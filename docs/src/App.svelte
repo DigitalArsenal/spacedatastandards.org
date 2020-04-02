@@ -52,6 +52,6 @@
 </svelte:head>
 
 <main>
-  <h1>SpaceDataSource.Org</h1>
+  <h1>SpaceDataStandards.Org</h1>
   <p>{flatc.length}</p>
 </main>
