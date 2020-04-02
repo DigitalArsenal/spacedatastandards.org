@@ -35,7 +35,6 @@
   },
   "homepage": "https://github.com/DigitalArsenal/spacedatastandards.org#readme",
   "dependencies": {
-    "codemirror": "^5.52.2",
-    "octokat": "^0.10.0"
+
   }
 }
