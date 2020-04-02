@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public"
+    "start": "sirv dev"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.0",
