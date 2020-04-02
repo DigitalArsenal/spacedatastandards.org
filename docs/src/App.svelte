@@ -53,5 +53,7 @@
 
 <main>
   <h1>SpaceDataStandards.Org</h1>
-  <p>{flatc.length}</p>
+  {#if flatc && flatc.length}
+    <p>{flatc.length}</p>
+  {/if}
 </main>
