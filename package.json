@@ -1,0 +1,41 @@
+{
+  "name": "spacedatastandards.org",
+  "version": "1.0.0",
+  "description": "The spacedatastandards.org web application",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DigitalArsenal/spacedatastandards.org.git"
+  },
+  "keywords": [
+    "space",
+    "data",
+    "standards",
+    "ccsds",
+    "space-track",
+    "spacetrack",
+    "celestrak",
+    "tle",
+    "two-line",
+    "elements",
+    "satellite",
+    "catalog",
+    "satellite"
+  ],
+  "author": "tjkoury",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DigitalArsenal/spacedatastandards.org/issues"
+  },
+  "homepage": "https://github.com/DigitalArsenal/spacedatastandards.org#readme",
+  "dependencies": {
+    "codemirror": "^5.52.2",
+    "octokat": "^0.10.0"
+  }
+}
