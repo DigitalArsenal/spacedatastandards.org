@@ -1,8 +1,10 @@
 <script>
   import { onMount } from "svelte";
   import { onLoad } from "./global.js";
-  export let flatc = { length: null };
+  let flatcLoaded = false;
+  let flatc;
   onLoad(() => {
+    flatcLoaded = true;
     flatc = globalThis.flatc;
   });
 </script>
@@ -53,7 +55,5 @@
 
 <main>
   <h1>SpaceDataStandards.Org</h1>
-  {#if flatc && flatc.length}
-    <p>{flatc.length}</p>
-  {/if}
+  <p>Loaded: {flatcLoaded}</p>
 </main>
