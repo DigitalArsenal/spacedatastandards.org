@@ -5,7 +5,8 @@
   onLoad(() => {
     editor = monaco.editor.create(document.getElementById("monacoeditor"), {
       value: "function hello() {\n\talert('Hello world!');\n}",
-      language: "javascript"
+      language: "javascript",
+      automaticLayout: true
     });
   });
 </script>
