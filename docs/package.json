@@ -18,8 +18,8 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "sirv-cli": "^0.4.4",
     "codemirror": "^5.52.2",
-    "octokat": "^0.10.0"
+    "octokat": "^0.10.0",
+    "sirv-cli": "^0.4.4"
   }
 }

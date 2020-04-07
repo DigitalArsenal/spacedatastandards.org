@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dev": "cd docs && npm run dev"
   },
   "repository": {
     "type": "git",
@@ -33,8 +34,5 @@
   "bugs": {
     "url": "https://github.com/DigitalArsenal/spacedatastandards.org/issues"
   },
-  "homepage": "https://github.com/DigitalArsenal/spacedatastandards.org#readme",
-  "dependencies": {
-
-  }
+  "homepage": "https://github.com/DigitalArsenal/spacedatastandards.org#readme"
 }

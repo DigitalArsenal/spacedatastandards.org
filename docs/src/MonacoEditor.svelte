@@ -1,6 +1,5 @@
 <script>
   import { onLoad } from "./global.js";
-  import CodeMirror from "CodeMirror";
   let editor;
   onLoad(() => {
     editor = monaco.editor.create(document.getElementById("monacoeditor"), {
@@ -13,8 +12,7 @@
 
 <style>
   #monacoeditor {
-    width: 100vw;
-    height: 100vh;
+    height: calc(99.99vh - var(--header-height));
   }
 </style>
 
