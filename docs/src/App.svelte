@@ -3,13 +3,13 @@
   import { onLoad } from "./global.js";
   import Editor from "./MonacoEditor.svelte";
   import Loader from "./Loader.svelte";
-  import Navaid from "./lib/navaid/src/index.js";
+  import Navaid from "navaid";
   import { routeparams } from "./stores/Route";
 
   let menuOpen;
 
   let router = new Navaid("/");
-	
+
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
