@@ -1,0 +1,3 @@
+[submodule "docs/src/lib/navaid"]
+	path = docs/src/lib/navaid
+	url = git@github.com:DigitalArsenal/navaid.git
