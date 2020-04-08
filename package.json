@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "test",
-    "dev": "cd docs && npm run dev"
+    "dev": "cd docs && npm run dev",
+    "postinstall": "cd docs && npm i"
   },
   "repository": {
     "type": "git",
