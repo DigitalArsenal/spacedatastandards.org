@@ -9,7 +9,8 @@
   "scripts": {
     "test": "test",
     "dev": "cd docs && npm run dev",
-    "postinstall": "cd docs && npm i"
+    "postinstall": "cd docs && npm i",
+    "deploy": "cd docs && npm run deploy"
   },
   "repository": {
     "type": "git",
