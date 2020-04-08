@@ -16,7 +16,7 @@
   };
 
   let activeComponent = Editor;
-  router.on("/", params => {
+  router.on("/", (params) => {
     setRoute(params, Editor);
   });
   /*
@@ -66,20 +66,25 @@
     display: grid;
     grid-template-columns: 100vw;
   }
+
   header {
     background: var(--celestrak-blue);
-    display: flex;
-    align-items: center;
     color: white;
     padding: 6px;
     box-sizing: border-box;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+
   container {
     display: grid;
     grid-template-rows: var(--header-height) auto;
     height: 100vh;
     width: 100vw;
     box-sizing: border-box;
+    overflow: hidden;
   }
   @media (min-width: 640px) {
     main {
@@ -91,6 +96,18 @@
     width: 100%;
     height: 100%;
   }
+
+  #links a {
+    color: #eee;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px #eee solid;
+    padding: 5px;
+  }
+  #links a:hover {
+    background: #eee;
+    color: #333;
+  }
 </style>
 
 <svelte:head>
@@ -100,14 +117,19 @@
   </script>
 </svelte:head>
 <container>
-  <header>SPACEDATASTANDARDS.ORG</header>
+  <header>
+    SPACEDATASTANDARDS.ORG
+    <div id="links">
+      <a href="#/">IDL</a>
+      <a href="#/schema">SCHEMA</a>
+    </div>
+  </header>
   <main>
     {#if !loaded}
-      <Loader />
+    <Loader></Loader>
     {/if}
     <div id="editorContainer">
-      <Editor />
+      <Editor></Editor>
     </div>
-
   </main>
 </container>
