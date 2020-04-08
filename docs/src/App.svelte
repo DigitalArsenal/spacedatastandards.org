@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { onLoad } from "./global.js";
   import Editor from "./MonacoEditor.svelte";
+  import Code from "./Code.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams } from "./stores/Route";
@@ -16,13 +17,13 @@
   };
 
   let activeComponent = Editor;
-  router.on("/", (params) => {
+  router.on("/#/", params => {
     setRoute(params, Editor);
   });
-  /*
-  router.on("/#Docs/:link?", params => {
-    setRoute(params, Docs);
-  });
+
+  router.on("/#/code", params => {
+    setRoute(params, Code);
+  }); /*
   router.on("/#Docs", params => {
     setRoute(params, Docs);
   });
@@ -91,7 +92,7 @@
       max-width: none;
     }
   }
-  #editorContainer {
+  #mainContainer {
     position: relative;
     width: 100%;
     height: 100%;
@@ -104,7 +105,8 @@
     border: 1px #eee solid;
     padding: 5px;
   }
-  #links a:hover {
+  #links a:hover,
+  #links a.active {
     background: #eee;
     color: #333;
   }
@@ -120,16 +122,19 @@
   <header>
     SPACEDATASTANDARDS.ORG
     <div id="links">
-      <a href="#/">IDL</a>
-      <a href="#/schema">SCHEMA</a>
+      <a target="_blank" href="https://public.ccsds.org/Pubs/505x0b1.pdf">
+        505xb1
+      </a>
+      <a href="#/" class:active={activeComponent === Editor}>IDL</a>
+      <a href="#/code" class:active={activeComponent === Code}>CODE</a>
     </div>
   </header>
   <main>
     {#if !loaded}
-    <Loader></Loader>
+      <Loader />
     {/if}
-    <div id="editorContainer">
-      <Editor></Editor>
+    <div id="mainContainer">
+      <svelte:component this={activeComponent} />
     </div>
   </main>
 </container>
