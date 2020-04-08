@@ -6,6 +6,42 @@
   let lang = "flatbuffers";
   let editor;
 
+  let OMM_Text = `table OMM {
+  CCSDS_OPM_VERS:float,
+  COMMENT:string,
+  CREATION_DATE:string,
+  ORIGINATOR:string,
+  OBJECT_NAME:string,
+  OBJECT_ID:string,
+  REF_FRAME:string,
+  REF_FRAME_EPOCH:string,
+  TIME_SYSTEM:string,
+  MEAN_ELEMENT_THEORY:string,
+  EPOCH:float,
+  SEMI_MAJOR_AXIS:float,
+  MEAN_MOTION:float,
+  ECCENTRICITY:float,
+  INCLINATION :float,
+  RA_OF_ASC_NODE:float,
+  ARG_OF_PERICENTER:float,
+  MEAN_ANOMALY:float,
+  GM :float,
+  MASS:float,
+  SOLAR_RAD_AREA :float,
+  SOLAR_RAD_COEFF:float,
+  DRAG_AREA:float,
+  DRAG_COEFF:float,
+  EPHEMERIS_TYPE:string,
+  CLASSIFICATION_TYPE:string,
+  NORAD_CAT_ID:uint,
+  ELEMENT_SET_NO:ulong,
+  REV_AT_EPOCH:float,
+  BSTAR:float,
+  MEAN_MOTION_DOT:float,
+  MEAN_MOTION_DDOT:float
+}
+root_type OMM;`;
+
   globalThis.createEditor = () => {
     if (!editor && globalThis.monaco) {
       monaco.languages.setMonarchTokensProvider(lang, {
@@ -35,29 +71,13 @@
         base: "vs",
         inherit: false,
         rules: [
-          { token: "keyword.control.flatbuffers", foreground: "b434eb" },
+          { token: "keyword.control.flatbuffers", foreground: "9100ff" },
           { token: "storage.type.flatbuffers", foreground: "2f45eb" }
         ]
       });
       monaco.languages.register({ id: lang });
       editor = monaco.editor.create(document.getElementById("monacoeditor"), {
-        value: `struct Vec3 {
-  x:float;
-  y:float;
-  z:float;
-}
-
-table Monster {
-  pos:Vec3;
-  mana:short = 150;
-  hp:short = 100;
-  name:string;
-  inventory:[ubyte];
-  test:Any;
-}
-
-root_type Monster;
-      `,
+        value: OMM_Text,
         language: lang,
         theme: lang,
         automaticLayout: true

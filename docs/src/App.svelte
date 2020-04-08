@@ -122,8 +122,8 @@
   <header>
     SPACEDATASTANDARDS.ORG
     <div id="links">
-      <a target="_blank" href="https://public.ccsds.org/Pubs/505x0b1.pdf">
-        505xb1
+      <a target="_blank" href="https://public.ccsds.org/Pubs/502x0b2c1.pdf">
+        502x0b2c1
       </a>
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
