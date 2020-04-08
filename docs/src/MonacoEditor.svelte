@@ -8,10 +8,36 @@
 
   globalThis.createEditor = () => {
     if (!editor && globalThis.monaco) {
+      monaco.languages.setMonarchTokensProvider(lang, {
+        tokenizer: {
+          root: [
+            [
+              /\b(root_type|table|struct|union|enum|namespace|id|deprecated|required|original_order|force_align|bit_flags|nested_flatbuffer|key|attribute|include|file_identifier|file_extension)\b/,
+              "keyword.control.flatbuffers"
+            ],
+            [
+              /(\.)?\s*\b(bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\b/,
+              "storage.type.flatbuffers"
+            ] /*
+            [
+              /\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\W)([_a-zA-Z]\\w*)\\s*(?=\\.)/,
+              "entity.name.section.flatbuffers"
+            ],
+            [
+              /\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\W)([_a-zA-Z]\w*)/,
+              "entity.name.type.flatbuffers"
+            ]*/
+          ]
+        }
+      });
+
       monaco.editor.defineTheme(lang, {
         base: "vs",
         inherit: false,
-        rules: FB_Scheme
+        rules: [
+          { token: "keyword.control.flatbuffers", foreground: "b434eb" },
+          { token: "storage.type.flatbuffers", foreground: "2f45eb" }
+        ]
       });
       monaco.languages.register({ id: lang });
       editor = monaco.editor.create(document.getElementById("monacoeditor"), {
@@ -33,6 +59,7 @@ table Monster {
 root_type Monster;
       `,
         language: lang,
+        theme: lang,
         automaticLayout: true
       });
       window.editor = editor;
