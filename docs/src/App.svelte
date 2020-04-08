@@ -112,12 +112,6 @@
   }
 </style>
 
-<svelte:head>
-  <script type="module">
-    import { flatc } from "https://digitalarsenal.io/lib/flatbuffers.js";
-    globalThis.flatc = flatc;
-  </script>
-</svelte:head>
 <container>
   <header>
     SPACEDATASTANDARDS.ORG

@@ -1,9 +1,9 @@
 <script>
   import { onLoad } from "./global.js";
   import { onMount, onDestroy } from "svelte";
-  import FB_Schema from "./lib/schema/flatbuffers/FlatbuffersSchema.configuration.json";
-  import FB_Scheme from "./lib/schema/flatbuffers/flatbuffers.json";
+
   let lang = "flatbuffers";
+
   let editor;
 
   let OMM_Text = `table OMM {
@@ -17,7 +17,7 @@
   REF_FRAME_EPOCH:string,
   TIME_SYSTEM:string,
   MEAN_ELEMENT_THEORY:string,
-  EPOCH:float,
+  EPOCH:ulong,
   SEMI_MAJOR_AXIS:float,
   MEAN_MOTION:float,
   ECCENTRICITY:float,
@@ -40,6 +40,7 @@
   MEAN_MOTION_DOT:float,
   MEAN_MOTION_DDOT:float
 }
+
 root_type OMM;`;
 
   globalThis.createEditor = () => {
@@ -82,6 +83,7 @@ root_type OMM;`;
         theme: lang,
         automaticLayout: true
       });
+      editor.onDidChangeModelContent(event => console.log(event));
       window.editor = editor;
     }
   };
