@@ -14,36 +14,41 @@
       loaded = true;
       return;
     }
-    let fb = new globalThis.flatc({
-      fs: fs,
-      rootDir: "/"
-    });
-    await fb.runCommand([
-      "./flatc",
-      currentLanguage[0],
-      "-o",
-      "/test",
-      `/test/${$currentDocument}.fbs`
-    ]);
-    window.errPipe = fs.createReadStream("/dev/stderr");
-    window.outPipe = fs.createReadStream("/dev/stdout");
-    window.errPipe.on("data", data => {
-      console.log(data.toString("utf8"));
-    });
-    window.outPipe.on("data", data => {
-      console.log(data.toString("utf8"));
-    });
-    globalThis.fs = fs;
-    let _resultFile;
-    fs.readdirSync("/test/").forEach(f => {
-      if (f.slice(f.lastIndexOf(".") + 1) === currentLanguage[2]) {
-        _resultFile = f;
-      }
-    });
-    result = fs.readFileSync(`/test/${_resultFile}`, {
-      encoding: "utf8"
-    });
-    loaded = true;
+    try {
+      let fb = new globalThis.flatc({
+        fs: fs,
+        rootDir: "/"
+      });
+      await fb.runCommand([
+        "./flatc",
+        currentLanguage[0],
+        "-o",
+        "/test",
+        `/test/${$currentDocument}.fbs`
+      ]);
+      window.errPipe = fs.createReadStream("/dev/stderr");
+      window.outPipe = fs.createReadStream("/dev/stdout");
+      window.errPipe.on("data", data => {
+        console.log(data.toString("utf8"));
+      });
+      window.outPipe.on("data", data => {
+        console.log(data.toString("utf8"));
+      });
+      globalThis.fs = fs;
+      let _resultFile;
+      fs.readdirSync("/test/").forEach(f => {
+        if (f.slice(f.lastIndexOf(".") + 1) === currentLanguage[2]) {
+          _resultFile = f;
+        }
+      });
+      result = fs.readFileSync(`/test/${_resultFile}`, {
+        encoding: "utf8"
+      });
+      loaded = true;
+    } catch (e) {
+      loaded = false;
+      result = "Code Generation Failed:  Check Syntax And Try Again.";
+    }
   };
   globalThis.createCode = createCode;
   onMount(() => {
