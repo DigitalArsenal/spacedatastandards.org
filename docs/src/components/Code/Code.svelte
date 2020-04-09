@@ -1,34 +1,19 @@
 <script>
   import { onMount } from "svelte";
-  import { fs } from "./stores/FileSystem";
-  import { currentDocument } from "./stores/Route";
+  import { fs } from "../../stores/FileSystem";
+  import { currentDocument } from "../../stores/Route";
+  import { languages } from "./languages.js";
 
-  let result;
+  export let loaded;
+  let result = "";
 
-  let languages = [
-    ["--cpp", "Generate a C++ header", "h"],
-    ["--java", "Generate Java code", "java"],
-    ["--kotlin", "Generate Kotlin code", "kt"],
-    ["--csharp", "Generate C# code", "cs"],
-    ["--go", "Generate Go code", "go"],
-    ["--python", "Generate Python code", "py"],
-    ["--js", "Generate JavaScript code", "js"],
-    ["--ts", "Generate TypeScript code", "ts"],
-    [
-      "--php",
-      " Generate PHP code",
-      "php"
-    ] /*,
-    ["--grpc", " Generate RPC stub code for GRPC", ''],
-    ["--dart", " Generate Dart code"],
-    ["--lua", " Generate Lua code"],
-    ["--lobster", " Generate Lobster code"],
-    ["--rust, -r ", " Generate Rust code"],
-    ["--swift", " Generate Swift code"]*/
-  ];
   let currentLanguage = languages[0];
   let createCode = async () => {
-    if (!globalThis.flatc) return;
+    loaded = false;
+    if (!globalThis.flatc) {
+      loaded = true;
+      return;
+    }
     let fb = new globalThis.flatc({
       fs: fs,
       rootDir: "/"
@@ -58,9 +43,11 @@
     result = fs.readFileSync(`/test/${_resultFile}`, {
       encoding: "utf8"
     });
+    loaded = true;
   };
   globalThis.createCode = createCode;
   onMount(() => {
+    loaded = true;
     createCode();
   });
 </script>
@@ -84,4 +71,4 @@
     <option value={language}>{language[1]}</option>
   {/each}
 </select>
-<textarea value={result} />
+<textarea readonly value={result} />

@@ -1,9 +1,9 @@
 <script>
-  import { onLoad } from "./global.js";
+  import { onLoad } from "../../lib/global.js";
   import { onMount, onDestroy } from "svelte";
-  import { fs } from "./stores/FileSystem";
-  import { currentDocument } from "./stores/Route";
-
+  import { fs } from "../../stores/FileSystem";
+  import { currentDocument } from "../../stores/Route";
+  export let loaded;
   let lang = "flatbuffers";
 
   let editor;
@@ -57,7 +57,10 @@
       window.editor = editor;
     }
   };
-  onMount(createEditor);
+  onMount(() => {
+    loaded = true;
+    createEditor();
+  });
   onLoad(createEditor);
   onDestroy(() => (editor ? editor.dispose() : null));
 </script>

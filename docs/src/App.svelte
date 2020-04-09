@@ -1,8 +1,8 @@
 <script>
   import { onMount } from "svelte";
-  import { onLoad } from "./global.js";
-  import Editor from "./MonacoEditor.svelte";
-  import Code from "./Code.svelte";
+  import { onLoad } from "./lib/global.js";
+  import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
+  import Code from "./components/Code/Code.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams, currentDocument } from "./stores/Route";
@@ -132,7 +132,8 @@
       <Loader />
     {/if}
     <div id="mainContainer">
-      <svelte:component this={activeComponent} />
+      <svelte:component this={activeComponent} bind:loaded />
     </div>
+
   </main>
 </container>
