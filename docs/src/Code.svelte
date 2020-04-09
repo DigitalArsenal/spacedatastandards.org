@@ -5,9 +5,15 @@
 
   let fs;
   let result;
+  $:{
+    if(editorBuffer.length){
+      globalThis.createCode(flatc);
+    }
+  }
   globalThis.createCode = async flatc => {
+    if(!$editorBuffer.length) return;
     fs = fs || new WasmFs();
-    let _fileName = `/${new Date()}.fbs`;
+    let _filename = `/${new Date()}.fbs`;
     fs.writeFileSync(_filename, $editorBuffer);
     await fb.runCommand(["./flatc", "--cpp", "-o", "/", _filename]);
     window.errPipe = fs.createReadStream("/dev/stderr");
@@ -19,7 +25,7 @@
       console.log(data.toString("utf8"));
     });
 
-    result = fs.readFileSync(`${_fileName.split(".")[0]}_generated.h`, {
+    result = fs.readFileSync(`${_filename.split(".")[0]}_generated.h`, {
       encoding: "utf8"
     });
   };
