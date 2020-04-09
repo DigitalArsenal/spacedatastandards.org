@@ -1,12 +1,35 @@
+struct Matrix_Lower_Triangular{
+  CX_X:float;
+  CY_X:float;
+  CY_Y:float;
+  CZ_X:float;
+  CZ_Y:float;
+  CZ_Z:float;
+  CX_DOT_X:float;
+  CX_DOT_Y:float;
+  CX_DOT_Z:float;
+  CX_DOT_X_DOT:float;
+  CY_DOT_X:float;
+  CY_DOT_Y:float;
+  CY_DOT_Z:float;
+  CY_DOT_X_DOT:float;
+  CY_DOT_Y_DOT:float;
+  CZ_DOT_X:float;
+  CZ_DOT_Y:float;
+  CZ_DOT_Z:float;
+  CZ_DOT_X_DOT:float;
+  CZ_DOT_Y_DOT:float;
+  CZ_DOT_Z_DOT:float;
+}
 table OMM {
-  CCSDS_OPM_VERS:float;
+  CCSDS_OMM_VERS:float;
   COMMENT:string;
-  CREATION_DATE:string;
-  ORIGINATOR:string;
-  OBJECT_NAME:string;
-  OBJECT_ID:string;
-  CENTER_NAME:string;
-  REF_FRAME:string;
+  CREATION_DATE:string (required);
+  ORIGINATOR:string (required);
+  OBJECT_NAME:string (required);
+  OBJECT_ID:string (required);
+  CENTER_NAME:string (required);
+  REF_FRAME:string (required);
   REF_FRAME_EPOCH:string;
   TIME_SYSTEM:string;
   MEAN_ELEMENT_THEORY:string;
@@ -32,27 +55,7 @@ table OMM {
   BSTAR:float;
   MEAN_MOTION_DOT:float;
   MEAN_MOTION_DDOT:float;
-  CX_X:float;
-  CY_X:float;
-  CY_Y:float;
-  CZ_X:float;
-  CZ_Y:float;
-  CZ_Z:float;
-  CX_DOT_X:float;
-  CX_DOT_Y:float;
-  CX_DOT_Z:float;
-  CX_DOT_X_DOT:float;
-  CY_DOT_X:float;
-  CY_DOT_Y:float;
-  CY_DOT_Z:float;
-  CY_DOT_X_DOT:float;
-  CY_DOT_Y_DOT:float;
-  CZ_DOT_X:float;
-  CZ_DOT_Y:float;
-  CZ_DOT_Z:float;
-  CZ_DOT_X_DOT:float;
-  CZ_DOT_Y_DOT:float;
-  CZ_DOT_Z_DOT:float;
+  POS_COV_MATRIX:Matrix_Lower_Triangular;
 }
 
 root_type OMM;
