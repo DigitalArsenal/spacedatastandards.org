@@ -3,6 +3,8 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import json from "@rollup/plugin-json";
+import { string } from "rollup-plugin-string";
+
 import { terser } from "rollup-plugin-terser";
 import fs from "fs";
 import path from "path";
@@ -19,6 +21,9 @@ export default {
   },
   plugins: [
     json(),
+    string({
+      include: "**/*.fbs"
+    }),
     {
       name: "rollup-plugin-svelte-css-replace",
       transform(code, id) {
@@ -37,7 +42,7 @@ export default {
         }
         return { code, map: this.getCombinedSourcemap() };
       },
-      generateBundle(opts) {}
+      generateBundle(opts) { }
     },
     svelte({
       // enable run-time checks when not in production
