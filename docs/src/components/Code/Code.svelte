@@ -46,7 +46,7 @@
       });
       loaded = true;
     } catch (e) {
-      loaded = false;
+      loaded = true;
       result = "Code Generation Failed:  Check Syntax And Try Again.";
     }
   };
