@@ -68,6 +68,20 @@
     width: 100%;
     height: calc(100vh - var(--header-height) - 25px);
   }
+  a:link,
+  a:visited {
+    background-color: rgb(233, 0, 0);
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  a:hover,
+  a:active {
+    background-color: rgb(233, 0, 0);
+  }
 </style>
 
 <svelte:head>
@@ -83,10 +97,10 @@
       <option value={language}>{language[1]}</option>
     {/each}
   </select>
-  <a href={resultHref} download={_resultFile}>Download Code</a>
+  <a href={resultHref} download={_resultFile}>&darr; Code</a>
   <a
     href="https://github.com/google/flatbuffers/tree/master/{currentLanguage[3]}">
-    Download Flatbuffer Library
+    &darr; Library
   </a>
 </div>
 <textarea readonly value={result} />
