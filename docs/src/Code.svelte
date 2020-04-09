@@ -1,24 +1,16 @@
 <script>
   import { onMount } from "svelte";
-  import WasmFs from "./lib/wasmer/wasmfs.esm.js";
-  import { editorBuffer } from "./stores/Buffer";
+  import { fs } from "./stores/FileSystem";
   import { currentDocument } from "./stores/Route";
-
-  let fs = new WasmFs().fs;
+ 
   let result;
-  $: {
-    if ($editorBuffer.length) {
-      globalThis.createCode();
-    }
-  }
+
   globalThis.createCode = async () => {
-    if (!$editorBuffer.length || !globalThis.flatc) return;
+    if (!globalThis.flatc) return;
     let fb = new globalThis.flatc({
       fs: fs,
       rootDir: "/"
     });
-    fs.mkdirpSync("/test");
-    fs.writeFileSync(`/test/${$currentDocument}.fbs`, $editorBuffer);
     await fb.runCommand([
       "./flatc",
       "--cpp",
@@ -39,7 +31,9 @@
     });
     //.replace(/\n/g, "<br/>");
   };
-  onMount(() => {});
+  onMount(() => {
+    createCode();
+  });
 </script>
 
 <style>

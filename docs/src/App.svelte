@@ -6,10 +6,13 @@
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams, currentDocument } from "./stores/Route";
+  import { fs, init } from "./stores/FileSystem";
+
   let menuOpen;
 
   let router = new Navaid("/");
   $currentDocument = "502x0b2c1";
+  init($currentDocument);
 
   const setRoute = (_params, _component) => {
     $routeparams = _params;
