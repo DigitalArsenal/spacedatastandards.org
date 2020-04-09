@@ -1,6 +1,7 @@
 <script>
   import { onLoad } from "./global.js";
   import { onMount, onDestroy } from "svelte";
+  import { editorBuffer } from "./stores/Buffer";
 
   let lang = "flatbuffers";
 
@@ -83,7 +84,9 @@ root_type OMM;`;
         theme: lang,
         automaticLayout: true
       });
-      editor.onDidChangeModelContent(event => console.log(event));
+      editor.onDidChangeModelContent(event => {
+        $editorBuffer = editor.getValue();
+      });
       window.editor = editor;
     }
   };

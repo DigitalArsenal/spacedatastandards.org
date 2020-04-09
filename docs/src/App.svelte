@@ -114,7 +114,7 @@
 
 <container>
   <header>
-    SPACEDATASTANDARDS.ORG
+    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
     <div id="links">
       <a target="_blank" href="https://public.ccsds.org/Pubs/502x0b2c1.pdf">
         502x0b2c1
