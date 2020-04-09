@@ -68,7 +68,7 @@
 <style>
   textarea {
     width: 100%;
-    height: calc(100vh - var(--header-height));
+    height: calc(100vh - var(--header-height) - 25px);
   }
 </style>
 
