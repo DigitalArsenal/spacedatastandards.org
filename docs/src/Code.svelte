@@ -2,20 +2,30 @@
   import { onMount } from "svelte";
   import WasmFs from "./lib/wasmer/wasmfs.esm.js";
   import { editorBuffer } from "./stores/Buffer";
+  import { currentDocument } from "./stores/Route";
 
-  let fs;
+  let fs = new WasmFs().fs;
   let result;
-  $:{
-    if(editorBuffer.length){
-      globalThis.createCode(flatc);
+  $: {
+    if ($editorBuffer.length) {
+      globalThis.createCode();
     }
   }
-  globalThis.createCode = async flatc => {
-    if(!$editorBuffer.length) return;
-    fs = fs || new WasmFs();
-    let _filename = `/${new Date()}.fbs`;
-    fs.writeFileSync(_filename, $editorBuffer);
-    await fb.runCommand(["./flatc", "--cpp", "-o", "/", _filename]);
+  globalThis.createCode = async () => {
+    if (!$editorBuffer.length || !globalThis.flatc) return;
+    let fb = new globalThis.flatc({
+      fs: fs,
+      rootDir: "/"
+    });
+    fs.mkdirpSync("/test");
+    fs.writeFileSync(`/test/${$currentDocument}.fbs`, $editorBuffer);
+    await fb.runCommand([
+      "./flatc",
+      "--cpp",
+      "-o",
+      "/test",
+      `/test/${$currentDocument}.fbs`
+    ]);
     window.errPipe = fs.createReadStream("/dev/stderr");
     window.outPipe = fs.createReadStream("/dev/stdout");
     window.errPipe.on("data", data => {
@@ -24,20 +34,26 @@
     window.outPipe.on("data", data => {
       console.log(data.toString("utf8"));
     });
-
-    result = fs.readFileSync(`${_filename.split(".")[0]}_generated.h`, {
+    result = fs.readFileSync(`/test/${$currentDocument}_generated.h`, {
       encoding: "utf8"
     });
+    //.replace(/\n/g, "<br/>");
   };
   onMount(() => {});
 </script>
 
+<style>
+  textarea {
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+  }
+</style>
+
 <svelte:head>
   <script type="module">
     import { flatc } from "https://digitalarsenal.io/lib/flatbuffers.js";
-    createCode(flatc);
+    globalThis.flatc = flatc;
+    createCode();
   </script>
 </svelte:head>
-<container>
-  <h1>{result}</h1>
-</container>
+<textarea value={result} />

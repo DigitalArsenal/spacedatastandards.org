@@ -5,11 +5,11 @@
   import Code from "./Code.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
-  import { routeparams } from "./stores/Route";
-
+  import { routeparams, currentDocument } from "./stores/Route";
   let menuOpen;
 
   let router = new Navaid("/");
+  $currentDocument = "502x0b2c1";
 
   const setRoute = (_params, _component) => {
     $routeparams = _params;
@@ -52,6 +52,7 @@
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
 
   :global(body) {
@@ -117,7 +118,7 @@
     <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
     <div id="links">
       <a target="_blank" href="https://public.ccsds.org/Pubs/502x0b2c1.pdf">
-        502x0b2c1
+        {$currentDocument}
       </a>
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
