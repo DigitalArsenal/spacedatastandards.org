@@ -71,9 +71,12 @@
     createCode();
   </script>
 </svelte:head>
+<div>
 <select bind:value={currentLanguage} on:change={() => createCode()}>
   {#each languages as language}
     <option value={language}>{language[1]}</option>
   {/each}
 </select>
+<a href="https://github.com/google/flatbuffers/tree/master/{currentLanguage[3]}">Download Flatbuffer Library</a>
+</div>
 <textarea readonly value={result} />
