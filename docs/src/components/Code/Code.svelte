@@ -6,7 +6,13 @@
 
   export let loaded;
   let result = "";
-
+  let _resultFile;
+  $: resultHref = [
+    "data:application/octet-stream",
+    _resultFile,
+    "charset=utf-8",
+    `base64,${btoa(result)}`
+  ].join(";");
   let currentLanguage = languages[0];
   let createCode = async () => {
     loaded = false;
@@ -35,7 +41,7 @@
         console.log(data.toString("utf8"));
       });
       globalThis.fs = fs;
-      let _resultFile;
+
       fs.readdirSync("/test/").forEach(f => {
         if (f.slice(f.lastIndexOf(".") + 1) === currentLanguage[2]) {
           _resultFile = f;
@@ -72,11 +78,15 @@
   </script>
 </svelte:head>
 <div>
-<select bind:value={currentLanguage} on:change={() => createCode()}>
-  {#each languages as language}
-    <option value={language}>{language[1]}</option>
-  {/each}
-</select>
-<a href="https://github.com/google/flatbuffers/tree/master/{currentLanguage[3]}">Download Flatbuffer Library</a>
+  <select bind:value={currentLanguage} on:change={() => createCode()}>
+    {#each languages as language}
+      <option value={language}>{language[1]}</option>
+    {/each}
+  </select>
+  <a href={resultHref} download={_resultFile}>Download Code</a>
+  <a
+    href="https://github.com/google/flatbuffers/tree/master/{currentLanguage[3]}">
+    Download Flatbuffer Library
+  </a>
 </div>
 <textarea readonly value={result} />
