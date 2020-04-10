@@ -5,11 +5,16 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   let lang = "flatbuffers";
-
   let editor;
 
+  editorContents.subscribe(e => {
+    if (editor) editor.setValue(e);
+  });
+
   const setC = () => {
-    if (editor) $editorContents = editor.getValue();
+    if (editor && $editorContents !== editor.getValue()) {
+      $editorContents = editor.getValue();
+    }
   };
 
   globalThis.createEditor = () => {
@@ -31,16 +36,16 @@
         theme: lang,
         automaticLayout: true
       });
-      setC();
+      globalThis.editor = editor;
       editor.onDidChangeModelContent(setC);
-      window.editor = editor;
     }
-  };
-  onMount(() => {
     loaded = true;
+  };
+  onMount(function() {
+    loaded = false;
     createEditor();
   });
-  onLoad(createEditor);
+
   onDestroy(() => (editor ? editor.dispose() : null));
 </script>
 

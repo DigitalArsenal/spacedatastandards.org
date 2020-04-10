@@ -27,7 +27,9 @@
   ].join(";");
 
   let createCode = () => {
-    loaded = false;
+    if (!$editorContents) {
+      return;
+    }
     result.data = "";
     let inputObject = {
       currentLanguage,
@@ -41,7 +43,6 @@
           .then(callback)
           .catch(e => {
             result = e;
-            loaded = true;
           });
       });
     } else {
@@ -53,10 +54,11 @@
       };
     }
   };
-
-  onMount(() => {
-    loaded = true;
+  editorContents.subscribe(() => {
     createCode();
+  });
+  onMount(() => {
+    loaded = false;
   });
 </script>
 

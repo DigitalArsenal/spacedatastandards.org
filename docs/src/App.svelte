@@ -5,14 +5,17 @@
   import Code from "./components/Code/Code.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
-  import OMM_Text from "./stores/OMM.fbs";
   import { routeparams, currentDocument, editorContents } from "./stores/Route";
 
   let menuOpen;
-
+  let loaded = false;
   let router = new Navaid("/");
-  $currentDocument = "502x0b2c1";
-  $editorContents = OMM_Text;
+
+  fetch("./schemas/OMM.fbs").then(async r => {
+    $currentDocument = "502x0b2c1";
+    $editorContents = await r.text();
+  });
+
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
@@ -33,13 +36,6 @@
     setRoute(params, DocPage);
   });*/
   router.listen();
-
-  let loaded = false;
-  let flatc;
-  onLoad(() => {
-    loaded = true;
-    flatc = globalThis.flatc;
-  });
 </script>
 
 <style>

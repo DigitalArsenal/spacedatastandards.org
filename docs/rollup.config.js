@@ -26,6 +26,7 @@ export default {
     json(),
     copy({
       targets: [
+        { src: 'schemas', dest: './dev/' },
         { src: './src/workers/**/*', dest: !production ? "./dev/workers" : "./workers" },
         { src: './src/lib/**/*', dest: !production ? "./dev/lib" : "./lib" }
       ]

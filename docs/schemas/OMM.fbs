@@ -28,20 +28,7 @@ table OMM {
   ORIGINATOR:string (required);
   OBJECT_NAME:string (required);
   OBJECT_ID:string (required);
-  /// Describes the address type by cryptocurrency coin / network, as described by SatoshiLabs in SLIP44
-  /// (https://github.com/satoshilabs/slips/blob/master/slip-0044.md).
-  /// Used in hierarchical deterministic wallet (HD Wallet) to construct a BIP_0032 path.
-  /// NOTE: Address specified in OBJECT_DESIGNATOR field do not necessarily belong to / derived from an HD tree.
   BIP_0044_TYPE:uint;
-  /// The public key portion of a cryptographic public/private key n/a pair (address).
-  /// Can be the raw public key or a hash of the key.
-  /// Value is an ASCII encoded string (UTF8) of max length 128.
-  /// If BIP_0044_TYPE is not null and valid, value MUST be a valid address and encoding for BIP_0044_TYPE.
-  /// If BIP_0044_TYPE is not present, value MUST be a valid BIP_0044_TYPE 2147483648 (bitcoin) address, to include but not limited to:
-  /// Pay-to-Pubkey (P2PK) beginning with 04 (uncompressed), or 02 (compressed y-coordinate even) / 03 (compressed y-coordinate odd)
-  /// Pay-to-PubkeyHash (P2PKH) beginning with the number 1
-  /// Pay-to-ScriptHash (P2SH) beginning with the number 3
-  /// Bech32 type starting with bc1
   OBJECT_DESIGNATOR:string;
   CENTER_NAME:string (required);
   REF_FRAME:string (required);
