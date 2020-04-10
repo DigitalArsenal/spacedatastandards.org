@@ -1,0 +1,439 @@
+{
+  "fileTypes": [
+    "fbs"
+  ],
+  "name": "Flatbuffers Schema",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#value"
+    },
+    {
+      "include": "#namespace-decl"
+    },
+    {
+      "include": "#attribute-decl"
+    },
+    {
+      "include": "#include-decl"
+    },
+    {
+      "include": "#enum-decl"
+    },
+    {
+      "include": "#union-decl"
+    },
+    {
+      "include": "#struct-decl"
+    },
+    {
+      "include": "#table-decl"
+    },
+    {
+      "include": "#root_type-decl"
+    },
+    {
+      "match": "\\b(attribute|include|file_identifier|file_extension)\\b",
+      "name": "keyword.control.flatbuffers"
+    }
+  ],
+  "repository": {
+    "line-comment": {
+      "begin": "(?=//)",
+      "end": "\\n",
+      "name": "comment.line.double-slash.flatbuffers",
+      "patterns": [
+        {
+          "begin": "(?<!/)(?=///[^/])",
+          "end": "(?=\\n)",
+          "name": "meta.documentation.flatbuffers"
+        }
+      ]
+    },
+    "block-comment": {
+      "begin": "(?=/\\*)",
+      "end": "(?<!/)\\*/",
+      "name": "comment.block.flatbuffers"
+    },
+    "escape-chars": {
+      "match": "\\\\(?:['\"\\?\\\\abfnrtv]|[0-7]{1,3}|x[\\da-fA-F]+|u[\\da-fA-F]{4}|U[\\da-fA-F]{8})",
+      "name": "constant.character.escape.flatbuffers"
+    },
+    "invalid-escape-chars": {
+      "match": "\\\\(?:[^'\"\\?\\\\abfnrtvxuU0-7]|x[^\\da-fA-F]|u[\\da-fA-F]{0,3}[^\\da-fA-F]|U[\\da-fA-F]{0,7}[^\\da-fA-F])",
+      "name": "invalid.illegal.unknown-escape.flatbuffers"
+    },
+    "string": {
+      "begin": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.flatbuffers"
+        }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.flatbuffers"
+        }
+      },
+      "name": "string.quoted.double.flatbuffers",
+      "patterns": [
+        {
+          "include": "#escape-chars"
+        },
+        {
+          "include": "#invalid-escape-chars"
+        }
+      ]
+    },
+    "scalar": {
+      "patterns": [
+        {
+          "match": "\\b(true|false)\\b",
+          "name": "constant.language.flatbuffers"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#numeric"
+        }
+      ]
+    },
+    "object": {
+      "begin": "{",
+      "end": "(?<=})",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#name"
+        },
+        {
+          "begin": ":",
+          "end": ",|}",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#value"
+            },
+            {
+              "include": "#name"
+            }
+          ]
+        }
+      ]
+    },
+    "typename": {
+      "patterns": [
+        {
+          "match": "(\\.)?\\s*\\b(bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\b",
+          "captures": {
+            "1": {
+              "name": "invalid.illegal.flatbuffers"
+            },
+            "2": {
+              "name": "storage.type.flatbuffers"
+            }
+          }
+        },
+        {
+          "match": "\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\W)([_a-zA-Z]\\w*)\\s*(?=\\.)",
+          "captures": {
+            "2": {
+              "name": "entity.name.section.flatbuffers"
+            }
+          }
+        },
+        {
+          "match": "\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\W)([_a-zA-Z]\\w*)",
+          "name": "entity.name.type.flatbuffers"
+        }
+      ]
+    },
+    "name": {
+      "match": "\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\W)([_a-zA-Z]\\w*)\\b",
+      "name": "entity.name.tag.flatbuffers"
+    },
+    "packname": {
+      "match": "\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\W)([_a-zA-Z]\\w*)\\b",
+      "name": "entity.name.section.flatbuffers"
+    },
+    "numeric": {
+      "match": "(-)?\\d+(\\.\\d+)?",
+      "name": "constant.numeric.flatbuffers"
+    },
+    "comments": {
+      "patterns": [
+        {
+          "include": "#line-comment"
+        },
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "value": {
+      "patterns": [
+        {
+          "include": "#scalar"
+        },
+        {
+          "include": "#object"
+        }
+      ]
+    },
+    "struct_field_end": {
+      "begin": "\\b(:)",
+      "end": ";",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        },
+        {
+          "match": "[\\d=]+",
+          "name": "invalid.illegal.flatbuffers"
+        },
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "invalid.illegal.flatbuffers",
+          "patterns": [
+            {
+              "match": "(\\\\\\\\)|\\\\\""
+            }
+          ]
+        },
+        {
+          "include": "#metadata"
+        }
+      ]
+    },
+    "table_field_end": {
+      "begin": "\\b(:)",
+      "end": ";",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        },
+        {
+          "begin": "=",
+          "end": "(?=;|\\()",
+          "patterns": [
+            {
+              "include": "#value"
+            },
+            {
+              "include": "#name"
+            }
+          ]
+        },
+        {
+          "include": "#metadata"
+        }
+      ]
+    },
+    "metadata": {
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "match": "\\b(id|deprecated|required|original_order|force_align|bit_flags|nested_flatbuffer|key)\\b",
+          "name": "keyword.control.flatbuffers"
+        },
+        {
+          "include": "#name"
+        },
+        {
+          "include": "#scalar"
+        }
+      ]
+    },
+    "namespace-decl": {
+      "begin": "\\b(namespace)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flatbuffers"
+        }
+      },
+      "end": ";",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#packname"
+        }
+      ]
+    },
+    "enum-decl": {
+      "begin": "\\b(enum)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flatbuffers"
+        }
+      },
+      "end": "(?<=})",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        },
+        {
+          "include": "#metadata"
+        },
+        {
+          "begin": "{",
+          "end": "}",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#name"
+            },
+            {
+              "include": "#numeric"
+            }
+          ]
+        }
+      ]
+    },
+    "union-decl": {
+      "begin": "\\b(union)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flatbuffers"
+        }
+      },
+      "end": "(?<=})",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        },
+        {
+          "include": "#metadata"
+        },
+        {
+          "begin": "{",
+          "end": "}",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#typename"
+            }
+          ]
+        }
+      ]
+    },
+    "struct-decl": {
+      "begin": "\\b(struct)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flatbuffers"
+        }
+      },
+      "end": "(?<=})",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        },
+        {
+          "include": "#metadata"
+        },
+        {
+          "begin": "{",
+          "end": "}",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#name"
+            },
+            {
+              "include": "#struct_field_end"
+            }
+          ]
+        }
+      ]
+    },
+    "table-decl": {
+      "begin": "\\b(table)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flatbuffers"
+        }
+      },
+      "end": "(?<=})",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        },
+        {
+          "include": "#metadata"
+        },
+        {
+          "begin": "{",
+          "end": "}",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#name"
+            },
+            {
+              "include": "#table_field_end"
+            }
+          ]
+        }
+      ]
+    },
+    "root_type-decl": {
+      "begin": "\\b(root_type)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flatbuffers"
+        }
+      },
+      "end": ";",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#typename"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.flatbuffers"
+}
