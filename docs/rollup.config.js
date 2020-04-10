@@ -13,6 +13,7 @@ import path from "path";
 const production = !process.env.ROLLUP_WATCH;
 const writePath = !production ? "dev/build/" : "";
 export default {
+  external: "./workers/worker.js",
   input: "src/main.js",
   output: {
     sourcemap: true,
@@ -21,6 +22,7 @@ export default {
     file: `${writePath}bundle.js`
   },
   plugins: [
+
     json(),
     copy({
       targets: [

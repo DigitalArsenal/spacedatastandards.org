@@ -115,6 +115,10 @@
   }
 </style>
 
+<svelte:head>
+  <link rel="modulepreload" href="workers/worker.js" />
+</svelte:head>
+
 <container>
   <header>
     <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>

@@ -1,15 +1,17 @@
 import { flatc } from "https://digitalarsenal.io/lib/flatbuffers.js";
 import WasmFs from "../lib/wasmer/wasmfs.esm.js";
 
+const isWorker = typeof WorkerGlobalScope !== "undefined";
+
 let fs = new WasmFs().fs;
 fs.mkdirpSync("/root");
-
-onmessage = async function (e) {
+const convert = async function (e) {
   let result = {
     fileName: "",
     data: "",
     loaded: e.data.loaded
   };
+
   let { currentLanguage, currentDocument, editorContents } = e.data;
   fs.writeFileSync(`/root/${currentDocument}.fbs`, editorContents);
   try {
@@ -47,5 +49,14 @@ onmessage = async function (e) {
     result.data = "Code Generation Failed:  Check Syntax And Try Again.";
   }
   result.loaded = true;
-  this.postMessage(result);
+  if (isWorker) {
+    this.postMessage(result);
+  } else {
+    return result;
+  }
 }
+if (isWorker) {
+  onmessage = convert;
+}
+
+export { convert };

@@ -2,11 +2,21 @@
   import { onMount } from "svelte";
   import { currentDocument, editorContents } from "../../stores/Route";
   import { languages } from "./languages.js";
+  import { mobilecheck } from "./DetectMobile.js";
 
   export let loaded;
+
+  const workerPath = "/workers/worker.js";
+  let currentLanguage = languages[0];
+
   let result = {
     fileName: "",
     data: ""
+  };
+
+  const callback = data => {
+    result = data;
+    loaded = data.loaded;
   };
 
   $: resultHref = [
@@ -15,23 +25,35 @@
     "charset=utf-8",
     `base64,${btoa(result)}`
   ].join(";");
-  let currentLanguage = languages[0];
-  let createCode = async () => {
+
+  let createCode = () => {
     loaded = false;
     result.data = "";
-    let flatWorker = new Worker("./workers/worker.js", { type: "module" });
-    flatWorker.postMessage({
+    let inputObject = {
       currentLanguage,
       currentDocument: $currentDocument,
       editorContents: $editorContents,
       loaded
-    });
-    flatWorker.onmessage = a => {
-      loaded = a.data.loaded;
-      result = a.data;
     };
+    if (mobilecheck()) {
+      import(workerPath).then(m => {
+        m.convert({ data: inputObject })
+          .then(callback)
+          .catch(e => {
+            result = e;
+            loaded = true;
+          });
+      });
+    } else {
+      let flatWorker = new Worker(workerPath, { type: "module" });
+      flatWorker.postMessage(inputObject);
+      flatWorker.onmessage = a => {
+        let { data } = a;
+        callback(data);
+      };
+    }
   };
-  globalThis.createCode = createCode;
+
   onMount(() => {
     loaded = true;
     createCode();
