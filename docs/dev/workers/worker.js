@@ -3,7 +3,7 @@ import WasmFs from "../lib/wasmer/wasmfs.esm.js";
 
 let fs = new WasmFs().fs;
 fs.mkdirpSync("/root");
-console.log(globalThis.location)
+
 onmessage = async function (e) {
   let result = {
     fileName: "",
