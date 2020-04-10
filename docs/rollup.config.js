@@ -4,6 +4,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import json from "@rollup/plugin-json";
 import { string } from "rollup-plugin-string";
+import copy from 'rollup-plugin-copy';
 
 import { terser } from "rollup-plugin-terser";
 import fs from "fs";
@@ -21,6 +22,12 @@ export default {
   },
   plugins: [
     json(),
+    copy({
+      targets: [
+        { src: './src/workers/**/*', dest: !production ? "./dev/workers" : "./workers" },
+        { src: './src/lib/**/*', dest: !production ? "./dev/lib" : "./lib" }
+      ]
+    }),
     string({
       include: "**/*.fbs"
     }),
@@ -71,7 +78,7 @@ export default {
 
     // Watch the `dev` directory and refresh the
     // browser on changes when not in production
-    !production && livereload("dev"),
+    !production && livereload(),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify

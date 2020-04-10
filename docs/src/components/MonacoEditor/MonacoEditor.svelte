@@ -1,37 +1,20 @@
 <script>
   import { onLoad } from "../../lib/global.js";
   import { onMount, onDestroy } from "svelte";
-  import { fs } from "../../stores/FileSystem";
-  import { currentDocument } from "../../stores/Route";
+  import { currentDocument, editorContents } from "../../stores/Route";
+  import tokenProvider from "./TokenProvider.js";
   export let loaded;
   let lang = "flatbuffers";
 
   let editor;
 
+  const setC = () => {
+    if (editor) $editorContents = editor.getValue();
+  };
+
   globalThis.createEditor = () => {
     if (!editor && globalThis.monaco) {
-      monaco.languages.setMonarchTokensProvider(lang, {
-        tokenizer: {
-          root: [
-            [
-              /\b(root_type|table|struct|union|enum|namespace|id|deprecated|required|original_order|force_align|bit_flags|nested_flatbuffer|key|attribute|include|file_identifier|file_extension)\b/,
-              "keyword.control.flatbuffers"
-            ],
-            [
-              /(\.)?\s*\b(bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\b/,
-              "storage.type.flatbuffers"
-            ] /*
-            [
-              /\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\\W)([_a-zA-Z]\\w*)\\s*(?=\\.)/,
-              "entity.name.section.flatbuffers"
-            ],
-            [
-              /\\b(?!(enum|namespace|union|struct|table|include|true|false|bool|byte|ubyte|short|ushort|int|uint|float|long|ulong|double|string)\W)([_a-zA-Z]\w*)/,
-              "entity.name.type.flatbuffers"
-            ]*/
-          ]
-        }
-      });
+      monaco.languages.setMonarchTokensProvider(lang, tokenProvider);
 
       monaco.editor.defineTheme(lang, {
         base: "vs",
@@ -43,17 +26,13 @@
       });
       monaco.languages.register({ id: lang });
       editor = monaco.editor.create(document.getElementById("monacoeditor"), {
-        value: fs.readFileSync(`/test/${$currentDocument}.fbs`, {
-          encoding: "utf8"
-        }),
+        value: $editorContents,
         language: lang,
         theme: lang,
         automaticLayout: true
       });
-      fs.writeFileSync(`/test/${$currentDocument}.fbs`, editor.getValue());
-      editor.onDidChangeModelContent(event => {
-        fs.writeFileSync(`/test/${$currentDocument}.fbs`, editor.getValue());
-      });
+      setC();
+      editor.onDidChangeModelContent(setC);
       window.editor = editor;
     }
   };

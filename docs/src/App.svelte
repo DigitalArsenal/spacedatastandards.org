@@ -5,15 +5,14 @@
   import Code from "./components/Code/Code.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
-  import { routeparams, currentDocument } from "./stores/Route";
-  import { fs, init } from "./stores/FileSystem";
+  import OMM_Text from "./stores/OMM.fbs";
+  import { routeparams, currentDocument, editorContents } from "./stores/Route";
 
   let menuOpen;
 
   let router = new Navaid("/");
   $currentDocument = "502x0b2c1";
-  init($currentDocument);
-
+  $editorContents = OMM_Text;
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
