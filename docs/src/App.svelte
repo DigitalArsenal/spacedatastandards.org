@@ -6,8 +6,12 @@
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams, currentDocument, editorContents } from "./stores/Route";
-
+  import { files } from "./stores/Files.js";
+  files.subscribe(f => {
+    console.log(f);
+  });
   let menuOpen;
+   
   let loaded = false;
   let router = new Navaid("/");
 
