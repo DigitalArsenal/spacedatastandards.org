@@ -3,6 +3,8 @@
   import { onLoad } from "./lib/global.js";
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
   import Code from "./components/Code/Code.svelte";
+  import Test from "./components/Test/Test.svelte";
+
   import FileMenu from "./components/FileMenu/FileMenu.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
@@ -29,7 +31,13 @@
 
   router.on("/#/code", params => {
     setRoute(params, Code);
-  }); /*
+  });
+  
+  router.on("/#/test", params => {
+    setRoute(params, Test);
+  });
+
+  /*
   router.on("/#Docs", params => {
     setRoute(params, Docs);
   });
