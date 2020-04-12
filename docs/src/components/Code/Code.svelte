@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { currentDocument, editorContents } from "../../stores/Route";
+  import { currentDocument, editorContents } from "../../stores/Files";
   import { languages } from "./languages.js";
   import { mobilecheck } from "./DetectMobile.js";
 

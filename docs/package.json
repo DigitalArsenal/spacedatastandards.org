@@ -25,6 +25,7 @@
     "flatbuffers": "git+ssh://git@github.com/gaborv/FlatbuffersSchema.git",
     "navaid": "git+ssh://git@github.com/DigitalArsenal/navaid.git",
     "octokat": "^0.10.0",
+    "path-browserify": "^1.0.1",
     "sirv-cli": "^0.4.4"
   }
 }

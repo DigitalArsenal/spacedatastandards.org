@@ -3,22 +3,16 @@
   import { onLoad } from "./lib/global.js";
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
   import Code from "./components/Code/Code.svelte";
+  import FileMenu from "./components/FileMenu/FileMenu.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
-  import { routeparams, currentDocument, editorContents } from "./stores/Route";
-  import { files } from "./stores/Files.js";
-  files.subscribe(f => {
-    console.log(f);
-  });
+  import { routeparams } from "./stores/Route";
+  import { manifest, currentDocument, editorContents } from "./stores/Files.js";
+
   let menuOpen;
-   
+
   let loaded = false;
   let router = new Navaid("/");
-
-  fetch("./schemas/OMM.fbs").then(async r => {
-    $currentDocument = "502x0b2c1";
-    $editorContents = await r.text();
-  });
 
   const setRoute = (_params, _component) => {
     $routeparams = _params;
@@ -64,6 +58,9 @@
     box-sizing: border-box;
     font-family: var(--font-family);
   }
+  :global(div) {
+    box-sizing: border-box;
+  }
 
   main {
     margin: 0 auto;
@@ -100,7 +97,12 @@
     width: 100%;
     height: 100%;
   }
-
+  #links {
+    box-sizing: border-box;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: auto auto auto;
+  }
   #links a {
     color: #eee;
     text-decoration: none;
@@ -123,9 +125,7 @@
   <header>
     <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
     <div id="links">
-      <a target="_blank" href="https://public.ccsds.org/Pubs/502x0b2c1.pdf">
-        {$currentDocument}
-      </a>
+      <FileMenu />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
     </div>
