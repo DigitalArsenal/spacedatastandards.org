@@ -13,7 +13,7 @@
 
   let loaded = false;
   let router = new Navaid("/");
- 
+
   $: link = `https://public.ccsds.org/Pubs/${
     $currentDocument.split("/").filter(Boolean)[0]
   }.pdf`;
@@ -105,7 +105,7 @@
     box-sizing: border-box;
     display: grid;
     grid-gap: 5px;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
   }
   #links a,
   header a {
@@ -128,11 +128,12 @@
 
 <container>
   <header>
-    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG {loaded}</span>
-    {#if $currentDocument}
-      <a target="_blank" href={link}>DOC</a>
-    {/if}
+    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
+
     <div id="links">
+      {#if $currentDocument}
+        <a target="_blank" href={link}>DOC</a>
+      {/if}
       <FileMenu bind:loaded />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>

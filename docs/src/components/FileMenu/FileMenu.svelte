@@ -67,7 +67,7 @@
   on:click={e => {
     visible = !visible;
   }}>
-  {'Select'}
+  SELECT
 </a>
 <div
   id="dropdown"
