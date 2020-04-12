@@ -8,7 +8,10 @@
   let editor;
 
   editorContents.subscribe(e => {
-    if (editor) editor.setValue(e);
+    if (editor) {
+      editor.setValue(e);
+    }
+    loaded = true;
   });
 
   const setC = () => {

@@ -19,6 +19,7 @@
     loaded = false;
     fetch(path.join($manifest.root, mFile))
       .then(async data => {
+        $editorContents = "";
         $editorContents = await data.text();
         $currentDocument = mFile;
       })

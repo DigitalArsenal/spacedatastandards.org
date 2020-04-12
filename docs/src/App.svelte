@@ -128,7 +128,7 @@
 
 <container>
   <header>
-    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
+    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG {loaded}</span>
     {#if $currentDocument}
       <a target="_blank" href={link}>DOC</a>
     {/if}
