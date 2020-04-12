@@ -9,7 +9,11 @@
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams } from "./stores/Route";
-  import { manifest, currentDocument, editorContents } from "./stores/Files.js";
+  import {
+    manifest,
+    currentDocument,
+    IDLEditorContents
+  } from "./stores/Files.js";
 
   let menuOpen;
 
@@ -32,7 +36,7 @@
   router.on("/#/code", params => {
     setRoute(params, Code);
   });
-  
+
   router.on("/#/test", params => {
     setRoute(params, Test);
   });
@@ -156,7 +160,10 @@
       <Loader />
     {/if}
     <div id="mainContainer">
-      <svelte:component this={activeComponent} bind:loaded />
+      <svelte:component
+        this={activeComponent}
+        bind:loaded
+        editorContents={IDLEditorContents} />
     </div>
 
   </main>

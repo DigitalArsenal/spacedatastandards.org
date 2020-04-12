@@ -1,9 +1,10 @@
 <script>
   import { onLoad } from "../../lib/global.js";
   import { onMount, onDestroy } from "svelte";
-  import { currentDocument, editorContents } from "../../stores/Files";
+  import { currentDocument } from "../../stores/Files";
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
+  export let editorContents;
   let lang = "flatbuffers";
   let editor;
 

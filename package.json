@@ -10,7 +10,7 @@
     "create:manifest": "node ./scripts/cmanifest.mjs",
     "test": "test",
     "dev": "cd docs && npm run dev",
-    "postinstall": "cd docs && npm i",
+    "postinstall": "cd docs && npm i && cd ../ && ./scripts/install.sh",
     "deploy": "cd docs && npm run deploy"
   },
   "repository": {

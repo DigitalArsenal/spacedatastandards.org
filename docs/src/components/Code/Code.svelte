@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { currentDocument, editorContents } from "../../stores/Files";
+  import { currentDocument, IDLEditorContents } from "../../stores/Files";
   import { languages } from "./languages.js";
   import { mobilecheck } from "./DetectMobile.js";
 
@@ -35,7 +35,7 @@
     let inputObject = {
       currentLanguage,
       currentDocument: $currentDocument,
-      editorContents: $editorContents,
+      IDLEditorContents: $IDLEditorContents,
       loaded
     };
     if (mobilecheck()) {

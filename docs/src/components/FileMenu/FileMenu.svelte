@@ -3,7 +3,7 @@
   import {
     currentDocument,
     manifest,
-    editorContents
+    IDLEditorContents
   } from "../../stores/Files";
   import path from "path-browserify";
   export let loaded;
@@ -19,8 +19,8 @@
     loaded = false;
     fetch(path.join($manifest.root, mFile))
       .then(async data => {
-        $editorContents = "";
-        $editorContents = await data.text();
+        $IDLEditorContents = "";
+        $IDLEditorContents = await data.text();
         $currentDocument = mFile;
       })
       .catch(e => {});
@@ -79,6 +79,7 @@
       on:click={e => {
         loadFile(mfile);
         visible = false;
+        window.location.hash = '/';
       }}>
       {mfile}
     </div>

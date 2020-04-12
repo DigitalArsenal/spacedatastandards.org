@@ -12,8 +12,8 @@ const convert = async function (e) {
     loaded: e.data.loaded,
   };
 
-  let { currentLanguage, currentDocument, editorContents } = e.data;
-  fs.writeFileSync(`/root/currentDocument.fbs`, editorContents);
+  let { currentLanguage, currentDocument, IDLEditorContents } = e.data;
+  fs.writeFileSync(`/root/currentDocument.fbs`, IDLEditorContents);
   try {
     let fb = new flatc({
       fs: fs,
