@@ -143,7 +143,9 @@
     <span>
       {#if $currentDocument}
         <a target="_blank" href={link}>{linkName}</a>
-      {:else}SPACEDATASTANDARDS.ORG{/if}
+      {:else}
+        <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
+      {/if}
 
     </span>
 
