@@ -27,9 +27,10 @@
   ].join(";");
 
   let createCode = () => {
-    if (!$editorContents) {
+    if (!$currentDocument) {
       return;
     }
+    loaded = false;
     result.data = "";
     let inputObject = {
       currentLanguage,
@@ -54,11 +55,12 @@
       };
     }
   };
-  editorContents.subscribe(() => {
+  currentDocument.subscribe(() => {
+    loaded = false;
     createCode();
   });
   onMount(() => {
-    loaded = false;
+    loaded = $currentDocument ? false : true;
   });
 </script>
 

@@ -6,7 +6,7 @@
     editorContents
   } from "../../stores/Files";
   import path from "path-browserify";
-
+  export let loaded;
   let visible = false;
   let dE = document.documentElement;
 
@@ -16,9 +16,13 @@
     }
   };
   let loadFile = mFile => {
-    fetch(path.join($manifest.root, mFile)).then(async data => {
-      $editorContents = await data.text();
-    });
+    loaded = false;
+    fetch(path.join($manifest.root, mFile))
+      .then(async data => {
+        $editorContents = await data.text();
+        $currentDocument = mFile;
+      })
+      .catch(e => {});
   };
   onMount(() => {
     dE.addEventListener("click", cC);
@@ -62,7 +66,7 @@
   on:click={e => {
     visible = !visible;
   }}>
-  {$currentDocument || 'Select Schema'}
+  {'Select'}
 </a>
 <div
   id="dropdown"

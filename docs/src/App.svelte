@@ -13,7 +13,12 @@
 
   let loaded = false;
   let router = new Navaid("/");
-
+  $: {
+    console.log($currentDocument);
+  }
+  $: link = `https://public.ccsds.org/Pubs/${
+    $currentDocument.split("/").filter(Boolean)[0]
+  }.pdf`;
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
@@ -90,6 +95,7 @@
   @media (min-width: 640px) {
     main {
       max-width: none;
+      z-index: 1;
     }
   }
   #mainContainer {
@@ -103,7 +109,8 @@
     grid-gap: 5px;
     grid-template-columns: auto auto auto;
   }
-  #links a {
+  #links a,
+  header a {
     color: #eee;
     text-decoration: none;
     cursor: pointer;
@@ -123,9 +130,12 @@
 
 <container>
   <header>
-    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
+    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG{loaded}</span>
+    {#if $currentDocument}
+      <a target="_blank" href={link}>DOC</a>
+    {/if}
     <div id="links">
-      <FileMenu />
+      <FileMenu bind:loaded />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
     </div>
