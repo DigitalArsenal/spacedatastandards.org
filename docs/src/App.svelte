@@ -13,9 +13,7 @@
 
   let loaded = false;
   let router = new Navaid("/");
-  $: {
-    console.log($currentDocument);
-  }
+ 
   $: link = `https://public.ccsds.org/Pubs/${
     $currentDocument.split("/").filter(Boolean)[0]
   }.pdf`;
