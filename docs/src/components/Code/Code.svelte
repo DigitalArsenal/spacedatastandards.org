@@ -71,7 +71,7 @@
   }
   a:link,
   a:visited {
-    background-color: rgb(233, 0, 0);
+    background-color: #c00;
     color: white;
     padding: 5px;
     text-align: center;
