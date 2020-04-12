@@ -21,7 +21,7 @@
     $routeparams = _params;
     activeComponent = _component;
   };
-
+  $: linkName = $currentDocument.split("/").filter(Boolean)[0];
   let activeComponent = Editor;
   router.on("/#/", params => {
     setRoute(params, Editor);
@@ -105,7 +105,7 @@
     box-sizing: border-box;
     display: grid;
     grid-gap: 5px;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto;
   }
   #links a,
   header a {
@@ -128,15 +128,19 @@
 
 <container>
   <header>
-    <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
+    <span>
+      {#if $currentDocument}
+        <a target="_blank" href={link}>{linkName}</a>
+      {:else}SPACEDATASTANDARDS.ORG{/if}
+
+    </span>
 
     <div id="links">
-      {#if $currentDocument}
-        <a target="_blank" href={link}>DOC</a>
-      {/if}
+
       <FileMenu bind:loaded />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
+      <a href="#/test">TEST</a>
     </div>
   </header>
   <main>
