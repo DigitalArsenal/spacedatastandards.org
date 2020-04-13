@@ -59,6 +59,9 @@
       Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --header-height: 50px;
   }
+  :global(.editor1) {
+    height: calc(99.99vh - var(--header-height));
+  }
   :global(html, body) {
     position: relative;
     width: 100%;
@@ -88,7 +91,7 @@
     color: white;
     padding: 6px;
     box-sizing: border-box;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -146,11 +149,8 @@
       {:else}
         <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
       {/if}
-
-    </span>
-
+    </span>{loaded}
     <div id="links">
-
       <FileMenu bind:loaded />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
@@ -165,7 +165,10 @@
       <svelte:component
         this={activeComponent}
         bind:loaded
-        editorContents={IDLEditorContents} />
+        editorContents={IDLEditorContents}
+        language="flatbuffers"
+        theme="flatbuffers"
+        _class={'editor1'} />
     </div>
 
   </main>

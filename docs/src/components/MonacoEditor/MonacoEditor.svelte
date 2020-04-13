@@ -5,7 +5,10 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   export let editorContents;
-  let lang = "flatbuffers";
+  export let _class = "";
+  export let _style = "";
+  export let language = "javascript";
+  export let theme;
   let editor;
 
   editorContents.subscribe(e => {
@@ -23,9 +26,9 @@
 
   globalThis.createEditor = () => {
     if (!editor && globalThis.monaco) {
-      monaco.languages.setMonarchTokensProvider(lang, tokenProvider);
+      monaco.languages.setMonarchTokensProvider("flatbuffers", tokenProvider);
 
-      monaco.editor.defineTheme(lang, {
+      monaco.editor.defineTheme("flatbuffers", {
         base: "vs",
         inherit: false,
         rules: [
@@ -33,11 +36,11 @@
           { token: "storage.type.flatbuffers", foreground: "2f45eb" }
         ]
       });
-      monaco.languages.register({ id: lang });
+      monaco.languages.register({ id: "flatbuffers" });
       editor = monaco.editor.create(document.getElementById("monacoeditor"), {
         value: $editorContents,
-        language: lang,
-        theme: lang,
+        language: language,
+        theme: theme,
         automaticLayout: true
       });
       globalThis.editor = editor;
@@ -46,7 +49,6 @@
     loaded = true;
   };
   onMount(function() {
-    loaded = false;
     createEditor();
   });
 
@@ -54,9 +56,7 @@
 </script>
 
 <style>
-  #monacoeditor {
-    height: calc(99.99vh - var(--header-height));
-  }
+
 </style>
 
 <svelte:head>
@@ -65,4 +65,4 @@
     createEditor();
   </script>
 </svelte:head>
-<div id="monacoeditor" />
+<div id="monacoeditor" style={_style} class={_class} />
