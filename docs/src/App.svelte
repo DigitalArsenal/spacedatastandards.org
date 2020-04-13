@@ -91,7 +91,7 @@
     color: white;
     padding: 6px;
     box-sizing: border-box;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     display: flex;
     align-items: center;
     justify-content: space-between;
