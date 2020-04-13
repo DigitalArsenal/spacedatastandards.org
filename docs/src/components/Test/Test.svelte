@@ -3,18 +3,17 @@
   import Editor from "../MonacoEditor/MonacoEditor.svelte";
   import { TestEditorContents } from "../../stores/Files.js";
   import fb from "../../../lib/flatbuffers.js";
-  export let editorContents;
-  export let language;
-  export let _class;
   export let loaded;
-  export let theme;
+  export let args;
 
+  args = {
+    _class: "editor2",
+    language: "javascript",
+    editorContents: TestEditorContents,
+    theme: "vs-dark"
+  };
   onMount(() => {
     loaded = true;
-    _class = "editor2";
-    language = "javascript";
-    editorContents = TestEditorContents;
-    theme = "vs-dark";
   });
 </script>
 
@@ -35,7 +34,7 @@
 
 <container>
   <div id="top-container">
-    <Editor editorContents={TestEditorContents} {_class} theme="vs-dark" />
+    <Editor {args} />
   </div>
   <div>Test2</div>
 </container>

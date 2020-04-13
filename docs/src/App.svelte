@@ -20,6 +20,13 @@
   let loaded = false;
   let router = new Navaid("/");
 
+  let args = {
+    editorContents: IDLEditorContents,
+    language: "flatbuffers",
+    theme: "flatbuffers",
+    _class: "editor1"
+  };
+
   $: link = `https://public.ccsds.org/Pubs/${
     $currentDocument.split("/").filter(Boolean)[0]
   }.pdf`;
@@ -41,13 +48,6 @@
     setRoute(params, Test);
   });
 
-  /*
-  router.on("/#Docs", params => {
-    setRoute(params, Docs);
-  });
-  router.on("/#Docs/Page/:link?/:sublink?/:subsection?", params => {
-    setRoute(params, DocPage);
-  });*/
   router.listen();
 </script>
 
@@ -140,7 +140,7 @@
 <svelte:head>
   <link rel="modulepreload" href="workers/worker.js" />
 </svelte:head>
-
+<svelte:options accessors={true} />
 <container>
   <header>
     <span style="display: flex;">
@@ -149,7 +149,7 @@
       {:else}
         <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
       {/if}
-    </span>{loaded}
+    </span>
     <div id="links">
       <FileMenu bind:loaded />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
@@ -161,14 +161,9 @@
     {#if !loaded}
       <Loader />
     {/if}
+
     <div id="mainContainer">
-      <svelte:component
-        this={activeComponent}
-        bind:loaded
-        editorContents={IDLEditorContents}
-        language="flatbuffers"
-        theme="flatbuffers"
-        _class={'editor1'} />
+      <svelte:component this={activeComponent} bind:loaded {args} />
     </div>
 
   </main>

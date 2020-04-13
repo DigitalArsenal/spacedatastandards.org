@@ -5,11 +5,8 @@
   import { mobilecheck } from "./DetectMobile.js";
 
   export let loaded;
-  export let editorContents;
-  export let language;
-  export let _class;
-  export let theme;
-
+  export let args;
+  
   const workerPath = "/workers/worker.js";
   let currentLanguage = languages[0];
 

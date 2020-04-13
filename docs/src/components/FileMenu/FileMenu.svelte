@@ -16,7 +16,6 @@
     }
   };
   let loadFile = mFile => {
-    loaded = false;
     fetch(path.join($manifest.root, mFile))
       .then(async data => {
         $IDLEditorContents = "";

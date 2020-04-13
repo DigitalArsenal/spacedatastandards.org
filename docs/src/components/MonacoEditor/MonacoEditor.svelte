@@ -4,11 +4,9 @@
   import { currentDocument } from "../../stores/Files";
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
-  export let editorContents;
-  export let _class = "";
-  export let _style = "";
-  export let language = "javascript";
-  export let theme;
+  export let args;
+  let { editorContents, _class, _style, language = "javascript", theme } = args;
+  console.log(args);
   let editor;
 
   editorContents.subscribe(e => {
