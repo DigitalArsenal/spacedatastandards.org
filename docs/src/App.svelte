@@ -140,7 +140,7 @@
 
 <container>
   <header>
-    <span>
+    <span style="display: flex;">
       {#if $currentDocument}
         <a target="_blank" href={link}>{linkName}</a>
       {:else}
