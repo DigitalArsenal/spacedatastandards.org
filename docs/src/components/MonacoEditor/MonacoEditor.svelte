@@ -5,12 +5,12 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   export let args;
-  let { editorContents, _class, _style, language = "javascript", theme } = args;
-  console.log(args);
   let editor;
 
+  let { editorContents, _class, _style, language = "javascript", theme } = args;
+
   editorContents.subscribe(e => {
-    if (editor) {
+    if (editor && editor.getValue() !== e) {
       editor.setValue(e);
     }
     loaded = true;
