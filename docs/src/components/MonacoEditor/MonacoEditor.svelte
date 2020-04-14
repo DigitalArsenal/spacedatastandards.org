@@ -20,6 +20,7 @@
     if (editor && $editorContents !== editor.getValue()) {
       $editorContents = editor.getValue();
     }
+    loaded = true;
   };
 
   globalThis.createEditor = () => {

@@ -2,11 +2,11 @@
   import { onMount } from "svelte";
   import { currentDocument, IDLEditorContents } from "../../stores/Files";
   import { languages } from "./languages.js";
-  import { mobilecheck } from "./DetectMobile.js";
+  import workerLoader from "../../lib/workerLoader.js";
 
   export let loaded;
   export let args;
-  
+
   const workerPath = "/workers/worker.js";
   let currentLanguage = languages[0];
 
@@ -31,7 +31,6 @@
     if (!$currentDocument) {
       return;
     }
-    loaded = false;
     result.data = "";
     let inputObject = {
       currentLanguage,
@@ -39,25 +38,9 @@
       IDLEditorContents: $IDLEditorContents,
       loaded
     };
-    if (mobilecheck()) {
-      import(workerPath).then(m => {
-        m.convert({ data: inputObject })
-          .then(callback)
-          .catch(e => {
-            result = e;
-          });
-      });
-    } else {
-      let flatWorker = new Worker(workerPath, { type: "module" });
-      flatWorker.postMessage(inputObject);
-      flatWorker.onmessage = a => {
-        let { data } = a;
-        callback(data);
-      };
-    }
+    workerLoader(workerPath, inputObject, callback);
   };
   currentDocument.subscribe(() => {
-    loaded = false;
     createCode();
   });
   onMount(() => {

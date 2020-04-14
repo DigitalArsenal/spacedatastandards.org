@@ -76,6 +76,7 @@
   {#each $manifest.files as mfile}
     <div
       on:click={e => {
+        loaded = false;
         loadFile(mfile);
         visible = false;
         window.location.hash = '/';

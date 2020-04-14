@@ -16,8 +16,7 @@
   } from "./stores/Files.js";
 
   let menuOpen;
-
-  let loaded = false;
+  let loaded;
   let router = new Navaid("/");
 
   let args = {
@@ -138,7 +137,16 @@
 </style>
 
 <svelte:head>
-  <link rel="modulepreload" href="workers/worker.js" />
+  <link
+    rel="prefetch"
+    href="/workers/worker.js"
+    as="worker"
+    type="text/javascript" />
+  <link
+    rel="prefetch"
+    href="https://digitalarsenal.io/lib/flatbuffers.js"
+    as="worker"
+    type="text/javascript" />
 </svelte:head>
 <svelte:options accessors={true} />
 <container>

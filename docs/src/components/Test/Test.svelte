@@ -3,8 +3,12 @@
   import Editor from "../MonacoEditor/MonacoEditor.svelte";
   import { TestEditorContents } from "../../stores/Files.js";
   import fb from "../../../lib/flatbuffers.js";
+  import workerLoader from "../../lib/workerLoader.js";
+
   export let loaded;
   export let args;
+
+  const workerPath = "/workers/worker.js";
 
   args = {
     _class: "editor2",
