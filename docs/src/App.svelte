@@ -17,6 +17,7 @@
 
   let menuOpen = false;
   let loaded;
+  let editor;
   let router = new Navaid("/");
 
   let args = {
@@ -51,15 +52,9 @@
   });
 
   router.listen();
-  /*
-     {#if $currentDocument}
-        <a target="_blank" href={link}>{linkName}</a>
-      {:else}
-        <span style="font-size:2vw">SPACEDATASTANDARDS.ORG</span>
-      {/if}
-  */
-  const toggleMenu = () => {
-    menuOpen = !menuOpen;
+
+  const toggleMenu = value => {
+    menuOpen = value !== undefined ? value : !menuOpen;
     let posVal = menuOpen ? "30vw" : "0vw";
     document.documentElement.style.setProperty("--container-position", posVal);
   };
@@ -220,6 +215,13 @@
   <header>
     <div id="menuButton" on:click={() => toggleMenu()}>
       <span>☰</span>
+    </div>
+    <div style="font-size:2vw;display:flex">
+      {#if $currentDocument}
+        <a target="_blank" href={link}>{linkName}</a>
+      {:else}
+        <span>SPACEDATASTANDARDS.ORG</span>
+      {/if}
     </div>
     <div id="links">
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>

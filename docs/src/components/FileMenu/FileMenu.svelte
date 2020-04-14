@@ -7,18 +7,14 @@
   } from "../../stores/Files";
   import path from "path-browserify";
   export let loaded;
-  let visible = false;
+  export let toggleMenu;
   let dE = document.documentElement;
   $: {
     if ($manifest) {
       loaded = true;
     }
   }
-  let cC = function(e) {
-    if (Array.from(e.target.classList).indexOf("listClick") === -1) {
-      visible = false;
-    }
-  };
+
   let loadFile = mFile => {
     if (!$IDLEditorContents || confirm("Replace Current IDL Contents?")) {
       fetch(path.join($manifest.root, mFile))
@@ -30,12 +26,6 @@
         .catch(e => {});
     }
   };
-  onMount(() => {
-    dE.addEventListener("click", cC);
-  });
-  onDestroy(() => {
-    dE.removeEventListener("click", cC);
-  });
 </script>
 
 <style>
@@ -67,8 +57,8 @@
       on:click={e => {
         loaded = false;
         loadFile(mfile);
-        visible = false;
         window.location.hash = '/';
+        toggleMenu(false);
       }}>
       {mfile}
     </div>

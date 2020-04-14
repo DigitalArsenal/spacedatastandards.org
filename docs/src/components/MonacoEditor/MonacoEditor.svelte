@@ -5,7 +5,7 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   export let args;
-  let editor;
+  export let editor;
 
   let { editorContents, _class, _style, language = "javascript", theme } = args;
 
