@@ -27,13 +27,14 @@
   };
 
   $: link = `https://public.ccsds.org/Pubs/${
-    $currentDocument.split("/").filter(Boolean)[0]
+    ($currentDocument || "").split("/").filter(Boolean)[0]
   }.pdf`;
+
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
   };
-  $: linkName = $currentDocument.split("/").filter(Boolean)[0];
+  $: linkName = ($currentDocument || "").split("/").filter(Boolean)[0];
   let activeComponent = Editor;
   router.on("/#/", params => {
     setRoute(params, Editor);

@@ -16,10 +16,7 @@
     }
   };
   let loadFile = mFile => {
-    if (
-      !$IDLEditorContents.length ||
-      confirm("Replace Current IDL Contents?")
-    ) {
+    if (!$IDLEditorContents || confirm("Replace Current IDL Contents?")) {
       fetch(path.join($manifest.root, mFile))
         .then(async data => {
           $currentDocument = mFile;

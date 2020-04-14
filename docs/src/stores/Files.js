@@ -1,8 +1,12 @@
 import { writable } from "svelte/store";
 
-let _currentDocument = localStorage.getItem("currentDocument");
-let _IDLEditorContents = localStorage.getItem(_currentDocument);
-if (_IDLEditorContents) {
+let setItem = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+let getItem = (key) => JSON.parse(localStorage.getItem(key));
+
+let _currentDocument = getItem("currentDocument");
+let _IDLEditorContents = getItem(_currentDocument);
+_currentDocument;
+if (_currentDocument && _IDLEditorContents) {
   alert(`${_currentDocument} loaded from disk.`);
 }
 export let manifest = writable({ files: [] });
@@ -12,16 +16,12 @@ export let TestEditorContents = writable("");
 
 currentDocument.subscribe((d) => {
   _currentDocument = d;
-  localStorage.setItem("currentDocument", d);
+  setItem("currentDocument", d);
 });
 
 IDLEditorContents.subscribe((d) => {
-  localStorage.setItem(_currentDocument, d);
+  setItem(_currentDocument, d);
 });
-
-if (localStorage.getItem("currentDocument")) {
-  console.log(localStorage.getItem("currentDocument"));
-}
 
 fetch(`./schemas/manifest.json`)
   .then(async (r) => {
