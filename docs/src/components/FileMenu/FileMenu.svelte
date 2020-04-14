@@ -16,13 +16,18 @@
     }
   };
   let loadFile = mFile => {
-    fetch(path.join($manifest.root, mFile))
-      .then(async data => {
-        $IDLEditorContents = "";
-        $IDLEditorContents = await data.text();
-        $currentDocument = mFile;
-      })
-      .catch(e => {});
+    if (
+      !$IDLEditorContents.length ||
+      confirm("Replace Current IDL Contents?")
+    ) {
+      fetch(path.join($manifest.root, mFile))
+        .then(async data => {
+          $currentDocument = mFile;
+          $IDLEditorContents = "";
+          $IDLEditorContents = await data.text();
+        })
+        .catch(e => {});
+    }
   };
   onMount(() => {
     dE.addEventListener("click", cC);
