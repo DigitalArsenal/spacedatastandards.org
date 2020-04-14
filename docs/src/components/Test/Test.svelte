@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Editor from "../MonacoEditor/MonacoEditor.svelte";
-  import { TestEditorContents } from "../../stores/Files.js";
+  import { IDLEditorContents, TestEditorContents } from "../../stores/Files.js";
   import fb from "../../../lib/flatbuffers.js";
   import workerLoader from "../../lib/workerLoader.js";
 
@@ -9,6 +9,26 @@
   export let args;
 
   const workerPath = "/workers/worker.js";
+
+  function getTestScript() {
+    if ($IDLEditorContents) {
+      let inputObject = {
+        currentLanguage: [
+          "--js",
+          "Generate JavaScript code",
+          "js",
+          "js",
+          "text/javascript"
+        ],
+        currentDocument: "JSTEST",
+        IDLEditorContents: $IDLEditorContents,
+        loaded
+      };
+      workerLoader(workerPath, inputObject, function(d) {
+        globalThis.eval(d.data);
+      });
+    }
+  }
 
   args = {
     _class: "editor2",
@@ -25,7 +45,7 @@
   container {
     height: 100%;
     display: grid;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 10% 50% 40%;
   }
   :global(.editor2) {
     height: 100%;
@@ -37,6 +57,7 @@
 </style>
 
 <container>
+  <div on:click={getTestScript()}>Run</div>
   <div id="top-container">
     <Editor {args} />
   </div>
