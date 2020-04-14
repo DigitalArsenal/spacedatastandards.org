@@ -9,7 +9,11 @@
   export let loaded;
   let visible = false;
   let dE = document.documentElement;
-
+  $: {
+    if ($manifest) {
+      loaded = true;
+    }
+  }
   let cC = function(e) {
     if (Array.from(e.target.classList).indexOf("listClick") === -1) {
       visible = false;
@@ -35,63 +39,29 @@
 </script>
 
 <style>
-  a {
-    color: #eee;
-    text-decoration: none;
-    cursor: pointer;
-    border: 1px #eee solid;
-    padding: 5px;
-    cursor: pointer;
-  }
-  a:hover {
-    background: #eee;
-    color: #333;
-  }
-  #dropdown {
+  #docs {
     z-index: 100;
-    position: fixed;
-    top: calc(var(--header-height) - 2px);
+    width: 100%;
     right: 1px;
     height: 100vh;
-    background: #ddd;
+    background: #fff;
     overflow-y: auto;
     border: 1px var(--celestrak-blue) solid;
   }
-  #dropdown div {
+  #docs div {
     border: #ddd 1px solid;
     padding: 5px;
     background: var(--celestrak-blue);
     cursor: pointer;
+    color: #eee;
+    width: 50%;
   }
-  a:link,
-  a:visited {
-    background-color: #c00;
-    color: white;
-    padding: 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-  }
-  a:hover,
-  a:active {
-    background-color: rgb(233, 0, 0);
+  #docs div:hover {
+    background: #2164bd;
   }
 </style>
 
-<a
-  class="listClick"
-  target=""
-  href="javascript:"
-  on:click={e => {
-    visible = !visible;
-  }}>
-  OPEN
-</a>
-<div
-  id="dropdown"
-  class="listClick"
-  on:mouseleave={e => (visible = false)}
-  style="display:{visible ? 'initial' : 'none'}">
+<div id="docs">
   {#each $manifest.files as mfile}
     <div
       on:click={e => {

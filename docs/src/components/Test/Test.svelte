@@ -45,7 +45,7 @@
   container {
     height: 100%;
     display: grid;
-    grid-template-rows: 10% 50% 40%;
+    grid-template-rows: 35px 50% auto;
   }
   :global(.editor2) {
     height: 100%;
@@ -54,12 +54,25 @@
     border: 1px solid silver;
     box-sizing: border-box;
   }
+  #run {
+    background: blue;
+    color: white;
+    width: 50px;
+    height: 100%;
+    border: 1px #333 solid;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
 
 <container>
-  <div on:click={getTestScript()}>Run</div>
+  <div style="padding:5px;" on:click={() => getTestScript()}>
+    <div id="run">RUN</div>
+  </div>
   <div id="top-container">
     <Editor {args} />
   </div>
-  <div>Test2</div>
+  <div></div>
 </container>

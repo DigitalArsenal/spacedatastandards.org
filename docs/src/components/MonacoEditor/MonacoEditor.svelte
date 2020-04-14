@@ -44,6 +44,7 @@
       });
       globalThis.editor = editor;
       editor.onDidChangeModelContent(setC);
+      window.editor = editor;
     }
     loaded = true;
   };
