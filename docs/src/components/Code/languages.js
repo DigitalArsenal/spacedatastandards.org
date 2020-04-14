@@ -7,7 +7,7 @@ export let languages = [
   ["--python", "Generate Python code", "py", "python", "text/x-script.python"],
   ["--js", "Generate JavaScript code", "js", "js", "text/javascript"],
   ["--ts", "Generate TypeScript code", "ts", "js", "text/javascript"],
-  ["--php", " Generate PHP code", "php"]
+  ["--php", " Generate PHP code", "php", "php"],
   /*,
   ["--grpc", " Generate RPC stub code for GRPC", ''],
   ["--dart", " Generate Dart code"],
