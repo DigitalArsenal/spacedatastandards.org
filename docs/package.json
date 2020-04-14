@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "codemirror": "^5.52.2",
+    "downloadjs": "^1.4.7",
     "flatbuffers": "git+ssh://git@github.com/gaborv/FlatbuffersSchema.git",
     "navaid": "git+ssh://git@github.com/DigitalArsenal/navaid.git",
     "octokat": "^0.10.0",

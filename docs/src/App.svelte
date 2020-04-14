@@ -4,7 +4,7 @@
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
   import Code from "./components/Code/Code.svelte";
   import Test from "./components/Test/Test.svelte";
-
+  import download from "downloadjs";
   import FileMenu from "./components/FileMenu/FileMenu.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
@@ -211,7 +211,10 @@
   <div>
     <a href="#/files">OPEN</a>
   </div>
-  <div>SAVE FILE</div>
+  <div
+    on:click={() => download($IDLEditorContents, $currentDocument, 'text/plain')}>
+    SAVE FILE
+  </div>
 </menu>
 <container>
   <header>
