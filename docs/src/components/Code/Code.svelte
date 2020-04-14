@@ -24,7 +24,7 @@
     "data:application/octet-stream",
     result.fileName,
     "charset=utf-8",
-    `base64,${btoa(result)}`
+    `base64,${btoa(result.data)}`
   ].join(";");
 
   let createCode = () => {
