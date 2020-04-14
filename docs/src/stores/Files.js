@@ -7,7 +7,7 @@ let _currentDocument = getItem("currentDocument");
 let _IDLEditorContents = getItem(_currentDocument);
 _currentDocument;
 if (_currentDocument && _IDLEditorContents) {
-  alert(`${_currentDocument} loaded from disk.`);
+  setTimeout(() => alert(`${_currentDocument} loaded from disk.`), 1500);
 }
 export let manifest = writable({ files: [] });
 export let currentDocument = writable(_currentDocument);

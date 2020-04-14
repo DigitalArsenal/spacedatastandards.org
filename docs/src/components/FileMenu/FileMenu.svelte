@@ -50,14 +50,31 @@
   #dropdown {
     z-index: 100;
     position: fixed;
-    top: calc(var(--header-height) - 5px);
-    right: 5px;
+    top: calc(var(--header-height) - 2px);
+    right: 1px;
+    height: 100vh;
+    background: #ddd;
+    overflow-y: auto;
+    border: 1px var(--celestrak-blue) solid;
   }
   #dropdown div {
-    border: #eee 1px solid;
+    border: #ddd 1px solid;
     padding: 5px;
     background: var(--celestrak-blue);
     cursor: pointer;
+  }
+  a:link,
+  a:visited {
+    background-color: #c00;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+  a:hover,
+  a:active {
+    background-color: rgb(233, 0, 0);
   }
 </style>
 
@@ -68,7 +85,7 @@
   on:click={e => {
     visible = !visible;
   }}>
-  SELECT
+  OPEN
 </a>
 <div
   id="dropdown"

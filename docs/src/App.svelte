@@ -89,7 +89,7 @@
   header {
     background: var(--celestrak-blue);
     color: white;
-    padding: 6px;
+    padding: 2px;
     box-sizing: border-box;
     margin-bottom: 1px;
     display: flex;
@@ -119,7 +119,7 @@
   #links {
     box-sizing: border-box;
     display: grid;
-    grid-gap: 5px;
+    grid-gap: 4px;
     grid-template-columns: auto auto auto auto auto;
   }
   #links a,
@@ -152,7 +152,7 @@
 <svelte:options accessors={true} />
 <container>
   <header>
-    <span style="display: flex;">
+    <span style="display: flex;margin-left:2px">
       {#if $currentDocument}
         <a target="_blank" href={link}>{linkName}</a>
       {:else}
@@ -163,7 +163,7 @@
       <FileMenu bind:loaded />
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
       <a href="#/code" class:active={activeComponent === Code}>CODE</a>
-      <a href="#/test">TEST</a>
+      <a href="#/test" class:active={activeComponent === Test}>TEST</a>
     </div>
   </header>
   <main>
