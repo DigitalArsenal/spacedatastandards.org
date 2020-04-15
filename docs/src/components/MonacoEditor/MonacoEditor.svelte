@@ -5,7 +5,7 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded = undefined;
   export let args;
-  export let toggleMenu = undefined;
+
   let editor;
 
   let {
@@ -17,29 +17,30 @@
     theme
   } = args;
 
-  const setEditorLanguage = language => {
-    if (editor && globalThis.monaco && editor.getModel()) {
-      monaco.editor.setModelLanguage(editor.getModel(), language);
-      editor.updateOptions({ readOnly: true });
-    }
-  };
-
-  documentName.subscribe(n => {
+  const setEditorLanguage = n => {
+    let language;
     if (globalThis.monaco) {
       let extension = n.split(".").pop();
       let languages = monaco.languages.getLanguages();
       for (let x = 0; x < languages.length; x++) {
-        let language = languages[x];
+        let _language = languages[x];
         if (
-          language.extensions &&
-          language.extensions.indexOf("." + extension) > -1
+          _language.extensions &&
+          _language.extensions.indexOf("." + extension) > -1
         ) {
-          setEditorLanguage(language.id);
+          language = _language.id;
           break;
         }
       }
+
+      if (editor && globalThis.monaco && editor.getModel()) {
+        monaco.editor.setModelLanguage(editor.getModel(), language);
+        editor.updateOptions({ readOnly: true });
+      }
     }
-  });
+  };
+
+  documentName.subscribe(setEditorLanguage);
 
   editorContents.subscribe(e => {
     if (editor && editor.getValue() !== e) {
@@ -82,6 +83,7 @@
   };
   onMount(function() {
     createEditor();
+    setEditorLanguage($documentName);
   });
 
   onDestroy(() => (editor ? editor.dispose() : null));
