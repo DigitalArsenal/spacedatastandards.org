@@ -20,7 +20,7 @@
     "rollup-plugin-terser": "^5.1.2",
     "sirv": "^0.4.2",
     "sirv-cli": "^0.4.4",
-    "svelte": "^3.0.0"
+    "svelte": "*"
   },
   "dependencies": {
     "codemirror": "^5.52.2",

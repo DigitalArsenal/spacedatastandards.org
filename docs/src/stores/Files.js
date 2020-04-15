@@ -5,6 +5,7 @@ let getItem = (key) => JSON.parse(localStorage.getItem(key));
 
 let _IDLDocument = getItem("IDLDocument");
 let _IDLEditorContents = getItem(_IDLDocument);
+let _TestEditorContents = getItem("TestEditorContents");
 _IDLDocument;
 if (_IDLDocument && _IDLEditorContents) {
   //setTimeout(() => alert(`${_IDLDocument} loaded from disk.`), 1500);
@@ -15,7 +16,8 @@ export let IDLEditorContents = writable(_IDLEditorContents);
 export let CodeEditorDocument = writable("");
 export let CodeEditorContents = writable("");
 export let CodeEditorLanguage = writable([]);
-export let TestEditorContents = writable("");
+export let TestEditorDocument = writable("");
+export let TestEditorContents = writable(_TestEditorContents);
 
 IDLDocument.subscribe((d) => {
   _IDLDocument = d;
@@ -24,6 +26,10 @@ IDLDocument.subscribe((d) => {
 
 IDLEditorContents.subscribe((d) => {
   setItem(_IDLDocument, d);
+});
+
+TestEditorContents.subscribe((d) => {
+  setItem("TestEditorContents", d);
 });
 
 fetch(`./schemas/manifest.json`)

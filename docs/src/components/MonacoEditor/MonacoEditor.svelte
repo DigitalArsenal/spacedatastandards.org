@@ -3,7 +3,7 @@
   import { onMount, onDestroy } from "svelte";
   import { IDLDocument } from "../../stores/Files";
   import tokenProvider from "./TokenProvider.js";
-  export let loaded;
+  export let loaded = undefined;
   export let args;
   export let toggleMenu = undefined;
   let editor;
