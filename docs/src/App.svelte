@@ -34,7 +34,7 @@
   };
   $: linkName = ($IDLDocument || "").split("/").filter(Boolean)[0];
   let activeComponent = Editor;
-  router.on("/#/", params => {
+  let defaultPath = params => {
     args = {
       documentName: IDLDocument,
       editorContents: IDLEditorContents,
@@ -43,7 +43,9 @@
       _class: "editor1"
     };
     setRoute(params, Editor);
-  });
+  };
+  router.on("/", defaultPath);
+  router.on("/#/", defaultPath);
   router.on("/#/code", params => {
     args = {
       documentName: CodeEditorDocument,
