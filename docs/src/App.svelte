@@ -194,6 +194,9 @@
     left: 0px;
     padding: 0px;
     width: var(--menu-width);
+    height: 100vh;
+    background: #164583;
+
     margin: 0px;
   }
   menu div {
@@ -204,9 +207,11 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    text-transform: uppercase;
     color: #eee;
     background: #164583;
+  }
+  menu div:hover {
+    background: #1a529b;
   }
 </style>
 
@@ -233,8 +238,15 @@
       <a
         target="_blank"
         href="https://github.com/google/flatbuffers/tree/master/{$CodeEditorLanguage[3]}">
-        &darr; Library ({$CodeEditorLanguage[0].replace('--', '')})
+        &darr; LIBRARY ({$CodeEditorLanguage[0]
+          .replace('--', '')
+          .toUpperCase()})
       </a>
+    </div>
+  {/if}
+  {#if $IDLDocument}
+    <div>
+      <a target="_blank" href={link}>{linkName} (PDF)</a>
     </div>
   {/if}
 </menu>
@@ -244,11 +256,7 @@
       <span>☰</span>
     </div>
     <div style="font-size:15px;display:flex">
-      {#if $IDLDocument}
-        <a target="_blank" href={link}>{linkName}</a>
-      {:else}
-        <span>SPACEDATASTANDARDS.ORG</span>
-      {/if}
+      <span>SPACEDATASTANDARDS.ORG</span>
     </div>
     <div id="links">
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
