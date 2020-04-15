@@ -8,7 +8,7 @@
   let editor;
 
   let {
-    documentName,
+    documentName = "",
     editorContents,
     _class,
     _style,
