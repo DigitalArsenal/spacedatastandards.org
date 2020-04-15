@@ -1,10 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import {
-    IDLDocument,
-    manifest,
-    IDLEditorContents
-  } from "../../stores/Files";
+  import { IDLDocument, manifest, IDLEditorContents } from "../../stores/Files";
   import path from "path-browserify";
   export let loaded;
   export let toggleMenu;
@@ -23,7 +19,9 @@
           $IDLEditorContents = "";
           $IDLEditorContents = await data.text();
         })
-        .catch(e => {});
+        .catch(e => {
+          alert(e);
+        });
     }
   };
 </script>
