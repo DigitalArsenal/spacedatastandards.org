@@ -18,7 +18,7 @@
   } = args;
 
   const setEditorLanguage = language => {
-    if (editor && globalThis.monaco) {
+    if (editor && globalThis.monaco && editor.getModel()) {
       monaco.editor.setModelLanguage(editor.getModel(), language);
       editor.updateOptions({ readOnly: true });
     }

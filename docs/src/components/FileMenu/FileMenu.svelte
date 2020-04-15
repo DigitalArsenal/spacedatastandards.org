@@ -20,7 +20,7 @@
           $IDLEditorContents = await data.text();
         })
         .catch(e => {
-          alert(e);
+          alert(`Fetch Failed With Error: ${e}`);
         });
     }
   };
