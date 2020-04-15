@@ -54,7 +54,8 @@
       editorContents: CodeEditorContents,
       language: "",
       theme: "",
-      _class: "editor1"
+      _class: "editor1",
+      readOnly: true
     };
     setRoute(params, Code);
   });

@@ -14,7 +14,8 @@
     _class,
     _style,
     language = "javascript",
-    theme
+    theme,
+    readOnly = false
   } = args;
 
   const setEditorLanguage = n => {
@@ -35,7 +36,7 @@
 
       if (editor && globalThis.monaco && editor.getModel()) {
         monaco.editor.setModelLanguage(editor.getModel(), language);
-        editor.updateOptions({ readOnly: true });
+        editor.updateOptions({ readOnly: readOnly });
       }
     }
   };
