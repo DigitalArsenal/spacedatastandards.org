@@ -14,6 +14,7 @@ export let IDLDocument = writable(_IDLDocument);
 export let IDLEditorContents = writable(_IDLEditorContents);
 export let CodeEditorDocument = writable("");
 export let CodeEditorContents = writable("");
+export let CodeEditorLanguage = writable([]);
 export let TestEditorContents = writable("");
 
 IDLDocument.subscribe((d) => {

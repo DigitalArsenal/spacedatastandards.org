@@ -4,17 +4,20 @@
     IDLDocument,
     IDLEditorContents,
     CodeEditorDocument,
-    CodeEditorContents
+    CodeEditorContents,
+    CodeEditorLanguage
   } from "../../stores/Files";
   import { languages } from "./languages.js";
   import Editor from "../MonacoEditor/MonacoEditor.svelte";
   import workerLoader from "../../lib/workerLoader.js";
 
-  export let loaded;
+  export let loaded = undefined;
+  export let toggleMenu = undefined;
+
   export let args;
 
   const workerPath = "/workers/worker.js";
-  let currentLanguage = languages[0];
+  $CodeEditorLanguage = languages[0];
 
   const callback = data => {
     $CodeEditorDocument = data.fileName;
@@ -28,7 +31,7 @@
     }
     $CodeEditorContents = "";
     let inputObject = {
-      currentLanguage,
+      currentLanguage: $CodeEditorLanguage,
       IDLDocument: $IDLDocument,
       IDLEditorContents: $IDLEditorContents,
       loaded
@@ -44,36 +47,22 @@
 </script>
 
 <style>
-  textarea {
-    width: 100%;
-    height: calc(100vh - var(--header-height) - 25px);
-  }
-  a:link,
-  a:visited {
-    background-color: #c00;
-    color: white;
+  select {
+    border-radius: 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
     padding: 2px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-  }
-
-  a:hover,
-  a:active {
-    background-color: rgb(233, 0, 0);
+    user-select: none;
+    outline: none;
   }
 </style>
 
 <div>
-  <select bind:value={currentLanguage} on:change={() => createCode()}>
+  <select bind:value={$CodeEditorLanguage} on:change={() => createCode()}>
     {#each languages as language}
       <option value={language}>{language[1]}</option>
     {/each}
   </select>
-  <a
-    target="_blank"
-    href="https://github.com/google/flatbuffers/tree/master/{currentLanguage[3]}">
-    &darr; Library
-  </a>
 </div>
 <Editor {args} />

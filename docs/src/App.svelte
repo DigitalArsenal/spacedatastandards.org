@@ -14,7 +14,8 @@
     IDLDocument,
     IDLEditorContents,
     CodeEditorDocument,
-    CodeEditorContents
+    CodeEditorContents,
+    CodeEditorLanguage
   } from "./stores/Files.js";
 
   let menuOpen = false;
@@ -35,6 +36,7 @@
   let activeComponent = Editor;
   router.on("/#/", params => {
     args = {
+      documentName: IDLDocument,
       editorContents: IDLEditorContents,
       language: "flatbuffers",
       theme: "flatbuffers",
@@ -44,6 +46,7 @@
   });
   router.on("/#/code", params => {
     args = {
+      documentName: CodeEditorDocument,
       editorContents: CodeEditorContents,
       language: "",
       theme: "",
@@ -225,13 +228,22 @@
     <a href="#/files">OPEN</a>
   </div>
   <div on:click={() => createDownload()}>SAVE FILE</div>
+  {#if $CodeEditorLanguage[0]}
+    <div>
+      <a
+        target="_blank"
+        href="https://github.com/google/flatbuffers/tree/master/{$CodeEditorLanguage[3]}">
+        &darr; Library ({$CodeEditorLanguage[0].replace('--', '')})
+      </a>
+    </div>
+  {/if}
 </menu>
 <container>
   <header>
     <div id="menuButton" on:click={() => toggleMenu()}>
       <span>☰</span>
     </div>
-    <div style="font-size:2vw;display:flex">
+    <div style="font-size:15px;display:flex">
       {#if $IDLDocument}
         <a target="_blank" href={link}>{linkName}</a>
       {:else}

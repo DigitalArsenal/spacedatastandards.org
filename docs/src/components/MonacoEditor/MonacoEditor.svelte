@@ -5,9 +5,30 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   export let args;
-  export let editor;
+  let editor;
 
-  let { editorContents, _class, _style, language = "javascript", theme } = args;
+  let {
+    documentName,
+    editorContents,
+    _class,
+    _style,
+    language = "javascript",
+    theme
+  } = args;
+
+  documentName.subscribe(n => {
+    if (globalThis.monaco) {
+      let extension = n.split(".").pop();
+      let languages = monaco.languages.getLanguages();
+      for (let x = 0; x < languages.length; x++) {
+        let language = languages[x];
+        if (language.extensions.indexOf("." + extension) > -1) {
+          setEditorLanguage(language.id);
+          break;
+        }
+      }
+    }
+  });
 
   editorContents.subscribe(e => {
     if (editor && editor.getValue() !== e) {
@@ -21,6 +42,13 @@
       $editorContents = editor.getValue();
     }
     loaded = true;
+  };
+
+  const setEditorLanguage = language => {
+    if (editor && globalThis.monaco) {
+      monaco.editor.setModelLanguage(editor.getModel(), language);
+      editor.updateOptions({ readOnly: true });
+    }
   };
 
   globalThis.createEditor = () => {

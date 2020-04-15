@@ -12,14 +12,14 @@ const convert = async function (e) {
     loaded: e.data.loaded,
   };
 
-  let { currentLanguage, currentDocument, IDLEditorContents } = e.data;
-  fs.writeFileSync(`/root/currentDocument.fbs`, IDLEditorContents);
+  let { currentLanguage, IDLDocument, IDLEditorContents } = e.data;
+  fs.writeFileSync(`/root/IDLDocument.fbs`, IDLEditorContents);
   try {
     let fb = new flatc({
       fs: fs,
       rootDir: "/",
     });
-    await fb.runCommand(["./flatc", currentLanguage[0], "-o", "/root", `/root/currentDocument.fbs`]);
+    await fb.runCommand(["./flatc", currentLanguage[0], "-o", "/root", `/root/IDLDocument.fbs`]);
     window.errPipe = fs.createReadStream("/dev/stderr");
     window.outPipe = fs.createReadStream("/dev/stdout");
     window.errPipe.on("data", (data) => {
@@ -38,7 +38,7 @@ const convert = async function (e) {
       encoding: "utf8",
     });
 
-    result.fileName = `${currentDocument.split("/").pop().split(".")[0]}.${currentLanguage[2]}`;
+    result.fileName = `${IDLDocument.split("/").pop().split(".")[0]}.${currentLanguage[2]}`;
   } catch (e) {
     console.log(e);
     result.data = "Code Generation Failed:  Check Syntax And Try Again.";
