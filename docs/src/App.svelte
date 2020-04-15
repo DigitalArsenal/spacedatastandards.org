@@ -66,6 +66,16 @@
     let posVal = menuOpen ? "30vw" : "0vw";
     document.documentElement.style.setProperty("--container-position", posVal);
   };
+
+  function createDownload() {
+    let dL = [];
+    if (activeComponent === Editor) {
+      dL = [$IDLEditorContents, $IDLDocument];
+    } else if (activeComponent === Code) {
+      dL = [$CodeEditorContents, $CodeEditorDocument];
+    }
+    download(dL[0], dL[1], "text/plain");
+  }
 </script>
 
 <style>
@@ -214,10 +224,7 @@
   <div>
     <a href="#/files">OPEN</a>
   </div>
-  <div
-    on:click={() => download($IDLEditorContents, $IDLDocument, 'text/plain')}>
-    SAVE FILE
-  </div>
+  <div on:click={() => createDownload()}>SAVE FILE</div>
 </menu>
 <container>
   <header>
