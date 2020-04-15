@@ -257,7 +257,7 @@
     <div id="menuButton" on:click={() => toggleMenu()}>
       <span>☰</span>
     </div>
-    <div style="font-size:15px;display:flex">
+    <div style="font-size:13px;display:flex">
       <span>SPACEDATASTANDARDS.ORG</span>
     </div>
     <div id="links">
