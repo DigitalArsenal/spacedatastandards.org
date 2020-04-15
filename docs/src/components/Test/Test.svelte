@@ -13,7 +13,7 @@
   export let loaded;
   export let args;
 
-  let _logOutput = "〉\n";
+  let _logOutput = "> \n";
   let startLine = 0;
   let _worker;
 
@@ -33,7 +33,7 @@
     );
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
-      else _logOutput += e.data + "\n";
+      else _logOutput += "> " + e.data + "\n";
     };
     _worker.onerror = function(err) {
       _logOutput += `${err.message}  at line ${err.lineno - startLine}`;
@@ -101,6 +101,7 @@
   textarea {
     font-size: 12px;
     overflow-y: auto;
+    font: 12px/1.2 sans-serif;
   }
 </style>
 

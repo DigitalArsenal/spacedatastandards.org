@@ -1,14 +1,14 @@
 table OMM {
   CCSDS_OMM_VERS:float;
   COMMENT:string;
-  CREATION_DATE:string (required);
-  ORIGINATOR:string (required);
-  OBJECT_NAME:string (required);
-  OBJECT_ID:string (required);
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
   BIP_0044_TYPE:uint;
   OBJECT_DESIGNATOR:string;
-  CENTER_NAME:string (required);
-  REF_FRAME:string (required);
+  CENTER_NAME:string;
+  REF_FRAME:string;
   REF_FRAME_EPOCH:string;
   TIME_SYSTEM:string;
   MEAN_ELEMENT_THEORY:string;
