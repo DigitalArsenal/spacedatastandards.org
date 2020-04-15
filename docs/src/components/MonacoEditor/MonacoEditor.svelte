@@ -5,6 +5,7 @@
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   export let args;
+  export let toggleMenu = undefined;
   let editor;
 
   let {
@@ -16,13 +17,23 @@
     theme
   } = args;
 
+  const setEditorLanguage = language => {
+    if (editor && globalThis.monaco) {
+      monaco.editor.setModelLanguage(editor.getModel(), language);
+      editor.updateOptions({ readOnly: true });
+    }
+  };
+
   documentName.subscribe(n => {
     if (globalThis.monaco) {
       let extension = n.split(".").pop();
       let languages = monaco.languages.getLanguages();
       for (let x = 0; x < languages.length; x++) {
         let language = languages[x];
-        if (language.extensions.indexOf("." + extension) > -1) {
+        if (
+          language.extensions &&
+          language.extensions.indexOf("." + extension) > -1
+        ) {
           setEditorLanguage(language.id);
           break;
         }
@@ -44,13 +55,6 @@
     loaded = true;
   };
 
-  const setEditorLanguage = language => {
-    if (editor && globalThis.monaco) {
-      monaco.editor.setModelLanguage(editor.getModel(), language);
-      editor.updateOptions({ readOnly: true });
-    }
-  };
-
   globalThis.createEditor = () => {
     if (!editor && globalThis.monaco) {
       monaco.languages.setMonarchTokensProvider("flatbuffers", tokenProvider);
@@ -63,7 +67,7 @@
           { token: "storage.type.flatbuffers", foreground: "2f45eb" }
         ]
       });
-      monaco.languages.register({ id: "flatbuffers" });
+      monaco.languages.register({ id: "flatbuffers", extensions: [".fbs"] });
       editor = monaco.editor.create(document.getElementById("monacoeditor"), {
         value: $editorContents,
         language: language,
