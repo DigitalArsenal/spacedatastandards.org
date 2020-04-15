@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import {
-    currentDocument,
+    IDLDocument,
     manifest,
     IDLEditorContents
   } from "../../stores/Files";
@@ -19,7 +19,7 @@
     if (!$IDLEditorContents || confirm("Replace Current IDL Contents?")) {
       fetch(path.join($manifest.root, mFile))
         .then(async data => {
-          $currentDocument = mFile;
+          $IDLDocument = mFile;
           $IDLEditorContents = "";
           $IDLEditorContents = await data.text();
         })

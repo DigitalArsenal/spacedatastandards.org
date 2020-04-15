@@ -1,7 +1,13 @@
 <script>
   import { onMount } from "svelte";
-  import { currentDocument, IDLEditorContents } from "../../stores/Files";
+  import {
+    IDLDocument,
+    IDLEditorContents,
+    CodeEditorDocument,
+    CodeEditorContents
+  } from "../../stores/Files";
   import { languages } from "./languages.js";
+  import Editor from "../MonacoEditor/MonacoEditor.svelte";
   import workerLoader from "../../lib/workerLoader.js";
 
   export let loaded;
@@ -10,41 +16,30 @@
   const workerPath = "/workers/worker.js";
   let currentLanguage = languages[0];
 
-  let result = {
-    fileName: "",
-    data: ""
-  };
-
   const callback = data => {
-    result = data;
+    $CodeEditorDocument = data.fileName;
+    $CodeEditorContents = data.data;
     loaded = data.loaded;
   };
 
-  $: resultHref = [
-    "data:application/octet-stream",
-    result.fileName,
-    "charset=utf-8",
-    `base64,${btoa(result.data)}`
-  ].join(";");
-
   let createCode = () => {
-    if (!$currentDocument) {
+    if (!$IDLDocument) {
       return;
     }
-    result.data = "";
+    $CodeEditorContents = "";
     let inputObject = {
       currentLanguage,
-      currentDocument: $currentDocument,
+      IDLDocument: $IDLDocument,
       IDLEditorContents: $IDLEditorContents,
       loaded
     };
     workerLoader(workerPath, inputObject, callback);
   };
-  currentDocument.subscribe(() => {
+  IDLDocument.subscribe(() => {
     createCode();
   });
   onMount(() => {
-    loaded = $currentDocument ? false : true;
+    loaded = $IDLDocument ? false : true;
   });
 </script>
 
@@ -57,7 +52,7 @@
   a:visited {
     background-color: #c00;
     color: white;
-    padding: 5px;
+    padding: 2px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -75,11 +70,10 @@
       <option value={language}>{language[1]}</option>
     {/each}
   </select>
-  <a href={resultHref} download={result.fileName}>&darr; Code</a>
   <a
     target="_blank"
     href="https://github.com/google/flatbuffers/tree/master/{currentLanguage[3]}">
     &darr; Library
   </a>
 </div>
-<textarea readonly value={result.data} />
+<Editor {args} />

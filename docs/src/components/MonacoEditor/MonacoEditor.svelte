@@ -1,7 +1,7 @@
 <script>
   import { onLoad } from "../../lib/global.js";
   import { onMount, onDestroy } from "svelte";
-  import { currentDocument } from "../../stores/Files";
+  import { IDLDocument } from "../../stores/Files";
   import tokenProvider from "./TokenProvider.js";
   export let loaded;
   export let args;

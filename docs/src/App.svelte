@@ -11,40 +11,48 @@
   import { routeparams } from "./stores/Route";
   import {
     manifest,
-    currentDocument,
-    IDLEditorContents
+    IDLDocument,
+    IDLEditorContents,
+    CodeEditorDocument,
+    CodeEditorContents
   } from "./stores/Files.js";
 
   let menuOpen = false;
   let loaded;
   let editor;
   let router = new Navaid("/");
-
-  let args = {
-    editorContents: IDLEditorContents,
-    language: "flatbuffers",
-    theme: "flatbuffers",
-    _class: "editor1"
-  };
+  let args;
 
   $: link = `https://public.ccsds.org/Pubs/${
-    ($currentDocument || "").split("/").filter(Boolean)[0]
+    ($IDLDocument || "").split("/").filter(Boolean)[0]
   }.pdf`;
 
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
   };
-  $: linkName = ($currentDocument || "").split("/").filter(Boolean)[0];
+  $: linkName = ($IDLDocument || "").split("/").filter(Boolean)[0];
   let activeComponent = Editor;
   router.on("/#/", params => {
+    args = {
+      editorContents: IDLEditorContents,
+      language: "flatbuffers",
+      theme: "flatbuffers",
+      _class: "editor1"
+    };
     setRoute(params, Editor);
+  });
+  router.on("/#/code", params => {
+    args = {
+      editorContents: CodeEditorContents,
+      language: "",
+      theme: "",
+      _class: "editor1"
+    };
+    setRoute(params, Code);
   });
   router.on("/#/files", params => {
     setRoute(params, FileMenu);
-  });
-  router.on("/#/code", params => {
-    setRoute(params, Code);
   });
 
   router.on("/#/test", params => {
@@ -207,7 +215,7 @@
     <a href="#/files">OPEN</a>
   </div>
   <div
-    on:click={() => download($IDLEditorContents, $currentDocument, 'text/plain')}>
+    on:click={() => download($IDLEditorContents, $IDLDocument, 'text/plain')}>
     SAVE FILE
   </div>
 </menu>
@@ -217,7 +225,7 @@
       <span>☰</span>
     </div>
     <div style="font-size:2vw;display:flex">
-      {#if $currentDocument}
+      {#if $IDLDocument}
         <a target="_blank" href={link}>{linkName}</a>
       {:else}
         <span>SPACEDATASTANDARDS.ORG</span>

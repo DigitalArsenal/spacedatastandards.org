@@ -20,7 +20,7 @@
           "js",
           "text/javascript"
         ],
-        currentDocument: "JSTEST",
+        IDLDocument: "JSTEST",
         IDLEditorContents: $IDLEditorContents,
         loaded
       };
