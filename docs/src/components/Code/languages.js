@@ -6,6 +6,7 @@ export let languages = [
   ["--go", "Generate Go code", "go", "go"],
   ["--python", "Generate Python code", "py", "python", "text/x-script.python"],
   ["--js", "Generate JavaScript code", "js", "js", "text/javascript"],
+  ["--js", "Generate JSON Schema", "json", "json"],
   ["--ts", "Generate TypeScript code", "ts", "js", "text/javascript"],
   ["--php", " Generate PHP code", "php", "php"],
   /*,

@@ -9,6 +9,7 @@ const convert = async function (e) {
   let result = {
     fileName: "",
     data: "",
+    schema: "",
     loaded: e.data.loaded,
   };
 
@@ -19,7 +20,7 @@ const convert = async function (e) {
       fs: fs,
       rootDir: "/",
     });
-    await fb.runCommand(["./flatc", currentLanguage[0], "-o", "/root", `/root/IDLDocument.fbs`]);
+    await fb.runCommand(["./flatc", currentLanguage[0], "--jsonschema", "-o", "/root", `/root/IDLDocument.fbs`]);
     window.errPipe = fs.createReadStream("/dev/stderr");
     window.outPipe = fs.createReadStream("/dev/stdout");
     window.errPipe.on("data", (data) => {
@@ -32,12 +33,19 @@ const convert = async function (e) {
       if (f.slice(f.lastIndexOf(".") + 1) === currentLanguage[2]) {
         result.fileName = f;
       }
+      if (f.indexOf(".schema.json") > -1 && f.slice(f.lastIndexOf(".") + 1) === "json") {
+        result.schema = f;
+      }
     });
 
     result.data = fs.readFileSync(`/root/${result.fileName}`, {
       encoding: "utf8",
     });
-
+    if (result.schema) {
+      result.schema = fs.readFileSync(`/root/${result.schema}`, {
+        encoding: "utf8",
+      });
+    }
     result.fileName = `${IDLDocument.split("/").pop().split(".")[0]}.${currentLanguage[2]}`;
   } catch (e) {
     console.log(e);
