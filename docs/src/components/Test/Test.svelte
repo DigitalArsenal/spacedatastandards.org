@@ -87,15 +87,16 @@
     box-sizing: border-box;
   }
   #run {
-    background: blue;
+    background: #bd1c00;
     color: white;
-    width: 50px;
+    width: 75px;
     height: 100%;
     border: 1px #333 solid;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 2px;
   }
   textarea {
     font-size: 12px;
@@ -105,7 +106,7 @@
 
 <container>
   <div style="padding:5px;" on:click={() => getTestScript()}>
-    <div id="run">RUN</div>
+    <div id="run">RUN CODE</div>
   </div>
   <div id="top-container">
     <Editor {args} />

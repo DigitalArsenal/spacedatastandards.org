@@ -15,7 +15,9 @@
     IDLEditorContents,
     CodeEditorDocument,
     CodeEditorContents,
-    CodeEditorLanguage
+    CodeEditorLanguage,
+    TestEditorDocument,
+    TestEditorContents
   } from "./stores/Files.js";
 
   let menuOpen = false;
@@ -78,6 +80,8 @@
       dL = [$IDLEditorContents, $IDLDocument];
     } else if (activeComponent === Code) {
       dL = [$CodeEditorContents, $CodeEditorDocument];
+    } else if (activeComponent === Test) {
+      dL = [$TestEditorContents, $TestEditorDocument];
     }
     download(dL[0], dL[1], "text/plain");
   }

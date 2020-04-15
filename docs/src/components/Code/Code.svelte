@@ -17,7 +17,9 @@
   export let args;
 
   const workerPath = "/workers/worker.js";
-  $CodeEditorLanguage = languages[0];
+  $CodeEditorLanguage = $CodeEditorLanguage.length
+    ? $CodeEditorLanguage
+    : languages[0];
 
   const callback = data => {
     $CodeEditorDocument = data.fileName;
@@ -61,7 +63,9 @@
 <div>
   <select bind:value={$CodeEditorLanguage} on:change={() => createCode()}>
     {#each languages as language}
-      <option value={language}>{language[1]}</option>
+      <option value={language} selected={language === $CodeEditorLanguage}>
+        {language[1]}
+      </option>
     {/each}
   </select>
 </div>
