@@ -40,7 +40,7 @@ const convert = async function (e) {
     });
 
     let command = ["./flatc", currentLanguage[0], "-o", "/root", `/root/IDLDocument.fbs`];
-    if (IDLEditorContents.match(/root_type /)) command.push("--jsonschema");
+    if (IDLEditorContents.match(/root_type \w{1,};/)) command.push("--jsonschema");
     await fb.runCommand(command);
     window.errPipe = fs.createReadStream("/dev/stderr");
     window.outPipe = fs.createReadStream("/dev/stdout");
