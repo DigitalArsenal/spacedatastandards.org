@@ -29,6 +29,7 @@ const convert = async function (e) {
   let result = {
     files: {},
     loaded: e.data.loaded,
+    error: null
   };
   let _schemaDoc = "/root/IDLDocument.fbs";
   let { currentLanguage, IDLDocument, IDLEditorContents } = e.data;
@@ -61,7 +62,7 @@ const convert = async function (e) {
     });
   } catch (e) {
     console.log(e);
-    result.data = "Code Generation Failed:  Check Syntax And Try Again.";
+    result.error = "Code Generation Failed:  Check Syntax And Try Again.";
   }
   result.loaded = true;
   if (isWorker) {

@@ -63,6 +63,15 @@ enum timeSystem : byte {
   UTC
 }
 
+enum meanElementTheory : byte {
+  /// Simplified General Perturbation Model  4
+  SGP4,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM
+}
+
 table OMM {
   EPOCH:string;
   ECCENTRICITY:float;
@@ -83,8 +92,8 @@ table OMM {
   CENTER_NAME:string;
   REF_FRAME:referenceFrame = TEME;
   REF_FRAME_EPOCH:string;
-  TIME_SYSTEM:string;
-  MEAN_ELEMENT_THEORY:string;
+  TIME_SYSTEM:timeSystem = UTC;
+  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
   SEMI_MAJOR_AXIS:float;
   MEAN_MOTION:float;
   GM:float;

@@ -38,6 +38,11 @@
     : languages[0];
 
   const callback = data => {
+    if (data.error) {
+      alert(data.error);
+      loaded = true;
+      return;
+    }
     $CodeEditorDocuments = data.files;
     $CodeEditorActiveDocument = Object.keys(data.files).sort(schemaSort)[0];
     $CodeEditorContents = $CodeEditorDocuments[$CodeEditorActiveDocument];
