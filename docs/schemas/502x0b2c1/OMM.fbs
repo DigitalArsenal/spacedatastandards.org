@@ -1,12 +1,37 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// Greenwich Rotating Coordinates
+GRC,
+/// International Celestial Reference Frame
+ICRF,
+/// International Terrestrial Reference Frame 2000
+ITRF2000,
+/// International Terrestrial Reference Frame 1993
+ITRF93, 
+/// International Terrestrial Reference Frame 1997
+ITRF97,
+/// Mars Centered Inertial
+MCI,
+/// True of Date, Rotating
+TDR,
+/// True Equator Mean Equinox
+TEME,
+/// True of Date
+TOD, 
+}
+
 table OMM {
   EPOCH:string (required);
-  ECCENTRICITY:float (required);
-  INCLINATION:float (required);
-  RA_OF_ASC_NODE:float (required);
-  ARG_OF_PERICENTER:float (required);
-  MEAN_ANOMALY:float (required);
-  NORAD_CAT_ID:uint (required);
-  BSTAR:float (required);
+  ECCENTRICITY:float;
+  INCLINATION:float;
+  RA_OF_ASC_NODE:float;
+  ARG_OF_PERICENTER:float;
+  MEAN_ANOMALY:float;
+  NORAD_CAT_ID:uint;
+  BSTAR:float;
   CCSDS_OMM_VERS:float;
   COMMENT:string;
   CREATION_DATE:string;
@@ -16,7 +41,7 @@ table OMM {
   BIP_0044_TYPE:uint;
   OBJECT_DESIGNATOR:string;
   CENTER_NAME:string;
-  REF_FRAME:string;
+  REF_FRAME:referenceFrame = TEME;
   REF_FRAME_EPOCH:string;
   TIME_SYSTEM:string;
   MEAN_ELEMENT_THEORY:string;
