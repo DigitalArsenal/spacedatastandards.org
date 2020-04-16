@@ -1,7 +1,7 @@
 table MPE {
   NORAD_CAT_ID:uint;
   EPOCH:ulong;
-  SEMI_MAJOR_AXIS:float;
+  MEAN_MOTION:float;
   INCLINATION:float;
   RA_OF_ASC_NODE:float;
   ARG_OF_PERICENTER:float;
