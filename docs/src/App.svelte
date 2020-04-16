@@ -71,7 +71,7 @@
 
   const toggleMenu = value => {
     menuOpen = value !== undefined ? value : !menuOpen;
-    let posVal = menuOpen ? "30vw" : "0vw";
+    let posVal = menuOpen ? "45vw" : "0vw";
     document.documentElement.style.setProperty("--container-position", posVal);
   };
 
@@ -96,7 +96,7 @@
       Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --header-height: 50px;
     --container-position: 0px;
-    --menu-width: 30vw;
+    --menu-width: 45vw;
   }
   :global(.editor1) {
     height: calc(99.99vh - var(--header-height));
