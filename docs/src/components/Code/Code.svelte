@@ -3,7 +3,8 @@
   import {
     IDLDocument,
     IDLEditorContents,
-    CodeEditorDocument,
+    CodeEditorDocuments,
+    CodeEditorActiveDocument,
     CodeEditorContents,
     CodeEditorLanguage
   } from "../../stores/Files";
@@ -16,23 +17,30 @@
 
   export let args;
 
-  let results = { data: "", schema: "", fileName: "" };
-  let mode = 0;
+  const schemaSort = (a, b) => {
+    if (a === b) {
+      return 0;
+    } else if (a.indexOf("schema.json") > -1) {
+      return 1;
+    } else if (b.indexOf("schema.json") > -1) {
+      return -1;
+    } else {
+      return a < b ? 1 : -1;
+    }
+  };
+
+  $: {
+    $CodeEditorContents = $CodeEditorDocuments[$CodeEditorActiveDocument];
+  }
   const workerPath = "/workers/worker.js";
   $CodeEditorLanguage = $CodeEditorLanguage.length
     ? $CodeEditorLanguage
     : languages[0];
 
-  $: {
-    $CodeEditorContents = mode === 0 ? results.data : results.schema;
-    $CodeEditorDocument =
-      mode === 0 ? results.fileName : `${results.fileName}.schema.json`;
-  }
   const callback = data => {
-    results = data;
-    mode = 0;
-    $CodeEditorDocument = data.fileName;
-    $CodeEditorContents = data.data;
+    $CodeEditorDocuments = data.files;
+    $CodeEditorActiveDocument = Object.keys(data.files).sort(schemaSort)[0];
+    $CodeEditorContents = $CodeEditorDocuments[$CodeEditorActiveDocument];
     loaded = data.loaded;
   };
 
@@ -67,24 +75,9 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 200px 75px 75px;
-    grid-gap: 5px;
+    grid-template-columns: 150px 30vw;
+    grid-gap: 15px;
     padding: 5px;
-  }
-  #topMenu div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--celestrak-blue);
-    border-radius: 5px;
-    background: white;
-    border: 1px var(--celestrak-blue) solid;
-    cursor: pointer;
-  }
-  #topMenu div.active {
-    background: var(--celestrak-blue);
-    border-radius: 5px;
-    color: white;
   }
 </style>
 
@@ -96,8 +89,18 @@
       </option>
     {/each}
   </select>
-
-  <div class:active={mode === 0} on:click={() => (mode = 0)}>Code</div>
-  <div class:active={mode === 1} on:click={() => (mode = 1)}>Schema</div>
+  {#if Object.keys($CodeEditorDocuments).length > 0}
+    <div>
+      <select bind:value={$CodeEditorActiveDocument}>
+        {#each Object.keys($CodeEditorDocuments).sort(schemaSort) as document}
+          <option
+            value={document}
+            selected={document === $CodeEditorActiveDocument}>
+            {document}
+          </option>
+        {/each}
+      </select>
+    </div>
+  {/if}
 </div>
 <Editor {args} />

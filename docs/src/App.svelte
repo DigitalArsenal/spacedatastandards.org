@@ -13,7 +13,7 @@
     manifest,
     IDLDocument,
     IDLEditorContents,
-    CodeEditorDocument,
+    CodeEditorActiveDocument,
     CodeEditorContents,
     CodeEditorLanguage,
     TestEditorDocument,
@@ -50,7 +50,7 @@
   router.on("/#/", defaultPath);
   router.on("/#/code", params => {
     args = {
-      documentName: CodeEditorDocument,
+      documentName: CodeEditorActiveDocument,
       editorContents: CodeEditorContents,
       language: "",
       theme: "",
@@ -80,7 +80,7 @@
     if (activeComponent === Editor) {
       dL = [$IDLEditorContents, $IDLDocument];
     } else if (activeComponent === Code) {
-      dL = [$CodeEditorContents, $CodeEditorDocument];
+      dL = [$CodeEditorContents, $CodeEditorActiveDocument];
     } else if (activeComponent === Test) {
       dL = [$TestEditorContents, $TestEditorDocument];
     }

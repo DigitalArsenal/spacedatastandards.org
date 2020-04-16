@@ -24,7 +24,7 @@ TOD,
 }
 
 table OMM {
-  EPOCH:string (required);
+  EPOCH:string;
   ECCENTRICITY:float;
   INCLINATION:float;
   RA_OF_ASC_NODE:float;

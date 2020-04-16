@@ -13,7 +13,8 @@ if (_IDLDocument && _IDLEditorContents) {
 export let manifest = writable({ files: [] });
 export let IDLDocument = writable(_IDLDocument || "");
 export let IDLEditorContents = writable(_IDLEditorContents);
-export let CodeEditorDocument = writable("");
+export let CodeEditorDocuments = writable({});
+export let CodeEditorActiveDocument = writable("");
 export let CodeEditorContents = writable("");
 export let CodeEditorLanguage = writable([]);
 export let TestEditorDocument = writable("Test.js");

@@ -1,20 +1,39 @@
 import { flatc } from "https://digitalarsenal.io/lib/flatbuffers.js";
 import WasmFs from "../lib/wasmer/wasmfs.esm.js";
 
-const isWorker = typeof WorkerGlobalScope !== "undefined";
+const join = (...args) => {
+  return args.join("/").replace(new RegExp("/" + '{1,}', 'g'), "/");
+}
 
 let fs = new WasmFs().fs;
+
+const walk = async (pdir) => {
+  let files = fs.readdirSync(pdir);
+  return Promise.all(
+    files.map(async (fname) => {
+      let cPath = join(pdir, fname);
+      let s = fs.statSync(cPath);
+      return s.isDirectory() ? walk(cPath) : cPath;
+    })
+  );
+};
+
+const isWorker = typeof WorkerGlobalScope !== "undefined";
+
+
 fs.mkdirpSync("/root");
 const convert = async function (e) {
+  let currentDocuments = (await walk("/root/")).flat();
+  currentDocuments.forEach(d => {
+    fs.unlinkSync(d);
+  })
   let result = {
-    fileName: "",
-    data: "",
-    schema: "",
+    files: {},
     loaded: e.data.loaded,
   };
-
+  let _schemaDoc = "/root/IDLDocument.fbs";
   let { currentLanguage, IDLDocument, IDLEditorContents } = e.data;
-  fs.writeFileSync(`/root/IDLDocument.fbs`, IDLEditorContents);
+  fs.writeFileSync(_schemaDoc, IDLEditorContents);
   try {
     let fb = new flatc({
       fs: fs,
@@ -29,24 +48,17 @@ const convert = async function (e) {
     window.outPipe.on("data", (data) => {
       console.log(data.toString("utf8"));
     });
-    fs.readdirSync("/root/").forEach((f) => {
-      if (f.slice(f.lastIndexOf(".") + 1) === currentLanguage[2]) {
-        result.fileName = f;
-      }
-      if (f.indexOf(".schema.json") > -1 && f.slice(f.lastIndexOf(".") + 1) === "json") {
-        result.schema = f;
+
+
+    let manifest = (await walk("/root/")).flat();
+    manifest.forEach((f) => {
+      if (f.indexOf(_schemaDoc) === -1) {
+        result.files[f] = fs.readFileSync(f, {
+          encoding: "utf8",
+        });
       }
     });
 
-    result.data = fs.readFileSync(`/root/${result.fileName}`, {
-      encoding: "utf8",
-    });
-    if (result.schema) {
-      result.schema = fs.readFileSync(`/root/${result.schema}`, {
-        encoding: "utf8",
-      });
-    }
-    result.fileName = `${IDLDocument.split("/").pop().split(".")[0]}.${currentLanguage[2]}`;
   } catch (e) {
     console.log(e);
     result.data = "Code Generation Failed:  Check Syntax And Try Again.";
