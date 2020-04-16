@@ -1,15 +1,12 @@
-table MPE {
-  NORAD_CAT_ID:uint;
-  EPOCH:ulong;
-  MEAN_MOTION:float;
-  INCLINATION:float;
-  RA_OF_ASC_NODE:float;
-  ARG_OF_PERICENTER:float;
-  BSTAR:float;
-  MEAN_ANOMALY:float;
-}
-
 table OMM {
+  EPOCH:string (required);
+  ECCENTRICITY:float (required);
+  INCLINATION:float (required);
+  RA_OF_ASC_NODE:float (required);
+  ARG_OF_PERICENTER:float (required);
+  MEAN_ANOMALY:float (required);
+  NORAD_CAT_ID:uint (required);
+  BSTAR:float (required);
   CCSDS_OMM_VERS:float;
   COMMENT:string;
   CREATION_DATE:string;
@@ -23,14 +20,8 @@ table OMM {
   REF_FRAME_EPOCH:string;
   TIME_SYSTEM:string;
   MEAN_ELEMENT_THEORY:string;
-  EPOCH:ulong;
   SEMI_MAJOR_AXIS:float;
   MEAN_MOTION:float;
-  ECCENTRICITY:float;
-  INCLINATION:float;
-  RA_OF_ASC_NODE:float;
-  ARG_OF_PERICENTER:float;
-  MEAN_ANOMALY:float;
   GM:float;
   MASS:float;
   SOLAR_RAD_AREA:float;
@@ -39,15 +30,10 @@ table OMM {
   DRAG_COEFF:float;
   EPHEMERIS_TYPE:string;
   CLASSIFICATION_TYPE:string;
-  NORAD_CAT_ID:uint;
   ELEMENT_SET_NO:ulong;
   REV_AT_EPOCH:float;
-  BSTAR:float;
   MEAN_MOTION_DOT:float;
   MEAN_MOTION_DDOT:float;
-  POS_COV_MATRIX:Matrix_Lower_Triangular;
-}
-struct Matrix_Lower_Triangular{
   CX_X:float;
   CY_X:float;
   CY_Y:float;
@@ -70,4 +56,5 @@ struct Matrix_Lower_Triangular{
   CZ_DOT_Y_DOT:float;
   CZ_DOT_Z_DOT:float;
 }
+
 root_type OMM;
