@@ -33,7 +33,11 @@
     );
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
-      else _logOutput += "> " + e.data + "\n";
+      else _logOutput += "> " + e.data + "<br/>";
+      setTimeout(() => {
+        let ta = document.getElementById("console");
+        ta.scrollTop = ta.scrollHeight;
+      }, 10);
     };
     _worker.onerror = function(err) {
       _logOutput += `${err.message}  at line ${err.lineno - startLine}`;
@@ -55,7 +59,10 @@
         loaded
       };
       workerLoader(workerPath, inputObject, function(d) {
-        _exec(`${fb}${d.data}`);
+        let file = Object.keys(d.files).filter(
+          f => f.slice(f.lastIndexOf(".")) === ".js"
+        );
+        _exec(`${fb}${d.files[file]}`);
       });
     }
   }
@@ -69,7 +76,11 @@
   };
 
   onMount(() => {
-    loaded = true;
+    loaded = false;
+    fetch("./test/test.js").then(async d => {
+      $TestEditorContents = await d.text();
+      loaded = true;
+    });
   });
 </script>
 
@@ -77,7 +88,7 @@
   container {
     height: 100%;
     display: grid;
-    grid-template-rows: 35px 70% auto;
+    grid-template-rows: 35px auto 100px;
   }
   :global(.editor2) {
     height: 100%;
@@ -98,11 +109,14 @@
     align-items: center;
     border-radius: 2px;
   }
-  textarea {
+  #console {
     font-size: 12px;
     overflow-y: scroll;
+    overflow-x: none;
     user-select: none;
+    word-wrap: break-word;
     font: 12px/1.2 sans-serif;
+    color: #333;
   }
 </style>
 
@@ -113,5 +127,7 @@
   <div id="top-container">
     <Editor {args} />
   </div>
-  <textarea readonly value={_logOutput} />
+  <div id="console">
+    {@html _logOutput}
+  </div>
 </container>
