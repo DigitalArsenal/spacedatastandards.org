@@ -19,6 +19,7 @@
   } = args;
 
   const setEditorLanguage = n => {
+    if (!n) return;
     let language;
     if (globalThis.monaco) {
       let extension = n.split(".").pop();
