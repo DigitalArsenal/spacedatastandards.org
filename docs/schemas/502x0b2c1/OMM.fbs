@@ -23,6 +23,18 @@ TEME,
 TOD, 
 }
 
+enum ephemerisType : byte {
+ /// Simplified General Perturbation Model 
+ SGP,
+ /// Simplified General Perturbation Model  4
+ SGP4,
+ /// Simplified Deep Space Perturbation Model 4 
+ SDP4,
+ /// Simplified General Perturbation Model 8
+ SGP8,
+ /// Simplified Deep Space Perturbation Model 8
+ SDP8
+}
 table OMM {
   EPOCH:string;
   ECCENTRICITY:float;
@@ -53,7 +65,7 @@ table OMM {
   SOLAR_RAD_COEFF:float;
   DRAG_AREA:float;
   DRAG_COEFF:float;
-  EPHEMERIS_TYPE:string;
+  EPHEMERIS_TYPE:ephemerisType = SGP4;
   CLASSIFICATION_TYPE:string;
   ELEMENT_SET_NO:ulong;
   REV_AT_EPOCH:float;
