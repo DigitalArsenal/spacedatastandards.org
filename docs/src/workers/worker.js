@@ -2,8 +2,8 @@ import { flatc } from "https://digitalarsenal.io/lib/flatbuffers.js";
 import WasmFs from "../lib/wasmer/wasmfs.esm.js";
 
 const join = (...args) => {
-  return args.join("/").replace(new RegExp("/" + '{1,}', 'g'), "/");
-}
+  return args.join("/").replace(new RegExp("/" + "{1,}", "g"), "/");
+};
 
 let fs = new WasmFs().fs;
 
@@ -20,13 +20,12 @@ const walk = async (pdir) => {
 
 const isWorker = typeof WorkerGlobalScope !== "undefined";
 
-
 fs.mkdirpSync("/root");
 const convert = async function (e) {
   let currentDocuments = (await walk("/root/")).flat();
-  currentDocuments.forEach(d => {
+  currentDocuments.forEach((d) => {
     fs.unlinkSync(d);
-  })
+  });
   let result = {
     files: {},
     loaded: e.data.loaded,
@@ -39,7 +38,10 @@ const convert = async function (e) {
       fs: fs,
       rootDir: "/",
     });
-    await fb.runCommand(["./flatc", currentLanguage[0], "--jsonschema", "-o", "/root", `/root/IDLDocument.fbs`]);
+
+    let command = ["./flatc", currentLanguage[0], "-o", "/root", `/root/IDLDocument.fbs`];
+    if (IDLEditorContents.match(/root_type /)) command.push("--jsonschema");
+    await fb.runCommand(command);
     window.errPipe = fs.createReadStream("/dev/stderr");
     window.outPipe = fs.createReadStream("/dev/stdout");
     window.errPipe.on("data", (data) => {
@@ -49,7 +51,6 @@ const convert = async function (e) {
       console.log(data.toString("utf8"));
     });
 
-
     let manifest = (await walk("/root/")).flat();
     manifest.forEach((f) => {
       if (f.indexOf(_schemaDoc) === -1) {
@@ -58,7 +59,6 @@ const convert = async function (e) {
         });
       }
     });
-
   } catch (e) {
     console.log(e);
     result.data = "Code Generation Failed:  Check Syntax And Try Again.";
