@@ -233,6 +233,11 @@
     href="https://digitalarsenal.io/lib/flatbuffers.js"
     as="worker"
     type="text/javascript" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+    user-scalable=no" />
+
 </svelte:head>
 <svelte:options accessors={true} />
 <menu>

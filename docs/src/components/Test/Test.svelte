@@ -89,8 +89,8 @@
   #run {
     background: #bd1c00;
     color: white;
-    width: 75px;
     height: 100%;
+    max-width: 100px;
     border: 1px #333 solid;
     cursor: pointer;
     display: flex;
@@ -100,7 +100,8 @@
   }
   textarea {
     font-size: 12px;
-    overflow-y: auto;
+    overflow-y: scroll;
+    user-select: none;
     font: 12px/1.2 sans-serif;
   }
 </style>
