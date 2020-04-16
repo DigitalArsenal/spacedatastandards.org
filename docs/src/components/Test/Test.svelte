@@ -110,6 +110,7 @@
     border-radius: 2px;
   }
   #console {
+    padding-left:5px;
     font-size: 12px;
     overflow-y: scroll;
     overflow-x: none;
