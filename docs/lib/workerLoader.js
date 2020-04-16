@@ -1,6 +1,6 @@
 import { mobilecheck } from "./DetectMobile.js";
-
-const wMax = navigator.hardwareConcurrency - 1;
+const nhC = navigator.hardwareConcurrency;
+const wMax = nhC ? nhC - 1 : 2;
 const workers = new Array(wMax);
 const activeWorkers = [];
 
