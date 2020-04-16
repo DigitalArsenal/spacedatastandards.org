@@ -75,9 +75,21 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 150px 30vw;
+    grid-template-columns: 100px 30vw auto;
     grid-gap: 15px;
     padding: 5px;
+  }
+  #libraryDownload {
+    display: flex;
+    align-self: center;
+    justify-content: flex-end;
+  }
+  #libraryDownload a {
+    text-decoration: none;
+    color: white;
+    background-color: var(--celestrak-blue);
+    padding: 3px;
+    border-radius: 3px;
   }
 </style>
 
@@ -90,16 +102,23 @@
     {/each}
   </select>
   {#if Object.keys($CodeEditorDocuments).length > 0}
-    <div>
-      <select bind:value={$CodeEditorActiveDocument}>
-        {#each Object.keys($CodeEditorDocuments).sort(schemaSort) as document}
-          <option
-            value={document}
-            selected={document === $CodeEditorActiveDocument}>
-            {document}
-          </option>
-        {/each}
-      </select>
+    <select bind:value={$CodeEditorActiveDocument}>
+      {#each Object.keys($CodeEditorDocuments).sort(schemaSort) as document}
+        <option
+          value={document}
+          selected={document === $CodeEditorActiveDocument}>
+          {document}
+        </option>
+      {/each}
+    </select>
+    <div id="libraryDownload">
+      {#if $CodeEditorLanguage[0]}
+        <a
+          target="_blank"
+          href="https://github.com/google/flatbuffers/tree/master/{$CodeEditorLanguage[3]}">
+          FB LIBRARY ({$CodeEditorLanguage[0].replace('--', '').toUpperCase()})
+        </a>
+      {/if}
     </div>
   {/if}
 </div>

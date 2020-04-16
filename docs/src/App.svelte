@@ -71,7 +71,7 @@
 
   const toggleMenu = value => {
     menuOpen = value !== undefined ? value : !menuOpen;
-    let posVal = menuOpen ? "45vw" : "0vw";
+    let posVal = menuOpen ? "30vw" : "0vw";
     document.documentElement.style.setProperty("--container-position", posVal);
   };
 
@@ -96,7 +96,7 @@
       Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --header-height: 50px;
     --container-position: 0px;
-    --menu-width: 45vw;
+    --menu-width: 30vw;
   }
   :global(.editor1) {
     height: calc(99.99vh - var(--header-height));
@@ -220,6 +220,16 @@
   menu div:hover {
     background: #1a529b;
   }
+
+  #mainHeader {
+    font-size: 13px;
+    display: flex;
+  }
+ /* @media only screen and (max-width: 600px) {
+    #mainHeader {
+      display: none;
+    }
+  }*/
 </style>
 
 <svelte:head>
@@ -242,23 +252,34 @@
 <svelte:options accessors={true} />
 <menu>
   <div>
-    <a href="#/files">OPEN</a>
+    <a
+      href="#/"
+      class:active={activeComponent === Editor}
+      on:click={() => toggleMenu()}>
+      IDL
+    </a>
   </div>
-  <div on:click={() => createDownload()}>SAVE FILE</div>
-  {#if $CodeEditorLanguage[0]}
-    <div>
-      <a
-        target="_blank"
-        href="https://github.com/google/flatbuffers/tree/master/{$CodeEditorLanguage[3]}">
-        &darr; LIBRARY ({$CodeEditorLanguage[0]
-          .replace('--', '')
-          .toUpperCase()})
-      </a>
-    </div>
-  {/if}
+  <div>
+    <a
+      href="#/code"
+      class:active={activeComponent === Code}
+      on:click={() => toggleMenu()}>
+      CODE
+    </a>
+  </div>
+  <div>
+    <a
+      href="#/test"
+      class:active={activeComponent === Test}
+      on:click={() => toggleMenu()}>
+      TEST
+    </a>
+  </div>
   {#if $IDLDocument}
     <div>
-      <a target="_blank" href={link}>{linkName} (PDF)</a>
+      <a target="_blank" href={link} on:click={() => toggleMenu()}>
+        {linkName}
+      </a>
     </div>
   {/if}
 </menu>
@@ -267,13 +288,21 @@
     <div id="menuButton" on:click={() => toggleMenu()}>
       <span>☰</span>
     </div>
-    <div style="font-size:13px;display:flex">
-      <span><a target="_blank" href="https://github.com/DigitalArsenal/spacedatastandards.org">SPACEDATASTANDARDS.ORG</a></span>
+    <div id="mainHeader">
+      <span>
+        <a
+          target="_blank"
+          href="https://github.com/DigitalArsenal/spacedatastandards.org">
+          SPACEDATASTANDARDS.ORG
+        </a>
+      </span>
     </div>
     <div id="links">
-      <a href="#/" class:active={activeComponent === Editor}>IDL</a>
-      <a href="#/code" class:active={activeComponent === Code}>CODE</a>
-      <a href="#/test" class:active={activeComponent === Test}>TEST</a>
+
+      <a href="#/files">OPEN</a>
+
+      <a href="javascript:" on:click={() => createDownload()}>SAVE</a>
+
     </div>
   </header>
   <main>
