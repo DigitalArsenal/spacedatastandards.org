@@ -1,15 +1,37 @@
-table MPE {
-  NORAD_CAT_ID:uint;
-  EPOCH:ulong;
-  MEAN_MOTION:float;
-  INCLINATION:float;
-  RA_OF_ASC_NODE:float;
-  ARG_OF_PERICENTER:float;
-  BSTAR:float;
-  MEAN_ANOMALY:float;
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// Greenwich Rotating Coordinates
+GRC,
+/// International Celestial Reference Frame
+ICRF,
+/// International Terrestrial Reference Frame 2000
+ITRF2000,
+/// International Terrestrial Reference Frame 1993
+ITRF93, 
+/// International Terrestrial Reference Frame 1997
+ITRF97,
+/// Mars Centered Inertial
+MCI,
+/// True of Date, Rotating
+TDR,
+/// True Equator Mean Equinox
+TEME,
+/// True of Date
+TOD, 
 }
 
 table OMM {
+  EPOCH:string (required);
+  ECCENTRICITY:float;
+  INCLINATION:float;
+  RA_OF_ASC_NODE:float;
+  ARG_OF_PERICENTER:float;
+  MEAN_ANOMALY:float;
+  NORAD_CAT_ID:uint;
+  BSTAR:float;
   CCSDS_OMM_VERS:float;
   COMMENT:string;
   CREATION_DATE:string;
@@ -19,18 +41,12 @@ table OMM {
   BIP_0044_TYPE:uint;
   OBJECT_DESIGNATOR:string;
   CENTER_NAME:string;
-  REF_FRAME:string;
+  REF_FRAME:referenceFrame = TEME;
   REF_FRAME_EPOCH:string;
   TIME_SYSTEM:string;
   MEAN_ELEMENT_THEORY:string;
-  EPOCH:ulong;
   SEMI_MAJOR_AXIS:float;
   MEAN_MOTION:float;
-  ECCENTRICITY:float;
-  INCLINATION:float;
-  RA_OF_ASC_NODE:float;
-  ARG_OF_PERICENTER:float;
-  MEAN_ANOMALY:float;
   GM:float;
   MASS:float;
   SOLAR_RAD_AREA:float;
@@ -39,15 +55,10 @@ table OMM {
   DRAG_COEFF:float;
   EPHEMERIS_TYPE:string;
   CLASSIFICATION_TYPE:string;
-  NORAD_CAT_ID:uint;
   ELEMENT_SET_NO:ulong;
   REV_AT_EPOCH:float;
-  BSTAR:float;
   MEAN_MOTION_DOT:float;
   MEAN_MOTION_DDOT:float;
-  POS_COV_MATRIX:Matrix_Lower_Triangular;
-}
-struct Matrix_Lower_Triangular{
   CX_X:float;
   CY_X:float;
   CY_Y:float;
@@ -70,4 +81,5 @@ struct Matrix_Lower_Triangular{
   CZ_DOT_Y_DOT:float;
   CZ_DOT_Z_DOT:float;
 }
+
 root_type OMM;

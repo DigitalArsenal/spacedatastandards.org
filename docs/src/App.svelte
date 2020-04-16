@@ -268,7 +268,7 @@
       <span>☰</span>
     </div>
     <div style="font-size:13px;display:flex">
-      <span>SPACEDATASTANDARDS.ORG</span>
+      <span><a target="_blank" href="https://github.com/DigitalArsenal/spacedatastandards.org">SPACEDATASTANDARDS.ORG</a></span>
     </div>
     <div id="links">
       <a href="#/" class:active={activeComponent === Editor}>IDL</a>
