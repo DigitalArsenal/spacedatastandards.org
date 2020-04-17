@@ -60,7 +60,7 @@
       IDLDocument: $IDLDocument,
       IDLEditorContents: $IDLEditorContents,
       loaded,
-      flags: ["--es6-js-export"]
+      flags: ["--es6-js-export", "--gen-onefile"]
     };
     workerLoader(workerPath, inputObject, callback);
   };
