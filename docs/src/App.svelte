@@ -89,7 +89,7 @@
 </script>
 
 <style>
-  :root {
+  :global(:root) {
     --font-size-sm: calc((2rem + 0.5 * ((100vw - 50rem) / 120)));
     --celestrak-blue: #1e5cad;
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -146,7 +146,7 @@
     overflow: hidden;
     position: relative;
     left: var(--container-position);
-    transition: all 0.2s;
+    transition: all 0.1s;
     border-left: 1px var(--celestrak-blue) solid;
     background: white;
   }
@@ -185,17 +185,6 @@
     justify-content: center;
     align-items: center;
   }
-  #links a:hover,
-  #links a.active {
-    background: #eee;
-    color: #333;
-  }
-  #menuButton {
-    padding-left: 5px;
-    display: flex;
-    cursor: pointer;
-    font-size: 30px;
-  }
   menu {
     position: fixed;
     left: 0px;
@@ -206,6 +195,7 @@
 
     margin: 0px;
   }
+
   menu div {
     height: var(--header-height);
     border-bottom: 1px #aaa solid;
@@ -221,15 +211,22 @@
     background: #1a529b;
   }
 
+  #links a:hover,
+  #links a.active {
+    background: #eee;
+    color: #333;
+  }
+  #menuButton {
+    padding-left: 5px;
+    display: flex;
+    cursor: pointer;
+    font-size: 30px;
+  }
+
   #mainHeader {
     font-size: 13px;
     display: flex;
   }
- /* @media only screen and (max-width: 600px) {
-    #mainHeader {
-      display: none;
-    }
-  }*/
 </style>
 
 <svelte:head>

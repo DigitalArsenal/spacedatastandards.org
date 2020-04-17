@@ -72,42 +72,62 @@ enum meanElementTheory : byte {
   USM
 }
 
+enum manCovRefFrame : byte {
+  // Another name for ‘Radial, Transverse, Normal’
+  RSW,
+  // Radial, Transverse, Normal
+  RTN,
+  // A local orbital coordinate frame (x velocity vec., w orbital angular momentum vec., N completes right handed system.)
+  TNW
+}
+
 table OMM {
-  EPOCH:string;
-  ECCENTRICITY:float;
-  INCLINATION:float;
-  RA_OF_ASC_NODE:float;
-  ARG_OF_PERICENTER:float;
-  MEAN_ANOMALY:float;
-  NORAD_CAT_ID:uint;
-  BSTAR:float;
+  // OMM Header
   CCSDS_OMM_VERS:float;
-  COMMENT:string;
   CREATION_DATE:string;
   ORIGINATOR:string;
+
+  // OMM Metadata
   OBJECT_NAME:string;
   OBJECT_ID:string;
-  BIP_0044_TYPE:uint;
-  OBJECT_DESIGNATOR:string;
   CENTER_NAME:string;
   REF_FRAME:referenceFrame = TEME;
   REF_FRAME_EPOCH:string;
   TIME_SYSTEM:timeSystem = UTC;
   MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
+
+  // Mean Keplerian Elements in the Specified Reference Frame
+  COMMENT:string;
+  EPOCH:string;
   SEMI_MAJOR_AXIS:float;
   MEAN_MOTION:float;
+  ECCENTRICITY:float;
+  INCLINATION:float;
+  RA_OF_ASC_NODE:float;
+  ARG_OF_PERICENTER:float;
+  MEAN_ANOMALY:float;
   GM:float;
+  
+  // Spacecraft Parameters
   MASS:float;
   SOLAR_RAD_AREA:float;
   SOLAR_RAD_COEFF:float;
   DRAG_AREA:float;
   DRAG_COEFF:float;
+
+  // TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
   EPHEMERIS_TYPE:ephemerisType = SGP4;
   CLASSIFICATION_TYPE:string;
+  NORAD_CAT_ID:uint;
   ELEMENT_SET_NO:ulong;
   REV_AT_EPOCH:float;
+  BSTAR:float;
   MEAN_MOTION_DOT:float;
   MEAN_MOTION_DDOT:float;
+  
+  // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
+  // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
+  COV_REF_FRAME:manCovRefFrame = RSW;
   CX_X:float;
   CY_X:float;
   CY_Y:float;
@@ -129,6 +149,14 @@ table OMM {
   CZ_DOT_X_DOT:float;
   CZ_DOT_Y_DOT:float;
   CZ_DOT_Z_DOT:float;
+
+  // User Defined Parameters (all parameters in this section must be described in an ICD). 
+  USER_DEFINED_BIP_0044_TYPE:uint;
+  USER_DEFINED_OBJECT_DESIGNATOR:string;
+}
+
+table OMMCOLLECTION {
+  RECORDS:[OMM];
 }
 
 root_type OMM;

@@ -82,7 +82,7 @@ enum manCovRefFrame : byte {
 }
 
 table OMM {
-  //OMM Header
+  // OMM Header
   CCSDS_OMM_VERS:float;
   CREATION_DATE:string;
   ORIGINATOR:string;
@@ -150,7 +150,7 @@ table OMM {
   CZ_DOT_Y_DOT:float;
   CZ_DOT_Z_DOT:float;
 
-  //User Defined Parameters (all parameters in this section must be described in an ICD). 
+  // User Defined Parameters (all parameters in this section must be described in an ICD). 
   USER_DEFINED_BIP_0044_TYPE:uint;
   USER_DEFINED_OBJECT_DESIGNATOR:string;
 }

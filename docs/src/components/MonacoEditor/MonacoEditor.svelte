@@ -67,7 +67,10 @@
         inherit: false,
         rules: [
           { token: "keyword.control.flatbuffers", foreground: "9100ff" },
-          { token: "storage.type.flatbuffers", foreground: "2f45eb" }
+          { token: "storage.type.flatbuffers", foreground: "2f45eb" },
+          { token: "keyword.name.flatbuffers", foreground: "00d44a" },
+          { token: "keyword.comments.flatbuffers", foreground: "00aa00" },
+          { token: "keyword.local.comment.flatbuffers", foreground: "3300cc" }
         ]
       });
       monaco.languages.register({ id: "flatbuffers", extensions: [".fbs"] });
