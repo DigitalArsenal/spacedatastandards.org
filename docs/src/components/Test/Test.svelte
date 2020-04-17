@@ -77,10 +77,15 @@
 
   onMount(() => {
     loaded = false;
-    fetch("./test/test.js").then(async d => {
-      $TestEditorContents = await d.text();
-      loaded = true;
-    });
+    fetch("./test/test.js")
+      .then(async d => {
+        $TestEditorContents = await d.text();
+        loaded = true;
+      })
+      .catch(e => {
+        alert(`Loading file error: ${e}`);
+        loaded = true;
+      });
   });
 </script>
 
@@ -110,7 +115,7 @@
     border-radius: 2px;
   }
   #console {
-    padding-left:5px;
+    padding-left: 5px;
     font-size: 12px;
     overflow-y: scroll;
     overflow-x: none;
