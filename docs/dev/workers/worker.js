@@ -29,10 +29,10 @@ const convert = async function (e) {
   let result = {
     files: {},
     loaded: e.data.loaded,
-    error: null
+    error: null,
   };
   let _schemaDoc = "/root/IDLDocument.fbs";
-  let { currentLanguage, IDLDocument, IDLEditorContents } = e.data;
+  let { currentLanguage, IDLDocument, IDLEditorContents, flags } = e.data;
   fs.writeFileSync(_schemaDoc, IDLEditorContents);
   try {
     let fb = new flatc({
@@ -40,7 +40,8 @@ const convert = async function (e) {
       rootDir: "/",
     });
 
-    let command = ["./flatc", currentLanguage[0], "-o", "/root", "/root/IDLDocument.fbs", "--gen-mutable", "--es6-js-export"];
+    let command = ["./flatc", currentLanguage[0], "-o", "/root", "/root/IDLDocument.fbs", "--gen-mutable"];
+    if (flags) command = command.concat(flags);
     if (IDLEditorContents.match(/root_type \w{1,};/)) command.push("--jsonschema");
     await fb.runCommand(command);
     window.errPipe = fs.createReadStream("/dev/stderr");

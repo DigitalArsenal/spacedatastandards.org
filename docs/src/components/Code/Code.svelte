@@ -16,6 +16,7 @@
   export let toggleMenu = undefined;
 
   export let args;
+  args._class = "editorCode";
 
   const schemaSort = (a, b) => {
     if (a === b) {
@@ -58,7 +59,8 @@
       currentLanguage: $CodeEditorLanguage,
       IDLDocument: $IDLDocument,
       IDLEditorContents: $IDLEditorContents,
-      loaded
+      loaded,
+      flags: ["--es6-js-export"]
     };
     workerLoader(workerPath, inputObject, callback);
   };
@@ -83,6 +85,7 @@
     grid-template-columns: 100px 30vw auto;
     grid-gap: 15px;
     padding: 5px;
+    height: 40px;
   }
   #libraryDownload {
     display: flex;
@@ -95,6 +98,9 @@
     background-color: var(--celestrak-blue);
     padding: 3px;
     border-radius: 3px;
+  }
+  :global(.editorCode) {
+    height: calc(99.99vh - var(--header-height) - 40px);
   }
 </style>
 
