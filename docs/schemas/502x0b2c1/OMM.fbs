@@ -155,4 +155,8 @@ table OMM {
   USER_DEFINED_OBJECT_DESIGNATOR:string;
 }
 
+table OMMCOLLECTION {
+  RECORDS:[OMM];
+}
+
 root_type OMM;
