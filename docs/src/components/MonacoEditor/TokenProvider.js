@@ -14,7 +14,7 @@ export default {
         "keyword.name.flatbuffers"
       ],
       [
-        /^\s*\/\/[^\/]{1,}/,
+        /^\s*\/\/[^\/].{1,}/,
         "keyword.comments.flatbuffers"
       ],
       [
