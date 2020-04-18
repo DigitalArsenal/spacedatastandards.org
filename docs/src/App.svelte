@@ -26,15 +26,15 @@
   let router = new Navaid("/");
   let args;
 
-  $: link = `https://public.ccsds.org/Pubs/${
-    ($IDLDocument || "").split("/").filter(Boolean)[0]
-  }.pdf`;
+  $: link = `https://public.ccsds.org/Pubs/${($IDLDocument || "").match(
+    /\w{1,}/
+  )}.pdf`;
 
   const setRoute = (_params, _component) => {
     $routeparams = _params;
     activeComponent = _component;
   };
-  $: linkName = ($IDLDocument || "").split("/").filter(Boolean)[0];
+  $: linkName = ($IDLDocument || "").match(/\w{1,}/);
   let activeComponent = Editor;
   let defaultPath = params => {
     setRoute(params, Main);
@@ -87,11 +87,18 @@
     }
     download(dL[0], dL[1], "text/plain");
   }
+  onMount(() => {
+    if (!$IDLDocument) {
+      window.location.hash = "";
+    }
+  });
 </script>
 
 <style>
   :global(:root) {
     --font-size-sm: calc((2rem + 0.5 * ((100vw - 50rem) / 120)));
+    --font-size-btn: calc((1.5rem + 0.5 * ((100vw - 50rem) / 120)));
+    --font-size-header: calc((1rem + 0.5 * ((100vw - 80rem) / 120)));
     --celestrak-blue: #1e5cad;
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
       Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -180,6 +187,7 @@
     display: grid;
     grid-gap: 4px;
     grid-template-columns: auto auto auto auto auto;
+    font-size: var(--font-size-header);
   }
   #links a,
   header a,
@@ -188,7 +196,7 @@
     font-weight: 200;
     text-decoration: none;
     cursor: pointer;
-    border: 1px #ccc solid;
+    border: 0.5px #ccc solid;
     padding: 5px;
   }
 
@@ -245,8 +253,8 @@
     color: #333;
   }
 
-  #mainHeader {
-    font-size: 13px;
+  #mainHeader span {
+    font-size: var(--font-size-header);
     display: flex;
   }
 </style>
@@ -322,9 +330,8 @@
         <a target="_blank" href={link} on:click={() => toggleMenu()}>
           {linkName}
         </a>
+        <!--<a href="javascript:" on:click={() => createDownload()}>SAVE</a>-->
       {/if}
-      <a href="javascript:" on:click={() => createDownload()}>SAVE</a>
-
     </div>
   </header>
   <main>

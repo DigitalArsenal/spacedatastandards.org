@@ -47,7 +47,7 @@
   .docButton {
     position: relative;
     color: #eee;
-    font-size: alc(3vw - 12px);
+    font-size: var(--font-size-btn);
     font-weight: 150;
     padding: 5px;
     text-align: center;
@@ -55,8 +55,6 @@
     justify-content: center;
     align-items: center;
     border: 1.5px #6c9ec4 outset;
-    height: 12vh;
-    max-height: 60px;
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
     border-top-left-radius: var(--border-radius);
@@ -90,6 +88,7 @@
     opacity: 1;
   }
   h1 {
+    font-size: var(--font-size-sm);
     text-align: center;
     color: #444;
     font-weight: 100;

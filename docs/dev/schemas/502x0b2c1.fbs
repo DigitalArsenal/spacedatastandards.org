@@ -73,11 +73,11 @@ enum meanElementTheory : byte {
 }
 
 enum manCovRefFrame : byte {
-  /// Another name for ‘Radial, Transverse, Normal’
+  // Another name for ‘Radial, Transverse, Normal’
   RSW,
-  /// Radial, Transverse, Normal
+  // Radial, Transverse, Normal
   RTN,
-  /// A local orbital coordinate frame (x velocity vec., w orbital angular momentum vec., N completes right handed system.)
+  // A local orbital coordinate frame (x velocity vec., w orbital angular momentum vec., N completes right handed system.)
   TNW
 }
 
