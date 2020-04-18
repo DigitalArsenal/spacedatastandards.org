@@ -194,8 +194,9 @@
     box-sizing: border-box;
     display: grid;
     grid-gap: 4px;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: auto;
     font-size: var(--font-size-header);
+    padding-right: 5px;
   }
   #links a,
   header a,
@@ -215,6 +216,8 @@
     cursor: pointer;
     font-size: 30px;
     position: absolute;
+    justify-content: center;
+    align-items: center;
     left: 0px;
   }
 
