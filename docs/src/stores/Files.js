@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import manifestFile from "../../schemas/manifest.json";
 
 let setItem = (key, value) => localStorage.setItem(key, JSON.stringify(value));
 let getItem = (key) => JSON.parse(localStorage.getItem(key));
@@ -10,7 +11,7 @@ _IDLDocument;
 if (_IDLDocument && _IDLEditorContents) {
   //setTimeout(() => alert(`${_IDLDocument} loaded from disk.`), 1500);
 }
-export let manifest = writable({ files: [] });
+export let manifest = writable(manifestFile);
 export let IDLDocument = writable(_IDLDocument || "");
 export let IDLEditorContents = writable(_IDLEditorContents);
 export let CodeEditorDocuments = writable({});
@@ -32,13 +33,3 @@ IDLEditorContents.subscribe((d) => {
 TestEditorContents.subscribe((d) => {
   setItem("TestEditorContents", d);
 });
-
-fetch(`./schemas/manifest.json`)
-  .then(async (r) => {
-    let m = await r.json();
-    manifest.set(m);
-  })
-  .catch((e) => {
-    alert(e);
-    manifest.set({ files: [] });
-  });

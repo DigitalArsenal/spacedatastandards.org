@@ -66,6 +66,17 @@
       });
     }
   }
+  const reloadTestScript = () => {
+    fetch("./test/test.js")
+      .then(async d => {
+        $TestEditorContents = await d.text();
+        loaded = true;
+      })
+      .catch(e => {
+        alert(`Loading file error: ${e}`);
+        loaded = true;
+      });
+  };
 
   args = {
     documentName: TestEditorDocument,
@@ -77,15 +88,11 @@
 
   onMount(() => {
     loaded = false;
-    fetch("./test/test.js")
-      .then(async d => {
-        $TestEditorContents = await d.text();
-        loaded = true;
-      })
-      .catch(e => {
-        alert(`Loading file error: ${e}`);
-        loaded = true;
-      });
+    if (!$TestEditorContents) {
+      reloadTestScript();
+    } else {
+      loaded = true;
+    }
   });
 </script>
 

@@ -10,12 +10,6 @@
   export let args;
   export let toggleMenu;
 
-  $: {
-    if ($manifest) {
-      loaded = true;
-    }
-  }
-
   let loadFile = mFile => {
     if (!$IDLEditorContents || confirm("Replace Current IDL Contents?")) {
       fetch(path.join($manifest.root, mFile))
@@ -32,7 +26,7 @@
     }
   };
   onMount(() => {
-    loaded = false;
+    loaded = true;
   });
 </script>
 

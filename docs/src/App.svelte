@@ -54,8 +54,8 @@
   });
   router.on("/#/code", params => {
     args = {
-      documentName: CodeEditorActiveDocument,
-      editorContents: CodeEditorContents,
+      documentName: TestEditorDocument,
+      editorContents: TestEditorContents,
       language: "",
       theme: "",
       _class: "editor1",
@@ -65,6 +65,14 @@
   });
 
   router.on("/#/test", params => {
+    args = {
+      documentName: CodeEditorActiveDocument,
+      editorContents: CodeEditorContents,
+      language: "",
+      theme: "",
+      _class: "editor1",
+      readOnly: true
+    };
     setRoute(params, Test);
   });
 
