@@ -23,20 +23,23 @@
           $IDLDocument = mFile;
           $IDLEditorContents = "";
           $IDLEditorContents = await data.text();
+          loaded = true;
         })
         .catch(e => {
           alert(`Fetch Failed With Error: ${e}`);
+          loaded = true;
         });
     }
   };
   onMount(() => {
-    loaded = true;
+    loaded = false;
   });
 </script>
 
 <style>
   container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     grid-gap: 20px;
     padding: 20px;
@@ -49,7 +52,9 @@
     color: #eee;
     font-size: var(--font-size-btn);
     font-weight: 150;
+    min-width: 200px;
     padding: 5px;
+    margin: 5px;
     text-align: center;
     display: flex;
     justify-content: center;
