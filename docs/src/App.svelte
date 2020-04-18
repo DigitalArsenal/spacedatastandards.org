@@ -1,11 +1,11 @@
 <script>
   import { onMount } from "svelte";
   import { onLoad } from "./lib/global.js";
+  import Main from "./components/Main/Main.svelte";
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
   import Code from "./components/Code/Code.svelte";
   import Test from "./components/Test/Test.svelte";
   import download from "downloadjs";
-  import FileMenu from "./components/FileMenu/FileMenu.svelte";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams } from "./stores/Route";
@@ -37,6 +37,12 @@
   $: linkName = ($IDLDocument || "").split("/").filter(Boolean)[0];
   let activeComponent = Editor;
   let defaultPath = params => {
+    setRoute(params, Main);
+  };
+
+  router.on("/", defaultPath);
+  router.on("/#/", defaultPath);
+  router.on("/#/idl", params => {
     args = {
       documentName: IDLDocument,
       editorContents: IDLEditorContents,
@@ -45,9 +51,7 @@
       _class: "editor1"
     };
     setRoute(params, Editor);
-  };
-  router.on("/", defaultPath);
-  router.on("/#/", defaultPath);
+  });
   router.on("/#/code", params => {
     args = {
       documentName: CodeEditorActiveDocument,
@@ -58,9 +62,6 @@
       readOnly: true
     };
     setRoute(params, Code);
-  });
-  router.on("/#/files", params => {
-    setRoute(params, FileMenu);
   });
 
   router.on("/#/test", params => {
@@ -97,6 +98,18 @@
     --header-height: 50px;
     --container-position: 0px;
     --menu-width: 30vw;
+    --header-gradient: linear-gradient(
+      to bottom,
+      var(--celestrak-blue) 20%,
+      #2963af 50%,
+      var(--celestrak-blue) 80%
+    );
+    --button-gradient: linear-gradient(
+      to right,
+      var(--celestrak-blue) 0%,
+      #2b66b3 50%,
+      var(--celestrak-blue) 100%
+    );
   }
   :global(.editor1) {
     height: calc(99.99vh - var(--header-height));
@@ -127,14 +140,14 @@
   }
 
   header {
-    background: var(--celestrak-blue);
+    background: var(--header-gradient);
     color: white;
     padding: 2px;
     box-sizing: border-box;
     margin-bottom: 1px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   container {
@@ -171,12 +184,24 @@
   #links a,
   header a,
   menu a {
-    color: #eee;
+    color: #fff;
+    font-weight: 200;
     text-decoration: none;
     cursor: pointer;
-    border: 1px #eee solid;
+    border: 1px #ccc solid;
     padding: 5px;
   }
+
+  #menuButton {
+    color: #eee;
+    padding-left: 5px;
+    display: flex;
+    cursor: pointer;
+    font-size: 30px;
+    position: absolute;
+    left: 0px;
+  }
+
   menu a {
     border: none;
     width: 100%;
@@ -210,17 +235,14 @@
   menu div:hover {
     background: #1a529b;
   }
-
+  #links {
+    position: absolute;
+    right: 0px;
+  }
   #links a:hover,
   #links a.active {
     background: #eee;
     color: #333;
-  }
-  #menuButton {
-    padding-left: 5px;
-    display: flex;
-    cursor: pointer;
-    font-size: 30px;
   }
 
   #mainHeader {
@@ -251,6 +273,14 @@
   <div>
     <a
       href="#/"
+      class:active={activeComponent === Main}
+      on:click={() => toggleMenu()}>
+      HOME
+    </a>
+  </div>
+  <div>
+    <a
+      href="#/idl"
       class:active={activeComponent === Editor}
       on:click={() => toggleMenu()}>
       IDL
@@ -272,13 +302,6 @@
       TEST
     </a>
   </div>
-  {#if $IDLDocument}
-    <div>
-      <a target="_blank" href={link} on:click={() => toggleMenu()}>
-        {linkName}
-      </a>
-    </div>
-  {/if}
 </menu>
 <container>
   <header>
@@ -295,9 +318,11 @@
       </span>
     </div>
     <div id="links">
-
-      <a href="#/files">OPEN</a>
-
+      {#if $IDLDocument}
+        <a target="_blank" href={link} on:click={() => toggleMenu()}>
+          {linkName}
+        </a>
+      {/if}
       <a href="javascript:" on:click={() => createDownload()}>SAVE</a>
 
     </div>
