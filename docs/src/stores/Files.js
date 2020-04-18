@@ -7,10 +7,7 @@ let getItem = (key) => JSON.parse(localStorage.getItem(key));
 let _IDLDocument = getItem("IDLDocument");
 let _IDLEditorContents = getItem(_IDLDocument);
 let _TestEditorContents = getItem("TestEditorContents");
-_IDLDocument;
-if (_IDLDocument && _IDLEditorContents) {
-  //setTimeout(() => alert(`${_IDLDocument} loaded from disk.`), 1500);
-}
+
 export let manifest = writable(manifestFile);
 export let IDLDocument = writable(_IDLDocument || "");
 export let IDLEditorContents = writable(_IDLEditorContents);

@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { onLoad } from "./lib/global.js";
   import Main from "./components/Main/Main.svelte";
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
@@ -52,10 +52,11 @@
     };
     setRoute(params, Editor);
   });
+
   router.on("/#/code", params => {
     args = {
-      documentName: TestEditorDocument,
-      editorContents: TestEditorContents,
+      documentName: CodeEditorActiveDocument,
+      editorContents: CodeEditorContents,
       language: "",
       theme: "",
       _class: "editor1",
@@ -66,8 +67,8 @@
 
   router.on("/#/test", params => {
     args = {
-      documentName: CodeEditorActiveDocument,
-      editorContents: CodeEditorContents,
+      documentName: TestEditorDocument,
+      editorContents: TestEditorContents,
       language: "",
       theme: "",
       _class: "editor1",
@@ -95,10 +96,19 @@
     }
     download(dL[0], dL[1], "text/plain");
   }
+
+  const sEvent = event => {
+    if (event.which == 83 && event.ctrlKey) event.preventDefault();
+  };
+
   onMount(() => {
     if (!$IDLDocument) {
       window.location.hash = "";
     }
+    window.addEventListener("keydown", sEvent);
+  });
+  onDestroy(() => {
+    window.removeEventListener("keydown", sEvent);
   });
 </script>
 

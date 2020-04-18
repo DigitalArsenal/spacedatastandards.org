@@ -16,6 +16,24 @@
   let _logOutput = "> \n";
   let startLine = 0;
   let _worker;
+  let dragging;
+  let dragEl = [];
+
+  let mouseupEvent = () => {
+    dragging = false;
+    document.removeEventListener("mouseup", mouseupEvent);
+    document.removeEventListener("mousemove", mouseMoveEvent);
+  };
+  let mouseMoveEvent = e => {
+    dragEl[3].style.height = `${Math.max(
+      10,
+      window.innerHeight - e.clientY
+    )}px`;
+    dragEl[2].style.height = `${window.innerHeight -
+      document.getElementsByTagName("header")[0].clientHeight -
+      dragEl[1].clientHeight -
+      dragEl[3].clientHeight}px`;
+  };
 
   const workerPath = "/workers/worker.js";
 
@@ -87,6 +105,12 @@
   };
 
   onMount(() => {
+    dragEl = [
+      document.getElementById("top-container"),
+      document.getElementById("top-menu"),
+      document.getElementById("editor-container"),
+      document.getElementById("console")
+    ];
     loaded = false;
     if (!$TestEditorContents) {
       resetTestScript();
@@ -97,19 +121,27 @@
 </script>
 
 <style>
+  :root {
+    --console-height: 100px;
+  }
   container {
     height: 100%;
-    display: grid;
-    grid-template-rows: 35px auto 100px;
+    display: flex;
+    flex-direction: column;
+  }
+  container div {
   }
   :global(.editor2) {
     height: 100%;
   }
-  #top-container {
+  #editor-container {
     border: 1px solid silver;
     box-sizing: border-box;
   }
-
+  #editor-container,
+  #console {
+    flex: 1 1 auto;
+  }
   #console {
     padding-left: 5px;
     font-size: 12px;
@@ -119,6 +151,7 @@
     word-wrap: break-word;
     font: 12px/1.2 sans-serif;
     color: #333;
+    height: var(--console-height);
   }
   #top-menu {
     padding: 5px;
@@ -168,9 +201,14 @@
       var(--celestrak-blue) 100%
     );
   }
+  #hr {
+    cursor: ns-resize;
+    border-top: 1px #333 inset;
+    height: 10px;
+  }
 </style>
 
-<container>
+<container id="top-container">
   <div id="top-menu">
     <div id="run" on:click={() => runTestScript()}>RUN CODE</div>
     <div
@@ -183,8 +221,18 @@
       RELOAD SCRIPT
     </div>
   </div>
-  <div id="top-container">
+  <div id="editor-container">
     <Editor {args} />
+  </div>
+  <div
+    id="hr"
+    on:mousedown={() => {
+      dragging = true;
+      [['mouseup', mouseupEvent], ['mousemove', mouseMoveEvent]].forEach(ee => {
+        document.addEventListener.apply(document, ee);
+      });
+    }}>
+    &nbsp;
   </div>
   <div id="console">
     {@html _logOutput}
