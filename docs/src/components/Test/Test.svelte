@@ -207,8 +207,8 @@
   #hr {
     border-top: 0.5px #eee solid;
     cursor: ns-resize;
-    height: 5px;
-    background: #333;
+    height: 3px;
+    background: #444;
   }
 </style>
 

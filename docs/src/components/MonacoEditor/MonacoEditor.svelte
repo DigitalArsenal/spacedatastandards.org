@@ -14,7 +14,7 @@
     _class,
     _style,
     language = "javascript",
-    theme,
+    theme = "vs",
     readOnly = false
   } = args;
 
