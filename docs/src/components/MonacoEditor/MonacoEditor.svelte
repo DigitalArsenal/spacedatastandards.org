@@ -83,6 +83,7 @@
       globalThis.editor = editor;
       editor.onDidChangeModelContent(setC);
       window.editor = editor;
+      setEditorLanguage($documentName);
     }
     loaded = true;
   };

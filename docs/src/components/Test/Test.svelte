@@ -25,10 +25,9 @@
     document.removeEventListener("mousemove", mouseMoveEvent);
   };
   let mouseMoveEvent = e => {
-    dragEl[3].style.height = `${Math.max(
-      10,
-      window.innerHeight - e.clientY
-    )}px`;
+    dragEl[3].style.height = dragging
+      ? `${Math.max(10, window.innerHeight - e.clientY)}px`
+      : dragEl[3].style.height;
     dragEl[2].style.height = `${window.innerHeight -
       document.getElementsByTagName("header")[0].clientHeight -
       dragEl[1].clientHeight -
@@ -117,6 +116,10 @@
     } else {
       loaded = true;
     }
+    window.addEventListener("resize", mouseMoveEvent);
+  });
+  onDestroy(() => {
+    window.removeEventListener("resize", mouseMoveEvent);
   });
 </script>
 
@@ -135,7 +138,6 @@
     height: 100%;
   }
   #editor-container {
-    border: 1px solid silver;
     box-sizing: border-box;
   }
   #editor-container,
@@ -143,7 +145,7 @@
     flex: 1 1 auto;
   }
   #console {
-    padding-left: 5px;
+    padding: 5px;
     font-size: 12px;
     overflow-y: scroll;
     overflow-x: none;
@@ -154,7 +156,8 @@
     height: var(--console-height);
   }
   #top-menu {
-    padding: 5px;
+    font-size: var(--font-size-sm);
+    padding: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -202,9 +205,10 @@
     );
   }
   #hr {
+    border-top: 0.5px #eee solid;
     cursor: ns-resize;
-    border-top: 1px #333 inset;
-    height: 10px;
+    height: 5px;
+    background: #333;
   }
 </style>
 
