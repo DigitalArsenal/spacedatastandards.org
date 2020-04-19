@@ -185,8 +185,8 @@
     position: relative;
     left: var(--container-position);
     transition: all 0.1s;
-    border-left: 1px var(--celestrak-blue) solid;
     background: white;
+    box-shadow: -5px 2px 6px 7px #00000044;
   }
   @media (min-width: 640px) {
     main {
@@ -206,7 +206,7 @@
     grid-gap: 4px;
     grid-template-columns: auto;
     font-size: var(--font-size-header);
-    padding-right: 5px;
+    padding-right: 10px;
   }
   #links a,
   header a,
@@ -221,7 +221,7 @@
 
   #menuButton {
     color: #eee;
-    padding-left: 5px;
+    padding-left: 10px;
     display: flex;
     cursor: pointer;
     font-size: 30px;
