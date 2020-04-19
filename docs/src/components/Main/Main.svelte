@@ -87,7 +87,7 @@
     opacity: 1;
   }
   h1 {
-    font-size: var(--font-size-sm);
+    font-size: calc(2rem + 0.5 * ((100vw - 50rem) / 120));
     text-align: center;
     color: #444;
     font-weight: 100;
