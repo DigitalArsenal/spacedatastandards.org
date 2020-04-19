@@ -86,12 +86,16 @@
   .docButton:hover::before {
     opacity: 1;
   }
-  h1 {
+  h1,
+  h2 {
     font-size: calc(2rem + 0.5 * ((100vw - 50rem) / 120));
     text-align: center;
     color: #444;
     font-weight: 100;
     font-family: var(--font-family);
+  }
+  h2 {
+    font-size: calc(1rem + 0.5 * ((100vw - 50rem) / 120));
   }
   h1 a {
     text-decoration: none;
@@ -104,6 +108,7 @@
   <a target="_blank" href="https://public.ccsds.org">CCSDS</a>
   RECOMMENDED STANDARDS
 </h1>
+<h2>(CLICK TO SELECT)</h2>
 <container>
   {#each $manifest.files as mfile}
     <div class="docButton">
