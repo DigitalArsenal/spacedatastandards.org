@@ -13,7 +13,8 @@
   export let loaded;
   export let args;
 
-  let _logOutput = "> \n";
+  let carat = `>`;
+  let _logOutput = `${carat}\n`;
   let startLine = 0;
   let _worker;
   let dragging;
@@ -49,7 +50,7 @@
     );
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
-      else _logOutput += "> " + e.data + "<br/>";
+      else _logOutput += `${carat} ${e.data.join("")}  \n`;
       setTimeout(() => {
         let ta = document.getElementById("console");
         ta.scrollTop = ta.scrollHeight;
@@ -62,7 +63,7 @@
 
   function runTestScript() {
     if ($IDLEditorContents) {
-      _logOutput = "LOADING ...";
+      _logOutput = `${carat} LOADING ...`;
       let inputObject = {
         currentLanguage: [
           "--js",
@@ -147,6 +148,8 @@
   #console {
     padding: 5px;
     font-size: 12px;
+    font-weight: 400;
+    font-family: monospace;
     overflow-y: scroll;
     overflow-x: none;
     user-select: none;
@@ -164,7 +167,7 @@
     grid-gap: 10px;
   }
   #top-menu div {
-    font-weight: 200;
+    font-weight: 300;
     color: #eee;
     height: 100%;
     border: 0.5px #eee inset;
@@ -205,10 +208,10 @@
     );
   }
   #hr {
-    border-top: 0.5px #eee solid;
+    border-top: 0.5px #aaa solid;
     cursor: ns-resize;
-    height: 3px;
-    background: #444;
+    height: 5px;
+    background: #007fe0;
   }
 </style>
 
@@ -238,7 +241,5 @@
     }}>
     &nbsp;
   </div>
-  <div id="console">
-    {@html _logOutput}
-  </div>
+  <textarea id="console" bind:value={_logOutput} />
 </container>

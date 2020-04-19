@@ -1,4 +1,5 @@
 let assert = {};
+
 assert.equal = (val1, val2) => {
   if(val1!==val2) throw Error(`${val1} is Not Equal To ${val2}`);
     
@@ -62,7 +63,7 @@ function main() {
   var iss = OMM.getRootAsOMM(buf);
 
   assert.equal(iss.OBJECTNAME(), 'ISS');
-  console.log('\n\n\n\n');
+
   //for(let x in iss)console.log(x);
   Object.defineProperty(iss, 'OBJECT_NAME', {get:iss.OBJECTNAME});
   console.log(iss.OBJECT_NAME);

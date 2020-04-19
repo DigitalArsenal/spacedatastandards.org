@@ -62,7 +62,7 @@ function main() {
   var iss = OMM.getRootAsOMM(buf);
 
   assert.equal(iss.OBJECTNAME(), 'ISS');
-  console.log('\n\n\n\n');
+
   //for(let x in iss)console.log(x);
   Object.defineProperty(iss, 'OBJECT_NAME', {get:iss.OBJECTNAME});
   console.log(iss.OBJECT_NAME);

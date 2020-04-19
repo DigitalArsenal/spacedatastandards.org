@@ -352,6 +352,8 @@
           {linkName}
         </a>
         <!--<a href="javascript:" on:click={() => createDownload()}>SAVE</a>-->
+      {:else}
+        <a href="#/">SELECT...</a>
       {/if}
     </div>
   </header>

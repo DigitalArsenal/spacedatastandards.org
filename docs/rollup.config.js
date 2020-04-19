@@ -28,7 +28,8 @@ export default {
       targets: [
         { src: 'schemas', dest: './dev/' },
         { src: './src/workers/**/*', dest: !production ? "./dev/workers" : "./workers" },
-        { src: './src/lib/**/*', dest: !production ? "./dev/lib" : "./lib" }
+        { src: './src/lib/**/*', dest: !production ? "./dev/lib" : "./lib" },
+        { src: './src/test/**/*', dest: !production ? "./dev/test" : "./test" }
       ]
     }),
     string({
