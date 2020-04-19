@@ -47,7 +47,7 @@
     font-size: var(--font-size-btn);
     font-weight: 150;
     min-width: 200px;
-    padding: 5px;
+    padding: 8px;
     margin: 5px;
     text-align: center;
     display: flex;
