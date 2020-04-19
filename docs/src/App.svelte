@@ -212,7 +212,7 @@
   header a,
   menu a {
     color: #fff;
-    font-weight: 200;
+    font-weight: 300;
     text-decoration: none;
     cursor: pointer;
     border: 0.5px #ccc solid;

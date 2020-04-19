@@ -45,7 +45,7 @@
     position: relative;
     color: #eee;
     font-size: var(--font-size-btn);
-    font-weight: 150;
+    font-weight: 200;
     min-width: 200px;
     padding: 8px;
     margin: 5px;
@@ -91,7 +91,7 @@
     font-size: calc(2rem + 0.5 * ((100vw - 50rem) / 120));
     text-align: center;
     color: #444;
-    font-weight: 100;
+    font-weight: 300;
     font-family: var(--font-family);
   }
   h2 {
