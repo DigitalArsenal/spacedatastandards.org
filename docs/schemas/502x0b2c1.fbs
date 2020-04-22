@@ -119,7 +119,7 @@ table OMM {
   EPHEMERIS_TYPE:ephemerisType = SGP4;
   CLASSIFICATION_TYPE:string;
   NORAD_CAT_ID:uint32;
-  ELEMENT_SET_NO:ulong;
+  ELEMENT_SET_NO:uint32;
   REV_AT_EPOCH:float;
   BSTAR:float;
   MEAN_MOTION_DOT:float;
