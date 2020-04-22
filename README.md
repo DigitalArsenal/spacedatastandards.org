@@ -2,7 +2,7 @@
 
 Data Standards For Space Data Systems
 
-## Background
+**Background**
 
 The [Consultative Committee for Space Data Systems (CCSDS)](https://public.ccsds.org/default.aspx) "...is a multi-national forum for the development of communications and data systems standards for spaceflight".
 
@@ -12,6 +12,8 @@ In 2010, CCSDS published an [XML SPECIFICATION FOR NAVIGATION DATA MESSAGES](htt
 
 This means that, to transfer messages between computers over networks, the data elements are converted in a text-based format using tags which look like [HyperText Markup Language (HTML)](https://developer.mozilla.org/en-US/docs/Web/HTML), the basic format of the world wide web.
 
-However, XML is not the only way to transmit messages between computers. The goal of this site is to add additional formatting options for CCSDS messages, as well as aid developers by generating code for use in applications.
+However, XML is [not the only way](https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats) to transmit messages between computers. Most modern systems use other formats that consume less bandwidth, less memory, and are faster to convert inside applications.
+
+The goal of this site is to add additional formatting options for CCSDS messages, as well as aid developers by generating code for use in applications.
 
 For more information contact me at <tj@digitalarsenal.io>, or [open an issue](https://github.com/DigitalArsenal/spacedatastandards.org/issues) on this repository.
