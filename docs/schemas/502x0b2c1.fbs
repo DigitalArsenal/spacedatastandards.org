@@ -118,7 +118,7 @@ table OMM {
   // TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
   EPHEMERIS_TYPE:ephemerisType = SGP4;
   CLASSIFICATION_TYPE:string;
-  NORAD_CAT_ID:uint;
+  NORAD_CAT_ID:uint64;
   ELEMENT_SET_NO:ulong;
   REV_AT_EPOCH:float;
   BSTAR:float;
