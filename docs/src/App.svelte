@@ -4,11 +4,14 @@
   import Main from "./components/Main/Main.svelte";
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
   import Code from "./components/Code/Code.svelte";
+  import Examples from "./components/Examples/Examples.svelte";
+
   import Test from "./components/Test/Test.svelte";
   import download from "downloadjs";
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams } from "./stores/Route";
+
   import {
     manifest,
     IDLDocument,
@@ -64,7 +67,17 @@
     };
     setRoute(params, Code);
   });
-
+  router.on("/#/examples", params => {
+    args = {
+      documentName: "",
+      editorContents: "",
+      language: "",
+      theme: "",
+      _class: "editor1",
+      readOnly: true
+    };
+    setRoute(params, Examples);
+  });
   router.on("/#/test", params => {
     args = {
       documentName: TestEditorDocument,
@@ -321,6 +334,14 @@
       class:active={activeComponent === Code}
       on:click={() => toggleMenu()}>
       CODE
+    </a>
+  </div>
+  <div>
+    <a
+      href="#/examples"
+      class:active={activeComponent === Test}
+      on:click={() => toggleMenu()}>
+      EXAMPLES
     </a>
   </div>
   <div>
