@@ -15,6 +15,8 @@ This means that, to transfer messages between computers over networks, the data 
 
 However, XML is [not the only way](https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats) to transmit messages between computers. Most modern systems use other formats that consume less bandwidth, less memory, and require less computational resources to use inside applications. Some do not even require a conversion step and can write the messages directly into memory!
 
+Here are some examples:
+
 - [JavaScript Object Notation (JSON)](https://tools.ietf.org/html/rfc8259)
 - [Comma Seperated Values (CSV)](https://tools.ietf.org/html/rfc4180)
 - [Binary JSON (BSON)](http://bsonspec.org/spec.html)
