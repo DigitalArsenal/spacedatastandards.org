@@ -1,6 +1,6 @@
-# spacedatastandards.org
+# [spacedatastandards.org](https://spacedatastandards.org)
 
-Data Standards For Space Data Systems
+<img style="max-width:400px" src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
 
 **Background**
 ---
