@@ -1,8 +1,6 @@
-# spacedatastandards.org
+# [spacedatastandards.org](https://spacedatastandards.org)
 
-<img src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
-
-**[CLICK HERE FOR THE EDITOR](https://spacedatastandards.org)**
+<img style="max-width:400px" src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
 
 **Background**
 ---
