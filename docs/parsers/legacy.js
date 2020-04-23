@@ -1,33 +1,31 @@
 const utf8Decoder = new TextDecoder("utf-8");
-const leregex = /[\r\n]{1,2}/;
+let leRegex = /[\r\n]{1,2}/gm;
+
 async function* iterate(reader) {
   const utf8Decoder = new TextDecoder("utf-8");
-  let { value: chunk, done } = await reader.read();
-  chunk = chunk ? utf8Decoder.decode(chunk) : "";
+  let { value, done } = await reader.read();
+  value = value ? utf8Decoder.decode(value) : "";
 
-  let re = /\r\n|\n|\r/gm;
   let startIndex = 0;
-  let result;
 
-  for (;;) {
-    let result = re.exec(chunk);
-
+  while (!done) {
+    let result = leRegex.exec(value);
+    //only progress if there are more lines
     if (!result) {
-      if (done) {
-        break;
-      }
-      let remainder = chunk.substr(startIndex);
-      ({ value: chunk, done } = await reader.read());
-      chunk = remainder + (chunk ? utf8Decoder.decode(chunk) : "");
-
-      startIndex = re.lastIndex = 0;
-      continue;
+      //loop through each successive line
+      let remainder = value.substr(startIndex);
+      ({ value, done } = await reader.read());
+      //add more if available
+      value = remainder + (value ? utf8Decoder.decode(value) : "");
+      startIndex = leRegex.lastIndex = 0;
+    } else {
+      yield value.substring(startIndex, result.index);
     }
-    yield chunk.substring(startIndex, result.index);
-    startIndex = re.lastIndex;
+    startIndex = leRegex.lastIndex;
   }
-  if (startIndex < chunk.length) {
-    yield chunk.substr(startIndex);
+
+  if (startIndex < value.length) {
+    yield value.substr(startIndex);
   }
 }
 
