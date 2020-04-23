@@ -1,6 +1,7 @@
 # spacedatastandards.org
 
-[Data Standards For Space Data Systems](https://spacedatastandards.org)
+Data Standards For Space Data Systems
+[CLICK HERE FOR THE EDITOR](https://spacedatastandards.org)
 
 **Background**
 ---
