@@ -1,9 +1,8 @@
 # spacedatastandards.org
 
-Data Standards For Space Data Systems
+<img src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
 
-**[CLICK HERE TO ACCESS THE EDITOR](https://spacedatastandards.org)**
----
+**[CLICK HERE FOR THE EDITOR](https://spacedatastandards.org)**
 
 **Background**
 ---
