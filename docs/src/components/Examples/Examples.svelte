@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { tle, satcat, vcm } from "../../../parsers/legacy.js";
+  import { tle, satcat, vcm } from "../../../parsers/legacy.mjs";
   export let loaded;
   let tles = [];
 
