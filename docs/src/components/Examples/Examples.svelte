@@ -24,6 +24,7 @@
           let remainder = chunk.substr(startIndex);
           ({ value: chunk, done } = await reader.read());
           chunk = remainder + (chunk ? utf8Decoder.decode(chunk) : "");
+          console.log(remainder);
           startIndex = re.lastIndex = 0;
           continue;
         }
@@ -37,7 +38,7 @@
     }
 
     for await (let line of makeTextFileLineIterator("./test/all.txt")) {
-      console.log("Line", line);
+      //console.log("Line", line);
     }
   })();
   onMount(() => {
