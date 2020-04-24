@@ -3,7 +3,9 @@ let assert = {};
 
 assert.equal = (label, val1, val2) => {
   let sep = '\n----------------------------\n';
-  if(val1!==val2)console.log(`${sep}${sep}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
+  let sep2 = '\n============================\n';
+
+  if(val1!==val2)console.log(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
   else console.log(`${sep}${sep}${label}${sep} assert passed: ${sep}`, val1,' === ', val2);
 }
 
@@ -49,7 +51,7 @@ function main() {
       if(prop.indexOf(mangledname) > -1){
         if(SAT_TEST_OBJ[canonicalname]){
           let schemaValue = OMM.schema.definitions.OMM.properties[canonicalname];
-          console.log(schemaValue)
+          //console.log(schemaValue)
           intermediate[prop] = {canonicalname, mangledname };
           intermediate[prop].value = schemaValue.type ==="string"?builder.createString(SAT_TEST_OBJ[canonicalname]):SAT_TEST_OBJ[canonicalname];
         }

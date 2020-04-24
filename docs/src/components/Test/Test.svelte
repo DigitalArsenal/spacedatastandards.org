@@ -58,6 +58,7 @@
         })
       )
     );
+    _logOutput = "";
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
       else _logOutput += `${carat} ${e.data.join("")}  \n`;

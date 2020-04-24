@@ -1,9 +1,12 @@
 //TEST
 let assert = {};
 
-assert.equal = (val1, val2) => {
-  if(val1!==val2) throw Error(`${val1} is Not Equal To ${val2}`);
-  else console.log('assert passed: ', val1,' === ', val2);
+assert.equal = (label, val1, val2) => {
+  let sep = '\n----------------------------\n';
+  let sep2 = '\n============================\n';
+
+  if(val1!==val2)console.log(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
+  else console.log(`${sep}${sep}${label}${sep} assert passed: ${sep}`, val1,' === ', val2);
 }
 
 let SAT_TEST_OBJ = {
@@ -13,7 +16,7 @@ let SAT_TEST_OBJ = {
   OBJECT_NAME : "GOES 9",
   OBJECT_ID : "1995-025A",
   CENTER_NAME : "EARTH",
-  REF_FRAME : "TEME",
+  REF_FRAME : 0,
   TIME_SYSTEM : "UTC",
   MEAN_ELEMENT_THEORY: "SGP/SGP4",
   EPOCH: "2007-03-05T10:34:41.4264",
@@ -41,17 +44,26 @@ function main() {
 
 
   let shim = Object.keys(OMM.schema.definitions.OMM.properties);
-  
+  let intermediate = {};
   shim.forEach(canonicalname =>{
     let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
     for(let prop in OMM){
-      console.log(prop)
+      if(prop.indexOf(mangledname) > -1){
+        if(SAT_TEST_OBJ[canonicalname]){
+          let schemaValue = OMM.schema.definitions.OMM.properties[canonicalname];
+          //console.log(schemaValue)
+          intermediate[prop] = {canonicalname, mangledname };
+          intermediate[prop].value = schemaValue.type ==="string"?builder.createString(SAT_TEST_OBJ[canonicalname]):SAT_TEST_OBJ[canonicalname];
+        }
+      }
     }
   });
 
-  
-
   OMM.startOMM(builder);
+
+  for(prop in intermediate){
+    OMM[prop](builder, intermediate[prop].value);
+  }
   
   var GOESBuiltOMM = OMM.endOMM(builder);
 
@@ -65,12 +77,18 @@ function main() {
   //console.log(b64encoded);
   // Get access to the root:
   var GOES9 = OMM.getRootAsOMM(buf);
+  
+  for(let prop in intermediate){
+    let {canonicalname, mangledname} = intermediate[prop];
+    
+    if(typeof GOES9[mangledname] === "function")
+    Object.defineProperty(GOES9, canonicalname, { get: GOES9[mangledname]});
+  }
 
-  assert.equal(GOES9.OBJECTNAME(), 'GOES 9');
+  for(let prop in SAT_TEST_OBJ){
+    assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
+  }
 
-  //for(let x in iss)console.log(x);
-  Object.defineProperty(GOES9, 'OBJECT_NAME', {get:GOES9.OBJECTNAME});
-  console.log(GOES9.OBJECT_NAME);
   console.log('The FlatBuffer was successfully created and verified!');
 }
 
