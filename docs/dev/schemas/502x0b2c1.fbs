@@ -83,7 +83,7 @@ enum manCovRefFrame : byte {
 
 table OMM {
   // OMM Header
-  CCSDS_OMM_VERS:float;
+  CCSDS_OMM_VERS:double;
   CREATION_DATE:string;
   ORIGINATOR:string;
 
@@ -99,60 +99,61 @@ table OMM {
   // Mean Keplerian Elements in the Specified Reference Frame
   COMMENT:string;
   EPOCH:string;
-  SEMI_MAJOR_AXIS:float;
-  MEAN_MOTION:float;
-  ECCENTRICITY:float;
-  INCLINATION:float;
-  RA_OF_ASC_NODE:float;
-  ARG_OF_PERICENTER:float;
-  MEAN_ANOMALY:float;
-  GM:float;
+  SEMI_MAJOR_AXIS:double;
+  MEAN_MOTION:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  MEAN_ANOMALY:double;
+  GM:double;
   
   // Spacecraft Parameters
-  MASS:float;
-  SOLAR_RAD_AREA:float;
-  SOLAR_RAD_COEFF:float;
-  DRAG_AREA:float;
-  DRAG_COEFF:float;
+  MASS:double;
+  SOLAR_RAD_AREA:double;
+  SOLAR_RAD_COEFF:double;
+  DRAG_AREA:double;
+  DRAG_COEFF:double;
 
   // TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
   EPHEMERIS_TYPE:ephemerisType = SGP4;
   CLASSIFICATION_TYPE:string;
   NORAD_CAT_ID:uint32;
   ELEMENT_SET_NO:uint32;
-  REV_AT_EPOCH:float;
-  BSTAR:float;
-  MEAN_MOTION_DOT:float;
-  MEAN_MOTION_DDOT:float;
+  REV_AT_EPOCH:double;
+  BSTAR:double;
+  MEAN_MOTION_DOT:double;
+  MEAN_MOTION_DDOT:double;
   
   // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
   // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
   COV_REF_FRAME:manCovRefFrame = RSW;
-  CX_X:float;
-  CY_X:float;
-  CY_Y:float;
-  CZ_X:float;
-  CZ_Y:float;
-  CZ_Z:float;
-  CX_DOT_X:float;
-  CX_DOT_Y:float;
-  CX_DOT_Z:float;
-  CX_DOT_X_DOT:float;
-  CY_DOT_X:float;
-  CY_DOT_Y:float;
-  CY_DOT_Z:float;
-  CY_DOT_X_DOT:float;
-  CY_DOT_Y_DOT:float;
-  CZ_DOT_X:float;
-  CZ_DOT_Y:float;
-  CZ_DOT_Z:float;
-  CZ_DOT_X_DOT:float;
-  CZ_DOT_Y_DOT:float;
-  CZ_DOT_Z_DOT:float;
+  CX_X:double;
+  CY_X:double;
+  CY_Y:double;
+  CZ_X:double;
+  CZ_Y:double;
+  CZ_Z:double;
+  CX_DOT_X:double;
+  CX_DOT_Y:double;
+  CX_DOT_Z:double;
+  CX_DOT_X_DOT:double;
+  CY_DOT_X:double;
+  CY_DOT_Y:double;
+  CY_DOT_Z:double;
+  CY_DOT_X_DOT:double;
+  CY_DOT_Y_DOT:double;
+  CZ_DOT_X:double;
+  CZ_DOT_Y:double;
+  CZ_DOT_Z:double;
+  CZ_DOT_X_DOT:double;
+  CZ_DOT_Y_DOT:double;
+  CZ_DOT_Z_DOT:double;
 
   // User Defined Parameters (all parameters in this section must be described in an ICD). 
   USER_DEFINED_BIP_0044_TYPE:uint;
   USER_DEFINED_OBJECT_DESIGNATOR:string;
+  USER_DEFINED_EARTH_MODEL:string;
 }
 
 table OMMCOLLECTION {
