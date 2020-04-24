@@ -13,10 +13,11 @@ class lineReader {
 
         let startIndex = 0;
 
-        while (!done) {
-          let result = leRegex.exec(value);
+        for (;;) {
+          let remline = leRegex.exec(value);
           //only progress if there are more lines
-          if (!result) {
+          if (!remline) {
+            if (done) break;
             //loop through each successive line
             let remainder = value.substr(startIndex);
             ({ value, done } = await reader.read());
@@ -24,7 +25,7 @@ class lineReader {
             value = remainder + (value ? utf8Decoder.decode(value) : "");
             startIndex = leRegex.lastIndex = 0;
           } else {
-            yield value.substring(startIndex, result.index);
+            yield value.substring(startIndex, remline.index);
           }
           startIndex = leRegex.lastIndex;
         }
@@ -48,7 +49,9 @@ class tle extends lineReader {
     this._line = [];
     this.processLine = (line) => {
       this._line.push(line);
-      if ((this._line[0].length === 24 && this._line.length === 3) || (this._line[0].length >= 68 && this._line.length === 2)) {
+      let l0 = this._line[0].length;
+      let l1 = this._line.length;
+      if ((l0 === 24 && l1 === 3) || (l0 >= 68 && l1 === 2)) {
         this.lines.push(this._line);
         this._line = [];
       }

@@ -10,7 +10,10 @@
     let reader = response.body.getReader();
     let tles = new tle(reader);
     let stuff = await tles.readLines();
-    console.log(tles.lines);
+    let response2 = await fetch("./test/tle.txt");
+    let reader2 = response2.body.getReader();
+    let tles2 = new tle(reader2);
+    let stuff2 = await tles2.readLines();
   });
 </script>
 
