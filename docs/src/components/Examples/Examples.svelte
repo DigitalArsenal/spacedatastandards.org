@@ -5,10 +5,12 @@
   let tles = [];
 
   onMount(async () => {
+    loaded = true;
     let response = await fetch("./test/all.txt");
     let reader = response.body.getReader();
     let tles = new tle(reader);
-    loaded = true;
+    console.log(tles);
+    tles.readLines();
   });
 </script>
 

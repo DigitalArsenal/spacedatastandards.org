@@ -11,7 +11,7 @@ rs.on("readable", async () => {
   for (;;) {
     value = await rs.read();
     done = value === null;
-    if (value && !done) console.log(value.toString());
+    if (value && !done) console.log(value.toString().split(""));
     if (done) break;
   }
 });
