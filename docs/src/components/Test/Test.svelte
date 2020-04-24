@@ -4,7 +4,8 @@
   import {
     IDLEditorContents,
     TestEditorDocument,
-    TestEditorContents
+    TestEditorContents,
+    saveEventTime
   } from "../../stores/Files.js";
   import fb from "../../../lib/flatbuffers.js";
   import ws from "../../lib/workerShim.js";
@@ -34,7 +35,11 @@
       dragEl[1].clientHeight -
       dragEl[3].clientHeight}px`;
   };
-
+  $: {
+    if ($saveEventTime) {
+      runTestScript();
+    }
+  }
   const workerPath = "/workers/worker.js";
 
   let _exec = code => {
@@ -80,7 +85,11 @@
         let file = Object.keys(d.files).filter(
           f => f.slice(f.lastIndexOf(".")) === ".js"
         );
-        _exec(`${fb}${d.files[file]}`);
+        let schemaFile = Object.keys(d.files).filter(
+          f => f.indexOf("schema.json") > -1
+        );
+
+        _exec(`${fb}${d.files[file]}; OMM.schema = ${d.files[schemaFile]};`);
       });
     }
   }

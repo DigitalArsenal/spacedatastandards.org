@@ -17,6 +17,7 @@ export let CodeEditorContents = writable("");
 export let CodeEditorLanguage = writable([]);
 export let TestEditorDocument = writable("Test.js");
 export let TestEditorContents = writable(_TestEditorContents);
+export let saveEventTime = writable(new Date());
 
 IDLDocument.subscribe((d) => {
   _IDLDocument = d;

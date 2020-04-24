@@ -16,7 +16,7 @@
 
   let startLine = 0;
   let _worker;
-  let _results;
+  let _results = "";
 
   let _2le = "";
   let _3le = "";

@@ -1,7 +1,9 @@
+//TESTasdf
 let assert = {};
+
 assert.equal = (val1, val2) => {
   if(val1!==val2) throw Error(`${val1} is Not Equal To ${val2}`);
-    
+  else console.log('assert passed: ', val1,' === ', val2);
 }
 
 let ISS_TEST_OBJ = {
@@ -36,9 +38,11 @@ let ISS_TEST_OBJ = {
 // Example how to use FlatBuffers to create and read binary buffers.
 function main() {
   var builder = new flatbuffers.Builder(0);
-
-  console.log(OMM.addBSTAR.toString().match(/builder\.add([^\(]{1,})/)[1]);
-  console.log(builder.createFieldFloat32)
+  let shim = Object.keys(OMM.schema.definitions.OMM.properties);
+  shim.forEach(s=>{
+    console.log(s.replace(/_/g, "").toUpperCase());
+  });
+  for(let prop in builder)console.log(prop);
   let name = builder.createString('ISS');
   let centername = builder.createString('NASA JOHNSON SPACE FLIGHT CENTER, SOMEWHERE IN TEXAS, USA');
   OMM.startOMM(builder);
@@ -52,12 +56,12 @@ function main() {
     OBJECTNAME:"ISS",
     CENTERNAME:"NASA JOHNSON SPACE FLIGHT CENTER, SOMEWHERE IN TEXAS, USA"
   };
-  console.log(testObject,"\n", btoa(JSON.stringify(testObject)));
+  //console.log(testObject,"\n", btoa(JSON.stringify(testObject)));
   var buf = builder.dataBuffer();
   let uint8 = builder.asUint8Array();
   var decoder = new TextDecoder('utf8');
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));
-  console.log(b64encoded);
+  //console.log(b64encoded);
   // Get access to the root:
   var iss = OMM.getRootAsOMM(buf);
 

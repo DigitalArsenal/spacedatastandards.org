@@ -20,7 +20,8 @@
     CodeEditorContents,
     CodeEditorLanguage,
     TestEditorDocument,
-    TestEditorContents
+    TestEditorContents,
+    saveEventTime
   } from "./stores/Files.js";
 
   let menuOpen = false;
@@ -111,7 +112,10 @@
   }
 
   const sEvent = event => {
-    if (event.which == 83 && event.ctrlKey) event.preventDefault();
+    if (event.which == 83 && event.ctrlKey) {
+      event.preventDefault();
+      $saveEventTime = new Date();
+    }
   };
 
   onMount(() => {
@@ -360,7 +364,8 @@
     </div>
     <div id="mainHeader">
       <span>
-        <a style="border:none"
+        <a
+          style="border:none"
           target="_blank"
           href="https://github.com/DigitalArsenal/spacedatastandards.org">
           SPACEDATASTANDARDS.ORG
