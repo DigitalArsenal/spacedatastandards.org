@@ -87,8 +87,7 @@ class tle extends lineReader {
     };
     this.processTLE = (tle) => {
       
-      
-      this.lines.push(parsedTLE);
+      //this.lines.push(parsedTLE);
     }
   }
 }
