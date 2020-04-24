@@ -7,7 +7,7 @@
     TestEditorContents
   } from "../../stores/Files.js";
   import fb from "../../../lib/flatbuffers.js";
-  import ws from "./workerShim.js";
+  import ws from "../../lib/workerShim.js";
   import workerLoader from "../../lib/workerLoader.js";
 
   export let loaded;
@@ -133,8 +133,7 @@
     display: flex;
     flex-direction: column;
   }
-  container div {
-  }
+
   :global(.editor2) {
     height: 100%;
   }

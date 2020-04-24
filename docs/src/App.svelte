@@ -360,7 +360,7 @@
     </div>
     <div id="mainHeader">
       <span>
-        <a
+        <a style="border:none"
           target="_blank"
           href="https://github.com/DigitalArsenal/spacedatastandards.org">
           SPACEDATASTANDARDS.ORG
