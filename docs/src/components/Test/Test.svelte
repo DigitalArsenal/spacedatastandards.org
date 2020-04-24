@@ -61,6 +61,9 @@
     _logOutput = "";
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
+      if (e.data.global){
+        globalThis[e.data.globalName] = e.data.global;
+      }
       else _logOutput += `${carat} ${e.data.join("")}  \n`;
       scrollDown();
     };

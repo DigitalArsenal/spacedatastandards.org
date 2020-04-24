@@ -38,6 +38,20 @@ let SAT_TEST_OBJ = {
   USER_DEFINED_EARTH_MODEL: "WGS-84"
 };
 
+/*
+let SAT_TEST_OBJ = {
+  NORAD_CAT_ID: 23581,
+  EPOCH: "2007-03-05T10:34:41.4264",
+  MEAN_MOTION: 1.00273272,
+  ECCENTRICITY: 0.0005013,
+  INCLINATION: 3.0539,
+  RA_OF_ASC_NODE: 81.7939,
+  ARG_OF_PERICENTER: 249.2363,
+  MEAN_ANOMALY: 150.1602,
+  BSTAR: 0.0001
+};
+*/
+
 // Example how to use FlatBuffers to create and read binary buffers.
 function main() {
   var builder = new flatbuffers.Builder(0);
@@ -62,7 +76,6 @@ function main() {
 
           };
           intermediate[prop].value = _value;
-
         }
       }
     }
@@ -82,7 +95,15 @@ function main() {
   let uint8 = builder.asUint8Array();
   var decoder = new TextDecoder('utf8');
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));
-  console.log(uint8.length, " ", decoder.decode(uint8).length, " ", b64encoded.length, " ", JSON.stringify(SAT_TEST_OBJ).length);
+  globalThis.postMessage({ global: uint8, globalName: "_flatbuff" });
+  globalThis.postMessage({ global: Object.values(SAT_TEST_OBJ).join(), globalName: "_flatcsv" });
+  console.log([
+    uint8.length,
+    decoder.decode(uint8).length,
+    b64encoded.length,
+    JSON.stringify(SAT_TEST_OBJ).length,
+    Object.values(SAT_TEST_OBJ).join().length]
+    .join());
   // Get access to the root:
   var GOES9 = OMM.getRootAsOMM(buf);
 
@@ -94,8 +115,11 @@ function main() {
   }
 
   for (let prop in SAT_TEST_OBJ) {
-    assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
+
+    if (GOES9[prop])
+      assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
   }
+
   console.log('\n\n\n\nThe FlatBuffer was successfully created and verified!');
 }
 

@@ -11,7 +11,7 @@
   import Loader from "./Loader.svelte";
   import Navaid from "navaid";
   import { routeparams } from "./stores/Route";
-
+  window.download = download;
   import {
     manifest,
     IDLDocument,
