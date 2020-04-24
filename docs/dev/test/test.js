@@ -6,7 +6,7 @@ assert.equal = (val1, val2) => {
   else console.log('assert passed: ', val1,' === ', val2);
 }
 
-let ISS_TEST_OBJ = {
+let SAT_TEST_OBJ = {
   CCSDS_OMM_VERS : 2.0,
   CREATION_DATE : "2007-03-05T16:00:00",
   ORIGINATOR : "NOAA/USA",
@@ -38,24 +38,25 @@ let ISS_TEST_OBJ = {
 // Example how to use FlatBuffers to create and read binary buffers.
 function main() {
   var builder = new flatbuffers.Builder(0);
+
+
   let shim = Object.keys(OMM.schema.definitions.OMM.properties);
-  shim.forEach(s=>{
-    console.log(s.replace(/_/g, "").toUpperCase());
+  
+  shim.forEach(canonicalname =>{
+    let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
+    for(let prop in OMM){
+      console.log(prop)
+    }
   });
-  for(let prop in builder)console.log(prop);
-  let name = builder.createString('ISS');
-  let centername = builder.createString('NASA JOHNSON SPACE FLIGHT CENTER, SOMEWHERE IN TEXAS, USA');
+
+  
+
   OMM.startOMM(builder);
   
-  OMM.addOBJECTNAME(builder, name);
-  OMM.addCENTERNAME(builder, centername);
-  var issBuiltOMM = OMM.endOMM(builder);
+  var GOESBuiltOMM = OMM.endOMM(builder);
 
-  builder.finish(issBuiltOMM);
-  let testObject = {
-    OBJECTNAME:"ISS",
-    CENTERNAME:"NASA JOHNSON SPACE FLIGHT CENTER, SOMEWHERE IN TEXAS, USA"
-  };
+  builder.finish(GOESBuiltOMM);
+
   //console.log(testObject,"\n", btoa(JSON.stringify(testObject)));
   var buf = builder.dataBuffer();
   let uint8 = builder.asUint8Array();
@@ -63,13 +64,13 @@ function main() {
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));
   //console.log(b64encoded);
   // Get access to the root:
-  var iss = OMM.getRootAsOMM(buf);
+  var GOES9 = OMM.getRootAsOMM(buf);
 
-  assert.equal(iss.OBJECTNAME(), 'ISS');
+  assert.equal(GOES9.OBJECTNAME(), 'GOES 9');
 
   //for(let x in iss)console.log(x);
-  Object.defineProperty(iss, 'OBJECT_NAME', {get:iss.OBJECTNAME});
-  console.log(iss.OBJECT_NAME);
+  Object.defineProperty(GOES9, 'OBJECT_NAME', {get:GOES9.OBJECTNAME});
+  console.log(GOES9.OBJECT_NAME);
   console.log('The FlatBuffer was successfully created and verified!');
 }
 

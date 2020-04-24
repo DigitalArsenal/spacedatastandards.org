@@ -1,19 +1,20 @@
-//TESTasdf
+//TEST
 let assert = {};
 
-assert.equal = (val1, val2) => {
-  if(val1!==val2) throw Error(`${val1} is Not Equal To ${val2}`);
-  else console.log('assert passed: ', val1,' === ', val2);
+assert.equal = (label, val1, val2) => {
+  let sep = '\n----------------------------\n';
+  if(val1!==val2)console.log(`${sep}${sep}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
+  else console.log(`${sep}${sep}${label}${sep} assert passed: ${sep}`, val1,' === ', val2);
 }
 
-let ISS_TEST_OBJ = {
+let SAT_TEST_OBJ = {
   CCSDS_OMM_VERS : 2.0,
   CREATION_DATE : "2007-03-05T16:00:00",
   ORIGINATOR : "NOAA/USA",
   OBJECT_NAME : "GOES 9",
   OBJECT_ID : "1995-025A",
   CENTER_NAME : "EARTH",
-  REF_FRAME : "TEME",
+  REF_FRAME : 0,
   TIME_SYSTEM : "UTC",
   MEAN_ELEMENT_THEORY: "SGP/SGP4",
   EPOCH: "2007-03-05T10:34:41.4264",
@@ -38,24 +39,34 @@ let ISS_TEST_OBJ = {
 // Example how to use FlatBuffers to create and read binary buffers.
 function main() {
   var builder = new flatbuffers.Builder(0);
-  let shim = Object.keys(OMM.schema.definitions.OMM.properties);
-  shim.forEach(s=>{
-    console.log(s.replace(/_/g, "").toUpperCase());
-  });
-  for(let prop in builder)console.log(prop);
-  let name = builder.createString('ISS');
-  let centername = builder.createString('NASA JOHNSON SPACE FLIGHT CENTER, SOMEWHERE IN TEXAS, USA');
-  OMM.startOMM(builder);
-  
-  OMM.addOBJECTNAME(builder, name);
-  OMM.addCENTERNAME(builder, centername);
-  var issBuiltOMM = OMM.endOMM(builder);
 
-  builder.finish(issBuiltOMM);
-  let testObject = {
-    OBJECTNAME:"ISS",
-    CENTERNAME:"NASA JOHNSON SPACE FLIGHT CENTER, SOMEWHERE IN TEXAS, USA"
-  };
+
+  let shim = Object.keys(OMM.schema.definitions.OMM.properties);
+  let intermediate = {};
+  shim.forEach(canonicalname =>{
+    let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
+    for(let prop in OMM){
+      if(prop.indexOf(mangledname) > -1){
+        if(SAT_TEST_OBJ[canonicalname]){
+          let schemaValue = OMM.schema.definitions.OMM.properties[canonicalname];
+          console.log(schemaValue)
+          intermediate[prop] = {canonicalname, mangledname };
+          intermediate[prop].value = schemaValue.type ==="string"?builder.createString(SAT_TEST_OBJ[canonicalname]):SAT_TEST_OBJ[canonicalname];
+        }
+      }
+    }
+  });
+
+  OMM.startOMM(builder);
+
+  for(prop in intermediate){
+    OMM[prop](builder, intermediate[prop].value);
+  }
+  
+  var GOESBuiltOMM = OMM.endOMM(builder);
+
+  builder.finish(GOESBuiltOMM);
+
   //console.log(testObject,"\n", btoa(JSON.stringify(testObject)));
   var buf = builder.dataBuffer();
   let uint8 = builder.asUint8Array();
@@ -63,13 +74,19 @@ function main() {
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));
   //console.log(b64encoded);
   // Get access to the root:
-  var iss = OMM.getRootAsOMM(buf);
+  var GOES9 = OMM.getRootAsOMM(buf);
+  
+  for(let prop in intermediate){
+    let {canonicalname, mangledname} = intermediate[prop];
+    
+    if(typeof GOES9[mangledname] === "function")
+    Object.defineProperty(GOES9, canonicalname, { get: GOES9[mangledname]});
+  }
 
-  assert.equal(iss.OBJECTNAME(), 'ISS');
+  for(let prop in SAT_TEST_OBJ){
+    assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
+  }
 
-  //for(let x in iss)console.log(x);
-  Object.defineProperty(iss, 'OBJECT_NAME', {get:iss.OBJECTNAME});
-  console.log(iss.OBJECT_NAME);
   console.log('The FlatBuffer was successfully created and verified!');
 }
 

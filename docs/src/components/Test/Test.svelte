@@ -23,6 +23,7 @@
 
   let mouseupEvent = () => {
     dragging = false;
+    scrollDown();
     document.removeEventListener("mouseup", mouseupEvent);
     document.removeEventListener("mousemove", mouseMoveEvent);
   };
@@ -41,7 +42,11 @@
     }
   }
   const workerPath = "/workers/worker.js";
-
+  const scrollDown = () =>
+    setTimeout(() => {
+      let ta = document.getElementById("console");
+      ta.scrollTop = ta.scrollHeight;
+    }, 10);
   let _exec = code => {
     if (_worker) _worker.terminate();
     let _preamble = `${ws}${code}`;
@@ -56,10 +61,7 @@
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
       else _logOutput += `${carat} ${e.data.join("")}  \n`;
-      setTimeout(() => {
-        let ta = document.getElementById("console");
-        ta.scrollTop = ta.scrollHeight;
-      }, 10);
+      scrollDown();
     };
     _worker.onerror = function(err) {
       _logOutput += `${err.message}  at line ${err.lineno - startLine}`;
