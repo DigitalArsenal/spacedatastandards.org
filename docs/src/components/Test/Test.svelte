@@ -252,5 +252,5 @@
     }}>
     &nbsp;
   </div>
-  <textarea id="console" bind:value={_logOutput} />
+  <textarea readonly id="console" bind:value={_logOutput} />
 </container>

@@ -6,7 +6,7 @@ assert.equal = (label, val1, val2) => {
   let sep2 = '\n============================\n';
 
   if (val1 !== val2) throw Error(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
-  else console.log(`${sep2}${label}${sep} assert passed: ${sep}`, val1, ' === ', val2);
+  //else console.log(`${sep2}${label}${sep} assert passed: ${sep}`, val1, ' === ', val2);
 }
 
 let SAT_TEST_OBJ = {
