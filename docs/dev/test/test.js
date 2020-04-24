@@ -5,8 +5,8 @@ assert.equal = (label, val1, val2) => {
   let sep = '\n----------------------------\n';
   let sep2 = '\n============================\n';
 
-  if (val1 !== val2) console.log(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
-  //else console.log(`${sep2}${label}${sep} assert passed: ${sep}`, val1,' === ', val2);
+  if (val1 !== val2) throw Error(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
+  else console.log(`${sep2}${label}${sep} assert passed: ${sep}`, val1, ' === ', val2);
 }
 
 let SAT_TEST_OBJ = {
@@ -78,12 +78,11 @@ function main() {
 
   builder.finish(GOESBuiltOMM);
 
-  //console.log(testObject,"\n", btoa(JSON.stringify(testObject)));
   var buf = builder.dataBuffer();
   let uint8 = builder.asUint8Array();
   var decoder = new TextDecoder('utf8');
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));
-  //console.log(b64encoded);
+  console.log(uint8.length, " ", decoder.decode(uint8).length, " ", b64encoded.length, " ", JSON.stringify(SAT_TEST_OBJ).length);
   // Get access to the root:
   var GOES9 = OMM.getRootAsOMM(buf);
 
@@ -97,8 +96,7 @@ function main() {
   for (let prop in SAT_TEST_OBJ) {
     assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
   }
-  console.log(timeSystem);
-  console.log('The FlatBuffer was successfully created and verified!');
+  console.log('\n\n\n\nThe FlatBuffer was successfully created and verified!');
 }
 
 main();
