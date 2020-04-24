@@ -36,6 +36,7 @@ class lineReader {
       for await (let line of rr(this.reader)) {
         this.processLine(line);
       }
+      return true;
     };
   }
 }
@@ -43,8 +44,14 @@ class lineReader {
 class tle extends lineReader {
   constructor(reader) {
     super(reader);
+    this.lines = [];
+    this._line = [];
     this.processLine = (line) => {
-      console.log(line);
+      this._line.push(line);
+      if ((this._line[0].length === 24 && this._line.length === 3) || (this._line[0].length >= 68 && this._line.length === 2)) {
+        this.lines.push(this._line);
+        this._line = [];
+      }
     };
   }
 }

@@ -9,8 +9,8 @@
     let response = await fetch("./test/all.txt");
     let reader = response.body.getReader();
     let tles = new tle(reader);
-    console.log(tles);
-    tles.readLines();
+    let stuff = await tles.readLines();
+    console.log(tles.lines);
   });
 </script>
 
