@@ -1,7 +1,7 @@
 //https://celestrak.com/NORAD/documentation/spacetrk.pdf
 
 // [-1, +1]
-const tleTransform = {
+const tle_map = {
   1: {
     NORAD_CAT_ID: [3, 7],
     CLASSIFICATION_TYPE: [8],
@@ -24,6 +24,12 @@ const tleTransform = {
     MEAN_MOTION: [53, 63],
     REV_AT_EPOCH: [64, 68],
     CHECKSUM: [69],
+  },
+};
+const tle_transform = {
+  OBJECT_ID: (value) => {
+    let year = parseInt(value.slice(0, 2)) < 50 ? "20" : "19";
+    return `${year}${value.slice(0, 2)}-${value.slice(2)}`;
   },
 };
 
@@ -93,12 +99,15 @@ class tle extends lineReader {
         tle = tle.slice(1, 3);
       }
       tle.forEach((_line, i) => {
-        let tt = tleTransform[i + 1];
+        let tt = tle_map[i + 1];
         for (let prop in tt) {
           let tp = tt[prop];
           let _tp = [];
           _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
           _tle[prop] = _line.substring(_tp[0], _tp[1]);
+          if (tle_transform[prop]) {
+            _tle[prop] = tle_transform[prop](_tle[prop]);
+          }
         }
       });
       if (OBJECT_NAME) _tle.OBJECT_NAME = OBJECT_NAME;
