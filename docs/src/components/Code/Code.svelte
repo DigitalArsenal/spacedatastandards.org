@@ -74,7 +74,7 @@
 
 <style>
   select {
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     font-size: 12px;
     padding: 2px;
     user-select: none;
@@ -97,7 +97,7 @@
     color: white;
     background-color: var(--celestrak-blue);
     padding: 3px;
-    border-radius: 3px;
+    /*border-radius: 3px;*/
   }
   :global(.editorCode) {
     height: calc(99.99vh - var(--header-height) - 40px);

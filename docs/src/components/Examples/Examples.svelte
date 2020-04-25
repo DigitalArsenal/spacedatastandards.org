@@ -17,18 +17,16 @@
   let currentDownload = downloads[0];
   let startLine = 0;
   let _worker;
-  let tles = { lines: [] };
+  let tles;
   let raw;
+  let total = 0;
+  let current = 0;
   let versions = { RAW: "lines", OMM: "OMMCOLLECTION" };
   let currentVersion = "RAW";
-
+  const filter = a => console.log(a);
   const setRawText = () => {
     let prop = versions[currentVersion];
-    if (currentVersion === "RAW") {
-      raw = tles[prop].flat().join("\n");
-    } else if (currentVersion === "OMM") {
-      raw = tles[prop].map(p => JSON.stringify(p, null, 4)).join("\n");
-    }
+    raw = JSON.stringify(tles[prop][current], null, 4);
   };
 
   let _exec = code => {
@@ -92,6 +90,7 @@
       convertObjects();
     }
     setRawText();
+    total = tles.lines.length;
     loaded = true;
   }
 
@@ -104,7 +103,7 @@
 
 <style>
   select {
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     font-size: 12px;
     padding: 2px;
     user-select: none;
@@ -121,22 +120,42 @@
   #top-container {
     box-sizing: border-box;
     width: 100%;
-    height: 50%;
+    height: 100%;
     padding: 5px;
     display: grid;
-    grid-template-columns: auto;
+    grid-template-rows: auto 50px;
     grid-gap: 5px;
   }
 
-  #top-container textarea {
-    height: 100%;
+  #controls {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 30px;
   }
+  #page {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-gap: 10px;
+    font-size: var(--font-size-sm);
+  }
+  #controls #page div {
+    cursor: pointer;
+    display: flex;
+    border: 1px #eee solid;
+    align-items: center;
+    justify-content: center;
+    padding:5px;
+  }
+  #controls input {
+    height: 1;
+  }
+
   .button {
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--celestrak-blue);
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     color: white;
     height: 100%;
     cursor: pointer;
@@ -163,4 +182,12 @@
 </div>
 <container id="top-container">
   <textarea bind:value={raw} />
+  <div id="controls">
+    <div id="page">
+      <div class="arrow">⯇</div>
+      <div>{total}</div>
+      <div class="arrow">⯈</div>
+    </div>
+    <input type="text" on:keyup={e => filter(e.target.value)} />
+  </div>
 </container>
