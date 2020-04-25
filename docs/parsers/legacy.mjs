@@ -111,7 +111,7 @@ class tle extends lineReader {
         }
       });
       if (OBJECT_NAME) _tle.OBJECT_NAME = OBJECT_NAME;
-      this.lines.push(JSON.stringify(_tle).slice(0, 100));
+      this.lines.push(tle.join());
     };
   }
 }

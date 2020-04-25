@@ -23,7 +23,7 @@
   let time = {};
 
   $: {
-    console.log($CodeEditorDocuments, $IDLDocument);
+    if($CodeEditorDocuments, $IDLDocument){}
   }
 
   let _exec = code => {
