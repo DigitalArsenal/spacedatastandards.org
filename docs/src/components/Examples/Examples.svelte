@@ -13,19 +13,12 @@
   const workerPath = "/workers/worker.js";
 
   export let loaded;
-
+  const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
+  let currentDownload = downloads[0];
   let startLine = 0;
   let _worker;
-  let _results = "";
-
-  let _2le = "";
-  let _3le = "";
-  let time = {};
-
-  $: {
-    if (($CodeEditorDocuments, $IDLDocument)) {
-    }
-  }
+  let tles = { lines: [] };
+  let raw;
 
   let _exec = code => {
     if (_worker) _worker.terminate();
@@ -74,56 +67,86 @@
       });
     }
   }
+  async function getData() {
+    loaded = false;
+    let i = downloads.indexOf(currentDownload);
+    let start = new Date();
+    let response = await fetch(currentDownload);
+    let reader = response.body.getReader();
+    tles = new tle(reader);
+    let stop = await tles.readLines();
+    let rows = tles.lines;
+
+    if ($IDLEditorContents) {
+      convertObjects();
+    }
+    raw = tles.lines.flat().join("\n");
+    loaded = true;
+  }
 
   onMount(async () => {
-    Promise.all(
-      ["./test/tle.txt", "./test/all.txt"].map((file, i) =>
-        (async (file, i) => {
-          let start = new Date();
-          let response = await fetch(file);
-          let reader = response.body.getReader();
-          let tles = new tle(reader);
-          let stop = await tles.readLines();
-          let rows = tles.lines;
-
-          if (i) {
-            _3le = rows.flat().join("\n");
-          } else {
-            _2le = rows.flat().join("\n");
-          }
-        })(file, i)
-      )
-    ).then(a => {
-      if ($IDLEditorContents) {
-        convertObjects();
-      } else {
-        IDLEditorContents.subscribe(c => {
-          convertObjects();
-        });
-      }
-      loaded = true;
-    });
+    loaded = true;
+    /*
+     */
   });
 </script>
 
 <style>
+  select {
+    border-radius: 10px;
+    font-size: 12px;
+    padding: 2px;
+    user-select: none;
+    outline: none;
+  }
+  #topMenu {
+    display: grid;
+    grid-template-columns: 200px 60px;
+    grid-gap: 15px;
+    padding: 5px;
+    height: 40px;
+  }
+
   #top-container {
     box-sizing: border-box;
     width: 100%;
     height: 50%;
     padding: 5px;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto;
     grid-gap: 5px;
   }
 
   #top-container textarea {
     height: 100%;
   }
+  #download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--celestrak-blue);
+    border-radius: 5px;
+    color: white;
+    height: 100%;
+    cursor: pointer;
+  }
+  #download:hover {
+    background: #2164bd;
+  }
 </style>
 
+<div id="topMenu">
+  <select
+    bind:value={currentDownload}
+    on:change={() => console.log(currentDownload)}>
+    {#each downloads as download}
+      <option value={download} selected={download === currentDownload}>
+        {download}
+      </option>
+    {/each}
+  </select>
+  <div id="download" on:click={() => getData()}>Fetch</div>
+</div>
 <container id="top-container">
-  <textarea bind:value={_2le} />
-  <textarea bind:value={_3le} />
-
+  <textarea bind:value={raw} />
 </container>

@@ -81,6 +81,7 @@ class tle extends lineReader {
   constructor(reader) {
     super(reader);
     this.lines = [];
+    this.OMMCOLLECTION = [];
     this._line = [];
     this.processLine = (line) => {
       this._line.push(line);
@@ -93,7 +94,8 @@ class tle extends lineReader {
     };
     this.processTLE = (tle) => {
       let OBJECT_NAME;
-      let _tle = {};
+      let _OMM = {};
+      this.lines.push(tle);
       if (tle.length === 3) {
         OBJECT_NAME = tle[0].trim();
         tle = tle.slice(1, 3);
@@ -104,14 +106,14 @@ class tle extends lineReader {
           let tp = tt[prop];
           let _tp = [];
           _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
-          _tle[prop] = _line.substring(_tp[0], _tp[1]);
+          _OMM[prop] = _line.substring(_tp[0], _tp[1]);
           if (tle_transform[prop]) {
-            _tle[prop] = tle_transform[prop](_tle[prop]);
+            _OMM[prop] = tle_transform[prop](_OMM[prop]);
           }
         }
       });
-      if (OBJECT_NAME) _tle.OBJECT_NAME = OBJECT_NAME;
-      this.lines.push(tle.join());
+      if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
+      this.OMMCOLLECTION.push(_OMM);
     };
   }
 }
