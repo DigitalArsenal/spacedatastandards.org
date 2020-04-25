@@ -23,7 +23,8 @@
   let time = {};
 
   $: {
-    if($CodeEditorDocuments, $IDLDocument){}
+    if (($CodeEditorDocuments, $IDLDocument)) {
+    }
   }
 
   let _exec = code => {
@@ -75,7 +76,6 @@
   }
 
   onMount(async () => {
-    loaded = true;
     Promise.all(
       ["./test/tle.txt", "./test/all.txt"].map((file, i) =>
         (async (file, i) => {
@@ -101,6 +101,7 @@
           convertObjects();
         });
       }
+      loaded = true;
     });
   });
 </script>
