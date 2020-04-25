@@ -4,28 +4,28 @@
 const tleTransform = {
   1: {
     NORAD_CAT_ID: [3, 7],
-    CLASSIFICATION_TYPE: [7, 8],
-    OBJECT_ID: [8, 18],
-    EPOCH: [18, 33],
-    MEAN_MOTION_DOT: [33, 44],
-    MEAN_MOTION_DDOT: [44, 53],
-    BSTAR: [53, 62],
-    EPHEMERIS_TYPE: [62, 64],
-    ELEMENT_SET_NO: [64, 68],
-    CHECKSUM: [69, 70]
+    CLASSIFICATION_TYPE: [8],
+    OBJECT_ID: [10, 17],
+    EPOCH: [19, 32],
+    MEAN_MOTION_DOT: [34, 43],
+    MEAN_MOTION_DDOT: [45, 52],
+    BSTAR: [54, 61],
+    EPHEMERIS_TYPE: [63],
+    ELEMENT_SET_NO: [65, 68],
+    CHECKSUM: [69],
   },
   2: {
-    INCLINATION: [8, 17],
-    RA_OF_ASC_NODE: [17, 26],
-    ECCENTRICITY: [26, 34],
-    ARG_OF_PERICENTER: [34, 43],
-    MEAN_ANOMALY: [43, 52],
-    MEAN_MOTION: [52, 63],
-    REV_AT_EPOCH: [63, 68],
-    CHECKSUM: [69, 70]
-  }
+    NORAD_CAT_ID: [3, 7],
+    INCLINATION: [9, 16],
+    RA_OF_ASC_NODE: [18, 25],
+    ECCENTRICITY: [27, 33],
+    ARG_OF_PERICENTER: [35, 42],
+    MEAN_ANOMALY: [44, 51],
+    MEAN_MOTION: [53, 63],
+    REV_AT_EPOCH: [64, 68],
+    CHECKSUM: [69],
+  },
 };
-
 
 class lineReader {
   constructor(reader) {
@@ -42,7 +42,7 @@ class lineReader {
 
         let startIndex = 0;
 
-        for (; ;) {
+        for (;;) {
           let remline = leRegex.exec(value);
           //only progress if there are more lines
           if (!remline) {
@@ -86,9 +86,24 @@ class tle extends lineReader {
       }
     };
     this.processTLE = (tle) => {
-      
-      //this.lines.push(parsedTLE);
-    }
+      let OBJECT_NAME;
+      let _tle = {};
+      if (tle.length === 3) {
+        OBJECT_NAME = tle[0].trim();
+        tle = tle.slice(1, 3);
+      }
+      tle.forEach((_line, i) => {
+        let tt = tleTransform[i + 1];
+        for (let prop in tt) {
+          let tp = tt[prop];
+          let _tp = [];
+          _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
+          _tle[prop] = _line.substring(_tp[0], _tp[1]);
+        }
+      });
+      if (OBJECT_NAME) _tle.OBJECT_NAME = OBJECT_NAME;
+      this.lines.push(JSON.stringify(_tle).slice(0, 100));
+    };
   }
 }
 const satcat = null;

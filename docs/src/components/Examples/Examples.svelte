@@ -48,7 +48,7 @@
   };
 
   let src = `
-    console.log(OMM);
+    //console.log(OMM);
   `;
 
   function convertObjects() {
