@@ -19,6 +19,17 @@
   let _worker;
   let tles = { lines: [] };
   let raw;
+  let versions = { RAW: "lines", OMM: "OMMCOLLECTION" };
+  let currentVersion = "RAW";
+
+  const setRawText = () => {
+    let prop = versions[currentVersion];
+    if (currentVersion === "RAW") {
+      raw = tles[prop].flat().join("\n");
+    } else if (currentVersion === "OMM") {
+      raw = tles[prop].map(p => JSON.stringify(p, null, 4)).join("\n");
+    }
+  };
 
   let _exec = code => {
     if (_worker) _worker.terminate();
@@ -69,18 +80,18 @@
   }
   async function getData() {
     loaded = false;
+    raw = "";
     let i = downloads.indexOf(currentDownload);
     let start = new Date();
     let response = await fetch(currentDownload);
     let reader = response.body.getReader();
     tles = new tle(reader);
     let stop = await tles.readLines();
-    let rows = tles.lines;
 
     if ($IDLEditorContents) {
       convertObjects();
     }
-    raw = tles.lines.flat().join("\n");
+    setRawText();
     loaded = true;
   }
 
@@ -101,7 +112,7 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 200px 60px;
+    grid-template-columns: 200px 60px 200px;
     grid-gap: 15px;
     padding: 5px;
     height: 40px;
@@ -120,7 +131,7 @@
   #top-container textarea {
     height: 100%;
   }
-  #download {
+  .button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -130,22 +141,25 @@
     height: 100%;
     cursor: pointer;
   }
-  #download:hover {
+  .button:hover {
     background: #2164bd;
   }
 </style>
 
 <div id="topMenu">
-  <select
-    bind:value={currentDownload}
-    on:change={() => console.log(currentDownload)}>
+  <select bind:value={currentDownload}>
     {#each downloads as download}
       <option value={download} selected={download === currentDownload}>
         {download}
       </option>
     {/each}
   </select>
-  <div id="download" on:click={() => getData()}>Fetch</div>
+  <div class="button" on:click={() => getData()}>Fetch</div>
+  <select bind:value={currentVersion} on:change={() => setRawText()}>
+    {#each Object.entries(versions) as [key, value]}
+      <option value={key} selected={key === currentVersion}>{key}</option>
+    {/each}
+  </select>
 </div>
 <container id="top-container">
   <textarea bind:value={raw} />
