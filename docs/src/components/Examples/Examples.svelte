@@ -25,8 +25,10 @@
   let currentVersion = "RAW";
   const filter = a => console.log(a);
   const setRawText = () => {
-    let prop = versions[currentVersion];
-    raw = JSON.stringify(tles[prop][current], null, 4);
+    if (tles) {
+      let prop = versions[currentVersion];
+      raw = JSON.stringify(tles[prop][current], null, 4);
+    }
   };
 
   let _exec = code => {
@@ -144,7 +146,7 @@
     border: 1px #eee solid;
     align-items: center;
     justify-content: center;
-    padding:5px;
+    padding: 5px;
   }
   #controls input {
     height: 1;

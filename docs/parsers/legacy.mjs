@@ -1,6 +1,7 @@
 //https://celestrak.com/NORAD/documentation/spacetrk.pdf
 
 // [-1, +1]
+const whatCentury = (digits) => (parseInt(digits) < 50 ? "20" : "19") + digits;
 const tle_map = {
   1: {
     NORAD_CAT_ID: [3, 7],
@@ -27,10 +28,29 @@ const tle_map = {
   },
 };
 const tle_transform = {
+  BSTAR: (value) => {
+    let sign = value.slice(0, 1) === "-" ? -1 : 1;
+    let num = value.slice(1, 6);
+    let exp = value.slice(6);
+    return (sign * parseFloat("." + num) * Math.pow(10, parseInt(exp)))
+  },
+  CLASSIFICATION_TYPE: (value) => value,
   OBJECT_ID: (value) => {
-    let year = parseInt(value.slice(0, 2)) < 50 ? "20" : "19";
+    let year = whatCentury(parseInt(value.slice(0, 2)));
     return `${year}${value.slice(0, 2)}-${value.slice(2)}`;
   },
+  EPOCH: (value) => {
+    value = value.trim();
+    let tA = [whatCentury((value.slice(0, 2))), 0, parseFloat(value.substr(2)), 0, 24, 0, 60, 0, 60, 0, 1000];
+    tA.forEach((v, i) => {
+      if (i % 2 && i !== 1) {
+        tA[i] = Math.floor(tA[i - 1]);
+      } else if (i > 2) {
+        tA[i] = tA[i] * (tA[i - 2] - tA[i - 1]);
+      }
+    });
+    return new Date(Date.UTC.apply(0, tA.filter((v, i) => { return i % 2 || i == 0 || i == tA.length - 1 })));
+  }
 };
 
 class lineReader {
@@ -48,7 +68,7 @@ class lineReader {
 
         let startIndex = 0;
 
-        for (;;) {
+        for (; ;) {
           let remline = leRegex.exec(value);
           //only progress if there are more lines
           if (!remline) {
@@ -106,10 +126,7 @@ class tle extends lineReader {
           let tp = tt[prop];
           let _tp = [];
           _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
-          _OMM[prop] = _line.substring(_tp[0], _tp[1]);
-          if (tle_transform[prop]) {
-            _OMM[prop] = tle_transform[prop](_OMM[prop]);
-          }
+          _OMM[prop] = (tle_transform[prop] || Number.parseFloat)(_line.substring(_tp[0], _tp[1]).trim());
         }
       });
       if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
