@@ -205,7 +205,7 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 200px 60px 150px;
+    grid-template-columns: 2fr 1fr 1fr;
     grid-gap: 15px;
     padding: 5px;
     height: 40px;
@@ -217,7 +217,7 @@
     height: 100%;
     padding: 5px;
     display: grid;
-    grid-template-rows: auto 50px;
+    grid-template-rows: 1fr 50px;
     grid-gap: 5px;
   }
 
