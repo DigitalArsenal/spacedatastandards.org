@@ -1,7 +1,8 @@
 //https://celestrak.com/NORAD/documentation/spacetrk.pdf
+//https://cdf.gsfc.nasa.gov/html/leapseconds_requirements.html
 
-// [-1, +1]
-const whatCentury = (digits) => (parseInt(digits) < 50 ? "20" : "19") + digits;
+import bignumber from "bignumber.js";
+window.bignumber = bignumber;
 const tle_map = {
   1: {
     NORAD_CAT_ID: [3, 7],
@@ -27,21 +28,29 @@ const tle_map = {
     CHECKSUM: [69],
   },
 };
+const decimalAssumed = (value) => bignumber("." + value) || 0;
 const tle_transform = {
   BSTAR: (value) => {
     let sign = value.slice(0, 1) === "-" ? -1 : 1;
     let num = value.slice(1, 6);
     let exp = value.slice(6);
-    return (sign * parseFloat("." + num) * Math.pow(10, parseInt(exp)))
+    let fpf = 1e32;
+    let r = sign * parseInt(num) * Math.pow(10, parseInt(exp));
+    return (r * fpf) / (fpf * parseInt("10" + new Array(num.length).join("0")));
   },
   CLASSIFICATION_TYPE: (value) => value,
   OBJECT_ID: (value) => {
     let year = whatCentury(parseInt(value.slice(0, 2)));
-    return `${year}${value.slice(0, 2)}-${value.slice(2)}`;
+    return `${year}${value.slice(0, 2)}-${value.slice(2)}`.trim();
+  },
+  ECCENTRICITY: decimalAssumed,
+  MEAN_MOTION_DDOT: (value) => {
+    let sign = value.slice(0, 1) === "-" ? -1 : 1;
+    return sign * decimalAssumed(value.slice(1));
   },
   EPOCH: (value) => {
     value = value.trim();
-    let tA = [whatCentury((value.slice(0, 2))), 0, parseFloat(value.substr(2)), 0, 24, 0, 60, 0, 60, 0, 1000];
+    let tA = [whatCentury(value.slice(0, 2)), 0, parseFloat(value.substr(2)), 0, 24, 0, 60, 0, 60, 0, 1000];
     tA.forEach((v, i) => {
       if (i % 2 && i !== 1) {
         tA[i] = Math.floor(tA[i - 1]);
@@ -49,9 +58,18 @@ const tle_transform = {
         tA[i] = tA[i] * (tA[i - 2] - tA[i - 1]);
       }
     });
-    return new Date(Date.UTC.apply(0, tA.filter((v, i) => { return i % 2 || i == 0 || i == tA.length - 1 })));
-  }
+    return new Date(
+      Date.UTC.apply(
+        0,
+        tA.filter((v, i) => {
+          return i % 2 || i == 0 || i == tA.length - 1;
+        })
+      )
+    );
+  },
 };
+
+const whatCentury = (digits) => (parseInt(digits) < 50 ? "20" : "19") + digits;
 
 class lineReader {
   constructor(reader) {
@@ -68,7 +86,7 @@ class lineReader {
 
         let startIndex = 0;
 
-        for (; ;) {
+        for (;;) {
           let remline = leRegex.exec(value);
           //only progress if there are more lines
           if (!remline) {
@@ -101,7 +119,6 @@ class tle extends lineReader {
   constructor(reader) {
     super(reader);
     this.lines = [];
-    this.OMMCOLLECTION = [];
     this._line = [];
     this.processLine = (line) => {
       this._line.push(line);
@@ -113,24 +130,31 @@ class tle extends lineReader {
       }
     };
     this.processTLE = (tle) => {
-      let OBJECT_NAME;
-      let _OMM = {};
       this.lines.push(tle);
-      if (tle.length === 3) {
-        OBJECT_NAME = tle[0].trim();
-        tle = tle.slice(1, 3);
-      }
-      tle.forEach((_line, i) => {
-        let tt = tle_map[i + 1];
-        for (let prop in tt) {
-          let tp = tt[prop];
-          let _tp = [];
-          _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
-          _OMM[prop] = (tle_transform[prop] || Number.parseFloat)(_line.substring(_tp[0], _tp[1]).trim());
+    };
+    this.format = {
+      RAW: (tle) => tle,
+      OMM: (tle) => {
+        if (!tle) return;
+        let OBJECT_NAME;
+        let _OMM = {};
+        if (tle.length === 3) {
+          OBJECT_NAME = tle[0].trim();
+          tle = tle.slice(1, 3);
         }
-      });
-      if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
-      this.OMMCOLLECTION.push(_OMM);
+        tle.forEach((_line, i) => {
+          let tt = tle_map[i + 1];
+          for (let prop in tt) {
+            let tp = tt[prop];
+            let _tp = [];
+            _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
+            let value = _line.substring(_tp[0], _tp[1]);
+            _OMM[prop] = (tle_transform[prop] || bignumber)(value);
+          }
+        });
+        if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
+        return _OMM;
+      },
     };
   }
 }

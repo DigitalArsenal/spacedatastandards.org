@@ -9,27 +9,90 @@
   import workerLoader from "../../lib/workerLoader.js";
   import fb from "../../../lib/flatbuffers.js";
   import ws from "../../lib/workerShim.js";
+  import bignumber from "bignumber.js";
 
   const workerPath = "/workers/worker.js";
 
   export let loaded;
   const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
   let currentDownload = downloads[0];
-  let startLine = 0;
+
   let _worker;
   let tles;
   let raw;
+  let schema;
+
+  let startLine = 0;
   let total = 0;
-  let current = 0;
-  let versions = { RAW: "lines", OMM: "OMMCOLLECTION" };
+  $: current = Math.min(Math.max(current, 1), total) || 0;
   let currentVersion = "RAW";
-  const filter = a => console.log(a);
-  const setRawText = () => {
-    if (tles) {
-      let prop = versions[currentVersion];
-      raw = JSON.stringify(tles[prop][current], null, 4);
+  let filtered = [];
+  let filter = "";
+  let tofixed = n => {
+    if (!isNaN(n) && (typeof n === "number" || n instanceof bignumber)) {
+      let place = n % 1 ? 15 : 0;
+      n = n.toFixed(place);
+      n = place ? n.replace(/0+$/, "") : n;
+    } else {
+      n = n || null;
     }
+    return n;
   };
+
+  let versions = {
+    RAW: v => (v ? v.join("\n") : ""),
+    "OMM (KEY / VALUE)": v => {
+      if (!v) return;
+      v = tles.format.OMM(v);
+      let _v = {};
+      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      for (let k = 0; k < keys.length; k++) {
+        let key = keys[k];
+        _v[key] = v[key] || null;
+      }
+      let _max =
+        Reflect.ownKeys(_v).reduce((p, c) => (p.length > c.length ? p : c))
+          .length + 1;
+      let result = Object.entries(_v)
+        .map(kv => {
+          return `${kv[0].padEnd(_max)} = ${(tofixed(kv[1]) || "null")
+            .toString()
+            .replace(/"/g, "")}`;
+        })
+        .join("\n");
+      return result;
+    },
+    "OMM (JSON)": v => {
+      if (!v) return;
+      v = tles.format.OMM(v);
+      let _v = {};
+      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      for (let k = 0; k < keys.length; k++) {
+        let key = keys[k];
+        _v[key] = tofixed([key]);
+      }
+      return JSON.stringify(_v, null, 4).replace(
+        /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
+        "$1"
+      );
+    }
+    // "OMM (XML)": v => {}
+  };
+
+  $: {
+    if (tles && currentVersion && !isNaN(current)) {
+      setRawText();
+    }
+  }
+
+  $: filtered =
+    tles && tles.lines && filter.length
+      ? tles.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
+      : [];
+  const setRawText = c =>
+    tles && schema
+      ? (raw = versions[currentVersion](tles.lines[c || current]))
+      : null;
 
   let _exec = code => {
     if (_worker) _worker.terminate();
@@ -43,17 +106,21 @@
       )
     );
     _worker.onmessage = e => {
-      if (e.data === "done") worker.terminate();
-      else _results += `${e.data.join("")}  \n`;
-      console.log(_results);
+      if (e.data === "done") {
+        _worker.terminate();
+        loaded = true;
+        setRawText();
+      } else {
+        _results += `${e.data.join("")}  \n`;
+      }
     };
     _worker.onerror = function(err) {
-      _results += `${err.message}  at line ${err.lineno - startLine}`;
+      alert(`${err.message}  at line ${err.lineno - startLine}`);
     };
   };
 
   let src = `
-    //console.log(OMM);
+    _done();
   `;
 
   function convertObjects() {
@@ -74,6 +141,10 @@
         let file = Object.keys(d.files).filter(
           f => f.slice(f.lastIndexOf(".")) === ".js"
         );
+        let sfile = Object.keys(d.files).filter(
+          f => f.indexOf("schema.json") > -1
+        );
+        schema = JSON.parse(d.files[sfile]);
         _exec(`${fb}${d.files[file]}${src}`);
       });
     }
@@ -88,18 +159,18 @@
     tles = new tle(reader);
     let stop = await tles.readLines();
 
-    if ($IDLEditorContents) {
-      convertObjects();
-    }
     setRawText();
-    total = tles.lines.length;
-    loaded = true;
+    total = tles.lines.length - 1;
+    if ($IDLEditorContents && !schema) {
+      convertObjects();
+    } else {
+      loaded = true;
+      setRawText();
+    }
   }
 
   onMount(async () => {
     loaded = true;
-    /*
-     */
   });
 </script>
 
@@ -113,7 +184,7 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 200px 60px 200px;
+    grid-template-columns: 200px 60px 150px;
     grid-gap: 15px;
     padding: 5px;
     height: 40px;
@@ -148,8 +219,14 @@
     justify-content: center;
     padding: 5px;
   }
-  #controls input {
+  #slider {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+  #slider input {
     height: 1;
+    width: 100%;
   }
 
   .button {
@@ -164,6 +241,10 @@
   }
   .button:hover {
     background: #2164bd;
+  }
+  div[contenteditable="true"] {
+    padding: 1px;
+    width: 50px;
   }
 </style>
 
@@ -186,10 +267,36 @@
   <textarea bind:value={raw} />
   <div id="controls">
     <div id="page">
-      <div class="arrow">⯇</div>
-      <div>{total}</div>
-      <div class="arrow">⯈</div>
+      <div
+        class="arrow"
+        on:click={() => {
+          current = Math.max(0, current - 1);
+        }}>
+        ⯇
+      </div>
+      <div>
+        <div
+          contenteditable="true"
+          bind:textContent={current}
+          inputmode="text" />
+        /{total}
+      </div>
+      <div
+        class="arrow"
+        on:click={() => {
+          current = Math.min(total, current + 1);
+        }}>
+        ⯈
+      </div>
     </div>
-    <input type="text" on:keyup={e => filter(e.target.value)} />
+    <div id="slider">
+      <input
+        type="range"
+        min="1"
+        max={total}
+        bind:value={current}
+        class="slider"
+        id="myRange" />
+    </div>
   </div>
 </container>
