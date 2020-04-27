@@ -212,10 +212,10 @@
       background: white;
     }
   }
+  main {
+  }
   #mainContainer {
-    position: relative;
     width: 100%;
-    height: calc(100% - var(--header-height));
   }
   #links {
     box-sizing: border-box;

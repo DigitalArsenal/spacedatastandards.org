@@ -208,16 +208,15 @@
     grid-template-columns: 2fr 1fr 1fr;
     grid-gap: 15px;
     padding: 5px;
-    height: 40px;
   }
 
   #top-container {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    height: calc(100%); /*calc(100% - var(--header-height) - 50px);*/
     padding: 5px;
     display: grid;
-    grid-template-rows: 1fr 50px;
+    grid-template-rows: 40px auto 50px;
     grid-gap: 5px;
   }
 
@@ -269,22 +268,22 @@
   }
 </style>
 
-<div id="topMenu">
-  <select bind:value={currentDownload}>
-    {#each downloads as download}
-      <option value={download} selected={download === currentDownload}>
-        {download}
-      </option>
-    {/each}
-  </select>
-  <div class="button" on:click={() => getData()}>Fetch</div>
-  <select bind:value={currentVersion} on:change={() => setRawText()}>
-    {#each Object.entries(versions) as [key, value]}
-      <option value={key} selected={key === currentVersion}>{key}</option>
-    {/each}
-  </select>
-</div>
 <container id="top-container">
+  <div id="topMenu">
+    <select bind:value={currentDownload}>
+      {#each downloads as download}
+        <option value={download} selected={download === currentDownload}>
+          {download}
+        </option>
+      {/each}
+    </select>
+    <div class="button" on:click={() => getData()}>Fetch</div>
+    <select bind:value={currentVersion} on:change={() => setRawText()}>
+      {#each Object.entries(versions) as [key, value]}
+        <option value={key} selected={key === currentVersion}>{key}</option>
+      {/each}
+    </select>
+  </div>
   <textarea bind:value={raw} />
   <div id="controls">
     <div id="page">
@@ -293,7 +292,7 @@
         on:click={() => {
           current = Math.max(0, current - 1);
         }}>
-        ⯇
+        ◁
       </div>
       <div>
         <div
@@ -307,7 +306,7 @@
         on:click={() => {
           current = Math.min(total, current + 1);
         }}>
-        ⯈
+        ▷
       </div>
     </div>
     <div id="slider">
