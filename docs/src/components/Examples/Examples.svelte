@@ -34,7 +34,7 @@
       n = n.toFixed(place);
       n = place ? n.replace(/0+$/, "") : n;
     } else {
-      n = JSON.stringify(n) || null;
+      n = n || null;
     }
     return n;
   };
@@ -55,9 +55,12 @@
           .length + 1;
       let result = Object.entries(_v)
         .map(kv => {
-          return `${kv[0].padEnd(_max)} = ${(tofixed(kv[1]) || "null")
-            .toString()
-            .replace(/"/g, "")}`;
+          let _v =
+            kv[1] instanceof Date
+              ? JSON.stringify(kv[1])
+              : tofixed(kv[1]) || "null";
+
+          return `${kv[0].padEnd(_max)} = ${_v.toString().replace(/"/g, "")}`;
         })
         .join("\n");
       return result;
