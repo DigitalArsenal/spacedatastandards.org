@@ -83,7 +83,7 @@ function main() {
 
   OMM.startOMM(builder);
 
-  for (prop in intermediate) {
+  for (let prop in intermediate) {
     OMM[prop](builder, intermediate[prop].value);
   }
 
@@ -91,7 +91,7 @@ function main() {
 
   builder.finish(GOESBuiltOMM);
 
-  var buf = builder.dataBuffer();
+  let buf = builder.dataBuffer();
   let uint8 = builder.asUint8Array();
   var decoder = new TextDecoder('utf8');
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));

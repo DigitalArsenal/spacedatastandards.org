@@ -7,8 +7,7 @@
     IDLDocument
   } from "../../stores/Files";
   import workerLoader from "../../lib/workerLoader.js";
-  import fb from "../../../lib/flatbuffers.js";
-  import ws from "../../lib/workerShim.js";
+  import { flatbuffers } from "./flatbuffers.js";
   import bignumber from "bignumber.js";
 
   const workerPath = "/workers/worker.js";
@@ -78,6 +77,54 @@
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
         "$1"
       );
+    },
+    "OMM (FLATBUFFER)": v => {
+      if (!v) return;
+      v = tles.format.OMM(v);
+      let { OMM } = FlatBuffer;
+      let builder = new flatbuffers.Builder(0);
+      let shim = Object.keys(schema.definitions.OMM.properties);
+      let intermediate = {};
+      shim.forEach(canonicalname => {
+        let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
+        for (let prop in OMM) {
+          if (prop.indexOf(mangledname) > -1) {
+            if (v[canonicalname] || v[canonicalname] === 0) {
+              let schemaValue =
+                schema.definitions.OMM.properties[canonicalname];
+              intermediate[prop] = { canonicalname, mangledname };
+              let _value = v[canonicalname];
+              switch (schemaValue.type) {
+                case "number":
+                  break;
+                case "string":
+                  _value = builder.createString(_value);
+                  break;
+              }
+              intermediate[prop].value = _value;
+            }
+          }
+        }
+      });
+
+      OMM.startOMM(builder);
+
+      for (let prop in intermediate) {
+        OMM[prop](builder, intermediate[prop].value);
+      }
+
+      var GOESBuiltOMM = OMM.endOMM(builder);
+
+      builder.finish(GOESBuiltOMM);
+
+      var buf = builder.dataBuffer();
+      let uint8 = builder.asUint8Array();
+      var decoder = new TextDecoder("utf8");
+      var b64encoded = btoa(
+        unescape(encodeURIComponent(decoder.decode(uint8)))
+      );
+      console.log(JSON.stringify(uint8));
+      return uint8;
     }
     /* "OMM (XML)": v => {}*/
   };
@@ -118,8 +165,6 @@
         f => f.indexOf("schema.json") > -1
       );
       new Function(d.files[file]).bind(FlatBuffer)();
-      console.log(FlatBuffer);
-      globalThis.FlatBuffer = FlatBuffer;
       schema = JSON.parse(d.files[sfile]);
       setRawText();
       loaded = true;

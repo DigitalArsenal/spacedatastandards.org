@@ -45,7 +45,9 @@
   const scrollDown = () =>
     setTimeout(() => {
       let ta = document.getElementById("console");
-      ta.scrollTop = ta.scrollHeight;
+      if (ta) {
+        ta.scrollTop = ta.scrollHeight;
+      }
     }, 10);
   let _exec = code => {
     if (_worker) _worker.terminate();
@@ -61,10 +63,9 @@
     _logOutput = "";
     _worker.onmessage = e => {
       if (e.data === "done") worker.terminate();
-      if (e.data.global){
+      if (e.data.global) {
         globalThis[e.data.globalName] = e.data.global;
-      }
-      else _logOutput += `${carat} ${e.data.join("")}  \n`;
+      } else _logOutput += `${carat} ${e.data.join("")}  \n`;
       scrollDown();
     };
     _worker.onerror = function(err) {
