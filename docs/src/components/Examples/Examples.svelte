@@ -21,7 +21,7 @@
   let tles;
   let raw;
   let schema;
-
+  let FlatBuffer = {};
   let startLine = 0;
   let total = 0;
   $: current = Math.min(Math.max(current, 1), total) || 0;
@@ -97,60 +97,33 @@
       ? (raw = versions[currentVersion](tles.lines[c || current]))
       : null;
 
-  let _exec = code => {
-    if (_worker) _worker.terminate();
-    let _preamble = `${ws}${code}`;
-    startLine = _preamble.match(/\n/g).length;
-    _worker = new Worker(
-      window.URL.createObjectURL(
-        new Blob([`${_preamble}`], {
-          type: "text/javascript"
-        })
-      )
-    );
-    _worker.onmessage = e => {
-      if (e.data === "done") {
-        _worker.terminate();
-        loaded = true;
-        setRawText();
-      } else {
-        _results += `${e.data.join("")}  \n`;
-      }
-    };
-    _worker.onerror = function(err) {
-      alert(`${err.message}  at line ${err.lineno - startLine}`);
-    };
-  };
-
-  let src = `
-    _done();
-  `;
-
   function convertObjects() {
-    if (src) {
-      let inputObject = {
-        currentLanguage: [
-          "--js",
-          "Generate JavaScript code",
-          "js",
-          "js",
-          "text/javascript"
-        ],
-        IDLDocument: "JSTEST",
-        IDLEditorContents: $IDLEditorContents,
-        loaded
-      };
-      workerLoader(workerPath, inputObject, function(d) {
-        let file = Object.keys(d.files).filter(
-          f => f.slice(f.lastIndexOf(".")) === ".js"
-        );
-        let sfile = Object.keys(d.files).filter(
-          f => f.indexOf("schema.json") > -1
-        );
-        schema = JSON.parse(d.files[sfile]);
-        _exec(`${fb}${d.files[file]}${src}`);
-      });
-    }
+    let inputObject = {
+      currentLanguage: [
+        "--js",
+        "Generate JavaScript code",
+        "js",
+        "js",
+        "text/javascript"
+      ],
+      IDLDocument: "JSTEST",
+      IDLEditorContents: $IDLEditorContents,
+      loaded
+    };
+    workerLoader(workerPath, inputObject, function(d) {
+      let file = Object.keys(d.files).filter(
+        f => f.slice(f.lastIndexOf(".")) === ".js"
+      );
+      let sfile = Object.keys(d.files).filter(
+        f => f.indexOf("schema.json") > -1
+      );
+      new Function(d.files[file]).bind(FlatBuffer)();
+      console.log(FlatBuffer);
+      globalThis.FlatBuffer = FlatBuffer;
+      schema = JSON.parse(d.files[sfile]);
+      setRawText();
+      loaded = true;
+    });
   }
   async function getData() {
     loaded = false;

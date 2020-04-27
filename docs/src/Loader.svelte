@@ -8,6 +8,7 @@
     align-items: center;
     justify-content: center;
     z-index: 100;
+    background: #ffffffaa;
   }
   h1 {
     color: var(--celestrak-blue);
