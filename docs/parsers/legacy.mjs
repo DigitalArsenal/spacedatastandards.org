@@ -41,7 +41,8 @@ const tle_transform = {
   CLASSIFICATION_TYPE: (value) => value,
   OBJECT_ID: (value) => {
     let year = whatCentury(parseInt(value.slice(0, 2)));
-    return `${year}${value.slice(0, 2)}-${value.slice(2)}`.trim();
+
+    return !year ? "" : `${year}${value.slice(0, 2)}-${value.slice(2)}`.trim();
   },
   ECCENTRICITY: decimalAssumed,
   MEAN_MOTION_DDOT: (value) => {
@@ -69,7 +70,10 @@ const tle_transform = {
   },
 };
 
-const whatCentury = (digits) => (parseInt(digits) < 50 ? "20" : "19") + digits;
+const whatCentury = (digits) => {
+  digits = parseInt(digits);
+  return digits ? (digits < 50 ? "20" : "19") + digits : null;
+};
 
 class lineReader {
   constructor(reader) {

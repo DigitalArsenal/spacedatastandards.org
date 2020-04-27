@@ -34,7 +34,7 @@
       n = n.toFixed(place);
       n = place ? n.replace(/0+$/, "") : n;
     } else {
-      n = n || null;
+      n = JSON.stringify(n) || null;
     }
     return n;
   };
@@ -69,7 +69,7 @@
       let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
       for (let k = 0; k < keys.length; k++) {
         let key = keys[k];
-        _v[key] = tofixed([key]);
+        _v[key] = tofixed(v[key]);
       }
       return JSON.stringify(_v, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
