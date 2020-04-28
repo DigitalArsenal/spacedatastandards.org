@@ -69,6 +69,9 @@
     if (false) toggleMenu();
   });
   onMount(() => {
+    if (!$IDLDocument) {
+      window.location.hash = "/select";
+    }
     loaded = $IDLDocument ? false : true;
   });
 </script>

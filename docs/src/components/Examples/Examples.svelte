@@ -210,6 +210,9 @@
     }
   };
   onMount(async () => {
+    if (!$IDLDocument) {
+      window.location.hash = "/select";
+    }
     loaded = true;
   });
 </script>

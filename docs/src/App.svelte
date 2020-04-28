@@ -28,7 +28,7 @@
   let menuOpen = false;
   let loaded = false;
   let editor = null;
-  let router = new Navaid("/");
+
   let args = {};
   const githubURL = "https://github.com/DigitalArsenal/spacedatastandards.org";
   $: link = `https://public.ccsds.org/Pubs/${($IDLDocument || "").match(
@@ -40,10 +40,14 @@
     activeComponent = _component;
   };
   $: linkName = ($IDLDocument || "").match(/\w{1,}/);
+
   let activeComponent = Editor;
+
   let defaultPath = params => {
     setRoute(params, Main);
   };
+
+  let router = new Navaid("/", defaultPath);
 
   router.on("/", defaultPath);
   router.on("/#/", defaultPath);
@@ -124,9 +128,7 @@
   };
 
   onMount(() => {
-    if (!$IDLDocument) {
-      window.location.hash = "";
-    }
+    window.location.hash = "";
     window.addEventListener("keydown", sEvent);
   });
   onDestroy(() => {
@@ -395,7 +397,7 @@
         </a>
         <!--<a href="javascript:" on:click={() => createDownload()}>SAVE</a>-->
       {:else}
-        <a href="#/">SELECT...</a>
+        <a href="#/select">SELECT...</a>
       {/if}
     </div>
   </header>

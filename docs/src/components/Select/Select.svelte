@@ -25,6 +25,13 @@
         });
     }
   };
+  const clearLocalData = () => {
+    if (confirm("clear data")) {
+      localStorage.clear();
+      $IDLDocument = "";
+      $IDLEditorContents = "";
+    }
+  };
   onMount(() => {
     loaded = true;
   });
@@ -45,7 +52,7 @@
     position: relative;
     color: #eee;
     font-size: var(--font-size-btn);
-    font-weight: 200;
+    font-weight: 300;
     min-width: 200px;
     padding: 8px;
     margin: 5px;
@@ -102,6 +109,21 @@
     color: var(--celestrak-blue);
     border-bottom: 0.5px var(--celestrak-blue) solid;
   }
+  #footer {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    padding: 5px;
+    position: fixed;
+    bottom: 0px;
+    width: 100vw;
+  }
+  #footer button {
+    background: var(--celestrak-blue);
+    border: 0px;
+    color: white;
+    padding: 10px;
+  }
 </style>
 
 <h1>
@@ -127,3 +149,11 @@
     </div>
   {/each}
 </container>
+<div id="footer">
+  <button
+    on:click={() => {
+      clearLocalData();
+    }}>
+    Click to Clear Local Data
+  </button>
+</div>

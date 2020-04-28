@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import Editor from "../MonacoEditor/MonacoEditor.svelte";
   import {
+    IDLDocument,
     IDLEditorContents,
     TestEditorDocument,
     TestEditorContents,
@@ -78,7 +79,6 @@
   };
 
   function runTestScript() {
-    console.log(_running);
     if (_running) return;
     _running = true;
     if ($IDLEditorContents) {
@@ -132,6 +132,9 @@
   };
 
   onMount(() => {
+    if (!$IDLDocument) {
+      window.location.hash = "/select";
+    }
     dragEl = [
       document.getElementById("top-container"),
       document.getElementById("top-menu"),

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import background from "./background.html.txt";
-  console.log(background);
+
   export let loaded;
   onMount(() => {
     loaded = true;
@@ -16,7 +16,7 @@
   #backgroundContainer div {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
       sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    padding: 5px;
+    padding: 10px;
     font-weight: 500;
     font-size: 16px;
     max-width: 1024px;
