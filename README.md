@@ -1,7 +1,7 @@
 # [spacedatastandards.org](https://spacedatastandards.org)
 <img style="max-width:400px" src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
 <h2>
-  <b>Background</b>
+  Background
 </h2>
 <p>
   The

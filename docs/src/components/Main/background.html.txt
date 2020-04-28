@@ -1,5 +1,5 @@
 <h2>
-  <b>Background</b>
+  Background
 </h2>
 <p>
   The

@@ -28,10 +28,21 @@
     border-bottom-width: 0.993304px;
     box-sizing: border-box;
     padding-bottom: 5px;
+    font-weight: 100;
+    font-size:calc((1.7rem + 0.5 * ((100vw - 50rem) / 120)));
+  }
+  h1 {
+    margin: auto;
+    font-size: calc((2rem + 0.5 * ((100vw - 50rem) / 120)));
+    width: fit-content;
+    padding: 15px;
+    font-weight: 300;
   }
 </style>
 
 <div id="backgroundContainer">
+
+  <h1>Space Data Standards</h1>
   <div>
     {@html background}
   </div>
