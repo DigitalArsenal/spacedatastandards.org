@@ -1,7 +1,5 @@
 # [spacedatastandards.org](https://spacedatastandards.org)
-<div style="width:100%">
-<img style="max-width:400px;margin:auto" src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
-</div>
+<img style="max-width:400px" src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
 <h2>
   <b>Background</b>
 </h2>
