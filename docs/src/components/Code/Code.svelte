@@ -77,6 +77,9 @@
     createCode();
     if (false) toggleMenu();
   });
+  const downloadFile = () => {
+    download($CodeEditorContents, $CodeEditorActiveDocument, "text/plain");
+  };
   onMount(() => {
     if (!$IDLDocument) {
       window.location.hash = "/select";
@@ -95,24 +98,30 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 100px 30vw auto;
+    grid-template-columns: minmax(50px, 100px) minmax(50px, 200px) minmax(
+        20px,
+        100px
+      ) auto;
     grid-gap: 15px;
     padding: 5px;
     height: 40px;
   }
-  #libraryDownload {
+  .dlBtn {
     display: flex;
     align-self: center;
     justify-content: flex-end;
+    height: 100%;
   }
-  #libraryDownload a {
+  .dlBtn a {
     text-decoration: none;
     color: white;
     background-color: var(--celestrak-blue);
     padding: 5px;
-    font-weight: 200;
+    font-weight: 300;
     font-size: var(--font-size-sm);
-    /*border-radius: 3px;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   :global(.editorCode) {
     height: calc(99.99vh - var(--header-height) - 40px);
@@ -137,12 +146,18 @@
         </option>
       {/each}
     </select>
-    <div id="libraryDownload">
+    <div
+      class="dlBtn"
+      style="justify-content: left;"
+      on:click={() => downloadFile()}>
+      <a href="javascript:">Download</a>
+    </div>
+    <div class="dlBtn">
       {#if $CodeEditorLanguage[0]}
         <a
           target="_blank"
           href="https://github.com/google/flatbuffers/tree/master/{$CodeEditorLanguage[3]}">
-          FB LIBRARY ({$CodeEditorLanguage[0].replace('--', '').toUpperCase()})
+          FB LIB ({$CodeEditorLanguage[0].replace('--', '').toUpperCase()})
         </a>
       {/if}
     </div>
