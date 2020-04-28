@@ -222,12 +222,12 @@
     sizeEvents.forEach(e => {
       window.addEventListener(e, sizeSet);
     });
-    onDestroy(() => {
-      sizeEvents.forEach(e => {
-        window.removeEventListener(e, sizeSet);
-      });
-    });
     loaded = true;
+  });
+  onDestroy(() => {
+    sizeEvents.forEach(e => {
+      window.removeEventListener(e, sizeSet);
+    });
   });
 </script>
 

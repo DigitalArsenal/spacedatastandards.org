@@ -162,7 +162,7 @@
 
 <style>
   :root {
-    --console-height: 150px;
+    --console-height: 250px;
   }
   container {
     height: 100%;
