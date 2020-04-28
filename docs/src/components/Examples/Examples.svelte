@@ -225,14 +225,16 @@
   #topMenu {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 15px;
+    grid-gap: 5px;
     padding: 5px;
   }
 
   #topMenu > div {
     display: grid;
-    grid-gap: 15px;
-    grid-template-columns: 200px 100px;
+    grid-gap: 5px;
+    font-size: var(--font-size-sm);
+    padding: 2px;
+    grid-template-columns: minmax(100px, 200px) minmax(35px, 55px);
   }
   #right {
     justify-content: right;
@@ -305,7 +307,7 @@
           </option>
         {/each}
       </select>
-      <div class="button" on:click={() => getData()}>Fetch</div>
+      <div class="button" on:click={() => getData()}>GET</div>
     </div>
     <div id="right">
       <select bind:value={currentVersion} on:change={() => setRawText()}>
@@ -313,7 +315,7 @@
           <option value={key} selected={key === currentVersion}>{key}</option>
         {/each}
       </select>
-      <div class="button" on:click={() => downloadData()}>Download</div>
+      <div class="button" on:click={() => downloadData()}>D/L</div>
     </div>
   </div>
   <textarea bind:value={raw} />
