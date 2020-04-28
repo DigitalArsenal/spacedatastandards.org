@@ -11,7 +11,7 @@
   import { languages } from "./languages.js";
   import Editor from "../MonacoEditor/MonacoEditor.svelte";
   import workerLoader from "../../lib/workerLoader.js";
-
+  import demangler from "../../lib/demangler.js";
   export let loaded = undefined;
   export let toggleMenu = undefined;
 
@@ -31,7 +31,17 @@
   };
 
   $: {
-    $CodeEditorContents = $CodeEditorDocuments[$CodeEditorActiveDocument];
+    let _editorContents = $CodeEditorDocuments[$CodeEditorActiveDocument];
+    let _sFile = Object.keys($CodeEditorDocuments).filter(
+      f => f.indexOf("schema.json") > -1
+    )[0];
+    if (_sFile) {
+      let _schema = JSON.parse($CodeEditorDocuments[_sFile]);
+      $CodeEditorContents = demangler(
+        Object.keys(_schema.definitions.OMM.properties),
+        _editorContents
+      );
+    }
   }
   const workerPath = "/workers/worker.js";
   $CodeEditorLanguage = $CodeEditorLanguage.length
@@ -46,7 +56,6 @@
     }
     $CodeEditorDocuments = data.files;
     $CodeEditorActiveDocument = Object.keys(data.files).sort(schemaSort)[0];
-    $CodeEditorContents = $CodeEditorDocuments[$CodeEditorActiveDocument];
     loaded = data.loaded;
   };
 

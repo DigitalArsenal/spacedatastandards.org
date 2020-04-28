@@ -128,7 +128,6 @@
   };
 
   onMount(() => {
-    window.location.hash = "";
     window.addEventListener("keydown", sEvent);
   });
   onDestroy(() => {

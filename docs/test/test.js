@@ -5,7 +5,7 @@ assert.equal = (label, val1, val2) => {
   let sep = '\n----------------------------\n';
   let sep2 = '============================\n';
 
-  if (val1 !== val2) throw Error(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
+  if (val1 !== val2) console.log(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
   // else console.log(`${sep2}${label} === ${val2}`);
 }
 
@@ -60,13 +60,12 @@ function main() {
   let shim = Object.keys(OMM.schema.definitions.OMM.properties);
   let intermediate = {};
   shim.forEach(canonicalname => {
-    let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
     for (let prop in OMM) {
-      if (prop.indexOf(mangledname) > -1) {
+      if (prop.indexOf(canonicalname) > -1) {
         if (SAT_TEST_OBJ[canonicalname] || SAT_TEST_OBJ[canonicalname] === 0) {
           let schemaValue = OMM.schema.definitions.OMM.properties[canonicalname];
 
-          intermediate[prop] = { canonicalname, mangledname };
+          intermediate[prop] = { canonicalname };
           let _value = SAT_TEST_OBJ[canonicalname];
           switch (schemaValue.type) {
             case "number":
@@ -93,7 +92,7 @@ function main() {
   let _GOES9 = OMM.endOMM(builder);
   builder.finish(_GOES9);
   let _GG = OMM.getRootAsOMM(builder.dataBuffer());
-  console.log(_GG.NORADCATID())
+  console.log(_GG.NORAD_CAT_ID())
 
   let records = [_GOES9];
 
@@ -122,10 +121,10 @@ function main() {
   console.log(SCOLLECTION.RECORDSLength());
   if (SCOLLECTION.RECORDSLength()) {
     for (let prop in intermediate) {
-      let { canonicalname, mangledname } = intermediate[prop];
+      let { canonicalname } = intermediate[prop];
 
-      if (typeof GOES9[mangledname] === "function")
-        Object.defineProperty(GOES9, canonicalname, { get: GOES9[mangledname] });
+      if (typeof GOES9[canonicalname] === "function")
+        Object.defineProperty(GOES9, canonicalname, { get: GOES9[canonicalname] });
     }
 
     for (let prop in SAT_TEST_OBJ) {

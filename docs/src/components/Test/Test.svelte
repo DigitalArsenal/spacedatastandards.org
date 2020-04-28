@@ -11,6 +11,7 @@
   import fb from "../../../lib/flatbuffers.js";
   import ws from "../../lib/workerShim.js";
   import workerLoader from "../../lib/workerLoader.js";
+  import demangler from "../../lib/demangler.js";
 
   export let loaded;
   export let args;
@@ -103,7 +104,12 @@
         let schemaFile = Object.keys(d.files).filter(
           f => f.indexOf("schema.json") > -1
         );
+
         if (d.files[file] && d.files[schemaFile]) {
+          let _keys = Object.keys(
+            JSON.parse(d.files[schemaFile]).definitions.OMM.properties
+          );
+          d.files[file] = demangler(_keys, d.files[file]);
           _exec(`${fb}${d.files[file]}; OMM.schema = ${d.files[schemaFile]};`);
         } else {
           alert(JSON.stringify(d));
@@ -156,7 +162,7 @@
 
 <style>
   :root {
-    --console-height: 100px;
+    --console-height: 150px;
   }
   container {
     height: 100%;
@@ -238,9 +244,11 @@
     );
   }
   #hr {
+    z-index: 1;
     cursor: ns-resize;
-    height: 5px;
-    background: #007fe0;
+    height: 6px;
+    background: #888;
+    box-shadow: -1px 2px 2px -1px black;
   }
 </style>
 
