@@ -3,10 +3,10 @@ let assert = {};
 
 assert.equal = (label, val1, val2) => {
   let sep = '\n----------------------------\n';
-  let sep2 = '\n============================\n';
+  let sep2 = '============================\n';
 
   if (val1 !== val2) throw Error(`${sep2}${label}${sep} assert failed: ${sep}`, `${val1} is Not Equal To ${val2}`);
-  //else console.log(`${sep2}${label}${sep} assert passed: ${sep}`, val1, ' === ', val2);
+  // else console.log(`${sep2}${label} === ${val2}`);
 }
 
 let SAT_TEST_OBJ = {
@@ -55,6 +55,8 @@ let SAT_TEST_OBJ = {
 // Example how to use FlatBuffers to create and read binary buffers.
 function main() {
   var builder = new flatbuffers.Builder(0);
+
+  //START WRAPPER
   let shim = Object.keys(OMM.schema.definitions.OMM.properties);
   let intermediate = {};
   shim.forEach(canonicalname => {
@@ -63,7 +65,7 @@ function main() {
       if (prop.indexOf(mangledname) > -1) {
         if (SAT_TEST_OBJ[canonicalname] || SAT_TEST_OBJ[canonicalname] === 0) {
           let schemaValue = OMM.schema.definitions.OMM.properties[canonicalname];
-          //console.log(schemaValue.type)
+
           intermediate[prop] = { canonicalname, mangledname };
           let _value = SAT_TEST_OBJ[canonicalname];
           switch (schemaValue.type) {
@@ -80,47 +82,62 @@ function main() {
       }
     }
   });
+  //END WRAPPER
 
   OMM.startOMM(builder);
 
-  for (let prop in intermediate) {
+  for (prop in intermediate) {
     OMM[prop](builder, intermediate[prop].value);
   }
 
-  var GOESBuiltOMM = OMM.endOMM(builder);
+  let _GOES9 = OMM.endOMM(builder);
+  builder.finish(_GOES9);
+  let _GG = OMM.getRootAsOMM(builder.dataBuffer());
+  console.log(_GG.NORADCATID())
 
-  builder.finish(GOESBuiltOMM);
+  let records = [_GOES9];
 
-  let buf = builder.dataBuffer();
+  //for(let x in OMMCOLLECTION)console.log(x);
+
+  let OMMRECORDS = OMMCOLLECTION.createRECORDSVector(builder, records);
+
+  OMMCOLLECTION.startOMMCOLLECTION(builder);
+
+  OMMCOLLECTION.addRECORDS(builder, OMMRECORDS);
+
+  let COLLECTION = OMMCOLLECTION.endOMMCOLLECTION(builder);
+
+  builder.finish(COLLECTION);
+  //
+
+  var buf = builder.dataBuffer();
   let uint8 = builder.asUint8Array();
   var decoder = new TextDecoder('utf8');
   var b64encoded = btoa(unescape(encodeURIComponent(decoder.decode(uint8))));
   globalThis.postMessage({ global: uint8, globalName: "_flatbuff" });
-  globalThis.postMessage({ global: Object.values(SAT_TEST_OBJ).join(), globalName: "_flatcsv" });
-  console.log([
-    uint8.length,
-    decoder.decode(uint8).length,
-    b64encoded.length,
-    JSON.stringify(SAT_TEST_OBJ).length,
-    Object.values(SAT_TEST_OBJ).join().length]
-    .join());
+
   // Get access to the root:
-  var GOES9 = OMM.getRootAsOMM(buf);
+  let SCOLLECTION = OMMCOLLECTION.getRootAsOMMCOLLECTION(buf);
+  let GOES9 = SCOLLECTION.RECORDS(0);
+  console.log(SCOLLECTION.RECORDSLength());
+  if (SCOLLECTION.RECORDSLength()) {
+    for (let prop in intermediate) {
+      let { canonicalname, mangledname } = intermediate[prop];
 
-  for (let prop in intermediate) {
-    let { canonicalname, mangledname } = intermediate[prop];
+      if (typeof GOES9[mangledname] === "function")
+        Object.defineProperty(GOES9, canonicalname, { get: GOES9[mangledname] });
+    }
 
-    if (typeof GOES9[mangledname] === "function")
-      Object.defineProperty(GOES9, canonicalname, { get: GOES9[mangledname] });
+    for (let prop in SAT_TEST_OBJ) {
+
+      if (GOES9[prop])
+        assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
+    }
+
+    console.log('\n\n\n\nThe FlatBuffer was successfully created and verified!');
+  } else {
+    console.log('No Records: ', SCOLLECTION.RECORDSLength());
   }
-
-  for (let prop in SAT_TEST_OBJ) {
-
-    if (GOES9[prop])
-      assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
-  }
-
-  console.log('\n\n\n\nThe FlatBuffer was successfully created and verified!');
 }
 
 main();
