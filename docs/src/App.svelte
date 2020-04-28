@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import { onLoad } from "./lib/global.js";
   import Main from "./components/Main/Main.svelte";
+  import Select from "./components/Select/Select.svelte";
   import Editor from "./components/MonacoEditor/MonacoEditor.svelte";
   import Code from "./components/Code/Code.svelte";
   import Examples from "./components/Examples/Examples.svelte";
@@ -29,7 +30,7 @@
   let editor = null;
   let router = new Navaid("/");
   let args = {};
-
+  const githubURL = "https://github.com/DigitalArsenal/spacedatastandards.org";
   $: link = `https://public.ccsds.org/Pubs/${($IDLDocument || "").match(
     /\w{1,}/
   )}.pdf`;
@@ -46,6 +47,10 @@
 
   router.on("/", defaultPath);
   router.on("/#/", defaultPath);
+  router.on("/#/select", params => {
+    args = {};
+    setRoute(params, Select);
+  });
   router.on("/#/idl", params => {
     args = {
       documentName: IDLDocument,
@@ -327,6 +332,14 @@
   </div>
   <div>
     <a
+      href="#/select"
+      class:active={activeComponent === Main}
+      on:click={() => toggleMenu()}>
+      SELECT
+    </a>
+  </div>
+  <div>
+    <a
       href="#/idl"
       class:active={activeComponent === Editor}
       on:click={() => toggleMenu()}>
@@ -357,6 +370,11 @@
       TEST
     </a>
   </div>
+  <div>
+    <a target="_blank" href={githubURL} class:active={activeComponent === Main}>
+      GITHUB
+    </a>
+  </div>
 </menu>
 <container>
   <header>
@@ -365,10 +383,7 @@
     </div>
     <div id="mainHeader">
       <span>
-        <a
-          style="border:none"
-          target="_blank"
-          href="https://github.com/DigitalArsenal/spacedatastandards.org">
+        <a style="border:none" target="_blank" href={githubURL}>
           SPACEDATASTANDARDS.ORG
         </a>
       </span>

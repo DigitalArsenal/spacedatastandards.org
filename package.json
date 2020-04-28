@@ -11,7 +11,7 @@
     "test": "test",
     "dev": "cd docs && npm run dev",
     "postinstall": "cd docs && npm i && cd ../ && ./scripts/install.sh",
-    "deploy": "cd docs && npm run deploy"
+    "deploy": "node scripts/readme.mjs && cd docs && npm run deploy"
   },
   "repository": {
     "type": "git",

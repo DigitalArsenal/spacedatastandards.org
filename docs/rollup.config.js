@@ -12,6 +12,7 @@ import path from "path";
 
 const production = !process.env.ROLLUP_WATCH;
 const writePath = !production ? "dev/build/" : "";
+
 export default {
   external: "./workers/worker.js",
   input: "src/main.js",
@@ -33,7 +34,7 @@ export default {
       ]
     }),
     string({
-      include: ["**/*.fbs", "lib/flatbuffers.js", "src/lib/workerShim.js"]
+      include: ["**/*.fbs", "lib/flatbuffers.js", "src/components/Main/background.html.txt", "src/lib/workerShim.js"]
     }),
     {
       name: "rollup-plugin-svelte-css-replace",
