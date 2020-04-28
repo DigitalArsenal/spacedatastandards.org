@@ -5,8 +5,8 @@ const workers = new Array(wMax);
 const activeWorkers = [];
 
 export default (workerPath, inputObject, callback) => {
-  let nW = () => new Worker(workerPath, { type: "module" });
-  if (mobilecheck()) {
+
+  if (mobilecheck()) { //cannot load external worker
     import(workerPath).then((m) => {
       m.convert({ data: inputObject })
         .then(callback)
@@ -15,6 +15,7 @@ export default (workerPath, inputObject, callback) => {
         });
     });
   } else {
+    let nW = () => new Worker(workerPath, { type: "module" });
     let wIndex = Math.min(activeWorkers.length, wMax - 1);
     activeWorkers[wIndex] = workers[wIndex] = workers[wIndex] || nW();
     activeWorkers[wIndex].postMessage(inputObject);

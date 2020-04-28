@@ -14,10 +14,12 @@
   export let loaded;
   export let args;
 
+  const workerPath = "/workers/worker.js";
   let carat = `>`;
   let _logOutput = `${carat}\n`;
   let startLine = 0;
   let _worker;
+  let _running;
   let dragging;
   let dragEl = [];
 
@@ -41,7 +43,7 @@
       runTestScript();
     }
   }
-  const workerPath = "/workers/worker.js";
+
   const scrollDown = () =>
     setTimeout(() => {
       let ta = document.getElementById("console");
@@ -62,7 +64,8 @@
     );
     _logOutput = "";
     _worker.onmessage = e => {
-      if (e.data === "done") worker.terminate();
+      if (e.data === "done") _worker.terminate();
+
       if (e.data.global) {
         globalThis[e.data.globalName] = e.data.global;
       } else _logOutput += `${carat} ${e.data.join("")}  \n`;
@@ -70,10 +73,14 @@
     };
     _worker.onerror = function(err) {
       _logOutput += `${err.message}  at line ${err.lineno - startLine}`;
+      _worker.terminate();
     };
   };
 
   function runTestScript() {
+    console.log(_running);
+    if (_running) return;
+    _running = true;
     if ($IDLEditorContents) {
       _logOutput = `${carat} LOADING ...`;
       let inputObject = {
@@ -89,14 +96,18 @@
         loaded
       };
       workerLoader(workerPath, inputObject, function(d) {
+        _running = false;
         let file = Object.keys(d.files).filter(
           f => f.slice(f.lastIndexOf(".")) === ".js"
         );
         let schemaFile = Object.keys(d.files).filter(
           f => f.indexOf("schema.json") > -1
         );
-
-        _exec(`${fb}${d.files[file]}; OMM.schema = ${d.files[schemaFile]};`);
+        if (d.files[file] && d.files[schemaFile]) {
+          _exec(`${fb}${d.files[file]}; OMM.schema = ${d.files[schemaFile]};`);
+        } else {
+          alert(JSON.stringify(d));
+        }
       });
     }
   }
@@ -155,6 +166,7 @@
   }
   #editor-container {
     box-sizing: border-box;
+    height: 100%;
   }
   #editor-container,
   #console {
@@ -223,7 +235,6 @@
     );
   }
   #hr {
-    border-top: 0.5px #aaa solid;
     cursor: ns-resize;
     height: 5px;
     background: #007fe0;
