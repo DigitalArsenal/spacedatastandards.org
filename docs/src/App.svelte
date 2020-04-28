@@ -174,7 +174,7 @@
     /*overflow: hidden;*/
 
     padding-bottom: 20px;
-
+    background: #164583;
     color: #333;
     margin: 0;
     box-sizing: border-box;
@@ -222,8 +222,7 @@
       background: white;
     }
   }
-  main {
-  }
+
   #mainContainer {
     width: 100%;
   }
@@ -268,7 +267,7 @@
   }
   menu {
     position: fixed;
-    left: 0px;
+    left: -100%;
     padding: 0px;
     width: var(--menu-width);
     height: 100vh;
@@ -276,7 +275,9 @@
 
     margin: 0px;
   }
-
+  menu.navActive {
+    left: 0px;
+  }
   menu div {
     height: var(--header-height);
     border-bottom: 1px #aaa solid;
@@ -321,11 +322,11 @@
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
-    user-scalable=no, viewport-fit=cover" />
+    user-scalable=no, viewport-fit=contain" />
 
 </svelte:head>
 <svelte:options accessors={true} />
-<menu>
+<menu class:navActive={menuOpen}>
   <div>
     <a
       href="#/"

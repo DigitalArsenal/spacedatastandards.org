@@ -209,10 +209,24 @@
       );
     }
   };
+  let sizeEvents = ["resize", "orientationchange"];
+  let sizeSet = () =>
+    (document.getElementById(
+      "code-top-container"
+    ).style.height = `calc(${window.innerHeight}px - var(--header-height))`);
   onMount(async () => {
     if (!$IDLDocument) {
       window.location.hash = "/select";
     }
+    sizeSet();
+    sizeEvents.forEach(e => {
+      window.addEventListener(e, sizeSet);
+    });
+    onDestroy(() => {
+      sizeEvents.forEach(e => {
+        window.removeEventListener(e, sizeSet);
+      });
+    });
     loaded = true;
   });
 </script>
@@ -242,10 +256,9 @@
   #right {
     justify-content: right;
   }
-  #top-container {
+  #code-top-container {
     box-sizing: border-box;
     width: 100%;
-    height: calc(100%); /*calc(100% - var(--header-height) - 50px);*/
     padding: 5px;
     display: grid;
     grid-template-rows: 40px auto 50px;
@@ -300,7 +313,7 @@
   }
 </style>
 
-<container id="top-container">
+<div id="code-top-container">
   <div id="topMenu">
     <div>
       <select bind:value={currentDownload}>
@@ -356,4 +369,4 @@
         id="myRange" />
     </div>
   </div>
-</container>
+</div>
