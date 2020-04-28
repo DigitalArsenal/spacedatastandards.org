@@ -11,6 +11,12 @@
 <style>
   #backgroundContainer {
     height: calc(100vh - var(--header-height));
+      /* Status bar height on iOS 10 */
+    padding-bottom: 100px;
+    /* Status bar height on iOS 11.0 
+    padding-bottom: constant(safe-area-inset-top);
+    /* Status bar height on iOS 11+ 
+    padding-bottom: env(safe-area-inset-top);*/
     overflow-y: scroll;
   }
   #backgroundContainer div {
@@ -28,14 +34,15 @@
     border-bottom-width: 0.993304px;
     box-sizing: border-box;
     padding-bottom: 5px;
-    font-weight: 100;
-    font-size:calc((1.7rem + 0.5 * ((100vw - 50rem) / 120)));
+    font-weight: 200;
+    font-size: calc((1.7rem + 0.5 * ((100vw - 50rem) / 120)));
+    margin:5px;
   }
   h1 {
     margin: auto;
     font-size: calc((2rem + 0.5 * ((100vw - 50rem) / 120)));
     width: fit-content;
-    padding: 15px;
+    padding: 10px;
     font-weight: 300;
   }
 </style>

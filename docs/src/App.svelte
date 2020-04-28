@@ -172,6 +172,9 @@
 
   :global(body) {
     /*overflow: hidden;*/
+
+    padding-bottom: 20px;
+
     color: #333;
     margin: 0;
     box-sizing: border-box;
@@ -318,7 +321,7 @@
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
-    user-scalable=no" />
+    user-scalable=no, viewport-fit=cover" />
 
 </svelte:head>
 <svelte:options accessors={true} />

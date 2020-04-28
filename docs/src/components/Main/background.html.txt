@@ -80,7 +80,10 @@
 <p>
   The goal of this site is to add additional formatting options for CCSDS
   messages, as well as aid developers by generating code for use in
-  applications. For more information contact me at
+  applications. 
+</p>
+<p>
+  For more information contact me at
   <a href='mailto:tj@digitalarsenal.io'>tj@digitalarsenal.io</a>
   , or
   <a href='https://github.com/DigitalArsenal/spacedatastandards.org/issues'>
