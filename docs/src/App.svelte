@@ -25,10 +25,10 @@
   } from "./stores/Files.js";
 
   let menuOpen = false;
-  let loaded;
-  let editor;
+  let loaded = false;
+  let editor = null;
   let router = new Navaid("/");
-  let args;
+  let args = {};
 
   $: link = `https://public.ccsds.org/Pubs/${($IDLDocument || "").match(
     /\w{1,}/
@@ -161,7 +161,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    position:fixed;
+    position: fixed;
   }
 
   :global(body) {
@@ -344,7 +344,7 @@
   <div>
     <a
       href="#/examples"
-      class:active={activeComponent === Test}
+      class:active={activeComponent === Examples}
       on:click={() => toggleMenu()}>
       EXAMPLES
     </a>

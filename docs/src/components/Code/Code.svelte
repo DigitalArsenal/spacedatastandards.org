@@ -66,6 +66,7 @@
   };
   IDLDocument.subscribe(() => {
     createCode();
+    if (false) toggleMenu();
   });
   onMount(() => {
     loaded = $IDLDocument ? false : true;
@@ -96,7 +97,9 @@
     text-decoration: none;
     color: white;
     background-color: var(--celestrak-blue);
-    padding: 3px;
+    padding: 5px;
+    font-weight: 200;
+    font-size: var(--font-size-sm);
     /*border-radius: 3px;*/
   }
   :global(.editorCode) {

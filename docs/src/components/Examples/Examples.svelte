@@ -9,10 +9,14 @@
   import workerLoader from "../../lib/workerLoader.js";
   import { flatbuffers } from "./flatbuffers.js";
   import bignumber from "bignumber.js";
+  import download from "downloadjs";
 
   const workerPath = "/workers/worker.js";
 
   export let loaded;
+  export let args;
+  export let toggleMenu;
+
   const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
   let currentDownload = downloads[0];
 
@@ -36,6 +40,13 @@
       n = n || null;
     }
     return n;
+  };
+
+  let versionExtensions = {
+    RAW: "txt",
+    "OMM (KEY / VALUE)": "txt",
+    "OMM (JSON)": "json",
+    "OMM (FLATBUFFER)": "fbs"
   };
 
   let versions = {
@@ -189,7 +200,15 @@
       setRawText();
     }
   }
-
+  const downloadData = () => {
+    if (raw) {
+      download(
+        raw,
+        `test_omm.${versionExtensions[currentVersion] || "txt"}`,
+        "text/plain"
+      );
+    }
+  };
   onMount(async () => {
     loaded = true;
   });
@@ -205,11 +224,19 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
     padding: 5px;
   }
 
+  #topMenu > div {
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: 200px 100px;
+  }
+  #right {
+    justify-content: right;
+  }
   #top-container {
     box-sizing: border-box;
     width: 100%;
@@ -270,19 +297,24 @@
 
 <container id="top-container">
   <div id="topMenu">
-    <select bind:value={currentDownload}>
-      {#each downloads as download}
-        <option value={download} selected={download === currentDownload}>
-          {download}
-        </option>
-      {/each}
-    </select>
-    <div class="button" on:click={() => getData()}>Fetch</div>
-    <select bind:value={currentVersion} on:change={() => setRawText()}>
-      {#each Object.entries(versions) as [key, value]}
-        <option value={key} selected={key === currentVersion}>{key}</option>
-      {/each}
-    </select>
+    <div>
+      <select bind:value={currentDownload}>
+        {#each downloads as download}
+          <option value={download} selected={download === currentDownload}>
+            {download}
+          </option>
+        {/each}
+      </select>
+      <div class="button" on:click={() => getData()}>Fetch</div>
+    </div>
+    <div id="right">
+      <select bind:value={currentVersion} on:change={() => setRawText()}>
+        {#each Object.entries(versions) as [key, value]}
+          <option value={key} selected={key === currentVersion}>{key}</option>
+        {/each}
+      </select>
+      <div class="button" on:click={() => downloadData()}>Download</div>
+    </div>
   </div>
   <textarea bind:value={raw} />
   <div id="controls">
