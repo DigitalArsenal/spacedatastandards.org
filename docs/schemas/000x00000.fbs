@@ -53,65 +53,65 @@ enum opsStatusCode byte:{
 
 enum orbitalStatusCode byte:{
   ///NCE
-  NO_CURRENT_ELEMENTS;
+  NO_CURRENT_ELEMENTS,
   ///NIE
-  NO_INITIAL_ELEMENTS;
+  NO_INITIAL_ELEMENTS,
   ///NEA
-  NO_ELEMENTS_AVAILABLE;
+  NO_ELEMENTS_AVAILABLE,
   ///DOC
-  PERMANENTLY_DOCKED;
+  PERMANENTLY_DOCKED,
   ///ISS
-  DOCKED_TO_INTERNATIONAL_SPACE_STATION;
+  DOCKED_TO_INTERNATIONAL_SPACE_STATION,
   ///XXN
-  IN_ORBIT;
+  IN_ORBIT
 }
 enum orbitCenter byte:{
   ///AS
-  ASTEROID;
+  ASTEROID,
   ///EA
-  EARTH;
+  EARTH,
   ///EL
-  EARTH_LAGRANGE;
+  EARTH_LAGRANGE,
   ///EM
-  EARTH_MOON_BARYCENTER;
+  EARTH_MOON_BARYCENTER,
   ///JU
-  JUPITER;
+  JUPITER,
   ///MA
-  MARS;
+  MARS,
   ///ME
-  MERCURY;
+  MERCURY,
   ///MO
-  MOON_EARTH;
+  MOON_EARTH,
   ///NE
-  NEPTUNE;
+  NEPTUNE,
   ///PL
-  PLUTO;
+  PLUTO,
   ///SA
-  SATURN;
+  SATURN,
   ///SS
-  SOLAR_SYSTEM_ESCAPE;
+  SOLAR_SYSTEM_ESCAPE,
   ///SU
-  SUN;
+  SUN,
   ///UR
-  URANUS;
+  URANUS,
   ///VE
-  VENUS;
+  VENUS
 }
 
 enum orbitType byte:{
   ///0
-  Orbit;
+  Orbit,
   ///1
-  Landing;
+  Landing,
   ///2
-  Impact;
+  Impact,
   ///3
-  Roundtrip;
+  Roundtrip
 }
 
 /// https://www.iso.org/iso-3166-country-codes.html
 enum source byte:{
-	"AD",
+  "AD",
   "AE",
   "AF",
   "AG",
