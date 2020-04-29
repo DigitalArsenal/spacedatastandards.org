@@ -142,7 +142,7 @@
       window.location.hash = "/select";
     }
     dragEl = [
-      document.getElementById("top-container"),
+      document.getElementById("test-top-container"),
       document.getElementById("top-menu"),
       document.getElementById("editor-container"),
       document.getElementById("console")
@@ -164,7 +164,7 @@
   :root {
     --console-height: 250px;
   }
-  container {
+  #test-top-container {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -252,7 +252,7 @@
   }
 </style>
 
-<container id="top-container">
+<div id="test-top-container">
   <div id="top-menu">
     <div id="run" on:click={() => runTestScript()}>RUN CODE</div>
     <div
@@ -279,4 +279,4 @@
     &nbsp;
   </div>
   <textarea readonly id="console" bind:value={_logOutput} />
-</container>
+</div>
