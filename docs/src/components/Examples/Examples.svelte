@@ -134,7 +134,6 @@
       var b64encoded = btoa(
         unescape(encodeURIComponent(decoder.decode(uint8)))
       );
-      console.log(JSON.stringify(uint8));
       return uint8;
     }
     /* "OMM (XML)": v => {}*/
