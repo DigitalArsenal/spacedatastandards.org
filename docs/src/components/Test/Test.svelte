@@ -32,20 +32,22 @@
     document.removeEventListener("mousemove", mouseMoveEvent);
   };
   let mouseMoveEvent = e => {
-    e = e.touches ? e.touches[0] : e;
-    dragEl[3].style.height = dragging
-      ? `${Math.max(
-          10,
-          window.innerHeight -
-            e.clientY -
-            2 *
-              parseInt(
-                globalThis
-                  .getComputedStyle(document.getElementById("hr"))
-                  .height.replace("px", "")
-              )
-        )}px`
-      : dragEl[3].style.height;
+    e = e && e.touches ? e.touches[0] : e;
+    if (e) {
+      dragEl[3].style.height = dragging
+        ? `${Math.max(
+            10,
+            window.innerHeight -
+              e.clientY -
+              2 *
+                parseInt(
+                  globalThis
+                    .getComputedStyle(document.getElementById("hr"))
+                    .height.replace("px", "")
+                )
+          )}px`
+        : dragEl[3].style.height;
+    }
     dragEl[2].style.height = `${window.innerHeight -
       document.getElementsByTagName("header")[0].clientHeight -
       dragEl[1].clientHeight -
@@ -164,6 +166,7 @@
     } else {
       loaded = true;
     }
+    mouseMoveEvent();
     window.addEventListener("resize", mouseMoveEvent);
   });
   onDestroy(() => {
@@ -188,7 +191,7 @@
   }
   #editor-container {
     box-sizing: border-box;
-    height: 100%;
+    height: 50%;
   }
   #editor-container,
   #console {
