@@ -2,7 +2,6 @@
 //https://www.celestrak.com/satcat/satcat-format.php
 
 table CAT {
-
   OBJECT_NAME:string;
   OBJECT_ID:string;
   NORAD_CAT_ID:uint32;
@@ -41,30 +40,30 @@ enum opsStatusCode byte:{
   ///P
   PARTIALLY_OPERATIONAL,
   ///B
-	BACKUP_STANDBY,
+  BACKUP_STANDBY,
   ///S
-	SPARE,
+  SPARE,
   ///X
-	EXTENDED_MISSION,
+  EXTENDED_MISSION,
   ///D
-	DECAYED,
+  DECAYED,
   ///?
-	UNKNOWN
+  UNKNOWN
 }
 
 enum orbitalStatusCode byte:{
   ///NCE
   NO_CURRENT_ELEMENTS;
   ///NIE
- NO_INITIAL_ELEMENTS;
- ///NEA
- NO_ELEMENTS_AVAILABLE;
- ///DOC
- PERMANENTLY_DOCKED;
- ///ISS
- DOCKED_TO_INTERNATIONAL_SPACE_STATION;
- ///XXN
- IN_ORBIT;
+  NO_INITIAL_ELEMENTS;
+  ///NEA
+  NO_ELEMENTS_AVAILABLE;
+  ///DOC
+  PERMANENTLY_DOCKED;
+  ///ISS
+  DOCKED_TO_INTERNATIONAL_SPACE_STATION;
+  ///XXN
+  IN_ORBIT;
 }
 enum orbitCenter byte:{
   ///AS
