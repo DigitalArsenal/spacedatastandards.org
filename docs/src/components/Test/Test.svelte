@@ -274,7 +274,7 @@
 <div id="test-top-container">
   <div id="top-menu">
     <div id="run" on:click={() => runTestScript()}>RUN CODE</div>
-    <div>NOTE: This tool only works in Chrome.</div>
+    <div style="font-size:.7rem">NOTE: This tool only works in Chrome.</div>
     <div
       id="reloadEditor"
       on:click={() => {
