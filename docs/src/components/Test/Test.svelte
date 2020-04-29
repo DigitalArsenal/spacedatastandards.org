@@ -34,7 +34,17 @@
   let mouseMoveEvent = e => {
     e = e.touches ? e.touches[0] : e;
     dragEl[3].style.height = dragging
-      ? `${Math.max(10, window.innerHeight - e.clientY)}px`
+      ? `${Math.max(
+          10,
+          window.innerHeight -
+            e.clientY -
+            2 *
+              parseInt(
+                globalThis
+                  .getComputedStyle(document.getElementById("hr"))
+                  .height.replace("px", "")
+              )
+        )}px`
       : dragEl[3].style.height;
     dragEl[2].style.height = `${window.innerHeight -
       document.getElementsByTagName("header")[0].clientHeight -
@@ -166,6 +176,8 @@
     --console-height: 250px;
   }
   #test-top-container {
+    position: absolute;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -184,7 +196,7 @@
   }
   #console {
     padding: 5px;
-    padding-bottom:50px;
+    padding-bottom: 50px;
     font-size: 12px;
     font-weight: 400;
     font-family: monospace;
@@ -230,12 +242,14 @@
       #6d0019 100%
     );
   }
-  #top-menu div#reloadEditor {
+  #top-menu div#reloadEditor,
+  #top-menu div#run {
     max-width: 200px;
     right: 0px;
     background: var(--button-gradient);
   }
-  #top-menu div#reloadEditor:hover {
+  #top-menu div#reloadEditor:hover,
+  #top-menu div#run:hover {
     max-width: 200px;
     right: 0px;
     background: linear-gradient(
@@ -257,6 +271,7 @@
 <div id="test-top-container">
   <div id="top-menu">
     <div id="run" on:click={() => runTestScript()}>RUN CODE</div>
+    <div>NOTE: This tool only works in Chrome.</div>
     <div
       id="reloadEditor"
       on:click={() => {
