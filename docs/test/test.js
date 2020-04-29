@@ -133,7 +133,7 @@ function main() {
         assert.equal(prop, SAT_TEST_OBJ[prop], GOES9[prop]);
     }
 
-    console.log('\n\n\n\nThe FlatBuffer was successfully created and verified!');
+    console.log('The FlatBuffer was successfully created and verified!');
   } else {
     console.log('No Records: ', SCOLLECTION.RECORDSLength());
   }

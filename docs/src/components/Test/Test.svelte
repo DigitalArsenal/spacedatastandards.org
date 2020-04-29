@@ -32,6 +32,7 @@
     document.removeEventListener("mousemove", mouseMoveEvent);
   };
   let mouseMoveEvent = e => {
+    e = e.touches ? e.touches[0] : e;
     dragEl[3].style.height = dragging
       ? `${Math.max(10, window.innerHeight - e.clientY)}px`
       : dragEl[3].style.height;
@@ -183,6 +184,7 @@
   }
   #console {
     padding: 5px;
+    padding-bottom:50px;
     font-size: 12px;
     font-weight: 400;
     font-family: monospace;
@@ -246,7 +248,7 @@
   #hr {
     z-index: 1;
     cursor: ns-resize;
-    height: 6px;
+    height: 20px;
     background: #888;
     box-shadow: -1px 2px 2px -1px black;
   }
@@ -275,6 +277,14 @@
       [['mouseup', mouseupEvent], ['mousemove', mouseMoveEvent]].forEach(ee => {
         document.addEventListener.apply(document, ee);
       });
+    }}
+    on:touchstart={() => {
+      dragging = true;
+      [['touchcancel', mouseupEvent], ['touchend', mouseupEvent], ['touchmove', mouseMoveEvent]].forEach(
+        ee => {
+          document.addEventListener.apply(document, ee);
+        }
+      );
     }}>
     &nbsp;
   </div>
