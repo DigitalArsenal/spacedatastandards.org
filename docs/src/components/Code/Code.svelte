@@ -37,10 +37,13 @@
     )[0];
     if (_sFile) {
       let _schema = JSON.parse($CodeEditorDocuments[_sFile]);
-      $CodeEditorContents = demangler(
-        Object.keys(_schema.definitions.OMM.properties),
-        _editorContents
-      );
+      let _keys = [];
+      Object.entries(_schema.definitions).forEach(pp => {
+        if (pp[1].hasOwnProperty("properties")) {
+          _keys = _keys.concat(Object.keys(pp[1].properties));
+        }
+      });
+      $CodeEditorContents = demangler(_keys, _editorContents);
     }
   }
   const workerPath = "/workers/worker.js";
@@ -98,10 +101,9 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: minmax(50px, 100px) minmax(50px, 200px) minmax(
-        20px,
-        100px
-      ) auto;
+    grid-template-columns:
+      minmax(50px, 100px) minmax(50px, 200px) minmax(20px, 100px)
+      auto;
     grid-gap: 15px;
     padding: 5px;
     height: 40px;

@@ -1,38 +1,14 @@
-
 //https://www.celestrak.com/satcat/satcat-format.php
 
-table CAT {
-  OBJECT_NAME:string;
-  OBJECT_ID:string;
-  NORAD_CAT_ID:uint32;
-  MULTIPLE_NAMES: bool;
-  PAYLOAD:bool;
-  OPS_STATUS_CODE:opsStatusCode = UNKNOWN;
-  SOURCE:source;
-  LAUNCH_DATE:string;
-  LAUNCH_SITE:string;
-  DECAY_DATE:string;
-  PERIOD:float;
-  INCLINATION:float;
-  APOGEE:float;
-  PERIGEE:float;
-  RCS:float;
-  ORBITAL_STATUS_CODE:orbitStatusCode;
-  ORBIT_CENTER:orbitCenter =  EARTH;
-  ORBIT_TYPE:orbitType;
+enum objType: byte  {
+  ACTIVE,
+  DEAD,
+  DEBRIS,
+  ROCKET_BODY,
+  UNKNOWN
 }
 
-root_type CAT;
-
-enum TYPE byte: {
-  "ACTIVE",
-  "DEAD",
-  "DEBRIS",
-  "ROCKET BODY",
-  "UNKNOWN",
-}
-
-enum opsStatusCode byte:{
+enum opsStatusCode: byte {
   ///+
   OPERATIONAL,
   ///-
@@ -51,7 +27,7 @@ enum opsStatusCode byte:{
   UNKNOWN
 }
 
-enum orbitalStatusCode byte:{
+enum orbitalStatusCode: byte {
   ///NCE
   NO_CURRENT_ELEMENTS,
   ///NIE
@@ -65,7 +41,7 @@ enum orbitalStatusCode byte:{
   ///XXN
   IN_ORBIT
 }
-enum orbitCenter byte:{
+enum orbitCenter: byte {
   ///AS
   ASTEROID,
   ///EA
@@ -98,7 +74,7 @@ enum orbitCenter byte:{
   VENUS
 }
 
-enum orbitType byte:{
+enum orbitType: byte {
   ///0
   Orbit,
   ///1
@@ -109,256 +85,26 @@ enum orbitType byte:{
   Roundtrip
 }
 
-/// https://www.iso.org/iso-3166-country-codes.html
-enum source byte:{
-  "AD",
-  "AE",
-  "AF",
-  "AG",
-  "AI",
-  "AL",
-  "AM",
-  "AO",
-  "AQ",
-  "AR",
-  "AS",
-  "AT",
-  "AU",
-  "AW",
-  "AX",
-  "AZ",
-  "BA",
-  "BB",
-  "BD",
-  "BE",
-  "BF",
-  "BG",
-  "BH",
-  "BI",
-  "BJ",
-  "BL",
-  "BM",
-  "BN",
-  "BO",
-  "BQ",
-  "BR",
-  "BS",
-  "BT",
-  "BV",
-  "BW",
-  "BY",
-  "BZ",
-  "CA",
-  "CC",
-  "CD",
-  "CF",
-  "CG",
-  "CH",
-  "CI",
-  "CK",
-  "CL",
-  "CM",
-  "CN",
-  "CO",
-  "CR",
-  "CU",
-  "CV",
-  "CW",
-  "CX",
-  "CY",
-  "CZ",
-  "DE",
-  "DJ",
-  "DK",
-  "DM",
-  "DO",
-  "DZ",
-  "EC",
-  "EE",
-  "EG",
-  "EH",
-  "ER",
-  "ES",
-  "ET",
-  "FI",
-  "FJ",
-  "FK",
-  "FM",
-  "FO",
-  "FR",
-  "GA",
-  "GB",
-  "GD",
-  "GE",
-  "GF",
-  "GG",
-  "GH",
-  "GI",
-  "GL",
-  "GM",
-  "GN",
-  "GP",
-  "GQ",
-  "GR",
-  "GS",
-  "GT",
-  "GU",
-  "GW",
-  "GY",
-  "HK",
-  "HM",
-  "HN",
-  "HR",
-  "HT",
-  "HU",
-  "ID",
-  "IE",
-  "IL",
-  "IM",
-  "IN",
-  "IO",
-  "IQ",
-  "IR",
-  "IS",
-  "IT",
-  "JE",
-  "JM",
-  "JO",
-  "JP",
-  "KE",
-  "KG",
-  "KH",
-  "KI",
-  "KM",
-  "KN",
-  "KP",
-  "KR",
-  "KW",
-  "KY",
-  "KZ",
-  "LA",
-  "LB",
-  "LC",
-  "LI",
-  "LK",
-  "LR",
-  "LS",
-  "LT",
-  "LU",
-  "LV",
-  "LY",
-  "MA",
-  "MC",
-  "MD",
-  "ME",
-  "MF",
-  "MG",
-  "MH",
-  "MK",
-  "ML",
-  "MM",
-  "MN",
-  "MO",
-  "MP",
-  "MQ",
-  "MR",
-  "MS",
-  "MT",
-  "MU",
-  "MV",
-  "MW",
-  "MX",
-  "MY",
-  "MZ",
-  "NA",
-  "NC",
-  "NE",
-  "NF",
-  "NG",
-  "NI",
-  "NL",
-  "NO",
-  "NP",
-  "NR",
-  "NU",
-  "NZ",
-  "OM",
-  "PA",
-  "PE",
-  "PF",
-  "PG",
-  "PH",
-  "PK",
-  "PL",
-  "PM",
-  "PN",
-  "PR",
-  "PS",
-  "PT",
-  "PW",
-  "PY",
-  "QA",
-  "RE",
-  "RO",
-  "RS",
-  "RU",
-  "RW",
-  "SA",
-  "SB",
-  "SC",
-  "SD",
-  "SE",
-  "SG",
-  "SH",
-  "SI",
-  "SJ",
-  "SK",
-  "SL",
-  "SM",
-  "SN",
-  "SO",
-  "SR",
-  "SS",
-  "ST",
-  "SV",
-  "SX",
-  "SY",
-  "SZ",
-  "TC",
-  "TD",
-  "TF",
-  "TG",
-  "TH",
-  "TJ",
-  "TK",
-  "TL",
-  "TM",
-  "TN",
-  "TO",
-  "TR",
-  "TT",
-  "TV",
-  "TW",
-  "TZ",
-  "UA",
-  "UG",
-  "UM",
-  "US",
-  "UY",
-  "UZ",
-  "VA",
-  "VC",
-  "VE",
-  "VG",
-  "VI",
-  "VN",
-  "VU",
-  "WF",
-  "WS",
-  "XK",
-  "YE",
-  "YT",
-  "ZA",
-  "ZM",
-  "ZW
+table CAT {
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  NORAD_CAT_ID:uint;
+  MULTIPLE_NAMES: bool;
+  TYPE:objType = UNKNOWN;
+  PAYLOAD:bool;
+  OPS_STATUS_CODE:opsStatusCode = UNKNOWN;
+  ORIGINATOR:string;
+  LAUNCH_DATE:string;
+  LAUNCH_SITE:string;
+  DECAY_DATE:string;
+  PERIOD:float;
+  INCLINATION:float;
+  APOGEE:float;
+  PERIGEE:float;
+  RCS:float;
+  ORBITAL_STATUS_CODE:orbitalStatusCode;
+  ORBIT_CENTER:orbitCenter =  EARTH;
+  ORBIT_TYPE:orbitType;
 }
+
+root_type CAT;
