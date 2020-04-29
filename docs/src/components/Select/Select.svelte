@@ -97,12 +97,12 @@
   h2 {
     font-size: calc(2rem + 0.5 * ((100vw - 50rem) / 120));
     text-align: center;
-    color: #444;
-    font-weight: 300;
+    color: #000;
+    font-weight: 200;
     font-family: var(--font-family);
   }
   h2 {
-    font-size: calc(1rem + 0.5 * ((100vw - 50rem) / 120));
+    font-size: calc(2rem + 0.5 * ((100vw - 50rem) / 120));
   }
   h1 a {
     text-decoration: none;
@@ -126,13 +126,19 @@
   }
 </style>
 
-<h1>
-  <a target="_blank" href="https://public.ccsds.org">CCSDS</a>
-  RECOMMENDED STANDARDS
-</h1>
-<h2>(CLICK TO SELECT)</h2>
+<h2>CLICK TO LOAD</h2>
+<h2>
+  <a
+    style="text-decoration:none"
+    href="https://google.github.io/flatbuffers/md__schemas.html"
+    target="_new">
+    INTERFACE DEFINITION LANGUAGE (IDL) FILE
+  </a>
+</h2>
 <container>
-  {#each $manifest.files as mfile}
+  {#each $manifest.files.sort((a, b) => {
+    return a.filename > b.filename ? -1 : 1;
+  }) as mfile}
     <div class="docButton">
       <div
         class="text"

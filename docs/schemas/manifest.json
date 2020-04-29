@@ -1,1 +1,1 @@
-{"root":"schemas","files":[{"filename":"/502x0b2c1.fbs","title":"ORBIT DATA MESSAGES"}]}
+{"root":"schemas","files":[{"filename":"/000x00000.fbs","title":"PRE-PROPOSAL MESSAGES","type":"Pre-Proposal: Non-CCSDS","color":"#EEEEE"},{"filename":"/502x0b2c1.fbs","title":"ORBIT DATA MESSAGES","type":"Blue: Recommended Standards","color":"#0066FF"}]}

@@ -4,6 +4,40 @@ const whatCentury = (digits) => {
   digits = parseInt(digits);
   return digits || digits === 0 ? (digits < 50 ? "20" : "19") + digits.toString().padStart(2, 0) : null;
 };
+export const catalogType = (e, Color) => {
+  let _types = [
+    "ACTIVE",
+    "DEAD",
+    "DEBRIS",
+    "ROCKET BODY",
+    "UNKNOWN"
+  ];
+
+  let _satcat = e && e.properties ? e.properties.satcat : {};
+  let _payload = e => e && _satcat.payload;
+  let _active = e =>
+    _satcat.ops_status_code &&
+    ["+", "P", "B", "S", "X"].indexOf(_satcat.ops_status_code.toUpperCase()) >
+    -1;
+  if (_payload(e) && _active(e)) {
+    return _types[0];
+  } else if (_payload(e) && !_active(e)) {
+    return _types[1];
+  } else if (
+    !_payload(e) &&
+    _satcat.satname &&
+    _satcat.satname.indexOf(" DEB") > -1
+  ) {
+    return _types[2];
+  } else if (
+    _satcat.satname &&
+    (_satcat.satname.indexOf(" R/B") > -1 ||
+      _satcat.satname.indexOf(" AKM") > -1)
+  ) {
+    return _types[3];
+  }
+  return _types[4];
+};
 
 const satcat_map = {
   intldes: [0, 11],
