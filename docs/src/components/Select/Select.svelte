@@ -112,7 +112,7 @@
   #footer {
     display: flex;
     align-content: center;
-    justify-content: center;
+    justify-content: flex-end;
     padding: 5px;
     position: fixed;
     bottom: 0px;
