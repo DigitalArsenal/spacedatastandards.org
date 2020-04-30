@@ -1,115 +1,76 @@
+import bignumber from "bignumber.js";
+
 const decimalAssumed = (value) => bignumber("." + value) || 0;
 
 const whatCentury = (digits) => {
   digits = parseInt(digits);
   return digits || digits === 0 ? (digits < 50 ? "20" : "19") + digits.toString().padStart(2, 0) : null;
-};
-export const catalogType = (e, Color) => {
-  let _types = [
-    "ACTIVE",
-    "DEAD",
-    "DEBRIS",
-    "ROCKET BODY",
-    "UNKNOWN"
-  ];
-
-  let _satcat = e && e.properties ? e.properties.satcat : {};
-  let _payload = e => e && _satcat.payload;
-  let _active = e =>
-    _satcat.ops_status_code &&
-    ["+", "P", "B", "S", "X"].indexOf(_satcat.ops_status_code.toUpperCase()) >
-    -1;
-  if (_payload(e) && _active(e)) {
-    return _types[0];
-  } else if (_payload(e) && !_active(e)) {
-    return _types[1];
-  } else if (
-    !_payload(e) &&
-    _satcat.satname &&
-    _satcat.satname.indexOf(" DEB") > -1
-  ) {
-    return _types[2];
-  } else if (
-    _satcat.satname &&
-    (_satcat.satname.indexOf(" R/B") > -1 ||
-      _satcat.satname.indexOf(" AKM") > -1)
-  ) {
-    return _types[3];
-  }
-  return _types[4];
-};
+}
 
 const satcat_map = {
-  intldes: [0, 11],
-  norad_cat_id: [13, 18],
-  multipleNames: [19, 20],
-  payload: [20, 21],
-  ops_status_code: [21, 22],
-  satname: [23, 47],
-  source: [49, 54],
-  launch: [56, 66],
-  site: [68, 73],
-  decay: [75, 85],
-  period: [87, 94],
-  inclination: [96, 101],
-  apogee: [103, 109],
-  perigee: [111, 117],
-  rcs: [119, 127],
-  orbital_status_code: [129, 132],
-  orbital_status_code_text: [129, 132],
-  orbit_center: [129, 132],
-  orbit_type: [129, 132]
+  OBJECT_ID: [0, 11],
+  NORAD_CAT_ID: [13, 18],
+  MULTIPLE_NAMES: [19, 20],
+  PAYLOAD: [20, 21],
+  OPS_STATUS_CODE: [21, 22],
+  OBJECT_NAME: [23, 47],
+  ORIGINATOR: [49, 54],
+  LAUNCH_DATE: [56, 66],
+  LAUNCH_SITE: [68, 73],
+  DECAY_DATE: [75, 85],
+  PERIOD: [87, 94],
+  INCLINATION: [96, 101],
+  APOGEE: [103, 109],
+  PERIGEE: [111, 117],
+  RCS: [119, 127],
+  ORBITAL_STATUS_CODE: [129, 132],
+  ORBIT_CENTER: [129, 132],
+  ORBIT_TYPE: [129, 132],
+  TYPE: [21, 22]
 };
 
 const satcat_transform = {
-  multipleNames: d => d === "M",
-  payload: d => d === "*",
-  launch: d => new Date(d),
-  decay: d => new Date(d),
-  period: d => parseFloat(d),
-  inclination: d => parseFloat(d),
-  apogee: d => parseFloat(d),
-  perigee: d => parseFloat(d),
-  rcs: d => parseFloat(d),
-  orbital_status_code_text:
-    function (d) {
-      let _status = {
-        NCE: "No Current Elements",
-        NIE: "No Initial Elements",
-        NEA: "No Elements Available",
-        DOC: "Permanently Docked",
-        ISS: "Docked to International Space Station"
-      };
-      return _status[d] || null;
-    },
-  orbit_center:
-    function (d) {
-      //https://public.ccsds.org/Pubs/508x0b1e2c1.pdf
-      if (d.length && parseInt(d.split("").pop())) {
-        let _centers = {
-          AS: "Asteroid",
-          EA: "Earth (default if blank)",
-          EL: "Earth Lagrange",
-          EM: "Earth-Moon Barycenter",
-          JU: "Jupiter",
-          MA: "Mars",
-          ME: "Mercury",
-          MO: "Moon (Earth)",
-          NE: "Neptune",
-          PL: "Pluto",
-          SA: "Saturn",
-          SS: "Solar System Escape",
-          SU: "Sun",
-          UR: "Uranus",
-          VE: "Venus"
-        };
-        d = _centers[d.slice(0, 2)];
-      } else {
-        d = "Earth";
-      }
-      return d;
-    },
-  orbit_type: d => parseInt(d.split("").pop()) || null
+  TYPE: (d, _satcat) => {
+    let _payload = _satcat.PAYLOAD;
+    let _name = _satcat.OBJECT_NAME;
+    let _active = _satcat.OPS_STATUS_CODE &&
+      _satcat.OPS_STATUS_CODE < 5;
+    if (_payload && _active) {
+      return 0;
+    } else if (_payload && !_active) {
+      return 1;
+    } else if (
+      !_payload &&
+      _name &&
+      _name.indexOf(" DEB") > -1
+    ) {
+      return 2;
+    } else if (
+      _name &&
+      (_name.indexOf(" R/B") > -1 ||
+        _name.indexOf(" AKM") > -1)
+    ) {
+      return 3;
+    }
+    return 4;
+  },
+  MULTIPLE_NAMES: d => d.trim() === "M",
+  PAYLOAD: d => d.trim() === "*",
+  LAUNCH_SITE: d => d.trim(),
+  ORIGINATOR: d => d.trim(),
+  OBJECT_NAME: d => d.trim(),
+  OBJECT_ID: d => d.trim(),
+  OPS_STATUS_CODE: d => {
+    d = d.trim();
+    let r = ["+", "P", "B", "S", "X", "D", "?"].indexOf(d);
+    return r > -1 ? r : null;
+  },
+  LAUNCH_DATE: d => new Date(d),
+  DECAY_DATE: d => new Date(d),
+  ORBITAL_STATUS_CODE: d => d.trim(),
+  ORBIT_CENTER: d => d.trim(),
+  ORBIT_TYPE: d => d.trim(),
+  RCS: d => parseFloat(d) ? bignumber(d) : null
 };
 
 const tle_map = {

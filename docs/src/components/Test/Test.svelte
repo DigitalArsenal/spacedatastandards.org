@@ -149,8 +149,20 @@
     editorContents: TestEditorContents,
     theme: "vs-dark"
   };
-
+  let test = { OMM: "" };
   onMount(() => {
+    if ($IDLEditorContents) {
+      let root_type = $IDLEditorContents
+        .match(/(root_type\s)([^;]{1,})/)[2]
+        .trim();
+
+      if (root_type && test[root_type]) {
+        activeComponent = test[root_type];
+      } else {
+        alert(`No Test For Type ${root_type}`);
+        window.location.hash = "/idl";
+      }
+    }
     if (!$IDLDocument) {
       window.location.hash = "/select";
     }

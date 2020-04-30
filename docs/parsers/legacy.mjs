@@ -89,7 +89,7 @@ class tle extends lineReader {
         });
         if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
         return _OMM;
-      },
+      }
     };
   }
 }
@@ -103,29 +103,19 @@ const satcat = class tle extends lineReader {
     };
 
     this.format = {
-      RAW: (line) => line,
-      SATCAT: (line) => {
-        if (line) return;
-        let OBJECT_NAME;
-        let _OMM = {};
-        if (tle.length === 3) {
-          OBJECT_NAME = tle[0].trim();
-          tle = tle.slice(1, 3);
+      RAW: (satcat) => satcat,
+      CAT: (satcat) => {
+        if (!satcat) return;
+        let _satcat = {};
+        for (let prop in satcat_map) {
+          let sp = satcat_map[prop];
+          let value = satcat.substring(sp[0], sp[1]);
+          _satcat[prop] = satcat_transform[prop] ? satcat_transform[prop](value, _satcat) : bignumber(value);
+
         }
-        tle.forEach((_line, i) => {
-          let tt = tle_map[i + 1];
-          for (let prop in tt) {
-            let tp = tt[prop];
-            let _tp = [];
-            _tp = tp.length === 2 ? [tp[0] - 1, tp[1]] : [tp[0] - 1, tp[0]];
-            let value = _line.substring(_tp[0], _tp[1]);
-            _OMM[prop] = (tle_transform[prop] || bignumber)(value);
-          }
-        });
-        if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
-        return _OMM;
-      },
-    };
+        return _satcat;
+      }
+    }
   }
 };
 const vcm = null;

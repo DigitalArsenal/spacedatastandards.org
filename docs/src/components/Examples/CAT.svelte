@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { tle, satcat, vcm } from "../../../parsers/legacy.mjs";
+  import { satcat } from "../../../parsers/legacy.mjs";
   import {
     CodeEditorDocuments,
     IDLEditorContents,
@@ -17,16 +17,18 @@
   export let args;
   export let toggleMenu;
 
-  const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
+  const downloads = ["./test/satcat.txt"];
   let currentDownload = downloads[0];
 
   let _worker;
-  let tles;
+  let catalog;
   let raw;
   let schema;
   let FlatBuffer = {};
   let startLine = 0;
   let total = 0;
+  let boolCheck = v => (v || v === false ? v : null);
+
   $: current = Math.min(Math.max(current, 1), total) || 0;
   let currentVersion = "RAW";
   let filtered = [];
@@ -37,28 +39,28 @@
       n = n.toFixed(place);
       n = place ? n.replace(/0+$/, "") : n;
     } else {
-      n = n || null;
+      n = boolCheck(n);
     }
     return n;
   };
 
   let versionExtensions = {
     RAW: "txt",
-    "OMM (KEY / VALUE)": "txt",
-    "OMM (JSON)": "json",
-    "OMM (FLATBUFFER)": "fbs"
+    "CAT (KEY / VALUE)": "txt",
+    "CAT (JSON)": "json",
+    "CAT (FLATBUFFER)": "fbs"
   };
 
   let versions = {
-    RAW: v => (v ? v.join("\n") : ""),
-    "OMM (KEY / VALUE)": v => {
+    RAW: v => v,
+    "CAT (KEY / VALUE)": v => {
       if (!v) return;
-      v = tles.format.OMM(v);
+      v = catalog.format.CAT(v);
       let _v = {};
-      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      let keys = Reflect.ownKeys(schema.definitions.CAT.properties);
       for (let k = 0; k < keys.length; k++) {
         let key = keys[k];
-        _v[key] = v[key] || null;
+        _v[key] = boolCheck(_v[key]);
       }
       let _max =
         Reflect.ownKeys(_v).reduce((p, c) => (p.length > c.length ? p : c))
@@ -75,34 +77,40 @@
         .join("\n");
       return result;
     },
-    "OMM (JSON)": v => {
+    "CAT (JSON)": v => {
       if (!v) return;
-      v = tles.format.OMM(v);
+      v = catalog.format.CAT(v);
       let _v = {};
-      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      let keys = Reflect.ownKeys(schema.definitions.CAT.properties);
       for (let k = 0; k < keys.length; k++) {
         let key = keys[k];
         _v[key] = tofixed(v[key]);
+        if (schema.definitions.CAT.properties[key].$ref) {
+          let _key = schema.definitions.CAT.properties[key].$ref.split(
+            "/definitions/"
+          )[1];
+          _v[key] = schema.definitions[_key].enum[_v[key]] || _v[key];
+        }
       }
       return JSON.stringify(_v, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
         "$1"
       );
     },
-    "OMM (FLATBUFFER)": v => {
+    "CAT (FLATBUFFER)": v => {
       if (!v) return;
-      v = tles.format.OMM(v);
-      let { OMM } = FlatBuffer;
+      v = satcat.format.CAT(v);
+      let { CAT } = FlatBuffer;
       let builder = new flatbuffers.Builder(0);
-      let shim = Object.keys(schema.definitions.OMM.properties);
+      let shim = Object.keys(schema.definitions.CAT.properties);
       let intermediate = {};
       shim.forEach(canonicalname => {
         let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
-        for (let prop in OMM) {
+        for (let prop in CAT) {
           if (prop.indexOf(mangledname) > -1) {
             if (v[canonicalname] || v[canonicalname] === 0) {
               let schemaValue =
-                schema.definitions.OMM.properties[canonicalname];
+                schema.definitions.CAT.properties[canonicalname];
               intermediate[prop] = { canonicalname, mangledname };
               let _value = v[canonicalname];
               switch (schemaValue.type) {
@@ -118,15 +126,15 @@
         }
       });
 
-      OMM.startOMM(builder);
+      CAT.startCAT(builder);
 
       for (let prop in intermediate) {
-        OMM[prop](builder, intermediate[prop].value);
+        CAT[prop](builder, intermediate[prop].value);
       }
 
-      var BuiltOMM = OMM.endOMM(builder);
+      var BuiltCAT = CAT.endCAT(builder);
 
-      builder.finish(BuiltOMM);
+      builder.finish(BuiltCAT);
 
       var buf = builder.dataBuffer();
       let uint8 = builder.asUint8Array();
@@ -136,22 +144,22 @@
       );
       return uint8;
     }
-    /* "OMM (XML)": v => {}*/
+    /* "CAT (XML)": v => {}*/
   };
 
   $: {
-    if (tles && currentVersion && !isNaN(current)) {
+    if (catalog && currentVersion && !isNaN(current)) {
       setRawText();
     }
   }
 
   $: filtered =
-    tles && tles.lines && filter.length
-      ? tles.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
+    catalog && catalog.lines && filter.length
+      ? catalog.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
       : [];
   const setRawText = c =>
-    tles && schema
-      ? (raw = versions[currentVersion](tles.lines[c || current]))
+    catalog && schema
+      ? (raw = versions[currentVersion](catalog.lines[c || current]))
       : null;
 
   function convertObjects() {
@@ -187,11 +195,11 @@
     let start = new Date();
     let response = await fetch(currentDownload);
     let reader = response.body.getReader();
-    tles = new tle(reader);
-    let stop = await tles.readLines();
+    catalog = new satcat(reader);
+    let stop = await catalog.readLines();
 
     setRawText();
-    total = tles.lines.length - 1;
+    total = catalog.lines.length - 1;
     if ($IDLEditorContents && !schema) {
       convertObjects();
     } else {
@@ -203,7 +211,7 @@
     if (raw) {
       download(
         raw,
-        `test_omm.${versionExtensions[currentVersion] || "txt"}`,
+        `test_CAT.${versionExtensions[currentVersion] || "txt"}`,
         "text/plain"
       );
     }
