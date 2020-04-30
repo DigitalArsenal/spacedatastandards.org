@@ -117,6 +117,7 @@
     position: fixed;
     bottom: 0px;
     width: 100vw;
+    z-index: 100;
   }
   #footer button {
     background: var(--celestrak-blue);
@@ -126,40 +127,42 @@
   }
 </style>
 
-<h2>CLICK TO LOAD</h2>
-<h2>
-  <a
-    style="text-decoration:none"
-    href="https://google.github.io/flatbuffers/md__schemas.html"
-    target="_new">
-    INTERFACE DEFINITION LANGUAGE (IDL) FILE
-  </a>
-</h2>
-<container>
-  {#each $manifest.files.sort((a, b) => {
-    return a.filename > b.filename ? -1 : 1;
-  }) as mfile}
-    <div class="docButton">
-      <div
-        class="text"
-        on:click={e => {
-          loaded = false;
-          loadFile(mfile.filename);
-          window.location.hash = '/idl';
-          toggleMenu(false);
-        }}>
-        {mfile.title}
-        <br />
-        {mfile.filename.match(/\w{1,}/)}
+<div>
+  <h2>CLICK TO LOAD</h2>
+  <h2>
+    <a
+      style="text-decoration:none"
+      href="https://google.github.io/flatbuffers/md__schemas.html"
+      target="_new">
+      INTERFACE DEFINITION LANGUAGE (IDL) FILE
+    </a>
+  </h2>
+  <container>
+    {#each $manifest.files.sort((a, b) => {
+      return a.filename > b.filename ? -1 : 1;
+    }) as mfile}
+      <div class="docButton">
+        <div
+          class="text"
+          on:click={e => {
+            loaded = false;
+            loadFile(mfile.filename);
+            window.location.hash = '/idl';
+            toggleMenu(false);
+          }}>
+          {mfile.title}
+          <br />
+          {mfile.filename.match(/\w{1,}/)}
+        </div>
       </div>
-    </div>
-  {/each}
-</container>
-<div id="footer">
-  <button
-    on:click={() => {
-      clearLocalData();
-    }}>
-    Click to Clear Local Data
-  </button>
+    {/each}
+  </container>
+  <div id="footer">
+    <button
+      on:click={() => {
+        clearLocalData();
+      }}>
+      Click to Clear Local Data
+    </button>
+  </div>
 </div>
