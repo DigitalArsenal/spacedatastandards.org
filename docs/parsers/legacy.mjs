@@ -109,9 +109,12 @@ const satcat = class tle extends lineReader {
         let _satcat = {};
         for (let prop in satcat_map) {
           let sp = satcat_map[prop];
-          let value = satcat.substring(sp[0], sp[1]);
-          _satcat[prop] = satcat_transform[prop] ? satcat_transform[prop](value, _satcat) : bignumber(value);
-
+          if (sp[1]) {
+            let value = satcat.substring(sp[0], sp[1]);
+            _satcat[prop] = satcat_transform[prop] ? satcat_transform[prop](value, _satcat) : bignumber(value);
+          } else {
+            _satcat[prop] = _satcat[prop];
+          }
         }
         return _satcat;
       }

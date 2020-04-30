@@ -51,17 +51,29 @@
     "CAT (FLATBUFFER)": "fbs"
   };
 
+  let parseUp = (keys = [], v) => {
+    let _v = {};
+    for (let k = 0; k < keys.length; k++) {
+      let key = keys[k];
+      _v[key] = tofixed(v[key]);
+      if (schema.definitions.CAT.properties[key].$ref) {
+        let _key = schema.definitions.CAT.properties[key].$ref.split(
+          "/definitions/"
+        )[1];
+        _v[key] = schema.definitions[_key].enum[_v[key]] || _v[key];
+      }
+    }
+    return _v;
+  };
+
   let versions = {
     RAW: v => v,
     "CAT (KEY / VALUE)": v => {
       if (!v) return;
-      v = catalog.format.CAT(v);
-      let _v = {};
-      let keys = Reflect.ownKeys(schema.definitions.CAT.properties);
-      for (let k = 0; k < keys.length; k++) {
-        let key = keys[k];
-        _v[key] = boolCheck(_v[key]);
-      }
+      let _v = parseUp(
+        Reflect.ownKeys(schema.definitions.CAT.properties),
+        catalog.format.CAT(v)
+      );
       let _max =
         Reflect.ownKeys(_v).reduce((p, c) => (p.length > c.length ? p : c))
           .length + 1;
@@ -79,19 +91,10 @@
     },
     "CAT (JSON)": v => {
       if (!v) return;
-      v = catalog.format.CAT(v);
-      let _v = {};
-      let keys = Reflect.ownKeys(schema.definitions.CAT.properties);
-      for (let k = 0; k < keys.length; k++) {
-        let key = keys[k];
-        _v[key] = tofixed(v[key]);
-        if (schema.definitions.CAT.properties[key].$ref) {
-          let _key = schema.definitions.CAT.properties[key].$ref.split(
-            "/definitions/"
-          )[1];
-          _v[key] = schema.definitions[_key].enum[_v[key]] || _v[key];
-        }
-      }
+      let _v = parseUp(
+        Reflect.ownKeys(schema.definitions.CAT.properties),
+        catalog.format.CAT(v)
+      );
       return JSON.stringify(_v, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
         "$1"
@@ -99,7 +102,7 @@
     },
     "CAT (FLATBUFFER)": v => {
       if (!v) return;
-      v = satcat.format.CAT(v);
+      v = catalog.format.CAT(v);
       let { CAT } = FlatBuffer;
       let builder = new flatbuffers.Builder(0);
       let shim = Object.keys(schema.definitions.CAT.properties);

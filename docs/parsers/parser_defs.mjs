@@ -24,8 +24,8 @@ const satcat_map = {
   PERIGEE: [111, 117],
   RCS: [119, 127],
   ORBITAL_STATUS_CODE: [129, 132],
-  ORBIT_CENTER: [129, 132],
-  ORBIT_TYPE: [129, 132],
+  ORBIT_CENTER: [0, 0],
+  ORBIT_TYPE: [0, 0],
   TYPE: [21, 22]
 };
 
@@ -33,8 +33,7 @@ const satcat_transform = {
   TYPE: (d, _satcat) => {
     let _payload = _satcat.PAYLOAD;
     let _name = _satcat.OBJECT_NAME;
-    let _active = _satcat.OPS_STATUS_CODE &&
-      _satcat.OPS_STATUS_CODE < 5;
+    let _active = [0, 2, 3, 4, 5].indexOf(_satcat.OPS_STATUS_CODE) > -1;
     if (_payload && _active) {
       return 0;
     } else if (_payload && !_active) {
@@ -62,14 +61,53 @@ const satcat_transform = {
   OBJECT_ID: d => d.trim(),
   OPS_STATUS_CODE: d => {
     d = d.trim();
-    let r = ["+", "P", "B", "S", "X", "D", "?"].indexOf(d);
-    return r > -1 ? r : null;
+    d = ["+", "P", "B", "S", "X", "D", "?"].indexOf(d);
+    return d > -1 ? d : null;
   },
   LAUNCH_DATE: d => new Date(d),
   DECAY_DATE: d => new Date(d),
-  ORBITAL_STATUS_CODE: d => d.trim(),
-  ORBIT_CENTER: d => d.trim(),
-  ORBIT_TYPE: d => d.trim(),
+  ORBITAL_STATUS_CODE: (d, _satcat) => {
+    d = d.trim();
+    let _d = ["NCE", "NIE", "NEA", "DOC", "ISS"].indexOf(d);
+    _satcat.ORBIT_CENTER = 1;
+    _satcat.ORBIT_TYPE = null;
+    if (_d === -1) {
+      _d = null;
+      let _dd = [
+        "AS",
+        "EA",
+        "EL",
+        "EM",
+        "JU",
+        "MA",
+        "ME",
+        "MO",
+        "NE",
+        "PL",
+        "SA",
+        "SS",
+        "SU",
+        "UR",
+        "VE"
+      ].indexOf(d.slice(0, 2));
+      if (_dd > -1) {
+        _satcat.ORBIT_CENTER = _d;
+        let _n = parseInt(d.slice(2));
+        _satcat.ORBIT_TYPE = _n >= 0 ? _n : null
+      }
+    }
+    if (_satcat.ORBIT_TYPE === null) {
+      let _decayed = _satcat.OPS_STATUS_CODE === 6 || !isNaN(_satcat.DECAY_DATE.getTime());
+      if (_decayed) {
+        _satcat.ORBIT_TYPE = 2;
+      } else {
+        _satcat.ORBIT_TYPE = [0, 2, 3, 4, 5].indexOf(_satcat.OPS_STATUS_CODE) > -1 ? 0 : null;
+
+      }
+    }
+    return _d;
+  },
+
   RCS: d => parseFloat(d) ? bignumber(d) : null
 };
 
