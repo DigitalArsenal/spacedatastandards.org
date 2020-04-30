@@ -89,6 +89,23 @@
         "$1"
       );
     },
+    "OMM (XML)": v => {
+      let xmlString = `
+<ndm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd">
+  <omm id="CCSDS_OMM_VERS" version="2.0">
+    <header>
+    </header>
+    <body>
+    </body>
+</omm>
+</ndm>`;
+      let parser = new DOMParser();
+      let xmlDoc = parser.parseFromString(xmlString, "text/xml");
+      return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        new XMLSerializer().serializeToString(xmlDoc.documentElement)
+      );
+    },
     "OMM (FLATBUFFER)": v => {
       if (!v) return;
       v = tles.format.OMM(v);
