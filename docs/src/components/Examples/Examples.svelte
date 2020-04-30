@@ -16,12 +16,16 @@
   let activeComponent;
 
   onMount(() => {
-    let root_type = $IDLEditorContents.match(/(?<=root_type\s{1,})([^;]{1,})/g);
-    if (root_type && examples[root_type[0]]) {
-      activeComponent = examples[root_type[0]];
-    } else {
-      alert(`No Example For Type ${root_type}`);
-      window.location.hash = "/idl";
+    if ($IDLEditorContents) {
+      let root_type = $IDLEditorContents.match(
+        /(?<=root_type\s{1,})([^;]{1,})/g
+      );
+      if (root_type && examples[root_type[0]]) {
+        activeComponent = examples[root_type[0]];
+      } else {
+        alert(`No Example For Type ${root_type}`);
+        window.location.hash = "/idl";
+      }
     }
   });
 </script>
