@@ -104,7 +104,11 @@
 
   const toggleMenu = value => {
     menuOpen = value !== undefined ? value : !menuOpen;
-    let posVal = menuOpen ? "30vw" : "0vw";
+    let posVal = menuOpen
+      ? window.innerWidth > 1024
+        ? "200px"
+        : "30vw"
+      : "0vw";
     document.documentElement.style.setProperty("--container-position", posVal);
   };
 
@@ -145,7 +149,6 @@
       Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --header-height: 50px;
     --container-position: 0px;
-    --menu-width: 30vw;
     --header-gradient: linear-gradient(
       to bottom,
       var(--celestrak-blue) 20%,
@@ -269,7 +272,7 @@
     position: fixed;
     left: -100%;
     padding: 0px;
-    width: var(--menu-width);
+    width: var(--container-position);
     height: 100vh;
     background: #164583;
 
