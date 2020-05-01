@@ -149,7 +149,7 @@
     editorContents: TestEditorContents,
     theme: "vs-dark"
   };
-  let test = { OMM: "" };
+  let test = { OMM: "true" };
   onMount(() => {
     if ($IDLEditorContents) {
       let root_type = $IDLEditorContents

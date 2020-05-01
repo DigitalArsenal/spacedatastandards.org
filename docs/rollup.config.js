@@ -34,7 +34,7 @@ export default {
       ]
     }),
     string({
-      include: ["**/*.fbs", "lib/flatbuffers.js", "src/components/Main/background.html.txt", "src/lib/workerShim.js"]
+      include: ["**/*.fbs", "**/*.xsd", "lib/flatbuffers.js", "src/components/Main/background.html.txt", "src/lib/workerShim.js"]
     }),
     {
       name: "rollup-plugin-svelte-css-replace",

@@ -10,6 +10,34 @@
   import { flatbuffers } from "./flatbuffers.js";
   import bignumber from "bignumber.js";
   import download from "downloadjs";
+  import navCommon_xsd from "../../../test/ndmxml-1.0-navwg-common.xsd";
+  import omm_xsd from "../../../test/ndmxml-1.0-omm-2.0.xsd";
+
+  let parser = new DOMParser();
+  let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
+  let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
+  let _xml = [navCommon_xsd_xml, omm_xsd_xml];
+
+  const getElementsByAttribute = (
+    _documentElement,
+    _TagName,
+    _attributeName,
+    _attributeValue
+  ) => {
+    let _array = Array.prototype.slice.call(
+      _documentElement.getElementsByTagName(_TagName)
+    );
+    return _attributeName
+      ? _array.filter(n =>
+          _attributeValue
+            ? n.attributes.getNamedItem(_attributeName).value ===
+              _attributeValue
+            : n.attributes.getNamedItem(_attributeName)
+        )
+      : _array;
+  };
+
+  globalThis.getElementsByAttribute = getElementsByAttribute;
 
   const workerPath = "/workers/worker.js";
 
@@ -92,16 +120,55 @@
     },
     "OMM (XML)": v => {
       let xmlString = `
-<ndm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd">
+<ndm 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd">
   <omm id="CCSDS_OMM_VERS" version="2.0">
     <header>
     </header>
     <body>
     </body>
-</omm>
+  </omm>
 </ndm>`;
-      let parser = new DOMParser();
+
       let xmlDoc = parser.parseFromString(xmlString, "text/xml");
+      let header = xmlDoc.getElementsByTagName("header")[0];
+
+      let _omm_metadata_tag = getElementsByAttribute(
+        _xml[1].documentElement,
+        "xsd:complexType",
+        "name",
+        "ommMetadata"
+      );
+
+      let _omm_data_tag = getElementsByAttribute(
+        _xml[1].documentElement,
+        "xsd:complexType",
+        "name",
+        "ommData"
+      );
+
+      const buildTree = (_root, tree) => {
+        let tags = Array.prototype.slice
+          .call(_root)
+          .map(n => [
+            n.attributes.getNamedItem("name").value,
+            n.attributes.getNamedItem("type").value
+          ]);
+        let _needs = tags.filter(st => st[1].slice(0, 3));
+        console.log(tags);
+      };
+
+      let metadata_tags = buildTree(_omm_metadata_tag[0].children[0].children);
+      console.log(metadata_tags);
+      let data_tags = Array.prototype.slice
+        .call(_omm_data_tag[0].children[0].children)
+        .map(n => n.attributes.getNamedItem("name").value);
+
+      console.log(metadata_tags, data_tags);
+
+      let body = xmlDoc.getElementsByTagName("body")[0];
+      console.log(header, body);
       return (
         '<?xml version="1.0" encoding="UTF-8"?>\n' +
         new XMLSerializer().serializeToString(xmlDoc.documentElement)
@@ -154,7 +221,6 @@
       );
       return uint8;
     }
-    /* "OMM (XML)": v => {}*/
   };
 
   $: {
