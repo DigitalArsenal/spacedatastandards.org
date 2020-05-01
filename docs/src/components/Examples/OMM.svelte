@@ -14,11 +14,19 @@
   import navCommon_xsd from "../../../test/ndmxml-1.0-navwg-common.xsd";
   import omm_xsd from "../../../test/ndmxml-1.0-omm-2.0.xsd";
 
+  const workerPath = "/workers/worker.js";
+
+  export let loaded;
+  export let args;
+  export let toggleMenu;
+
+  const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
+  let currentDownload = downloads[0];
+
   let parser = new DOMParser();
   let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
   let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
   let _xml = [navCommon_xsd_xml, omm_xsd_xml];
-  globalThis.xml = _xml;
 
   const makeArray = a => Array.prototype.slice.call(a);
   const getElementsByAttribute = (
@@ -51,27 +59,23 @@
       .map(([key, value]) => `${key}="${value}"`)
       .join(" ");
   const tagUp = (k, v, a = {}) => `\t<${k} ${aMap(a)}>${v}</${k}>`;
+
+  let rMap = {
+    covarianceMatrix: "covarianceMatrixElementsGroup"
+  };
+
   const genTags = (tags, a, _v) => {
     return getKids(tags[a]).map(n => {
-      if (tags[n + "Type"]) {
-        _v[n] = genTags(tags, n + "Type", _v).join("\n");
+      if (tags[n + "Type"] || tags[rMap[n]]) {
+        _v[n] = genTags(tags, tags[rMap[n]] ? rMap[n] : n + "Type", _v).join(
+          "\n"
+        );
       }
       if (_v[n]) {
         return `\t${tagUp(n, _v[n])}`;
       }
     });
   };
-
-  globalThis.getElementsByAttribute = getElementsByAttribute;
-
-  const workerPath = "/workers/worker.js";
-
-  export let loaded;
-  export let args;
-  export let toggleMenu;
-
-  const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
-  let currentDownload = downloads[0];
 
   let _worker;
   let tles;
@@ -147,8 +151,10 @@
       let tagTypes = {
         "xsd:complexType": [],
         "xsd:simpleType": [],
-        "xsd:element": []
+        "xsd:element": [],
+        "xsd:group": []
       };
+
       _xml.forEach(xx => {
         Object.keys(tagTypes).forEach(tt => {
           tagTypes[tt] = tagTypes[tt].concat(
@@ -160,7 +166,9 @@
       let tags = {};
       Object.values(tagTypes).forEach(ta => {
         ta.forEach(ttt => {
-          tags[ttt.attributes.getNamedItem("name").value] = ttt;
+          if (ttt.attributes.getNamedItem("name")) {
+            tags[ttt.attributes.getNamedItem("name").value] = ttt;
+          }
         });
       });
       //TAGS
