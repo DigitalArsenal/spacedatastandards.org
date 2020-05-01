@@ -10,6 +10,7 @@
   import { flatbuffers } from "./flatbuffers.js";
   import bignumber from "bignumber.js";
   import download from "downloadjs";
+  import xmlformatter from "xml-formatter";
   import navCommon_xsd from "../../../test/ndmxml-1.0-navwg-common.xsd";
   import omm_xsd from "../../../test/ndmxml-1.0-omm-2.0.xsd";
 
@@ -17,16 +18,16 @@
   let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
   let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
   let _xml = [navCommon_xsd_xml, omm_xsd_xml];
+  globalThis.xml = _xml;
 
+  const makeArray = a => Array.prototype.slice.call(a);
   const getElementsByAttribute = (
     _documentElement,
     _TagName,
     _attributeName,
     _attributeValue
   ) => {
-    let _array = Array.prototype.slice.call(
-      _documentElement.getElementsByTagName(_TagName)
-    );
+    let _array = makeArray(_documentElement.getElementsByTagName(_TagName));
     return _attributeName
       ? _array.filter(n =>
           _attributeValue
@@ -35,6 +36,30 @@
             : n.attributes.getNamedItem(_attributeName)
         )
       : _array;
+  };
+
+  const getKids = a =>
+    makeArray(a.children[0].children)
+      .map(n =>
+        n.attributes.getNamedItem("name")
+          ? n.attributes.getNamedItem("name").value
+          : false
+      )
+      .filter(Boolean);
+  const aMap = (a = {}) =>
+    Object.entries(a)
+      .map(([key, value]) => `${key}="${value}"`)
+      .join(" ");
+  const tagUp = (k, v, a = {}) => `\t<${k} ${aMap(a)}>${v}</${k}>`;
+  const genTags = (tags, a, _v) => {
+    return getKids(tags[a]).map(n => {
+      if (tags[n + "Type"]) {
+        _v[n] = genTags(tags, n + "Type", _v).join("\n");
+      }
+      if (_v[n]) {
+        return `\t${tagUp(n, _v[n])}`;
+      }
+    });
   };
 
   globalThis.getElementsByAttribute = getElementsByAttribute;
@@ -119,59 +144,127 @@
       );
     },
     "OMM (XML)": v => {
+      let tagTypes = {
+        "xsd:complexType": [],
+        "xsd:simpleType": [],
+        "xsd:element": []
+      };
+      _xml.forEach(xx => {
+        Object.keys(tagTypes).forEach(tt => {
+          tagTypes[tt] = tagTypes[tt].concat(
+            makeArray(xx.documentElement.getElementsByTagName(tt))
+          );
+        });
+      });
+
+      let tags = {};
+      Object.values(tagTypes).forEach(ta => {
+        ta.forEach(ttt => {
+          tags[ttt.attributes.getNamedItem("name").value] = ttt;
+        });
+      });
+      //TAGS
+
+      v = tles.format.OMM(v);
+      let _v = {};
+      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      for (let k = 0; k < keys.length; k++) {
+        let key = keys[k];
+        _v[key] = v[key] || null;
+      }
+
+      Object.entries(_v).map(kv => {
+        _v[kv[0]] =
+          kv[1] instanceof Date
+            ? JSON.stringify(kv[1])
+            : tofixed(kv[1]) || "null";
+      });
+      //console.log(_v);
+
       let xmlString = `
 <ndm 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd">
   <omm id="CCSDS_OMM_VERS" version="2.0">
     <header>
+       ${genTags(tags, "ndmHeader", _v).join("\n")}
     </header>
     <body>
+    <segment>
+    <metadata>
+    ${genTags(tags, "ommMetadata", _v).join("\n")}
+    </metadata>
+    <data>
+    ${genTags(tags, "ommData", _v).join("\n")}
+    </data>
+    </segment>
     </body>
   </omm>
 </ndm>`;
 
       let xmlDoc = parser.parseFromString(xmlString, "text/xml");
-      let header = xmlDoc.getElementsByTagName("header")[0];
+      let XML = {
+        parse: (string, type = "text/xml") =>
+          new DOMParser().parseFromString(string, type), // like JSON.parse
+        stringify: DOM => new XMLSerializer().serializeToString(DOM), // like JSON.stringify
 
-      let _omm_metadata_tag = getElementsByAttribute(
-        _xml[1].documentElement,
-        "xsd:complexType",
-        "name",
-        "ommMetadata"
-      );
+        transform: (xml, xsl) => {
+          let proc = new XSLTProcessor();
+          proc.importStylesheet(typeof xsl == "string" ? XML.parse(xsl) : xsl);
+          let output = proc.transformToFragment(
+            typeof xml == "string" ? XML.parse(xml) : xml,
+            document
+          );
+          return typeof xml == "string" ? XML.stringify(output) : output; // if source was string then stringify response, else return object
+        },
 
-      let _omm_data_tag = getElementsByAttribute(
-        _xml[1].documentElement,
-        "xsd:complexType",
-        "name",
-        "ommData"
-      );
-
-      const buildTree = (_root, tree) => {
-        let tags = Array.prototype.slice
-          .call(_root)
-          .map(n => [
-            n.attributes.getNamedItem("name").value,
-            n.attributes.getNamedItem("type").value
-          ]);
-        let _needs = tags.filter(st => st[1].slice(0, 3));
-        console.log(tags);
+        minify: node => XML.toString(node, false),
+        prettify: node => XML.toString(node, true),
+        toString: (node, pretty, level = 0, singleton = false) => {
+          // einzelkind
+          if (typeof node == "string") node = XML.parse(node);
+          let tabs = pretty
+            ? Array(level + 1)
+                .fill("")
+                .join("\t")
+            : "";
+          let newLine = pretty ? "\n" : "";
+          if (node.nodeType == 3)
+            return (
+              (singleton ? "" : tabs) +
+              node.textContent.trim() +
+              (singleton ? "" : newLine)
+            );
+          if (!node.tagName) return XML.toString(node.firstChild, pretty);
+          let output = tabs + `<${node.tagName}`; // >\n
+          for (let i = 0; i < node.attributes.length; i++)
+            output += ` ${node.attributes[i].name}="${node.attributes[i].value}"`;
+          if (node.childNodes.length == 0) return output + " />" + newLine;
+          else output += ">";
+          let onlyOneTextChild =
+            node.childNodes.length == 1 && node.childNodes[0].nodeType == 3;
+          if (!onlyOneTextChild) output += newLine;
+          for (let i = 0; i < node.childNodes.length; i++)
+            output += XML.toString(
+              node.childNodes[i],
+              pretty,
+              level + 1,
+              onlyOneTextChild
+            );
+          return (
+            output +
+            (onlyOneTextChild ? "" : tabs) +
+            `</${node.tagName}>` +
+            newLine
+          );
+        }
       };
-
-      let metadata_tags = buildTree(_omm_metadata_tag[0].children[0].children);
-      console.log(metadata_tags);
-      let data_tags = Array.prototype.slice
-        .call(_omm_data_tag[0].children[0].children)
-        .map(n => n.attributes.getNamedItem("name").value);
-
-      console.log(metadata_tags, data_tags);
-
-      let body = xmlDoc.getElementsByTagName("body")[0];
-      console.log(header, body);
       return (
         '<?xml version="1.0" encoding="UTF-8"?>\n' +
-        new XMLSerializer().serializeToString(xmlDoc.documentElement)
+        xmlformatter(
+          new XMLSerializer().serializeToString(xmlDoc.documentElement),
+          { indentation: "  ", collapseContent: true }
+        )
       );
     },
     "OMM (FLATBUFFER)": v => {
