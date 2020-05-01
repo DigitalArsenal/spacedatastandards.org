@@ -77,7 +77,7 @@
     };
     setRoute(params, Code);
   });
-  router.on("/#/examples", params => {
+  router.on("/#/examples.*", params => {
     args = {
       documentName: "",
       editorContents: "",

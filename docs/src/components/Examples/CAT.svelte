@@ -233,6 +233,7 @@
       window.addEventListener(e, sizeSet);
     });
     loaded = true;
+    getData();
   });
   onDestroy(() => {
     sizeEvents.forEach(e => {

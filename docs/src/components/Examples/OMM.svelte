@@ -46,12 +46,13 @@
     RAW: "txt",
     "OMM (KEY / VALUE)": "txt",
     "OMM (JSON)": "json",
+    "OMM (XML)": "xml",
     "OMM (FLATBUFFER)": "fbs"
   };
 
   let versions = {
     RAW: v => (v ? v.join("\n") : ""),
-    "OMM (KEY / VALUE)": v => {
+    "OMM (KEY/VALUE)": v => {
       if (!v) return;
       v = tles.format.OMM(v);
       let _v = {};
@@ -166,10 +167,11 @@
     tles && tles.lines && filter.length
       ? tles.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
       : [];
-  const setRawText = c =>
+  const setRawText = c => {
     tles && schema
       ? (raw = versions[currentVersion](tles.lines[c || current]))
       : null;
+  };
 
   function convertObjects() {
     let inputObject = {
@@ -206,15 +208,13 @@
     let reader = response.body.getReader();
     tles = new tle(reader);
     let stop = await tles.readLines();
-
-    setRawText();
     total = tles.lines.length - 1;
     if ($IDLEditorContents && !schema) {
       convertObjects();
     } else {
       loaded = true;
-      setRawText();
     }
+    setRawText();
   }
   const downloadData = () => {
     if (raw) {
@@ -224,6 +224,13 @@
         "text/plain"
       );
     }
+  };
+  let versionsKey = {
+    raw: "RAW",
+    kv: "OMM (KEY / VALUE)",
+    json: "OMM (JSON)",
+    xml: "OMM (XML)",
+    fbs: "OMM (FLATBUFFER)"
   };
   let sizeEvents = ["resize", "orientationchange"];
   let sizeSet = () =>
@@ -239,6 +246,13 @@
       window.addEventListener(e, sizeSet);
     });
     loaded = true;
+    getData();
+    let params = new URL(document.location.href.split("#")).searchParams;
+    let format = (params.get("format") || "").toLowerCase();
+
+    if (format && versionsKey[format]) {
+      currentVersion = versionsKey[format];
+    }
   });
   onDestroy(() => {
     sizeEvents.forEach(e => {

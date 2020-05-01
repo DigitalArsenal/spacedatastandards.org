@@ -3,7 +3,7 @@
 
 **[CLICK HERE FOR THE EDITOR](https://spacedatastandards.org)**
 
-<img src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">	<img style="max-width:400px" src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
+<img src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">
 
 <h2>
   Background
