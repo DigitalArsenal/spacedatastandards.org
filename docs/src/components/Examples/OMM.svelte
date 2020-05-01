@@ -179,7 +179,6 @@
             ? JSON.stringify(kv[1])
             : tofixed(kv[1]) || "null";
       });
-      //console.log(_v);
 
       let xmlString = `
 <ndm 
