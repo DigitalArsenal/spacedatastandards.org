@@ -183,16 +183,12 @@
 
       Object.entries(_v).map(kv => {
         _v[kv[0]] =
-          kv[1] instanceof Date
-            ? JSON.stringify(kv[1])
-            : tofixed(kv[1]) || "";
+          kv[1] instanceof Date ? JSON.stringify(kv[1]) : tofixed(kv[1]) || "";
       });
 
       let xmlString = `
-<ndm 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd">
-  <omm id="CCSDS_OMM_VERS" version="2.0">
+  <omm id="CCSDS_OMM_VERS" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2.0.xsd">
     <header>
        ${genTags(tags, "ndmHeader", _v).join("\n")}
     </header>
@@ -206,8 +202,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-maste
     </data>
     </segment>
     </body>
-  </omm>
-</ndm>`;
+  </omm>`;
 
       let xmlDoc = parser.parseFromString(xmlString, "text/xml");
       let XML = {
