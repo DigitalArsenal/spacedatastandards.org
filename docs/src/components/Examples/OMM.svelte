@@ -185,7 +185,7 @@
         _v[kv[0]] =
           kv[1] instanceof Date
             ? JSON.stringify(kv[1])
-            : tofixed(kv[1]) || "null";
+            : tofixed(kv[1]) || "";
       });
 
       let xmlString = `
