@@ -29,19 +29,14 @@
   let _xml = [navCommon_xsd_xml, omm_xsd_xml];
 
   const makeArray = a => Array.prototype.slice.call(a);
-  const getElementsByAttribute = (
-    _documentElement,
-    _TagName,
-    _attributeName,
-    _attributeValue
-  ) => {
+
+  const getElementsByAttribute = (_documentElement, _TagName, _aN, _aV) => {
     let _array = makeArray(_documentElement.getElementsByTagName(_TagName));
-    return _attributeName
+    return _aN
       ? _array.filter(n =>
-          _attributeValue
-            ? n.attributes.getNamedItem(_attributeName).value ===
-              _attributeValue
-            : n.attributes.getNamedItem(_attributeName)
+          _aV
+            ? n.attributes.getNamedItem(_aN).value === _aV
+            : n.attributes.getNamedItem(_aN)
         )
       : _array;
   };
@@ -54,22 +49,48 @@
           : false
       )
       .filter(Boolean);
+
   const aMap = (a = {}) =>
     Object.entries(a)
       .map(([key, value]) => `${key}="${value}"`)
       .join(" ");
+
   const tagUp = (k, v, a = {}) => `\t<${k} ${aMap(a)}>${v}</${k}>`;
 
   let rMap = {
     covarianceMatrix: "covarianceMatrixElementsGroup"
   };
 
+  const subTags = {
+    userDefinedParameters: (a, b, c, d) => {
+      let ud = "user_defined";
+      let userkeys = Object.keys(c).filter(
+        n => n.toLowerCase().indexOf(ud) > -1
+      );
+      let keyText = userkeys
+        .map(k => {
+          return `\t${tagUp("USER_DEFINED", c[k], {
+            parameter: k
+              .toLowerCase()
+              .replace(ud, "")
+              .toUpperCase()
+          })}`;
+        })
+        .join("\n");
+      return keyText;
+    }
+  };
+
   const genTags = (tags, a, _v) => {
     return getKids(tags[a]).map(n => {
-      if (tags[n + "Type"] || tags[rMap[n]]) {
-        _v[n] = genTags(tags, tags[rMap[n]] ? rMap[n] : n + "Type", _v).join(
-          "\n"
-        );
+      if (tags[n + "Type"] || tags[rMap[n]] || subTags[n]) {
+        if (subTags[n]) {
+          _v[n] = subTags[n](tags, tags[rMap[n]] ? rMap[n] : n + "Type", _v);
+        } else {
+          _v[n] = genTags(tags, tags[rMap[n]] ? rMap[n] : n + "Type", _v).join(
+            "\n"
+          );
+        }
       }
       if (_v[n]) {
         return `\t${tagUp(n, _v[n])}`;
@@ -164,14 +185,14 @@
       });
 
       let tags = {};
-      Object.values(tagTypes).forEach(ta => {
+
+      Object.values(tagTypes).map(ta => {
         ta.forEach(ttt => {
           if (ttt.attributes.getNamedItem("name")) {
             tags[ttt.attributes.getNamedItem("name").value] = ttt;
           }
         });
       });
-      //TAGS
 
       v = tles.format.OMM(v);
       let _v = {};
@@ -204,67 +225,12 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
     </body>
   </omm>`;
 
-      let xmlDoc = parser.parseFromString(xmlString, "text/xml");
-      let XML = {
-        parse: (string, type = "text/xml") =>
-          new DOMParser().parseFromString(string, type), // like JSON.parse
-        stringify: DOM => new XMLSerializer().serializeToString(DOM), // like JSON.stringify
-
-        transform: (xml, xsl) => {
-          let proc = new XSLTProcessor();
-          proc.importStylesheet(typeof xsl == "string" ? XML.parse(xsl) : xsl);
-          let output = proc.transformToFragment(
-            typeof xml == "string" ? XML.parse(xml) : xml,
-            document
-          );
-          return typeof xml == "string" ? XML.stringify(output) : output; // if source was string then stringify response, else return object
-        },
-
-        minify: node => XML.toString(node, false),
-        prettify: node => XML.toString(node, true),
-        toString: (node, pretty, level = 0, singleton = false) => {
-          // einzelkind
-          if (typeof node == "string") node = XML.parse(node);
-          let tabs = pretty
-            ? Array(level + 1)
-                .fill("")
-                .join("\t")
-            : "";
-          let newLine = pretty ? "\n" : "";
-          if (node.nodeType == 3)
-            return (
-              (singleton ? "" : tabs) +
-              node.textContent.trim() +
-              (singleton ? "" : newLine)
-            );
-          if (!node.tagName) return XML.toString(node.firstChild, pretty);
-          let output = tabs + `<${node.tagName}`; // >\n
-          for (let i = 0; i < node.attributes.length; i++)
-            output += ` ${node.attributes[i].name}="${node.attributes[i].value}"`;
-          if (node.childNodes.length == 0) return output + " />" + newLine;
-          else output += ">";
-          let onlyOneTextChild =
-            node.childNodes.length == 1 && node.childNodes[0].nodeType == 3;
-          if (!onlyOneTextChild) output += newLine;
-          for (let i = 0; i < node.childNodes.length; i++)
-            output += XML.toString(
-              node.childNodes[i],
-              pretty,
-              level + 1,
-              onlyOneTextChild
-            );
-          return (
-            output +
-            (onlyOneTextChild ? "" : tabs) +
-            `</${node.tagName}>` +
-            newLine
-          );
-        }
-      };
       return (
         '<?xml version="1.0" encoding="UTF-8"?>\n' +
         xmlformatter(
-          new XMLSerializer().serializeToString(xmlDoc.documentElement),
+          new XMLSerializer().serializeToString(
+            parser.parseFromString(xmlString, "text/xml").documentElement
+          ),
           { indentation: "  ", collapseContent: true }
         )
       );
