@@ -237,7 +237,7 @@
 
       Object.entries(_v).map(kv => {
         _v[kv[0]] =
-          kv[1] instanceof Date ? JSON.stringify(kv[1]) : tofixed(kv[1]) || "";
+          kv[1] instanceof Date ? JSON.stringify(kv[1]).replace(/"([\s\S]{1,})"/gm, "$1") : tofixed(kv[1]) || "";
       });
 
       let xmlString = `
