@@ -157,7 +157,7 @@
         .trim();
 
       if (root_type && test[root_type]) {
-        activeComponent = test[root_type];
+        root_type = test[root_type];
       } else {
         alert(`No Test For Type ${root_type}`);
         window.location.hash = "/idl";
