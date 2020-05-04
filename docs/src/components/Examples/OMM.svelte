@@ -92,9 +92,7 @@
           );
         }
       }
-      if (_v[n]) {
-        return `\t${tagUp(n, _v[n])}`;
-      }
+      return `\t${tagUp(n, _v[n])}`;
     });
   };
 
