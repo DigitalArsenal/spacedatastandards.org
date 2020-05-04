@@ -15,7 +15,12 @@
   import omm_xsd from "../../../test/ndmxml-1.0-omm-2.0.xsd";
 
   const workerPath = "/workers/worker.js";
-
+  let showNull = true;
+  let checkNull = v =>
+    showNull ||
+    (v !== null &&
+      v !== "null" &&
+      (typeof v === "string" && v.trim().length > 0));
   export let loaded;
   export let args;
   export let toggleMenu;
@@ -69,13 +74,16 @@
       );
       let keyText = userkeys
         .map(k => {
-          return `\t${tagUp("USER_DEFINED", c[k], {
-            parameter: k
-              .toLowerCase()
-              .replace(ud + "_", "")
-              .toUpperCase()
-          })}`;
+          if (checkNull(c[k])) {
+            return `\t${tagUp("USER_DEFINED", c[k], {
+              parameter: k
+                .toLowerCase()
+                .replace(ud + "_", "")
+                .toUpperCase()
+            })}`;
+          }
         })
+        .filter(Boolean)
         .join("\n");
       return keyText;
     }
@@ -92,7 +100,9 @@
           );
         }
       }
-      return `\t${tagUp(n, _v[n])}`;
+      if (checkNull(_v[n])) {
+        return `\t${tagUp(n, _v[n])}`;
+      }
     });
   };
 
@@ -121,6 +131,7 @@
   let versionExtensions = {
     RAW: "txt",
     "OMM (KEY / VALUE)": "txt",
+    "OMM (CSV)": "csv",
     "OMM (JSON)": "json",
     "OMM (XML)": "xml",
     "OMM (FLATBUFFER)": "fbs"
@@ -146,11 +157,32 @@
             kv[1] instanceof Date
               ? JSON.stringify(kv[1])
               : tofixed(kv[1]) || "null";
-
-          return `${kv[0].padEnd(_max)} = ${_v.toString().replace(/"/g, "")}`;
+          let _value = _v.toString().replace(/"/g, "");
+          if (checkNull(_value)) return `${kv[0].padEnd(_max)} = ${_value}`;
         })
+        .filter(Boolean)
         .join("\n");
       return result;
+    },
+    "OMM (CSV)": v => {
+      v = tles.format.OMM(v);
+      let kvm = {};
+      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      for (let k = 0; k < keys.length; k++) {
+        let key = keys[k];
+        let _v =
+          v[key] instanceof Date
+            ? JSON.stringify(v[key])
+            : tofixed(v[key]) || "null";
+
+        v[key] = _v.toString().replace(/"/g, "");
+        if (checkNull(v[key])) {
+          kvm[key] = v[key] || null;
+        }
+      }
+      return [Object.keys(kvm).join(","), Object.values(kvm).join(",")].join(
+        "\n"
+      );
     },
     "OMM (JSON)": v => {
       if (!v) return;
@@ -160,6 +192,9 @@
       for (let k = 0; k < keys.length; k++) {
         let key = keys[k];
         _v[key] = tofixed(v[key]);
+        if (!checkNull(_v[key])) {
+          delete _v[key];
+        }
       }
       return JSON.stringify(_v, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
@@ -293,6 +328,13 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
       ? tles.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
       : [];
   const setRawText = c => {
+    let overflowStyle = {
+      "OMM (CSV)": "initial"
+    };
+    document.documentElement.style.setProperty(
+      "--overflow-wrap",
+      overflowStyle[currentVersion] || ""
+    );
     tles && schema
       ? (raw = versions[currentVersion](tles.lines[c || current]))
       : null;
@@ -353,6 +395,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
   let versionsKey = {
     raw: "RAW",
     kv: "OMM (KEY / VALUE)",
+    csv: "OMM (CSV)",
     json: "OMM (JSON)",
     xml: "OMM (XML)",
     fbs: "OMM (FLATBUFFER)"
@@ -387,6 +430,9 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
 </script>
 
 <style>
+  :root {
+    --overflow-wrap: inital;
+  }
   select {
     /*border-radius: 10px;*/
     font-size: 12px;
@@ -396,7 +442,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 5px;
     padding: 5px;
   }
@@ -406,7 +452,12 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
     grid-gap: 5px;
     font-size: var(--font-size-sm);
     padding: 2px;
-    grid-template-columns: minmax(100px, 200px) minmax(35px, 55px);
+    grid-template-columns: minmax(50px, 100px) minmax(35px, 55px);
+  }
+  #topMenu > div#center {
+    align-items: center;
+    justify-content: center;
+    display: flex;
   }
   #right {
     justify-content: right;
@@ -466,6 +517,10 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
     padding: 1px;
     width: 50px;
   }
+  textarea {
+    overflow: auto;
+    overflow-wrap: var(--overflow-wrap);
+  }
 </style>
 
 <div id="code-top-container">
@@ -479,6 +534,16 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
         {/each}
       </select>
       <div class="button" on:click={() => getData()}>GET</div>
+    </div>
+    <div id="center">
+      <input
+        type="checkbox"
+        on:change={e => {
+          showNull = e.target.checked;
+          setRawText();
+        }}
+        bind:checked={showNull} />
+      <div>Show Blank / Null</div>
     </div>
     <div id="right">
       <select bind:value={currentVersion} on:change={() => setRawText()}>
