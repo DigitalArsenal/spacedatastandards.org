@@ -72,7 +72,7 @@
           return `\t${tagUp("USER_DEFINED", c[k], {
             parameter: k
               .toLowerCase()
-              .replace(ud, "")
+              .replace(ud + "_", "")
               .toUpperCase()
           })}`;
         })
