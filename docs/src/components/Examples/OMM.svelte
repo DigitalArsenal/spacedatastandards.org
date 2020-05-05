@@ -237,7 +237,9 @@
 
       Object.entries(_v).map(kv => {
         _v[kv[0]] =
-          kv[1] instanceof Date ? JSON.stringify(kv[1]).replace(/"([\s\S]{1,})"/gm, "$1") : tofixed(kv[1]) || "";
+          kv[1] instanceof Date
+            ? JSON.stringify(kv[1]).replace(/"([\s\S]{1,})"/gm, "$1")
+            : tofixed(kv[1]) || "";
       });
 
       let xmlString = `
@@ -520,6 +522,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
   textarea {
     overflow: auto;
     overflow-wrap: var(--overflow-wrap);
+    font-family: "Courier New", Courier, monospace;
   }
 </style>
 
