@@ -88,6 +88,8 @@ class tle extends lineReader {
           }
         });
         if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
+        _OMM.USER_DEFINED_MICROSECONDS = _OMM.EPOCH.microseconds;
+        _OMM.USER_DEFINED_UNIX_TIMESTAMP = _OMM.EPOCH.getTime();
         return _OMM;
       }
     };

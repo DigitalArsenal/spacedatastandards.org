@@ -5,7 +5,7 @@ const decimalAssumed = (value) => bignumber("." + value) || 0;
 const whatCentury = (digits) => {
   digits = parseInt(digits);
   return digits || digits === 0 ? (digits < 50 ? "20" : "19") + digits.toString().padStart(2, 0) : null;
-}
+};
 
 const satcat_map = {
   OBJECT_ID: [0, 11],
@@ -26,7 +26,7 @@ const satcat_map = {
   ORBITAL_STATUS_CODE: [129, 132],
   ORBIT_CENTER: [0, 0],
   ORBIT_TYPE: [0, 0],
-  TYPE: [21, 22]
+  TYPE: [21, 22],
 };
 
 const satcat_transform = {
@@ -38,34 +38,26 @@ const satcat_transform = {
       return 0;
     } else if (_payload && !_active) {
       return 1;
-    } else if (
-      !_payload &&
-      _name &&
-      _name.indexOf(" DEB") > -1
-    ) {
+    } else if (!_payload && _name && _name.indexOf(" DEB") > -1) {
       return 2;
-    } else if (
-      _name &&
-      (_name.indexOf(" R/B") > -1 ||
-        _name.indexOf(" AKM") > -1)
-    ) {
+    } else if (_name && (_name.indexOf(" R/B") > -1 || _name.indexOf(" AKM") > -1)) {
       return 3;
     }
     return 4;
   },
-  MULTIPLE_NAMES: d => d.trim() === "M",
-  PAYLOAD: d => d.trim() === "*",
-  LAUNCH_SITE: d => d.trim(),
-  ORIGINATOR: d => d.trim(),
-  OBJECT_NAME: d => d.trim(),
-  OBJECT_ID: d => d.trim(),
-  OPS_STATUS_CODE: d => {
+  MULTIPLE_NAMES: (d) => d.trim() === "M",
+  PAYLOAD: (d) => d.trim() === "*",
+  LAUNCH_SITE: (d) => d.trim(),
+  ORIGINATOR: (d) => d.trim(),
+  OBJECT_NAME: (d) => d.trim(),
+  OBJECT_ID: (d) => d.trim(),
+  OPS_STATUS_CODE: (d) => {
     d = d.trim();
     d = ["+", "P", "B", "S", "X", "D", "?"].indexOf(d);
     return d > -1 ? d : null;
   },
-  LAUNCH_DATE: d => new Date(d),
-  DECAY_DATE: d => new Date(d),
+  LAUNCH_DATE: (d) => new Date(d),
+  DECAY_DATE: (d) => new Date(d),
   ORBITAL_STATUS_CODE: (d, _satcat) => {
     d = d.trim();
     let _d = ["NCE", "NIE", "NEA", "DOC", "ISS"].indexOf(d);
@@ -73,27 +65,11 @@ const satcat_transform = {
     _satcat.ORBIT_TYPE = null;
     if (_d === -1) {
       _d = null;
-      let _dd = [
-        "AS",
-        "EA",
-        "EL",
-        "EM",
-        "JU",
-        "MA",
-        "ME",
-        "MO",
-        "NE",
-        "PL",
-        "SA",
-        "SS",
-        "SU",
-        "UR",
-        "VE"
-      ].indexOf(d.slice(0, 2));
+      let _dd = ["AS", "EA", "EL", "EM", "JU", "MA", "ME", "MO", "NE", "PL", "SA", "SS", "SU", "UR", "VE"].indexOf(d.slice(0, 2));
       if (_dd > -1) {
         _satcat.ORBIT_CENTER = _d;
         let _n = parseInt(d.slice(2));
-        _satcat.ORBIT_TYPE = _n >= 0 ? _n : null
+        _satcat.ORBIT_TYPE = _n >= 0 ? _n : null;
       }
     }
     if (_satcat.ORBIT_TYPE === null) {
@@ -102,13 +78,12 @@ const satcat_transform = {
         _satcat.ORBIT_TYPE = 2;
       } else {
         _satcat.ORBIT_TYPE = [0, 2, 3, 4, 5].indexOf(_satcat.OPS_STATUS_CODE) > -1 ? 0 : null;
-
       }
     }
     return _d;
   },
 
-  RCS: d => parseFloat(d) ? bignumber(d) : null
+  RCS: (d) => (parseFloat(d) ? bignumber(d) : null),
 };
 
 const tle_map = {
@@ -167,16 +142,14 @@ const tle_transform = {
         tA[i] = tA[i] * (tA[i - 2] - tA[i - 1]);
       }
     });
-    return new Date(
-      Date.UTC.apply(
-        0,
-        tA.filter((v, i) => {
-          return i % 2 || i == 0 || i == tA.length - 1;
-        })
-      )
-    );
+    tA = tA.filter((v, i) => {
+      return i % 2 || i == 0 || i == tA.length - 1;
+    });
+
+    let _epoch = new Date(Date.UTC.apply(0, tA));
+    _epoch.microseconds = parseInt(tA[tA.length - 1] * 1000);
+    return _epoch;
   },
 };
 
-
-export { satcat_map, satcat_transform, tle_map, tle_transform }
+export { satcat_map, satcat_transform, tle_map, tle_transform };

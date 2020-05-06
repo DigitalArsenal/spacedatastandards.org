@@ -329,7 +329,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
     tles && tles.lines && filter.length
       ? tles.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
       : [];
-  const setRawText = c => {
+  const setRawText = () => {
     let overflowStyle = {
       "OMM (CSV)": "initial"
     };
@@ -338,7 +338,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
       overflowStyle[currentVersion] || ""
     );
     tles && schema
-      ? (raw = versions[currentVersion](tles.lines[c || current]))
+      ? (raw = versions[currentVersion](tles.lines[current - 1]))
       : null;
   };
 
@@ -377,7 +377,7 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
     let reader = response.body.getReader();
     tles = new tle(reader);
     let stop = await tles.readLines();
-    total = tles.lines.length - 1;
+    total = tles.lines.length;
     if ($IDLEditorContents && !schema) {
       convertObjects();
     } else {
