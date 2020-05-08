@@ -122,9 +122,7 @@
       let place = n % 1 ? 15 : 0;
       n = n.toFixed(place);
       n = place ? n.replace(/0+$/, "") : n;
-    } else {
-      n = n || null;
-    }
+    } 
     return n;
   };
 
@@ -146,7 +144,7 @@
       let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
       for (let k = 0; k < keys.length; k++) {
         let key = keys[k];
-        _v[key] = v[key] || null;
+        _v[key] = v[key];
       }
       let _max =
         Reflect.ownKeys(_v).reduce((p, c) => (p.length > c.length ? p : c))
@@ -156,8 +154,8 @@
           let _v =
             kv[1] instanceof Date
               ? JSON.stringify(kv[1])
-              : tofixed(kv[1]) || "null";
-          let _value = _v.toString().replace(/"/g, "");
+              : tofixed(kv[1]);
+          let _value = _v !== null && _v !== undefined ? _v.toString().replace(/"/g, ""):_v;
           if (checkNull(_value)) return `${kv[0].padEnd(_max)} = ${_value}`;
         })
         .filter(Boolean)
