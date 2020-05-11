@@ -20,7 +20,7 @@
     showNull ||
     (v !== null &&
       v !== "null" &&
-      (typeof v === "string" && v.trim().length > 0));
+      (typeof v !== "string" || v.trim().length > 0));
   export let loaded;
   export let args;
   export let toggleMenu;
