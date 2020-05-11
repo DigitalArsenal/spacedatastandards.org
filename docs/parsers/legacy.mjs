@@ -2,9 +2,13 @@
 //https://cdf.gsfc.nasa.gov/html/leapseconds_requirements.html
 
 import bignumber from "bignumber.js";
-import { satcat_map, satcat_transform, tle_map, tle_transform } from './parser_defs.mjs';
+import {
+  satcat_map,
+  satcat_transform,
+  tle_map,
+  tle_transform,
+} from "./parser_defs.mjs";
 window.bignumber = bignumber;
-
 
 class lineReader {
   constructor(reader) {
@@ -21,7 +25,7 @@ class lineReader {
 
         let startIndex = 0;
 
-        for (; ;) {
+        for (;;) {
           let remline = leRegex.exec(value);
           //only progress if there are more lines
           if (!remline) {
@@ -69,7 +73,7 @@ class tle extends lineReader {
     };
     this.format = {
       RAW: (tle) => tle,
-      OMM: (tle) => {
+      OMM: (tle, microseconds) => {
         if (!tle) return;
         let OBJECT_NAME;
         let _OMM = {};
@@ -88,10 +92,12 @@ class tle extends lineReader {
           }
         });
         if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
-        _OMM.USER_DEFINED_MICROSECONDS = _OMM.EPOCH.microseconds;
-        _OMM.USER_DEFINED_EPOCH_UNIX_TIMESTAMP = _OMM.EPOCH.getTime();
+        if (microseconds) {
+          _OMM.USER_DEFINED_MICROSECONDS = _OMM.EPOCH.microseconds;
+          _OMM.USER_DEFINED_EPOCH_UNIX_TIMESTAMP = _OMM.EPOCH.getTime();
+        }
         return _OMM;
-      }
+      },
     };
   }
 }
@@ -113,14 +119,16 @@ const satcat = class tle extends lineReader {
           let sp = satcat_map[prop];
           if (sp[1]) {
             let value = satcat.substring(sp[0], sp[1]);
-            _satcat[prop] = satcat_transform[prop] ? satcat_transform[prop](value, _satcat) : bignumber(value);
+            _satcat[prop] = satcat_transform[prop]
+              ? satcat_transform[prop](value, _satcat)
+              : bignumber(value);
           } else {
             _satcat[prop] = _satcat[prop];
           }
         }
         return _satcat;
-      }
-    }
+      },
+    };
   }
 };
 const vcm = null;
