@@ -122,7 +122,7 @@
       let place = n % 1 ? 15 : 0;
       n = n.toFixed(place);
       n = place ? n.replace(/0+$/, "") : n;
-    } 
+    }
     return n;
   };
 
@@ -152,10 +152,11 @@
       let result = Object.entries(_v)
         .map(kv => {
           let _v =
-            kv[1] instanceof Date
-              ? JSON.stringify(kv[1])
-              : tofixed(kv[1]);
-          let _value = _v !== null && _v !== undefined ? _v.toString().replace(/"/g, ""):_v;
+            kv[1] instanceof Date ? JSON.stringify(kv[1]) : tofixed(kv[1]);
+          let _value =
+            _v !== null && _v !== undefined
+              ? _v.toString().replace(/"/g, "")
+              : _v;
           if (checkNull(_value)) return `${kv[0].padEnd(_max)} = ${_value}`;
         })
         .filter(Boolean)
@@ -185,16 +186,17 @@
     "OMM (JSON)": v => {
       if (!v) return;
       v = tles.format.OMM(v);
-      let _v = {};
+      let _json = {};
       let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
       for (let k = 0; k < keys.length; k++) {
         let key = keys[k];
-        _v[key] = tofixed(v[key]);
-        if (!checkNull(_v[key])) {
-          delete _v[key];
+        let _v = v[key] instanceof Date ? v[key] : tofixed(v[key]) || null;
+
+        if (checkNull(_v)) {
+          _json[key] = _v || null;
         }
       }
-      return JSON.stringify(_v, null, 4).replace(
+      return JSON.stringify(_json, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
         "$1"
       );
