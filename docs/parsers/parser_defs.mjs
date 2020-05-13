@@ -1,12 +1,14 @@
+import { JulianDate, TimeStandard } from "./JulianDate";
+window.JulianDate = JulianDate;
 import bignumber from "bignumber.js";
 
 const decimalAssumed = (value) => {
   let n = bignumber("." + value);
   return n.isFinite() && !n.isNaN() ? n : 0;
 }
-const dpAParse = value =>{
+const dpAParse = value => {
   let sign = value.slice(0, 1) === "-" ? -1 : 1;
-  let result = sign * decimalAssumed(`${value.slice(1,6)}e${value.slice(6)}`);
+  let result = sign * decimalAssumed(`${value.slice(1, 6)}e${value.slice(6)}`);
   return result;
 }
 const whatCentury = (digits) => {
@@ -144,8 +146,10 @@ const tle_transform = {
     });
 
     let _epoch = new Date(Date.UTC.apply(0, tA));
-    _epoch.microseconds = parseInt(tA[tA.length - 1] * 1000);
-    return _epoch;
+    let jdate = new JulianDate();
+    JulianDate.fromDate(_epoch, jdate); //converts to TAI https://github.com/CesiumGS/cesium/blob/1.69/Source/Core/JulianDate.js#L299
+    window.jday = jdate;
+    return JulianDate.toIso8601(jdate, 3);
   },
 };
 

@@ -73,7 +73,7 @@ class tle extends lineReader {
     };
     this.format = {
       RAW: (tle) => tle,
-      OMM: (tle, microseconds) => {
+      OMM: (tle) => {
         if (!tle) return;
         let OBJECT_NAME;
         let _OMM = {};
@@ -92,10 +92,6 @@ class tle extends lineReader {
           }
         });
         if (OBJECT_NAME) _OMM.OBJECT_NAME = OBJECT_NAME;
-        if (microseconds) {
-          _OMM.USER_DEFINED_MICROSECONDS = _OMM.EPOCH.microseconds;
-          _OMM.USER_DEFINED_EPOCH_UNIX_TIMESTAMP = _OMM.EPOCH.getTime();
-        }
         return _OMM;
       },
     };
