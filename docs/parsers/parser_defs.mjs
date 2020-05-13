@@ -1,5 +1,5 @@
 import { JulianDate, TimeStandard } from "./JulianDate";
-window.JulianDate = JulianDate;
+
 import bignumber from "bignumber.js";
 
 const decimalAssumed = (value) => {
@@ -148,7 +148,7 @@ const tle_transform = {
     let _epoch = new Date(Date.UTC.apply(0, tA));
     let jdate = new JulianDate();
     JulianDate.fromDate(_epoch, jdate); //converts to TAI https://github.com/CesiumGS/cesium/blob/1.69/Source/Core/JulianDate.js#L299
-    window.jday = jdate;
+
     return JulianDate.toIso8601(jdate, 3);
   },
 };
