@@ -146,10 +146,14 @@ const tle_transform = {
     });
 
     let _epoch = new Date(Date.UTC.apply(0, tA));
+    /*
     let jdate = new JulianDate();
     JulianDate.fromDate(_epoch, jdate); //converts to TAI https://github.com/CesiumGS/cesium/blob/1.69/Source/Core/JulianDate.js#L299
-
     return JulianDate.toIso8601(jdate, 3);
+    */
+    _epoch.microseconds = parseInt(tA[tA.length - 1] * 1000);
+    return _epoch;
+
   },
 };
 
