@@ -1,7 +1,16 @@
+import { JulianDate, TimeStandard } from "./JulianDate";
+
 import bignumber from "bignumber.js";
 
-const decimalAssumed = (value) => bignumber("." + value) || 0;
-
+const decimalAssumed = (value) => {
+  let n = bignumber("." + value);
+  return n.isFinite() && !n.isNaN() ? n : 0;
+}
+const dpAParse = value => {
+  let sign = value.slice(0, 1) === "-" ? -1 : 1;
+  let result = sign * decimalAssumed(`${value.slice(1, 6)}e${value.slice(6)}`);
+  return result;
+}
 const whatCentury = (digits) => {
   digits = parseInt(digits);
   return digits || digits === 0 ? (digits < 50 ? "20" : "19") + digits.toString().padStart(2, 0) : null;
@@ -113,14 +122,7 @@ const tle_map = {
 };
 
 const tle_transform = {
-  BSTAR: (value) => {
-    let sign = value.slice(0, 1) === "-" ? -1 : 1;
-    let num = value.slice(1, 6);
-    let exp = value.slice(6);
-    let fpf = 1e32;
-    let r = sign * parseInt(num) * Math.pow(10, parseInt(exp));
-    return (r * fpf) / (fpf * parseInt("10" + new Array(num.length).join("0")));
-  },
+  BSTAR: dpAParse,
   CLASSIFICATION_TYPE: (value) => value,
   OBJECT_ID: (value) => {
     let year = whatCentury(parseInt(value.slice(0, 2)));
@@ -128,10 +130,7 @@ const tle_transform = {
     return `${year ? year : "0000"}-${value.slice(2)}`.trim();
   },
   ECCENTRICITY: decimalAssumed,
-  MEAN_MOTION_DDOT: (value) => {
-    let sign = value.slice(0, 1) === "-" ? -1 : 1;
-    return sign * decimalAssumed(value.slice(1));
-  },
+  MEAN_MOTION_DDOT: dpAParse,
   EPOCH: (value) => {
     value = value.trim();
     let tA = [whatCentury(value.slice(0, 2)), 0, parseFloat(value.substr(2)), 0, 24, 0, 60, 0, 60, 0, 1000];
@@ -147,8 +146,14 @@ const tle_transform = {
     });
 
     let _epoch = new Date(Date.UTC.apply(0, tA));
+    /*
+    let jdate = new JulianDate();
+    JulianDate.fromDate(_epoch, jdate); //converts to TAI https://github.com/CesiumGS/cesium/blob/1.69/Source/Core/JulianDate.js#L299
+    return JulianDate.toIso8601(jdate, 3);
+    */
     _epoch.microseconds = parseInt(tA[tA.length - 1] * 1000);
     return _epoch;
+
   },
 };
 
