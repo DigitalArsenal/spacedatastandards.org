@@ -196,6 +196,7 @@
           delete _v[key];
         }
       }
+      _v = [_v];
       return JSON.stringify(_v, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
         "$1"
@@ -242,9 +243,9 @@
             : tofixed(kv[1]) || "";
       });
 
-      let xmlString = `
-  <omm id="CCSDS_OMM_VERS" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2.0.xsd">
+      let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
+<ndm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd"> 
+  <omm id="CCSDS_OMM_VERS" version="2.0">
     <header>
        ${genTags(tags, "ndmHeader", _v).join("\n")}
     </header>
@@ -258,7 +259,8 @@ xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-omm-2
     </data>
     </segment>
     </body>
-  </omm>`;
+  </omm>
+</ndm>`;
 
       return (
         '<?xml version="1.0" encoding="UTF-8"?>\n' +
