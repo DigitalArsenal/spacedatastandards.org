@@ -57,35 +57,43 @@
   };
 
   let versions = {
-    RAW: v => (v ? v.join("\n") : ""),
-    "OMM (KEY/VALUE)": v => {
-      console.log(v);
-      v = v[0]; //TODO
-      if (!v) return;
-      v = tles.format.OMM(v);
-      let _v = {};
-      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
-      for (let k = 0; k < keys.length; k++) {
-        let key = keys[k];
-        _v[key] = v[key];
-      }
-      let _max =
-        Reflect.ownKeys(_v).reduce((p, c) => (p.length > c.length ? p : c))
-          .length + 1;
-      let result = Object.entries(_v)
-        .map(kv => {
-          let _v =
-            kv[1] instanceof Date ? JSON.stringify(kv[1]) : tofixed(kv[1]);
-          let _value =
-            _v !== null && _v !== undefined
-              ? _v.toString().replace(/"/g, "")
-              : _v;
-          if (checkNull(showNull, _value))
-            return `${kv[0].padEnd(_max)} = ${_value}`;
-        })
-        .filter(Boolean)
-        .join("\n");
-      return result;
+    RAW: raw => {
+      let v = raw.map(a => a.join("\n"));
+      return v ? v.join("\n") : "";
+    },
+
+    "OMM (KEY/VALUE)": raw => {
+      if (!raw) return;
+      let result = raw.map(v => {
+        v = tles.format.OMM(v);
+        let _v = {};
+        let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+        for (let k = 0; k < keys.length; k++) {
+          let key = keys[k];
+          _v[key] = v[key];
+        }
+        let _max =
+          Reflect.ownKeys(_v).reduce((p, c) => (p.length > c.length ? p : c))
+            .length + 1;
+        return Object.entries(_v)
+          .map(kv => {
+            let _v =
+              kv[1] instanceof Date ? JSON.stringify(kv[1]) : tofixed(kv[1]);
+            let _value =
+              _v !== null && _v !== undefined
+                ? _v.toString().replace(/"/g, "")
+                : _v;
+            if (checkNull(showNull, _value)) {
+              if (_value === undefined) {
+                _value = "";
+              }
+              return `${kv[0].padEnd(_max)} = ${_value}`;
+            }
+          })
+          .filter(Boolean)
+          .join("\n");
+      });
+      return result.join("\n\n");
     },
     "OMM (CSV)": raw => {
       let keys = Reflect.ownKeys(schema.definitions.OMM.properties);

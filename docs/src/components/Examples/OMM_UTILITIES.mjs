@@ -2,6 +2,7 @@
 let checkNull = (showNull, v) =>
   showNull ||
   (v !== null &&
+    v !== undefined &&
     v !== "null" &&
     (typeof v !== "string" || v.trim().length > 0));
 const makeArray = a => Array.prototype.slice.call(a);
