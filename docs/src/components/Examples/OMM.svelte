@@ -141,7 +141,7 @@
         keys = Object.keys(kvm);
         return Object.values(kvm).join(",");
       });
-      return [keys.join(","), _v.join("\n")].join("");
+      return [keys.join(","), _v.join("\n")].join("\n");
     },
     "OMM (JSON)": raw => {
       if (!raw) return;
