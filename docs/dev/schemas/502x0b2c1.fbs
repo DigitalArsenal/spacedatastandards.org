@@ -173,4 +173,8 @@ table OMMCOLLECTION {
   RECORDS:[OMM];
 }
 
+table MPECOLLECTION {
+  RECORDS:[MPE];
+}
+
 root_type OMM;

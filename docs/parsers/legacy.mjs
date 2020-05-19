@@ -105,7 +105,6 @@ const satcat = class tle extends lineReader {
     this.processLine = (line) => {
       this.lines.push(line);
     };
-
     this.format = {
       RAW: (satcat) => satcat,
       CAT: (satcat) => {

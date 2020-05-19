@@ -5,12 +5,11 @@ import bignumber from "bignumber.js";
 const decimalAssumed = (value) => {
   let n = bignumber("." + value);
   return n.isFinite() && !n.isNaN() ? n : 0;
-}
-const dpAParse = value => {
-  let sign = value.slice(0, 1) === "-" ? -1 : 1;
-  let result = sign * decimalAssumed(`${value.slice(1, 6)}e${value.slice(6)}`);
+};
+const dpAParse = (value) => {
+  let result = (value.slice(0, 1) === "-" ? -1 : 1) * decimalAssumed(`${value.slice(1, 6)}e${value.slice(6)}`);
   return result;
-}
+};
 const whatCentury = (digits) => {
   digits = parseInt(digits);
   return digits || digits === 0 ? (digits < 50 ? "20" : "19") + digits.toString().padStart(2, 0) : null;
@@ -149,11 +148,10 @@ const tle_transform = {
     /*
     let jdate = new JulianDate();
     JulianDate.fromDate(_epoch, jdate); //converts to TAI https://github.com/CesiumGS/cesium/blob/1.69/Source/Core/JulianDate.js#L299
-    return JulianDate.toIso8601(jdate, 3);
+    console.log(Juliandate.totalDays(jdate));
     */
     _epoch.microseconds = parseInt(tA[tA.length - 1] * 1000);
     return _epoch;
-
   },
 };
 
