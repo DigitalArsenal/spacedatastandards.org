@@ -42,7 +42,7 @@
   let FlatBuffer = {};
   let startLine = 0;
   let total = 0;
-  $: current = Math.min(Math.max(current, 1), total) || 0;
+  $: current = Math.min(Math.max(current, 1), total - 10) || 0;
   let currentVersion = "RAW";
   let filtered = [];
   let filter = "";
@@ -59,6 +59,8 @@
   let versions = {
     RAW: v => (v ? v.join("\n") : ""),
     "OMM (KEY/VALUE)": v => {
+      console.log(v);
+      v = v[0]; //TODO
       if (!v) return;
       v = tles.format.OMM(v);
       let _v = {};
@@ -85,25 +87,27 @@
         .join("\n");
       return result;
     },
-    "OMM (CSV)": v => {
-      v = tles.format.OMM(v);
-      let kvm = {};
+    "OMM (CSV)": raw => {
       let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
-      for (let k = 0; k < keys.length; k++) {
-        let key = keys[k];
-        let _v =
-          v[key] instanceof Date
-            ? JSON.stringify(v[key])
-            : tofixed(v[key]) || "null";
+      let _v = raw.map(v => {
+        v = tles.format.OMM(v);
+        let kvm = {};
+        for (let k = 0; k < keys.length; k++) {
+          let key = keys[k];
+          let _v =
+            v[key] instanceof Date
+              ? JSON.stringify(v[key])
+              : tofixed(v[key]) || "null";
 
-        v[key] = _v.toString().replace(/"/g, "");
-        if (checkNull(showNull, v[key])) {
-          kvm[key] = v[key] || null;
+          v[key] = _v.toString().replace(/"/g, "");
+          if (checkNull(showNull, v[key])) {
+            kvm[key] = v[key] || null;
+          }
         }
-      }
-      return [Object.keys(kvm).join(","), Object.values(kvm).join(",")].join(
-        "\n"
-      );
+        keys = Object.keys(kvm);
+        return Object.values(kvm).join(",");
+      });
+      return [keys.join(","), _v.join("\n")].join("\n");
     },
     "OMM (JSON)": raw => {
       if (!raw) return;
@@ -180,7 +184,7 @@
     },
     "OMM (FLATBUFFER)": v => {
       if (!v) return;
-      v = tles.format.OMM(v);
+      v = tles.format.OMM([v]); //TODO
       let { OMM } = FlatBuffer;
       let builder = new flatbuffers.Builder(0);
       let shim = Object.keys(schema.definitions.OMM.properties);
