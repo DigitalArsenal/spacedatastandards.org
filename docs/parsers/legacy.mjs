@@ -7,7 +7,7 @@ import {
   satcat_transform,
   tle_map,
   tle_transform,
-} from "./parser_defs.mjs";
+} from "./definitions.mjs";
 window.bignumber = bignumber;
 
 class lineReader {

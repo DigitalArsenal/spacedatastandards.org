@@ -11,100 +11,29 @@
   import bignumber from "bignumber.js";
   import download from "downloadjs";
   import xmlformatter from "xml-formatter";
+  import {
+    checkNull,
+    makeArray,
+    tofixed,
+    tagTypes,
+    XMLOMM
+  } from "./OMM_UTILITIES.mjs";
   import navCommon_xsd from "../../../test/ndmxml-1.0-navwg-common.xsd";
   import omm_xsd from "../../../test/ndmxml-1.0-omm-2.0.xsd";
+  let parser = new DOMParser();
+  let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
+  let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
+  let _xml = [navCommon_xsd_xml, omm_xsd_xml];
 
   const workerPath = "/workers/worker.js";
   let showNull = true;
-  let checkNull = v =>
-    showNull ||
-    (v !== null &&
-      v !== "null" &&
-      (typeof v !== "string" || v.trim().length > 0));
+
   export let loaded;
   export let args;
   export let toggleMenu;
 
   const downloads = ["./test/twoline.txt", "./test/threeline.txt"];
   let currentDownload = downloads[0];
-
-  let parser = new DOMParser();
-  let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
-  let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
-  let _xml = [navCommon_xsd_xml, omm_xsd_xml];
-
-  const makeArray = a => Array.prototype.slice.call(a);
-
-  const getElementsByAttribute = (_documentElement, _TagName, _aN, _aV) => {
-    let _array = makeArray(_documentElement.getElementsByTagName(_TagName));
-    return _aN
-      ? _array.filter(n =>
-          _aV
-            ? n.attributes.getNamedItem(_aN).value === _aV
-            : n.attributes.getNamedItem(_aN)
-        )
-      : _array;
-  };
-
-  const getKids = a =>
-    makeArray(a.children[0].children)
-      .map(n =>
-        n.attributes.getNamedItem("name")
-          ? n.attributes.getNamedItem("name").value
-          : false
-      )
-      .filter(Boolean);
-
-  const aMap = (a = {}) =>
-    Object.entries(a)
-      .map(([key, value]) => `${key}="${value}"`)
-      .join(" ");
-
-  const tagUp = (k, v, a = {}) => `\t<${k} ${aMap(a)}>${v}</${k}>`;
-
-  let rMap = {
-    covarianceMatrix: "covarianceMatrixElementsGroup"
-  };
-
-  const subTags = {
-    userDefinedParameters: (a, b, c, d) => {
-      let ud = "user_defined";
-      let userkeys = Object.keys(c).filter(
-        n => n.toLowerCase().indexOf(ud) > -1
-      );
-      let keyText = userkeys
-        .map(k => {
-          if (checkNull(c[k])) {
-            return `\t${tagUp("USER_DEFINED", c[k], {
-              parameter: k
-                .toLowerCase()
-                .replace(ud + "_", "")
-                .toUpperCase()
-            })}`;
-          }
-        })
-        .filter(Boolean)
-        .join("\n");
-      return keyText;
-    }
-  };
-
-  const genTags = (tags, a, _v) => {
-    return getKids(tags[a]).map(n => {
-      if (tags[n + "Type"] || tags[rMap[n]] || subTags[n]) {
-        if (subTags[n]) {
-          _v[n] = subTags[n](tags, tags[rMap[n]] ? rMap[n] : n + "Type", _v);
-        } else {
-          _v[n] = genTags(tags, tags[rMap[n]] ? rMap[n] : n + "Type", _v).join(
-            "\n"
-          );
-        }
-      }
-      if (checkNull(_v[n])) {
-        return `\t${tagUp(n, _v[n])}`;
-      }
-    });
-  };
 
   let _worker;
   let tles;
@@ -117,14 +46,6 @@
   let currentVersion = "RAW";
   let filtered = [];
   let filter = "";
-  let tofixed = n => {
-    if (!isNaN(n) && (typeof n === "number" || n instanceof bignumber)) {
-      let place = n % 1 ? 15 : 0;
-      n = n.toFixed(place);
-      n = place ? n.replace(/0+$/, "") : n;
-    }
-    return n;
-  };
 
   let versionExtensions = {
     RAW: "txt",
@@ -157,7 +78,8 @@
             _v !== null && _v !== undefined
               ? _v.toString().replace(/"/g, "")
               : _v;
-          if (checkNull(_value)) return `${kv[0].padEnd(_max)} = ${_value}`;
+          if (checkNull(showNull, _value))
+            return `${kv[0].padEnd(_max)} = ${_value}`;
         })
         .filter(Boolean)
         .join("\n");
@@ -175,7 +97,7 @@
             : tofixed(v[key]) || "null";
 
         v[key] = _v.toString().replace(/"/g, "");
-        if (checkNull(v[key])) {
+        if (checkNull(showNull, v[key])) {
           kvm[key] = v[key] || null;
         }
       }
@@ -183,33 +105,30 @@
         "\n"
       );
     },
-    "OMM (JSON)": v => {
-      if (!v) return;
-      v = tles.format.OMM(v);
-      let _json = {};
-      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
-      for (let k = 0; k < keys.length; k++) {
-        let key = keys[k];
-        let _v = v[key] instanceof Date ? v[key] : tofixed(v[key]) || null;
+    "OMM (JSON)": raw => {
+      if (!raw) return;
 
-        if (checkNull(_v)) {
-          _json[key] = _v || null;
+      let _jsona = raw.map(v => {
+        v = tles.format.OMM(v);
+        let _json = {};
+        let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+        for (let k = 0; k < keys.length; k++) {
+          let key = keys[k];
+          let _v = v[key] instanceof Date ? v[key] : tofixed(v[key]) || null;
+
+          if (checkNull(showNull, _v)) {
+            _json[key] = _v || null;
+          }
         }
-      }
-      _json = [_json];
-      return JSON.stringify(_json, null, 4).replace(
+        return _json;
+      });
+
+      return JSON.stringify(_jsona, null, 4).replace(
         /"([\-+\s]?[0-9]+\.{0,1}[0-9]*)"/g,
         "$1"
       );
     },
-    "OMM (XML)": v => {
-      let tagTypes = {
-        "xsd:complexType": [],
-        "xsd:simpleType": [],
-        "xsd:element": [],
-        "xsd:group": []
-      };
-
+    "OMM (XML)": raw => {
       _xml.forEach(xx => {
         Object.keys(tagTypes).forEach(tt => {
           tagTypes[tt] = tagTypes[tt].concat(
@@ -228,40 +147,27 @@
         });
       });
 
-      v = tles.format.OMM(v);
-      let _v = {};
-      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
-      for (let k = 0; k < keys.length; k++) {
-        let key = keys[k];
-        _v[key] = v[key] || null;
-      }
+      let varray = raw.map(v => {
+        v = tles.format.OMM(v);
+        let _v = {};
+        let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+        for (let k = 0; k < keys.length; k++) {
+          let key = keys[k];
+          _v[key] = v[key] || null;
+        }
 
-      Object.entries(_v).map(kv => {
-        _v[kv[0]] =
-          kv[1] instanceof Date
-            ? JSON.stringify(kv[1]).replace(/"([\s\S]{1,})"/gm, "$1")
-            : tofixed(kv[1]) || "";
+        Object.entries(_v).map(kv => {
+          _v[kv[0]] =
+            kv[1] instanceof Date
+              ? JSON.stringify(kv[1]).replace(/"([\s\S]{1,})"/gm, "$1")
+              : tofixed(kv[1]) || "";
+        });
+        return XMLOMM(showNull, tags, _v);
       });
-
       let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
-<ndm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd"> 
-  <omm id="CCSDS_OMM_VERS" version="2.0">
-    <header>
-       ${genTags(tags, "ndmHeader", _v).join("\n")}
-    </header>
-    <body>
-    <segment>
-    <metadata>
-    ${genTags(tags, "ommMetadata", _v).join("\n")}
-    </metadata>
-    <data>
-    ${genTags(tags, "ommData", _v).join("\n")}
-    </data>
-    </segment>
-    </body>
-  </omm>
-</ndm>`;
-
+<ndm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sanaregistry.org/r/ndmxml/ndmxml-1.0-master.xsd">`;
+      xmlString += varray.join("\n");
+      xmlString += `</ndm>`;
       return (
         '<?xml version="1.0" encoding="UTF-8"?>\n' +
         xmlformatter(
@@ -340,7 +246,9 @@
       overflowStyle[currentVersion] || ""
     );
     tles && schema
-      ? (raw = versions[currentVersion](tles.lines[current - 1]))
+      ? (raw = versions[currentVersion](
+          tles.lines.slice(current - 1, current + 9)
+        ))
       : null;
   };
 

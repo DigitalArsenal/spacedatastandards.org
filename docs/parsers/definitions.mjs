@@ -125,7 +125,6 @@ const tle_transform = {
   CLASSIFICATION_TYPE: (value) => value,
   OBJECT_ID: (value) => {
     let year = whatCentury(parseInt(value.slice(0, 2)));
-
     return `${year ? year : "0000"}-${value.slice(2)}`.trim();
   },
   ECCENTRICITY: decimalAssumed,
@@ -153,6 +152,7 @@ const tle_transform = {
     _epoch.microseconds = parseInt(tA[tA.length - 1] * 1000);
     return _epoch;
   },
+  
 };
 
 export { satcat_map, satcat_transform, tle_map, tle_transform };
