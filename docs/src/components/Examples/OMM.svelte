@@ -21,9 +21,11 @@
   import navCommon_xsd from "../../../test/ndmxml-1.0-navwg-common.xsd";
   import omm_xsd from "../../../test/ndmxml-1.0-omm-2.0.xsd";
   let parser = new DOMParser();
-  let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
-  let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
-  let _xml = [navCommon_xsd_xml, omm_xsd_xml];
+  let _xml;
+  let [navCommon_xsd_xml, omm_xsd_xml] = (_xml = [navCommon_xsd, omm_xsd].map(
+    raw => parser.parseFromString(raw, "text/xml")
+  ));
+
   _xml.forEach(xx => {
     Object.keys(tagTypes).forEach(tt => {
       tagTypes[tt] = tagTypes[tt].concat(
@@ -72,7 +74,14 @@
     "OMM (XML)": "xml",
     "OMM (FLATBUFFER)": "fbs"
   };
-
+  let versionsKey = {
+    raw: "RAW",
+    kv: "OMM (KEY / VALUE)",
+    csv: "OMM (CSV)",
+    json: "OMM (JSON)",
+    xml: "OMM (XML)",
+    fbs: "OMM (FLATBUFFER)"
+  };
   let versions = {
     RAW: raw => {
       let v = raw.map(a => a.join("\n"));
@@ -132,7 +141,7 @@
         keys = Object.keys(kvm);
         return Object.values(kvm).join(",");
       });
-      return [keys.join(","), _v.join("\n")].join("\n");
+      return [keys.join(","), _v.join("\n")].join("");
     },
     "OMM (JSON)": raw => {
       if (!raw) return;
@@ -189,44 +198,58 @@
         )
       );
     },
-    "OMM (FLATBUFFER)": v => {
-      if (!v) return;
-      v = tles.format.OMM([v]); //TODO
-      let { OMM } = FlatBuffer;
+    "OMM (FLATBUFFER)": raw => {
+      if (!raw) return;
+      let { OMM, OMMCOLLECTION } = FlatBuffer;
       let builder = new flatbuffers.Builder(0);
-      let shim = Object.keys(schema.definitions.OMM.properties);
-      let intermediate = {};
-      shim.forEach(canonicalname => {
-        let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
-        for (let prop in OMM) {
-          if (prop.indexOf(mangledname) > -1) {
-            if (v[canonicalname] || v[canonicalname] === 0) {
-              let schemaValue =
-                schema.definitions.OMM.properties[canonicalname];
-              intermediate[prop] = { canonicalname, mangledname };
-              let _value = v[canonicalname];
-              switch (schemaValue.type) {
-                case "number":
-                  break;
-                case "string":
-                  _value = builder.createString(_value);
-                  break;
+
+      let intermediates = raw.map(v => {
+        v = tles.format.OMM(v);
+        let shim = Object.keys(schema.definitions.OMM.properties);
+        let intermediate = {};
+        shim.forEach(canonicalname => {
+          let mangledname = canonicalname.replace(/_/g, "").toUpperCase();
+          for (let prop in OMM) {
+            if (prop.indexOf(mangledname) > -1) {
+              if (v[canonicalname] || v[canonicalname] === 0) {
+                let schemaValue =
+                  schema.definitions.OMM.properties[canonicalname];
+                intermediate[prop] = { canonicalname, mangledname };
+                let _value = v[canonicalname];
+                switch (schemaValue.type) {
+                  case "number":
+                    break;
+                  case "string":
+                    _value = builder.createString(_value);
+                    break;
+                }
+                intermediate[prop].value = _value;
               }
-              intermediate[prop].value = _value;
             }
           }
-        }
+        });
+        return intermediate;
       });
 
-      OMM.startOMM(builder);
+      let records = intermediates.map(intermediate => {
+        OMM.startOMM(builder);
+        for (let prop in intermediate) {
+          OMM[prop](builder, intermediate[prop].value);
+        }
+        var BuiltOMM = OMM.endOMM(builder);
+        builder.finish(BuiltOMM);
+        return BuiltOMM;
+      });
 
-      for (let prop in intermediate) {
-        OMM[prop](builder, intermediate[prop].value);
-      }
+      let OMMRECORDS = OMMCOLLECTION.createRECORDSVector(builder, records);
 
-      var BuiltOMM = OMM.endOMM(builder);
+      OMMCOLLECTION.startOMMCOLLECTION(builder);
 
-      builder.finish(BuiltOMM);
+      OMMCOLLECTION.addRECORDS(builder, OMMRECORDS);
+
+      let COLLECTION = OMMCOLLECTION.endOMMCOLLECTION(builder);
+
+      builder.finish(COLLECTION);
 
       var buf = builder.dataBuffer();
       let uint8 = builder.asUint8Array();
@@ -248,9 +271,10 @@
     tles && tles.lines && filter.length
       ? tles.lines.filter(v => JSON.stringify(v).indexOf(filter) > -1)
       : [];
-  const setRawText = () => {
+  const setRawText = _value => {
     let overflowStyle = {
-      "OMM (CSV)": "initial"
+      "OMM (CSV)": "initial",
+      "OMM (FLATBUFFER)": "break-word"
     };
     document.documentElement.style.setProperty(
       "--overflow-wrap",
@@ -261,6 +285,13 @@
           tles.lines.slice(current - 1, current + pageSize - 1)
         ))
       : null;
+    if (_value) {
+      globalThis.location.hash = `${
+        globalThis.location.hash.split("?")[0]
+      }?format=${Object.keys(versionsKey).find(
+        key => versionsKey[key] === _value
+      )}`;
+    }
   };
 
   function convertObjects() {
@@ -315,14 +346,7 @@
       );
     }
   };
-  let versionsKey = {
-    raw: "RAW",
-    kv: "OMM (KEY / VALUE)",
-    csv: "OMM (CSV)",
-    json: "OMM (JSON)",
-    xml: "OMM (XML)",
-    fbs: "OMM (FLATBUFFER)"
-  };
+
   let sizeEvents = ["resize", "orientationchange"];
   let sizeSet = () =>
     (document.getElementById(
@@ -470,7 +494,9 @@
       <div>Show Blank / Null</div>
     </div>
     <div id="right">
-      <select bind:value={currentVersion} on:change={() => setRawText()}>
+      <select
+        bind:value={currentVersion}
+        on:change={e => setRawText(e.target.value)}>
         {#each Object.entries(versions) as [key, value]}
           <option value={key} selected={key === currentVersion}>{key}</option>
         {/each}
