@@ -24,7 +24,23 @@
   let navCommon_xsd_xml = parser.parseFromString(navCommon_xsd, "text/xml");
   let omm_xsd_xml = parser.parseFromString(omm_xsd, "text/xml");
   let _xml = [navCommon_xsd_xml, omm_xsd_xml];
+  _xml.forEach(xx => {
+    Object.keys(tagTypes).forEach(tt => {
+      tagTypes[tt] = tagTypes[tt].concat(
+        makeArray(xx.documentElement.getElementsByTagName(tt))
+      );
+    });
+  });
 
+  let tags = {};
+
+  Object.values(tagTypes).map(ta => {
+    ta.forEach(ttt => {
+      if (ttt.attributes.getNamedItem("name")) {
+        tags[ttt.attributes.getNamedItem("name").value] = ttt;
+      }
+    });
+  });
   const workerPath = "/workers/worker.js";
   let showNull = true;
 
@@ -42,7 +58,8 @@
   let FlatBuffer = {};
   let startLine = 0;
   let total = 0;
-  $: current = Math.min(Math.max(current, 1), total - 10) || 0;
+  let pageSize = 10;
+  $: current = Math.min(Math.max(current, 1), total - pageSize + 1) || 0;
   let currentVersion = "RAW";
   let filtered = [];
   let filter = "";
@@ -141,24 +158,6 @@
       );
     },
     "OMM (XML)": raw => {
-      _xml.forEach(xx => {
-        Object.keys(tagTypes).forEach(tt => {
-          tagTypes[tt] = tagTypes[tt].concat(
-            makeArray(xx.documentElement.getElementsByTagName(tt))
-          );
-        });
-      });
-
-      let tags = {};
-
-      Object.values(tagTypes).map(ta => {
-        ta.forEach(ttt => {
-          if (ttt.attributes.getNamedItem("name")) {
-            tags[ttt.attributes.getNamedItem("name").value] = ttt;
-          }
-        });
-      });
-
       let varray = raw.map(v => {
         v = tles.format.OMM(v);
         let _v = {};
@@ -259,7 +258,7 @@
     );
     tles && schema
       ? (raw = versions[currentVersion](
-          tles.lines.slice(current - 1, current + 9)
+          tles.lines.slice(current - 1, current + pageSize - 1)
         ))
       : null;
   };
