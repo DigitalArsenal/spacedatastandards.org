@@ -322,6 +322,11 @@
     padding: 1px;
     width: 50px;
   }
+  textarea {
+    overflow: auto;
+    overflow-wrap: var(--overflow-wrap);
+    font-family: "Courier New", Courier, monospace;
+  }
 </style>
 
 <div id="code-top-container">
