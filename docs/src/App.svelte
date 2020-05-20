@@ -141,7 +141,7 @@
 
 <style>
   :global(:root) {
-    --font-size-sm: calc((0.85rem + 0.5 * ((100vw - 50rem) / 120)));
+    --font-size-sm: calc(minmax((0.85rem + 0.5 * ((100vw - 50rem) / 120)), 12px));
     --font-size-btn: calc((1.5rem + 0.5 * ((100vw - 50rem) / 120)));
     --font-size-header: calc((1rem + 0.5 * ((100vw - 80rem) / 120)));
     --celestrak-blue: #1e5cad;
