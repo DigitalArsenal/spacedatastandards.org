@@ -122,12 +122,14 @@
       return result.join("\n\n");
     },
     "OMM (CSV)": raw => {
-      let keys = Reflect.ownKeys(schema.definitions.OMM.properties);
+      let keys = [];
+      let skeys = Reflect.ownKeys(schema.definitions.OMM.properties);
+
       let _v = raw.map(v => {
         v = tles.format.OMM(v);
         let kvm = {};
-        for (let k = 0; k < keys.length; k++) {
-          let key = keys[k];
+        for (let k = 0; k < skeys.length; k++) {
+          let key = skeys[k];
           let _v =
             v[key] instanceof Date
               ? JSON.stringify(v[key])
