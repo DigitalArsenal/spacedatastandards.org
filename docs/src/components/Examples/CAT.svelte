@@ -10,6 +10,7 @@
   import { flatbuffers } from "./flatbuffers.js";
   import bignumber from "bignumber.js";
   import download from "downloadjs";
+  import { checkNull } from "./OMM_UTILITIES.mjs";
 
   const workerPath = "/workers/worker.js";
 
@@ -19,6 +20,7 @@
 
   const downloads = ["./test/satcat.txt"];
   let currentDownload = downloads[0];
+  let showNull = true;
 
   let _worker;
   let catalog;
@@ -60,7 +62,11 @@
         let _key = schema.definitions.CAT.properties[key].$ref.split(
           "/definitions/"
         )[1];
+
         _v[key] = schema.definitions[_key].enum[_v[key]] || _v[key];
+      }
+      if (!checkNull(showNull, _v[key])) {
+        delete _v[key];
       }
     }
     return _v;
@@ -80,14 +86,25 @@
       let result = Object.entries(_v)
         .map(kv => {
           let _v =
-            kv[1] instanceof Date
-              ? JSON.stringify(kv[1])
-              : tofixed(kv[1]) || "null";
-
-          return `${kv[0].padEnd(_max)} = ${_v.toString().replace(/"/g, "")}`;
+            kv[1] instanceof Date ? JSON.stringify(kv[1]) : tofixed(kv[1]);
+          if (checkNull(showNull, _v)) {
+            if ([null, undefined].indexOf(_v) > -1) {
+              _v = "";
+            }
+            return `${kv[0].padEnd(_max)} = ${_v.toString().replace(/"/g, "")}`;
+          }
         })
         .join("\n");
       return result;
+    },
+    "CAT (CSV)": v => {
+      if (!v) return;
+      let _v = parseUp(
+        Reflect.ownKeys(schema.definitions.CAT.properties),
+        catalog.format.CAT(v)
+      );
+      console.log(_v);
+      return [Object.keys(_v), Object.values(_v)].join("\n");
     },
     "CAT (JSON)": v => {
       if (!v) return;
@@ -252,7 +269,7 @@
   }
   #topMenu {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 5px;
     padding: 5px;
   }
@@ -262,7 +279,12 @@
     grid-gap: 5px;
     font-size: var(--font-size-sm);
     padding: 2px;
-    grid-template-columns: minmax(100px, 200px) minmax(35px, 55px);
+    grid-template-columns: minmax(50px, 100px) minmax(35px, 55px);
+  }
+  #topMenu > div#center {
+    align-items: center;
+    justify-content: center;
+    display: flex;
   }
   #right {
     justify-content: right;
@@ -340,6 +362,16 @@
         {/each}
       </select>
       <div class="button" on:click={() => getData()}>GET</div>
+    </div>
+    <div id="center">
+      <input
+        type="checkbox"
+        on:change={e => {
+          showNull = e.target.checked;
+          setRawText();
+        }}
+        bind:checked={showNull} />
+      <div>Show Blank / Null</div>
     </div>
     <div id="right">
       <select bind:value={currentVersion} on:change={() => setRawText()}>
