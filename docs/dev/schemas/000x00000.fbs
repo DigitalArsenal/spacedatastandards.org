@@ -1,8 +1,7 @@
 //https://www.celestrak.com/satcat/satcat-format.php
 
 enum objType: byte  {
-  ACTIVE,
-  DEAD,
+  PAYLOAD,
   DEBRIS,
   ROCKET_BODY,
   UNKNOWN
@@ -91,7 +90,7 @@ table CAT {
   NORAD_CAT_ID:uint;
   MULTIPLE_NAMES: bool;
   TYPE:objType = UNKNOWN;
-  PAYLOAD:bool;
+  //PAYLOAD:bool;
   OPS_STATUS_CODE:opsStatusCode = UNKNOWN;
   ORIGINATOR:string;
   LAUNCH_DATE:string;
@@ -105,6 +104,20 @@ table CAT {
   ORBITAL_STATUS_CODE:orbitalStatusCode;
   ORBIT_CENTER:orbitCenter =  EARTH;
   ORBIT_TYPE:orbitType;
+}
+
+enum massType: byte {
+  DRY,
+  WET
+}
+
+table PAY {
+  OBJECT_ID:string;
+  DEPLOYMENT_DATE:string;
+  MANEUVERABLE:bool;
+  SIZE:float;
+  MASS:float;
+  MASS_TYPE:massType = DRY;
 }
 
 root_type CAT;
