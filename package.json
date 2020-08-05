@@ -33,7 +33,7 @@
     "satellite"
   ],
   "author": "tjkoury",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/DigitalArsenal/spacedatastandards.org/issues"
   },
