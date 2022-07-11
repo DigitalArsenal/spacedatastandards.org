@@ -44,7 +44,6 @@ export const getCode = async (repoData) => {
         if (get(currentEditorLanguage) !== 7) {
             _idl = _idl.replace(/\s{0,}=\s{0,}null/g, "");
         }
-        console.log(_idl);
         mFS = m.FS;
         m.FS.writeFile("/main.fbs", _idl);
         let args = languages[get(currentEditorLanguage)][0];

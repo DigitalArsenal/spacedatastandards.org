@@ -11,11 +11,9 @@ export let languages = [
     [["--csharp", "--gen-object-api"], "C#", "cs", "net"],
     ["--go", "Go", "go", "go"],
     ["--python", "Python", "py", "python", "text/x-script.python"],
-    /*["--js", "JavaScript", "js", "js", "text/javascript"],*/
     ["--jsonschema", "JSON Schema", "json", "json"],
     [["--ts", "--gen-object-api"], "TypeScript", "ts", "js", "text/javascript"],
     ["--php", " PHP", "php", "php"],
-    /*["--grpc", " RPC stub code for GRPC", ''],*/
     ["--dart", " Dart"],
     ["--lua", " Lua"],
     ["--lobster", " Lobster"],

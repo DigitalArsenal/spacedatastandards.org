@@ -1,7 +1,6 @@
 import showdown from "showdown";
 import { globby } from "globby";
-import path from "path";
-import { readFileSync, mkdir, copyFile, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 let converter = new showdown.Converter();
 converter.setOption('tables', true);

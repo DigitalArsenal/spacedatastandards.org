@@ -38,7 +38,7 @@ DRAG\_AREA|Drag Area (AD) m\*\*2|
 DRAG\_COEFF|Drag Coefficient (CD)|
 EPHEMERIS\_TYPE|Default value = 0|
 CLASSIFICATION\_TYPE|Default value = U|
-NORAD\_CAT\_ID|NORAD Catalog Number (‘Satellite Number’) an integer|
+NORAD\_CAT\_ID|NORAD Catalog Number (Satellite Number) an integer|
 ELEMENT\_SET\_NO|Element set number for this satellite|
 REV\_AT\_EPOCH|Revolution Number|
 BSTAR|SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])|
@@ -67,4 +67,4 @@ CZ\_DOT\_Z|Covariance matrix [6,3] km\*\*2/s|
 CZ\_DOT\_X\_DOT|Covariance matrix [6,4] km\*\*2/s\*\*2|
 CZ\_DOT\_Y\_DOT|Covariance matrix [6,5] km\*\*2/s\*\*2|
 CZ\_DOT\_Z\_DOT|Covariance matrix [6,6] km\*\*2/s\*\*2|
-USER\_DEFINED\_x|User defined parameter, where ‘x’ is replaced by a variable. Must be described in an ICD.|
+USER\_DEFINED\_x|User defined parameter, where "x" is replaced by a variable. Must be described in an ICD.|

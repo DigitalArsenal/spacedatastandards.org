@@ -130,7 +130,6 @@
     a {
         @apply text-blue-700;
     }
-    h1,
     h2 {
         @apply p-2 text-2xl  border-b-2;
     }

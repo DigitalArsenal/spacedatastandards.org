@@ -44,38 +44,6 @@ enum orbitalStatusCode: byte {
   ///XXN
   IN_ORBIT
 }
-enum orbitCenter: byte {
-  ///AS
-  ASTEROID,
-  ///EA
-  EARTH,
-  ///EL
-  EARTH_LAGRANGE,
-  ///EM
-  EARTH_MOON_BARYCENTER,
-  ///JU
-  JUPITER,
-  ///MA
-  MARS,
-  ///ME
-  MERCURY,
-  ///MO
-  MOON_EARTH,
-  ///NE
-  NEPTUNE,
-  ///PL
-  PLUTO,
-  ///SA
-  SATURN,
-  ///SS
-  SOLAR_SYSTEM_ESCAPE,
-  ///SU
-  SUN,
-  ///UR
-  URANUS,
-  ///VE
-  VENUS
-}
 
 enum orbitType: byte {
   ///0
