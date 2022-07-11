@@ -1,0 +1,99 @@
+//https://www.celestrak.com/satcat/satcat-format.php
+
+enum objType: byte  {
+  ///0
+  PAYLOAD,
+  ///1
+  DEBRIS,
+  ///2
+  ROCKET_BODY,
+  ///3
+  UNKNOWN
+}
+
+enum opsStatusCode: byte {
+  ///+
+  OPERATIONAL,
+  ///-
+  NONOPERATIONAL,
+  ///P
+  PARTIALLY_OPERATIONAL,
+  ///B
+  BACKUP_STANDBY,
+  ///S
+  SPARE,
+  ///X
+  EXTENDED_MISSION,
+  ///D
+  DECAYED,
+  ///?
+  UNKNOWN
+}
+
+enum orbitalStatusCode: byte {
+  ///NCE
+  NO_CURRENT_ELEMENTS,
+  ///NIE
+  NO_INITIAL_ELEMENTS,
+  ///NEA
+  NO_ELEMENTS_AVAILABLE,
+  ///DOC
+  PERMANENTLY_DOCKED,
+  ///ISS
+  DOCKED_TO_INTERNATIONAL_SPACE_STATION,
+  ///XXN
+  IN_ORBIT
+}
+
+enum orbitType: byte {
+  ///0
+  ORBIT,
+  ///1
+  DOCKED,
+  ///2
+  LANDING,
+  ///3
+  IMPACT
+}
+
+table SATCAT {
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  NORAD_CAT_ID:uint;
+  OBJECT_TYPE:objType = UNKNOWN;
+  OPS_STATUS_CODE:opsStatusCode = UNKNOWN;
+  OWNER:string;
+  LAUNCH_DATE:string;
+  LAUNCH_SITE:string;
+  DECAY_DATE:string;
+  PERIOD:double = null;
+  INCLINATION:double = null;
+  APOGEE:double = null;
+  PERIGEE:double = null;
+  RCS:double = null;
+  DATA_STATUS_CODE:orbitalStatusCode;
+  ORBIT_CENTER: string;
+  ORBIT_TYPE:orbitType;
+}
+
+enum massType: byte {
+  DRY,
+  WET
+}
+
+table PAYLOAD {
+  OBJECT_ID:string;
+  OBJECT_NAME:string;
+  DEPLOYMENT_DATE:string;
+  MANEUVERABLE:bool;
+  SIZE:double = null;
+  MASS:double = null;
+  MASS_TYPE:massType = DRY;
+}
+
+table SATCATCOLLECTION {
+  RECORDS:[SATCAT];
+}
+
+root_type SATCAT;
+file_identifier "$SAT";

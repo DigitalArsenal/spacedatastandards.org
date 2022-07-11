@@ -1,0 +1,184 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// Greenwich Rotating Coordinates
+GRC,
+/// International Celestial Reference Frame
+ICRF,
+/// International Terrestrial Reference Frame 2000
+ITRF2000,
+/// International Terrestrial Reference Frame 1993
+ITRF93, 
+/// International Terrestrial Reference Frame 1997
+ITRF97,
+/// Mars Centered Inertial
+MCI,
+/// True of Date, Rotating
+TDR,
+/// True Equator Mean Equinox
+TEME,
+/// True of Date
+TOD, 
+}
+
+enum ephemerisType : byte {
+ /// Simplified General Perturbation Model 
+ SGP,
+ /// Simplified General Perturbation Model  4
+ SGP4,
+ /// Simplified Deep Space Perturbation Model 4 
+ SDP4,
+ /// Simplified General Perturbation Model 8
+ SGP8,
+ /// Simplified Deep Space Perturbation Model 8
+ SDP8,
+ /// SGP4-XP
+ SGP4XP
+}
+
+enum timeSystem : byte {
+  /// Greenwich Mean Sidereal Time
+  GMST,
+  /// Global Positioning System
+  GPS,
+  /// Mission Elapsed Time
+  MET,
+  /// Mission Relative Time
+  MRT,
+  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
+  SCLK,
+  /// International Atomic Time
+  TAI,
+  /// Barycentric Coordinate Time
+  TCB,
+  /// Barycentric Dynamical Time
+  TDB,
+  /// Geocentric Coordinate Time
+  TCG,
+  /// Terrestrial Time
+  TT,
+  /// Universal Time
+  UT1,
+  /// Coordinated Universal Time 
+  UTC
+}
+
+enum meanElementTheory : byte {
+  /// Simplified General Perturbation Model  4
+  SGP4,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM
+}
+
+enum manCovRefFrame : byte {
+  // Another name for ‘Radial, Transverse, Normal’
+  RSW,
+  // Radial, Transverse, Normal
+  RTN,
+  // A local orbital coordinate frame (x velocity vec., w orbital angular momentum vec., N completes right handed system.)
+  TNW
+}
+
+table OMM {
+  // OMM Header
+  CCSDS_OMM_VERS:double = null;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+
+  // OMM Metadata
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  CENTER_NAME:string;
+  REF_FRAME:referenceFrame = TEME;
+  REF_FRAME_EPOCH:string;
+  TIME_SYSTEM:timeSystem = UTC;
+  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
+
+  // Mean Keplerian Elements in the Specified Reference Frame
+  COMMENT:string;
+  EPOCH:string;
+  SEMI_MAJOR_AXIS:double = null;
+  MEAN_MOTION:double = null;
+  ECCENTRICITY:double = null;
+  INCLINATION:double = null;
+  RA_OF_ASC_NODE:double = null;
+  ARG_OF_PERICENTER:double = null;
+  MEAN_ANOMALY:double = null;
+  GM:double = null;
+  
+  // Spacecraft Parameters
+  MASS:double = null;
+  SOLAR_RAD_AREA:double = null;
+  SOLAR_RAD_COEFF:double = null;
+  DRAG_AREA:double = null;
+  DRAG_COEFF:double = null;
+
+  // TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  EPHEMERIS_TYPE:ephemerisType = SGP4;
+  CLASSIFICATION_TYPE:string;
+  NORAD_CAT_ID:uint32;
+  ELEMENT_SET_NO:uint32;
+  REV_AT_EPOCH:double = null;
+  BSTAR:double = null;
+  MEAN_MOTION_DOT:double = null;
+  MEAN_MOTION_DDOT:double = null;
+  
+  // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
+  // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
+  COV_REF_FRAME:manCovRefFrame = RSW;
+  CX_X:double = null;
+  CY_X:double = null;
+  CY_Y:double = null;
+  CZ_X:double = null;
+  CZ_Y:double = null;
+  CZ_Z:double = null;
+  CX_DOT_X:double = null;
+  CX_DOT_Y:double = null;
+  CX_DOT_Z:double = null;
+  CX_DOT_X_DOT:double = null;
+  CY_DOT_X:double = null;
+  CY_DOT_Y:double = null;
+  CY_DOT_Z:double = null;
+  CY_DOT_X_DOT:double = null;
+  CY_DOT_Y_DOT:double = null;
+  CZ_DOT_X:double = null;
+  CZ_DOT_Y:double = null;
+  CZ_DOT_Z:double = null;
+  CZ_DOT_X_DOT:double = null;
+  CZ_DOT_Y_DOT:double = null;
+  CZ_DOT_Z_DOT:double = null;
+
+  // User Defined Parameters (all parameters in this section must be described in an ICD). 
+  USER_DEFINED_BIP_0044_TYPE:uint;
+  USER_DEFINED_OBJECT_DESIGNATOR:string;
+  USER_DEFINED_EARTH_MODEL:string;
+  USER_DEFINED_EPOCH_TIMESTAMP: double = null;
+  USER_DEFINED_MICROSECONDS: double = null;
+}
+
+table mpe {
+  MEAN_MOTION:double = null;
+  ECCENTRICITY:double = null;
+  INCLINATION:double = null;
+  RA_OF_ASC_NODE:double = null;
+  ARG_OF_PERICENTER:double = null;
+  MEAN_ANOMALY:double = null;
+  NORAD_CAT_ID:uint32;
+  BSTAR:double = null;
+  USER_DEFINED_EPOCH_TIMESTAMP: double = null;
+}
+
+table OMMcollection {
+  RECORDS:[OMM];
+}
+
+table mpecollection {
+  RECORDS:[mpe];
+}
+
+root_type OMM;
+file_identifier "$OMM";
