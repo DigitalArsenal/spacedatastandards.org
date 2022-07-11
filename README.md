@@ -99,5 +99,3 @@
 
 
 **[CLICK HERE FOR THE EDITOR](https://spacedatastandards.org)**
-
-<img src="https://github.com/DigitalArsenal/spacedatastandards.org/raw/master/images/IDE.gif">

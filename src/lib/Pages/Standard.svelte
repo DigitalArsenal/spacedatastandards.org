@@ -153,7 +153,8 @@
 
 <style lang="postcss">
     .readMeWrapper {
-        @apply text-sm p-6 whitespace-pre-wrap break-all;
+        word-break: keep-all;
+        @apply text-sm p-6 whitespace-pre-wrap;
     }
 
     .readMeWrapper > :global(h1) {
