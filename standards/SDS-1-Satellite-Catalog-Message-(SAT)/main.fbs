@@ -1,6 +1,6 @@
 //https://www.celestrak.com/satcat/satcat-format.php
 
-enum objType: byte  {
+enum objectType: byte  {
   ///0
   PAYLOAD,
   ///1
@@ -30,7 +30,7 @@ enum opsStatusCode: byte {
   UNKNOWN
 }
 
-enum orbitalStatusCode: byte {
+enum dataStatusCode: byte {
   ///NCE
   NO_CURRENT_ELEMENTS,
   ///NIE
@@ -60,7 +60,7 @@ table SATCAT {
   OBJECT_NAME:string;
   OBJECT_ID:string;
   NORAD_CAT_ID:uint;
-  OBJECT_TYPE:objType = UNKNOWN;
+  OBJECT_TYPE:objectType = UNKNOWN;
   OPS_STATUS_CODE:opsStatusCode = UNKNOWN;
   OWNER:string;
   LAUNCH_DATE:string;
@@ -71,7 +71,7 @@ table SATCAT {
   APOGEE:double = null;
   PERIGEE:double = null;
   RCS:double = null;
-  DATA_STATUS_CODE:orbitalStatusCode;
+  DATA_STATUS_CODE:dataStatusCode;
   ORBIT_CENTER: string;
   ORBIT_TYPE:orbitType;
 }
