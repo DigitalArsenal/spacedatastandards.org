@@ -4,9 +4,9 @@ enum objectType: byte  {
   ///0
   PAYLOAD,
   ///1
-  DEBRIS,
-  ///2
   ROCKET_BODY,
+  ///2
+  DEBRIS,
   ///3
   UNKNOWN
 }
@@ -49,11 +49,13 @@ enum orbitType: byte {
   ///0
   ORBIT,
   ///1
-  DOCKED,
-  ///2
   LANDING,
+  ///2
+  IMPACT,
   ///3
-  IMPACT
+  DOCKED,
+  ///4
+  ROUNDTRIP
 }
 
 table SATCAT {
