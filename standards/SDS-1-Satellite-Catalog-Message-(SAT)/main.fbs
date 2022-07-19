@@ -37,12 +37,8 @@ enum dataStatusCode: byte {
   NO_INITIAL_ELEMENTS,
   ///NEA
   NO_ELEMENTS_AVAILABLE,
-  ///DOC
-  PERMANENTLY_DOCKED,
-  ///ISS
-  DOCKED_TO_INTERNATIONAL_SPACE_STATION,
-  ///XXN
-  IN_ORBIT
+  ///OK
+  OK
 }
 
 enum orbitType: byte {
