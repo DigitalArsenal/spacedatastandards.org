@@ -64,11 +64,11 @@ table SATCAT {
   LAUNCH_DATE:string;
   LAUNCH_SITE:string;
   DECAY_DATE:string;
-  PERIOD:double = null;
-  INCLINATION:double = null;
-  APOGEE:double = null;
-  PERIGEE:double = null;
-  RCS:double = null;
+  PERIOD:double;
+  INCLINATION:double;
+  APOGEE:double;
+  PERIGEE:double;
+  RCS:double;
   DATA_STATUS_CODE:dataStatusCode;
   ORBIT_CENTER: string;
   ORBIT_TYPE:orbitType;
@@ -84,8 +84,8 @@ table PAYLOAD {
   OBJECT_NAME:string;
   DEPLOYMENT_DATE:string;
   MANEUVERABLE:bool;
-  SIZE:double = null;
-  MASS:double = null;
+  SIZE:double;
+  MASS:double;
   MASS_TYPE:massType = DRY;
 }
 
