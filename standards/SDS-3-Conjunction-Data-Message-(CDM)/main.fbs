@@ -1,1 +1,186 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// International Terrestrial Reference Frame
+ITRF
+}
 
+enum objectCenteredReferenceFrame : byte {
+/// Radial, Transverse, Normal
+RTN,
+///  Transverse, Velocity, Normal
+TVN
+}
+
+enum screeningVolumeShape : byte {
+ELLIPSOID,
+BOX
+}
+
+enum objectNumber : byte {
+OBJECT1,
+OBJECT2
+}
+
+enum objectType : byte {
+PAYLOAD,
+ROCKET_BODY,
+DEBRIS,
+UNKNOWN,
+OTHER,
+}
+
+enum covarianceMethod : byte {
+CALCULATED,
+DEFAULT
+}
+
+enum maneuverableType : byte {
+YES,
+NO,
+NA
+}
+
+table CDMObject {
+  // Object MetaData
+  COMMENT:string;
+  OBJECT:objectNumber;
+  OBJECT_DESIGNATOR:uint32;
+  CATALOG_NAME:string;
+  OBJECT_NAME:string;
+  INTERNATIONAL_DESIGNATOR:string;
+  OBJECT_TYPE:objectType;
+  OPERATOR_CONTACT_POSITION:string;
+  OPERATOR_ORGANIZATION:string;
+  EPHEMERIS_NAME:string;
+  COVARIANCE_METHOD:covarianceMethod;
+  MANEUVERABLE:maneuverableType;
+  ORBIT_CENTER:string;
+  REF_FRAME:referenceFrame;
+  GRAVITY_MODEL:string;
+  ATMOSPHERIC_MODEL:string;
+  N_BODY_PERTURBATIONS:string;
+  SOLAR_RAD_PRESSURE:bool;
+  EARTH_TIDES:bool;
+  INTRACK_THRUST:bool;
+  
+  // OD Parameters
+  TIME_LASTOB_START:string;
+  TIME_LASTOB_END:string;
+  RECOMMENDED_OD_SPAN:double;
+  ACTUAL_OD_SPAN:double;
+  OBS_AVAILABLE:uint32;
+  OBS_USED:uint32;
+  TRACKS_AVAILABLE:uint32;
+  TRACKS_USED:uint32;
+  RESIDUALS_ACCEPTED:double;
+  WEIGHTED_RMS:double;
+  
+  // Additional Parameters
+  AREA_PC:double;
+  AREA_DRG:double;
+  AREA_SRP:double;
+  MASS:double;
+  CR_AREA_OVER_MASS:double;
+  THRUST_ACCELERATION:double;
+  SEDR:double;
+  
+  // State Vector
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+
+  // Covariance Matrix in the RTN Coordinate Frame
+  // (Covariance Matrix 9×9 Lower Triangular Form. All parameters of the 6×6 position/velocity submatrix must be given)
+  CR_R:double;
+  CT_R:double;
+  CT_T:double;
+  CN_R:double;
+  CN_T:double;
+  CN_N:double;
+  CRDOT_R:double;
+  CRDOT_T:double;
+  CRDOT_N:double;
+  CRDOT_RDOT:double;
+  CTDOT_R:double;
+  CTDOT_T:double;
+  CTDOT_N:double;
+  CTDOT_RDOT:double;
+  CTDOT_TDOT:double;
+  CNDOT_R:double;
+  CNDOT_T:double;
+  CNDOT_N:double;
+  CNDOT_RDOT:double;
+  CNDOT_TDOT:double;
+  CNDOT_NDOT:double;
+  CDRG_R:double;
+  CDRG_T:double;
+  CDRG_N:double;
+  CDRG_RDOT:double;
+  CDRG_TDOT:double;
+  CDRG_NDOT:double;
+  CDRG_DRG:double;
+  CSRP_R:double;
+  CSRP_T:double;
+  CSRP_N:double;
+  CSRP_RDOT:double;
+  CSRP_TDOT:double;
+  CSRP_NDOT:double;
+  CSRP_DRG:double;
+  CSRP_SRP:double;
+  CTHR_R:double;
+  CTHR_T:double;
+  CTHR_N:double;
+  CTHR_RDOT:double;
+  CTHR_TDOT:double;
+  CTHR_NDOT:double;
+  CTHR_DRG:double;
+  CTHR_SRP:double;
+  CTHR_THR:double;
+}
+
+table CDM {
+  // CDM Header
+  CCSDS_CDM_VERS:double = null;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  MESSAGE_FOR:string;
+  MESSAGE_ID:string;
+
+  // CDM Relative Metadata/Data
+  TCA:string;
+  MISS_DISTANCE:double;
+  RELATIVE_SPEED:double;
+  RELATIVE_POSITION_R:double;
+  RELATIVE_POSITION_T:double;
+  RELATIVE_POSITION_N:double;
+  RELATIVE_VELOCITY_R:double;
+  RELATIVE_VELOCITY_T:double;
+  RELATIVE_VELOCITY_N:double;
+  START_SCREEN_PERIOD:string;
+  STOP_SCREEN_PERIOD:string;
+  SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame;
+  SCREEN_VOLUME_SHAPE:screeningVolumeShape;
+  SCREEN_VOLUME_X:double;
+  SCREEN_VOLUME_Y:double;
+  SCREEN_VOLUME_Z:double;
+  SCREEN_ENTRY_TIME:string;
+  SCREEN_EXIT_TIME:string;
+  COLLISION_PROBABILITY:double;
+  COLLISION_PROBABILITY_METHOD:string;
+
+  OBJECT1:CDMObject;
+  OBJECT2:CDMObject;
+}
+
+table CDMCOLLECTION {
+  RECORDS:[CDM];
+}
+
+root_type CDM;
+file_identifier "$CDM";
