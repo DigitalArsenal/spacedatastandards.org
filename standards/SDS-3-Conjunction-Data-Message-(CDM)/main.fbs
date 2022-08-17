@@ -29,7 +29,7 @@ PAYLOAD,
 ROCKET_BODY,
 DEBRIS,
 UNKNOWN,
-OTHER,
+OTHER
 }
 
 enum covarianceMethod : byte {
@@ -47,7 +47,7 @@ table CDMObject {
   // Object MetaData
   COMMENT:string;
   OBJECT:objectNumber;
-  OBJECT_DESIGNATOR:uint32;
+  OBJECT_DESIGNATOR:string;
   CATALOG_NAME:string;
   OBJECT_NAME:string;
   INTERNATIONAL_DESIGNATOR:string;
@@ -71,10 +71,10 @@ table CDMObject {
   TIME_LASTOB_END:string;
   RECOMMENDED_OD_SPAN:double;
   ACTUAL_OD_SPAN:double;
-  OBS_AVAILABLE:uint32;
-  OBS_USED:uint32;
-  TRACKS_AVAILABLE:uint32;
-  TRACKS_USED:uint32;
+  OBS_AVAILABLE:uint;
+  OBS_USED:uint;
+  TRACKS_AVAILABLE:uint;
+  TRACKS_USED:uint;
   RESIDUALS_ACCEPTED:double;
   WEIGHTED_RMS:double;
   
