@@ -1,0 +1,186 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// International Terrestrial Reference Frame
+ITRF
+}
+
+enum objectCenteredReferenceFrame : byte {
+/// Radial, Transverse, Normal
+RTN,
+///  Transverse, Velocity, Normal
+TVN
+}
+
+enum screeningVolumeShape : byte {
+ELLIPSOID,
+BOX
+}
+
+enum objectNumber : byte {
+OBJECT1,
+OBJECT2
+}
+
+enum objectType : byte {
+PAYLOAD,
+ROCKET_BODY,
+DEBRIS,
+UNKNOWN,
+OTHER
+}
+
+enum covarianceMethod : byte {
+CALCULATED,
+DEFAULT
+}
+
+enum maneuverableType : byte {
+YES,
+NO,
+NA
+}
+
+table CDMObject {
+  // Object MetaData
+  COMMENT:string = null;
+  OBJECT:objectNumber;
+  OBJECT_DESIGNATOR:string;
+  CATALOG_NAME:string;
+  OBJECT_NAME:string;
+  INTERNATIONAL_DESIGNATOR:string;
+  OBJECT_TYPE:objectType = null;
+  OPERATOR_CONTACT_POSITION:string = null;
+  OPERATOR_ORGANIZATION:string = null;
+  EPHEMERIS_NAME:string;
+  COVARIANCE_METHOD:covarianceMethod;
+  MANEUVERABLE:maneuverableType;
+  ORBIT_CENTER:string = "EARTH"
+  REF_FRAME:referenceFrame;
+  GRAVITY_MODEL:string = null;
+  ATMOSPHERIC_MODEL:string = null;
+  N_BODY_PERTURBATIONS:string = null;
+  SOLAR_RAD_PRESSURE:bool = null;
+  EARTH_TIDES:bool = null;
+  INTRACK_THRUST:bool = null;
+  
+  // OD Parameters
+  TIME_LASTOB_START:string = null;
+  TIME_LASTOB_END:string = null;
+  RECOMMENDED_OD_SPAN:double = null;
+  ACTUAL_OD_SPAN:double = null;
+  OBS_AVAILABLE:uint = null;
+  OBS_USED:uint = null;
+  TRACKS_AVAILABLE:uint = null;
+  TRACKS_USED:uint = null;
+  RESIDUALS_ACCEPTED:double = null;
+  WEIGHTED_RMS:double = null;
+  
+  // Additional Parameters
+  AREA_PC:double = null;
+  AREA_DRG:double = null;
+  AREA_SRP:double = null;
+  MASS:double = null;
+  CR_AREA_OVER_MASS:double = null;
+  THRUST_ACCELERATION:double = null;
+  SEDR:double = null;
+  
+  // State Vector
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+
+  // Covariance Matrix in the RTN Coordinate Frame
+  // (Covariance Matrix 9×9 Lower Triangular Form. All parameters of the 6×6 position/velocity submatrix must be given)
+  CR_R:double;
+  CT_R:double;
+  CT_T:double;
+  CN_R:double;
+  CN_T:double;
+  CN_N:double;
+  CRDOT_R:double;
+  CRDOT_T:double;
+  CRDOT_N:double;
+  CRDOT_RDOT:double;
+  CTDOT_R:double;
+  CTDOT_T:double;
+  CTDOT_N:double;
+  CTDOT_RDOT:double;
+  CTDOT_TDOT:double;
+  CNDOT_R:double;
+  CNDOT_T:double;
+  CNDOT_N:double;
+  CNDOT_RDOT:double;
+  CNDOT_TDOT:double;
+  CNDOT_NDOT:double;
+  CDRG_R:double = null;
+  CDRG_T:double = null;
+  CDRG_N:double = null;
+  CDRG_RDOT:double = null;
+  CDRG_TDOT:double = null;
+  CDRG_NDOT:double = null;
+  CDRG_DRG:double = null;
+  CSRP_R:double = null;
+  CSRP_T:double = null;
+  CSRP_N:double = null;
+  CSRP_RDOT:double = null;
+  CSRP_TDOT:double = null;
+  CSRP_NDOT:double = null;
+  CSRP_DRG:double = null;
+  CSRP_SRP:double = null;
+  CTHR_R:double = null;
+  CTHR_T:double = null;
+  CTHR_N:double = null;
+  CTHR_RDOT:double = null;
+  CTHR_TDOT:double = null;
+  CTHR_NDOT:double = null;
+  CTHR_DRG:double = null;
+  CTHR_SRP:double = null;
+  CTHR_THR:double = null;
+}
+
+table CDM {
+  // CDM Header
+  CCSDS_CDM_VERS:double;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  MESSAGE_FOR:string = null;
+  MESSAGE_ID:string;
+
+  // CDM Relative Metadata/Data
+  TCA:string;
+  MISS_DISTANCE:double;
+  RELATIVE_SPEED:double = null;
+  RELATIVE_POSITION_R:double = null;
+  RELATIVE_POSITION_T:double = null;
+  RELATIVE_POSITION_N:double = null;
+  RELATIVE_VELOCITY_R:double = null;
+  RELATIVE_VELOCITY_T:double = null;
+  RELATIVE_VELOCITY_N:double = null;
+  START_SCREEN_PERIOD:string = null;
+  STOP_SCREEN_PERIOD:string = null;
+  SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame = null;
+  SCREEN_VOLUME_SHAPE:screeningVolumeShape = null;
+  SCREEN_VOLUME_X:double = null;
+  SCREEN_VOLUME_Y:double = null;
+  SCREEN_VOLUME_Z:double = null;
+  SCREEN_ENTRY_TIME:string = null;
+  SCREEN_EXIT_TIME:string = null;
+  COLLISION_PROBABILITY:double = null;
+  COLLISION_PROBABILITY_METHOD:string = null;
+
+  OBJECT1:CDMObject;
+  OBJECT2:CDMObject;
+}
+
+table CDMCOLLECTION {
+  RECORDS:[CDM];
+}
+
+root_type CDM;
+file_identifier "$CDM";
