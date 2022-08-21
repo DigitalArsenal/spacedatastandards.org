@@ -51,20 +51,20 @@ table CDMObject {
   CATALOG_NAME:string;
   OBJECT_NAME:string;
   INTERNATIONAL_DESIGNATOR:string;
-  OBJECT_TYPE:objectType = null;
+  OBJECT_TYPE:objectType;
   OPERATOR_CONTACT_POSITION:string;
   OPERATOR_ORGANIZATION:string;
   EPHEMERIS_NAME:string;
   COVARIANCE_METHOD:covarianceMethod;
   MANEUVERABLE:maneuverableType;
-  ORBIT_CENTER:string = "EARTH"
+  ORBIT_CENTER:string;
   REF_FRAME:referenceFrame;
   GRAVITY_MODEL:string;
   ATMOSPHERIC_MODEL:string;
   N_BODY_PERTURBATIONS:string;
-  SOLAR_RAD_PRESSURE:bool = null;
-  EARTH_TIDES:bool = null;
-  INTRACK_THRUST:bool = null;
+  SOLAR_RAD_PRESSURE:bool;
+  EARTH_TIDES:bool;
+  INTRACK_THRUST:bool;
   
   // OD Parameters
   TIME_LASTOB_START:string;
