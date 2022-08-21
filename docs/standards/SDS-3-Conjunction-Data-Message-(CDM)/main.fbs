@@ -45,30 +45,30 @@ NA
 
 table CDMObject {
   // Object MetaData
-  COMMENT:string = null;
+  COMMENT:string;
   OBJECT:objectNumber;
   OBJECT_DESIGNATOR:string;
   CATALOG_NAME:string;
   OBJECT_NAME:string;
   INTERNATIONAL_DESIGNATOR:string;
   OBJECT_TYPE:objectType = null;
-  OPERATOR_CONTACT_POSITION:string = null;
-  OPERATOR_ORGANIZATION:string = null;
+  OPERATOR_CONTACT_POSITION:string;
+  OPERATOR_ORGANIZATION:string;
   EPHEMERIS_NAME:string;
   COVARIANCE_METHOD:covarianceMethod;
   MANEUVERABLE:maneuverableType;
   ORBIT_CENTER:string = "EARTH"
   REF_FRAME:referenceFrame;
-  GRAVITY_MODEL:string = null;
-  ATMOSPHERIC_MODEL:string = null;
-  N_BODY_PERTURBATIONS:string = null;
+  GRAVITY_MODEL:string;
+  ATMOSPHERIC_MODEL:string;
+  N_BODY_PERTURBATIONS:string;
   SOLAR_RAD_PRESSURE:bool = null;
   EARTH_TIDES:bool = null;
   INTRACK_THRUST:bool = null;
   
   // OD Parameters
-  TIME_LASTOB_START:string = null;
-  TIME_LASTOB_END:string = null;
+  TIME_LASTOB_START:string;
+  TIME_LASTOB_END:string;
   RECOMMENDED_OD_SPAN:double = null;
   ACTUAL_OD_SPAN:double = null;
   OBS_AVAILABLE:uint = null;
@@ -149,7 +149,7 @@ table CDM {
   CCSDS_CDM_VERS:double;
   CREATION_DATE:string;
   ORIGINATOR:string;
-  MESSAGE_FOR:string = null;
+  MESSAGE_FOR:string;
   MESSAGE_ID:string;
 
   // CDM Relative Metadata/Data
@@ -162,17 +162,17 @@ table CDM {
   RELATIVE_VELOCITY_R:double = null;
   RELATIVE_VELOCITY_T:double = null;
   RELATIVE_VELOCITY_N:double = null;
-  START_SCREEN_PERIOD:string = null;
-  STOP_SCREEN_PERIOD:string = null;
+  START_SCREEN_PERIOD:string;
+  STOP_SCREEN_PERIOD:string;
   SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame = null;
   SCREEN_VOLUME_SHAPE:screeningVolumeShape = null;
   SCREEN_VOLUME_X:double = null;
   SCREEN_VOLUME_Y:double = null;
   SCREEN_VOLUME_Z:double = null;
-  SCREEN_ENTRY_TIME:string = null;
-  SCREEN_EXIT_TIME:string = null;
+  SCREEN_ENTRY_TIME:string;
+  SCREEN_EXIT_TIME:string;
   COLLISION_PROBABILITY:double = null;
-  COLLISION_PROBABILITY_METHOD:string = null;
+  COLLISION_PROBABILITY_METHOD:string;
 
   OBJECT1:CDMObject;
   OBJECT2:CDMObject;
