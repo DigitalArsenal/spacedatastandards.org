@@ -19,7 +19,7 @@ OBJECT\_NAME|Satellite Name(s)|
 OBJECT\_ID|International Designator (YYYY-NNNAAA)|
 CENTER\_NAME|Origin of reference frame (EARTH, MARS, MOON, etc.)|
 REF\_FRAME|Name of the reference frame (TEME, EME2000, etc.)|
-REF\_FRAME\_Epoch|Epoch of reference frame, if not intrinsic to the definition of the reference frame|
+REF\_FRAME\_EPOCH|Epoch of reference frame, if not intrinsic to the definition of the reference frame|
 TIME\_SYSTEM|Time system used for the orbit state and covariance matrix. (UTC)|
 COMMENT|Plain-Text Comment|
 EPOCH|Epoch of state vector & optional Keplerian elements (ISO 8601)|
