@@ -83,7 +83,7 @@ enum manCovRefFrame : byte {
 
 table OMM {
   // OMM Header
-  CCSDS_OMM_VERS:double = null;
+  CCSDS_OMM_VERS:double;
   CREATION_DATE:string;
   ORIGINATOR:string;
 
@@ -99,75 +99,75 @@ table OMM {
   // Mean Keplerian Elements in the Specified Reference Frame
   COMMENT:string;
   EPOCH:string;
-  SEMI_MAJOR_AXIS:double = null;
-  MEAN_MOTION:double = null;
-  ECCENTRICITY:double = null;
-  INCLINATION:double = null;
-  RA_OF_ASC_NODE:double = null;
-  ARG_OF_PERICENTER:double = null;
-  MEAN_ANOMALY:double = null;
-  GM:double = null;
+  SEMI_MAJOR_AXIS:double;
+  MEAN_MOTION:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  MEAN_ANOMALY:double;
+  GM:double;
   
   // Spacecraft Parameters
-  MASS:double = null;
-  SOLAR_RAD_AREA:double = null;
-  SOLAR_RAD_COEFF:double = null;
-  DRAG_AREA:double = null;
-  DRAG_COEFF:double = null;
+  MASS:double;
+  SOLAR_RAD_AREA:double;
+  SOLAR_RAD_COEFF:double;
+  DRAG_AREA:double;
+  DRAG_COEFF:double;
 
   // TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
   EPHEMERIS_TYPE:ephemerisType = SGP4;
   CLASSIFICATION_TYPE:string;
   NORAD_CAT_ID:uint32;
   ELEMENT_SET_NO:uint32;
-  REV_AT_EPOCH:double = null;
-  BSTAR:double = null;
-  MEAN_MOTION_DOT:double = null;
-  MEAN_MOTION_DDOT:double = null;
+  REV_AT_EPOCH:double;
+  BSTAR:double;
+  MEAN_MOTION_DOT:double;
+  MEAN_MOTION_DDOT:double;
   
   // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
   // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
   COV_REF_FRAME:manCovRefFrame = RSW;
-  CX_X:double = null;
-  CY_X:double = null;
-  CY_Y:double = null;
-  CZ_X:double = null;
-  CZ_Y:double = null;
-  CZ_Z:double = null;
-  CX_DOT_X:double = null;
-  CX_DOT_Y:double = null;
-  CX_DOT_Z:double = null;
-  CX_DOT_X_DOT:double = null;
-  CY_DOT_X:double = null;
-  CY_DOT_Y:double = null;
-  CY_DOT_Z:double = null;
-  CY_DOT_X_DOT:double = null;
-  CY_DOT_Y_DOT:double = null;
-  CZ_DOT_X:double = null;
-  CZ_DOT_Y:double = null;
-  CZ_DOT_Z:double = null;
-  CZ_DOT_X_DOT:double = null;
-  CZ_DOT_Y_DOT:double = null;
-  CZ_DOT_Z_DOT:double = null;
+  CX_X:double;
+  CY_X:double;
+  CY_Y:double;
+  CZ_X:double;
+  CZ_Y:double;
+  CZ_Z:double;
+  CX_DOT_X:double;
+  CX_DOT_Y:double;
+  CX_DOT_Z:double;
+  CX_DOT_X_DOT:double;
+  CY_DOT_X:double;
+  CY_DOT_Y:double;
+  CY_DOT_Z:double;
+  CY_DOT_X_DOT:double;
+  CY_DOT_Y_DOT:double;
+  CZ_DOT_X:double;
+  CZ_DOT_Y:double;
+  CZ_DOT_Z:double;
+  CZ_DOT_X_DOT:double;
+  CZ_DOT_Y_DOT:double;
+  CZ_DOT_Z_DOT:double;
 
   // User Defined Parameters (all parameters in this section must be described in an ICD). 
   USER_DEFINED_BIP_0044_TYPE:uint;
   USER_DEFINED_OBJECT_DESIGNATOR:string;
   USER_DEFINED_EARTH_MODEL:string;
-  USER_DEFINED_EPOCH_TIMESTAMP: double = null;
-  USER_DEFINED_MICROSECONDS: double = null;
+  USER_DEFINED_EPOCH_TIMESTAMP: double;
+  USER_DEFINED_MICROSECONDS: double;
 }
 
 table MPE {
-  MEAN_MOTION:double = null;
-  ECCENTRICITY:double = null;
-  INCLINATION:double = null;
-  RA_OF_ASC_NODE:double = null;
-  ARG_OF_PERICENTER:double = null;
-  MEAN_ANOMALY:double = null;
+  MEAN_MOTION:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  MEAN_ANOMALY:double;
   NORAD_CAT_ID:uint32;
-  BSTAR:double = null;
-  USER_DEFINED_EPOCH_TIMESTAMP: double = null;
+  BSTAR:double;
+  USER_DEFINED_EPOCH_TIMESTAMP: double;
 }
 
 table OMMCOLLECTION {
