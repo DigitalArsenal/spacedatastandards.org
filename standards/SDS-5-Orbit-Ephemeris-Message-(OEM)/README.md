@@ -26,14 +26,29 @@ USEABLE_START_TIME|Optional start USEABLE time span covered by ephemeris data ((
 USEABLE_STOP_TIME|Optional end of USEABLE time span covered by ephemeris data ((ISO 8601))|
 STOP_TIME|End of TOTAL time span covered by ephemeris data and covariance data ((ISO 8601))|
 INTERPOLATION|Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)|
-INTERPOLATION_DEGREE| Recommended interpolation degree for ephemeris data|
+INTERPOLATION_DEGREE|Recommended interpolation degree for ephemeris data|
+EPHEMERIS DATA LINES|Each set of ephemeris data, including the time tag, must be provided on a single line. Fields described below|
+COVARIANCE MATRIX LINES|A single covariance matrix data section may optionally follow each ephemeris data block. Fields described below|
+
+### EPHEMERIS DATA LINES
+
+|Predicate |Description |
+---|---|
 EPOCH|Epoch of state vector (ISO 8601)|
 X|Position vector X-component km
 Y|Position vector Y-component km
 Z|Position vector Z-component km
 X\_DOT|Velocity vector X-component km/s
 Y\_DOT|Velocity vector Y-component km/s
-Z\_DOT| Velocity vector Z-component km/s
+Z\_DOT|Velocity vector Z-component km/s
+X\_DDOT|Acceleration vector X-component (optional) km/s/s
+Y\_DDOT|Acceleration vector Y-component (optional) km/s/s
+Z\_DDOT|Acceleration vector Z-component (optional) km/s/s
+
+### COVARIANCE MATRIX LINES
+
+|Predicate |Description |
+---|---|
 COV\_REF\_FRAME|Reference frame for the covariance matrix (may be omitted if it is the same as the metadata REF\_FRAME)|
 CX\_X|Covariance matrix [1,1] km\*\*2|
 CY\_X|Covariance matrix [2,1] km\*\*2|
