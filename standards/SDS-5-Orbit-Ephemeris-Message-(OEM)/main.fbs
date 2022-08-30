@@ -1,0 +1,140 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// Greenwich Rotating Coordinates
+GRC,
+/// International Celestial Reference Frame
+ICRF,
+/// International Terrestrial Reference Frame 2000
+ITRF2000,
+/// International Terrestrial Reference Frame 1993
+ITRF93, 
+/// International Terrestrial Reference Frame 1997
+ITRF97,
+/// Mars Centered Inertial
+MCI,
+/// True of Date, Rotating
+TDR,
+/// True Equator Mean Equinox
+TEME,
+/// True of Date
+TOD, 
+}
+
+enum timeSystem : byte {
+  /// Greenwich Mean Sidereal Time
+  GMST,
+  /// Global Positioning System
+  GPS,
+  /// Mission Elapsed Time
+  MET,
+  /// Mission Relative Time
+  MRT,
+  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
+  SCLK,
+  /// International Atomic Time
+  TAI,
+  /// Barycentric Coordinate Time
+  TCB,
+  /// Barycentric Dynamical Time
+  TDB,
+  /// Geocentric Coordinate Time
+  TCG,
+  /// Terrestrial Time
+  TT,
+  /// Universal Time
+  UT1,
+  /// Coordinated Universal Time 
+  UTC
+}
+
+enum manCovRefFrame : byte {
+  // Another name for ‘Radial, Transverse, Normal’
+  RSW,
+  // Radial, Transverse, Normal
+  RTN,
+  // A local orbital coordinate frame (x velocity vec., w orbital angular momentum vec., N completes right handed system.)
+  TNW
+}
+
+table ephemerisDataLine {
+  // A single ephemeris data line
+  EPOCH:string;
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+  // acceleration is optional
+  X_DDOT:double;
+  Y_DDOT:double;
+  Z_DDOT:double;
+}
+
+table covarianceMatrixLine {
+  // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
+  // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
+  EPOCH:string;
+  COV_REF_FRAME:manCovRefFrame;
+  CX_X:double;
+  CY_X:double;
+  CY_Y:double;
+  CZ_X:double;
+  CZ_Y:double;
+  CZ_Z:double;
+  CX_DOT_X:double;
+  CX_DOT_Y:double;
+  CX_DOT_Z:double;
+  CX_DOT_X_DOT:double;
+  CY_DOT_X:double;
+  CY_DOT_Y:double;
+  CY_DOT_Z:double;
+  CY_DOT_X_DOT:double;
+  CY_DOT_Y_DOT:double;
+  CZ_DOT_X:double;
+  CZ_DOT_Y:double;
+  CZ_DOT_Z:double;
+  CZ_DOT_X_DOT:double;
+  CZ_DOT_Y_DOT:double;
+  CZ_DOT_Z_DOT:double;  
+}
+
+table ephemerisDataBlock {
+  // OEM Metadata
+  COMMENT:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  CENTER_NAME:string;
+  REF_FRAME:referenceFrame;
+  REF_FRAME_EPOCH:string;
+  TIME_SYSTEM:timeSystem;
+  START_TIME:string;
+  USEABLE_START_TIME:string;
+  USEABLE_STOP_TIME:string;
+  STOP_TIME:string;
+  INTERPOLATION:string;
+  INTERPOLATION_DEGREE:uint;
+
+  EPHEMERIS_DATA_LINES:[ephemerisDataLine];
+  
+  COVARIANCE_MATRIX_LINES:[covarianceMatrixLine];
+}
+
+table OEM {
+  // OEM Header
+  CCSDS_OEM_VERS:double;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+
+  EPHEMERIS_DATA_BLOCK:[ephemerisDataBlock];
+}
+
+table OEMCOLLECTION {
+  RECORDS:[OEM];
+}
+
+root_type OEM;
+file_identifier "$OEM";
