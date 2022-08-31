@@ -23,19 +23,6 @@ TEME,
 TOD, 
 }
 
-enum ephemerisType : byte {
- /// Simplified General Perturbation Model 
- SGP,
- /// Simplified General Perturbation Model  4
- SGP4,
- /// Simplified Deep Space Perturbation Model 4 
- SDP4,
- /// Simplified General Perturbation Model 8
- SGP8,
- /// Simplified Deep Space Perturbation Model 8
- SDP8
-}
-
 enum timeSystem : byte {
   /// Greenwich Mean Sidereal Time
   GMST,
@@ -63,15 +50,6 @@ enum timeSystem : byte {
   UTC
 }
 
-enum meanElementTheory : byte {
-  /// Simplified General Perturbation Model  4
-  SGP4,
-  /// Draper Semi-analytical Satellite Theory
-  DSST,
-  /// Universal Semianalytical Method
-  USM
-}
-
 enum manCovRefFrame : byte {
   // Another name for ‘Radial, Transverse, Normal’
   RSW,
@@ -81,30 +59,48 @@ enum manCovRefFrame : byte {
   TNW
 }
 
-table OMM {
-  // OMM Header
-  CCSDS_OMM_VERS:double;
+table maneuverParameters {
+  // Maneuver Parameters (Repeat for each maneuver. None or all parameters of this block must be given.)
+  MAN_EPOCH_IGNITION:string;
+  MAN_DURATION:double;
+  MAN_DELTA_MASS:double;
+  MAN_REF_FRAME:manCovRefFrame;
+  MAN_DV_1:double;
+  MAN_DV_2:double;
+  MAN_DV_3:double;
+}
+
+table OPM {
+  // OPM Header
+  CCSDS_OPM_VERS:double;
   CREATION_DATE:string;
   ORIGINATOR:string;
 
-  // OMM Metadata
+  // OPM Metadata
   OBJECT_NAME:string;
   OBJECT_ID:string;
   CENTER_NAME:string;
-  REF_FRAME:referenceFrame = TEME;
+  REF_FRAME:referenceFrame;
   REF_FRAME_EPOCH:string;
-  TIME_SYSTEM:timeSystem = UTC;
-  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
-
-  // Mean Keplerian Elements in the Specified Reference Frame
+  TIME_SYSTEM:timeSystem;
+  
+  // State Vector Components in the Specified Coordinate System
   COMMENT:string;
   EPOCH:string;
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+
+  // Osculating Keplerian Elements in the Specified Reference Frame (none or all parameters of this block must be given.)
   SEMI_MAJOR_AXIS:double;
-  MEAN_MOTION:double;
   ECCENTRICITY:double;
   INCLINATION:double;
   RA_OF_ASC_NODE:double;
   ARG_OF_PERICENTER:double;
+  TRUE_ANOMALY:double;
   MEAN_ANOMALY:double;
   GM:double;
   
@@ -115,19 +111,9 @@ table OMM {
   DRAG_AREA:double;
   DRAG_COEFF:double;
 
-  // TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  EPHEMERIS_TYPE:ephemerisType = SGP4;
-  CLASSIFICATION_TYPE:string;
-  NORAD_CAT_ID:uint32;
-  ELEMENT_SET_NO:uint32;
-  REV_AT_EPOCH:double;
-  BSTAR:double;
-  MEAN_MOTION_DOT:double;
-  MEAN_MOTION_DDOT:double;
-  
   // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
   // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
-  COV_REF_FRAME:manCovRefFrame = RSW;
+  COV_REF_FRAME:manCovRefFrame;
   CX_X:double;
   CY_X:double;
   CY_Y:double;
@@ -150,33 +136,19 @@ table OMM {
   CZ_DOT_Y_DOT:double;
   CZ_DOT_Z_DOT:double;
 
+  MANEUVERS:[maneuverParameters];
+
   // User Defined Parameters (all parameters in this section must be described in an ICD). 
   USER_DEFINED_BIP_0044_TYPE:uint;
   USER_DEFINED_OBJECT_DESIGNATOR:string;
   USER_DEFINED_EARTH_MODEL:string;
-  USER_DEFINED_EPOCH_TIMESTAMP: double;
-  USER_DEFINED_MICROSECONDS: double;
+  USER_DEFINED_EPOCH_TIMESTAMP:double;
+  USER_DEFINED_EPOCH_MICROSECONDS:double;
 }
 
-table MPE {
-  MEAN_MOTION:double;
-  ECCENTRICITY:double;
-  INCLINATION:double;
-  RA_OF_ASC_NODE:double;
-  ARG_OF_PERICENTER:double;
-  MEAN_ANOMALY:double;
-  NORAD_CAT_ID:uint32;
-  BSTAR:double;
-  USER_DEFINED_EPOCH_TIMESTAMP: double;
+table OPMCOLLECTION {
+  RECORDS:[OPM];
 }
 
-table OMMCOLLECTION {
-  RECORDS:[OMM];
-}
-
-table MPECOLLECTION {
-  RECORDS:[MPE];
-}
-
-root_type OMM;
-file_identifier "$OMM";
+root_type OPM;
+file_identifier "$OPM";

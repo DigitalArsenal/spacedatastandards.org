@@ -69,23 +69,23 @@ table CDMObject {
   // OD Parameters
   TIME_LASTOB_START:string;
   TIME_LASTOB_END:string;
-  RECOMMENDED_OD_SPAN:double = null;
-  ACTUAL_OD_SPAN:double = null;
-  OBS_AVAILABLE:uint = null;
-  OBS_USED:uint = null;
-  TRACKS_AVAILABLE:uint = null;
-  TRACKS_USED:uint = null;
-  RESIDUALS_ACCEPTED:double = null;
-  WEIGHTED_RMS:double = null;
+  RECOMMENDED_OD_SPAN:double;
+  ACTUAL_OD_SPAN:double;
+  OBS_AVAILABLE:uint;
+  OBS_USED:uint;
+  TRACKS_AVAILABLE:uint;
+  TRACKS_USED:uint;
+  RESIDUALS_ACCEPTED:double;
+  WEIGHTED_RMS:double;
   
   // Additional Parameters
-  AREA_PC:double = null;
-  AREA_DRG:double = null;
-  AREA_SRP:double = null;
-  MASS:double = null;
-  CR_AREA_OVER_MASS:double = null;
-  THRUST_ACCELERATION:double = null;
-  SEDR:double = null;
+  AREA_PC:double;
+  AREA_DRG:double;
+  AREA_SRP:double;
+  MASS:double;
+  CR_AREA_OVER_MASS:double;
+  THRUST_ACCELERATION:double;
+  SEDR:double;
   
   // State Vector
   X:double;
@@ -118,30 +118,30 @@ table CDMObject {
   CNDOT_RDOT:double;
   CNDOT_TDOT:double;
   CNDOT_NDOT:double;
-  CDRG_R:double = null;
-  CDRG_T:double = null;
-  CDRG_N:double = null;
-  CDRG_RDOT:double = null;
-  CDRG_TDOT:double = null;
-  CDRG_NDOT:double = null;
-  CDRG_DRG:double = null;
-  CSRP_R:double = null;
-  CSRP_T:double = null;
-  CSRP_N:double = null;
-  CSRP_RDOT:double = null;
-  CSRP_TDOT:double = null;
-  CSRP_NDOT:double = null;
-  CSRP_DRG:double = null;
-  CSRP_SRP:double = null;
-  CTHR_R:double = null;
-  CTHR_T:double = null;
-  CTHR_N:double = null;
-  CTHR_RDOT:double = null;
-  CTHR_TDOT:double = null;
-  CTHR_NDOT:double = null;
-  CTHR_DRG:double = null;
-  CTHR_SRP:double = null;
-  CTHR_THR:double = null;
+  CDRG_R:double;
+  CDRG_T:double;
+  CDRG_N:double;
+  CDRG_RDOT:double;
+  CDRG_TDOT:double;
+  CDRG_NDOT:double;
+  CDRG_DRG:double;
+  CSRP_R:double;
+  CSRP_T:double;
+  CSRP_N:double;
+  CSRP_RDOT:double;
+  CSRP_TDOT:double;
+  CSRP_NDOT:double;
+  CSRP_DRG:double;
+  CSRP_SRP:double;
+  CTHR_R:double;
+  CTHR_T:double;
+  CTHR_N:double;
+  CTHR_RDOT:double;
+  CTHR_TDOT:double;
+  CTHR_NDOT:double;
+  CTHR_DRG:double;
+  CTHR_SRP:double;
+  CTHR_THR:double;
 }
 
 table CDM {
@@ -155,23 +155,23 @@ table CDM {
   // CDM Relative Metadata/Data
   TCA:string;
   MISS_DISTANCE:double;
-  RELATIVE_SPEED:double = null;
-  RELATIVE_POSITION_R:double = null;
-  RELATIVE_POSITION_T:double = null;
-  RELATIVE_POSITION_N:double = null;
-  RELATIVE_VELOCITY_R:double = null;
-  RELATIVE_VELOCITY_T:double = null;
-  RELATIVE_VELOCITY_N:double = null;
+  RELATIVE_SPEED:double;
+  RELATIVE_POSITION_R:double;
+  RELATIVE_POSITION_T:double;
+  RELATIVE_POSITION_N:double;
+  RELATIVE_VELOCITY_R:double;
+  RELATIVE_VELOCITY_T:double;
+  RELATIVE_VELOCITY_N:double;
   START_SCREEN_PERIOD:string;
   STOP_SCREEN_PERIOD:string;
-  SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame = null;
-  SCREEN_VOLUME_SHAPE:screeningVolumeShape = null;
-  SCREEN_VOLUME_X:double = null;
-  SCREEN_VOLUME_Y:double = null;
-  SCREEN_VOLUME_Z:double = null;
+  SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame;
+  SCREEN_VOLUME_SHAPE:screeningVolumeShape;
+  SCREEN_VOLUME_X:double;
+  SCREEN_VOLUME_Y:double;
+  SCREEN_VOLUME_Z:double;
   SCREEN_ENTRY_TIME:string;
   SCREEN_EXIT_TIME:string;
-  COLLISION_PROBABILITY:double = null;
+  COLLISION_PROBABILITY:double;
   COLLISION_PROBABILITY_METHOD:string;
 
   OBJECT1:CDMObject;

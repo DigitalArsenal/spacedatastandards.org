@@ -1,0 +1,244 @@
+<h2 id="spacedatastandard4orbitparametermessageopm">Space Data Standard - 4 - Orbit Parameter Message (OPM)</h2>
+<h2 id="description">Description</h2>
+<p>Orbit information may be exchanged between two participants by sending a state
+vector for a specified epoch using an Orbit Parameter Message (OPM).
+The message recipient must have an orbit propagator available that is able to propagate the
+OPM state vector to compute the orbit at other desired epochs. For this propagation,
+additional ancillary information (spacecraft properties such as mass, area, and maneuver
+planning data, if applicable) may be included with the message.</p>
+<p>CCSDS Reference documentation: <a href="https://public.ccsds.org/Pubs/502x0b2c1e2.pdf">502x0b2c1e2</a>.</p>
+<h2 id="format">Format</h2>
+<table>
+<thead>
+<tr>
+<th>Predicate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OBJECT_NAME</td>
+<td>Satellite Name(s)</td>
+</tr>
+<tr>
+<td>OBJECT_ID</td>
+<td>International Designator (YYYY-NNNAAA)</td>
+</tr>
+<tr>
+<td>CENTER_NAME</td>
+<td>Origin of reference frame (EARTH, MARS, MOON, etc.)</td>
+</tr>
+<tr>
+<td>REF_FRAME</td>
+<td>Name of the reference frame (TEME, EME2000, etc.)</td>
+</tr>
+<tr>
+<td>REF_FRAME_EPOCH</td>
+<td>Epoch of reference frame, if not intrinsic to the definition of the reference frame</td>
+</tr>
+<tr>
+<td>TIME_SYSTEM</td>
+<td>Time system used for the orbit state and covariance matrix. (UTC)</td>
+</tr>
+<tr>
+<td>COMMENT</td>
+<td>Plain-Text Comment</td>
+</tr>
+<tr>
+<td>EPOCH</td>
+<td>Epoch of state vector &amp; optional Keplerian elements (ISO 8601)</td>
+</tr>
+<tr>
+<td>X</td>
+<td>Position vector X-component km</td>
+</tr>
+<tr>
+<td>Y</td>
+<td>Position vector Y-component km</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>Position vector Z-component km</td>
+</tr>
+<tr>
+<td>X_DOT</td>
+<td>Velocity vector X-component km/s</td>
+</tr>
+<tr>
+<td>Y_DOT</td>
+<td>Velocity vector Y-component km/s</td>
+</tr>
+<tr>
+<td>Z_DOT</td>
+<td>Velocity vector Z-component km/s</td>
+</tr>
+<tr>
+<td>SEMI_MAJOR_AXIS</td>
+<td>Semi-major axis km</td>
+</tr>
+<tr>
+<td>ECCENTRICITY</td>
+<td>Eccentricity</td>
+</tr>
+<tr>
+<td>INCLINATION</td>
+<td>Inclination deg</td>
+</tr>
+<tr>
+<td>RA_OF_ASC_NODE</td>
+<td>Right ascension of ascending node deg</td>
+</tr>
+<tr>
+<td>ARG_OF_PERICENTER</td>
+<td>Argument of pericenter deg</td>
+</tr>
+<tr>
+<td>TRUE_ANOMALY or MEAN_ANOMALY</td>
+<td>True anomaly or mean anomaly deg</td>
+</tr>
+<tr>
+<td>GM</td>
+<td>Gravitational Coefficient (Gravitational Constant x Central Mass) km**3/s**2</td>
+</tr>
+<tr>
+<td>MASS</td>
+<td>S/C Mass kg</td>
+</tr>
+<tr>
+<td>SOLAR_RAD_AREA</td>
+<td>Solar Radiation Pressure Area (AR) m**2</td>
+</tr>
+<tr>
+<td>SOLAR_RAD_COEFF</td>
+<td>Solar Radiation Pressure Coefficient (CR)</td>
+</tr>
+<tr>
+<td>DRAG_AREA</td>
+<td>Drag Area (AD) m**2</td>
+</tr>
+<tr>
+<td>DRAG_COEFF</td>
+<td>Drag Coefficient (CD)</td>
+</tr>
+<tr>
+<td>COV_REF_FRAME</td>
+<td>Reference frame for the covariance matrix (may be omitted if it is the same as the metadata REF_FRAME)</td>
+</tr>
+<tr>
+<td>CX_X</td>
+<td>Covariance matrix [1,1] km**2</td>
+</tr>
+<tr>
+<td>CY_X</td>
+<td>Covariance matrix [2,1] km**2</td>
+</tr>
+<tr>
+<td>CY_Y</td>
+<td>Covariance matrix [2,2] km**2</td>
+</tr>
+<tr>
+<td>CZ_X</td>
+<td>Covariance matrix [3,1] km**2</td>
+</tr>
+<tr>
+<td>CZ_Y</td>
+<td>Covariance matrix [3,2] km**2</td>
+</tr>
+<tr>
+<td>CZ_Z</td>
+<td>Covariance matrix [3,3] km**2</td>
+</tr>
+<tr>
+<td>CX_DOT_X</td>
+<td>Covariance matrix [4,1] km**2/s</td>
+</tr>
+<tr>
+<td>CX_DOT_Y</td>
+<td>Covariance matrix [4,2] km**2/s</td>
+</tr>
+<tr>
+<td>CX_DOT_Z</td>
+<td>Covariance matrix [4,3] km**2/s</td>
+</tr>
+<tr>
+<td>CX_DOT_X_DOT</td>
+<td>Covariance matrix [4,4] km**2/s**2</td>
+</tr>
+<tr>
+<td>CY_DOT_X</td>
+<td>Covariance matrix [5,1] km**2/s</td>
+</tr>
+<tr>
+<td>CY_DOT_Y</td>
+<td>Covariance matrix [5,2] km**2/s</td>
+</tr>
+<tr>
+<td>CY_DOT_Z</td>
+<td>Covariance matrix [5,3] km**2/s</td>
+</tr>
+<tr>
+<td>CY_DOT_X_DOT</td>
+<td>Covariance matrix [5,4] km**2/s**2</td>
+</tr>
+<tr>
+<td>CY_DOT_Y_DOT</td>
+<td>Covariance matrix [5,5] km**2/s**2</td>
+</tr>
+<tr>
+<td>CZ_DOT_X</td>
+<td>Covariance matrix [6,1] km**2/s</td>
+</tr>
+<tr>
+<td>CZ_DOT_Y</td>
+<td>Covariance matrix [6,2] km**2/s</td>
+</tr>
+<tr>
+<td>CZ_DOT_Z</td>
+<td>Covariance matrix [6,3] km**2/s</td>
+</tr>
+<tr>
+<td>CZ_DOT_X_DOT</td>
+<td>Covariance matrix [6,4] km**2/s**2</td>
+</tr>
+<tr>
+<td>CZ_DOT_Y_DOT</td>
+<td>Covariance matrix [6,5] km**2/s**2</td>
+</tr>
+<tr>
+<td>CZ_DOT_Z_DOT</td>
+<td>Covariance matrix [6,6] km**2/s**2</td>
+</tr>
+<tr>
+<td>MAN<em>EPOCH</em>IGNITION</td>
+<td>Epoch of ignition (ISO 8601)</td>
+</tr>
+<tr>
+<td>MAN_DURATION</td>
+<td>Maneuver duration (If = 0, impulsive maneuver) s</td>
+</tr>
+<tr>
+<td>MAN<em>DELTA</em>MASS</td>
+<td>Mass change during maneuver (value is &lt; 0) kg</td>
+</tr>
+<tr>
+<td>MAN<em>REF</em>FRAME</td>
+<td>Coordinate system for velocity increment vector</td>
+</tr>
+<tr>
+<td>MAN<em>DV</em>1</td>
+<td>1st component of the velocity increment km/s</td>
+</tr>
+<tr>
+<td>MAN<em>DV</em>2</td>
+<td>2nd component of the velocity increment km/s</td>
+</tr>
+<tr>
+<td>MAN<em>DV</em>3</td>
+<td>3rd component of the velocity increment km/s</td>
+</tr>
+<tr>
+<td>USER_DEFINED_x</td>
+<td>User defined parameter, where "x" is replaced by a variable. Must be described in an ICD.</td>
+</tr>
+</tbody>
+</table>
