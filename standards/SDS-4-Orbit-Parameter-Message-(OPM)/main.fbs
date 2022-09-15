@@ -1,0 +1,154 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// Greenwich Rotating Coordinates
+GRC,
+/// International Celestial Reference Frame
+ICRF,
+/// International Terrestrial Reference Frame 2000
+ITRF2000,
+/// International Terrestrial Reference Frame 1993
+ITRF93, 
+/// International Terrestrial Reference Frame 1997
+ITRF97,
+/// Mars Centered Inertial
+MCI,
+/// True of Date, Rotating
+TDR,
+/// True Equator Mean Equinox
+TEME,
+/// True of Date
+TOD, 
+}
+
+enum timeSystem : byte {
+  /// Greenwich Mean Sidereal Time
+  GMST,
+  /// Global Positioning System
+  GPS,
+  /// Mission Elapsed Time
+  MET,
+  /// Mission Relative Time
+  MRT,
+  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
+  SCLK,
+  /// International Atomic Time
+  TAI,
+  /// Barycentric Coordinate Time
+  TCB,
+  /// Barycentric Dynamical Time
+  TDB,
+  /// Geocentric Coordinate Time
+  TCG,
+  /// Terrestrial Time
+  TT,
+  /// Universal Time
+  UT1,
+  /// Coordinated Universal Time 
+  UTC
+}
+
+enum manCovRefFrame : byte {
+  // Another name for ‘Radial, Transverse, Normal’
+  RSW,
+  // Radial, Transverse, Normal
+  RTN,
+  // A local orbital coordinate frame (x velocity vec., w orbital angular momentum vec., N completes right handed system.)
+  TNW
+}
+
+table maneuverParameters {
+  // Maneuver Parameters (Repeat for each maneuver. None or all parameters of this block must be given.)
+  MAN_EPOCH_IGNITION:string;
+  MAN_DURATION:double;
+  MAN_DELTA_MASS:double;
+  MAN_REF_FRAME:manCovRefFrame;
+  MAN_DV_1:double;
+  MAN_DV_2:double;
+  MAN_DV_3:double;
+}
+
+table OPM {
+  // OPM Header
+  CCSDS_OPM_VERS:double;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+
+  // OPM Metadata
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  CENTER_NAME:string;
+  REF_FRAME:referenceFrame;
+  REF_FRAME_EPOCH:string;
+  TIME_SYSTEM:timeSystem;
+  
+  // State Vector Components in the Specified Coordinate System
+  COMMENT:string;
+  EPOCH:string;
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+
+  // Osculating Keplerian Elements in the Specified Reference Frame (none or all parameters of this block must be given.)
+  SEMI_MAJOR_AXIS:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  TRUE_ANOMALY:double;
+  MEAN_ANOMALY:double;
+  GM:double;
+  
+  // Spacecraft Parameters
+  MASS:double;
+  SOLAR_RAD_AREA:double;
+  SOLAR_RAD_COEFF:double;
+  DRAG_AREA:double;
+  DRAG_COEFF:double;
+
+  // Position/Velocity Covariance Matrix (6x6 Lower Triangular Form. None or all parameters of the matrix must be given.
+  // COV_REF_FRAME may be omitted if it is the same as the metadata REF_FRAME.) 
+  COV_REF_FRAME:manCovRefFrame;
+  CX_X:double;
+  CY_X:double;
+  CY_Y:double;
+  CZ_X:double;
+  CZ_Y:double;
+  CZ_Z:double;
+  CX_DOT_X:double;
+  CX_DOT_Y:double;
+  CX_DOT_Z:double;
+  CX_DOT_X_DOT:double;
+  CY_DOT_X:double;
+  CY_DOT_Y:double;
+  CY_DOT_Z:double;
+  CY_DOT_X_DOT:double;
+  CY_DOT_Y_DOT:double;
+  CZ_DOT_X:double;
+  CZ_DOT_Y:double;
+  CZ_DOT_Z:double;
+  CZ_DOT_X_DOT:double;
+  CZ_DOT_Y_DOT:double;
+  CZ_DOT_Z_DOT:double;
+
+  MANEUVERS:[maneuverParameters];
+
+  // User Defined Parameters (all parameters in this section must be described in an ICD). 
+  USER_DEFINED_BIP_0044_TYPE:uint;
+  USER_DEFINED_OBJECT_DESIGNATOR:string;
+  USER_DEFINED_EARTH_MODEL:string;
+  USER_DEFINED_EPOCH_TIMESTAMP:double;
+  USER_DEFINED_EPOCH_MICROSECONDS:double;
+}
+
+table OPMCOLLECTION {
+  RECORDS:[OPM];
+}
+
+root_type OPM;
+file_identifier "$OPM";

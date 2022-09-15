@@ -136,7 +136,7 @@
             {:else if $subMenu === 1}
                 <div class="relative border h-full">
                     <div />
-                    <CodeMirror readOnly={true} content={repoData.IDL} />
+                    <CodeMirror readOnly={false} content={repoData.IDL} />
                 </div>
             {:else if $subMenu === 2}
             
