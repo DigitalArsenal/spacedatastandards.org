@@ -30,9 +30,9 @@
             />
         </div>
     </header>
-    <main class="relative h-full">
+    <main class="relative h-full p-2">
         <div
-            class="p-5 overflow-y-auto relative flex flex-wrap gap-5 items-start h-full justify-center"
+            class="flex flex-wrap gap-2 justify-center"
         >
             {#each $standards.filter((s) => !searchTerm || ~s.name
                         .toLowerCase()
