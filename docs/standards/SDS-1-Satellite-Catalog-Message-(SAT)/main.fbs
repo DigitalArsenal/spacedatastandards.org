@@ -72,21 +72,16 @@ table SATCAT {
   DATA_STATUS_CODE:dataStatusCode;
   ORBIT_CENTER: string;
   ORBIT_TYPE:orbitType;
-}
-
-enum massType: byte {
-  DRY,
-  WET
-}
-
-table PAYLOAD {
-  OBJECT_ID:string;
-  OBJECT_NAME:string;
   DEPLOYMENT_DATE:string;
   MANEUVERABLE:bool;
   SIZE:double;
   MASS:double;
   MASS_TYPE:massType = DRY;
+}
+
+enum massType: byte {
+  DRY,
+  WET
 }
 
 table SATCATCOLLECTION {
