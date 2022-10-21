@@ -54,6 +54,11 @@ enum orbitType: byte {
   ROUNDTRIP
 }
 
+enum massType: byte {
+  DRY,
+  WET
+}
+
 table SATCAT {
   OBJECT_NAME:string;
   OBJECT_ID:string;
@@ -77,11 +82,6 @@ table SATCAT {
   SIZE:double;
   MASS:double;
   MASS_TYPE:massType = DRY;
-}
-
-enum massType: byte {
-  DRY,
-  WET
 }
 
 table SATCATCOLLECTION {
