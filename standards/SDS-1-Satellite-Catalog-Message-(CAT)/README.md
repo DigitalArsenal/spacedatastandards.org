@@ -1,9 +1,9 @@
-## Space Data Standard - 1 - Resident Space Object Catalog Message (RSM)
+## Space Data Standard - 1 - Satellite Catalog Message (CAT)
 
 
 ## Description
 
-The RSM describes metadata about space objects independent of positional data. The message fields are derived from the Satellite Catalog (SATCAT/SATC) message currently produced by the Space Defense Operations Center (SPADOC) system and used as the basis of satellite catalog databases within the United States Government.  Legacy format description can be found [here](https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/satcat/README.md).
+The CAT describes metadata about space objects independent of positional data. The message fields are derived from the Satellite Catalog (SATCAT/SATC) message currently produced by the Space Defense Operations Center (SPADOC) system and used as the basis of satellite catalog databases within the United States Government.  Legacy format description can be found [here](https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/satcat/README.md).
 
 ## Format
 

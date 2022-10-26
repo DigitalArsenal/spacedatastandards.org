@@ -59,7 +59,7 @@ enum massType: byte {
   WET
 }
 
-table SATCAT {
+table CAT {
   OBJECT_NAME:string;
   OBJECT_ID:string;
   NORAD_CAT_ID:uint;
@@ -84,9 +84,9 @@ table SATCAT {
   MASS_TYPE:massType = DRY;
 }
 
-table SATCATCOLLECTION {
-  RECORDS:[SATCAT];
+table CATCOLLECTION {
+  RECORDS:[CAT];
 }
 
-root_type SATCAT;
-file_identifier "$SAT";
+root_type CAT;
+file_identifier "$CAT";
