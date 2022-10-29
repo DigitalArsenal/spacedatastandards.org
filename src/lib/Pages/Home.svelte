@@ -26,7 +26,7 @@
             </p>
             <p>
                 In 2010, CCSDS published an
-                <a href="https://public.ccsds.org/Pubs/505x0b1.pdf">
+                <a href="https://public.ccsds.org/Pubs/505x0b2.pdf">
                     XML SPECIFICATION FOR NAVIGATION DATA MESSAGES
                 </a>
                 to aid developers in creating web services based on CCSDS standards,
