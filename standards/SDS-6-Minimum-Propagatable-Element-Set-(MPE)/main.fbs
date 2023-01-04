@@ -1,0 +1,84 @@
+enum referenceFrame : byte {
+/// Earth Mean Equator and Equinox of J2000
+EME2000,
+///  Geocentric Celestial Reference Frame
+GCRF,
+/// Greenwich Rotating Coordinates
+GRC,
+/// International Celestial Reference Frame
+ICRF,
+/// International Terrestrial Reference Frame 2000
+ITRF2000,
+/// International Terrestrial Reference Frame 1993
+ITRF93, 
+/// International Terrestrial Reference Frame 1997
+ITRF97,
+/// Mars Centered Inertial
+MCI,
+/// True of Date, Rotating
+TDR,
+/// True Equator Mean Equinox
+TEME,
+/// True of Date
+TOD, 
+}
+
+enum timeSystem : byte {
+  /// Greenwich Mean Sidereal Time
+  GMST,
+  /// Global Positioning System
+  GPS,
+  /// Mission Elapsed Time
+  MET,
+  /// Mission Relative Time
+  MRT,
+  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
+  SCLK,
+  /// International Atomic Time
+  TAI,
+  /// Barycentric Coordinate Time
+  TCB,
+  /// Barycentric Dynamical Time
+  TDB,
+  /// Geocentric Coordinate Time
+  TCG,
+  /// Terrestrial Time
+  TT,
+  /// Universal Time
+  UT1,
+  /// Coordinated Universal Time 
+  UTC
+}
+
+enum meanElementTheory : byte {
+  /// Simplified General Perturbation Model  4
+  SGP4,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM
+}
+
+table MPE {  
+  OBJECT_ID:string;
+  USER_DEFINED_EPOCH_TIMESTAMP: double;
+  MEAN_MOTION:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  MEAN_ANOMALY:double;
+  BSTAR:double;
+}
+
+table MPECOLLECTION {
+  CLASSIFICATION_TYPE:string;
+  REF_FRAME:referenceFrame = TEME;
+  REF_FRAME_EPOCH: double;
+  TIME_SYSTEM:timeSystem = UTC;
+  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
+  RECORDS:[MPE];
+}
+
+root_type MPE;
+file_identifier "$MPE";

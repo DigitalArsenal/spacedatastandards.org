@@ -158,24 +158,8 @@ table OMM {
   USER_DEFINED_MICROSECONDS: double;
 }
 
-table MPE {
-  MEAN_MOTION:double;
-  ECCENTRICITY:double;
-  INCLINATION:double;
-  RA_OF_ASC_NODE:double;
-  ARG_OF_PERICENTER:double;
-  MEAN_ANOMALY:double;
-  NORAD_CAT_ID:uint32;
-  BSTAR:double;
-  USER_DEFINED_EPOCH_TIMESTAMP: double;
-}
-
 table OMMCOLLECTION {
   RECORDS:[OMM];
-}
-
-table MPECOLLECTION {
-  RECORDS:[MPE];
 }
 
 root_type OMM;
