@@ -60,7 +60,7 @@ enum meanElementTheory : byte {
 }
 
 table MPE {  
-  OBJECT_ID:string;
+  ENTITY_ID:string;
   USER_DEFINED_EPOCH_TIMESTAMP: double;
   MEAN_MOTION:double;
   ECCENTRICITY:double;

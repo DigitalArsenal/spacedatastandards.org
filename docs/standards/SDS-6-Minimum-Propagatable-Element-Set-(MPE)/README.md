@@ -8,7 +8,7 @@ Truncated version of the Orbit Mean-Elements Message (OMM).  Includes only the M
 
 |Predicate |Description |
 ---|---|
-OBJECT\_ID|International Designator (YYYY-NNNAAA)|
+ENTITY\_ID| Unique ID as a String|
 USER\_DEFINED\_EPOCH\_TIMESTAMP|Epoch of Mean Keplerian elements. (UNIX TimeStamp)|
 MEAN\_MOTION|Semi-major axis in km or mean motion in rev/day|
 ECCENTRICITY|Eccentricity|
