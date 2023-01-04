@@ -1,8 +1,6 @@
 <h2 id="spacedatastandard6minimumpropagatableelementsetmpe">Space Data Standard - 6 - Minimum-Propagatable-Element-Set-(MPE)</h2>
 <h2 id="description">Description</h2>
-<p>Truncated version of the Orbit Mean-Elements Message (OMM).  Includes only the Mean Elements required to propagate an orbit.</p>
-<p>Legacy format description can be found <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/tle/README.md">here</a>.</p>
-<p>CCSDS Reference documentation: <a href="https://public.ccsds.org/Pubs/502x0b2c1e2.pdf">502x0b2c1e2</a>.</p>
+<p>Truncated version of the Orbit Mean-Elements Message (OMM).  Includes only the Mean Elements required to propagate an orbit.  Legacy format description can be found <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/tle/README.md">here</a>.  CCSDS Reference documentation: <a href="https://public.ccsds.org/Pubs/502x0b2c1e2.pdf">502x0b2c1e2</a>.</p>
 <h2 id="format">Format</h2>
 <table>
 <thead>
@@ -51,9 +49,33 @@
 </tbody>
 </table>
 <h2 id="collectionattributes">Collection Attributes</h2>
-<p>---|---|
-CLASSIFICATION_TYPE|Default value = U|
-REF_FRAME|Name of the reference frame (TEME, EME2000, etc.)|
-REF_FRAME_EPOCH|Epoch of the Reference Frame. (UNIX TimeStamp)|
-TIME_SYSTEM|Time system used for the orbit state and covariance matrix. (UTC)|
-MEAN_ELEMENT_THEORY|Description of the Mean Element Theory. (SGP4,DSST,USM)|</p>
+<table>
+<thead>
+<tr>
+<th>Predicate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLASSIFICATION_TYPE</td>
+<td>Default value = U</td>
+</tr>
+<tr>
+<td>REF_FRAME</td>
+<td>Name of the reference frame (TEME, EME2000, etc.)</td>
+</tr>
+<tr>
+<td>REF_FRAME_EPOCH</td>
+<td>Epoch of the Reference Frame. (UNIX TimeStamp)</td>
+</tr>
+<tr>
+<td>TIME_SYSTEM</td>
+<td>Time system used for the orbit state and covariance matrix. (UTC)</td>
+</tr>
+<tr>
+<td>MEAN_ELEMENT_THEORY</td>
+<td>Description of the Mean Element Theory. (SGP4,DSST,USM)</td>
+</tr>
+</tbody>
+</table>

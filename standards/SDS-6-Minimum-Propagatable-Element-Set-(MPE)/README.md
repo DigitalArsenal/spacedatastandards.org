@@ -2,11 +2,7 @@
 
 ## Description
 
-Truncated version of the Orbit Mean-Elements Message (OMM).  Includes only the Mean Elements required to propagate an orbit.
-
-Legacy format description can be found [here](https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/tle/README.md).
-
-CCSDS Reference documentation: [502x0b2c1e2](https://public.ccsds.org/Pubs/502x0b2c1e2.pdf).
+Truncated version of the Orbit Mean-Elements Message (OMM).  Includes only the Mean Elements required to propagate an orbit.  Legacy format description can be found [here](https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/tle/README.md).  CCSDS Reference documentation: [502x0b2c1e2](https://public.ccsds.org/Pubs/502x0b2c1e2.pdf).
 
 ## Format
 
@@ -24,6 +20,7 @@ BSTAR|SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])|
 
 ## Collection Attributes
 
+|Predicate |Description |
 ---|---|
 CLASSIFICATION\_TYPE|Default value = U|
 REF\_FRAME|Name of the reference frame (TEME, EME2000, etc.)|
