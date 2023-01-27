@@ -47,4 +47,4 @@ table DPMCOLLECTION {
 }
 
 root_type DPM;
-file_identifier "DPM";
+file_identifier "$DPM";
