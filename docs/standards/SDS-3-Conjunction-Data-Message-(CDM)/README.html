@@ -1,3 +1,306 @@
 <h2 id="spacedatastandard3conjunctiondatamessagecdm">Space Data Standard - 3 - Conjunction Data Message (CDM)</h2>
 <h2 id="description">Description</h2>
 <p>The Conjunction Data Message (CDM) specifies a standard message format for use in exchanging spacecraft conjunction information between originators of Conjunction Assessments (CAs) and satellite owner/operators and other authorized parties. Such exchanges are used to inform satellite owner/operators of conjunctions between objects in space to enable consistent warning by different organizations employing diverse CA techniques. </p>
+<h2 id="format">Format</h2>
+<h3 id="cdm">CDM</h3>
+<table>
+<thead>
+<tr>
+<th>Predicate Name</th>
+<th style="text-align:left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CCSDS_CDM_VERS</td>
+<td style="text-align:left;">The version of the CCSDS CDM standard used</td>
+</tr>
+<tr>
+<td>CREATION_DATE</td>
+<td style="text-align:left;">The date the CDM message was created</td>
+</tr>
+<tr>
+<td>ORIGINATOR</td>
+<td style="text-align:left;">The originator of the CDM message</td>
+</tr>
+<tr>
+<td>MESSAGE_FOR</td>
+<td style="text-align:left;">The intended recipient of the CDM message</td>
+</tr>
+<tr>
+<td>MESSAGE_ID</td>
+<td style="text-align:left;">A unique identifier for the CDM message</td>
+</tr>
+<tr>
+<td>TCA</td>
+<td style="text-align:left;">Time of closest approach</td>
+</tr>
+<tr>
+<td>MISS_DISTANCE</td>
+<td style="text-align:left;">The miss distance between the two objects</td>
+</tr>
+<tr>
+<td>RELATIVE_SPEED</td>
+<td style="text-align:left;">The relative speed between the two objects</td>
+</tr>
+<tr>
+<td>RELATIVE_POSITION_R</td>
+<td style="text-align:left;">The relative position R component</td>
+</tr>
+<tr>
+<td>RELATIVE_POSITION_T</td>
+<td style="text-align:left;">The relative position T component</td>
+</tr>
+<tr>
+<td>RELATIVE_POSITION_N</td>
+<td style="text-align:left;">The relative position N component</td>
+</tr>
+<tr>
+<td>RELATIVE_VELOCITY_R</td>
+<td style="text-align:left;">The relative velocity R component</td>
+</tr>
+<tr>
+<td>RELATIVE_VELOCITY_T</td>
+<td style="text-align:left;">The relative velocity T component</td>
+</tr>
+<tr>
+<td>RELATIVE_VELOCITY_N</td>
+<td style="text-align:left;">The relative velocity N component</td>
+</tr>
+<tr>
+<td>START_SCREEN_PERIOD</td>
+<td style="text-align:left;">The start time of the screening period</td>
+</tr>
+<tr>
+<td>STOP_SCREEN_PERIOD</td>
+<td style="text-align:left;">The end time of the screening period</td>
+</tr>
+<tr>
+<td>SCREEN_VOLUME_FRAME</td>
+<td style="text-align:left;">The reference frame for the screening volume</td>
+</tr>
+<tr>
+<td>SCREEN_VOLUME_SHAPE</td>
+<td style="text-align:left;">The shape of the screening volume</td>
+</tr>
+<tr>
+<td>SCREEN_VOLUME_X</td>
+<td style="text-align:left;">The X dimension of the screening volume</td>
+</tr>
+<tr>
+<td>SCREEN_VOLUME_Y</td>
+<td style="text-align:left;">The Y dimension of the screening volume</td>
+</tr>
+<tr>
+<td>SCREEN_VOLUME_Z</td>
+<td style="text-align:left;">The Z dimension of the screening volume</td>
+</tr>
+<tr>
+<td>SCREEN_ENTRY_TIME</td>
+<td style="text-align:left;">The time the objects entered the screening volume</td>
+</tr>
+<tr>
+<td>SCREEN_EXIT_TIME</td>
+<td style="text-align:left;">The time the objects exited the screening volume</td>
+</tr>
+<tr>
+<td>COLLISION_PROBABILITY</td>
+<td style="text-align:left;">The probability of collision between the two objects</td>
+</tr>
+<tr>
+<td>COLLISION_PROBABILITY_METHOD</td>
+<td style="text-align:left;">The method used to calculate the collision probability</td>
+</tr>
+<tr>
+<td>OBJECT1</td>
+<td style="text-align:left;">The first object in the CDM message</td>
+</tr>
+<tr>
+<td>OBJECT2</td>
+<td style="text-align:left;">The second object in the CDM message</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cdmobject">CDMOBJECT</h3>
+<table>
+<thead>
+<tr>
+<th>Predicate Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COMMENT</td>
+<td>A string value for a comment</td>
+</tr>
+<tr>
+<td>OBJECT</td>
+<td>An enumerated value for the object number</td>
+</tr>
+<tr>
+<td>OBJECT_DESIGNATOR</td>
+<td>A string value for the object designator</td>
+</tr>
+<tr>
+<td>CATALOG_NAME</td>
+<td>A string value for the catalog name</td>
+</tr>
+<tr>
+<td>OBJECT_NAME</td>
+<td>A string value for the object name</td>
+</tr>
+<tr>
+<td>INTERNATIONAL_DESIGNATOR</td>
+<td>A string value for the international designator</td>
+</tr>
+<tr>
+<td>OBJECT_TYPE</td>
+<td>An enumerated value for the object type</td>
+</tr>
+<tr>
+<td>OPERATOR_CONTACT_POSITION</td>
+<td>A string value for the operator contact position</td>
+</tr>
+<tr>
+<td>OPERATOR_ORGANIZATION</td>
+<td>A string value for the operator organization</td>
+</tr>
+<tr>
+<td>EPHEMERIS_NAME</td>
+<td>A string value for the ephemeris name</td>
+</tr>
+<tr>
+<td>COVARIANCE_METHOD</td>
+<td>An enumerated value for the covariance method</td>
+</tr>
+<tr>
+<td>MANEUVERABLE</td>
+<td>An enumerated value for the maneuverable type</td>
+</tr>
+<tr>
+<td>ORBIT_CENTER</td>
+<td>A string value for the orbit center</td>
+</tr>
+<tr>
+<td>REF_FRAME</td>
+<td>An enumerated value for the reference frame</td>
+</tr>
+<tr>
+<td>GRAVITY_MODEL</td>
+<td>A string value for the gravity model</td>
+</tr>
+<tr>
+<td>ATMOSPHERIC_MODEL</td>
+<td>A string value for the atmospheric model</td>
+</tr>
+<tr>
+<td>N_BODY_PERTURBATIONS</td>
+<td>A string value for the n-body perturbations</td>
+</tr>
+<tr>
+<td>SOLAR_RAD_PRESSURE</td>
+<td>A boolean value for solar radiation pressure</td>
+</tr>
+<tr>
+<td>EARTH_TIDES</td>
+<td>A boolean value for earth tides</td>
+</tr>
+<tr>
+<td>INTRACK_THRUST</td>
+<td>A boolean value for intrack thrust</td>
+</tr>
+<tr>
+<td>TIME_LASTOB_START</td>
+<td>A string value for the time of last observation start</td>
+</tr>
+<tr>
+<td>TIME_LASTOB_END</td>
+<td>A string value for the time of last observation end</td>
+</tr>
+<tr>
+<td>RECOMMENDED_OD_SPAN</td>
+<td>A double value for the recommended observation data span</td>
+</tr>
+<tr>
+<td>ACTUAL_OD_SPAN</td>
+<td>A double value for the actual observation data span</td>
+</tr>
+<tr>
+<td>OBS_AVAILABLE</td>
+<td>An unsigned integer value for the number of observations available</td>
+</tr>
+<tr>
+<td>OBS_USED</td>
+<td>An unsigned integer value for the number of observations used</td>
+</tr>
+<tr>
+<td>TRACKS_AVAILABLE</td>
+<td>An unsigned integer value for the number of tracks available</td>
+</tr>
+<tr>
+<td>TRACKS_USED</td>
+<td>An unsigned integer value for the number of tracks used</td>
+</tr>
+<tr>
+<td>RESIDUALS_ACCEPTED</td>
+<td>A double value for the residuals accepted</td>
+</tr>
+<tr>
+<td>WEIGHTED_RMS</td>
+<td>A double value for the weighted root mean square</td>
+</tr>
+<tr>
+<td>AREA_PC</td>
+<td>A double value for the area of the object</td>
+</tr>
+<tr>
+<td>AREA_DRG</td>
+<td>A double value for the area of the object drag</td>
+</tr>
+<tr>
+<td>AREA_SRP</td>
+<td>A double value for the area of the object solar radiation pressure</td>
+</tr>
+<tr>
+<td>MASS</td>
+<td>A double value for the mass of the object</td>
+</tr>
+<tr>
+<td>CR_AREA_OVER_MASS</td>
+<td>A double value for the object's area-to-mass ratio</td>
+</tr>
+<tr>
+<td>THRUST_ACCELERATION</td>
+<td>A double value for the object's thrust acceleration</td>
+</tr>
+<tr>
+<td>SEDR</td>
+<td>A double value for the object's solar flux</td>
+</tr>
+<tr>
+<td>X</td>
+<td>A double value for the X-coordinate of the object's position in RTN coordinates</td>
+</tr>
+<tr>
+<td>Y</td>
+<td>A double value for the Y-coordinate of the object's position in RTN</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>A double value for the Z-coordinate of the object's position in RTN</td>
+</tr>
+<tr>
+<td>X_DOT</td>
+<td>A double value for the X-coordinate of the object's position in RTN coordinates</td>
+</tr>
+<tr>
+<td>Y_DOT</td>
+<td>A double value for the Y-coordinate of the object's position in RTN</td>
+</tr>
+<tr>
+<td>Z_DOT</td>
+<td>A double value for the Z-coordinate of the object's position in RTN</td>
+</tr>
+</tbody>
+</table>

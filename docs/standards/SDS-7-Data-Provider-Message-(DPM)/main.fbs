@@ -1,0 +1,50 @@
+table PERSON {
+  ID:string;
+  NAME:string;
+  ALTERNATE_NAME:string;
+  DESCRIPTION:string;
+  IMAGE:string;
+  SAME_AS:string;
+  URL:string;
+  TELEPHONE:string;
+  EMAIL:string;
+  CONTACT_POINT:CONTACT_POINT;
+  ADDRESS:POSTAL_ADDRESS;
+  JOB_TITLE:string;
+  WORKS_FOR:ORGANIZATION;
+}
+
+table CONTACT_POINT {
+  ID:string;
+  CONTACT_TYPE:string;
+  EMAIL:string;
+  TELEPHONE:string;
+  CONTACT_OPTION:string;
+  AREA_SERVED:string;
+  AVAILABLE_LANGUAGE:string;
+}
+
+table POSTAL_ADDRESS {
+  ID:string;
+  ADDRESS_COUNTRY:string;
+  ADDRESS_REGION:string;
+  ADDRESS_LOCALITY:string;
+  POSTAL_CODE:string;
+  STREET_ADDRESS:string;
+}
+
+table DPM {
+  ID:string;
+  NAME:string;
+  SAME_AS:string;
+  URL:string;
+  DESCRIPTION:string;
+  CONTACTS:[PERSON]
+}
+
+table DPMCOLLECTION {
+  RECORDS:[DPM];
+}
+
+root_type DPM;
+file_identifier "DPM";
