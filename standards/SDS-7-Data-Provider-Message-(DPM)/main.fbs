@@ -39,7 +39,7 @@ table DPM {
   SAME_AS:string;
   URL:string;
   DESCRIPTION:string;
-  CONTACTS:[PERSON]
+  CONTACTS:[PERSON];
 }
 
 table DPMCOLLECTION {
