@@ -1,10 +1,13 @@
 //@ts-ignore
 import { Writable, writable } from "svelte/store";
+import  languagesJSON from "./languages.mjs";
+export const languages = languagesJSON;
 
 export const currentEditorLanguage: Writable<number> = writable(0);
 export const currentEditorFile: Writable<string> = writable("");
 export const totalFiles: Writable<Array<string>> = writable([]);
-export let languages = [
+
+/*export let languages = [
     ["--cpp", "C++ header", "h", "include"],
     ["--java", "Java", "java", "java"],
     ["--kotlin", "Kotlin", "kt", "java"],
@@ -18,6 +21,6 @@ export let languages = [
     ["--lua", " Lua"],
     ["--lobster", " Lobster"],
     /*["--rust, -r ", " Rust"],*/
-    ["--swift", " Swift"]
+  //  ["--swift", " Swift"]
 
-];
+//];
