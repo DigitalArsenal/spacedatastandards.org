@@ -1,5 +1,5 @@
 table PERSON {
-  ID:string;
+  GUID:string;
   NAME:string;
   ALTERNATE_NAME:string;
   DESCRIPTION:string;
@@ -14,7 +14,7 @@ table PERSON {
 }
 
 table CONTACT_POINT {
-  ID:string;
+  GUID:string;
   CONTACT_TYPE:string;
   EMAIL:string;
   TELEPHONE:string;
@@ -24,7 +24,7 @@ table CONTACT_POINT {
 }
 
 table POSTAL_ADDRESS {
-  ID:string;
+  GUID:string;
   ADDRESS_COUNTRY:string;
   ADDRESS_REGION:string;
   ADDRESS_LOCALITY:string;
@@ -33,7 +33,7 @@ table POSTAL_ADDRESS {
 }
 
 table DPM {
-  ID:string;
+  GUID:string;
   NAME:string;
   SAME_AS:string;
   URL:string;

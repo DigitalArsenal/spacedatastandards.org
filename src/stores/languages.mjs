@@ -7,10 +7,10 @@ export default [
   ["--python", "Python", "py", "python", "text/x-script.python"],
   ["--jsonschema", "JSON Schema", "json", "json"],
   [["--ts", "--gen-object-api"], "TypeScript", "ts", "js", "text/javascript"],
-  ["--php", " PHP", "php", "php"],
-  ["--dart", " Dart"],
-  ["--lua", " Lua"],
-  ["--lobster", " Lobster"],
-  ["--rust, -r ", " Rust"],
-  ["--swift", " Swift"]
+  ["--php", "PHP", "php", "php"],
+  ["--dart", "Dart"],
+  ["--lua", "Lua"],
+  ["--lobster", "Lobster"],
+  [["--rust", "--gen-object-api"], "Rust"],
+  ["--swift", "Swift"]
 ]

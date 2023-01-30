@@ -8,9 +8,9 @@ import {
     readdirSync,
 } from "fs";
 import path, { basename, resolve } from "path";
-import { version } from "../package.json" assert { type: "json" };
+import packageJSON from "../package.json" assert { type: "json" };
 console.log(version);
-import { languages } from "../src/stores/editor.js";
+import languages from "../src/stores/languages.mjs";
 console.log((languages))
 /*
 
