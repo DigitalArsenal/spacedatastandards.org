@@ -1,15 +1,16 @@
 {
     "name": "spacedatastandards",
     "private": false,
-    "version": "0.0.2+1675110065585",
+    "version": "0.0.2+1677873256724",
     "type": "module",
     "license": "MIT",
     "scripts": {
         "dev": "vite",
         "build": "vite build && cp -R standards docs/standards && cp CNAME ./docs/CNAME && node ./scripts/convertMarkDown.mjs",
+        "build:libraries": "node ./scripts/buildSrcArchives.js",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "deploy": "npm run build && node ./scripts/updateVersion.mjs && git add -A && git commit -m 'deploy' && git push"
+        "deploy": "npm run build && node ./scripts/updateVersion.mjs &&  npm run build:libraries && git add -A && git commit -m 'deploy' && git push"
     },
     "devDependencies": {
         "@octokit/types": "^6.34.0",
@@ -38,7 +39,7 @@
         "codemirror-grammar-mode": "^0.1.10",
         "file-saver": "^2.0.5",
         "isomorphic-fetch": "^3.0.0",
-        "jszip": "^3.10.0",
+        "jszip": "^3.10.1",
         "localforage": "^1.10.0",
         "svelte-awesome": "^3.0.0",
         "svelte-spa-router": "^3.2.0"

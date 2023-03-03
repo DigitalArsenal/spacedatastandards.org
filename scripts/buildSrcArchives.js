@@ -6,22 +6,17 @@ import {
     rmSync,
     existsSync,
     readdirSync,
+    createWriteStream,
 } from "fs";
 import path, { basename, resolve } from "path";
 import packageJSON from "../package.json" assert { type: "json" };
-console.log(version);
 import languages from "../src/stores/languages.mjs";
-console.log((languages))
-/*
+import JSZip from "jszip";
 
+let folderObj = {};
 
-const databaseConfig = config.database.config[config.database.config.primary];
-
-let dataTypes = [["--jsonschema"], ["--ts", "--gen-object-api"]];
-const { standardsPath } = packageJSON;
-export const en = { encoding: "utf8" };
-let typeJSON = null;
-const getCode = async (_idl, classFolder) => {
+const getCode = async (_idl, languageArguments, langName, standard) => {
+    folderObj[langName][standard] = [];
     return new Promise((resolve, reject) => {
         flatc({
             noInitialRun: true,
@@ -32,122 +27,77 @@ const getCode = async (_idl, classFolder) => {
             m.FS.writeFile("/main.fbs", _idl);
 
             const runFile = (xx) => {
-                let args = xx;
-                if (!Array.isArray(xx)) {
-                    args = [xx];
-                }
-                args = [...args, "/main.fbs"];
+                let args = xx.slice(0, 1);
+
+                args = [...args.flat(), "/main.fbs"];
                 m.main(args);
                 let files = m.FS.readdir("/").filter((a) => {
                     return !~[".", "..", "tmp", "home", "dev", "proc"].indexOf(a);
                 });
                 for (let f = 0; f < files.length; f++) {
-                    if (~classFolder.indexOf("TypeGen")) {
-                        if (~files[f].indexOf("main.schema.json")) {
-                            typeJSON = JSON.parse(m.FS.readFile(files[f], en));
-                        }
-                    }
-                    writeFileSync(
-                        `${classFolder}/${files[f].replace("_generated", "")}`,
-                        m.FS.readFile(files[f], en)
-                    );
+                    let fileName = files[f].replace("_generated", "");
+                    folderObj[langName][standard][fileName] = m.FS.readFile(files[f], { encoding: "utf8" });
                 }
             };
-            runFile(dataTypes[0]);
-            runFile(dataTypes[1]);
+            runFile(languageArguments);
             resolve();
         });
     });
 };
 
-let standardsPackage = JSON.parse(
-    readFileSync(`./packages/spacedatastandards.org/package.json`, en)
-);
-console.log(
-    `Generating SpaceDataStandards version: ${standardsPackage.version}
-  `
-);
-let folders = readdirSync(`./packages/spacedatastandards.org/standards/`);
 
-const typeGenPath = resolve(standardsPath, "..", "TypeGen");
+let standards = readdirSync("./standards");
 
-if (existsSync(typeGenPath)) {
-    rmSync(typeGenPath, { recursive: true, force: true });
-}
-mkdirSync(typeGenPath);
+for (let s = 0; s < standards.length; s++) {
+    let standard = standards[s];
 
-let numTypes = [
-    "byte",
-    "int8",
-    "ubyte",
-    "uint8",
-    "bool", //8 bit
-    "short",
-    "int16",
-    "ushort",
-    "uint16", //16 bit
-    "int",
-    "int32",
-    "uint",
-    "uint32",
-    "float",
-    "float32", //32 bit
-    "long",
-    "int64",
-    "ulong",
-    "uint64",
-    "double",
-    "float64",
-    "string",
-]; //64 bit
-
-let _tIDL = `
-table TypeCheck {
-${numTypes.map((nT) => `  ${nT}:${nT}`).join(";\n")};
-}
-root_type TypeCheck;
-`;
-
-let generatePromises = [getCode(_tIDL, typeGenPath)];
-
-for (let f = 0; f < folders.length; f++) {
-    console.log(`Generating: ${folders[f]}`);
-    let folderName = folders[f];
     let _idl = readFileSync(
-        `./packages/spacedatastandards.org/standards/${folderName}/main.fbs`,
-        en
+        `./standards/${standard}/main.fbs`,
+        "utf8"
     );
-    let classFolder = `${standardsPath}/${folderName.match(/\((.*)\)/)[1]}`;
-    if (existsSync(classFolder)) {
-        rmSync(classFolder, { recursive: true, force: true });
+
+    for (let l = 0; l < languages.length; l++) {
+        const langName = languages[l][1].toLowerCase().replaceAll(" ", "_");
+        folderObj[langName] = folderObj[langName] || {};
+        await getCode(_idl, languages[l], langName, standard);
     }
-    mkdirSync(classFolder);
-    generatePromises.push(getCode(_idl, classFolder));
 }
 
-Promise.all(generatePromises).then(() => {
-    let _src = ``;
-    let _schemas = {};
-    for (let f = 0; f < folders.length; f++) {
-        let folderName = folders[f].match(/\((.*)\)/)[1];
-        let mainSchema = JSON.parse(
-            readFileSync(
-                `${packageJSON.standardsPath}/${folderName}/main.schema.json`,
-                en
-            )
-        );
-        _schemas[folderName] = mainSchema;
-        let mainExport = mainSchema.$ref.split("/").pop();
-
-        _src += `export * as ${mainExport} from "${packageJSON.standardsPath.replace(
-            "./",
-            "@/"
-        )}/${folderName}/main";\n`;
+for (let x in folderObj) {
+    const zip = new JSZip();
+    let folders = folderObj[x];
+    for (let folder in folders) {
+        let zipFolder = zip.folder(folder);
+        for (let file in folders[folder]) {
+            zipFolder.file(file, folders[folder][file])
+        }
     }
-    writeFileSync(
-        "./lib/standards/schemas.json",
-        JSON.stringify(_schemas, null, 4)
-    );
-    writeFileSync("./lib/standards/standards.ts", _src);
-});
+    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+        .pipe(createWriteStream(`./generatedCode/${x.replace("_header", "")}.${packageJSON.version}.zip`))
+        .on('finish', function () {
+            console.log(`Generated ${x}/.zip`);
+            resolve();
+        });
+}
+
+/*
+
+const zip = new JSZip();
+
+for (let f = 0; f < files.length; f++) {
+    let fileName = files[f].replace("_generated", "");
+
+    if (fileName.endsWith('.fbs')) {
+        zip.file(fileName, m.FS.readFile(files[f], en));
+    }
+}
+
+zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+    .pipe(writeFileSync(`./${languageArguments.lang}/${languageArguments.standard}.zip`))
+    .on('finish', function () {
+        console.log(`Generated ${languageArguments.lang}/${languageArguments.standard}.zip`);
+        resolve();
+    });
+
+
 */
