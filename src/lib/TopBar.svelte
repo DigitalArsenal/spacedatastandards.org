@@ -27,7 +27,6 @@
       CODE
     </a>
   </div>
-  <div class="text-sm">{@html title}</div>
   <div class="flex items-center justify-center">
     <a
       class="transition-all p-1 flex gap-2 pl-6 pr-2 items-center justify-start"
