@@ -73,31 +73,9 @@ for (let x in folderObj) {
         }
     }
     zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-        .pipe(createWriteStream(`./generatedCode/${x.replace("_header", "")}.${packageJSON.version}.zip`))
+        .pipe(createWriteStream(`./code/${x.replace("_header", "")}.${packageJSON.version}.zip`))
         .on('finish', function () {
             console.log(`Generated ${x}/.zip`);
             resolve();
         });
 }
-
-/*
-
-const zip = new JSZip();
-
-for (let f = 0; f < files.length; f++) {
-    let fileName = files[f].replace("_generated", "");
-
-    if (fileName.endsWith('.fbs')) {
-        zip.file(fileName, m.FS.readFile(files[f], en));
-    }
-}
-
-zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-    .pipe(writeFileSync(`./${languageArguments.lang}/${languageArguments.standard}.zip`))
-    .on('finish', function () {
-        console.log(`Generated ${languageArguments.lang}/${languageArguments.standard}.zip`);
-        resolve();
-    });
-
-
-*/
