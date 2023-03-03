@@ -9,7 +9,7 @@
   <main class="relative overflow-y-auto h-screen">
     <iframe
       class="w-full h-full"
-      src="http://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/" />
+      src="https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/" />
   </main>
   <footer />
 </div>
