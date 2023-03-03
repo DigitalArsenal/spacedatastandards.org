@@ -23,7 +23,7 @@
     <a
       class:underline={$location === "/Code"}
       class="flex gap-2 items-center justify-start"
-      href="#/Code">
+      href="https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/code">
       CODE
     </a>
   </div>
