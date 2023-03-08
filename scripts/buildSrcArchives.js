@@ -65,6 +65,7 @@ for (let s = 0; s < standards.length; s++) {
 
 for (let x in folderObj) {
     const zip = new JSZip();
+    zip.file("version.txt", packageJSON.version);
     let folders = folderObj[x];
     for (let folder in folders) {
         let zipFolder = zip.folder(folder);
@@ -73,7 +74,7 @@ for (let x in folderObj) {
         }
     }
     zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-        .pipe(createWriteStream(`./code/${x.replace("_header", "")}.${packageJSON.version}.zip`))
+        .pipe(createWriteStream(`./code/${x.replace("_header", "")}.zip`))
         .on('finish', function () {
             console.log(`Generated ${x}/.zip`);
             resolve();
