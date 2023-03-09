@@ -60,19 +60,19 @@ enum meanElementTheory : byte {
 }
 
 table MPE {  
-  ENTITY_ID:string;
-  USER_DEFINED_EPOCH_TIMESTAMP: double;
-  MEAN_MOTION:double;
-  ECCENTRICITY:double;
-  INCLINATION:double;
-  RA_OF_ASC_NODE:double;
-  ARG_OF_PERICENTER:double;
-  MEAN_ANOMALY:double;
-  BSTAR:double;
+  ENTITY_ID: string;
+  EPOCH: double;
+  MEAN_MOTION: double;
+  ECCENTRICITY: double;
+  INCLINATION: double;
+  RA_OF_ASC_NODE: double;
+  ARG_OF_PERICENTER: double;
+  MEAN_ANOMALY: double;
+  BSTAR: double;
 }
 
 table MPECOLLECTION {
-  CLASSIFICATION_TYPE:string;
+  CLASSIFICATION_TYPE: string;
   REF_FRAME:referenceFrame = TEME;
   REF_FRAME_EPOCH: double;
   TIME_SYSTEM:timeSystem = UTC;

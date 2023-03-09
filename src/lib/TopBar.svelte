@@ -2,7 +2,6 @@
   import { location } from "svelte-spa-router";
   import Icon from "svelte-awesome";
   import { github } from "svelte-awesome/icons";
-  export let title: string;
 </script>
 
 <div

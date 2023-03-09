@@ -1,6 +1,6 @@
 <h2 id="spacedatastandard6minimumpropagatableelementsetmpe">Space Data Standard - 6 - Minimum-Propagatable-Element-Set-(MPE)</h2>
 <h2 id="description">Description</h2>
-<p>Truncated version of the Orbit Mean-Elements Message (OMM).  Includes only the Mean Elements required to propagate an orbit.  Legacy format description can be found <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/tle/README.md">here</a>.  CCSDS Reference documentation: <a href="https://public.ccsds.org/Pubs/502x0b2c1e2.pdf">502x0b2c1e2</a>.</p>
+<p>Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit. Legacy format description can be found <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/tle/README.md">here</a>. CCSDS Reference documentation: <a href="https://public.ccsds.org/Pubs/502x0b2c1e2.pdf">502x0b2c1e2</a>.</p>
 <h2 id="format">Format</h2>
 <table>
 <thead>
@@ -15,7 +15,7 @@
 <td>Unique ID as a String</td>
 </tr>
 <tr>
-<td>USER_DEFINED_EPOCH_TIMESTAMP</td>
+<td>EPOCH</td>
 <td>Epoch of Mean Keplerian elements. (UNIX TimeStamp)</td>
 </tr>
 <tr>
@@ -31,11 +31,11 @@
 <td>Inclination</td>
 </tr>
 <tr>
-<td>RA_OF_ASC_NODE</td>
+<td>RA<em>OF</em>ASC_NODE</td>
 <td>Right ascension of ascending node</td>
 </tr>
 <tr>
-<td>ARG_OF_PERICENTER</td>
+<td>ARG<em>OF</em>PERICENTER</td>
 <td>Argument of pericenter</td>
 </tr>
 <tr>
@@ -66,7 +66,7 @@
 <td>Name of the reference frame (TEME, EME2000, etc.)</td>
 </tr>
 <tr>
-<td>REF_FRAME_EPOCH</td>
+<td>REF<em>FRAME</em>EPOCH</td>
 <td>Epoch of the Reference Frame. (UNIX TimeStamp)</td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@
 <td>Time system used for the orbit state and covariance matrix. (UTC)</td>
 </tr>
 <tr>
-<td>MEAN_ELEMENT_THEORY</td>
+<td>MEAN<em>ELEMENT</em>THEORY</td>
 <td>Description of the Mean Element Theory. (SGP4,DSST,USM)</td>
 </tr>
 </tbody>
