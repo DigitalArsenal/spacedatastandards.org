@@ -1,0 +1,63 @@
+<h2 id="spacedatastandard8conjunctionsummarymessagecsm">Space Data Standard - 8 - Conjunction Summary Message (CSM)</h2>
+<h2 id="description">Description</h2>
+<p>The Conjunction Summary Message (CSM) specifies a standard message format for use in exchanging spacecraft conjunction information between originators of Conjunction Assessments (CAs) and satellite owner/operators and other authorized parties, similar to a Conjunction Data Message. The message format is truncated to only include the minimum amount of data required to describe a conjunction event.</p>
+<h2 id="format">Format</h2>
+<h3 id="csm">CSM</h3>
+<table>
+<thead>
+<tr>
+<th>Predicate Name</th>
+<th style="text-align:left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OBJECT<em>ID</em>1</td>
+<td style="text-align:left;">NORAD Catalog Number for the first object. Note that this is the first of the two objects involved in the conjunction and not what might be considered the primary object.</td>
+</tr>
+<tr>
+<td>OBJECT<em>NAME</em>1</td>
+<td style="text-align:left;">Satellite name for the first object, extracted from the SATCAT. The operational status of the object is appended to the name, in brackets.</td>
+</tr>
+<tr>
+<td>DSE_1</td>
+<td style="text-align:left;">Days since epoch for the first object. This is the time in days from the epoch of the GP data used in the calculation to the calculated time of closest approach (TCA) and is an indication of how accurate the data might be at TCA.</td>
+</tr>
+<tr>
+<td>OBJECT<em>ID</em>2</td>
+<td style="text-align:left;">NORAD Catalog Number for the second object. Note that this is the second of the two objects involved in the conjunction and not what might be considered the secondary object.</td>
+</tr>
+<tr>
+<td>OBJECT<em>NAME</em>2</td>
+<td style="text-align:left;">Satellite name for the second object, extracted from the SATCAT. The operational status of the object is appended to the name, in brackets.</td>
+</tr>
+<tr>
+<td>DSE_2</td>
+<td style="text-align:left;">Days since epoch for the second object. This is the time in days from the epoch of the GP data used in the calculation to the calculated time of closest approach (TCA) and is an indication of how accurate the data might be at TCA.</td>
+</tr>
+<tr>
+<td>TCA</td>
+<td style="text-align:left;">Time of closest approach</td>
+</tr>
+<tr>
+<td>TCA_RANGE</td>
+<td style="text-align:left;">The distance or range between the two objects at TCA. Often referred to as the minimum range.</td>
+</tr>
+<tr>
+<td>TCA<em>RELATIVE</em>SPEED</td>
+<td style="text-align:left;">The magnitude of the relative velocity at TCA. This value provides an indication of the risk (specific kinetic energy) for the two objects if they collided.</td>
+</tr>
+<tr>
+<td>MIN_RANGE</td>
+<td style="text-align:left;">The distance between the two conjuncting objects at the time of closest approach in kilometers.</td>
+</tr>
+<tr>
+<td>MAX_PROB</td>
+<td style="text-align:left;">Given fixed spherical object radii and relative distance at the time of closest approach (TCA), the projected covariance ellipse is sized and oriented to produce the maximum probability. For these reports the ratio of major-to-minor axes of the projected covariance ellipse is set using radial, in-track, and cross-track values of 100 m, 300 m, 100 m, respectively. If the combined object radius is greater than the relative distance, the maximum probability will be one; such occurrences are not addressed here.method</td>
+</tr>
+<tr>
+<td>DILUTION</td>
+<td style="text-align:left;">The standard deviation that produces the maximum probability defines the threshold of dilution. A smaller or larger standard deviation will produce a smaller probability. In the case of computing true probability with a smaller standard deviation, the data is of sufficient quality to associate low probability with low risk. For a larger standard deviation, this is not the case and the resulting true probability calculation becomes "diluted." If operating in this dilution region, the recommendation is to obtain better data and reassess the encounter. If time or resources do not permit, then the maximum probability should be used in place of the true probability.</td>
+</tr>
+</tbody>
+</table>
