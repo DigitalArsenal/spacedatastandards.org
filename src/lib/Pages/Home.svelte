@@ -8,6 +8,7 @@
   </header>
   <main class="relative overflow-y-auto h-screen">
     <iframe
+      title="https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/"
       class="w-full h-full"
       src="https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/" />
   </main>
@@ -16,13 +17,4 @@
 
 <style lang="postcss">
   @tailwind base;
-  a {
-    @apply text-blue-700;
-  }
-  h2 {
-    @apply p-2 text-2xl  border-b-2;
-  }
-  p {
-    @apply m-2;
-  }
 </style>

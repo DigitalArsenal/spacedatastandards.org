@@ -3,7 +3,7 @@ import { Writable, writable, get } from "svelte/store";
 import { Octokit } from "@octokit/rest";
 import { PackageFile, Repository } from "@/classes/package_file";
 import { languages, currentEditorFile, currentEditorLanguage, totalFiles } from "./editor";
-import flatc from "@/external/flatc.mjs";
+import flatc from "../../packages/flatbuffers_wasm/dist/flatc.mjs";
 import localForage from "localforage";
 
 export let sTimeout = 1000 * 60 * 60 * 30;
