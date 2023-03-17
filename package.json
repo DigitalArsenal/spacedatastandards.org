@@ -1,7 +1,7 @@
 {
     "name": "spacedatastandards",
     "private": false,
-    "version": "23.3.3-0.1.0+1679083008146",
+    "version": "23.3.3-0.1.1+1679084152269",
     "type": "module",
     "license": "MIT",
     "scripts": {
@@ -10,7 +10,7 @@
         "build:libraries": "rm code/*.zip && node ./scripts/buildSrcArchives.js",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "deploy": "npm run build && node ./scripts/updateVersion.mjs &&  npm run build:libraries && git add -A && git commit -m 'deploy' && git push"
+        "deploy": "npm run build && node ./scripts/updateVersion.mjs &&  npm run build:libraries && git add -A && git commit -m 'deploy' && git push && git push origin --tags"
     },
     "devDependencies": {
         "@octokit/types": "^6.34.0",
