@@ -1,0 +1,3 @@
+[submodule "packages/flatbuffers_wasm"]
+	path = packages/flatbuffers_wasm
+	url = git@github.com:DigitalArsenal/flatbuffers_wasm.git
