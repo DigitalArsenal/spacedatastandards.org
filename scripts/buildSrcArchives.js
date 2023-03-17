@@ -12,6 +12,7 @@ import path, { basename, resolve } from "path";
 import packageJSON from "../package.json" assert { type: "json" };
 import languages from "../src/stores/languages.mjs";
 import JSZip from "jszip";
+import packageJSONFB from "../packages/flatbuffers_wasm/package.json" assert { type: "json" };
 
 let folderObj = {};
 
@@ -64,8 +65,12 @@ for (let s = 0; s < standards.length; s++) {
 }
 
 for (let x in folderObj) {
+
     const zip = new JSZip();
-    zip.file("version.txt", packageJSON.version);
+
+    zip.file("version.txt", `SDS VERSION: ${packageJSON.version}
+FLATBUFFERS VERSION: ${packageJSONFB.version}`);
+
     let folders = folderObj[x];
     for (let folder in folders) {
         let zipFolder = zip.folder(folder);
@@ -73,6 +78,7 @@ for (let x in folderObj) {
             zipFolder.file(file, folders[folder][file])
         }
     }
+
     zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
         .pipe(createWriteStream(`./code/${x.replace("_header", "")}.zip`))
         .on('finish', function () {
