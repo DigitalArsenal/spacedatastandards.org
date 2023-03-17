@@ -1,7 +1,7 @@
 {
     "name": "spacedatastandards",
     "private": false,
-    "version": "0.0.2+1679080674638",
+    "version": "23.3.3+1679082320247",
     "type": "module",
     "license": "MIT",
     "scripts": {

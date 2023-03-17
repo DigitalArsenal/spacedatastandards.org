@@ -68,8 +68,7 @@ for (let x in folderObj) {
 
     const zip = new JSZip();
 
-    zip.file("version.txt", `SDS VERSION: ${packageJSON.version}
-FLATBUFFERS VERSION: ${packageJSONFB.version}`);
+    zip.file("version.txt", `${packageJSON.version}`);
 
     let folders = folderObj[x];
     for (let folder in folders) {
