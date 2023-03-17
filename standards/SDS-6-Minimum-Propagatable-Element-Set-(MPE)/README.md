@@ -13,8 +13,8 @@ Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Me
 | MEAN_MOTION       | Semi-major axis in km or mean motion in rev/day           |
 | ECCENTRICITY      | Eccentricity                                              |
 | INCLINATION       | Inclination                                               |
-| RA_OF_ASC_NODE    | Right ascension of ascending node                         |
-| ARG_OF_PERICENTER | Argument of pericenter                                    |
+| RA\_OF\_ASC_NODE    | Right ascension of ascending node                         |
+| ARG\_OF\_PERICENTER | Argument of pericenter                                    |
 | MEAN_ANOMALY      | Mean anomaly                                              |
 | BSTAR             | SGP/SGP4 drag-like coefficient (in units 1/[Earth radii]) |
 
@@ -24,6 +24,6 @@ Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Me
 | ------------------- | ----------------------------------------------------------------- |
 | CLASSIFICATION_TYPE | Default value = U                                                 |
 | REF_FRAME           | Name of the reference frame (TEME, EME2000, etc.)                 |
-| REF_FRAME_EPOCH     | Epoch of the Reference Frame. (UNIX TimeStamp)                    |
+| REF\_FRAME\_EPOCH     | Epoch of the Reference Frame. (UNIX TimeStamp)                    |
 | TIME_SYSTEM         | Time system used for the orbit state and covariance matrix. (UTC) |
-| MEAN_ELEMENT_THEORY | Description of the Mean Element Theory. (SGP4,DSST,USM)           |
+| MEAN\_ELEMENT\_THEORY | Description of the Mean Element Theory. (SGP4,DSST,USM)           |
