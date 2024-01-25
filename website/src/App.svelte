@@ -31,10 +31,12 @@
       href="#/standards"
       class="hover:bg-blue-600 p-2 rounded"
       class:bg-blue-500={$currentPath === "/standards"}>Standards</a>
-    <a
-      href="#/form"
-      class="hover:bg-blue-600 p-2 rounded"
-      class:bg-blue-500={$currentPath === "/form"}>Test Form</a>
+    {#if window.location.host !== "spacedatastandards.org"}
+      <a
+        href="#/form"
+        class="hover:bg-blue-600 p-2 rounded"
+        class:bg-blue-500={$currentPath === "/form"}>Test Form</a>
+    {/if}
   </div>
   <div class="fixed top-12 left-0 text-black z-1 text-xs text-gray-600 pl-1">
     standards version: {packageJSON.version}
