@@ -6,7 +6,7 @@ Flatbuffers offer several advantages over traditional data serialization methods
 
 Website Link:
 
-[SpaceDataStandards.org](https://github.com/DigitalArsenal/spacedatastandards.org)
+[SpaceDataStandards.org](https://spacedatastandards.org)
 
 ## Repository Structure
 
