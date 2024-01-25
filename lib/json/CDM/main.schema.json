@@ -1,0 +1,516 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "referenceFrame" : {
+      "type" : "string",
+      "enum": ["EME2000", "GCRF", "ITRF"]
+    },
+    "objectCenteredReferenceFrame" : {
+      "type" : "string",
+      "enum": ["RTN", "TVN"]
+    },
+    "screeningVolumeShape" : {
+      "type" : "string",
+      "enum": ["ELLIPSOID", "BOX"]
+    },
+    "objectNumber" : {
+      "type" : "string",
+      "enum": ["OBJECT1", "OBJECT2"]
+    },
+    "objectType" : {
+      "type" : "string",
+      "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN", "OTHER"]
+    },
+    "covarianceMethod" : {
+      "type" : "string",
+      "enum": ["CALCULATED", "DEFAULT"]
+    },
+    "maneuverableType" : {
+      "type" : "string",
+      "enum": ["YES", "NO", "NA"]
+    },
+    "CDMObject" : {
+      "type" : "object",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "A comment"
+              },
+        "OBJECT" : {
+                "$ref" : "#/definitions/objectNumber",
+                "description" : "Object number"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Object designator"
+              },
+        "CATALOG_NAME" : {
+                "type" : "string",
+                "description" : "Catalog name"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Object name"
+              },
+        "INTERNATIONAL_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "International designator"
+              },
+        "OBJECT_TYPE" : {
+                "$ref" : "#/definitions/objectType",
+                "description" : "Object type"
+              },
+        "OPERATOR_CONTACT_POSITION" : {
+                "type" : "string",
+                "description" : "Operator contact position"
+              },
+        "OPERATOR_ORGANIZATION" : {
+                "type" : "string",
+                "description" : "Operator organization"
+              },
+        "EPHEMERIS_NAME" : {
+                "type" : "string",
+                "description" : "Ephemeris name"
+              },
+        "COVARIANCE_METHOD" : {
+                "$ref" : "#/definitions/covarianceMethod",
+                "description" : "Covariance method"
+              },
+        "MANEUVERABLE" : {
+                "$ref" : "#/definitions/maneuverableType",
+                "description" : "Maneuverable type"
+              },
+        "ORBIT_CENTER" : {
+                "type" : "string",
+                "description" : "Orbit center"
+              },
+        "REF_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame",
+                "description" : "Reference frame"
+              },
+        "GRAVITY_MODEL" : {
+                "type" : "string",
+                "description" : "Gravity model"
+              },
+        "ATMOSPHERIC_MODEL" : {
+                "type" : "string",
+                "description" : "Atmospheric model"
+              },
+        "N_BODY_PERTURBATIONS" : {
+                "type" : "string",
+                "description" : "N-body perturbations"
+              },
+        "SOLAR_RAD_PRESSURE" : {
+                "type" : "boolean",
+                "description" : "Solar radiation pressure"
+              },
+        "EARTH_TIDES" : {
+                "type" : "boolean",
+                "description" : "Earth tides"
+              },
+        "INTRACK_THRUST" : {
+                "type" : "boolean",
+                "description" : "Intrack thrust"
+              },
+        "TIME_LASTOB_START" : {
+                "type" : "string",
+                "description" : "Time of last observation start"
+              },
+        "TIME_LASTOB_END" : {
+                "type" : "string",
+                "description" : "Time of last observation end"
+              },
+        "RECOMMENDED_OD_SPAN" : {
+                "type" : "number",
+                "description" : "Recommended observation data span"
+              },
+        "ACTUAL_OD_SPAN" : {
+                "type" : "number",
+                "description" : "Actual observation data span"
+              },
+        "OBS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of observations available"
+              },
+        "OBS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of observations used"
+              },
+        "TRACKS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of tracks available"
+              },
+        "TRACKS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of tracks used"
+              },
+        "RESIDUALS_ACCEPTED" : {
+                "type" : "number",
+                "description" : "Residuals accepted"
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number",
+                "description" : "Weighted root mean square"
+              },
+        "AREA_PC" : {
+                "type" : "number",
+                "description" : "Area of the object"
+              },
+        "AREA_DRG" : {
+                "type" : "number",
+                "description" : "Area of the object drag"
+              },
+        "AREA_SRP" : {
+                "type" : "number",
+                "description" : "Area of the object solar radiation pressure"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Mass of the object"
+              },
+        "CR_AREA_OVER_MASS" : {
+                "type" : "number",
+                "description" : "Object's area-to-mass ratio"
+              },
+        "THRUST_ACCELERATION" : {
+                "type" : "number",
+                "description" : "Object's thrust acceleration"
+              },
+        "SEDR" : {
+                "type" : "number",
+                "description" : "Object's solar flux"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "X-coordinate of the object's position in RTN coordinates"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Y-coordinate of the object's position in RTN"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Z-coordinate of the object's position in RTN"
+              },
+        "X_DOT" : {
+                "type" : "number",
+                "description" : "X-coordinate of the object's position in RTN coordinates"
+              },
+        "Y_DOT" : {
+                "type" : "number",
+                "description" : "Y-coordinate of the object's position in RTN"
+              },
+        "Z_DOT" : {
+                "type" : "number",
+                "description" : "Z-coordinate of the object's position in RTN"
+              },
+        "CR_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CT_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CT_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CN_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CN_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CN_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CRDOT_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CRDOT_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CRDOT_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CRDOT_RDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTDOT_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTDOT_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTDOT_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTDOT_RDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTDOT_TDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CNDOT_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CNDOT_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CNDOT_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CNDOT_RDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CNDOT_TDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CNDOT_NDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_RDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_TDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_NDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CDRG_DRG" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_RDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_TDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_NDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_DRG" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CSRP_SRP" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_R" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_T" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_N" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_RDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_TDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_NDOT" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_DRG" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_SRP" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              },
+        "CTHR_THR" : {
+                "type" : "number",
+                "description" : "Covariance Matrix component"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CDM" : {
+      "type" : "object",
+      "properties" : {
+        "CCSDS_CDM_VERS" : {
+                "type" : "number",
+                "description" : "The version of the CCSDS CDM standard used"
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "The date the CDM message was created"
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "The originator of the CDM message"
+              },
+        "MESSAGE_FOR" : {
+                "type" : "string",
+                "description" : "The intended recipient of the CDM message"
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "A unique identifier for the CDM message"
+              },
+        "TCA" : {
+                "type" : "string",
+                "description" : "Time of closest approach"
+              },
+        "MISS_DISTANCE" : {
+                "type" : "number",
+                "description" : "The miss distance between the two objects"
+              },
+        "RELATIVE_SPEED" : {
+                "type" : "number",
+                "description" : "The relative speed between the two objects"
+              },
+        "RELATIVE_POSITION_R" : {
+                "type" : "number",
+                "description" : "The relative position R component"
+              },
+        "RELATIVE_POSITION_T" : {
+                "type" : "number",
+                "description" : "The relative position T component"
+              },
+        "RELATIVE_POSITION_N" : {
+                "type" : "number",
+                "description" : "The relative position N component"
+              },
+        "RELATIVE_VELOCITY_R" : {
+                "type" : "number",
+                "description" : "The relative velocity R component"
+              },
+        "RELATIVE_VELOCITY_T" : {
+                "type" : "number",
+                "description" : "The relative velocity T component"
+              },
+        "RELATIVE_VELOCITY_N" : {
+                "type" : "number",
+                "description" : "The relative velocity N component"
+              },
+        "START_SCREEN_PERIOD" : {
+                "type" : "string",
+                "description" : "The start time of the screening period"
+              },
+        "STOP_SCREEN_PERIOD" : {
+                "type" : "string",
+                "description" : "The end time of the screening period"
+              },
+        "SCREEN_VOLUME_FRAME" : {
+                "$ref" : "#/definitions/objectCenteredReferenceFrame",
+                "description" : "The reference frame for the screening volume"
+              },
+        "SCREEN_VOLUME_SHAPE" : {
+                "$ref" : "#/definitions/screeningVolumeShape",
+                "description" : "The shape of the screening volume"
+              },
+        "SCREEN_VOLUME_X" : {
+                "type" : "number",
+                "description" : "The X dimension of the screening volume"
+              },
+        "SCREEN_VOLUME_Y" : {
+                "type" : "number",
+                "description" : "The Y dimension of the screening volume"
+              },
+        "SCREEN_VOLUME_Z" : {
+                "type" : "number",
+                "description" : "The Z dimension of the screening volume"
+              },
+        "SCREEN_ENTRY_TIME" : {
+                "type" : "string",
+                "description" : "The time the objects entered the screening volume"
+              },
+        "SCREEN_EXIT_TIME" : {
+                "type" : "string",
+                "description" : "The time the objects exited the screening volume"
+              },
+        "COLLISION_PROBABILITY" : {
+                "type" : "number",
+                "description" : "The probability of collision between the two objects"
+              },
+        "COLLISION_PROBABILITY_METHOD" : {
+                "type" : "string",
+                "description" : "The method used to calculate the collision probability"
+              },
+        "OBJECT1" : {
+                "$ref" : "#/definitions/CDMObject",
+                "description" : "The first object in the CDM message"
+              },
+        "OBJECT2" : {
+                "$ref" : "#/definitions/CDMObject",
+                "description" : "The second object in the CDM message"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CDM"},
+                "description" : "A vector of CDM records"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CDM"
+}

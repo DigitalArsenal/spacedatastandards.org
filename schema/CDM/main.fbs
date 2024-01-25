@@ -262,8 +262,6 @@ table CDM {
   SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame;
   /// The shape of the screening volume
   SCREEN_VOLUME_SHAPE:screeningVolumeShape;
-  /// The shape of the screening volume
-  SCREEN_VOLUME_SHAPE:screeningVolumeShape;
   /// The X dimension of the screening volume
   SCREEN_VOLUME_X:double;
   /// The Y dimension of the screening volume
