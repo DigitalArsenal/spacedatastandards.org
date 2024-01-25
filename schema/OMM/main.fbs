@@ -1,0 +1,235 @@
+// Space Data Standard - 2 - Orbit Mean Elements Message (OMM)
+// Description
+// Orbit information may be exchanged between two participants by sending an orbital
+// state based on mean Keplerian elements for a specified epoch using an
+// Orbit Mean-Elements Message (OMM). The message recipient must use appropriate orbit
+// propagator algorithms in order to correctly propagate the OMM state to compute the orbit at
+// other desired epochs. 
+// Legacy format description can be found here.
+// CCSDS Reference documentation: 502x0b2c1e2.
+
+enum referenceFrame : byte {
+  /// Earth Mean Equator and Equinox of J2000
+  EME2000,
+  /// Geocentric Celestial Reference Frame
+  GCRF,
+  /// Greenwich Rotating Coordinates
+  GRC,
+  /// International Celestial Reference Frame
+  ICRF,
+  /// International Terrestrial Reference Frame 2000
+  ITRF2000,
+  /// International Terrestrial Reference Frame 1993
+  ITRF93, 
+  /// International Terrestrial Reference Frame 1997
+  ITRF97,
+  /// Mars Centered Inertial
+  MCI,
+  /// True of Date, Rotating
+  TDR,
+  /// True Equator Mean Equinox
+  TEME,
+  /// True of Date
+  TOD
+}
+
+enum ephemerisType : byte {
+  /// Simplified General Perturbation Model
+  SGP,
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Simplified Deep Space Perturbation Model 4
+  SDP4,
+  /// Simplified General Perturbation Model 8
+  SGP8,
+  /// Simplified Deep Space Perturbation Model 8
+  SDP8
+}
+
+enum timeSystem : byte {
+  /// Greenwich Mean Sidereal Time
+  GMST,
+  /// Global Positioning System
+  GPS,
+  /// Mission Elapsed Time
+  MET,
+  /// Mission Relative Time
+  MRT,
+  /// Spacecraft Clock (receiver)
+  SCLK,
+  /// International Atomic Time
+  TAI,
+  /// Barycentric Coordinate Time
+  TCB,
+  /// Barycentric Dynamical Time
+  TDB,
+  /// Geocentric Coordinate Time
+  TCG,
+  /// Terrestrial Time
+  TT,
+  /// Universal Time
+  UT1,
+  /// Coordinated Universal Time
+  UTC
+}
+
+enum meanElementTheory : byte {
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM
+}
+
+enum manCovRefFrame : byte {
+  /// Another name for 'Radial, Transverse, Normal'
+  RSW,
+  /// Radial, Transverse, Normal
+  RTN,
+  /// A local orbital coordinate frame
+  TNW
+}
+
+/// Orbit Mean Elements Message
+table OMM {
+  /// OMM Header
+  CCSDS_OMM_VERS:double;
+  /// Creation Date
+  CREATION_DATE:string;
+  /// Originator
+  ORIGINATOR:string;
+
+  /// OMM Metadata
+  /// Satellite Name(s)
+  OBJECT_NAME:string;
+  /// International Designator (YYYY-NNNAAA)
+  OBJECT_ID:string;
+  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+  CENTER_NAME:string;
+  /// Name of the reference frame (TEME, EME2000, etc.)
+  REF_FRAME:referenceFrame = TEME;
+  /// REF_FRAME_EPOCH
+  REF_FRAME_EPOCH:string;
+  /// Time system used for the orbit state and covariance matrix. (UTC)
+  TIME_SYSTEM:timeSystem = UTC;
+  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
+
+  /// Mean Keplerian Elements in the Specified Reference Frame
+  /// Plain-Text Comment
+  COMMENT:string;
+  /// Epoch of Mean Keplerian elements. (ISO 8601)
+  EPOCH:string;
+  /// Semi-major axis in km or mean motion in rev/day
+  SEMI_MAJOR_AXIS:double;
+  /// Mean motion
+  MEAN_MOTION:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Inclination
+  INCLINATION:double;
+  /// Right ascension of ascending node
+  RA_OF_ASC_NODE:double;
+  /// Argument of pericenter
+  ARG_OF_PERICENTER:double;
+  /// Mean anomaly
+  MEAN_ANOMALY:double;
+  /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+  GM:double;
+  
+  /// Spacecraft Parameters
+  /// S/C Mass
+  MASS:double;
+  /// Solar Radiation Pressure Area (AR) m**2
+  SOLAR_RAD_AREA:double;
+  /// Solar Radiation Pressure Coefficient (CR)
+  SOLAR_RAD_COEFF:double;
+  /// Drag Area (AD) m**2
+  DRAG_AREA:double;
+  /// Drag Coefficient (CD)
+  DRAG_COEFF:double;
+
+  /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// Default value = 0
+  EPHEMERIS_TYPE:ephemerisType = SGP4;
+  /// Default value = U
+  CLASSIFICATION_TYPE:string;
+  /// NORAD Catalog Number (Satellite Number) an integer
+  NORAD_CAT_ID:uint32;
+  /// Element set number for this satellite
+  ELEMENT_SET_NO:uint32;
+  /// Revolution Number
+  REV_AT_EPOCH:double;
+  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  BSTAR:double;
+  /// First Time Derivative of the Mean Motion
+  MEAN_MOTION_DOT:double;
+  /// Second Time Derivative of Mean Motion
+  MEAN_MOTION_DDOT:double;
+  
+  /// Position/Velocity Covariance Matrix
+  /// Reference frame for the covariance matrix
+  COV_REF_FRAME:manCovRefFrame = RSW;
+  /// Covariance matrix [1,1] km**2
+  CX_X:double;
+  /// Covariance matrix [2,1] km**2
+  CY_X:double;
+  /// Covariance matrix [2,2] km**2
+  CY_Y:double;
+  /// Covariance matrix [3,1] km**2
+  CZ_X:double;
+  /// Covariance matrix [3,2] km**2
+  CZ_Y:double;
+  /// Covariance matrix [3,3] km**2
+  CZ_Z:double;
+  /// Covariance matrix [4,1] km**2/s
+  CX_DOT_X:double;
+  /// Covariance matrix [4,2] km**2/s
+  CX_DOT_Y:double;
+  /// Covariance matrix [4,3] km**2/s
+  CX_DOT_Z:double;
+  /// Covariance matrix [4,4] km**2/s**2
+  CX_DOT_X_DOT:double;
+  /// Covariance matrix [5,1] km**2/s
+  CY_DOT_X:double;
+  /// Covariance matrix [5,2] km**2/s
+  CY_DOT_Y:double;
+  /// Covariance matrix [5,3] km**2/s
+  CY_DOT_Z:double;
+  /// Covariance matrix [5,4] km**2/s**2
+  CY_DOT_X_DOT:double;
+  /// Covariance matrix [5,5] km**2/s**2
+  CY_DOT_Y_DOT:double;
+  /// Covariance matrix [6,1] km**2/s
+  CZ_DOT_X:double;
+  /// Covariance matrix [6,2] km**2/s
+  CZ_DOT_Y:double;
+  /// Covariance matrix [6,3] km**2/s
+  CZ_DOT_Z:double;
+  /// Covariance matrix [6,4] km**2/s**2
+  CZ_DOT_X_DOT:double;
+  /// Covariance matrix [6,5] km**2/s**2
+  CZ_DOT_Y_DOT:double;
+  /// Covariance matrix [6,6] km**2/s**2
+  CZ_DOT_Z_DOT:double;
+
+  /// User defined parameter, must be described in an ICD
+  USER_DEFINED_BIP_0044_TYPE:uint;
+  /// User defined parameter, must be described in an ICD
+  USER_DEFINED_OBJECT_DESIGNATOR:string;
+  /// User defined parameter, must be described in an ICD
+  USER_DEFINED_EARTH_MODEL:string;
+  /// User defined parameter, must be described in an ICD
+  USER_DEFINED_EPOCH_TIMESTAMP: double;
+  /// User defined parameter, must be described in an ICD
+  USER_DEFINED_MICROSECONDS: double;
+}
+
+table OMMCOLLECTION {
+  /// Array of OMM records
+  RECORDS:[OMM];
+}
+
+root_type OMM;
+file_identifier "$OMM";

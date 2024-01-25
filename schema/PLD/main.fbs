@@ -1,0 +1,20 @@
+include "../IDM/main.fbs";
+
+/// Payload Information
+table PLD {
+  PAYLOAD_DURATION: string;
+  MASS_AT_LAUNCH: float;
+  DIMENSIONS: string;
+  SOLAR_ARRAY_AREA: float;
+  SOLAR_ARRAY_DIMENSIONS: string;
+  NOMINAL_OPERATIONAL_LIFETIME: string;
+  INSTRUMENTS: [IDM]; // Vector of Instrument Data Messages
+}
+
+// Collection of Payload Information Records
+table PLDCOLLECTION {
+  RECORDS: [PLD];
+}
+
+root_type PLD;
+file_identifier "$PLD";

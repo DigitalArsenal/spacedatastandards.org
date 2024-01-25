@@ -1,0 +1,260 @@
+{
+  "title": "Metadata for TestContentUpload",
+  "type": "object",
+  "properties": {
+    "DemoTerms": {
+      "type": "object",
+      "properties": {
+        "LabelTerm": {
+          "title": "LabelTerm",
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "RequiredTerm": {
+          "title": "RequiredTerm",
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "RecommendedTerm": {
+          "title": "RecommendedTerm",
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "Person": {
+          "title": "Person",
+          "type": "object",
+          "properties": {
+            "age": {
+              "title": "age",
+              "type": "integer",
+              "default": 32
+            },
+            "gender": {
+              "title": "gender",
+              "type": "object",
+              "anyOf": [
+                {
+                  "title": "other",
+                  "type": "object",
+                  "properties": {
+                    "other": {
+                      "title": "other",
+                      "type": "object",
+                      "properties": {
+                        "specify": {
+                          "title": "specify",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "title": "male",
+                  "type": "object",
+                  "properties": {
+                    "male": {
+                      "title": "male",
+                      "type": "object",
+                      "properties": {},
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "title": "female",
+                  "type": "object",
+                  "properties": {
+                    "female": {
+                      "title": "female",
+                      "type": "object",
+                      "properties": {},
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "pets": {
+              "title": "pets",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "anyOf": [
+                  {
+                    "title": "Dog",
+                    "type": "object",
+                    "properties": {
+                      "Dog": {
+                        "title": "Dog",
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "title": "name",
+                            "type": "string"
+                          },
+                          "breed": {
+                            "title": "breed",
+                            "type": "object",
+                            "anyOf": [
+                              {
+                                "title": "Golden Retriever",
+                                "type": "object",
+                                "properties": {
+                                  "Golden Retriever": {
+                                    "title": "Golden Retriever",
+                                    "type": "object",
+                                    "properties": {},
+                                    "required": [],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              {
+                                "title": "Border Collie",
+                                "type": "object",
+                                "properties": {
+                                  "Border Collie": {
+                                    "title": "Border Collie",
+                                    "type": "object",
+                                    "properties": {},
+                                    "required": [],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              {
+                                "title": "Other",
+                                "type": "object",
+                                "properties": {
+                                  "Other": {
+                                    "title": "Other",
+                                    "type": "object",
+                                    "properties": {},
+                                    "required": [],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        },
+                        "required": [],
+                        "additionalProperties": false
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "title": "Cat",
+                    "type": "object",
+                    "properties": {
+                      "Cat": {
+                        "title": "Cat",
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "title": "name",
+                            "type": "string"
+                          },
+                          "breed": {
+                            "title": "breed",
+                            "type": "object",
+                            "anyOf": [
+                              {
+                                "title": "Tabby",
+                                "type": "object",
+                                "properties": {
+                                  "Tabby": {
+                                    "title": "Tabby",
+                                    "type": "object",
+                                    "properties": {},
+                                    "required": [],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              {
+                                "title": "Other",
+                                "type": "object",
+                                "properties": {
+                                  "Other": {
+                                    "title": "Other",
+                                    "type": "object",
+                                    "properties": {},
+                                    "required": [],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        },
+                        "required": [],
+                        "additionalProperties": false
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ],
+                "default": {
+                  "Dog": {}
+                }
+              }
+            },
+            "isTall?": {
+              "title": "isTall?",
+              "type": "boolean",
+              "default": true
+            },
+            "name": {
+              "title": "name",
+              "type": "string",
+              "default": "Brian"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "ReqFields": {
+          "title": "ReqFields",
+          "type": "object",
+          "properties": {
+            "requiredField": {
+              "title": "requiredField",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "RequiredTerm"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "DemoTerms"
+  ]
+}

@@ -1,0 +1,266 @@
+
+/// Electro-Optical Observation
+table EOO {
+  
+  /// Unique identifier for Earth Observation Observation
+  EOBSERVATION_ID: string;
+
+  /// Classification marking of the data
+  CLASSIFICATION: string;
+
+  /// Observation time in UTC
+  OB_TIME: string;
+
+  /// Quality of the correlation
+  CORR_QUALITY: float;
+
+  /// Identifier for the satellite on orbit
+  ID_ON_ORBIT: string;
+
+  /// Identifier for the sensor
+  SENSOR_ID: string;
+
+  /// Method of data collection
+  COLLECT_METHOD: string;
+
+  /// NORAD catalog identifier for the satellite
+  NORAD_CAT_ID: int;
+
+  /// Identifier for the task
+  TASK_ID: string;
+
+  /// Identifier for the transaction
+  TRANSACTION_ID: string;
+
+  /// Identifier for the track
+  TRACK_ID: string;
+
+  /// Position of the observation
+  OB_POSITION: string;
+
+  /// Original object identifier
+  ORIG_OBJECT_ID: string;
+
+  /// Original sensor identifier
+  ORIG_SENSOR_ID: string;
+
+  /// Universal Coordinated Time flag
+  UCT: bool;
+
+  /// Azimuth angle
+  AZIMUTH: float;
+
+  /// Uncertainty in azimuth angle
+  AZIMUTH_UNC: float;
+  
+  /// Bias in azimuth angle
+  AZIMUTH_BIAS: float;
+
+  /// Rate of change in azimuth
+  AZIMUTH_RATE: float;
+
+  /// Elevation angle
+  ELEVATION: float;
+
+  /// Uncertainty in elevation angle
+  ELEVATION_UNC: float;
+
+  /// Bias in elevation angle
+  ELEVATION_BIAS: float;
+
+  /// Rate of change in elevation
+  ELEVATION_RATE: float;
+
+  /// Range to the target
+  RANGE: float;
+
+  /// Uncertainty in range
+  RANGE_UNC: float;
+
+  /// Bias in range measurement
+  RANGE_BIAS: float;
+
+  /// Rate of change in range
+  RANGE_RATE: float;
+
+  /// Uncertainty in range rate
+  RANGE_RATE_UNC: float;
+
+  /// Right ascension
+  RA: float;
+
+  /// Rate of change in right ascension
+  RA_RATE: float;
+
+  /// Uncertainty in right ascension
+  RA_UNC: float;
+
+  /// Bias in right ascension
+  RA_BIAS: float;
+
+  /// Declination angle
+  DECLINATION: float;
+
+  /// Rate of change in declination
+  DECLINATION_RATE: float;
+
+  /// Uncertainty in declination
+  DECLINATION_UNC: float;
+
+  /// Bias in declination
+  DECLINATION_BIAS: float;
+
+  /// X-component of line-of-sight vector
+  LOSX: float;
+
+  /// Y-component of line-of-sight vector
+  LOSY: float;
+
+  /// Z-component of line-of-sight vector
+  LOSZ: float;
+
+  /// Uncertainty in line-of-sight vector
+  LOS_UNC: float;
+
+  /// X-component of line-of-sight velocity
+  LOSXVEL: float;
+
+  /// Y-component of line-of-sight velocity
+  LOSYVEL: float;
+
+  /// Z-component of line-of-sight velocity
+  LOSZVEL: float;
+
+  /// Latitude of sensor
+  SENLAT: float;
+
+  /// Longitude of sensor
+  SENLON: float;
+
+  /// Altitude of sensor
+  SENALT: float;
+
+  /// X-coordinate of sensor position
+  SENX: float;
+
+  /// Y-coordinate of sensor position
+  SENY: float;
+
+  /// Z-coordinate of sensor position
+  SENZ: float;
+
+  /// Number of fields of view
+  FOV_COUNT: int;
+
+  /// Duration of the exposure
+  EXP_DURATION: float;
+
+  /// Zero-point displacement
+  ZEROPTD: float;
+
+  /// Net object signal
+  NET_OBJ_SIG: float;
+
+  /// Uncertainty in net object signal
+  NET_OBJ_SIG_UNC: float;
+
+  /// Magnitude of the observation
+  MAG: float;
+
+  /// Uncertainty in magnitude
+  MAG_UNC: float;
+
+  /// Normalized range for magnitude
+  MAG_NORM_RANGE: float;
+
+  /// Geocentric latitude
+  GEOLAT: float;
+
+  /// Geocentric longitude
+  GEOLON: float;
+
+  /// Geocentric altitude
+  GEOALT: float;
+
+  /// Geocentric range
+  GEORANGE: float;
+
+  /// Sky background level
+  SKY_BKGRND: float;
+
+  /// Primary extinction
+  PRIMARY_EXTINCTION: float;
+
+  /// Uncertainty in primary extinction
+  PRIMARY_EXTINCTION_UNC: float;
+
+  /// Solar phase angle
+  SOLAR_PHASE_ANGLE: float;
+
+  /// Solar equatorial phase angle
+  SOLAR_EQ_PHASE_ANGLE: float;
+
+  /// Solar declination angle
+  SOLAR_DEC_ANGLE: float;
+
+  /// Shutter delay
+  SHUTTER_DELAY: float;
+
+  /// Timing bias
+  TIMING_BIAS: float;
+
+  /// URI of the raw data file
+  RAW_FILE_URI: string;
+
+  /// Intensity of the observation
+  INTENSITY: float;
+
+  /// Background intensity
+  BG_INTENSITY: float;
+
+  /// Descriptor of the provided data
+  DESCRIPTOR: string;
+
+  /// Source of the data
+  SOURCE: string;
+
+  /// Origin of the data
+  ORIGIN: string;
+
+  /// Mode of the data
+  DATA_MODE: string;
+
+  /// Creation time of the record
+  CREATED_AT: string;
+
+  /// User who created the record
+  CREATED_BY: string;
+
+  /// Reference frame of the observation
+  REFERENCE_FRAME: string;
+
+  /// Reference frame of the sensor
+  SEN_REFERENCE_FRAME: string;
+
+  /// Flag for umbra (total eclipse)
+  UMBRA: bool;
+
+  /// Flag for penumbra (partial eclipse)
+  PENUMBRA: bool;
+
+  /// Original network identifier
+  ORIG_NETWORK: string;
+
+  /// Data link source
+  SOURCE_DL: string;
+
+  /// Type of the observation
+  TYPE: string;
+}
+
+table EOOCOLLECTION {
+  RECORDS: [EOO];
+}
+
+root_type EOO;
+file_identifier "$EOO";

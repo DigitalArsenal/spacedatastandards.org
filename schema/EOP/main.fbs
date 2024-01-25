@@ -1,0 +1,45 @@
+enum DataType: byte {
+  OBSERVED = 0,
+  PREDICTED = 1
+}
+
+/// Earth Orientation Parameters
+table EOP {
+  ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+  DATE: string;
+
+  ///  Modified Julian Date in UTC, e.g., 58119
+  MJD: uint;
+
+  ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+  X_POLE_WANDER_RADIANS: float;
+
+  ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+  Y_POLE_WANDER_RADIANS: float;
+
+  ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+  X_CELESTIAL_POLE_OFFSET_RADIANS: float;
+
+  ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+  Y_CELESTIAL_POLE_OFFSET_RADIANS: float;
+
+  ///  UT1 minus UTC in seconds, e.g., 0.2163567
+  UT1_MINUS_UTC_SECONDS: float;
+
+  ///  TAI minus UTC in seconds, e.g., 37
+  TAI_MINUS_UTC_SECONDS: ushort;
+
+  ///  Correction to Length of Day in seconds, e.g., 8.094E-4
+  LENGTH_OF_DAY_CORRECTION_SECONDS: float;
+   
+  ///  Data type (O = Observed, P = Predicted)
+  DATA_TYPE: DataType;
+}
+
+/// Collection of EOP records
+table EOPCOLLECTION {
+  RECORDS: [EOP];
+}
+
+root_type EOP;
+file_identifier "$EOP";

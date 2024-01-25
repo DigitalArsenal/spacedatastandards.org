@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EOO" : {
+      "type" : "object",
+      "description" : "Electro-Optical Observation",
+      "properties" : {
+        "EOBSERVATION_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for Earth Observation Observation"
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Classification marking of the data"
+              },
+        "OB_TIME" : {
+                "type" : "string",
+                "description" : "Observation time in UTC"
+              },
+        "CORR_QUALITY" : {
+                "type" : "number",
+                "description" : "Quality of the correlation"
+              },
+        "ID_ON_ORBIT" : {
+                "type" : "string",
+                "description" : "Identifier for the satellite on orbit"
+              },
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Identifier for the sensor"
+              },
+        "COLLECT_METHOD" : {
+                "type" : "string",
+                "description" : "Method of data collection"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NORAD catalog identifier for the satellite"
+              },
+        "TASK_ID" : {
+                "type" : "string",
+                "description" : "Identifier for the task"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "Identifier for the transaction"
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Identifier for the track"
+              },
+        "OB_POSITION" : {
+                "type" : "string",
+                "description" : "Position of the observation"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Original object identifier"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Original sensor identifier"
+              },
+        "UCT" : {
+                "type" : "boolean",
+                "description" : "Universal Coordinated Time flag"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth angle"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in azimuth angle"
+              },
+        "AZIMUTH_BIAS" : {
+                "type" : "number",
+                "description" : "Bias in azimuth angle"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change in azimuth"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation angle"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in elevation angle"
+              },
+        "ELEVATION_BIAS" : {
+                "type" : "number",
+                "description" : "Bias in elevation angle"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change in elevation"
+              },
+        "RANGE" : {
+                "type" : "number",
+                "description" : "Range to the target"
+              },
+        "RANGE_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in range"
+              },
+        "RANGE_BIAS" : {
+                "type" : "number",
+                "description" : "Bias in range measurement"
+              },
+        "RANGE_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change in range"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in range rate"
+              },
+        "RA" : {
+                "type" : "number",
+                "description" : "Right ascension"
+              },
+        "RA_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change in right ascension"
+              },
+        "RA_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in right ascension"
+              },
+        "RA_BIAS" : {
+                "type" : "number",
+                "description" : "Bias in right ascension"
+              },
+        "DECLINATION" : {
+                "type" : "number",
+                "description" : "Declination angle"
+              },
+        "DECLINATION_RATE" : {
+                "type" : "number",
+                "description" : "Rate of change in declination"
+              },
+        "DECLINATION_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in declination"
+              },
+        "DECLINATION_BIAS" : {
+                "type" : "number",
+                "description" : "Bias in declination"
+              },
+        "LOSX" : {
+                "type" : "number",
+                "description" : "X-component of line-of-sight vector"
+              },
+        "LOSY" : {
+                "type" : "number",
+                "description" : "Y-component of line-of-sight vector"
+              },
+        "LOSZ" : {
+                "type" : "number",
+                "description" : "Z-component of line-of-sight vector"
+              },
+        "LOS_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in line-of-sight vector"
+              },
+        "LOSXVEL" : {
+                "type" : "number",
+                "description" : "X-component of line-of-sight velocity"
+              },
+        "LOSYVEL" : {
+                "type" : "number",
+                "description" : "Y-component of line-of-sight velocity"
+              },
+        "LOSZVEL" : {
+                "type" : "number",
+                "description" : "Z-component of line-of-sight velocity"
+              },
+        "SENLAT" : {
+                "type" : "number",
+                "description" : "Latitude of sensor"
+              },
+        "SENLON" : {
+                "type" : "number",
+                "description" : "Longitude of sensor"
+              },
+        "SENALT" : {
+                "type" : "number",
+                "description" : "Altitude of sensor"
+              },
+        "SENX" : {
+                "type" : "number",
+                "description" : "X-coordinate of sensor position"
+              },
+        "SENY" : {
+                "type" : "number",
+                "description" : "Y-coordinate of sensor position"
+              },
+        "SENZ" : {
+                "type" : "number",
+                "description" : "Z-coordinate of sensor position"
+              },
+        "FOV_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of fields of view"
+              },
+        "EXP_DURATION" : {
+                "type" : "number",
+                "description" : "Duration of the exposure"
+              },
+        "ZEROPTD" : {
+                "type" : "number",
+                "description" : "Zero-point displacement"
+              },
+        "NET_OBJ_SIG" : {
+                "type" : "number",
+                "description" : "Net object signal"
+              },
+        "NET_OBJ_SIG_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in net object signal"
+              },
+        "MAG" : {
+                "type" : "number",
+                "description" : "Magnitude of the observation"
+              },
+        "MAG_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in magnitude"
+              },
+        "MAG_NORM_RANGE" : {
+                "type" : "number",
+                "description" : "Normalized range for magnitude"
+              },
+        "GEOLAT" : {
+                "type" : "number",
+                "description" : "Geocentric latitude"
+              },
+        "GEOLON" : {
+                "type" : "number",
+                "description" : "Geocentric longitude"
+              },
+        "GEOALT" : {
+                "type" : "number",
+                "description" : "Geocentric altitude"
+              },
+        "GEORANGE" : {
+                "type" : "number",
+                "description" : "Geocentric range"
+              },
+        "SKY_BKGRND" : {
+                "type" : "number",
+                "description" : "Sky background level"
+              },
+        "PRIMARY_EXTINCTION" : {
+                "type" : "number",
+                "description" : "Primary extinction"
+              },
+        "PRIMARY_EXTINCTION_UNC" : {
+                "type" : "number",
+                "description" : "Uncertainty in primary extinction"
+              },
+        "SOLAR_PHASE_ANGLE" : {
+                "type" : "number",
+                "description" : "Solar phase angle"
+              },
+        "SOLAR_EQ_PHASE_ANGLE" : {
+                "type" : "number",
+                "description" : "Solar equatorial phase angle"
+              },
+        "SOLAR_DEC_ANGLE" : {
+                "type" : "number",
+                "description" : "Solar declination angle"
+              },
+        "SHUTTER_DELAY" : {
+                "type" : "number",
+                "description" : "Shutter delay"
+              },
+        "TIMING_BIAS" : {
+                "type" : "number",
+                "description" : "Timing bias"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string",
+                "description" : "URI of the raw data file"
+              },
+        "INTENSITY" : {
+                "type" : "number",
+                "description" : "Intensity of the observation"
+              },
+        "BG_INTENSITY" : {
+                "type" : "number",
+                "description" : "Background intensity"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string",
+                "description" : "Descriptor of the provided data"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of the data"
+              },
+        "ORIGIN" : {
+                "type" : "string",
+                "description" : "Origin of the data"
+              },
+        "DATA_MODE" : {
+                "type" : "string",
+                "description" : "Mode of the data"
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "Creation time of the record"
+              },
+        "CREATED_BY" : {
+                "type" : "string",
+                "description" : "User who created the record"
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame of the observation"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame of the sensor"
+              },
+        "UMBRA" : {
+                "type" : "boolean",
+                "description" : "Flag for umbra (total eclipse)"
+              },
+        "PENUMBRA" : {
+                "type" : "boolean",
+                "description" : "Flag for penumbra (partial eclipse)"
+              },
+        "ORIG_NETWORK" : {
+                "type" : "string",
+                "description" : "Original network identifier"
+              },
+        "SOURCE_DL" : {
+                "type" : "string",
+                "description" : "Data link source"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type of the observation"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EOOCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOO"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EOO"
+}

@@ -1,0 +1,15 @@
+[
+  ["--cpp", "C++ header", "cpp", "include"],
+  ["--java", "Java", "java", "java"],
+  ["--kotlin", "Kotlin", "kt", "java"],
+  [["--csharp", "--gen-object-api"], "C#", "cs", "net"],
+  ["--go", "Go", "go", "go"],
+  [["--python", "--gen-object-api"], "Python", "py", "text/x-script.python"],
+  ["--jsonschema", "JSON Schema", "json", "json"],
+  [["--ts", "--gen-object-api"], "TypeScript", "ts", "text/javascript"],
+  ["--php", "PHP", "php", "php"],
+  ["--dart", "Dart", "dart", "dart"],
+  ["--lobster", "Lobster", "lob", "lob"],
+  [["--rust", "--gen-object-api"], "Rust", "rs", "rust"],
+  ["--swift", "Swift", "sw", "swift"]
+]

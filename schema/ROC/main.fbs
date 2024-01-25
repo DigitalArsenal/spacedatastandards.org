@@ -1,0 +1,78 @@
+/// Rocket Configuration
+table ROC {
+  /// Rocket Name
+  NAME: string;
+
+  /// Rocket Family
+  FAMILY: string;
+
+  /// Rocket Variant
+  VARIANT: string;
+
+  /// Stages in the Rocket
+  STAGES: [STAGE];
+
+  /// Sustainers in the Rocket
+  SUSTAINERS: [SUSTAINER];
+}
+
+/// Enumeration of Engine Types
+enum ENGINE_TYPE: byte {
+  LIQUID,
+  SOLID,
+  HYBRID,
+  ION,
+  NUCLEAR_THERMAL,
+  OTHER
+}
+
+/// Stage Details
+table STAGE {
+  /// Stage Number
+  STAGE_NUMBER: int;
+
+  /// Engines Used in This Stage
+  ENGINES: [ENGINE];
+
+  /// Fuel Type Used in This Stage
+  FUEL_TYPE: string;
+
+  /// Thrust Produced by This Stage (in Newtons)
+  THRUST: double;
+
+  /// Duration of the Burn (in Seconds)
+  BURN_DURATION: double;
+}
+
+/// Sustainer Details
+table SUSTAINER {
+  /// Name of the Sustainer
+  SUSTAINER_NAME: string;
+
+  /// Thrust Produced by the Sustainer (in Newtons)
+  THRUST: double;
+
+  /// Duration of the Burn (in Seconds)
+  BURN_DURATION: double;
+}
+
+/// Engine Details
+table ENGINE {
+  /// Engine Name
+  ENGINE_NAME: string;
+
+  /// Type of Engine
+  TYPE: ENGINE_TYPE;
+
+  /// Thrust Produced by the Engine (in Newtons)
+  THRUST: double;
+}
+
+/// Collection of Rocket Configurations
+table ROCCOLLECTION {
+  /// Records of Rocket Configurations
+  RECORDS: [ROC];
+}
+
+root_type ROC;
+file_identifier "$ROC";

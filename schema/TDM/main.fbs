@@ -1,0 +1,229 @@
+// Based on CCSDS 503.0-B-1 standard, November 2007
+
+enum OBSERVERLocationReferenceFrame: byte {
+  /// Earth Mean Equator and Equinox of J2000
+  EME2000,
+  ///  Geocentric Celestial Reference Frame
+  GCRF,
+  /// Greenwich Rotating Coordinates
+  GRC,
+  /// International Celestial Reference Frame
+  ICRF,
+  /// International Terrestrial Reference Frame 2000
+  ITRF2000,
+  /// International Terrestrial Reference Frame 1993
+  ITRF93, 
+  /// International Terrestrial Reference Frame 1997
+  ITRF97,
+  /// Mars Centered Inertial
+  MCI,
+  /// True of Date, Rotating
+  TDR,
+  /// True Equator Mean Equinox
+  TEME,
+  /// True of Date
+  TOD,
+  /// Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
+  VVLH,
+  /// Radial-Intrack-Crosstrack (RIC): A local orbital reference frame with the radial axis pointing away from the central body, the intrack axis in the direction of motion, and the crosstrack axis completing the right-handed system.
+  RIC,
+  /// Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
+  VLVH,
+   /// East-North-Up (ENU): A terrestrial reference frame where the X-axis points East, the Y-axis points North, and the Z-axis points Up (away from the center of the Earth).
+  ENU,
+  /// North-East-Down (NED): Similar to ENU, but with axes oriented Northward, Eastward, and Downward towards the Earth's center.
+  NED,
+  /// Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
+  LTP,
+  /// Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
+  LVLH,
+  /// Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
+  PNE,
+  /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
+  BRF
+}
+
+/// Tracking Data Message
+table TDM {
+
+  /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
+  OBSERVER_ID: string;
+
+  /// Cartesian X coordinate of the OBSERVER location in chosen reference frame
+  OBSERVER_X: double;
+
+  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+  OBSERVER_Y: double;
+
+  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+  OBSERVER_Z: double;
+
+  /// Cartesian X coordinate of the OBSERVER velocity in chosen reference frame
+  OBSERVER_VX: double;
+
+  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+  OBSERVER_VY: double;
+
+  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+  OBSERVER_VZ: double;
+  
+  /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
+  OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame;
+
+  /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
+  OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame;
+
+  /// Epoch or observation time -  CCSDS 503.0-B-1
+  EPOCH: string;
+
+  /// TDM version number -  CCSDS 503.0-B-1, Page D-9
+  CCSDS_TDM_VERS: string;
+
+  /// Comments regarding TDM -  various sections, e.g., Page D-9
+  COMMENT: [string];
+
+  /// Date of TDM creation -  CCSDS 503.0-B-1, Page D-9
+  CREATION_DATE: string;
+
+  /// Originator of the TDM -  CCSDS 503.0-B-1, Page D-9
+  ORIGINATOR: string;
+
+  /// Start of metadata section -  CCSDS 503.0-B-1, Page D-9
+  META_START: string;
+
+  /// Time system used -  CCSDS 503.0-B-1, Page D-9
+  TIME_SYSTEM: string;
+
+  /// Start time of the data -  CCSDS 503.0-B-1, Page D-9
+  START_TIME: string;
+
+  /// Stop time of the data -  CCSDS 503.0-B-1, Page D-9
+  STOP_TIME: string;
+
+  /// First participant in the TDM -  CCSDS 503.0-B-1, Page D-9
+  PARTICIPANT_1: string;
+
+  /// Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9
+  PARTICIPANT_2: string;
+
+  /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  PARTICIPANT_3: string;
+
+  /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
+  MODE: string;
+
+  /// First path in TDM -  CCSDS 503.0-B-1, Page D-9
+  PATH_1: ushort;
+
+  /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  PATH_2: ushort;
+
+  /// Transmit band -  CCSDS 503.0-B-1, Page D-9
+  TRANSMIT_BAND: string;
+
+  /// Receive band -  CCSDS 503.0-B-1, Page D-9
+  RECEIVE_BAND: string;
+
+  /// Integration interval -  CCSDS 503.0-B-1, Page D-9
+  INTEGRATION_INTERVAL: float;
+
+  /// Integration reference -  CCSDS 503.0-B-1, Page D-9
+  INTEGRATION_REF: string;
+
+  /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
+  RECEIVE_DELAY_2: double;
+
+  /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
+  RECEIVE_DELAY_3: double;
+
+  /// Data quality -  CCSDS 503.0-B-1, Page D-9
+  DATA_QUALITY: string;
+
+  /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
+  META_STOP: string;
+
+  /// Start of data section -  CCSDS 503.0-B-1, Page D-9
+  DATA_START: string;
+
+  /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
+  TRANSMIT_FREQ_1: double;
+
+  /// Receive frequency -  CCSDS 503.0-B-1, Page D-9
+  RECEIVE_FREQ: [double];
+
+  /// End of data section -  CCSDS 503.0-B-1, Page D-9
+  DATA_STOP: string;
+
+  /// Additional properties as required by the specific application of the TDM...
+  /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
+  TIMETAG_REF: string;
+
+  /// Type of angle data -  CCSDS 503.0-B-1, Page D-12
+  /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
+  ANGLE_TYPE: string;
+
+  /// First angle value -  CCSDS 503.0-B-1, Page D-12
+  ANGLE_1: [float];
+
+  /// Second angle value -  CCSDS 503.0-B-1, Page D-12
+  ANGLE_2: [float];
+
+  /// Uncertainty of first angle -  CCSDS 503.0-B-1
+  ANGLE_UNCERTAINTY_1: float;
+
+  /// Uncertainty of second angle -  CCSDS 503.0-B-1
+  ANGLE_UNCERTAINTY_2: float;
+
+  /// Rate of change of range -  CCSDS 503.0-B-1
+  RANGE_RATE: double;
+
+  /// Uncertainty in range -  CCSDS 503.0-B-1
+  RANGE_UNCERTAINTY: double;
+
+  /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
+  RANGE_MODE: string;
+
+  /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
+  RANGE_MODULUS: double;
+
+  /// First correction angle -  CCSDS 503.0-B-1, Page D-12
+  CORRECTION_ANGLE_1: float;
+
+  /// Second correction angle -  CCSDS 503.0-B-1, Page D-12
+  CORRECTION_ANGLE_2: float;
+
+  /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
+  CORRECTIONS_APPLIED: string;
+
+  /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
+  TROPO_DRY: [double];
+
+  /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
+  TROPO_WET: [double];
+
+  /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13
+  STEC: [double];
+
+  /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
+  PRESSURE: [double];
+
+  /// Relative humidity -  CCSDS 503.0-B-1, Page D-14
+  RHUMIDITY: [double];
+
+  /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14
+  TEMPERATURE: [double];
+
+  /// Clock bias values -  CCSDS 503.0-B-1, Page D-15
+  CLOCK_BIAS: [double];
+
+  /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
+  CLOCK_DRIFT: [double];
+}
+
+/// Collection of TDM records
+table TDMCOLLECTION {
+  RECORDS: [TDM];
+}
+
+root_type TDM;
+file_identifier "$TDM";

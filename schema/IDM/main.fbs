@@ -1,0 +1,247 @@
+/// Different types of polarization in EMT
+enum PolarizationType: byte {
+  linear,
+  circular,
+  elliptical,
+  unpolarized
+}
+
+/// Simple polarization types
+enum SimplePolarization: byte {
+  vertical,
+  horizontal,
+  leftHandCircular,
+  rightHandCircular
+}
+
+/// Frequency range with lower and upper limits
+table FrequencyRange {
+  /// Lower frequency in MHz
+  LOWER: double;
+  /// Upper frequency in MHz
+  UPPER: double;
+}
+
+/// Stokes parameters, representing different aspects of polarization
+table StokesParameters {
+  /// Intensity
+  I: double;
+  /// Linear polarization
+  Q: double;
+  /// Another linear polarization, orthogonal to Q
+  U: double;
+  /// Circular polarization
+  V: double;
+}
+
+/// Table representing a frequency band with a name and frequency range
+table Band {
+  /// Name of the band
+  NAME: string;
+  /// Frequency range of the band
+  FREQUENCY_RANGE: FrequencyRange;
+}
+
+/// Enum for the mode of data (real, simulated, synthetic)
+enum DataMode: byte {
+  REAL,
+  SIMULATED,
+  SYNTHETIC
+}
+
+enum DeviceType: byte {
+  
+  // Basic and General Sensors
+  
+  /// Basic or undefined sensor type
+  UNKNOWN,
+  /// General optical sensors
+  OPTICAL,
+
+  // Electromagnetic Spectrum Sensors
+
+  /// Detects infrared radiation
+  INFRARED_SENSOR,
+  /// Sensitive to ultraviolet light
+  ULTRAVIOLET_SENSOR,
+  /// For X-ray detection
+  X_RAY_SENSOR,
+  /// For gamma-ray detection
+  GAMMA_RAY_SENSOR,
+
+  // Radar and Radio Telescopes
+
+  /// Basic radar systems
+  RADAR,
+  /// Advanced radar with phased array technology
+  PHASED_ARRAY_RADAR,
+  /// For high-resolution imaging
+  SYNTHETIC_APERTURE_RADAR,
+  /// For astronomical observations using bistatic setup
+  BISTATIC_RADIO_TELESCOPE,
+  /// For radio astronomy
+  RADIO_TELESCOPE,
+
+  // Environmental and Atmospheric Sensors
+
+  /// For atmospheric studies
+  ATMOSPHERIC_SENSOR,
+  /// For observing space weather phenomena
+  SPACE_WEATHER_SENSOR,
+  /// General environmental monitoring
+  ENVIRONMENTAL_SENSOR,
+
+  // Specialized Scientific Sensors
+
+  /// For measuring seismic activities
+  SEISMIC_SENSOR,
+  /// For gravity measurements
+  GRAVIMETRIC_SENSOR,
+  /// For magnetic field detection
+  MAGNETIC_SENSOR,
+  /// For electromagnetic field analysis
+  ELECTROMAGNETIC_SENSOR,
+  /// For temperature and heat detection
+  THERMAL_SENSOR,
+  /// For detecting chemicals and substances
+  CHEMICAL_SENSOR,
+  /// For biological research and detection
+  BIOLOGICAL_SENSOR,
+  /// For detecting ionizing radiation
+  RADIATION_SENSOR,
+  /// For detecting subatomic particles
+  PARTICLE_DETECTOR,
+
+  // Advanced Optical and Imaging Sensors
+
+  /// Light Detection and Ranging
+  LIDAR,
+  /// Sound Navigation and Ranging
+  SONAR,
+  /// General telescopes for astronomical observations
+  TELESCOPE,
+  /// For spectral analysis
+  SPECTROSCOPIC_SENSOR,
+  /// For measuring light intensity
+  PHOTOMETRIC_SENSOR,
+  /// For analyzing polarization of light
+  POLARIMETRIC_SENSOR,
+  /// For detailed imaging using interference
+  INTERFEROMETRIC_SENSOR,
+  /// Capturing image data at multiple wavelengths
+  MULTISPECTRAL_SENSOR,
+  /// Advanced imaging across many spectral bands
+  HYPERSPECTRAL_SENSOR,
+
+  // Positioning and Tracking Sensors
+
+  /// For Global Positioning System reception
+  GPS_RECEIVER,
+
+  // Communication Devices
+
+  /// Standard radio communication device
+  RADIO_COMMUNICATIONS,
+  /// Advanced laser communication system
+  LASER_COMMUNICATIONS,
+  /// Satellite communication system
+  SATELLITE_COMMUNICATIONS,
+
+  // Specialized Scientific Instruments
+
+  /// Device for laser-based experiments and measurements
+  LASER_INSTRUMENT,
+  /// Radio frequency analysis and measurement device
+  RF_ANALYZER,
+  /// Device for ionospheric research
+  IONOSPHERIC_SENSOR,
+
+  // Optical Devices
+
+  /// Device for laser-based imaging
+  LASER_IMAGING,
+  /// Advanced optical telescope
+  OPTICAL_TELESCOPE,
+  /// Device for high-resolution optical observations
+  HIGH_RESOLUTION_OPTICAL,
+
+  // Radio and Microwave Devices
+
+  RADIO,
+  /// Microwave communication device
+  MICROWAVE_TRANSMITTER,
+  /// Device for radio frequency monitoring
+  RF_MONITOR,
+  /// High-frequency radio communication device
+  HF_RADIO_COMMUNICATIONS,
+}
+
+/// Integrated Device Message
+table IDM {
+  /// Unique identifier for the EMT
+  ID: string;
+  /// Name of the EMT
+  NAME: string;
+  /// Mode of the data (real, simulated, synthetic)
+  DATA_MODE: DataMode;
+  /// Uplink frequency range
+  UPLINK: FrequencyRange;
+  /// Downlink frequency range
+  DOWNLINK: FrequencyRange;
+  /// Beacon frequency range
+  BEACON: FrequencyRange;
+  /// Bands associated with the EMT
+  BAND: [Band];
+  /// Type of polarization used
+  POLARIZATION_TYPE: PolarizationType;
+  /// Simple polarization configuration
+  SIMPLE_POLARIZATION: SimplePolarization;
+  /// Stokes parameters for polarization characterization
+  STOKES_PARAMETERS: StokesParameters;
+  /// Power required in Watts
+  POWER_REQUIRED: double;
+  /// Type of power (eg. AC or DC)
+  POWER_TYPE: string;
+  /// Indicates if the EMT can transmit
+  TRANSMIT: bool;
+  /// Indicates if the EMT can receive
+  RECEIVE: bool;
+  /// Type of the sensor
+  SENSOR_TYPE: DeviceType;
+  /// Source of the data
+  SOURCE: string;
+  /// Timestamp of the last observation
+  LAST_OB_TIME: string;
+  /// Lower left elevation limit
+  LOWER_LEFT_ELEVATION_LIMIT: double;
+  /// Upper left azimuth limit
+  UPPER_LEFT_AZIMUTH_LIMIT: double;
+  /// Lower right elevation limit
+  LOWER_RIGHT_ELEVATION_LIMIT: double;
+  /// Lower left azimuth limit
+  LOWER_LEFT_AZIMUTH_LIMIT: double;
+  /// Upper right elevation limit
+  UPPER_RIGHT_ELEVATION_LIMIT: double;
+  /// Upper right azimuth limit
+  UPPER_RIGHT_AZIMUTH_LIMIT: double;
+  /// Lower right azimuth limit
+  LOWER_RIGHT_AZIMUTH_LIMIT: double;
+  /// Upper left elevation limit
+  UPPER_LEFT_ELEVATION_LIMIT: double;
+  /// Right geostationary belt limit
+  RIGHT_GEO_BELT_LIMIT: double;
+  /// Left geostationary belt limit
+  LEFT_GEO_BELT_LIMIT: double;
+  /// Magnitude limit of the sensor
+  MAGNITUDE_LIMIT: double;
+  /// Indicates if the site is taskable
+  TASKABLE: bool;
+}
+
+/// Collection of IDM records
+table IDMCOLLECTION {
+  RECORDS: [IDM];
+}
+
+root_type IDM;
+file_identifier "$IDM";

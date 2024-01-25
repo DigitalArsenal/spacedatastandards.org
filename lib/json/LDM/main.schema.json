@@ -1,0 +1,940 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PolarizationType" : {
+      "type" : "string",
+      "enum": ["linear", "circular", "elliptical", "unpolarized"]
+    },
+    "SimplePolarization" : {
+      "type" : "string",
+      "enum": ["vertical", "horizontal", "leftHandCircular", "rightHandCircular"]
+    },
+    "DataMode" : {
+      "type" : "string",
+      "enum": ["REAL", "SIMULATED", "SYNTHETIC"]
+    },
+    "DeviceType" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "OPTICAL", "INFRARED_SENSOR", "ULTRAVIOLET_SENSOR", "X_RAY_SENSOR", "GAMMA_RAY_SENSOR", "RADAR", "PHASED_ARRAY_RADAR", "SYNTHETIC_APERTURE_RADAR", "BISTATIC_RADIO_TELESCOPE", "RADIO_TELESCOPE", "ATMOSPHERIC_SENSOR", "SPACE_WEATHER_SENSOR", "ENVIRONMENTAL_SENSOR", "SEISMIC_SENSOR", "GRAVIMETRIC_SENSOR", "MAGNETIC_SENSOR", "ELECTROMAGNETIC_SENSOR", "THERMAL_SENSOR", "CHEMICAL_SENSOR", "BIOLOGICAL_SENSOR", "RADIATION_SENSOR", "PARTICLE_DETECTOR", "LIDAR", "SONAR", "TELESCOPE", "SPECTROSCOPIC_SENSOR", "PHOTOMETRIC_SENSOR", "POLARIMETRIC_SENSOR", "INTERFEROMETRIC_SENSOR", "MULTISPECTRAL_SENSOR", "HYPERSPECTRAL_SENSOR", "GPS_RECEIVER", "RADIO_COMMUNICATIONS", "LASER_COMMUNICATIONS", "SATELLITE_COMMUNICATIONS", "LASER_INSTRUMENT", "RF_ANALYZER", "IONOSPHERIC_SENSOR", "LASER_IMAGING", "OPTICAL_TELESCOPE", "HIGH_RESOLUTION_OPTICAL", "RADIO", "MICROWAVE_TRANSMITTER", "RF_MONITOR", "HF_RADIO_COMMUNICATIONS"]
+    },
+    "SiteType" : {
+      "type" : "string",
+      "enum": ["LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER"]
+    },
+    "objectType" : {
+      "type" : "string",
+      "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN"]
+    },
+    "opsStatusCode" : {
+      "type" : "string",
+      "enum": ["OPERATIONAL", "NONOPERATIONAL", "PARTIALLY_OPERATIONAL", "BACKUP_STANDBY", "SPARE", "EXTENDED_MISSION", "DECAYED", "UNKNOWN"]
+    },
+    "dataStatusCode" : {
+      "type" : "string",
+      "enum": ["NO_CURRENT_ELEMENTS", "NO_INITIAL_ELEMENTS", "NO_ELEMENTS_AVAILABLE", "OK"]
+    },
+    "orbitType" : {
+      "type" : "string",
+      "enum": ["ORBIT", "LANDING", "IMPACT", "DOCKED", "ROUNDTRIP"]
+    },
+    "massType" : {
+      "type" : "string",
+      "enum": ["DRY", "WET"]
+    },
+    "ENGINE_TYPE" : {
+      "type" : "string",
+      "enum": ["LIQUID", "SOLID", "HYBRID", "ION", "NUCLEAR_THERMAL", "OTHER"]
+    },
+    "FrequencyRange" : {
+      "type" : "object",
+      "description" : "Frequency range with lower and upper limits",
+      "properties" : {
+        "LOWER" : {
+                "type" : "number",
+                "description" : "Lower frequency in MHz"
+              },
+        "UPPER" : {
+                "type" : "number",
+                "description" : "Upper frequency in MHz"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StokesParameters" : {
+      "type" : "object",
+      "description" : "Stokes parameters, representing different aspects of polarization",
+      "properties" : {
+        "I" : {
+                "type" : "number",
+                "description" : "Intensity"
+              },
+        "Q" : {
+                "type" : "number",
+                "description" : "Linear polarization"
+              },
+        "U" : {
+                "type" : "number",
+                "description" : "Another linear polarization, orthogonal to Q"
+              },
+        "V" : {
+                "type" : "number",
+                "description" : "Circular polarization"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Band" : {
+      "type" : "object",
+      "description" : "Table representing a frequency band with a name and frequency range",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the band"
+              },
+        "FREQUENCY_RANGE" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Frequency range of the band"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IDM" : {
+      "type" : "object",
+      "description" : "Integrated Device Message",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the EMT"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the EMT"
+              },
+        "DATA_MODE" : {
+                "$ref" : "#/definitions/DataMode",
+                "description" : "Mode of the data (real, simulated, synthetic)"
+              },
+        "UPLINK" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Uplink frequency range"
+              },
+        "DOWNLINK" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Downlink frequency range"
+              },
+        "BEACON" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Beacon frequency range"
+              },
+        "BAND" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Band"},
+                "description" : "Bands associated with the EMT"
+              },
+        "POLARIZATION_TYPE" : {
+                "$ref" : "#/definitions/PolarizationType",
+                "description" : "Type of polarization used"
+              },
+        "SIMPLE_POLARIZATION" : {
+                "$ref" : "#/definitions/SimplePolarization",
+                "description" : "Simple polarization configuration"
+              },
+        "STOKES_PARAMETERS" : {
+                "$ref" : "#/definitions/StokesParameters",
+                "description" : "Stokes parameters for polarization characterization"
+              },
+        "POWER_REQUIRED" : {
+                "type" : "number",
+                "description" : "Power required in Watts"
+              },
+        "POWER_TYPE" : {
+                "type" : "string",
+                "description" : "Type of power (eg. AC or DC)"
+              },
+        "TRANSMIT" : {
+                "type" : "boolean",
+                "description" : "Indicates if the EMT can transmit"
+              },
+        "RECEIVE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the EMT can receive"
+              },
+        "SENSOR_TYPE" : {
+                "$ref" : "#/definitions/DeviceType",
+                "description" : "Type of the sensor"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of the data"
+              },
+        "LAST_OB_TIME" : {
+                "type" : "string",
+                "description" : "Timestamp of the last observation"
+              },
+        "LOWER_LEFT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower left elevation limit"
+              },
+        "UPPER_LEFT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper left azimuth limit"
+              },
+        "LOWER_RIGHT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower right elevation limit"
+              },
+        "LOWER_LEFT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower left azimuth limit"
+              },
+        "UPPER_RIGHT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper right elevation limit"
+              },
+        "UPPER_RIGHT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper right azimuth limit"
+              },
+        "LOWER_RIGHT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower right azimuth limit"
+              },
+        "UPPER_LEFT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper left elevation limit"
+              },
+        "RIGHT_GEO_BELT_LIMIT" : {
+                "type" : "number",
+                "description" : "Right geostationary belt limit"
+              },
+        "LEFT_GEO_BELT_LIMIT" : {
+                "type" : "number",
+                "description" : "Left geostationary belt limit"
+              },
+        "MAGNITUDE_LIMIT" : {
+                "type" : "number",
+                "description" : "Magnitude limit of the sensor"
+              },
+        "TASKABLE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the site is taskable"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IDMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of IDM records",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Geometry" : {
+      "type" : "object",
+      "description" : "Geometry table with information about geometric properties",
+      "properties" : {
+        "GEOMETRY_TYPE" : {
+                "type" : "string",
+                "description" : "Type of geometry"
+              },
+        "COORDINATES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coordinates of the geometry"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SIT" : {
+      "type" : "object",
+      "description" : "Site Information Message",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the site, BE_NUMBER"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the site"
+              },
+        "ABBREVIATION" : {
+                "type" : "string",
+                "description" : "Abbreviation"
+              },
+        "SITE_TYPE" : {
+                "$ref" : "#/definitions/SiteType",
+                "description" : "Site type as defined in SiteType enum"
+              },
+        "CATCODE" : {
+                "type" : "string",
+                "description" : "Site type CATCODE"
+              },
+        "NETWORK" : {
+                "type" : "string",
+                "description" : "Network identifier"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude of the site"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude of the site"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude of the site"
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/Geometry",
+                "description" : "Geometry of the site"
+              },
+        "CENTER_POINT_GEOMETRY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Center point geometry coordinates"
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Classification marking of the site"
+              },
+        "CTR_ID" : {
+                "type" : "string",
+                "description" : "CTR ISO 3166 Numeric code as string"
+              },
+        "CREATED_BY" : {
+                "type" : "string",
+                "description" : "Identifier of the user who created the site data"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description of the site"
+              },
+        "MODEL_URL" : {
+                "type" : "string",
+                "description" : "URL for the 3D model of the site"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of the site data"
+              },
+        "TASKABLE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the site is taskable"
+              },
+        "OPERATIONAL_STATUS" : {
+                "type" : "string",
+                "description" : "Operational status of the site (e.g., active, inactive, under construction)"
+              },
+        "ESTABLISHMENT_DATE" : {
+                "type" : "string",
+                "description" : "Date of establishment"
+              },
+        "CONTACT_INFO" : {
+                "type" : "string",
+                "description" : "Contact information for the site"
+              },
+        "ENVIRONMENTAL_IMPACT" : {
+                "type" : "string",
+                "description" : "Environmental impact or considerations"
+              },
+        "ACCESSIBILITY_INFRA" : {
+                "type" : "string",
+                "description" : "Accessibility and infrastructure details"
+              },
+        "INTEGRATED_DEVICES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
+                "description" : "Vector of Integrated Devices (IDM)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SITCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of SIT records",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SIT"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CryptoKey" : {
+      "type" : "object",
+      "properties" : {
+        "PUBLIC_KEY" : {
+                "type" : "string"
+              },
+        "XPUB" : {
+                "type" : "string"
+              },
+        "PRIVATE_KEY" : {
+                "type" : "string"
+              },
+        "XPRIV" : {
+                "type" : "string"
+              },
+        "KEY_ADDRESS" : {
+                "type" : "string"
+              },
+        "ADDRESS_TYPE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContactPoint" : {
+      "type" : "object",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "CONTACT_TYPE" : {
+                "type" : "string"
+              },
+        "EMAIL" : {
+                "type" : "string"
+              },
+        "TELEPHONE" : {
+                "type" : "string"
+              },
+        "CONTACT_OPTION" : {
+                "type" : "string"
+              },
+        "AREA_SERVED" : {
+                "type" : "string"
+              },
+        "AVAILABLE_LANGUAGE" : {
+                "type" : "string"
+              },
+        "ADDRESS_COUNTRY" : {
+                "type" : "string"
+              },
+        "ADDRESS_REGION" : {
+                "type" : "string"
+              },
+        "ADDRESS_LOCALITY" : {
+                "type" : "string"
+              },
+        "POSTAL_CODE" : {
+                "type" : "string"
+              },
+        "STREET_ADDRESS" : {
+                "type" : "string"
+              },
+        "POST_OFFICE_BOX_NUMBER" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Organization" : {
+      "type" : "object",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "LEGAL_NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Occupation" : {
+      "type" : "object",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "UPM" : {
+      "type" : "object",
+      "description" : "User Profile Message",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "ALTERNATE_NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "IMAGE" : {
+                "type" : "string"
+              },
+        "SAME_AS" : {
+                "type" : "string"
+              },
+        "URL" : {
+                "type" : "string"
+              },
+        "TELEPHONE" : {
+                "type" : "string"
+              },
+        "EMAIL" : {
+                "type" : "string"
+              },
+        "KEY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CryptoKey"}
+              },
+        "CONTACT_POINT" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContactPoint"}
+              },
+        "ADDRESS" : {
+                "$ref" : "#/definitions/ContactPoint"
+              },
+        "JOB_TITLE" : {
+                "type" : "string"
+              },
+        "AFFILIATION" : {
+                "$ref" : "#/definitions/Organization"
+              },
+        "HAS_OCCUPATION" : {
+                "$ref" : "#/definitions/Occupation"
+              },
+        "FAMILY_NAME" : {
+                "type" : "string"
+              },
+        "GIVEN_NAME" : {
+                "type" : "string"
+              },
+        "ADDITIONAL_NAME" : {
+                "type" : "string"
+              },
+        "HONORIFIC_PREFIX" : {
+                "type" : "string"
+              },
+        "HONORIFIC_SUFFIX" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "UPMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/UPM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLD" : {
+      "type" : "object",
+      "description" : "Payload Information",
+      "properties" : {
+        "PAYLOAD_DURATION" : {
+                "type" : "string"
+              },
+        "MASS_AT_LAUNCH" : {
+                "type" : "number"
+              },
+        "DIMENSIONS" : {
+                "type" : "string"
+              },
+        "SOLAR_ARRAY_AREA" : {
+                "type" : "number"
+              },
+        "SOLAR_ARRAY_DIMENSIONS" : {
+                "type" : "string"
+              },
+        "NOMINAL_OPERATIONAL_LIFETIME" : {
+                "type" : "string"
+              },
+        "INSTRUMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLDCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CAT" : {
+      "type" : "object",
+      "description" : "Catalog Entity Message",
+      "properties" : {
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Satellite Name(s)"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International Designator (YYYY-NNNAAA)"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD Catalog Number"
+              },
+        "OBJECT_TYPE" : {
+                "$ref" : "#/definitions/objectType",
+                "description" : "Object type (Payload, Rocket body, Debris, Unknown)"
+              },
+        "OPS_STATUS_CODE" : {
+                "$ref" : "#/definitions/opsStatusCode",
+                "description" : "Operational Status Code"
+              },
+        "OWNER" : {
+                "type" : "string",
+                "description" : "Ownership, typically country or company"
+              },
+        "LAUNCH_DATE" : {
+                "type" : "string",
+                "description" : "Launch Date [year-month-day] (ISO 8601)"
+              },
+        "LAUNCH_SITE" : {
+                "type" : "string",
+                "description" : "Launch Site"
+              },
+        "DECAY_DATE" : {
+                "type" : "string",
+                "description" : "Decay Date, if applicable [year-month-day] (ISO 8601)"
+              },
+        "PERIOD" : {
+                "type" : "number",
+                "description" : "Orbital period [minutes]"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination [degrees]"
+              },
+        "APOGEE" : {
+                "type" : "number",
+                "description" : "Apogee Altitude [kilometers]"
+              },
+        "PERIGEE" : {
+                "type" : "number",
+                "description" : "Perigee Altitude [kilometers]"
+              },
+        "RCS" : {
+                "type" : "number",
+                "description" : "Radar Cross Section [meters2]; blank if no data available"
+              },
+        "DATA_STATUS_CODE" : {
+                "$ref" : "#/definitions/dataStatusCode",
+                "description" : "Data status code; blank otherwise"
+              },
+        "ORBIT_CENTER" : {
+                "type" : "string",
+                "description" : "Orbit center"
+              },
+        "ORBIT_TYPE" : {
+                "$ref" : "#/definitions/orbitType",
+                "description" : "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)"
+              },
+        "DEPLOYMENT_DATE" : {
+                "type" : "string",
+                "description" : "Deployment Date [year-month-day] (ISO 8601)"
+              },
+        "MANEUVERABLE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the object is maneuverable"
+              },
+        "SIZE" : {
+                "type" : "number",
+                "description" : "Size [meters]; blank if no data available"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Mass [kilograms]; blank if no data available"
+              },
+        "MASS_TYPE" : {
+                "$ref" : "#/definitions/massType",
+                "description" : "Mass type (Dry, Wet)"
+              },
+        "PAYLOADS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"},
+                "description" : "Vector of PAYLOADS"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CATCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ROC" : {
+      "type" : "object",
+      "description" : "Rocket Configuration",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Rocket Name"
+              },
+        "FAMILY" : {
+                "type" : "string",
+                "description" : "Rocket Family"
+              },
+        "VARIANT" : {
+                "type" : "string",
+                "description" : "Rocket Variant"
+              },
+        "STAGES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/STAGE"},
+                "description" : "Stages in the Rocket"
+              },
+        "SUSTAINERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SUSTAINER"},
+                "description" : "Sustainers in the Rocket"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "STAGE" : {
+      "type" : "object",
+      "description" : "Stage Details",
+      "properties" : {
+        "STAGE_NUMBER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Stage Number"
+              },
+        "ENGINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ENGINE"},
+                "description" : "Engines Used in This Stage"
+              },
+        "FUEL_TYPE" : {
+                "type" : "string",
+                "description" : "Fuel Type Used in This Stage"
+              },
+        "THRUST" : {
+                "type" : "number",
+                "description" : "Thrust Produced by This Stage (in Newtons)"
+              },
+        "BURN_DURATION" : {
+                "type" : "number",
+                "description" : "Duration of the Burn (in Seconds)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SUSTAINER" : {
+      "type" : "object",
+      "description" : "Sustainer Details",
+      "properties" : {
+        "SUSTAINER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the Sustainer"
+              },
+        "THRUST" : {
+                "type" : "number",
+                "description" : "Thrust Produced by the Sustainer (in Newtons)"
+              },
+        "BURN_DURATION" : {
+                "type" : "number",
+                "description" : "Duration of the Burn (in Seconds)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ENGINE" : {
+      "type" : "object",
+      "description" : "Engine Details",
+      "properties" : {
+        "ENGINE_NAME" : {
+                "type" : "string",
+                "description" : "Engine Name"
+              },
+        "TYPE" : {
+                "$ref" : "#/definitions/ENGINE_TYPE",
+                "description" : "Type of Engine"
+              },
+        "THRUST" : {
+                "type" : "number",
+                "description" : "Thrust Produced by the Engine (in Newtons)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ROCCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of Rocket Configurations",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ROC"},
+                "description" : "Records of Rocket Configurations"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BOV" : {
+      "type" : "object",
+      "description" : "Burn Out Vector Message",
+      "properties" : {
+        "E_COORDINATE" : {
+                "type" : "number"
+              },
+        "F_COORDINATE" : {
+                "type" : "number"
+              },
+        "G_COORDINATE" : {
+                "type" : "number"
+              },
+        "E_DOT" : {
+                "type" : "number"
+              },
+        "F_DOT" : {
+                "type" : "number"
+              },
+        "G_DOT" : {
+                "type" : "number"
+              },
+        "EPOCH_TIME" : {
+                "type" : "string"
+              },
+        "TIME_FROM_LAUNCH" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BOVCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BOV"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LDM" : {
+      "type" : "object",
+      "description" : "Launch Data Message",
+      "properties" : {
+        "SITE" : {
+                "$ref" : "#/definitions/SIT",
+                "description" : "Launch Site Information"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth at Launch (in Degrees)"
+              },
+        "REFERENCES" : {
+                "type" : "string",
+                "description" : "References for Launch Data"
+              },
+        "AGENCY_NAME" : {
+                "type" : "string",
+                "description" : "Launching Agency Name"
+              },
+        "POINTS_OF_CONTACT" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/UPM"},
+                "description" : "Points of Contact for Launch"
+              },
+        "OPERATIONS_POINTS_OF_CONTACT" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/UPM"},
+                "description" : "Operations Points of Contact for Launch"
+              },
+        "NET" : {
+                "type" : "string",
+                "description" : "Net Launch Time (UTC Format)"
+              },
+        "ROCKET_CONFIGURATION" : {
+                "$ref" : "#/definitions/ROC",
+                "description" : "Rocket Configuration Details"
+              },
+        "MISSION_NAME" : {
+                "type" : "string",
+                "description" : "Mission Name"
+              },
+        "MISSION_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description of the Mission"
+              },
+        "MISSION_TYPE" : {
+                "type" : "string",
+                "description" : "Type of the Mission (e.g., Test Flight, Satellite Deployment)"
+              },
+        "ORBIT_TYPE" : {
+                "type" : "string",
+                "description" : "Target Orbit Type (e.g., LEO, GEO)"
+              },
+        "WEATHER_CONDITIONS" : {
+                "type" : "string",
+                "description" : "Weather and Environmental Conditions at Launch"
+              },
+        "LAUNCH_STATUS" : {
+                "type" : "string",
+                "description" : "Launch Outcome and Status (e.g., Successful, Failed)"
+              },
+        "WEBCAST_URL" : {
+                "type" : "string",
+                "description" : "Webcast URL for the Launch"
+              },
+        "MEDIA_LINKS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Media Links Related to the Launch"
+              },
+        "EARLIEST_LAUNCH_TIMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Earliest Possible Launch Times"
+              },
+        "LATEST_LAUNCH_TIMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Latest Possible Launch Times"
+              },
+        "LCOLA_WINDOW_CLOSURES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Launch Collision Avoidance Information"
+              },
+        "OBJECTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"},
+                "description" : "Payload Information (Catalog Entities)"
+              },
+        "TRACKING_REQUIREMENTS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Tracking and Collision Avoidance Requirements"
+              },
+        "COLA_SCREEN_DURATION" : {
+                "type" : "string",
+                "description" : "Duration of Collision Avoidance Screen (in Seconds)"
+              },
+        "PROBABILITY_OF_COLLISION_THRESHOLD" : {
+                "type" : "string",
+                "description" : "Probability of Collision Threshold (Percentage)"
+              },
+        "COLA_RUNS_REQUIRED" : {
+                "type" : "string",
+                "description" : "Number of Required Collision Avoidance Runs"
+              },
+        "COLA_POINTS_OF_CONTACT" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/UPM"},
+                "description" : "Points of Contact for Collision Avoidance"
+              },
+        "ORBITAL_PARAMETERS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Orbital Parameters of the Launch"
+              },
+        "BURN_OUT_VECTORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BOV"},
+                "description" : "Burn Out Vectors for the Launch"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LDM"},
+                "description" : "Collection of LDM Records"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LDM"
+}

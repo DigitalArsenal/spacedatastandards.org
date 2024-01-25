@@ -1,0 +1,22 @@
+/// Observation Stability Message
+table OSM {
+  /// Indicates whether the observation is stable or not
+  IS_STABLE: bool;
+  /// The number of observations
+  NUM_OBS: int;
+  /// Unique identifier for the object being observed
+  OBJECT_ID: string;
+  /// Identifier of the sensor
+  ID_SENSOR: string;
+  /// Timestamp of data creation
+  PASS_START: string;
+  /// Duration of the observation pass in seconds
+  PASS_DURATION: int;
+}
+
+table OSMCOLLECTION {
+  RECORDS: [OSM];
+}
+
+root_type OSM;
+file_identifier "$OSM";

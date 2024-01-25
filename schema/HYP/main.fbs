@@ -1,0 +1,44 @@
+enum ScoreType: byte {
+  OUTLIER = 0
+}
+
+table Score {
+    NORAD_CAT_ID: string;
+    TYPE: ScoreType;
+    TAG: string;
+    SCORE: float;
+}
+
+/// Hypothesis Message
+table HYP {
+    /// Space Objects Involved
+    CAT_IDS: [string];
+    /// Space Objects Involved
+    SIT_IDS: [string];
+    /// Name of the hypothesis
+    NAME: string;
+    /// Category of the hypothesis
+    CATEGORY: string;
+    /// Row indicators for the hypothesis matrix
+    ROW_INDICATORS: [string];
+    /// Column indicators for the hypothesis matrix
+    COL_INDICATORS: [string];
+    /// Matrix data as a boolean array in row major format; if overflow, adds additional rows
+    MATRIX: [bool];
+    /// Scores for objects
+    SCORE: [Score];
+    /// Analysis methodology used to form the hypothesis
+    ANALYSIS_METHOD: string;
+    // Refer to CCSDS Time Code Formats (CCSDS 301.0-B4, ANNEX B3.4)
+    EVENT_START_TIME: string;
+    // Refer to CCSDS Time Code Formats (CCSDS 301.0-B4, ANNEX B3.4)
+    EVENT_END_TIME: string;
+}
+
+/// Collection of HYP records
+table HYPCOLLECTION {
+    RECORDS: [HYP];
+}
+
+root_type HYP;
+file_identifier "$HYP";

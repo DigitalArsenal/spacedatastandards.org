@@ -1,0 +1,123 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: http://www.satobs.org/position/posn_formats.html
+Subject: Positional Observation Reporting Formats
+Date: Fri, 1 Dec 2023 20:59:10 -0000
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--s4VP3YLe5HIW4kLccnxn7SBpJfITuaShAXeq5GZDXn----"
+
+
+------MultipartBoundary--s4VP3YLe5HIW4kLccnxn7SBpJfITuaShAXeq5GZDXn----
+Content-Type: text/html
+Content-ID: <frame-25EDA61756125B82C3985CE80BDA7A40@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.satobs.org/position/posn_formats.html
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3Dwindows-1252">
+<title>Positional Observation Reporting Formats</title>
+</head>
+<body><h1>Positional Observation Reporting Formats</h1>
+<p>
+Positional observations of satellites provide the basis to determine their =
+orbits, and to study their optical characteristics. The latter provide the =
+basis for the accurate brightness predictions that we have come to expect f=
+rom our favourite prediction software or service.
+</p><p>
+Positional observations are analysed using computer programs, so observers =
+need a systematic and accurate reporting format, ideally one that can be re=
+ad by both humans and machines.
+</p><p>
+There are three reporting formats in common use.
+</p><p>
+</p><h2>IOD Format</h2>
+<p>
+Here is an example of an IOD formatted report:
+</p><pre>23794 96 010A   2701 G 20040506012614270 17 25 1100114-184298 38 I=
++020 10
+90019 03 790B   2701 G 20040506020755480 17 25 0929080-203364 48
+90019 03 790B   2701 G 20040506020932610 17 25 1029694-220449 67
+90019 03 790B   2701 G 20040506021046340 17 25 1115711-225466 37
+90019 03 790B   2701 G 20040506021115210 17 25 1133310-231006 78
+23794 96 010A   2701 P 20040506061610940 17 25 1045488+105544 19 I-010 10
+23794 96 010A   2701 P 20040506061636730 17 25 1252114+021122 29 I-020 10
+23794 96 010A   2701 P 20040506061641360 17 25 1334003-010390 58 I-020 10
+23794 96 010A   2701 P 20040506061735610 17 25 1909776-205541 97 I
+</pre>
+The IOD format is described <a href=3D"http://www.satobs.org/position/IODfo=
+rmat.html">here</a>.
+<p>
+</p><h2>U.K. Format</h2>
+<p>
+Here is an example of a U.K. formatted report:
+</p><pre>0401401267504050320170296  010  12102706  +36412   50 5
+0401401267504050320171054  010  12102406  +41279   50 5
+0401402267504050320192783  020  12100282  +21570   20 5
+0401402267504050320200763  020  12090786  +47320  100 5
+9906701267504050320381348  020  12114955  +16154   15 5
+9607201267504050320421970  010  12153504  +26400   60 5
+9607201267504050320423927  010  12162845  +41547   40 5
+9107603267504050320472151  010  12135798  +22002   50 5
+9107604267504050320473073  010  12135931  +21233   50 5
+9107603267504050320480282  010  12144997  +28369   10 5
+9107605267504050320483131  010  12152189  +32549   20 5
+</pre>
+The U.K. format is described <a href=3D"http://www.satobs.org/position/UKfo=
+rmat.html">here</a>.
+<p>
+</p><h2>R.D.E. Format</h2>
+<p>
+Here is an example of an R.D.E. formatted report:
+</p><pre>2420 0309 0.211 1204
+03
+0300203 195141.71 005932+313611 4.4 4.4 0 S
+8502002 195853.74 010744+311633 5.1 5.1 0 S
+04
+7704401 015519.00 212317+765245 6.3 7.5 4 R
+7704401 015559.35 221342+565110 6.0 7.2 4 R
+8700602 020411.32 151747+741235 4.8 4.8 0 S
+8205102 021426.21 021503+282843 4.2 4.2 0 S
+999
+</pre>
+The R.D.E. format is described <a href=3D"http://www.satobs.org/position/RD=
+Eformat.html">here</a>.
+<p>
+<a href=3D"http://www.satobs.org/satintro.html">
+   <img alt=3D"[Home Page]" src=3D"http://www.satobs.org/icon/buttons/home_=
+btn.gif"></a>
+
+<a href=3D"http://www.satobs.org/position/posn_measure.html">
+   <img alt=3D"[Position Measuring]" src=3D"http://www.satobs.org/icon/butt=
+ons/time_btn.gif"></a>
+
+</p><hr><address>
+Contact: <a href=3D"mailto:webmaster@satobs.org">webmaster@satobs.org</a>
+</address>
+
+
+</body></html>
+------MultipartBoundary--s4VP3YLe5HIW4kLccnxn7SBpJfITuaShAXeq5GZDXn----
+Content-Type: image/gif
+Content-Transfer-Encoding: base64
+Content-Location: http://www.satobs.org/icon/buttons/home_btn.gif
+
+R0lGODdhKAAoAMIAAOfn525ubr6+vgAAAAAA/wAAAAAAAAAAACwAAAAAKAAoAAAD2Ai63P5whUgr
+DBOIzbv/YIgpAmaeaKqm2tiGcOy1WSnfME0G+DYMPYHuhRsQCEDc0HYzHpHKUo3n+f18z2cytqR2
+nEBn9rgNdT9g8ZjMle7Q5PW6PHMTv/I8FHSu6vN0G314f3KBg1iFgHUuTImKixyDapCGknZMVpSV
+SFaCmF6PnGwdiAKblXSmqJCqoH6jWoxTsLF7l42hp7akuLSEtq65tbHCvxysisZvwMWzzMi8t5/D
+zaPLd6LXz9mnmt/g4NyOQT2m5TJLFusRmOjvIyvy8/T19vcYCQA7
+
+------MultipartBoundary--s4VP3YLe5HIW4kLccnxn7SBpJfITuaShAXeq5GZDXn----
+Content-Type: image/gif
+Content-Transfer-Encoding: base64
+Content-Location: http://www.satobs.org/icon/buttons/time_btn.gif
+
+R0lGODdhKAAoAMIAAOfn525ubr6+voGF/wAA/0sduP8AAAAAACwAAAAAKAAoAAAD/gi63P5whUgr
+DBOIzbv/YIgpAmaeaKqm2tiGcOy1WSnfME0G+OD/ON0L9iMYj8BcqcYLDY4fpNJl+/gInkFUCxJW
+O08smFDwFIzd5S4r3hg2z7L5zOV4m5y2G04OnWdqQ3wfb3EwBHUCdx16HIV9fnqLg4QChocdk08w
+BpdObZqNHZ2Qn3aBVZtEpSCqiqhNrq1GP7UcrqExYUe8YriwlDAFw8TEt6DAlqI4Y6dUscvMwZMC
+f9JsmckbiNfNzkwd1t2yr88e3OON1Bt00lcf6+xoN2Fp5h/DiD5W7yHx57Rq7YrxD0SvaIDudQui
+baGMgg7hobJAMQKqiNJGrNjICLGjx48gMSQAADs=
+
+------MultipartBoundary--s4VP3YLe5HIW4kLccnxn7SBpJfITuaShAXeq5GZDXn------

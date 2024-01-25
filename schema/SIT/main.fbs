@@ -1,0 +1,91 @@
+include "../IDM/main.fbs";
+
+/// Enum for the type of site
+enum SiteType: byte {
+  LAUNCH_SITE,
+  OBSERVATION_STATION,
+  HOBBYIST_OBSERVER,
+  RESEARCH_FACILITY,
+  SATELLITE_GROUND_STATION,
+  SPACEPORT,
+  MILITARY_BASE,
+  WEATHER_STATION,
+  ASTRONOMICAL_OBSERVATORY,
+  EDUCATIONAL_INSTITUTE,
+  COMMUNICATION_HUB,
+  POWER_PLANT,
+  INDUSTRIAL_COMPLEX,
+  TRANSPORTATION_HUB,
+  URBAN_AREA,
+  NATIONAL_PARK,
+  HISTORICAL_SITE,
+  OTHER
+}
+
+/// Geometry table with information about geometric properties
+table Geometry {
+  /// Type of geometry
+  GEOMETRY_TYPE: string;
+  /// Coordinates of the geometry
+  COORDINATES: [float];
+}
+
+/// Site Information Message
+table SIT {
+  /// Unique identifier for the site, BE_NUMBER
+  ID: string;
+  /// Name of the site
+  NAME: string;
+  /// Abbreviation
+  ABBREVIATION: string;
+  /// Site type as defined in SiteType enum
+  SITE_TYPE: SiteType;
+  /// Site type CATCODE
+  CATCODE: string;
+  /// Network identifier
+  NETWORK: string;
+  /// Latitude of the site
+  LATITUDE: float;
+  /// Longitude of the site
+  LONGITUDE: float;
+  /// Altitude of the site
+  ALTITUDE: float;
+  /// Geometry of the site
+  GEOMETRY: Geometry;
+  /// Center point geometry coordinates
+  CENTER_POINT_GEOMETRY: [float];
+  /// Classification marking of the site
+  CLASSIFICATION: string;
+  /// CTR ISO 3166 Numeric code as string
+  CTR_ID: string;
+  /// Identifier of the user who created the site data
+  CREATED_BY: string;
+  /// Description of the site
+  DESCRIPTION: string;
+  /// URL for the 3D model of the site
+  MODEL_URL: string;
+  /// Source of the site data
+  SOURCE: string;
+  /// Indicates if the site is taskable
+  TASKABLE: bool;
+  /// Operational status of the site (e.g., active, inactive, under construction)
+  OPERATIONAL_STATUS: string;
+  /// Date of establishment
+  ESTABLISHMENT_DATE: string;
+  /// Contact information for the site
+  CONTACT_INFO: string;
+  /// Environmental impact or considerations
+  ENVIRONMENTAL_IMPACT: string;
+  /// Accessibility and infrastructure details
+  ACCESSIBILITY_INFRA: string;
+  /// Vector of Integrated Devices (IDM)
+  INTEGRATED_DEVICES: [IDM];
+}
+
+/// Collection of SIT records
+table SITCOLLECTION {
+  RECORDS: [SIT];
+}
+
+root_type SIT;
+file_identifier "$SIT";

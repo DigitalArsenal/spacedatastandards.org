@@ -1,0 +1,26 @@
+/// Burn Out Vector Message
+table BOV {
+  // EFG Coordinates
+  E_COORDINATE: double; // 11 significant figures
+  F_COORDINATE: double; // 11 significant figures
+  G_COORDINATE: double; // 11 significant figures
+
+  // Velocity in EFG Coordinates
+  E_DOT: double; // 9 significant figures
+  F_DOT: double; // 9 significant figures
+  G_DOT: double; // 9 significant figures
+
+  // Epoch Time (UTC)
+  EPOCH_TIME: string; // Formatted as "YYYY-MM-DD HH:MM:SS.SSS"
+
+  // Time from Launch in Seconds
+  TIME_FROM_LAUNCH: double; // Seconds with appropriate precision
+}
+
+// Collection of Burn Out Vector Messages
+table BOVCOLLECTION {
+  RECORDS: [BOV];
+}
+
+root_type BOV;
+file_identifier "$BOV";

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "referenceFrame" : {
+      "type" : "string",
+      "enum": ["EME2000", "GCRF", "GRC", "ICRF", "ITRF2000", "ITRF93", "ITRF97", "MCI", "TDR", "TEME", "TOD"]
+    },
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "meanElementTheory" : {
+      "type" : "string",
+      "enum": ["SGP4", "DSST", "USM"]
+    },
+    "MPE" : {
+      "type" : "object",
+      "description" : "Minimum Propagatable Element Set",
+      "properties" : {
+        "ENTITY_ID" : {
+                "type" : "string",
+                "description" : "Unique ID as a String"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Epoch of Mean Keplerian elements. (UNIX TimeStamp)"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Semi-major axis in km or mean motion in rev/day"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly"
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPECOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of MPE Records",
+      "properties" : {
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "Default value = U"
+              },
+        "REF_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame",
+                "description" : "Name of the reference frame (TEME, EME2000, etc.)"
+              },
+        "REF_FRAME_EPOCH" : {
+                "type" : "number",
+                "description" : "Epoch of the Reference Frame. (UNIX TimeStamp)"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem",
+                "description" : "Time system used for the orbit state and covariance matrix. (UTC)"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory",
+                "description" : "Description of the Mean Element Theory. (SGP4,DSST,USM)"
+              },
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MPE"},
+                "description" : "Array of MPE records"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MPE"
+}

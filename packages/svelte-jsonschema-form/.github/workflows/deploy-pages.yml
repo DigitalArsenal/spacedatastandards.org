@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+
+  build_site:
+    name: Build pages artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Use Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Build
+        env:
+          BASE_PATH: '/svelte-jsonschema-form'
+        run: |
+          npm run build:static
+          touch build/.nojekyll
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'build/'
+
+  deploy:
+    needs: build_site
+    name: Deploy example page to GitHub Pages
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v2

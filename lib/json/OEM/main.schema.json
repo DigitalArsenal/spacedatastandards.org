@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "referenceFrame" : {
+      "type" : "string",
+      "enum": ["EME2000", "GCRF", "GRC", "ICRF", "ITRF2000", "ITRF93", "ITRF97", "MCI", "TDR", "TEME", "TOD"]
+    },
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "manCovRefFrame" : {
+      "type" : "string",
+      "enum": ["RSW", "RTN", "TNW"]
+    },
+    "ephemerisDataLine" : {
+      "type" : "object",
+      "description" : "A single ephemeris data line",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of state vector (ISO 8601)"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "Position vector X-component km"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Position vector Y-component km"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Position vector Z-component km"
+              },
+        "X_DOT" : {
+                "type" : "number",
+                "description" : "Velocity vector X-component km/s"
+              },
+        "Y_DOT" : {
+                "type" : "number",
+                "description" : "Velocity vector Y-component km/s"
+              },
+        "Z_DOT" : {
+                "type" : "number",
+                "description" : "Velocity vector Z-component km/s"
+              },
+        "X_DDOT" : {
+                "type" : "number",
+                "description" : "Optional: Acceleration vector X-component km/s/s"
+              },
+        "Y_DDOT" : {
+                "type" : "number",
+                "description" : "Optional: Acceleration vector Y-component km/s/s"
+              },
+        "Z_DDOT" : {
+                "type" : "number",
+                "description" : "Optional: Acceleration vector Z-component km/s/s"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "covarianceMatrixLine" : {
+      "type" : "object",
+      "description" : "Position/Velocity Covariance Matrix Line",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch"
+              },
+        "COV_REF_FRAME" : {
+                "$ref" : "#/definitions/manCovRefFrame",
+                "description" : "Reference frame for the covariance matrix"
+              },
+        "CX_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [1,1] km**2"
+              },
+        "CY_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [2,1] km**2"
+              },
+        "CY_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [2,2] km**2"
+              },
+        "CZ_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [3,1] km**2"
+              },
+        "CZ_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [3,2] km**2"
+              },
+        "CZ_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [3,3] km**2"
+              },
+        "CX_DOT_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,1] km**2/s"
+              },
+        "CX_DOT_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,2] km**2/s"
+              },
+        "CX_DOT_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,3] km**2/s"
+              },
+        "CX_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,4] km**2/s**2"
+              },
+        "CY_DOT_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,1] km**2/s"
+              },
+        "CY_DOT_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,2] km**2/s"
+              },
+        "CY_DOT_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,3] km**2/s"
+              },
+        "CY_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,4] km**2/s**2"
+              },
+        "CY_DOT_Y_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,5] km**2/s**2"
+              },
+        "CZ_DOT_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,1] km**2/s"
+              },
+        "CZ_DOT_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,2] km**2/s"
+              },
+        "CZ_DOT_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,3] km**2/s"
+              },
+        "CZ_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,4] km**2/s**2"
+              },
+        "CZ_DOT_Y_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,5] km**2/s**2"
+              },
+        "CZ_DOT_Z_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,6] km**2/s**2"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ephemerisDataBlock" : {
+      "type" : "object",
+      "description" : "OEM Ephemeris Data Block",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Plain-Text Comment"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Satellite Name(s)"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International Designator (YYYY-NNNAAA)"
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of reference frame (EARTH, MARS, MOON, etc.)"
+              },
+        "REF_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame",
+                "description" : "Name of the reference frame (TEME, EME2000, etc.)"
+              },
+        "REF_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem",
+                "description" : "Time system used for the orbit state and covariance matrix. (UTC)"
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string",
+                "description" : "Optional start USEABLE time span covered by ephemeris data (ISO 8601)"
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Optional end of USEABLE time span covered by ephemeris data (ISO 8601)"
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
+              },
+        "INTERPOLATION" : {
+                "type" : "string",
+                "description" : "Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)"
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Recommended interpolation degree for ephemeris data"
+              },
+        "EPHEMERIS_DATA_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataLine"},
+                "description" : "Array of ephemeris data lines"
+              },
+        "COVARIANCE_MATRIX_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/covarianceMatrixLine"},
+                "description" : "Array of covariance matrix lines"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OEM" : {
+      "type" : "object",
+      "description" : "Orbit Ephemeris Message",
+      "properties" : {
+        "CCSDS_OEM_VERS" : {
+                "type" : "number",
+                "description" : "OEM Header\nOEM Version"
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation Date"
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator"
+              },
+        "EPHEMERIS_DATA_BLOCK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
+                "description" : "Array of ephemeris data blocks"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OEMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of OEM messages",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OEM"},
+                "description" : "Array of OEM records"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OEM"
+}

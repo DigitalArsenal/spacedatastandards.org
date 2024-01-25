@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OSM" : {
+      "type" : "object",
+      "description" : "Observation Stability Message",
+      "properties" : {
+        "IS_STABLE" : {
+                "type" : "boolean",
+                "description" : "Indicates whether the observation is stable or not"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of observations"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the object being observed"
+              },
+        "ID_SENSOR" : {
+                "type" : "string",
+                "description" : "Identifier of the sensor"
+              },
+        "PASS_START" : {
+                "type" : "string",
+                "description" : "Timestamp of data creation"
+              },
+        "PASS_DURATION" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Duration of the observation pass in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OSMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OSM"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OSM"
+}

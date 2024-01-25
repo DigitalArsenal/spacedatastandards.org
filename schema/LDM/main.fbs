@@ -1,0 +1,98 @@
+include "../SIT/main.fbs";
+include "../UPM/main.fbs";
+include "../CAT/main.fbs";
+include "../ROC/main.fbs"; // For Rocket Configuration
+include "../BOV/main.fbs"; 
+
+/// Launch Data Message
+table LDM {
+  /// Launch Site Information
+  SITE: SIT;
+
+  /// Azimuth at Launch (in Degrees)
+  AZIMUTH: float;
+
+  /// References for Launch Data
+  REFERENCES: string;
+
+  /// Launching Agency Name
+  AGENCY_NAME: string;
+
+  /// Points of Contact for Launch
+  POINTS_OF_CONTACT: [UPM];
+
+  /// Operations Points of Contact for Launch
+  OPERATIONS_POINTS_OF_CONTACT: [UPM];
+
+  /// Net Launch Time (UTC Format)
+  NET: string;
+
+  /// Rocket Configuration Details
+  ROCKET_CONFIGURATION: ROC;
+
+  /// Mission Name
+  MISSION_NAME: string;
+
+  /// Description of the Mission
+  MISSION_DESCRIPTION: string;
+
+  /// Type of the Mission (e.g., Test Flight, Satellite Deployment)
+  MISSION_TYPE: string;
+
+  /// Target Orbit Type (e.g., LEO, GEO)
+  ORBIT_TYPE: string;
+
+  /// Weather and Environmental Conditions at Launch
+  WEATHER_CONDITIONS: string;
+
+  /// Launch Outcome and Status (e.g., Successful, Failed)
+  LAUNCH_STATUS: string;
+
+  /// Webcast URL for the Launch
+  WEBCAST_URL: string;
+
+  /// Media Links Related to the Launch
+  MEDIA_LINKS: [string];
+
+  /// Earliest Possible Launch Times
+  EARLIEST_LAUNCH_TIMES: [string];
+
+  /// Latest Possible Launch Times
+  LATEST_LAUNCH_TIMES: [string];
+
+  /// Launch Collision Avoidance Information
+  LCOLA_WINDOW_CLOSURES: [string];
+
+  /// Payload Information (Catalog Entities)
+  OBJECTS: [CAT];
+
+  /// Tracking and Collision Avoidance Requirements
+  TRACKING_REQUIREMENTS: [string];
+
+  /// Duration of Collision Avoidance Screen (in Seconds)
+  COLA_SCREEN_DURATION: string;
+
+  /// Probability of Collision Threshold (Percentage)
+  PROBABILITY_OF_COLLISION_THRESHOLD: string;
+
+  /// Number of Required Collision Avoidance Runs
+  COLA_RUNS_REQUIRED: string;
+
+  /// Points of Contact for Collision Avoidance
+  COLA_POINTS_OF_CONTACT: [UPM];
+
+  /// Orbital Parameters of the Launch
+  ORBITAL_PARAMETERS: [string];
+
+  /// Burn Out Vectors for the Launch
+  BURN_OUT_VECTORS: [BOV];
+}
+
+// Collection of Launch Data Messages
+table LDMCOLLECTION {
+  /// Collection of LDM Records
+  RECORDS: [LDM];
+}
+
+root_type LDM;
+file_identifier "$LDM";

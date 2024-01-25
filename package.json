@@ -1,0 +1,38 @@
+{
+    "name": "tap-schema-workshop",
+    "version": "1.0.85+1706205399149",
+    "type": "module",
+    "description": "Node.js application to parse Excel data and convert geospatial information to GeoJSON.",
+    "main": "index.js",
+    "files": [
+        "schema/",
+        "lib/js/",
+        "lib/ts/",
+        "lib/json/",
+        "dist/",
+        "LICENSE",
+        "README"
+    ],
+    "scripts": {
+        "postinstall": "cd website && npm i",
+        "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main && git push upstream main",
+        "start": "node index.js",
+        "build": "python ./scripts/generateSource.py && npm run build:js && python ./scripts/generateVersion.py && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py",
+        "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py",
+        "build:website": "cd website && npm run build",
+        "build:js": "mkdir -p ./lib/js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts",
+        "dev": "npm run build && cd website && npm run dev"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "ajv": "^8.12.0",
+        "flatbuffers": "23.3.3",
+        "svelte-spa-router": "^4.0.0"
+    },
+    "devDependencies": {
+        "sass": "^1.69.5",
+        "smui-theme": "^7.0.0-beta.15",
+        "typescript": "^5.2.2"
+    }
+}
