@@ -1,0 +1,32 @@
+table CSM {
+  /// NORAD Catalog Number for the first object
+  NORAD_CAT_ID_1: uint32;       
+  /// Satellite name for the first object
+  OBJECT_NAME_1: string;
+  /// Days since epoch for the first object
+  DSE_1: double;          
+  /// NORAD Catalog Number for the second object
+  NORAD_CAT_ID_2: uint32;           
+  /// Satellite name for the second object
+  OBJECT_NAME_2: string;      
+  /// Days since epoch for the second object
+  DSE_2: double;       
+  /// Time of closest approach as a Unix timestamp
+  TCA: double;
+  /// The distance or range between the two objects at TCA
+  TCA_RANGE: double;   
+  /// The magnitude of the relative velocity at TCA
+  TCA_RELATIVE_SPEED: double;   
+  /// Maximum probability
+  MAX_PROB: double;   
+  /// Standard deviation that produces the maximum probability
+  DILUTION: double;   
+}
+
+table CSMCOLLECTION {
+  /// A vector of CSM records
+  RECORDS:[CSM];
+}
+
+root_type CSM;
+file_identifier "$CSM";

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CSM" : {
+      "type" : "object",
+      "properties" : {
+        "NORAD_CAT_ID_1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD Catalog Number for the first object"
+              },
+        "OBJECT_NAME_1" : {
+                "type" : "string",
+                "description" : "Satellite name for the first object"
+              },
+        "DSE_1" : {
+                "type" : "number",
+                "description" : "Days since epoch for the first object"
+              },
+        "NORAD_CAT_ID_2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD Catalog Number for the second object"
+              },
+        "OBJECT_NAME_2" : {
+                "type" : "string",
+                "description" : "Satellite name for the second object"
+              },
+        "DSE_2" : {
+                "type" : "number",
+                "description" : "Days since epoch for the second object"
+              },
+        "TCA" : {
+                "type" : "number",
+                "description" : "Time of closest approach as a Unix timestamp"
+              },
+        "TCA_RANGE" : {
+                "type" : "number",
+                "description" : "The distance or range between the two objects at TCA"
+              },
+        "TCA_RELATIVE_SPEED" : {
+                "type" : "number",
+                "description" : "The magnitude of the relative velocity at TCA"
+              },
+        "MAX_PROB" : {
+                "type" : "number",
+                "description" : "Maximum probability"
+              },
+        "DILUTION" : {
+                "type" : "number",
+                "description" : "Standard deviation that produces the maximum probability"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CSMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CSM"},
+                "description" : "A vector of CSM records"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CSM"
+}

@@ -1,5 +1,5 @@
 {
-    "version": "1.0.86+1706210004288",
+    "version": "1.0.87+1706210559658",
     "STANDARDS": {
         "MPE": {
             "IDL": "// Space Data Standard - 6 - Minimum-Propagatable-Element-Set (MPE)\n// Description\n// Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit.\n// Legacy format description can be found here.\n// CCSDS Reference documentation: 502x0b2c1e2.\n\nenum referenceFrame : byte {\n  /// Earth Mean Equator and Equinox of J2000\n  EME2000,\n  /// Geocentric Celestial Reference Frame\n  GCRF,\n  /// Greenwich Rotating Coordinates\n  GRC,\n  /// International Celestial Reference Frame\n  ICRF,\n  /// International Terrestrial Reference Frame 2000\n  ITRF2000,\n  /// International Terrestrial Reference Frame 1993\n  ITRF93,\n  /// International Terrestrial Reference Frame 1997\n  ITRF97,\n  /// Mars Centered Inertial\n  MCI,\n  /// True of Date, Rotating\n  TDR,\n  /// True Equator Mean Equinox\n  TEME,\n  /// True of Date\n  TOD\n}\n\nenum timeSystem : byte {\n  /// Greenwich Mean Sidereal Time\n  GMST,\n  /// Global Positioning System\n  GPS,\n  /// Mission Elapsed Time\n  MET,\n  /// Mission Relative Time\n  MRT,\n  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)\n  SCLK,\n  /// International Atomic Time\n  TAI,\n  /// Barycentric Coordinate Time\n  TCB,\n  /// Barycentric Dynamical Time\n  TDB,\n  /// Geocentric Coordinate Time\n  TCG,\n  /// Terrestrial Time\n  TT,\n  /// Universal Time\n  UT1,\n  /// Coordinated Universal Time\n  UTC\n}\n\nenum meanElementTheory : byte {\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM\n}\n\n/// Minimum Propagatable Element Set\ntable MPE {  \n  /// Unique ID as a String\n  ENTITY_ID: string;\n  /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)\n  EPOCH: double;\n  /// Semi-major axis in km or mean motion in rev/day\n  MEAN_MOTION: double;\n  /// Eccentricity\n  ECCENTRICITY: double;\n  /// Inclination\n  INCLINATION: double;\n  /// Right ascension of ascending node\n  RA_OF_ASC_NODE: double;\n  /// Argument of pericenter\n  ARG_OF_PERICENTER: double;\n  /// Mean anomaly\n  MEAN_ANOMALY: double;\n  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])\n  BSTAR: double;\n}\n\n/// Collection of MPE Records\ntable MPECOLLECTION {\n  /// Default value = U\n  CLASSIFICATION_TYPE: string;\n  /// Name of the reference frame (TEME, EME2000, etc.)\n  REF_FRAME:referenceFrame = TEME;\n  /// Epoch of the Reference Frame. (UNIX TimeStamp)\n  REF_FRAME_EPOCH: double;\n  /// Time system used for the orbit state and covariance matrix. (UTC)\n  TIME_SYSTEM:timeSystem = UTC;\n  /// Description of the Mean Element Theory. (SGP4,DSST,USM)\n  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;\n  /// Array of MPE records\n  RECORDS:[MPE];\n}\n\nroot_type MPE;\nfile_identifier \"$MPE\";\n",
@@ -56,6 +56,25 @@
                 "./dist/PLD/PLD.cpp.tar.gz",
                 "./dist/PLD/PLD.sw.tar.gz",
                 "./dist/PLD/PLD.go.tar.gz"
+            ]
+        },
+        "CSM": {
+            "IDL": "table CSM {\n  /// NORAD Catalog Number for the first object\n  NORAD_CAT_ID_1: uint32;       \n  /// Satellite name for the first object\n  OBJECT_NAME_1: string;\n  /// Days since epoch for the first object\n  DSE_1: double;          \n  /// NORAD Catalog Number for the second object\n  NORAD_CAT_ID_2: uint32;           \n  /// Satellite name for the second object\n  OBJECT_NAME_2: string;      \n  /// Days since epoch for the second object\n  DSE_2: double;       \n  /// Time of closest approach as a Unix timestamp\n  TCA: double;\n  /// The distance or range between the two objects at TCA\n  TCA_RANGE: double;   \n  /// The magnitude of the relative velocity at TCA\n  TCA_RELATIVE_SPEED: double;   \n  /// Maximum probability\n  MAX_PROB: double;   \n  /// Standard deviation that produces the maximum probability\n  DILUTION: double;   \n}\n\ntable CSMCOLLECTION {\n  /// A vector of CSM records\n  RECORDS:[CSM];\n}\n\nroot_type CSM;\nfile_identifier \"$CSM\";",
+            "files": [
+                "./dist/CSM/CSM.php.tar.gz",
+                "./dist/CSM/CSM.json.tar.gz",
+                "./dist/CSM/CSM.py.tar.gz",
+                "./dist/CSM/CSM.java.tar.gz",
+                "./dist/CSM/CSM.rs.tar.gz",
+                "./dist/CSM/CSM.lob.tar.gz",
+                "./dist/CSM/CSM.ts.tar.gz",
+                "./dist/CSM/CSM.js.tar.gz",
+                "./dist/CSM/CSM.dart.tar.gz",
+                "./dist/CSM/CSM.kt.tar.gz",
+                "./dist/CSM/CSM.cs.tar.gz",
+                "./dist/CSM/CSM.cpp.tar.gz",
+                "./dist/CSM/CSM.sw.tar.gz",
+                "./dist/CSM/CSM.go.tar.gz"
             ]
         },
         "OSM": {
