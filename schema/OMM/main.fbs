@@ -1,5 +1,5 @@
-// Space Data Standard - 2 - Orbit Mean Elements Message (OMM)
-// Description
+// Orbit Mean Elements Message (OMM)
+//
 // Orbit information may be exchanged between two participants by sending an orbital
 // state based on mean Keplerian elements for a specified epoch using an
 // Orbit Mean-Elements Message (OMM). The message recipient must use appropriate orbit

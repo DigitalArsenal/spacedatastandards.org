@@ -1,0 +1,293 @@
+enum referenceFrame : byte {
+  /// Earth Mean Equator and Equinox of J2000
+  EME2000,
+  /// Geocentric Celestial Reference Frame
+  GCRF,
+  /// International Terrestrial Reference Frame
+  ITRF
+}
+
+enum objectCenteredReferenceFrame : byte {
+  /// Radial, Transverse, Normal
+  RTN,
+  /// Transverse, Velocity, Normal
+  TVN
+}
+
+enum screeningVolumeShape : byte {
+  ELLIPSOID,
+  BOX
+}
+
+enum objectNumber : byte {
+  OBJECT1,
+  OBJECT2
+}
+
+enum objectType : byte {
+  PAYLOAD,
+  ROCKET_BODY,
+  DEBRIS,
+  UNKNOWN,
+  OTHER
+}
+
+enum covarianceMethod : byte {
+  CALCULATED,
+  DEFAULT
+}
+
+enum maneuverableType : byte {
+  YES,
+  NO,
+  NA
+}
+
+table CDMObject {
+  /// A comment
+  COMMENT:string;
+  /// Object number
+  OBJECT:objectNumber;
+  /// Object designator
+  OBJECT_DESIGNATOR:string;
+  /// Catalog name
+  CATALOG_NAME:string;
+  /// Object name
+  OBJECT_NAME:string;
+  /// International designator
+  INTERNATIONAL_DESIGNATOR:string;
+  /// Object type
+  OBJECT_TYPE:objectType;
+  /// Operator contact position
+  OPERATOR_CONTACT_POSITION:string;
+  /// Operator organization
+  OPERATOR_ORGANIZATION:string;
+  /// Ephemeris name
+  EPHEMERIS_NAME:string;
+  /// Covariance method
+  COVARIANCE_METHOD:covarianceMethod;
+  /// Maneuverable type
+  MANEUVERABLE:maneuverableType;
+  /// Orbit center
+  ORBIT_CENTER:string;
+  /// Reference frame
+  REF_FRAME:referenceFrame;
+  /// Gravity model
+  GRAVITY_MODEL:string;
+  /// Atmospheric model
+  ATMOSPHERIC_MODEL:string;
+  /// N-body perturbations
+  N_BODY_PERTURBATIONS:string;
+  /// Solar radiation pressure
+  SOLAR_RAD_PRESSURE:bool;
+  /// Earth tides
+  EARTH_TIDES:bool;
+  /// Intrack thrust
+  INTRACK_THRUST:bool;
+  /// Time of last observation start
+  TIME_LASTOB_START:string;
+  /// Time of last observation end
+  TIME_LASTOB_END:string;
+  /// Recommended observation data span
+  RECOMMENDED_OD_SPAN:double;
+  /// Actual observation data span
+  ACTUAL_OD_SPAN:double;
+  /// Number of observations available
+  OBS_AVAILABLE:uint;
+  /// Number of observations used
+  OBS_USED:uint;
+  /// Number of tracks available
+  TRACKS_AVAILABLE:uint;
+  /// Number of tracks used
+  TRACKS_USED:uint;
+  /// Residuals accepted
+  RESIDUALS_ACCEPTED:double;
+  /// Weighted root mean square
+  WEIGHTED_RMS:double;
+  /// Area of the object
+  AREA_PC:double;
+  /// Area of the object drag
+  AREA_DRG:double;
+  /// Area of the object solar radiation pressure
+  AREA_SRP:double;
+  /// Mass of the object
+  MASS:double;
+  /// Object's area-to-mass ratio
+  CR_AREA_OVER_MASS:double;
+  /// Object's thrust acceleration
+  THRUST_ACCELERATION:double;
+  /// Object's solar flux
+  SEDR:double;
+  /// X-coordinate of the object's position in RTN coordinates
+  X:double;
+  /// Y-coordinate of the object's position in RTN
+  Y:double;
+  /// Z-coordinate of the object's position in RTN
+  Z:double;
+  /// X-coordinate of the object's position in RTN coordinates
+  X_DOT:double;
+  /// Y-coordinate of the object's position in RTN
+  Y_DOT:double;
+  /// Z-coordinate of the object's position in RTN
+  Z_DOT:double;
+  
+  // (Covariance Matrix 9×9 Lower Triangular Form. All parameters of the 6×6 position/velocity submatrix must be given)
+
+  /// Covariance Matrix component
+  CR_R:double;
+  /// Covariance Matrix component
+  CT_R:double;
+  /// Covariance Matrix component
+  CT_T:double;
+  /// Covariance Matrix component
+  CN_R:double;
+  /// Covariance Matrix component
+  CN_T:double;
+  /// Covariance Matrix component
+  CN_N:double;
+  /// Covariance Matrix component
+  CRDOT_R:double;
+  /// Covariance Matrix component
+  CRDOT_T:double;
+  /// Covariance Matrix component
+  CRDOT_N:double;
+  /// Covariance Matrix component
+  CRDOT_RDOT:double;
+  /// Covariance Matrix component
+  CTDOT_R:double;
+  /// Covariance Matrix component
+  CTDOT_T:double;
+  /// Covariance Matrix component
+  CTDOT_N:double;
+  /// Covariance Matrix component
+  CTDOT_RDOT:double;
+  /// Covariance Matrix component
+  CTDOT_TDOT:double;
+  /// Covariance Matrix component
+  CNDOT_R:double;
+  /// Covariance Matrix component
+  CNDOT_T:double;
+  /// Covariance Matrix component
+  CNDOT_N:double;
+  /// Covariance Matrix component
+  CNDOT_RDOT:double;
+  /// Covariance Matrix component
+  CNDOT_TDOT:double;
+  /// Covariance Matrix component
+  CNDOT_NDOT:double;
+  /// Covariance Matrix component
+  CDRG_R:double;
+  /// Covariance Matrix component
+  CDRG_T:double;
+  /// Covariance Matrix component
+  CDRG_N:double;
+  /// Covariance Matrix component
+  CDRG_RDOT:double;
+  /// Covariance Matrix component
+  CDRG_TDOT:double;
+  /// Covariance Matrix component
+  CDRG_NDOT:double;
+  /// Covariance Matrix component
+  CDRG_DRG:double;
+  /// Covariance Matrix component
+  CSRP_R:double;
+  /// Covariance Matrix component
+  CSRP_T:double;
+  /// Covariance Matrix component
+  CSRP_N:double;
+  /// Covariance Matrix component
+  CSRP_RDOT:double;
+  /// Covariance Matrix component
+  CSRP_TDOT:double;
+  /// Covariance Matrix component
+  CSRP_NDOT:double;
+  /// Covariance Matrix component
+  CSRP_DRG:double;
+  /// Covariance Matrix component
+  CSRP_SRP:double;
+  /// Covariance Matrix component
+  CTHR_R:double;
+  /// Covariance Matrix component
+  CTHR_T:double;
+  /// Covariance Matrix component
+  CTHR_N:double;
+  /// Covariance Matrix component
+  CTHR_RDOT:double;
+  /// Covariance Matrix component
+  CTHR_TDOT:double;
+  /// Covariance Matrix component
+  CTHR_NDOT:double;
+  /// Covariance Matrix component
+  CTHR_DRG:double;
+  /// Covariance Matrix component
+  CTHR_SRP:double;
+  /// Covariance Matrix component
+  CTHR_THR:double;
+}
+
+table CDM {
+  /// The version of the CCSDS CDM standard used
+  CCSDS_CDM_VERS:double;
+  /// The date the CDM message was created
+  CREATION_DATE:string;
+  /// The originator of the CDM message
+  ORIGINATOR:string;
+  /// The intended recipient of the CDM message
+  MESSAGE_FOR:string;
+  /// A unique identifier for the CDM message
+  MESSAGE_ID:string;
+  /// Time of closest approach
+  TCA:string;
+  /// The miss distance between the two objects
+  MISS_DISTANCE:double;
+  /// The relative speed between the two objects
+  RELATIVE_SPEED:double;
+  /// The relative position R component
+  RELATIVE_POSITION_R:double;
+  /// The relative position T component
+  RELATIVE_POSITION_T:double;
+  /// The relative position N component
+  RELATIVE_POSITION_N:double;
+  /// The relative velocity R component
+  RELATIVE_VELOCITY_R:double;
+  /// The relative velocity T component
+  RELATIVE_VELOCITY_T:double;
+  /// The relative velocity N component
+  RELATIVE_VELOCITY_N:double;
+  /// The start time of the screening period
+  START_SCREEN_PERIOD:string;
+  /// The end time of the screening period
+  STOP_SCREEN_PERIOD:string;
+  /// The reference frame for the screening volume
+  SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame;
+  /// The shape of the screening volume
+  SCREEN_VOLUME_SHAPE:screeningVolumeShape;
+  /// The shape of the screening volume
+  SCREEN_VOLUME_SHAPE:screeningVolumeShape;
+  /// The X dimension of the screening volume
+  SCREEN_VOLUME_X:double;
+  /// The Y dimension of the screening volume
+  SCREEN_VOLUME_Y:double;
+  /// The Z dimension of the screening volume
+  SCREEN_VOLUME_Z:double;
+  /// The time the objects entered the screening volume
+  SCREEN_ENTRY_TIME:string;
+  /// The time the objects exited the screening volume
+  SCREEN_EXIT_TIME:string;
+  /// The probability of collision between the two objects
+  COLLISION_PROBABILITY:double;
+  /// The method used to calculate the collision probability
+  COLLISION_PROBABILITY_METHOD:string;
+  /// The first object in the CDM message
+  OBJECT1:CDMObject;
+  /// The second object in the CDM message
+  OBJECT2:CDMObject;
+}
+
+table CDMCOLLECTION {
+  /// A vector of CDM records
+  RECORDS:[CDM];
+}
+
+root_type CDM;
+file_identifier "$CDM";
