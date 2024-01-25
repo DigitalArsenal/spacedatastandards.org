@@ -27,15 +27,17 @@
 <main class="w-screen h-screen text-black flex flex-col">
   <div
     class="fixed bg-blue-700 text-white flex gap-2 w-full flex items-center justify-start h-12 pl-2">
-    <a
-      href="#/standards"
-      class="hover:bg-blue-600 p-2 rounded"
-      class:bg-blue-500={$currentPath === "/standards"}>Standards</a>
     {#if window.location.host !== "spacedatastandards.org"}
+      <a
+        href="#/standards"
+        class="hover:bg-blue-600 p-2 rounded"
+        class:bg-blue-500={$currentPath === "/standards"}>Standards</a>
       <a
         href="#/form"
         class="hover:bg-blue-600 p-2 rounded"
         class:bg-blue-500={$currentPath === "/form"}>Test Form</a>
+    {:else}
+      SpaceDataStandards.org
     {/if}
   </div>
   <div class="fixed top-12 left-0 text-black z-1 text-xs text-gray-600 pl-1">
