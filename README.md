@@ -1,7 +1,5 @@
 # spacedatastandards.org
 
-## Currently unsponsored, if interested in sponsoring contact sds@digitalarsenal.io
-
 ## Information
 
 [Click Here For More Information (Gitbook).](https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/)
