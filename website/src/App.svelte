@@ -6,11 +6,15 @@
   import Form from "./lib/Form.svelte";
   import packageJSON from "root/package.json";
 
-  const routes = {
+  let routes: any = {
     "/": Standards,
     "/standards": Standards,
-    "/form": Form,
   };
+
+  if (window.location.host !== "spacedatastandards.org") {
+    routes["/form"] = Form;
+  }
+
   const currentPath = derived(location, ($location) => {
     // If the path is empty or not recognized, redirect to '/standards'
     if ($location === "/" || !Object.keys(routes).includes($location)) {
@@ -32,7 +36,9 @@
       class="hover:bg-blue-600 p-2 rounded"
       class:bg-blue-500={$currentPath === "/form"}>Test Form</a>
   </div>
-  <div class="fixed top-12 left-0 text-black z-1 text-xs text-gray-600 pl-1">standards version: {packageJSON.version}</div>
+  <div class="fixed top-12 left-0 text-black z-1 text-xs text-gray-600 pl-1">
+    standards version: {packageJSON.version}
+  </div>
 
   <Router {routes} />
 </main>
