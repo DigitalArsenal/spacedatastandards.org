@@ -76,7 +76,7 @@
 </script>
 
 <div class="text-black flex gap-2 fixed max-h-[calc(100vh-4rem)] top-16 w-full">
-  <div class="list-section overflow-x-hidden pt-12 min-w-[500px] select-none">
+  <div class="list-section overflow-x-hidden pt-12 min-w-[500px] w-1/2 select-none">
     <input
       type="search"
       bind:value={$searchInput}
