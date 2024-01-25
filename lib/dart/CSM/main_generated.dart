@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+///  Conjunction Summary Message
 class CSM {
   CSM._(this._bc, this._bcOffset);
   factory CSM(List<int> bytes) {

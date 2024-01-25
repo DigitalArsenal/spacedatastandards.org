@@ -6,6 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# Conjunction Data Message
 class CDMObject(object):
     __slots__ = ['_tab']
 

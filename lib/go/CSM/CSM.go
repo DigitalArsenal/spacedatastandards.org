@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Conjunction Summary Message
 type CSM struct {
 	_tab flatbuffers.Table
 }

@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Conjunction Summary Message
+ */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class CSM : Table() {

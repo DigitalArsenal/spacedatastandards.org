@@ -43,6 +43,7 @@ enum maneuverableType : byte {
   NA
 }
 
+/// Conjunction Data Message
 table CDMObject {
   /// A comment
   COMMENT:string;

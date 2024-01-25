@@ -1,3 +1,4 @@
+/// Conjunction Summary Message
 table CSM {
   /// NORAD Catalog Number for the first object
   NORAD_CAT_ID_1: uint32;       

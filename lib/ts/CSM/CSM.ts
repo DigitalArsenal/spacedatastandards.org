@@ -4,6 +4,9 @@ import * as flatbuffers from 'flatbuffers';
 
 
 
+/**
+ * Conjunction Summary Message
+ */
 export class CSM implements flatbuffers.IUnpackableObject<CSMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

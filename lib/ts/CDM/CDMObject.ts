@@ -9,6 +9,9 @@ import { objectType } from './objectType.js';
 import { referenceFrame } from './referenceFrame.js';
 
 
+/**
+ * Conjunction Data Message
+ */
 export class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

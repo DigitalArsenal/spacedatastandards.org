@@ -17,6 +17,9 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * Conjunction Summary Message
+ */
 @SuppressWarnings("unused")
 public final class CSM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }

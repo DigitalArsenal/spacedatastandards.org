@@ -19,6 +19,7 @@ struct CSMBuilder;
 struct CSMCOLLECTION;
 struct CSMCOLLECTIONBuilder;
 
+/// Conjunction Summary Message
 struct CSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CSMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

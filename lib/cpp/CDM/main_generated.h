@@ -252,6 +252,7 @@ inline const char *EnumNamemaneuverableType(maneuverableType e) {
   return EnumNamesmaneuverableType()[index];
 }
 
+/// Conjunction Data Message
 struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CDMObjectBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

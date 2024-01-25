@@ -778,6 +778,7 @@
             "definitions": {
                 "CSM": {
                     "type": "object",
+                    "description": "Conjunction Summary Message",
                     "properties": {
                         "NORAD_CAT_ID_1": {
                             "type": "integer",
@@ -4561,6 +4562,7 @@
                 },
                 "CDMObject": {
                     "type": "object",
+                    "description": "Conjunction Data Message",
                     "properties": {
                         "COMMENT": {
                             "type": "string",

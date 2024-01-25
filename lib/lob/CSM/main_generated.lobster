@@ -5,6 +5,7 @@ class CSM
 
 class CSMCOLLECTION
 
+/// Conjunction Summary Message
 class CSM : flatbuffers_handle
     /// NORAD Catalog Number for the first object
     def NORAD_CAT_ID_1() -> int:

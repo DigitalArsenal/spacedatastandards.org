@@ -45,6 +45,7 @@ class CDM
 
 class CDMCOLLECTION
 
+/// Conjunction Data Message
 class CDMObject : flatbuffers_handle
     /// A comment
     def COMMENT() -> string:

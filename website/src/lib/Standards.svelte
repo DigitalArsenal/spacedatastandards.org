@@ -99,6 +99,7 @@
             class:active-idl={$idlContent === standard.idl?.toString()}
             class="p-2 bg-blue-600 rounded text-white"
             on:click={() => {
+              //@ts-ignore
               idlContent.set(standard.idl?.toString());
 
             }}>Show IDL</button>

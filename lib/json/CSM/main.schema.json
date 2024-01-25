@@ -3,6 +3,7 @@
   "definitions": {
     "CSM" : {
       "type" : "object",
+      "description" : "Conjunction Summary Message",
       "properties" : {
         "NORAD_CAT_ID_1" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,

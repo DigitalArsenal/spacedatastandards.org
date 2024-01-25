@@ -12,6 +12,7 @@ use self::flatbuffers::{EndianScalar, Follow};
 pub enum CSMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Conjunction Summary Message
 pub struct CSM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

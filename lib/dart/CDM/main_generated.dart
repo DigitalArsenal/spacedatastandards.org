@@ -331,6 +331,7 @@ class _ManeuverableTypeReader extends fb.Reader<ManeuverableType> {
       ManeuverableType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Conjunction Data Message
 class Cdmobject {
   Cdmobject._(this._bc, this._bcOffset);
   factory Cdmobject(List<int> bytes) {
