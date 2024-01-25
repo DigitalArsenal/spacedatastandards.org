@@ -1,24 +1,13 @@
 # spacedatastandards.org
 
-#### Currently unsponsored, if interested in sponsoring contact sds@digitalarsenal.io
+## Currently unsponsored, if interested in sponsoring contact sds@digitalarsenal.io
 
-<h2>Information</h2>
+## Information
 
-<a href="https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/">Click Here For More Information (Gitbook).</a>
+[Click Here For More Information (Gitbook).](https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/)
 
-<a href="https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/survey/legacy-messages">Click here for legacy message documentation (SATCAT, TLE, VCM, etc.)</a>
+[Click here for legacy message documentation (SATCAT, TLE, VCM, etc.)](https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/survey/legacy-messages)
 
-<h2>Contact</h2>
+## Contact
 
-<a href='mailto:tj@digitalarsenal.io'>spacestandards@digitalarsenal.io</a>
-, or
-<a href='https://github.com/DigitalArsenal/spacedatastandards.org/issues'>
-open an issue
-</a>
-on this repository.
-
-</p>
-
-Website
-
-**[CLICK HERE FOR THE EDITOR](https://spacedatastandards.org)**
+[spacestandards@digitalarsenal.io](mailto:tj@digitalarsenal.io), or [open an issue](https://github.com/DigitalArsenal/spacedatastandards.org/issues) on this repository.
