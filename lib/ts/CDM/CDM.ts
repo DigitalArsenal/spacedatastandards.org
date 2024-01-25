@@ -7,6 +7,9 @@ import { objectCenteredReferenceFrame } from './objectCenteredReferenceFrame.js'
 import { screeningVolumeShape } from './screeningVolumeShape.js';
 
 
+/**
+ * Conjunction Data Message
+ */
 export class CDM implements flatbuffers.IUnpackableObject<CDMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

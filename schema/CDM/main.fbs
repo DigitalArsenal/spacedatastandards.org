@@ -43,7 +43,6 @@ enum maneuverableType : byte {
   NA
 }
 
-/// Conjunction Data Message
 table CDMObject {
   /// A comment
   COMMENT:string;
@@ -226,6 +225,7 @@ table CDMObject {
   CTHR_THR:double;
 }
 
+/// Conjunction Data Message
 table CDM {
   /// The version of the CCSDS CDM standard used
   CCSDS_CDM_VERS:double;

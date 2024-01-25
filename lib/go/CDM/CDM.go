@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Conjunction Data Message
 type CDM struct {
 	_tab flatbuffers.Table
 }

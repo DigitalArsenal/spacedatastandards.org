@@ -6,6 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
+/// Conjunction Data Message
 class CDM extends Table
 {
     /**

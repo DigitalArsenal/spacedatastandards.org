@@ -45,7 +45,6 @@ class CDM
 
 class CDMCOLLECTION
 
-/// Conjunction Data Message
 class CDMObject : flatbuffers_handle
     /// A comment
     def COMMENT() -> string:
@@ -586,6 +585,7 @@ struct CDMObjectBuilder:
     def end():
         return b_.EndObject()
 
+/// Conjunction Data Message
 class CDM : flatbuffers_handle
     /// The version of the CCSDS CDM standard used
     def CCSDS_CDM_VERS() -> float:

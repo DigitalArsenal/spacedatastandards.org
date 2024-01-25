@@ -31,7 +31,6 @@
     },
     "CDMObject" : {
       "type" : "object",
-      "description" : "Conjunction Data Message",
       "properties" : {
         "COMMENT" : {
                 "type" : "string",
@@ -390,6 +389,7 @@
     },
     "CDM" : {
       "type" : "object",
+      "description" : "Conjunction Data Message",
       "properties" : {
         "CCSDS_CDM_VERS" : {
                 "type" : "number",

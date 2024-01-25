@@ -6,7 +6,6 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Conjunction Data Message
 public struct CDMObject : IFlatbufferObject
 {
   private Table __p;

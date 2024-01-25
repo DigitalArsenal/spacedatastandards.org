@@ -98,7 +98,6 @@ public enum maneuverableType: Int8, Enum, Verifiable {
 }
 
 
-///  Conjunction Data Message
 public struct CDMObject: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
@@ -763,6 +762,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   }
 }
 
+///  Conjunction Data Message
 public struct CDM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

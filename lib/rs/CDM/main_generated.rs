@@ -632,7 +632,6 @@ impl flatbuffers::SimpleToVerifyInSlice for maneuverableType {}
 pub enum CDMObjectOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Conjunction Data Message
 pub struct CDMObject<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -2904,6 +2903,7 @@ impl CDMObjectT {
 pub enum CDMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Conjunction Data Message
 pub struct CDM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

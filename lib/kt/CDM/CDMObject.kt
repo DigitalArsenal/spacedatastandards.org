@@ -16,9 +16,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
-/**
- * Conjunction Data Message
- */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class CDMObject : Table() {
