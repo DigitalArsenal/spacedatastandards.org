@@ -4,9 +4,9 @@ import * as flatbuffers from 'flatbuffers';
 
 import { BOV, BOVT } from './BOV.js';
 import { CAT, CATT } from './CAT.js';
+import { EPM, EPMT } from './EPM.js';
 import { ROC, ROCT } from './ROC.js';
 import { SIT, SITT } from './SIT.js';
-import { UPM, UPMT } from './UPM.js';
 
 
 /**
@@ -73,9 +73,9 @@ AGENCY_NAME(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Points of Contact for Launch
  */
-POINTS_OF_CONTACT(index: number, obj?:UPM):UPM|null {
+POINTS_OF_CONTACT(index: number, obj?:EPM):EPM|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? (obj || new UPM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+  return offset ? (obj || new EPM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 pointsOfContactLength():number {
@@ -86,9 +86,9 @@ pointsOfContactLength():number {
 /**
  * Operations Points of Contact for Launch
  */
-OPERATIONS_POINTS_OF_CONTACT(index: number, obj?:UPM):UPM|null {
+OPERATIONS_POINTS_OF_CONTACT(index: number, obj?:EPM):EPM|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? (obj || new UPM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+  return offset ? (obj || new EPM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 operationsPointsOfContactLength():number {
@@ -305,9 +305,9 @@ COLA_RUNS_REQUIRED(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Points of Contact for Collision Avoidance
  */
-COLA_POINTS_OF_CONTACT(index: number, obj?:UPM):UPM|null {
+COLA_POINTS_OF_CONTACT(index: number, obj?:EPM):EPM|null {
   const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? (obj || new UPM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+  return offset ? (obj || new EPM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 colaPointsOfContactLength():number {
@@ -607,8 +607,8 @@ unpack(): LDMT {
     this.AZIMUTH(),
     this.REFERENCES(),
     this.AGENCY_NAME(),
-    this.bb!.createObjList<UPM, UPMT>(this.POINTS_OF_CONTACT.bind(this), this.pointsOfContactLength()),
-    this.bb!.createObjList<UPM, UPMT>(this.OPERATIONS_POINTS_OF_CONTACT.bind(this), this.operationsPointsOfContactLength()),
+    this.bb!.createObjList<EPM, EPMT>(this.POINTS_OF_CONTACT.bind(this), this.pointsOfContactLength()),
+    this.bb!.createObjList<EPM, EPMT>(this.OPERATIONS_POINTS_OF_CONTACT.bind(this), this.operationsPointsOfContactLength()),
     this.NET(),
     (this.ROCKET_CONFIGURATION() !== null ? this.ROCKET_CONFIGURATION()!.unpack() : null),
     this.MISSION_NAME(),
@@ -627,7 +627,7 @@ unpack(): LDMT {
     this.COLA_SCREEN_DURATION(),
     this.PROBABILITY_OF_COLLISION_THRESHOLD(),
     this.COLA_RUNS_REQUIRED(),
-    this.bb!.createObjList<UPM, UPMT>(this.COLA_POINTS_OF_CONTACT.bind(this), this.colaPointsOfContactLength()),
+    this.bb!.createObjList<EPM, EPMT>(this.COLA_POINTS_OF_CONTACT.bind(this), this.colaPointsOfContactLength()),
     this.bb!.createScalarList<string>(this.ORBITAL_PARAMETERS.bind(this), this.orbitalParametersLength()),
     this.bb!.createObjList<BOV, BOVT>(this.BURN_OUT_VECTORS.bind(this), this.burnOutVectorsLength())
   );
@@ -639,8 +639,8 @@ unpackTo(_o: LDMT): void {
   _o.AZIMUTH = this.AZIMUTH();
   _o.REFERENCES = this.REFERENCES();
   _o.AGENCY_NAME = this.AGENCY_NAME();
-  _o.POINTS_OF_CONTACT = this.bb!.createObjList<UPM, UPMT>(this.POINTS_OF_CONTACT.bind(this), this.pointsOfContactLength());
-  _o.OPERATIONS_POINTS_OF_CONTACT = this.bb!.createObjList<UPM, UPMT>(this.OPERATIONS_POINTS_OF_CONTACT.bind(this), this.operationsPointsOfContactLength());
+  _o.POINTS_OF_CONTACT = this.bb!.createObjList<EPM, EPMT>(this.POINTS_OF_CONTACT.bind(this), this.pointsOfContactLength());
+  _o.OPERATIONS_POINTS_OF_CONTACT = this.bb!.createObjList<EPM, EPMT>(this.OPERATIONS_POINTS_OF_CONTACT.bind(this), this.operationsPointsOfContactLength());
   _o.NET = this.NET();
   _o.ROCKET_CONFIGURATION = (this.ROCKET_CONFIGURATION() !== null ? this.ROCKET_CONFIGURATION()!.unpack() : null);
   _o.MISSION_NAME = this.MISSION_NAME();
@@ -659,7 +659,7 @@ unpackTo(_o: LDMT): void {
   _o.COLA_SCREEN_DURATION = this.COLA_SCREEN_DURATION();
   _o.PROBABILITY_OF_COLLISION_THRESHOLD = this.PROBABILITY_OF_COLLISION_THRESHOLD();
   _o.COLA_RUNS_REQUIRED = this.COLA_RUNS_REQUIRED();
-  _o.COLA_POINTS_OF_CONTACT = this.bb!.createObjList<UPM, UPMT>(this.COLA_POINTS_OF_CONTACT.bind(this), this.colaPointsOfContactLength());
+  _o.COLA_POINTS_OF_CONTACT = this.bb!.createObjList<EPM, EPMT>(this.COLA_POINTS_OF_CONTACT.bind(this), this.colaPointsOfContactLength());
   _o.ORBITAL_PARAMETERS = this.bb!.createScalarList<string>(this.ORBITAL_PARAMETERS.bind(this), this.orbitalParametersLength());
   _o.BURN_OUT_VECTORS = this.bb!.createObjList<BOV, BOVT>(this.BURN_OUT_VECTORS.bind(this), this.burnOutVectorsLength());
 }
@@ -671,8 +671,8 @@ constructor(
   public AZIMUTH: number = 0.0,
   public REFERENCES: string|Uint8Array|null = null,
   public AGENCY_NAME: string|Uint8Array|null = null,
-  public POINTS_OF_CONTACT: (UPMT)[] = [],
-  public OPERATIONS_POINTS_OF_CONTACT: (UPMT)[] = [],
+  public POINTS_OF_CONTACT: (EPMT)[] = [],
+  public OPERATIONS_POINTS_OF_CONTACT: (EPMT)[] = [],
   public NET: string|Uint8Array|null = null,
   public ROCKET_CONFIGURATION: ROCT|null = null,
   public MISSION_NAME: string|Uint8Array|null = null,
@@ -691,7 +691,7 @@ constructor(
   public COLA_SCREEN_DURATION: string|Uint8Array|null = null,
   public PROBABILITY_OF_COLLISION_THRESHOLD: string|Uint8Array|null = null,
   public COLA_RUNS_REQUIRED: string|Uint8Array|null = null,
-  public COLA_POINTS_OF_CONTACT: (UPMT)[] = [],
+  public COLA_POINTS_OF_CONTACT: (EPMT)[] = [],
   public ORBITAL_PARAMETERS: (string)[] = [],
   public BURN_OUT_VECTORS: (BOVT)[] = []
 ){}

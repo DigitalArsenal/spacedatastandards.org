@@ -1,5 +1,5 @@
 include "../SIT/main.fbs";
-include "../UPM/main.fbs";
+include "../EPM/main.fbs";
 include "../CAT/main.fbs";
 include "../ROC/main.fbs"; // For Rocket Configuration
 include "../BOV/main.fbs"; 
@@ -19,10 +19,10 @@ table LDM {
   AGENCY_NAME: string;
 
   /// Points of Contact for Launch
-  POINTS_OF_CONTACT: [UPM];
+  POINTS_OF_CONTACT: [EPM];
 
   /// Operations Points of Contact for Launch
-  OPERATIONS_POINTS_OF_CONTACT: [UPM];
+  OPERATIONS_POINTS_OF_CONTACT: [EPM];
 
   /// Net Launch Time (UTC Format)
   NET: string;
@@ -79,7 +79,7 @@ table LDM {
   COLA_RUNS_REQUIRED: string;
 
   /// Points of Contact for Collision Avoidance
-  COLA_POINTS_OF_CONTACT: [UPM];
+  COLA_POINTS_OF_CONTACT: [EPM];
 
   /// Orbital Parameters of the Launch
   ORBITAL_PARAMETERS: [string];

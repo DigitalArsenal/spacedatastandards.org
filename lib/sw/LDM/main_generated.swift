@@ -61,11 +61,11 @@ public struct LDM: FlatBufferObject, Verifiable {
   ///  Points of Contact for Launch
   public var hasPointsOfContact: Bool { let o = _accessor.offset(VTOFFSET.POINTS_OF_CONTACT.v); return o == 0 ? false : true }
   public var POINTS_OF_CONTACTCount: Int32 { let o = _accessor.offset(VTOFFSET.POINTS_OF_CONTACT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POINTS_OF_CONTACT(at index: Int32) -> UPM? { let o = _accessor.offset(VTOFFSET.POINTS_OF_CONTACT.v); return o == 0 ? nil : UPM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public func POINTS_OF_CONTACT(at index: Int32) -> EPM? { let o = _accessor.offset(VTOFFSET.POINTS_OF_CONTACT.v); return o == 0 ? nil : EPM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
   ///  Operations Points of Contact for Launch
   public var hasOperationsPointsOfContact: Bool { let o = _accessor.offset(VTOFFSET.OPERATIONS_POINTS_OF_CONTACT.v); return o == 0 ? false : true }
   public var OPERATIONS_POINTS_OF_CONTACTCount: Int32 { let o = _accessor.offset(VTOFFSET.OPERATIONS_POINTS_OF_CONTACT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OPERATIONS_POINTS_OF_CONTACT(at index: Int32) -> UPM? { let o = _accessor.offset(VTOFFSET.OPERATIONS_POINTS_OF_CONTACT.v); return o == 0 ? nil : UPM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public func OPERATIONS_POINTS_OF_CONTACT(at index: Int32) -> EPM? { let o = _accessor.offset(VTOFFSET.OPERATIONS_POINTS_OF_CONTACT.v); return o == 0 ? nil : EPM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
   ///  Net Launch Time (UTC Format)
   public var NET: String? { let o = _accessor.offset(VTOFFSET.NET.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NET.v) }
@@ -128,7 +128,7 @@ public struct LDM: FlatBufferObject, Verifiable {
   ///  Points of Contact for Collision Avoidance
   public var hasColaPointsOfContact: Bool { let o = _accessor.offset(VTOFFSET.COLA_POINTS_OF_CONTACT.v); return o == 0 ? false : true }
   public var COLA_POINTS_OF_CONTACTCount: Int32 { let o = _accessor.offset(VTOFFSET.COLA_POINTS_OF_CONTACT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COLA_POINTS_OF_CONTACT(at index: Int32) -> UPM? { let o = _accessor.offset(VTOFFSET.COLA_POINTS_OF_CONTACT.v); return o == 0 ? nil : UPM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public func COLA_POINTS_OF_CONTACT(at index: Int32) -> EPM? { let o = _accessor.offset(VTOFFSET.COLA_POINTS_OF_CONTACT.v); return o == 0 ? nil : EPM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
   ///  Orbital Parameters of the Launch
   public var hasOrbitalParameters: Bool { let o = _accessor.offset(VTOFFSET.ORBITAL_PARAMETERS.v); return o == 0 ? false : true }
   public var ORBITAL_PARAMETERSCount: Int32 { let o = _accessor.offset(VTOFFSET.ORBITAL_PARAMETERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
@@ -233,8 +233,8 @@ public struct LDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.AZIMUTH.p, fieldName: "AZIMUTH", required: false, type: Float32.self)
     try _v.visit(field: VTOFFSET.REFERENCES.p, fieldName: "REFERENCES", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.AGENCY_NAME.p, fieldName: "AGENCY_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POINTS_OF_CONTACT.p, fieldName: "POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<UPM>, UPM>>.self)
-    try _v.visit(field: VTOFFSET.OPERATIONS_POINTS_OF_CONTACT.p, fieldName: "OPERATIONS_POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<UPM>, UPM>>.self)
+    try _v.visit(field: VTOFFSET.POINTS_OF_CONTACT.p, fieldName: "POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<EPM>, EPM>>.self)
+    try _v.visit(field: VTOFFSET.OPERATIONS_POINTS_OF_CONTACT.p, fieldName: "OPERATIONS_POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<EPM>, EPM>>.self)
     try _v.visit(field: VTOFFSET.NET.p, fieldName: "NET", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ROCKET_CONFIGURATION.p, fieldName: "ROCKET_CONFIGURATION", required: false, type: ForwardOffset<ROC>.self)
     try _v.visit(field: VTOFFSET.MISSION_NAME.p, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
@@ -253,7 +253,7 @@ public struct LDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.COLA_SCREEN_DURATION.p, fieldName: "COLA_SCREEN_DURATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PROBABILITY_OF_COLLISION_THRESHOLD.p, fieldName: "PROBABILITY_OF_COLLISION_THRESHOLD", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COLA_RUNS_REQUIRED.p, fieldName: "COLA_RUNS_REQUIRED", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLA_POINTS_OF_CONTACT.p, fieldName: "COLA_POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<UPM>, UPM>>.self)
+    try _v.visit(field: VTOFFSET.COLA_POINTS_OF_CONTACT.p, fieldName: "COLA_POINTS_OF_CONTACT", required: false, type: ForwardOffset<Vector<ForwardOffset<EPM>, EPM>>.self)
     try _v.visit(field: VTOFFSET.ORBITAL_PARAMETERS.p, fieldName: "ORBITAL_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.BURN_OUT_VECTORS.p, fieldName: "BURN_OUT_VECTORS", required: false, type: ForwardOffset<Vector<ForwardOffset<BOV>, BOV>>.self)
     _v.finish()

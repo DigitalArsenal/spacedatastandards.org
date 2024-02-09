@@ -81,8 +81,8 @@ class LDM : Table() {
     /**
      * Points of Contact for Launch
      */
-    fun POINTS_OF_CONTACT(j: Int) : UPM? = POINTS_OF_CONTACT(UPM(), j)
-    fun POINTS_OF_CONTACT(obj: UPM, j: Int) : UPM? {
+    fun POINTS_OF_CONTACT(j: Int) : EPM? = POINTS_OF_CONTACT(EPM(), j)
+    fun POINTS_OF_CONTACT(obj: EPM, j: Int) : EPM? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -97,8 +97,8 @@ class LDM : Table() {
     /**
      * Operations Points of Contact for Launch
      */
-    fun OPERATIONS_POINTS_OF_CONTACT(j: Int) : UPM? = OPERATIONS_POINTS_OF_CONTACT(UPM(), j)
-    fun OPERATIONS_POINTS_OF_CONTACT(obj: UPM, j: Int) : UPM? {
+    fun OPERATIONS_POINTS_OF_CONTACT(j: Int) : EPM? = OPERATIONS_POINTS_OF_CONTACT(EPM(), j)
+    fun OPERATIONS_POINTS_OF_CONTACT(obj: EPM, j: Int) : EPM? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -370,8 +370,8 @@ class LDM : Table() {
     /**
      * Points of Contact for Collision Avoidance
      */
-    fun COLA_POINTS_OF_CONTACT(j: Int) : UPM? = COLA_POINTS_OF_CONTACT(UPM(), j)
-    fun COLA_POINTS_OF_CONTACT(obj: UPM, j: Int) : UPM? {
+    fun COLA_POINTS_OF_CONTACT(j: Int) : EPM? = COLA_POINTS_OF_CONTACT(EPM(), j)
+    fun COLA_POINTS_OF_CONTACT(obj: EPM, j: Int) : EPM? {
         val o = __offset(52)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)

@@ -80,7 +80,7 @@ class LDM extends Table
     public function getPOINTS_OF_CONTACT($j)
     {
         $o = $this->__offset(12);
-        $obj = new UPM();
+        $obj = new EPM();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
@@ -100,7 +100,7 @@ class LDM extends Table
     public function getOPERATIONS_POINTS_OF_CONTACT($j)
     {
         $o = $this->__offset(14);
-        $obj = new UPM();
+        $obj = new EPM();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
@@ -325,7 +325,7 @@ class LDM extends Table
     public function getCOLA_POINTS_OF_CONTACT($j)
     {
         $o = $this->__offset(52);
-        $obj = new UPM();
+        $obj = new EPM();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 

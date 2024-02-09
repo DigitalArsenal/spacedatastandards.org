@@ -21,13 +21,13 @@ class LDM : flatbuffers_handle
     def AGENCY_NAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 10)
     /// Points of Contact for Launch
-    def POINTS_OF_CONTACT(i:int) -> UPM:
-        return UPM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 12) + i * 4) }
+    def POINTS_OF_CONTACT(i:int) -> EPM:
+        return EPM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 12) + i * 4) }
     def POINTS_OF_CONTACT_length() -> int:
         return buf_.flatbuffers_field_vector_len(pos_, 12)
     /// Operations Points of Contact for Launch
-    def OPERATIONS_POINTS_OF_CONTACT(i:int) -> UPM:
-        return UPM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 14) + i * 4) }
+    def OPERATIONS_POINTS_OF_CONTACT(i:int) -> EPM:
+        return EPM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 14) + i * 4) }
     def OPERATIONS_POINTS_OF_CONTACT_length() -> int:
         return buf_.flatbuffers_field_vector_len(pos_, 14)
     /// Net Launch Time (UTC Format)
@@ -98,8 +98,8 @@ class LDM : flatbuffers_handle
     def COLA_RUNS_REQUIRED() -> string:
         return buf_.flatbuffers_field_string(pos_, 50)
     /// Points of Contact for Collision Avoidance
-    def COLA_POINTS_OF_CONTACT(i:int) -> UPM:
-        return UPM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 52) + i * 4) }
+    def COLA_POINTS_OF_CONTACT(i:int) -> EPM:
+        return EPM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 52) + i * 4) }
     def COLA_POINTS_OF_CONTACT_length() -> int:
         return buf_.flatbuffers_field_vector_len(pos_, 52)
     /// Orbital Parameters of the Launch

@@ -246,19 +246,19 @@ impl<'a> LDM<'a> {
   }
   /// Points of Contact for Launch
   #[inline]
-  pub fn POINTS_OF_CONTACT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM<'a>>>> {
+  pub fn POINTS_OF_CONTACT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM>>>>(LDM::VT_POINTS_OF_CONTACT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM>>>>(LDM::VT_POINTS_OF_CONTACT, None)}
   }
   /// Operations Points of Contact for Launch
   #[inline]
-  pub fn OPERATIONS_POINTS_OF_CONTACT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM<'a>>>> {
+  pub fn OPERATIONS_POINTS_OF_CONTACT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM>>>>(LDM::VT_OPERATIONS_POINTS_OF_CONTACT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM>>>>(LDM::VT_OPERATIONS_POINTS_OF_CONTACT, None)}
   }
   /// Net Launch Time (UTC Format)
   #[inline]
@@ -406,11 +406,11 @@ impl<'a> LDM<'a> {
   }
   /// Points of Contact for Collision Avoidance
   #[inline]
-  pub fn COLA_POINTS_OF_CONTACT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM<'a>>>> {
+  pub fn COLA_POINTS_OF_CONTACT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM>>>>(LDM::VT_COLA_POINTS_OF_CONTACT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM>>>>(LDM::VT_COLA_POINTS_OF_CONTACT, None)}
   }
   /// Orbital Parameters of the Launch
   #[inline]
@@ -441,8 +441,8 @@ impl flatbuffers::Verifiable for LDM<'_> {
      .visit_field::<f32>("AZIMUTH", Self::VT_AZIMUTH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCES", Self::VT_REFERENCES, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AGENCY_NAME", Self::VT_AGENCY_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<UPM>>>>("POINTS_OF_CONTACT", Self::VT_POINTS_OF_CONTACT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<UPM>>>>("OPERATIONS_POINTS_OF_CONTACT", Self::VT_OPERATIONS_POINTS_OF_CONTACT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<EPM>>>>("POINTS_OF_CONTACT", Self::VT_POINTS_OF_CONTACT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<EPM>>>>("OPERATIONS_POINTS_OF_CONTACT", Self::VT_OPERATIONS_POINTS_OF_CONTACT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NET", Self::VT_NET, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<ROC>>("ROCKET_CONFIGURATION", Self::VT_ROCKET_CONFIGURATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MISSION_NAME", Self::VT_MISSION_NAME, false)?
@@ -461,7 +461,7 @@ impl flatbuffers::Verifiable for LDM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLA_SCREEN_DURATION", Self::VT_COLA_SCREEN_DURATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PROBABILITY_OF_COLLISION_THRESHOLD", Self::VT_PROBABILITY_OF_COLLISION_THRESHOLD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLA_RUNS_REQUIRED", Self::VT_COLA_RUNS_REQUIRED, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<UPM>>>>("COLA_POINTS_OF_CONTACT", Self::VT_COLA_POINTS_OF_CONTACT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<EPM>>>>("COLA_POINTS_OF_CONTACT", Self::VT_COLA_POINTS_OF_CONTACT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ORBITAL_PARAMETERS", Self::VT_ORBITAL_PARAMETERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<BOV>>>>("BURN_OUT_VECTORS", Self::VT_BURN_OUT_VECTORS, false)?
      .finish();
@@ -473,8 +473,8 @@ pub struct LDMArgs<'a> {
     pub AZIMUTH: f32,
     pub REFERENCES: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AGENCY_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub POINTS_OF_CONTACT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM<'a>>>>>,
-    pub OPERATIONS_POINTS_OF_CONTACT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM<'a>>>>>,
+    pub POINTS_OF_CONTACT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>>>,
+    pub OPERATIONS_POINTS_OF_CONTACT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>>>,
     pub NET: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ROCKET_CONFIGURATION: Option<flatbuffers::WIPOffset<ROC<'a>>>,
     pub MISSION_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -493,7 +493,7 @@ pub struct LDMArgs<'a> {
     pub COLA_SCREEN_DURATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PROBABILITY_OF_COLLISION_THRESHOLD: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COLA_RUNS_REQUIRED: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COLA_POINTS_OF_CONTACT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<UPM<'a>>>>>,
+    pub COLA_POINTS_OF_CONTACT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>>>,
     pub ORBITAL_PARAMETERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub BURN_OUT_VECTORS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<BOV<'a>>>>>,
 }
@@ -554,11 +554,11 @@ impl<'a: 'b, 'b> LDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDM::VT_AGENCY_NAME, AGENCY_NAME);
   }
   #[inline]
-  pub fn add_POINTS_OF_CONTACT(&mut self, POINTS_OF_CONTACT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<UPM<'b >>>>) {
+  pub fn add_POINTS_OF_CONTACT(&mut self, POINTS_OF_CONTACT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EPM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDM::VT_POINTS_OF_CONTACT, POINTS_OF_CONTACT);
   }
   #[inline]
-  pub fn add_OPERATIONS_POINTS_OF_CONTACT(&mut self, OPERATIONS_POINTS_OF_CONTACT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<UPM<'b >>>>) {
+  pub fn add_OPERATIONS_POINTS_OF_CONTACT(&mut self, OPERATIONS_POINTS_OF_CONTACT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EPM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDM::VT_OPERATIONS_POINTS_OF_CONTACT, OPERATIONS_POINTS_OF_CONTACT);
   }
   #[inline]
@@ -634,7 +634,7 @@ impl<'a: 'b, 'b> LDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDM::VT_COLA_RUNS_REQUIRED, COLA_RUNS_REQUIRED);
   }
   #[inline]
-  pub fn add_COLA_POINTS_OF_CONTACT(&mut self, COLA_POINTS_OF_CONTACT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<UPM<'b >>>>) {
+  pub fn add_COLA_POINTS_OF_CONTACT(&mut self, COLA_POINTS_OF_CONTACT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EPM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDM::VT_COLA_POINTS_OF_CONTACT, COLA_POINTS_OF_CONTACT);
   }
   #[inline]
@@ -700,8 +700,8 @@ pub struct LDMT {
   pub AZIMUTH: f32,
   pub REFERENCES: Option<String>,
   pub AGENCY_NAME: Option<String>,
-  pub POINTS_OF_CONTACT: Option<Vec<UPMT>>,
-  pub OPERATIONS_POINTS_OF_CONTACT: Option<Vec<UPMT>>,
+  pub POINTS_OF_CONTACT: Option<Vec<EPMT>>,
+  pub OPERATIONS_POINTS_OF_CONTACT: Option<Vec<EPMT>>,
   pub NET: Option<String>,
   pub ROCKET_CONFIGURATION: Option<Box<ROCT>>,
   pub MISSION_NAME: Option<String>,
@@ -720,7 +720,7 @@ pub struct LDMT {
   pub COLA_SCREEN_DURATION: Option<String>,
   pub PROBABILITY_OF_COLLISION_THRESHOLD: Option<String>,
   pub COLA_RUNS_REQUIRED: Option<String>,
-  pub COLA_POINTS_OF_CONTACT: Option<Vec<UPMT>>,
+  pub COLA_POINTS_OF_CONTACT: Option<Vec<EPMT>>,
   pub ORBITAL_PARAMETERS: Option<Vec<String>>,
   pub BURN_OUT_VECTORS: Option<Vec<BOVT>>,
 }

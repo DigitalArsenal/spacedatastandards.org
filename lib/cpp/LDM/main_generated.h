@@ -74,12 +74,12 @@ struct LDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_AGENCY_NAME);
   }
   /// Points of Contact for Launch
-  const ::flatbuffers::Vector<::flatbuffers::Offset<UPM>> *POINTS_OF_CONTACT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<UPM>> *>(VT_POINTS_OF_CONTACT);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *POINTS_OF_CONTACT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *>(VT_POINTS_OF_CONTACT);
   }
   /// Operations Points of Contact for Launch
-  const ::flatbuffers::Vector<::flatbuffers::Offset<UPM>> *OPERATIONS_POINTS_OF_CONTACT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<UPM>> *>(VT_OPERATIONS_POINTS_OF_CONTACT);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *OPERATIONS_POINTS_OF_CONTACT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *>(VT_OPERATIONS_POINTS_OF_CONTACT);
   }
   /// Net Launch Time (UTC Format)
   const ::flatbuffers::String *NET() const {
@@ -154,8 +154,8 @@ struct LDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_COLA_RUNS_REQUIRED);
   }
   /// Points of Contact for Collision Avoidance
-  const ::flatbuffers::Vector<::flatbuffers::Offset<UPM>> *COLA_POINTS_OF_CONTACT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<UPM>> *>(VT_COLA_POINTS_OF_CONTACT);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *COLA_POINTS_OF_CONTACT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *>(VT_COLA_POINTS_OF_CONTACT);
   }
   /// Orbital Parameters of the Launch
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ORBITAL_PARAMETERS() const {
@@ -251,10 +251,10 @@ struct LDMBuilder {
   void add_AGENCY_NAME(::flatbuffers::Offset<::flatbuffers::String> AGENCY_NAME) {
     fbb_.AddOffset(LDM::VT_AGENCY_NAME, AGENCY_NAME);
   }
-  void add_POINTS_OF_CONTACT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UPM>>> POINTS_OF_CONTACT) {
+  void add_POINTS_OF_CONTACT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> POINTS_OF_CONTACT) {
     fbb_.AddOffset(LDM::VT_POINTS_OF_CONTACT, POINTS_OF_CONTACT);
   }
-  void add_OPERATIONS_POINTS_OF_CONTACT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UPM>>> OPERATIONS_POINTS_OF_CONTACT) {
+  void add_OPERATIONS_POINTS_OF_CONTACT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> OPERATIONS_POINTS_OF_CONTACT) {
     fbb_.AddOffset(LDM::VT_OPERATIONS_POINTS_OF_CONTACT, OPERATIONS_POINTS_OF_CONTACT);
   }
   void add_NET(::flatbuffers::Offset<::flatbuffers::String> NET) {
@@ -311,7 +311,7 @@ struct LDMBuilder {
   void add_COLA_RUNS_REQUIRED(::flatbuffers::Offset<::flatbuffers::String> COLA_RUNS_REQUIRED) {
     fbb_.AddOffset(LDM::VT_COLA_RUNS_REQUIRED, COLA_RUNS_REQUIRED);
   }
-  void add_COLA_POINTS_OF_CONTACT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UPM>>> COLA_POINTS_OF_CONTACT) {
+  void add_COLA_POINTS_OF_CONTACT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> COLA_POINTS_OF_CONTACT) {
     fbb_.AddOffset(LDM::VT_COLA_POINTS_OF_CONTACT, COLA_POINTS_OF_CONTACT);
   }
   void add_ORBITAL_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ORBITAL_PARAMETERS) {
@@ -337,8 +337,8 @@ inline ::flatbuffers::Offset<LDM> CreateLDM(
     float AZIMUTH = 0.0f,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCES = 0,
     ::flatbuffers::Offset<::flatbuffers::String> AGENCY_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UPM>>> POINTS_OF_CONTACT = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UPM>>> OPERATIONS_POINTS_OF_CONTACT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> POINTS_OF_CONTACT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> OPERATIONS_POINTS_OF_CONTACT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NET = 0,
     ::flatbuffers::Offset<ROC> ROCKET_CONFIGURATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MISSION_NAME = 0,
@@ -357,7 +357,7 @@ inline ::flatbuffers::Offset<LDM> CreateLDM(
     ::flatbuffers::Offset<::flatbuffers::String> COLA_SCREEN_DURATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROBABILITY_OF_COLLISION_THRESHOLD = 0,
     ::flatbuffers::Offset<::flatbuffers::String> COLA_RUNS_REQUIRED = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UPM>>> COLA_POINTS_OF_CONTACT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> COLA_POINTS_OF_CONTACT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ORBITAL_PARAMETERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<BOV>>> BURN_OUT_VECTORS = 0) {
   LDMBuilder builder_(_fbb);
@@ -397,8 +397,8 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
     float AZIMUTH = 0.0f,
     const char *REFERENCES = nullptr,
     const char *AGENCY_NAME = nullptr,
-    const std::vector<::flatbuffers::Offset<UPM>> *POINTS_OF_CONTACT = nullptr,
-    const std::vector<::flatbuffers::Offset<UPM>> *OPERATIONS_POINTS_OF_CONTACT = nullptr,
+    const std::vector<::flatbuffers::Offset<EPM>> *POINTS_OF_CONTACT = nullptr,
+    const std::vector<::flatbuffers::Offset<EPM>> *OPERATIONS_POINTS_OF_CONTACT = nullptr,
     const char *NET = nullptr,
     ::flatbuffers::Offset<ROC> ROCKET_CONFIGURATION = 0,
     const char *MISSION_NAME = nullptr,
@@ -417,13 +417,13 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
     const char *COLA_SCREEN_DURATION = nullptr,
     const char *PROBABILITY_OF_COLLISION_THRESHOLD = nullptr,
     const char *COLA_RUNS_REQUIRED = nullptr,
-    const std::vector<::flatbuffers::Offset<UPM>> *COLA_POINTS_OF_CONTACT = nullptr,
+    const std::vector<::flatbuffers::Offset<EPM>> *COLA_POINTS_OF_CONTACT = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ORBITAL_PARAMETERS = nullptr,
     const std::vector<::flatbuffers::Offset<BOV>> *BURN_OUT_VECTORS = nullptr) {
   auto REFERENCES__ = REFERENCES ? _fbb.CreateString(REFERENCES) : 0;
   auto AGENCY_NAME__ = AGENCY_NAME ? _fbb.CreateString(AGENCY_NAME) : 0;
-  auto POINTS_OF_CONTACT__ = POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<UPM>>(*POINTS_OF_CONTACT) : 0;
-  auto OPERATIONS_POINTS_OF_CONTACT__ = OPERATIONS_POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<UPM>>(*OPERATIONS_POINTS_OF_CONTACT) : 0;
+  auto POINTS_OF_CONTACT__ = POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<EPM>>(*POINTS_OF_CONTACT) : 0;
+  auto OPERATIONS_POINTS_OF_CONTACT__ = OPERATIONS_POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<EPM>>(*OPERATIONS_POINTS_OF_CONTACT) : 0;
   auto NET__ = NET ? _fbb.CreateString(NET) : 0;
   auto MISSION_NAME__ = MISSION_NAME ? _fbb.CreateString(MISSION_NAME) : 0;
   auto MISSION_DESCRIPTION__ = MISSION_DESCRIPTION ? _fbb.CreateString(MISSION_DESCRIPTION) : 0;
@@ -441,7 +441,7 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
   auto COLA_SCREEN_DURATION__ = COLA_SCREEN_DURATION ? _fbb.CreateString(COLA_SCREEN_DURATION) : 0;
   auto PROBABILITY_OF_COLLISION_THRESHOLD__ = PROBABILITY_OF_COLLISION_THRESHOLD ? _fbb.CreateString(PROBABILITY_OF_COLLISION_THRESHOLD) : 0;
   auto COLA_RUNS_REQUIRED__ = COLA_RUNS_REQUIRED ? _fbb.CreateString(COLA_RUNS_REQUIRED) : 0;
-  auto COLA_POINTS_OF_CONTACT__ = COLA_POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<UPM>>(*COLA_POINTS_OF_CONTACT) : 0;
+  auto COLA_POINTS_OF_CONTACT__ = COLA_POINTS_OF_CONTACT ? _fbb.CreateVector<::flatbuffers::Offset<EPM>>(*COLA_POINTS_OF_CONTACT) : 0;
   auto ORBITAL_PARAMETERS__ = ORBITAL_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ORBITAL_PARAMETERS) : 0;
   auto BURN_OUT_VECTORS__ = BURN_OUT_VECTORS ? _fbb.CreateVector<::flatbuffers::Offset<BOV>>(*BURN_OUT_VECTORS) : 0;
   return CreateLDM(

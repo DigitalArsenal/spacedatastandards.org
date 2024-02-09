@@ -29,9 +29,9 @@ class LDM {
   ///  Launching Agency Name
   String? get AGENCY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Points of Contact for Launch
-  List<UPM>? get POINTS_OF_CONTACT => const fb.ListReader<UPM>(UPM.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  List<EPM>? get POINTS_OF_CONTACT => const fb.ListReader<EPM>(EPM.reader).vTableGetNullable(_bc, _bcOffset, 12);
   ///  Operations Points of Contact for Launch
-  List<UPM>? get OPERATIONS_POINTS_OF_CONTACT => const fb.ListReader<UPM>(UPM.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<EPM>? get OPERATIONS_POINTS_OF_CONTACT => const fb.ListReader<EPM>(EPM.reader).vTableGetNullable(_bc, _bcOffset, 14);
   ///  Net Launch Time (UTC Format)
   String? get NET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   ///  Rocket Configuration Details
@@ -69,7 +69,7 @@ class LDM {
   ///  Number of Required Collision Avoidance Runs
   String? get COLA_RUNS_REQUIRED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
   ///  Points of Contact for Collision Avoidance
-  List<UPM>? get COLA_POINTS_OF_CONTACT => const fb.ListReader<UPM>(UPM.reader).vTableGetNullable(_bc, _bcOffset, 52);
+  List<EPM>? get COLA_POINTS_OF_CONTACT => const fb.ListReader<EPM>(EPM.reader).vTableGetNullable(_bc, _bcOffset, 52);
   ///  Orbital Parameters of the Launch
   List<String>? get ORBITAL_PARAMETERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 54);
   ///  Burn Out Vectors for the Launch
@@ -217,8 +217,8 @@ class LDMObjectBuilder extends fb.ObjectBuilder {
   final double? _AZIMUTH;
   final String? _REFERENCES;
   final String? _AGENCY_NAME;
-  final List<UPMObjectBuilder>? _POINTS_OF_CONTACT;
-  final List<UPMObjectBuilder>? _OPERATIONS_POINTS_OF_CONTACT;
+  final List<EPMObjectBuilder>? _POINTS_OF_CONTACT;
+  final List<EPMObjectBuilder>? _OPERATIONS_POINTS_OF_CONTACT;
   final String? _NET;
   final ROCObjectBuilder? _ROCKET_CONFIGURATION;
   final String? _MISSION_NAME;
@@ -237,7 +237,7 @@ class LDMObjectBuilder extends fb.ObjectBuilder {
   final String? _COLA_SCREEN_DURATION;
   final String? _PROBABILITY_OF_COLLISION_THRESHOLD;
   final String? _COLA_RUNS_REQUIRED;
-  final List<UPMObjectBuilder>? _COLA_POINTS_OF_CONTACT;
+  final List<EPMObjectBuilder>? _COLA_POINTS_OF_CONTACT;
   final List<String>? _ORBITAL_PARAMETERS;
   final List<BOVObjectBuilder>? _BURN_OUT_VECTORS;
 
@@ -246,8 +246,8 @@ class LDMObjectBuilder extends fb.ObjectBuilder {
     double? AZIMUTH,
     String? REFERENCES,
     String? AGENCY_NAME,
-    List<UPMObjectBuilder>? POINTS_OF_CONTACT,
-    List<UPMObjectBuilder>? OPERATIONS_POINTS_OF_CONTACT,
+    List<EPMObjectBuilder>? POINTS_OF_CONTACT,
+    List<EPMObjectBuilder>? OPERATIONS_POINTS_OF_CONTACT,
     String? NET,
     ROCObjectBuilder? ROCKET_CONFIGURATION,
     String? MISSION_NAME,
@@ -266,7 +266,7 @@ class LDMObjectBuilder extends fb.ObjectBuilder {
     String? COLA_SCREEN_DURATION,
     String? PROBABILITY_OF_COLLISION_THRESHOLD,
     String? COLA_RUNS_REQUIRED,
-    List<UPMObjectBuilder>? COLA_POINTS_OF_CONTACT,
+    List<EPMObjectBuilder>? COLA_POINTS_OF_CONTACT,
     List<String>? ORBITAL_PARAMETERS,
     List<BOVObjectBuilder>? BURN_OUT_VECTORS,
   })

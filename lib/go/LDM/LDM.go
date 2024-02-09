@@ -84,7 +84,7 @@ func (rcv *LDM) AGENCY_NAME() []byte {
 
 /// Launching Agency Name
 /// Points of Contact for Launch
-func (rcv *LDM) POINTS_OF_CONTACT(obj *UPM, j int) bool {
+func (rcv *LDM) POINTS_OF_CONTACT(obj *EPM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
@@ -106,7 +106,7 @@ func (rcv *LDM) POINTS_OF_CONTACTLength() int {
 
 /// Points of Contact for Launch
 /// Operations Points of Contact for Launch
-func (rcv *LDM) OPERATIONS_POINTS_OF_CONTACT(obj *UPM, j int) bool {
+func (rcv *LDM) OPERATIONS_POINTS_OF_CONTACT(obj *EPM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
@@ -370,7 +370,7 @@ func (rcv *LDM) COLA_RUNS_REQUIRED() []byte {
 
 /// Number of Required Collision Avoidance Runs
 /// Points of Contact for Collision Avoidance
-func (rcv *LDM) COLA_POINTS_OF_CONTACT(obj *UPM, j int) bool {
+func (rcv *LDM) COLA_POINTS_OF_CONTACT(obj *EPM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		x := rcv._tab.Vector(o)

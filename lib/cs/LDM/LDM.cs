@@ -39,10 +39,10 @@ public struct LDM : IFlatbufferObject
 #endif
   public byte[] GetAGENCY_NAMEArray() { return __p.__vector_as_array<byte>(10); }
   /// Points of Contact for Launch
-  public UPM? POINTS_OF_CONTACT(int j) { int o = __p.__offset(12); return o != 0 ? (UPM?)(new UPM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public EPM? POINTS_OF_CONTACT(int j) { int o = __p.__offset(12); return o != 0 ? (EPM?)(new EPM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int POINTS_OF_CONTACTLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Operations Points of Contact for Launch
-  public UPM? OPERATIONS_POINTS_OF_CONTACT(int j) { int o = __p.__offset(14); return o != 0 ? (UPM?)(new UPM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public EPM? OPERATIONS_POINTS_OF_CONTACT(int j) { int o = __p.__offset(14); return o != 0 ? (EPM?)(new EPM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int OPERATIONS_POINTS_OF_CONTACTLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Net Launch Time (UTC Format)
   public string NET { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -153,7 +153,7 @@ public struct LDM : IFlatbufferObject
 #endif
   public byte[] GetCOLA_RUNS_REQUIREDArray() { return __p.__vector_as_array<byte>(50); }
   /// Points of Contact for Collision Avoidance
-  public UPM? COLA_POINTS_OF_CONTACT(int j) { int o = __p.__offset(52); return o != 0 ? (UPM?)(new UPM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public EPM? COLA_POINTS_OF_CONTACT(int j) { int o = __p.__offset(52); return o != 0 ? (EPM?)(new EPM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COLA_POINTS_OF_CONTACTLength { get { int o = __p.__offset(52); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Orbital Parameters of the Launch
   public string ORBITAL_PARAMETERS(int j) { int o = __p.__offset(54); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
@@ -227,16 +227,16 @@ public struct LDM : IFlatbufferObject
   public static void AddREFERENCES(FlatBufferBuilder builder, StringOffset REFERENCESOffset) { builder.AddOffset(2, REFERENCESOffset.Value, 0); }
   public static void AddAGENCY_NAME(FlatBufferBuilder builder, StringOffset AGENCY_NAMEOffset) { builder.AddOffset(3, AGENCY_NAMEOffset.Value, 0); }
   public static void AddPOINTS_OF_CONTACT(FlatBufferBuilder builder, VectorOffset POINTS_OF_CONTACTOffset) { builder.AddOffset(4, POINTS_OF_CONTACTOffset.Value, 0); }
-  public static VectorOffset CreatePOINTS_OF_CONTACTVector(FlatBufferBuilder builder, Offset<UPM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreatePOINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, Offset<UPM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreatePOINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<UPM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreatePOINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<UPM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTS_OF_CONTACTVector(FlatBufferBuilder builder, Offset<EPM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, Offset<EPM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<EPM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EPM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPOINTS_OF_CONTACTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddOPERATIONS_POINTS_OF_CONTACT(FlatBufferBuilder builder, VectorOffset OPERATIONS_POINTS_OF_CONTACTOffset) { builder.AddOffset(5, OPERATIONS_POINTS_OF_CONTACTOffset.Value, 0); }
-  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVector(FlatBufferBuilder builder, Offset<UPM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, Offset<UPM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<UPM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<UPM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVector(FlatBufferBuilder builder, Offset<EPM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, Offset<EPM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<EPM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOPERATIONS_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EPM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartOPERATIONS_POINTS_OF_CONTACTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddNET(FlatBufferBuilder builder, StringOffset NETOffset) { builder.AddOffset(6, NETOffset.Value, 0); }
   public static void AddROCKET_CONFIGURATION(FlatBufferBuilder builder, Offset<ROC> ROCKET_CONFIGURATIONOffset) { builder.AddOffset(7, ROCKET_CONFIGURATIONOffset.Value, 0); }
@@ -287,10 +287,10 @@ public struct LDM : IFlatbufferObject
   public static void AddPROBABILITY_OF_COLLISION_THRESHOLD(FlatBufferBuilder builder, StringOffset PROBABILITY_OF_COLLISION_THRESHOLDOffset) { builder.AddOffset(22, PROBABILITY_OF_COLLISION_THRESHOLDOffset.Value, 0); }
   public static void AddCOLA_RUNS_REQUIRED(FlatBufferBuilder builder, StringOffset COLA_RUNS_REQUIREDOffset) { builder.AddOffset(23, COLA_RUNS_REQUIREDOffset.Value, 0); }
   public static void AddCOLA_POINTS_OF_CONTACT(FlatBufferBuilder builder, VectorOffset COLA_POINTS_OF_CONTACTOffset) { builder.AddOffset(24, COLA_POINTS_OF_CONTACTOffset.Value, 0); }
-  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVector(FlatBufferBuilder builder, Offset<UPM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, Offset<UPM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<UPM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<UPM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVector(FlatBufferBuilder builder, Offset<EPM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, Offset<EPM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<EPM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOLA_POINTS_OF_CONTACTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EPM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOLA_POINTS_OF_CONTACTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddORBITAL_PARAMETERS(FlatBufferBuilder builder, VectorOffset ORBITAL_PARAMETERSOffset) { builder.AddOffset(25, ORBITAL_PARAMETERSOffset.Value, 0); }
   public static VectorOffset CreateORBITAL_PARAMETERSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -320,9 +320,9 @@ public struct LDM : IFlatbufferObject
     _o.AZIMUTH = this.AZIMUTH;
     _o.REFERENCES = this.REFERENCES;
     _o.AGENCY_NAME = this.AGENCY_NAME;
-    _o.POINTS_OF_CONTACT = new List<UPMT>();
+    _o.POINTS_OF_CONTACT = new List<EPMT>();
     for (var _j = 0; _j < this.POINTS_OF_CONTACTLength; ++_j) {_o.POINTS_OF_CONTACT.Add(this.POINTS_OF_CONTACT(_j).HasValue ? this.POINTS_OF_CONTACT(_j).Value.UnPack() : null);}
-    _o.OPERATIONS_POINTS_OF_CONTACT = new List<UPMT>();
+    _o.OPERATIONS_POINTS_OF_CONTACT = new List<EPMT>();
     for (var _j = 0; _j < this.OPERATIONS_POINTS_OF_CONTACTLength; ++_j) {_o.OPERATIONS_POINTS_OF_CONTACT.Add(this.OPERATIONS_POINTS_OF_CONTACT(_j).HasValue ? this.OPERATIONS_POINTS_OF_CONTACT(_j).Value.UnPack() : null);}
     _o.NET = this.NET;
     _o.ROCKET_CONFIGURATION = this.ROCKET_CONFIGURATION.HasValue ? this.ROCKET_CONFIGURATION.Value.UnPack() : null;
@@ -348,7 +348,7 @@ public struct LDM : IFlatbufferObject
     _o.COLA_SCREEN_DURATION = this.COLA_SCREEN_DURATION;
     _o.PROBABILITY_OF_COLLISION_THRESHOLD = this.PROBABILITY_OF_COLLISION_THRESHOLD;
     _o.COLA_RUNS_REQUIRED = this.COLA_RUNS_REQUIRED;
-    _o.COLA_POINTS_OF_CONTACT = new List<UPMT>();
+    _o.COLA_POINTS_OF_CONTACT = new List<EPMT>();
     for (var _j = 0; _j < this.COLA_POINTS_OF_CONTACTLength; ++_j) {_o.COLA_POINTS_OF_CONTACT.Add(this.COLA_POINTS_OF_CONTACT(_j).HasValue ? this.COLA_POINTS_OF_CONTACT(_j).Value.UnPack() : null);}
     _o.ORBITAL_PARAMETERS = new List<string>();
     for (var _j = 0; _j < this.ORBITAL_PARAMETERSLength; ++_j) {_o.ORBITAL_PARAMETERS.Add(this.ORBITAL_PARAMETERS(_j));}
@@ -362,14 +362,14 @@ public struct LDM : IFlatbufferObject
     var _AGENCY_NAME = _o.AGENCY_NAME == null ? default(StringOffset) : builder.CreateString(_o.AGENCY_NAME);
     var _POINTS_OF_CONTACT = default(VectorOffset);
     if (_o.POINTS_OF_CONTACT != null) {
-      var __POINTS_OF_CONTACT = new Offset<UPM>[_o.POINTS_OF_CONTACT.Count];
-      for (var _j = 0; _j < __POINTS_OF_CONTACT.Length; ++_j) { __POINTS_OF_CONTACT[_j] = UPM.Pack(builder, _o.POINTS_OF_CONTACT[_j]); }
+      var __POINTS_OF_CONTACT = new Offset<EPM>[_o.POINTS_OF_CONTACT.Count];
+      for (var _j = 0; _j < __POINTS_OF_CONTACT.Length; ++_j) { __POINTS_OF_CONTACT[_j] = EPM.Pack(builder, _o.POINTS_OF_CONTACT[_j]); }
       _POINTS_OF_CONTACT = CreatePOINTS_OF_CONTACTVector(builder, __POINTS_OF_CONTACT);
     }
     var _OPERATIONS_POINTS_OF_CONTACT = default(VectorOffset);
     if (_o.OPERATIONS_POINTS_OF_CONTACT != null) {
-      var __OPERATIONS_POINTS_OF_CONTACT = new Offset<UPM>[_o.OPERATIONS_POINTS_OF_CONTACT.Count];
-      for (var _j = 0; _j < __OPERATIONS_POINTS_OF_CONTACT.Length; ++_j) { __OPERATIONS_POINTS_OF_CONTACT[_j] = UPM.Pack(builder, _o.OPERATIONS_POINTS_OF_CONTACT[_j]); }
+      var __OPERATIONS_POINTS_OF_CONTACT = new Offset<EPM>[_o.OPERATIONS_POINTS_OF_CONTACT.Count];
+      for (var _j = 0; _j < __OPERATIONS_POINTS_OF_CONTACT.Length; ++_j) { __OPERATIONS_POINTS_OF_CONTACT[_j] = EPM.Pack(builder, _o.OPERATIONS_POINTS_OF_CONTACT[_j]); }
       _OPERATIONS_POINTS_OF_CONTACT = CreateOPERATIONS_POINTS_OF_CONTACTVector(builder, __OPERATIONS_POINTS_OF_CONTACT);
     }
     var _NET = _o.NET == null ? default(StringOffset) : builder.CreateString(_o.NET);
@@ -422,8 +422,8 @@ public struct LDM : IFlatbufferObject
     var _COLA_RUNS_REQUIRED = _o.COLA_RUNS_REQUIRED == null ? default(StringOffset) : builder.CreateString(_o.COLA_RUNS_REQUIRED);
     var _COLA_POINTS_OF_CONTACT = default(VectorOffset);
     if (_o.COLA_POINTS_OF_CONTACT != null) {
-      var __COLA_POINTS_OF_CONTACT = new Offset<UPM>[_o.COLA_POINTS_OF_CONTACT.Count];
-      for (var _j = 0; _j < __COLA_POINTS_OF_CONTACT.Length; ++_j) { __COLA_POINTS_OF_CONTACT[_j] = UPM.Pack(builder, _o.COLA_POINTS_OF_CONTACT[_j]); }
+      var __COLA_POINTS_OF_CONTACT = new Offset<EPM>[_o.COLA_POINTS_OF_CONTACT.Count];
+      for (var _j = 0; _j < __COLA_POINTS_OF_CONTACT.Length; ++_j) { __COLA_POINTS_OF_CONTACT[_j] = EPM.Pack(builder, _o.COLA_POINTS_OF_CONTACT[_j]); }
       _COLA_POINTS_OF_CONTACT = CreateCOLA_POINTS_OF_CONTACTVector(builder, __COLA_POINTS_OF_CONTACT);
     }
     var _ORBITAL_PARAMETERS = default(VectorOffset);
@@ -476,8 +476,8 @@ public class LDMT
   public float AZIMUTH { get; set; }
   public string REFERENCES { get; set; }
   public string AGENCY_NAME { get; set; }
-  public List<UPMT> POINTS_OF_CONTACT { get; set; }
-  public List<UPMT> OPERATIONS_POINTS_OF_CONTACT { get; set; }
+  public List<EPMT> POINTS_OF_CONTACT { get; set; }
+  public List<EPMT> OPERATIONS_POINTS_OF_CONTACT { get; set; }
   public string NET { get; set; }
   public ROCT ROCKET_CONFIGURATION { get; set; }
   public string MISSION_NAME { get; set; }
@@ -496,7 +496,7 @@ public class LDMT
   public string COLA_SCREEN_DURATION { get; set; }
   public string PROBABILITY_OF_COLLISION_THRESHOLD { get; set; }
   public string COLA_RUNS_REQUIRED { get; set; }
-  public List<UPMT> COLA_POINTS_OF_CONTACT { get; set; }
+  public List<EPMT> COLA_POINTS_OF_CONTACT { get; set; }
   public List<string> ORBITAL_PARAMETERS { get; set; }
   public List<BOVT> BURN_OUT_VECTORS { get; set; }
 

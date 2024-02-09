@@ -73,8 +73,8 @@ class LDM(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from UPM import UPM
-            obj = UPM()
+            from EPM import EPM
+            obj = EPM()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -99,8 +99,8 @@ class LDM(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from UPM import UPM
-            obj = UPM()
+            from EPM import EPM
+            obj = EPM()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -356,8 +356,8 @@ class LDM(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from UPM import UPM
-            obj = UPM()
+            from EPM import EPM
+            obj = EPM()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -543,9 +543,9 @@ def End(builder):
     return LDMEnd(builder)
 import BOV
 import CAT
+import EPM
 import ROC
 import SIT
-import UPM
 try:
     from typing import List, Optional
 except:
@@ -559,8 +559,8 @@ class LDMT(object):
         self.AZIMUTH = 0.0  # type: float
         self.REFERENCES = None  # type: str
         self.AGENCY_NAME = None  # type: str
-        self.POINTS_OF_CONTACT = None  # type: List[UPM.UPMT]
-        self.OPERATIONS_POINTS_OF_CONTACT = None  # type: List[UPM.UPMT]
+        self.POINTS_OF_CONTACT = None  # type: List[EPM.EPMT]
+        self.OPERATIONS_POINTS_OF_CONTACT = None  # type: List[EPM.EPMT]
         self.NET = None  # type: str
         self.ROCKET_CONFIGURATION = None  # type: Optional[ROC.ROCT]
         self.MISSION_NAME = None  # type: str
@@ -579,7 +579,7 @@ class LDMT(object):
         self.COLA_SCREEN_DURATION = None  # type: str
         self.PROBABILITY_OF_COLLISION_THRESHOLD = None  # type: str
         self.COLA_RUNS_REQUIRED = None  # type: str
-        self.COLA_POINTS_OF_CONTACT = None  # type: List[UPM.UPMT]
+        self.COLA_POINTS_OF_CONTACT = None  # type: List[EPM.EPMT]
         self.ORBITAL_PARAMETERS = None  # type: List[str]
         self.BURN_OUT_VECTORS = None  # type: List[BOV.BOVT]
 
@@ -615,16 +615,16 @@ class LDMT(object):
                 if LDM.POINTS_OF_CONTACT(i) is None:
                     self.POINTS_OF_CONTACT.append(None)
                 else:
-                    uPM_ = UPM.UPMT.InitFromObj(LDM.POINTS_OF_CONTACT(i))
-                    self.POINTS_OF_CONTACT.append(uPM_)
+                    ePM_ = EPM.EPMT.InitFromObj(LDM.POINTS_OF_CONTACT(i))
+                    self.POINTS_OF_CONTACT.append(ePM_)
         if not LDM.OPERATIONS_POINTS_OF_CONTACTIsNone():
             self.OPERATIONS_POINTS_OF_CONTACT = []
             for i in range(LDM.OPERATIONS_POINTS_OF_CONTACTLength()):
                 if LDM.OPERATIONS_POINTS_OF_CONTACT(i) is None:
                     self.OPERATIONS_POINTS_OF_CONTACT.append(None)
                 else:
-                    uPM_ = UPM.UPMT.InitFromObj(LDM.OPERATIONS_POINTS_OF_CONTACT(i))
-                    self.OPERATIONS_POINTS_OF_CONTACT.append(uPM_)
+                    ePM_ = EPM.EPMT.InitFromObj(LDM.OPERATIONS_POINTS_OF_CONTACT(i))
+                    self.OPERATIONS_POINTS_OF_CONTACT.append(ePM_)
         self.NET = LDM.NET()
         if LDM.ROCKET_CONFIGURATION() is not None:
             self.ROCKET_CONFIGURATION = ROC.ROCT.InitFromObj(LDM.ROCKET_CONFIGURATION())
@@ -672,8 +672,8 @@ class LDMT(object):
                 if LDM.COLA_POINTS_OF_CONTACT(i) is None:
                     self.COLA_POINTS_OF_CONTACT.append(None)
                 else:
-                    uPM_ = UPM.UPMT.InitFromObj(LDM.COLA_POINTS_OF_CONTACT(i))
-                    self.COLA_POINTS_OF_CONTACT.append(uPM_)
+                    ePM_ = EPM.EPMT.InitFromObj(LDM.COLA_POINTS_OF_CONTACT(i))
+                    self.COLA_POINTS_OF_CONTACT.append(ePM_)
         if not LDM.ORBITAL_PARAMETERSIsNone():
             self.ORBITAL_PARAMETERS = []
             for i in range(LDM.ORBITAL_PARAMETERSLength()):

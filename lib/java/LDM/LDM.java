@@ -53,19 +53,19 @@ public final class LDM extends Table {
   /**
    * Points of Contact for Launch
    */
-  public UPM POINTS_OF_CONTACT(int j) { return POINTS_OF_CONTACT(new UPM(), j); }
-  public UPM POINTS_OF_CONTACT(UPM obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public EPM POINTS_OF_CONTACT(int j) { return POINTS_OF_CONTACT(new EPM(), j); }
+  public EPM POINTS_OF_CONTACT(EPM obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int POINTS_OF_CONTACTLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
-  public UPM.Vector pointsOfContactVector() { return pointsOfContactVector(new UPM.Vector()); }
-  public UPM.Vector pointsOfContactVector(UPM.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public EPM.Vector pointsOfContactVector() { return pointsOfContactVector(new EPM.Vector()); }
+  public EPM.Vector pointsOfContactVector(EPM.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Operations Points of Contact for Launch
    */
-  public UPM OPERATIONS_POINTS_OF_CONTACT(int j) { return OPERATIONS_POINTS_OF_CONTACT(new UPM(), j); }
-  public UPM OPERATIONS_POINTS_OF_CONTACT(UPM obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public EPM OPERATIONS_POINTS_OF_CONTACT(int j) { return OPERATIONS_POINTS_OF_CONTACT(new EPM(), j); }
+  public EPM OPERATIONS_POINTS_OF_CONTACT(EPM obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int OPERATIONS_POINTS_OF_CONTACTLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public UPM.Vector operationsPointsOfContactVector() { return operationsPointsOfContactVector(new UPM.Vector()); }
-  public UPM.Vector operationsPointsOfContactVector(UPM.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public EPM.Vector operationsPointsOfContactVector() { return operationsPointsOfContactVector(new EPM.Vector()); }
+  public EPM.Vector operationsPointsOfContactVector(EPM.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Net Launch Time (UTC Format)
    */
@@ -183,11 +183,11 @@ public final class LDM extends Table {
   /**
    * Points of Contact for Collision Avoidance
    */
-  public UPM COLA_POINTS_OF_CONTACT(int j) { return COLA_POINTS_OF_CONTACT(new UPM(), j); }
-  public UPM COLA_POINTS_OF_CONTACT(UPM obj, int j) { int o = __offset(52); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public EPM COLA_POINTS_OF_CONTACT(int j) { return COLA_POINTS_OF_CONTACT(new EPM(), j); }
+  public EPM COLA_POINTS_OF_CONTACT(EPM obj, int j) { int o = __offset(52); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int COLA_POINTS_OF_CONTACTLength() { int o = __offset(52); return o != 0 ? __vector_len(o) : 0; }
-  public UPM.Vector colaPointsOfContactVector() { return colaPointsOfContactVector(new UPM.Vector()); }
-  public UPM.Vector colaPointsOfContactVector(UPM.Vector obj) { int o = __offset(52); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public EPM.Vector colaPointsOfContactVector() { return colaPointsOfContactVector(new EPM.Vector()); }
+  public EPM.Vector colaPointsOfContactVector(EPM.Vector obj) { int o = __offset(52); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Orbital Parameters of the Launch
    */

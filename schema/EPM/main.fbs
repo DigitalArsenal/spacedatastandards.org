@@ -1,0 +1,117 @@
+/// Crypto Key Information
+table CryptoKey {
+  /// Public part of the cryptographic key
+  PUBLIC_KEY: string;
+  /// Extended public key
+  XPUB: string;
+  /// Private part of the cryptographic key, should be kept secret
+  PRIVATE_KEY: string;
+  /// Extended private key
+  XPRIV: string;
+  /// Address generated from the cryptographic key
+  KEY_ADDRESS: string;
+  /// Numerical type of the address generated from the cryptographic key
+  ADDRESS_TYPE: int;
+}
+
+/// Information about a contact point
+table ContactPoint {
+  /// Name of the contact point or person
+  NAME: string;
+  /// Type of contact (e.g., customer service, technical support)
+  CONTACT_TYPE: string;
+  /// Email address
+  EMAIL: string;
+  /// Telephone number
+  TELEPHONE: string;
+  /// Available contact options (e.g., HearingImpairedSupported)
+  CONTACT_OPTION: string;
+  /// Geographic area where the service is available
+  AREA_SERVED: string;
+  /// Language available for communication
+  AVAILABLE_LANGUAGE: string;
+  /// Country of the address
+  ADDRESS_COUNTRY: string;
+  /// Region of the address (e.g., state or province)
+  ADDRESS_REGION: string;
+  /// Locality of the address (e.g., city or town)
+  ADDRESS_LOCALITY: string;
+  /// Postal code of the address
+  POSTAL_CODE: string;
+  /// Street address
+  STREET_ADDRESS: string;
+  /// Post office box number
+  POST_OFFICE_BOX_NUMBER: string;
+}
+
+/// Basic information about an organization
+table Organization {
+  /// Common name of the organization
+  NAME: string;
+  /// Legal name of the organization
+  LEGAL_NAME: string;
+}
+
+/// Information about a person's occupation
+table Occupation {
+  /// Name of the occupation
+  NAME: string;
+}
+
+/// Information about a person
+table Person {
+  /// Family name or surname of the person
+  FAMILY_NAME: string;
+  /// Given name or first name of the person
+  GIVEN_NAME: string;
+  /// Additional name or middle name of the person
+  ADDITIONAL_NAME: string;
+  /// Honorific prefix preceding the person's name
+  HONORIFIC_PREFIX: string;
+  /// Honorific suffix following the person's name
+  HONORIFIC_SUFFIX: string;
+}
+
+/// Union type for Entity, which can be either a Person or an Organization
+union Entity { Person, Organization }
+
+/// Entity Profile Message
+table EPM {
+  /// Common name of the entity (person or organization)
+  NAME: string;
+  /// Alternate name for the entity
+  ALTERNATE_NAME: string;
+  /// Description of the entity
+  DESCRIPTION: string;
+  /// URL of an image representing the entity
+  IMAGE: string;
+  /// URL of a webpage that unambiguously indicates the entity's identity
+  SAME_AS: string;
+  /// URL of the entity's website
+  URL: string;
+  /// Telephone number for the entity
+  TELEPHONE: string;
+  /// Email address for the entity
+  EMAIL: string;
+  /// Cryptographic key information associated with the entity
+  KEY: [CryptoKey];
+  /// Contact points for the entity
+  CONTACT_POINT: [ContactPoint];
+  /// Address of the entity, using the ContactPoint structure
+  ADDRESS: ContactPoint;
+  /// Job title of the entity (applicable to persons)
+  JOB_TITLE: string;
+  /// Union type to represent either a person or an organization
+  ENTITY: Entity;
+  /// Occupation of the entity (applicable to persons)
+  HAS_OCCUPATION: Occupation;
+}
+
+// Collection of Entity Profile Messages
+table EPMCOLLECTION {
+  /// Records of Entity Profile Messages
+  RECORDS: [EPM];
+}
+
+root_type EPM;
+file_identifier "$EPM";
