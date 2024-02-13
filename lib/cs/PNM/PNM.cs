@@ -39,1150 +39,214 @@ public struct PNM : IFlatbufferObject
   public ArraySegment<byte>? GetETH_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetETH_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(6); }
-  /// SHA-512 File Hash
-  /// SHA-512 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
-  public string SHA_512_FILE_HASH { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Bitcoin Digital Signature
+  /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
+  /// Refer to the Bitcoin Blockchain integration section for details.
+  public string BTC_DIGITAL_SIGNATURE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSHA_512_FILE_HASHBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetBTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetSHA_512_FILE_HASHBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetBTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetSHA_512_FILE_HASHArray() { return __p.__vector_as_array<byte>(8); }
-  /// SHA-256 File Hash
-  /// SHA-256 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
-  public string SHA_256_FILE_HASH { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetBTC_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(8); }
+  /// Litecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
+  /// Refer to the Litecoin Blockchain integration section for details.
+  public string LTC_DIGITAL_SIGNATURE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSHA_256_FILE_HASHBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetLTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetSHA_256_FILE_HASHBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetLTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetSHA_256_FILE_HASHArray() { return __p.__vector_as_array<byte>(10); }
-  /// MD5 File Digest
-  /// MD5 digest of the file for backward compatibility with older systems.
-  /// Located in the legacy support section of the document.
-  public string MD5_FILE_DIGEST { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLTC_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(10); }
+  /// Ripple Digital Signature
+  /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
+  /// Refer to the Ripple Blockchain integration section for details.
+  public string XRP_DIGITAL_SIGNATURE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMD5_FILE_DIGESTBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetXRP_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetMD5_FILE_DIGESTBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetXRP_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetMD5_FILE_DIGESTArray() { return __p.__vector_as_array<byte>(12); }
-  /// SHA-1 File Hash
-  /// SHA-1 hash of the file, used in certain legacy systems for compatibility.
-  /// Refer to the legacy systems integration section for more information.
-  public string SHA_1_FILE_HASH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetXRP_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(12); }
+  /// Cardano Digital Signature
+  /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
+  /// Refer to the Cardano Blockchain integration section for details.
+  public string ADA_DIGITAL_SIGNATURE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSHA_1_FILE_HASHBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetADA_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetSHA_1_FILE_HASHBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetADA_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetSHA_1_FILE_HASHArray() { return __p.__vector_as_array<byte>(14); }
-  /// Argon2 File Hash
-  /// Argon2 hash of the file, providing state-of-the-art password hashing.
-  /// This is mentioned in the advanced security measures section.
-  public string ARGON2_FILE_HASH { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetADA_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(14); }
+  /// Stellar Digital Signature
+  /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
+  /// Refer to the Stellar Blockchain integration section for details.
+  public string XLM_DIGITAL_SIGNATURE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetARGON2_FILE_HASHBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetXLM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetARGON2_FILE_HASHBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetXLM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetARGON2_FILE_HASHArray() { return __p.__vector_as_array<byte>(16); }
-  /// Blake2b File Hash
-  /// Blake2b hash of the file, known for high-speed cryptographic hashing.
-  /// Refer to the high-performance security solutions section.
-  public string BLAKE2B_FILE_HASH { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetXLM_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(16); }
+  /// Dogecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
+  /// Refer to the Dogecoin Blockchain integration section for details.
+  public string DOGE_DIGITAL_SIGNATURE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBLAKE2B_FILE_HASHBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetDOGE_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetBLAKE2B_FILE_HASHBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetDOGE_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetBLAKE2B_FILE_HASHArray() { return __p.__vector_as_array<byte>(18); }
-  /// SHA-3 File Hash
-  /// SHA-3 hash of the file, offering a stronger alternative to SHA-2.
-  /// Located in the modern cryptographic standards section.
-  public string SHA_3_FILE_HASH { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDOGE_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(18); }
+  /// Monero Digital Signature
+  /// Digital signature of the IPFS file hash using Monero's signing mechanism.
+  /// Refer to the Monero Blockchain integration section for details.
+  public string XMR_DIGITAL_SIGNATURE { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSHA_3_FILE_HASHBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetXMR_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetSHA_3_FILE_HASHBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetXMR_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetSHA_3_FILE_HASHArray() { return __p.__vector_as_array<byte>(20); }
-  /// RIPEMD-160 File Hash
-  /// RIPEMD-160 hash of the file, often used in blockchain applications for address generation.
-  /// Discussed in the blockchain compatibility section.
-  public string RIPEMD_160_FILE_HASH { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetXMR_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(20); }
+  /// Polkadot Digital Signature
+  /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
+  /// Refer to the Polkadot Blockchain integration section for details.
+  public string DOT_DIGITAL_SIGNATURE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRIPEMD_160_FILE_HASHBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetDOT_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetRIPEMD_160_FILE_HASHBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetDOT_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetRIPEMD_160_FILE_HASHArray() { return __p.__vector_as_array<byte>(22); }
-  /// Whirlpool File Hash
-  /// Whirlpool hash of the file, designed for integrity protection and digital fingerprinting.
-  /// Refer to the data integrity and authentication section.
-  public string WHIRLPOOL_FILE_HASH { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDOT_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(22); }
+  /// Filecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
+  /// Refer to the Filecoin Blockchain integration section for details.
+  public string FIL_DIGITAL_SIGNATURE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetWHIRLPOOL_FILE_HASHBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetFIL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetWHIRLPOOL_FILE_HASHBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetFIL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetWHIRLPOOL_FILE_HASHArray() { return __p.__vector_as_array<byte>(24); }
-  /// Tiger File Hash
-  /// Tiger hash of the file, optimized for fast hashing on 64-bit platforms.
-  /// Detailed in the high-speed cryptographic operations section.
-  public string TIGER_FILE_HASH { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetFIL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(24); }
+  /// Tezos Digital Signature
+  /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
+  /// Refer to the Tezos Blockchain integration section for details.
+  public string XTZ_DIGITAL_SIGNATURE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTIGER_FILE_HASHBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetXTZ_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetTIGER_FILE_HASHBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetXTZ_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetTIGER_FILE_HASHArray() { return __p.__vector_as_array<byte>(26); }
-  /// Cyclic Redundancy Check (CRC) 32
-  /// Cyclic redundancy check with a length of 32 bits.
-  /// Refer to CRC section for more details.
-  public string CRC32 { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetXTZ_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(26); }
+  /// Cosmos Digital Signature
+  /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
+  /// Refer to the Cosmos Blockchain integration section for details.
+  public string ATOM_DIGITAL_SIGNATURE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCRC32Bytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetATOM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetCRC32Bytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetATOM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetCRC32Array() { return __p.__vector_as_array<byte>(28); }
-  /// Adler-32 Checksum
-  /// Adler-32 checksum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  public string ADLER32_CHECKSUM { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetATOM_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(28); }
+  /// Tron Digital Signature
+  /// Digital signature of the IPFS file hash using Tron's signing mechanism.
+  /// Refer to the Tron Blockchain integration section for details.
+  public string TRX_DIGITAL_SIGNATURE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetADLER32_CHECKSUMBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetTRX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetADLER32_CHECKSUMBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetTRX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetADLER32_CHECKSUMArray() { return __p.__vector_as_array<byte>(30); }
-  /// Universal Hash Function Family - Rabin Fingerprint
-  /// Variable-length hash function using Rabin fingerprinting.
-  /// Refer to the Universal hash function families section for details.
-  public string RABIN_FINGERPRINT { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRX_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(30); }
+  /// Binance Coin Digital Signature
+  /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
+  /// Refer to the Binance Coin Blockchain integration section for details.
+  public string BNB_DIGITAL_SIGNATURE { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRABIN_FINGERPRINTBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetBNB_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetRABIN_FINGERPRINTBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetBNB_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetRABIN_FINGERPRINTArray() { return __p.__vector_as_array<byte>(32); }
-  /// Non-Cryptographic Hash Function - Pearson Hashing
-  /// Non-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string PEARSON_HASHING { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetBNB_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(32); }
+  /// Avalanche Digital Signature
+  /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
+  /// Refer to the Avalanche Blockchain integration section for details.
+  public string AVAX_DIGITAL_SIGNATURE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPEARSON_HASHINGBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetAVAX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetPEARSON_HASHINGBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetAVAX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetPEARSON_HASHINGArray() { return __p.__vector_as_array<byte>(34); }
-  /// Keyed Cryptographic Hash Function - BLAKE2
-  /// Keyed hash function (prefix-MAC) with variable length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  public string BLAKE2_KEYED_HASH { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetAVAX_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(34); }
+  /// Solana Digital Signature
+  /// Digital signature of the IPFS file hash using Solana's signing mechanism.
+  /// Refer to the Solana Blockchain integration section for details.
+  public string SOL_DIGITAL_SIGNATURE { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBLAKE2_KEYED_HASHBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetSOL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetBLAKE2_KEYED_HASHBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetSOL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetBLAKE2_KEYED_HASHArray() { return __p.__vector_as_array<byte>(36); }
-  /// Unkeyed Cryptographic Hash Function - BLAKE-256
-  /// Cryptographic hash function with a length of 256 bits, based on HAIFA structure.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string BLAKE_256 { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetBLAKE_256Bytes() { return __p.__vector_as_span<byte>(38, 1); }
-#else
-  public ArraySegment<byte>? GetBLAKE_256Bytes() { return __p.__vector_as_arraysegment(38); }
-#endif
-  public byte[] GetBLAKE_256Array() { return __p.__vector_as_array<byte>(38); }
-  /// CRC-8
-  /// Cyclic redundancy check with a length of 8 bits.
-  /// Refer to CRC section for more details.
-  public string CRC8 { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCRC8Bytes() { return __p.__vector_as_span<byte>(40, 1); }
-#else
-  public ArraySegment<byte>? GetCRC8Bytes() { return __p.__vector_as_arraysegment(40); }
-#endif
-  public byte[] GetCRC8Array() { return __p.__vector_as_array<byte>(40); }
-  /// CRC-16
-  /// Cyclic redundancy check with a length of 16 bits.
-  /// Refer to CRC section for more details.
-  public string CRC16 { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCRC16Bytes() { return __p.__vector_as_span<byte>(42, 1); }
-#else
-  public ArraySegment<byte>? GetCRC16Bytes() { return __p.__vector_as_arraysegment(42); }
-#endif
-  public byte[] GetCRC16Array() { return __p.__vector_as_array<byte>(42); }
-  /// CRC-64
-  /// Cyclic redundancy check with a length of 64 bits.
-  /// Refer to CRC section for more details.
-  public string CRC64 { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCRC64Bytes() { return __p.__vector_as_span<byte>(44, 1); }
-#else
-  public ArraySegment<byte>? GetCRC64Bytes() { return __p.__vector_as_arraysegment(44); }
-#endif
-  public byte[] GetCRC64Array() { return __p.__vector_as_array<byte>(44); }
-  /// BSD Checksum
-  /// BSD checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  public string BSD_CHECKSUM { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetBSD_CHECKSUMBytes() { return __p.__vector_as_span<byte>(46, 1); }
-#else
-  public ArraySegment<byte>? GetBSD_CHECKSUMBytes() { return __p.__vector_as_arraysegment(46); }
-#endif
-  public byte[] GetBSD_CHECKSUMArray() { return __p.__vector_as_array<byte>(46); }
-  /// SYSV Checksum
-  /// SYSV checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  public string SYSV_CHECKSUM { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSYSV_CHECKSUMBytes() { return __p.__vector_as_span<byte>(48, 1); }
-#else
-  public ArraySegment<byte>? GetSYSV_CHECKSUMBytes() { return __p.__vector_as_arraysegment(48); }
-#endif
-  public byte[] GetSYSV_CHECKSUMArray() { return __p.__vector_as_array<byte>(48); }
-  /// Sum8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  public string SUM8 { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSUM8Bytes() { return __p.__vector_as_span<byte>(50, 1); }
-#else
-  public ArraySegment<byte>? GetSUM8Bytes() { return __p.__vector_as_arraysegment(50); }
-#endif
-  public byte[] GetSUM8Array() { return __p.__vector_as_array<byte>(50); }
-  /// Internet Checksum
-  /// Internet checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  public string INTERNET_CHECKSUM { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetINTERNET_CHECKSUMBytes() { return __p.__vector_as_span<byte>(52, 1); }
-#else
-  public ArraySegment<byte>? GetINTERNET_CHECKSUMBytes() { return __p.__vector_as_arraysegment(52); }
-#endif
-  public byte[] GetINTERNET_CHECKSUMArray() { return __p.__vector_as_array<byte>(52); }
-  /// Sum24
-  /// Sum with a length of 24 bits.
-  /// Refer to the checksum section for more details.
-  public string SUM24 { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSUM24Bytes() { return __p.__vector_as_span<byte>(54, 1); }
-#else
-  public ArraySegment<byte>? GetSUM24Bytes() { return __p.__vector_as_arraysegment(54); }
-#endif
-  public byte[] GetSUM24Array() { return __p.__vector_as_array<byte>(54); }
-  /// Sum32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  public string SUM32 { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSUM32Bytes() { return __p.__vector_as_span<byte>(56, 1); }
-#else
-  public ArraySegment<byte>? GetSUM32Bytes() { return __p.__vector_as_arraysegment(56); }
-#endif
-  public byte[] GetSUM32Array() { return __p.__vector_as_array<byte>(56); }
-  /// Fletcher-4
-  /// Sum with a length of 4 bits.
-  /// Refer to the checksum section for more details.
-  public string FLETCHER_4 { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFLETCHER_4Bytes() { return __p.__vector_as_span<byte>(58, 1); }
-#else
-  public ArraySegment<byte>? GetFLETCHER_4Bytes() { return __p.__vector_as_arraysegment(58); }
-#endif
-  public byte[] GetFLETCHER_4Array() { return __p.__vector_as_array<byte>(58); }
-  /// Fletcher-8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  public string FLETCHER_8 { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFLETCHER_8Bytes() { return __p.__vector_as_span<byte>(60, 1); }
-#else
-  public ArraySegment<byte>? GetFLETCHER_8Bytes() { return __p.__vector_as_arraysegment(60); }
-#endif
-  public byte[] GetFLETCHER_8Array() { return __p.__vector_as_array<byte>(60); }
-  /// Fletcher-16
-  /// Sum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  public string FLETCHER_16 { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFLETCHER_16Bytes() { return __p.__vector_as_span<byte>(62, 1); }
-#else
-  public ArraySegment<byte>? GetFLETCHER_16Bytes() { return __p.__vector_as_arraysegment(62); }
-#endif
-  public byte[] GetFLETCHER_16Array() { return __p.__vector_as_array<byte>(62); }
-  /// Fletcher-32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  public string FLETCHER_32 { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFLETCHER_32Bytes() { return __p.__vector_as_span<byte>(64, 1); }
-#else
-  public ArraySegment<byte>? GetFLETCHER_32Bytes() { return __p.__vector_as_arraysegment(64); }
-#endif
-  public byte[] GetFLETCHER_32Array() { return __p.__vector_as_array<byte>(64); }
-  /// Luhn Algorithm
-  /// Luhn algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  public string LUNH_ALGORITHM { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetLUNH_ALGORITHMBytes() { return __p.__vector_as_span<byte>(66, 1); }
-#else
-  public ArraySegment<byte>? GetLUNH_ALGORITHMBytes() { return __p.__vector_as_arraysegment(66); }
-#endif
-  public byte[] GetLUNH_ALGORITHMArray() { return __p.__vector_as_array<byte>(66); }
-  /// Verhoeff Algorithm
-  /// Verhoeff algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  public string VERHOEFF_ALGORITHM { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetVERHOEFF_ALGORITHMBytes() { return __p.__vector_as_span<byte>(68, 1); }
-#else
-  public ArraySegment<byte>? GetVERHOEFF_ALGORITHMBytes() { return __p.__vector_as_arraysegment(68); }
-#endif
-  public byte[] GetVERHOEFF_ALGORITHMArray() { return __p.__vector_as_array<byte>(68); }
-  /// Damm Algorithm
-  /// Damm algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  public string DAMM_ALGORITHM { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDAMM_ALGORITHMBytes() { return __p.__vector_as_span<byte>(70, 1); }
-#else
-  public ArraySegment<byte>? GetDAMM_ALGORITHMBytes() { return __p.__vector_as_arraysegment(70); }
-#endif
-  public byte[] GetDAMM_ALGORITHMArray() { return __p.__vector_as_array<byte>(70); }
-  /// Universal Hash Function Family - Tabulation Hashing
-  /// Variable-length hash function using tabulation hashing.
-  /// Refer to the Universal hash function families section for details.
-  public string TABULATION_HASHING { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTABULATION_HASHINGBytes() { return __p.__vector_as_span<byte>(72, 1); }
-#else
-  public ArraySegment<byte>? GetTABULATION_HASHINGBytes() { return __p.__vector_as_arraysegment(72); }
-#endif
-  public byte[] GetTABULATION_HASHINGArray() { return __p.__vector_as_array<byte>(72); }
-  /// Universal Hash Function Family - Universal One-Way Hash Function
-  /// Universal one-way hash function with arbitrary length.
-  /// Refer to the Universal hash function families section for details.
-  public string UNIVERSAL_ONE_WAY_HASH_FUNCTION { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetUNIVERSAL_ONE_WAY_HASH_FUNCTIONBytes() { return __p.__vector_as_span<byte>(74, 1); }
-#else
-  public ArraySegment<byte>? GetUNIVERSAL_ONE_WAY_HASH_FUNCTIONBytes() { return __p.__vector_as_arraysegment(74); }
-#endif
-  public byte[] GetUNIVERSAL_ONE_WAY_HASH_FUNCTIONArray() { return __p.__vector_as_array<byte>(74); }
-  /// Universal Hash Function Family - Zobrist Hashing
-  /// Variable-length hash function using Zobrist hashing.
-  /// Refer to the Universal hash function families section for details.
-  public string ZOBRIST_HASHING { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetZOBRIST_HASHINGBytes() { return __p.__vector_as_span<byte>(76, 1); }
-#else
-  public ArraySegment<byte>? GetZOBRIST_HASHINGBytes() { return __p.__vector_as_arraysegment(76); }
-#endif
-  public byte[] GetZOBRIST_HASHINGArray() { return __p.__vector_as_array<byte>(76); }
-  /// Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash
-  /// Non-cryptographic hash function with a length of 32 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string PAUL_HSIEHS_SUPERFASTHASH { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetPAUL_HSIEHS_SUPERFASTHASHBytes() { return __p.__vector_as_span<byte>(78, 1); }
-#else
-  public ArraySegment<byte>? GetPAUL_HSIEHS_SUPERFASTHASHBytes() { return __p.__vector_as_arraysegment(78); }
-#endif
-  public byte[] GetPAUL_HSIEHS_SUPERFASTHASHArray() { return __p.__vector_as_array<byte>(78); }
-  /// Non-Cryptographic Hash Function - Buzhash
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string BUZHASH { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetBUZHASHBytes() { return __p.__vector_as_span<byte>(80, 1); }
-#else
-  public ArraySegment<byte>? GetBUZHASHBytes() { return __p.__vector_as_arraysegment(80); }
-#endif
-  public byte[] GetBUZHASHArray() { return __p.__vector_as_array<byte>(80); }
-  /// Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string FNV_HASH { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFNV_HASHBytes() { return __p.__vector_as_span<byte>(82, 1); }
-#else
-  public ArraySegment<byte>? GetFNV_HASHBytes() { return __p.__vector_as_arraysegment(82); }
-#endif
-  public byte[] GetFNV_HASHArray() { return __p.__vector_as_array<byte>(82); }
-  /// Non-Cryptographic Hash Function - Jenkins Hash Function
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string JENKINS_HASH_FUNCTION { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetJENKINS_HASH_FUNCTIONBytes() { return __p.__vector_as_span<byte>(84, 1); }
-#else
-  public ArraySegment<byte>? GetJENKINS_HASH_FUNCTIONBytes() { return __p.__vector_as_arraysegment(84); }
-#endif
-  public byte[] GetJENKINS_HASH_FUNCTIONArray() { return __p.__vector_as_array<byte>(84); }
-  /// Non-Cryptographic Hash Function - Bernstein's Hash (djb2)
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string BERNSTEINS_HASH_DJB2 { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetBERNSTEINS_HASH_DJB2Bytes() { return __p.__vector_as_span<byte>(86, 1); }
-#else
-  public ArraySegment<byte>? GetBERNSTEINS_HASH_DJB2Bytes() { return __p.__vector_as_arraysegment(86); }
-#endif
-  public byte[] GetBERNSTEINS_HASH_DJB2Array() { return __p.__vector_as_array<byte>(86); }
-  /// Non-Cryptographic Hash Function - PJW Hash / Elf Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string PJW_HASH_ELF_HASH { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetPJW_HASH_ELF_HASHBytes() { return __p.__vector_as_span<byte>(88, 1); }
-#else
-  public ArraySegment<byte>? GetPJW_HASH_ELF_HASHBytes() { return __p.__vector_as_arraysegment(88); }
-#endif
-  public byte[] GetPJW_HASH_ELF_HASHArray() { return __p.__vector_as_array<byte>(88); }
-  /// Non-Cryptographic Hash Function - MurmurHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string MURMURHASH { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetMURMURHASHBytes() { return __p.__vector_as_span<byte>(90, 1); }
-#else
-  public ArraySegment<byte>? GetMURMURHASHBytes() { return __p.__vector_as_arraysegment(90); }
-#endif
-  public byte[] GetMURMURHASHArray() { return __p.__vector_as_array<byte>(90); }
-  /// Non-Cryptographic Hash Function - Fast-Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string FAST_HASH { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFAST_HASHBytes() { return __p.__vector_as_span<byte>(92, 1); }
-#else
-  public ArraySegment<byte>? GetFAST_HASHBytes() { return __p.__vector_as_arraysegment(92); }
-#endif
-  public byte[] GetFAST_HASHArray() { return __p.__vector_as_array<byte>(92); }
-  /// Non-Cryptographic Hash Function - SpookyHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string SPOOKYHASH { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSPOOKYHASHBytes() { return __p.__vector_as_span<byte>(94, 1); }
-#else
-  public ArraySegment<byte>? GetSPOOKYHASHBytes() { return __p.__vector_as_arraysegment(94); }
-#endif
-  public byte[] GetSPOOKYHASHArray() { return __p.__vector_as_array<byte>(94); }
-  /// Non-Cryptographic Hash Function - CityHash
-  /// Non-cryptographic hash function with a length of 32, 64, 128, or 256 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string CITYHASH { get { int o = __p.__offset(96); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCITYHASHBytes() { return __p.__vector_as_span<byte>(96, 1); }
-#else
-  public ArraySegment<byte>? GetCITYHASHBytes() { return __p.__vector_as_arraysegment(96); }
-#endif
-  public byte[] GetCITYHASHArray() { return __p.__vector_as_array<byte>(96); }
-  /// Non-Cryptographic Hash Function - FarmHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string FARMHASH { get { int o = __p.__offset(98); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFARMHASHBytes() { return __p.__vector_as_span<byte>(98, 1); }
-#else
-  public ArraySegment<byte>? GetFARMHASHBytes() { return __p.__vector_as_arraysegment(98); }
-#endif
-  public byte[] GetFARMHASHArray() { return __p.__vector_as_array<byte>(98); }
-  /// Non-Cryptographic Hash Function - MetroHash
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string METROHASH { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetMETROHASHBytes() { return __p.__vector_as_span<byte>(100, 1); }
-#else
-  public ArraySegment<byte>? GetMETROHASHBytes() { return __p.__vector_as_arraysegment(100); }
-#endif
-  public byte[] GetMETROHASHArray() { return __p.__vector_as_array<byte>(100); }
-  /// Non-Cryptographic Hash Function - Numeric Hash (nhash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string NUMERIC_HASH { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetNUMERIC_HASHBytes() { return __p.__vector_as_span<byte>(102, 1); }
-#else
-  public ArraySegment<byte>? GetNUMERIC_HASHBytes() { return __p.__vector_as_arraysegment(102); }
-#endif
-  public byte[] GetNUMERIC_HASHArray() { return __p.__vector_as_array<byte>(102); }
-  /// Non-Cryptographic Hash Function - xxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string XXHASH { get { int o = __p.__offset(104); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetXXHASHBytes() { return __p.__vector_as_span<byte>(104, 1); }
-#else
-  public ArraySegment<byte>? GetXXHASHBytes() { return __p.__vector_as_arraysegment(104); }
-#endif
-  public byte[] GetXXHASHArray() { return __p.__vector_as_array<byte>(104); }
-  /// Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string T1HA { get { int o = __p.__offset(106); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetT1HABytes() { return __p.__vector_as_span<byte>(106, 1); }
-#else
-  public ArraySegment<byte>? GetT1HABytes() { return __p.__vector_as_arraysegment(106); }
-#endif
-  public byte[] GetT1HAArray() { return __p.__vector_as_array<byte>(106); }
-  /// Non-Cryptographic Hash Function - GxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string GXHASH { get { int o = __p.__offset(108); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetGXHASHBytes() { return __p.__vector_as_span<byte>(108, 1); }
-#else
-  public ArraySegment<byte>? GetGXHASHBytes() { return __p.__vector_as_arraysegment(108); }
-#endif
-  public byte[] GetGXHASHArray() { return __p.__vector_as_array<byte>(108); }
-  /// Non-Cryptographic Hash Function - pHash
-  /// Non-cryptographic hash function with fixed or variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string PHASH { get { int o = __p.__offset(110); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetPHASHBytes() { return __p.__vector_as_span<byte>(110, 1); }
-#else
-  public ArraySegment<byte>? GetPHASHBytes() { return __p.__vector_as_arraysegment(110); }
-#endif
-  public byte[] GetPHASHArray() { return __p.__vector_as_array<byte>(110); }
-  /// Non-Cryptographic Hash Function - dhash
-  /// Non-cryptographic hash function with a length of 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string DHASH { get { int o = __p.__offset(112); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDHASHBytes() { return __p.__vector_as_span<byte>(112, 1); }
-#else
-  public ArraySegment<byte>? GetDHASHBytes() { return __p.__vector_as_arraysegment(112); }
-#endif
-  public byte[] GetDHASHArray() { return __p.__vector_as_array<byte>(112); }
-  /// Non-Cryptographic Hash Function - SDBM
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  public string SDBM { get { int o = __p.__offset(114); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSDBMBytes() { return __p.__vector_as_span<byte>(114, 1); }
-#else
-  public ArraySegment<byte>? GetSDBMBytes() { return __p.__vector_as_arraysegment(114); }
-#endif
-  public byte[] GetSDBMArray() { return __p.__vector_as_array<byte>(114); }
-  /// Unkeyed Cryptographic Hash Function - OSDB Hash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string OSDB_HASH { get { int o = __p.__offset(116); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOSDB_HASHBytes() { return __p.__vector_as_span<byte>(116, 1); }
-#else
-  public ArraySegment<byte>? GetOSDB_HASHBytes() { return __p.__vector_as_arraysegment(116); }
-#endif
-  public byte[] GetOSDB_HASHArray() { return __p.__vector_as_array<byte>(116); }
-  /// Unkeyed Cryptographic Hash Function - komihash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string KOMIHASH { get { int o = __p.__offset(118); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetKOMIHASHBytes() { return __p.__vector_as_span<byte>(118, 1); }
-#else
-  public ArraySegment<byte>? GetKOMIHASHBytes() { return __p.__vector_as_arraysegment(118); }
-#endif
-  public byte[] GetKOMIHASHArray() { return __p.__vector_as_array<byte>(118); }
-  /// Keyed Cryptographic Hash Function - BLAKE3
-  /// Keyed hash function with arbitrary length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  public string BLAKE3 { get { int o = __p.__offset(120); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetBLAKE3Bytes() { return __p.__vector_as_span<byte>(120, 1); }
-#else
-  public ArraySegment<byte>? GetBLAKE3Bytes() { return __p.__vector_as_arraysegment(120); }
-#endif
-  public byte[] GetBLAKE3Array() { return __p.__vector_as_array<byte>(120); }
-  /// Unkeyed Cryptographic Hash Function - ECOH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string ECOH { get { int o = __p.__offset(122); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetECOHBytes() { return __p.__vector_as_span<byte>(122, 1); }
-#else
-  public ArraySegment<byte>? GetECOHBytes() { return __p.__vector_as_arraysegment(122); }
-#endif
-  public byte[] GetECOHArray() { return __p.__vector_as_array<byte>(122); }
-  /// Unkeyed Cryptographic Hash Function - FSB
-  /// Cryptographic hash function with a length of 160 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string FSB { get { int o = __p.__offset(124); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetFSBBytes() { return __p.__vector_as_span<byte>(124, 1); }
-#else
-  public ArraySegment<byte>? GetFSBBytes() { return __p.__vector_as_arraysegment(124); }
-#endif
-  public byte[] GetFSBArray() { return __p.__vector_as_array<byte>(124); }
-  /// Unkeyed Cryptographic Hash Function - GOST
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string GOST { get { int o = __p.__offset(126); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetGOSTBytes() { return __p.__vector_as_span<byte>(126, 1); }
-#else
-  public ArraySegment<byte>? GetGOSTBytes() { return __p.__vector_as_arraysegment(126); }
-#endif
-  public byte[] GetGOSTArray() { return __p.__vector_as_array<byte>(126); }
-  /// Unkeyed Cryptographic Hash Function - Grøstl
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string GROSTL { get { int o = __p.__offset(128); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetGROSTLBytes() { return __p.__vector_as_span<byte>(128, 1); }
-#else
-  public ArraySegment<byte>? GetGROSTLBytes() { return __p.__vector_as_arraysegment(128); }
-#endif
-  public byte[] GetGROSTLArray() { return __p.__vector_as_array<byte>(128); }
-  /// Unkeyed Cryptographic Hash Function - HAS-160
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string HAS_160 { get { int o = __p.__offset(130); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetHAS_160Bytes() { return __p.__vector_as_span<byte>(130, 1); }
-#else
-  public ArraySegment<byte>? GetHAS_160Bytes() { return __p.__vector_as_arraysegment(130); }
-#endif
-  public byte[] GetHAS_160Array() { return __p.__vector_as_array<byte>(130); }
-  /// Unkeyed Cryptographic Hash Function - HAVAL
-  /// Cryptographic hash function with a length of 128 to 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string HAVAL { get { int o = __p.__offset(132); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetHAVALBytes() { return __p.__vector_as_span<byte>(132, 1); }
-#else
-  public ArraySegment<byte>? GetHAVALBytes() { return __p.__vector_as_arraysegment(132); }
-#endif
-  public byte[] GetHAVALArray() { return __p.__vector_as_array<byte>(132); }
-  /// Unkeyed Cryptographic Hash Function - JH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string JH { get { int o = __p.__offset(134); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetJHBytes() { return __p.__vector_as_span<byte>(134, 1); }
-#else
-  public ArraySegment<byte>? GetJHBytes() { return __p.__vector_as_arraysegment(134); }
-#endif
-  public byte[] GetJHArray() { return __p.__vector_as_array<byte>(134); }
-  /// Unkeyed Cryptographic Hash Function - LSH
-  /// Cryptographic hash function with a length of 256 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string LSH { get { int o = __p.__offset(136); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetLSHBytes() { return __p.__vector_as_span<byte>(136, 1); }
-#else
-  public ArraySegment<byte>? GetLSHBytes() { return __p.__vector_as_arraysegment(136); }
-#endif
-  public byte[] GetLSHArray() { return __p.__vector_as_array<byte>(136); }
-  /// Unkeyed Cryptographic Hash Function - MD2
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string MD2 { get { int o = __p.__offset(138); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetMD2Bytes() { return __p.__vector_as_span<byte>(138, 1); }
-#else
-  public ArraySegment<byte>? GetMD2Bytes() { return __p.__vector_as_arraysegment(138); }
-#endif
-  public byte[] GetMD2Array() { return __p.__vector_as_array<byte>(138); }
-  /// Unkeyed Cryptographic Hash Function - MD4
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string MD4 { get { int o = __p.__offset(140); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetMD4Bytes() { return __p.__vector_as_span<byte>(140, 1); }
-#else
-  public ArraySegment<byte>? GetMD4Bytes() { return __p.__vector_as_arraysegment(140); }
-#endif
-  public byte[] GetMD4Array() { return __p.__vector_as_array<byte>(140); }
-  /// Unkeyed Cryptographic Hash Function - MD5
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string MD5 { get { int o = __p.__offset(142); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetMD5Bytes() { return __p.__vector_as_span<byte>(142, 1); }
-#else
-  public ArraySegment<byte>? GetMD5Bytes() { return __p.__vector_as_arraysegment(142); }
-#endif
-  public byte[] GetMD5Array() { return __p.__vector_as_array<byte>(142); }
-  /// Unkeyed Cryptographic Hash Function - MD6
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string MD6 { get { int o = __p.__offset(144); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetMD6Bytes() { return __p.__vector_as_span<byte>(144, 1); }
-#else
-  public ArraySegment<byte>? GetMD6Bytes() { return __p.__vector_as_arraysegment(144); }
-#endif
-  public byte[] GetMD6Array() { return __p.__vector_as_array<byte>(144); }
-  /// Unkeyed Cryptographic Hash Function - RadioGatún
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string RADIOGATUN { get { int o = __p.__offset(146); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetRADIOGATUNBytes() { return __p.__vector_as_span<byte>(146, 1); }
-#else
-  public ArraySegment<byte>? GetRADIOGATUNBytes() { return __p.__vector_as_arraysegment(146); }
-#endif
-  public byte[] GetRADIOGATUNArray() { return __p.__vector_as_array<byte>(146); }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string RIPEMD { get { int o = __p.__offset(148); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetRIPEMDBytes() { return __p.__vector_as_span<byte>(148, 1); }
-#else
-  public ArraySegment<byte>? GetRIPEMDBytes() { return __p.__vector_as_arraysegment(148); }
-#endif
-  public byte[] GetRIPEMDArray() { return __p.__vector_as_array<byte>(148); }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-128
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string RIPEMD_128 { get { int o = __p.__offset(150); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetRIPEMD_128Bytes() { return __p.__vector_as_span<byte>(150, 1); }
-#else
-  public ArraySegment<byte>? GetRIPEMD_128Bytes() { return __p.__vector_as_arraysegment(150); }
-#endif
-  public byte[] GetRIPEMD_128Array() { return __p.__vector_as_array<byte>(150); }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string RIPEMD_256 { get { int o = __p.__offset(152); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetRIPEMD_256Bytes() { return __p.__vector_as_span<byte>(152, 1); }
-#else
-  public ArraySegment<byte>? GetRIPEMD_256Bytes() { return __p.__vector_as_arraysegment(152); }
-#endif
-  public byte[] GetRIPEMD_256Array() { return __p.__vector_as_array<byte>(152); }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-320
-  /// Cryptographic hash function with a length of 320 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string RIPEMD_320 { get { int o = __p.__offset(154); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetRIPEMD_320Bytes() { return __p.__vector_as_span<byte>(154, 1); }
-#else
-  public ArraySegment<byte>? GetRIPEMD_320Bytes() { return __p.__vector_as_arraysegment(154); }
-#endif
-  public byte[] GetRIPEMD_320Array() { return __p.__vector_as_array<byte>(154); }
-  /// Unkeyed Cryptographic Hash Function - SHA-1
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SHA_1 { get { int o = __p.__offset(156); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSHA_1Bytes() { return __p.__vector_as_span<byte>(156, 1); }
-#else
-  public ArraySegment<byte>? GetSHA_1Bytes() { return __p.__vector_as_arraysegment(156); }
-#endif
-  public byte[] GetSHA_1Array() { return __p.__vector_as_array<byte>(156); }
-  /// Unkeyed Cryptographic Hash Function - SHA-224
-  /// Cryptographic hash function with a length of 224 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SHA_224 { get { int o = __p.__offset(158); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSHA_224Bytes() { return __p.__vector_as_span<byte>(158, 1); }
-#else
-  public ArraySegment<byte>? GetSHA_224Bytes() { return __p.__vector_as_arraysegment(158); }
-#endif
-  public byte[] GetSHA_224Array() { return __p.__vector_as_array<byte>(158); }
-  /// Unkeyed Cryptographic Hash Function - SHA-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SHA_256 { get { int o = __p.__offset(160); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSHA_256Bytes() { return __p.__vector_as_span<byte>(160, 1); }
-#else
-  public ArraySegment<byte>? GetSHA_256Bytes() { return __p.__vector_as_arraysegment(160); }
-#endif
-  public byte[] GetSHA_256Array() { return __p.__vector_as_array<byte>(160); }
-  /// Unkeyed Cryptographic Hash Function - SHA-384
-  /// Cryptographic hash function with a length of 384 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SHA_384 { get { int o = __p.__offset(162); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSHA_384Bytes() { return __p.__vector_as_span<byte>(162, 1); }
-#else
-  public ArraySegment<byte>? GetSHA_384Bytes() { return __p.__vector_as_arraysegment(162); }
-#endif
-  public byte[] GetSHA_384Array() { return __p.__vector_as_array<byte>(162); }
-  /// Unkeyed Cryptographic Hash Function - SHA-512
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SHA_512 { get { int o = __p.__offset(164); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSHA_512Bytes() { return __p.__vector_as_span<byte>(164, 1); }
-#else
-  public ArraySegment<byte>? GetSHA_512Bytes() { return __p.__vector_as_arraysegment(164); }
-#endif
-  public byte[] GetSHA_512Array() { return __p.__vector_as_array<byte>(164); }
-  /// Unkeyed Cryptographic Hash Function - SHA-3
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SHA_3 { get { int o = __p.__offset(166); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSHA_3Bytes() { return __p.__vector_as_span<byte>(166, 1); }
-#else
-  public ArraySegment<byte>? GetSHA_3Bytes() { return __p.__vector_as_arraysegment(166); }
-#endif
-  public byte[] GetSHA_3Array() { return __p.__vector_as_array<byte>(166); }
-  /// Unkeyed Cryptographic Hash Function - Skein
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SKEIN { get { int o = __p.__offset(168); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSKEINBytes() { return __p.__vector_as_span<byte>(168, 1); }
-#else
-  public ArraySegment<byte>? GetSKEINBytes() { return __p.__vector_as_arraysegment(168); }
-#endif
-  public byte[] GetSKEINArray() { return __p.__vector_as_array<byte>(168); }
-  /// Unkeyed Cryptographic Hash Function - Snefru
-  /// Cryptographic hash function with a length of 128 or 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SNEFRU { get { int o = __p.__offset(170); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSNEFRUBytes() { return __p.__vector_as_span<byte>(170, 1); }
-#else
-  public ArraySegment<byte>? GetSNEFRUBytes() { return __p.__vector_as_arraysegment(170); }
-#endif
-  public byte[] GetSNEFRUArray() { return __p.__vector_as_array<byte>(170); }
-  /// Unkeyed Cryptographic Hash Function - Spectral Hash
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SPECTRAL_HASH { get { int o = __p.__offset(172); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSPECTRAL_HASHBytes() { return __p.__vector_as_span<byte>(172, 1); }
-#else
-  public ArraySegment<byte>? GetSPECTRAL_HASHBytes() { return __p.__vector_as_arraysegment(172); }
-#endif
-  public byte[] GetSPECTRAL_HASHArray() { return __p.__vector_as_array<byte>(172); }
-  /// Unkeyed Cryptographic Hash Function - Streebog
-  /// Cryptographic hash function with a length of 256 or 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string STREEBOG { get { int o = __p.__offset(174); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSTREEBOGBytes() { return __p.__vector_as_span<byte>(174, 1); }
-#else
-  public ArraySegment<byte>? GetSTREEBOGBytes() { return __p.__vector_as_arraysegment(174); }
-#endif
-  public byte[] GetSTREEBOGArray() { return __p.__vector_as_array<byte>(174); }
-  /// Unkeyed Cryptographic Hash Function - SWIFFT
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string SWIFFT { get { int o = __p.__offset(176); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSWIFFTBytes() { return __p.__vector_as_span<byte>(176, 1); }
-#else
-  public ArraySegment<byte>? GetSWIFFTBytes() { return __p.__vector_as_arraysegment(176); }
-#endif
-  public byte[] GetSWIFFTArray() { return __p.__vector_as_array<byte>(176); }
-  /// Unkeyed Cryptographic Hash Function - Tiger
-  /// Cryptographic hash function with a length of 192 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string TIGER { get { int o = __p.__offset(178); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTIGERBytes() { return __p.__vector_as_span<byte>(178, 1); }
-#else
-  public ArraySegment<byte>? GetTIGERBytes() { return __p.__vector_as_arraysegment(178); }
-#endif
-  public byte[] GetTIGERArray() { return __p.__vector_as_array<byte>(178); }
-  /// Unkeyed Cryptographic Hash Function - Whirlpool
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  public string WHIRLPOOL { get { int o = __p.__offset(180); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetWHIRLPOOLBytes() { return __p.__vector_as_span<byte>(180, 1); }
-#else
-  public ArraySegment<byte>? GetWHIRLPOOLBytes() { return __p.__vector_as_arraysegment(180); }
-#endif
-  public byte[] GetWHIRLPOOLArray() { return __p.__vector_as_array<byte>(180); }
+  public byte[] GetSOL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(36); }
 
   public static Offset<PNM> CreatePNM(FlatBufferBuilder builder,
       StringOffset IPFS_CIDOffset = default(StringOffset),
       StringOffset ETH_DIGITAL_SIGNATUREOffset = default(StringOffset),
-      StringOffset SHA_512_FILE_HASHOffset = default(StringOffset),
-      StringOffset SHA_256_FILE_HASHOffset = default(StringOffset),
-      StringOffset MD5_FILE_DIGESTOffset = default(StringOffset),
-      StringOffset SHA_1_FILE_HASHOffset = default(StringOffset),
-      StringOffset ARGON2_FILE_HASHOffset = default(StringOffset),
-      StringOffset BLAKE2B_FILE_HASHOffset = default(StringOffset),
-      StringOffset SHA_3_FILE_HASHOffset = default(StringOffset),
-      StringOffset RIPEMD_160_FILE_HASHOffset = default(StringOffset),
-      StringOffset WHIRLPOOL_FILE_HASHOffset = default(StringOffset),
-      StringOffset TIGER_FILE_HASHOffset = default(StringOffset),
-      StringOffset CRC32Offset = default(StringOffset),
-      StringOffset ADLER32_CHECKSUMOffset = default(StringOffset),
-      StringOffset RABIN_FINGERPRINTOffset = default(StringOffset),
-      StringOffset PEARSON_HASHINGOffset = default(StringOffset),
-      StringOffset BLAKE2_KEYED_HASHOffset = default(StringOffset),
-      StringOffset BLAKE_256Offset = default(StringOffset),
-      StringOffset CRC8Offset = default(StringOffset),
-      StringOffset CRC16Offset = default(StringOffset),
-      StringOffset CRC64Offset = default(StringOffset),
-      StringOffset BSD_CHECKSUMOffset = default(StringOffset),
-      StringOffset SYSV_CHECKSUMOffset = default(StringOffset),
-      StringOffset SUM8Offset = default(StringOffset),
-      StringOffset INTERNET_CHECKSUMOffset = default(StringOffset),
-      StringOffset SUM24Offset = default(StringOffset),
-      StringOffset SUM32Offset = default(StringOffset),
-      StringOffset FLETCHER_4Offset = default(StringOffset),
-      StringOffset FLETCHER_8Offset = default(StringOffset),
-      StringOffset FLETCHER_16Offset = default(StringOffset),
-      StringOffset FLETCHER_32Offset = default(StringOffset),
-      StringOffset LUNH_ALGORITHMOffset = default(StringOffset),
-      StringOffset VERHOEFF_ALGORITHMOffset = default(StringOffset),
-      StringOffset DAMM_ALGORITHMOffset = default(StringOffset),
-      StringOffset TABULATION_HASHINGOffset = default(StringOffset),
-      StringOffset UNIVERSAL_ONE_WAY_HASH_FUNCTIONOffset = default(StringOffset),
-      StringOffset ZOBRIST_HASHINGOffset = default(StringOffset),
-      StringOffset PAUL_HSIEHS_SUPERFASTHASHOffset = default(StringOffset),
-      StringOffset BUZHASHOffset = default(StringOffset),
-      StringOffset FNV_HASHOffset = default(StringOffset),
-      StringOffset JENKINS_HASH_FUNCTIONOffset = default(StringOffset),
-      StringOffset BERNSTEINS_HASH_DJB2Offset = default(StringOffset),
-      StringOffset PJW_HASH_ELF_HASHOffset = default(StringOffset),
-      StringOffset MURMURHASHOffset = default(StringOffset),
-      StringOffset FAST_HASHOffset = default(StringOffset),
-      StringOffset SPOOKYHASHOffset = default(StringOffset),
-      StringOffset CITYHASHOffset = default(StringOffset),
-      StringOffset FARMHASHOffset = default(StringOffset),
-      StringOffset METROHASHOffset = default(StringOffset),
-      StringOffset NUMERIC_HASHOffset = default(StringOffset),
-      StringOffset XXHASHOffset = default(StringOffset),
-      StringOffset T1HAOffset = default(StringOffset),
-      StringOffset GXHASHOffset = default(StringOffset),
-      StringOffset PHASHOffset = default(StringOffset),
-      StringOffset DHASHOffset = default(StringOffset),
-      StringOffset SDBMOffset = default(StringOffset),
-      StringOffset OSDB_HASHOffset = default(StringOffset),
-      StringOffset KOMIHASHOffset = default(StringOffset),
-      StringOffset BLAKE3Offset = default(StringOffset),
-      StringOffset ECOHOffset = default(StringOffset),
-      StringOffset FSBOffset = default(StringOffset),
-      StringOffset GOSTOffset = default(StringOffset),
-      StringOffset GROSTLOffset = default(StringOffset),
-      StringOffset HAS_160Offset = default(StringOffset),
-      StringOffset HAVALOffset = default(StringOffset),
-      StringOffset JHOffset = default(StringOffset),
-      StringOffset LSHOffset = default(StringOffset),
-      StringOffset MD2Offset = default(StringOffset),
-      StringOffset MD4Offset = default(StringOffset),
-      StringOffset MD5Offset = default(StringOffset),
-      StringOffset MD6Offset = default(StringOffset),
-      StringOffset RADIOGATUNOffset = default(StringOffset),
-      StringOffset RIPEMDOffset = default(StringOffset),
-      StringOffset RIPEMD_128Offset = default(StringOffset),
-      StringOffset RIPEMD_256Offset = default(StringOffset),
-      StringOffset RIPEMD_320Offset = default(StringOffset),
-      StringOffset SHA_1Offset = default(StringOffset),
-      StringOffset SHA_224Offset = default(StringOffset),
-      StringOffset SHA_256Offset = default(StringOffset),
-      StringOffset SHA_384Offset = default(StringOffset),
-      StringOffset SHA_512Offset = default(StringOffset),
-      StringOffset SHA_3Offset = default(StringOffset),
-      StringOffset SKEINOffset = default(StringOffset),
-      StringOffset SNEFRUOffset = default(StringOffset),
-      StringOffset SPECTRAL_HASHOffset = default(StringOffset),
-      StringOffset STREEBOGOffset = default(StringOffset),
-      StringOffset SWIFFTOffset = default(StringOffset),
-      StringOffset TIGEROffset = default(StringOffset),
-      StringOffset WHIRLPOOLOffset = default(StringOffset)) {
-    builder.StartTable(89);
-    PNM.AddWHIRLPOOL(builder, WHIRLPOOLOffset);
-    PNM.AddTIGER(builder, TIGEROffset);
-    PNM.AddSWIFFT(builder, SWIFFTOffset);
-    PNM.AddSTREEBOG(builder, STREEBOGOffset);
-    PNM.AddSPECTRAL_HASH(builder, SPECTRAL_HASHOffset);
-    PNM.AddSNEFRU(builder, SNEFRUOffset);
-    PNM.AddSKEIN(builder, SKEINOffset);
-    PNM.AddSHA_3(builder, SHA_3Offset);
-    PNM.AddSHA_512(builder, SHA_512Offset);
-    PNM.AddSHA_384(builder, SHA_384Offset);
-    PNM.AddSHA_256(builder, SHA_256Offset);
-    PNM.AddSHA_224(builder, SHA_224Offset);
-    PNM.AddSHA_1(builder, SHA_1Offset);
-    PNM.AddRIPEMD_320(builder, RIPEMD_320Offset);
-    PNM.AddRIPEMD_256(builder, RIPEMD_256Offset);
-    PNM.AddRIPEMD_128(builder, RIPEMD_128Offset);
-    PNM.AddRIPEMD(builder, RIPEMDOffset);
-    PNM.AddRADIOGATUN(builder, RADIOGATUNOffset);
-    PNM.AddMD6(builder, MD6Offset);
-    PNM.AddMD5(builder, MD5Offset);
-    PNM.AddMD4(builder, MD4Offset);
-    PNM.AddMD2(builder, MD2Offset);
-    PNM.AddLSH(builder, LSHOffset);
-    PNM.AddJH(builder, JHOffset);
-    PNM.AddHAVAL(builder, HAVALOffset);
-    PNM.AddHAS_160(builder, HAS_160Offset);
-    PNM.AddGROSTL(builder, GROSTLOffset);
-    PNM.AddGOST(builder, GOSTOffset);
-    PNM.AddFSB(builder, FSBOffset);
-    PNM.AddECOH(builder, ECOHOffset);
-    PNM.AddBLAKE3(builder, BLAKE3Offset);
-    PNM.AddKOMIHASH(builder, KOMIHASHOffset);
-    PNM.AddOSDB_HASH(builder, OSDB_HASHOffset);
-    PNM.AddSDBM(builder, SDBMOffset);
-    PNM.AddDHASH(builder, DHASHOffset);
-    PNM.AddPHASH(builder, PHASHOffset);
-    PNM.AddGXHASH(builder, GXHASHOffset);
-    PNM.AddT1HA(builder, T1HAOffset);
-    PNM.AddXXHASH(builder, XXHASHOffset);
-    PNM.AddNUMERIC_HASH(builder, NUMERIC_HASHOffset);
-    PNM.AddMETROHASH(builder, METROHASHOffset);
-    PNM.AddFARMHASH(builder, FARMHASHOffset);
-    PNM.AddCITYHASH(builder, CITYHASHOffset);
-    PNM.AddSPOOKYHASH(builder, SPOOKYHASHOffset);
-    PNM.AddFAST_HASH(builder, FAST_HASHOffset);
-    PNM.AddMURMURHASH(builder, MURMURHASHOffset);
-    PNM.AddPJW_HASH_ELF_HASH(builder, PJW_HASH_ELF_HASHOffset);
-    PNM.AddBERNSTEINS_HASH_DJB2(builder, BERNSTEINS_HASH_DJB2Offset);
-    PNM.AddJENKINS_HASH_FUNCTION(builder, JENKINS_HASH_FUNCTIONOffset);
-    PNM.AddFNV_HASH(builder, FNV_HASHOffset);
-    PNM.AddBUZHASH(builder, BUZHASHOffset);
-    PNM.AddPAUL_HSIEHS_SUPERFASTHASH(builder, PAUL_HSIEHS_SUPERFASTHASHOffset);
-    PNM.AddZOBRIST_HASHING(builder, ZOBRIST_HASHINGOffset);
-    PNM.AddUNIVERSAL_ONE_WAY_HASH_FUNCTION(builder, UNIVERSAL_ONE_WAY_HASH_FUNCTIONOffset);
-    PNM.AddTABULATION_HASHING(builder, TABULATION_HASHINGOffset);
-    PNM.AddDAMM_ALGORITHM(builder, DAMM_ALGORITHMOffset);
-    PNM.AddVERHOEFF_ALGORITHM(builder, VERHOEFF_ALGORITHMOffset);
-    PNM.AddLUNH_ALGORITHM(builder, LUNH_ALGORITHMOffset);
-    PNM.AddFLETCHER_32(builder, FLETCHER_32Offset);
-    PNM.AddFLETCHER_16(builder, FLETCHER_16Offset);
-    PNM.AddFLETCHER_8(builder, FLETCHER_8Offset);
-    PNM.AddFLETCHER_4(builder, FLETCHER_4Offset);
-    PNM.AddSUM32(builder, SUM32Offset);
-    PNM.AddSUM24(builder, SUM24Offset);
-    PNM.AddINTERNET_CHECKSUM(builder, INTERNET_CHECKSUMOffset);
-    PNM.AddSUM8(builder, SUM8Offset);
-    PNM.AddSYSV_CHECKSUM(builder, SYSV_CHECKSUMOffset);
-    PNM.AddBSD_CHECKSUM(builder, BSD_CHECKSUMOffset);
-    PNM.AddCRC64(builder, CRC64Offset);
-    PNM.AddCRC16(builder, CRC16Offset);
-    PNM.AddCRC8(builder, CRC8Offset);
-    PNM.AddBLAKE_256(builder, BLAKE_256Offset);
-    PNM.AddBLAKE2_KEYED_HASH(builder, BLAKE2_KEYED_HASHOffset);
-    PNM.AddPEARSON_HASHING(builder, PEARSON_HASHINGOffset);
-    PNM.AddRABIN_FINGERPRINT(builder, RABIN_FINGERPRINTOffset);
-    PNM.AddADLER32_CHECKSUM(builder, ADLER32_CHECKSUMOffset);
-    PNM.AddCRC32(builder, CRC32Offset);
-    PNM.AddTIGER_FILE_HASH(builder, TIGER_FILE_HASHOffset);
-    PNM.AddWHIRLPOOL_FILE_HASH(builder, WHIRLPOOL_FILE_HASHOffset);
-    PNM.AddRIPEMD_160_FILE_HASH(builder, RIPEMD_160_FILE_HASHOffset);
-    PNM.AddSHA_3_FILE_HASH(builder, SHA_3_FILE_HASHOffset);
-    PNM.AddBLAKE2B_FILE_HASH(builder, BLAKE2B_FILE_HASHOffset);
-    PNM.AddARGON2_FILE_HASH(builder, ARGON2_FILE_HASHOffset);
-    PNM.AddSHA_1_FILE_HASH(builder, SHA_1_FILE_HASHOffset);
-    PNM.AddMD5_FILE_DIGEST(builder, MD5_FILE_DIGESTOffset);
-    PNM.AddSHA_256_FILE_HASH(builder, SHA_256_FILE_HASHOffset);
-    PNM.AddSHA_512_FILE_HASH(builder, SHA_512_FILE_HASHOffset);
+      StringOffset BTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset LTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset XRP_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset ADA_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset XLM_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset DOGE_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset XMR_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset DOT_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset FIL_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset XTZ_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset ATOM_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset TRX_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset BNB_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset AVAX_DIGITAL_SIGNATUREOffset = default(StringOffset),
+      StringOffset SOL_DIGITAL_SIGNATUREOffset = default(StringOffset)) {
+    builder.StartTable(17);
+    PNM.AddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATUREOffset);
+    PNM.AddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATUREOffset);
+    PNM.AddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATUREOffset);
+    PNM.AddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATUREOffset);
+    PNM.AddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATUREOffset);
+    PNM.AddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATUREOffset);
+    PNM.AddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATUREOffset);
+    PNM.AddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATUREOffset);
+    PNM.AddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATUREOffset);
+    PNM.AddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATUREOffset);
+    PNM.AddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATUREOffset);
+    PNM.AddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATUREOffset);
+    PNM.AddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATUREOffset);
+    PNM.AddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATUREOffset);
+    PNM.AddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATUREOffset);
     PNM.AddIPFS_CID(builder, IPFS_CIDOffset);
     return PNM.EndPNM(builder);
   }
 
-  public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(89); }
+  public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddIPFS_CID(FlatBufferBuilder builder, StringOffset IPFS_CIDOffset) { builder.AddOffset(0, IPFS_CIDOffset.Value, 0); }
   public static void AddETH_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ETH_DIGITAL_SIGNATUREOffset) { builder.AddOffset(1, ETH_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddSHA_512_FILE_HASH(FlatBufferBuilder builder, StringOffset SHA_512_FILE_HASHOffset) { builder.AddOffset(2, SHA_512_FILE_HASHOffset.Value, 0); }
-  public static void AddSHA_256_FILE_HASH(FlatBufferBuilder builder, StringOffset SHA_256_FILE_HASHOffset) { builder.AddOffset(3, SHA_256_FILE_HASHOffset.Value, 0); }
-  public static void AddMD5_FILE_DIGEST(FlatBufferBuilder builder, StringOffset MD5_FILE_DIGESTOffset) { builder.AddOffset(4, MD5_FILE_DIGESTOffset.Value, 0); }
-  public static void AddSHA_1_FILE_HASH(FlatBufferBuilder builder, StringOffset SHA_1_FILE_HASHOffset) { builder.AddOffset(5, SHA_1_FILE_HASHOffset.Value, 0); }
-  public static void AddARGON2_FILE_HASH(FlatBufferBuilder builder, StringOffset ARGON2_FILE_HASHOffset) { builder.AddOffset(6, ARGON2_FILE_HASHOffset.Value, 0); }
-  public static void AddBLAKE2B_FILE_HASH(FlatBufferBuilder builder, StringOffset BLAKE2B_FILE_HASHOffset) { builder.AddOffset(7, BLAKE2B_FILE_HASHOffset.Value, 0); }
-  public static void AddSHA_3_FILE_HASH(FlatBufferBuilder builder, StringOffset SHA_3_FILE_HASHOffset) { builder.AddOffset(8, SHA_3_FILE_HASHOffset.Value, 0); }
-  public static void AddRIPEMD_160_FILE_HASH(FlatBufferBuilder builder, StringOffset RIPEMD_160_FILE_HASHOffset) { builder.AddOffset(9, RIPEMD_160_FILE_HASHOffset.Value, 0); }
-  public static void AddWHIRLPOOL_FILE_HASH(FlatBufferBuilder builder, StringOffset WHIRLPOOL_FILE_HASHOffset) { builder.AddOffset(10, WHIRLPOOL_FILE_HASHOffset.Value, 0); }
-  public static void AddTIGER_FILE_HASH(FlatBufferBuilder builder, StringOffset TIGER_FILE_HASHOffset) { builder.AddOffset(11, TIGER_FILE_HASHOffset.Value, 0); }
-  public static void AddCRC32(FlatBufferBuilder builder, StringOffset CRC32Offset) { builder.AddOffset(12, CRC32Offset.Value, 0); }
-  public static void AddADLER32_CHECKSUM(FlatBufferBuilder builder, StringOffset ADLER32_CHECKSUMOffset) { builder.AddOffset(13, ADLER32_CHECKSUMOffset.Value, 0); }
-  public static void AddRABIN_FINGERPRINT(FlatBufferBuilder builder, StringOffset RABIN_FINGERPRINTOffset) { builder.AddOffset(14, RABIN_FINGERPRINTOffset.Value, 0); }
-  public static void AddPEARSON_HASHING(FlatBufferBuilder builder, StringOffset PEARSON_HASHINGOffset) { builder.AddOffset(15, PEARSON_HASHINGOffset.Value, 0); }
-  public static void AddBLAKE2_KEYED_HASH(FlatBufferBuilder builder, StringOffset BLAKE2_KEYED_HASHOffset) { builder.AddOffset(16, BLAKE2_KEYED_HASHOffset.Value, 0); }
-  public static void AddBLAKE_256(FlatBufferBuilder builder, StringOffset BLAKE_256Offset) { builder.AddOffset(17, BLAKE_256Offset.Value, 0); }
-  public static void AddCRC8(FlatBufferBuilder builder, StringOffset CRC8Offset) { builder.AddOffset(18, CRC8Offset.Value, 0); }
-  public static void AddCRC16(FlatBufferBuilder builder, StringOffset CRC16Offset) { builder.AddOffset(19, CRC16Offset.Value, 0); }
-  public static void AddCRC64(FlatBufferBuilder builder, StringOffset CRC64Offset) { builder.AddOffset(20, CRC64Offset.Value, 0); }
-  public static void AddBSD_CHECKSUM(FlatBufferBuilder builder, StringOffset BSD_CHECKSUMOffset) { builder.AddOffset(21, BSD_CHECKSUMOffset.Value, 0); }
-  public static void AddSYSV_CHECKSUM(FlatBufferBuilder builder, StringOffset SYSV_CHECKSUMOffset) { builder.AddOffset(22, SYSV_CHECKSUMOffset.Value, 0); }
-  public static void AddSUM8(FlatBufferBuilder builder, StringOffset SUM8Offset) { builder.AddOffset(23, SUM8Offset.Value, 0); }
-  public static void AddINTERNET_CHECKSUM(FlatBufferBuilder builder, StringOffset INTERNET_CHECKSUMOffset) { builder.AddOffset(24, INTERNET_CHECKSUMOffset.Value, 0); }
-  public static void AddSUM24(FlatBufferBuilder builder, StringOffset SUM24Offset) { builder.AddOffset(25, SUM24Offset.Value, 0); }
-  public static void AddSUM32(FlatBufferBuilder builder, StringOffset SUM32Offset) { builder.AddOffset(26, SUM32Offset.Value, 0); }
-  public static void AddFLETCHER_4(FlatBufferBuilder builder, StringOffset FLETCHER_4Offset) { builder.AddOffset(27, FLETCHER_4Offset.Value, 0); }
-  public static void AddFLETCHER_8(FlatBufferBuilder builder, StringOffset FLETCHER_8Offset) { builder.AddOffset(28, FLETCHER_8Offset.Value, 0); }
-  public static void AddFLETCHER_16(FlatBufferBuilder builder, StringOffset FLETCHER_16Offset) { builder.AddOffset(29, FLETCHER_16Offset.Value, 0); }
-  public static void AddFLETCHER_32(FlatBufferBuilder builder, StringOffset FLETCHER_32Offset) { builder.AddOffset(30, FLETCHER_32Offset.Value, 0); }
-  public static void AddLUNH_ALGORITHM(FlatBufferBuilder builder, StringOffset LUNH_ALGORITHMOffset) { builder.AddOffset(31, LUNH_ALGORITHMOffset.Value, 0); }
-  public static void AddVERHOEFF_ALGORITHM(FlatBufferBuilder builder, StringOffset VERHOEFF_ALGORITHMOffset) { builder.AddOffset(32, VERHOEFF_ALGORITHMOffset.Value, 0); }
-  public static void AddDAMM_ALGORITHM(FlatBufferBuilder builder, StringOffset DAMM_ALGORITHMOffset) { builder.AddOffset(33, DAMM_ALGORITHMOffset.Value, 0); }
-  public static void AddTABULATION_HASHING(FlatBufferBuilder builder, StringOffset TABULATION_HASHINGOffset) { builder.AddOffset(34, TABULATION_HASHINGOffset.Value, 0); }
-  public static void AddUNIVERSAL_ONE_WAY_HASH_FUNCTION(FlatBufferBuilder builder, StringOffset UNIVERSAL_ONE_WAY_HASH_FUNCTIONOffset) { builder.AddOffset(35, UNIVERSAL_ONE_WAY_HASH_FUNCTIONOffset.Value, 0); }
-  public static void AddZOBRIST_HASHING(FlatBufferBuilder builder, StringOffset ZOBRIST_HASHINGOffset) { builder.AddOffset(36, ZOBRIST_HASHINGOffset.Value, 0); }
-  public static void AddPAUL_HSIEHS_SUPERFASTHASH(FlatBufferBuilder builder, StringOffset PAUL_HSIEHS_SUPERFASTHASHOffset) { builder.AddOffset(37, PAUL_HSIEHS_SUPERFASTHASHOffset.Value, 0); }
-  public static void AddBUZHASH(FlatBufferBuilder builder, StringOffset BUZHASHOffset) { builder.AddOffset(38, BUZHASHOffset.Value, 0); }
-  public static void AddFNV_HASH(FlatBufferBuilder builder, StringOffset FNV_HASHOffset) { builder.AddOffset(39, FNV_HASHOffset.Value, 0); }
-  public static void AddJENKINS_HASH_FUNCTION(FlatBufferBuilder builder, StringOffset JENKINS_HASH_FUNCTIONOffset) { builder.AddOffset(40, JENKINS_HASH_FUNCTIONOffset.Value, 0); }
-  public static void AddBERNSTEINS_HASH_DJB2(FlatBufferBuilder builder, StringOffset BERNSTEINS_HASH_DJB2Offset) { builder.AddOffset(41, BERNSTEINS_HASH_DJB2Offset.Value, 0); }
-  public static void AddPJW_HASH_ELF_HASH(FlatBufferBuilder builder, StringOffset PJW_HASH_ELF_HASHOffset) { builder.AddOffset(42, PJW_HASH_ELF_HASHOffset.Value, 0); }
-  public static void AddMURMURHASH(FlatBufferBuilder builder, StringOffset MURMURHASHOffset) { builder.AddOffset(43, MURMURHASHOffset.Value, 0); }
-  public static void AddFAST_HASH(FlatBufferBuilder builder, StringOffset FAST_HASHOffset) { builder.AddOffset(44, FAST_HASHOffset.Value, 0); }
-  public static void AddSPOOKYHASH(FlatBufferBuilder builder, StringOffset SPOOKYHASHOffset) { builder.AddOffset(45, SPOOKYHASHOffset.Value, 0); }
-  public static void AddCITYHASH(FlatBufferBuilder builder, StringOffset CITYHASHOffset) { builder.AddOffset(46, CITYHASHOffset.Value, 0); }
-  public static void AddFARMHASH(FlatBufferBuilder builder, StringOffset FARMHASHOffset) { builder.AddOffset(47, FARMHASHOffset.Value, 0); }
-  public static void AddMETROHASH(FlatBufferBuilder builder, StringOffset METROHASHOffset) { builder.AddOffset(48, METROHASHOffset.Value, 0); }
-  public static void AddNUMERIC_HASH(FlatBufferBuilder builder, StringOffset NUMERIC_HASHOffset) { builder.AddOffset(49, NUMERIC_HASHOffset.Value, 0); }
-  public static void AddXXHASH(FlatBufferBuilder builder, StringOffset XXHASHOffset) { builder.AddOffset(50, XXHASHOffset.Value, 0); }
-  public static void AddT1HA(FlatBufferBuilder builder, StringOffset T1HAOffset) { builder.AddOffset(51, T1HAOffset.Value, 0); }
-  public static void AddGXHASH(FlatBufferBuilder builder, StringOffset GXHASHOffset) { builder.AddOffset(52, GXHASHOffset.Value, 0); }
-  public static void AddPHASH(FlatBufferBuilder builder, StringOffset PHASHOffset) { builder.AddOffset(53, PHASHOffset.Value, 0); }
-  public static void AddDHASH(FlatBufferBuilder builder, StringOffset DHASHOffset) { builder.AddOffset(54, DHASHOffset.Value, 0); }
-  public static void AddSDBM(FlatBufferBuilder builder, StringOffset SDBMOffset) { builder.AddOffset(55, SDBMOffset.Value, 0); }
-  public static void AddOSDB_HASH(FlatBufferBuilder builder, StringOffset OSDB_HASHOffset) { builder.AddOffset(56, OSDB_HASHOffset.Value, 0); }
-  public static void AddKOMIHASH(FlatBufferBuilder builder, StringOffset KOMIHASHOffset) { builder.AddOffset(57, KOMIHASHOffset.Value, 0); }
-  public static void AddBLAKE3(FlatBufferBuilder builder, StringOffset BLAKE3Offset) { builder.AddOffset(58, BLAKE3Offset.Value, 0); }
-  public static void AddECOH(FlatBufferBuilder builder, StringOffset ECOHOffset) { builder.AddOffset(59, ECOHOffset.Value, 0); }
-  public static void AddFSB(FlatBufferBuilder builder, StringOffset FSBOffset) { builder.AddOffset(60, FSBOffset.Value, 0); }
-  public static void AddGOST(FlatBufferBuilder builder, StringOffset GOSTOffset) { builder.AddOffset(61, GOSTOffset.Value, 0); }
-  public static void AddGROSTL(FlatBufferBuilder builder, StringOffset GROSTLOffset) { builder.AddOffset(62, GROSTLOffset.Value, 0); }
-  public static void AddHAS_160(FlatBufferBuilder builder, StringOffset HAS_160Offset) { builder.AddOffset(63, HAS_160Offset.Value, 0); }
-  public static void AddHAVAL(FlatBufferBuilder builder, StringOffset HAVALOffset) { builder.AddOffset(64, HAVALOffset.Value, 0); }
-  public static void AddJH(FlatBufferBuilder builder, StringOffset JHOffset) { builder.AddOffset(65, JHOffset.Value, 0); }
-  public static void AddLSH(FlatBufferBuilder builder, StringOffset LSHOffset) { builder.AddOffset(66, LSHOffset.Value, 0); }
-  public static void AddMD2(FlatBufferBuilder builder, StringOffset MD2Offset) { builder.AddOffset(67, MD2Offset.Value, 0); }
-  public static void AddMD4(FlatBufferBuilder builder, StringOffset MD4Offset) { builder.AddOffset(68, MD4Offset.Value, 0); }
-  public static void AddMD5(FlatBufferBuilder builder, StringOffset MD5Offset) { builder.AddOffset(69, MD5Offset.Value, 0); }
-  public static void AddMD6(FlatBufferBuilder builder, StringOffset MD6Offset) { builder.AddOffset(70, MD6Offset.Value, 0); }
-  public static void AddRADIOGATUN(FlatBufferBuilder builder, StringOffset RADIOGATUNOffset) { builder.AddOffset(71, RADIOGATUNOffset.Value, 0); }
-  public static void AddRIPEMD(FlatBufferBuilder builder, StringOffset RIPEMDOffset) { builder.AddOffset(72, RIPEMDOffset.Value, 0); }
-  public static void AddRIPEMD_128(FlatBufferBuilder builder, StringOffset RIPEMD_128Offset) { builder.AddOffset(73, RIPEMD_128Offset.Value, 0); }
-  public static void AddRIPEMD_256(FlatBufferBuilder builder, StringOffset RIPEMD_256Offset) { builder.AddOffset(74, RIPEMD_256Offset.Value, 0); }
-  public static void AddRIPEMD_320(FlatBufferBuilder builder, StringOffset RIPEMD_320Offset) { builder.AddOffset(75, RIPEMD_320Offset.Value, 0); }
-  public static void AddSHA_1(FlatBufferBuilder builder, StringOffset SHA_1Offset) { builder.AddOffset(76, SHA_1Offset.Value, 0); }
-  public static void AddSHA_224(FlatBufferBuilder builder, StringOffset SHA_224Offset) { builder.AddOffset(77, SHA_224Offset.Value, 0); }
-  public static void AddSHA_256(FlatBufferBuilder builder, StringOffset SHA_256Offset) { builder.AddOffset(78, SHA_256Offset.Value, 0); }
-  public static void AddSHA_384(FlatBufferBuilder builder, StringOffset SHA_384Offset) { builder.AddOffset(79, SHA_384Offset.Value, 0); }
-  public static void AddSHA_512(FlatBufferBuilder builder, StringOffset SHA_512Offset) { builder.AddOffset(80, SHA_512Offset.Value, 0); }
-  public static void AddSHA_3(FlatBufferBuilder builder, StringOffset SHA_3Offset) { builder.AddOffset(81, SHA_3Offset.Value, 0); }
-  public static void AddSKEIN(FlatBufferBuilder builder, StringOffset SKEINOffset) { builder.AddOffset(82, SKEINOffset.Value, 0); }
-  public static void AddSNEFRU(FlatBufferBuilder builder, StringOffset SNEFRUOffset) { builder.AddOffset(83, SNEFRUOffset.Value, 0); }
-  public static void AddSPECTRAL_HASH(FlatBufferBuilder builder, StringOffset SPECTRAL_HASHOffset) { builder.AddOffset(84, SPECTRAL_HASHOffset.Value, 0); }
-  public static void AddSTREEBOG(FlatBufferBuilder builder, StringOffset STREEBOGOffset) { builder.AddOffset(85, STREEBOGOffset.Value, 0); }
-  public static void AddSWIFFT(FlatBufferBuilder builder, StringOffset SWIFFTOffset) { builder.AddOffset(86, SWIFFTOffset.Value, 0); }
-  public static void AddTIGER(FlatBufferBuilder builder, StringOffset TIGEROffset) { builder.AddOffset(87, TIGEROffset.Value, 0); }
-  public static void AddWHIRLPOOL(FlatBufferBuilder builder, StringOffset WHIRLPOOLOffset) { builder.AddOffset(88, WHIRLPOOLOffset.Value, 0); }
+  public static void AddBTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(2, BTC_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddLTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset LTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(3, LTC_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXRP_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XRP_DIGITAL_SIGNATUREOffset) { builder.AddOffset(4, XRP_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddADA_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ADA_DIGITAL_SIGNATUREOffset) { builder.AddOffset(5, ADA_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXLM_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XLM_DIGITAL_SIGNATUREOffset) { builder.AddOffset(6, XLM_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset DOGE_DIGITAL_SIGNATUREOffset) { builder.AddOffset(7, DOGE_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXMR_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XMR_DIGITAL_SIGNATUREOffset) { builder.AddOffset(8, XMR_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddDOT_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset DOT_DIGITAL_SIGNATUREOffset) { builder.AddOffset(9, DOT_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddFIL_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset FIL_DIGITAL_SIGNATUREOffset) { builder.AddOffset(10, FIL_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XTZ_DIGITAL_SIGNATUREOffset) { builder.AddOffset(11, XTZ_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddATOM_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ATOM_DIGITAL_SIGNATUREOffset) { builder.AddOffset(12, ATOM_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddTRX_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset TRX_DIGITAL_SIGNATUREOffset) { builder.AddOffset(13, TRX_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddBNB_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BNB_DIGITAL_SIGNATUREOffset) { builder.AddOffset(14, BNB_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset AVAX_DIGITAL_SIGNATUREOffset) { builder.AddOffset(15, AVAX_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddSOL_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset SOL_DIGITAL_SIGNATUREOffset) { builder.AddOffset(16, SOL_DIGITAL_SIGNATUREOffset.Value, 0); }
   public static Offset<PNM> EndPNM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PNM>(o);
@@ -1197,276 +261,60 @@ public struct PNM : IFlatbufferObject
   public void UnPackTo(PNMT _o) {
     _o.IPFS_CID = this.IPFS_CID;
     _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE;
-    _o.SHA_512_FILE_HASH = this.SHA_512_FILE_HASH;
-    _o.SHA_256_FILE_HASH = this.SHA_256_FILE_HASH;
-    _o.MD5_FILE_DIGEST = this.MD5_FILE_DIGEST;
-    _o.SHA_1_FILE_HASH = this.SHA_1_FILE_HASH;
-    _o.ARGON2_FILE_HASH = this.ARGON2_FILE_HASH;
-    _o.BLAKE2B_FILE_HASH = this.BLAKE2B_FILE_HASH;
-    _o.SHA_3_FILE_HASH = this.SHA_3_FILE_HASH;
-    _o.RIPEMD_160_FILE_HASH = this.RIPEMD_160_FILE_HASH;
-    _o.WHIRLPOOL_FILE_HASH = this.WHIRLPOOL_FILE_HASH;
-    _o.TIGER_FILE_HASH = this.TIGER_FILE_HASH;
-    _o.CRC32 = this.CRC32;
-    _o.ADLER32_CHECKSUM = this.ADLER32_CHECKSUM;
-    _o.RABIN_FINGERPRINT = this.RABIN_FINGERPRINT;
-    _o.PEARSON_HASHING = this.PEARSON_HASHING;
-    _o.BLAKE2_KEYED_HASH = this.BLAKE2_KEYED_HASH;
-    _o.BLAKE_256 = this.BLAKE_256;
-    _o.CRC8 = this.CRC8;
-    _o.CRC16 = this.CRC16;
-    _o.CRC64 = this.CRC64;
-    _o.BSD_CHECKSUM = this.BSD_CHECKSUM;
-    _o.SYSV_CHECKSUM = this.SYSV_CHECKSUM;
-    _o.SUM8 = this.SUM8;
-    _o.INTERNET_CHECKSUM = this.INTERNET_CHECKSUM;
-    _o.SUM24 = this.SUM24;
-    _o.SUM32 = this.SUM32;
-    _o.FLETCHER_4 = this.FLETCHER_4;
-    _o.FLETCHER_8 = this.FLETCHER_8;
-    _o.FLETCHER_16 = this.FLETCHER_16;
-    _o.FLETCHER_32 = this.FLETCHER_32;
-    _o.LUNH_ALGORITHM = this.LUNH_ALGORITHM;
-    _o.VERHOEFF_ALGORITHM = this.VERHOEFF_ALGORITHM;
-    _o.DAMM_ALGORITHM = this.DAMM_ALGORITHM;
-    _o.TABULATION_HASHING = this.TABULATION_HASHING;
-    _o.UNIVERSAL_ONE_WAY_HASH_FUNCTION = this.UNIVERSAL_ONE_WAY_HASH_FUNCTION;
-    _o.ZOBRIST_HASHING = this.ZOBRIST_HASHING;
-    _o.PAUL_HSIEHS_SUPERFASTHASH = this.PAUL_HSIEHS_SUPERFASTHASH;
-    _o.BUZHASH = this.BUZHASH;
-    _o.FNV_HASH = this.FNV_HASH;
-    _o.JENKINS_HASH_FUNCTION = this.JENKINS_HASH_FUNCTION;
-    _o.BERNSTEINS_HASH_DJB2 = this.BERNSTEINS_HASH_DJB2;
-    _o.PJW_HASH_ELF_HASH = this.PJW_HASH_ELF_HASH;
-    _o.MURMURHASH = this.MURMURHASH;
-    _o.FAST_HASH = this.FAST_HASH;
-    _o.SPOOKYHASH = this.SPOOKYHASH;
-    _o.CITYHASH = this.CITYHASH;
-    _o.FARMHASH = this.FARMHASH;
-    _o.METROHASH = this.METROHASH;
-    _o.NUMERIC_HASH = this.NUMERIC_HASH;
-    _o.XXHASH = this.XXHASH;
-    _o.T1HA = this.T1HA;
-    _o.GXHASH = this.GXHASH;
-    _o.PHASH = this.PHASH;
-    _o.DHASH = this.DHASH;
-    _o.SDBM = this.SDBM;
-    _o.OSDB_HASH = this.OSDB_HASH;
-    _o.KOMIHASH = this.KOMIHASH;
-    _o.BLAKE3 = this.BLAKE3;
-    _o.ECOH = this.ECOH;
-    _o.FSB = this.FSB;
-    _o.GOST = this.GOST;
-    _o.GROSTL = this.GROSTL;
-    _o.HAS_160 = this.HAS_160;
-    _o.HAVAL = this.HAVAL;
-    _o.JH = this.JH;
-    _o.LSH = this.LSH;
-    _o.MD2 = this.MD2;
-    _o.MD4 = this.MD4;
-    _o.MD5 = this.MD5;
-    _o.MD6 = this.MD6;
-    _o.RADIOGATUN = this.RADIOGATUN;
-    _o.RIPEMD = this.RIPEMD;
-    _o.RIPEMD_128 = this.RIPEMD_128;
-    _o.RIPEMD_256 = this.RIPEMD_256;
-    _o.RIPEMD_320 = this.RIPEMD_320;
-    _o.SHA_1 = this.SHA_1;
-    _o.SHA_224 = this.SHA_224;
-    _o.SHA_256 = this.SHA_256;
-    _o.SHA_384 = this.SHA_384;
-    _o.SHA_512 = this.SHA_512;
-    _o.SHA_3 = this.SHA_3;
-    _o.SKEIN = this.SKEIN;
-    _o.SNEFRU = this.SNEFRU;
-    _o.SPECTRAL_HASH = this.SPECTRAL_HASH;
-    _o.STREEBOG = this.STREEBOG;
-    _o.SWIFFT = this.SWIFFT;
-    _o.TIGER = this.TIGER;
-    _o.WHIRLPOOL = this.WHIRLPOOL;
+    _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE;
+    _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE;
+    _o.XRP_DIGITAL_SIGNATURE = this.XRP_DIGITAL_SIGNATURE;
+    _o.ADA_DIGITAL_SIGNATURE = this.ADA_DIGITAL_SIGNATURE;
+    _o.XLM_DIGITAL_SIGNATURE = this.XLM_DIGITAL_SIGNATURE;
+    _o.DOGE_DIGITAL_SIGNATURE = this.DOGE_DIGITAL_SIGNATURE;
+    _o.XMR_DIGITAL_SIGNATURE = this.XMR_DIGITAL_SIGNATURE;
+    _o.DOT_DIGITAL_SIGNATURE = this.DOT_DIGITAL_SIGNATURE;
+    _o.FIL_DIGITAL_SIGNATURE = this.FIL_DIGITAL_SIGNATURE;
+    _o.XTZ_DIGITAL_SIGNATURE = this.XTZ_DIGITAL_SIGNATURE;
+    _o.ATOM_DIGITAL_SIGNATURE = this.ATOM_DIGITAL_SIGNATURE;
+    _o.TRX_DIGITAL_SIGNATURE = this.TRX_DIGITAL_SIGNATURE;
+    _o.BNB_DIGITAL_SIGNATURE = this.BNB_DIGITAL_SIGNATURE;
+    _o.AVAX_DIGITAL_SIGNATURE = this.AVAX_DIGITAL_SIGNATURE;
+    _o.SOL_DIGITAL_SIGNATURE = this.SOL_DIGITAL_SIGNATURE;
   }
   public static Offset<PNM> Pack(FlatBufferBuilder builder, PNMT _o) {
     if (_o == null) return default(Offset<PNM>);
     var _IPFS_CID = _o.IPFS_CID == null ? default(StringOffset) : builder.CreateString(_o.IPFS_CID);
     var _ETH_DIGITAL_SIGNATURE = _o.ETH_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.ETH_DIGITAL_SIGNATURE);
-    var _SHA_512_FILE_HASH = _o.SHA_512_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.SHA_512_FILE_HASH);
-    var _SHA_256_FILE_HASH = _o.SHA_256_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.SHA_256_FILE_HASH);
-    var _MD5_FILE_DIGEST = _o.MD5_FILE_DIGEST == null ? default(StringOffset) : builder.CreateString(_o.MD5_FILE_DIGEST);
-    var _SHA_1_FILE_HASH = _o.SHA_1_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.SHA_1_FILE_HASH);
-    var _ARGON2_FILE_HASH = _o.ARGON2_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.ARGON2_FILE_HASH);
-    var _BLAKE2B_FILE_HASH = _o.BLAKE2B_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.BLAKE2B_FILE_HASH);
-    var _SHA_3_FILE_HASH = _o.SHA_3_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.SHA_3_FILE_HASH);
-    var _RIPEMD_160_FILE_HASH = _o.RIPEMD_160_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.RIPEMD_160_FILE_HASH);
-    var _WHIRLPOOL_FILE_HASH = _o.WHIRLPOOL_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.WHIRLPOOL_FILE_HASH);
-    var _TIGER_FILE_HASH = _o.TIGER_FILE_HASH == null ? default(StringOffset) : builder.CreateString(_o.TIGER_FILE_HASH);
-    var _CRC32 = _o.CRC32 == null ? default(StringOffset) : builder.CreateString(_o.CRC32);
-    var _ADLER32_CHECKSUM = _o.ADLER32_CHECKSUM == null ? default(StringOffset) : builder.CreateString(_o.ADLER32_CHECKSUM);
-    var _RABIN_FINGERPRINT = _o.RABIN_FINGERPRINT == null ? default(StringOffset) : builder.CreateString(_o.RABIN_FINGERPRINT);
-    var _PEARSON_HASHING = _o.PEARSON_HASHING == null ? default(StringOffset) : builder.CreateString(_o.PEARSON_HASHING);
-    var _BLAKE2_KEYED_HASH = _o.BLAKE2_KEYED_HASH == null ? default(StringOffset) : builder.CreateString(_o.BLAKE2_KEYED_HASH);
-    var _BLAKE_256 = _o.BLAKE_256 == null ? default(StringOffset) : builder.CreateString(_o.BLAKE_256);
-    var _CRC8 = _o.CRC8 == null ? default(StringOffset) : builder.CreateString(_o.CRC8);
-    var _CRC16 = _o.CRC16 == null ? default(StringOffset) : builder.CreateString(_o.CRC16);
-    var _CRC64 = _o.CRC64 == null ? default(StringOffset) : builder.CreateString(_o.CRC64);
-    var _BSD_CHECKSUM = _o.BSD_CHECKSUM == null ? default(StringOffset) : builder.CreateString(_o.BSD_CHECKSUM);
-    var _SYSV_CHECKSUM = _o.SYSV_CHECKSUM == null ? default(StringOffset) : builder.CreateString(_o.SYSV_CHECKSUM);
-    var _SUM8 = _o.SUM8 == null ? default(StringOffset) : builder.CreateString(_o.SUM8);
-    var _INTERNET_CHECKSUM = _o.INTERNET_CHECKSUM == null ? default(StringOffset) : builder.CreateString(_o.INTERNET_CHECKSUM);
-    var _SUM24 = _o.SUM24 == null ? default(StringOffset) : builder.CreateString(_o.SUM24);
-    var _SUM32 = _o.SUM32 == null ? default(StringOffset) : builder.CreateString(_o.SUM32);
-    var _FLETCHER_4 = _o.FLETCHER_4 == null ? default(StringOffset) : builder.CreateString(_o.FLETCHER_4);
-    var _FLETCHER_8 = _o.FLETCHER_8 == null ? default(StringOffset) : builder.CreateString(_o.FLETCHER_8);
-    var _FLETCHER_16 = _o.FLETCHER_16 == null ? default(StringOffset) : builder.CreateString(_o.FLETCHER_16);
-    var _FLETCHER_32 = _o.FLETCHER_32 == null ? default(StringOffset) : builder.CreateString(_o.FLETCHER_32);
-    var _LUNH_ALGORITHM = _o.LUNH_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.LUNH_ALGORITHM);
-    var _VERHOEFF_ALGORITHM = _o.VERHOEFF_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.VERHOEFF_ALGORITHM);
-    var _DAMM_ALGORITHM = _o.DAMM_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.DAMM_ALGORITHM);
-    var _TABULATION_HASHING = _o.TABULATION_HASHING == null ? default(StringOffset) : builder.CreateString(_o.TABULATION_HASHING);
-    var _UNIVERSAL_ONE_WAY_HASH_FUNCTION = _o.UNIVERSAL_ONE_WAY_HASH_FUNCTION == null ? default(StringOffset) : builder.CreateString(_o.UNIVERSAL_ONE_WAY_HASH_FUNCTION);
-    var _ZOBRIST_HASHING = _o.ZOBRIST_HASHING == null ? default(StringOffset) : builder.CreateString(_o.ZOBRIST_HASHING);
-    var _PAUL_HSIEHS_SUPERFASTHASH = _o.PAUL_HSIEHS_SUPERFASTHASH == null ? default(StringOffset) : builder.CreateString(_o.PAUL_HSIEHS_SUPERFASTHASH);
-    var _BUZHASH = _o.BUZHASH == null ? default(StringOffset) : builder.CreateString(_o.BUZHASH);
-    var _FNV_HASH = _o.FNV_HASH == null ? default(StringOffset) : builder.CreateString(_o.FNV_HASH);
-    var _JENKINS_HASH_FUNCTION = _o.JENKINS_HASH_FUNCTION == null ? default(StringOffset) : builder.CreateString(_o.JENKINS_HASH_FUNCTION);
-    var _BERNSTEINS_HASH_DJB2 = _o.BERNSTEINS_HASH_DJB2 == null ? default(StringOffset) : builder.CreateString(_o.BERNSTEINS_HASH_DJB2);
-    var _PJW_HASH_ELF_HASH = _o.PJW_HASH_ELF_HASH == null ? default(StringOffset) : builder.CreateString(_o.PJW_HASH_ELF_HASH);
-    var _MURMURHASH = _o.MURMURHASH == null ? default(StringOffset) : builder.CreateString(_o.MURMURHASH);
-    var _FAST_HASH = _o.FAST_HASH == null ? default(StringOffset) : builder.CreateString(_o.FAST_HASH);
-    var _SPOOKYHASH = _o.SPOOKYHASH == null ? default(StringOffset) : builder.CreateString(_o.SPOOKYHASH);
-    var _CITYHASH = _o.CITYHASH == null ? default(StringOffset) : builder.CreateString(_o.CITYHASH);
-    var _FARMHASH = _o.FARMHASH == null ? default(StringOffset) : builder.CreateString(_o.FARMHASH);
-    var _METROHASH = _o.METROHASH == null ? default(StringOffset) : builder.CreateString(_o.METROHASH);
-    var _NUMERIC_HASH = _o.NUMERIC_HASH == null ? default(StringOffset) : builder.CreateString(_o.NUMERIC_HASH);
-    var _XXHASH = _o.XXHASH == null ? default(StringOffset) : builder.CreateString(_o.XXHASH);
-    var _T1HA = _o.T1HA == null ? default(StringOffset) : builder.CreateString(_o.T1HA);
-    var _GXHASH = _o.GXHASH == null ? default(StringOffset) : builder.CreateString(_o.GXHASH);
-    var _PHASH = _o.PHASH == null ? default(StringOffset) : builder.CreateString(_o.PHASH);
-    var _DHASH = _o.DHASH == null ? default(StringOffset) : builder.CreateString(_o.DHASH);
-    var _SDBM = _o.SDBM == null ? default(StringOffset) : builder.CreateString(_o.SDBM);
-    var _OSDB_HASH = _o.OSDB_HASH == null ? default(StringOffset) : builder.CreateString(_o.OSDB_HASH);
-    var _KOMIHASH = _o.KOMIHASH == null ? default(StringOffset) : builder.CreateString(_o.KOMIHASH);
-    var _BLAKE3 = _o.BLAKE3 == null ? default(StringOffset) : builder.CreateString(_o.BLAKE3);
-    var _ECOH = _o.ECOH == null ? default(StringOffset) : builder.CreateString(_o.ECOH);
-    var _FSB = _o.FSB == null ? default(StringOffset) : builder.CreateString(_o.FSB);
-    var _GOST = _o.GOST == null ? default(StringOffset) : builder.CreateString(_o.GOST);
-    var _GROSTL = _o.GROSTL == null ? default(StringOffset) : builder.CreateString(_o.GROSTL);
-    var _HAS_160 = _o.HAS_160 == null ? default(StringOffset) : builder.CreateString(_o.HAS_160);
-    var _HAVAL = _o.HAVAL == null ? default(StringOffset) : builder.CreateString(_o.HAVAL);
-    var _JH = _o.JH == null ? default(StringOffset) : builder.CreateString(_o.JH);
-    var _LSH = _o.LSH == null ? default(StringOffset) : builder.CreateString(_o.LSH);
-    var _MD2 = _o.MD2 == null ? default(StringOffset) : builder.CreateString(_o.MD2);
-    var _MD4 = _o.MD4 == null ? default(StringOffset) : builder.CreateString(_o.MD4);
-    var _MD5 = _o.MD5 == null ? default(StringOffset) : builder.CreateString(_o.MD5);
-    var _MD6 = _o.MD6 == null ? default(StringOffset) : builder.CreateString(_o.MD6);
-    var _RADIOGATUN = _o.RADIOGATUN == null ? default(StringOffset) : builder.CreateString(_o.RADIOGATUN);
-    var _RIPEMD = _o.RIPEMD == null ? default(StringOffset) : builder.CreateString(_o.RIPEMD);
-    var _RIPEMD_128 = _o.RIPEMD_128 == null ? default(StringOffset) : builder.CreateString(_o.RIPEMD_128);
-    var _RIPEMD_256 = _o.RIPEMD_256 == null ? default(StringOffset) : builder.CreateString(_o.RIPEMD_256);
-    var _RIPEMD_320 = _o.RIPEMD_320 == null ? default(StringOffset) : builder.CreateString(_o.RIPEMD_320);
-    var _SHA_1 = _o.SHA_1 == null ? default(StringOffset) : builder.CreateString(_o.SHA_1);
-    var _SHA_224 = _o.SHA_224 == null ? default(StringOffset) : builder.CreateString(_o.SHA_224);
-    var _SHA_256 = _o.SHA_256 == null ? default(StringOffset) : builder.CreateString(_o.SHA_256);
-    var _SHA_384 = _o.SHA_384 == null ? default(StringOffset) : builder.CreateString(_o.SHA_384);
-    var _SHA_512 = _o.SHA_512 == null ? default(StringOffset) : builder.CreateString(_o.SHA_512);
-    var _SHA_3 = _o.SHA_3 == null ? default(StringOffset) : builder.CreateString(_o.SHA_3);
-    var _SKEIN = _o.SKEIN == null ? default(StringOffset) : builder.CreateString(_o.SKEIN);
-    var _SNEFRU = _o.SNEFRU == null ? default(StringOffset) : builder.CreateString(_o.SNEFRU);
-    var _SPECTRAL_HASH = _o.SPECTRAL_HASH == null ? default(StringOffset) : builder.CreateString(_o.SPECTRAL_HASH);
-    var _STREEBOG = _o.STREEBOG == null ? default(StringOffset) : builder.CreateString(_o.STREEBOG);
-    var _SWIFFT = _o.SWIFFT == null ? default(StringOffset) : builder.CreateString(_o.SWIFFT);
-    var _TIGER = _o.TIGER == null ? default(StringOffset) : builder.CreateString(_o.TIGER);
-    var _WHIRLPOOL = _o.WHIRLPOOL == null ? default(StringOffset) : builder.CreateString(_o.WHIRLPOOL);
+    var _BTC_DIGITAL_SIGNATURE = _o.BTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.BTC_DIGITAL_SIGNATURE);
+    var _LTC_DIGITAL_SIGNATURE = _o.LTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.LTC_DIGITAL_SIGNATURE);
+    var _XRP_DIGITAL_SIGNATURE = _o.XRP_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.XRP_DIGITAL_SIGNATURE);
+    var _ADA_DIGITAL_SIGNATURE = _o.ADA_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.ADA_DIGITAL_SIGNATURE);
+    var _XLM_DIGITAL_SIGNATURE = _o.XLM_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.XLM_DIGITAL_SIGNATURE);
+    var _DOGE_DIGITAL_SIGNATURE = _o.DOGE_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.DOGE_DIGITAL_SIGNATURE);
+    var _XMR_DIGITAL_SIGNATURE = _o.XMR_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.XMR_DIGITAL_SIGNATURE);
+    var _DOT_DIGITAL_SIGNATURE = _o.DOT_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.DOT_DIGITAL_SIGNATURE);
+    var _FIL_DIGITAL_SIGNATURE = _o.FIL_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.FIL_DIGITAL_SIGNATURE);
+    var _XTZ_DIGITAL_SIGNATURE = _o.XTZ_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.XTZ_DIGITAL_SIGNATURE);
+    var _ATOM_DIGITAL_SIGNATURE = _o.ATOM_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.ATOM_DIGITAL_SIGNATURE);
+    var _TRX_DIGITAL_SIGNATURE = _o.TRX_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.TRX_DIGITAL_SIGNATURE);
+    var _BNB_DIGITAL_SIGNATURE = _o.BNB_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.BNB_DIGITAL_SIGNATURE);
+    var _AVAX_DIGITAL_SIGNATURE = _o.AVAX_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.AVAX_DIGITAL_SIGNATURE);
+    var _SOL_DIGITAL_SIGNATURE = _o.SOL_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SOL_DIGITAL_SIGNATURE);
     return CreatePNM(
       builder,
       _IPFS_CID,
       _ETH_DIGITAL_SIGNATURE,
-      _SHA_512_FILE_HASH,
-      _SHA_256_FILE_HASH,
-      _MD5_FILE_DIGEST,
-      _SHA_1_FILE_HASH,
-      _ARGON2_FILE_HASH,
-      _BLAKE2B_FILE_HASH,
-      _SHA_3_FILE_HASH,
-      _RIPEMD_160_FILE_HASH,
-      _WHIRLPOOL_FILE_HASH,
-      _TIGER_FILE_HASH,
-      _CRC32,
-      _ADLER32_CHECKSUM,
-      _RABIN_FINGERPRINT,
-      _PEARSON_HASHING,
-      _BLAKE2_KEYED_HASH,
-      _BLAKE_256,
-      _CRC8,
-      _CRC16,
-      _CRC64,
-      _BSD_CHECKSUM,
-      _SYSV_CHECKSUM,
-      _SUM8,
-      _INTERNET_CHECKSUM,
-      _SUM24,
-      _SUM32,
-      _FLETCHER_4,
-      _FLETCHER_8,
-      _FLETCHER_16,
-      _FLETCHER_32,
-      _LUNH_ALGORITHM,
-      _VERHOEFF_ALGORITHM,
-      _DAMM_ALGORITHM,
-      _TABULATION_HASHING,
-      _UNIVERSAL_ONE_WAY_HASH_FUNCTION,
-      _ZOBRIST_HASHING,
-      _PAUL_HSIEHS_SUPERFASTHASH,
-      _BUZHASH,
-      _FNV_HASH,
-      _JENKINS_HASH_FUNCTION,
-      _BERNSTEINS_HASH_DJB2,
-      _PJW_HASH_ELF_HASH,
-      _MURMURHASH,
-      _FAST_HASH,
-      _SPOOKYHASH,
-      _CITYHASH,
-      _FARMHASH,
-      _METROHASH,
-      _NUMERIC_HASH,
-      _XXHASH,
-      _T1HA,
-      _GXHASH,
-      _PHASH,
-      _DHASH,
-      _SDBM,
-      _OSDB_HASH,
-      _KOMIHASH,
-      _BLAKE3,
-      _ECOH,
-      _FSB,
-      _GOST,
-      _GROSTL,
-      _HAS_160,
-      _HAVAL,
-      _JH,
-      _LSH,
-      _MD2,
-      _MD4,
-      _MD5,
-      _MD6,
-      _RADIOGATUN,
-      _RIPEMD,
-      _RIPEMD_128,
-      _RIPEMD_256,
-      _RIPEMD_320,
-      _SHA_1,
-      _SHA_224,
-      _SHA_256,
-      _SHA_384,
-      _SHA_512,
-      _SHA_3,
-      _SKEIN,
-      _SNEFRU,
-      _SPECTRAL_HASH,
-      _STREEBOG,
-      _SWIFFT,
-      _TIGER,
-      _WHIRLPOOL);
+      _BTC_DIGITAL_SIGNATURE,
+      _LTC_DIGITAL_SIGNATURE,
+      _XRP_DIGITAL_SIGNATURE,
+      _ADA_DIGITAL_SIGNATURE,
+      _XLM_DIGITAL_SIGNATURE,
+      _DOGE_DIGITAL_SIGNATURE,
+      _XMR_DIGITAL_SIGNATURE,
+      _DOT_DIGITAL_SIGNATURE,
+      _FIL_DIGITAL_SIGNATURE,
+      _XTZ_DIGITAL_SIGNATURE,
+      _ATOM_DIGITAL_SIGNATURE,
+      _TRX_DIGITAL_SIGNATURE,
+      _BNB_DIGITAL_SIGNATURE,
+      _AVAX_DIGITAL_SIGNATURE,
+      _SOL_DIGITAL_SIGNATURE);
   }
 }
 
@@ -1474,184 +322,40 @@ public class PNMT
 {
   public string IPFS_CID { get; set; }
   public string ETH_DIGITAL_SIGNATURE { get; set; }
-  public string SHA_512_FILE_HASH { get; set; }
-  public string SHA_256_FILE_HASH { get; set; }
-  public string MD5_FILE_DIGEST { get; set; }
-  public string SHA_1_FILE_HASH { get; set; }
-  public string ARGON2_FILE_HASH { get; set; }
-  public string BLAKE2B_FILE_HASH { get; set; }
-  public string SHA_3_FILE_HASH { get; set; }
-  public string RIPEMD_160_FILE_HASH { get; set; }
-  public string WHIRLPOOL_FILE_HASH { get; set; }
-  public string TIGER_FILE_HASH { get; set; }
-  public string CRC32 { get; set; }
-  public string ADLER32_CHECKSUM { get; set; }
-  public string RABIN_FINGERPRINT { get; set; }
-  public string PEARSON_HASHING { get; set; }
-  public string BLAKE2_KEYED_HASH { get; set; }
-  public string BLAKE_256 { get; set; }
-  public string CRC8 { get; set; }
-  public string CRC16 { get; set; }
-  public string CRC64 { get; set; }
-  public string BSD_CHECKSUM { get; set; }
-  public string SYSV_CHECKSUM { get; set; }
-  public string SUM8 { get; set; }
-  public string INTERNET_CHECKSUM { get; set; }
-  public string SUM24 { get; set; }
-  public string SUM32 { get; set; }
-  public string FLETCHER_4 { get; set; }
-  public string FLETCHER_8 { get; set; }
-  public string FLETCHER_16 { get; set; }
-  public string FLETCHER_32 { get; set; }
-  public string LUNH_ALGORITHM { get; set; }
-  public string VERHOEFF_ALGORITHM { get; set; }
-  public string DAMM_ALGORITHM { get; set; }
-  public string TABULATION_HASHING { get; set; }
-  public string UNIVERSAL_ONE_WAY_HASH_FUNCTION { get; set; }
-  public string ZOBRIST_HASHING { get; set; }
-  public string PAUL_HSIEHS_SUPERFASTHASH { get; set; }
-  public string BUZHASH { get; set; }
-  public string FNV_HASH { get; set; }
-  public string JENKINS_HASH_FUNCTION { get; set; }
-  public string BERNSTEINS_HASH_DJB2 { get; set; }
-  public string PJW_HASH_ELF_HASH { get; set; }
-  public string MURMURHASH { get; set; }
-  public string FAST_HASH { get; set; }
-  public string SPOOKYHASH { get; set; }
-  public string CITYHASH { get; set; }
-  public string FARMHASH { get; set; }
-  public string METROHASH { get; set; }
-  public string NUMERIC_HASH { get; set; }
-  public string XXHASH { get; set; }
-  public string T1HA { get; set; }
-  public string GXHASH { get; set; }
-  public string PHASH { get; set; }
-  public string DHASH { get; set; }
-  public string SDBM { get; set; }
-  public string OSDB_HASH { get; set; }
-  public string KOMIHASH { get; set; }
-  public string BLAKE3 { get; set; }
-  public string ECOH { get; set; }
-  public string FSB { get; set; }
-  public string GOST { get; set; }
-  public string GROSTL { get; set; }
-  public string HAS_160 { get; set; }
-  public string HAVAL { get; set; }
-  public string JH { get; set; }
-  public string LSH { get; set; }
-  public string MD2 { get; set; }
-  public string MD4 { get; set; }
-  public string MD5 { get; set; }
-  public string MD6 { get; set; }
-  public string RADIOGATUN { get; set; }
-  public string RIPEMD { get; set; }
-  public string RIPEMD_128 { get; set; }
-  public string RIPEMD_256 { get; set; }
-  public string RIPEMD_320 { get; set; }
-  public string SHA_1 { get; set; }
-  public string SHA_224 { get; set; }
-  public string SHA_256 { get; set; }
-  public string SHA_384 { get; set; }
-  public string SHA_512 { get; set; }
-  public string SHA_3 { get; set; }
-  public string SKEIN { get; set; }
-  public string SNEFRU { get; set; }
-  public string SPECTRAL_HASH { get; set; }
-  public string STREEBOG { get; set; }
-  public string SWIFFT { get; set; }
-  public string TIGER { get; set; }
-  public string WHIRLPOOL { get; set; }
+  public string BTC_DIGITAL_SIGNATURE { get; set; }
+  public string LTC_DIGITAL_SIGNATURE { get; set; }
+  public string XRP_DIGITAL_SIGNATURE { get; set; }
+  public string ADA_DIGITAL_SIGNATURE { get; set; }
+  public string XLM_DIGITAL_SIGNATURE { get; set; }
+  public string DOGE_DIGITAL_SIGNATURE { get; set; }
+  public string XMR_DIGITAL_SIGNATURE { get; set; }
+  public string DOT_DIGITAL_SIGNATURE { get; set; }
+  public string FIL_DIGITAL_SIGNATURE { get; set; }
+  public string XTZ_DIGITAL_SIGNATURE { get; set; }
+  public string ATOM_DIGITAL_SIGNATURE { get; set; }
+  public string TRX_DIGITAL_SIGNATURE { get; set; }
+  public string BNB_DIGITAL_SIGNATURE { get; set; }
+  public string AVAX_DIGITAL_SIGNATURE { get; set; }
+  public string SOL_DIGITAL_SIGNATURE { get; set; }
 
   public PNMT() {
     this.IPFS_CID = null;
     this.ETH_DIGITAL_SIGNATURE = null;
-    this.SHA_512_FILE_HASH = null;
-    this.SHA_256_FILE_HASH = null;
-    this.MD5_FILE_DIGEST = null;
-    this.SHA_1_FILE_HASH = null;
-    this.ARGON2_FILE_HASH = null;
-    this.BLAKE2B_FILE_HASH = null;
-    this.SHA_3_FILE_HASH = null;
-    this.RIPEMD_160_FILE_HASH = null;
-    this.WHIRLPOOL_FILE_HASH = null;
-    this.TIGER_FILE_HASH = null;
-    this.CRC32 = null;
-    this.ADLER32_CHECKSUM = null;
-    this.RABIN_FINGERPRINT = null;
-    this.PEARSON_HASHING = null;
-    this.BLAKE2_KEYED_HASH = null;
-    this.BLAKE_256 = null;
-    this.CRC8 = null;
-    this.CRC16 = null;
-    this.CRC64 = null;
-    this.BSD_CHECKSUM = null;
-    this.SYSV_CHECKSUM = null;
-    this.SUM8 = null;
-    this.INTERNET_CHECKSUM = null;
-    this.SUM24 = null;
-    this.SUM32 = null;
-    this.FLETCHER_4 = null;
-    this.FLETCHER_8 = null;
-    this.FLETCHER_16 = null;
-    this.FLETCHER_32 = null;
-    this.LUNH_ALGORITHM = null;
-    this.VERHOEFF_ALGORITHM = null;
-    this.DAMM_ALGORITHM = null;
-    this.TABULATION_HASHING = null;
-    this.UNIVERSAL_ONE_WAY_HASH_FUNCTION = null;
-    this.ZOBRIST_HASHING = null;
-    this.PAUL_HSIEHS_SUPERFASTHASH = null;
-    this.BUZHASH = null;
-    this.FNV_HASH = null;
-    this.JENKINS_HASH_FUNCTION = null;
-    this.BERNSTEINS_HASH_DJB2 = null;
-    this.PJW_HASH_ELF_HASH = null;
-    this.MURMURHASH = null;
-    this.FAST_HASH = null;
-    this.SPOOKYHASH = null;
-    this.CITYHASH = null;
-    this.FARMHASH = null;
-    this.METROHASH = null;
-    this.NUMERIC_HASH = null;
-    this.XXHASH = null;
-    this.T1HA = null;
-    this.GXHASH = null;
-    this.PHASH = null;
-    this.DHASH = null;
-    this.SDBM = null;
-    this.OSDB_HASH = null;
-    this.KOMIHASH = null;
-    this.BLAKE3 = null;
-    this.ECOH = null;
-    this.FSB = null;
-    this.GOST = null;
-    this.GROSTL = null;
-    this.HAS_160 = null;
-    this.HAVAL = null;
-    this.JH = null;
-    this.LSH = null;
-    this.MD2 = null;
-    this.MD4 = null;
-    this.MD5 = null;
-    this.MD6 = null;
-    this.RADIOGATUN = null;
-    this.RIPEMD = null;
-    this.RIPEMD_128 = null;
-    this.RIPEMD_256 = null;
-    this.RIPEMD_320 = null;
-    this.SHA_1 = null;
-    this.SHA_224 = null;
-    this.SHA_256 = null;
-    this.SHA_384 = null;
-    this.SHA_512 = null;
-    this.SHA_3 = null;
-    this.SKEIN = null;
-    this.SNEFRU = null;
-    this.SPECTRAL_HASH = null;
-    this.STREEBOG = null;
-    this.SWIFFT = null;
-    this.TIGER = null;
-    this.WHIRLPOOL = null;
+    this.BTC_DIGITAL_SIGNATURE = null;
+    this.LTC_DIGITAL_SIGNATURE = null;
+    this.XRP_DIGITAL_SIGNATURE = null;
+    this.ADA_DIGITAL_SIGNATURE = null;
+    this.XLM_DIGITAL_SIGNATURE = null;
+    this.DOGE_DIGITAL_SIGNATURE = null;
+    this.XMR_DIGITAL_SIGNATURE = null;
+    this.DOT_DIGITAL_SIGNATURE = null;
+    this.FIL_DIGITAL_SIGNATURE = null;
+    this.XTZ_DIGITAL_SIGNATURE = null;
+    this.ATOM_DIGITAL_SIGNATURE = null;
+    this.TRX_DIGITAL_SIGNATURE = null;
+    this.BNB_DIGITAL_SIGNATURE = null;
+    this.AVAX_DIGITAL_SIGNATURE = null;
+    this.SOL_DIGITAL_SIGNATURE = null;
   }
   public static PNMT DeserializeFromBinary(byte[] fbBuffer) {
     return PNM.GetRootAsPNM(new ByteBuffer(fbBuffer)).UnPack();

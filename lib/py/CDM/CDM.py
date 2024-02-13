@@ -253,7 +253,31 @@ class CDM(object):
             return obj
         return None
 
-def CDMStart(builder): builder.StartObject(27)
+    # Data Source for the positional information for Object 1
+    # CDM
+    def OBJECT1_DATASOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PNM import PNM
+            obj = PNM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Data Source for the positional information for Object 2
+    # CDM
+    def OBJECT2_DATASOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PNM import PNM
+            obj = PNM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def CDMStart(builder): builder.StartObject(29)
 def Start(builder):
     return CDMStart(builder)
 def CDMAddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS): builder.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
@@ -337,10 +361,17 @@ def AddOBJECT1(builder, OBJECT1):
 def CDMAddOBJECT2(builder, OBJECT2): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT2), 0)
 def AddOBJECT2(builder, OBJECT2):
     return CDMAddOBJECT2(builder, OBJECT2)
+def CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT1_DATASOURCE), 0)
+def AddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE):
+    return CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE)
+def CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT2_DATASOURCE), 0)
+def AddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE):
+    return CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
 def CDMEnd(builder): return builder.EndObject()
 def End(builder):
     return CDMEnd(builder)
 import CDMObject
+import PNM
 try:
     from typing import Optional
 except:
@@ -377,6 +408,8 @@ class CDMT(object):
         self.COLLISION_PROBABILITY_METHOD = None  # type: str
         self.OBJECT1 = None  # type: Optional[CDMObject.CDMObjectT]
         self.OBJECT2 = None  # type: Optional[CDMObject.CDMObjectT]
+        self.OBJECT1_DATASOURCE = None  # type: Optional[PNM.PNMT]
+        self.OBJECT2_DATASOURCE = None  # type: Optional[PNM.PNMT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -428,6 +461,10 @@ class CDMT(object):
             self.OBJECT1 = CDMObject.CDMObjectT.InitFromObj(CDM.OBJECT1())
         if CDM.OBJECT2() is not None:
             self.OBJECT2 = CDMObject.CDMObjectT.InitFromObj(CDM.OBJECT2())
+        if CDM.OBJECT1_DATASOURCE() is not None:
+            self.OBJECT1_DATASOURCE = PNM.PNMT.InitFromObj(CDM.OBJECT1_DATASOURCE())
+        if CDM.OBJECT2_DATASOURCE() is not None:
+            self.OBJECT2_DATASOURCE = PNM.PNMT.InitFromObj(CDM.OBJECT2_DATASOURCE())
 
     # CDMT
     def Pack(self, builder):
@@ -455,6 +492,10 @@ class CDMT(object):
             OBJECT1 = self.OBJECT1.Pack(builder)
         if self.OBJECT2 is not None:
             OBJECT2 = self.OBJECT2.Pack(builder)
+        if self.OBJECT1_DATASOURCE is not None:
+            OBJECT1_DATASOURCE = self.OBJECT1_DATASOURCE.Pack(builder)
+        if self.OBJECT2_DATASOURCE is not None:
+            OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE.Pack(builder)
         CDMStart(builder)
         CDMAddCCSDS_CDM_VERS(builder, self.CCSDS_CDM_VERS)
         if self.CREATION_DATE is not None:
@@ -495,5 +536,9 @@ class CDMT(object):
             CDMAddOBJECT1(builder, OBJECT1)
         if self.OBJECT2 is not None:
             CDMAddOBJECT2(builder, OBJECT2)
+        if self.OBJECT1_DATASOURCE is not None:
+            CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE)
+        if self.OBJECT2_DATASOURCE is not None:
+            CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
         CDM = CDMEnd(builder)
         return CDM

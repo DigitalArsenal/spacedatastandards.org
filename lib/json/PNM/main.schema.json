@@ -13,353 +13,65 @@
                 "type" : "string",
                 "description" : "Ethereum Digital Signature\nDigital signature of the IPFS file hash using Ethereum's signing mechanism.\nRefer to the Ethereum Blockchain integration section for details."
               },
-        "SHA_512_FILE_HASH" : {
+        "BTC_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "SHA-512 File Hash\nSHA-512 hash of the file for additional security verification.\nDetailed in the security features section of the document."
+                "description" : "Bitcoin Digital Signature\nDigital signature of the IPFS file hash using Bitcoin's signing mechanism.\nRefer to the Bitcoin Blockchain integration section for details."
               },
-        "SHA_256_FILE_HASH" : {
+        "LTC_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "SHA-256 File Hash\nSHA-256 hash of the file for additional security verification.\nDetailed in the security features section of the document."
+                "description" : "Litecoin Digital Signature\nDigital signature of the IPFS file hash using Litecoin's signing mechanism.\nRefer to the Litecoin Blockchain integration section for details."
               },
-        "MD5_FILE_DIGEST" : {
+        "XRP_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "MD5 File Digest\nMD5 digest of the file for backward compatibility with older systems.\nLocated in the legacy support section of the document."
+                "description" : "Ripple Digital Signature\nDigital signature of the IPFS file hash using Ripple's signing mechanism.\nRefer to the Ripple Blockchain integration section for details."
               },
-        "SHA_1_FILE_HASH" : {
+        "ADA_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "SHA-1 File Hash\nSHA-1 hash of the file, used in certain legacy systems for compatibility.\nRefer to the legacy systems integration section for more information."
+                "description" : "Cardano Digital Signature\nDigital signature of the IPFS file hash using Cardano's signing mechanism.\nRefer to the Cardano Blockchain integration section for details."
               },
-        "ARGON2_FILE_HASH" : {
+        "XLM_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Argon2 File Hash\nArgon2 hash of the file, providing state-of-the-art password hashing.\nThis is mentioned in the advanced security measures section."
+                "description" : "Stellar Digital Signature\nDigital signature of the IPFS file hash using Stellar's signing mechanism.\nRefer to the Stellar Blockchain integration section for details."
               },
-        "BLAKE2B_FILE_HASH" : {
+        "DOGE_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Blake2b File Hash\nBlake2b hash of the file, known for high-speed cryptographic hashing.\nRefer to the high-performance security solutions section."
+                "description" : "Dogecoin Digital Signature\nDigital signature of the IPFS file hash using Dogecoin's signing mechanism.\nRefer to the Dogecoin Blockchain integration section for details."
               },
-        "SHA_3_FILE_HASH" : {
+        "XMR_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "SHA-3 File Hash\nSHA-3 hash of the file, offering a stronger alternative to SHA-2.\nLocated in the modern cryptographic standards section."
+                "description" : "Monero Digital Signature\nDigital signature of the IPFS file hash using Monero's signing mechanism.\nRefer to the Monero Blockchain integration section for details."
               },
-        "RIPEMD_160_FILE_HASH" : {
+        "DOT_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "RIPEMD-160 File Hash\nRIPEMD-160 hash of the file, often used in blockchain applications for address generation.\nDiscussed in the blockchain compatibility section."
+                "description" : "Polkadot Digital Signature\nDigital signature of the IPFS file hash using Polkadot's signing mechanism.\nRefer to the Polkadot Blockchain integration section for details."
               },
-        "WHIRLPOOL_FILE_HASH" : {
+        "FIL_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Whirlpool File Hash\nWhirlpool hash of the file, designed for integrity protection and digital fingerprinting.\nRefer to the data integrity and authentication section."
+                "description" : "Filecoin Digital Signature\nDigital signature of the IPFS file hash using Filecoin's signing mechanism.\nRefer to the Filecoin Blockchain integration section for details."
               },
-        "TIGER_FILE_HASH" : {
+        "XTZ_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Tiger File Hash\nTiger hash of the file, optimized for fast hashing on 64-bit platforms.\nDetailed in the high-speed cryptographic operations section."
+                "description" : "Tezos Digital Signature\nDigital signature of the IPFS file hash using Tezos's signing mechanism.\nRefer to the Tezos Blockchain integration section for details."
               },
-        "CRC32" : {
+        "ATOM_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Cyclic Redundancy Check (CRC) 32\nCyclic redundancy check with a length of 32 bits.\nRefer to CRC section for more details."
+                "description" : "Cosmos Digital Signature\nDigital signature of the IPFS file hash using Cosmos's signing mechanism.\nRefer to the Cosmos Blockchain integration section for details."
               },
-        "ADLER32_CHECKSUM" : {
+        "TRX_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Adler-32 Checksum\nAdler-32 checksum with a length of 32 bits.\nRefer to the checksum section for more details."
+                "description" : "Tron Digital Signature\nDigital signature of the IPFS file hash using Tron's signing mechanism.\nRefer to the Tron Blockchain integration section for details."
               },
-        "RABIN_FINGERPRINT" : {
+        "BNB_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Universal Hash Function Family - Rabin Fingerprint\nVariable-length hash function using Rabin fingerprinting.\nRefer to the Universal hash function families section for details."
+                "description" : "Binance Coin Digital Signature\nDigital signature of the IPFS file hash using Binance Coin's signing mechanism.\nRefer to the Binance Coin Blockchain integration section for details."
               },
-        "PEARSON_HASHING" : {
+        "AVAX_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Pearson Hashing\nNon-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.\nRefer to the Non-cryptographic hash functions section for details."
+                "description" : "Avalanche Digital Signature\nDigital signature of the IPFS file hash using Avalanche's signing mechanism.\nRefer to the Avalanche Blockchain integration section for details."
               },
-        "BLAKE2_KEYED_HASH" : {
+        "SOL_DIGITAL_SIGNATURE" : {
                 "type" : "string",
-                "description" : "Keyed Cryptographic Hash Function - BLAKE2\nKeyed hash function (prefix-MAC) with variable length.\nRefer to the Keyed cryptographic hash functions section for details."
-              },
-        "BLAKE_256" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - BLAKE-256\nCryptographic hash function with a length of 256 bits, based on HAIFA structure.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "CRC8" : {
-                "type" : "string",
-                "description" : "CRC-8\nCyclic redundancy check with a length of 8 bits.\nRefer to CRC section for more details."
-              },
-        "CRC16" : {
-                "type" : "string",
-                "description" : "CRC-16\nCyclic redundancy check with a length of 16 bits.\nRefer to CRC section for more details."
-              },
-        "CRC64" : {
-                "type" : "string",
-                "description" : "CRC-64\nCyclic redundancy check with a length of 64 bits.\nRefer to CRC section for more details."
-              },
-        "BSD_CHECKSUM" : {
-                "type" : "string",
-                "description" : "BSD Checksum\nBSD checksum with a length of 16 bits.\nRefer to the checksum section for more details."
-              },
-        "SYSV_CHECKSUM" : {
-                "type" : "string",
-                "description" : "SYSV Checksum\nSYSV checksum with a length of 16 bits.\nRefer to the checksum section for more details."
-              },
-        "SUM8" : {
-                "type" : "string",
-                "description" : "Sum8\nSum with a length of 8 bits.\nRefer to the checksum section for more details."
-              },
-        "INTERNET_CHECKSUM" : {
-                "type" : "string",
-                "description" : "Internet Checksum\nInternet checksum with a length of 16 bits.\nRefer to the checksum section for more details."
-              },
-        "SUM24" : {
-                "type" : "string",
-                "description" : "Sum24\nSum with a length of 24 bits.\nRefer to the checksum section for more details."
-              },
-        "SUM32" : {
-                "type" : "string",
-                "description" : "Sum32\nSum with a length of 32 bits.\nRefer to the checksum section for more details."
-              },
-        "FLETCHER_4" : {
-                "type" : "string",
-                "description" : "Fletcher-4\nSum with a length of 4 bits.\nRefer to the checksum section for more details."
-              },
-        "FLETCHER_8" : {
-                "type" : "string",
-                "description" : "Fletcher-8\nSum with a length of 8 bits.\nRefer to the checksum section for more details."
-              },
-        "FLETCHER_16" : {
-                "type" : "string",
-                "description" : "Fletcher-16\nSum with a length of 16 bits.\nRefer to the checksum section for more details."
-              },
-        "FLETCHER_32" : {
-                "type" : "string",
-                "description" : "Fletcher-32\nSum with a length of 32 bits.\nRefer to the checksum section for more details."
-              },
-        "LUNH_ALGORITHM" : {
-                "type" : "string",
-                "description" : "Luhn Algorithm\nLuhn algorithm with a length of 1 decimal digit.\nRefer to the checksum section for more details."
-              },
-        "VERHOEFF_ALGORITHM" : {
-                "type" : "string",
-                "description" : "Verhoeff Algorithm\nVerhoeff algorithm with a length of 1 decimal digit.\nRefer to the checksum section for more details."
-              },
-        "DAMM_ALGORITHM" : {
-                "type" : "string",
-                "description" : "Damm Algorithm\nDamm algorithm with a length of 1 decimal digit.\nRefer to the checksum section for more details."
-              },
-        "TABULATION_HASHING" : {
-                "type" : "string",
-                "description" : "Universal Hash Function Family - Tabulation Hashing\nVariable-length hash function using tabulation hashing.\nRefer to the Universal hash function families section for details."
-              },
-        "UNIVERSAL_ONE_WAY_HASH_FUNCTION" : {
-                "type" : "string",
-                "description" : "Universal Hash Function Family - Universal One-Way Hash Function\nUniversal one-way hash function with arbitrary length.\nRefer to the Universal hash function families section for details."
-              },
-        "ZOBRIST_HASHING" : {
-                "type" : "string",
-                "description" : "Universal Hash Function Family - Zobrist Hashing\nVariable-length hash function using Zobrist hashing.\nRefer to the Universal hash function families section for details."
-              },
-        "PAUL_HSIEHS_SUPERFASTHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash\nNon-cryptographic hash function with a length of 32 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "BUZHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Buzhash\nNon-cryptographic hash function with variable length.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "FNV_HASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)\nNon-cryptographic hash function with variable length.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "JENKINS_HASH_FUNCTION" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Jenkins Hash Function\nNon-cryptographic hash function with a length of 32 or 64 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "BERNSTEINS_HASH_DJB2" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Bernstein's Hash (djb2)\nNon-cryptographic hash function with a length of 32 or 64 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "PJW_HASH_ELF_HASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - PJW Hash / Elf Hash\nNon-cryptographic hash function with a length of 32 or 64 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "MURMURHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - MurmurHash\nNon-cryptographic hash function with a length of 32, 64, or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "FAST_HASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Fast-Hash\nNon-cryptographic hash function with a length of 32 or 64 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "SPOOKYHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - SpookyHash\nNon-cryptographic hash function with a length of 32, 64, or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "CITYHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - CityHash\nNon-cryptographic hash function with a length of 32, 64, 128, or 256 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "FARMHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - FarmHash\nNon-cryptographic hash function with a length of 32, 64, or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "METROHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - MetroHash\nNon-cryptographic hash function with a length of 64 or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "NUMERIC_HASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - Numeric Hash (nhash)\nNon-cryptographic hash function with variable length.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "XXHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - xxHash\nNon-cryptographic hash function with a length of 32, 64, or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "T1HA" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)\nNon-cryptographic hash function with a length of 64 or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "GXHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - GxHash\nNon-cryptographic hash function with a length of 32, 64, or 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "PHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - pHash\nNon-cryptographic hash function with fixed or variable length.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "DHASH" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - dhash\nNon-cryptographic hash function with a length of 128 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "SDBM" : {
-                "type" : "string",
-                "description" : "Non-Cryptographic Hash Function - SDBM\nNon-cryptographic hash function with a length of 32 or 64 bits.\nRefer to the Non-cryptographic hash functions section for details."
-              },
-        "OSDB_HASH" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - OSDB Hash\nCryptographic hash function with a length of 64 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "KOMIHASH" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - komihash\nCryptographic hash function with a length of 64 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "BLAKE3" : {
-                "type" : "string",
-                "description" : "Keyed Cryptographic Hash Function - BLAKE3\nKeyed hash function with arbitrary length.\nRefer to the Keyed cryptographic hash functions section for details."
-              },
-        "ECOH" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - ECOH\nCryptographic hash function with a length of 224 to 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "FSB" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - FSB\nCryptographic hash function with a length of 160 to 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "GOST" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - GOST\nCryptographic hash function with a length of 256 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "GROSTL" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Grøstl\nCryptographic hash function with a length of up to 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "HAS_160" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - HAS-160\nCryptographic hash function with a length of 160 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "HAVAL" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - HAVAL\nCryptographic hash function with a length of 128 to 256 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "JH" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - JH\nCryptographic hash function with a length of 224 to 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "LSH" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - LSH\nCryptographic hash function with a length of 256 to 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "MD2" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - MD2\nCryptographic hash function with a length of 128 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "MD4" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - MD4\nCryptographic hash function with a length of 128 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "MD5" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - MD5\nCryptographic hash function with a length of 128 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "MD6" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - MD6\nCryptographic hash function with a length of up to 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "RADIOGATUN" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - RadioGatún\nCryptographic hash function with arbitrary length.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "RIPEMD" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - RIPEMD\nCryptographic hash function with a length of 128 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "RIPEMD_128" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - RIPEMD-128\nCryptographic hash function with a length of 128 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "RIPEMD_256" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - RIPEMD-256\nCryptographic hash function with a length of 256 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "RIPEMD_320" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - RIPEMD-320\nCryptographic hash function with a length of 320 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SHA_1" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SHA-1\nCryptographic hash function with a length of 160 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SHA_224" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SHA-224\nCryptographic hash function with a length of 224 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SHA_256" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SHA-256\nCryptographic hash function with a length of 256 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SHA_384" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SHA-384\nCryptographic hash function with a length of 384 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SHA_512" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SHA-512\nCryptographic hash function with a length of 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SHA_3" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SHA-3\nCryptographic hash function with arbitrary length.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SKEIN" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Skein\nCryptographic hash function with arbitrary length.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SNEFRU" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Snefru\nCryptographic hash function with a length of 128 or 256 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SPECTRAL_HASH" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Spectral Hash\nCryptographic hash function with a length of 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "STREEBOG" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Streebog\nCryptographic hash function with a length of 256 or 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "SWIFFT" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - SWIFFT\nCryptographic hash function with a length of 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "TIGER" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Tiger\nCryptographic hash function with a length of 192 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
-              },
-        "WHIRLPOOL" : {
-                "type" : "string",
-                "description" : "Unkeyed Cryptographic Hash Function - Whirlpool\nCryptographic hash function with a length of 512 bits.\nRefer to the Unkeyed cryptographic hash functions section for details."
+                "description" : "Solana Digital Signature\nDigital signature of the IPFS file hash using Solana's signing mechanism.\nRefer to the Solana Blockchain integration section for details."
               }
       },
       "additionalProperties" : false

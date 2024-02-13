@@ -26,93 +26,21 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_IPFS_CID = 4,
     VT_ETH_DIGITAL_SIGNATURE = 6,
-    VT_SHA_512_FILE_HASH = 8,
-    VT_SHA_256_FILE_HASH = 10,
-    VT_MD5_FILE_DIGEST = 12,
-    VT_SHA_1_FILE_HASH = 14,
-    VT_ARGON2_FILE_HASH = 16,
-    VT_BLAKE2B_FILE_HASH = 18,
-    VT_SHA_3_FILE_HASH = 20,
-    VT_RIPEMD_160_FILE_HASH = 22,
-    VT_WHIRLPOOL_FILE_HASH = 24,
-    VT_TIGER_FILE_HASH = 26,
-    VT_CRC32 = 28,
-    VT_ADLER32_CHECKSUM = 30,
-    VT_RABIN_FINGERPRINT = 32,
-    VT_PEARSON_HASHING = 34,
-    VT_BLAKE2_KEYED_HASH = 36,
-    VT_BLAKE_256 = 38,
-    VT_CRC8 = 40,
-    VT_CRC16 = 42,
-    VT_CRC64 = 44,
-    VT_BSD_CHECKSUM = 46,
-    VT_SYSV_CHECKSUM = 48,
-    VT_SUM8 = 50,
-    VT_INTERNET_CHECKSUM = 52,
-    VT_SUM24 = 54,
-    VT_SUM32 = 56,
-    VT_FLETCHER_4 = 58,
-    VT_FLETCHER_8 = 60,
-    VT_FLETCHER_16 = 62,
-    VT_FLETCHER_32 = 64,
-    VT_LUNH_ALGORITHM = 66,
-    VT_VERHOEFF_ALGORITHM = 68,
-    VT_DAMM_ALGORITHM = 70,
-    VT_TABULATION_HASHING = 72,
-    VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION = 74,
-    VT_ZOBRIST_HASHING = 76,
-    VT_PAUL_HSIEHS_SUPERFASTHASH = 78,
-    VT_BUZHASH = 80,
-    VT_FNV_HASH = 82,
-    VT_JENKINS_HASH_FUNCTION = 84,
-    VT_BERNSTEINS_HASH_DJB2 = 86,
-    VT_PJW_HASH_ELF_HASH = 88,
-    VT_MURMURHASH = 90,
-    VT_FAST_HASH = 92,
-    VT_SPOOKYHASH = 94,
-    VT_CITYHASH = 96,
-    VT_FARMHASH = 98,
-    VT_METROHASH = 100,
-    VT_NUMERIC_HASH = 102,
-    VT_XXHASH = 104,
-    VT_T1HA = 106,
-    VT_GXHASH = 108,
-    VT_PHASH = 110,
-    VT_DHASH = 112,
-    VT_SDBM = 114,
-    VT_OSDB_HASH = 116,
-    VT_KOMIHASH = 118,
-    VT_BLAKE3 = 120,
-    VT_ECOH = 122,
-    VT_FSB = 124,
-    VT_GOST = 126,
-    VT_GROSTL = 128,
-    VT_HAS_160 = 130,
-    VT_HAVAL = 132,
-    VT_JH = 134,
-    VT_LSH = 136,
-    VT_MD2 = 138,
-    VT_MD4 = 140,
-    VT_MD5 = 142,
-    VT_MD6 = 144,
-    VT_RADIOGATUN = 146,
-    VT_RIPEMD = 148,
-    VT_RIPEMD_128 = 150,
-    VT_RIPEMD_256 = 152,
-    VT_RIPEMD_320 = 154,
-    VT_SHA_1 = 156,
-    VT_SHA_224 = 158,
-    VT_SHA_256 = 160,
-    VT_SHA_384 = 162,
-    VT_SHA_512 = 164,
-    VT_SHA_3 = 166,
-    VT_SKEIN = 168,
-    VT_SNEFRU = 170,
-    VT_SPECTRAL_HASH = 172,
-    VT_STREEBOG = 174,
-    VT_SWIFFT = 176,
-    VT_TIGER = 178,
-    VT_WHIRLPOOL = 180
+    VT_BTC_DIGITAL_SIGNATURE = 8,
+    VT_LTC_DIGITAL_SIGNATURE = 10,
+    VT_XRP_DIGITAL_SIGNATURE = 12,
+    VT_ADA_DIGITAL_SIGNATURE = 14,
+    VT_XLM_DIGITAL_SIGNATURE = 16,
+    VT_DOGE_DIGITAL_SIGNATURE = 18,
+    VT_XMR_DIGITAL_SIGNATURE = 20,
+    VT_DOT_DIGITAL_SIGNATURE = 22,
+    VT_FIL_DIGITAL_SIGNATURE = 24,
+    VT_XTZ_DIGITAL_SIGNATURE = 26,
+    VT_ATOM_DIGITAL_SIGNATURE = 28,
+    VT_TRX_DIGITAL_SIGNATURE = 30,
+    VT_BNB_DIGITAL_SIGNATURE = 32,
+    VT_AVAX_DIGITAL_SIGNATURE = 34,
+    VT_SOL_DIGITAL_SIGNATURE = 36
   };
   /// IPFS Content Identifier (CID)
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
@@ -126,527 +54,95 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ETH_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ETH_DIGITAL_SIGNATURE);
   }
-  /// SHA-512 File Hash
-  /// SHA-512 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
-  const ::flatbuffers::String *SHA_512_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_512_FILE_HASH);
-  }
-  /// SHA-256 File Hash
-  /// SHA-256 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
-  const ::flatbuffers::String *SHA_256_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_256_FILE_HASH);
-  }
-  /// MD5 File Digest
-  /// MD5 digest of the file for backward compatibility with older systems.
-  /// Located in the legacy support section of the document.
-  const ::flatbuffers::String *MD5_FILE_DIGEST() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MD5_FILE_DIGEST);
-  }
-  /// SHA-1 File Hash
-  /// SHA-1 hash of the file, used in certain legacy systems for compatibility.
-  /// Refer to the legacy systems integration section for more information.
-  const ::flatbuffers::String *SHA_1_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_1_FILE_HASH);
-  }
-  /// Argon2 File Hash
-  /// Argon2 hash of the file, providing state-of-the-art password hashing.
-  /// This is mentioned in the advanced security measures section.
-  const ::flatbuffers::String *ARGON2_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ARGON2_FILE_HASH);
-  }
-  /// Blake2b File Hash
-  /// Blake2b hash of the file, known for high-speed cryptographic hashing.
-  /// Refer to the high-performance security solutions section.
-  const ::flatbuffers::String *BLAKE2B_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BLAKE2B_FILE_HASH);
-  }
-  /// SHA-3 File Hash
-  /// SHA-3 hash of the file, offering a stronger alternative to SHA-2.
-  /// Located in the modern cryptographic standards section.
-  const ::flatbuffers::String *SHA_3_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_3_FILE_HASH);
-  }
-  /// RIPEMD-160 File Hash
-  /// RIPEMD-160 hash of the file, often used in blockchain applications for address generation.
-  /// Discussed in the blockchain compatibility section.
-  const ::flatbuffers::String *RIPEMD_160_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RIPEMD_160_FILE_HASH);
-  }
-  /// Whirlpool File Hash
-  /// Whirlpool hash of the file, designed for integrity protection and digital fingerprinting.
-  /// Refer to the data integrity and authentication section.
-  const ::flatbuffers::String *WHIRLPOOL_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_WHIRLPOOL_FILE_HASH);
-  }
-  /// Tiger File Hash
-  /// Tiger hash of the file, optimized for fast hashing on 64-bit platforms.
-  /// Detailed in the high-speed cryptographic operations section.
-  const ::flatbuffers::String *TIGER_FILE_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TIGER_FILE_HASH);
-  }
-  /// Cyclic Redundancy Check (CRC) 32
-  /// Cyclic redundancy check with a length of 32 bits.
-  /// Refer to CRC section for more details.
-  const ::flatbuffers::String *CRC32() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CRC32);
-  }
-  /// Adler-32 Checksum
-  /// Adler-32 checksum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *ADLER32_CHECKSUM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADLER32_CHECKSUM);
-  }
-  /// Universal Hash Function Family - Rabin Fingerprint
-  /// Variable-length hash function using Rabin fingerprinting.
-  /// Refer to the Universal hash function families section for details.
-  const ::flatbuffers::String *RABIN_FINGERPRINT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RABIN_FINGERPRINT);
-  }
-  /// Non-Cryptographic Hash Function - Pearson Hashing
-  /// Non-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *PEARSON_HASHING() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PEARSON_HASHING);
-  }
-  /// Keyed Cryptographic Hash Function - BLAKE2
-  /// Keyed hash function (prefix-MAC) with variable length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *BLAKE2_KEYED_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BLAKE2_KEYED_HASH);
-  }
-  /// Unkeyed Cryptographic Hash Function - BLAKE-256
-  /// Cryptographic hash function with a length of 256 bits, based on HAIFA structure.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *BLAKE_256() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BLAKE_256);
-  }
-  /// CRC-8
-  /// Cyclic redundancy check with a length of 8 bits.
-  /// Refer to CRC section for more details.
-  const ::flatbuffers::String *CRC8() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CRC8);
-  }
-  /// CRC-16
-  /// Cyclic redundancy check with a length of 16 bits.
-  /// Refer to CRC section for more details.
-  const ::flatbuffers::String *CRC16() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CRC16);
-  }
-  /// CRC-64
-  /// Cyclic redundancy check with a length of 64 bits.
-  /// Refer to CRC section for more details.
-  const ::flatbuffers::String *CRC64() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CRC64);
-  }
-  /// BSD Checksum
-  /// BSD checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *BSD_CHECKSUM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BSD_CHECKSUM);
-  }
-  /// SYSV Checksum
-  /// SYSV checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *SYSV_CHECKSUM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SYSV_CHECKSUM);
-  }
-  /// Sum8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *SUM8() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SUM8);
-  }
-  /// Internet Checksum
-  /// Internet checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *INTERNET_CHECKSUM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_INTERNET_CHECKSUM);
-  }
-  /// Sum24
-  /// Sum with a length of 24 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *SUM24() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SUM24);
-  }
-  /// Sum32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *SUM32() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SUM32);
-  }
-  /// Fletcher-4
-  /// Sum with a length of 4 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *FLETCHER_4() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FLETCHER_4);
-  }
-  /// Fletcher-8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *FLETCHER_8() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FLETCHER_8);
-  }
-  /// Fletcher-16
-  /// Sum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *FLETCHER_16() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FLETCHER_16);
-  }
-  /// Fletcher-32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *FLETCHER_32() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FLETCHER_32);
-  }
-  /// Luhn Algorithm
-  /// Luhn algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *LUNH_ALGORITHM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LUNH_ALGORITHM);
-  }
-  /// Verhoeff Algorithm
-  /// Verhoeff algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *VERHOEFF_ALGORITHM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_VERHOEFF_ALGORITHM);
-  }
-  /// Damm Algorithm
-  /// Damm algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  const ::flatbuffers::String *DAMM_ALGORITHM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DAMM_ALGORITHM);
-  }
-  /// Universal Hash Function Family - Tabulation Hashing
-  /// Variable-length hash function using tabulation hashing.
-  /// Refer to the Universal hash function families section for details.
-  const ::flatbuffers::String *TABULATION_HASHING() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TABULATION_HASHING);
-  }
-  /// Universal Hash Function Family - Universal One-Way Hash Function
-  /// Universal one-way hash function with arbitrary length.
-  /// Refer to the Universal hash function families section for details.
-  const ::flatbuffers::String *UNIVERSAL_ONE_WAY_HASH_FUNCTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION);
-  }
-  /// Universal Hash Function Family - Zobrist Hashing
-  /// Variable-length hash function using Zobrist hashing.
-  /// Refer to the Universal hash function families section for details.
-  const ::flatbuffers::String *ZOBRIST_HASHING() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ZOBRIST_HASHING);
-  }
-  /// Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash
-  /// Non-cryptographic hash function with a length of 32 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *PAUL_HSIEHS_SUPERFASTHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PAUL_HSIEHS_SUPERFASTHASH);
-  }
-  /// Non-Cryptographic Hash Function - Buzhash
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *BUZHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BUZHASH);
-  }
-  /// Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *FNV_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FNV_HASH);
-  }
-  /// Non-Cryptographic Hash Function - Jenkins Hash Function
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *JENKINS_HASH_FUNCTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_JENKINS_HASH_FUNCTION);
-  }
-  /// Non-Cryptographic Hash Function - Bernstein's Hash (djb2)
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *BERNSTEINS_HASH_DJB2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BERNSTEINS_HASH_DJB2);
-  }
-  /// Non-Cryptographic Hash Function - PJW Hash / Elf Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *PJW_HASH_ELF_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PJW_HASH_ELF_HASH);
-  }
-  /// Non-Cryptographic Hash Function - MurmurHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *MURMURHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MURMURHASH);
-  }
-  /// Non-Cryptographic Hash Function - Fast-Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *FAST_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FAST_HASH);
-  }
-  /// Non-Cryptographic Hash Function - SpookyHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *SPOOKYHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SPOOKYHASH);
-  }
-  /// Non-Cryptographic Hash Function - CityHash
-  /// Non-cryptographic hash function with a length of 32, 64, 128, or 256 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *CITYHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CITYHASH);
-  }
-  /// Non-Cryptographic Hash Function - FarmHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *FARMHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FARMHASH);
-  }
-  /// Non-Cryptographic Hash Function - MetroHash
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *METROHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_METROHASH);
-  }
-  /// Non-Cryptographic Hash Function - Numeric Hash (nhash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *NUMERIC_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NUMERIC_HASH);
-  }
-  /// Non-Cryptographic Hash Function - xxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *XXHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XXHASH);
-  }
-  /// Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *T1HA() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_T1HA);
-  }
-  /// Non-Cryptographic Hash Function - GxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *GXHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_GXHASH);
-  }
-  /// Non-Cryptographic Hash Function - pHash
-  /// Non-cryptographic hash function with fixed or variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *PHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PHASH);
-  }
-  /// Non-Cryptographic Hash Function - dhash
-  /// Non-cryptographic hash function with a length of 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *DHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DHASH);
-  }
-  /// Non-Cryptographic Hash Function - SDBM
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  const ::flatbuffers::String *SDBM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SDBM);
-  }
-  /// Unkeyed Cryptographic Hash Function - OSDB Hash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *OSDB_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OSDB_HASH);
-  }
-  /// Unkeyed Cryptographic Hash Function - komihash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *KOMIHASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_KOMIHASH);
-  }
-  /// Keyed Cryptographic Hash Function - BLAKE3
-  /// Keyed hash function with arbitrary length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *BLAKE3() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BLAKE3);
-  }
-  /// Unkeyed Cryptographic Hash Function - ECOH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *ECOH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ECOH);
-  }
-  /// Unkeyed Cryptographic Hash Function - FSB
-  /// Cryptographic hash function with a length of 160 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *FSB() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FSB);
-  }
-  /// Unkeyed Cryptographic Hash Function - GOST
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *GOST() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_GOST);
-  }
-  /// Unkeyed Cryptographic Hash Function - Grøstl
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *GROSTL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_GROSTL);
-  }
-  /// Unkeyed Cryptographic Hash Function - HAS-160
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *HAS_160() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_HAS_160);
-  }
-  /// Unkeyed Cryptographic Hash Function - HAVAL
-  /// Cryptographic hash function with a length of 128 to 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *HAVAL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_HAVAL);
-  }
-  /// Unkeyed Cryptographic Hash Function - JH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *JH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_JH);
-  }
-  /// Unkeyed Cryptographic Hash Function - LSH
-  /// Cryptographic hash function with a length of 256 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *LSH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LSH);
-  }
-  /// Unkeyed Cryptographic Hash Function - MD2
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *MD2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MD2);
-  }
-  /// Unkeyed Cryptographic Hash Function - MD4
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *MD4() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MD4);
-  }
-  /// Unkeyed Cryptographic Hash Function - MD5
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *MD5() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MD5);
-  }
-  /// Unkeyed Cryptographic Hash Function - MD6
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *MD6() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MD6);
-  }
-  /// Unkeyed Cryptographic Hash Function - RadioGatún
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *RADIOGATUN() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RADIOGATUN);
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *RIPEMD() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RIPEMD);
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-128
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *RIPEMD_128() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RIPEMD_128);
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *RIPEMD_256() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RIPEMD_256);
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-320
-  /// Cryptographic hash function with a length of 320 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *RIPEMD_320() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RIPEMD_320);
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-1
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SHA_1() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_1);
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-224
-  /// Cryptographic hash function with a length of 224 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SHA_224() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_224);
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SHA_256() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_256);
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-384
-  /// Cryptographic hash function with a length of 384 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SHA_384() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_384);
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-512
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SHA_512() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_512);
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-3
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SHA_3() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SHA_3);
-  }
-  /// Unkeyed Cryptographic Hash Function - Skein
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SKEIN() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SKEIN);
-  }
-  /// Unkeyed Cryptographic Hash Function - Snefru
-  /// Cryptographic hash function with a length of 128 or 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SNEFRU() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SNEFRU);
-  }
-  /// Unkeyed Cryptographic Hash Function - Spectral Hash
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SPECTRAL_HASH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SPECTRAL_HASH);
-  }
-  /// Unkeyed Cryptographic Hash Function - Streebog
-  /// Cryptographic hash function with a length of 256 or 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *STREEBOG() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STREEBOG);
-  }
-  /// Unkeyed Cryptographic Hash Function - SWIFFT
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *SWIFFT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SWIFFT);
-  }
-  /// Unkeyed Cryptographic Hash Function - Tiger
-  /// Cryptographic hash function with a length of 192 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *TIGER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TIGER);
-  }
-  /// Unkeyed Cryptographic Hash Function - Whirlpool
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  const ::flatbuffers::String *WHIRLPOOL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_WHIRLPOOL);
+  /// Bitcoin Digital Signature
+  /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
+  /// Refer to the Bitcoin Blockchain integration section for details.
+  const ::flatbuffers::String *BTC_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BTC_DIGITAL_SIGNATURE);
+  }
+  /// Litecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
+  /// Refer to the Litecoin Blockchain integration section for details.
+  const ::flatbuffers::String *LTC_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LTC_DIGITAL_SIGNATURE);
+  }
+  /// Ripple Digital Signature
+  /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
+  /// Refer to the Ripple Blockchain integration section for details.
+  const ::flatbuffers::String *XRP_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_XRP_DIGITAL_SIGNATURE);
+  }
+  /// Cardano Digital Signature
+  /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
+  /// Refer to the Cardano Blockchain integration section for details.
+  const ::flatbuffers::String *ADA_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ADA_DIGITAL_SIGNATURE);
+  }
+  /// Stellar Digital Signature
+  /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
+  /// Refer to the Stellar Blockchain integration section for details.
+  const ::flatbuffers::String *XLM_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_XLM_DIGITAL_SIGNATURE);
+  }
+  /// Dogecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
+  /// Refer to the Dogecoin Blockchain integration section for details.
+  const ::flatbuffers::String *DOGE_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DOGE_DIGITAL_SIGNATURE);
+  }
+  /// Monero Digital Signature
+  /// Digital signature of the IPFS file hash using Monero's signing mechanism.
+  /// Refer to the Monero Blockchain integration section for details.
+  const ::flatbuffers::String *XMR_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_XMR_DIGITAL_SIGNATURE);
+  }
+  /// Polkadot Digital Signature
+  /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
+  /// Refer to the Polkadot Blockchain integration section for details.
+  const ::flatbuffers::String *DOT_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DOT_DIGITAL_SIGNATURE);
+  }
+  /// Filecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
+  /// Refer to the Filecoin Blockchain integration section for details.
+  const ::flatbuffers::String *FIL_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FIL_DIGITAL_SIGNATURE);
+  }
+  /// Tezos Digital Signature
+  /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
+  /// Refer to the Tezos Blockchain integration section for details.
+  const ::flatbuffers::String *XTZ_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_XTZ_DIGITAL_SIGNATURE);
+  }
+  /// Cosmos Digital Signature
+  /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
+  /// Refer to the Cosmos Blockchain integration section for details.
+  const ::flatbuffers::String *ATOM_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATOM_DIGITAL_SIGNATURE);
+  }
+  /// Tron Digital Signature
+  /// Digital signature of the IPFS file hash using Tron's signing mechanism.
+  /// Refer to the Tron Blockchain integration section for details.
+  const ::flatbuffers::String *TRX_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRX_DIGITAL_SIGNATURE);
+  }
+  /// Binance Coin Digital Signature
+  /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
+  /// Refer to the Binance Coin Blockchain integration section for details.
+  const ::flatbuffers::String *BNB_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BNB_DIGITAL_SIGNATURE);
+  }
+  /// Avalanche Digital Signature
+  /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
+  /// Refer to the Avalanche Blockchain integration section for details.
+  const ::flatbuffers::String *AVAX_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_AVAX_DIGITAL_SIGNATURE);
+  }
+  /// Solana Digital Signature
+  /// Digital signature of the IPFS file hash using Solana's signing mechanism.
+  /// Refer to the Solana Blockchain integration section for details.
+  const ::flatbuffers::String *SOL_DIGITAL_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOL_DIGITAL_SIGNATURE);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -654,180 +150,36 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(IPFS_CID()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_SHA_512_FILE_HASH) &&
-           verifier.VerifyString(SHA_512_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_SHA_256_FILE_HASH) &&
-           verifier.VerifyString(SHA_256_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_MD5_FILE_DIGEST) &&
-           verifier.VerifyString(MD5_FILE_DIGEST()) &&
-           VerifyOffset(verifier, VT_SHA_1_FILE_HASH) &&
-           verifier.VerifyString(SHA_1_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_ARGON2_FILE_HASH) &&
-           verifier.VerifyString(ARGON2_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_BLAKE2B_FILE_HASH) &&
-           verifier.VerifyString(BLAKE2B_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_SHA_3_FILE_HASH) &&
-           verifier.VerifyString(SHA_3_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_RIPEMD_160_FILE_HASH) &&
-           verifier.VerifyString(RIPEMD_160_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_WHIRLPOOL_FILE_HASH) &&
-           verifier.VerifyString(WHIRLPOOL_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_TIGER_FILE_HASH) &&
-           verifier.VerifyString(TIGER_FILE_HASH()) &&
-           VerifyOffset(verifier, VT_CRC32) &&
-           verifier.VerifyString(CRC32()) &&
-           VerifyOffset(verifier, VT_ADLER32_CHECKSUM) &&
-           verifier.VerifyString(ADLER32_CHECKSUM()) &&
-           VerifyOffset(verifier, VT_RABIN_FINGERPRINT) &&
-           verifier.VerifyString(RABIN_FINGERPRINT()) &&
-           VerifyOffset(verifier, VT_PEARSON_HASHING) &&
-           verifier.VerifyString(PEARSON_HASHING()) &&
-           VerifyOffset(verifier, VT_BLAKE2_KEYED_HASH) &&
-           verifier.VerifyString(BLAKE2_KEYED_HASH()) &&
-           VerifyOffset(verifier, VT_BLAKE_256) &&
-           verifier.VerifyString(BLAKE_256()) &&
-           VerifyOffset(verifier, VT_CRC8) &&
-           verifier.VerifyString(CRC8()) &&
-           VerifyOffset(verifier, VT_CRC16) &&
-           verifier.VerifyString(CRC16()) &&
-           VerifyOffset(verifier, VT_CRC64) &&
-           verifier.VerifyString(CRC64()) &&
-           VerifyOffset(verifier, VT_BSD_CHECKSUM) &&
-           verifier.VerifyString(BSD_CHECKSUM()) &&
-           VerifyOffset(verifier, VT_SYSV_CHECKSUM) &&
-           verifier.VerifyString(SYSV_CHECKSUM()) &&
-           VerifyOffset(verifier, VT_SUM8) &&
-           verifier.VerifyString(SUM8()) &&
-           VerifyOffset(verifier, VT_INTERNET_CHECKSUM) &&
-           verifier.VerifyString(INTERNET_CHECKSUM()) &&
-           VerifyOffset(verifier, VT_SUM24) &&
-           verifier.VerifyString(SUM24()) &&
-           VerifyOffset(verifier, VT_SUM32) &&
-           verifier.VerifyString(SUM32()) &&
-           VerifyOffset(verifier, VT_FLETCHER_4) &&
-           verifier.VerifyString(FLETCHER_4()) &&
-           VerifyOffset(verifier, VT_FLETCHER_8) &&
-           verifier.VerifyString(FLETCHER_8()) &&
-           VerifyOffset(verifier, VT_FLETCHER_16) &&
-           verifier.VerifyString(FLETCHER_16()) &&
-           VerifyOffset(verifier, VT_FLETCHER_32) &&
-           verifier.VerifyString(FLETCHER_32()) &&
-           VerifyOffset(verifier, VT_LUNH_ALGORITHM) &&
-           verifier.VerifyString(LUNH_ALGORITHM()) &&
-           VerifyOffset(verifier, VT_VERHOEFF_ALGORITHM) &&
-           verifier.VerifyString(VERHOEFF_ALGORITHM()) &&
-           VerifyOffset(verifier, VT_DAMM_ALGORITHM) &&
-           verifier.VerifyString(DAMM_ALGORITHM()) &&
-           VerifyOffset(verifier, VT_TABULATION_HASHING) &&
-           verifier.VerifyString(TABULATION_HASHING()) &&
-           VerifyOffset(verifier, VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION) &&
-           verifier.VerifyString(UNIVERSAL_ONE_WAY_HASH_FUNCTION()) &&
-           VerifyOffset(verifier, VT_ZOBRIST_HASHING) &&
-           verifier.VerifyString(ZOBRIST_HASHING()) &&
-           VerifyOffset(verifier, VT_PAUL_HSIEHS_SUPERFASTHASH) &&
-           verifier.VerifyString(PAUL_HSIEHS_SUPERFASTHASH()) &&
-           VerifyOffset(verifier, VT_BUZHASH) &&
-           verifier.VerifyString(BUZHASH()) &&
-           VerifyOffset(verifier, VT_FNV_HASH) &&
-           verifier.VerifyString(FNV_HASH()) &&
-           VerifyOffset(verifier, VT_JENKINS_HASH_FUNCTION) &&
-           verifier.VerifyString(JENKINS_HASH_FUNCTION()) &&
-           VerifyOffset(verifier, VT_BERNSTEINS_HASH_DJB2) &&
-           verifier.VerifyString(BERNSTEINS_HASH_DJB2()) &&
-           VerifyOffset(verifier, VT_PJW_HASH_ELF_HASH) &&
-           verifier.VerifyString(PJW_HASH_ELF_HASH()) &&
-           VerifyOffset(verifier, VT_MURMURHASH) &&
-           verifier.VerifyString(MURMURHASH()) &&
-           VerifyOffset(verifier, VT_FAST_HASH) &&
-           verifier.VerifyString(FAST_HASH()) &&
-           VerifyOffset(verifier, VT_SPOOKYHASH) &&
-           verifier.VerifyString(SPOOKYHASH()) &&
-           VerifyOffset(verifier, VT_CITYHASH) &&
-           verifier.VerifyString(CITYHASH()) &&
-           VerifyOffset(verifier, VT_FARMHASH) &&
-           verifier.VerifyString(FARMHASH()) &&
-           VerifyOffset(verifier, VT_METROHASH) &&
-           verifier.VerifyString(METROHASH()) &&
-           VerifyOffset(verifier, VT_NUMERIC_HASH) &&
-           verifier.VerifyString(NUMERIC_HASH()) &&
-           VerifyOffset(verifier, VT_XXHASH) &&
-           verifier.VerifyString(XXHASH()) &&
-           VerifyOffset(verifier, VT_T1HA) &&
-           verifier.VerifyString(T1HA()) &&
-           VerifyOffset(verifier, VT_GXHASH) &&
-           verifier.VerifyString(GXHASH()) &&
-           VerifyOffset(verifier, VT_PHASH) &&
-           verifier.VerifyString(PHASH()) &&
-           VerifyOffset(verifier, VT_DHASH) &&
-           verifier.VerifyString(DHASH()) &&
-           VerifyOffset(verifier, VT_SDBM) &&
-           verifier.VerifyString(SDBM()) &&
-           VerifyOffset(verifier, VT_OSDB_HASH) &&
-           verifier.VerifyString(OSDB_HASH()) &&
-           VerifyOffset(verifier, VT_KOMIHASH) &&
-           verifier.VerifyString(KOMIHASH()) &&
-           VerifyOffset(verifier, VT_BLAKE3) &&
-           verifier.VerifyString(BLAKE3()) &&
-           VerifyOffset(verifier, VT_ECOH) &&
-           verifier.VerifyString(ECOH()) &&
-           VerifyOffset(verifier, VT_FSB) &&
-           verifier.VerifyString(FSB()) &&
-           VerifyOffset(verifier, VT_GOST) &&
-           verifier.VerifyString(GOST()) &&
-           VerifyOffset(verifier, VT_GROSTL) &&
-           verifier.VerifyString(GROSTL()) &&
-           VerifyOffset(verifier, VT_HAS_160) &&
-           verifier.VerifyString(HAS_160()) &&
-           VerifyOffset(verifier, VT_HAVAL) &&
-           verifier.VerifyString(HAVAL()) &&
-           VerifyOffset(verifier, VT_JH) &&
-           verifier.VerifyString(JH()) &&
-           VerifyOffset(verifier, VT_LSH) &&
-           verifier.VerifyString(LSH()) &&
-           VerifyOffset(verifier, VT_MD2) &&
-           verifier.VerifyString(MD2()) &&
-           VerifyOffset(verifier, VT_MD4) &&
-           verifier.VerifyString(MD4()) &&
-           VerifyOffset(verifier, VT_MD5) &&
-           verifier.VerifyString(MD5()) &&
-           VerifyOffset(verifier, VT_MD6) &&
-           verifier.VerifyString(MD6()) &&
-           VerifyOffset(verifier, VT_RADIOGATUN) &&
-           verifier.VerifyString(RADIOGATUN()) &&
-           VerifyOffset(verifier, VT_RIPEMD) &&
-           verifier.VerifyString(RIPEMD()) &&
-           VerifyOffset(verifier, VT_RIPEMD_128) &&
-           verifier.VerifyString(RIPEMD_128()) &&
-           VerifyOffset(verifier, VT_RIPEMD_256) &&
-           verifier.VerifyString(RIPEMD_256()) &&
-           VerifyOffset(verifier, VT_RIPEMD_320) &&
-           verifier.VerifyString(RIPEMD_320()) &&
-           VerifyOffset(verifier, VT_SHA_1) &&
-           verifier.VerifyString(SHA_1()) &&
-           VerifyOffset(verifier, VT_SHA_224) &&
-           verifier.VerifyString(SHA_224()) &&
-           VerifyOffset(verifier, VT_SHA_256) &&
-           verifier.VerifyString(SHA_256()) &&
-           VerifyOffset(verifier, VT_SHA_384) &&
-           verifier.VerifyString(SHA_384()) &&
-           VerifyOffset(verifier, VT_SHA_512) &&
-           verifier.VerifyString(SHA_512()) &&
-           VerifyOffset(verifier, VT_SHA_3) &&
-           verifier.VerifyString(SHA_3()) &&
-           VerifyOffset(verifier, VT_SKEIN) &&
-           verifier.VerifyString(SKEIN()) &&
-           VerifyOffset(verifier, VT_SNEFRU) &&
-           verifier.VerifyString(SNEFRU()) &&
-           VerifyOffset(verifier, VT_SPECTRAL_HASH) &&
-           verifier.VerifyString(SPECTRAL_HASH()) &&
-           VerifyOffset(verifier, VT_STREEBOG) &&
-           verifier.VerifyString(STREEBOG()) &&
-           VerifyOffset(verifier, VT_SWIFFT) &&
-           verifier.VerifyString(SWIFFT()) &&
-           VerifyOffset(verifier, VT_TIGER) &&
-           verifier.VerifyString(TIGER()) &&
-           VerifyOffset(verifier, VT_WHIRLPOOL) &&
-           verifier.VerifyString(WHIRLPOOL()) &&
+           VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(BTC_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_LTC_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(LTC_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_XRP_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(XRP_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_ADA_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(ADA_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_XLM_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(XLM_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_DOGE_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(DOGE_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_XMR_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(XMR_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_DOT_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(DOT_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_FIL_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(FIL_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_XTZ_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(XTZ_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_ATOM_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(ATOM_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_TRX_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(TRX_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_BNB_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(BNB_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_AVAX_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(AVAX_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_SOL_DIGITAL_SIGNATURE) &&
+           verifier.VerifyString(SOL_DIGITAL_SIGNATURE()) &&
            verifier.EndTable();
   }
 };
@@ -842,266 +194,50 @@ struct PNMBuilder {
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
     fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
   }
-  void add_SHA_512_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> SHA_512_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_SHA_512_FILE_HASH, SHA_512_FILE_HASH);
+  void add_BTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
   }
-  void add_SHA_256_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> SHA_256_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_SHA_256_FILE_HASH, SHA_256_FILE_HASH);
+  void add_LTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
   }
-  void add_MD5_FILE_DIGEST(::flatbuffers::Offset<::flatbuffers::String> MD5_FILE_DIGEST) {
-    fbb_.AddOffset(PNM::VT_MD5_FILE_DIGEST, MD5_FILE_DIGEST);
+  void add_XRP_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
   }
-  void add_SHA_1_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> SHA_1_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_SHA_1_FILE_HASH, SHA_1_FILE_HASH);
+  void add_ADA_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
   }
-  void add_ARGON2_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> ARGON2_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_ARGON2_FILE_HASH, ARGON2_FILE_HASH);
+  void add_XLM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
   }
-  void add_BLAKE2B_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> BLAKE2B_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_BLAKE2B_FILE_HASH, BLAKE2B_FILE_HASH);
+  void add_DOGE_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
   }
-  void add_SHA_3_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> SHA_3_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_SHA_3_FILE_HASH, SHA_3_FILE_HASH);
+  void add_XMR_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
   }
-  void add_RIPEMD_160_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> RIPEMD_160_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_RIPEMD_160_FILE_HASH, RIPEMD_160_FILE_HASH);
+  void add_DOT_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
   }
-  void add_WHIRLPOOL_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> WHIRLPOOL_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_WHIRLPOOL_FILE_HASH, WHIRLPOOL_FILE_HASH);
+  void add_FIL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
   }
-  void add_TIGER_FILE_HASH(::flatbuffers::Offset<::flatbuffers::String> TIGER_FILE_HASH) {
-    fbb_.AddOffset(PNM::VT_TIGER_FILE_HASH, TIGER_FILE_HASH);
+  void add_XTZ_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
   }
-  void add_CRC32(::flatbuffers::Offset<::flatbuffers::String> CRC32) {
-    fbb_.AddOffset(PNM::VT_CRC32, CRC32);
+  void add_ATOM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
   }
-  void add_ADLER32_CHECKSUM(::flatbuffers::Offset<::flatbuffers::String> ADLER32_CHECKSUM) {
-    fbb_.AddOffset(PNM::VT_ADLER32_CHECKSUM, ADLER32_CHECKSUM);
+  void add_TRX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
   }
-  void add_RABIN_FINGERPRINT(::flatbuffers::Offset<::flatbuffers::String> RABIN_FINGERPRINT) {
-    fbb_.AddOffset(PNM::VT_RABIN_FINGERPRINT, RABIN_FINGERPRINT);
+  void add_BNB_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
   }
-  void add_PEARSON_HASHING(::flatbuffers::Offset<::flatbuffers::String> PEARSON_HASHING) {
-    fbb_.AddOffset(PNM::VT_PEARSON_HASHING, PEARSON_HASHING);
+  void add_AVAX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
   }
-  void add_BLAKE2_KEYED_HASH(::flatbuffers::Offset<::flatbuffers::String> BLAKE2_KEYED_HASH) {
-    fbb_.AddOffset(PNM::VT_BLAKE2_KEYED_HASH, BLAKE2_KEYED_HASH);
-  }
-  void add_BLAKE_256(::flatbuffers::Offset<::flatbuffers::String> BLAKE_256) {
-    fbb_.AddOffset(PNM::VT_BLAKE_256, BLAKE_256);
-  }
-  void add_CRC8(::flatbuffers::Offset<::flatbuffers::String> CRC8) {
-    fbb_.AddOffset(PNM::VT_CRC8, CRC8);
-  }
-  void add_CRC16(::flatbuffers::Offset<::flatbuffers::String> CRC16) {
-    fbb_.AddOffset(PNM::VT_CRC16, CRC16);
-  }
-  void add_CRC64(::flatbuffers::Offset<::flatbuffers::String> CRC64) {
-    fbb_.AddOffset(PNM::VT_CRC64, CRC64);
-  }
-  void add_BSD_CHECKSUM(::flatbuffers::Offset<::flatbuffers::String> BSD_CHECKSUM) {
-    fbb_.AddOffset(PNM::VT_BSD_CHECKSUM, BSD_CHECKSUM);
-  }
-  void add_SYSV_CHECKSUM(::flatbuffers::Offset<::flatbuffers::String> SYSV_CHECKSUM) {
-    fbb_.AddOffset(PNM::VT_SYSV_CHECKSUM, SYSV_CHECKSUM);
-  }
-  void add_SUM8(::flatbuffers::Offset<::flatbuffers::String> SUM8) {
-    fbb_.AddOffset(PNM::VT_SUM8, SUM8);
-  }
-  void add_INTERNET_CHECKSUM(::flatbuffers::Offset<::flatbuffers::String> INTERNET_CHECKSUM) {
-    fbb_.AddOffset(PNM::VT_INTERNET_CHECKSUM, INTERNET_CHECKSUM);
-  }
-  void add_SUM24(::flatbuffers::Offset<::flatbuffers::String> SUM24) {
-    fbb_.AddOffset(PNM::VT_SUM24, SUM24);
-  }
-  void add_SUM32(::flatbuffers::Offset<::flatbuffers::String> SUM32) {
-    fbb_.AddOffset(PNM::VT_SUM32, SUM32);
-  }
-  void add_FLETCHER_4(::flatbuffers::Offset<::flatbuffers::String> FLETCHER_4) {
-    fbb_.AddOffset(PNM::VT_FLETCHER_4, FLETCHER_4);
-  }
-  void add_FLETCHER_8(::flatbuffers::Offset<::flatbuffers::String> FLETCHER_8) {
-    fbb_.AddOffset(PNM::VT_FLETCHER_8, FLETCHER_8);
-  }
-  void add_FLETCHER_16(::flatbuffers::Offset<::flatbuffers::String> FLETCHER_16) {
-    fbb_.AddOffset(PNM::VT_FLETCHER_16, FLETCHER_16);
-  }
-  void add_FLETCHER_32(::flatbuffers::Offset<::flatbuffers::String> FLETCHER_32) {
-    fbb_.AddOffset(PNM::VT_FLETCHER_32, FLETCHER_32);
-  }
-  void add_LUNH_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> LUNH_ALGORITHM) {
-    fbb_.AddOffset(PNM::VT_LUNH_ALGORITHM, LUNH_ALGORITHM);
-  }
-  void add_VERHOEFF_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> VERHOEFF_ALGORITHM) {
-    fbb_.AddOffset(PNM::VT_VERHOEFF_ALGORITHM, VERHOEFF_ALGORITHM);
-  }
-  void add_DAMM_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> DAMM_ALGORITHM) {
-    fbb_.AddOffset(PNM::VT_DAMM_ALGORITHM, DAMM_ALGORITHM);
-  }
-  void add_TABULATION_HASHING(::flatbuffers::Offset<::flatbuffers::String> TABULATION_HASHING) {
-    fbb_.AddOffset(PNM::VT_TABULATION_HASHING, TABULATION_HASHING);
-  }
-  void add_UNIVERSAL_ONE_WAY_HASH_FUNCTION(::flatbuffers::Offset<::flatbuffers::String> UNIVERSAL_ONE_WAY_HASH_FUNCTION) {
-    fbb_.AddOffset(PNM::VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION, UNIVERSAL_ONE_WAY_HASH_FUNCTION);
-  }
-  void add_ZOBRIST_HASHING(::flatbuffers::Offset<::flatbuffers::String> ZOBRIST_HASHING) {
-    fbb_.AddOffset(PNM::VT_ZOBRIST_HASHING, ZOBRIST_HASHING);
-  }
-  void add_PAUL_HSIEHS_SUPERFASTHASH(::flatbuffers::Offset<::flatbuffers::String> PAUL_HSIEHS_SUPERFASTHASH) {
-    fbb_.AddOffset(PNM::VT_PAUL_HSIEHS_SUPERFASTHASH, PAUL_HSIEHS_SUPERFASTHASH);
-  }
-  void add_BUZHASH(::flatbuffers::Offset<::flatbuffers::String> BUZHASH) {
-    fbb_.AddOffset(PNM::VT_BUZHASH, BUZHASH);
-  }
-  void add_FNV_HASH(::flatbuffers::Offset<::flatbuffers::String> FNV_HASH) {
-    fbb_.AddOffset(PNM::VT_FNV_HASH, FNV_HASH);
-  }
-  void add_JENKINS_HASH_FUNCTION(::flatbuffers::Offset<::flatbuffers::String> JENKINS_HASH_FUNCTION) {
-    fbb_.AddOffset(PNM::VT_JENKINS_HASH_FUNCTION, JENKINS_HASH_FUNCTION);
-  }
-  void add_BERNSTEINS_HASH_DJB2(::flatbuffers::Offset<::flatbuffers::String> BERNSTEINS_HASH_DJB2) {
-    fbb_.AddOffset(PNM::VT_BERNSTEINS_HASH_DJB2, BERNSTEINS_HASH_DJB2);
-  }
-  void add_PJW_HASH_ELF_HASH(::flatbuffers::Offset<::flatbuffers::String> PJW_HASH_ELF_HASH) {
-    fbb_.AddOffset(PNM::VT_PJW_HASH_ELF_HASH, PJW_HASH_ELF_HASH);
-  }
-  void add_MURMURHASH(::flatbuffers::Offset<::flatbuffers::String> MURMURHASH) {
-    fbb_.AddOffset(PNM::VT_MURMURHASH, MURMURHASH);
-  }
-  void add_FAST_HASH(::flatbuffers::Offset<::flatbuffers::String> FAST_HASH) {
-    fbb_.AddOffset(PNM::VT_FAST_HASH, FAST_HASH);
-  }
-  void add_SPOOKYHASH(::flatbuffers::Offset<::flatbuffers::String> SPOOKYHASH) {
-    fbb_.AddOffset(PNM::VT_SPOOKYHASH, SPOOKYHASH);
-  }
-  void add_CITYHASH(::flatbuffers::Offset<::flatbuffers::String> CITYHASH) {
-    fbb_.AddOffset(PNM::VT_CITYHASH, CITYHASH);
-  }
-  void add_FARMHASH(::flatbuffers::Offset<::flatbuffers::String> FARMHASH) {
-    fbb_.AddOffset(PNM::VT_FARMHASH, FARMHASH);
-  }
-  void add_METROHASH(::flatbuffers::Offset<::flatbuffers::String> METROHASH) {
-    fbb_.AddOffset(PNM::VT_METROHASH, METROHASH);
-  }
-  void add_NUMERIC_HASH(::flatbuffers::Offset<::flatbuffers::String> NUMERIC_HASH) {
-    fbb_.AddOffset(PNM::VT_NUMERIC_HASH, NUMERIC_HASH);
-  }
-  void add_XXHASH(::flatbuffers::Offset<::flatbuffers::String> XXHASH) {
-    fbb_.AddOffset(PNM::VT_XXHASH, XXHASH);
-  }
-  void add_T1HA(::flatbuffers::Offset<::flatbuffers::String> T1HA) {
-    fbb_.AddOffset(PNM::VT_T1HA, T1HA);
-  }
-  void add_GXHASH(::flatbuffers::Offset<::flatbuffers::String> GXHASH) {
-    fbb_.AddOffset(PNM::VT_GXHASH, GXHASH);
-  }
-  void add_PHASH(::flatbuffers::Offset<::flatbuffers::String> PHASH) {
-    fbb_.AddOffset(PNM::VT_PHASH, PHASH);
-  }
-  void add_DHASH(::flatbuffers::Offset<::flatbuffers::String> DHASH) {
-    fbb_.AddOffset(PNM::VT_DHASH, DHASH);
-  }
-  void add_SDBM(::flatbuffers::Offset<::flatbuffers::String> SDBM) {
-    fbb_.AddOffset(PNM::VT_SDBM, SDBM);
-  }
-  void add_OSDB_HASH(::flatbuffers::Offset<::flatbuffers::String> OSDB_HASH) {
-    fbb_.AddOffset(PNM::VT_OSDB_HASH, OSDB_HASH);
-  }
-  void add_KOMIHASH(::flatbuffers::Offset<::flatbuffers::String> KOMIHASH) {
-    fbb_.AddOffset(PNM::VT_KOMIHASH, KOMIHASH);
-  }
-  void add_BLAKE3(::flatbuffers::Offset<::flatbuffers::String> BLAKE3) {
-    fbb_.AddOffset(PNM::VT_BLAKE3, BLAKE3);
-  }
-  void add_ECOH(::flatbuffers::Offset<::flatbuffers::String> ECOH) {
-    fbb_.AddOffset(PNM::VT_ECOH, ECOH);
-  }
-  void add_FSB(::flatbuffers::Offset<::flatbuffers::String> FSB) {
-    fbb_.AddOffset(PNM::VT_FSB, FSB);
-  }
-  void add_GOST(::flatbuffers::Offset<::flatbuffers::String> GOST) {
-    fbb_.AddOffset(PNM::VT_GOST, GOST);
-  }
-  void add_GROSTL(::flatbuffers::Offset<::flatbuffers::String> GROSTL) {
-    fbb_.AddOffset(PNM::VT_GROSTL, GROSTL);
-  }
-  void add_HAS_160(::flatbuffers::Offset<::flatbuffers::String> HAS_160) {
-    fbb_.AddOffset(PNM::VT_HAS_160, HAS_160);
-  }
-  void add_HAVAL(::flatbuffers::Offset<::flatbuffers::String> HAVAL) {
-    fbb_.AddOffset(PNM::VT_HAVAL, HAVAL);
-  }
-  void add_JH(::flatbuffers::Offset<::flatbuffers::String> JH) {
-    fbb_.AddOffset(PNM::VT_JH, JH);
-  }
-  void add_LSH(::flatbuffers::Offset<::flatbuffers::String> LSH) {
-    fbb_.AddOffset(PNM::VT_LSH, LSH);
-  }
-  void add_MD2(::flatbuffers::Offset<::flatbuffers::String> MD2) {
-    fbb_.AddOffset(PNM::VT_MD2, MD2);
-  }
-  void add_MD4(::flatbuffers::Offset<::flatbuffers::String> MD4) {
-    fbb_.AddOffset(PNM::VT_MD4, MD4);
-  }
-  void add_MD5(::flatbuffers::Offset<::flatbuffers::String> MD5) {
-    fbb_.AddOffset(PNM::VT_MD5, MD5);
-  }
-  void add_MD6(::flatbuffers::Offset<::flatbuffers::String> MD6) {
-    fbb_.AddOffset(PNM::VT_MD6, MD6);
-  }
-  void add_RADIOGATUN(::flatbuffers::Offset<::flatbuffers::String> RADIOGATUN) {
-    fbb_.AddOffset(PNM::VT_RADIOGATUN, RADIOGATUN);
-  }
-  void add_RIPEMD(::flatbuffers::Offset<::flatbuffers::String> RIPEMD) {
-    fbb_.AddOffset(PNM::VT_RIPEMD, RIPEMD);
-  }
-  void add_RIPEMD_128(::flatbuffers::Offset<::flatbuffers::String> RIPEMD_128) {
-    fbb_.AddOffset(PNM::VT_RIPEMD_128, RIPEMD_128);
-  }
-  void add_RIPEMD_256(::flatbuffers::Offset<::flatbuffers::String> RIPEMD_256) {
-    fbb_.AddOffset(PNM::VT_RIPEMD_256, RIPEMD_256);
-  }
-  void add_RIPEMD_320(::flatbuffers::Offset<::flatbuffers::String> RIPEMD_320) {
-    fbb_.AddOffset(PNM::VT_RIPEMD_320, RIPEMD_320);
-  }
-  void add_SHA_1(::flatbuffers::Offset<::flatbuffers::String> SHA_1) {
-    fbb_.AddOffset(PNM::VT_SHA_1, SHA_1);
-  }
-  void add_SHA_224(::flatbuffers::Offset<::flatbuffers::String> SHA_224) {
-    fbb_.AddOffset(PNM::VT_SHA_224, SHA_224);
-  }
-  void add_SHA_256(::flatbuffers::Offset<::flatbuffers::String> SHA_256) {
-    fbb_.AddOffset(PNM::VT_SHA_256, SHA_256);
-  }
-  void add_SHA_384(::flatbuffers::Offset<::flatbuffers::String> SHA_384) {
-    fbb_.AddOffset(PNM::VT_SHA_384, SHA_384);
-  }
-  void add_SHA_512(::flatbuffers::Offset<::flatbuffers::String> SHA_512) {
-    fbb_.AddOffset(PNM::VT_SHA_512, SHA_512);
-  }
-  void add_SHA_3(::flatbuffers::Offset<::flatbuffers::String> SHA_3) {
-    fbb_.AddOffset(PNM::VT_SHA_3, SHA_3);
-  }
-  void add_SKEIN(::flatbuffers::Offset<::flatbuffers::String> SKEIN) {
-    fbb_.AddOffset(PNM::VT_SKEIN, SKEIN);
-  }
-  void add_SNEFRU(::flatbuffers::Offset<::flatbuffers::String> SNEFRU) {
-    fbb_.AddOffset(PNM::VT_SNEFRU, SNEFRU);
-  }
-  void add_SPECTRAL_HASH(::flatbuffers::Offset<::flatbuffers::String> SPECTRAL_HASH) {
-    fbb_.AddOffset(PNM::VT_SPECTRAL_HASH, SPECTRAL_HASH);
-  }
-  void add_STREEBOG(::flatbuffers::Offset<::flatbuffers::String> STREEBOG) {
-    fbb_.AddOffset(PNM::VT_STREEBOG, STREEBOG);
-  }
-  void add_SWIFFT(::flatbuffers::Offset<::flatbuffers::String> SWIFFT) {
-    fbb_.AddOffset(PNM::VT_SWIFFT, SWIFFT);
-  }
-  void add_TIGER(::flatbuffers::Offset<::flatbuffers::String> TIGER) {
-    fbb_.AddOffset(PNM::VT_TIGER, TIGER);
-  }
-  void add_WHIRLPOOL(::flatbuffers::Offset<::flatbuffers::String> WHIRLPOOL) {
-    fbb_.AddOffset(PNM::VT_WHIRLPOOL, WHIRLPOOL);
+  void add_SOL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
   }
   explicit PNMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1118,181 +254,37 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> IPFS_CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_512_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_256_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MD5_FILE_DIGEST = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_1_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ARGON2_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BLAKE2B_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_3_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RIPEMD_160_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> WHIRLPOOL_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TIGER_FILE_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CRC32 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADLER32_CHECKSUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RABIN_FINGERPRINT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PEARSON_HASHING = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BLAKE2_KEYED_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BLAKE_256 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CRC8 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CRC16 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CRC64 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BSD_CHECKSUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SYSV_CHECKSUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SUM8 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> INTERNET_CHECKSUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SUM24 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SUM32 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FLETCHER_4 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FLETCHER_8 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FLETCHER_16 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FLETCHER_32 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LUNH_ALGORITHM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> VERHOEFF_ALGORITHM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DAMM_ALGORITHM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TABULATION_HASHING = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> UNIVERSAL_ONE_WAY_HASH_FUNCTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ZOBRIST_HASHING = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PAUL_HSIEHS_SUPERFASTHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BUZHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FNV_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> JENKINS_HASH_FUNCTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BERNSTEINS_HASH_DJB2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PJW_HASH_ELF_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MURMURHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FAST_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SPOOKYHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CITYHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FARMHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> METROHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NUMERIC_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XXHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> T1HA = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> GXHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SDBM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OSDB_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> KOMIHASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BLAKE3 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ECOH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FSB = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> GOST = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> GROSTL = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> HAS_160 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> HAVAL = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> JH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LSH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MD2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MD4 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MD5 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MD6 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RADIOGATUN = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RIPEMD = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RIPEMD_128 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RIPEMD_256 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RIPEMD_320 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_224 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_256 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_384 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_512 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SHA_3 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SKEIN = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SNEFRU = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SPECTRAL_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> STREEBOG = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SWIFFT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TIGER = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> WHIRLPOOL = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE = 0) {
   PNMBuilder builder_(_fbb);
-  builder_.add_WHIRLPOOL(WHIRLPOOL);
-  builder_.add_TIGER(TIGER);
-  builder_.add_SWIFFT(SWIFFT);
-  builder_.add_STREEBOG(STREEBOG);
-  builder_.add_SPECTRAL_HASH(SPECTRAL_HASH);
-  builder_.add_SNEFRU(SNEFRU);
-  builder_.add_SKEIN(SKEIN);
-  builder_.add_SHA_3(SHA_3);
-  builder_.add_SHA_512(SHA_512);
-  builder_.add_SHA_384(SHA_384);
-  builder_.add_SHA_256(SHA_256);
-  builder_.add_SHA_224(SHA_224);
-  builder_.add_SHA_1(SHA_1);
-  builder_.add_RIPEMD_320(RIPEMD_320);
-  builder_.add_RIPEMD_256(RIPEMD_256);
-  builder_.add_RIPEMD_128(RIPEMD_128);
-  builder_.add_RIPEMD(RIPEMD);
-  builder_.add_RADIOGATUN(RADIOGATUN);
-  builder_.add_MD6(MD6);
-  builder_.add_MD5(MD5);
-  builder_.add_MD4(MD4);
-  builder_.add_MD2(MD2);
-  builder_.add_LSH(LSH);
-  builder_.add_JH(JH);
-  builder_.add_HAVAL(HAVAL);
-  builder_.add_HAS_160(HAS_160);
-  builder_.add_GROSTL(GROSTL);
-  builder_.add_GOST(GOST);
-  builder_.add_FSB(FSB);
-  builder_.add_ECOH(ECOH);
-  builder_.add_BLAKE3(BLAKE3);
-  builder_.add_KOMIHASH(KOMIHASH);
-  builder_.add_OSDB_HASH(OSDB_HASH);
-  builder_.add_SDBM(SDBM);
-  builder_.add_DHASH(DHASH);
-  builder_.add_PHASH(PHASH);
-  builder_.add_GXHASH(GXHASH);
-  builder_.add_T1HA(T1HA);
-  builder_.add_XXHASH(XXHASH);
-  builder_.add_NUMERIC_HASH(NUMERIC_HASH);
-  builder_.add_METROHASH(METROHASH);
-  builder_.add_FARMHASH(FARMHASH);
-  builder_.add_CITYHASH(CITYHASH);
-  builder_.add_SPOOKYHASH(SPOOKYHASH);
-  builder_.add_FAST_HASH(FAST_HASH);
-  builder_.add_MURMURHASH(MURMURHASH);
-  builder_.add_PJW_HASH_ELF_HASH(PJW_HASH_ELF_HASH);
-  builder_.add_BERNSTEINS_HASH_DJB2(BERNSTEINS_HASH_DJB2);
-  builder_.add_JENKINS_HASH_FUNCTION(JENKINS_HASH_FUNCTION);
-  builder_.add_FNV_HASH(FNV_HASH);
-  builder_.add_BUZHASH(BUZHASH);
-  builder_.add_PAUL_HSIEHS_SUPERFASTHASH(PAUL_HSIEHS_SUPERFASTHASH);
-  builder_.add_ZOBRIST_HASHING(ZOBRIST_HASHING);
-  builder_.add_UNIVERSAL_ONE_WAY_HASH_FUNCTION(UNIVERSAL_ONE_WAY_HASH_FUNCTION);
-  builder_.add_TABULATION_HASHING(TABULATION_HASHING);
-  builder_.add_DAMM_ALGORITHM(DAMM_ALGORITHM);
-  builder_.add_VERHOEFF_ALGORITHM(VERHOEFF_ALGORITHM);
-  builder_.add_LUNH_ALGORITHM(LUNH_ALGORITHM);
-  builder_.add_FLETCHER_32(FLETCHER_32);
-  builder_.add_FLETCHER_16(FLETCHER_16);
-  builder_.add_FLETCHER_8(FLETCHER_8);
-  builder_.add_FLETCHER_4(FLETCHER_4);
-  builder_.add_SUM32(SUM32);
-  builder_.add_SUM24(SUM24);
-  builder_.add_INTERNET_CHECKSUM(INTERNET_CHECKSUM);
-  builder_.add_SUM8(SUM8);
-  builder_.add_SYSV_CHECKSUM(SYSV_CHECKSUM);
-  builder_.add_BSD_CHECKSUM(BSD_CHECKSUM);
-  builder_.add_CRC64(CRC64);
-  builder_.add_CRC16(CRC16);
-  builder_.add_CRC8(CRC8);
-  builder_.add_BLAKE_256(BLAKE_256);
-  builder_.add_BLAKE2_KEYED_HASH(BLAKE2_KEYED_HASH);
-  builder_.add_PEARSON_HASHING(PEARSON_HASHING);
-  builder_.add_RABIN_FINGERPRINT(RABIN_FINGERPRINT);
-  builder_.add_ADLER32_CHECKSUM(ADLER32_CHECKSUM);
-  builder_.add_CRC32(CRC32);
-  builder_.add_TIGER_FILE_HASH(TIGER_FILE_HASH);
-  builder_.add_WHIRLPOOL_FILE_HASH(WHIRLPOOL_FILE_HASH);
-  builder_.add_RIPEMD_160_FILE_HASH(RIPEMD_160_FILE_HASH);
-  builder_.add_SHA_3_FILE_HASH(SHA_3_FILE_HASH);
-  builder_.add_BLAKE2B_FILE_HASH(BLAKE2B_FILE_HASH);
-  builder_.add_ARGON2_FILE_HASH(ARGON2_FILE_HASH);
-  builder_.add_SHA_1_FILE_HASH(SHA_1_FILE_HASH);
-  builder_.add_MD5_FILE_DIGEST(MD5_FILE_DIGEST);
-  builder_.add_SHA_256_FILE_HASH(SHA_256_FILE_HASH);
-  builder_.add_SHA_512_FILE_HASH(SHA_512_FILE_HASH);
+  builder_.add_SOL_DIGITAL_SIGNATURE(SOL_DIGITAL_SIGNATURE);
+  builder_.add_AVAX_DIGITAL_SIGNATURE(AVAX_DIGITAL_SIGNATURE);
+  builder_.add_BNB_DIGITAL_SIGNATURE(BNB_DIGITAL_SIGNATURE);
+  builder_.add_TRX_DIGITAL_SIGNATURE(TRX_DIGITAL_SIGNATURE);
+  builder_.add_ATOM_DIGITAL_SIGNATURE(ATOM_DIGITAL_SIGNATURE);
+  builder_.add_XTZ_DIGITAL_SIGNATURE(XTZ_DIGITAL_SIGNATURE);
+  builder_.add_FIL_DIGITAL_SIGNATURE(FIL_DIGITAL_SIGNATURE);
+  builder_.add_DOT_DIGITAL_SIGNATURE(DOT_DIGITAL_SIGNATURE);
+  builder_.add_XMR_DIGITAL_SIGNATURE(XMR_DIGITAL_SIGNATURE);
+  builder_.add_DOGE_DIGITAL_SIGNATURE(DOGE_DIGITAL_SIGNATURE);
+  builder_.add_XLM_DIGITAL_SIGNATURE(XLM_DIGITAL_SIGNATURE);
+  builder_.add_ADA_DIGITAL_SIGNATURE(ADA_DIGITAL_SIGNATURE);
+  builder_.add_XRP_DIGITAL_SIGNATURE(XRP_DIGITAL_SIGNATURE);
+  builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
+  builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
   builder_.add_IPFS_CID(IPFS_CID);
   return builder_.Finish();
@@ -1302,273 +294,57 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *IPFS_CID = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
-    const char *SHA_512_FILE_HASH = nullptr,
-    const char *SHA_256_FILE_HASH = nullptr,
-    const char *MD5_FILE_DIGEST = nullptr,
-    const char *SHA_1_FILE_HASH = nullptr,
-    const char *ARGON2_FILE_HASH = nullptr,
-    const char *BLAKE2B_FILE_HASH = nullptr,
-    const char *SHA_3_FILE_HASH = nullptr,
-    const char *RIPEMD_160_FILE_HASH = nullptr,
-    const char *WHIRLPOOL_FILE_HASH = nullptr,
-    const char *TIGER_FILE_HASH = nullptr,
-    const char *CRC32 = nullptr,
-    const char *ADLER32_CHECKSUM = nullptr,
-    const char *RABIN_FINGERPRINT = nullptr,
-    const char *PEARSON_HASHING = nullptr,
-    const char *BLAKE2_KEYED_HASH = nullptr,
-    const char *BLAKE_256 = nullptr,
-    const char *CRC8 = nullptr,
-    const char *CRC16 = nullptr,
-    const char *CRC64 = nullptr,
-    const char *BSD_CHECKSUM = nullptr,
-    const char *SYSV_CHECKSUM = nullptr,
-    const char *SUM8 = nullptr,
-    const char *INTERNET_CHECKSUM = nullptr,
-    const char *SUM24 = nullptr,
-    const char *SUM32 = nullptr,
-    const char *FLETCHER_4 = nullptr,
-    const char *FLETCHER_8 = nullptr,
-    const char *FLETCHER_16 = nullptr,
-    const char *FLETCHER_32 = nullptr,
-    const char *LUNH_ALGORITHM = nullptr,
-    const char *VERHOEFF_ALGORITHM = nullptr,
-    const char *DAMM_ALGORITHM = nullptr,
-    const char *TABULATION_HASHING = nullptr,
-    const char *UNIVERSAL_ONE_WAY_HASH_FUNCTION = nullptr,
-    const char *ZOBRIST_HASHING = nullptr,
-    const char *PAUL_HSIEHS_SUPERFASTHASH = nullptr,
-    const char *BUZHASH = nullptr,
-    const char *FNV_HASH = nullptr,
-    const char *JENKINS_HASH_FUNCTION = nullptr,
-    const char *BERNSTEINS_HASH_DJB2 = nullptr,
-    const char *PJW_HASH_ELF_HASH = nullptr,
-    const char *MURMURHASH = nullptr,
-    const char *FAST_HASH = nullptr,
-    const char *SPOOKYHASH = nullptr,
-    const char *CITYHASH = nullptr,
-    const char *FARMHASH = nullptr,
-    const char *METROHASH = nullptr,
-    const char *NUMERIC_HASH = nullptr,
-    const char *XXHASH = nullptr,
-    const char *T1HA = nullptr,
-    const char *GXHASH = nullptr,
-    const char *PHASH = nullptr,
-    const char *DHASH = nullptr,
-    const char *SDBM = nullptr,
-    const char *OSDB_HASH = nullptr,
-    const char *KOMIHASH = nullptr,
-    const char *BLAKE3 = nullptr,
-    const char *ECOH = nullptr,
-    const char *FSB = nullptr,
-    const char *GOST = nullptr,
-    const char *GROSTL = nullptr,
-    const char *HAS_160 = nullptr,
-    const char *HAVAL = nullptr,
-    const char *JH = nullptr,
-    const char *LSH = nullptr,
-    const char *MD2 = nullptr,
-    const char *MD4 = nullptr,
-    const char *MD5 = nullptr,
-    const char *MD6 = nullptr,
-    const char *RADIOGATUN = nullptr,
-    const char *RIPEMD = nullptr,
-    const char *RIPEMD_128 = nullptr,
-    const char *RIPEMD_256 = nullptr,
-    const char *RIPEMD_320 = nullptr,
-    const char *SHA_1 = nullptr,
-    const char *SHA_224 = nullptr,
-    const char *SHA_256 = nullptr,
-    const char *SHA_384 = nullptr,
-    const char *SHA_512 = nullptr,
-    const char *SHA_3 = nullptr,
-    const char *SKEIN = nullptr,
-    const char *SNEFRU = nullptr,
-    const char *SPECTRAL_HASH = nullptr,
-    const char *STREEBOG = nullptr,
-    const char *SWIFFT = nullptr,
-    const char *TIGER = nullptr,
-    const char *WHIRLPOOL = nullptr) {
+    const char *BTC_DIGITAL_SIGNATURE = nullptr,
+    const char *LTC_DIGITAL_SIGNATURE = nullptr,
+    const char *XRP_DIGITAL_SIGNATURE = nullptr,
+    const char *ADA_DIGITAL_SIGNATURE = nullptr,
+    const char *XLM_DIGITAL_SIGNATURE = nullptr,
+    const char *DOGE_DIGITAL_SIGNATURE = nullptr,
+    const char *XMR_DIGITAL_SIGNATURE = nullptr,
+    const char *DOT_DIGITAL_SIGNATURE = nullptr,
+    const char *FIL_DIGITAL_SIGNATURE = nullptr,
+    const char *XTZ_DIGITAL_SIGNATURE = nullptr,
+    const char *ATOM_DIGITAL_SIGNATURE = nullptr,
+    const char *TRX_DIGITAL_SIGNATURE = nullptr,
+    const char *BNB_DIGITAL_SIGNATURE = nullptr,
+    const char *AVAX_DIGITAL_SIGNATURE = nullptr,
+    const char *SOL_DIGITAL_SIGNATURE = nullptr) {
   auto IPFS_CID__ = IPFS_CID ? _fbb.CreateString(IPFS_CID) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
-  auto SHA_512_FILE_HASH__ = SHA_512_FILE_HASH ? _fbb.CreateString(SHA_512_FILE_HASH) : 0;
-  auto SHA_256_FILE_HASH__ = SHA_256_FILE_HASH ? _fbb.CreateString(SHA_256_FILE_HASH) : 0;
-  auto MD5_FILE_DIGEST__ = MD5_FILE_DIGEST ? _fbb.CreateString(MD5_FILE_DIGEST) : 0;
-  auto SHA_1_FILE_HASH__ = SHA_1_FILE_HASH ? _fbb.CreateString(SHA_1_FILE_HASH) : 0;
-  auto ARGON2_FILE_HASH__ = ARGON2_FILE_HASH ? _fbb.CreateString(ARGON2_FILE_HASH) : 0;
-  auto BLAKE2B_FILE_HASH__ = BLAKE2B_FILE_HASH ? _fbb.CreateString(BLAKE2B_FILE_HASH) : 0;
-  auto SHA_3_FILE_HASH__ = SHA_3_FILE_HASH ? _fbb.CreateString(SHA_3_FILE_HASH) : 0;
-  auto RIPEMD_160_FILE_HASH__ = RIPEMD_160_FILE_HASH ? _fbb.CreateString(RIPEMD_160_FILE_HASH) : 0;
-  auto WHIRLPOOL_FILE_HASH__ = WHIRLPOOL_FILE_HASH ? _fbb.CreateString(WHIRLPOOL_FILE_HASH) : 0;
-  auto TIGER_FILE_HASH__ = TIGER_FILE_HASH ? _fbb.CreateString(TIGER_FILE_HASH) : 0;
-  auto CRC32__ = CRC32 ? _fbb.CreateString(CRC32) : 0;
-  auto ADLER32_CHECKSUM__ = ADLER32_CHECKSUM ? _fbb.CreateString(ADLER32_CHECKSUM) : 0;
-  auto RABIN_FINGERPRINT__ = RABIN_FINGERPRINT ? _fbb.CreateString(RABIN_FINGERPRINT) : 0;
-  auto PEARSON_HASHING__ = PEARSON_HASHING ? _fbb.CreateString(PEARSON_HASHING) : 0;
-  auto BLAKE2_KEYED_HASH__ = BLAKE2_KEYED_HASH ? _fbb.CreateString(BLAKE2_KEYED_HASH) : 0;
-  auto BLAKE_256__ = BLAKE_256 ? _fbb.CreateString(BLAKE_256) : 0;
-  auto CRC8__ = CRC8 ? _fbb.CreateString(CRC8) : 0;
-  auto CRC16__ = CRC16 ? _fbb.CreateString(CRC16) : 0;
-  auto CRC64__ = CRC64 ? _fbb.CreateString(CRC64) : 0;
-  auto BSD_CHECKSUM__ = BSD_CHECKSUM ? _fbb.CreateString(BSD_CHECKSUM) : 0;
-  auto SYSV_CHECKSUM__ = SYSV_CHECKSUM ? _fbb.CreateString(SYSV_CHECKSUM) : 0;
-  auto SUM8__ = SUM8 ? _fbb.CreateString(SUM8) : 0;
-  auto INTERNET_CHECKSUM__ = INTERNET_CHECKSUM ? _fbb.CreateString(INTERNET_CHECKSUM) : 0;
-  auto SUM24__ = SUM24 ? _fbb.CreateString(SUM24) : 0;
-  auto SUM32__ = SUM32 ? _fbb.CreateString(SUM32) : 0;
-  auto FLETCHER_4__ = FLETCHER_4 ? _fbb.CreateString(FLETCHER_4) : 0;
-  auto FLETCHER_8__ = FLETCHER_8 ? _fbb.CreateString(FLETCHER_8) : 0;
-  auto FLETCHER_16__ = FLETCHER_16 ? _fbb.CreateString(FLETCHER_16) : 0;
-  auto FLETCHER_32__ = FLETCHER_32 ? _fbb.CreateString(FLETCHER_32) : 0;
-  auto LUNH_ALGORITHM__ = LUNH_ALGORITHM ? _fbb.CreateString(LUNH_ALGORITHM) : 0;
-  auto VERHOEFF_ALGORITHM__ = VERHOEFF_ALGORITHM ? _fbb.CreateString(VERHOEFF_ALGORITHM) : 0;
-  auto DAMM_ALGORITHM__ = DAMM_ALGORITHM ? _fbb.CreateString(DAMM_ALGORITHM) : 0;
-  auto TABULATION_HASHING__ = TABULATION_HASHING ? _fbb.CreateString(TABULATION_HASHING) : 0;
-  auto UNIVERSAL_ONE_WAY_HASH_FUNCTION__ = UNIVERSAL_ONE_WAY_HASH_FUNCTION ? _fbb.CreateString(UNIVERSAL_ONE_WAY_HASH_FUNCTION) : 0;
-  auto ZOBRIST_HASHING__ = ZOBRIST_HASHING ? _fbb.CreateString(ZOBRIST_HASHING) : 0;
-  auto PAUL_HSIEHS_SUPERFASTHASH__ = PAUL_HSIEHS_SUPERFASTHASH ? _fbb.CreateString(PAUL_HSIEHS_SUPERFASTHASH) : 0;
-  auto BUZHASH__ = BUZHASH ? _fbb.CreateString(BUZHASH) : 0;
-  auto FNV_HASH__ = FNV_HASH ? _fbb.CreateString(FNV_HASH) : 0;
-  auto JENKINS_HASH_FUNCTION__ = JENKINS_HASH_FUNCTION ? _fbb.CreateString(JENKINS_HASH_FUNCTION) : 0;
-  auto BERNSTEINS_HASH_DJB2__ = BERNSTEINS_HASH_DJB2 ? _fbb.CreateString(BERNSTEINS_HASH_DJB2) : 0;
-  auto PJW_HASH_ELF_HASH__ = PJW_HASH_ELF_HASH ? _fbb.CreateString(PJW_HASH_ELF_HASH) : 0;
-  auto MURMURHASH__ = MURMURHASH ? _fbb.CreateString(MURMURHASH) : 0;
-  auto FAST_HASH__ = FAST_HASH ? _fbb.CreateString(FAST_HASH) : 0;
-  auto SPOOKYHASH__ = SPOOKYHASH ? _fbb.CreateString(SPOOKYHASH) : 0;
-  auto CITYHASH__ = CITYHASH ? _fbb.CreateString(CITYHASH) : 0;
-  auto FARMHASH__ = FARMHASH ? _fbb.CreateString(FARMHASH) : 0;
-  auto METROHASH__ = METROHASH ? _fbb.CreateString(METROHASH) : 0;
-  auto NUMERIC_HASH__ = NUMERIC_HASH ? _fbb.CreateString(NUMERIC_HASH) : 0;
-  auto XXHASH__ = XXHASH ? _fbb.CreateString(XXHASH) : 0;
-  auto T1HA__ = T1HA ? _fbb.CreateString(T1HA) : 0;
-  auto GXHASH__ = GXHASH ? _fbb.CreateString(GXHASH) : 0;
-  auto PHASH__ = PHASH ? _fbb.CreateString(PHASH) : 0;
-  auto DHASH__ = DHASH ? _fbb.CreateString(DHASH) : 0;
-  auto SDBM__ = SDBM ? _fbb.CreateString(SDBM) : 0;
-  auto OSDB_HASH__ = OSDB_HASH ? _fbb.CreateString(OSDB_HASH) : 0;
-  auto KOMIHASH__ = KOMIHASH ? _fbb.CreateString(KOMIHASH) : 0;
-  auto BLAKE3__ = BLAKE3 ? _fbb.CreateString(BLAKE3) : 0;
-  auto ECOH__ = ECOH ? _fbb.CreateString(ECOH) : 0;
-  auto FSB__ = FSB ? _fbb.CreateString(FSB) : 0;
-  auto GOST__ = GOST ? _fbb.CreateString(GOST) : 0;
-  auto GROSTL__ = GROSTL ? _fbb.CreateString(GROSTL) : 0;
-  auto HAS_160__ = HAS_160 ? _fbb.CreateString(HAS_160) : 0;
-  auto HAVAL__ = HAVAL ? _fbb.CreateString(HAVAL) : 0;
-  auto JH__ = JH ? _fbb.CreateString(JH) : 0;
-  auto LSH__ = LSH ? _fbb.CreateString(LSH) : 0;
-  auto MD2__ = MD2 ? _fbb.CreateString(MD2) : 0;
-  auto MD4__ = MD4 ? _fbb.CreateString(MD4) : 0;
-  auto MD5__ = MD5 ? _fbb.CreateString(MD5) : 0;
-  auto MD6__ = MD6 ? _fbb.CreateString(MD6) : 0;
-  auto RADIOGATUN__ = RADIOGATUN ? _fbb.CreateString(RADIOGATUN) : 0;
-  auto RIPEMD__ = RIPEMD ? _fbb.CreateString(RIPEMD) : 0;
-  auto RIPEMD_128__ = RIPEMD_128 ? _fbb.CreateString(RIPEMD_128) : 0;
-  auto RIPEMD_256__ = RIPEMD_256 ? _fbb.CreateString(RIPEMD_256) : 0;
-  auto RIPEMD_320__ = RIPEMD_320 ? _fbb.CreateString(RIPEMD_320) : 0;
-  auto SHA_1__ = SHA_1 ? _fbb.CreateString(SHA_1) : 0;
-  auto SHA_224__ = SHA_224 ? _fbb.CreateString(SHA_224) : 0;
-  auto SHA_256__ = SHA_256 ? _fbb.CreateString(SHA_256) : 0;
-  auto SHA_384__ = SHA_384 ? _fbb.CreateString(SHA_384) : 0;
-  auto SHA_512__ = SHA_512 ? _fbb.CreateString(SHA_512) : 0;
-  auto SHA_3__ = SHA_3 ? _fbb.CreateString(SHA_3) : 0;
-  auto SKEIN__ = SKEIN ? _fbb.CreateString(SKEIN) : 0;
-  auto SNEFRU__ = SNEFRU ? _fbb.CreateString(SNEFRU) : 0;
-  auto SPECTRAL_HASH__ = SPECTRAL_HASH ? _fbb.CreateString(SPECTRAL_HASH) : 0;
-  auto STREEBOG__ = STREEBOG ? _fbb.CreateString(STREEBOG) : 0;
-  auto SWIFFT__ = SWIFFT ? _fbb.CreateString(SWIFFT) : 0;
-  auto TIGER__ = TIGER ? _fbb.CreateString(TIGER) : 0;
-  auto WHIRLPOOL__ = WHIRLPOOL ? _fbb.CreateString(WHIRLPOOL) : 0;
+  auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
+  auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
+  auto XRP_DIGITAL_SIGNATURE__ = XRP_DIGITAL_SIGNATURE ? _fbb.CreateString(XRP_DIGITAL_SIGNATURE) : 0;
+  auto ADA_DIGITAL_SIGNATURE__ = ADA_DIGITAL_SIGNATURE ? _fbb.CreateString(ADA_DIGITAL_SIGNATURE) : 0;
+  auto XLM_DIGITAL_SIGNATURE__ = XLM_DIGITAL_SIGNATURE ? _fbb.CreateString(XLM_DIGITAL_SIGNATURE) : 0;
+  auto DOGE_DIGITAL_SIGNATURE__ = DOGE_DIGITAL_SIGNATURE ? _fbb.CreateString(DOGE_DIGITAL_SIGNATURE) : 0;
+  auto XMR_DIGITAL_SIGNATURE__ = XMR_DIGITAL_SIGNATURE ? _fbb.CreateString(XMR_DIGITAL_SIGNATURE) : 0;
+  auto DOT_DIGITAL_SIGNATURE__ = DOT_DIGITAL_SIGNATURE ? _fbb.CreateString(DOT_DIGITAL_SIGNATURE) : 0;
+  auto FIL_DIGITAL_SIGNATURE__ = FIL_DIGITAL_SIGNATURE ? _fbb.CreateString(FIL_DIGITAL_SIGNATURE) : 0;
+  auto XTZ_DIGITAL_SIGNATURE__ = XTZ_DIGITAL_SIGNATURE ? _fbb.CreateString(XTZ_DIGITAL_SIGNATURE) : 0;
+  auto ATOM_DIGITAL_SIGNATURE__ = ATOM_DIGITAL_SIGNATURE ? _fbb.CreateString(ATOM_DIGITAL_SIGNATURE) : 0;
+  auto TRX_DIGITAL_SIGNATURE__ = TRX_DIGITAL_SIGNATURE ? _fbb.CreateString(TRX_DIGITAL_SIGNATURE) : 0;
+  auto BNB_DIGITAL_SIGNATURE__ = BNB_DIGITAL_SIGNATURE ? _fbb.CreateString(BNB_DIGITAL_SIGNATURE) : 0;
+  auto AVAX_DIGITAL_SIGNATURE__ = AVAX_DIGITAL_SIGNATURE ? _fbb.CreateString(AVAX_DIGITAL_SIGNATURE) : 0;
+  auto SOL_DIGITAL_SIGNATURE__ = SOL_DIGITAL_SIGNATURE ? _fbb.CreateString(SOL_DIGITAL_SIGNATURE) : 0;
   return CreatePNM(
       _fbb,
       IPFS_CID__,
       ETH_DIGITAL_SIGNATURE__,
-      SHA_512_FILE_HASH__,
-      SHA_256_FILE_HASH__,
-      MD5_FILE_DIGEST__,
-      SHA_1_FILE_HASH__,
-      ARGON2_FILE_HASH__,
-      BLAKE2B_FILE_HASH__,
-      SHA_3_FILE_HASH__,
-      RIPEMD_160_FILE_HASH__,
-      WHIRLPOOL_FILE_HASH__,
-      TIGER_FILE_HASH__,
-      CRC32__,
-      ADLER32_CHECKSUM__,
-      RABIN_FINGERPRINT__,
-      PEARSON_HASHING__,
-      BLAKE2_KEYED_HASH__,
-      BLAKE_256__,
-      CRC8__,
-      CRC16__,
-      CRC64__,
-      BSD_CHECKSUM__,
-      SYSV_CHECKSUM__,
-      SUM8__,
-      INTERNET_CHECKSUM__,
-      SUM24__,
-      SUM32__,
-      FLETCHER_4__,
-      FLETCHER_8__,
-      FLETCHER_16__,
-      FLETCHER_32__,
-      LUNH_ALGORITHM__,
-      VERHOEFF_ALGORITHM__,
-      DAMM_ALGORITHM__,
-      TABULATION_HASHING__,
-      UNIVERSAL_ONE_WAY_HASH_FUNCTION__,
-      ZOBRIST_HASHING__,
-      PAUL_HSIEHS_SUPERFASTHASH__,
-      BUZHASH__,
-      FNV_HASH__,
-      JENKINS_HASH_FUNCTION__,
-      BERNSTEINS_HASH_DJB2__,
-      PJW_HASH_ELF_HASH__,
-      MURMURHASH__,
-      FAST_HASH__,
-      SPOOKYHASH__,
-      CITYHASH__,
-      FARMHASH__,
-      METROHASH__,
-      NUMERIC_HASH__,
-      XXHASH__,
-      T1HA__,
-      GXHASH__,
-      PHASH__,
-      DHASH__,
-      SDBM__,
-      OSDB_HASH__,
-      KOMIHASH__,
-      BLAKE3__,
-      ECOH__,
-      FSB__,
-      GOST__,
-      GROSTL__,
-      HAS_160__,
-      HAVAL__,
-      JH__,
-      LSH__,
-      MD2__,
-      MD4__,
-      MD5__,
-      MD6__,
-      RADIOGATUN__,
-      RIPEMD__,
-      RIPEMD_128__,
-      RIPEMD_256__,
-      RIPEMD_320__,
-      SHA_1__,
-      SHA_224__,
-      SHA_256__,
-      SHA_384__,
-      SHA_512__,
-      SHA_3__,
-      SKEIN__,
-      SNEFRU__,
-      SPECTRAL_HASH__,
-      STREEBOG__,
-      SWIFFT__,
-      TIGER__,
-      WHIRLPOOL__);
+      BTC_DIGITAL_SIGNATURE__,
+      LTC_DIGITAL_SIGNATURE__,
+      XRP_DIGITAL_SIGNATURE__,
+      ADA_DIGITAL_SIGNATURE__,
+      XLM_DIGITAL_SIGNATURE__,
+      DOGE_DIGITAL_SIGNATURE__,
+      XMR_DIGITAL_SIGNATURE__,
+      DOT_DIGITAL_SIGNATURE__,
+      FIL_DIGITAL_SIGNATURE__,
+      XTZ_DIGITAL_SIGNATURE__,
+      ATOM_DIGITAL_SIGNATURE__,
+      TRX_DIGITAL_SIGNATURE__,
+      BNB_DIGITAL_SIGNATURE__,
+      AVAX_DIGITAL_SIGNATURE__,
+      SOL_DIGITAL_SIGNATURE__);
 }
 
 /// Collection of Publish Notification Messages

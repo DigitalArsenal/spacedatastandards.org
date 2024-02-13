@@ -132,6 +132,10 @@ public struct CDM : IFlatbufferObject
   public CDMObject? OBJECT1 { get { int o = __p.__offset(54); return o != 0 ? (CDMObject?)(new CDMObject()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// The second object in the CDM message
   public CDMObject? OBJECT2 { get { int o = __p.__offset(56); return o != 0 ? (CDMObject?)(new CDMObject()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Data Source for the positional information for Object 1
+  public PNM? OBJECT1_DATASOURCE { get { int o = __p.__offset(58); return o != 0 ? (PNM?)(new PNM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Data Source for the positional information for Object 2
+  public PNM? OBJECT2_DATASOURCE { get { int o = __p.__offset(60); return o != 0 ? (PNM?)(new PNM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<CDM> CreateCDM(FlatBufferBuilder builder,
       double CCSDS_CDM_VERS = 0.0,
@@ -160,8 +164,10 @@ public struct CDM : IFlatbufferObject
       double COLLISION_PROBABILITY = 0.0,
       StringOffset COLLISION_PROBABILITY_METHODOffset = default(StringOffset),
       Offset<CDMObject> OBJECT1Offset = default(Offset<CDMObject>),
-      Offset<CDMObject> OBJECT2Offset = default(Offset<CDMObject>)) {
-    builder.StartTable(27);
+      Offset<CDMObject> OBJECT2Offset = default(Offset<CDMObject>),
+      Offset<PNM> OBJECT1_DATASOURCEOffset = default(Offset<PNM>),
+      Offset<PNM> OBJECT2_DATASOURCEOffset = default(Offset<PNM>)) {
+    builder.StartTable(29);
     CDM.AddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY);
     CDM.AddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z);
     CDM.AddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y);
@@ -175,6 +181,8 @@ public struct CDM : IFlatbufferObject
     CDM.AddRELATIVE_SPEED(builder, RELATIVE_SPEED);
     CDM.AddMISS_DISTANCE(builder, MISS_DISTANCE);
     CDM.AddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS);
+    CDM.AddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCEOffset);
+    CDM.AddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCEOffset);
     CDM.AddOBJECT2(builder, OBJECT2Offset);
     CDM.AddOBJECT1(builder, OBJECT1Offset);
     CDM.AddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHODOffset);
@@ -192,7 +200,7 @@ public struct CDM : IFlatbufferObject
     return CDM.EndCDM(builder);
   }
 
-  public static void StartCDM(FlatBufferBuilder builder) { builder.StartTable(27); }
+  public static void StartCDM(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddCCSDS_CDM_VERS(FlatBufferBuilder builder, double CCSDS_CDM_VERS) { builder.AddDouble(0, CCSDS_CDM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -220,6 +228,8 @@ public struct CDM : IFlatbufferObject
   public static void AddCOLLISION_PROBABILITY_METHOD(FlatBufferBuilder builder, StringOffset COLLISION_PROBABILITY_METHODOffset) { builder.AddOffset(24, COLLISION_PROBABILITY_METHODOffset.Value, 0); }
   public static void AddOBJECT1(FlatBufferBuilder builder, Offset<CDMObject> OBJECT1Offset) { builder.AddOffset(25, OBJECT1Offset.Value, 0); }
   public static void AddOBJECT2(FlatBufferBuilder builder, Offset<CDMObject> OBJECT2Offset) { builder.AddOffset(26, OBJECT2Offset.Value, 0); }
+  public static void AddOBJECT1_DATASOURCE(FlatBufferBuilder builder, Offset<PNM> OBJECT1_DATASOURCEOffset) { builder.AddOffset(27, OBJECT1_DATASOURCEOffset.Value, 0); }
+  public static void AddOBJECT2_DATASOURCE(FlatBufferBuilder builder, Offset<PNM> OBJECT2_DATASOURCEOffset) { builder.AddOffset(28, OBJECT2_DATASOURCEOffset.Value, 0); }
   public static Offset<CDM> EndCDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CDM>(o);
@@ -259,6 +269,8 @@ public struct CDM : IFlatbufferObject
     _o.COLLISION_PROBABILITY_METHOD = this.COLLISION_PROBABILITY_METHOD;
     _o.OBJECT1 = this.OBJECT1.HasValue ? this.OBJECT1.Value.UnPack() : null;
     _o.OBJECT2 = this.OBJECT2.HasValue ? this.OBJECT2.Value.UnPack() : null;
+    _o.OBJECT1_DATASOURCE = this.OBJECT1_DATASOURCE.HasValue ? this.OBJECT1_DATASOURCE.Value.UnPack() : null;
+    _o.OBJECT2_DATASOURCE = this.OBJECT2_DATASOURCE.HasValue ? this.OBJECT2_DATASOURCE.Value.UnPack() : null;
   }
   public static Offset<CDM> Pack(FlatBufferBuilder builder, CDMT _o) {
     if (_o == null) return default(Offset<CDM>);
@@ -274,6 +286,8 @@ public struct CDM : IFlatbufferObject
     var _COLLISION_PROBABILITY_METHOD = _o.COLLISION_PROBABILITY_METHOD == null ? default(StringOffset) : builder.CreateString(_o.COLLISION_PROBABILITY_METHOD);
     var _OBJECT1 = _o.OBJECT1 == null ? default(Offset<CDMObject>) : CDMObject.Pack(builder, _o.OBJECT1);
     var _OBJECT2 = _o.OBJECT2 == null ? default(Offset<CDMObject>) : CDMObject.Pack(builder, _o.OBJECT2);
+    var _OBJECT1_DATASOURCE = _o.OBJECT1_DATASOURCE == null ? default(Offset<PNM>) : PNM.Pack(builder, _o.OBJECT1_DATASOURCE);
+    var _OBJECT2_DATASOURCE = _o.OBJECT2_DATASOURCE == null ? default(Offset<PNM>) : PNM.Pack(builder, _o.OBJECT2_DATASOURCE);
     return CreateCDM(
       builder,
       _o.CCSDS_CDM_VERS,
@@ -302,7 +316,9 @@ public struct CDM : IFlatbufferObject
       _o.COLLISION_PROBABILITY,
       _COLLISION_PROBABILITY_METHOD,
       _OBJECT1,
-      _OBJECT2);
+      _OBJECT2,
+      _OBJECT1_DATASOURCE,
+      _OBJECT2_DATASOURCE);
   }
 }
 
@@ -335,6 +351,8 @@ public class CDMT
   public string COLLISION_PROBABILITY_METHOD { get; set; }
   public CDMObjectT OBJECT1 { get; set; }
   public CDMObjectT OBJECT2 { get; set; }
+  public PNMT OBJECT1_DATASOURCE { get; set; }
+  public PNMT OBJECT2_DATASOURCE { get; set; }
 
   public CDMT() {
     this.CCSDS_CDM_VERS = 0.0;
@@ -364,6 +382,8 @@ public class CDMT
     this.COLLISION_PROBABILITY_METHOD = null;
     this.OBJECT1 = null;
     this.OBJECT2 = null;
+    this.OBJECT1_DATASOURCE = null;
+    this.OBJECT2_DATASOURCE = null;
   }
   public static CDMT DeserializeFromBinary(byte[] fbBuffer) {
     return CDM.GetRootAsCDM(new ByteBuffer(fbBuffer)).UnPack();

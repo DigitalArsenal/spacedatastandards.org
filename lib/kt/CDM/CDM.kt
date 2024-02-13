@@ -314,6 +314,30 @@ class CDM : Table() {
             null
         }
     }
+    /**
+     * Data Source for the positional information for Object 1
+     */
+    val OBJECT1_DATASOURCE : PNM? get() = OBJECT1_DATASOURCE(PNM())
+    fun OBJECT1_DATASOURCE(obj: PNM) : PNM? {
+        val o = __offset(58)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Data Source for the positional information for Object 2
+     */
+    val OBJECT2_DATASOURCE : PNM? get() = OBJECT2_DATASOURCE(PNM())
+    fun OBJECT2_DATASOURCE(obj: PNM) : PNM? {
+        val o = __offset(60)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
         fun getRootAsCDM(_bb: ByteBuffer): CDM = getRootAsCDM(_bb, CDM())
@@ -322,8 +346,8 @@ class CDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CDM")
-        fun createCDM(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_FOROffset: Int, MESSAGE_IDOffset: Int, TCAOffset: Int, MISS_DISTANCE: Double, RELATIVE_SPEED: Double, RELATIVE_POSITION_R: Double, RELATIVE_POSITION_T: Double, RELATIVE_POSITION_N: Double, RELATIVE_VELOCITY_R: Double, RELATIVE_VELOCITY_T: Double, RELATIVE_VELOCITY_N: Double, START_SCREEN_PERIODOffset: Int, STOP_SCREEN_PERIODOffset: Int, SCREEN_VOLUME_FRAME: Byte, SCREEN_VOLUME_SHAPE: Byte, SCREEN_VOLUME_X: Double, SCREEN_VOLUME_Y: Double, SCREEN_VOLUME_Z: Double, SCREEN_ENTRY_TIMEOffset: Int, SCREEN_EXIT_TIMEOffset: Int, COLLISION_PROBABILITY: Double, COLLISION_PROBABILITY_METHODOffset: Int, OBJECT1Offset: Int, OBJECT2Offset: Int) : Int {
-            builder.startTable(27)
+        fun createCDM(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_FOROffset: Int, MESSAGE_IDOffset: Int, TCAOffset: Int, MISS_DISTANCE: Double, RELATIVE_SPEED: Double, RELATIVE_POSITION_R: Double, RELATIVE_POSITION_T: Double, RELATIVE_POSITION_N: Double, RELATIVE_VELOCITY_R: Double, RELATIVE_VELOCITY_T: Double, RELATIVE_VELOCITY_N: Double, START_SCREEN_PERIODOffset: Int, STOP_SCREEN_PERIODOffset: Int, SCREEN_VOLUME_FRAME: Byte, SCREEN_VOLUME_SHAPE: Byte, SCREEN_VOLUME_X: Double, SCREEN_VOLUME_Y: Double, SCREEN_VOLUME_Z: Double, SCREEN_ENTRY_TIMEOffset: Int, SCREEN_EXIT_TIMEOffset: Int, COLLISION_PROBABILITY: Double, COLLISION_PROBABILITY_METHODOffset: Int, OBJECT1Offset: Int, OBJECT2Offset: Int, OBJECT1_DATASOURCEOffset: Int, OBJECT2_DATASOURCEOffset: Int) : Int {
+            builder.startTable(29)
             addCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
             addSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z)
             addSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y)
@@ -337,6 +361,8 @@ class CDM : Table() {
             addRELATIVE_SPEED(builder, RELATIVE_SPEED)
             addMISS_DISTANCE(builder, MISS_DISTANCE)
             addCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS)
+            addOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCEOffset)
+            addOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCEOffset)
             addOBJECT2(builder, OBJECT2Offset)
             addOBJECT1(builder, OBJECT1Offset)
             addCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHODOffset)
@@ -353,7 +379,7 @@ class CDM : Table() {
             addSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
             return endCDM(builder)
         }
-        fun startCDM(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startCDM(builder: FlatBufferBuilder) = builder.startTable(29)
         fun addCCSDS_CDM_VERS(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double) = builder.addDouble(0, CCSDS_CDM_VERS, 0.0)
         fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
@@ -381,6 +407,8 @@ class CDM : Table() {
         fun addCOLLISION_PROBABILITY_METHOD(builder: FlatBufferBuilder, COLLISION_PROBABILITY_METHOD: Int) = builder.addOffset(24, COLLISION_PROBABILITY_METHOD, 0)
         fun addOBJECT1(builder: FlatBufferBuilder, OBJECT1: Int) = builder.addOffset(25, OBJECT1, 0)
         fun addOBJECT2(builder: FlatBufferBuilder, OBJECT2: Int) = builder.addOffset(26, OBJECT2, 0)
+        fun addOBJECT1_DATASOURCE(builder: FlatBufferBuilder, OBJECT1_DATASOURCE: Int) = builder.addOffset(27, OBJECT1_DATASOURCE, 0)
+        fun addOBJECT2_DATASOURCE(builder: FlatBufferBuilder, OBJECT2_DATASOURCE: Int) = builder.addOffset(28, OBJECT2_DATASOURCE, 0)
         fun endCDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

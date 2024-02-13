@@ -802,6 +802,8 @@ public struct CDM: FlatBufferObject, Verifiable {
     case COLLISION_PROBABILITY_METHOD = 52
     case OBJECT1 = 54
     case OBJECT2 = 56
+    case OBJECT1_DATASOURCE = 58
+    case OBJECT2_DATASOURCE = 60
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -870,7 +872,11 @@ public struct CDM: FlatBufferObject, Verifiable {
   public var OBJECT1: CDMObject? { let o = _accessor.offset(VTOFFSET.OBJECT1.v); return o == 0 ? nil : CDMObject(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  The second object in the CDM message
   public var OBJECT2: CDMObject? { let o = _accessor.offset(VTOFFSET.OBJECT2.v); return o == 0 ? nil : CDMObject(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  public static func startCDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
+  ///  Data Source for the positional information for Object 1
+  public var OBJECT1_DATASOURCE: PNM? { let o = _accessor.offset(VTOFFSET.OBJECT1_DATASOURCE.v); return o == 0 ? nil : PNM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  ///  Data Source for the positional information for Object 2
+  public var OBJECT2_DATASOURCE: PNM? { let o = _accessor.offset(VTOFFSET.OBJECT2_DATASOURCE.v); return o == 0 ? nil : PNM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public static func startCDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(CCSDS_CDM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_CDM_VERS, def: 0.0, at: VTOFFSET.CCSDS_CDM_VERS.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
@@ -898,6 +904,8 @@ public struct CDM: FlatBufferObject, Verifiable {
   public static func add(COLLISION_PROBABILITY_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLISION_PROBABILITY_METHOD, at: VTOFFSET.COLLISION_PROBABILITY_METHOD.p) }
   public static func add(OBJECT1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT1, at: VTOFFSET.OBJECT1.p) }
   public static func add(OBJECT2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT2, at: VTOFFSET.OBJECT2.p) }
+  public static func add(OBJECT1_DATASOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT1_DATASOURCE, at: VTOFFSET.OBJECT1_DATASOURCE.p) }
+  public static func add(OBJECT2_DATASOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT2_DATASOURCE, at: VTOFFSET.OBJECT2_DATASOURCE.p) }
   public static func endCDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCDM(
     _ fbb: inout FlatBufferBuilder,
@@ -927,7 +935,9 @@ public struct CDM: FlatBufferObject, Verifiable {
     COLLISION_PROBABILITY: Double = 0.0,
     COLLISION_PROBABILITY_METHODOffset COLLISION_PROBABILITY_METHOD: Offset = Offset(),
     OBJECT1Offset OBJECT1: Offset = Offset(),
-    OBJECT2Offset OBJECT2: Offset = Offset()
+    OBJECT2Offset OBJECT2: Offset = Offset(),
+    OBJECT1_DATASOURCEOffset OBJECT1_DATASOURCE: Offset = Offset(),
+    OBJECT2_DATASOURCEOffset OBJECT2_DATASOURCE: Offset = Offset()
   ) -> Offset {
     let __start = CDM.startCDM(&fbb)
     CDM.add(CCSDS_CDM_VERS: CCSDS_CDM_VERS, &fbb)
@@ -957,6 +967,8 @@ public struct CDM: FlatBufferObject, Verifiable {
     CDM.add(COLLISION_PROBABILITY_METHOD: COLLISION_PROBABILITY_METHOD, &fbb)
     CDM.add(OBJECT1: OBJECT1, &fbb)
     CDM.add(OBJECT2: OBJECT2, &fbb)
+    CDM.add(OBJECT1_DATASOURCE: OBJECT1_DATASOURCE, &fbb)
+    CDM.add(OBJECT2_DATASOURCE: OBJECT2_DATASOURCE, &fbb)
     return CDM.endCDM(&fbb, start: __start)
   }
 
@@ -989,6 +1001,8 @@ public struct CDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.COLLISION_PROBABILITY_METHOD.p, fieldName: "COLLISION_PROBABILITY_METHOD", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJECT1.p, fieldName: "OBJECT1", required: false, type: ForwardOffset<CDMObject>.self)
     try _v.visit(field: VTOFFSET.OBJECT2.p, fieldName: "OBJECT2", required: false, type: ForwardOffset<CDMObject>.self)
+    try _v.visit(field: VTOFFSET.OBJECT1_DATASOURCE.p, fieldName: "OBJECT1_DATASOURCE", required: false, type: ForwardOffset<PNM>.self)
+    try _v.visit(field: VTOFFSET.OBJECT2_DATASOURCE.p, fieldName: "OBJECT2_DATASOURCE", required: false, type: ForwardOffset<PNM>.self)
     _v.finish()
   }
 }

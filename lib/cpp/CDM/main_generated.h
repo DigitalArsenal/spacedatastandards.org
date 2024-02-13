@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct CDMObject;
 struct CDMObjectBuilder;
 
@@ -1491,7 +1493,9 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COLLISION_PROBABILITY = 50,
     VT_COLLISION_PROBABILITY_METHOD = 52,
     VT_OBJECT1 = 54,
-    VT_OBJECT2 = 56
+    VT_OBJECT2 = 56,
+    VT_OBJECT1_DATASOURCE = 58,
+    VT_OBJECT2_DATASOURCE = 60
   };
   /// The version of the CCSDS CDM standard used
   double CCSDS_CDM_VERS() const {
@@ -1601,6 +1605,14 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CDMObject *OBJECT2() const {
     return GetPointer<const CDMObject *>(VT_OBJECT2);
   }
+  /// Data Source for the positional information for Object 1
+  const PNM *OBJECT1_DATASOURCE() const {
+    return GetPointer<const PNM *>(VT_OBJECT1_DATASOURCE);
+  }
+  /// Data Source for the positional information for Object 2
+  const PNM *OBJECT2_DATASOURCE() const {
+    return GetPointer<const PNM *>(VT_OBJECT2_DATASOURCE);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_CCSDS_CDM_VERS, 8) &&
@@ -1642,6 +1654,10 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(OBJECT1()) &&
            VerifyOffset(verifier, VT_OBJECT2) &&
            verifier.VerifyTable(OBJECT2()) &&
+           VerifyOffset(verifier, VT_OBJECT1_DATASOURCE) &&
+           verifier.VerifyTable(OBJECT1_DATASOURCE()) &&
+           VerifyOffset(verifier, VT_OBJECT2_DATASOURCE) &&
+           verifier.VerifyTable(OBJECT2_DATASOURCE()) &&
            verifier.EndTable();
   }
 };
@@ -1731,6 +1747,12 @@ struct CDMBuilder {
   void add_OBJECT2(::flatbuffers::Offset<CDMObject> OBJECT2) {
     fbb_.AddOffset(CDM::VT_OBJECT2, OBJECT2);
   }
+  void add_OBJECT1_DATASOURCE(::flatbuffers::Offset<PNM> OBJECT1_DATASOURCE) {
+    fbb_.AddOffset(CDM::VT_OBJECT1_DATASOURCE, OBJECT1_DATASOURCE);
+  }
+  void add_OBJECT2_DATASOURCE(::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE) {
+    fbb_.AddOffset(CDM::VT_OBJECT2_DATASOURCE, OBJECT2_DATASOURCE);
+  }
   explicit CDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1770,7 +1792,9 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
     double COLLISION_PROBABILITY = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> COLLISION_PROBABILITY_METHOD = 0,
     ::flatbuffers::Offset<CDMObject> OBJECT1 = 0,
-    ::flatbuffers::Offset<CDMObject> OBJECT2 = 0) {
+    ::flatbuffers::Offset<CDMObject> OBJECT2 = 0,
+    ::flatbuffers::Offset<PNM> OBJECT1_DATASOURCE = 0,
+    ::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE = 0) {
   CDMBuilder builder_(_fbb);
   builder_.add_COLLISION_PROBABILITY(COLLISION_PROBABILITY);
   builder_.add_SCREEN_VOLUME_Z(SCREEN_VOLUME_Z);
@@ -1785,6 +1809,8 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
   builder_.add_RELATIVE_SPEED(RELATIVE_SPEED);
   builder_.add_MISS_DISTANCE(MISS_DISTANCE);
   builder_.add_CCSDS_CDM_VERS(CCSDS_CDM_VERS);
+  builder_.add_OBJECT2_DATASOURCE(OBJECT2_DATASOURCE);
+  builder_.add_OBJECT1_DATASOURCE(OBJECT1_DATASOURCE);
   builder_.add_OBJECT2(OBJECT2);
   builder_.add_OBJECT1(OBJECT1);
   builder_.add_COLLISION_PROBABILITY_METHOD(COLLISION_PROBABILITY_METHOD);
@@ -1830,7 +1856,9 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
     double COLLISION_PROBABILITY = 0.0,
     const char *COLLISION_PROBABILITY_METHOD = nullptr,
     ::flatbuffers::Offset<CDMObject> OBJECT1 = 0,
-    ::flatbuffers::Offset<CDMObject> OBJECT2 = 0) {
+    ::flatbuffers::Offset<CDMObject> OBJECT2 = 0,
+    ::flatbuffers::Offset<PNM> OBJECT1_DATASOURCE = 0,
+    ::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE = 0) {
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto MESSAGE_FOR__ = MESSAGE_FOR ? _fbb.CreateString(MESSAGE_FOR) : 0;
@@ -1869,7 +1897,9 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
       COLLISION_PROBABILITY,
       COLLISION_PROBABILITY_METHOD__,
       OBJECT1,
-      OBJECT2);
+      OBJECT2,
+      OBJECT1_DATASOURCE,
+      OBJECT2_DATASOURCE);
 }
 
 struct CDMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

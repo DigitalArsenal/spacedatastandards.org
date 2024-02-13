@@ -159,6 +159,16 @@ public final class CDM extends Table {
    */
   public CDMObject OBJECT2() { return OBJECT2(new CDMObject()); }
   public CDMObject OBJECT2(CDMObject obj) { int o = __offset(56); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Data Source for the positional information for Object 1
+   */
+  public PNM OBJECT1_DATASOURCE() { return OBJECT1_DATASOURCE(new PNM()); }
+  public PNM OBJECT1_DATASOURCE(PNM obj) { int o = __offset(58); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Data Source for the positional information for Object 2
+   */
+  public PNM OBJECT2_DATASOURCE() { return OBJECT2_DATASOURCE(new PNM()); }
+  public PNM OBJECT2_DATASOURCE(PNM obj) { int o = __offset(60); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createCDM(FlatBufferBuilder builder,
       double CCSDS_CDM_VERS,
@@ -187,8 +197,10 @@ public final class CDM extends Table {
       double COLLISION_PROBABILITY,
       int COLLISION_PROBABILITY_METHODOffset,
       int OBJECT1Offset,
-      int OBJECT2Offset) {
-    builder.startTable(27);
+      int OBJECT2Offset,
+      int OBJECT1_DATASOURCEOffset,
+      int OBJECT2_DATASOURCEOffset) {
+    builder.startTable(29);
     CDM.addCollisionProbability(builder, COLLISION_PROBABILITY);
     CDM.addScreenVolumeZ(builder, SCREEN_VOLUME_Z);
     CDM.addScreenVolumeY(builder, SCREEN_VOLUME_Y);
@@ -202,6 +214,8 @@ public final class CDM extends Table {
     CDM.addRelativeSpeed(builder, RELATIVE_SPEED);
     CDM.addMissDistance(builder, MISS_DISTANCE);
     CDM.addCcsdsCdmVers(builder, CCSDS_CDM_VERS);
+    CDM.addObject2Datasource(builder, OBJECT2_DATASOURCEOffset);
+    CDM.addObject1Datasource(builder, OBJECT1_DATASOURCEOffset);
     CDM.addObject2(builder, OBJECT2Offset);
     CDM.addObject1(builder, OBJECT1Offset);
     CDM.addCollisionProbabilityMethod(builder, COLLISION_PROBABILITY_METHODOffset);
@@ -219,7 +233,7 @@ public final class CDM extends Table {
     return CDM.endCDM(builder);
   }
 
-  public static void startCDM(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startCDM(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addCcsdsCdmVers(FlatBufferBuilder builder, double CCSDS_CDM_VERS) { builder.addDouble(0, CCSDS_CDM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -247,6 +261,8 @@ public final class CDM extends Table {
   public static void addCollisionProbabilityMethod(FlatBufferBuilder builder, int COLLISION_PROBABILITY_METHODOffset) { builder.addOffset(24, COLLISION_PROBABILITY_METHODOffset, 0); }
   public static void addObject1(FlatBufferBuilder builder, int OBJECT1Offset) { builder.addOffset(25, OBJECT1Offset, 0); }
   public static void addObject2(FlatBufferBuilder builder, int OBJECT2Offset) { builder.addOffset(26, OBJECT2Offset, 0); }
+  public static void addObject1Datasource(FlatBufferBuilder builder, int OBJECT1_DATASOURCEOffset) { builder.addOffset(27, OBJECT1_DATASOURCEOffset, 0); }
+  public static void addObject2Datasource(FlatBufferBuilder builder, int OBJECT2_DATASOURCEOffset) { builder.addOffset(28, OBJECT2_DATASOURCEOffset, 0); }
   public static int endCDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

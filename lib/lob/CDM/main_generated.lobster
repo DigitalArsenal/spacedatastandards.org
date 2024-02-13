@@ -670,13 +670,21 @@ class CDM : flatbuffers_handle
     def OBJECT2() -> CDMObject?:
         let o = buf_.flatbuffers_field_table(pos_, 56)
         return if o: CDMObject { buf_, o } else: nil
+    /// Data Source for the positional information for Object 1
+    def OBJECT1_DATASOURCE() -> PNM?:
+        let o = buf_.flatbuffers_field_table(pos_, 58)
+        return if o: PNM { buf_, o } else: nil
+    /// Data Source for the positional information for Object 2
+    def OBJECT2_DATASOURCE() -> PNM?:
+        let o = buf_.flatbuffers_field_table(pos_, 60)
+        return if o: PNM { buf_, o } else: nil
 
 def GetRootAsCDM(buf:string): return CDM { buf, buf.flatbuffers_indirect(0) }
 
 struct CDMBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(27)
+        b_.StartObject(29)
         return this
     def add_CCSDS_CDM_VERS(CCSDS_CDM_VERS:float):
         b_.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
@@ -758,6 +766,12 @@ struct CDMBuilder:
         return this
     def add_OBJECT2(OBJECT2:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(26, OBJECT2)
+        return this
+    def add_OBJECT1_DATASOURCE(OBJECT1_DATASOURCE:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(27, OBJECT1_DATASOURCE)
+        return this
+    def add_OBJECT2_DATASOURCE(OBJECT2_DATASOURCE:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(28, OBJECT2_DATASOURCE)
         return this
     def end():
         return b_.EndObject()

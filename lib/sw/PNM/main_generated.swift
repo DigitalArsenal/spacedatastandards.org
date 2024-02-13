@@ -20,93 +20,21 @@ public struct PNM: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case IPFS_CID = 4
     case ETH_DIGITAL_SIGNATURE = 6
-    case SHA_512_FILE_HASH = 8
-    case SHA_256_FILE_HASH = 10
-    case MD5_FILE_DIGEST = 12
-    case SHA_1_FILE_HASH = 14
-    case ARGON2_FILE_HASH = 16
-    case BLAKE2B_FILE_HASH = 18
-    case SHA_3_FILE_HASH = 20
-    case RIPEMD_160_FILE_HASH = 22
-    case WHIRLPOOL_FILE_HASH = 24
-    case TIGER_FILE_HASH = 26
-    case CRC32 = 28
-    case ADLER32_CHECKSUM = 30
-    case RABIN_FINGERPRINT = 32
-    case PEARSON_HASHING = 34
-    case BLAKE2_KEYED_HASH = 36
-    case BLAKE_256 = 38
-    case CRC8 = 40
-    case CRC16 = 42
-    case CRC64 = 44
-    case BSD_CHECKSUM = 46
-    case SYSV_CHECKSUM = 48
-    case SUM8 = 50
-    case INTERNET_CHECKSUM = 52
-    case SUM24 = 54
-    case SUM32 = 56
-    case FLETCHER_4 = 58
-    case FLETCHER_8 = 60
-    case FLETCHER_16 = 62
-    case FLETCHER_32 = 64
-    case LUNH_ALGORITHM = 66
-    case VERHOEFF_ALGORITHM = 68
-    case DAMM_ALGORITHM = 70
-    case TABULATION_HASHING = 72
-    case UNIVERSAL_ONE_WAY_HASH_FUNCTION = 74
-    case ZOBRIST_HASHING = 76
-    case PAUL_HSIEHS_SUPERFASTHASH = 78
-    case BUZHASH = 80
-    case FNV_HASH = 82
-    case JENKINS_HASH_FUNCTION = 84
-    case BERNSTEINS_HASH_DJB2 = 86
-    case PJW_HASH_ELF_HASH = 88
-    case MURMURHASH = 90
-    case FAST_HASH = 92
-    case SPOOKYHASH = 94
-    case CITYHASH = 96
-    case FARMHASH = 98
-    case METROHASH = 100
-    case NUMERIC_HASH = 102
-    case XXHASH = 104
-    case T1HA = 106
-    case GXHASH = 108
-    case PHASH = 110
-    case DHASH = 112
-    case SDBM = 114
-    case OSDB_HASH = 116
-    case KOMIHASH = 118
-    case BLAKE3 = 120
-    case ECOH = 122
-    case FSB = 124
-    case GOST = 126
-    case GROSTL = 128
-    case HAS_160 = 130
-    case HAVAL = 132
-    case JH = 134
-    case LSH = 136
-    case MD2 = 138
-    case MD4 = 140
-    case MD5 = 142
-    case MD6 = 144
-    case RADIOGATUN = 146
-    case RIPEMD = 148
-    case RIPEMD_128 = 150
-    case RIPEMD_256 = 152
-    case RIPEMD_320 = 154
-    case SHA_1 = 156
-    case SHA_224 = 158
-    case SHA_256 = 160
-    case SHA_384 = 162
-    case SHA_512 = 164
-    case SHA_3 = 166
-    case SKEIN = 168
-    case SNEFRU = 170
-    case SPECTRAL_HASH = 172
-    case STREEBOG = 174
-    case SWIFFT = 176
-    case TIGER = 178
-    case WHIRLPOOL = 180
+    case BTC_DIGITAL_SIGNATURE = 8
+    case LTC_DIGITAL_SIGNATURE = 10
+    case XRP_DIGITAL_SIGNATURE = 12
+    case ADA_DIGITAL_SIGNATURE = 14
+    case XLM_DIGITAL_SIGNATURE = 16
+    case DOGE_DIGITAL_SIGNATURE = 18
+    case XMR_DIGITAL_SIGNATURE = 20
+    case DOT_DIGITAL_SIGNATURE = 22
+    case FIL_DIGITAL_SIGNATURE = 24
+    case XTZ_DIGITAL_SIGNATURE = 26
+    case ATOM_DIGITAL_SIGNATURE = 28
+    case TRX_DIGITAL_SIGNATURE = 30
+    case BNB_DIGITAL_SIGNATURE = 32
+    case AVAX_DIGITAL_SIGNATURE = 34
+    case SOL_DIGITAL_SIGNATURE = 36
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -121,714 +49,138 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  Refer to the Ethereum Blockchain integration section for details.
   public var ETH_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ETH_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ETH_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ETH_DIGITAL_SIGNATURE.v) }
-  ///  SHA-512 File Hash
-  ///  SHA-512 hash of the file for additional security verification.
-  ///  Detailed in the security features section of the document.
-  public var SHA_512_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.SHA_512_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_512_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_512_FILE_HASH.v) }
-  ///  SHA-256 File Hash
-  ///  SHA-256 hash of the file for additional security verification.
-  ///  Detailed in the security features section of the document.
-  public var SHA_256_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.SHA_256_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_256_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_256_FILE_HASH.v) }
-  ///  MD5 File Digest
-  ///  MD5 digest of the file for backward compatibility with older systems.
-  ///  Located in the legacy support section of the document.
-  public var MD5_FILE_DIGEST: String? { let o = _accessor.offset(VTOFFSET.MD5_FILE_DIGEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MD5_FILE_DIGESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MD5_FILE_DIGEST.v) }
-  ///  SHA-1 File Hash
-  ///  SHA-1 hash of the file, used in certain legacy systems for compatibility.
-  ///  Refer to the legacy systems integration section for more information.
-  public var SHA_1_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.SHA_1_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_1_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_1_FILE_HASH.v) }
-  ///  Argon2 File Hash
-  ///  Argon2 hash of the file, providing state-of-the-art password hashing.
-  ///  This is mentioned in the advanced security measures section.
-  public var ARGON2_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.ARGON2_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARGON2_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARGON2_FILE_HASH.v) }
-  ///  Blake2b File Hash
-  ///  Blake2b hash of the file, known for high-speed cryptographic hashing.
-  ///  Refer to the high-performance security solutions section.
-  public var BLAKE2B_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.BLAKE2B_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BLAKE2B_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BLAKE2B_FILE_HASH.v) }
-  ///  SHA-3 File Hash
-  ///  SHA-3 hash of the file, offering a stronger alternative to SHA-2.
-  ///  Located in the modern cryptographic standards section.
-  public var SHA_3_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.SHA_3_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_3_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_3_FILE_HASH.v) }
-  ///  RIPEMD-160 File Hash
-  ///  RIPEMD-160 hash of the file, often used in blockchain applications for address generation.
-  ///  Discussed in the blockchain compatibility section.
-  public var RIPEMD_160_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.RIPEMD_160_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RIPEMD_160_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RIPEMD_160_FILE_HASH.v) }
-  ///  Whirlpool File Hash
-  ///  Whirlpool hash of the file, designed for integrity protection and digital fingerprinting.
-  ///  Refer to the data integrity and authentication section.
-  public var WHIRLPOOL_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.WHIRLPOOL_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var WHIRLPOOL_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WHIRLPOOL_FILE_HASH.v) }
-  ///  Tiger File Hash
-  ///  Tiger hash of the file, optimized for fast hashing on 64-bit platforms.
-  ///  Detailed in the high-speed cryptographic operations section.
-  public var TIGER_FILE_HASH: String? { let o = _accessor.offset(VTOFFSET.TIGER_FILE_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIGER_FILE_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIGER_FILE_HASH.v) }
-  ///  Cyclic Redundancy Check (CRC) 32
-  ///  Cyclic redundancy check with a length of 32 bits.
-  ///  Refer to CRC section for more details.
-  public var CRC32: String? { let o = _accessor.offset(VTOFFSET.CRC32.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CRC32SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CRC32.v) }
-  ///  Adler-32 Checksum
-  ///  Adler-32 checksum with a length of 32 bits.
-  ///  Refer to the checksum section for more details.
-  public var ADLER32_CHECKSUM: String? { let o = _accessor.offset(VTOFFSET.ADLER32_CHECKSUM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADLER32_CHECKSUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADLER32_CHECKSUM.v) }
-  ///  Universal Hash Function Family - Rabin Fingerprint
-  ///  Variable-length hash function using Rabin fingerprinting.
-  ///  Refer to the Universal hash function families section for details.
-  public var RABIN_FINGERPRINT: String? { let o = _accessor.offset(VTOFFSET.RABIN_FINGERPRINT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RABIN_FINGERPRINTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RABIN_FINGERPRINT.v) }
-  ///  Non-Cryptographic Hash Function - Pearson Hashing
-  ///  Non-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var PEARSON_HASHING: String? { let o = _accessor.offset(VTOFFSET.PEARSON_HASHING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PEARSON_HASHINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PEARSON_HASHING.v) }
-  ///  Keyed Cryptographic Hash Function - BLAKE2
-  ///  Keyed hash function (prefix-MAC) with variable length.
-  ///  Refer to the Keyed cryptographic hash functions section for details.
-  public var BLAKE2_KEYED_HASH: String? { let o = _accessor.offset(VTOFFSET.BLAKE2_KEYED_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BLAKE2_KEYED_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BLAKE2_KEYED_HASH.v) }
-  ///  Unkeyed Cryptographic Hash Function - BLAKE-256
-  ///  Cryptographic hash function with a length of 256 bits, based on HAIFA structure.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var BLAKE_256: String? { let o = _accessor.offset(VTOFFSET.BLAKE_256.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BLAKE_256SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BLAKE_256.v) }
-  ///  CRC-8
-  ///  Cyclic redundancy check with a length of 8 bits.
-  ///  Refer to CRC section for more details.
-  public var CRC8: String? { let o = _accessor.offset(VTOFFSET.CRC8.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CRC8SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CRC8.v) }
-  ///  CRC-16
-  ///  Cyclic redundancy check with a length of 16 bits.
-  ///  Refer to CRC section for more details.
-  public var CRC16: String? { let o = _accessor.offset(VTOFFSET.CRC16.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CRC16SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CRC16.v) }
-  ///  CRC-64
-  ///  Cyclic redundancy check with a length of 64 bits.
-  ///  Refer to CRC section for more details.
-  public var CRC64: String? { let o = _accessor.offset(VTOFFSET.CRC64.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CRC64SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CRC64.v) }
-  ///  BSD Checksum
-  ///  BSD checksum with a length of 16 bits.
-  ///  Refer to the checksum section for more details.
-  public var BSD_CHECKSUM: String? { let o = _accessor.offset(VTOFFSET.BSD_CHECKSUM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BSD_CHECKSUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BSD_CHECKSUM.v) }
-  ///  SYSV Checksum
-  ///  SYSV checksum with a length of 16 bits.
-  ///  Refer to the checksum section for more details.
-  public var SYSV_CHECKSUM: String? { let o = _accessor.offset(VTOFFSET.SYSV_CHECKSUM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYSV_CHECKSUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYSV_CHECKSUM.v) }
-  ///  Sum8
-  ///  Sum with a length of 8 bits.
-  ///  Refer to the checksum section for more details.
-  public var SUM8: String? { let o = _accessor.offset(VTOFFSET.SUM8.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SUM8SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUM8.v) }
-  ///  Internet Checksum
-  ///  Internet checksum with a length of 16 bits.
-  ///  Refer to the checksum section for more details.
-  public var INTERNET_CHECKSUM: String? { let o = _accessor.offset(VTOFFSET.INTERNET_CHECKSUM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERNET_CHECKSUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERNET_CHECKSUM.v) }
-  ///  Sum24
-  ///  Sum with a length of 24 bits.
-  ///  Refer to the checksum section for more details.
-  public var SUM24: String? { let o = _accessor.offset(VTOFFSET.SUM24.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SUM24SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUM24.v) }
-  ///  Sum32
-  ///  Sum with a length of 32 bits.
-  ///  Refer to the checksum section for more details.
-  public var SUM32: String? { let o = _accessor.offset(VTOFFSET.SUM32.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SUM32SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUM32.v) }
-  ///  Fletcher-4
-  ///  Sum with a length of 4 bits.
-  ///  Refer to the checksum section for more details.
-  public var FLETCHER_4: String? { let o = _accessor.offset(VTOFFSET.FLETCHER_4.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FLETCHER_4SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FLETCHER_4.v) }
-  ///  Fletcher-8
-  ///  Sum with a length of 8 bits.
-  ///  Refer to the checksum section for more details.
-  public var FLETCHER_8: String? { let o = _accessor.offset(VTOFFSET.FLETCHER_8.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FLETCHER_8SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FLETCHER_8.v) }
-  ///  Fletcher-16
-  ///  Sum with a length of 16 bits.
-  ///  Refer to the checksum section for more details.
-  public var FLETCHER_16: String? { let o = _accessor.offset(VTOFFSET.FLETCHER_16.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FLETCHER_16SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FLETCHER_16.v) }
-  ///  Fletcher-32
-  ///  Sum with a length of 32 bits.
-  ///  Refer to the checksum section for more details.
-  public var FLETCHER_32: String? { let o = _accessor.offset(VTOFFSET.FLETCHER_32.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FLETCHER_32SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FLETCHER_32.v) }
-  ///  Luhn Algorithm
-  ///  Luhn algorithm with a length of 1 decimal digit.
-  ///  Refer to the checksum section for more details.
-  public var LUNH_ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.LUNH_ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LUNH_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LUNH_ALGORITHM.v) }
-  ///  Verhoeff Algorithm
-  ///  Verhoeff algorithm with a length of 1 decimal digit.
-  ///  Refer to the checksum section for more details.
-  public var VERHOEFF_ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.VERHOEFF_ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERHOEFF_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VERHOEFF_ALGORITHM.v) }
-  ///  Damm Algorithm
-  ///  Damm algorithm with a length of 1 decimal digit.
-  ///  Refer to the checksum section for more details.
-  public var DAMM_ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.DAMM_ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DAMM_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DAMM_ALGORITHM.v) }
-  ///  Universal Hash Function Family - Tabulation Hashing
-  ///  Variable-length hash function using tabulation hashing.
-  ///  Refer to the Universal hash function families section for details.
-  public var TABULATION_HASHING: String? { let o = _accessor.offset(VTOFFSET.TABULATION_HASHING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TABULATION_HASHINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TABULATION_HASHING.v) }
-  ///  Universal Hash Function Family - Universal One-Way Hash Function
-  ///  Universal one-way hash function with arbitrary length.
-  ///  Refer to the Universal hash function families section for details.
-  public var UNIVERSAL_ONE_WAY_HASH_FUNCTION: String? { let o = _accessor.offset(VTOFFSET.UNIVERSAL_ONE_WAY_HASH_FUNCTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNIVERSAL_ONE_WAY_HASH_FUNCTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNIVERSAL_ONE_WAY_HASH_FUNCTION.v) }
-  ///  Universal Hash Function Family - Zobrist Hashing
-  ///  Variable-length hash function using Zobrist hashing.
-  ///  Refer to the Universal hash function families section for details.
-  public var ZOBRIST_HASHING: String? { let o = _accessor.offset(VTOFFSET.ZOBRIST_HASHING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ZOBRIST_HASHINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ZOBRIST_HASHING.v) }
-  ///  Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash
-  ///  Non-cryptographic hash function with a length of 32 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var PAUL_HSIEHS_SUPERFASTHASH: String? { let o = _accessor.offset(VTOFFSET.PAUL_HSIEHS_SUPERFASTHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PAUL_HSIEHS_SUPERFASTHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PAUL_HSIEHS_SUPERFASTHASH.v) }
-  ///  Non-Cryptographic Hash Function - Buzhash
-  ///  Non-cryptographic hash function with variable length.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var BUZHASH: String? { let o = _accessor.offset(VTOFFSET.BUZHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BUZHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BUZHASH.v) }
-  ///  Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)
-  ///  Non-cryptographic hash function with variable length.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var FNV_HASH: String? { let o = _accessor.offset(VTOFFSET.FNV_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FNV_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FNV_HASH.v) }
-  ///  Non-Cryptographic Hash Function - Jenkins Hash Function
-  ///  Non-cryptographic hash function with a length of 32 or 64 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var JENKINS_HASH_FUNCTION: String? { let o = _accessor.offset(VTOFFSET.JENKINS_HASH_FUNCTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var JENKINS_HASH_FUNCTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.JENKINS_HASH_FUNCTION.v) }
-  ///  Non-Cryptographic Hash Function - Bernstein's Hash (djb2)
-  ///  Non-cryptographic hash function with a length of 32 or 64 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var BERNSTEINS_HASH_DJB2: String? { let o = _accessor.offset(VTOFFSET.BERNSTEINS_HASH_DJB2.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BERNSTEINS_HASH_DJB2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BERNSTEINS_HASH_DJB2.v) }
-  ///  Non-Cryptographic Hash Function - PJW Hash / Elf Hash
-  ///  Non-cryptographic hash function with a length of 32 or 64 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var PJW_HASH_ELF_HASH: String? { let o = _accessor.offset(VTOFFSET.PJW_HASH_ELF_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PJW_HASH_ELF_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PJW_HASH_ELF_HASH.v) }
-  ///  Non-Cryptographic Hash Function - MurmurHash
-  ///  Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var MURMURHASH: String? { let o = _accessor.offset(VTOFFSET.MURMURHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MURMURHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MURMURHASH.v) }
-  ///  Non-Cryptographic Hash Function - Fast-Hash
-  ///  Non-cryptographic hash function with a length of 32 or 64 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var FAST_HASH: String? { let o = _accessor.offset(VTOFFSET.FAST_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FAST_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FAST_HASH.v) }
-  ///  Non-Cryptographic Hash Function - SpookyHash
-  ///  Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var SPOOKYHASH: String? { let o = _accessor.offset(VTOFFSET.SPOOKYHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPOOKYHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SPOOKYHASH.v) }
-  ///  Non-Cryptographic Hash Function - CityHash
-  ///  Non-cryptographic hash function with a length of 32, 64, 128, or 256 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var CITYHASH: String? { let o = _accessor.offset(VTOFFSET.CITYHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CITYHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CITYHASH.v) }
-  ///  Non-Cryptographic Hash Function - FarmHash
-  ///  Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var FARMHASH: String? { let o = _accessor.offset(VTOFFSET.FARMHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FARMHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FARMHASH.v) }
-  ///  Non-Cryptographic Hash Function - MetroHash
-  ///  Non-cryptographic hash function with a length of 64 or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var METROHASH: String? { let o = _accessor.offset(VTOFFSET.METROHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var METROHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.METROHASH.v) }
-  ///  Non-Cryptographic Hash Function - Numeric Hash (nhash)
-  ///  Non-cryptographic hash function with variable length.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var NUMERIC_HASH: String? { let o = _accessor.offset(VTOFFSET.NUMERIC_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NUMERIC_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NUMERIC_HASH.v) }
-  ///  Non-Cryptographic Hash Function - xxHash
-  ///  Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var XXHASH: String? { let o = _accessor.offset(VTOFFSET.XXHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XXHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XXHASH.v) }
-  ///  Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)
-  ///  Non-cryptographic hash function with a length of 64 or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var T1HA: String? { let o = _accessor.offset(VTOFFSET.T1HA.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var T1HASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.T1HA.v) }
-  ///  Non-Cryptographic Hash Function - GxHash
-  ///  Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var GXHASH: String? { let o = _accessor.offset(VTOFFSET.GXHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GXHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GXHASH.v) }
-  ///  Non-Cryptographic Hash Function - pHash
-  ///  Non-cryptographic hash function with fixed or variable length.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var PHASH: String? { let o = _accessor.offset(VTOFFSET.PHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PHASH.v) }
-  ///  Non-Cryptographic Hash Function - dhash
-  ///  Non-cryptographic hash function with a length of 128 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var DHASH: String? { let o = _accessor.offset(VTOFFSET.DHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DHASH.v) }
-  ///  Non-Cryptographic Hash Function - SDBM
-  ///  Non-cryptographic hash function with a length of 32 or 64 bits.
-  ///  Refer to the Non-cryptographic hash functions section for details.
-  public var SDBM: String? { let o = _accessor.offset(VTOFFSET.SDBM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SDBMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SDBM.v) }
-  ///  Unkeyed Cryptographic Hash Function - OSDB Hash
-  ///  Cryptographic hash function with a length of 64 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var OSDB_HASH: String? { let o = _accessor.offset(VTOFFSET.OSDB_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OSDB_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OSDB_HASH.v) }
-  ///  Unkeyed Cryptographic Hash Function - komihash
-  ///  Cryptographic hash function with a length of 64 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var KOMIHASH: String? { let o = _accessor.offset(VTOFFSET.KOMIHASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KOMIHASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KOMIHASH.v) }
-  ///  Keyed Cryptographic Hash Function - BLAKE3
-  ///  Keyed hash function with arbitrary length.
-  ///  Refer to the Keyed cryptographic hash functions section for details.
-  public var BLAKE3: String? { let o = _accessor.offset(VTOFFSET.BLAKE3.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BLAKE3SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BLAKE3.v) }
-  ///  Unkeyed Cryptographic Hash Function - ECOH
-  ///  Cryptographic hash function with a length of 224 to 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var ECOH: String? { let o = _accessor.offset(VTOFFSET.ECOH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ECOHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ECOH.v) }
-  ///  Unkeyed Cryptographic Hash Function - FSB
-  ///  Cryptographic hash function with a length of 160 to 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var FSB: String? { let o = _accessor.offset(VTOFFSET.FSB.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FSBSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FSB.v) }
-  ///  Unkeyed Cryptographic Hash Function - GOST
-  ///  Cryptographic hash function with a length of 256 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var GOST: String? { let o = _accessor.offset(VTOFFSET.GOST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GOSTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GOST.v) }
-  ///  Unkeyed Cryptographic Hash Function - Grøstl
-  ///  Cryptographic hash function with a length of up to 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var GROSTL: String? { let o = _accessor.offset(VTOFFSET.GROSTL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GROSTLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GROSTL.v) }
-  ///  Unkeyed Cryptographic Hash Function - HAS-160
-  ///  Cryptographic hash function with a length of 160 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var HAS_160: String? { let o = _accessor.offset(VTOFFSET.HAS_160.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HAS_160SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HAS_160.v) }
-  ///  Unkeyed Cryptographic Hash Function - HAVAL
-  ///  Cryptographic hash function with a length of 128 to 256 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var HAVAL: String? { let o = _accessor.offset(VTOFFSET.HAVAL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HAVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HAVAL.v) }
-  ///  Unkeyed Cryptographic Hash Function - JH
-  ///  Cryptographic hash function with a length of 224 to 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var JH: String? { let o = _accessor.offset(VTOFFSET.JH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var JHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.JH.v) }
-  ///  Unkeyed Cryptographic Hash Function - LSH
-  ///  Cryptographic hash function with a length of 256 to 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var LSH: String? { let o = _accessor.offset(VTOFFSET.LSH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LSHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LSH.v) }
-  ///  Unkeyed Cryptographic Hash Function - MD2
-  ///  Cryptographic hash function with a length of 128 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var MD2: String? { let o = _accessor.offset(VTOFFSET.MD2.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MD2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MD2.v) }
-  ///  Unkeyed Cryptographic Hash Function - MD4
-  ///  Cryptographic hash function with a length of 128 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var MD4: String? { let o = _accessor.offset(VTOFFSET.MD4.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MD4SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MD4.v) }
-  ///  Unkeyed Cryptographic Hash Function - MD5
-  ///  Cryptographic hash function with a length of 128 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var MD5: String? { let o = _accessor.offset(VTOFFSET.MD5.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MD5SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MD5.v) }
-  ///  Unkeyed Cryptographic Hash Function - MD6
-  ///  Cryptographic hash function with a length of up to 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var MD6: String? { let o = _accessor.offset(VTOFFSET.MD6.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MD6SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MD6.v) }
-  ///  Unkeyed Cryptographic Hash Function - RadioGatún
-  ///  Cryptographic hash function with arbitrary length.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var RADIOGATUN: String? { let o = _accessor.offset(VTOFFSET.RADIOGATUN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RADIOGATUNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RADIOGATUN.v) }
-  ///  Unkeyed Cryptographic Hash Function - RIPEMD
-  ///  Cryptographic hash function with a length of 128 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var RIPEMD: String? { let o = _accessor.offset(VTOFFSET.RIPEMD.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RIPEMDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RIPEMD.v) }
-  ///  Unkeyed Cryptographic Hash Function - RIPEMD-128
-  ///  Cryptographic hash function with a length of 128 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var RIPEMD_128: String? { let o = _accessor.offset(VTOFFSET.RIPEMD_128.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RIPEMD_128SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RIPEMD_128.v) }
-  ///  Unkeyed Cryptographic Hash Function - RIPEMD-256
-  ///  Cryptographic hash function with a length of 256 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var RIPEMD_256: String? { let o = _accessor.offset(VTOFFSET.RIPEMD_256.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RIPEMD_256SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RIPEMD_256.v) }
-  ///  Unkeyed Cryptographic Hash Function - RIPEMD-320
-  ///  Cryptographic hash function with a length of 320 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var RIPEMD_320: String? { let o = _accessor.offset(VTOFFSET.RIPEMD_320.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RIPEMD_320SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RIPEMD_320.v) }
-  ///  Unkeyed Cryptographic Hash Function - SHA-1
-  ///  Cryptographic hash function with a length of 160 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SHA_1: String? { let o = _accessor.offset(VTOFFSET.SHA_1.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_1.v) }
-  ///  Unkeyed Cryptographic Hash Function - SHA-224
-  ///  Cryptographic hash function with a length of 224 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SHA_224: String? { let o = _accessor.offset(VTOFFSET.SHA_224.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_224SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_224.v) }
-  ///  Unkeyed Cryptographic Hash Function - SHA-256
-  ///  Cryptographic hash function with a length of 256 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SHA_256: String? { let o = _accessor.offset(VTOFFSET.SHA_256.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_256SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_256.v) }
-  ///  Unkeyed Cryptographic Hash Function - SHA-384
-  ///  Cryptographic hash function with a length of 384 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SHA_384: String? { let o = _accessor.offset(VTOFFSET.SHA_384.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_384SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_384.v) }
-  ///  Unkeyed Cryptographic Hash Function - SHA-512
-  ///  Cryptographic hash function with a length of 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SHA_512: String? { let o = _accessor.offset(VTOFFSET.SHA_512.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_512SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_512.v) }
-  ///  Unkeyed Cryptographic Hash Function - SHA-3
-  ///  Cryptographic hash function with arbitrary length.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SHA_3: String? { let o = _accessor.offset(VTOFFSET.SHA_3.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHA_3SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHA_3.v) }
-  ///  Unkeyed Cryptographic Hash Function - Skein
-  ///  Cryptographic hash function with arbitrary length.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SKEIN: String? { let o = _accessor.offset(VTOFFSET.SKEIN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SKEINSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SKEIN.v) }
-  ///  Unkeyed Cryptographic Hash Function - Snefru
-  ///  Cryptographic hash function with a length of 128 or 256 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SNEFRU: String? { let o = _accessor.offset(VTOFFSET.SNEFRU.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SNEFRUSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SNEFRU.v) }
-  ///  Unkeyed Cryptographic Hash Function - Spectral Hash
-  ///  Cryptographic hash function with a length of 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SPECTRAL_HASH: String? { let o = _accessor.offset(VTOFFSET.SPECTRAL_HASH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPECTRAL_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SPECTRAL_HASH.v) }
-  ///  Unkeyed Cryptographic Hash Function - Streebog
-  ///  Cryptographic hash function with a length of 256 or 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var STREEBOG: String? { let o = _accessor.offset(VTOFFSET.STREEBOG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STREEBOGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STREEBOG.v) }
-  ///  Unkeyed Cryptographic Hash Function - SWIFFT
-  ///  Cryptographic hash function with a length of 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var SWIFFT: String? { let o = _accessor.offset(VTOFFSET.SWIFFT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SWIFFTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SWIFFT.v) }
-  ///  Unkeyed Cryptographic Hash Function - Tiger
-  ///  Cryptographic hash function with a length of 192 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var TIGER: String? { let o = _accessor.offset(VTOFFSET.TIGER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIGERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIGER.v) }
-  ///  Unkeyed Cryptographic Hash Function - Whirlpool
-  ///  Cryptographic hash function with a length of 512 bits.
-  ///  Refer to the Unkeyed cryptographic hash functions section for details.
-  public var WHIRLPOOL: String? { let o = _accessor.offset(VTOFFSET.WHIRLPOOL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var WHIRLPOOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WHIRLPOOL.v) }
-  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 89) }
+  ///  Bitcoin Digital Signature
+  ///  Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
+  ///  Refer to the Bitcoin Blockchain integration section for details.
+  public var BTC_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.BTC_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BTC_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BTC_DIGITAL_SIGNATURE.v) }
+  ///  Litecoin Digital Signature
+  ///  Digital signature of the IPFS file hash using Litecoin's signing mechanism.
+  ///  Refer to the Litecoin Blockchain integration section for details.
+  public var LTC_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.LTC_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LTC_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LTC_DIGITAL_SIGNATURE.v) }
+  ///  Ripple Digital Signature
+  ///  Digital signature of the IPFS file hash using Ripple's signing mechanism.
+  ///  Refer to the Ripple Blockchain integration section for details.
+  public var XRP_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XRP_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var XRP_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XRP_DIGITAL_SIGNATURE.v) }
+  ///  Cardano Digital Signature
+  ///  Digital signature of the IPFS file hash using Cardano's signing mechanism.
+  ///  Refer to the Cardano Blockchain integration section for details.
+  public var ADA_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ADA_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ADA_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADA_DIGITAL_SIGNATURE.v) }
+  ///  Stellar Digital Signature
+  ///  Digital signature of the IPFS file hash using Stellar's signing mechanism.
+  ///  Refer to the Stellar Blockchain integration section for details.
+  public var XLM_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XLM_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var XLM_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XLM_DIGITAL_SIGNATURE.v) }
+  ///  Dogecoin Digital Signature
+  ///  Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
+  ///  Refer to the Dogecoin Blockchain integration section for details.
+  public var DOGE_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.DOGE_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOGE_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOGE_DIGITAL_SIGNATURE.v) }
+  ///  Monero Digital Signature
+  ///  Digital signature of the IPFS file hash using Monero's signing mechanism.
+  ///  Refer to the Monero Blockchain integration section for details.
+  public var XMR_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XMR_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var XMR_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XMR_DIGITAL_SIGNATURE.v) }
+  ///  Polkadot Digital Signature
+  ///  Digital signature of the IPFS file hash using Polkadot's signing mechanism.
+  ///  Refer to the Polkadot Blockchain integration section for details.
+  public var DOT_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.DOT_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOT_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOT_DIGITAL_SIGNATURE.v) }
+  ///  Filecoin Digital Signature
+  ///  Digital signature of the IPFS file hash using Filecoin's signing mechanism.
+  ///  Refer to the Filecoin Blockchain integration section for details.
+  public var FIL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.FIL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FIL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FIL_DIGITAL_SIGNATURE.v) }
+  ///  Tezos Digital Signature
+  ///  Digital signature of the IPFS file hash using Tezos's signing mechanism.
+  ///  Refer to the Tezos Blockchain integration section for details.
+  public var XTZ_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XTZ_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var XTZ_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XTZ_DIGITAL_SIGNATURE.v) }
+  ///  Cosmos Digital Signature
+  ///  Digital signature of the IPFS file hash using Cosmos's signing mechanism.
+  ///  Refer to the Cosmos Blockchain integration section for details.
+  public var ATOM_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ATOM_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATOM_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATOM_DIGITAL_SIGNATURE.v) }
+  ///  Tron Digital Signature
+  ///  Digital signature of the IPFS file hash using Tron's signing mechanism.
+  ///  Refer to the Tron Blockchain integration section for details.
+  public var TRX_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.TRX_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRX_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRX_DIGITAL_SIGNATURE.v) }
+  ///  Binance Coin Digital Signature
+  ///  Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
+  ///  Refer to the Binance Coin Blockchain integration section for details.
+  public var BNB_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.BNB_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BNB_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BNB_DIGITAL_SIGNATURE.v) }
+  ///  Avalanche Digital Signature
+  ///  Digital signature of the IPFS file hash using Avalanche's signing mechanism.
+  ///  Refer to the Avalanche Blockchain integration section for details.
+  public var AVAX_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.AVAX_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AVAX_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AVAX_DIGITAL_SIGNATURE.v) }
+  ///  Solana Digital Signature
+  ///  Digital signature of the IPFS file hash using Solana's signing mechanism.
+  ///  Refer to the Solana Blockchain integration section for details.
+  public var SOL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SOL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
+  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(IPFS_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IPFS_CID, at: VTOFFSET.IPFS_CID.p) }
   public static func add(ETH_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETH_DIGITAL_SIGNATURE, at: VTOFFSET.ETH_DIGITAL_SIGNATURE.p) }
-  public static func add(SHA_512_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_512_FILE_HASH, at: VTOFFSET.SHA_512_FILE_HASH.p) }
-  public static func add(SHA_256_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_256_FILE_HASH, at: VTOFFSET.SHA_256_FILE_HASH.p) }
-  public static func add(MD5_FILE_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MD5_FILE_DIGEST, at: VTOFFSET.MD5_FILE_DIGEST.p) }
-  public static func add(SHA_1_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_1_FILE_HASH, at: VTOFFSET.SHA_1_FILE_HASH.p) }
-  public static func add(ARGON2_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGON2_FILE_HASH, at: VTOFFSET.ARGON2_FILE_HASH.p) }
-  public static func add(BLAKE2B_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLAKE2B_FILE_HASH, at: VTOFFSET.BLAKE2B_FILE_HASH.p) }
-  public static func add(SHA_3_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_3_FILE_HASH, at: VTOFFSET.SHA_3_FILE_HASH.p) }
-  public static func add(RIPEMD_160_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIPEMD_160_FILE_HASH, at: VTOFFSET.RIPEMD_160_FILE_HASH.p) }
-  public static func add(WHIRLPOOL_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WHIRLPOOL_FILE_HASH, at: VTOFFSET.WHIRLPOOL_FILE_HASH.p) }
-  public static func add(TIGER_FILE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIGER_FILE_HASH, at: VTOFFSET.TIGER_FILE_HASH.p) }
-  public static func add(CRC32: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRC32, at: VTOFFSET.CRC32.p) }
-  public static func add(ADLER32_CHECKSUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADLER32_CHECKSUM, at: VTOFFSET.ADLER32_CHECKSUM.p) }
-  public static func add(RABIN_FINGERPRINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RABIN_FINGERPRINT, at: VTOFFSET.RABIN_FINGERPRINT.p) }
-  public static func add(PEARSON_HASHING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PEARSON_HASHING, at: VTOFFSET.PEARSON_HASHING.p) }
-  public static func add(BLAKE2_KEYED_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLAKE2_KEYED_HASH, at: VTOFFSET.BLAKE2_KEYED_HASH.p) }
-  public static func add(BLAKE_256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLAKE_256, at: VTOFFSET.BLAKE_256.p) }
-  public static func add(CRC8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRC8, at: VTOFFSET.CRC8.p) }
-  public static func add(CRC16: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRC16, at: VTOFFSET.CRC16.p) }
-  public static func add(CRC64: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRC64, at: VTOFFSET.CRC64.p) }
-  public static func add(BSD_CHECKSUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BSD_CHECKSUM, at: VTOFFSET.BSD_CHECKSUM.p) }
-  public static func add(SYSV_CHECKSUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSV_CHECKSUM, at: VTOFFSET.SYSV_CHECKSUM.p) }
-  public static func add(SUM8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUM8, at: VTOFFSET.SUM8.p) }
-  public static func add(INTERNET_CHECKSUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNET_CHECKSUM, at: VTOFFSET.INTERNET_CHECKSUM.p) }
-  public static func add(SUM24: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUM24, at: VTOFFSET.SUM24.p) }
-  public static func add(SUM32: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUM32, at: VTOFFSET.SUM32.p) }
-  public static func add(FLETCHER_4: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLETCHER_4, at: VTOFFSET.FLETCHER_4.p) }
-  public static func add(FLETCHER_8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLETCHER_8, at: VTOFFSET.FLETCHER_8.p) }
-  public static func add(FLETCHER_16: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLETCHER_16, at: VTOFFSET.FLETCHER_16.p) }
-  public static func add(FLETCHER_32: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLETCHER_32, at: VTOFFSET.FLETCHER_32.p) }
-  public static func add(LUNH_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LUNH_ALGORITHM, at: VTOFFSET.LUNH_ALGORITHM.p) }
-  public static func add(VERHOEFF_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERHOEFF_ALGORITHM, at: VTOFFSET.VERHOEFF_ALGORITHM.p) }
-  public static func add(DAMM_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DAMM_ALGORITHM, at: VTOFFSET.DAMM_ALGORITHM.p) }
-  public static func add(TABULATION_HASHING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TABULATION_HASHING, at: VTOFFSET.TABULATION_HASHING.p) }
-  public static func add(UNIVERSAL_ONE_WAY_HASH_FUNCTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIVERSAL_ONE_WAY_HASH_FUNCTION, at: VTOFFSET.UNIVERSAL_ONE_WAY_HASH_FUNCTION.p) }
-  public static func add(ZOBRIST_HASHING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ZOBRIST_HASHING, at: VTOFFSET.ZOBRIST_HASHING.p) }
-  public static func add(PAUL_HSIEHS_SUPERFASTHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAUL_HSIEHS_SUPERFASTHASH, at: VTOFFSET.PAUL_HSIEHS_SUPERFASTHASH.p) }
-  public static func add(BUZHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUZHASH, at: VTOFFSET.BUZHASH.p) }
-  public static func add(FNV_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FNV_HASH, at: VTOFFSET.FNV_HASH.p) }
-  public static func add(JENKINS_HASH_FUNCTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JENKINS_HASH_FUNCTION, at: VTOFFSET.JENKINS_HASH_FUNCTION.p) }
-  public static func add(BERNSTEINS_HASH_DJB2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BERNSTEINS_HASH_DJB2, at: VTOFFSET.BERNSTEINS_HASH_DJB2.p) }
-  public static func add(PJW_HASH_ELF_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PJW_HASH_ELF_HASH, at: VTOFFSET.PJW_HASH_ELF_HASH.p) }
-  public static func add(MURMURHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MURMURHASH, at: VTOFFSET.MURMURHASH.p) }
-  public static func add(FAST_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAST_HASH, at: VTOFFSET.FAST_HASH.p) }
-  public static func add(SPOOKYHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPOOKYHASH, at: VTOFFSET.SPOOKYHASH.p) }
-  public static func add(CITYHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITYHASH, at: VTOFFSET.CITYHASH.p) }
-  public static func add(FARMHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FARMHASH, at: VTOFFSET.FARMHASH.p) }
-  public static func add(METROHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METROHASH, at: VTOFFSET.METROHASH.p) }
-  public static func add(NUMERIC_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NUMERIC_HASH, at: VTOFFSET.NUMERIC_HASH.p) }
-  public static func add(XXHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XXHASH, at: VTOFFSET.XXHASH.p) }
-  public static func add(T1HA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: T1HA, at: VTOFFSET.T1HA.p) }
-  public static func add(GXHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GXHASH, at: VTOFFSET.GXHASH.p) }
-  public static func add(PHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHASH, at: VTOFFSET.PHASH.p) }
-  public static func add(DHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DHASH, at: VTOFFSET.DHASH.p) }
-  public static func add(SDBM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SDBM, at: VTOFFSET.SDBM.p) }
-  public static func add(OSDB_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OSDB_HASH, at: VTOFFSET.OSDB_HASH.p) }
-  public static func add(KOMIHASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KOMIHASH, at: VTOFFSET.KOMIHASH.p) }
-  public static func add(BLAKE3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLAKE3, at: VTOFFSET.BLAKE3.p) }
-  public static func add(ECOH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECOH, at: VTOFFSET.ECOH.p) }
-  public static func add(FSB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FSB, at: VTOFFSET.FSB.p) }
-  public static func add(GOST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GOST, at: VTOFFSET.GOST.p) }
-  public static func add(GROSTL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROSTL, at: VTOFFSET.GROSTL.p) }
-  public static func add(HAS_160: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HAS_160, at: VTOFFSET.HAS_160.p) }
-  public static func add(HAVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HAVAL, at: VTOFFSET.HAVAL.p) }
-  public static func add(JH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JH, at: VTOFFSET.JH.p) }
-  public static func add(LSH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LSH, at: VTOFFSET.LSH.p) }
-  public static func add(MD2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MD2, at: VTOFFSET.MD2.p) }
-  public static func add(MD4: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MD4, at: VTOFFSET.MD4.p) }
-  public static func add(MD5: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MD5, at: VTOFFSET.MD5.p) }
-  public static func add(MD6: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MD6, at: VTOFFSET.MD6.p) }
-  public static func add(RADIOGATUN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RADIOGATUN, at: VTOFFSET.RADIOGATUN.p) }
-  public static func add(RIPEMD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIPEMD, at: VTOFFSET.RIPEMD.p) }
-  public static func add(RIPEMD_128: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIPEMD_128, at: VTOFFSET.RIPEMD_128.p) }
-  public static func add(RIPEMD_256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIPEMD_256, at: VTOFFSET.RIPEMD_256.p) }
-  public static func add(RIPEMD_320: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIPEMD_320, at: VTOFFSET.RIPEMD_320.p) }
-  public static func add(SHA_1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_1, at: VTOFFSET.SHA_1.p) }
-  public static func add(SHA_224: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_224, at: VTOFFSET.SHA_224.p) }
-  public static func add(SHA_256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_256, at: VTOFFSET.SHA_256.p) }
-  public static func add(SHA_384: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_384, at: VTOFFSET.SHA_384.p) }
-  public static func add(SHA_512: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_512, at: VTOFFSET.SHA_512.p) }
-  public static func add(SHA_3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA_3, at: VTOFFSET.SHA_3.p) }
-  public static func add(SKEIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SKEIN, at: VTOFFSET.SKEIN.p) }
-  public static func add(SNEFRU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SNEFRU, at: VTOFFSET.SNEFRU.p) }
-  public static func add(SPECTRAL_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_HASH, at: VTOFFSET.SPECTRAL_HASH.p) }
-  public static func add(STREEBOG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREEBOG, at: VTOFFSET.STREEBOG.p) }
-  public static func add(SWIFFT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SWIFFT, at: VTOFFSET.SWIFFT.p) }
-  public static func add(TIGER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIGER, at: VTOFFSET.TIGER.p) }
-  public static func add(WHIRLPOOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WHIRLPOOL, at: VTOFFSET.WHIRLPOOL.p) }
+  public static func add(BTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BTC_DIGITAL_SIGNATURE, at: VTOFFSET.BTC_DIGITAL_SIGNATURE.p) }
+  public static func add(LTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LTC_DIGITAL_SIGNATURE, at: VTOFFSET.LTC_DIGITAL_SIGNATURE.p) }
+  public static func add(XRP_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XRP_DIGITAL_SIGNATURE, at: VTOFFSET.XRP_DIGITAL_SIGNATURE.p) }
+  public static func add(ADA_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADA_DIGITAL_SIGNATURE, at: VTOFFSET.ADA_DIGITAL_SIGNATURE.p) }
+  public static func add(XLM_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XLM_DIGITAL_SIGNATURE, at: VTOFFSET.XLM_DIGITAL_SIGNATURE.p) }
+  public static func add(DOGE_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOGE_DIGITAL_SIGNATURE, at: VTOFFSET.DOGE_DIGITAL_SIGNATURE.p) }
+  public static func add(XMR_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XMR_DIGITAL_SIGNATURE, at: VTOFFSET.XMR_DIGITAL_SIGNATURE.p) }
+  public static func add(DOT_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOT_DIGITAL_SIGNATURE, at: VTOFFSET.DOT_DIGITAL_SIGNATURE.p) }
+  public static func add(FIL_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIL_DIGITAL_SIGNATURE, at: VTOFFSET.FIL_DIGITAL_SIGNATURE.p) }
+  public static func add(XTZ_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XTZ_DIGITAL_SIGNATURE, at: VTOFFSET.XTZ_DIGITAL_SIGNATURE.p) }
+  public static func add(ATOM_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATOM_DIGITAL_SIGNATURE, at: VTOFFSET.ATOM_DIGITAL_SIGNATURE.p) }
+  public static func add(TRX_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRX_DIGITAL_SIGNATURE, at: VTOFFSET.TRX_DIGITAL_SIGNATURE.p) }
+  public static func add(BNB_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BNB_DIGITAL_SIGNATURE, at: VTOFFSET.BNB_DIGITAL_SIGNATURE.p) }
+  public static func add(AVAX_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AVAX_DIGITAL_SIGNATURE, at: VTOFFSET.AVAX_DIGITAL_SIGNATURE.p) }
+  public static func add(SOL_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOL_DIGITAL_SIGNATURE, at: VTOFFSET.SOL_DIGITAL_SIGNATURE.p) }
   public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
     IPFS_CIDOffset IPFS_CID: Offset = Offset(),
     ETH_DIGITAL_SIGNATUREOffset ETH_DIGITAL_SIGNATURE: Offset = Offset(),
-    SHA_512_FILE_HASHOffset SHA_512_FILE_HASH: Offset = Offset(),
-    SHA_256_FILE_HASHOffset SHA_256_FILE_HASH: Offset = Offset(),
-    MD5_FILE_DIGESTOffset MD5_FILE_DIGEST: Offset = Offset(),
-    SHA_1_FILE_HASHOffset SHA_1_FILE_HASH: Offset = Offset(),
-    ARGON2_FILE_HASHOffset ARGON2_FILE_HASH: Offset = Offset(),
-    BLAKE2B_FILE_HASHOffset BLAKE2B_FILE_HASH: Offset = Offset(),
-    SHA_3_FILE_HASHOffset SHA_3_FILE_HASH: Offset = Offset(),
-    RIPEMD_160_FILE_HASHOffset RIPEMD_160_FILE_HASH: Offset = Offset(),
-    WHIRLPOOL_FILE_HASHOffset WHIRLPOOL_FILE_HASH: Offset = Offset(),
-    TIGER_FILE_HASHOffset TIGER_FILE_HASH: Offset = Offset(),
-    CRC32Offset CRC32: Offset = Offset(),
-    ADLER32_CHECKSUMOffset ADLER32_CHECKSUM: Offset = Offset(),
-    RABIN_FINGERPRINTOffset RABIN_FINGERPRINT: Offset = Offset(),
-    PEARSON_HASHINGOffset PEARSON_HASHING: Offset = Offset(),
-    BLAKE2_KEYED_HASHOffset BLAKE2_KEYED_HASH: Offset = Offset(),
-    BLAKE_256Offset BLAKE_256: Offset = Offset(),
-    CRC8Offset CRC8: Offset = Offset(),
-    CRC16Offset CRC16: Offset = Offset(),
-    CRC64Offset CRC64: Offset = Offset(),
-    BSD_CHECKSUMOffset BSD_CHECKSUM: Offset = Offset(),
-    SYSV_CHECKSUMOffset SYSV_CHECKSUM: Offset = Offset(),
-    SUM8Offset SUM8: Offset = Offset(),
-    INTERNET_CHECKSUMOffset INTERNET_CHECKSUM: Offset = Offset(),
-    SUM24Offset SUM24: Offset = Offset(),
-    SUM32Offset SUM32: Offset = Offset(),
-    FLETCHER_4Offset FLETCHER_4: Offset = Offset(),
-    FLETCHER_8Offset FLETCHER_8: Offset = Offset(),
-    FLETCHER_16Offset FLETCHER_16: Offset = Offset(),
-    FLETCHER_32Offset FLETCHER_32: Offset = Offset(),
-    LUNH_ALGORITHMOffset LUNH_ALGORITHM: Offset = Offset(),
-    VERHOEFF_ALGORITHMOffset VERHOEFF_ALGORITHM: Offset = Offset(),
-    DAMM_ALGORITHMOffset DAMM_ALGORITHM: Offset = Offset(),
-    TABULATION_HASHINGOffset TABULATION_HASHING: Offset = Offset(),
-    UNIVERSAL_ONE_WAY_HASH_FUNCTIONOffset UNIVERSAL_ONE_WAY_HASH_FUNCTION: Offset = Offset(),
-    ZOBRIST_HASHINGOffset ZOBRIST_HASHING: Offset = Offset(),
-    PAUL_HSIEHS_SUPERFASTHASHOffset PAUL_HSIEHS_SUPERFASTHASH: Offset = Offset(),
-    BUZHASHOffset BUZHASH: Offset = Offset(),
-    FNV_HASHOffset FNV_HASH: Offset = Offset(),
-    JENKINS_HASH_FUNCTIONOffset JENKINS_HASH_FUNCTION: Offset = Offset(),
-    BERNSTEINS_HASH_DJB2Offset BERNSTEINS_HASH_DJB2: Offset = Offset(),
-    PJW_HASH_ELF_HASHOffset PJW_HASH_ELF_HASH: Offset = Offset(),
-    MURMURHASHOffset MURMURHASH: Offset = Offset(),
-    FAST_HASHOffset FAST_HASH: Offset = Offset(),
-    SPOOKYHASHOffset SPOOKYHASH: Offset = Offset(),
-    CITYHASHOffset CITYHASH: Offset = Offset(),
-    FARMHASHOffset FARMHASH: Offset = Offset(),
-    METROHASHOffset METROHASH: Offset = Offset(),
-    NUMERIC_HASHOffset NUMERIC_HASH: Offset = Offset(),
-    XXHASHOffset XXHASH: Offset = Offset(),
-    T1HAOffset T1HA: Offset = Offset(),
-    GXHASHOffset GXHASH: Offset = Offset(),
-    PHASHOffset PHASH: Offset = Offset(),
-    DHASHOffset DHASH: Offset = Offset(),
-    SDBMOffset SDBM: Offset = Offset(),
-    OSDB_HASHOffset OSDB_HASH: Offset = Offset(),
-    KOMIHASHOffset KOMIHASH: Offset = Offset(),
-    BLAKE3Offset BLAKE3: Offset = Offset(),
-    ECOHOffset ECOH: Offset = Offset(),
-    FSBOffset FSB: Offset = Offset(),
-    GOSTOffset GOST: Offset = Offset(),
-    GROSTLOffset GROSTL: Offset = Offset(),
-    HAS_160Offset HAS_160: Offset = Offset(),
-    HAVALOffset HAVAL: Offset = Offset(),
-    JHOffset JH: Offset = Offset(),
-    LSHOffset LSH: Offset = Offset(),
-    MD2Offset MD2: Offset = Offset(),
-    MD4Offset MD4: Offset = Offset(),
-    MD5Offset MD5: Offset = Offset(),
-    MD6Offset MD6: Offset = Offset(),
-    RADIOGATUNOffset RADIOGATUN: Offset = Offset(),
-    RIPEMDOffset RIPEMD: Offset = Offset(),
-    RIPEMD_128Offset RIPEMD_128: Offset = Offset(),
-    RIPEMD_256Offset RIPEMD_256: Offset = Offset(),
-    RIPEMD_320Offset RIPEMD_320: Offset = Offset(),
-    SHA_1Offset SHA_1: Offset = Offset(),
-    SHA_224Offset SHA_224: Offset = Offset(),
-    SHA_256Offset SHA_256: Offset = Offset(),
-    SHA_384Offset SHA_384: Offset = Offset(),
-    SHA_512Offset SHA_512: Offset = Offset(),
-    SHA_3Offset SHA_3: Offset = Offset(),
-    SKEINOffset SKEIN: Offset = Offset(),
-    SNEFRUOffset SNEFRU: Offset = Offset(),
-    SPECTRAL_HASHOffset SPECTRAL_HASH: Offset = Offset(),
-    STREEBOGOffset STREEBOG: Offset = Offset(),
-    SWIFFTOffset SWIFFT: Offset = Offset(),
-    TIGEROffset TIGER: Offset = Offset(),
-    WHIRLPOOLOffset WHIRLPOOL: Offset = Offset()
+    BTC_DIGITAL_SIGNATUREOffset BTC_DIGITAL_SIGNATURE: Offset = Offset(),
+    LTC_DIGITAL_SIGNATUREOffset LTC_DIGITAL_SIGNATURE: Offset = Offset(),
+    XRP_DIGITAL_SIGNATUREOffset XRP_DIGITAL_SIGNATURE: Offset = Offset(),
+    ADA_DIGITAL_SIGNATUREOffset ADA_DIGITAL_SIGNATURE: Offset = Offset(),
+    XLM_DIGITAL_SIGNATUREOffset XLM_DIGITAL_SIGNATURE: Offset = Offset(),
+    DOGE_DIGITAL_SIGNATUREOffset DOGE_DIGITAL_SIGNATURE: Offset = Offset(),
+    XMR_DIGITAL_SIGNATUREOffset XMR_DIGITAL_SIGNATURE: Offset = Offset(),
+    DOT_DIGITAL_SIGNATUREOffset DOT_DIGITAL_SIGNATURE: Offset = Offset(),
+    FIL_DIGITAL_SIGNATUREOffset FIL_DIGITAL_SIGNATURE: Offset = Offset(),
+    XTZ_DIGITAL_SIGNATUREOffset XTZ_DIGITAL_SIGNATURE: Offset = Offset(),
+    ATOM_DIGITAL_SIGNATUREOffset ATOM_DIGITAL_SIGNATURE: Offset = Offset(),
+    TRX_DIGITAL_SIGNATUREOffset TRX_DIGITAL_SIGNATURE: Offset = Offset(),
+    BNB_DIGITAL_SIGNATUREOffset BNB_DIGITAL_SIGNATURE: Offset = Offset(),
+    AVAX_DIGITAL_SIGNATUREOffset AVAX_DIGITAL_SIGNATURE: Offset = Offset(),
+    SOL_DIGITAL_SIGNATUREOffset SOL_DIGITAL_SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = PNM.startPNM(&fbb)
     PNM.add(IPFS_CID: IPFS_CID, &fbb)
     PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(SHA_512_FILE_HASH: SHA_512_FILE_HASH, &fbb)
-    PNM.add(SHA_256_FILE_HASH: SHA_256_FILE_HASH, &fbb)
-    PNM.add(MD5_FILE_DIGEST: MD5_FILE_DIGEST, &fbb)
-    PNM.add(SHA_1_FILE_HASH: SHA_1_FILE_HASH, &fbb)
-    PNM.add(ARGON2_FILE_HASH: ARGON2_FILE_HASH, &fbb)
-    PNM.add(BLAKE2B_FILE_HASH: BLAKE2B_FILE_HASH, &fbb)
-    PNM.add(SHA_3_FILE_HASH: SHA_3_FILE_HASH, &fbb)
-    PNM.add(RIPEMD_160_FILE_HASH: RIPEMD_160_FILE_HASH, &fbb)
-    PNM.add(WHIRLPOOL_FILE_HASH: WHIRLPOOL_FILE_HASH, &fbb)
-    PNM.add(TIGER_FILE_HASH: TIGER_FILE_HASH, &fbb)
-    PNM.add(CRC32: CRC32, &fbb)
-    PNM.add(ADLER32_CHECKSUM: ADLER32_CHECKSUM, &fbb)
-    PNM.add(RABIN_FINGERPRINT: RABIN_FINGERPRINT, &fbb)
-    PNM.add(PEARSON_HASHING: PEARSON_HASHING, &fbb)
-    PNM.add(BLAKE2_KEYED_HASH: BLAKE2_KEYED_HASH, &fbb)
-    PNM.add(BLAKE_256: BLAKE_256, &fbb)
-    PNM.add(CRC8: CRC8, &fbb)
-    PNM.add(CRC16: CRC16, &fbb)
-    PNM.add(CRC64: CRC64, &fbb)
-    PNM.add(BSD_CHECKSUM: BSD_CHECKSUM, &fbb)
-    PNM.add(SYSV_CHECKSUM: SYSV_CHECKSUM, &fbb)
-    PNM.add(SUM8: SUM8, &fbb)
-    PNM.add(INTERNET_CHECKSUM: INTERNET_CHECKSUM, &fbb)
-    PNM.add(SUM24: SUM24, &fbb)
-    PNM.add(SUM32: SUM32, &fbb)
-    PNM.add(FLETCHER_4: FLETCHER_4, &fbb)
-    PNM.add(FLETCHER_8: FLETCHER_8, &fbb)
-    PNM.add(FLETCHER_16: FLETCHER_16, &fbb)
-    PNM.add(FLETCHER_32: FLETCHER_32, &fbb)
-    PNM.add(LUNH_ALGORITHM: LUNH_ALGORITHM, &fbb)
-    PNM.add(VERHOEFF_ALGORITHM: VERHOEFF_ALGORITHM, &fbb)
-    PNM.add(DAMM_ALGORITHM: DAMM_ALGORITHM, &fbb)
-    PNM.add(TABULATION_HASHING: TABULATION_HASHING, &fbb)
-    PNM.add(UNIVERSAL_ONE_WAY_HASH_FUNCTION: UNIVERSAL_ONE_WAY_HASH_FUNCTION, &fbb)
-    PNM.add(ZOBRIST_HASHING: ZOBRIST_HASHING, &fbb)
-    PNM.add(PAUL_HSIEHS_SUPERFASTHASH: PAUL_HSIEHS_SUPERFASTHASH, &fbb)
-    PNM.add(BUZHASH: BUZHASH, &fbb)
-    PNM.add(FNV_HASH: FNV_HASH, &fbb)
-    PNM.add(JENKINS_HASH_FUNCTION: JENKINS_HASH_FUNCTION, &fbb)
-    PNM.add(BERNSTEINS_HASH_DJB2: BERNSTEINS_HASH_DJB2, &fbb)
-    PNM.add(PJW_HASH_ELF_HASH: PJW_HASH_ELF_HASH, &fbb)
-    PNM.add(MURMURHASH: MURMURHASH, &fbb)
-    PNM.add(FAST_HASH: FAST_HASH, &fbb)
-    PNM.add(SPOOKYHASH: SPOOKYHASH, &fbb)
-    PNM.add(CITYHASH: CITYHASH, &fbb)
-    PNM.add(FARMHASH: FARMHASH, &fbb)
-    PNM.add(METROHASH: METROHASH, &fbb)
-    PNM.add(NUMERIC_HASH: NUMERIC_HASH, &fbb)
-    PNM.add(XXHASH: XXHASH, &fbb)
-    PNM.add(T1HA: T1HA, &fbb)
-    PNM.add(GXHASH: GXHASH, &fbb)
-    PNM.add(PHASH: PHASH, &fbb)
-    PNM.add(DHASH: DHASH, &fbb)
-    PNM.add(SDBM: SDBM, &fbb)
-    PNM.add(OSDB_HASH: OSDB_HASH, &fbb)
-    PNM.add(KOMIHASH: KOMIHASH, &fbb)
-    PNM.add(BLAKE3: BLAKE3, &fbb)
-    PNM.add(ECOH: ECOH, &fbb)
-    PNM.add(FSB: FSB, &fbb)
-    PNM.add(GOST: GOST, &fbb)
-    PNM.add(GROSTL: GROSTL, &fbb)
-    PNM.add(HAS_160: HAS_160, &fbb)
-    PNM.add(HAVAL: HAVAL, &fbb)
-    PNM.add(JH: JH, &fbb)
-    PNM.add(LSH: LSH, &fbb)
-    PNM.add(MD2: MD2, &fbb)
-    PNM.add(MD4: MD4, &fbb)
-    PNM.add(MD5: MD5, &fbb)
-    PNM.add(MD6: MD6, &fbb)
-    PNM.add(RADIOGATUN: RADIOGATUN, &fbb)
-    PNM.add(RIPEMD: RIPEMD, &fbb)
-    PNM.add(RIPEMD_128: RIPEMD_128, &fbb)
-    PNM.add(RIPEMD_256: RIPEMD_256, &fbb)
-    PNM.add(RIPEMD_320: RIPEMD_320, &fbb)
-    PNM.add(SHA_1: SHA_1, &fbb)
-    PNM.add(SHA_224: SHA_224, &fbb)
-    PNM.add(SHA_256: SHA_256, &fbb)
-    PNM.add(SHA_384: SHA_384, &fbb)
-    PNM.add(SHA_512: SHA_512, &fbb)
-    PNM.add(SHA_3: SHA_3, &fbb)
-    PNM.add(SKEIN: SKEIN, &fbb)
-    PNM.add(SNEFRU: SNEFRU, &fbb)
-    PNM.add(SPECTRAL_HASH: SPECTRAL_HASH, &fbb)
-    PNM.add(STREEBOG: STREEBOG, &fbb)
-    PNM.add(SWIFFT: SWIFFT, &fbb)
-    PNM.add(TIGER: TIGER, &fbb)
-    PNM.add(WHIRLPOOL: WHIRLPOOL, &fbb)
+    PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XRP_DIGITAL_SIGNATURE: XRP_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(ADA_DIGITAL_SIGNATURE: ADA_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XLM_DIGITAL_SIGNATURE: XLM_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(DOGE_DIGITAL_SIGNATURE: DOGE_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XMR_DIGITAL_SIGNATURE: XMR_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(DOT_DIGITAL_SIGNATURE: DOT_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(FIL_DIGITAL_SIGNATURE: FIL_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XTZ_DIGITAL_SIGNATURE: XTZ_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(ATOM_DIGITAL_SIGNATURE: ATOM_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(TRX_DIGITAL_SIGNATURE: TRX_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(BNB_DIGITAL_SIGNATURE: BNB_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(AVAX_DIGITAL_SIGNATURE: AVAX_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(SOL_DIGITAL_SIGNATURE: SOL_DIGITAL_SIGNATURE, &fbb)
     return PNM.endPNM(&fbb, start: __start)
   }
 
@@ -836,93 +188,21 @@ public struct PNM: FlatBufferObject, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.IPFS_CID.p, fieldName: "IPFS_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ETH_DIGITAL_SIGNATURE.p, fieldName: "ETH_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_512_FILE_HASH.p, fieldName: "SHA_512_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_256_FILE_HASH.p, fieldName: "SHA_256_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MD5_FILE_DIGEST.p, fieldName: "MD5_FILE_DIGEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_1_FILE_HASH.p, fieldName: "SHA_1_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ARGON2_FILE_HASH.p, fieldName: "ARGON2_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BLAKE2B_FILE_HASH.p, fieldName: "BLAKE2B_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_3_FILE_HASH.p, fieldName: "SHA_3_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RIPEMD_160_FILE_HASH.p, fieldName: "RIPEMD_160_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.WHIRLPOOL_FILE_HASH.p, fieldName: "WHIRLPOOL_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIGER_FILE_HASH.p, fieldName: "TIGER_FILE_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CRC32.p, fieldName: "CRC32", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADLER32_CHECKSUM.p, fieldName: "ADLER32_CHECKSUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RABIN_FINGERPRINT.p, fieldName: "RABIN_FINGERPRINT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PEARSON_HASHING.p, fieldName: "PEARSON_HASHING", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BLAKE2_KEYED_HASH.p, fieldName: "BLAKE2_KEYED_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BLAKE_256.p, fieldName: "BLAKE_256", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CRC8.p, fieldName: "CRC8", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CRC16.p, fieldName: "CRC16", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CRC64.p, fieldName: "CRC64", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BSD_CHECKSUM.p, fieldName: "BSD_CHECKSUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SYSV_CHECKSUM.p, fieldName: "SYSV_CHECKSUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SUM8.p, fieldName: "SUM8", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTERNET_CHECKSUM.p, fieldName: "INTERNET_CHECKSUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SUM24.p, fieldName: "SUM24", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SUM32.p, fieldName: "SUM32", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FLETCHER_4.p, fieldName: "FLETCHER_4", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FLETCHER_8.p, fieldName: "FLETCHER_8", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FLETCHER_16.p, fieldName: "FLETCHER_16", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FLETCHER_32.p, fieldName: "FLETCHER_32", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LUNH_ALGORITHM.p, fieldName: "LUNH_ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VERHOEFF_ALGORITHM.p, fieldName: "VERHOEFF_ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DAMM_ALGORITHM.p, fieldName: "DAMM_ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TABULATION_HASHING.p, fieldName: "TABULATION_HASHING", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNIVERSAL_ONE_WAY_HASH_FUNCTION.p, fieldName: "UNIVERSAL_ONE_WAY_HASH_FUNCTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ZOBRIST_HASHING.p, fieldName: "ZOBRIST_HASHING", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PAUL_HSIEHS_SUPERFASTHASH.p, fieldName: "PAUL_HSIEHS_SUPERFASTHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BUZHASH.p, fieldName: "BUZHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FNV_HASH.p, fieldName: "FNV_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.JENKINS_HASH_FUNCTION.p, fieldName: "JENKINS_HASH_FUNCTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BERNSTEINS_HASH_DJB2.p, fieldName: "BERNSTEINS_HASH_DJB2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PJW_HASH_ELF_HASH.p, fieldName: "PJW_HASH_ELF_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MURMURHASH.p, fieldName: "MURMURHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FAST_HASH.p, fieldName: "FAST_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SPOOKYHASH.p, fieldName: "SPOOKYHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CITYHASH.p, fieldName: "CITYHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FARMHASH.p, fieldName: "FARMHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.METROHASH.p, fieldName: "METROHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NUMERIC_HASH.p, fieldName: "NUMERIC_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.XXHASH.p, fieldName: "XXHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.T1HA.p, fieldName: "T1HA", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GXHASH.p, fieldName: "GXHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PHASH.p, fieldName: "PHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DHASH.p, fieldName: "DHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SDBM.p, fieldName: "SDBM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OSDB_HASH.p, fieldName: "OSDB_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.KOMIHASH.p, fieldName: "KOMIHASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BLAKE3.p, fieldName: "BLAKE3", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ECOH.p, fieldName: "ECOH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FSB.p, fieldName: "FSB", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GOST.p, fieldName: "GOST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GROSTL.p, fieldName: "GROSTL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HAS_160.p, fieldName: "HAS_160", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HAVAL.p, fieldName: "HAVAL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.JH.p, fieldName: "JH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LSH.p, fieldName: "LSH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MD2.p, fieldName: "MD2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MD4.p, fieldName: "MD4", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MD5.p, fieldName: "MD5", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MD6.p, fieldName: "MD6", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RADIOGATUN.p, fieldName: "RADIOGATUN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RIPEMD.p, fieldName: "RIPEMD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RIPEMD_128.p, fieldName: "RIPEMD_128", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RIPEMD_256.p, fieldName: "RIPEMD_256", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RIPEMD_320.p, fieldName: "RIPEMD_320", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_1.p, fieldName: "SHA_1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_224.p, fieldName: "SHA_224", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_256.p, fieldName: "SHA_256", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_384.p, fieldName: "SHA_384", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_512.p, fieldName: "SHA_512", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHA_3.p, fieldName: "SHA_3", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SKEIN.p, fieldName: "SKEIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SNEFRU.p, fieldName: "SNEFRU", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SPECTRAL_HASH.p, fieldName: "SPECTRAL_HASH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STREEBOG.p, fieldName: "STREEBOG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SWIFFT.p, fieldName: "SWIFFT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIGER.p, fieldName: "TIGER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.WHIRLPOOL.p, fieldName: "WHIRLPOOL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.BTC_DIGITAL_SIGNATURE.p, fieldName: "BTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LTC_DIGITAL_SIGNATURE.p, fieldName: "LTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.XRP_DIGITAL_SIGNATURE.p, fieldName: "XRP_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ADA_DIGITAL_SIGNATURE.p, fieldName: "ADA_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.XLM_DIGITAL_SIGNATURE.p, fieldName: "XLM_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DOGE_DIGITAL_SIGNATURE.p, fieldName: "DOGE_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.XMR_DIGITAL_SIGNATURE.p, fieldName: "XMR_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DOT_DIGITAL_SIGNATURE.p, fieldName: "DOT_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FIL_DIGITAL_SIGNATURE.p, fieldName: "FIL_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.XTZ_DIGITAL_SIGNATURE.p, fieldName: "XTZ_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ATOM_DIGITAL_SIGNATURE.p, fieldName: "ATOM_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TRX_DIGITAL_SIGNATURE.p, fieldName: "TRX_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.BNB_DIGITAL_SIGNATURE.p, fieldName: "BNB_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.AVAX_DIGITAL_SIGNATURE.p, fieldName: "AVAX_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SOL_DIGITAL_SIGNATURE.p, fieldName: "SOL_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

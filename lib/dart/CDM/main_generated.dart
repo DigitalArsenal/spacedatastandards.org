@@ -5,6 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
+
 class ReferenceFrame {
   final int value;
   const ReferenceFrame._(this.value);
@@ -1368,10 +1370,14 @@ class CDM {
   Cdmobject? get OBJECT1 => Cdmobject.reader.vTableGetNullable(_bc, _bcOffset, 54);
   ///  The second object in the CDM message
   Cdmobject? get OBJECT2 => Cdmobject.reader.vTableGetNullable(_bc, _bcOffset, 56);
+  ///  Data Source for the positional information for Object 1
+  PNM? get OBJECT1_DATASOURCE => PNM.reader.vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Data Source for the positional information for Object 2
+  PNM? get OBJECT2_DATASOURCE => PNM.reader.vTableGetNullable(_bc, _bcOffset, 60);
 
   @override
   String toString() {
-    return 'CDM{CCSDS_CDM_VERS: ${CCSDS_CDM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, MESSAGE_FOR: ${MESSAGE_FOR}, MESSAGE_ID: ${MESSAGE_ID}, TCA: ${TCA}, MISS_DISTANCE: ${MISS_DISTANCE}, RELATIVE_SPEED: ${RELATIVE_SPEED}, RELATIVE_POSITION_R: ${RELATIVE_POSITION_R}, RELATIVE_POSITION_T: ${RELATIVE_POSITION_T}, RELATIVE_POSITION_N: ${RELATIVE_POSITION_N}, RELATIVE_VELOCITY_R: ${RELATIVE_VELOCITY_R}, RELATIVE_VELOCITY_T: ${RELATIVE_VELOCITY_T}, RELATIVE_VELOCITY_N: ${RELATIVE_VELOCITY_N}, START_SCREEN_PERIOD: ${START_SCREEN_PERIOD}, STOP_SCREEN_PERIOD: ${STOP_SCREEN_PERIOD}, SCREEN_VOLUME_FRAME: ${SCREEN_VOLUME_FRAME}, SCREEN_VOLUME_SHAPE: ${SCREEN_VOLUME_SHAPE}, SCREEN_VOLUME_X: ${SCREEN_VOLUME_X}, SCREEN_VOLUME_Y: ${SCREEN_VOLUME_Y}, SCREEN_VOLUME_Z: ${SCREEN_VOLUME_Z}, SCREEN_ENTRY_TIME: ${SCREEN_ENTRY_TIME}, SCREEN_EXIT_TIME: ${SCREEN_EXIT_TIME}, COLLISION_PROBABILITY: ${COLLISION_PROBABILITY}, COLLISION_PROBABILITY_METHOD: ${COLLISION_PROBABILITY_METHOD}, OBJECT1: ${OBJECT1}, OBJECT2: ${OBJECT2}}';
+    return 'CDM{CCSDS_CDM_VERS: ${CCSDS_CDM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, MESSAGE_FOR: ${MESSAGE_FOR}, MESSAGE_ID: ${MESSAGE_ID}, TCA: ${TCA}, MISS_DISTANCE: ${MISS_DISTANCE}, RELATIVE_SPEED: ${RELATIVE_SPEED}, RELATIVE_POSITION_R: ${RELATIVE_POSITION_R}, RELATIVE_POSITION_T: ${RELATIVE_POSITION_T}, RELATIVE_POSITION_N: ${RELATIVE_POSITION_N}, RELATIVE_VELOCITY_R: ${RELATIVE_VELOCITY_R}, RELATIVE_VELOCITY_T: ${RELATIVE_VELOCITY_T}, RELATIVE_VELOCITY_N: ${RELATIVE_VELOCITY_N}, START_SCREEN_PERIOD: ${START_SCREEN_PERIOD}, STOP_SCREEN_PERIOD: ${STOP_SCREEN_PERIOD}, SCREEN_VOLUME_FRAME: ${SCREEN_VOLUME_FRAME}, SCREEN_VOLUME_SHAPE: ${SCREEN_VOLUME_SHAPE}, SCREEN_VOLUME_X: ${SCREEN_VOLUME_X}, SCREEN_VOLUME_Y: ${SCREEN_VOLUME_Y}, SCREEN_VOLUME_Z: ${SCREEN_VOLUME_Z}, SCREEN_ENTRY_TIME: ${SCREEN_ENTRY_TIME}, SCREEN_EXIT_TIME: ${SCREEN_EXIT_TIME}, COLLISION_PROBABILITY: ${COLLISION_PROBABILITY}, COLLISION_PROBABILITY_METHOD: ${COLLISION_PROBABILITY_METHOD}, OBJECT1: ${OBJECT1}, OBJECT2: ${OBJECT2}, OBJECT1_DATASOURCE: ${OBJECT1_DATASOURCE}, OBJECT2_DATASOURCE: ${OBJECT2_DATASOURCE}}';
   }
 }
 
@@ -1389,7 +1395,7 @@ class CDMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(27);
+    fbBuilder.startTable(29);
   }
 
   int addCcsdsCdmVers(double? CCSDS_CDM_VERS) {
@@ -1500,6 +1506,14 @@ class CDMBuilder {
     fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
+  int addObject1DatasourceOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addObject2DatasourceOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1534,6 +1548,8 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
   final String? _COLLISION_PROBABILITY_METHOD;
   final CdmobjectObjectBuilder? _OBJECT1;
   final CdmobjectObjectBuilder? _OBJECT2;
+  final PNMObjectBuilder? _OBJECT1_DATASOURCE;
+  final PNMObjectBuilder? _OBJECT2_DATASOURCE;
 
   CDMObjectBuilder({
     double? CCSDS_CDM_VERS,
@@ -1563,6 +1579,8 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
     String? COLLISION_PROBABILITY_METHOD,
     CdmobjectObjectBuilder? OBJECT1,
     CdmobjectObjectBuilder? OBJECT2,
+    PNMObjectBuilder? OBJECT1_DATASOURCE,
+    PNMObjectBuilder? OBJECT2_DATASOURCE,
   })
       : _CCSDS_CDM_VERS = CCSDS_CDM_VERS,
         _CREATION_DATE = CREATION_DATE,
@@ -1590,7 +1608,9 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
         _COLLISION_PROBABILITY = COLLISION_PROBABILITY,
         _COLLISION_PROBABILITY_METHOD = COLLISION_PROBABILITY_METHOD,
         _OBJECT1 = OBJECT1,
-        _OBJECT2 = OBJECT2;
+        _OBJECT2 = OBJECT2,
+        _OBJECT1_DATASOURCE = OBJECT1_DATASOURCE,
+        _OBJECT2_DATASOURCE = OBJECT2_DATASOURCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1617,7 +1637,9 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_COLLISION_PROBABILITY_METHOD!);
     final int? OBJECT1Offset = _OBJECT1?.getOrCreateOffset(fbBuilder);
     final int? OBJECT2Offset = _OBJECT2?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(27);
+    final int? OBJECT1_DATASOURCEOffset = _OBJECT1_DATASOURCE?.getOrCreateOffset(fbBuilder);
+    final int? OBJECT2_DATASOURCEOffset = _OBJECT2_DATASOURCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(29);
     fbBuilder.addFloat64(0, _CCSDS_CDM_VERS);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -1645,6 +1667,8 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(24, COLLISION_PROBABILITY_METHODOffset);
     fbBuilder.addOffset(25, OBJECT1Offset);
     fbBuilder.addOffset(26, OBJECT2Offset);
+    fbBuilder.addOffset(27, OBJECT1_DATASOURCEOffset);
+    fbBuilder.addOffset(28, OBJECT2_DATASOURCEOffset);
     return fbBuilder.endTable();
   }
 

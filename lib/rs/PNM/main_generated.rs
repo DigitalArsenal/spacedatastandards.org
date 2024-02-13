@@ -29,93 +29,21 @@ impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
 impl<'a> PNM<'a> {
   pub const VT_IPFS_CID: flatbuffers::VOffsetT = 4;
   pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 6;
-  pub const VT_SHA_512_FILE_HASH: flatbuffers::VOffsetT = 8;
-  pub const VT_SHA_256_FILE_HASH: flatbuffers::VOffsetT = 10;
-  pub const VT_MD5_FILE_DIGEST: flatbuffers::VOffsetT = 12;
-  pub const VT_SHA_1_FILE_HASH: flatbuffers::VOffsetT = 14;
-  pub const VT_ARGON2_FILE_HASH: flatbuffers::VOffsetT = 16;
-  pub const VT_BLAKE2B_FILE_HASH: flatbuffers::VOffsetT = 18;
-  pub const VT_SHA_3_FILE_HASH: flatbuffers::VOffsetT = 20;
-  pub const VT_RIPEMD_160_FILE_HASH: flatbuffers::VOffsetT = 22;
-  pub const VT_WHIRLPOOL_FILE_HASH: flatbuffers::VOffsetT = 24;
-  pub const VT_TIGER_FILE_HASH: flatbuffers::VOffsetT = 26;
-  pub const VT_CRC32: flatbuffers::VOffsetT = 28;
-  pub const VT_ADLER32_CHECKSUM: flatbuffers::VOffsetT = 30;
-  pub const VT_RABIN_FINGERPRINT: flatbuffers::VOffsetT = 32;
-  pub const VT_PEARSON_HASHING: flatbuffers::VOffsetT = 34;
-  pub const VT_BLAKE2_KEYED_HASH: flatbuffers::VOffsetT = 36;
-  pub const VT_BLAKE_256: flatbuffers::VOffsetT = 38;
-  pub const VT_CRC8: flatbuffers::VOffsetT = 40;
-  pub const VT_CRC16: flatbuffers::VOffsetT = 42;
-  pub const VT_CRC64: flatbuffers::VOffsetT = 44;
-  pub const VT_BSD_CHECKSUM: flatbuffers::VOffsetT = 46;
-  pub const VT_SYSV_CHECKSUM: flatbuffers::VOffsetT = 48;
-  pub const VT_SUM8: flatbuffers::VOffsetT = 50;
-  pub const VT_INTERNET_CHECKSUM: flatbuffers::VOffsetT = 52;
-  pub const VT_SUM24: flatbuffers::VOffsetT = 54;
-  pub const VT_SUM32: flatbuffers::VOffsetT = 56;
-  pub const VT_FLETCHER_4: flatbuffers::VOffsetT = 58;
-  pub const VT_FLETCHER_8: flatbuffers::VOffsetT = 60;
-  pub const VT_FLETCHER_16: flatbuffers::VOffsetT = 62;
-  pub const VT_FLETCHER_32: flatbuffers::VOffsetT = 64;
-  pub const VT_LUNH_ALGORITHM: flatbuffers::VOffsetT = 66;
-  pub const VT_VERHOEFF_ALGORITHM: flatbuffers::VOffsetT = 68;
-  pub const VT_DAMM_ALGORITHM: flatbuffers::VOffsetT = 70;
-  pub const VT_TABULATION_HASHING: flatbuffers::VOffsetT = 72;
-  pub const VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION: flatbuffers::VOffsetT = 74;
-  pub const VT_ZOBRIST_HASHING: flatbuffers::VOffsetT = 76;
-  pub const VT_PAUL_HSIEHS_SUPERFASTHASH: flatbuffers::VOffsetT = 78;
-  pub const VT_BUZHASH: flatbuffers::VOffsetT = 80;
-  pub const VT_FNV_HASH: flatbuffers::VOffsetT = 82;
-  pub const VT_JENKINS_HASH_FUNCTION: flatbuffers::VOffsetT = 84;
-  pub const VT_BERNSTEINS_HASH_DJB2: flatbuffers::VOffsetT = 86;
-  pub const VT_PJW_HASH_ELF_HASH: flatbuffers::VOffsetT = 88;
-  pub const VT_MURMURHASH: flatbuffers::VOffsetT = 90;
-  pub const VT_FAST_HASH: flatbuffers::VOffsetT = 92;
-  pub const VT_SPOOKYHASH: flatbuffers::VOffsetT = 94;
-  pub const VT_CITYHASH: flatbuffers::VOffsetT = 96;
-  pub const VT_FARMHASH: flatbuffers::VOffsetT = 98;
-  pub const VT_METROHASH: flatbuffers::VOffsetT = 100;
-  pub const VT_NUMERIC_HASH: flatbuffers::VOffsetT = 102;
-  pub const VT_XXHASH: flatbuffers::VOffsetT = 104;
-  pub const VT_T1HA: flatbuffers::VOffsetT = 106;
-  pub const VT_GXHASH: flatbuffers::VOffsetT = 108;
-  pub const VT_PHASH: flatbuffers::VOffsetT = 110;
-  pub const VT_DHASH: flatbuffers::VOffsetT = 112;
-  pub const VT_SDBM: flatbuffers::VOffsetT = 114;
-  pub const VT_OSDB_HASH: flatbuffers::VOffsetT = 116;
-  pub const VT_KOMIHASH: flatbuffers::VOffsetT = 118;
-  pub const VT_BLAKE3: flatbuffers::VOffsetT = 120;
-  pub const VT_ECOH: flatbuffers::VOffsetT = 122;
-  pub const VT_FSB: flatbuffers::VOffsetT = 124;
-  pub const VT_GOST: flatbuffers::VOffsetT = 126;
-  pub const VT_GROSTL: flatbuffers::VOffsetT = 128;
-  pub const VT_HAS_160: flatbuffers::VOffsetT = 130;
-  pub const VT_HAVAL: flatbuffers::VOffsetT = 132;
-  pub const VT_JH: flatbuffers::VOffsetT = 134;
-  pub const VT_LSH: flatbuffers::VOffsetT = 136;
-  pub const VT_MD2: flatbuffers::VOffsetT = 138;
-  pub const VT_MD4: flatbuffers::VOffsetT = 140;
-  pub const VT_MD5: flatbuffers::VOffsetT = 142;
-  pub const VT_MD6: flatbuffers::VOffsetT = 144;
-  pub const VT_RADIOGATUN: flatbuffers::VOffsetT = 146;
-  pub const VT_RIPEMD: flatbuffers::VOffsetT = 148;
-  pub const VT_RIPEMD_128: flatbuffers::VOffsetT = 150;
-  pub const VT_RIPEMD_256: flatbuffers::VOffsetT = 152;
-  pub const VT_RIPEMD_320: flatbuffers::VOffsetT = 154;
-  pub const VT_SHA_1: flatbuffers::VOffsetT = 156;
-  pub const VT_SHA_224: flatbuffers::VOffsetT = 158;
-  pub const VT_SHA_256: flatbuffers::VOffsetT = 160;
-  pub const VT_SHA_384: flatbuffers::VOffsetT = 162;
-  pub const VT_SHA_512: flatbuffers::VOffsetT = 164;
-  pub const VT_SHA_3: flatbuffers::VOffsetT = 166;
-  pub const VT_SKEIN: flatbuffers::VOffsetT = 168;
-  pub const VT_SNEFRU: flatbuffers::VOffsetT = 170;
-  pub const VT_SPECTRAL_HASH: flatbuffers::VOffsetT = 172;
-  pub const VT_STREEBOG: flatbuffers::VOffsetT = 174;
-  pub const VT_SWIFFT: flatbuffers::VOffsetT = 176;
-  pub const VT_TIGER: flatbuffers::VOffsetT = 178;
-  pub const VT_WHIRLPOOL: flatbuffers::VOffsetT = 180;
+  pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 8;
+  pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
+  pub const VT_XRP_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 12;
+  pub const VT_ADA_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 14;
+  pub const VT_XLM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 16;
+  pub const VT_DOGE_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 18;
+  pub const VT_XMR_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 20;
+  pub const VT_DOT_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 22;
+  pub const VT_FIL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 24;
+  pub const VT_XTZ_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 26;
+  pub const VT_ATOM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 28;
+  pub const VT_TRX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 30;
+  pub const VT_BNB_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 32;
+  pub const VT_AVAX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 34;
+  pub const VT_SOL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 36;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -127,93 +55,21 @@ impl<'a> PNM<'a> {
     args: &'args PNMArgs<'args>
   ) -> flatbuffers::WIPOffset<PNM<'bldr>> {
     let mut builder = PNMBuilder::new(_fbb);
-    if let Some(x) = args.WHIRLPOOL { builder.add_WHIRLPOOL(x); }
-    if let Some(x) = args.TIGER { builder.add_TIGER(x); }
-    if let Some(x) = args.SWIFFT { builder.add_SWIFFT(x); }
-    if let Some(x) = args.STREEBOG { builder.add_STREEBOG(x); }
-    if let Some(x) = args.SPECTRAL_HASH { builder.add_SPECTRAL_HASH(x); }
-    if let Some(x) = args.SNEFRU { builder.add_SNEFRU(x); }
-    if let Some(x) = args.SKEIN { builder.add_SKEIN(x); }
-    if let Some(x) = args.SHA_3 { builder.add_SHA_3(x); }
-    if let Some(x) = args.SHA_512 { builder.add_SHA_512(x); }
-    if let Some(x) = args.SHA_384 { builder.add_SHA_384(x); }
-    if let Some(x) = args.SHA_256 { builder.add_SHA_256(x); }
-    if let Some(x) = args.SHA_224 { builder.add_SHA_224(x); }
-    if let Some(x) = args.SHA_1 { builder.add_SHA_1(x); }
-    if let Some(x) = args.RIPEMD_320 { builder.add_RIPEMD_320(x); }
-    if let Some(x) = args.RIPEMD_256 { builder.add_RIPEMD_256(x); }
-    if let Some(x) = args.RIPEMD_128 { builder.add_RIPEMD_128(x); }
-    if let Some(x) = args.RIPEMD { builder.add_RIPEMD(x); }
-    if let Some(x) = args.RADIOGATUN { builder.add_RADIOGATUN(x); }
-    if let Some(x) = args.MD6 { builder.add_MD6(x); }
-    if let Some(x) = args.MD5 { builder.add_MD5(x); }
-    if let Some(x) = args.MD4 { builder.add_MD4(x); }
-    if let Some(x) = args.MD2 { builder.add_MD2(x); }
-    if let Some(x) = args.LSH { builder.add_LSH(x); }
-    if let Some(x) = args.JH { builder.add_JH(x); }
-    if let Some(x) = args.HAVAL { builder.add_HAVAL(x); }
-    if let Some(x) = args.HAS_160 { builder.add_HAS_160(x); }
-    if let Some(x) = args.GROSTL { builder.add_GROSTL(x); }
-    if let Some(x) = args.GOST { builder.add_GOST(x); }
-    if let Some(x) = args.FSB { builder.add_FSB(x); }
-    if let Some(x) = args.ECOH { builder.add_ECOH(x); }
-    if let Some(x) = args.BLAKE3 { builder.add_BLAKE3(x); }
-    if let Some(x) = args.KOMIHASH { builder.add_KOMIHASH(x); }
-    if let Some(x) = args.OSDB_HASH { builder.add_OSDB_HASH(x); }
-    if let Some(x) = args.SDBM { builder.add_SDBM(x); }
-    if let Some(x) = args.DHASH { builder.add_DHASH(x); }
-    if let Some(x) = args.PHASH { builder.add_PHASH(x); }
-    if let Some(x) = args.GXHASH { builder.add_GXHASH(x); }
-    if let Some(x) = args.T1HA { builder.add_T1HA(x); }
-    if let Some(x) = args.XXHASH { builder.add_XXHASH(x); }
-    if let Some(x) = args.NUMERIC_HASH { builder.add_NUMERIC_HASH(x); }
-    if let Some(x) = args.METROHASH { builder.add_METROHASH(x); }
-    if let Some(x) = args.FARMHASH { builder.add_FARMHASH(x); }
-    if let Some(x) = args.CITYHASH { builder.add_CITYHASH(x); }
-    if let Some(x) = args.SPOOKYHASH { builder.add_SPOOKYHASH(x); }
-    if let Some(x) = args.FAST_HASH { builder.add_FAST_HASH(x); }
-    if let Some(x) = args.MURMURHASH { builder.add_MURMURHASH(x); }
-    if let Some(x) = args.PJW_HASH_ELF_HASH { builder.add_PJW_HASH_ELF_HASH(x); }
-    if let Some(x) = args.BERNSTEINS_HASH_DJB2 { builder.add_BERNSTEINS_HASH_DJB2(x); }
-    if let Some(x) = args.JENKINS_HASH_FUNCTION { builder.add_JENKINS_HASH_FUNCTION(x); }
-    if let Some(x) = args.FNV_HASH { builder.add_FNV_HASH(x); }
-    if let Some(x) = args.BUZHASH { builder.add_BUZHASH(x); }
-    if let Some(x) = args.PAUL_HSIEHS_SUPERFASTHASH { builder.add_PAUL_HSIEHS_SUPERFASTHASH(x); }
-    if let Some(x) = args.ZOBRIST_HASHING { builder.add_ZOBRIST_HASHING(x); }
-    if let Some(x) = args.UNIVERSAL_ONE_WAY_HASH_FUNCTION { builder.add_UNIVERSAL_ONE_WAY_HASH_FUNCTION(x); }
-    if let Some(x) = args.TABULATION_HASHING { builder.add_TABULATION_HASHING(x); }
-    if let Some(x) = args.DAMM_ALGORITHM { builder.add_DAMM_ALGORITHM(x); }
-    if let Some(x) = args.VERHOEFF_ALGORITHM { builder.add_VERHOEFF_ALGORITHM(x); }
-    if let Some(x) = args.LUNH_ALGORITHM { builder.add_LUNH_ALGORITHM(x); }
-    if let Some(x) = args.FLETCHER_32 { builder.add_FLETCHER_32(x); }
-    if let Some(x) = args.FLETCHER_16 { builder.add_FLETCHER_16(x); }
-    if let Some(x) = args.FLETCHER_8 { builder.add_FLETCHER_8(x); }
-    if let Some(x) = args.FLETCHER_4 { builder.add_FLETCHER_4(x); }
-    if let Some(x) = args.SUM32 { builder.add_SUM32(x); }
-    if let Some(x) = args.SUM24 { builder.add_SUM24(x); }
-    if let Some(x) = args.INTERNET_CHECKSUM { builder.add_INTERNET_CHECKSUM(x); }
-    if let Some(x) = args.SUM8 { builder.add_SUM8(x); }
-    if let Some(x) = args.SYSV_CHECKSUM { builder.add_SYSV_CHECKSUM(x); }
-    if let Some(x) = args.BSD_CHECKSUM { builder.add_BSD_CHECKSUM(x); }
-    if let Some(x) = args.CRC64 { builder.add_CRC64(x); }
-    if let Some(x) = args.CRC16 { builder.add_CRC16(x); }
-    if let Some(x) = args.CRC8 { builder.add_CRC8(x); }
-    if let Some(x) = args.BLAKE_256 { builder.add_BLAKE_256(x); }
-    if let Some(x) = args.BLAKE2_KEYED_HASH { builder.add_BLAKE2_KEYED_HASH(x); }
-    if let Some(x) = args.PEARSON_HASHING { builder.add_PEARSON_HASHING(x); }
-    if let Some(x) = args.RABIN_FINGERPRINT { builder.add_RABIN_FINGERPRINT(x); }
-    if let Some(x) = args.ADLER32_CHECKSUM { builder.add_ADLER32_CHECKSUM(x); }
-    if let Some(x) = args.CRC32 { builder.add_CRC32(x); }
-    if let Some(x) = args.TIGER_FILE_HASH { builder.add_TIGER_FILE_HASH(x); }
-    if let Some(x) = args.WHIRLPOOL_FILE_HASH { builder.add_WHIRLPOOL_FILE_HASH(x); }
-    if let Some(x) = args.RIPEMD_160_FILE_HASH { builder.add_RIPEMD_160_FILE_HASH(x); }
-    if let Some(x) = args.SHA_3_FILE_HASH { builder.add_SHA_3_FILE_HASH(x); }
-    if let Some(x) = args.BLAKE2B_FILE_HASH { builder.add_BLAKE2B_FILE_HASH(x); }
-    if let Some(x) = args.ARGON2_FILE_HASH { builder.add_ARGON2_FILE_HASH(x); }
-    if let Some(x) = args.SHA_1_FILE_HASH { builder.add_SHA_1_FILE_HASH(x); }
-    if let Some(x) = args.MD5_FILE_DIGEST { builder.add_MD5_FILE_DIGEST(x); }
-    if let Some(x) = args.SHA_256_FILE_HASH { builder.add_SHA_256_FILE_HASH(x); }
-    if let Some(x) = args.SHA_512_FILE_HASH { builder.add_SHA_512_FILE_HASH(x); }
+    if let Some(x) = args.SOL_DIGITAL_SIGNATURE { builder.add_SOL_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.AVAX_DIGITAL_SIGNATURE { builder.add_AVAX_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.BNB_DIGITAL_SIGNATURE { builder.add_BNB_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.TRX_DIGITAL_SIGNATURE { builder.add_TRX_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.ATOM_DIGITAL_SIGNATURE { builder.add_ATOM_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.XTZ_DIGITAL_SIGNATURE { builder.add_XTZ_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.FIL_DIGITAL_SIGNATURE { builder.add_FIL_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.DOT_DIGITAL_SIGNATURE { builder.add_DOT_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.XMR_DIGITAL_SIGNATURE { builder.add_XMR_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.DOGE_DIGITAL_SIGNATURE { builder.add_DOGE_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.XLM_DIGITAL_SIGNATURE { builder.add_XLM_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.ADA_DIGITAL_SIGNATURE { builder.add_ADA_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.XRP_DIGITAL_SIGNATURE { builder.add_XRP_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.LTC_DIGITAL_SIGNATURE { builder.add_LTC_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.BTC_DIGITAL_SIGNATURE { builder.add_BTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.ETH_DIGITAL_SIGNATURE { builder.add_ETH_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.IPFS_CID { builder.add_IPFS_CID(x); }
     builder.finish()
@@ -226,357 +82,69 @@ impl<'a> PNM<'a> {
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let SHA_512_FILE_HASH = self.SHA_512_FILE_HASH().map(|x| {
+    let BTC_DIGITAL_SIGNATURE = self.BTC_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let SHA_256_FILE_HASH = self.SHA_256_FILE_HASH().map(|x| {
+    let LTC_DIGITAL_SIGNATURE = self.LTC_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let MD5_FILE_DIGEST = self.MD5_FILE_DIGEST().map(|x| {
+    let XRP_DIGITAL_SIGNATURE = self.XRP_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let SHA_1_FILE_HASH = self.SHA_1_FILE_HASH().map(|x| {
+    let ADA_DIGITAL_SIGNATURE = self.ADA_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let ARGON2_FILE_HASH = self.ARGON2_FILE_HASH().map(|x| {
+    let XLM_DIGITAL_SIGNATURE = self.XLM_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let BLAKE2B_FILE_HASH = self.BLAKE2B_FILE_HASH().map(|x| {
+    let DOGE_DIGITAL_SIGNATURE = self.DOGE_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let SHA_3_FILE_HASH = self.SHA_3_FILE_HASH().map(|x| {
+    let XMR_DIGITAL_SIGNATURE = self.XMR_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let RIPEMD_160_FILE_HASH = self.RIPEMD_160_FILE_HASH().map(|x| {
+    let DOT_DIGITAL_SIGNATURE = self.DOT_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let WHIRLPOOL_FILE_HASH = self.WHIRLPOOL_FILE_HASH().map(|x| {
+    let FIL_DIGITAL_SIGNATURE = self.FIL_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let TIGER_FILE_HASH = self.TIGER_FILE_HASH().map(|x| {
+    let XTZ_DIGITAL_SIGNATURE = self.XTZ_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let CRC32 = self.CRC32().map(|x| {
+    let ATOM_DIGITAL_SIGNATURE = self.ATOM_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let ADLER32_CHECKSUM = self.ADLER32_CHECKSUM().map(|x| {
+    let TRX_DIGITAL_SIGNATURE = self.TRX_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let RABIN_FINGERPRINT = self.RABIN_FINGERPRINT().map(|x| {
+    let BNB_DIGITAL_SIGNATURE = self.BNB_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let PEARSON_HASHING = self.PEARSON_HASHING().map(|x| {
+    let AVAX_DIGITAL_SIGNATURE = self.AVAX_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let BLAKE2_KEYED_HASH = self.BLAKE2_KEYED_HASH().map(|x| {
-      x.to_string()
-    });
-    let BLAKE_256 = self.BLAKE_256().map(|x| {
-      x.to_string()
-    });
-    let CRC8 = self.CRC8().map(|x| {
-      x.to_string()
-    });
-    let CRC16 = self.CRC16().map(|x| {
-      x.to_string()
-    });
-    let CRC64 = self.CRC64().map(|x| {
-      x.to_string()
-    });
-    let BSD_CHECKSUM = self.BSD_CHECKSUM().map(|x| {
-      x.to_string()
-    });
-    let SYSV_CHECKSUM = self.SYSV_CHECKSUM().map(|x| {
-      x.to_string()
-    });
-    let SUM8 = self.SUM8().map(|x| {
-      x.to_string()
-    });
-    let INTERNET_CHECKSUM = self.INTERNET_CHECKSUM().map(|x| {
-      x.to_string()
-    });
-    let SUM24 = self.SUM24().map(|x| {
-      x.to_string()
-    });
-    let SUM32 = self.SUM32().map(|x| {
-      x.to_string()
-    });
-    let FLETCHER_4 = self.FLETCHER_4().map(|x| {
-      x.to_string()
-    });
-    let FLETCHER_8 = self.FLETCHER_8().map(|x| {
-      x.to_string()
-    });
-    let FLETCHER_16 = self.FLETCHER_16().map(|x| {
-      x.to_string()
-    });
-    let FLETCHER_32 = self.FLETCHER_32().map(|x| {
-      x.to_string()
-    });
-    let LUNH_ALGORITHM = self.LUNH_ALGORITHM().map(|x| {
-      x.to_string()
-    });
-    let VERHOEFF_ALGORITHM = self.VERHOEFF_ALGORITHM().map(|x| {
-      x.to_string()
-    });
-    let DAMM_ALGORITHM = self.DAMM_ALGORITHM().map(|x| {
-      x.to_string()
-    });
-    let TABULATION_HASHING = self.TABULATION_HASHING().map(|x| {
-      x.to_string()
-    });
-    let UNIVERSAL_ONE_WAY_HASH_FUNCTION = self.UNIVERSAL_ONE_WAY_HASH_FUNCTION().map(|x| {
-      x.to_string()
-    });
-    let ZOBRIST_HASHING = self.ZOBRIST_HASHING().map(|x| {
-      x.to_string()
-    });
-    let PAUL_HSIEHS_SUPERFASTHASH = self.PAUL_HSIEHS_SUPERFASTHASH().map(|x| {
-      x.to_string()
-    });
-    let BUZHASH = self.BUZHASH().map(|x| {
-      x.to_string()
-    });
-    let FNV_HASH = self.FNV_HASH().map(|x| {
-      x.to_string()
-    });
-    let JENKINS_HASH_FUNCTION = self.JENKINS_HASH_FUNCTION().map(|x| {
-      x.to_string()
-    });
-    let BERNSTEINS_HASH_DJB2 = self.BERNSTEINS_HASH_DJB2().map(|x| {
-      x.to_string()
-    });
-    let PJW_HASH_ELF_HASH = self.PJW_HASH_ELF_HASH().map(|x| {
-      x.to_string()
-    });
-    let MURMURHASH = self.MURMURHASH().map(|x| {
-      x.to_string()
-    });
-    let FAST_HASH = self.FAST_HASH().map(|x| {
-      x.to_string()
-    });
-    let SPOOKYHASH = self.SPOOKYHASH().map(|x| {
-      x.to_string()
-    });
-    let CITYHASH = self.CITYHASH().map(|x| {
-      x.to_string()
-    });
-    let FARMHASH = self.FARMHASH().map(|x| {
-      x.to_string()
-    });
-    let METROHASH = self.METROHASH().map(|x| {
-      x.to_string()
-    });
-    let NUMERIC_HASH = self.NUMERIC_HASH().map(|x| {
-      x.to_string()
-    });
-    let XXHASH = self.XXHASH().map(|x| {
-      x.to_string()
-    });
-    let T1HA = self.T1HA().map(|x| {
-      x.to_string()
-    });
-    let GXHASH = self.GXHASH().map(|x| {
-      x.to_string()
-    });
-    let PHASH = self.PHASH().map(|x| {
-      x.to_string()
-    });
-    let DHASH = self.DHASH().map(|x| {
-      x.to_string()
-    });
-    let SDBM = self.SDBM().map(|x| {
-      x.to_string()
-    });
-    let OSDB_HASH = self.OSDB_HASH().map(|x| {
-      x.to_string()
-    });
-    let KOMIHASH = self.KOMIHASH().map(|x| {
-      x.to_string()
-    });
-    let BLAKE3 = self.BLAKE3().map(|x| {
-      x.to_string()
-    });
-    let ECOH = self.ECOH().map(|x| {
-      x.to_string()
-    });
-    let FSB = self.FSB().map(|x| {
-      x.to_string()
-    });
-    let GOST = self.GOST().map(|x| {
-      x.to_string()
-    });
-    let GROSTL = self.GROSTL().map(|x| {
-      x.to_string()
-    });
-    let HAS_160 = self.HAS_160().map(|x| {
-      x.to_string()
-    });
-    let HAVAL = self.HAVAL().map(|x| {
-      x.to_string()
-    });
-    let JH = self.JH().map(|x| {
-      x.to_string()
-    });
-    let LSH = self.LSH().map(|x| {
-      x.to_string()
-    });
-    let MD2 = self.MD2().map(|x| {
-      x.to_string()
-    });
-    let MD4 = self.MD4().map(|x| {
-      x.to_string()
-    });
-    let MD5 = self.MD5().map(|x| {
-      x.to_string()
-    });
-    let MD6 = self.MD6().map(|x| {
-      x.to_string()
-    });
-    let RADIOGATUN = self.RADIOGATUN().map(|x| {
-      x.to_string()
-    });
-    let RIPEMD = self.RIPEMD().map(|x| {
-      x.to_string()
-    });
-    let RIPEMD_128 = self.RIPEMD_128().map(|x| {
-      x.to_string()
-    });
-    let RIPEMD_256 = self.RIPEMD_256().map(|x| {
-      x.to_string()
-    });
-    let RIPEMD_320 = self.RIPEMD_320().map(|x| {
-      x.to_string()
-    });
-    let SHA_1 = self.SHA_1().map(|x| {
-      x.to_string()
-    });
-    let SHA_224 = self.SHA_224().map(|x| {
-      x.to_string()
-    });
-    let SHA_256 = self.SHA_256().map(|x| {
-      x.to_string()
-    });
-    let SHA_384 = self.SHA_384().map(|x| {
-      x.to_string()
-    });
-    let SHA_512 = self.SHA_512().map(|x| {
-      x.to_string()
-    });
-    let SHA_3 = self.SHA_3().map(|x| {
-      x.to_string()
-    });
-    let SKEIN = self.SKEIN().map(|x| {
-      x.to_string()
-    });
-    let SNEFRU = self.SNEFRU().map(|x| {
-      x.to_string()
-    });
-    let SPECTRAL_HASH = self.SPECTRAL_HASH().map(|x| {
-      x.to_string()
-    });
-    let STREEBOG = self.STREEBOG().map(|x| {
-      x.to_string()
-    });
-    let SWIFFT = self.SWIFFT().map(|x| {
-      x.to_string()
-    });
-    let TIGER = self.TIGER().map(|x| {
-      x.to_string()
-    });
-    let WHIRLPOOL = self.WHIRLPOOL().map(|x| {
+    let SOL_DIGITAL_SIGNATURE = self.SOL_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
     PNMT {
       IPFS_CID,
       ETH_DIGITAL_SIGNATURE,
-      SHA_512_FILE_HASH,
-      SHA_256_FILE_HASH,
-      MD5_FILE_DIGEST,
-      SHA_1_FILE_HASH,
-      ARGON2_FILE_HASH,
-      BLAKE2B_FILE_HASH,
-      SHA_3_FILE_HASH,
-      RIPEMD_160_FILE_HASH,
-      WHIRLPOOL_FILE_HASH,
-      TIGER_FILE_HASH,
-      CRC32,
-      ADLER32_CHECKSUM,
-      RABIN_FINGERPRINT,
-      PEARSON_HASHING,
-      BLAKE2_KEYED_HASH,
-      BLAKE_256,
-      CRC8,
-      CRC16,
-      CRC64,
-      BSD_CHECKSUM,
-      SYSV_CHECKSUM,
-      SUM8,
-      INTERNET_CHECKSUM,
-      SUM24,
-      SUM32,
-      FLETCHER_4,
-      FLETCHER_8,
-      FLETCHER_16,
-      FLETCHER_32,
-      LUNH_ALGORITHM,
-      VERHOEFF_ALGORITHM,
-      DAMM_ALGORITHM,
-      TABULATION_HASHING,
-      UNIVERSAL_ONE_WAY_HASH_FUNCTION,
-      ZOBRIST_HASHING,
-      PAUL_HSIEHS_SUPERFASTHASH,
-      BUZHASH,
-      FNV_HASH,
-      JENKINS_HASH_FUNCTION,
-      BERNSTEINS_HASH_DJB2,
-      PJW_HASH_ELF_HASH,
-      MURMURHASH,
-      FAST_HASH,
-      SPOOKYHASH,
-      CITYHASH,
-      FARMHASH,
-      METROHASH,
-      NUMERIC_HASH,
-      XXHASH,
-      T1HA,
-      GXHASH,
-      PHASH,
-      DHASH,
-      SDBM,
-      OSDB_HASH,
-      KOMIHASH,
-      BLAKE3,
-      ECOH,
-      FSB,
-      GOST,
-      GROSTL,
-      HAS_160,
-      HAVAL,
-      JH,
-      LSH,
-      MD2,
-      MD4,
-      MD5,
-      MD6,
-      RADIOGATUN,
-      RIPEMD,
-      RIPEMD_128,
-      RIPEMD_256,
-      RIPEMD_320,
-      SHA_1,
-      SHA_224,
-      SHA_256,
-      SHA_384,
-      SHA_512,
-      SHA_3,
-      SKEIN,
-      SNEFRU,
-      SPECTRAL_HASH,
-      STREEBOG,
-      SWIFFT,
-      TIGER,
-      WHIRLPOOL,
+      BTC_DIGITAL_SIGNATURE,
+      LTC_DIGITAL_SIGNATURE,
+      XRP_DIGITAL_SIGNATURE,
+      ADA_DIGITAL_SIGNATURE,
+      XLM_DIGITAL_SIGNATURE,
+      DOGE_DIGITAL_SIGNATURE,
+      XMR_DIGITAL_SIGNATURE,
+      DOT_DIGITAL_SIGNATURE,
+      FIL_DIGITAL_SIGNATURE,
+      XTZ_DIGITAL_SIGNATURE,
+      ATOM_DIGITAL_SIGNATURE,
+      TRX_DIGITAL_SIGNATURE,
+      BNB_DIGITAL_SIGNATURE,
+      AVAX_DIGITAL_SIGNATURE,
+      SOL_DIGITAL_SIGNATURE,
     }
   }
 
@@ -600,875 +168,155 @@ impl<'a> PNM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ETH_DIGITAL_SIGNATURE, None)}
   }
-  /// SHA-512 File Hash
-  /// SHA-512 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
+  /// Bitcoin Digital Signature
+  /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
+  /// Refer to the Bitcoin Blockchain integration section for details.
   #[inline]
-  pub fn SHA_512_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn BTC_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_512_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BTC_DIGITAL_SIGNATURE, None)}
   }
-  /// SHA-256 File Hash
-  /// SHA-256 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
+  /// Litecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
+  /// Refer to the Litecoin Blockchain integration section for details.
   #[inline]
-  pub fn SHA_256_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn LTC_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_256_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_LTC_DIGITAL_SIGNATURE, None)}
   }
-  /// MD5 File Digest
-  /// MD5 digest of the file for backward compatibility with older systems.
-  /// Located in the legacy support section of the document.
+  /// Ripple Digital Signature
+  /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
+  /// Refer to the Ripple Blockchain integration section for details.
   #[inline]
-  pub fn MD5_FILE_DIGEST(&self) -> Option<&'a str> {
+  pub fn XRP_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MD5_FILE_DIGEST, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XRP_DIGITAL_SIGNATURE, None)}
   }
-  /// SHA-1 File Hash
-  /// SHA-1 hash of the file, used in certain legacy systems for compatibility.
-  /// Refer to the legacy systems integration section for more information.
+  /// Cardano Digital Signature
+  /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
+  /// Refer to the Cardano Blockchain integration section for details.
   #[inline]
-  pub fn SHA_1_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn ADA_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_1_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ADA_DIGITAL_SIGNATURE, None)}
   }
-  /// Argon2 File Hash
-  /// Argon2 hash of the file, providing state-of-the-art password hashing.
-  /// This is mentioned in the advanced security measures section.
+  /// Stellar Digital Signature
+  /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
+  /// Refer to the Stellar Blockchain integration section for details.
   #[inline]
-  pub fn ARGON2_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn XLM_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ARGON2_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XLM_DIGITAL_SIGNATURE, None)}
   }
-  /// Blake2b File Hash
-  /// Blake2b hash of the file, known for high-speed cryptographic hashing.
-  /// Refer to the high-performance security solutions section.
+  /// Dogecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
+  /// Refer to the Dogecoin Blockchain integration section for details.
   #[inline]
-  pub fn BLAKE2B_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn DOGE_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BLAKE2B_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, None)}
   }
-  /// SHA-3 File Hash
-  /// SHA-3 hash of the file, offering a stronger alternative to SHA-2.
-  /// Located in the modern cryptographic standards section.
+  /// Monero Digital Signature
+  /// Digital signature of the IPFS file hash using Monero's signing mechanism.
+  /// Refer to the Monero Blockchain integration section for details.
   #[inline]
-  pub fn SHA_3_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn XMR_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_3_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XMR_DIGITAL_SIGNATURE, None)}
   }
-  /// RIPEMD-160 File Hash
-  /// RIPEMD-160 hash of the file, often used in blockchain applications for address generation.
-  /// Discussed in the blockchain compatibility section.
+  /// Polkadot Digital Signature
+  /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
+  /// Refer to the Polkadot Blockchain integration section for details.
   #[inline]
-  pub fn RIPEMD_160_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn DOT_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RIPEMD_160_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOT_DIGITAL_SIGNATURE, None)}
   }
-  /// Whirlpool File Hash
-  /// Whirlpool hash of the file, designed for integrity protection and digital fingerprinting.
-  /// Refer to the data integrity and authentication section.
+  /// Filecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
+  /// Refer to the Filecoin Blockchain integration section for details.
   #[inline]
-  pub fn WHIRLPOOL_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn FIL_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_WHIRLPOOL_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FIL_DIGITAL_SIGNATURE, None)}
   }
-  /// Tiger File Hash
-  /// Tiger hash of the file, optimized for fast hashing on 64-bit platforms.
-  /// Detailed in the high-speed cryptographic operations section.
+  /// Tezos Digital Signature
+  /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
+  /// Refer to the Tezos Blockchain integration section for details.
   #[inline]
-  pub fn TIGER_FILE_HASH(&self) -> Option<&'a str> {
+  pub fn XTZ_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TIGER_FILE_HASH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, None)}
   }
-  /// Cyclic Redundancy Check (CRC) 32
-  /// Cyclic redundancy check with a length of 32 bits.
-  /// Refer to CRC section for more details.
+  /// Cosmos Digital Signature
+  /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
+  /// Refer to the Cosmos Blockchain integration section for details.
   #[inline]
-  pub fn CRC32(&self) -> Option<&'a str> {
+  pub fn ATOM_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CRC32, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, None)}
   }
-  /// Adler-32 Checksum
-  /// Adler-32 checksum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
+  /// Tron Digital Signature
+  /// Digital signature of the IPFS file hash using Tron's signing mechanism.
+  /// Refer to the Tron Blockchain integration section for details.
   #[inline]
-  pub fn ADLER32_CHECKSUM(&self) -> Option<&'a str> {
+  pub fn TRX_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ADLER32_CHECKSUM, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TRX_DIGITAL_SIGNATURE, None)}
   }
-  /// Universal Hash Function Family - Rabin Fingerprint
-  /// Variable-length hash function using Rabin fingerprinting.
-  /// Refer to the Universal hash function families section for details.
+  /// Binance Coin Digital Signature
+  /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
+  /// Refer to the Binance Coin Blockchain integration section for details.
   #[inline]
-  pub fn RABIN_FINGERPRINT(&self) -> Option<&'a str> {
+  pub fn BNB_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RABIN_FINGERPRINT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BNB_DIGITAL_SIGNATURE, None)}
   }
-  /// Non-Cryptographic Hash Function - Pearson Hashing
-  /// Non-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.
-  /// Refer to the Non-cryptographic hash functions section for details.
+  /// Avalanche Digital Signature
+  /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
+  /// Refer to the Avalanche Blockchain integration section for details.
   #[inline]
-  pub fn PEARSON_HASHING(&self) -> Option<&'a str> {
+  pub fn AVAX_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_PEARSON_HASHING, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, None)}
   }
-  /// Keyed Cryptographic Hash Function - BLAKE2
-  /// Keyed hash function (prefix-MAC) with variable length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
+  /// Solana Digital Signature
+  /// Digital signature of the IPFS file hash using Solana's signing mechanism.
+  /// Refer to the Solana Blockchain integration section for details.
   #[inline]
-  pub fn BLAKE2_KEYED_HASH(&self) -> Option<&'a str> {
+  pub fn SOL_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BLAKE2_KEYED_HASH, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - BLAKE-256
-  /// Cryptographic hash function with a length of 256 bits, based on HAIFA structure.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn BLAKE_256(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BLAKE_256, None)}
-  }
-  /// CRC-8
-  /// Cyclic redundancy check with a length of 8 bits.
-  /// Refer to CRC section for more details.
-  #[inline]
-  pub fn CRC8(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CRC8, None)}
-  }
-  /// CRC-16
-  /// Cyclic redundancy check with a length of 16 bits.
-  /// Refer to CRC section for more details.
-  #[inline]
-  pub fn CRC16(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CRC16, None)}
-  }
-  /// CRC-64
-  /// Cyclic redundancy check with a length of 64 bits.
-  /// Refer to CRC section for more details.
-  #[inline]
-  pub fn CRC64(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CRC64, None)}
-  }
-  /// BSD Checksum
-  /// BSD checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn BSD_CHECKSUM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BSD_CHECKSUM, None)}
-  }
-  /// SYSV Checksum
-  /// SYSV checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn SYSV_CHECKSUM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SYSV_CHECKSUM, None)}
-  }
-  /// Sum8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn SUM8(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SUM8, None)}
-  }
-  /// Internet Checksum
-  /// Internet checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn INTERNET_CHECKSUM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_INTERNET_CHECKSUM, None)}
-  }
-  /// Sum24
-  /// Sum with a length of 24 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn SUM24(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SUM24, None)}
-  }
-  /// Sum32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn SUM32(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SUM32, None)}
-  }
-  /// Fletcher-4
-  /// Sum with a length of 4 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn FLETCHER_4(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FLETCHER_4, None)}
-  }
-  /// Fletcher-8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn FLETCHER_8(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FLETCHER_8, None)}
-  }
-  /// Fletcher-16
-  /// Sum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn FLETCHER_16(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FLETCHER_16, None)}
-  }
-  /// Fletcher-32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn FLETCHER_32(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FLETCHER_32, None)}
-  }
-  /// Luhn Algorithm
-  /// Luhn algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn LUNH_ALGORITHM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_LUNH_ALGORITHM, None)}
-  }
-  /// Verhoeff Algorithm
-  /// Verhoeff algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn VERHOEFF_ALGORITHM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_VERHOEFF_ALGORITHM, None)}
-  }
-  /// Damm Algorithm
-  /// Damm algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  #[inline]
-  pub fn DAMM_ALGORITHM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DAMM_ALGORITHM, None)}
-  }
-  /// Universal Hash Function Family - Tabulation Hashing
-  /// Variable-length hash function using tabulation hashing.
-  /// Refer to the Universal hash function families section for details.
-  #[inline]
-  pub fn TABULATION_HASHING(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TABULATION_HASHING, None)}
-  }
-  /// Universal Hash Function Family - Universal One-Way Hash Function
-  /// Universal one-way hash function with arbitrary length.
-  /// Refer to the Universal hash function families section for details.
-  #[inline]
-  pub fn UNIVERSAL_ONE_WAY_HASH_FUNCTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION, None)}
-  }
-  /// Universal Hash Function Family - Zobrist Hashing
-  /// Variable-length hash function using Zobrist hashing.
-  /// Refer to the Universal hash function families section for details.
-  #[inline]
-  pub fn ZOBRIST_HASHING(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ZOBRIST_HASHING, None)}
-  }
-  /// Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash
-  /// Non-cryptographic hash function with a length of 32 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn PAUL_HSIEHS_SUPERFASTHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_PAUL_HSIEHS_SUPERFASTHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - Buzhash
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn BUZHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BUZHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn FNV_HASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FNV_HASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - Jenkins Hash Function
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn JENKINS_HASH_FUNCTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_JENKINS_HASH_FUNCTION, None)}
-  }
-  /// Non-Cryptographic Hash Function - Bernstein's Hash (djb2)
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn BERNSTEINS_HASH_DJB2(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BERNSTEINS_HASH_DJB2, None)}
-  }
-  /// Non-Cryptographic Hash Function - PJW Hash / Elf Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn PJW_HASH_ELF_HASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_PJW_HASH_ELF_HASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - MurmurHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn MURMURHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MURMURHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - Fast-Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn FAST_HASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FAST_HASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - SpookyHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn SPOOKYHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SPOOKYHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - CityHash
-  /// Non-cryptographic hash function with a length of 32, 64, 128, or 256 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn CITYHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CITYHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - FarmHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn FARMHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FARMHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - MetroHash
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn METROHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_METROHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - Numeric Hash (nhash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn NUMERIC_HASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_NUMERIC_HASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - xxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn XXHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XXHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn T1HA(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_T1HA, None)}
-  }
-  /// Non-Cryptographic Hash Function - GxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn GXHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_GXHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - pHash
-  /// Non-cryptographic hash function with fixed or variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn PHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_PHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - dhash
-  /// Non-cryptographic hash function with a length of 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn DHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DHASH, None)}
-  }
-  /// Non-Cryptographic Hash Function - SDBM
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  #[inline]
-  pub fn SDBM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SDBM, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - OSDB Hash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn OSDB_HASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_OSDB_HASH, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - komihash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn KOMIHASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_KOMIHASH, None)}
-  }
-  /// Keyed Cryptographic Hash Function - BLAKE3
-  /// Keyed hash function with arbitrary length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn BLAKE3(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BLAKE3, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - ECOH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn ECOH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ECOH, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - FSB
-  /// Cryptographic hash function with a length of 160 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn FSB(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FSB, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - GOST
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn GOST(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_GOST, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Grøstl
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn GROSTL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_GROSTL, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - HAS-160
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn HAS_160(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_HAS_160, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - HAVAL
-  /// Cryptographic hash function with a length of 128 to 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn HAVAL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_HAVAL, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - JH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn JH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_JH, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - LSH
-  /// Cryptographic hash function with a length of 256 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn LSH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_LSH, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - MD2
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn MD2(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MD2, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - MD4
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn MD4(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MD4, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - MD5
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn MD5(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MD5, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - MD6
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn MD6(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MD6, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - RadioGatún
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn RADIOGATUN(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RADIOGATUN, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn RIPEMD(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RIPEMD, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-128
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn RIPEMD_128(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RIPEMD_128, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn RIPEMD_256(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RIPEMD_256, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-320
-  /// Cryptographic hash function with a length of 320 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn RIPEMD_320(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_RIPEMD_320, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-1
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SHA_1(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_1, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-224
-  /// Cryptographic hash function with a length of 224 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SHA_224(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_224, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SHA_256(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_256, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-384
-  /// Cryptographic hash function with a length of 384 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SHA_384(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_384, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-512
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SHA_512(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_512, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SHA-3
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SHA_3(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SHA_3, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Skein
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SKEIN(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SKEIN, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Snefru
-  /// Cryptographic hash function with a length of 128 or 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SNEFRU(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SNEFRU, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Spectral Hash
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SPECTRAL_HASH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SPECTRAL_HASH, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Streebog
-  /// Cryptographic hash function with a length of 256 or 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn STREEBOG(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_STREEBOG, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - SWIFFT
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn SWIFFT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SWIFFT, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Tiger
-  /// Cryptographic hash function with a length of 192 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn TIGER(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TIGER, None)}
-  }
-  /// Unkeyed Cryptographic Hash Function - Whirlpool
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  #[inline]
-  pub fn WHIRLPOOL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_WHIRLPOOL, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SOL_DIGITAL_SIGNATURE, None)}
   }
 }
 
@@ -1481,93 +329,21 @@ impl flatbuffers::Verifiable for PNM<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IPFS_CID", Self::VT_IPFS_CID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ETH_DIGITAL_SIGNATURE", Self::VT_ETH_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_512_FILE_HASH", Self::VT_SHA_512_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_256_FILE_HASH", Self::VT_SHA_256_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MD5_FILE_DIGEST", Self::VT_MD5_FILE_DIGEST, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_1_FILE_HASH", Self::VT_SHA_1_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ARGON2_FILE_HASH", Self::VT_ARGON2_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BLAKE2B_FILE_HASH", Self::VT_BLAKE2B_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_3_FILE_HASH", Self::VT_SHA_3_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RIPEMD_160_FILE_HASH", Self::VT_RIPEMD_160_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("WHIRLPOOL_FILE_HASH", Self::VT_WHIRLPOOL_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIGER_FILE_HASH", Self::VT_TIGER_FILE_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CRC32", Self::VT_CRC32, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADLER32_CHECKSUM", Self::VT_ADLER32_CHECKSUM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RABIN_FINGERPRINT", Self::VT_RABIN_FINGERPRINT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PEARSON_HASHING", Self::VT_PEARSON_HASHING, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BLAKE2_KEYED_HASH", Self::VT_BLAKE2_KEYED_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BLAKE_256", Self::VT_BLAKE_256, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CRC8", Self::VT_CRC8, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CRC16", Self::VT_CRC16, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CRC64", Self::VT_CRC64, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BSD_CHECKSUM", Self::VT_BSD_CHECKSUM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SYSV_CHECKSUM", Self::VT_SYSV_CHECKSUM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SUM8", Self::VT_SUM8, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INTERNET_CHECKSUM", Self::VT_INTERNET_CHECKSUM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SUM24", Self::VT_SUM24, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SUM32", Self::VT_SUM32, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FLETCHER_4", Self::VT_FLETCHER_4, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FLETCHER_8", Self::VT_FLETCHER_8, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FLETCHER_16", Self::VT_FLETCHER_16, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FLETCHER_32", Self::VT_FLETCHER_32, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LUNH_ALGORITHM", Self::VT_LUNH_ALGORITHM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VERHOEFF_ALGORITHM", Self::VT_VERHOEFF_ALGORITHM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DAMM_ALGORITHM", Self::VT_DAMM_ALGORITHM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TABULATION_HASHING", Self::VT_TABULATION_HASHING, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("UNIVERSAL_ONE_WAY_HASH_FUNCTION", Self::VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ZOBRIST_HASHING", Self::VT_ZOBRIST_HASHING, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PAUL_HSIEHS_SUPERFASTHASH", Self::VT_PAUL_HSIEHS_SUPERFASTHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BUZHASH", Self::VT_BUZHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FNV_HASH", Self::VT_FNV_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("JENKINS_HASH_FUNCTION", Self::VT_JENKINS_HASH_FUNCTION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BERNSTEINS_HASH_DJB2", Self::VT_BERNSTEINS_HASH_DJB2, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PJW_HASH_ELF_HASH", Self::VT_PJW_HASH_ELF_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MURMURHASH", Self::VT_MURMURHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FAST_HASH", Self::VT_FAST_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SPOOKYHASH", Self::VT_SPOOKYHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CITYHASH", Self::VT_CITYHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FARMHASH", Self::VT_FARMHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("METROHASH", Self::VT_METROHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NUMERIC_HASH", Self::VT_NUMERIC_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XXHASH", Self::VT_XXHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("T1HA", Self::VT_T1HA, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GXHASH", Self::VT_GXHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PHASH", Self::VT_PHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DHASH", Self::VT_DHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SDBM", Self::VT_SDBM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OSDB_HASH", Self::VT_OSDB_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KOMIHASH", Self::VT_KOMIHASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BLAKE3", Self::VT_BLAKE3, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ECOH", Self::VT_ECOH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FSB", Self::VT_FSB, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GOST", Self::VT_GOST, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GROSTL", Self::VT_GROSTL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HAS_160", Self::VT_HAS_160, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HAVAL", Self::VT_HAVAL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("JH", Self::VT_JH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LSH", Self::VT_LSH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MD2", Self::VT_MD2, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MD4", Self::VT_MD4, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MD5", Self::VT_MD5, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MD6", Self::VT_MD6, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RADIOGATUN", Self::VT_RADIOGATUN, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RIPEMD", Self::VT_RIPEMD, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RIPEMD_128", Self::VT_RIPEMD_128, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RIPEMD_256", Self::VT_RIPEMD_256, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RIPEMD_320", Self::VT_RIPEMD_320, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_1", Self::VT_SHA_1, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_224", Self::VT_SHA_224, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_256", Self::VT_SHA_256, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_384", Self::VT_SHA_384, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_512", Self::VT_SHA_512, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHA_3", Self::VT_SHA_3, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SKEIN", Self::VT_SKEIN, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SNEFRU", Self::VT_SNEFRU, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SPECTRAL_HASH", Self::VT_SPECTRAL_HASH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STREEBOG", Self::VT_STREEBOG, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SWIFFT", Self::VT_SWIFFT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIGER", Self::VT_TIGER, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("WHIRLPOOL", Self::VT_WHIRLPOOL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BTC_DIGITAL_SIGNATURE", Self::VT_BTC_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LTC_DIGITAL_SIGNATURE", Self::VT_LTC_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XRP_DIGITAL_SIGNATURE", Self::VT_XRP_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADA_DIGITAL_SIGNATURE", Self::VT_ADA_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XLM_DIGITAL_SIGNATURE", Self::VT_XLM_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DOGE_DIGITAL_SIGNATURE", Self::VT_DOGE_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XMR_DIGITAL_SIGNATURE", Self::VT_XMR_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DOT_DIGITAL_SIGNATURE", Self::VT_DOT_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FIL_DIGITAL_SIGNATURE", Self::VT_FIL_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XTZ_DIGITAL_SIGNATURE", Self::VT_XTZ_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATOM_DIGITAL_SIGNATURE", Self::VT_ATOM_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRX_DIGITAL_SIGNATURE", Self::VT_TRX_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BNB_DIGITAL_SIGNATURE", Self::VT_BNB_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AVAX_DIGITAL_SIGNATURE", Self::VT_AVAX_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOL_DIGITAL_SIGNATURE", Self::VT_SOL_DIGITAL_SIGNATURE, false)?
      .finish();
     Ok(())
   }
@@ -1575,93 +351,21 @@ impl flatbuffers::Verifiable for PNM<'_> {
 pub struct PNMArgs<'a> {
     pub IPFS_CID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ETH_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_512_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_256_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MD5_FILE_DIGEST: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_1_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ARGON2_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BLAKE2B_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_3_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RIPEMD_160_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub WHIRLPOOL_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TIGER_FILE_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CRC32: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ADLER32_CHECKSUM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RABIN_FINGERPRINT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PEARSON_HASHING: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BLAKE2_KEYED_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BLAKE_256: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CRC8: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CRC16: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CRC64: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BSD_CHECKSUM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SYSV_CHECKSUM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SUM8: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub INTERNET_CHECKSUM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SUM24: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SUM32: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FLETCHER_4: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FLETCHER_8: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FLETCHER_16: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FLETCHER_32: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LUNH_ALGORITHM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub VERHOEFF_ALGORITHM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DAMM_ALGORITHM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TABULATION_HASHING: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub UNIVERSAL_ONE_WAY_HASH_FUNCTION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ZOBRIST_HASHING: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PAUL_HSIEHS_SUPERFASTHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BUZHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FNV_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub JENKINS_HASH_FUNCTION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BERNSTEINS_HASH_DJB2: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PJW_HASH_ELF_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MURMURHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FAST_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SPOOKYHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CITYHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FARMHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub METROHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub NUMERIC_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub XXHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub T1HA: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub GXHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SDBM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OSDB_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub KOMIHASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BLAKE3: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ECOH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FSB: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub GOST: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub GROSTL: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub HAS_160: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub HAVAL: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub JH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LSH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MD2: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MD4: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MD5: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MD6: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RADIOGATUN: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RIPEMD: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RIPEMD_128: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RIPEMD_256: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RIPEMD_320: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_1: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_224: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_256: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_384: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_512: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SHA_3: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SKEIN: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SNEFRU: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SPECTRAL_HASH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STREEBOG: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SWIFFT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TIGER: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub WHIRLPOOL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub XRP_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ADA_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub XLM_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DOGE_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub XMR_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DOT_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FIL_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub XTZ_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ATOM_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRX_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BNB_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub AVAX_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SOL_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for PNMArgs<'a> {
   #[inline]
@@ -1669,93 +373,21 @@ impl<'a> Default for PNMArgs<'a> {
     PNMArgs {
       IPFS_CID: None,
       ETH_DIGITAL_SIGNATURE: None,
-      SHA_512_FILE_HASH: None,
-      SHA_256_FILE_HASH: None,
-      MD5_FILE_DIGEST: None,
-      SHA_1_FILE_HASH: None,
-      ARGON2_FILE_HASH: None,
-      BLAKE2B_FILE_HASH: None,
-      SHA_3_FILE_HASH: None,
-      RIPEMD_160_FILE_HASH: None,
-      WHIRLPOOL_FILE_HASH: None,
-      TIGER_FILE_HASH: None,
-      CRC32: None,
-      ADLER32_CHECKSUM: None,
-      RABIN_FINGERPRINT: None,
-      PEARSON_HASHING: None,
-      BLAKE2_KEYED_HASH: None,
-      BLAKE_256: None,
-      CRC8: None,
-      CRC16: None,
-      CRC64: None,
-      BSD_CHECKSUM: None,
-      SYSV_CHECKSUM: None,
-      SUM8: None,
-      INTERNET_CHECKSUM: None,
-      SUM24: None,
-      SUM32: None,
-      FLETCHER_4: None,
-      FLETCHER_8: None,
-      FLETCHER_16: None,
-      FLETCHER_32: None,
-      LUNH_ALGORITHM: None,
-      VERHOEFF_ALGORITHM: None,
-      DAMM_ALGORITHM: None,
-      TABULATION_HASHING: None,
-      UNIVERSAL_ONE_WAY_HASH_FUNCTION: None,
-      ZOBRIST_HASHING: None,
-      PAUL_HSIEHS_SUPERFASTHASH: None,
-      BUZHASH: None,
-      FNV_HASH: None,
-      JENKINS_HASH_FUNCTION: None,
-      BERNSTEINS_HASH_DJB2: None,
-      PJW_HASH_ELF_HASH: None,
-      MURMURHASH: None,
-      FAST_HASH: None,
-      SPOOKYHASH: None,
-      CITYHASH: None,
-      FARMHASH: None,
-      METROHASH: None,
-      NUMERIC_HASH: None,
-      XXHASH: None,
-      T1HA: None,
-      GXHASH: None,
-      PHASH: None,
-      DHASH: None,
-      SDBM: None,
-      OSDB_HASH: None,
-      KOMIHASH: None,
-      BLAKE3: None,
-      ECOH: None,
-      FSB: None,
-      GOST: None,
-      GROSTL: None,
-      HAS_160: None,
-      HAVAL: None,
-      JH: None,
-      LSH: None,
-      MD2: None,
-      MD4: None,
-      MD5: None,
-      MD6: None,
-      RADIOGATUN: None,
-      RIPEMD: None,
-      RIPEMD_128: None,
-      RIPEMD_256: None,
-      RIPEMD_320: None,
-      SHA_1: None,
-      SHA_224: None,
-      SHA_256: None,
-      SHA_384: None,
-      SHA_512: None,
-      SHA_3: None,
-      SKEIN: None,
-      SNEFRU: None,
-      SPECTRAL_HASH: None,
-      STREEBOG: None,
-      SWIFFT: None,
-      TIGER: None,
-      WHIRLPOOL: None,
+      BTC_DIGITAL_SIGNATURE: None,
+      LTC_DIGITAL_SIGNATURE: None,
+      XRP_DIGITAL_SIGNATURE: None,
+      ADA_DIGITAL_SIGNATURE: None,
+      XLM_DIGITAL_SIGNATURE: None,
+      DOGE_DIGITAL_SIGNATURE: None,
+      XMR_DIGITAL_SIGNATURE: None,
+      DOT_DIGITAL_SIGNATURE: None,
+      FIL_DIGITAL_SIGNATURE: None,
+      XTZ_DIGITAL_SIGNATURE: None,
+      ATOM_DIGITAL_SIGNATURE: None,
+      TRX_DIGITAL_SIGNATURE: None,
+      BNB_DIGITAL_SIGNATURE: None,
+      AVAX_DIGITAL_SIGNATURE: None,
+      SOL_DIGITAL_SIGNATURE: None,
     }
   }
 }
@@ -1774,352 +406,64 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_SHA_512_FILE_HASH(&mut self, SHA_512_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_512_FILE_HASH, SHA_512_FILE_HASH);
+  pub fn add_BTC_DIGITAL_SIGNATURE(&mut self, BTC_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_SHA_256_FILE_HASH(&mut self, SHA_256_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_256_FILE_HASH, SHA_256_FILE_HASH);
+  pub fn add_LTC_DIGITAL_SIGNATURE(&mut self, LTC_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_MD5_FILE_DIGEST(&mut self, MD5_FILE_DIGEST: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MD5_FILE_DIGEST, MD5_FILE_DIGEST);
+  pub fn add_XRP_DIGITAL_SIGNATURE(&mut self, XRP_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_SHA_1_FILE_HASH(&mut self, SHA_1_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_1_FILE_HASH, SHA_1_FILE_HASH);
+  pub fn add_ADA_DIGITAL_SIGNATURE(&mut self, ADA_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_ARGON2_FILE_HASH(&mut self, ARGON2_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ARGON2_FILE_HASH, ARGON2_FILE_HASH);
+  pub fn add_XLM_DIGITAL_SIGNATURE(&mut self, XLM_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_BLAKE2B_FILE_HASH(&mut self, BLAKE2B_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BLAKE2B_FILE_HASH, BLAKE2B_FILE_HASH);
+  pub fn add_DOGE_DIGITAL_SIGNATURE(&mut self, DOGE_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_SHA_3_FILE_HASH(&mut self, SHA_3_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_3_FILE_HASH, SHA_3_FILE_HASH);
+  pub fn add_XMR_DIGITAL_SIGNATURE(&mut self, XMR_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_RIPEMD_160_FILE_HASH(&mut self, RIPEMD_160_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RIPEMD_160_FILE_HASH, RIPEMD_160_FILE_HASH);
+  pub fn add_DOT_DIGITAL_SIGNATURE(&mut self, DOT_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_WHIRLPOOL_FILE_HASH(&mut self, WHIRLPOOL_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_WHIRLPOOL_FILE_HASH, WHIRLPOOL_FILE_HASH);
+  pub fn add_FIL_DIGITAL_SIGNATURE(&mut self, FIL_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_TIGER_FILE_HASH(&mut self, TIGER_FILE_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TIGER_FILE_HASH, TIGER_FILE_HASH);
+  pub fn add_XTZ_DIGITAL_SIGNATURE(&mut self, XTZ_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_CRC32(&mut self, CRC32: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CRC32, CRC32);
+  pub fn add_ATOM_DIGITAL_SIGNATURE(&mut self, ATOM_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_ADLER32_CHECKSUM(&mut self, ADLER32_CHECKSUM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ADLER32_CHECKSUM, ADLER32_CHECKSUM);
+  pub fn add_TRX_DIGITAL_SIGNATURE(&mut self, TRX_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_RABIN_FINGERPRINT(&mut self, RABIN_FINGERPRINT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RABIN_FINGERPRINT, RABIN_FINGERPRINT);
+  pub fn add_BNB_DIGITAL_SIGNATURE(&mut self, BNB_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_PEARSON_HASHING(&mut self, PEARSON_HASHING: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_PEARSON_HASHING, PEARSON_HASHING);
+  pub fn add_AVAX_DIGITAL_SIGNATURE(&mut self, AVAX_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn add_BLAKE2_KEYED_HASH(&mut self, BLAKE2_KEYED_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BLAKE2_KEYED_HASH, BLAKE2_KEYED_HASH);
-  }
-  #[inline]
-  pub fn add_BLAKE_256(&mut self, BLAKE_256: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BLAKE_256, BLAKE_256);
-  }
-  #[inline]
-  pub fn add_CRC8(&mut self, CRC8: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CRC8, CRC8);
-  }
-  #[inline]
-  pub fn add_CRC16(&mut self, CRC16: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CRC16, CRC16);
-  }
-  #[inline]
-  pub fn add_CRC64(&mut self, CRC64: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CRC64, CRC64);
-  }
-  #[inline]
-  pub fn add_BSD_CHECKSUM(&mut self, BSD_CHECKSUM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BSD_CHECKSUM, BSD_CHECKSUM);
-  }
-  #[inline]
-  pub fn add_SYSV_CHECKSUM(&mut self, SYSV_CHECKSUM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SYSV_CHECKSUM, SYSV_CHECKSUM);
-  }
-  #[inline]
-  pub fn add_SUM8(&mut self, SUM8: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SUM8, SUM8);
-  }
-  #[inline]
-  pub fn add_INTERNET_CHECKSUM(&mut self, INTERNET_CHECKSUM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_INTERNET_CHECKSUM, INTERNET_CHECKSUM);
-  }
-  #[inline]
-  pub fn add_SUM24(&mut self, SUM24: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SUM24, SUM24);
-  }
-  #[inline]
-  pub fn add_SUM32(&mut self, SUM32: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SUM32, SUM32);
-  }
-  #[inline]
-  pub fn add_FLETCHER_4(&mut self, FLETCHER_4: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FLETCHER_4, FLETCHER_4);
-  }
-  #[inline]
-  pub fn add_FLETCHER_8(&mut self, FLETCHER_8: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FLETCHER_8, FLETCHER_8);
-  }
-  #[inline]
-  pub fn add_FLETCHER_16(&mut self, FLETCHER_16: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FLETCHER_16, FLETCHER_16);
-  }
-  #[inline]
-  pub fn add_FLETCHER_32(&mut self, FLETCHER_32: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FLETCHER_32, FLETCHER_32);
-  }
-  #[inline]
-  pub fn add_LUNH_ALGORITHM(&mut self, LUNH_ALGORITHM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_LUNH_ALGORITHM, LUNH_ALGORITHM);
-  }
-  #[inline]
-  pub fn add_VERHOEFF_ALGORITHM(&mut self, VERHOEFF_ALGORITHM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_VERHOEFF_ALGORITHM, VERHOEFF_ALGORITHM);
-  }
-  #[inline]
-  pub fn add_DAMM_ALGORITHM(&mut self, DAMM_ALGORITHM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DAMM_ALGORITHM, DAMM_ALGORITHM);
-  }
-  #[inline]
-  pub fn add_TABULATION_HASHING(&mut self, TABULATION_HASHING: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TABULATION_HASHING, TABULATION_HASHING);
-  }
-  #[inline]
-  pub fn add_UNIVERSAL_ONE_WAY_HASH_FUNCTION(&mut self, UNIVERSAL_ONE_WAY_HASH_FUNCTION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_UNIVERSAL_ONE_WAY_HASH_FUNCTION, UNIVERSAL_ONE_WAY_HASH_FUNCTION);
-  }
-  #[inline]
-  pub fn add_ZOBRIST_HASHING(&mut self, ZOBRIST_HASHING: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ZOBRIST_HASHING, ZOBRIST_HASHING);
-  }
-  #[inline]
-  pub fn add_PAUL_HSIEHS_SUPERFASTHASH(&mut self, PAUL_HSIEHS_SUPERFASTHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_PAUL_HSIEHS_SUPERFASTHASH, PAUL_HSIEHS_SUPERFASTHASH);
-  }
-  #[inline]
-  pub fn add_BUZHASH(&mut self, BUZHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BUZHASH, BUZHASH);
-  }
-  #[inline]
-  pub fn add_FNV_HASH(&mut self, FNV_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FNV_HASH, FNV_HASH);
-  }
-  #[inline]
-  pub fn add_JENKINS_HASH_FUNCTION(&mut self, JENKINS_HASH_FUNCTION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_JENKINS_HASH_FUNCTION, JENKINS_HASH_FUNCTION);
-  }
-  #[inline]
-  pub fn add_BERNSTEINS_HASH_DJB2(&mut self, BERNSTEINS_HASH_DJB2: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BERNSTEINS_HASH_DJB2, BERNSTEINS_HASH_DJB2);
-  }
-  #[inline]
-  pub fn add_PJW_HASH_ELF_HASH(&mut self, PJW_HASH_ELF_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_PJW_HASH_ELF_HASH, PJW_HASH_ELF_HASH);
-  }
-  #[inline]
-  pub fn add_MURMURHASH(&mut self, MURMURHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MURMURHASH, MURMURHASH);
-  }
-  #[inline]
-  pub fn add_FAST_HASH(&mut self, FAST_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FAST_HASH, FAST_HASH);
-  }
-  #[inline]
-  pub fn add_SPOOKYHASH(&mut self, SPOOKYHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SPOOKYHASH, SPOOKYHASH);
-  }
-  #[inline]
-  pub fn add_CITYHASH(&mut self, CITYHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CITYHASH, CITYHASH);
-  }
-  #[inline]
-  pub fn add_FARMHASH(&mut self, FARMHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FARMHASH, FARMHASH);
-  }
-  #[inline]
-  pub fn add_METROHASH(&mut self, METROHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_METROHASH, METROHASH);
-  }
-  #[inline]
-  pub fn add_NUMERIC_HASH(&mut self, NUMERIC_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_NUMERIC_HASH, NUMERIC_HASH);
-  }
-  #[inline]
-  pub fn add_XXHASH(&mut self, XXHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XXHASH, XXHASH);
-  }
-  #[inline]
-  pub fn add_T1HA(&mut self, T1HA: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_T1HA, T1HA);
-  }
-  #[inline]
-  pub fn add_GXHASH(&mut self, GXHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_GXHASH, GXHASH);
-  }
-  #[inline]
-  pub fn add_PHASH(&mut self, PHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_PHASH, PHASH);
-  }
-  #[inline]
-  pub fn add_DHASH(&mut self, DHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DHASH, DHASH);
-  }
-  #[inline]
-  pub fn add_SDBM(&mut self, SDBM: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SDBM, SDBM);
-  }
-  #[inline]
-  pub fn add_OSDB_HASH(&mut self, OSDB_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_OSDB_HASH, OSDB_HASH);
-  }
-  #[inline]
-  pub fn add_KOMIHASH(&mut self, KOMIHASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_KOMIHASH, KOMIHASH);
-  }
-  #[inline]
-  pub fn add_BLAKE3(&mut self, BLAKE3: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BLAKE3, BLAKE3);
-  }
-  #[inline]
-  pub fn add_ECOH(&mut self, ECOH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ECOH, ECOH);
-  }
-  #[inline]
-  pub fn add_FSB(&mut self, FSB: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FSB, FSB);
-  }
-  #[inline]
-  pub fn add_GOST(&mut self, GOST: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_GOST, GOST);
-  }
-  #[inline]
-  pub fn add_GROSTL(&mut self, GROSTL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_GROSTL, GROSTL);
-  }
-  #[inline]
-  pub fn add_HAS_160(&mut self, HAS_160: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_HAS_160, HAS_160);
-  }
-  #[inline]
-  pub fn add_HAVAL(&mut self, HAVAL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_HAVAL, HAVAL);
-  }
-  #[inline]
-  pub fn add_JH(&mut self, JH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_JH, JH);
-  }
-  #[inline]
-  pub fn add_LSH(&mut self, LSH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_LSH, LSH);
-  }
-  #[inline]
-  pub fn add_MD2(&mut self, MD2: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MD2, MD2);
-  }
-  #[inline]
-  pub fn add_MD4(&mut self, MD4: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MD4, MD4);
-  }
-  #[inline]
-  pub fn add_MD5(&mut self, MD5: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MD5, MD5);
-  }
-  #[inline]
-  pub fn add_MD6(&mut self, MD6: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MD6, MD6);
-  }
-  #[inline]
-  pub fn add_RADIOGATUN(&mut self, RADIOGATUN: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RADIOGATUN, RADIOGATUN);
-  }
-  #[inline]
-  pub fn add_RIPEMD(&mut self, RIPEMD: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RIPEMD, RIPEMD);
-  }
-  #[inline]
-  pub fn add_RIPEMD_128(&mut self, RIPEMD_128: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RIPEMD_128, RIPEMD_128);
-  }
-  #[inline]
-  pub fn add_RIPEMD_256(&mut self, RIPEMD_256: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RIPEMD_256, RIPEMD_256);
-  }
-  #[inline]
-  pub fn add_RIPEMD_320(&mut self, RIPEMD_320: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_RIPEMD_320, RIPEMD_320);
-  }
-  #[inline]
-  pub fn add_SHA_1(&mut self, SHA_1: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_1, SHA_1);
-  }
-  #[inline]
-  pub fn add_SHA_224(&mut self, SHA_224: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_224, SHA_224);
-  }
-  #[inline]
-  pub fn add_SHA_256(&mut self, SHA_256: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_256, SHA_256);
-  }
-  #[inline]
-  pub fn add_SHA_384(&mut self, SHA_384: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_384, SHA_384);
-  }
-  #[inline]
-  pub fn add_SHA_512(&mut self, SHA_512: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_512, SHA_512);
-  }
-  #[inline]
-  pub fn add_SHA_3(&mut self, SHA_3: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SHA_3, SHA_3);
-  }
-  #[inline]
-  pub fn add_SKEIN(&mut self, SKEIN: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SKEIN, SKEIN);
-  }
-  #[inline]
-  pub fn add_SNEFRU(&mut self, SNEFRU: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SNEFRU, SNEFRU);
-  }
-  #[inline]
-  pub fn add_SPECTRAL_HASH(&mut self, SPECTRAL_HASH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SPECTRAL_HASH, SPECTRAL_HASH);
-  }
-  #[inline]
-  pub fn add_STREEBOG(&mut self, STREEBOG: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_STREEBOG, STREEBOG);
-  }
-  #[inline]
-  pub fn add_SWIFFT(&mut self, SWIFFT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SWIFFT, SWIFFT);
-  }
-  #[inline]
-  pub fn add_TIGER(&mut self, TIGER: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TIGER, TIGER);
-  }
-  #[inline]
-  pub fn add_WHIRLPOOL(&mut self, WHIRLPOOL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_WHIRLPOOL, WHIRLPOOL);
+  pub fn add_SOL_DIGITAL_SIGNATURE(&mut self, SOL_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMBuilder<'a, 'b> {
@@ -2141,93 +485,21 @@ impl core::fmt::Debug for PNM<'_> {
     let mut ds = f.debug_struct("PNM");
       ds.field("IPFS_CID", &self.IPFS_CID());
       ds.field("ETH_DIGITAL_SIGNATURE", &self.ETH_DIGITAL_SIGNATURE());
-      ds.field("SHA_512_FILE_HASH", &self.SHA_512_FILE_HASH());
-      ds.field("SHA_256_FILE_HASH", &self.SHA_256_FILE_HASH());
-      ds.field("MD5_FILE_DIGEST", &self.MD5_FILE_DIGEST());
-      ds.field("SHA_1_FILE_HASH", &self.SHA_1_FILE_HASH());
-      ds.field("ARGON2_FILE_HASH", &self.ARGON2_FILE_HASH());
-      ds.field("BLAKE2B_FILE_HASH", &self.BLAKE2B_FILE_HASH());
-      ds.field("SHA_3_FILE_HASH", &self.SHA_3_FILE_HASH());
-      ds.field("RIPEMD_160_FILE_HASH", &self.RIPEMD_160_FILE_HASH());
-      ds.field("WHIRLPOOL_FILE_HASH", &self.WHIRLPOOL_FILE_HASH());
-      ds.field("TIGER_FILE_HASH", &self.TIGER_FILE_HASH());
-      ds.field("CRC32", &self.CRC32());
-      ds.field("ADLER32_CHECKSUM", &self.ADLER32_CHECKSUM());
-      ds.field("RABIN_FINGERPRINT", &self.RABIN_FINGERPRINT());
-      ds.field("PEARSON_HASHING", &self.PEARSON_HASHING());
-      ds.field("BLAKE2_KEYED_HASH", &self.BLAKE2_KEYED_HASH());
-      ds.field("BLAKE_256", &self.BLAKE_256());
-      ds.field("CRC8", &self.CRC8());
-      ds.field("CRC16", &self.CRC16());
-      ds.field("CRC64", &self.CRC64());
-      ds.field("BSD_CHECKSUM", &self.BSD_CHECKSUM());
-      ds.field("SYSV_CHECKSUM", &self.SYSV_CHECKSUM());
-      ds.field("SUM8", &self.SUM8());
-      ds.field("INTERNET_CHECKSUM", &self.INTERNET_CHECKSUM());
-      ds.field("SUM24", &self.SUM24());
-      ds.field("SUM32", &self.SUM32());
-      ds.field("FLETCHER_4", &self.FLETCHER_4());
-      ds.field("FLETCHER_8", &self.FLETCHER_8());
-      ds.field("FLETCHER_16", &self.FLETCHER_16());
-      ds.field("FLETCHER_32", &self.FLETCHER_32());
-      ds.field("LUNH_ALGORITHM", &self.LUNH_ALGORITHM());
-      ds.field("VERHOEFF_ALGORITHM", &self.VERHOEFF_ALGORITHM());
-      ds.field("DAMM_ALGORITHM", &self.DAMM_ALGORITHM());
-      ds.field("TABULATION_HASHING", &self.TABULATION_HASHING());
-      ds.field("UNIVERSAL_ONE_WAY_HASH_FUNCTION", &self.UNIVERSAL_ONE_WAY_HASH_FUNCTION());
-      ds.field("ZOBRIST_HASHING", &self.ZOBRIST_HASHING());
-      ds.field("PAUL_HSIEHS_SUPERFASTHASH", &self.PAUL_HSIEHS_SUPERFASTHASH());
-      ds.field("BUZHASH", &self.BUZHASH());
-      ds.field("FNV_HASH", &self.FNV_HASH());
-      ds.field("JENKINS_HASH_FUNCTION", &self.JENKINS_HASH_FUNCTION());
-      ds.field("BERNSTEINS_HASH_DJB2", &self.BERNSTEINS_HASH_DJB2());
-      ds.field("PJW_HASH_ELF_HASH", &self.PJW_HASH_ELF_HASH());
-      ds.field("MURMURHASH", &self.MURMURHASH());
-      ds.field("FAST_HASH", &self.FAST_HASH());
-      ds.field("SPOOKYHASH", &self.SPOOKYHASH());
-      ds.field("CITYHASH", &self.CITYHASH());
-      ds.field("FARMHASH", &self.FARMHASH());
-      ds.field("METROHASH", &self.METROHASH());
-      ds.field("NUMERIC_HASH", &self.NUMERIC_HASH());
-      ds.field("XXHASH", &self.XXHASH());
-      ds.field("T1HA", &self.T1HA());
-      ds.field("GXHASH", &self.GXHASH());
-      ds.field("PHASH", &self.PHASH());
-      ds.field("DHASH", &self.DHASH());
-      ds.field("SDBM", &self.SDBM());
-      ds.field("OSDB_HASH", &self.OSDB_HASH());
-      ds.field("KOMIHASH", &self.KOMIHASH());
-      ds.field("BLAKE3", &self.BLAKE3());
-      ds.field("ECOH", &self.ECOH());
-      ds.field("FSB", &self.FSB());
-      ds.field("GOST", &self.GOST());
-      ds.field("GROSTL", &self.GROSTL());
-      ds.field("HAS_160", &self.HAS_160());
-      ds.field("HAVAL", &self.HAVAL());
-      ds.field("JH", &self.JH());
-      ds.field("LSH", &self.LSH());
-      ds.field("MD2", &self.MD2());
-      ds.field("MD4", &self.MD4());
-      ds.field("MD5", &self.MD5());
-      ds.field("MD6", &self.MD6());
-      ds.field("RADIOGATUN", &self.RADIOGATUN());
-      ds.field("RIPEMD", &self.RIPEMD());
-      ds.field("RIPEMD_128", &self.RIPEMD_128());
-      ds.field("RIPEMD_256", &self.RIPEMD_256());
-      ds.field("RIPEMD_320", &self.RIPEMD_320());
-      ds.field("SHA_1", &self.SHA_1());
-      ds.field("SHA_224", &self.SHA_224());
-      ds.field("SHA_256", &self.SHA_256());
-      ds.field("SHA_384", &self.SHA_384());
-      ds.field("SHA_512", &self.SHA_512());
-      ds.field("SHA_3", &self.SHA_3());
-      ds.field("SKEIN", &self.SKEIN());
-      ds.field("SNEFRU", &self.SNEFRU());
-      ds.field("SPECTRAL_HASH", &self.SPECTRAL_HASH());
-      ds.field("STREEBOG", &self.STREEBOG());
-      ds.field("SWIFFT", &self.SWIFFT());
-      ds.field("TIGER", &self.TIGER());
-      ds.field("WHIRLPOOL", &self.WHIRLPOOL());
+      ds.field("BTC_DIGITAL_SIGNATURE", &self.BTC_DIGITAL_SIGNATURE());
+      ds.field("LTC_DIGITAL_SIGNATURE", &self.LTC_DIGITAL_SIGNATURE());
+      ds.field("XRP_DIGITAL_SIGNATURE", &self.XRP_DIGITAL_SIGNATURE());
+      ds.field("ADA_DIGITAL_SIGNATURE", &self.ADA_DIGITAL_SIGNATURE());
+      ds.field("XLM_DIGITAL_SIGNATURE", &self.XLM_DIGITAL_SIGNATURE());
+      ds.field("DOGE_DIGITAL_SIGNATURE", &self.DOGE_DIGITAL_SIGNATURE());
+      ds.field("XMR_DIGITAL_SIGNATURE", &self.XMR_DIGITAL_SIGNATURE());
+      ds.field("DOT_DIGITAL_SIGNATURE", &self.DOT_DIGITAL_SIGNATURE());
+      ds.field("FIL_DIGITAL_SIGNATURE", &self.FIL_DIGITAL_SIGNATURE());
+      ds.field("XTZ_DIGITAL_SIGNATURE", &self.XTZ_DIGITAL_SIGNATURE());
+      ds.field("ATOM_DIGITAL_SIGNATURE", &self.ATOM_DIGITAL_SIGNATURE());
+      ds.field("TRX_DIGITAL_SIGNATURE", &self.TRX_DIGITAL_SIGNATURE());
+      ds.field("BNB_DIGITAL_SIGNATURE", &self.BNB_DIGITAL_SIGNATURE());
+      ds.field("AVAX_DIGITAL_SIGNATURE", &self.AVAX_DIGITAL_SIGNATURE());
+      ds.field("SOL_DIGITAL_SIGNATURE", &self.SOL_DIGITAL_SIGNATURE());
       ds.finish()
   }
 }
@@ -2236,186 +508,42 @@ impl core::fmt::Debug for PNM<'_> {
 pub struct PNMT {
   pub IPFS_CID: Option<String>,
   pub ETH_DIGITAL_SIGNATURE: Option<String>,
-  pub SHA_512_FILE_HASH: Option<String>,
-  pub SHA_256_FILE_HASH: Option<String>,
-  pub MD5_FILE_DIGEST: Option<String>,
-  pub SHA_1_FILE_HASH: Option<String>,
-  pub ARGON2_FILE_HASH: Option<String>,
-  pub BLAKE2B_FILE_HASH: Option<String>,
-  pub SHA_3_FILE_HASH: Option<String>,
-  pub RIPEMD_160_FILE_HASH: Option<String>,
-  pub WHIRLPOOL_FILE_HASH: Option<String>,
-  pub TIGER_FILE_HASH: Option<String>,
-  pub CRC32: Option<String>,
-  pub ADLER32_CHECKSUM: Option<String>,
-  pub RABIN_FINGERPRINT: Option<String>,
-  pub PEARSON_HASHING: Option<String>,
-  pub BLAKE2_KEYED_HASH: Option<String>,
-  pub BLAKE_256: Option<String>,
-  pub CRC8: Option<String>,
-  pub CRC16: Option<String>,
-  pub CRC64: Option<String>,
-  pub BSD_CHECKSUM: Option<String>,
-  pub SYSV_CHECKSUM: Option<String>,
-  pub SUM8: Option<String>,
-  pub INTERNET_CHECKSUM: Option<String>,
-  pub SUM24: Option<String>,
-  pub SUM32: Option<String>,
-  pub FLETCHER_4: Option<String>,
-  pub FLETCHER_8: Option<String>,
-  pub FLETCHER_16: Option<String>,
-  pub FLETCHER_32: Option<String>,
-  pub LUNH_ALGORITHM: Option<String>,
-  pub VERHOEFF_ALGORITHM: Option<String>,
-  pub DAMM_ALGORITHM: Option<String>,
-  pub TABULATION_HASHING: Option<String>,
-  pub UNIVERSAL_ONE_WAY_HASH_FUNCTION: Option<String>,
-  pub ZOBRIST_HASHING: Option<String>,
-  pub PAUL_HSIEHS_SUPERFASTHASH: Option<String>,
-  pub BUZHASH: Option<String>,
-  pub FNV_HASH: Option<String>,
-  pub JENKINS_HASH_FUNCTION: Option<String>,
-  pub BERNSTEINS_HASH_DJB2: Option<String>,
-  pub PJW_HASH_ELF_HASH: Option<String>,
-  pub MURMURHASH: Option<String>,
-  pub FAST_HASH: Option<String>,
-  pub SPOOKYHASH: Option<String>,
-  pub CITYHASH: Option<String>,
-  pub FARMHASH: Option<String>,
-  pub METROHASH: Option<String>,
-  pub NUMERIC_HASH: Option<String>,
-  pub XXHASH: Option<String>,
-  pub T1HA: Option<String>,
-  pub GXHASH: Option<String>,
-  pub PHASH: Option<String>,
-  pub DHASH: Option<String>,
-  pub SDBM: Option<String>,
-  pub OSDB_HASH: Option<String>,
-  pub KOMIHASH: Option<String>,
-  pub BLAKE3: Option<String>,
-  pub ECOH: Option<String>,
-  pub FSB: Option<String>,
-  pub GOST: Option<String>,
-  pub GROSTL: Option<String>,
-  pub HAS_160: Option<String>,
-  pub HAVAL: Option<String>,
-  pub JH: Option<String>,
-  pub LSH: Option<String>,
-  pub MD2: Option<String>,
-  pub MD4: Option<String>,
-  pub MD5: Option<String>,
-  pub MD6: Option<String>,
-  pub RADIOGATUN: Option<String>,
-  pub RIPEMD: Option<String>,
-  pub RIPEMD_128: Option<String>,
-  pub RIPEMD_256: Option<String>,
-  pub RIPEMD_320: Option<String>,
-  pub SHA_1: Option<String>,
-  pub SHA_224: Option<String>,
-  pub SHA_256: Option<String>,
-  pub SHA_384: Option<String>,
-  pub SHA_512: Option<String>,
-  pub SHA_3: Option<String>,
-  pub SKEIN: Option<String>,
-  pub SNEFRU: Option<String>,
-  pub SPECTRAL_HASH: Option<String>,
-  pub STREEBOG: Option<String>,
-  pub SWIFFT: Option<String>,
-  pub TIGER: Option<String>,
-  pub WHIRLPOOL: Option<String>,
+  pub BTC_DIGITAL_SIGNATURE: Option<String>,
+  pub LTC_DIGITAL_SIGNATURE: Option<String>,
+  pub XRP_DIGITAL_SIGNATURE: Option<String>,
+  pub ADA_DIGITAL_SIGNATURE: Option<String>,
+  pub XLM_DIGITAL_SIGNATURE: Option<String>,
+  pub DOGE_DIGITAL_SIGNATURE: Option<String>,
+  pub XMR_DIGITAL_SIGNATURE: Option<String>,
+  pub DOT_DIGITAL_SIGNATURE: Option<String>,
+  pub FIL_DIGITAL_SIGNATURE: Option<String>,
+  pub XTZ_DIGITAL_SIGNATURE: Option<String>,
+  pub ATOM_DIGITAL_SIGNATURE: Option<String>,
+  pub TRX_DIGITAL_SIGNATURE: Option<String>,
+  pub BNB_DIGITAL_SIGNATURE: Option<String>,
+  pub AVAX_DIGITAL_SIGNATURE: Option<String>,
+  pub SOL_DIGITAL_SIGNATURE: Option<String>,
 }
 impl Default for PNMT {
   fn default() -> Self {
     Self {
       IPFS_CID: None,
       ETH_DIGITAL_SIGNATURE: None,
-      SHA_512_FILE_HASH: None,
-      SHA_256_FILE_HASH: None,
-      MD5_FILE_DIGEST: None,
-      SHA_1_FILE_HASH: None,
-      ARGON2_FILE_HASH: None,
-      BLAKE2B_FILE_HASH: None,
-      SHA_3_FILE_HASH: None,
-      RIPEMD_160_FILE_HASH: None,
-      WHIRLPOOL_FILE_HASH: None,
-      TIGER_FILE_HASH: None,
-      CRC32: None,
-      ADLER32_CHECKSUM: None,
-      RABIN_FINGERPRINT: None,
-      PEARSON_HASHING: None,
-      BLAKE2_KEYED_HASH: None,
-      BLAKE_256: None,
-      CRC8: None,
-      CRC16: None,
-      CRC64: None,
-      BSD_CHECKSUM: None,
-      SYSV_CHECKSUM: None,
-      SUM8: None,
-      INTERNET_CHECKSUM: None,
-      SUM24: None,
-      SUM32: None,
-      FLETCHER_4: None,
-      FLETCHER_8: None,
-      FLETCHER_16: None,
-      FLETCHER_32: None,
-      LUNH_ALGORITHM: None,
-      VERHOEFF_ALGORITHM: None,
-      DAMM_ALGORITHM: None,
-      TABULATION_HASHING: None,
-      UNIVERSAL_ONE_WAY_HASH_FUNCTION: None,
-      ZOBRIST_HASHING: None,
-      PAUL_HSIEHS_SUPERFASTHASH: None,
-      BUZHASH: None,
-      FNV_HASH: None,
-      JENKINS_HASH_FUNCTION: None,
-      BERNSTEINS_HASH_DJB2: None,
-      PJW_HASH_ELF_HASH: None,
-      MURMURHASH: None,
-      FAST_HASH: None,
-      SPOOKYHASH: None,
-      CITYHASH: None,
-      FARMHASH: None,
-      METROHASH: None,
-      NUMERIC_HASH: None,
-      XXHASH: None,
-      T1HA: None,
-      GXHASH: None,
-      PHASH: None,
-      DHASH: None,
-      SDBM: None,
-      OSDB_HASH: None,
-      KOMIHASH: None,
-      BLAKE3: None,
-      ECOH: None,
-      FSB: None,
-      GOST: None,
-      GROSTL: None,
-      HAS_160: None,
-      HAVAL: None,
-      JH: None,
-      LSH: None,
-      MD2: None,
-      MD4: None,
-      MD5: None,
-      MD6: None,
-      RADIOGATUN: None,
-      RIPEMD: None,
-      RIPEMD_128: None,
-      RIPEMD_256: None,
-      RIPEMD_320: None,
-      SHA_1: None,
-      SHA_224: None,
-      SHA_256: None,
-      SHA_384: None,
-      SHA_512: None,
-      SHA_3: None,
-      SKEIN: None,
-      SNEFRU: None,
-      SPECTRAL_HASH: None,
-      STREEBOG: None,
-      SWIFFT: None,
-      TIGER: None,
-      WHIRLPOOL: None,
+      BTC_DIGITAL_SIGNATURE: None,
+      LTC_DIGITAL_SIGNATURE: None,
+      XRP_DIGITAL_SIGNATURE: None,
+      ADA_DIGITAL_SIGNATURE: None,
+      XLM_DIGITAL_SIGNATURE: None,
+      DOGE_DIGITAL_SIGNATURE: None,
+      XMR_DIGITAL_SIGNATURE: None,
+      DOT_DIGITAL_SIGNATURE: None,
+      FIL_DIGITAL_SIGNATURE: None,
+      XTZ_DIGITAL_SIGNATURE: None,
+      ATOM_DIGITAL_SIGNATURE: None,
+      TRX_DIGITAL_SIGNATURE: None,
+      BNB_DIGITAL_SIGNATURE: None,
+      AVAX_DIGITAL_SIGNATURE: None,
+      SOL_DIGITAL_SIGNATURE: None,
     }
   }
 }
@@ -2430,357 +558,69 @@ impl PNMT {
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SHA_512_FILE_HASH = self.SHA_512_FILE_HASH.as_ref().map(|x|{
+    let BTC_DIGITAL_SIGNATURE = self.BTC_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SHA_256_FILE_HASH = self.SHA_256_FILE_HASH.as_ref().map(|x|{
+    let LTC_DIGITAL_SIGNATURE = self.LTC_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let MD5_FILE_DIGEST = self.MD5_FILE_DIGEST.as_ref().map(|x|{
+    let XRP_DIGITAL_SIGNATURE = self.XRP_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SHA_1_FILE_HASH = self.SHA_1_FILE_HASH.as_ref().map(|x|{
+    let ADA_DIGITAL_SIGNATURE = self.ADA_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ARGON2_FILE_HASH = self.ARGON2_FILE_HASH.as_ref().map(|x|{
+    let XLM_DIGITAL_SIGNATURE = self.XLM_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let BLAKE2B_FILE_HASH = self.BLAKE2B_FILE_HASH.as_ref().map(|x|{
+    let DOGE_DIGITAL_SIGNATURE = self.DOGE_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SHA_3_FILE_HASH = self.SHA_3_FILE_HASH.as_ref().map(|x|{
+    let XMR_DIGITAL_SIGNATURE = self.XMR_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let RIPEMD_160_FILE_HASH = self.RIPEMD_160_FILE_HASH.as_ref().map(|x|{
+    let DOT_DIGITAL_SIGNATURE = self.DOT_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let WHIRLPOOL_FILE_HASH = self.WHIRLPOOL_FILE_HASH.as_ref().map(|x|{
+    let FIL_DIGITAL_SIGNATURE = self.FIL_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TIGER_FILE_HASH = self.TIGER_FILE_HASH.as_ref().map(|x|{
+    let XTZ_DIGITAL_SIGNATURE = self.XTZ_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let CRC32 = self.CRC32.as_ref().map(|x|{
+    let ATOM_DIGITAL_SIGNATURE = self.ATOM_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ADLER32_CHECKSUM = self.ADLER32_CHECKSUM.as_ref().map(|x|{
+    let TRX_DIGITAL_SIGNATURE = self.TRX_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let RABIN_FINGERPRINT = self.RABIN_FINGERPRINT.as_ref().map(|x|{
+    let BNB_DIGITAL_SIGNATURE = self.BNB_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let PEARSON_HASHING = self.PEARSON_HASHING.as_ref().map(|x|{
+    let AVAX_DIGITAL_SIGNATURE = self.AVAX_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let BLAKE2_KEYED_HASH = self.BLAKE2_KEYED_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let BLAKE_256 = self.BLAKE_256.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CRC8 = self.CRC8.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CRC16 = self.CRC16.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CRC64 = self.CRC64.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let BSD_CHECKSUM = self.BSD_CHECKSUM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SYSV_CHECKSUM = self.SYSV_CHECKSUM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SUM8 = self.SUM8.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let INTERNET_CHECKSUM = self.INTERNET_CHECKSUM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SUM24 = self.SUM24.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SUM32 = self.SUM32.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FLETCHER_4 = self.FLETCHER_4.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FLETCHER_8 = self.FLETCHER_8.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FLETCHER_16 = self.FLETCHER_16.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FLETCHER_32 = self.FLETCHER_32.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LUNH_ALGORITHM = self.LUNH_ALGORITHM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let VERHOEFF_ALGORITHM = self.VERHOEFF_ALGORITHM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DAMM_ALGORITHM = self.DAMM_ALGORITHM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TABULATION_HASHING = self.TABULATION_HASHING.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let UNIVERSAL_ONE_WAY_HASH_FUNCTION = self.UNIVERSAL_ONE_WAY_HASH_FUNCTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ZOBRIST_HASHING = self.ZOBRIST_HASHING.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PAUL_HSIEHS_SUPERFASTHASH = self.PAUL_HSIEHS_SUPERFASTHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let BUZHASH = self.BUZHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FNV_HASH = self.FNV_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let JENKINS_HASH_FUNCTION = self.JENKINS_HASH_FUNCTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let BERNSTEINS_HASH_DJB2 = self.BERNSTEINS_HASH_DJB2.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PJW_HASH_ELF_HASH = self.PJW_HASH_ELF_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let MURMURHASH = self.MURMURHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FAST_HASH = self.FAST_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SPOOKYHASH = self.SPOOKYHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CITYHASH = self.CITYHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FARMHASH = self.FARMHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let METROHASH = self.METROHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let NUMERIC_HASH = self.NUMERIC_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let XXHASH = self.XXHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let T1HA = self.T1HA.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let GXHASH = self.GXHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PHASH = self.PHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DHASH = self.DHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SDBM = self.SDBM.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let OSDB_HASH = self.OSDB_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let KOMIHASH = self.KOMIHASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let BLAKE3 = self.BLAKE3.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ECOH = self.ECOH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FSB = self.FSB.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let GOST = self.GOST.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let GROSTL = self.GROSTL.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let HAS_160 = self.HAS_160.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let HAVAL = self.HAVAL.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let JH = self.JH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LSH = self.LSH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let MD2 = self.MD2.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let MD4 = self.MD4.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let MD5 = self.MD5.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let MD6 = self.MD6.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RADIOGATUN = self.RADIOGATUN.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RIPEMD = self.RIPEMD.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RIPEMD_128 = self.RIPEMD_128.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RIPEMD_256 = self.RIPEMD_256.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RIPEMD_320 = self.RIPEMD_320.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SHA_1 = self.SHA_1.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SHA_224 = self.SHA_224.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SHA_256 = self.SHA_256.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SHA_384 = self.SHA_384.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SHA_512 = self.SHA_512.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SHA_3 = self.SHA_3.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SKEIN = self.SKEIN.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SNEFRU = self.SNEFRU.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SPECTRAL_HASH = self.SPECTRAL_HASH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let STREEBOG = self.STREEBOG.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SWIFFT = self.SWIFFT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TIGER = self.TIGER.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let WHIRLPOOL = self.WHIRLPOOL.as_ref().map(|x|{
+    let SOL_DIGITAL_SIGNATURE = self.SOL_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     PNM::create(_fbb, &PNMArgs{
       IPFS_CID,
       ETH_DIGITAL_SIGNATURE,
-      SHA_512_FILE_HASH,
-      SHA_256_FILE_HASH,
-      MD5_FILE_DIGEST,
-      SHA_1_FILE_HASH,
-      ARGON2_FILE_HASH,
-      BLAKE2B_FILE_HASH,
-      SHA_3_FILE_HASH,
-      RIPEMD_160_FILE_HASH,
-      WHIRLPOOL_FILE_HASH,
-      TIGER_FILE_HASH,
-      CRC32,
-      ADLER32_CHECKSUM,
-      RABIN_FINGERPRINT,
-      PEARSON_HASHING,
-      BLAKE2_KEYED_HASH,
-      BLAKE_256,
-      CRC8,
-      CRC16,
-      CRC64,
-      BSD_CHECKSUM,
-      SYSV_CHECKSUM,
-      SUM8,
-      INTERNET_CHECKSUM,
-      SUM24,
-      SUM32,
-      FLETCHER_4,
-      FLETCHER_8,
-      FLETCHER_16,
-      FLETCHER_32,
-      LUNH_ALGORITHM,
-      VERHOEFF_ALGORITHM,
-      DAMM_ALGORITHM,
-      TABULATION_HASHING,
-      UNIVERSAL_ONE_WAY_HASH_FUNCTION,
-      ZOBRIST_HASHING,
-      PAUL_HSIEHS_SUPERFASTHASH,
-      BUZHASH,
-      FNV_HASH,
-      JENKINS_HASH_FUNCTION,
-      BERNSTEINS_HASH_DJB2,
-      PJW_HASH_ELF_HASH,
-      MURMURHASH,
-      FAST_HASH,
-      SPOOKYHASH,
-      CITYHASH,
-      FARMHASH,
-      METROHASH,
-      NUMERIC_HASH,
-      XXHASH,
-      T1HA,
-      GXHASH,
-      PHASH,
-      DHASH,
-      SDBM,
-      OSDB_HASH,
-      KOMIHASH,
-      BLAKE3,
-      ECOH,
-      FSB,
-      GOST,
-      GROSTL,
-      HAS_160,
-      HAVAL,
-      JH,
-      LSH,
-      MD2,
-      MD4,
-      MD5,
-      MD6,
-      RADIOGATUN,
-      RIPEMD,
-      RIPEMD_128,
-      RIPEMD_256,
-      RIPEMD_320,
-      SHA_1,
-      SHA_224,
-      SHA_256,
-      SHA_384,
-      SHA_512,
-      SHA_3,
-      SKEIN,
-      SNEFRU,
-      SPECTRAL_HASH,
-      STREEBOG,
-      SWIFFT,
-      TIGER,
-      WHIRLPOOL,
+      BTC_DIGITAL_SIGNATURE,
+      LTC_DIGITAL_SIGNATURE,
+      XRP_DIGITAL_SIGNATURE,
+      ADA_DIGITAL_SIGNATURE,
+      XLM_DIGITAL_SIGNATURE,
+      DOGE_DIGITAL_SIGNATURE,
+      XMR_DIGITAL_SIGNATURE,
+      DOT_DIGITAL_SIGNATURE,
+      FIL_DIGITAL_SIGNATURE,
+      XTZ_DIGITAL_SIGNATURE,
+      ATOM_DIGITAL_SIGNATURE,
+      TRX_DIGITAL_SIGNATURE,
+      BNB_DIGITAL_SIGNATURE,
+      AVAX_DIGITAL_SIGNATURE,
+      SOL_DIGITAL_SIGNATURE,
     })
   }
 }

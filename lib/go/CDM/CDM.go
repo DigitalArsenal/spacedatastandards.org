@@ -374,8 +374,38 @@ func (rcv *CDM) OBJECT2(obj *CDMObject) *CDMObject {
 }
 
 /// The second object in the CDM message
+/// Data Source for the positional information for Object 1
+func (rcv *CDM) OBJECT1_DATASOURCE(obj *PNM) *PNM {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PNM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Data Source for the positional information for Object 1
+/// Data Source for the positional information for Object 2
+func (rcv *CDM) OBJECT2_DATASOURCE(obj *PNM) *PNM {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PNM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Data Source for the positional information for Object 2
 func CDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(27)
+	builder.StartObject(29)
 }
 func CDMAddCCSDS_CDM_VERS(builder *flatbuffers.Builder, CCSDS_CDM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
@@ -457,6 +487,12 @@ func CDMAddOBJECT1(builder *flatbuffers.Builder, OBJECT1 flatbuffers.UOffsetT) {
 }
 func CDMAddOBJECT2(builder *flatbuffers.Builder, OBJECT2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(OBJECT2), 0)
+}
+func CDMAddOBJECT1_DATASOURCE(builder *flatbuffers.Builder, OBJECT1_DATASOURCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(OBJECT1_DATASOURCE), 0)
+}
+func CDMAddOBJECT2_DATASOURCE(builder *flatbuffers.Builder, OBJECT2_DATASOURCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(OBJECT2_DATASOURCE), 0)
 }
 func CDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

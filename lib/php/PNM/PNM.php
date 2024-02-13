@@ -60,786 +60,138 @@ class PNM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// SHA-512 File Hash
-    /// SHA-512 hash of the file for additional security verification.
-    /// Detailed in the security features section of the document.
-    public function getSHA_512_FILE_HASH()
+    /// Bitcoin Digital Signature
+    /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
+    /// Refer to the Bitcoin Blockchain integration section for details.
+    public function getBTC_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// SHA-256 File Hash
-    /// SHA-256 hash of the file for additional security verification.
-    /// Detailed in the security features section of the document.
-    public function getSHA_256_FILE_HASH()
+    /// Litecoin Digital Signature
+    /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
+    /// Refer to the Litecoin Blockchain integration section for details.
+    public function getLTC_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// MD5 File Digest
-    /// MD5 digest of the file for backward compatibility with older systems.
-    /// Located in the legacy support section of the document.
-    public function getMD5_FILE_DIGEST()
+    /// Ripple Digital Signature
+    /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
+    /// Refer to the Ripple Blockchain integration section for details.
+    public function getXRP_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// SHA-1 File Hash
-    /// SHA-1 hash of the file, used in certain legacy systems for compatibility.
-    /// Refer to the legacy systems integration section for more information.
-    public function getSHA_1_FILE_HASH()
+    /// Cardano Digital Signature
+    /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
+    /// Refer to the Cardano Blockchain integration section for details.
+    public function getADA_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Argon2 File Hash
-    /// Argon2 hash of the file, providing state-of-the-art password hashing.
-    /// This is mentioned in the advanced security measures section.
-    public function getARGON2_FILE_HASH()
+    /// Stellar Digital Signature
+    /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
+    /// Refer to the Stellar Blockchain integration section for details.
+    public function getXLM_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Blake2b File Hash
-    /// Blake2b hash of the file, known for high-speed cryptographic hashing.
-    /// Refer to the high-performance security solutions section.
-    public function getBLAKE2B_FILE_HASH()
+    /// Dogecoin Digital Signature
+    /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
+    /// Refer to the Dogecoin Blockchain integration section for details.
+    public function getDOGE_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// SHA-3 File Hash
-    /// SHA-3 hash of the file, offering a stronger alternative to SHA-2.
-    /// Located in the modern cryptographic standards section.
-    public function getSHA_3_FILE_HASH()
+    /// Monero Digital Signature
+    /// Digital signature of the IPFS file hash using Monero's signing mechanism.
+    /// Refer to the Monero Blockchain integration section for details.
+    public function getXMR_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// RIPEMD-160 File Hash
-    /// RIPEMD-160 hash of the file, often used in blockchain applications for address generation.
-    /// Discussed in the blockchain compatibility section.
-    public function getRIPEMD_160_FILE_HASH()
+    /// Polkadot Digital Signature
+    /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
+    /// Refer to the Polkadot Blockchain integration section for details.
+    public function getDOT_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Whirlpool File Hash
-    /// Whirlpool hash of the file, designed for integrity protection and digital fingerprinting.
-    /// Refer to the data integrity and authentication section.
-    public function getWHIRLPOOL_FILE_HASH()
+    /// Filecoin Digital Signature
+    /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
+    /// Refer to the Filecoin Blockchain integration section for details.
+    public function getFIL_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Tiger File Hash
-    /// Tiger hash of the file, optimized for fast hashing on 64-bit platforms.
-    /// Detailed in the high-speed cryptographic operations section.
-    public function getTIGER_FILE_HASH()
+    /// Tezos Digital Signature
+    /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
+    /// Refer to the Tezos Blockchain integration section for details.
+    public function getXTZ_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Cyclic Redundancy Check (CRC) 32
-    /// Cyclic redundancy check with a length of 32 bits.
-    /// Refer to CRC section for more details.
-    public function getCRC32()
+    /// Cosmos Digital Signature
+    /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
+    /// Refer to the Cosmos Blockchain integration section for details.
+    public function getATOM_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Adler-32 Checksum
-    /// Adler-32 checksum with a length of 32 bits.
-    /// Refer to the checksum section for more details.
-    public function getADLER32_CHECKSUM()
+    /// Tron Digital Signature
+    /// Digital signature of the IPFS file hash using Tron's signing mechanism.
+    /// Refer to the Tron Blockchain integration section for details.
+    public function getTRX_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Universal Hash Function Family - Rabin Fingerprint
-    /// Variable-length hash function using Rabin fingerprinting.
-    /// Refer to the Universal hash function families section for details.
-    public function getRABIN_FINGERPRINT()
+    /// Binance Coin Digital Signature
+    /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
+    /// Refer to the Binance Coin Blockchain integration section for details.
+    public function getBNB_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Non-Cryptographic Hash Function - Pearson Hashing
-    /// Non-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getPEARSON_HASHING()
+    /// Avalanche Digital Signature
+    /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
+    /// Refer to the Avalanche Blockchain integration section for details.
+    public function getAVAX_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Keyed Cryptographic Hash Function - BLAKE2
-    /// Keyed hash function (prefix-MAC) with variable length.
-    /// Refer to the Keyed cryptographic hash functions section for details.
-    public function getBLAKE2_KEYED_HASH()
+    /// Solana Digital Signature
+    /// Digital signature of the IPFS file hash using Solana's signing mechanism.
+    /// Refer to the Solana Blockchain integration section for details.
+    public function getSOL_DIGITAL_SIGNATURE()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - BLAKE-256
-    /// Cryptographic hash function with a length of 256 bits, based on HAIFA structure.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getBLAKE_256()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// CRC-8
-    /// Cyclic redundancy check with a length of 8 bits.
-    /// Refer to CRC section for more details.
-    public function getCRC8()
-    {
-        $o = $this->__offset(40);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// CRC-16
-    /// Cyclic redundancy check with a length of 16 bits.
-    /// Refer to CRC section for more details.
-    public function getCRC16()
-    {
-        $o = $this->__offset(42);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// CRC-64
-    /// Cyclic redundancy check with a length of 64 bits.
-    /// Refer to CRC section for more details.
-    public function getCRC64()
-    {
-        $o = $this->__offset(44);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// BSD Checksum
-    /// BSD checksum with a length of 16 bits.
-    /// Refer to the checksum section for more details.
-    public function getBSD_CHECKSUM()
-    {
-        $o = $this->__offset(46);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// SYSV Checksum
-    /// SYSV checksum with a length of 16 bits.
-    /// Refer to the checksum section for more details.
-    public function getSYSV_CHECKSUM()
-    {
-        $o = $this->__offset(48);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Sum8
-    /// Sum with a length of 8 bits.
-    /// Refer to the checksum section for more details.
-    public function getSUM8()
-    {
-        $o = $this->__offset(50);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Internet Checksum
-    /// Internet checksum with a length of 16 bits.
-    /// Refer to the checksum section for more details.
-    public function getINTERNET_CHECKSUM()
-    {
-        $o = $this->__offset(52);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Sum24
-    /// Sum with a length of 24 bits.
-    /// Refer to the checksum section for more details.
-    public function getSUM24()
-    {
-        $o = $this->__offset(54);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Sum32
-    /// Sum with a length of 32 bits.
-    /// Refer to the checksum section for more details.
-    public function getSUM32()
-    {
-        $o = $this->__offset(56);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Fletcher-4
-    /// Sum with a length of 4 bits.
-    /// Refer to the checksum section for more details.
-    public function getFLETCHER_4()
-    {
-        $o = $this->__offset(58);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Fletcher-8
-    /// Sum with a length of 8 bits.
-    /// Refer to the checksum section for more details.
-    public function getFLETCHER_8()
-    {
-        $o = $this->__offset(60);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Fletcher-16
-    /// Sum with a length of 16 bits.
-    /// Refer to the checksum section for more details.
-    public function getFLETCHER_16()
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Fletcher-32
-    /// Sum with a length of 32 bits.
-    /// Refer to the checksum section for more details.
-    public function getFLETCHER_32()
-    {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Luhn Algorithm
-    /// Luhn algorithm with a length of 1 decimal digit.
-    /// Refer to the checksum section for more details.
-    public function getLUNH_ALGORITHM()
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Verhoeff Algorithm
-    /// Verhoeff algorithm with a length of 1 decimal digit.
-    /// Refer to the checksum section for more details.
-    public function getVERHOEFF_ALGORITHM()
-    {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Damm Algorithm
-    /// Damm algorithm with a length of 1 decimal digit.
-    /// Refer to the checksum section for more details.
-    public function getDAMM_ALGORITHM()
-    {
-        $o = $this->__offset(70);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Universal Hash Function Family - Tabulation Hashing
-    /// Variable-length hash function using tabulation hashing.
-    /// Refer to the Universal hash function families section for details.
-    public function getTABULATION_HASHING()
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Universal Hash Function Family - Universal One-Way Hash Function
-    /// Universal one-way hash function with arbitrary length.
-    /// Refer to the Universal hash function families section for details.
-    public function getUNIVERSAL_ONE_WAY_HASH_FUNCTION()
-    {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Universal Hash Function Family - Zobrist Hashing
-    /// Variable-length hash function using Zobrist hashing.
-    /// Refer to the Universal hash function families section for details.
-    public function getZOBRIST_HASHING()
-    {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash
-    /// Non-cryptographic hash function with a length of 32 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getPAUL_HSIEHS_SUPERFASTHASH()
-    {
-        $o = $this->__offset(78);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Buzhash
-    /// Non-cryptographic hash function with variable length.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getBUZHASH()
-    {
-        $o = $this->__offset(80);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)
-    /// Non-cryptographic hash function with variable length.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getFNV_HASH()
-    {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Jenkins Hash Function
-    /// Non-cryptographic hash function with a length of 32 or 64 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getJENKINS_HASH_FUNCTION()
-    {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Bernstein's Hash (djb2)
-    /// Non-cryptographic hash function with a length of 32 or 64 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getBERNSTEINS_HASH_DJB2()
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - PJW Hash / Elf Hash
-    /// Non-cryptographic hash function with a length of 32 or 64 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getPJW_HASH_ELF_HASH()
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - MurmurHash
-    /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getMURMURHASH()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Fast-Hash
-    /// Non-cryptographic hash function with a length of 32 or 64 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getFAST_HASH()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - SpookyHash
-    /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getSPOOKYHASH()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - CityHash
-    /// Non-cryptographic hash function with a length of 32, 64, 128, or 256 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getCITYHASH()
-    {
-        $o = $this->__offset(96);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - FarmHash
-    /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getFARMHASH()
-    {
-        $o = $this->__offset(98);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - MetroHash
-    /// Non-cryptographic hash function with a length of 64 or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getMETROHASH()
-    {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - Numeric Hash (nhash)
-    /// Non-cryptographic hash function with variable length.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getNUMERIC_HASH()
-    {
-        $o = $this->__offset(102);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - xxHash
-    /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getXXHASH()
-    {
-        $o = $this->__offset(104);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)
-    /// Non-cryptographic hash function with a length of 64 or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getT1HA()
-    {
-        $o = $this->__offset(106);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - GxHash
-    /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getGXHASH()
-    {
-        $o = $this->__offset(108);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - pHash
-    /// Non-cryptographic hash function with fixed or variable length.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getPHASH()
-    {
-        $o = $this->__offset(110);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - dhash
-    /// Non-cryptographic hash function with a length of 128 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getDHASH()
-    {
-        $o = $this->__offset(112);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Non-Cryptographic Hash Function - SDBM
-    /// Non-cryptographic hash function with a length of 32 or 64 bits.
-    /// Refer to the Non-cryptographic hash functions section for details.
-    public function getSDBM()
-    {
-        $o = $this->__offset(114);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - OSDB Hash
-    /// Cryptographic hash function with a length of 64 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getOSDB_HASH()
-    {
-        $o = $this->__offset(116);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - komihash
-    /// Cryptographic hash function with a length of 64 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getKOMIHASH()
-    {
-        $o = $this->__offset(118);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Keyed Cryptographic Hash Function - BLAKE3
-    /// Keyed hash function with arbitrary length.
-    /// Refer to the Keyed cryptographic hash functions section for details.
-    public function getBLAKE3()
-    {
-        $o = $this->__offset(120);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - ECOH
-    /// Cryptographic hash function with a length of 224 to 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getECOH()
-    {
-        $o = $this->__offset(122);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - FSB
-    /// Cryptographic hash function with a length of 160 to 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getFSB()
-    {
-        $o = $this->__offset(124);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - GOST
-    /// Cryptographic hash function with a length of 256 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getGOST()
-    {
-        $o = $this->__offset(126);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Grøstl
-    /// Cryptographic hash function with a length of up to 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getGROSTL()
-    {
-        $o = $this->__offset(128);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - HAS-160
-    /// Cryptographic hash function with a length of 160 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getHAS_160()
-    {
-        $o = $this->__offset(130);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - HAVAL
-    /// Cryptographic hash function with a length of 128 to 256 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getHAVAL()
-    {
-        $o = $this->__offset(132);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - JH
-    /// Cryptographic hash function with a length of 224 to 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getJH()
-    {
-        $o = $this->__offset(134);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - LSH
-    /// Cryptographic hash function with a length of 256 to 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getLSH()
-    {
-        $o = $this->__offset(136);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - MD2
-    /// Cryptographic hash function with a length of 128 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getMD2()
-    {
-        $o = $this->__offset(138);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - MD4
-    /// Cryptographic hash function with a length of 128 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getMD4()
-    {
-        $o = $this->__offset(140);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - MD5
-    /// Cryptographic hash function with a length of 128 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getMD5()
-    {
-        $o = $this->__offset(142);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - MD6
-    /// Cryptographic hash function with a length of up to 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getMD6()
-    {
-        $o = $this->__offset(144);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - RadioGatún
-    /// Cryptographic hash function with arbitrary length.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getRADIOGATUN()
-    {
-        $o = $this->__offset(146);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - RIPEMD
-    /// Cryptographic hash function with a length of 128 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getRIPEMD()
-    {
-        $o = $this->__offset(148);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - RIPEMD-128
-    /// Cryptographic hash function with a length of 128 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getRIPEMD_128()
-    {
-        $o = $this->__offset(150);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - RIPEMD-256
-    /// Cryptographic hash function with a length of 256 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getRIPEMD_256()
-    {
-        $o = $this->__offset(152);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - RIPEMD-320
-    /// Cryptographic hash function with a length of 320 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getRIPEMD_320()
-    {
-        $o = $this->__offset(154);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SHA-1
-    /// Cryptographic hash function with a length of 160 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSHA_1()
-    {
-        $o = $this->__offset(156);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SHA-224
-    /// Cryptographic hash function with a length of 224 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSHA_224()
-    {
-        $o = $this->__offset(158);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SHA-256
-    /// Cryptographic hash function with a length of 256 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSHA_256()
-    {
-        $o = $this->__offset(160);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SHA-384
-    /// Cryptographic hash function with a length of 384 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSHA_384()
-    {
-        $o = $this->__offset(162);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SHA-512
-    /// Cryptographic hash function with a length of 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSHA_512()
-    {
-        $o = $this->__offset(164);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SHA-3
-    /// Cryptographic hash function with arbitrary length.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSHA_3()
-    {
-        $o = $this->__offset(166);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Skein
-    /// Cryptographic hash function with arbitrary length.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSKEIN()
-    {
-        $o = $this->__offset(168);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Snefru
-    /// Cryptographic hash function with a length of 128 or 256 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSNEFRU()
-    {
-        $o = $this->__offset(170);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Spectral Hash
-    /// Cryptographic hash function with a length of 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSPECTRAL_HASH()
-    {
-        $o = $this->__offset(172);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Streebog
-    /// Cryptographic hash function with a length of 256 or 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSTREEBOG()
-    {
-        $o = $this->__offset(174);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - SWIFFT
-    /// Cryptographic hash function with a length of 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getSWIFFT()
-    {
-        $o = $this->__offset(176);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Tiger
-    /// Cryptographic hash function with a length of 192 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getTIGER()
-    {
-        $o = $this->__offset(178);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Unkeyed Cryptographic Hash Function - Whirlpool
-    /// Cryptographic hash function with a length of 512 bits.
-    /// Refer to the Unkeyed cryptographic hash functions section for details.
-    public function getWHIRLPOOL()
-    {
-        $o = $this->__offset(180);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -849,105 +201,33 @@ class PNM extends Table
      */
     public static function startPNM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(89);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PNM
      */
-    public static function createPNM(FlatBufferBuilder $builder, $IPFS_CID, $ETH_DIGITAL_SIGNATURE, $SHA_512_FILE_HASH, $SHA_256_FILE_HASH, $MD5_FILE_DIGEST, $SHA_1_FILE_HASH, $ARGON2_FILE_HASH, $BLAKE2B_FILE_HASH, $SHA_3_FILE_HASH, $RIPEMD_160_FILE_HASH, $WHIRLPOOL_FILE_HASH, $TIGER_FILE_HASH, $CRC32, $ADLER32_CHECKSUM, $RABIN_FINGERPRINT, $PEARSON_HASHING, $BLAKE2_KEYED_HASH, $BLAKE_256, $CRC8, $CRC16, $CRC64, $BSD_CHECKSUM, $SYSV_CHECKSUM, $SUM8, $INTERNET_CHECKSUM, $SUM24, $SUM32, $FLETCHER_4, $FLETCHER_8, $FLETCHER_16, $FLETCHER_32, $LUNH_ALGORITHM, $VERHOEFF_ALGORITHM, $DAMM_ALGORITHM, $TABULATION_HASHING, $UNIVERSAL_ONE_WAY_HASH_FUNCTION, $ZOBRIST_HASHING, $PAUL_HSIEHS_SUPERFASTHASH, $BUZHASH, $FNV_HASH, $JENKINS_HASH_FUNCTION, $BERNSTEINS_HASH_DJB2, $PJW_HASH_ELF_HASH, $MURMURHASH, $FAST_HASH, $SPOOKYHASH, $CITYHASH, $FARMHASH, $METROHASH, $NUMERIC_HASH, $XXHASH, $T1HA, $GXHASH, $PHASH, $DHASH, $SDBM, $OSDB_HASH, $KOMIHASH, $BLAKE3, $ECOH, $FSB, $GOST, $GROSTL, $HAS_160, $HAVAL, $JH, $LSH, $MD2, $MD4, $MD5, $MD6, $RADIOGATUN, $RIPEMD, $RIPEMD_128, $RIPEMD_256, $RIPEMD_320, $SHA_1, $SHA_224, $SHA_256, $SHA_384, $SHA_512, $SHA_3, $SKEIN, $SNEFRU, $SPECTRAL_HASH, $STREEBOG, $SWIFFT, $TIGER, $WHIRLPOOL)
+    public static function createPNM(FlatBufferBuilder $builder, $IPFS_CID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
     {
-        $builder->startObject(89);
+        $builder->startObject(17);
         self::addIPFS_CID($builder, $IPFS_CID);
         self::addETH_DIGITAL_SIGNATURE($builder, $ETH_DIGITAL_SIGNATURE);
-        self::addSHA_512_FILE_HASH($builder, $SHA_512_FILE_HASH);
-        self::addSHA_256_FILE_HASH($builder, $SHA_256_FILE_HASH);
-        self::addMD5_FILE_DIGEST($builder, $MD5_FILE_DIGEST);
-        self::addSHA_1_FILE_HASH($builder, $SHA_1_FILE_HASH);
-        self::addARGON2_FILE_HASH($builder, $ARGON2_FILE_HASH);
-        self::addBLAKE2B_FILE_HASH($builder, $BLAKE2B_FILE_HASH);
-        self::addSHA_3_FILE_HASH($builder, $SHA_3_FILE_HASH);
-        self::addRIPEMD_160_FILE_HASH($builder, $RIPEMD_160_FILE_HASH);
-        self::addWHIRLPOOL_FILE_HASH($builder, $WHIRLPOOL_FILE_HASH);
-        self::addTIGER_FILE_HASH($builder, $TIGER_FILE_HASH);
-        self::addCRC32($builder, $CRC32);
-        self::addADLER32_CHECKSUM($builder, $ADLER32_CHECKSUM);
-        self::addRABIN_FINGERPRINT($builder, $RABIN_FINGERPRINT);
-        self::addPEARSON_HASHING($builder, $PEARSON_HASHING);
-        self::addBLAKE2_KEYED_HASH($builder, $BLAKE2_KEYED_HASH);
-        self::addBLAKE_256($builder, $BLAKE_256);
-        self::addCRC8($builder, $CRC8);
-        self::addCRC16($builder, $CRC16);
-        self::addCRC64($builder, $CRC64);
-        self::addBSD_CHECKSUM($builder, $BSD_CHECKSUM);
-        self::addSYSV_CHECKSUM($builder, $SYSV_CHECKSUM);
-        self::addSUM8($builder, $SUM8);
-        self::addINTERNET_CHECKSUM($builder, $INTERNET_CHECKSUM);
-        self::addSUM24($builder, $SUM24);
-        self::addSUM32($builder, $SUM32);
-        self::addFLETCHER_4($builder, $FLETCHER_4);
-        self::addFLETCHER_8($builder, $FLETCHER_8);
-        self::addFLETCHER_16($builder, $FLETCHER_16);
-        self::addFLETCHER_32($builder, $FLETCHER_32);
-        self::addLUNH_ALGORITHM($builder, $LUNH_ALGORITHM);
-        self::addVERHOEFF_ALGORITHM($builder, $VERHOEFF_ALGORITHM);
-        self::addDAMM_ALGORITHM($builder, $DAMM_ALGORITHM);
-        self::addTABULATION_HASHING($builder, $TABULATION_HASHING);
-        self::addUNIVERSAL_ONE_WAY_HASH_FUNCTION($builder, $UNIVERSAL_ONE_WAY_HASH_FUNCTION);
-        self::addZOBRIST_HASHING($builder, $ZOBRIST_HASHING);
-        self::addPAUL_HSIEHS_SUPERFASTHASH($builder, $PAUL_HSIEHS_SUPERFASTHASH);
-        self::addBUZHASH($builder, $BUZHASH);
-        self::addFNV_HASH($builder, $FNV_HASH);
-        self::addJENKINS_HASH_FUNCTION($builder, $JENKINS_HASH_FUNCTION);
-        self::addBERNSTEINS_HASH_DJB2($builder, $BERNSTEINS_HASH_DJB2);
-        self::addPJW_HASH_ELF_HASH($builder, $PJW_HASH_ELF_HASH);
-        self::addMURMURHASH($builder, $MURMURHASH);
-        self::addFAST_HASH($builder, $FAST_HASH);
-        self::addSPOOKYHASH($builder, $SPOOKYHASH);
-        self::addCITYHASH($builder, $CITYHASH);
-        self::addFARMHASH($builder, $FARMHASH);
-        self::addMETROHASH($builder, $METROHASH);
-        self::addNUMERIC_HASH($builder, $NUMERIC_HASH);
-        self::addXXHASH($builder, $XXHASH);
-        self::addT1HA($builder, $T1HA);
-        self::addGXHASH($builder, $GXHASH);
-        self::addPHASH($builder, $PHASH);
-        self::addDHASH($builder, $DHASH);
-        self::addSDBM($builder, $SDBM);
-        self::addOSDB_HASH($builder, $OSDB_HASH);
-        self::addKOMIHASH($builder, $KOMIHASH);
-        self::addBLAKE3($builder, $BLAKE3);
-        self::addECOH($builder, $ECOH);
-        self::addFSB($builder, $FSB);
-        self::addGOST($builder, $GOST);
-        self::addGROSTL($builder, $GROSTL);
-        self::addHAS_160($builder, $HAS_160);
-        self::addHAVAL($builder, $HAVAL);
-        self::addJH($builder, $JH);
-        self::addLSH($builder, $LSH);
-        self::addMD2($builder, $MD2);
-        self::addMD4($builder, $MD4);
-        self::addMD5($builder, $MD5);
-        self::addMD6($builder, $MD6);
-        self::addRADIOGATUN($builder, $RADIOGATUN);
-        self::addRIPEMD($builder, $RIPEMD);
-        self::addRIPEMD_128($builder, $RIPEMD_128);
-        self::addRIPEMD_256($builder, $RIPEMD_256);
-        self::addRIPEMD_320($builder, $RIPEMD_320);
-        self::addSHA_1($builder, $SHA_1);
-        self::addSHA_224($builder, $SHA_224);
-        self::addSHA_256($builder, $SHA_256);
-        self::addSHA_384($builder, $SHA_384);
-        self::addSHA_512($builder, $SHA_512);
-        self::addSHA_3($builder, $SHA_3);
-        self::addSKEIN($builder, $SKEIN);
-        self::addSNEFRU($builder, $SNEFRU);
-        self::addSPECTRAL_HASH($builder, $SPECTRAL_HASH);
-        self::addSTREEBOG($builder, $STREEBOG);
-        self::addSWIFFT($builder, $SWIFFT);
-        self::addTIGER($builder, $TIGER);
-        self::addWHIRLPOOL($builder, $WHIRLPOOL);
+        self::addBTC_DIGITAL_SIGNATURE($builder, $BTC_DIGITAL_SIGNATURE);
+        self::addLTC_DIGITAL_SIGNATURE($builder, $LTC_DIGITAL_SIGNATURE);
+        self::addXRP_DIGITAL_SIGNATURE($builder, $XRP_DIGITAL_SIGNATURE);
+        self::addADA_DIGITAL_SIGNATURE($builder, $ADA_DIGITAL_SIGNATURE);
+        self::addXLM_DIGITAL_SIGNATURE($builder, $XLM_DIGITAL_SIGNATURE);
+        self::addDOGE_DIGITAL_SIGNATURE($builder, $DOGE_DIGITAL_SIGNATURE);
+        self::addXMR_DIGITAL_SIGNATURE($builder, $XMR_DIGITAL_SIGNATURE);
+        self::addDOT_DIGITAL_SIGNATURE($builder, $DOT_DIGITAL_SIGNATURE);
+        self::addFIL_DIGITAL_SIGNATURE($builder, $FIL_DIGITAL_SIGNATURE);
+        self::addXTZ_DIGITAL_SIGNATURE($builder, $XTZ_DIGITAL_SIGNATURE);
+        self::addATOM_DIGITAL_SIGNATURE($builder, $ATOM_DIGITAL_SIGNATURE);
+        self::addTRX_DIGITAL_SIGNATURE($builder, $TRX_DIGITAL_SIGNATURE);
+        self::addBNB_DIGITAL_SIGNATURE($builder, $BNB_DIGITAL_SIGNATURE);
+        self::addAVAX_DIGITAL_SIGNATURE($builder, $AVAX_DIGITAL_SIGNATURE);
+        self::addSOL_DIGITAL_SIGNATURE($builder, $SOL_DIGITAL_SIGNATURE);
         $o = $builder->endObject();
         return $o;
     }
@@ -977,9 +257,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSHA_512_FILE_HASH(FlatBufferBuilder $builder, $SHA_512_FILE_HASH)
+    public static function addBTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BTC_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(2, $SHA_512_FILE_HASH, 0);
+        $builder->addOffsetX(2, $BTC_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -987,9 +267,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSHA_256_FILE_HASH(FlatBufferBuilder $builder, $SHA_256_FILE_HASH)
+    public static function addLTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $LTC_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(3, $SHA_256_FILE_HASH, 0);
+        $builder->addOffsetX(3, $LTC_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -997,9 +277,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addMD5_FILE_DIGEST(FlatBufferBuilder $builder, $MD5_FILE_DIGEST)
+    public static function addXRP_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XRP_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(4, $MD5_FILE_DIGEST, 0);
+        $builder->addOffsetX(4, $XRP_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1007,9 +287,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSHA_1_FILE_HASH(FlatBufferBuilder $builder, $SHA_1_FILE_HASH)
+    public static function addADA_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ADA_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(5, $SHA_1_FILE_HASH, 0);
+        $builder->addOffsetX(5, $ADA_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1017,9 +297,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addARGON2_FILE_HASH(FlatBufferBuilder $builder, $ARGON2_FILE_HASH)
+    public static function addXLM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XLM_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(6, $ARGON2_FILE_HASH, 0);
+        $builder->addOffsetX(6, $XLM_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1027,9 +307,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addBLAKE2B_FILE_HASH(FlatBufferBuilder $builder, $BLAKE2B_FILE_HASH)
+    public static function addDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOGE_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(7, $BLAKE2B_FILE_HASH, 0);
+        $builder->addOffsetX(7, $DOGE_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1037,9 +317,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSHA_3_FILE_HASH(FlatBufferBuilder $builder, $SHA_3_FILE_HASH)
+    public static function addXMR_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XMR_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(8, $SHA_3_FILE_HASH, 0);
+        $builder->addOffsetX(8, $XMR_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1047,9 +327,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addRIPEMD_160_FILE_HASH(FlatBufferBuilder $builder, $RIPEMD_160_FILE_HASH)
+    public static function addDOT_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOT_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(9, $RIPEMD_160_FILE_HASH, 0);
+        $builder->addOffsetX(9, $DOT_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1057,9 +337,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addWHIRLPOOL_FILE_HASH(FlatBufferBuilder $builder, $WHIRLPOOL_FILE_HASH)
+    public static function addFIL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $FIL_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(10, $WHIRLPOOL_FILE_HASH, 0);
+        $builder->addOffsetX(10, $FIL_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1067,9 +347,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addTIGER_FILE_HASH(FlatBufferBuilder $builder, $TIGER_FILE_HASH)
+    public static function addXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XTZ_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(11, $TIGER_FILE_HASH, 0);
+        $builder->addOffsetX(11, $XTZ_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1077,9 +357,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addCRC32(FlatBufferBuilder $builder, $CRC32)
+    public static function addATOM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ATOM_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(12, $CRC32, 0);
+        $builder->addOffsetX(12, $ATOM_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1087,9 +367,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addADLER32_CHECKSUM(FlatBufferBuilder $builder, $ADLER32_CHECKSUM)
+    public static function addTRX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $TRX_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(13, $ADLER32_CHECKSUM, 0);
+        $builder->addOffsetX(13, $TRX_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1097,9 +377,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addRABIN_FINGERPRINT(FlatBufferBuilder $builder, $RABIN_FINGERPRINT)
+    public static function addBNB_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BNB_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(14, $RABIN_FINGERPRINT, 0);
+        $builder->addOffsetX(14, $BNB_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1107,9 +387,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addPEARSON_HASHING(FlatBufferBuilder $builder, $PEARSON_HASHING)
+    public static function addAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $AVAX_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(15, $PEARSON_HASHING, 0);
+        $builder->addOffsetX(15, $AVAX_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -1117,729 +397,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addBLAKE2_KEYED_HASH(FlatBufferBuilder $builder, $BLAKE2_KEYED_HASH)
+    public static function addSOL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $SOL_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(16, $BLAKE2_KEYED_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBLAKE_256(FlatBufferBuilder $builder, $BLAKE_256)
-    {
-        $builder->addOffsetX(17, $BLAKE_256, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCRC8(FlatBufferBuilder $builder, $CRC8)
-    {
-        $builder->addOffsetX(18, $CRC8, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCRC16(FlatBufferBuilder $builder, $CRC16)
-    {
-        $builder->addOffsetX(19, $CRC16, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCRC64(FlatBufferBuilder $builder, $CRC64)
-    {
-        $builder->addOffsetX(20, $CRC64, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBSD_CHECKSUM(FlatBufferBuilder $builder, $BSD_CHECKSUM)
-    {
-        $builder->addOffsetX(21, $BSD_CHECKSUM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSYSV_CHECKSUM(FlatBufferBuilder $builder, $SYSV_CHECKSUM)
-    {
-        $builder->addOffsetX(22, $SYSV_CHECKSUM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSUM8(FlatBufferBuilder $builder, $SUM8)
-    {
-        $builder->addOffsetX(23, $SUM8, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addINTERNET_CHECKSUM(FlatBufferBuilder $builder, $INTERNET_CHECKSUM)
-    {
-        $builder->addOffsetX(24, $INTERNET_CHECKSUM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSUM24(FlatBufferBuilder $builder, $SUM24)
-    {
-        $builder->addOffsetX(25, $SUM24, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSUM32(FlatBufferBuilder $builder, $SUM32)
-    {
-        $builder->addOffsetX(26, $SUM32, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFLETCHER_4(FlatBufferBuilder $builder, $FLETCHER_4)
-    {
-        $builder->addOffsetX(27, $FLETCHER_4, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFLETCHER_8(FlatBufferBuilder $builder, $FLETCHER_8)
-    {
-        $builder->addOffsetX(28, $FLETCHER_8, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFLETCHER_16(FlatBufferBuilder $builder, $FLETCHER_16)
-    {
-        $builder->addOffsetX(29, $FLETCHER_16, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFLETCHER_32(FlatBufferBuilder $builder, $FLETCHER_32)
-    {
-        $builder->addOffsetX(30, $FLETCHER_32, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLUNH_ALGORITHM(FlatBufferBuilder $builder, $LUNH_ALGORITHM)
-    {
-        $builder->addOffsetX(31, $LUNH_ALGORITHM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addVERHOEFF_ALGORITHM(FlatBufferBuilder $builder, $VERHOEFF_ALGORITHM)
-    {
-        $builder->addOffsetX(32, $VERHOEFF_ALGORITHM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDAMM_ALGORITHM(FlatBufferBuilder $builder, $DAMM_ALGORITHM)
-    {
-        $builder->addOffsetX(33, $DAMM_ALGORITHM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTABULATION_HASHING(FlatBufferBuilder $builder, $TABULATION_HASHING)
-    {
-        $builder->addOffsetX(34, $TABULATION_HASHING, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addUNIVERSAL_ONE_WAY_HASH_FUNCTION(FlatBufferBuilder $builder, $UNIVERSAL_ONE_WAY_HASH_FUNCTION)
-    {
-        $builder->addOffsetX(35, $UNIVERSAL_ONE_WAY_HASH_FUNCTION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addZOBRIST_HASHING(FlatBufferBuilder $builder, $ZOBRIST_HASHING)
-    {
-        $builder->addOffsetX(36, $ZOBRIST_HASHING, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPAUL_HSIEHS_SUPERFASTHASH(FlatBufferBuilder $builder, $PAUL_HSIEHS_SUPERFASTHASH)
-    {
-        $builder->addOffsetX(37, $PAUL_HSIEHS_SUPERFASTHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBUZHASH(FlatBufferBuilder $builder, $BUZHASH)
-    {
-        $builder->addOffsetX(38, $BUZHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFNV_HASH(FlatBufferBuilder $builder, $FNV_HASH)
-    {
-        $builder->addOffsetX(39, $FNV_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addJENKINS_HASH_FUNCTION(FlatBufferBuilder $builder, $JENKINS_HASH_FUNCTION)
-    {
-        $builder->addOffsetX(40, $JENKINS_HASH_FUNCTION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBERNSTEINS_HASH_DJB2(FlatBufferBuilder $builder, $BERNSTEINS_HASH_DJB2)
-    {
-        $builder->addOffsetX(41, $BERNSTEINS_HASH_DJB2, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPJW_HASH_ELF_HASH(FlatBufferBuilder $builder, $PJW_HASH_ELF_HASH)
-    {
-        $builder->addOffsetX(42, $PJW_HASH_ELF_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMURMURHASH(FlatBufferBuilder $builder, $MURMURHASH)
-    {
-        $builder->addOffsetX(43, $MURMURHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFAST_HASH(FlatBufferBuilder $builder, $FAST_HASH)
-    {
-        $builder->addOffsetX(44, $FAST_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSPOOKYHASH(FlatBufferBuilder $builder, $SPOOKYHASH)
-    {
-        $builder->addOffsetX(45, $SPOOKYHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCITYHASH(FlatBufferBuilder $builder, $CITYHASH)
-    {
-        $builder->addOffsetX(46, $CITYHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFARMHASH(FlatBufferBuilder $builder, $FARMHASH)
-    {
-        $builder->addOffsetX(47, $FARMHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMETROHASH(FlatBufferBuilder $builder, $METROHASH)
-    {
-        $builder->addOffsetX(48, $METROHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addNUMERIC_HASH(FlatBufferBuilder $builder, $NUMERIC_HASH)
-    {
-        $builder->addOffsetX(49, $NUMERIC_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addXXHASH(FlatBufferBuilder $builder, $XXHASH)
-    {
-        $builder->addOffsetX(50, $XXHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addT1HA(FlatBufferBuilder $builder, $T1HA)
-    {
-        $builder->addOffsetX(51, $T1HA, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addGXHASH(FlatBufferBuilder $builder, $GXHASH)
-    {
-        $builder->addOffsetX(52, $GXHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPHASH(FlatBufferBuilder $builder, $PHASH)
-    {
-        $builder->addOffsetX(53, $PHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDHASH(FlatBufferBuilder $builder, $DHASH)
-    {
-        $builder->addOffsetX(54, $DHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSDBM(FlatBufferBuilder $builder, $SDBM)
-    {
-        $builder->addOffsetX(55, $SDBM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOSDB_HASH(FlatBufferBuilder $builder, $OSDB_HASH)
-    {
-        $builder->addOffsetX(56, $OSDB_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addKOMIHASH(FlatBufferBuilder $builder, $KOMIHASH)
-    {
-        $builder->addOffsetX(57, $KOMIHASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBLAKE3(FlatBufferBuilder $builder, $BLAKE3)
-    {
-        $builder->addOffsetX(58, $BLAKE3, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addECOH(FlatBufferBuilder $builder, $ECOH)
-    {
-        $builder->addOffsetX(59, $ECOH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFSB(FlatBufferBuilder $builder, $FSB)
-    {
-        $builder->addOffsetX(60, $FSB, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addGOST(FlatBufferBuilder $builder, $GOST)
-    {
-        $builder->addOffsetX(61, $GOST, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addGROSTL(FlatBufferBuilder $builder, $GROSTL)
-    {
-        $builder->addOffsetX(62, $GROSTL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addHAS_160(FlatBufferBuilder $builder, $HAS_160)
-    {
-        $builder->addOffsetX(63, $HAS_160, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addHAVAL(FlatBufferBuilder $builder, $HAVAL)
-    {
-        $builder->addOffsetX(64, $HAVAL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addJH(FlatBufferBuilder $builder, $JH)
-    {
-        $builder->addOffsetX(65, $JH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLSH(FlatBufferBuilder $builder, $LSH)
-    {
-        $builder->addOffsetX(66, $LSH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMD2(FlatBufferBuilder $builder, $MD2)
-    {
-        $builder->addOffsetX(67, $MD2, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMD4(FlatBufferBuilder $builder, $MD4)
-    {
-        $builder->addOffsetX(68, $MD4, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMD5(FlatBufferBuilder $builder, $MD5)
-    {
-        $builder->addOffsetX(69, $MD5, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMD6(FlatBufferBuilder $builder, $MD6)
-    {
-        $builder->addOffsetX(70, $MD6, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addRADIOGATUN(FlatBufferBuilder $builder, $RADIOGATUN)
-    {
-        $builder->addOffsetX(71, $RADIOGATUN, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addRIPEMD(FlatBufferBuilder $builder, $RIPEMD)
-    {
-        $builder->addOffsetX(72, $RIPEMD, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addRIPEMD_128(FlatBufferBuilder $builder, $RIPEMD_128)
-    {
-        $builder->addOffsetX(73, $RIPEMD_128, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addRIPEMD_256(FlatBufferBuilder $builder, $RIPEMD_256)
-    {
-        $builder->addOffsetX(74, $RIPEMD_256, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addRIPEMD_320(FlatBufferBuilder $builder, $RIPEMD_320)
-    {
-        $builder->addOffsetX(75, $RIPEMD_320, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSHA_1(FlatBufferBuilder $builder, $SHA_1)
-    {
-        $builder->addOffsetX(76, $SHA_1, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSHA_224(FlatBufferBuilder $builder, $SHA_224)
-    {
-        $builder->addOffsetX(77, $SHA_224, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSHA_256(FlatBufferBuilder $builder, $SHA_256)
-    {
-        $builder->addOffsetX(78, $SHA_256, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSHA_384(FlatBufferBuilder $builder, $SHA_384)
-    {
-        $builder->addOffsetX(79, $SHA_384, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSHA_512(FlatBufferBuilder $builder, $SHA_512)
-    {
-        $builder->addOffsetX(80, $SHA_512, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSHA_3(FlatBufferBuilder $builder, $SHA_3)
-    {
-        $builder->addOffsetX(81, $SHA_3, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSKEIN(FlatBufferBuilder $builder, $SKEIN)
-    {
-        $builder->addOffsetX(82, $SKEIN, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSNEFRU(FlatBufferBuilder $builder, $SNEFRU)
-    {
-        $builder->addOffsetX(83, $SNEFRU, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSPECTRAL_HASH(FlatBufferBuilder $builder, $SPECTRAL_HASH)
-    {
-        $builder->addOffsetX(84, $SPECTRAL_HASH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSTREEBOG(FlatBufferBuilder $builder, $STREEBOG)
-    {
-        $builder->addOffsetX(85, $STREEBOG, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSWIFFT(FlatBufferBuilder $builder, $SWIFFT)
-    {
-        $builder->addOffsetX(86, $SWIFFT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTIGER(FlatBufferBuilder $builder, $TIGER)
-    {
-        $builder->addOffsetX(87, $TIGER, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addWHIRLPOOL(FlatBufferBuilder $builder, $WHIRLPOOL)
-    {
-        $builder->addOffsetX(88, $WHIRLPOOL, 0);
+        $builder->addOffsetX(16, $SOL_DIGITAL_SIGNATURE, 0);
     }
 
     /**

@@ -3,6 +3,7 @@
 
 // @generated
 
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -2944,6 +2945,8 @@ impl<'a> CDM<'a> {
   pub const VT_COLLISION_PROBABILITY_METHOD: flatbuffers::VOffsetT = 52;
   pub const VT_OBJECT1: flatbuffers::VOffsetT = 54;
   pub const VT_OBJECT2: flatbuffers::VOffsetT = 56;
+  pub const VT_OBJECT1_DATASOURCE: flatbuffers::VOffsetT = 58;
+  pub const VT_OBJECT2_DATASOURCE: flatbuffers::VOffsetT = 60;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2968,6 +2971,8 @@ impl<'a> CDM<'a> {
     builder.add_RELATIVE_SPEED(args.RELATIVE_SPEED);
     builder.add_MISS_DISTANCE(args.MISS_DISTANCE);
     builder.add_CCSDS_CDM_VERS(args.CCSDS_CDM_VERS);
+    if let Some(x) = args.OBJECT2_DATASOURCE { builder.add_OBJECT2_DATASOURCE(x); }
+    if let Some(x) = args.OBJECT1_DATASOURCE { builder.add_OBJECT1_DATASOURCE(x); }
     if let Some(x) = args.OBJECT2 { builder.add_OBJECT2(x); }
     if let Some(x) = args.OBJECT1 { builder.add_OBJECT1(x); }
     if let Some(x) = args.COLLISION_PROBABILITY_METHOD { builder.add_COLLISION_PROBABILITY_METHOD(x); }
@@ -3037,6 +3042,12 @@ impl<'a> CDM<'a> {
     let OBJECT2 = self.OBJECT2().map(|x| {
       Box::new(x.unpack())
     });
+    let OBJECT1_DATASOURCE = self.OBJECT1_DATASOURCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE().map(|x| {
+      Box::new(x.unpack())
+    });
     CDMT {
       CCSDS_CDM_VERS,
       CREATION_DATE,
@@ -3065,6 +3076,8 @@ impl<'a> CDM<'a> {
       COLLISION_PROBABILITY_METHOD,
       OBJECT1,
       OBJECT2,
+      OBJECT1_DATASOURCE,
+      OBJECT2_DATASOURCE,
     }
   }
 
@@ -3284,6 +3297,22 @@ impl<'a> CDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CDMObject>>(CDM::VT_OBJECT2, None)}
   }
+  /// Data Source for the positional information for Object 1
+  #[inline]
+  pub fn OBJECT1_DATASOURCE(&self) -> Option<PNM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<PNM>>(CDM::VT_OBJECT1_DATASOURCE, None)}
+  }
+  /// Data Source for the positional information for Object 2
+  #[inline]
+  pub fn OBJECT2_DATASOURCE(&self) -> Option<PNM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<PNM>>(CDM::VT_OBJECT2_DATASOURCE, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for CDM<'_> {
@@ -3320,6 +3349,8 @@ impl flatbuffers::Verifiable for CDM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLLISION_PROBABILITY_METHOD", Self::VT_COLLISION_PROBABILITY_METHOD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CDMObject>>("OBJECT1", Self::VT_OBJECT1, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CDMObject>>("OBJECT2", Self::VT_OBJECT2, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<PNM>>("OBJECT1_DATASOURCE", Self::VT_OBJECT1_DATASOURCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<PNM>>("OBJECT2_DATASOURCE", Self::VT_OBJECT2_DATASOURCE, false)?
      .finish();
     Ok(())
   }
@@ -3352,6 +3383,8 @@ pub struct CDMArgs<'a> {
     pub COLLISION_PROBABILITY_METHOD: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT1: Option<flatbuffers::WIPOffset<CDMObject<'a>>>,
     pub OBJECT2: Option<flatbuffers::WIPOffset<CDMObject<'a>>>,
+    pub OBJECT1_DATASOURCE: Option<flatbuffers::WIPOffset<PNM<'a>>>,
+    pub OBJECT2_DATASOURCE: Option<flatbuffers::WIPOffset<PNM<'a>>>,
 }
 impl<'a> Default for CDMArgs<'a> {
   #[inline]
@@ -3384,6 +3417,8 @@ impl<'a> Default for CDMArgs<'a> {
       COLLISION_PROBABILITY_METHOD: None,
       OBJECT1: None,
       OBJECT2: None,
+      OBJECT1_DATASOURCE: None,
+      OBJECT2_DATASOURCE: None,
     }
   }
 }
@@ -3502,6 +3537,14 @@ impl<'a: 'b, 'b> CDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CDMObject>>(CDM::VT_OBJECT2, OBJECT2);
   }
   #[inline]
+  pub fn add_OBJECT1_DATASOURCE(&mut self, OBJECT1_DATASOURCE: flatbuffers::WIPOffset<PNM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<PNM>>(CDM::VT_OBJECT1_DATASOURCE, OBJECT1_DATASOURCE);
+  }
+  #[inline]
+  pub fn add_OBJECT2_DATASOURCE(&mut self, OBJECT2_DATASOURCE: flatbuffers::WIPOffset<PNM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<PNM>>(CDM::VT_OBJECT2_DATASOURCE, OBJECT2_DATASOURCE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CDMBuilder<'a, 'b> {
     let start = _fbb.start_table();
     CDMBuilder {
@@ -3546,6 +3589,8 @@ impl core::fmt::Debug for CDM<'_> {
       ds.field("COLLISION_PROBABILITY_METHOD", &self.COLLISION_PROBABILITY_METHOD());
       ds.field("OBJECT1", &self.OBJECT1());
       ds.field("OBJECT2", &self.OBJECT2());
+      ds.field("OBJECT1_DATASOURCE", &self.OBJECT1_DATASOURCE());
+      ds.field("OBJECT2_DATASOURCE", &self.OBJECT2_DATASOURCE());
       ds.finish()
   }
 }
@@ -3579,6 +3624,8 @@ pub struct CDMT {
   pub COLLISION_PROBABILITY_METHOD: Option<String>,
   pub OBJECT1: Option<Box<CDMObjectT>>,
   pub OBJECT2: Option<Box<CDMObjectT>>,
+  pub OBJECT1_DATASOURCE: Option<Box<PNMT>>,
+  pub OBJECT2_DATASOURCE: Option<Box<PNMT>>,
 }
 impl Default for CDMT {
   fn default() -> Self {
@@ -3610,6 +3657,8 @@ impl Default for CDMT {
       COLLISION_PROBABILITY_METHOD: None,
       OBJECT1: None,
       OBJECT2: None,
+      OBJECT1_DATASOURCE: None,
+      OBJECT2_DATASOURCE: None,
     }
   }
 }
@@ -3669,6 +3718,12 @@ impl CDMT {
     let OBJECT2 = self.OBJECT2.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let OBJECT1_DATASOURCE = self.OBJECT1_DATASOURCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     CDM::create(_fbb, &CDMArgs{
       CCSDS_CDM_VERS,
       CREATION_DATE,
@@ -3697,6 +3752,8 @@ impl CDMT {
       COLLISION_PROBABILITY_METHOD,
       OBJECT1,
       OBJECT2,
+      OBJECT1_DATASOURCE,
+      OBJECT2_DATASOURCE,
     })
   }
 }

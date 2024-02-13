@@ -11,440 +11,80 @@ table PNM {
   /// Refer to the Ethereum Blockchain integration section for details.
   ETH_DIGITAL_SIGNATURE: string;
 
-  /// SHA-512 File Hash
-  /// SHA-512 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
-  SHA_512_FILE_HASH: string;
-
-  /// SHA-256 File Hash
-  /// SHA-256 hash of the file for additional security verification.
-  /// Detailed in the security features section of the document.
-  SHA_256_FILE_HASH: string;
-
-  /// MD5 File Digest
-  /// MD5 digest of the file for backward compatibility with older systems.
-  /// Located in the legacy support section of the document.
-  MD5_FILE_DIGEST: string;
-
-  /// SHA-1 File Hash
-  /// SHA-1 hash of the file, used in certain legacy systems for compatibility.
-  /// Refer to the legacy systems integration section for more information.
-  SHA_1_FILE_HASH: string;
-
-  /// Argon2 File Hash
-  /// Argon2 hash of the file, providing state-of-the-art password hashing.
-  /// This is mentioned in the advanced security measures section.
-  ARGON2_FILE_HASH: string;
-
-  /// Blake2b File Hash
-  /// Blake2b hash of the file, known for high-speed cryptographic hashing.
-  /// Refer to the high-performance security solutions section.
-  BLAKE2B_FILE_HASH: string;
-
-  /// SHA-3 File Hash
-  /// SHA-3 hash of the file, offering a stronger alternative to SHA-2.
-  /// Located in the modern cryptographic standards section.
-  SHA_3_FILE_HASH: string;
-
-  /// RIPEMD-160 File Hash
-  /// RIPEMD-160 hash of the file, often used in blockchain applications for address generation.
-  /// Discussed in the blockchain compatibility section.
-  RIPEMD_160_FILE_HASH: string;
-
-  /// Whirlpool File Hash
-  /// Whirlpool hash of the file, designed for integrity protection and digital fingerprinting.
-  /// Refer to the data integrity and authentication section.
-  WHIRLPOOL_FILE_HASH: string;
-
-  /// Tiger File Hash
-  /// Tiger hash of the file, optimized for fast hashing on 64-bit platforms.
-  /// Detailed in the high-speed cryptographic operations section.
-  TIGER_FILE_HASH: string;
-
-  /// Cyclic Redundancy Check (CRC) 32
-  /// Cyclic redundancy check with a length of 32 bits.
-  /// Refer to CRC section for more details.
-  CRC32: string;
-
-  /// Adler-32 Checksum
-  /// Adler-32 checksum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  ADLER32_CHECKSUM: string;
-
-  /// Universal Hash Function Family - Rabin Fingerprint
-  /// Variable-length hash function using Rabin fingerprinting.
-  /// Refer to the Universal hash function families section for details.
-  RABIN_FINGERPRINT: string;
-
-  /// Non-Cryptographic Hash Function - Pearson Hashing
-  /// Non-cryptographic hash function with a length of 8 bits or more, using XOR or table lookup.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  PEARSON_HASHING: string;
-
-  /// Keyed Cryptographic Hash Function - BLAKE2
-  /// Keyed hash function (prefix-MAC) with variable length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  BLAKE2_KEYED_HASH: string;
-
-  /// Unkeyed Cryptographic Hash Function - BLAKE-256
-  /// Cryptographic hash function with a length of 256 bits, based on HAIFA structure.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  BLAKE_256: string;
-
-  /// CRC-8
-  /// Cyclic redundancy check with a length of 8 bits.
-  /// Refer to CRC section for more details.
-  CRC8: string;
-
-  /// CRC-16
-  /// Cyclic redundancy check with a length of 16 bits.
-  /// Refer to CRC section for more details.
-  CRC16: string;
-
-  /// CRC-64
-  /// Cyclic redundancy check with a length of 64 bits.
-  /// Refer to CRC section for more details.
-  CRC64: string;
-
-  /// BSD Checksum
-  /// BSD checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  BSD_CHECKSUM: string;
-
-  /// SYSV Checksum
-  /// SYSV checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  SYSV_CHECKSUM: string;
-
-  /// Sum8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  SUM8: string;
-
-  /// Internet Checksum
-  /// Internet checksum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  INTERNET_CHECKSUM: string;
-
-  /// Sum24
-  /// Sum with a length of 24 bits.
-  /// Refer to the checksum section for more details.
-  SUM24: string;
-
-  /// Sum32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  SUM32: string;
-
-  /// Fletcher-4
-  /// Sum with a length of 4 bits.
-  /// Refer to the checksum section for more details.
-  FLETCHER_4: string;
-
-  /// Fletcher-8
-  /// Sum with a length of 8 bits.
-  /// Refer to the checksum section for more details.
-  FLETCHER_8: string;
-
-  /// Fletcher-16
-  /// Sum with a length of 16 bits.
-  /// Refer to the checksum section for more details.
-  FLETCHER_16: string;
-
-  /// Fletcher-32
-  /// Sum with a length of 32 bits.
-  /// Refer to the checksum section for more details.
-  FLETCHER_32: string;
-
-  /// Luhn Algorithm
-  /// Luhn algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  LUNH_ALGORITHM: string;
-
-  /// Verhoeff Algorithm
-  /// Verhoeff algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  VERHOEFF_ALGORITHM: string;
-
-  /// Damm Algorithm
-  /// Damm algorithm with a length of 1 decimal digit.
-  /// Refer to the checksum section for more details.
-  DAMM_ALGORITHM: string;
-
-  /// Universal Hash Function Family - Tabulation Hashing
-  /// Variable-length hash function using tabulation hashing.
-  /// Refer to the Universal hash function families section for details.
-  TABULATION_HASHING: string;
-
-  /// Universal Hash Function Family - Universal One-Way Hash Function
-  /// Universal one-way hash function with arbitrary length.
-  /// Refer to the Universal hash function families section for details.
-  UNIVERSAL_ONE_WAY_HASH_FUNCTION: string;
-
-  /// Universal Hash Function Family - Zobrist Hashing
-  /// Variable-length hash function using Zobrist hashing.
-  /// Refer to the Universal hash function families section for details.
-  ZOBRIST_HASHING: string;
-
-  /// Non-Cryptographic Hash Function - Paul Hsieh's SuperFastHash
-  /// Non-cryptographic hash function with a length of 32 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  PAUL_HSIEHS_SUPERFASTHASH: string;
-
-  /// Non-Cryptographic Hash Function - Buzhash
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  BUZHASH: string;
-
-  /// Non-Cryptographic Hash Function - Fowler-Noll-Vo Hash Function (FNV Hash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  FNV_HASH: string;
-
-  /// Non-Cryptographic Hash Function - Jenkins Hash Function
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  JENKINS_HASH_FUNCTION: string;
-
-  /// Non-Cryptographic Hash Function - Bernstein's Hash (djb2)
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  BERNSTEINS_HASH_DJB2: string;
-
-  /// Non-Cryptographic Hash Function - PJW Hash / Elf Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  PJW_HASH_ELF_HASH: string;
-
-  /// Non-Cryptographic Hash Function - MurmurHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  MURMURHASH: string;
-
-  /// Non-Cryptographic Hash Function - Fast-Hash
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  FAST_HASH: string;
-
-  /// Non-Cryptographic Hash Function - SpookyHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  SPOOKYHASH: string;
-
-  /// Non-Cryptographic Hash Function - CityHash
-  /// Non-cryptographic hash function with a length of 32, 64, 128, or 256 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  CITYHASH: string;
-
-  /// Non-Cryptographic Hash Function - FarmHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  FARMHASH: string;
-
-  /// Non-Cryptographic Hash Function - MetroHash
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  METROHASH: string;
-
-  /// Non-Cryptographic Hash Function - Numeric Hash (nhash)
-  /// Non-cryptographic hash function with variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  NUMERIC_HASH: string;
-
-  /// Non-Cryptographic Hash Function - xxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  XXHASH: string;
-
-  /// Non-Cryptographic Hash Function - t1ha (Fast Positive Hash)
-  /// Non-cryptographic hash function with a length of 64 or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  T1HA: string;
-
-  /// Non-Cryptographic Hash Function - GxHash
-  /// Non-cryptographic hash function with a length of 32, 64, or 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  GXHASH: string;
-
-  /// Non-Cryptographic Hash Function - pHash
-  /// Non-cryptographic hash function with fixed or variable length.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  PHASH: string;
-
-  /// Non-Cryptographic Hash Function - dhash
-  /// Non-cryptographic hash function with a length of 128 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  DHASH: string;
-
-  /// Non-Cryptographic Hash Function - SDBM
-  /// Non-cryptographic hash function with a length of 32 or 64 bits.
-  /// Refer to the Non-cryptographic hash functions section for details.
-  SDBM: string;
-
-  /// Unkeyed Cryptographic Hash Function - OSDB Hash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  OSDB_HASH: string;
-
-  /// Unkeyed Cryptographic Hash Function - komihash
-  /// Cryptographic hash function with a length of 64 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  KOMIHASH: string;
-
-  /// Keyed Cryptographic Hash Function - BLAKE3
-  /// Keyed hash function with arbitrary length.
-  /// Refer to the Keyed cryptographic hash functions section for details.
-  BLAKE3: string;
-
-  /// Unkeyed Cryptographic Hash Function - ECOH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  ECOH: string;
-
-  /// Unkeyed Cryptographic Hash Function - FSB
-  /// Cryptographic hash function with a length of 160 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  FSB: string;
-
-  /// Unkeyed Cryptographic Hash Function - GOST
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  GOST: string;
-
-  /// Unkeyed Cryptographic Hash Function - Grøstl
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  GROSTL: string;
-
-  /// Unkeyed Cryptographic Hash Function - HAS-160
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  HAS_160: string;
-
-  /// Unkeyed Cryptographic Hash Function - HAVAL
-  /// Cryptographic hash function with a length of 128 to 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  HAVAL: string;
-
-  /// Unkeyed Cryptographic Hash Function - JH
-  /// Cryptographic hash function with a length of 224 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  JH: string;
-
-  /// Unkeyed Cryptographic Hash Function - LSH
-  /// Cryptographic hash function with a length of 256 to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  LSH: string;
-
-  /// Unkeyed Cryptographic Hash Function - MD2
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  MD2: string;
-
-  /// Unkeyed Cryptographic Hash Function - MD4
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  MD4: string;
-
-  /// Unkeyed Cryptographic Hash Function - MD5
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  MD5: string;
-
-  /// Unkeyed Cryptographic Hash Function - MD6
-  /// Cryptographic hash function with a length of up to 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  MD6: string;
-
-  /// Unkeyed Cryptographic Hash Function - RadioGatún
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  RADIOGATUN: string;
-
-  /// Unkeyed Cryptographic Hash Function - RIPEMD
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  RIPEMD: string;
-
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-128
-  /// Cryptographic hash function with a length of 128 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  RIPEMD_128: string;
-
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  RIPEMD_256: string;
-
-  /// Unkeyed Cryptographic Hash Function - RIPEMD-320
-  /// Cryptographic hash function with a length of 320 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  RIPEMD_320: string;
-
-  /// Unkeyed Cryptographic Hash Function - SHA-1
-  /// Cryptographic hash function with a length of 160 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SHA_1: string;
-
-  /// Unkeyed Cryptographic Hash Function - SHA-224
-  /// Cryptographic hash function with a length of 224 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SHA_224: string;
-
-  /// Unkeyed Cryptographic Hash Function - SHA-256
-  /// Cryptographic hash function with a length of 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SHA_256: string;
-
-  /// Unkeyed Cryptographic Hash Function - SHA-384
-  /// Cryptographic hash function with a length of 384 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SHA_384: string;
-
-  /// Unkeyed Cryptographic Hash Function - SHA-512
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SHA_512: string;
-
-  /// Unkeyed Cryptographic Hash Function - SHA-3
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SHA_3: string;
-
-  /// Unkeyed Cryptographic Hash Function - Skein
-  /// Cryptographic hash function with arbitrary length.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SKEIN: string;
-
-  /// Unkeyed Cryptographic Hash Function - Snefru
-  /// Cryptographic hash function with a length of 128 or 256 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SNEFRU: string;
-
-  /// Unkeyed Cryptographic Hash Function - Spectral Hash
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SPECTRAL_HASH: string;
-
-  /// Unkeyed Cryptographic Hash Function - Streebog
-  /// Cryptographic hash function with a length of 256 or 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  STREEBOG: string;
-
-  /// Unkeyed Cryptographic Hash Function - SWIFFT
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  SWIFFT: string;
-
-  /// Unkeyed Cryptographic Hash Function - Tiger
-  /// Cryptographic hash function with a length of 192 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  TIGER: string;
-
-  /// Unkeyed Cryptographic Hash Function - Whirlpool
-  /// Cryptographic hash function with a length of 512 bits.
-  /// Refer to the Unkeyed cryptographic hash functions section for details.
-  WHIRLPOOL: string;
+  /// Bitcoin Digital Signature
+  /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
+  /// Refer to the Bitcoin Blockchain integration section for details.
+  BTC_DIGITAL_SIGNATURE: string;
+
+  /// Litecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
+  /// Refer to the Litecoin Blockchain integration section for details.
+  LTC_DIGITAL_SIGNATURE: string;
+
+  /// Ripple Digital Signature
+  /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
+  /// Refer to the Ripple Blockchain integration section for details.
+  XRP_DIGITAL_SIGNATURE: string;
+
+  /// Cardano Digital Signature
+  /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
+  /// Refer to the Cardano Blockchain integration section for details.
+  ADA_DIGITAL_SIGNATURE: string;
+
+  /// Stellar Digital Signature
+  /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
+  /// Refer to the Stellar Blockchain integration section for details.
+  XLM_DIGITAL_SIGNATURE: string;
+
+  /// Dogecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
+  /// Refer to the Dogecoin Blockchain integration section for details.
+  DOGE_DIGITAL_SIGNATURE: string;
+
+  /// Monero Digital Signature
+  /// Digital signature of the IPFS file hash using Monero's signing mechanism.
+  /// Refer to the Monero Blockchain integration section for details.
+  XMR_DIGITAL_SIGNATURE: string;
+
+  /// Polkadot Digital Signature
+  /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
+  /// Refer to the Polkadot Blockchain integration section for details.
+  DOT_DIGITAL_SIGNATURE: string;
+
+  /// Filecoin Digital Signature
+  /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
+  /// Refer to the Filecoin Blockchain integration section for details.
+  FIL_DIGITAL_SIGNATURE: string;
+
+  /// Tezos Digital Signature
+  /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
+  /// Refer to the Tezos Blockchain integration section for details.
+  XTZ_DIGITAL_SIGNATURE: string;
+
+  /// Cosmos Digital Signature
+  /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
+  /// Refer to the Cosmos Blockchain integration section for details.
+  ATOM_DIGITAL_SIGNATURE: string;
+
+  /// Tron Digital Signature
+  /// Digital signature of the IPFS file hash using Tron's signing mechanism.
+  /// Refer to the Tron Blockchain integration section for details.
+  TRX_DIGITAL_SIGNATURE: string;
+
+  /// Binance Coin Digital Signature
+  /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
+  /// Refer to the Binance Coin Blockchain integration section for details.
+  BNB_DIGITAL_SIGNATURE: string;
+
+  /// Avalanche Digital Signature
+  /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
+  /// Refer to the Avalanche Blockchain integration section for details.
+  AVAX_DIGITAL_SIGNATURE: string;
+
+  /// Solana Digital Signature
+  /// Digital signature of the IPFS file hash using Solana's signing mechanism.
+  /// Refer to the Solana Blockchain integration section for details.
+  SOL_DIGITAL_SIGNATURE: string;
 }
 
 /// Collection of Publish Notification Messages

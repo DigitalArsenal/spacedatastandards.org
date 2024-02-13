@@ -3,6 +3,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CDMObject, CDMObjectT } from './CDMObject.js';
+import { PNM, PNMT } from './PNM.js';
 import { objectCenteredReferenceFrame } from './objectCenteredReferenceFrame.js';
 import { screeningVolumeShape } from './screeningVolumeShape.js';
 
@@ -268,8 +269,24 @@ OBJECT2(obj?:CDMObject):CDMObject|null {
   return offset ? (obj || new CDMObject()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Data Source for the positional information for Object 1
+ */
+OBJECT1_DATASOURCE(obj?:PNM):PNM|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? (obj || new PNM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Data Source for the positional information for Object 2
+ */
+OBJECT2_DATASOURCE(obj?:PNM):PNM|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? (obj || new PNM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startCDM(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(29);
 }
 
 static addCcsdsCdmVers(builder:flatbuffers.Builder, CCSDS_CDM_VERS:number) {
@@ -380,6 +397,14 @@ static addObject2(builder:flatbuffers.Builder, OBJECT2Offset:flatbuffers.Offset)
   builder.addFieldOffset(26, OBJECT2Offset, 0);
 }
 
+static addObject1Datasource(builder:flatbuffers.Builder, OBJECT1_DATASOURCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, OBJECT1_DATASOURCEOffset, 0);
+}
+
+static addObject2Datasource(builder:flatbuffers.Builder, OBJECT2_DATASOURCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, OBJECT2_DATASOURCEOffset, 0);
+}
+
 static endCDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -422,7 +447,9 @@ unpack(): CDMT {
     this.COLLISION_PROBABILITY(),
     this.COLLISION_PROBABILITY_METHOD(),
     (this.OBJECT1() !== null ? this.OBJECT1()!.unpack() : null),
-    (this.OBJECT2() !== null ? this.OBJECT2()!.unpack() : null)
+    (this.OBJECT2() !== null ? this.OBJECT2()!.unpack() : null),
+    (this.OBJECT1_DATASOURCE() !== null ? this.OBJECT1_DATASOURCE()!.unpack() : null),
+    (this.OBJECT2_DATASOURCE() !== null ? this.OBJECT2_DATASOURCE()!.unpack() : null)
   );
 }
 
@@ -455,6 +482,8 @@ unpackTo(_o: CDMT): void {
   _o.COLLISION_PROBABILITY_METHOD = this.COLLISION_PROBABILITY_METHOD();
   _o.OBJECT1 = (this.OBJECT1() !== null ? this.OBJECT1()!.unpack() : null);
   _o.OBJECT2 = (this.OBJECT2() !== null ? this.OBJECT2()!.unpack() : null);
+  _o.OBJECT1_DATASOURCE = (this.OBJECT1_DATASOURCE() !== null ? this.OBJECT1_DATASOURCE()!.unpack() : null);
+  _o.OBJECT2_DATASOURCE = (this.OBJECT2_DATASOURCE() !== null ? this.OBJECT2_DATASOURCE()!.unpack() : null);
 }
 }
 
@@ -486,7 +515,9 @@ constructor(
   public COLLISION_PROBABILITY: number = 0.0,
   public COLLISION_PROBABILITY_METHOD: string|Uint8Array|null = null,
   public OBJECT1: CDMObjectT|null = null,
-  public OBJECT2: CDMObjectT|null = null
+  public OBJECT2: CDMObjectT|null = null,
+  public OBJECT1_DATASOURCE: PNMT|null = null,
+  public OBJECT2_DATASOURCE: PNMT|null = null
 ){}
 
 
@@ -503,6 +534,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COLLISION_PROBABILITY_METHOD = (this.COLLISION_PROBABILITY_METHOD !== null ? builder.createString(this.COLLISION_PROBABILITY_METHOD!) : 0);
   const OBJECT1 = (this.OBJECT1 !== null ? this.OBJECT1!.pack(builder) : 0);
   const OBJECT2 = (this.OBJECT2 !== null ? this.OBJECT2!.pack(builder) : 0);
+  const OBJECT1_DATASOURCE = (this.OBJECT1_DATASOURCE !== null ? this.OBJECT1_DATASOURCE!.pack(builder) : 0);
+  const OBJECT2_DATASOURCE = (this.OBJECT2_DATASOURCE !== null ? this.OBJECT2_DATASOURCE!.pack(builder) : 0);
 
   CDM.startCDM(builder);
   CDM.addCcsdsCdmVers(builder, this.CCSDS_CDM_VERS);
@@ -532,6 +565,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CDM.addCollisionProbabilityMethod(builder, COLLISION_PROBABILITY_METHOD);
   CDM.addObject1(builder, OBJECT1);
   CDM.addObject2(builder, OBJECT2);
+  CDM.addObject1Datasource(builder, OBJECT1_DATASOURCE);
+  CDM.addObject2Datasource(builder, OBJECT2_DATASOURCE);
 
   return CDM.endCDM(builder);
 }

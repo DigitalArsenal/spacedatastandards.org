@@ -277,22 +277,38 @@ class CDM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Data Source for the positional information for Object 1
+    public function getOBJECT1_DATASOURCE()
+    {
+        $obj = new PNM();
+        $o = $this->__offset(58);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Data Source for the positional information for Object 2
+    public function getOBJECT2_DATASOURCE()
+    {
+        $obj = new PNM();
+        $o = $this->__offset(60);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CDM
      */
-    public static function createCDM(FlatBufferBuilder $builder, $CCSDS_CDM_VERS, $CREATION_DATE, $ORIGINATOR, $MESSAGE_FOR, $MESSAGE_ID, $TCA, $MISS_DISTANCE, $RELATIVE_SPEED, $RELATIVE_POSITION_R, $RELATIVE_POSITION_T, $RELATIVE_POSITION_N, $RELATIVE_VELOCITY_R, $RELATIVE_VELOCITY_T, $RELATIVE_VELOCITY_N, $START_SCREEN_PERIOD, $STOP_SCREEN_PERIOD, $SCREEN_VOLUME_FRAME, $SCREEN_VOLUME_SHAPE, $SCREEN_VOLUME_X, $SCREEN_VOLUME_Y, $SCREEN_VOLUME_Z, $SCREEN_ENTRY_TIME, $SCREEN_EXIT_TIME, $COLLISION_PROBABILITY, $COLLISION_PROBABILITY_METHOD, $OBJECT1, $OBJECT2)
+    public static function createCDM(FlatBufferBuilder $builder, $CCSDS_CDM_VERS, $CREATION_DATE, $ORIGINATOR, $MESSAGE_FOR, $MESSAGE_ID, $TCA, $MISS_DISTANCE, $RELATIVE_SPEED, $RELATIVE_POSITION_R, $RELATIVE_POSITION_T, $RELATIVE_POSITION_N, $RELATIVE_VELOCITY_R, $RELATIVE_VELOCITY_T, $RELATIVE_VELOCITY_N, $START_SCREEN_PERIOD, $STOP_SCREEN_PERIOD, $SCREEN_VOLUME_FRAME, $SCREEN_VOLUME_SHAPE, $SCREEN_VOLUME_X, $SCREEN_VOLUME_Y, $SCREEN_VOLUME_Z, $SCREEN_ENTRY_TIME, $SCREEN_EXIT_TIME, $COLLISION_PROBABILITY, $COLLISION_PROBABILITY_METHOD, $OBJECT1, $OBJECT2, $OBJECT1_DATASOURCE, $OBJECT2_DATASOURCE)
     {
-        $builder->startObject(27);
+        $builder->startObject(29);
         self::addCCSDS_CDM_VERS($builder, $CCSDS_CDM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -320,6 +336,8 @@ class CDM extends Table
         self::addCOLLISION_PROBABILITY_METHOD($builder, $COLLISION_PROBABILITY_METHOD);
         self::addOBJECT1($builder, $OBJECT1);
         self::addOBJECT2($builder, $OBJECT2);
+        self::addOBJECT1_DATASOURCE($builder, $OBJECT1_DATASOURCE);
+        self::addOBJECT2_DATASOURCE($builder, $OBJECT2_DATASOURCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -592,6 +610,26 @@ class CDM extends Table
     public static function addOBJECT2(FlatBufferBuilder $builder, $OBJECT2)
     {
         $builder->addOffsetX(26, $OBJECT2, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addOBJECT1_DATASOURCE(FlatBufferBuilder $builder, $OBJECT1_DATASOURCE)
+    {
+        $builder->addOffsetX(27, $OBJECT1_DATASOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addOBJECT2_DATASOURCE(FlatBufferBuilder $builder, $OBJECT2_DATASOURCE)
+    {
+        $builder->addOffsetX(28, $OBJECT2_DATASOURCE, 0);
     }
 
     /**
