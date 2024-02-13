@@ -417,7 +417,7 @@ pub unsafe fn root_as_SCHEMA_MANIFEST_unchecked(buf: &[u8]) -> SCHEMA_MANIFEST {
 pub unsafe fn size_prefixed_root_as_SCHEMA_MANIFEST_unchecked(buf: &[u8]) -> SCHEMA_MANIFEST {
   flatbuffers::size_prefixed_root_unchecked::<SCHEMA_MANIFEST>(buf)
 }
-pub const SCHEMA_MANIFEST_IDENTIFIER: &str = "SCMM";
+pub const SCHEMA_MANIFEST_IDENTIFIER: &str = "$SCM";
 
 #[inline]
 pub fn SCHEMA_MANIFEST_buffer_has_identifier(buf: &[u8]) -> bool {

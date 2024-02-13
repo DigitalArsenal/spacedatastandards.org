@@ -62,6 +62,7 @@ def PLDCreateINSTRUMENTSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+/// Collection of Payload Information Records
 class PLDCOLLECTION : flatbuffers_handle
     def RECORDS(i:int) -> PLD:
         return PLD { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }

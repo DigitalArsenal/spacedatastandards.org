@@ -84,6 +84,7 @@ public struct PLD: FlatBufferObject, Verifiable {
   }
 }
 
+///  Collection of Payload Information Records
 public struct PLDCOLLECTION: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

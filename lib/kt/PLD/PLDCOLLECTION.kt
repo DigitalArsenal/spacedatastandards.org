@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Collection of Payload Information Records
+ */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class PLDCOLLECTION : Table() {

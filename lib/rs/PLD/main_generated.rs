@@ -298,6 +298,7 @@ impl PLDT {
 pub enum PLDCOLLECTIONOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Collection of Payload Information Records
 pub struct PLDCOLLECTION<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

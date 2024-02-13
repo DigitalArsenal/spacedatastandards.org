@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Collection of Payload Information Records
 public struct PLDCOLLECTION : IFlatbufferObject
 {
   private Table __p;

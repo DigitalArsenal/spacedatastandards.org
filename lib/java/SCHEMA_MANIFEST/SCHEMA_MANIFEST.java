@@ -25,7 +25,7 @@ public final class SCHEMA_MANIFEST extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static SCHEMA_MANIFEST getRootAsSCHEMA_MANIFEST(ByteBuffer _bb) { return getRootAsSCHEMA_MANIFEST(_bb, new SCHEMA_MANIFEST()); }
   public static SCHEMA_MANIFEST getRootAsSCHEMA_MANIFEST(ByteBuffer _bb, SCHEMA_MANIFEST obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean SCHEMA_MANIFESTBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "SCMM"); }
+  public static boolean SCHEMA_MANIFESTBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$SCM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCHEMA_MANIFEST __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -62,8 +62,8 @@ public final class SCHEMA_MANIFEST extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "SCMM"); }
-  public static void finishSizePrefixedSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "SCMM"); }
+  public static void finishSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$SCM"); }
+  public static void finishSizePrefixedSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$SCM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

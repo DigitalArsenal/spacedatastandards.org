@@ -27,7 +27,7 @@ static getSizePrefixedRootAsSCHEMA_MANIFEST(bb:flatbuffers.ByteBuffer, obj?:SCHE
 }
 
 static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('SCMM');
+  return bb.__has_identifier('$SCM');
 }
 
 /**
@@ -83,11 +83,11 @@ static endSCHEMA_MANIFEST(builder:flatbuffers.Builder):flatbuffers.Offset {
 }
 
 static finishSCHEMA_MANIFESTBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, 'SCMM');
+  builder.finish(offset, '$SCM');
 }
 
 static finishSizePrefixedSCHEMA_MANIFESTBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, 'SCMM', true);
+  builder.finish(offset, '$SCM', true);
 }
 
 static createSCHEMA_MANIFEST(builder:flatbuffers.Builder, versionOffset:flatbuffers.Offset, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

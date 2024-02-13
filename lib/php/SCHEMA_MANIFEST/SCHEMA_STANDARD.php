@@ -21,7 +21,7 @@ class SCHEMA_STANDARD extends Table
 
     public static function SCHEMA_STANDARDIdentifier()
     {
-        return "SCMM";
+        return "$SCM";
     }
 
     public static function SCHEMA_STANDARDBufferHasIdentifier(ByteBuffer $buf)

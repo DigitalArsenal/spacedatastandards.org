@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Collection of Payload Information Records
 type PLDCOLLECTION struct {
 	_tab flatbuffers.Table
 }

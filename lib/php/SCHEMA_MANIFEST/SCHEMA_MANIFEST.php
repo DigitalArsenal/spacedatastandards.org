@@ -21,7 +21,7 @@ class SCHEMA_MANIFEST extends Table
 
     public static function SCHEMA_MANIFESTIdentifier()
     {
-        return "SCMM";
+        return "$SCM";
     }
 
     public static function SCHEMA_MANIFESTBufferHasIdentifier(ByteBuffer $buf)
@@ -146,6 +146,6 @@ class SCHEMA_MANIFEST extends Table
 
     public static function finishSCHEMA_MANIFESTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "SCMM");
+        $builder->finish($offset, "$SCM");
     }
 }

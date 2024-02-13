@@ -67,7 +67,7 @@ class SCHEMA_MANIFEST : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SCHEMA_MANIFESTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "SCMM")
+        fun SCHEMA_MANIFESTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCM")
         fun createSCHEMA_MANIFEST(builder: FlatBufferBuilder, versionOffset: Int, RECORDSOffset: Int) : Int {
             builder.startTable(2)
             addRECORDS(builder, RECORDSOffset)
@@ -89,7 +89,7 @@ class SCHEMA_MANIFEST : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSCHEMA_MANIFESTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "SCMM")
-        fun finishSizePrefixedSCHEMA_MANIFESTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "SCMM")
+        fun finishSCHEMA_MANIFESTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SCM")
+        fun finishSizePrefixedSCHEMA_MANIFESTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SCM")
     }
 }

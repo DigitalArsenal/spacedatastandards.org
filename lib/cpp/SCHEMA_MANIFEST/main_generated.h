@@ -181,7 +181,7 @@ inline const SCHEMA_MANIFEST *GetSizePrefixedSCHEMA_MANIFEST(const void *buf) {
 }
 
 inline const char *SCHEMA_MANIFESTIdentifier() {
-  return "SCMM";
+  return "$SCM";
 }
 
 inline bool SCHEMA_MANIFESTBufferHasIdentifier(const void *buf) {

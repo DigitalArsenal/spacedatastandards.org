@@ -23,7 +23,7 @@ class SCHEMA_STANDARD(object):
         return cls.GetRootAs(buf, offset)
     @classmethod
     def SCHEMA_STANDARDBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
-        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x53\x43\x4D\x4D", size_prefixed=size_prefixed)
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x43\x4D", size_prefixed=size_prefixed)
 
     # SCHEMA_STANDARD
     def Init(self, buf, pos):

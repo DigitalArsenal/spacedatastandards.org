@@ -21,4 +21,4 @@ table SCHEMA_MANIFEST {
 
 /// Declaring the root type
 root_type SCHEMA_MANIFEST;
-file_identifier "SCMM";
+file_identifier "$SCM";

@@ -5,6 +5,9 @@ import * as flatbuffers from 'flatbuffers';
 import { PLD, PLDT } from './PLD.js';
 
 
+/**
+ * Collection of Payload Information Records
+ */
 export class PLDCOLLECTION implements flatbuffers.IUnpackableObject<PLDCOLLECTIONT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

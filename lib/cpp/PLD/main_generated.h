@@ -154,6 +154,7 @@ inline ::flatbuffers::Offset<PLD> CreatePLDDirect(
       INSTRUMENTS__);
 }
 
+/// Collection of Payload Information Records
 struct PLDCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PLDCOLLECTIONBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

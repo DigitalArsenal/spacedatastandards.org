@@ -11,7 +11,7 @@ table PLD {
   INSTRUMENTS: [IDM]; // Vector of Instrument Data Messages
 }
 
-// Collection of Payload Information Records
+/// Collection of Payload Information Records
 table PLDCOLLECTION {
   RECORDS: [PLD];
 }

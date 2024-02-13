@@ -143,6 +143,7 @@ class PLDObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Collection of Payload Information Records
 class PLDCOLLECTION {
   PLDCOLLECTION._(this._bc, this._bcOffset);
   factory PLDCOLLECTION(List<int> bytes) {

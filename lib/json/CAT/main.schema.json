@@ -253,6 +253,7 @@
     },
     "PLDCOLLECTION" : {
       "type" : "object",
+      "description" : "Collection of Payload Information Records",
       "properties" : {
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}

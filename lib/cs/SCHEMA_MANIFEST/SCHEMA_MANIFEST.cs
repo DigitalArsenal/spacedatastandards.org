@@ -14,7 +14,7 @@ public struct SCHEMA_MANIFEST : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static SCHEMA_MANIFEST GetRootAsSCHEMA_MANIFEST(ByteBuffer _bb) { return GetRootAsSCHEMA_MANIFEST(_bb, new SCHEMA_MANIFEST()); }
   public static SCHEMA_MANIFEST GetRootAsSCHEMA_MANIFEST(ByteBuffer _bb, SCHEMA_MANIFEST obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool SCHEMA_MANIFESTBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "SCMM"); }
+  public static bool SCHEMA_MANIFESTBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$SCM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCHEMA_MANIFEST __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -51,8 +51,8 @@ public struct SCHEMA_MANIFEST : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<SCHEMA_MANIFEST>(o);
   }
-  public static void FinishSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, Offset<SCHEMA_MANIFEST> offset) { builder.Finish(offset.Value, "SCMM"); }
-  public static void FinishSizePrefixedSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, Offset<SCHEMA_MANIFEST> offset) { builder.FinishSizePrefixed(offset.Value, "SCMM"); }
+  public static void FinishSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, Offset<SCHEMA_MANIFEST> offset) { builder.Finish(offset.Value, "$SCM"); }
+  public static void FinishSizePrefixedSCHEMA_MANIFESTBuffer(FlatBufferBuilder builder, Offset<SCHEMA_MANIFEST> offset) { builder.FinishSizePrefixed(offset.Value, "$SCM"); }
   public SCHEMA_MANIFESTT UnPack() {
     var _o = new SCHEMA_MANIFESTT();
     this.UnPackTo(_o);
