@@ -13,109 +13,45 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
-struct IPFS_CID_ADDRESS;
-struct IPFS_CID_ADDRESSBuilder;
-
 struct PNM;
 struct PNMBuilder;
 
 struct PNM_COLLECTION;
 struct PNM_COLLECTIONBuilder;
 
-/// IPFS CID and Account Identifier
-struct IPFS_CID_ADDRESS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef IPFS_CID_ADDRESSBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_IPFS_CID = 4,
-    VT_KEY_ADDRESS = 6
-  };
-  const ::flatbuffers::String *IPFS_CID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IPFS_CID);
-  }
-  const ::flatbuffers::String *KEY_ADDRESS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_IPFS_CID) &&
-           verifier.VerifyString(IPFS_CID()) &&
-           VerifyOffset(verifier, VT_KEY_ADDRESS) &&
-           verifier.VerifyString(KEY_ADDRESS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct IPFS_CID_ADDRESSBuilder {
-  typedef IPFS_CID_ADDRESS Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_IPFS_CID(::flatbuffers::Offset<::flatbuffers::String> IPFS_CID) {
-    fbb_.AddOffset(IPFS_CID_ADDRESS::VT_IPFS_CID, IPFS_CID);
-  }
-  void add_KEY_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS) {
-    fbb_.AddOffset(IPFS_CID_ADDRESS::VT_KEY_ADDRESS, KEY_ADDRESS);
-  }
-  explicit IPFS_CID_ADDRESSBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<IPFS_CID_ADDRESS> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<IPFS_CID_ADDRESS>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<IPFS_CID_ADDRESS> CreateIPFS_CID_ADDRESS(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> IPFS_CID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0) {
-  IPFS_CID_ADDRESSBuilder builder_(_fbb);
-  builder_.add_KEY_ADDRESS(KEY_ADDRESS);
-  builder_.add_IPFS_CID(IPFS_CID);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<IPFS_CID_ADDRESS> CreateIPFS_CID_ADDRESSDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *IPFS_CID = nullptr,
-    const char *KEY_ADDRESS = nullptr) {
-  auto IPFS_CID__ = IPFS_CID ? _fbb.CreateString(IPFS_CID) : 0;
-  auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
-  return CreateIPFS_CID_ADDRESS(
-      _fbb,
-      IPFS_CID__,
-      KEY_ADDRESS__);
-}
-
 /// Publish Notification Message
 /// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_IPFS_CID_ACCOUNT = 4,
-    VT_ETH_DIGITAL_SIGNATURE = 6,
-    VT_BTC_DIGITAL_SIGNATURE = 8,
-    VT_LTC_DIGITAL_SIGNATURE = 10,
-    VT_XRP_DIGITAL_SIGNATURE = 12,
-    VT_ADA_DIGITAL_SIGNATURE = 14,
-    VT_XLM_DIGITAL_SIGNATURE = 16,
-    VT_DOGE_DIGITAL_SIGNATURE = 18,
-    VT_XMR_DIGITAL_SIGNATURE = 20,
-    VT_DOT_DIGITAL_SIGNATURE = 22,
-    VT_FIL_DIGITAL_SIGNATURE = 24,
-    VT_XTZ_DIGITAL_SIGNATURE = 26,
-    VT_ATOM_DIGITAL_SIGNATURE = 28,
-    VT_TRX_DIGITAL_SIGNATURE = 30,
-    VT_BNB_DIGITAL_SIGNATURE = 32,
-    VT_AVAX_DIGITAL_SIGNATURE = 34,
-    VT_SOL_DIGITAL_SIGNATURE = 36
+    VT_IPFS_CID = 4,
+    VT_KEY_ADDRESS = 6,
+    VT_ETH_DIGITAL_SIGNATURE = 8,
+    VT_BTC_DIGITAL_SIGNATURE = 10,
+    VT_LTC_DIGITAL_SIGNATURE = 12,
+    VT_XRP_DIGITAL_SIGNATURE = 14,
+    VT_ADA_DIGITAL_SIGNATURE = 16,
+    VT_XLM_DIGITAL_SIGNATURE = 18,
+    VT_DOGE_DIGITAL_SIGNATURE = 20,
+    VT_XMR_DIGITAL_SIGNATURE = 22,
+    VT_DOT_DIGITAL_SIGNATURE = 24,
+    VT_FIL_DIGITAL_SIGNATURE = 26,
+    VT_XTZ_DIGITAL_SIGNATURE = 28,
+    VT_ATOM_DIGITAL_SIGNATURE = 30,
+    VT_TRX_DIGITAL_SIGNATURE = 32,
+    VT_BNB_DIGITAL_SIGNATURE = 34,
+    VT_AVAX_DIGITAL_SIGNATURE = 36,
+    VT_SOL_DIGITAL_SIGNATURE = 38
   };
   /// IPFS Content Identifier (CID)
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
   /// Refer to the section on IPFS integration for details.
-  const IPFS_CID_ADDRESS *IPFS_CID_ACCOUNT() const {
-    return GetPointer<const IPFS_CID_ADDRESS *>(VT_IPFS_CID_ACCOUNT);
+  const ::flatbuffers::String *IPFS_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IPFS_CID);
+  }
+  /// Unique identifier generated from the data provider's public key
+  const ::flatbuffers::String *KEY_ADDRESS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
   }
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS file hash using Ethereum's signing mechanism.
@@ -215,8 +151,10 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_IPFS_CID_ACCOUNT) &&
-           verifier.VerifyTable(IPFS_CID_ACCOUNT()) &&
+           VerifyOffset(verifier, VT_IPFS_CID) &&
+           verifier.VerifyString(IPFS_CID()) &&
+           VerifyOffset(verifier, VT_KEY_ADDRESS) &&
+           verifier.VerifyString(KEY_ADDRESS()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
            VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
@@ -257,8 +195,11 @@ struct PNMBuilder {
   typedef PNM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_IPFS_CID_ACCOUNT(::flatbuffers::Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNT) {
-    fbb_.AddOffset(PNM::VT_IPFS_CID_ACCOUNT, IPFS_CID_ACCOUNT);
+  void add_IPFS_CID(::flatbuffers::Offset<::flatbuffers::String> IPFS_CID) {
+    fbb_.AddOffset(PNM::VT_IPFS_CID, IPFS_CID);
+  }
+  void add_KEY_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS) {
+    fbb_.AddOffset(PNM::VT_KEY_ADDRESS, KEY_ADDRESS);
   }
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
     fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
@@ -321,7 +262,8 @@ struct PNMBuilder {
 
 inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IPFS_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
@@ -355,13 +297,15 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
   builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
   builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
-  builder_.add_IPFS_CID_ACCOUNT(IPFS_CID_ACCOUNT);
+  builder_.add_KEY_ADDRESS(KEY_ADDRESS);
+  builder_.add_IPFS_CID(IPFS_CID);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNT = 0,
+    const char *IPFS_CID = nullptr,
+    const char *KEY_ADDRESS = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
     const char *BTC_DIGITAL_SIGNATURE = nullptr,
     const char *LTC_DIGITAL_SIGNATURE = nullptr,
@@ -378,6 +322,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     const char *BNB_DIGITAL_SIGNATURE = nullptr,
     const char *AVAX_DIGITAL_SIGNATURE = nullptr,
     const char *SOL_DIGITAL_SIGNATURE = nullptr) {
+  auto IPFS_CID__ = IPFS_CID ? _fbb.CreateString(IPFS_CID) : 0;
+  auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
   auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
   auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
@@ -396,7 +342,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
   auto SOL_DIGITAL_SIGNATURE__ = SOL_DIGITAL_SIGNATURE ? _fbb.CreateString(SOL_DIGITAL_SIGNATURE) : 0;
   return CreatePNM(
       _fbb,
-      IPFS_CID_ACCOUNT,
+      IPFS_CID__,
+      KEY_ADDRESS__,
       ETH_DIGITAL_SIGNATURE__,
       BTC_DIGITAL_SIGNATURE__,
       LTC_DIGITAL_SIGNATURE__,

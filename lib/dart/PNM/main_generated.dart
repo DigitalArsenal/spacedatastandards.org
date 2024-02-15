@@ -5,91 +5,6 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  IPFS CID and Account Identifier
-class IPFS_CID_ADDRESS {
-  IPFS_CID_ADDRESS._(this._bc, this._bcOffset);
-  factory IPFS_CID_ADDRESS(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<IPFS_CID_ADDRESS> reader = _IPFS_CID_ADDRESSReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get IPFS_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-
-  @override
-  String toString() {
-    return 'IPFS_CID_ADDRESS{IPFS_CID: ${IPFS_CID}, KEY_ADDRESS: ${KEY_ADDRESS}}';
-  }
-}
-
-class _IPFS_CID_ADDRESSReader extends fb.TableReader<IPFS_CID_ADDRESS> {
-  const _IPFS_CID_ADDRESSReader();
-
-  @override
-  IPFS_CID_ADDRESS createObject(fb.BufferContext bc, int offset) => 
-    IPFS_CID_ADDRESS._(bc, offset);
-}
-
-class IPFS_CID_ADDRESSBuilder {
-  IPFS_CID_ADDRESSBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addIpfsCidOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addKeyAddressOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class IPFS_CID_ADDRESSObjectBuilder extends fb.ObjectBuilder {
-  final String? _IPFS_CID;
-  final String? _KEY_ADDRESS;
-
-  IPFS_CID_ADDRESSObjectBuilder({
-    String? IPFS_CID,
-    String? KEY_ADDRESS,
-  })
-      : _IPFS_CID = IPFS_CID,
-        _KEY_ADDRESS = KEY_ADDRESS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? IPFS_CIDOffset = _IPFS_CID == null ? null
-        : fbBuilder.writeString(_IPFS_CID!);
-    final int? KEY_ADDRESSOffset = _KEY_ADDRESS == null ? null
-        : fbBuilder.writeString(_KEY_ADDRESS!);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, IPFS_CIDOffset);
-    fbBuilder.addOffset(1, KEY_ADDRESSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
 ///  Publish Notification Message
 ///  This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 class PNM {
@@ -107,75 +22,77 @@ class PNM {
   ///  IPFS Content Identifier (CID)
   ///  The hash of a file stored on the InterPlanetary File System (IPFS).
   ///  Refer to the section on IPFS integration for details.
-  IPFS_CID_ADDRESS? get IPFS_CID_ACCOUNT => IPFS_CID_ADDRESS.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  String? get IPFS_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Unique identifier generated from the data provider's public key
+  String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Ethereum Digital Signature
   ///  Digital signature of the IPFS file hash using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
-  String? get ETH_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get ETH_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Bitcoin Digital Signature
   ///  Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
   ///  Refer to the Bitcoin Blockchain integration section for details.
-  String? get BTC_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get BTC_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Litecoin Digital Signature
   ///  Digital signature of the IPFS file hash using Litecoin's signing mechanism.
   ///  Refer to the Litecoin Blockchain integration section for details.
-  String? get LTC_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get LTC_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Ripple Digital Signature
   ///  Digital signature of the IPFS file hash using Ripple's signing mechanism.
   ///  Refer to the Ripple Blockchain integration section for details.
-  String? get XRP_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get XRP_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Cardano Digital Signature
   ///  Digital signature of the IPFS file hash using Cardano's signing mechanism.
   ///  Refer to the Cardano Blockchain integration section for details.
-  String? get ADA_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get ADA_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   ///  Stellar Digital Signature
   ///  Digital signature of the IPFS file hash using Stellar's signing mechanism.
   ///  Refer to the Stellar Blockchain integration section for details.
-  String? get XLM_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get XLM_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Dogecoin Digital Signature
   ///  Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
   ///  Refer to the Dogecoin Blockchain integration section for details.
-  String? get DOGE_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get DOGE_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  Monero Digital Signature
   ///  Digital signature of the IPFS file hash using Monero's signing mechanism.
   ///  Refer to the Monero Blockchain integration section for details.
-  String? get XMR_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get XMR_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  Polkadot Digital Signature
   ///  Digital signature of the IPFS file hash using Polkadot's signing mechanism.
   ///  Refer to the Polkadot Blockchain integration section for details.
-  String? get DOT_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get DOT_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   ///  Filecoin Digital Signature
   ///  Digital signature of the IPFS file hash using Filecoin's signing mechanism.
   ///  Refer to the Filecoin Blockchain integration section for details.
-  String? get FIL_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get FIL_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   ///  Tezos Digital Signature
   ///  Digital signature of the IPFS file hash using Tezos's signing mechanism.
   ///  Refer to the Tezos Blockchain integration section for details.
-  String? get XTZ_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get XTZ_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   ///  Cosmos Digital Signature
   ///  Digital signature of the IPFS file hash using Cosmos's signing mechanism.
   ///  Refer to the Cosmos Blockchain integration section for details.
-  String? get ATOM_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get ATOM_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
   ///  Tron Digital Signature
   ///  Digital signature of the IPFS file hash using Tron's signing mechanism.
   ///  Refer to the Tron Blockchain integration section for details.
-  String? get TRX_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get TRX_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
   ///  Binance Coin Digital Signature
   ///  Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
   ///  Refer to the Binance Coin Blockchain integration section for details.
-  String? get BNB_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get BNB_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   ///  Avalanche Digital Signature
   ///  Digital signature of the IPFS file hash using Avalanche's signing mechanism.
   ///  Refer to the Avalanche Blockchain integration section for details.
-  String? get AVAX_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get AVAX_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   ///  Solana Digital Signature
   ///  Digital signature of the IPFS file hash using Solana's signing mechanism.
   ///  Refer to the Solana Blockchain integration section for details.
-  String? get SOL_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get SOL_DIGITAL_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
 
   @override
   String toString() {
-    return 'PNM{IPFS_CID_ACCOUNT: ${IPFS_CID_ACCOUNT}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
+    return 'PNM{IPFS_CID: ${IPFS_CID}, KEY_ADDRESS: ${KEY_ADDRESS}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
   }
 }
 
@@ -193,75 +110,79 @@ class PNMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(18);
   }
 
-  int addIpfsCidAccountOffset(int? offset) {
+  int addIpfsCidOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addEthDigitalSignatureOffset(int? offset) {
+  int addKeyAddressOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addBtcDigitalSignatureOffset(int? offset) {
+  int addEthDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addLtcDigitalSignatureOffset(int? offset) {
+  int addBtcDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addXrpDigitalSignatureOffset(int? offset) {
+  int addLtcDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addAdaDigitalSignatureOffset(int? offset) {
+  int addXrpDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addXlmDigitalSignatureOffset(int? offset) {
+  int addAdaDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addDogeDigitalSignatureOffset(int? offset) {
+  int addXlmDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addXmrDigitalSignatureOffset(int? offset) {
+  int addDogeDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addDotDigitalSignatureOffset(int? offset) {
+  int addXmrDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addFilDigitalSignatureOffset(int? offset) {
+  int addDotDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addXtzDigitalSignatureOffset(int? offset) {
+  int addFilDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addAtomDigitalSignatureOffset(int? offset) {
+  int addXtzDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addTrxDigitalSignatureOffset(int? offset) {
+  int addAtomDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addBnbDigitalSignatureOffset(int? offset) {
+  int addTrxDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
-  int addAvaxDigitalSignatureOffset(int? offset) {
+  int addBnbDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addSolDigitalSignatureOffset(int? offset) {
+  int addAvaxDigitalSignatureOffset(int? offset) {
     fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addSolDigitalSignatureOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
 
@@ -271,7 +192,8 @@ class PNMBuilder {
 }
 
 class PNMObjectBuilder extends fb.ObjectBuilder {
-  final IPFS_CID_ADDRESSObjectBuilder? _IPFS_CID_ACCOUNT;
+  final String? _IPFS_CID;
+  final String? _KEY_ADDRESS;
   final String? _ETH_DIGITAL_SIGNATURE;
   final String? _BTC_DIGITAL_SIGNATURE;
   final String? _LTC_DIGITAL_SIGNATURE;
@@ -290,7 +212,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   final String? _SOL_DIGITAL_SIGNATURE;
 
   PNMObjectBuilder({
-    IPFS_CID_ADDRESSObjectBuilder? IPFS_CID_ACCOUNT,
+    String? IPFS_CID,
+    String? KEY_ADDRESS,
     String? ETH_DIGITAL_SIGNATURE,
     String? BTC_DIGITAL_SIGNATURE,
     String? LTC_DIGITAL_SIGNATURE,
@@ -308,7 +231,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     String? AVAX_DIGITAL_SIGNATURE,
     String? SOL_DIGITAL_SIGNATURE,
   })
-      : _IPFS_CID_ACCOUNT = IPFS_CID_ACCOUNT,
+      : _IPFS_CID = IPFS_CID,
+        _KEY_ADDRESS = KEY_ADDRESS,
         _ETH_DIGITAL_SIGNATURE = ETH_DIGITAL_SIGNATURE,
         _BTC_DIGITAL_SIGNATURE = BTC_DIGITAL_SIGNATURE,
         _LTC_DIGITAL_SIGNATURE = LTC_DIGITAL_SIGNATURE,
@@ -329,7 +253,10 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? IPFS_CID_ACCOUNTOffset = _IPFS_CID_ACCOUNT?.getOrCreateOffset(fbBuilder);
+    final int? IPFS_CIDOffset = _IPFS_CID == null ? null
+        : fbBuilder.writeString(_IPFS_CID!);
+    final int? KEY_ADDRESSOffset = _KEY_ADDRESS == null ? null
+        : fbBuilder.writeString(_KEY_ADDRESS!);
     final int? ETH_DIGITAL_SIGNATUREOffset = _ETH_DIGITAL_SIGNATURE == null ? null
         : fbBuilder.writeString(_ETH_DIGITAL_SIGNATURE!);
     final int? BTC_DIGITAL_SIGNATUREOffset = _BTC_DIGITAL_SIGNATURE == null ? null
@@ -362,24 +289,25 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_AVAX_DIGITAL_SIGNATURE!);
     final int? SOL_DIGITAL_SIGNATUREOffset = _SOL_DIGITAL_SIGNATURE == null ? null
         : fbBuilder.writeString(_SOL_DIGITAL_SIGNATURE!);
-    fbBuilder.startTable(17);
-    fbBuilder.addOffset(0, IPFS_CID_ACCOUNTOffset);
-    fbBuilder.addOffset(1, ETH_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(2, BTC_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(3, LTC_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(4, XRP_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(5, ADA_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(6, XLM_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(7, DOGE_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(8, XMR_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(9, DOT_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(10, FIL_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(11, XTZ_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(12, ATOM_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(13, TRX_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(14, BNB_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(15, AVAX_DIGITAL_SIGNATUREOffset);
-    fbBuilder.addOffset(16, SOL_DIGITAL_SIGNATUREOffset);
+    fbBuilder.startTable(18);
+    fbBuilder.addOffset(0, IPFS_CIDOffset);
+    fbBuilder.addOffset(1, KEY_ADDRESSOffset);
+    fbBuilder.addOffset(2, ETH_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(3, BTC_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(4, LTC_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(5, XRP_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(6, ADA_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(7, XLM_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(8, DOGE_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(9, XMR_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(10, DOT_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(11, FIL_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(12, XTZ_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(13, ATOM_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(14, TRX_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(15, BNB_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(16, AVAX_DIGITAL_SIGNATUREOffset);
+    fbBuilder.addOffset(17, SOL_DIGITAL_SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

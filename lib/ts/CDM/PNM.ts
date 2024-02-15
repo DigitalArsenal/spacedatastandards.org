@@ -2,7 +2,6 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { IPFS_CID_ADDRESS, IPFS_CID_ADDRESST } from './IPFS_CID_ADDRESS.js';
 
 
 /**
@@ -32,9 +31,21 @@ static getSizePrefixedRootAsPNM(bb:flatbuffers.ByteBuffer, obj?:PNM):PNM {
  * The hash of a file stored on the InterPlanetary File System (IPFS).
  * Refer to the section on IPFS integration for details.
  */
-IPFS_CID_ACCOUNT(obj?:IPFS_CID_ADDRESS):IPFS_CID_ADDRESS|null {
+IPFS_CID():string|null
+IPFS_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IPFS_CID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IPFS_CID_ADDRESS()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unique identifier generated from the data provider's public key
+ */
+KEY_ADDRESS():string|null
+KEY_ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+KEY_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
@@ -45,7 +56,7 @@ IPFS_CID_ACCOUNT(obj?:IPFS_CID_ADDRESS):IPFS_CID_ADDRESS|null {
 ETH_DIGITAL_SIGNATURE():string|null
 ETH_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ETH_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -57,7 +68,7 @@ ETH_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 BTC_DIGITAL_SIGNATURE():string|null
 BTC_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 BTC_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -69,7 +80,7 @@ BTC_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 LTC_DIGITAL_SIGNATURE():string|null
 LTC_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LTC_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -81,7 +92,7 @@ LTC_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 XRP_DIGITAL_SIGNATURE():string|null
 XRP_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 XRP_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -93,7 +104,7 @@ XRP_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 ADA_DIGITAL_SIGNATURE():string|null
 ADA_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ADA_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -105,7 +116,7 @@ ADA_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 XLM_DIGITAL_SIGNATURE():string|null
 XLM_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 XLM_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -117,7 +128,7 @@ XLM_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 DOGE_DIGITAL_SIGNATURE():string|null
 DOGE_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DOGE_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -129,7 +140,7 @@ DOGE_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 XMR_DIGITAL_SIGNATURE():string|null
 XMR_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 XMR_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -141,7 +152,7 @@ XMR_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 DOT_DIGITAL_SIGNATURE():string|null
 DOT_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DOT_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -153,7 +164,7 @@ DOT_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 FIL_DIGITAL_SIGNATURE():string|null
 FIL_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FIL_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -165,7 +176,7 @@ FIL_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 XTZ_DIGITAL_SIGNATURE():string|null
 XTZ_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 XTZ_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -177,7 +188,7 @@ XTZ_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 ATOM_DIGITAL_SIGNATURE():string|null
 ATOM_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ATOM_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -189,7 +200,7 @@ ATOM_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 TRX_DIGITAL_SIGNATURE():string|null
 TRX_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRX_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -201,7 +212,7 @@ TRX_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 BNB_DIGITAL_SIGNATURE():string|null
 BNB_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 BNB_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -213,7 +224,7 @@ BNB_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 AVAX_DIGITAL_SIGNATURE():string|null
 AVAX_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 AVAX_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -225,80 +236,84 @@ AVAX_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
 SOL_DIGITAL_SIGNATURE():string|null
 SOL_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SOL_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startPNM(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(18);
 }
 
-static addIpfsCidAccount(builder:flatbuffers.Builder, IPFS_CID_ACCOUNTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, IPFS_CID_ACCOUNTOffset, 0);
+static addIpfsCid(builder:flatbuffers.Builder, IPFS_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, IPFS_CIDOffset, 0);
+}
+
+static addKeyAddress(builder:flatbuffers.Builder, KEY_ADDRESSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, KEY_ADDRESSOffset, 0);
 }
 
 static addEthDigitalSignature(builder:flatbuffers.Builder, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, ETH_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(2, ETH_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addBtcDigitalSignature(builder:flatbuffers.Builder, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, BTC_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(3, BTC_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addLtcDigitalSignature(builder:flatbuffers.Builder, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, LTC_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(4, LTC_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addXrpDigitalSignature(builder:flatbuffers.Builder, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, XRP_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(5, XRP_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addAdaDigitalSignature(builder:flatbuffers.Builder, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, ADA_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(6, ADA_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addXlmDigitalSignature(builder:flatbuffers.Builder, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, XLM_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(7, XLM_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addDogeDigitalSignature(builder:flatbuffers.Builder, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, DOGE_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(8, DOGE_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addXmrDigitalSignature(builder:flatbuffers.Builder, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, XMR_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(9, XMR_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addDotDigitalSignature(builder:flatbuffers.Builder, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, DOT_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(10, DOT_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addFilDigitalSignature(builder:flatbuffers.Builder, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, FIL_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(11, FIL_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addXtzDigitalSignature(builder:flatbuffers.Builder, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, XTZ_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(12, XTZ_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addAtomDigitalSignature(builder:flatbuffers.Builder, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, ATOM_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(13, ATOM_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addTrxDigitalSignature(builder:flatbuffers.Builder, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, TRX_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(14, TRX_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addBnbDigitalSignature(builder:flatbuffers.Builder, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, BNB_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(15, BNB_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addAvaxDigitalSignature(builder:flatbuffers.Builder, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, AVAX_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(16, AVAX_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static addSolDigitalSignature(builder:flatbuffers.Builder, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, SOL_DIGITAL_SIGNATUREOffset, 0);
+  builder.addFieldOffset(17, SOL_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static endPNM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -306,9 +321,10 @@ static endPNM(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPNM(builder:flatbuffers.Builder, IPFS_CID_ACCOUNTOffset:flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPNM(builder:flatbuffers.Builder, IPFS_CIDOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PNM.startPNM(builder);
-  PNM.addIpfsCidAccount(builder, IPFS_CID_ACCOUNTOffset);
+  PNM.addIpfsCid(builder, IPFS_CIDOffset);
+  PNM.addKeyAddress(builder, KEY_ADDRESSOffset);
   PNM.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
   PNM.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
   PNM.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
@@ -330,7 +346,8 @@ static createPNM(builder:flatbuffers.Builder, IPFS_CID_ACCOUNTOffset:flatbuffers
 
 unpack(): PNMT {
   return new PNMT(
-    (this.IPFS_CID_ACCOUNT() !== null ? this.IPFS_CID_ACCOUNT()!.unpack() : null),
+    this.IPFS_CID(),
+    this.KEY_ADDRESS(),
     this.ETH_DIGITAL_SIGNATURE(),
     this.BTC_DIGITAL_SIGNATURE(),
     this.LTC_DIGITAL_SIGNATURE(),
@@ -352,7 +369,8 @@ unpack(): PNMT {
 
 
 unpackTo(_o: PNMT): void {
-  _o.IPFS_CID_ACCOUNT = (this.IPFS_CID_ACCOUNT() !== null ? this.IPFS_CID_ACCOUNT()!.unpack() : null);
+  _o.IPFS_CID = this.IPFS_CID();
+  _o.KEY_ADDRESS = this.KEY_ADDRESS();
   _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE();
   _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE();
   _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE();
@@ -374,7 +392,8 @@ unpackTo(_o: PNMT): void {
 
 export class PNMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public IPFS_CID_ACCOUNT: IPFS_CID_ADDRESST|null = null,
+  public IPFS_CID: string|Uint8Array|null = null,
+  public KEY_ADDRESS: string|Uint8Array|null = null,
   public ETH_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
   public BTC_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
   public LTC_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
@@ -395,7 +414,8 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const IPFS_CID_ACCOUNT = (this.IPFS_CID_ACCOUNT !== null ? this.IPFS_CID_ACCOUNT!.pack(builder) : 0);
+  const IPFS_CID = (this.IPFS_CID !== null ? builder.createString(this.IPFS_CID!) : 0);
+  const KEY_ADDRESS = (this.KEY_ADDRESS !== null ? builder.createString(this.KEY_ADDRESS!) : 0);
   const ETH_DIGITAL_SIGNATURE = (this.ETH_DIGITAL_SIGNATURE !== null ? builder.createString(this.ETH_DIGITAL_SIGNATURE!) : 0);
   const BTC_DIGITAL_SIGNATURE = (this.BTC_DIGITAL_SIGNATURE !== null ? builder.createString(this.BTC_DIGITAL_SIGNATURE!) : 0);
   const LTC_DIGITAL_SIGNATURE = (this.LTC_DIGITAL_SIGNATURE !== null ? builder.createString(this.LTC_DIGITAL_SIGNATURE!) : 0);
@@ -414,7 +434,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SOL_DIGITAL_SIGNATURE = (this.SOL_DIGITAL_SIGNATURE !== null ? builder.createString(this.SOL_DIGITAL_SIGNATURE!) : 0);
 
   return PNM.createPNM(builder,
-    IPFS_CID_ACCOUNT,
+    IPFS_CID,
+    KEY_ADDRESS,
     ETH_DIGITAL_SIGNATURE,
     BTC_DIGITAL_SIGNATURE,
     LTC_DIGITAL_SIGNATURE,

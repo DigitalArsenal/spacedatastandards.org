@@ -45,11 +45,17 @@ class PNM extends Table
     /// IPFS Content Identifier (CID)
     /// The hash of a file stored on the InterPlanetary File System (IPFS).
     /// Refer to the section on IPFS integration for details.
-    public function getIPFS_CID_ACCOUNT()
+    public function getIPFS_CID()
     {
-        $obj = new IPFS_CID_ADDRESS();
         $o = $this->__offset(4);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unique identifier generated from the data provider's public key
+    public function getKEY_ADDRESS()
+    {
+        $o = $this->__offset(6);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Ethereum Digital Signature
@@ -57,7 +63,7 @@ class PNM extends Table
     /// Refer to the Ethereum Blockchain integration section for details.
     public function getETH_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(6);
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -66,7 +72,7 @@ class PNM extends Table
     /// Refer to the Bitcoin Blockchain integration section for details.
     public function getBTC_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -75,7 +81,7 @@ class PNM extends Table
     /// Refer to the Litecoin Blockchain integration section for details.
     public function getLTC_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -84,7 +90,7 @@ class PNM extends Table
     /// Refer to the Ripple Blockchain integration section for details.
     public function getXRP_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -93,7 +99,7 @@ class PNM extends Table
     /// Refer to the Cardano Blockchain integration section for details.
     public function getADA_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -102,7 +108,7 @@ class PNM extends Table
     /// Refer to the Stellar Blockchain integration section for details.
     public function getXLM_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -111,7 +117,7 @@ class PNM extends Table
     /// Refer to the Dogecoin Blockchain integration section for details.
     public function getDOGE_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -120,7 +126,7 @@ class PNM extends Table
     /// Refer to the Monero Blockchain integration section for details.
     public function getXMR_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -129,7 +135,7 @@ class PNM extends Table
     /// Refer to the Polkadot Blockchain integration section for details.
     public function getDOT_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -138,7 +144,7 @@ class PNM extends Table
     /// Refer to the Filecoin Blockchain integration section for details.
     public function getFIL_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -147,7 +153,7 @@ class PNM extends Table
     /// Refer to the Tezos Blockchain integration section for details.
     public function getXTZ_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -156,7 +162,7 @@ class PNM extends Table
     /// Refer to the Cosmos Blockchain integration section for details.
     public function getATOM_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -165,7 +171,7 @@ class PNM extends Table
     /// Refer to the Tron Blockchain integration section for details.
     public function getTRX_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -174,7 +180,7 @@ class PNM extends Table
     /// Refer to the Binance Coin Blockchain integration section for details.
     public function getBNB_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -183,7 +189,7 @@ class PNM extends Table
     /// Refer to the Avalanche Blockchain integration section for details.
     public function getAVAX_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -192,7 +198,7 @@ class PNM extends Table
     /// Refer to the Solana Blockchain integration section for details.
     public function getSOL_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -202,17 +208,18 @@ class PNM extends Table
      */
     public static function startPNM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PNM
      */
-    public static function createPNM(FlatBufferBuilder $builder, $IPFS_CID_ACCOUNT, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
+    public static function createPNM(FlatBufferBuilder $builder, $IPFS_CID, $KEY_ADDRESS, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
     {
-        $builder->startObject(17);
-        self::addIPFS_CID_ACCOUNT($builder, $IPFS_CID_ACCOUNT);
+        $builder->startObject(18);
+        self::addIPFS_CID($builder, $IPFS_CID);
+        self::addKEY_ADDRESS($builder, $KEY_ADDRESS);
         self::addETH_DIGITAL_SIGNATURE($builder, $ETH_DIGITAL_SIGNATURE);
         self::addBTC_DIGITAL_SIGNATURE($builder, $BTC_DIGITAL_SIGNATURE);
         self::addLTC_DIGITAL_SIGNATURE($builder, $LTC_DIGITAL_SIGNATURE);
@@ -235,12 +242,22 @@ class PNM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
-    public static function addIPFS_CID_ACCOUNT(FlatBufferBuilder $builder, $IPFS_CID_ACCOUNT)
+    public static function addIPFS_CID(FlatBufferBuilder $builder, $IPFS_CID)
     {
-        $builder->addOffsetX(0, $IPFS_CID_ACCOUNT, 0);
+        $builder->addOffsetX(0, $IPFS_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addKEY_ADDRESS(FlatBufferBuilder $builder, $KEY_ADDRESS)
+    {
+        $builder->addOffsetX(1, $KEY_ADDRESS, 0);
     }
 
     /**
@@ -250,7 +267,7 @@ class PNM extends Table
      */
     public static function addETH_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ETH_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(1, $ETH_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(2, $ETH_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -260,7 +277,7 @@ class PNM extends Table
      */
     public static function addBTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BTC_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(2, $BTC_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(3, $BTC_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -270,7 +287,7 @@ class PNM extends Table
      */
     public static function addLTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $LTC_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(3, $LTC_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(4, $LTC_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -280,7 +297,7 @@ class PNM extends Table
      */
     public static function addXRP_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XRP_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(4, $XRP_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(5, $XRP_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -290,7 +307,7 @@ class PNM extends Table
      */
     public static function addADA_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ADA_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(5, $ADA_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(6, $ADA_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -300,7 +317,7 @@ class PNM extends Table
      */
     public static function addXLM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XLM_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(6, $XLM_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(7, $XLM_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -310,7 +327,7 @@ class PNM extends Table
      */
     public static function addDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOGE_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(7, $DOGE_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(8, $DOGE_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -320,7 +337,7 @@ class PNM extends Table
      */
     public static function addXMR_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XMR_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(8, $XMR_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(9, $XMR_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -330,7 +347,7 @@ class PNM extends Table
      */
     public static function addDOT_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOT_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(9, $DOT_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(10, $DOT_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -340,7 +357,7 @@ class PNM extends Table
      */
     public static function addFIL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $FIL_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(10, $FIL_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(11, $FIL_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -350,7 +367,7 @@ class PNM extends Table
      */
     public static function addXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XTZ_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(11, $XTZ_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(12, $XTZ_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -360,7 +377,7 @@ class PNM extends Table
      */
     public static function addATOM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ATOM_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(12, $ATOM_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(13, $ATOM_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -370,7 +387,7 @@ class PNM extends Table
      */
     public static function addTRX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $TRX_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(13, $TRX_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(14, $TRX_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -380,7 +397,7 @@ class PNM extends Table
      */
     public static function addBNB_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BNB_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(14, $BNB_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(15, $BNB_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -390,7 +407,7 @@ class PNM extends Table
      */
     public static function addAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $AVAX_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(15, $AVAX_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(16, $AVAX_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -400,7 +417,7 @@ class PNM extends Table
      */
     public static function addSOL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $SOL_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(16, $SOL_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(17, $SOL_DIGITAL_SIGNATURE, 0);
     }
 
     /**

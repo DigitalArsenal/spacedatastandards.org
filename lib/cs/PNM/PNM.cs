@@ -22,170 +22,185 @@ public struct PNM : IFlatbufferObject
   /// IPFS Content Identifier (CID)
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
   /// Refer to the section on IPFS integration for details.
-  public IPFS_CID_ADDRESS? IPFS_CID_ACCOUNT { get { int o = __p.__offset(4); return o != 0 ? (IPFS_CID_ADDRESS?)(new IPFS_CID_ADDRESS()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public string IPFS_CID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIPFS_CIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
+  public ArraySegment<byte>? GetIPFS_CIDBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetIPFS_CIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Unique identifier generated from the data provider's public key
+  public string KEY_ADDRESS { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetKEY_ADDRESSBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
+  public ArraySegment<byte>? GetKEY_ADDRESSBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetKEY_ADDRESSArray() { return __p.__vector_as_array<byte>(6); }
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS file hash using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.
-  public string ETH_DIGITAL_SIGNATURE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ETH_DIGITAL_SIGNATURE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetETH_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetETH_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetETH_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetETH_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetETH_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetETH_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(8); }
   /// Bitcoin Digital Signature
   /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
   /// Refer to the Bitcoin Blockchain integration section for details.
-  public string BTC_DIGITAL_SIGNATURE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string BTC_DIGITAL_SIGNATURE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetBTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetBTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetBTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetBTC_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetBTC_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(10); }
   /// Litecoin Digital Signature
   /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
   /// Refer to the Litecoin Blockchain integration section for details.
-  public string LTC_DIGITAL_SIGNATURE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string LTC_DIGITAL_SIGNATURE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetLTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetLTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetLTC_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetLTC_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetLTC_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(12); }
   /// Ripple Digital Signature
   /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
   /// Refer to the Ripple Blockchain integration section for details.
-  public string XRP_DIGITAL_SIGNATURE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string XRP_DIGITAL_SIGNATURE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetXRP_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetXRP_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetXRP_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetXRP_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetXRP_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(12); }
+  public byte[] GetXRP_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(14); }
   /// Cardano Digital Signature
   /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
   /// Refer to the Cardano Blockchain integration section for details.
-  public string ADA_DIGITAL_SIGNATURE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ADA_DIGITAL_SIGNATURE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetADA_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetADA_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetADA_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetADA_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetADA_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(14); }
+  public byte[] GetADA_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(16); }
   /// Stellar Digital Signature
   /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
   /// Refer to the Stellar Blockchain integration section for details.
-  public string XLM_DIGITAL_SIGNATURE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string XLM_DIGITAL_SIGNATURE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetXLM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetXLM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetXLM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetXLM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetXLM_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetXLM_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(18); }
   /// Dogecoin Digital Signature
   /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
   /// Refer to the Dogecoin Blockchain integration section for details.
-  public string DOGE_DIGITAL_SIGNATURE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DOGE_DIGITAL_SIGNATURE { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDOGE_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetDOGE_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetDOGE_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetDOGE_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetDOGE_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(18); }
+  public byte[] GetDOGE_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(20); }
   /// Monero Digital Signature
   /// Digital signature of the IPFS file hash using Monero's signing mechanism.
   /// Refer to the Monero Blockchain integration section for details.
-  public string XMR_DIGITAL_SIGNATURE { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string XMR_DIGITAL_SIGNATURE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetXMR_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetXMR_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetXMR_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetXMR_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetXMR_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(20); }
+  public byte[] GetXMR_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(22); }
   /// Polkadot Digital Signature
   /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
   /// Refer to the Polkadot Blockchain integration section for details.
-  public string DOT_DIGITAL_SIGNATURE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DOT_DIGITAL_SIGNATURE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDOT_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetDOT_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetDOT_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetDOT_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetDOT_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(22); }
+  public byte[] GetDOT_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(24); }
   /// Filecoin Digital Signature
   /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
   /// Refer to the Filecoin Blockchain integration section for details.
-  public string FIL_DIGITAL_SIGNATURE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string FIL_DIGITAL_SIGNATURE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFIL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetFIL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetFIL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetFIL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetFIL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(24); }
+  public byte[] GetFIL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(26); }
   /// Tezos Digital Signature
   /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
   /// Refer to the Tezos Blockchain integration section for details.
-  public string XTZ_DIGITAL_SIGNATURE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string XTZ_DIGITAL_SIGNATURE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetXTZ_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetXTZ_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetXTZ_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetXTZ_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetXTZ_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(26); }
+  public byte[] GetXTZ_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(28); }
   /// Cosmos Digital Signature
   /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
   /// Refer to the Cosmos Blockchain integration section for details.
-  public string ATOM_DIGITAL_SIGNATURE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ATOM_DIGITAL_SIGNATURE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetATOM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetATOM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetATOM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetATOM_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetATOM_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(28); }
+  public byte[] GetATOM_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(30); }
   /// Tron Digital Signature
   /// Digital signature of the IPFS file hash using Tron's signing mechanism.
   /// Refer to the Tron Blockchain integration section for details.
-  public string TRX_DIGITAL_SIGNATURE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TRX_DIGITAL_SIGNATURE { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetTRX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetTRX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetTRX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetTRX_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(30); }
+  public byte[] GetTRX_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(32); }
   /// Binance Coin Digital Signature
   /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
   /// Refer to the Binance Coin Blockchain integration section for details.
-  public string BNB_DIGITAL_SIGNATURE { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string BNB_DIGITAL_SIGNATURE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBNB_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetBNB_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetBNB_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetBNB_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetBNB_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(32); }
+  public byte[] GetBNB_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(34); }
   /// Avalanche Digital Signature
   /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
   /// Refer to the Avalanche Blockchain integration section for details.
-  public string AVAX_DIGITAL_SIGNATURE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string AVAX_DIGITAL_SIGNATURE { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAVAX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetAVAX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetAVAX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetAVAX_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetAVAX_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(34); }
+  public byte[] GetAVAX_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(36); }
   /// Solana Digital Signature
   /// Digital signature of the IPFS file hash using Solana's signing mechanism.
   /// Refer to the Solana Blockchain integration section for details.
-  public string SOL_DIGITAL_SIGNATURE { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SOL_DIGITAL_SIGNATURE { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSOL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetSOL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetSOL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetSOL_DIGITAL_SIGNATUREBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetSOL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(36); }
+  public byte[] GetSOL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(38); }
 
   public static Offset<PNM> CreatePNM(FlatBufferBuilder builder,
-      Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNTOffset = default(Offset<IPFS_CID_ADDRESS>),
+      StringOffset IPFS_CIDOffset = default(StringOffset),
+      StringOffset KEY_ADDRESSOffset = default(StringOffset),
       StringOffset ETH_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset BTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset LTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
@@ -202,7 +217,7 @@ public struct PNM : IFlatbufferObject
       StringOffset BNB_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset AVAX_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset SOL_DIGITAL_SIGNATUREOffset = default(StringOffset)) {
-    builder.StartTable(17);
+    builder.StartTable(18);
     PNM.AddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATUREOffset);
     PNM.AddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATUREOffset);
     PNM.AddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATUREOffset);
@@ -219,28 +234,30 @@ public struct PNM : IFlatbufferObject
     PNM.AddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATUREOffset);
     PNM.AddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATUREOffset);
-    PNM.AddIPFS_CID_ACCOUNT(builder, IPFS_CID_ACCOUNTOffset);
+    PNM.AddKEY_ADDRESS(builder, KEY_ADDRESSOffset);
+    PNM.AddIPFS_CID(builder, IPFS_CIDOffset);
     return PNM.EndPNM(builder);
   }
 
-  public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(17); }
-  public static void AddIPFS_CID_ACCOUNT(FlatBufferBuilder builder, Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNTOffset) { builder.AddOffset(0, IPFS_CID_ACCOUNTOffset.Value, 0); }
-  public static void AddETH_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ETH_DIGITAL_SIGNATUREOffset) { builder.AddOffset(1, ETH_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddBTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(2, BTC_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddLTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset LTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(3, LTC_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddXRP_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XRP_DIGITAL_SIGNATUREOffset) { builder.AddOffset(4, XRP_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddADA_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ADA_DIGITAL_SIGNATUREOffset) { builder.AddOffset(5, ADA_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddXLM_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XLM_DIGITAL_SIGNATUREOffset) { builder.AddOffset(6, XLM_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset DOGE_DIGITAL_SIGNATUREOffset) { builder.AddOffset(7, DOGE_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddXMR_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XMR_DIGITAL_SIGNATUREOffset) { builder.AddOffset(8, XMR_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddDOT_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset DOT_DIGITAL_SIGNATUREOffset) { builder.AddOffset(9, DOT_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddFIL_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset FIL_DIGITAL_SIGNATUREOffset) { builder.AddOffset(10, FIL_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XTZ_DIGITAL_SIGNATUREOffset) { builder.AddOffset(11, XTZ_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddATOM_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ATOM_DIGITAL_SIGNATUREOffset) { builder.AddOffset(12, ATOM_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddTRX_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset TRX_DIGITAL_SIGNATUREOffset) { builder.AddOffset(13, TRX_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddBNB_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BNB_DIGITAL_SIGNATUREOffset) { builder.AddOffset(14, BNB_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset AVAX_DIGITAL_SIGNATUREOffset) { builder.AddOffset(15, AVAX_DIGITAL_SIGNATUREOffset.Value, 0); }
-  public static void AddSOL_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset SOL_DIGITAL_SIGNATUREOffset) { builder.AddOffset(16, SOL_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void AddIPFS_CID(FlatBufferBuilder builder, StringOffset IPFS_CIDOffset) { builder.AddOffset(0, IPFS_CIDOffset.Value, 0); }
+  public static void AddKEY_ADDRESS(FlatBufferBuilder builder, StringOffset KEY_ADDRESSOffset) { builder.AddOffset(1, KEY_ADDRESSOffset.Value, 0); }
+  public static void AddETH_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ETH_DIGITAL_SIGNATUREOffset) { builder.AddOffset(2, ETH_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddBTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(3, BTC_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddLTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset LTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(4, LTC_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXRP_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XRP_DIGITAL_SIGNATUREOffset) { builder.AddOffset(5, XRP_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddADA_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ADA_DIGITAL_SIGNATUREOffset) { builder.AddOffset(6, ADA_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXLM_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XLM_DIGITAL_SIGNATUREOffset) { builder.AddOffset(7, XLM_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset DOGE_DIGITAL_SIGNATUREOffset) { builder.AddOffset(8, DOGE_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXMR_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XMR_DIGITAL_SIGNATUREOffset) { builder.AddOffset(9, XMR_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddDOT_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset DOT_DIGITAL_SIGNATUREOffset) { builder.AddOffset(10, DOT_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddFIL_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset FIL_DIGITAL_SIGNATUREOffset) { builder.AddOffset(11, FIL_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset XTZ_DIGITAL_SIGNATUREOffset) { builder.AddOffset(12, XTZ_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddATOM_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ATOM_DIGITAL_SIGNATUREOffset) { builder.AddOffset(13, ATOM_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddTRX_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset TRX_DIGITAL_SIGNATUREOffset) { builder.AddOffset(14, TRX_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddBNB_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BNB_DIGITAL_SIGNATUREOffset) { builder.AddOffset(15, BNB_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset AVAX_DIGITAL_SIGNATUREOffset) { builder.AddOffset(16, AVAX_DIGITAL_SIGNATUREOffset.Value, 0); }
+  public static void AddSOL_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset SOL_DIGITAL_SIGNATUREOffset) { builder.AddOffset(17, SOL_DIGITAL_SIGNATUREOffset.Value, 0); }
   public static Offset<PNM> EndPNM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PNM>(o);
@@ -253,7 +270,8 @@ public struct PNM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(PNMT _o) {
-    _o.IPFS_CID_ACCOUNT = this.IPFS_CID_ACCOUNT.HasValue ? this.IPFS_CID_ACCOUNT.Value.UnPack() : null;
+    _o.IPFS_CID = this.IPFS_CID;
+    _o.KEY_ADDRESS = this.KEY_ADDRESS;
     _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE;
     _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE;
     _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE;
@@ -273,7 +291,8 @@ public struct PNM : IFlatbufferObject
   }
   public static Offset<PNM> Pack(FlatBufferBuilder builder, PNMT _o) {
     if (_o == null) return default(Offset<PNM>);
-    var _IPFS_CID_ACCOUNT = _o.IPFS_CID_ACCOUNT == null ? default(Offset<IPFS_CID_ADDRESS>) : IPFS_CID_ADDRESS.Pack(builder, _o.IPFS_CID_ACCOUNT);
+    var _IPFS_CID = _o.IPFS_CID == null ? default(StringOffset) : builder.CreateString(_o.IPFS_CID);
+    var _KEY_ADDRESS = _o.KEY_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.KEY_ADDRESS);
     var _ETH_DIGITAL_SIGNATURE = _o.ETH_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.ETH_DIGITAL_SIGNATURE);
     var _BTC_DIGITAL_SIGNATURE = _o.BTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.BTC_DIGITAL_SIGNATURE);
     var _LTC_DIGITAL_SIGNATURE = _o.LTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.LTC_DIGITAL_SIGNATURE);
@@ -292,7 +311,8 @@ public struct PNM : IFlatbufferObject
     var _SOL_DIGITAL_SIGNATURE = _o.SOL_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SOL_DIGITAL_SIGNATURE);
     return CreatePNM(
       builder,
-      _IPFS_CID_ACCOUNT,
+      _IPFS_CID,
+      _KEY_ADDRESS,
       _ETH_DIGITAL_SIGNATURE,
       _BTC_DIGITAL_SIGNATURE,
       _LTC_DIGITAL_SIGNATURE,
@@ -314,7 +334,8 @@ public struct PNM : IFlatbufferObject
 
 public class PNMT
 {
-  public IPFS_CID_ADDRESST IPFS_CID_ACCOUNT { get; set; }
+  public string IPFS_CID { get; set; }
+  public string KEY_ADDRESS { get; set; }
   public string ETH_DIGITAL_SIGNATURE { get; set; }
   public string BTC_DIGITAL_SIGNATURE { get; set; }
   public string LTC_DIGITAL_SIGNATURE { get; set; }
@@ -333,7 +354,8 @@ public class PNMT
   public string SOL_DIGITAL_SIGNATURE { get; set; }
 
   public PNMT() {
-    this.IPFS_CID_ACCOUNT = null;
+    this.IPFS_CID = null;
+    this.KEY_ADDRESS = null;
     this.ETH_DIGITAL_SIGNATURE = null;
     this.BTC_DIGITAL_SIGNATURE = null;
     this.LTC_DIGITAL_SIGNATURE = null;

@@ -4231,26 +4231,17 @@
         "PNM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "IPFS_CID_ADDRESS": {
-                    "type": "object",
-                    "description": "IPFS CID and Account Identifier",
-                    "properties": {
-                        "IPFS_CID": {
-                            "type": "string"
-                        },
-                        "KEY_ADDRESS": {
-                            "type": "string"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "PNM": {
                     "type": "object",
                     "description": "Publish Notification Message\nThis table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.",
                     "properties": {
-                        "IPFS_CID_ACCOUNT": {
-                            "$ref": "#/definitions/IPFS_CID_ADDRESS",
+                        "IPFS_CID": {
+                            "type": "string",
                             "description": "IPFS Content Identifier (CID)\nThe hash of a file stored on the InterPlanetary File System (IPFS).\nRefer to the section on IPFS integration for details."
+                        },
+                        "KEY_ADDRESS": {
+                            "type": "string",
+                            "description": "Unique identifier generated from the data provider's public key"
                         },
                         "ETH_DIGITAL_SIGNATURE": {
                             "type": "string",
@@ -4559,26 +4550,17 @@
                         "NA"
                     ]
                 },
-                "IPFS_CID_ADDRESS": {
-                    "type": "object",
-                    "description": "IPFS CID and Account Identifier",
-                    "properties": {
-                        "IPFS_CID": {
-                            "type": "string"
-                        },
-                        "KEY_ADDRESS": {
-                            "type": "string"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "PNM": {
                     "type": "object",
                     "description": "Publish Notification Message\nThis table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.",
                     "properties": {
-                        "IPFS_CID_ACCOUNT": {
-                            "$ref": "#/definitions/IPFS_CID_ADDRESS",
+                        "IPFS_CID": {
+                            "type": "string",
                             "description": "IPFS Content Identifier (CID)\nThe hash of a file stored on the InterPlanetary File System (IPFS).\nRefer to the section on IPFS integration for details."
+                        },
+                        "KEY_ADDRESS": {
+                            "type": "string",
+                            "description": "Unique identifier generated from the data provider's public key"
                         },
                         "ETH_DIGITAL_SIGNATURE": {
                             "type": "string",

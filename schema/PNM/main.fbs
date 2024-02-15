@@ -1,20 +1,13 @@
-/// IPFS CID and Account Identifier
-table IPFS_CID_ADDRESS {
-  // IPFS Content Identifier (CID)
-  IPFS_CID: string;
-
-  // Identifier of the account that created the file
-  KEY_ADDRESS: string;
-}
-
-
 /// Publish Notification Message
 /// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 table PNM {
   /// IPFS Content Identifier (CID)
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
   /// Refer to the section on IPFS integration for details.
-  IPFS_CID_ACCOUNT: IPFS_CID_ADDRESS;
+  IPFS_CID: string;
+
+  /// Unique identifier generated from the data provider's public key
+  KEY_ADDRESS: string;
 
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS file hash using Ethereum's signing mechanism.
