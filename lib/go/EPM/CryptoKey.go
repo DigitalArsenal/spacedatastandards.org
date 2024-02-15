@@ -85,19 +85,15 @@ func (rcv *CryptoKey) KEY_ADDRESS() []byte {
 
 /// Address generated from the cryptographic key
 /// Numerical type of the address generated from the cryptographic key
-func (rcv *CryptoKey) ADDRESS_TYPE() int32 {
+func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0
+	return nil
 }
 
 /// Numerical type of the address generated from the cryptographic key
-func (rcv *CryptoKey) MutateADDRESS_TYPE(n int32) bool {
-	return rcv._tab.MutateInt32Slot(14, n)
-}
-
 func CryptoKeyStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
 }
@@ -116,8 +112,8 @@ func CryptoKeyAddXPRIV(builder *flatbuffers.Builder, XPRIV flatbuffers.UOffsetT)
 func CryptoKeyAddKEY_ADDRESS(builder *flatbuffers.Builder, KEY_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(KEY_ADDRESS), 0)
 }
-func CryptoKeyAddADDRESS_TYPE(builder *flatbuffers.Builder, ADDRESS_TYPE int32) {
-	builder.PrependInt32Slot(5, ADDRESS_TYPE, 0)
+func CryptoKeyAddADDRESS_TYPE(builder *flatbuffers.Builder, ADDRESS_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ADDRESS_TYPE), 0)
 }
 func CryptoKeyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

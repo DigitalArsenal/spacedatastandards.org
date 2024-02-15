@@ -39,8 +39,8 @@ class CryptoKey : flatbuffers_handle
     def KEY_ADDRESS() -> string:
         return buf_.flatbuffers_field_string(pos_, 12)
     /// Numerical type of the address generated from the cryptographic key
-    def ADDRESS_TYPE() -> int:
-        return buf_.flatbuffers_field_int32(pos_, 14, 0)
+    def ADDRESS_TYPE() -> string:
+        return buf_.flatbuffers_field_string(pos_, 14)
 
 def GetRootAsCryptoKey(buf:string): return CryptoKey { buf, buf.flatbuffers_indirect(0) }
 
@@ -64,8 +64,8 @@ struct CryptoKeyBuilder:
     def add_KEY_ADDRESS(KEY_ADDRESS:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(4, KEY_ADDRESS)
         return this
-    def add_ADDRESS_TYPE(ADDRESS_TYPE:int):
-        b_.PrependInt32Slot(5, ADDRESS_TYPE, 0)
+    def add_ADDRESS_TYPE(ADDRESS_TYPE:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(5, ADDRESS_TYPE)
         return this
     def end():
         return b_.EndObject()

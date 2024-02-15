@@ -76,7 +76,7 @@ class CryptoKey {
   ///  Address generated from the cryptographic key
   String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Numerical type of the address generated from the cryptographic key
-  int get ADDRESS_TYPE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  String? get ADDRESS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
 
   @override
   String toString() {
@@ -121,8 +121,8 @@ class CryptoKeyBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addAddressType(int? ADDRESS_TYPE) {
-    fbBuilder.addInt32(5, ADDRESS_TYPE);
+  int addAddressTypeOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
 
@@ -137,7 +137,7 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
   final String? _PRIVATE_KEY;
   final String? _XPRIV;
   final String? _KEY_ADDRESS;
-  final int? _ADDRESS_TYPE;
+  final String? _ADDRESS_TYPE;
 
   CryptoKeyObjectBuilder({
     String? PUBLIC_KEY,
@@ -145,7 +145,7 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
     String? PRIVATE_KEY,
     String? XPRIV,
     String? KEY_ADDRESS,
-    int? ADDRESS_TYPE,
+    String? ADDRESS_TYPE,
   })
       : _PUBLIC_KEY = PUBLIC_KEY,
         _XPUB = XPUB,
@@ -167,13 +167,15 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_XPRIV!);
     final int? KEY_ADDRESSOffset = _KEY_ADDRESS == null ? null
         : fbBuilder.writeString(_KEY_ADDRESS!);
+    final int? ADDRESS_TYPEOffset = _ADDRESS_TYPE == null ? null
+        : fbBuilder.writeString(_ADDRESS_TYPE!);
     fbBuilder.startTable(6);
     fbBuilder.addOffset(0, PUBLIC_KEYOffset);
     fbBuilder.addOffset(1, XPUBOffset);
     fbBuilder.addOffset(2, PRIVATE_KEYOffset);
     fbBuilder.addOffset(3, XPRIVOffset);
     fbBuilder.addOffset(4, KEY_ADDRESSOffset);
-    fbBuilder.addInt32(5, _ADDRESS_TYPE);
+    fbBuilder.addOffset(5, ADDRESS_TYPEOffset);
     return fbBuilder.endTable();
   }
 

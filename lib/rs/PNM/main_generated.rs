@@ -9,6 +9,164 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+pub enum IPFS_CID_ADDRESSOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// IPFS CID and Account Identifier
+pub struct IPFS_CID_ADDRESS<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for IPFS_CID_ADDRESS<'a> {
+  type Inner = IPFS_CID_ADDRESS<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> IPFS_CID_ADDRESS<'a> {
+  pub const VT_IPFS_CID: flatbuffers::VOffsetT = 4;
+  pub const VT_KEY_ADDRESS: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    IPFS_CID_ADDRESS { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args IPFS_CID_ADDRESSArgs<'args>
+  ) -> flatbuffers::WIPOffset<IPFS_CID_ADDRESS<'bldr>> {
+    let mut builder = IPFS_CID_ADDRESSBuilder::new(_fbb);
+    if let Some(x) = args.KEY_ADDRESS { builder.add_KEY_ADDRESS(x); }
+    if let Some(x) = args.IPFS_CID { builder.add_IPFS_CID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> IPFS_CID_ADDRESST {
+    let IPFS_CID = self.IPFS_CID().map(|x| {
+      x.to_string()
+    });
+    let KEY_ADDRESS = self.KEY_ADDRESS().map(|x| {
+      x.to_string()
+    });
+    IPFS_CID_ADDRESST {
+      IPFS_CID,
+      KEY_ADDRESS,
+    }
+  }
+
+  #[inline]
+  pub fn IPFS_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IPFS_CID_ADDRESS::VT_IPFS_CID, None)}
+  }
+  #[inline]
+  pub fn KEY_ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IPFS_CID_ADDRESS::VT_KEY_ADDRESS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for IPFS_CID_ADDRESS<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IPFS_CID", Self::VT_IPFS_CID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KEY_ADDRESS", Self::VT_KEY_ADDRESS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct IPFS_CID_ADDRESSArgs<'a> {
+    pub IPFS_CID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for IPFS_CID_ADDRESSArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    IPFS_CID_ADDRESSArgs {
+      IPFS_CID: None,
+      KEY_ADDRESS: None,
+    }
+  }
+}
+
+pub struct IPFS_CID_ADDRESSBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> IPFS_CID_ADDRESSBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_IPFS_CID(&mut self, IPFS_CID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IPFS_CID_ADDRESS::VT_IPFS_CID, IPFS_CID);
+  }
+  #[inline]
+  pub fn add_KEY_ADDRESS(&mut self, KEY_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IPFS_CID_ADDRESS::VT_KEY_ADDRESS, KEY_ADDRESS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> IPFS_CID_ADDRESSBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    IPFS_CID_ADDRESSBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<IPFS_CID_ADDRESS<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for IPFS_CID_ADDRESS<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("IPFS_CID_ADDRESS");
+      ds.field("IPFS_CID", &self.IPFS_CID());
+      ds.field("KEY_ADDRESS", &self.KEY_ADDRESS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct IPFS_CID_ADDRESST {
+  pub IPFS_CID: Option<String>,
+  pub KEY_ADDRESS: Option<String>,
+}
+impl Default for IPFS_CID_ADDRESST {
+  fn default() -> Self {
+    Self {
+      IPFS_CID: None,
+      KEY_ADDRESS: None,
+    }
+  }
+}
+impl IPFS_CID_ADDRESST {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<IPFS_CID_ADDRESS<'b>> {
+    let IPFS_CID = self.IPFS_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KEY_ADDRESS = self.KEY_ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    IPFS_CID_ADDRESS::create(_fbb, &IPFS_CID_ADDRESSArgs{
+      IPFS_CID,
+      KEY_ADDRESS,
+    })
+  }
+}
 pub enum PNMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,7 +185,7 @@ impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
 }
 
 impl<'a> PNM<'a> {
-  pub const VT_IPFS_CID: flatbuffers::VOffsetT = 4;
+  pub const VT_IPFS_CID_ACCOUNT: flatbuffers::VOffsetT = 4;
   pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 6;
   pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 8;
   pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
@@ -71,13 +229,13 @@ impl<'a> PNM<'a> {
     if let Some(x) = args.LTC_DIGITAL_SIGNATURE { builder.add_LTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.BTC_DIGITAL_SIGNATURE { builder.add_BTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.ETH_DIGITAL_SIGNATURE { builder.add_ETH_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.IPFS_CID { builder.add_IPFS_CID(x); }
+    if let Some(x) = args.IPFS_CID_ACCOUNT { builder.add_IPFS_CID_ACCOUNT(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> PNMT {
-    let IPFS_CID = self.IPFS_CID().map(|x| {
-      x.to_string()
+    let IPFS_CID_ACCOUNT = self.IPFS_CID_ACCOUNT().map(|x| {
+      Box::new(x.unpack())
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
@@ -128,7 +286,7 @@ impl<'a> PNM<'a> {
       x.to_string()
     });
     PNMT {
-      IPFS_CID,
+      IPFS_CID_ACCOUNT,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,
@@ -152,11 +310,11 @@ impl<'a> PNM<'a> {
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
   /// Refer to the section on IPFS integration for details.
   #[inline]
-  pub fn IPFS_CID(&self) -> Option<&'a str> {
+  pub fn IPFS_CID_ACCOUNT(&self) -> Option<IPFS_CID_ADDRESS<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_IPFS_CID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<IPFS_CID_ADDRESS>>(PNM::VT_IPFS_CID_ACCOUNT, None)}
   }
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS file hash using Ethereum's signing mechanism.
@@ -327,7 +485,7 @@ impl flatbuffers::Verifiable for PNM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IPFS_CID", Self::VT_IPFS_CID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<IPFS_CID_ADDRESS>>("IPFS_CID_ACCOUNT", Self::VT_IPFS_CID_ACCOUNT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ETH_DIGITAL_SIGNATURE", Self::VT_ETH_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BTC_DIGITAL_SIGNATURE", Self::VT_BTC_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LTC_DIGITAL_SIGNATURE", Self::VT_LTC_DIGITAL_SIGNATURE, false)?
@@ -349,7 +507,7 @@ impl flatbuffers::Verifiable for PNM<'_> {
   }
 }
 pub struct PNMArgs<'a> {
-    pub IPFS_CID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub IPFS_CID_ACCOUNT: Option<flatbuffers::WIPOffset<IPFS_CID_ADDRESS<'a>>>,
     pub ETH_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -371,7 +529,7 @@ impl<'a> Default for PNMArgs<'a> {
   #[inline]
   fn default() -> Self {
     PNMArgs {
-      IPFS_CID: None,
+      IPFS_CID_ACCOUNT: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -398,8 +556,8 @@ pub struct PNMBuilder<'a: 'b, 'b> {
 }
 impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
   #[inline]
-  pub fn add_IPFS_CID(&mut self, IPFS_CID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_IPFS_CID, IPFS_CID);
+  pub fn add_IPFS_CID_ACCOUNT(&mut self, IPFS_CID_ACCOUNT: flatbuffers::WIPOffset<IPFS_CID_ADDRESS<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<IPFS_CID_ADDRESS>>(PNM::VT_IPFS_CID_ACCOUNT, IPFS_CID_ACCOUNT);
   }
   #[inline]
   pub fn add_ETH_DIGITAL_SIGNATURE(&mut self, ETH_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
@@ -483,7 +641,7 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
 impl core::fmt::Debug for PNM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("PNM");
-      ds.field("IPFS_CID", &self.IPFS_CID());
+      ds.field("IPFS_CID_ACCOUNT", &self.IPFS_CID_ACCOUNT());
       ds.field("ETH_DIGITAL_SIGNATURE", &self.ETH_DIGITAL_SIGNATURE());
       ds.field("BTC_DIGITAL_SIGNATURE", &self.BTC_DIGITAL_SIGNATURE());
       ds.field("LTC_DIGITAL_SIGNATURE", &self.LTC_DIGITAL_SIGNATURE());
@@ -506,7 +664,7 @@ impl core::fmt::Debug for PNM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct PNMT {
-  pub IPFS_CID: Option<String>,
+  pub IPFS_CID_ACCOUNT: Option<Box<IPFS_CID_ADDRESST>>,
   pub ETH_DIGITAL_SIGNATURE: Option<String>,
   pub BTC_DIGITAL_SIGNATURE: Option<String>,
   pub LTC_DIGITAL_SIGNATURE: Option<String>,
@@ -527,7 +685,7 @@ pub struct PNMT {
 impl Default for PNMT {
   fn default() -> Self {
     Self {
-      IPFS_CID: None,
+      IPFS_CID_ACCOUNT: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -552,8 +710,8 @@ impl PNMT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
   ) -> flatbuffers::WIPOffset<PNM<'b>> {
-    let IPFS_CID = self.IPFS_CID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let IPFS_CID_ACCOUNT = self.IPFS_CID_ACCOUNT.as_ref().map(|x|{
+      x.pack(_fbb)
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -604,7 +762,7 @@ impl PNMT {
       _fbb.create_string(x)
     });
     PNM::create(_fbb, &PNMArgs{
-      IPFS_CID,
+      IPFS_CID_ACCOUNT,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,

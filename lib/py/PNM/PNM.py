@@ -34,10 +34,14 @@ class PNM(object):
     # The hash of a file stored on the InterPlanetary File System (IPFS).
     # Refer to the section on IPFS integration for details.
     # PNM
-    def IPFS_CID(self):
+    def IPFS_CID_ACCOUNT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from IPFS_CID_ADDRESS import IPFS_CID_ADDRESS
+            obj = IPFS_CID_ADDRESS()
+            obj.Init(self._tab.Bytes, x)
+            return obj
         return None
 
     # Ethereum Digital Signature
@@ -203,9 +207,9 @@ class PNM(object):
 def PNMStart(builder): builder.StartObject(17)
 def Start(builder):
     return PNMStart(builder)
-def PNMAddIPFS_CID(builder, IPFS_CID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(IPFS_CID), 0)
-def AddIPFS_CID(builder, IPFS_CID):
-    return PNMAddIPFS_CID(builder, IPFS_CID)
+def PNMAddIPFS_CID_ACCOUNT(builder, IPFS_CID_ACCOUNT): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(IPFS_CID_ACCOUNT), 0)
+def AddIPFS_CID_ACCOUNT(builder, IPFS_CID_ACCOUNT):
+    return PNMAddIPFS_CID_ACCOUNT(builder, IPFS_CID_ACCOUNT)
 def PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
 def AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE):
     return PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
@@ -257,12 +261,17 @@ def AddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE):
 def PNMEnd(builder): return builder.EndObject()
 def End(builder):
     return PNMEnd(builder)
+import IPFS_CID_ADDRESS
+try:
+    from typing import Optional
+except:
+    pass
 
 class PNMT(object):
 
     # PNMT
     def __init__(self):
-        self.IPFS_CID = None  # type: str
+        self.IPFS_CID_ACCOUNT = None  # type: Optional[IPFS_CID_ADDRESS.IPFS_CID_ADDRESST]
         self.ETH_DIGITAL_SIGNATURE = None  # type: str
         self.BTC_DIGITAL_SIGNATURE = None  # type: str
         self.LTC_DIGITAL_SIGNATURE = None  # type: str
@@ -301,7 +310,8 @@ class PNMT(object):
     def _UnPack(self, PNM):
         if PNM is None:
             return
-        self.IPFS_CID = PNM.IPFS_CID()
+        if PNM.IPFS_CID_ACCOUNT() is not None:
+            self.IPFS_CID_ACCOUNT = IPFS_CID_ADDRESS.IPFS_CID_ADDRESST.InitFromObj(PNM.IPFS_CID_ACCOUNT())
         self.ETH_DIGITAL_SIGNATURE = PNM.ETH_DIGITAL_SIGNATURE()
         self.BTC_DIGITAL_SIGNATURE = PNM.BTC_DIGITAL_SIGNATURE()
         self.LTC_DIGITAL_SIGNATURE = PNM.LTC_DIGITAL_SIGNATURE()
@@ -321,8 +331,8 @@ class PNMT(object):
 
     # PNMT
     def Pack(self, builder):
-        if self.IPFS_CID is not None:
-            IPFS_CID = builder.CreateString(self.IPFS_CID)
+        if self.IPFS_CID_ACCOUNT is not None:
+            IPFS_CID_ACCOUNT = self.IPFS_CID_ACCOUNT.Pack(builder)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             ETH_DIGITAL_SIGNATURE = builder.CreateString(self.ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:
@@ -356,8 +366,8 @@ class PNMT(object):
         if self.SOL_DIGITAL_SIGNATURE is not None:
             SOL_DIGITAL_SIGNATURE = builder.CreateString(self.SOL_DIGITAL_SIGNATURE)
         PNMStart(builder)
-        if self.IPFS_CID is not None:
-            PNMAddIPFS_CID(builder, IPFS_CID)
+        if self.IPFS_CID_ACCOUNT is not None:
+            PNMAddIPFS_CID_ACCOUNT(builder, IPFS_CID_ACCOUNT)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:

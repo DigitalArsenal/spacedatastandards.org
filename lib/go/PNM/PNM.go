@@ -38,10 +38,15 @@ func (rcv *PNM) Table() flatbuffers.Table {
 /// IPFS Content Identifier (CID)
 /// The hash of a file stored on the InterPlanetary File System (IPFS).
 /// Refer to the section on IPFS integration for details.
-func (rcv *PNM) IPFS_CID() []byte {
+func (rcv *PNM) IPFS_CID_ACCOUNT(obj *IPFS_CID_ADDRESS) *IPFS_CID_ADDRESS {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(IPFS_CID_ADDRESS)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
 	return nil
 }
@@ -276,8 +281,8 @@ func (rcv *PNM) SOL_DIGITAL_SIGNATURE() []byte {
 func PNMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
 }
-func PNMAddIPFS_CID(builder *flatbuffers.Builder, IPFS_CID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(IPFS_CID), 0)
+func PNMAddIPFS_CID_ACCOUNT(builder *flatbuffers.Builder, IPFS_CID_ACCOUNT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(IPFS_CID_ACCOUNT), 0)
 }
 func PNMAddETH_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ETH_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ETH_DIGITAL_SIGNATURE), 0)

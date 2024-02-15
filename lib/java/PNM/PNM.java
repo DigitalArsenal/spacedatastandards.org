@@ -35,9 +35,8 @@ public final class PNM extends Table {
    * The hash of a file stored on the InterPlanetary File System (IPFS).
    * Refer to the section on IPFS integration for details.
    */
-  public String IPFS_CID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IPFS_CIDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer IPFS_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public IPFS_CID_ADDRESS IPFS_CID_ACCOUNT() { return IPFS_CID_ACCOUNT(new IPFS_CID_ADDRESS()); }
+  public IPFS_CID_ADDRESS IPFS_CID_ACCOUNT(IPFS_CID_ADDRESS obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Ethereum Digital Signature
    * Digital signature of the IPFS file hash using Ethereum's signing mechanism.
@@ -168,7 +167,7 @@ public final class PNM extends Table {
   public ByteBuffer SOL_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
 
   public static int createPNM(FlatBufferBuilder builder,
-      int IPFS_CIDOffset,
+      int IPFS_CID_ACCOUNTOffset,
       int ETH_DIGITAL_SIGNATUREOffset,
       int BTC_DIGITAL_SIGNATUREOffset,
       int LTC_DIGITAL_SIGNATUREOffset,
@@ -202,12 +201,12 @@ public final class PNM extends Table {
     PNM.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
     PNM.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
-    PNM.addIpfsCid(builder, IPFS_CIDOffset);
+    PNM.addIpfsCidAccount(builder, IPFS_CID_ACCOUNTOffset);
     return PNM.endPNM(builder);
   }
 
   public static void startPNM(FlatBufferBuilder builder) { builder.startTable(17); }
-  public static void addIpfsCid(FlatBufferBuilder builder, int IPFS_CIDOffset) { builder.addOffset(0, IPFS_CIDOffset, 0); }
+  public static void addIpfsCidAccount(FlatBufferBuilder builder, int IPFS_CID_ACCOUNTOffset) { builder.addOffset(0, IPFS_CID_ACCOUNTOffset, 0); }
   public static void addEthDigitalSignature(FlatBufferBuilder builder, int ETH_DIGITAL_SIGNATUREOffset) { builder.addOffset(1, ETH_DIGITAL_SIGNATUREOffset, 0); }
   public static void addBtcDigitalSignature(FlatBufferBuilder builder, int BTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(2, BTC_DIGITAL_SIGNATUREOffset, 0); }
   public static void addLtcDigitalSignature(FlatBufferBuilder builder, int LTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(3, LTC_DIGITAL_SIGNATUREOffset, 0); }

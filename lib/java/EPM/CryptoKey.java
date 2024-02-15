@@ -61,7 +61,9 @@ public final class CryptoKey extends Table {
   /**
    * Numerical type of the address generated from the cryptographic key
    */
-  public int ADDRESS_TYPE() { int o = __offset(14); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public String ADDRESS_TYPE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ADDRESS_TYPEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer ADDRESS_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
 
   public static int createCryptoKey(FlatBufferBuilder builder,
       int PUBLIC_KEYOffset,
@@ -69,9 +71,9 @@ public final class CryptoKey extends Table {
       int PRIVATE_KEYOffset,
       int XPRIVOffset,
       int KEY_ADDRESSOffset,
-      int ADDRESS_TYPE) {
+      int ADDRESS_TYPEOffset) {
     builder.startTable(6);
-    CryptoKey.addAddressType(builder, ADDRESS_TYPE);
+    CryptoKey.addAddressType(builder, ADDRESS_TYPEOffset);
     CryptoKey.addKeyAddress(builder, KEY_ADDRESSOffset);
     CryptoKey.addXpriv(builder, XPRIVOffset);
     CryptoKey.addPrivateKey(builder, PRIVATE_KEYOffset);
@@ -86,7 +88,7 @@ public final class CryptoKey extends Table {
   public static void addPrivateKey(FlatBufferBuilder builder, int PRIVATE_KEYOffset) { builder.addOffset(2, PRIVATE_KEYOffset, 0); }
   public static void addXpriv(FlatBufferBuilder builder, int XPRIVOffset) { builder.addOffset(3, XPRIVOffset, 0); }
   public static void addKeyAddress(FlatBufferBuilder builder, int KEY_ADDRESSOffset) { builder.addOffset(4, KEY_ADDRESSOffset, 0); }
-  public static void addAddressType(FlatBufferBuilder builder, int ADDRESS_TYPE) { builder.addInt(5, ADDRESS_TYPE, 0); }
+  public static void addAddressType(FlatBufferBuilder builder, int ADDRESS_TYPEOffset) { builder.addOffset(5, ADDRESS_TYPEOffset, 0); }
   public static int endCryptoKey(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

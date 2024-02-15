@@ -45,10 +45,11 @@ class PNM extends Table
     /// IPFS Content Identifier (CID)
     /// The hash of a file stored on the InterPlanetary File System (IPFS).
     /// Refer to the section on IPFS integration for details.
-    public function getIPFS_CID()
+    public function getIPFS_CID_ACCOUNT()
     {
+        $obj = new IPFS_CID_ADDRESS();
         $o = $this->__offset(4);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Ethereum Digital Signature
@@ -208,10 +209,10 @@ class PNM extends Table
      * @param FlatBufferBuilder $builder
      * @return PNM
      */
-    public static function createPNM(FlatBufferBuilder $builder, $IPFS_CID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
+    public static function createPNM(FlatBufferBuilder $builder, $IPFS_CID_ACCOUNT, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
     {
         $builder->startObject(17);
-        self::addIPFS_CID($builder, $IPFS_CID);
+        self::addIPFS_CID_ACCOUNT($builder, $IPFS_CID_ACCOUNT);
         self::addETH_DIGITAL_SIGNATURE($builder, $ETH_DIGITAL_SIGNATURE);
         self::addBTC_DIGITAL_SIGNATURE($builder, $BTC_DIGITAL_SIGNATURE);
         self::addLTC_DIGITAL_SIGNATURE($builder, $LTC_DIGITAL_SIGNATURE);
@@ -234,12 +235,12 @@ class PNM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param int
      * @return void
      */
-    public static function addIPFS_CID(FlatBufferBuilder $builder, $IPFS_CID)
+    public static function addIPFS_CID_ACCOUNT(FlatBufferBuilder $builder, $IPFS_CID_ACCOUNT)
     {
-        $builder->addOffsetX(0, $IPFS_CID, 0);
+        $builder->addOffsetX(0, $IPFS_CID_ACCOUNT, 0);
     }
 
     /**

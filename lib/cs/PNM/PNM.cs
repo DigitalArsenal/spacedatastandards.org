@@ -22,13 +22,7 @@ public struct PNM : IFlatbufferObject
   /// IPFS Content Identifier (CID)
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
   /// Refer to the section on IPFS integration for details.
-  public string IPFS_CID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetIPFS_CIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
-#else
-  public ArraySegment<byte>? GetIPFS_CIDBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
-  public byte[] GetIPFS_CIDArray() { return __p.__vector_as_array<byte>(4); }
+  public IPFS_CID_ADDRESS? IPFS_CID_ACCOUNT { get { int o = __p.__offset(4); return o != 0 ? (IPFS_CID_ADDRESS?)(new IPFS_CID_ADDRESS()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS file hash using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.
@@ -191,7 +185,7 @@ public struct PNM : IFlatbufferObject
   public byte[] GetSOL_DIGITAL_SIGNATUREArray() { return __p.__vector_as_array<byte>(36); }
 
   public static Offset<PNM> CreatePNM(FlatBufferBuilder builder,
-      StringOffset IPFS_CIDOffset = default(StringOffset),
+      Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNTOffset = default(Offset<IPFS_CID_ADDRESS>),
       StringOffset ETH_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset BTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset LTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
@@ -225,12 +219,12 @@ public struct PNM : IFlatbufferObject
     PNM.AddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATUREOffset);
     PNM.AddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATUREOffset);
-    PNM.AddIPFS_CID(builder, IPFS_CIDOffset);
+    PNM.AddIPFS_CID_ACCOUNT(builder, IPFS_CID_ACCOUNTOffset);
     return PNM.EndPNM(builder);
   }
 
   public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(17); }
-  public static void AddIPFS_CID(FlatBufferBuilder builder, StringOffset IPFS_CIDOffset) { builder.AddOffset(0, IPFS_CIDOffset.Value, 0); }
+  public static void AddIPFS_CID_ACCOUNT(FlatBufferBuilder builder, Offset<IPFS_CID_ADDRESS> IPFS_CID_ACCOUNTOffset) { builder.AddOffset(0, IPFS_CID_ACCOUNTOffset.Value, 0); }
   public static void AddETH_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ETH_DIGITAL_SIGNATUREOffset) { builder.AddOffset(1, ETH_DIGITAL_SIGNATUREOffset.Value, 0); }
   public static void AddBTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(2, BTC_DIGITAL_SIGNATUREOffset.Value, 0); }
   public static void AddLTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset LTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(3, LTC_DIGITAL_SIGNATUREOffset.Value, 0); }
@@ -259,7 +253,7 @@ public struct PNM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(PNMT _o) {
-    _o.IPFS_CID = this.IPFS_CID;
+    _o.IPFS_CID_ACCOUNT = this.IPFS_CID_ACCOUNT.HasValue ? this.IPFS_CID_ACCOUNT.Value.UnPack() : null;
     _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE;
     _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE;
     _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE;
@@ -279,7 +273,7 @@ public struct PNM : IFlatbufferObject
   }
   public static Offset<PNM> Pack(FlatBufferBuilder builder, PNMT _o) {
     if (_o == null) return default(Offset<PNM>);
-    var _IPFS_CID = _o.IPFS_CID == null ? default(StringOffset) : builder.CreateString(_o.IPFS_CID);
+    var _IPFS_CID_ACCOUNT = _o.IPFS_CID_ACCOUNT == null ? default(Offset<IPFS_CID_ADDRESS>) : IPFS_CID_ADDRESS.Pack(builder, _o.IPFS_CID_ACCOUNT);
     var _ETH_DIGITAL_SIGNATURE = _o.ETH_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.ETH_DIGITAL_SIGNATURE);
     var _BTC_DIGITAL_SIGNATURE = _o.BTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.BTC_DIGITAL_SIGNATURE);
     var _LTC_DIGITAL_SIGNATURE = _o.LTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.LTC_DIGITAL_SIGNATURE);
@@ -298,7 +292,7 @@ public struct PNM : IFlatbufferObject
     var _SOL_DIGITAL_SIGNATURE = _o.SOL_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SOL_DIGITAL_SIGNATURE);
     return CreatePNM(
       builder,
-      _IPFS_CID,
+      _IPFS_CID_ACCOUNT,
       _ETH_DIGITAL_SIGNATURE,
       _BTC_DIGITAL_SIGNATURE,
       _LTC_DIGITAL_SIGNATURE,
@@ -320,7 +314,7 @@ public struct PNM : IFlatbufferObject
 
 public class PNMT
 {
-  public string IPFS_CID { get; set; }
+  public IPFS_CID_ADDRESST IPFS_CID_ACCOUNT { get; set; }
   public string ETH_DIGITAL_SIGNATURE { get; set; }
   public string BTC_DIGITAL_SIGNATURE { get; set; }
   public string LTC_DIGITAL_SIGNATURE { get; set; }
@@ -339,7 +333,7 @@ public class PNMT
   public string SOL_DIGITAL_SIGNATURE { get; set; }
 
   public PNMT() {
-    this.IPFS_CID = null;
+    this.IPFS_CID_ACCOUNT = null;
     this.ETH_DIGITAL_SIGNATURE = null;
     this.BTC_DIGITAL_SIGNATURE = null;
     this.LTC_DIGITAL_SIGNATURE = null;

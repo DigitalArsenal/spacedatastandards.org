@@ -115,8 +115,8 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
   }
   /// Numerical type of the address generated from the cryptographic key
-  int32_t ADDRESS_TYPE() const {
-    return GetField<int32_t>(VT_ADDRESS_TYPE, 0);
+  const ::flatbuffers::String *ADDRESS_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_TYPE);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -130,7 +130,8 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(XPRIV()) &&
            VerifyOffset(verifier, VT_KEY_ADDRESS) &&
            verifier.VerifyString(KEY_ADDRESS()) &&
-           VerifyField<int32_t>(verifier, VT_ADDRESS_TYPE, 4) &&
+           VerifyOffset(verifier, VT_ADDRESS_TYPE) &&
+           verifier.VerifyString(ADDRESS_TYPE()) &&
            verifier.EndTable();
   }
 };
@@ -154,8 +155,8 @@ struct CryptoKeyBuilder {
   void add_KEY_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS) {
     fbb_.AddOffset(CryptoKey::VT_KEY_ADDRESS, KEY_ADDRESS);
   }
-  void add_ADDRESS_TYPE(int32_t ADDRESS_TYPE) {
-    fbb_.AddElement<int32_t>(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE, 0);
+  void add_ADDRESS_TYPE(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE) {
+    fbb_.AddOffset(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
   }
   explicit CryptoKeyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -175,7 +176,7 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
     ::flatbuffers::Offset<::flatbuffers::String> PRIVATE_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
-    int32_t ADDRESS_TYPE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0) {
   CryptoKeyBuilder builder_(_fbb);
   builder_.add_ADDRESS_TYPE(ADDRESS_TYPE);
   builder_.add_KEY_ADDRESS(KEY_ADDRESS);
@@ -193,12 +194,13 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
     const char *PRIVATE_KEY = nullptr,
     const char *XPRIV = nullptr,
     const char *KEY_ADDRESS = nullptr,
-    int32_t ADDRESS_TYPE = 0) {
+    const char *ADDRESS_TYPE = nullptr) {
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto XPUB__ = XPUB ? _fbb.CreateString(XPUB) : 0;
   auto PRIVATE_KEY__ = PRIVATE_KEY ? _fbb.CreateString(PRIVATE_KEY) : 0;
   auto XPRIV__ = XPRIV ? _fbb.CreateString(XPRIV) : 0;
   auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
+  auto ADDRESS_TYPE__ = ADDRESS_TYPE ? _fbb.CreateString(ADDRESS_TYPE) : 0;
   return CreateCryptoKey(
       _fbb,
       PUBLIC_KEY__,
@@ -206,7 +208,7 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
       PRIVATE_KEY__,
       XPRIV__,
       KEY_ADDRESS__,
-      ADDRESS_TYPE);
+      ADDRESS_TYPE__);
 }
 
 /// Information about a contact point

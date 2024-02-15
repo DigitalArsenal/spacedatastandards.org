@@ -78,9 +78,11 @@ KEY_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Numerical type of the address generated from the cryptographic key
  */
-ADDRESS_TYPE():number {
+ADDRESS_TYPE():string|null
+ADDRESS_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ADDRESS_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startCryptoKey(builder:flatbuffers.Builder) {
@@ -107,8 +109,8 @@ static addKeyAddress(builder:flatbuffers.Builder, KEY_ADDRESSOffset:flatbuffers.
   builder.addFieldOffset(4, KEY_ADDRESSOffset, 0);
 }
 
-static addAddressType(builder:flatbuffers.Builder, ADDRESS_TYPE:number) {
-  builder.addFieldInt32(5, ADDRESS_TYPE, 0);
+static addAddressType(builder:flatbuffers.Builder, ADDRESS_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, ADDRESS_TYPEOffset, 0);
 }
 
 static endCryptoKey(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -116,14 +118,14 @@ static endCryptoKey(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, XPUBOffset:flatbuffers.Offset, PRIVATE_KEYOffset:flatbuffers.Offset, XPRIVOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, ADDRESS_TYPE:number):flatbuffers.Offset {
+static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, XPUBOffset:flatbuffers.Offset, PRIVATE_KEYOffset:flatbuffers.Offset, XPRIVOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, ADDRESS_TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {
   CryptoKey.startCryptoKey(builder);
   CryptoKey.addPublicKey(builder, PUBLIC_KEYOffset);
   CryptoKey.addXpub(builder, XPUBOffset);
   CryptoKey.addPrivateKey(builder, PRIVATE_KEYOffset);
   CryptoKey.addXpriv(builder, XPRIVOffset);
   CryptoKey.addKeyAddress(builder, KEY_ADDRESSOffset);
-  CryptoKey.addAddressType(builder, ADDRESS_TYPE);
+  CryptoKey.addAddressType(builder, ADDRESS_TYPEOffset);
   return CryptoKey.endCryptoKey(builder);
 }
 
@@ -156,7 +158,7 @@ constructor(
   public PRIVATE_KEY: string|Uint8Array|null = null,
   public XPRIV: string|Uint8Array|null = null,
   public KEY_ADDRESS: string|Uint8Array|null = null,
-  public ADDRESS_TYPE: number = 0
+  public ADDRESS_TYPE: string|Uint8Array|null = null
 ){}
 
 
@@ -166,6 +168,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PRIVATE_KEY = (this.PRIVATE_KEY !== null ? builder.createString(this.PRIVATE_KEY!) : 0);
   const XPRIV = (this.XPRIV !== null ? builder.createString(this.XPRIV!) : 0);
   const KEY_ADDRESS = (this.KEY_ADDRESS !== null ? builder.createString(this.KEY_ADDRESS!) : 0);
+  const ADDRESS_TYPE = (this.ADDRESS_TYPE !== null ? builder.createString(this.ADDRESS_TYPE!) : 0);
 
   return CryptoKey.createCryptoKey(builder,
     PUBLIC_KEY,
@@ -173,7 +176,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PRIVATE_KEY,
     XPRIV,
     KEY_ADDRESS,
-    this.ADDRESS_TYPE
+    ADDRESS_TYPE
   );
 }
 }

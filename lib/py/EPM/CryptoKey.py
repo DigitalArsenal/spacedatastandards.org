@@ -74,8 +74,8 @@ class CryptoKey(object):
     def ADDRESS_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
 def CryptoKeyStart(builder): builder.StartObject(6)
 def Start(builder):
@@ -95,7 +95,7 @@ def AddXPRIV(builder, XPRIV):
 def CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ADDRESS), 0)
 def AddKEY_ADDRESS(builder, KEY_ADDRESS):
     return CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
-def CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE): builder.PrependInt32Slot(5, ADDRESS_TYPE, 0)
+def CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS_TYPE), 0)
 def AddADDRESS_TYPE(builder, ADDRESS_TYPE):
     return CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
 def CryptoKeyEnd(builder): return builder.EndObject()
@@ -111,7 +111,7 @@ class CryptoKeyT(object):
         self.PRIVATE_KEY = None  # type: str
         self.XPRIV = None  # type: str
         self.KEY_ADDRESS = None  # type: str
-        self.ADDRESS_TYPE = 0  # type: int
+        self.ADDRESS_TYPE = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -153,6 +153,8 @@ class CryptoKeyT(object):
             XPRIV = builder.CreateString(self.XPRIV)
         if self.KEY_ADDRESS is not None:
             KEY_ADDRESS = builder.CreateString(self.KEY_ADDRESS)
+        if self.ADDRESS_TYPE is not None:
+            ADDRESS_TYPE = builder.CreateString(self.ADDRESS_TYPE)
         CryptoKeyStart(builder)
         if self.PUBLIC_KEY is not None:
             CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY)
@@ -164,6 +166,7 @@ class CryptoKeyT(object):
             CryptoKeyAddXPRIV(builder, XPRIV)
         if self.KEY_ADDRESS is not None:
             CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
-        CryptoKeyAddADDRESS_TYPE(builder, self.ADDRESS_TYPE)
+        if self.ADDRESS_TYPE is not None:
+            CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
         cryptoKey = CryptoKeyEnd(builder)
         return cryptoKey

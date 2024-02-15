@@ -4,6 +4,52 @@
 
 import FlatBuffers
 
+///  IPFS CID and Account Identifier
+public struct IPFS_CID_ADDRESS: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PNM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IPFS_CID_ADDRESS.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case IPFS_CID = 4
+    case KEY_ADDRESS = 6
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  public var IPFS_CID: String? { let o = _accessor.offset(VTOFFSET.IPFS_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IPFS_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IPFS_CID.v) }
+  public var KEY_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.KEY_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ADDRESS.v) }
+  public static func startIPFS_CID_ADDRESS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(IPFS_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IPFS_CID, at: VTOFFSET.IPFS_CID.p) }
+  public static func add(KEY_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ADDRESS, at: VTOFFSET.KEY_ADDRESS.p) }
+  public static func endIPFS_CID_ADDRESS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIPFS_CID_ADDRESS(
+    _ fbb: inout FlatBufferBuilder,
+    IPFS_CIDOffset IPFS_CID: Offset = Offset(),
+    KEY_ADDRESSOffset KEY_ADDRESS: Offset = Offset()
+  ) -> Offset {
+    let __start = IPFS_CID_ADDRESS.startIPFS_CID_ADDRESS(&fbb)
+    IPFS_CID_ADDRESS.add(IPFS_CID: IPFS_CID, &fbb)
+    IPFS_CID_ADDRESS.add(KEY_ADDRESS: KEY_ADDRESS, &fbb)
+    return IPFS_CID_ADDRESS.endIPFS_CID_ADDRESS(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.IPFS_CID.p, fieldName: "IPFS_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.KEY_ADDRESS.p, fieldName: "KEY_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Publish Notification Message
 ///  This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 public struct PNM: FlatBufferObject, Verifiable {
@@ -18,7 +64,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case IPFS_CID = 4
+    case IPFS_CID_ACCOUNT = 4
     case ETH_DIGITAL_SIGNATURE = 6
     case BTC_DIGITAL_SIGNATURE = 8
     case LTC_DIGITAL_SIGNATURE = 10
@@ -42,8 +88,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  IPFS Content Identifier (CID)
   ///  The hash of a file stored on the InterPlanetary File System (IPFS).
   ///  Refer to the section on IPFS integration for details.
-  public var IPFS_CID: String? { let o = _accessor.offset(VTOFFSET.IPFS_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IPFS_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IPFS_CID.v) }
+  public var IPFS_CID_ACCOUNT: IPFS_CID_ADDRESS? { let o = _accessor.offset(VTOFFSET.IPFS_CID_ACCOUNT.v); return o == 0 ? nil : IPFS_CID_ADDRESS(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Ethereum Digital Signature
   ///  Digital signature of the IPFS file hash using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
@@ -125,7 +170,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public var SOL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SOL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
   public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(IPFS_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IPFS_CID, at: VTOFFSET.IPFS_CID.p) }
+  public static func add(IPFS_CID_ACCOUNT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IPFS_CID_ACCOUNT, at: VTOFFSET.IPFS_CID_ACCOUNT.p) }
   public static func add(ETH_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETH_DIGITAL_SIGNATURE, at: VTOFFSET.ETH_DIGITAL_SIGNATURE.p) }
   public static func add(BTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BTC_DIGITAL_SIGNATURE, at: VTOFFSET.BTC_DIGITAL_SIGNATURE.p) }
   public static func add(LTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LTC_DIGITAL_SIGNATURE, at: VTOFFSET.LTC_DIGITAL_SIGNATURE.p) }
@@ -145,7 +190,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
-    IPFS_CIDOffset IPFS_CID: Offset = Offset(),
+    IPFS_CID_ACCOUNTOffset IPFS_CID_ACCOUNT: Offset = Offset(),
     ETH_DIGITAL_SIGNATUREOffset ETH_DIGITAL_SIGNATURE: Offset = Offset(),
     BTC_DIGITAL_SIGNATUREOffset BTC_DIGITAL_SIGNATURE: Offset = Offset(),
     LTC_DIGITAL_SIGNATUREOffset LTC_DIGITAL_SIGNATURE: Offset = Offset(),
@@ -164,7 +209,7 @@ public struct PNM: FlatBufferObject, Verifiable {
     SOL_DIGITAL_SIGNATUREOffset SOL_DIGITAL_SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = PNM.startPNM(&fbb)
-    PNM.add(IPFS_CID: IPFS_CID, &fbb)
+    PNM.add(IPFS_CID_ACCOUNT: IPFS_CID_ACCOUNT, &fbb)
     PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
     PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
     PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
@@ -186,7 +231,7 @@ public struct PNM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.IPFS_CID.p, fieldName: "IPFS_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.IPFS_CID_ACCOUNT.p, fieldName: "IPFS_CID_ACCOUNT", required: false, type: ForwardOffset<IPFS_CID_ADDRESS>.self)
     try _v.visit(field: VTOFFSET.ETH_DIGITAL_SIGNATURE.p, fieldName: "ETH_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.BTC_DIGITAL_SIGNATURE.p, fieldName: "BTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LTC_DIGITAL_SIGNATURE.p, fieldName: "LTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)

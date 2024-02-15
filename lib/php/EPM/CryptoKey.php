@@ -77,13 +77,10 @@ class CryptoKey extends Table
     }
 
     /// Numerical type of the address generated from the cryptographic key
-    /**
-     * @return int
-     */
     public function getADDRESS_TYPE()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -164,12 +161,12 @@ class CryptoKey extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
     public static function addADDRESS_TYPE(FlatBufferBuilder $builder, $ADDRESS_TYPE)
     {
-        $builder->addIntX(5, $ADDRESS_TYPE, 0);
+        $builder->addOffsetX(5, $ADDRESS_TYPE, 0);
     }
 
     /**

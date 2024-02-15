@@ -5,6 +5,91 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+///  IPFS CID and Account Identifier
+class IPFS_CID_ADDRESS {
+  IPFS_CID_ADDRESS._(this._bc, this._bcOffset);
+  factory IPFS_CID_ADDRESS(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<IPFS_CID_ADDRESS> reader = _IPFS_CID_ADDRESSReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get IPFS_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'IPFS_CID_ADDRESS{IPFS_CID: ${IPFS_CID}, KEY_ADDRESS: ${KEY_ADDRESS}}';
+  }
+}
+
+class _IPFS_CID_ADDRESSReader extends fb.TableReader<IPFS_CID_ADDRESS> {
+  const _IPFS_CID_ADDRESSReader();
+
+  @override
+  IPFS_CID_ADDRESS createObject(fb.BufferContext bc, int offset) => 
+    IPFS_CID_ADDRESS._(bc, offset);
+}
+
+class IPFS_CID_ADDRESSBuilder {
+  IPFS_CID_ADDRESSBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addIpfsCidOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addKeyAddressOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class IPFS_CID_ADDRESSObjectBuilder extends fb.ObjectBuilder {
+  final String? _IPFS_CID;
+  final String? _KEY_ADDRESS;
+
+  IPFS_CID_ADDRESSObjectBuilder({
+    String? IPFS_CID,
+    String? KEY_ADDRESS,
+  })
+      : _IPFS_CID = IPFS_CID,
+        _KEY_ADDRESS = KEY_ADDRESS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? IPFS_CIDOffset = _IPFS_CID == null ? null
+        : fbBuilder.writeString(_IPFS_CID!);
+    final int? KEY_ADDRESSOffset = _KEY_ADDRESS == null ? null
+        : fbBuilder.writeString(_KEY_ADDRESS!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, IPFS_CIDOffset);
+    fbBuilder.addOffset(1, KEY_ADDRESSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Publish Notification Message
 ///  This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 class PNM {
@@ -22,7 +107,7 @@ class PNM {
   ///  IPFS Content Identifier (CID)
   ///  The hash of a file stored on the InterPlanetary File System (IPFS).
   ///  Refer to the section on IPFS integration for details.
-  String? get IPFS_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  IPFS_CID_ADDRESS? get IPFS_CID_ACCOUNT => IPFS_CID_ADDRESS.reader.vTableGetNullable(_bc, _bcOffset, 4);
   ///  Ethereum Digital Signature
   ///  Digital signature of the IPFS file hash using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
@@ -90,7 +175,7 @@ class PNM {
 
   @override
   String toString() {
-    return 'PNM{IPFS_CID: ${IPFS_CID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
+    return 'PNM{IPFS_CID_ACCOUNT: ${IPFS_CID_ACCOUNT}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
   }
 }
 
@@ -111,7 +196,7 @@ class PNMBuilder {
     fbBuilder.startTable(17);
   }
 
-  int addIpfsCidOffset(int? offset) {
+  int addIpfsCidAccountOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
@@ -186,7 +271,7 @@ class PNMBuilder {
 }
 
 class PNMObjectBuilder extends fb.ObjectBuilder {
-  final String? _IPFS_CID;
+  final IPFS_CID_ADDRESSObjectBuilder? _IPFS_CID_ACCOUNT;
   final String? _ETH_DIGITAL_SIGNATURE;
   final String? _BTC_DIGITAL_SIGNATURE;
   final String? _LTC_DIGITAL_SIGNATURE;
@@ -205,7 +290,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   final String? _SOL_DIGITAL_SIGNATURE;
 
   PNMObjectBuilder({
-    String? IPFS_CID,
+    IPFS_CID_ADDRESSObjectBuilder? IPFS_CID_ACCOUNT,
     String? ETH_DIGITAL_SIGNATURE,
     String? BTC_DIGITAL_SIGNATURE,
     String? LTC_DIGITAL_SIGNATURE,
@@ -223,7 +308,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     String? AVAX_DIGITAL_SIGNATURE,
     String? SOL_DIGITAL_SIGNATURE,
   })
-      : _IPFS_CID = IPFS_CID,
+      : _IPFS_CID_ACCOUNT = IPFS_CID_ACCOUNT,
         _ETH_DIGITAL_SIGNATURE = ETH_DIGITAL_SIGNATURE,
         _BTC_DIGITAL_SIGNATURE = BTC_DIGITAL_SIGNATURE,
         _LTC_DIGITAL_SIGNATURE = LTC_DIGITAL_SIGNATURE,
@@ -244,8 +329,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? IPFS_CIDOffset = _IPFS_CID == null ? null
-        : fbBuilder.writeString(_IPFS_CID!);
+    final int? IPFS_CID_ACCOUNTOffset = _IPFS_CID_ACCOUNT?.getOrCreateOffset(fbBuilder);
     final int? ETH_DIGITAL_SIGNATUREOffset = _ETH_DIGITAL_SIGNATURE == null ? null
         : fbBuilder.writeString(_ETH_DIGITAL_SIGNATURE!);
     final int? BTC_DIGITAL_SIGNATUREOffset = _BTC_DIGITAL_SIGNATURE == null ? null
@@ -279,7 +363,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     final int? SOL_DIGITAL_SIGNATUREOffset = _SOL_DIGITAL_SIGNATURE == null ? null
         : fbBuilder.writeString(_SOL_DIGITAL_SIGNATURE!);
     fbBuilder.startTable(17);
-    fbBuilder.addOffset(0, IPFS_CIDOffset);
+    fbBuilder.addOffset(0, IPFS_CID_ACCOUNTOffset);
     fbBuilder.addOffset(1, ETH_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(2, BTC_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(3, LTC_DIGITAL_SIGNATUREOffset);

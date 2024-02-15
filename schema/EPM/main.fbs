@@ -11,7 +11,7 @@ table CryptoKey {
   /// Address generated from the cryptographic key
   KEY_ADDRESS: string;
   /// Numerical type of the address generated from the cryptographic key
-  ADDRESS_TYPE: int;
+  ADDRESS_TYPE: string;
 }
 
 /// Information about a contact point

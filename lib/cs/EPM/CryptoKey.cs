@@ -58,7 +58,13 @@ public struct CryptoKey : IFlatbufferObject
 #endif
   public byte[] GetKEY_ADDRESSArray() { return __p.__vector_as_array<byte>(12); }
   /// Numerical type of the address generated from the cryptographic key
-  public int ADDRESS_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public string ADDRESS_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetADDRESS_TYPEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetADDRESS_TYPEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetADDRESS_TYPEArray() { return __p.__vector_as_array<byte>(14); }
 
   public static Offset<CryptoKey> CreateCryptoKey(FlatBufferBuilder builder,
       StringOffset PUBLIC_KEYOffset = default(StringOffset),
@@ -66,9 +72,9 @@ public struct CryptoKey : IFlatbufferObject
       StringOffset PRIVATE_KEYOffset = default(StringOffset),
       StringOffset XPRIVOffset = default(StringOffset),
       StringOffset KEY_ADDRESSOffset = default(StringOffset),
-      int ADDRESS_TYPE = 0) {
+      StringOffset ADDRESS_TYPEOffset = default(StringOffset)) {
     builder.StartTable(6);
-    CryptoKey.AddADDRESS_TYPE(builder, ADDRESS_TYPE);
+    CryptoKey.AddADDRESS_TYPE(builder, ADDRESS_TYPEOffset);
     CryptoKey.AddKEY_ADDRESS(builder, KEY_ADDRESSOffset);
     CryptoKey.AddXPRIV(builder, XPRIVOffset);
     CryptoKey.AddPRIVATE_KEY(builder, PRIVATE_KEYOffset);
@@ -83,7 +89,7 @@ public struct CryptoKey : IFlatbufferObject
   public static void AddPRIVATE_KEY(FlatBufferBuilder builder, StringOffset PRIVATE_KEYOffset) { builder.AddOffset(2, PRIVATE_KEYOffset.Value, 0); }
   public static void AddXPRIV(FlatBufferBuilder builder, StringOffset XPRIVOffset) { builder.AddOffset(3, XPRIVOffset.Value, 0); }
   public static void AddKEY_ADDRESS(FlatBufferBuilder builder, StringOffset KEY_ADDRESSOffset) { builder.AddOffset(4, KEY_ADDRESSOffset.Value, 0); }
-  public static void AddADDRESS_TYPE(FlatBufferBuilder builder, int ADDRESS_TYPE) { builder.AddInt(5, ADDRESS_TYPE, 0); }
+  public static void AddADDRESS_TYPE(FlatBufferBuilder builder, StringOffset ADDRESS_TYPEOffset) { builder.AddOffset(5, ADDRESS_TYPEOffset.Value, 0); }
   public static Offset<CryptoKey> EndCryptoKey(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CryptoKey>(o);
@@ -108,6 +114,7 @@ public struct CryptoKey : IFlatbufferObject
     var _PRIVATE_KEY = _o.PRIVATE_KEY == null ? default(StringOffset) : builder.CreateString(_o.PRIVATE_KEY);
     var _XPRIV = _o.XPRIV == null ? default(StringOffset) : builder.CreateString(_o.XPRIV);
     var _KEY_ADDRESS = _o.KEY_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.KEY_ADDRESS);
+    var _ADDRESS_TYPE = _o.ADDRESS_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ADDRESS_TYPE);
     return CreateCryptoKey(
       builder,
       _PUBLIC_KEY,
@@ -115,7 +122,7 @@ public struct CryptoKey : IFlatbufferObject
       _PRIVATE_KEY,
       _XPRIV,
       _KEY_ADDRESS,
-      _o.ADDRESS_TYPE);
+      _ADDRESS_TYPE);
   }
 }
 
@@ -126,7 +133,7 @@ public class CryptoKeyT
   public string PRIVATE_KEY { get; set; }
   public string XPRIV { get; set; }
   public string KEY_ADDRESS { get; set; }
-  public int ADDRESS_TYPE { get; set; }
+  public string ADDRESS_TYPE { get; set; }
 
   public CryptoKeyT() {
     this.PUBLIC_KEY = null;
@@ -134,7 +141,7 @@ public class CryptoKeyT
     this.PRIVATE_KEY = null;
     this.XPRIV = null;
     this.KEY_ADDRESS = null;
-    this.ADDRESS_TYPE = 0;
+    this.ADDRESS_TYPE = null;
   }
 }
 
