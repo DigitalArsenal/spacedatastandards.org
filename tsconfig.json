@@ -1,15 +1,22 @@
 {
   "compilerOptions": {
     "target": "ES6", // Set the JavaScript version for output files
-    "module": "NodeNext", // CommonJS modules for Node.js
+    "module": "NodeNext", // Use the latest module resolution strategy
     "outDir": "./lib/js", // Output directory for the compiled files
     "rootDir": "./lib", // Root directory of TypeScript files
+    "declaration": true, // Generate corresponding '.d.ts' file
+    "declarationMap": true, // Generate a sourcemap for each corresponding '.d.ts' file
+    "removeComments": false, // Do not remove comments from output
     "strict": true, // Enable all strict type-checking options
     "esModuleInterop": true, // Enables compatibility with default Babel imports
-    "skipLibCheck": true, // Skip type checking for all declaration files
+    "skipLibCheck": true, // Skip type checking for all declaration files (*.d.ts)
     "forceConsistentCasingInFileNames": true, // Ensure consistent casing in user-specified imports
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext" // Use the latest module resolution strategy
   },
-  "include": ["lib/**/*"], // Include all files in the src directory
-  "exclude": ["node_modules"] // Exclude the node_modules directory
+  "include": [
+    "lib/**/*" // Include all files in the lib directory
+  ],
+  "exclude": [
+    "node_modules" // Exclude the node_modules directory
+  ]
 }

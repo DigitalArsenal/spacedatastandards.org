@@ -1,0 +1,15 @@
+export declare enum referenceFrame {
+    /**
+     * Earth Mean Equator and Equinox of J2000
+     */
+    EME2000 = 0,
+    /**
+     * Geocentric Celestial Reference Frame
+     */
+    GCRF = 1,
+    /**
+     * International Terrestrial Reference Frame
+     */
+    ITRF = 2
+}
+//# sourceMappingURL=referenceFrame.d.ts.map
