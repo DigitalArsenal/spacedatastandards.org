@@ -183,9 +183,4 @@ class OEM extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishOEMBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$OEM");
-    }
 }

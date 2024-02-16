@@ -214,9 +214,4 @@ class CTR extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishCTRBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$CTR");
-    }
 }

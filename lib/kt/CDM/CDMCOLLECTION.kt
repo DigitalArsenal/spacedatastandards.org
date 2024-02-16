@@ -50,6 +50,7 @@ class CDMCOLLECTION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun CDMCOLLECTIONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CDM")
         fun createCDMCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
             builder.startTable(1)
             addRECORDS(builder, RECORDSOffset)
@@ -69,5 +70,7 @@ class CDMCOLLECTION : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishCDMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CDM")
+        fun finishSizePrefixedCDMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CDM")
     }
 }

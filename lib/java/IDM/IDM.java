@@ -25,7 +25,6 @@ public final class IDM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static IDM getRootAsIDM(ByteBuffer _bb) { return getRootAsIDM(_bb, new IDM()); }
   public static IDM getRootAsIDM(ByteBuffer _bb, IDM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean IDMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$IDM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public IDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -263,8 +262,6 @@ public final class IDM extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishIDMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$IDM"); }
-  public static void finishSizePrefixedIDMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$IDM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

@@ -22,6 +22,7 @@ public final class OMMCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static OMMCOLLECTION getRootAsOMMCOLLECTION(ByteBuffer _bb) { return getRootAsOMMCOLLECTION(_bb, new OMMCOLLECTION()); }
   public static OMMCOLLECTION getRootAsOMMCOLLECTION(ByteBuffer _bb, OMMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean OMMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$OMM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OMMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -49,6 +50,8 @@ public final class OMMCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishOMMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$OMM"); }
+  public static void finishSizePrefixedOMMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$OMM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

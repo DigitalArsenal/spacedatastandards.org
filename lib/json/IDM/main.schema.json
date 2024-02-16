@@ -204,5 +204,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/IDM"
+  "$ref" : "#/definitions/IDMCOLLECTION"
 }

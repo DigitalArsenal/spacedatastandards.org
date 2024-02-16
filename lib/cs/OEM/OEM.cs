@@ -14,7 +14,6 @@ public struct OEM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static OEM GetRootAsOEM(ByteBuffer _bb) { return GetRootAsOEM(_bb, new OEM()); }
   public static OEM GetRootAsOEM(ByteBuffer _bb, OEM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool OEMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OEM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OEM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -68,8 +67,6 @@ public struct OEM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<OEM>(o);
   }
-  public static void FinishOEMBuffer(FlatBufferBuilder builder, Offset<OEM> offset) { builder.Finish(offset.Value, "$OEM"); }
-  public static void FinishSizePrefixedOEMBuffer(FlatBufferBuilder builder, Offset<OEM> offset) { builder.FinishSizePrefixed(offset.Value, "$OEM"); }
   public OEMT UnPack() {
     var _o = new OEMT();
     this.UnPackTo(_o);
@@ -113,14 +110,6 @@ public class OEMT
     this.CREATION_DATE = null;
     this.ORIGINATOR = null;
     this.EPHEMERIS_DATA_BLOCK = null;
-  }
-  public static OEMT DeserializeFromBinary(byte[] fbBuffer) {
-    return OEM.GetRootAsOEM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    OEM.FinishOEMBuffer(fbb, OEM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

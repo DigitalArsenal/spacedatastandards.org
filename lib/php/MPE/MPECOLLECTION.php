@@ -227,4 +227,9 @@ class MPECOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishMPECOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$MPE");
+    }
 }

@@ -103,7 +103,6 @@ class OSM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OSMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OSM")
         fun createOSM(builder: FlatBufferBuilder, IS_STABLE: Boolean, NUM_OBS: Int, OBJECT_IDOffset: Int, ID_SENSOROffset: Int, PASS_STARTOffset: Int, PASS_DURATION: Int) : Int {
             builder.startTable(6)
             addPASS_DURATION(builder, PASS_DURATION)
@@ -125,7 +124,5 @@ class OSM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OSM")
-        fun finishSizePrefixedOSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OSM")
     }
 }

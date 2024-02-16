@@ -14,7 +14,6 @@ public struct EPM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static EPM GetRootAsEPM(ByteBuffer _bb) { return GetRootAsEPM(_bb, new EPM()); }
   public static EPM GetRootAsEPM(ByteBuffer _bb, EPM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool EPMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EPM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EPM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -171,8 +170,6 @@ public struct EPM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<EPM>(o);
   }
-  public static void FinishEPMBuffer(FlatBufferBuilder builder, Offset<EPM> offset) { builder.Finish(offset.Value, "$EPM"); }
-  public static void FinishSizePrefixedEPMBuffer(FlatBufferBuilder builder, Offset<EPM> offset) { builder.FinishSizePrefixed(offset.Value, "$EPM"); }
   public EPMT UnPack() {
     var _o = new EPMT();
     this.UnPackTo(_o);
@@ -285,14 +282,6 @@ public class EPMT
     this.JOB_TITLE = null;
     this.ENTITY = null;
     this.HAS_OCCUPATION = null;
-  }
-  public static EPMT DeserializeFromBinary(byte[] fbBuffer) {
-    return EPM.GetRootAsEPM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    EPM.FinishEPMBuffer(fbb, EPM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

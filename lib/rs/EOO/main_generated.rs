@@ -2380,85 +2380,85 @@ impl EOOCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `EOO`
+/// Verifies that a buffer of bytes contains a `EOOCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EOO_unchecked`.
-pub fn root_as_EOO(buf: &[u8]) -> Result<EOO, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<EOO>(buf)
+/// `root_as_EOOCOLLECTION_unchecked`.
+pub fn root_as_EOOCOLLECTION(buf: &[u8]) -> Result<EOOCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<EOOCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `EOO` and returns it.
+/// `EOOCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_EOO_unchecked`.
-pub fn size_prefixed_root_as_EOO(buf: &[u8]) -> Result<EOO, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<EOO>(buf)
+/// `size_prefixed_root_as_EOOCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_EOOCOLLECTION(buf: &[u8]) -> Result<EOOCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<EOOCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `EOO` and returns it.
+/// contains a `EOOCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EOO_unchecked`.
-pub fn root_as_EOO_with_opts<'b, 'o>(
+/// `root_as_EOOCOLLECTION_unchecked`.
+pub fn root_as_EOOCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EOO<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<EOO<'b>>(opts, buf)
+) -> Result<EOOCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<EOOCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `EOO` and returns
+/// bytes contains a size prefixed `EOOCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EOO_unchecked`.
-pub fn size_prefixed_root_as_EOO_with_opts<'b, 'o>(
+/// `root_as_EOOCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_EOOCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EOO<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<EOO<'b>>(opts, buf)
+) -> Result<EOOCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<EOOCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a EOO and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a EOOCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `EOO`.
-pub unsafe fn root_as_EOO_unchecked(buf: &[u8]) -> EOO {
-  flatbuffers::root_unchecked::<EOO>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `EOOCOLLECTION`.
+pub unsafe fn root_as_EOOCOLLECTION_unchecked(buf: &[u8]) -> EOOCOLLECTION {
+  flatbuffers::root_unchecked::<EOOCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed EOO and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed EOOCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `EOO`.
-pub unsafe fn size_prefixed_root_as_EOO_unchecked(buf: &[u8]) -> EOO {
-  flatbuffers::size_prefixed_root_unchecked::<EOO>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `EOOCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_EOOCOLLECTION_unchecked(buf: &[u8]) -> EOOCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<EOOCOLLECTION>(buf)
 }
-pub const EOO_IDENTIFIER: &str = "$EOO";
+pub const EOOCOLLECTION_IDENTIFIER: &str = "$EOO";
 
 #[inline]
-pub fn EOO_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EOO_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn EOO_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EOO_IDENTIFIER, true)
+pub fn EOOCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EOOCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_EOO_buffer<'a, 'b>(
+pub fn EOOCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EOOCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_EOOCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<EOO<'a>>) {
-  fbb.finish(root, Some(EOO_IDENTIFIER));
+    root: flatbuffers::WIPOffset<EOOCOLLECTION<'a>>) {
+  fbb.finish(root, Some(EOOCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EOO_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EOO<'a>>) {
-  fbb.finish_size_prefixed(root, Some(EOO_IDENTIFIER));
+pub fn finish_size_prefixed_EOOCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EOOCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(EOOCOLLECTION_IDENTIFIER));
 }

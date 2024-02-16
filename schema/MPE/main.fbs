@@ -103,5 +103,5 @@ table MPECOLLECTION {
   RECORDS:[MPE];
 }
 
-root_type MPE;
+root_type MPECOLLECTION;
 file_identifier "$MPE";

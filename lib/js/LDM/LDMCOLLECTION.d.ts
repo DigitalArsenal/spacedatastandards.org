@@ -6,6 +6,7 @@ export declare class LDMCOLLECTION implements flatbuffers.IUnpackableObject<LDMC
     __init(i: number, bb: flatbuffers.ByteBuffer): LDMCOLLECTION;
     static getRootAsLDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: LDMCOLLECTION): LDMCOLLECTION;
     static getSizePrefixedRootAsLDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: LDMCOLLECTION): LDMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Collection of LDM Records
      */
@@ -16,6 +17,8 @@ export declare class LDMCOLLECTION implements flatbuffers.IUnpackableObject<LDMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endLDMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishLDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedLDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createLDMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): LDMCOLLECTIONT;
     unpackTo(_o: LDMCOLLECTIONT): void;

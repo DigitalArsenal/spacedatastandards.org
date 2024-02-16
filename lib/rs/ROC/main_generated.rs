@@ -1080,85 +1080,85 @@ impl ROCCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `ROC`
+/// Verifies that a buffer of bytes contains a `ROCCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ROC_unchecked`.
-pub fn root_as_ROC(buf: &[u8]) -> Result<ROC, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<ROC>(buf)
+/// `root_as_ROCCOLLECTION_unchecked`.
+pub fn root_as_ROCCOLLECTION(buf: &[u8]) -> Result<ROCCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<ROCCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `ROC` and returns it.
+/// `ROCCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_ROC_unchecked`.
-pub fn size_prefixed_root_as_ROC(buf: &[u8]) -> Result<ROC, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<ROC>(buf)
+/// `size_prefixed_root_as_ROCCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_ROCCOLLECTION(buf: &[u8]) -> Result<ROCCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<ROCCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `ROC` and returns it.
+/// contains a `ROCCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ROC_unchecked`.
-pub fn root_as_ROC_with_opts<'b, 'o>(
+/// `root_as_ROCCOLLECTION_unchecked`.
+pub fn root_as_ROCCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ROC<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<ROC<'b>>(opts, buf)
+) -> Result<ROCCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<ROCCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `ROC` and returns
+/// bytes contains a size prefixed `ROCCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ROC_unchecked`.
-pub fn size_prefixed_root_as_ROC_with_opts<'b, 'o>(
+/// `root_as_ROCCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_ROCCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ROC<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<ROC<'b>>(opts, buf)
+) -> Result<ROCCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<ROCCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a ROC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a ROCCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `ROC`.
-pub unsafe fn root_as_ROC_unchecked(buf: &[u8]) -> ROC {
-  flatbuffers::root_unchecked::<ROC>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `ROCCOLLECTION`.
+pub unsafe fn root_as_ROCCOLLECTION_unchecked(buf: &[u8]) -> ROCCOLLECTION {
+  flatbuffers::root_unchecked::<ROCCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed ROC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed ROCCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `ROC`.
-pub unsafe fn size_prefixed_root_as_ROC_unchecked(buf: &[u8]) -> ROC {
-  flatbuffers::size_prefixed_root_unchecked::<ROC>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `ROCCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_ROCCOLLECTION_unchecked(buf: &[u8]) -> ROCCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<ROCCOLLECTION>(buf)
 }
-pub const ROC_IDENTIFIER: &str = "$ROC";
+pub const ROCCOLLECTION_IDENTIFIER: &str = "$ROC";
 
 #[inline]
-pub fn ROC_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, ROC_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn ROC_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, ROC_IDENTIFIER, true)
+pub fn ROCCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, ROCCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_ROC_buffer<'a, 'b>(
+pub fn ROCCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, ROCCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_ROCCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<ROC<'a>>) {
-  fbb.finish(root, Some(ROC_IDENTIFIER));
+    root: flatbuffers::WIPOffset<ROCCOLLECTION<'a>>) {
+  fbb.finish(root, Some(ROCCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_ROC_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<ROC<'a>>) {
-  fbb.finish_size_prefixed(root, Some(ROC_IDENTIFIER));
+pub fn finish_size_prefixed_ROCCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<ROCCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(ROCCOLLECTION_IDENTIFIER));
 }

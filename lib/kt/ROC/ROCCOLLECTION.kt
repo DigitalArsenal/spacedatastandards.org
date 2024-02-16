@@ -53,6 +53,7 @@ class ROCCOLLECTION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun ROCCOLLECTIONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ROC")
         fun createROCCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
             builder.startTable(1)
             addRECORDS(builder, RECORDSOffset)
@@ -72,5 +73,7 @@ class ROCCOLLECTION : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishROCCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ROC")
+        fun finishSizePrefixedROCCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ROC")
     }
 }

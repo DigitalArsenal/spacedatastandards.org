@@ -26,6 +26,10 @@ static getSizePrefixedRootAsROCCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:ROCCOL
   return (obj || new ROCCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$ROC');
+}
+
 /**
  * Records of Rocket Configurations
  */
@@ -62,6 +66,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endROCCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishROCCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$ROC');
+}
+
+static finishSizePrefixedROCCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$ROC', true);
 }
 
 static createROCCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

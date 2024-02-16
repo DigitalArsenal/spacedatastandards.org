@@ -1025,48 +1025,48 @@ inline ::flatbuffers::Offset<IDMCOLLECTION> CreateIDMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const IDM *GetIDM(const void *buf) {
-  return ::flatbuffers::GetRoot<IDM>(buf);
+inline const IDMCOLLECTION *GetIDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<IDMCOLLECTION>(buf);
 }
 
-inline const IDM *GetSizePrefixedIDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<IDM>(buf);
+inline const IDMCOLLECTION *GetSizePrefixedIDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<IDMCOLLECTION>(buf);
 }
 
-inline const char *IDMIdentifier() {
+inline const char *IDMCOLLECTIONIdentifier() {
   return "$IDM";
 }
 
-inline bool IDMBufferHasIdentifier(const void *buf) {
+inline bool IDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, IDMIdentifier());
+      buf, IDMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedIDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedIDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, IDMIdentifier(), true);
+      buf, IDMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyIDMBuffer(
+inline bool VerifyIDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<IDM>(IDMIdentifier());
+  return verifier.VerifyBuffer<IDMCOLLECTION>(IDMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedIDMBuffer(
+inline bool VerifySizePrefixedIDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<IDM>(IDMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<IDMCOLLECTION>(IDMCOLLECTIONIdentifier());
 }
 
-inline void FinishIDMBuffer(
+inline void FinishIDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<IDM> root) {
-  fbb.Finish(root, IDMIdentifier());
+    ::flatbuffers::Offset<IDMCOLLECTION> root) {
+  fbb.Finish(root, IDMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedIDMBuffer(
+inline void FinishSizePrefixedIDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<IDM> root) {
-  fbb.FinishSizePrefixed(root, IDMIdentifier());
+    ::flatbuffers::Offset<IDMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, IDMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

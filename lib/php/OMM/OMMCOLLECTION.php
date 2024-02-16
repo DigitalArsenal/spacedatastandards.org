@@ -124,4 +124,9 @@ class OMMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishOMMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$OMM");
+    }
 }

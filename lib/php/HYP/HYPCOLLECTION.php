@@ -124,4 +124,9 @@ class HYPCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishHYPCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$HYP");
+    }
 }

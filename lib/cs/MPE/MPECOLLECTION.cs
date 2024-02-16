@@ -14,6 +14,7 @@ public struct MPECOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static MPECOLLECTION GetRootAsMPECOLLECTION(ByteBuffer _bb) { return GetRootAsMPECOLLECTION(_bb, new MPECOLLECTION()); }
   public static MPECOLLECTION GetRootAsMPECOLLECTION(ByteBuffer _bb, MPECOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool MPECOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$MPE"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MPECOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -70,6 +71,8 @@ public struct MPECOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<MPECOLLECTION>(o);
   }
+  public static void FinishMPECOLLECTIONBuffer(FlatBufferBuilder builder, Offset<MPECOLLECTION> offset) { builder.Finish(offset.Value, "$MPE"); }
+  public static void FinishSizePrefixedMPECOLLECTIONBuffer(FlatBufferBuilder builder, Offset<MPECOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$MPE"); }
   public MPECOLLECTIONT UnPack() {
     var _o = new MPECOLLECTIONT();
     this.UnPackTo(_o);
@@ -120,6 +123,14 @@ public class MPECOLLECTIONT
     this.TIME_SYSTEM = timeSystem.UTC;
     this.MEAN_ELEMENT_THEORY = meanElementTheory.SGP4;
     this.RECORDS = null;
+  }
+  public static MPECOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return MPECOLLECTION.GetRootAsMPECOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    MPECOLLECTION.FinishMPECOLLECTIONBuffer(fbb, MPECOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

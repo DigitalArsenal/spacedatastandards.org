@@ -9,6 +9,7 @@ export declare class HYPCOLLECTION implements flatbuffers.IUnpackableObject<HYPC
     __init(i: number, bb: flatbuffers.ByteBuffer): HYPCOLLECTION;
     static getRootAsHYPCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: HYPCOLLECTION): HYPCOLLECTION;
     static getSizePrefixedRootAsHYPCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: HYPCOLLECTION): HYPCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: HYP): HYP | null;
     recordsLength(): number;
     static startHYPCOLLECTION(builder: flatbuffers.Builder): void;
@@ -16,6 +17,8 @@ export declare class HYPCOLLECTION implements flatbuffers.IUnpackableObject<HYPC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endHYPCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishHYPCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedHYPCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createHYPCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): HYPCOLLECTIONT;
     unpackTo(_o: HYPCOLLECTIONT): void;

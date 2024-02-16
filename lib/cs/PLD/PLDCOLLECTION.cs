@@ -14,6 +14,7 @@ public struct PLDCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static PLDCOLLECTION GetRootAsPLDCOLLECTION(ByteBuffer _bb) { return GetRootAsPLDCOLLECTION(_bb, new PLDCOLLECTION()); }
   public static PLDCOLLECTION GetRootAsPLDCOLLECTION(ByteBuffer _bb, PLDCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool PLDCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PLD"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PLDCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct PLDCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<PLDCOLLECTION>(o);
   }
+  public static void FinishPLDCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<PLDCOLLECTION> offset) { builder.Finish(offset.Value, "$PLD"); }
+  public static void FinishSizePrefixedPLDCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<PLDCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$PLD"); }
   public PLDCOLLECTIONT UnPack() {
     var _o = new PLDCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class PLDCOLLECTIONT
 
   public PLDCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static PLDCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return PLDCOLLECTION.GetRootAsPLDCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    PLDCOLLECTION.FinishPLDCOLLECTIONBuffer(fbb, PLDCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

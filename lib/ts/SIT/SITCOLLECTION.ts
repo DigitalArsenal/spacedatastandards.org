@@ -26,6 +26,10 @@ static getSizePrefixedRootAsSITCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:SITCOL
   return (obj || new SITCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$SIT');
+}
+
 RECORDS(index: number, obj?:SIT):SIT|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new SIT()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endSITCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishSITCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$SIT');
+}
+
+static finishSizePrefixedSITCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$SIT', true);
 }
 
 static createSITCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

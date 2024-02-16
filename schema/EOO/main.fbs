@@ -262,5 +262,5 @@ table EOOCOLLECTION {
   RECORDS: [EOO];
 }
 
-root_type EOO;
+root_type EOOCOLLECTION;
 file_identifier "$EOO";

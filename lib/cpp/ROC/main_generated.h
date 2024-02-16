@@ -506,48 +506,48 @@ inline ::flatbuffers::Offset<ROCCOLLECTION> CreateROCCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const ROC *GetROC(const void *buf) {
-  return ::flatbuffers::GetRoot<ROC>(buf);
+inline const ROCCOLLECTION *GetROCCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<ROCCOLLECTION>(buf);
 }
 
-inline const ROC *GetSizePrefixedROC(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<ROC>(buf);
+inline const ROCCOLLECTION *GetSizePrefixedROCCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<ROCCOLLECTION>(buf);
 }
 
-inline const char *ROCIdentifier() {
+inline const char *ROCCOLLECTIONIdentifier() {
   return "$ROC";
 }
 
-inline bool ROCBufferHasIdentifier(const void *buf) {
+inline bool ROCCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ROCIdentifier());
+      buf, ROCCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedROCBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedROCCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ROCIdentifier(), true);
+      buf, ROCCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyROCBuffer(
+inline bool VerifyROCCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<ROC>(ROCIdentifier());
+  return verifier.VerifyBuffer<ROCCOLLECTION>(ROCCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedROCBuffer(
+inline bool VerifySizePrefixedROCCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<ROC>(ROCIdentifier());
+  return verifier.VerifySizePrefixedBuffer<ROCCOLLECTION>(ROCCOLLECTIONIdentifier());
 }
 
-inline void FinishROCBuffer(
+inline void FinishROCCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ROC> root) {
-  fbb.Finish(root, ROCIdentifier());
+    ::flatbuffers::Offset<ROCCOLLECTION> root) {
+  fbb.Finish(root, ROCCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedROCBuffer(
+inline void FinishSizePrefixedROCCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ROC> root) {
-  fbb.FinishSizePrefixed(root, ROCIdentifier());
+    ::flatbuffers::Offset<ROCCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, ROCCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

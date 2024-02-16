@@ -9,6 +9,7 @@ export declare class ROCCOLLECTION implements flatbuffers.IUnpackableObject<ROCC
     __init(i: number, bb: flatbuffers.ByteBuffer): ROCCOLLECTION;
     static getRootAsROCCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: ROCCOLLECTION): ROCCOLLECTION;
     static getSizePrefixedRootAsROCCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: ROCCOLLECTION): ROCCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Records of Rocket Configurations
      */
@@ -19,6 +20,8 @@ export declare class ROCCOLLECTION implements flatbuffers.IUnpackableObject<ROCC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endROCCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishROCCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedROCCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createROCCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): ROCCOLLECTIONT;
     unpackTo(_o: ROCCOLLECTIONT): void;

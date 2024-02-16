@@ -123,4 +123,9 @@ class CTRCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishCTRCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$CTR");
+    }
 }

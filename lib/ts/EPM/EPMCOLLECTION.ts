@@ -23,6 +23,10 @@ static getSizePrefixedRootAsEPMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:EPMCOL
   return (obj || new EPMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$EPM');
+}
+
 /**
  * Records of Entity Profile Messages
  */
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endEPMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishEPMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EPM');
+}
+
+static finishSizePrefixedEPMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EPM', true);
 }
 
 static createEPMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

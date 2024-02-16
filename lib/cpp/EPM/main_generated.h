@@ -1034,48 +1034,48 @@ inline bool VerifyEntityVector(::flatbuffers::Verifier &verifier, const ::flatbu
   return true;
 }
 
-inline const EPM *GetEPM(const void *buf) {
-  return ::flatbuffers::GetRoot<EPM>(buf);
+inline const EPMCOLLECTION *GetEPMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<EPMCOLLECTION>(buf);
 }
 
-inline const EPM *GetSizePrefixedEPM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<EPM>(buf);
+inline const EPMCOLLECTION *GetSizePrefixedEPMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<EPMCOLLECTION>(buf);
 }
 
-inline const char *EPMIdentifier() {
+inline const char *EPMCOLLECTIONIdentifier() {
   return "$EPM";
 }
 
-inline bool EPMBufferHasIdentifier(const void *buf) {
+inline bool EPMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, EPMIdentifier());
+      buf, EPMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedEPMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedEPMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, EPMIdentifier(), true);
+      buf, EPMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyEPMBuffer(
+inline bool VerifyEPMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<EPM>(EPMIdentifier());
+  return verifier.VerifyBuffer<EPMCOLLECTION>(EPMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedEPMBuffer(
+inline bool VerifySizePrefixedEPMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<EPM>(EPMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<EPMCOLLECTION>(EPMCOLLECTIONIdentifier());
 }
 
-inline void FinishEPMBuffer(
+inline void FinishEPMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<EPM> root) {
-  fbb.Finish(root, EPMIdentifier());
+    ::flatbuffers::Offset<EPMCOLLECTION> root) {
+  fbb.Finish(root, EPMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedEPMBuffer(
+inline void FinishSizePrefixedEPMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<EPM> root) {
-  fbb.FinishSizePrefixed(root, EPMIdentifier());
+    ::flatbuffers::Offset<EPMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, EPMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

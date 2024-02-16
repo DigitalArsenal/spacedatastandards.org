@@ -1004,85 +1004,85 @@ impl LDMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `LDM`
+/// Verifies that a buffer of bytes contains a `LDMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_LDM_unchecked`.
-pub fn root_as_LDM(buf: &[u8]) -> Result<LDM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<LDM>(buf)
+/// `root_as_LDMCOLLECTION_unchecked`.
+pub fn root_as_LDMCOLLECTION(buf: &[u8]) -> Result<LDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<LDMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `LDM` and returns it.
+/// `LDMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_LDM_unchecked`.
-pub fn size_prefixed_root_as_LDM(buf: &[u8]) -> Result<LDM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<LDM>(buf)
+/// `size_prefixed_root_as_LDMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_LDMCOLLECTION(buf: &[u8]) -> Result<LDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<LDMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `LDM` and returns it.
+/// contains a `LDMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_LDM_unchecked`.
-pub fn root_as_LDM_with_opts<'b, 'o>(
+/// `root_as_LDMCOLLECTION_unchecked`.
+pub fn root_as_LDMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LDM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<LDM<'b>>(opts, buf)
+) -> Result<LDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<LDMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `LDM` and returns
+/// bytes contains a size prefixed `LDMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_LDM_unchecked`.
-pub fn size_prefixed_root_as_LDM_with_opts<'b, 'o>(
+/// `root_as_LDMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_LDMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LDM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<LDM<'b>>(opts, buf)
+) -> Result<LDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<LDMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a LDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a LDMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `LDM`.
-pub unsafe fn root_as_LDM_unchecked(buf: &[u8]) -> LDM {
-  flatbuffers::root_unchecked::<LDM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `LDMCOLLECTION`.
+pub unsafe fn root_as_LDMCOLLECTION_unchecked(buf: &[u8]) -> LDMCOLLECTION {
+  flatbuffers::root_unchecked::<LDMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed LDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed LDMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `LDM`.
-pub unsafe fn size_prefixed_root_as_LDM_unchecked(buf: &[u8]) -> LDM {
-  flatbuffers::size_prefixed_root_unchecked::<LDM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `LDMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_LDMCOLLECTION_unchecked(buf: &[u8]) -> LDMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<LDMCOLLECTION>(buf)
 }
-pub const LDM_IDENTIFIER: &str = "$LDM";
+pub const LDMCOLLECTION_IDENTIFIER: &str = "$LDM";
 
 #[inline]
-pub fn LDM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, LDM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn LDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, LDM_IDENTIFIER, true)
+pub fn LDMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, LDMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_LDM_buffer<'a, 'b>(
+pub fn LDMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, LDMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_LDMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<LDM<'a>>) {
-  fbb.finish(root, Some(LDM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<LDMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(LDMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_LDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<LDM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(LDM_IDENTIFIER));
+pub fn finish_size_prefixed_LDMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<LDMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(LDMCOLLECTION_IDENTIFIER));
 }

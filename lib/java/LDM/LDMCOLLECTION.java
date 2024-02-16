@@ -22,6 +22,7 @@ public final class LDMCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static LDMCOLLECTION getRootAsLDMCOLLECTION(ByteBuffer _bb) { return getRootAsLDMCOLLECTION(_bb, new LDMCOLLECTION()); }
   public static LDMCOLLECTION getRootAsLDMCOLLECTION(ByteBuffer _bb, LDMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean LDMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$LDM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public LDMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -49,6 +50,8 @@ public final class LDMCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishLDMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$LDM"); }
+  public static void finishSizePrefixedLDMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$LDM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

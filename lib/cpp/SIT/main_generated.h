@@ -612,48 +612,48 @@ inline ::flatbuffers::Offset<SITCOLLECTION> CreateSITCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const SIT *GetSIT(const void *buf) {
-  return ::flatbuffers::GetRoot<SIT>(buf);
+inline const SITCOLLECTION *GetSITCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<SITCOLLECTION>(buf);
 }
 
-inline const SIT *GetSizePrefixedSIT(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<SIT>(buf);
+inline const SITCOLLECTION *GetSizePrefixedSITCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<SITCOLLECTION>(buf);
 }
 
-inline const char *SITIdentifier() {
+inline const char *SITCOLLECTIONIdentifier() {
   return "$SIT";
 }
 
-inline bool SITBufferHasIdentifier(const void *buf) {
+inline bool SITCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, SITIdentifier());
+      buf, SITCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedSITBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedSITCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, SITIdentifier(), true);
+      buf, SITCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifySITBuffer(
+inline bool VerifySITCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<SIT>(SITIdentifier());
+  return verifier.VerifyBuffer<SITCOLLECTION>(SITCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedSITBuffer(
+inline bool VerifySizePrefixedSITCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<SIT>(SITIdentifier());
+  return verifier.VerifySizePrefixedBuffer<SITCOLLECTION>(SITCOLLECTIONIdentifier());
 }
 
-inline void FinishSITBuffer(
+inline void FinishSITCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<SIT> root) {
-  fbb.Finish(root, SITIdentifier());
+    ::flatbuffers::Offset<SITCOLLECTION> root) {
+  fbb.Finish(root, SITCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedSITBuffer(
+inline void FinishSizePrefixedSITCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<SIT> root) {
-  fbb.FinishSizePrefixed(root, SITIdentifier());
+    ::flatbuffers::Offset<SITCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, SITCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

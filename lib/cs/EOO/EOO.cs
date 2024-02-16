@@ -14,7 +14,6 @@ public struct EOO : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static EOO GetRootAsEOO(ByteBuffer _bb) { return GetRootAsEOO(_bb, new EOO()); }
   public static EOO GetRootAsEOO(ByteBuffer _bb, EOO obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool EOOBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EOO"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EOO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -598,8 +597,6 @@ public struct EOO : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<EOO>(o);
   }
-  public static void FinishEOOBuffer(FlatBufferBuilder builder, Offset<EOO> offset) { builder.Finish(offset.Value, "$EOO"); }
-  public static void FinishSizePrefixedEOOBuffer(FlatBufferBuilder builder, Offset<EOO> offset) { builder.FinishSizePrefixed(offset.Value, "$EOO"); }
   public EOOT UnPack() {
     var _o = new EOOT();
     this.UnPackTo(_o);
@@ -982,14 +979,6 @@ public class EOOT
     this.ORIG_NETWORK = null;
     this.SOURCE_DL = null;
     this.TYPE = null;
-  }
-  public static EOOT DeserializeFromBinary(byte[] fbBuffer) {
-    return EOO.GetRootAsEOO(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    EOO.FinishEOOBuffer(fbb, EOO.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

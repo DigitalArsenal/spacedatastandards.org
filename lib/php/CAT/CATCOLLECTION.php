@@ -123,4 +123,9 @@ class CATCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishCATCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$CAT");
+    }
 }

@@ -115,5 +115,5 @@ table CATCOLLECTION {
   RECORDS:[CAT];
 }
 
-root_type CAT;
+root_type CATCOLLECTION;
 file_identifier "$CAT";

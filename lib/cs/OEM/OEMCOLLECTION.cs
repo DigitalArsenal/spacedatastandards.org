@@ -14,6 +14,7 @@ public struct OEMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static OEMCOLLECTION GetRootAsOEMCOLLECTION(ByteBuffer _bb) { return GetRootAsOEMCOLLECTION(_bb, new OEMCOLLECTION()); }
   public static OEMCOLLECTION GetRootAsOEMCOLLECTION(ByteBuffer _bb, OEMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool OEMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OEM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OEMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -39,6 +40,8 @@ public struct OEMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<OEMCOLLECTION>(o);
   }
+  public static void FinishOEMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<OEMCOLLECTION> offset) { builder.Finish(offset.Value, "$OEM"); }
+  public static void FinishSizePrefixedOEMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<OEMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$OEM"); }
   public OEMCOLLECTIONT UnPack() {
     var _o = new OEMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -68,6 +71,14 @@ public class OEMCOLLECTIONT
 
   public OEMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static OEMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return OEMCOLLECTION.GetRootAsOEMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    OEMCOLLECTION.FinishOEMCOLLECTIONBuffer(fbb, OEMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

@@ -26,6 +26,10 @@ static getSizePrefixedRootAsPLDCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:PLDCOL
   return (obj || new PLDCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$PLD');
+}
+
 RECORDS(index: number, obj?:PLD):PLD|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new PLD()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endPLDCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishPLDCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PLD');
+}
+
+static finishSizePrefixedPLDCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PLD', true);
 }
 
 static createPLDCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

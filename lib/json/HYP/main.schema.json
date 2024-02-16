@@ -83,5 +83,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/HYP"
+  "$ref" : "#/definitions/HYPCOLLECTION"
 }

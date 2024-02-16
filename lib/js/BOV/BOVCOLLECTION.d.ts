@@ -6,6 +6,7 @@ export declare class BOVCOLLECTION implements flatbuffers.IUnpackableObject<BOVC
     __init(i: number, bb: flatbuffers.ByteBuffer): BOVCOLLECTION;
     static getRootAsBOVCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: BOVCOLLECTION): BOVCOLLECTION;
     static getSizePrefixedRootAsBOVCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: BOVCOLLECTION): BOVCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: BOV): BOV | null;
     recordsLength(): number;
     static startBOVCOLLECTION(builder: flatbuffers.Builder): void;
@@ -13,6 +14,8 @@ export declare class BOVCOLLECTION implements flatbuffers.IUnpackableObject<BOVC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endBOVCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishBOVCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedBOVCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createBOVCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): BOVCOLLECTIONT;
     unpackTo(_o: BOVCOLLECTIONT): void;

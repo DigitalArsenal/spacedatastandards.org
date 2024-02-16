@@ -50,6 +50,7 @@ class CRMCOLLECTION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun CRMCOLLECTIONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CRM")
         fun createCRMCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
             builder.startTable(1)
             addRECORDS(builder, RECORDSOffset)
@@ -69,5 +70,7 @@ class CRMCOLLECTION : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishCRMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CRM")
+        fun finishSizePrefixedCRMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CRM")
     }
 }

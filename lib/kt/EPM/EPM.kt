@@ -230,7 +230,6 @@ class EPM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPM")
         fun createEPM(builder: FlatBufferBuilder, NAMEOffset: Int, ALTERNATE_NAMEOffset: Int, DESCRIPTIONOffset: Int, IMAGEOffset: Int, SAME_ASOffset: Int, URLOffset: Int, TELEPHONEOffset: Int, EMAILOffset: Int, KEYOffset: Int, CONTACT_POINTOffset: Int, ADDRESSOffset: Int, JOB_TITLEOffset: Int, entityType: UByte, ENTITYOffset: Int, HAS_OCCUPATIONOffset: Int) : Int {
             builder.startTable(15)
             addHAS_OCCUPATION(builder, HAS_OCCUPATIONOffset)
@@ -286,7 +285,5 @@ class EPM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EPM")
-        fun finishSizePrefixedEPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EPM")
     }
 }

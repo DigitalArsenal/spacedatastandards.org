@@ -25,10 +25,6 @@ static getSizePrefixedRootAsEOO(bb:flatbuffers.ByteBuffer, obj?:EOO):EOO {
   return (obj || new EOO()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$EOO');
-}
-
 /**
  * Unique identifier for Earth Observation Observation
  */
@@ -1104,14 +1100,6 @@ static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
 static endEOO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$EOO');
-}
-
-static finishSizePrefixedEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$EOO', true);
 }
 
 static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHODOffset:flatbuffers.Offset, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODEOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAMEOffset:flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {

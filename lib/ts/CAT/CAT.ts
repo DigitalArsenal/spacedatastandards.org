@@ -31,10 +31,6 @@ static getSizePrefixedRootAsCAT(bb:flatbuffers.ByteBuffer, obj?:CAT):CAT {
   return (obj || new CAT()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$CAT');
-}
-
 /**
  * Satellite Name(s)
  */
@@ -351,14 +347,6 @@ static startPayloadsVector(builder:flatbuffers.Builder, numElems:number) {
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishCATBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$CAT');
-}
-
-static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$CAT', true);
 }
 
 static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNEROffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {

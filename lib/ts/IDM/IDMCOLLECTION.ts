@@ -26,6 +26,10 @@ static getSizePrefixedRootAsIDMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:IDMCOL
   return (obj || new IDMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$IDM');
+}
+
 RECORDS(index: number, obj?:IDM):IDM|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new IDM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endIDMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishIDMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$IDM');
+}
+
+static finishSizePrefixedIDMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$IDM', true);
 }
 
 static createIDMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

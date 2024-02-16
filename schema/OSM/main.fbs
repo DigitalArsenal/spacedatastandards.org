@@ -18,5 +18,5 @@ table OSMCOLLECTION {
   RECORDS: [OSM];
 }
 
-root_type OSM;
+root_type OSMCOLLECTION;
 file_identifier "$OSM";

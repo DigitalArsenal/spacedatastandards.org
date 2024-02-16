@@ -124,4 +124,9 @@ class SITCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishSITCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$SIT");
+    }
 }

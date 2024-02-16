@@ -279,5 +279,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/OMM"
+  "$ref" : "#/definitions/OMMCOLLECTION"
 }

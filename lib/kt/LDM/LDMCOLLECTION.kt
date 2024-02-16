@@ -50,6 +50,7 @@ class LDMCOLLECTION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun LDMCOLLECTIONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LDM")
         fun createLDMCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
             builder.startTable(1)
             addRECORDS(builder, RECORDSOffset)
@@ -69,5 +70,7 @@ class LDMCOLLECTION : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishLDMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LDM")
+        fun finishSizePrefixedLDMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LDM")
     }
 }

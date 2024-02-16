@@ -2241,85 +2241,85 @@ impl CRMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `CRM`
+/// Verifies that a buffer of bytes contains a `CRMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CRM_unchecked`.
-pub fn root_as_CRM(buf: &[u8]) -> Result<CRM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<CRM>(buf)
+/// `root_as_CRMCOLLECTION_unchecked`.
+pub fn root_as_CRMCOLLECTION(buf: &[u8]) -> Result<CRMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<CRMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `CRM` and returns it.
+/// `CRMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_CRM_unchecked`.
-pub fn size_prefixed_root_as_CRM(buf: &[u8]) -> Result<CRM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<CRM>(buf)
+/// `size_prefixed_root_as_CRMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CRMCOLLECTION(buf: &[u8]) -> Result<CRMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<CRMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `CRM` and returns it.
+/// contains a `CRMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CRM_unchecked`.
-pub fn root_as_CRM_with_opts<'b, 'o>(
+/// `root_as_CRMCOLLECTION_unchecked`.
+pub fn root_as_CRMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CRM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<CRM<'b>>(opts, buf)
+) -> Result<CRMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<CRMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `CRM` and returns
+/// bytes contains a size prefixed `CRMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CRM_unchecked`.
-pub fn size_prefixed_root_as_CRM_with_opts<'b, 'o>(
+/// `root_as_CRMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CRMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CRM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<CRM<'b>>(opts, buf)
+) -> Result<CRMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<CRMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a CRM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CRMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `CRM`.
-pub unsafe fn root_as_CRM_unchecked(buf: &[u8]) -> CRM {
-  flatbuffers::root_unchecked::<CRM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `CRMCOLLECTION`.
+pub unsafe fn root_as_CRMCOLLECTION_unchecked(buf: &[u8]) -> CRMCOLLECTION {
+  flatbuffers::root_unchecked::<CRMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed CRM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CRMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `CRM`.
-pub unsafe fn size_prefixed_root_as_CRM_unchecked(buf: &[u8]) -> CRM {
-  flatbuffers::size_prefixed_root_unchecked::<CRM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CRMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_CRMCOLLECTION_unchecked(buf: &[u8]) -> CRMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<CRMCOLLECTION>(buf)
 }
-pub const CRM_IDENTIFIER: &str = "$CRM";
+pub const CRMCOLLECTION_IDENTIFIER: &str = "$CRM";
 
 #[inline]
-pub fn CRM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CRM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn CRM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CRM_IDENTIFIER, true)
+pub fn CRMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CRMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_CRM_buffer<'a, 'b>(
+pub fn CRMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CRMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_CRMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<CRM<'a>>) {
-  fbb.finish(root, Some(CRM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<CRMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(CRMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CRM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CRM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(CRM_IDENTIFIER));
+pub fn finish_size_prefixed_CRMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CRMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CRMCOLLECTION_IDENTIFIER));
 }

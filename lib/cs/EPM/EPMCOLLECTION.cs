@@ -13,6 +13,7 @@ public struct EPMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static EPMCOLLECTION GetRootAsEPMCOLLECTION(ByteBuffer _bb) { return GetRootAsEPMCOLLECTION(_bb, new EPMCOLLECTION()); }
   public static EPMCOLLECTION GetRootAsEPMCOLLECTION(ByteBuffer _bb, EPMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool EPMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EPM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EPMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct EPMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<EPMCOLLECTION>(o);
   }
+  public static void FinishEPMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<EPMCOLLECTION> offset) { builder.Finish(offset.Value, "$EPM"); }
+  public static void FinishSizePrefixedEPMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<EPMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$EPM"); }
   public EPMCOLLECTIONT UnPack() {
     var _o = new EPMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class EPMCOLLECTIONT
 
   public EPMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static EPMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return EPMCOLLECTION.GetRootAsEPMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    EPMCOLLECTION.FinishEPMCOLLECTIONBuffer(fbb, EPMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

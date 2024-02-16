@@ -29,10 +29,6 @@ static getSizePrefixedRootAsCDM(bb:flatbuffers.ByteBuffer, obj?:CDM):CDM {
   return (obj || new CDM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$CDM');
-}
-
 /**
  * The version of the CCSDS CDM standard used
  */
@@ -408,14 +404,6 @@ static addObject2Datasource(builder:flatbuffers.Builder, OBJECT2_DATASOURCEOffse
 static endCDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishCDMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$CDM');
-}
-
-static finishSizePrefixedCDMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$CDM', true);
 }
 
 

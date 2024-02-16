@@ -10,7 +10,6 @@ export declare class ROC implements flatbuffers.IUnpackableObject<ROCT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): ROC;
     static getRootAsROC(bb: flatbuffers.ByteBuffer, obj?: ROC): ROC;
     static getSizePrefixedRootAsROC(bb: flatbuffers.ByteBuffer, obj?: ROC): ROC;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Rocket Name
      */
@@ -47,8 +46,6 @@ export declare class ROC implements flatbuffers.IUnpackableObject<ROCT> {
     static createSustainersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startSustainersVector(builder: flatbuffers.Builder, numElems: number): void;
     static endROC(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishROCBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedROCBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createROC(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset, FAMILYOffset: flatbuffers.Offset, VARIANTOffset: flatbuffers.Offset, STAGESOffset: flatbuffers.Offset, SUSTAINERSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): ROCT;
     unpackTo(_o: ROCT): void;

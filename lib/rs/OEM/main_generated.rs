@@ -2236,85 +2236,85 @@ impl OEMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `OEM`
+/// Verifies that a buffer of bytes contains a `OEMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OEM_unchecked`.
-pub fn root_as_OEM(buf: &[u8]) -> Result<OEM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<OEM>(buf)
+/// `root_as_OEMCOLLECTION_unchecked`.
+pub fn root_as_OEMCOLLECTION(buf: &[u8]) -> Result<OEMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<OEMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `OEM` and returns it.
+/// `OEMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_OEM_unchecked`.
-pub fn size_prefixed_root_as_OEM(buf: &[u8]) -> Result<OEM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<OEM>(buf)
+/// `size_prefixed_root_as_OEMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_OEMCOLLECTION(buf: &[u8]) -> Result<OEMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<OEMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `OEM` and returns it.
+/// contains a `OEMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OEM_unchecked`.
-pub fn root_as_OEM_with_opts<'b, 'o>(
+/// `root_as_OEMCOLLECTION_unchecked`.
+pub fn root_as_OEMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<OEM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<OEM<'b>>(opts, buf)
+) -> Result<OEMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<OEMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `OEM` and returns
+/// bytes contains a size prefixed `OEMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OEM_unchecked`.
-pub fn size_prefixed_root_as_OEM_with_opts<'b, 'o>(
+/// `root_as_OEMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_OEMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<OEM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<OEM<'b>>(opts, buf)
+) -> Result<OEMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<OEMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a OEM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a OEMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `OEM`.
-pub unsafe fn root_as_OEM_unchecked(buf: &[u8]) -> OEM {
-  flatbuffers::root_unchecked::<OEM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `OEMCOLLECTION`.
+pub unsafe fn root_as_OEMCOLLECTION_unchecked(buf: &[u8]) -> OEMCOLLECTION {
+  flatbuffers::root_unchecked::<OEMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed OEM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed OEMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `OEM`.
-pub unsafe fn size_prefixed_root_as_OEM_unchecked(buf: &[u8]) -> OEM {
-  flatbuffers::size_prefixed_root_unchecked::<OEM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `OEMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_OEMCOLLECTION_unchecked(buf: &[u8]) -> OEMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<OEMCOLLECTION>(buf)
 }
-pub const OEM_IDENTIFIER: &str = "$OEM";
+pub const OEMCOLLECTION_IDENTIFIER: &str = "$OEM";
 
 #[inline]
-pub fn OEM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, OEM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn OEM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, OEM_IDENTIFIER, true)
+pub fn OEMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, OEMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_OEM_buffer<'a, 'b>(
+pub fn OEMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, OEMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_OEMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<OEM<'a>>) {
-  fbb.finish(root, Some(OEM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<OEMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(OEMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_OEM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OEM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(OEM_IDENTIFIER));
+pub fn finish_size_prefixed_OEMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OEMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(OEMCOLLECTION_IDENTIFIER));
 }

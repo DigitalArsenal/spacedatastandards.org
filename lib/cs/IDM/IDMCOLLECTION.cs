@@ -14,6 +14,7 @@ public struct IDMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static IDMCOLLECTION GetRootAsIDMCOLLECTION(ByteBuffer _bb) { return GetRootAsIDMCOLLECTION(_bb, new IDMCOLLECTION()); }
   public static IDMCOLLECTION GetRootAsIDMCOLLECTION(ByteBuffer _bb, IDMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool IDMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$IDM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public IDMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct IDMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<IDMCOLLECTION>(o);
   }
+  public static void FinishIDMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<IDMCOLLECTION> offset) { builder.Finish(offset.Value, "$IDM"); }
+  public static void FinishSizePrefixedIDMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<IDMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$IDM"); }
   public IDMCOLLECTIONT UnPack() {
     var _o = new IDMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class IDMCOLLECTIONT
 
   public IDMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static IDMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return IDMCOLLECTION.GetRootAsIDMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    IDMCOLLECTION.FinishIDMCOLLECTIONBuffer(fbb, IDMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

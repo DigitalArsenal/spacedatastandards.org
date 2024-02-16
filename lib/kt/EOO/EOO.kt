@@ -861,7 +861,6 @@ class EOO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
         fun createEOO(builder: FlatBufferBuilder, EOBSERVATION_IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHODOffset: Int, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAMEOffset: Int, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPEOffset: Int) : Int {
             builder.startTable(85)
             addTYPE(builder, TYPEOffset)
@@ -1041,7 +1040,5 @@ class EOO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEOOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EOO")
-        fun finishSizePrefixedEOOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EOO")
     }
 }

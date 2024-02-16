@@ -240,5 +240,5 @@ table CRMCOLLECTION {
   RECORDS: [CRM];
 }
 
-root_type CRM;
+root_type CRMCOLLECTION;
 file_identifier "$CRM";

@@ -25,6 +25,7 @@ public final class HYPCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static HYPCOLLECTION getRootAsHYPCOLLECTION(ByteBuffer _bb) { return getRootAsHYPCOLLECTION(_bb, new HYPCOLLECTION()); }
   public static HYPCOLLECTION getRootAsHYPCOLLECTION(ByteBuffer _bb, HYPCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean HYPCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$HYP"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public HYPCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -49,6 +50,8 @@ public final class HYPCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishHYPCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$HYP"); }
+  public static void finishSizePrefixedHYPCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$HYP"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

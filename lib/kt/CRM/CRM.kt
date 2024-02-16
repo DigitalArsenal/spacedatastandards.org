@@ -847,7 +847,6 @@ class CRM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CRMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CRM")
         fun createCRM(builder: FlatBufferBuilder, IDOffset: Int, CLASSIFICATIONOffset: Int, TYPEOffset: Int, ID_PLANOffset: Int, PLAN_INDEX: Int, TASK_IDOffset: Int, DWELL_IDOffset: Int, EXTERNAL_IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OB_TYPEOffset: Int, PRIORITYOffset: Int, TASK_CATEGORY: Int, SUFFIXOffset: Int, UCT_FOLLOW_UP: Boolean, START_TIMEOffset: Int, END_TIMEOffset: Int, NORAD_CAT_ID: UInt, ORIG_OBJECT_IDOffset: Int, TASK_GROUPOffset: Int, IRON: Int, ORBIT_REGIMEOffset: Int, TARGET_SIZE: Double, RCS_MIN: Double, RCS: Double, RCS_MAX: Double, FREQ_MIN: Double, FREQ: Double, FREQ_MAX: Double, POLARIZATIONOffset: Int, VIS_MAG_MIN: Double, VIS_MAG: Double, VIS_MAG_MAX: Double, SPECTRAL_MODELOffset: Int, REFLECTANCE: Double, IRRADIANCE: Double, NUM_FRAMES: Int, FRAME_RATE: Double, INTEGRATION_TIME: Double, NUM_TRACKS: Int, NUM_OBS: Int, DURATION: Int, SRCH_PATTERNOffset: Int, SCENARIOOffset: Int, ID_ELSETOffset: Int, ID_MANIFOLDOffset: Int, ID_STATE_VECTOROffset: Int, ES_IDOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, ECCENTRICITY: Double, INCLINATION: Double, RAAN: Double, ARG_OF_PERIGEE: Double, MEAN_ANOMALY: Double, RA: Double, DEC: Double, AZ: Double, EL: Double, RANGE: Double, EXTENT_AZ: Double, EXTENT_EL: Double, EXTENT_RANGE: Double, LAT: Double, LON: Double, ALT: Double, STOP_LAT: Double, STOP_LON: Double, STOP_ALT: Double, SRCH_INC: Double, X_ANGLE: Double, Y_ANGLE: Double, ORIENT_ANGLE: Double, CUSTOMEROffset: Int, NOTESOffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int) : Int {
             builder.startTable(78)
             addORIENT_ANGLE(builder, ORIENT_ANGLE)
@@ -1013,7 +1012,5 @@ class CRM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CRM")
-        fun finishSizePrefixedCRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CRM")
     }
 }

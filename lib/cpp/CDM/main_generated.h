@@ -1955,48 +1955,48 @@ inline ::flatbuffers::Offset<CDMCOLLECTION> CreateCDMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const CDM *GetCDM(const void *buf) {
-  return ::flatbuffers::GetRoot<CDM>(buf);
+inline const CDMCOLLECTION *GetCDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<CDMCOLLECTION>(buf);
 }
 
-inline const CDM *GetSizePrefixedCDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<CDM>(buf);
+inline const CDMCOLLECTION *GetSizePrefixedCDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CDMCOLLECTION>(buf);
 }
 
-inline const char *CDMIdentifier() {
+inline const char *CDMCOLLECTIONIdentifier() {
   return "$CDM";
 }
 
-inline bool CDMBufferHasIdentifier(const void *buf) {
+inline bool CDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CDMIdentifier());
+      buf, CDMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedCDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CDMIdentifier(), true);
+      buf, CDMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyCDMBuffer(
+inline bool VerifyCDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CDM>(CDMIdentifier());
+  return verifier.VerifyBuffer<CDMCOLLECTION>(CDMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedCDMBuffer(
+inline bool VerifySizePrefixedCDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CDM>(CDMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<CDMCOLLECTION>(CDMCOLLECTIONIdentifier());
 }
 
-inline void FinishCDMBuffer(
+inline void FinishCDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CDM> root) {
-  fbb.Finish(root, CDMIdentifier());
+    ::flatbuffers::Offset<CDMCOLLECTION> root) {
+  fbb.Finish(root, CDMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedCDMBuffer(
+inline void FinishSizePrefixedCDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CDM> root) {
-  fbb.FinishSizePrefixed(root, CDMIdentifier());
+    ::flatbuffers::Offset<CDMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, CDMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

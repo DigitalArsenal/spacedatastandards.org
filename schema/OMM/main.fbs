@@ -231,5 +231,5 @@ table OMMCOLLECTION {
   RECORDS:[OMM];
 }
 
-root_type OMM;
+root_type OMMCOLLECTION;
 file_identifier "$OMM";

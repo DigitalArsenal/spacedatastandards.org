@@ -1030,48 +1030,48 @@ inline ::flatbuffers::Offset<TDMCOLLECTION> CreateTDMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const TDM *GetTDM(const void *buf) {
-  return ::flatbuffers::GetRoot<TDM>(buf);
+inline const TDMCOLLECTION *GetTDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<TDMCOLLECTION>(buf);
 }
 
-inline const TDM *GetSizePrefixedTDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<TDM>(buf);
+inline const TDMCOLLECTION *GetSizePrefixedTDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<TDMCOLLECTION>(buf);
 }
 
-inline const char *TDMIdentifier() {
+inline const char *TDMCOLLECTIONIdentifier() {
   return "$TDM";
 }
 
-inline bool TDMBufferHasIdentifier(const void *buf) {
+inline bool TDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TDMIdentifier());
+      buf, TDMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedTDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedTDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TDMIdentifier(), true);
+      buf, TDMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyTDMBuffer(
+inline bool VerifyTDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<TDM>(TDMIdentifier());
+  return verifier.VerifyBuffer<TDMCOLLECTION>(TDMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedTDMBuffer(
+inline bool VerifySizePrefixedTDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<TDM>(TDMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<TDMCOLLECTION>(TDMCOLLECTIONIdentifier());
 }
 
-inline void FinishTDMBuffer(
+inline void FinishTDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TDM> root) {
-  fbb.Finish(root, TDMIdentifier());
+    ::flatbuffers::Offset<TDMCOLLECTION> root) {
+  fbb.Finish(root, TDMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedTDMBuffer(
+inline void FinishSizePrefixedTDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TDM> root) {
-  fbb.FinishSizePrefixed(root, TDMIdentifier());
+    ::flatbuffers::Offset<TDMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, TDMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -23,6 +23,10 @@ static getSizePrefixedRootAsCSMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:CSMCOL
   return (obj || new CSMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$CSM');
+}
+
 /**
  * A vector of CSM records
  */
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endCSMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishCSMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CSM');
+}
+
+static finishSizePrefixedCSMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CSM', true);
 }
 
 static createCSMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

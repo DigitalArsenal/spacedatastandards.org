@@ -13,6 +13,7 @@ public struct BOVCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static BOVCOLLECTION GetRootAsBOVCOLLECTION(ByteBuffer _bb) { return GetRootAsBOVCOLLECTION(_bb, new BOVCOLLECTION()); }
   public static BOVCOLLECTION GetRootAsBOVCOLLECTION(ByteBuffer _bb, BOVCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool BOVCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$BOV"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public BOVCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -37,6 +38,8 @@ public struct BOVCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<BOVCOLLECTION>(o);
   }
+  public static void FinishBOVCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<BOVCOLLECTION> offset) { builder.Finish(offset.Value, "$BOV"); }
+  public static void FinishSizePrefixedBOVCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<BOVCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$BOV"); }
   public BOVCOLLECTIONT UnPack() {
     var _o = new BOVCOLLECTIONT();
     this.UnPackTo(_o);
@@ -66,6 +69,14 @@ public class BOVCOLLECTIONT
 
   public BOVCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static BOVCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return BOVCOLLECTION.GetRootAsBOVCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    BOVCOLLECTION.FinishBOVCOLLECTIONBuffer(fbb, BOVCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

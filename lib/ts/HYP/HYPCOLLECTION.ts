@@ -26,6 +26,10 @@ static getSizePrefixedRootAsHYPCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:HYPCOL
   return (obj || new HYPCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$HYP');
+}
+
 RECORDS(index: number, obj?:HYP):HYP|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new HYP()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endHYPCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishHYPCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$HYP');
+}
+
+static finishSizePrefixedHYPCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$HYP', true);
 }
 
 static createHYPCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

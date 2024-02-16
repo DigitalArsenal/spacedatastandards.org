@@ -225,5 +225,5 @@ table TDMCOLLECTION {
   RECORDS: [TDM];
 }
 
-root_type TDM;
+root_type TDMCOLLECTION;
 file_identifier "$TDM";

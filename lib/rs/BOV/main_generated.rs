@@ -432,85 +432,85 @@ impl BOVCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `BOV`
+/// Verifies that a buffer of bytes contains a `BOVCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_BOV_unchecked`.
-pub fn root_as_BOV(buf: &[u8]) -> Result<BOV, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<BOV>(buf)
+/// `root_as_BOVCOLLECTION_unchecked`.
+pub fn root_as_BOVCOLLECTION(buf: &[u8]) -> Result<BOVCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<BOVCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `BOV` and returns it.
+/// `BOVCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_BOV_unchecked`.
-pub fn size_prefixed_root_as_BOV(buf: &[u8]) -> Result<BOV, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<BOV>(buf)
+/// `size_prefixed_root_as_BOVCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_BOVCOLLECTION(buf: &[u8]) -> Result<BOVCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<BOVCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `BOV` and returns it.
+/// contains a `BOVCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_BOV_unchecked`.
-pub fn root_as_BOV_with_opts<'b, 'o>(
+/// `root_as_BOVCOLLECTION_unchecked`.
+pub fn root_as_BOVCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<BOV<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<BOV<'b>>(opts, buf)
+) -> Result<BOVCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<BOVCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `BOV` and returns
+/// bytes contains a size prefixed `BOVCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_BOV_unchecked`.
-pub fn size_prefixed_root_as_BOV_with_opts<'b, 'o>(
+/// `root_as_BOVCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_BOVCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<BOV<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<BOV<'b>>(opts, buf)
+) -> Result<BOVCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<BOVCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a BOV and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a BOVCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `BOV`.
-pub unsafe fn root_as_BOV_unchecked(buf: &[u8]) -> BOV {
-  flatbuffers::root_unchecked::<BOV>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `BOVCOLLECTION`.
+pub unsafe fn root_as_BOVCOLLECTION_unchecked(buf: &[u8]) -> BOVCOLLECTION {
+  flatbuffers::root_unchecked::<BOVCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed BOV and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed BOVCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `BOV`.
-pub unsafe fn size_prefixed_root_as_BOV_unchecked(buf: &[u8]) -> BOV {
-  flatbuffers::size_prefixed_root_unchecked::<BOV>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `BOVCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_BOVCOLLECTION_unchecked(buf: &[u8]) -> BOVCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<BOVCOLLECTION>(buf)
 }
-pub const BOV_IDENTIFIER: &str = "$BOV";
+pub const BOVCOLLECTION_IDENTIFIER: &str = "$BOV";
 
 #[inline]
-pub fn BOV_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, BOV_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn BOV_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, BOV_IDENTIFIER, true)
+pub fn BOVCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, BOVCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_BOV_buffer<'a, 'b>(
+pub fn BOVCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, BOVCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_BOVCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<BOV<'a>>) {
-  fbb.finish(root, Some(BOV_IDENTIFIER));
+    root: flatbuffers::WIPOffset<BOVCOLLECTION<'a>>) {
+  fbb.finish(root, Some(BOVCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_BOV_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<BOV<'a>>) {
-  fbb.finish_size_prefixed(root, Some(BOV_IDENTIFIER));
+pub fn finish_size_prefixed_BOVCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<BOVCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(BOVCOLLECTION_IDENTIFIER));
 }

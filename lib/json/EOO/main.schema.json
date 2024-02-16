@@ -358,5 +358,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EOO"
+  "$ref" : "#/definitions/EOOCOLLECTION"
 }

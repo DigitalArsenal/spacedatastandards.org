@@ -15,6 +15,7 @@ public struct PNMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static PNMCOLLECTION GetRootAsPNMCOLLECTION(ByteBuffer _bb) { return GetRootAsPNMCOLLECTION(_bb, new PNMCOLLECTION()); }
   public static PNMCOLLECTION GetRootAsPNMCOLLECTION(ByteBuffer _bb, PNMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool PNMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PNM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PNMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -39,6 +40,8 @@ public struct PNMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<PNMCOLLECTION>(o);
   }
+  public static void FinishPNMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<PNMCOLLECTION> offset) { builder.Finish(offset.Value, "$PNM"); }
+  public static void FinishSizePrefixedPNMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<PNMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$PNM"); }
   public PNMCOLLECTIONT UnPack() {
     var _o = new PNMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -68,6 +71,14 @@ public class PNMCOLLECTIONT
 
   public PNMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static PNMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return PNMCOLLECTION.GetRootAsPNMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    PNMCOLLECTION.FinishPNMCOLLECTIONBuffer(fbb, PNMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

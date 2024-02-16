@@ -251,5 +251,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/TDM"
+  "$ref" : "#/definitions/TDMCOLLECTION"
 }

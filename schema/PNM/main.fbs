@@ -95,5 +95,5 @@ table PNMCOLLECTION {
   RECORDS: [PNM];
 }
 
-root_type PNM;
+root_type PNMCOLLECTION;
 file_identifier "$PNM";

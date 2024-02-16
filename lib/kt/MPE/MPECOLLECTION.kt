@@ -99,6 +99,7 @@ class MPECOLLECTION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun MPECOLLECTIONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MPE")
         fun createMPECOLLECTION(builder: FlatBufferBuilder, CLASSIFICATION_TYPEOffset: Int, REF_FRAME: Byte, REF_FRAME_EPOCH: Double, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, RECORDSOffset: Int) : Int {
             builder.startTable(6)
             addREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH)
@@ -128,5 +129,7 @@ class MPECOLLECTION : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishMPECOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MPE")
+        fun finishSizePrefixedMPECOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MPE")
     }
 }

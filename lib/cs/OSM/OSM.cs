@@ -14,7 +14,6 @@ public struct OSM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static OSM GetRootAsOSM(ByteBuffer _bb) { return GetRootAsOSM(_bb, new OSM()); }
   public static OSM GetRootAsOSM(ByteBuffer _bb, OSM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool OSMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OSM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OSM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -77,8 +76,6 @@ public struct OSM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<OSM>(o);
   }
-  public static void FinishOSMBuffer(FlatBufferBuilder builder, Offset<OSM> offset) { builder.Finish(offset.Value, "$OSM"); }
-  public static void FinishSizePrefixedOSMBuffer(FlatBufferBuilder builder, Offset<OSM> offset) { builder.FinishSizePrefixed(offset.Value, "$OSM"); }
   public OSMT UnPack() {
     var _o = new OSMT();
     this.UnPackTo(_o);
@@ -124,14 +121,6 @@ public class OSMT
     this.ID_SENSOR = null;
     this.PASS_START = null;
     this.PASS_DURATION = 0;
-  }
-  public static OSMT DeserializeFromBinary(byte[] fbBuffer) {
-    return OSM.GetRootAsOSM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    OSM.FinishOSMBuffer(fbb, OSM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

@@ -109,5 +109,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/ROC"
+  "$ref" : "#/definitions/ROCCOLLECTION"
 }

@@ -14,7 +14,6 @@ public struct PNM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static PNM GetRootAsPNM(ByteBuffer _bb) { return GetRootAsPNM(_bb, new PNM()); }
   public static PNM GetRootAsPNM(ByteBuffer _bb, PNM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool PNMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PNM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PNM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -250,8 +249,6 @@ public struct PNM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<PNM>(o);
   }
-  public static void FinishPNMBuffer(FlatBufferBuilder builder, Offset<PNM> offset) { builder.Finish(offset.Value, "$PNM"); }
-  public static void FinishSizePrefixedPNMBuffer(FlatBufferBuilder builder, Offset<PNM> offset) { builder.FinishSizePrefixed(offset.Value, "$PNM"); }
   public PNMT UnPack() {
     var _o = new PNMT();
     this.UnPackTo(_o);
@@ -355,14 +352,6 @@ public class PNMT
     this.BNB_DIGITAL_SIGNATURE = null;
     this.AVAX_DIGITAL_SIGNATURE = null;
     this.SOL_DIGITAL_SIGNATURE = null;
-  }
-  public static PNMT DeserializeFromBinary(byte[] fbBuffer) {
-    return PNM.GetRootAsPNM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    PNM.FinishPNMBuffer(fbb, PNM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

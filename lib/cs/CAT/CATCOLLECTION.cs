@@ -13,6 +13,7 @@ public struct CATCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CATCOLLECTION GetRootAsCATCOLLECTION(ByteBuffer _bb) { return GetRootAsCATCOLLECTION(_bb, new CATCOLLECTION()); }
   public static CATCOLLECTION GetRootAsCATCOLLECTION(ByteBuffer _bb, CATCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool CATCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CAT"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CATCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -37,6 +38,8 @@ public struct CATCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CATCOLLECTION>(o);
   }
+  public static void FinishCATCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<CATCOLLECTION> offset) { builder.Finish(offset.Value, "$CAT"); }
+  public static void FinishSizePrefixedCATCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<CATCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$CAT"); }
   public CATCOLLECTIONT UnPack() {
     var _o = new CATCOLLECTIONT();
     this.UnPackTo(_o);
@@ -66,6 +69,14 @@ public class CATCOLLECTIONT
 
   public CATCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static CATCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return CATCOLLECTION.GetRootAsCATCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    CATCOLLECTION.FinishCATCOLLECTIONBuffer(fbb, CATCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

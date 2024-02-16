@@ -272,48 +272,48 @@ inline ::flatbuffers::Offset<EOPCOLLECTION> CreateEOPCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const EOP *GetEOP(const void *buf) {
-  return ::flatbuffers::GetRoot<EOP>(buf);
+inline const EOPCOLLECTION *GetEOPCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<EOPCOLLECTION>(buf);
 }
 
-inline const EOP *GetSizePrefixedEOP(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<EOP>(buf);
+inline const EOPCOLLECTION *GetSizePrefixedEOPCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<EOPCOLLECTION>(buf);
 }
 
-inline const char *EOPIdentifier() {
+inline const char *EOPCOLLECTIONIdentifier() {
   return "$EOP";
 }
 
-inline bool EOPBufferHasIdentifier(const void *buf) {
+inline bool EOPCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, EOPIdentifier());
+      buf, EOPCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedEOPBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedEOPCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, EOPIdentifier(), true);
+      buf, EOPCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyEOPBuffer(
+inline bool VerifyEOPCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<EOP>(EOPIdentifier());
+  return verifier.VerifyBuffer<EOPCOLLECTION>(EOPCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedEOPBuffer(
+inline bool VerifySizePrefixedEOPCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<EOP>(EOPIdentifier());
+  return verifier.VerifySizePrefixedBuffer<EOPCOLLECTION>(EOPCOLLECTIONIdentifier());
 }
 
-inline void FinishEOPBuffer(
+inline void FinishEOPCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<EOP> root) {
-  fbb.Finish(root, EOPIdentifier());
+    ::flatbuffers::Offset<EOPCOLLECTION> root) {
+  fbb.Finish(root, EOPCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedEOPBuffer(
+inline void FinishSizePrefixedEOPCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<EOP> root) {
-  fbb.FinishSizePrefixed(root, EOPIdentifier());
+    ::flatbuffers::Offset<EOPCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, EOPCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

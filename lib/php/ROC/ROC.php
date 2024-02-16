@@ -234,9 +234,4 @@ class ROC extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishROCBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$ROC");
-    }
 }

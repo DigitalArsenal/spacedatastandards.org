@@ -14,6 +14,7 @@ public struct EOPCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static EOPCOLLECTION GetRootAsEOPCOLLECTION(ByteBuffer _bb) { return GetRootAsEOPCOLLECTION(_bb, new EOPCOLLECTION()); }
   public static EOPCOLLECTION GetRootAsEOPCOLLECTION(ByteBuffer _bb, EOPCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool EOPCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EOP"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EOPCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct EOPCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<EOPCOLLECTION>(o);
   }
+  public static void FinishEOPCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<EOPCOLLECTION> offset) { builder.Finish(offset.Value, "$EOP"); }
+  public static void FinishSizePrefixedEOPCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<EOPCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$EOP"); }
   public EOPCOLLECTIONT UnPack() {
     var _o = new EOPCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class EOPCOLLECTIONT
 
   public EOPCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static EOPCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return EOPCOLLECTION.GetRootAsEOPCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    EOPCOLLECTION.FinishEOPCOLLECTIONBuffer(fbb, EOPCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

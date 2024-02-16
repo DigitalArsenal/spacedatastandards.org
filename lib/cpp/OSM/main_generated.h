@@ -193,48 +193,48 @@ inline ::flatbuffers::Offset<OSMCOLLECTION> CreateOSMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const OSM *GetOSM(const void *buf) {
-  return ::flatbuffers::GetRoot<OSM>(buf);
+inline const OSMCOLLECTION *GetOSMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<OSMCOLLECTION>(buf);
 }
 
-inline const OSM *GetSizePrefixedOSM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<OSM>(buf);
+inline const OSMCOLLECTION *GetSizePrefixedOSMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<OSMCOLLECTION>(buf);
 }
 
-inline const char *OSMIdentifier() {
+inline const char *OSMCOLLECTIONIdentifier() {
   return "$OSM";
 }
 
-inline bool OSMBufferHasIdentifier(const void *buf) {
+inline bool OSMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, OSMIdentifier());
+      buf, OSMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedOSMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedOSMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, OSMIdentifier(), true);
+      buf, OSMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyOSMBuffer(
+inline bool VerifyOSMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<OSM>(OSMIdentifier());
+  return verifier.VerifyBuffer<OSMCOLLECTION>(OSMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedOSMBuffer(
+inline bool VerifySizePrefixedOSMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<OSM>(OSMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<OSMCOLLECTION>(OSMCOLLECTIONIdentifier());
 }
 
-inline void FinishOSMBuffer(
+inline void FinishOSMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<OSM> root) {
-  fbb.Finish(root, OSMIdentifier());
+    ::flatbuffers::Offset<OSMCOLLECTION> root) {
+  fbb.Finish(root, OSMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedOSMBuffer(
+inline void FinishSizePrefixedOSMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<OSM> root) {
-  fbb.FinishSizePrefixed(root, OSMIdentifier());
+    ::flatbuffers::Offset<OSMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, OSMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

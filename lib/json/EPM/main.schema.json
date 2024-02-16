@@ -225,5 +225,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EPM"
+  "$ref" : "#/definitions/EPMCOLLECTION"
 }

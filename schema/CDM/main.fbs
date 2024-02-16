@@ -294,5 +294,5 @@ table CDMCOLLECTION {
   RECORDS:[CDM];
 }
 
-root_type CDM;
+root_type CDMCOLLECTION;
 file_identifier "$CDM";

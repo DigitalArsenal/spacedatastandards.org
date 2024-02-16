@@ -400,48 +400,48 @@ inline ::flatbuffers::Offset<PNMCOLLECTION> CreatePNMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const PNM *GetPNM(const void *buf) {
-  return ::flatbuffers::GetRoot<PNM>(buf);
+inline const PNMCOLLECTION *GetPNMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<PNMCOLLECTION>(buf);
 }
 
-inline const PNM *GetSizePrefixedPNM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<PNM>(buf);
+inline const PNMCOLLECTION *GetSizePrefixedPNMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<PNMCOLLECTION>(buf);
 }
 
-inline const char *PNMIdentifier() {
+inline const char *PNMCOLLECTIONIdentifier() {
   return "$PNM";
 }
 
-inline bool PNMBufferHasIdentifier(const void *buf) {
+inline bool PNMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, PNMIdentifier());
+      buf, PNMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedPNMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedPNMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, PNMIdentifier(), true);
+      buf, PNMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyPNMBuffer(
+inline bool VerifyPNMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<PNM>(PNMIdentifier());
+  return verifier.VerifyBuffer<PNMCOLLECTION>(PNMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedPNMBuffer(
+inline bool VerifySizePrefixedPNMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<PNM>(PNMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<PNMCOLLECTION>(PNMCOLLECTIONIdentifier());
 }
 
-inline void FinishPNMBuffer(
+inline void FinishPNMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<PNM> root) {
-  fbb.Finish(root, PNMIdentifier());
+    ::flatbuffers::Offset<PNMCOLLECTION> root) {
+  fbb.Finish(root, PNMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedPNMBuffer(
+inline void FinishSizePrefixedPNMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<PNM> root) {
-  fbb.FinishSizePrefixed(root, PNMIdentifier());
+    ::flatbuffers::Offset<PNMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, PNMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -50,6 +50,7 @@ class CSMCOLLECTION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun CSMCOLLECTIONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CSM")
         fun createCSMCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
             builder.startTable(1)
             addRECORDS(builder, RECORDSOffset)
@@ -69,5 +70,7 @@ class CSMCOLLECTION : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishCSMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CSM")
+        fun finishSizePrefixedCSMCOLLECTIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CSM")
     }
 }

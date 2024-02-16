@@ -25,7 +25,6 @@ public final class EOO extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static EOO getRootAsEOO(ByteBuffer _bb) { return getRootAsEOO(_bb, new EOO()); }
   public static EOO getRootAsEOO(ByteBuffer _bb, EOO obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean EOOBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$EOO"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public EOO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -683,8 +682,6 @@ public final class EOO extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishEOOBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$EOO"); }
-  public static void finishSizePrefixedEOOBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$EOO"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

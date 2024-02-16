@@ -25,7 +25,6 @@ public final class CDM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static CDM getRootAsCDM(ByteBuffer _bb) { return getRootAsCDM(_bb, new CDM()); }
   public static CDM getRootAsCDM(ByteBuffer _bb, CDM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean CDMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CDM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public CDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -267,8 +266,6 @@ public final class CDM extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishCDMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$CDM"); }
-  public static void finishSizePrefixedCDMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$CDM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

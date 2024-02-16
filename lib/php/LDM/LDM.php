@@ -968,9 +968,4 @@ class LDM extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishLDMBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$LDM");
-    }
 }

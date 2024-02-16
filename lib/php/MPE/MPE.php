@@ -256,9 +256,4 @@ class MPE extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishMPEBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$MPE");
-    }
 }

@@ -13,6 +13,7 @@ public struct LDMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static LDMCOLLECTION GetRootAsLDMCOLLECTION(ByteBuffer _bb) { return GetRootAsLDMCOLLECTION(_bb, new LDMCOLLECTION()); }
   public static LDMCOLLECTION GetRootAsLDMCOLLECTION(ByteBuffer _bb, LDMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool LDMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$LDM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LDMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct LDMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<LDMCOLLECTION>(o);
   }
+  public static void FinishLDMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<LDMCOLLECTION> offset) { builder.Finish(offset.Value, "$LDM"); }
+  public static void FinishSizePrefixedLDMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<LDMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$LDM"); }
   public LDMCOLLECTIONT UnPack() {
     var _o = new LDMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class LDMCOLLECTIONT
 
   public LDMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static LDMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return LDMCOLLECTION.GetRootAsLDMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    LDMCOLLECTION.FinishLDMCOLLECTIONBuffer(fbb, LDMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

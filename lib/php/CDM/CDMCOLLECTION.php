@@ -124,4 +124,9 @@ class CDMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishCDMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$CDM");
+    }
 }

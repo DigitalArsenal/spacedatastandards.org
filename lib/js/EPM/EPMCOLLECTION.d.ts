@@ -6,6 +6,7 @@ export declare class EPMCOLLECTION implements flatbuffers.IUnpackableObject<EPMC
     __init(i: number, bb: flatbuffers.ByteBuffer): EPMCOLLECTION;
     static getRootAsEPMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: EPMCOLLECTION): EPMCOLLECTION;
     static getSizePrefixedRootAsEPMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: EPMCOLLECTION): EPMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Records of Entity Profile Messages
      */
@@ -16,6 +17,8 @@ export declare class EPMCOLLECTION implements flatbuffers.IUnpackableObject<EPMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endEPMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishEPMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedEPMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createEPMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EPMCOLLECTIONT;
     unpackTo(_o: EPMCOLLECTIONT): void;

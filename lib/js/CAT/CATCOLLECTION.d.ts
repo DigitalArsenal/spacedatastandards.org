@@ -6,6 +6,7 @@ export declare class CATCOLLECTION implements flatbuffers.IUnpackableObject<CATC
     __init(i: number, bb: flatbuffers.ByteBuffer): CATCOLLECTION;
     static getRootAsCATCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CATCOLLECTION): CATCOLLECTION;
     static getSizePrefixedRootAsCATCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CATCOLLECTION): CATCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: CAT): CAT | null;
     recordsLength(): number;
     static startCATCOLLECTION(builder: flatbuffers.Builder): void;
@@ -13,6 +14,8 @@ export declare class CATCOLLECTION implements flatbuffers.IUnpackableObject<CATC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCATCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCATCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCATCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCATCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CATCOLLECTIONT;
     unpackTo(_o: CATCOLLECTIONT): void;

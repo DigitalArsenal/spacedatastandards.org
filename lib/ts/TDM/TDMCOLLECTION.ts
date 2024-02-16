@@ -26,6 +26,10 @@ static getSizePrefixedRootAsTDMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:TDMCOL
   return (obj || new TDMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$TDM');
+}
+
 RECORDS(index: number, obj?:TDM):TDM|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new TDM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endTDMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishTDMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$TDM');
+}
+
+static finishSizePrefixedTDMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$TDM', true);
 }
 
 static createTDMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

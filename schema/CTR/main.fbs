@@ -29,5 +29,5 @@ table CTRCOLLECTION {
   RECORDS: [CTR];
 }
 
-root_type CTR;
+root_type CTRCOLLECTION;
 file_identifier "$CTR";

@@ -25,7 +25,6 @@ public final class OEM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static OEM getRootAsOEM(ByteBuffer _bb) { return getRootAsOEM(_bb, new OEM()); }
   public static OEM getRootAsOEM(ByteBuffer _bb, OEM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean OEMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$OEM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OEM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -79,8 +78,6 @@ public final class OEM extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishOEMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$OEM"); }
-  public static void finishSizePrefixedOEMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$OEM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

@@ -427,85 +427,85 @@ impl PLDCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `PLD`
+/// Verifies that a buffer of bytes contains a `PLDCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PLD_unchecked`.
-pub fn root_as_PLD(buf: &[u8]) -> Result<PLD, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<PLD>(buf)
+/// `root_as_PLDCOLLECTION_unchecked`.
+pub fn root_as_PLDCOLLECTION(buf: &[u8]) -> Result<PLDCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<PLDCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `PLD` and returns it.
+/// `PLDCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_PLD_unchecked`.
-pub fn size_prefixed_root_as_PLD(buf: &[u8]) -> Result<PLD, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<PLD>(buf)
+/// `size_prefixed_root_as_PLDCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_PLDCOLLECTION(buf: &[u8]) -> Result<PLDCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<PLDCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `PLD` and returns it.
+/// contains a `PLDCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PLD_unchecked`.
-pub fn root_as_PLD_with_opts<'b, 'o>(
+/// `root_as_PLDCOLLECTION_unchecked`.
+pub fn root_as_PLDCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PLD<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<PLD<'b>>(opts, buf)
+) -> Result<PLDCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<PLDCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `PLD` and returns
+/// bytes contains a size prefixed `PLDCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PLD_unchecked`.
-pub fn size_prefixed_root_as_PLD_with_opts<'b, 'o>(
+/// `root_as_PLDCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_PLDCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PLD<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<PLD<'b>>(opts, buf)
+) -> Result<PLDCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<PLDCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a PLD and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a PLDCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `PLD`.
-pub unsafe fn root_as_PLD_unchecked(buf: &[u8]) -> PLD {
-  flatbuffers::root_unchecked::<PLD>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `PLDCOLLECTION`.
+pub unsafe fn root_as_PLDCOLLECTION_unchecked(buf: &[u8]) -> PLDCOLLECTION {
+  flatbuffers::root_unchecked::<PLDCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed PLD and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed PLDCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `PLD`.
-pub unsafe fn size_prefixed_root_as_PLD_unchecked(buf: &[u8]) -> PLD {
-  flatbuffers::size_prefixed_root_unchecked::<PLD>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `PLDCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_PLDCOLLECTION_unchecked(buf: &[u8]) -> PLDCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<PLDCOLLECTION>(buf)
 }
-pub const PLD_IDENTIFIER: &str = "$PLD";
+pub const PLDCOLLECTION_IDENTIFIER: &str = "$PLD";
 
 #[inline]
-pub fn PLD_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, PLD_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn PLD_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, PLD_IDENTIFIER, true)
+pub fn PLDCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, PLDCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_PLD_buffer<'a, 'b>(
+pub fn PLDCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, PLDCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_PLDCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<PLD<'a>>) {
-  fbb.finish(root, Some(PLD_IDENTIFIER));
+    root: flatbuffers::WIPOffset<PLDCOLLECTION<'a>>) {
+  fbb.finish(root, Some(PLDCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_PLD_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PLD<'a>>) {
-  fbb.finish_size_prefixed(root, Some(PLD_IDENTIFIER));
+pub fn finish_size_prefixed_PLDCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PLDCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(PLDCOLLECTION_IDENTIFIER));
 }

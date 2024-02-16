@@ -14,6 +14,7 @@ public struct TDMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static TDMCOLLECTION GetRootAsTDMCOLLECTION(ByteBuffer _bb) { return GetRootAsTDMCOLLECTION(_bb, new TDMCOLLECTION()); }
   public static TDMCOLLECTION GetRootAsTDMCOLLECTION(ByteBuffer _bb, TDMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool TDMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$TDM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TDMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct TDMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<TDMCOLLECTION>(o);
   }
+  public static void FinishTDMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<TDMCOLLECTION> offset) { builder.Finish(offset.Value, "$TDM"); }
+  public static void FinishSizePrefixedTDMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<TDMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$TDM"); }
   public TDMCOLLECTIONT UnPack() {
     var _o = new TDMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class TDMCOLLECTIONT
 
   public TDMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static TDMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return TDMCOLLECTION.GetRootAsTDMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    TDMCOLLECTION.FinishTDMCOLLECTIONBuffer(fbb, TDMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

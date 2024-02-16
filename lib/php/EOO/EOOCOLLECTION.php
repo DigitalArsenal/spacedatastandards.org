@@ -123,4 +123,9 @@ class EOOCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishEOOCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$EOO");
+    }
 }

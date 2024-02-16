@@ -124,4 +124,9 @@ class CSMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishCSMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$CSM");
+    }
 }

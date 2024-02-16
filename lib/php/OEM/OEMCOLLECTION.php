@@ -125,4 +125,9 @@ class OEMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishOEMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$OEM");
+    }
 }

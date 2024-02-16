@@ -745,7 +745,6 @@ class TDM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TDM")
         fun createTDM(builder: FlatBufferBuilder, OBSERVER_IDOffset: Int, OBSERVER_X: Double, OBSERVER_Y: Double, OBSERVER_Z: Double, OBSERVER_VX: Double, OBSERVER_VY: Double, OBSERVER_VZ: Double, OBSERVER_POSITION_REFERENCE_FRAME: Byte, OBS_REFERENCE_FRAME: Byte, EPOCHOffset: Int, CCSDS_TDM_VERSOffset: Int, COMMENTOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, META_STARTOffset: Int, TIME_SYSTEMOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, PARTICIPANT_1Offset: Int, PARTICIPANT_2Offset: Int, PARTICIPANT_3Offset: Int, MODEOffset: Int, PATH_1: UShort, PATH_2: UShort, TRANSMIT_BANDOffset: Int, RECEIVE_BANDOffset: Int, INTEGRATION_INTERVAL: Float, INTEGRATION_REFOffset: Int, RECEIVE_DELAY_2: Double, RECEIVE_DELAY_3: Double, DATA_QUALITYOffset: Int, META_STOPOffset: Int, DATA_STARTOffset: Int, TRANSMIT_FREQ_1: Double, RECEIVE_FREQOffset: Int, DATA_STOPOffset: Int, TIMETAG_REFOffset: Int, ANGLE_TYPEOffset: Int, ANGLE_1Offset: Int, ANGLE_2Offset: Int, ANGLE_UNCERTAINTY_1: Float, ANGLE_UNCERTAINTY_2: Float, RANGE_RATE: Double, RANGE_UNCERTAINTY: Double, RANGE_MODEOffset: Int, RANGE_MODULUS: Double, CORRECTION_ANGLE_1: Float, CORRECTION_ANGLE_2: Float, CORRECTIONS_APPLIEDOffset: Int, TROPO_DRYOffset: Int, TROPO_WETOffset: Int, STECOffset: Int, PRESSUREOffset: Int, RHUMIDITYOffset: Int, TEMPERATUREOffset: Int, CLOCK_BIASOffset: Int, CLOCK_DRIFTOffset: Int) : Int {
             builder.startTable(57)
             addRANGE_MODULUS(builder, RANGE_MODULUS)
@@ -965,7 +964,5 @@ class TDM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TDM")
-        fun finishSizePrefixedTDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TDM")
     }
 }

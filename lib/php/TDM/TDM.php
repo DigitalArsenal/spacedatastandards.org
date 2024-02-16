@@ -1605,9 +1605,4 @@ class TDM extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishTDMBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$TDM");
-    }
 }

@@ -2289,85 +2289,85 @@ impl OMMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `OMM`
+/// Verifies that a buffer of bytes contains a `OMMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OMM_unchecked`.
-pub fn root_as_OMM(buf: &[u8]) -> Result<OMM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<OMM>(buf)
+/// `root_as_OMMCOLLECTION_unchecked`.
+pub fn root_as_OMMCOLLECTION(buf: &[u8]) -> Result<OMMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<OMMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `OMM` and returns it.
+/// `OMMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_OMM_unchecked`.
-pub fn size_prefixed_root_as_OMM(buf: &[u8]) -> Result<OMM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<OMM>(buf)
+/// `size_prefixed_root_as_OMMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_OMMCOLLECTION(buf: &[u8]) -> Result<OMMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<OMMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `OMM` and returns it.
+/// contains a `OMMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OMM_unchecked`.
-pub fn root_as_OMM_with_opts<'b, 'o>(
+/// `root_as_OMMCOLLECTION_unchecked`.
+pub fn root_as_OMMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<OMM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<OMM<'b>>(opts, buf)
+) -> Result<OMMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<OMMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `OMM` and returns
+/// bytes contains a size prefixed `OMMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OMM_unchecked`.
-pub fn size_prefixed_root_as_OMM_with_opts<'b, 'o>(
+/// `root_as_OMMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_OMMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<OMM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<OMM<'b>>(opts, buf)
+) -> Result<OMMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<OMMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a OMM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a OMMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `OMM`.
-pub unsafe fn root_as_OMM_unchecked(buf: &[u8]) -> OMM {
-  flatbuffers::root_unchecked::<OMM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `OMMCOLLECTION`.
+pub unsafe fn root_as_OMMCOLLECTION_unchecked(buf: &[u8]) -> OMMCOLLECTION {
+  flatbuffers::root_unchecked::<OMMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed OMM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed OMMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `OMM`.
-pub unsafe fn size_prefixed_root_as_OMM_unchecked(buf: &[u8]) -> OMM {
-  flatbuffers::size_prefixed_root_unchecked::<OMM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `OMMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_OMMCOLLECTION_unchecked(buf: &[u8]) -> OMMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<OMMCOLLECTION>(buf)
 }
-pub const OMM_IDENTIFIER: &str = "$OMM";
+pub const OMMCOLLECTION_IDENTIFIER: &str = "$OMM";
 
 #[inline]
-pub fn OMM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, OMM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn OMM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, OMM_IDENTIFIER, true)
+pub fn OMMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, OMMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_OMM_buffer<'a, 'b>(
+pub fn OMMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, OMMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_OMMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<OMM<'a>>) {
-  fbb.finish(root, Some(OMM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<OMMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(OMMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_OMM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OMM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(OMM_IDENTIFIER));
+pub fn finish_size_prefixed_OMMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OMMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(OMMCOLLECTION_IDENTIFIER));
 }

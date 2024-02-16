@@ -14,7 +14,6 @@ public struct CAT : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CAT GetRootAsCAT(ByteBuffer _bb) { return GetRootAsCAT(_bb, new CAT()); }
   public static CAT GetRootAsCAT(ByteBuffer _bb, CAT obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool CATBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CAT"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CAT __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -198,8 +197,6 @@ public struct CAT : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CAT>(o);
   }
-  public static void FinishCATBuffer(FlatBufferBuilder builder, Offset<CAT> offset) { builder.Finish(offset.Value, "$CAT"); }
-  public static void FinishSizePrefixedCATBuffer(FlatBufferBuilder builder, Offset<CAT> offset) { builder.FinishSizePrefixed(offset.Value, "$CAT"); }
   public CATT UnPack() {
     var _o = new CATT();
     this.UnPackTo(_o);
@@ -325,14 +322,6 @@ public class CATT
     this.MASS = 0.0;
     this.MASS_TYPE = massType.DRY;
     this.PAYLOADS = null;
-  }
-  public static CATT DeserializeFromBinary(byte[] fbBuffer) {
-    return CAT.GetRootAsCAT(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    CAT.FinishCATBuffer(fbb, CAT.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

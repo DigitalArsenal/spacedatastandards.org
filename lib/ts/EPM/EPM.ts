@@ -31,10 +31,6 @@ static getSizePrefixedRootAsEPM(bb:flatbuffers.ByteBuffer, obj?:EPM):EPM {
   return (obj || new EPM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$EPM');
-}
-
 /**
  * Common name of the entity (person or organization)
  */
@@ -271,14 +267,6 @@ static addHasOccupation(builder:flatbuffers.Builder, HAS_OCCUPATIONOffset:flatbu
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishEPMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$EPM');
-}
-
-static finishSizePrefixedEPMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$EPM', true);
 }
 
 

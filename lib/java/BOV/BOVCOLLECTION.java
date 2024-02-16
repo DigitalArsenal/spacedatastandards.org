@@ -22,6 +22,7 @@ public final class BOVCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static BOVCOLLECTION getRootAsBOVCOLLECTION(ByteBuffer _bb) { return getRootAsBOVCOLLECTION(_bb, new BOVCOLLECTION()); }
   public static BOVCOLLECTION getRootAsBOVCOLLECTION(ByteBuffer _bb, BOVCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean BOVCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$BOV"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public BOVCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -46,6 +47,8 @@ public final class BOVCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishBOVCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$BOV"); }
+  public static void finishSizePrefixedBOVCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$BOV"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

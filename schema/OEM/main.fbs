@@ -197,5 +197,5 @@ table OEMCOLLECTION {
   RECORDS:[OEM];
 }
 
-root_type OEM;
+root_type OEMCOLLECTION;
 file_identifier "$OEM";

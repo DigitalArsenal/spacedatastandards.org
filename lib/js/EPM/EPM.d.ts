@@ -14,7 +14,6 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): EPM;
     static getRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
     static getSizePrefixedRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Common name of the entity (person or organization)
      */
@@ -104,8 +103,6 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static addEntity(builder: flatbuffers.Builder, ENTITYOffset: flatbuffers.Offset): void;
     static addHasOccupation(builder: flatbuffers.Builder, HAS_OCCUPATIONOffset: flatbuffers.Offset): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     unpack(): EPMT;
     unpackTo(_o: EPMT): void;
 }

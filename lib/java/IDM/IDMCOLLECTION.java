@@ -25,6 +25,7 @@ public final class IDMCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static IDMCOLLECTION getRootAsIDMCOLLECTION(ByteBuffer _bb) { return getRootAsIDMCOLLECTION(_bb, new IDMCOLLECTION()); }
   public static IDMCOLLECTION getRootAsIDMCOLLECTION(ByteBuffer _bb, IDMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean IDMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$IDM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public IDMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -49,6 +50,8 @@ public final class IDMCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishIDMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$IDM"); }
+  public static void finishSizePrefixedIDMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$IDM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

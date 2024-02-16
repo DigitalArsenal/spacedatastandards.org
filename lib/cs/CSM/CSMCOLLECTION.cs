@@ -13,6 +13,7 @@ public struct CSMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CSMCOLLECTION GetRootAsCSMCOLLECTION(ByteBuffer _bb) { return GetRootAsCSMCOLLECTION(_bb, new CSMCOLLECTION()); }
   public static CSMCOLLECTION GetRootAsCSMCOLLECTION(ByteBuffer _bb, CSMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool CSMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CSM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CSMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct CSMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CSMCOLLECTION>(o);
   }
+  public static void FinishCSMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<CSMCOLLECTION> offset) { builder.Finish(offset.Value, "$CSM"); }
+  public static void FinishSizePrefixedCSMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<CSMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$CSM"); }
   public CSMCOLLECTIONT UnPack() {
     var _o = new CSMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class CSMCOLLECTIONT
 
   public CSMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static CSMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return CSMCOLLECTION.GetRootAsCSMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    CSMCOLLECTION.FinishCSMCOLLECTIONBuffer(fbb, CSMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

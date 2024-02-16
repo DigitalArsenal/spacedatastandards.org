@@ -639,48 +639,48 @@ inline ::flatbuffers::Offset<CATCOLLECTION> CreateCATCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const CAT *GetCAT(const void *buf) {
-  return ::flatbuffers::GetRoot<CAT>(buf);
+inline const CATCOLLECTION *GetCATCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<CATCOLLECTION>(buf);
 }
 
-inline const CAT *GetSizePrefixedCAT(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<CAT>(buf);
+inline const CATCOLLECTION *GetSizePrefixedCATCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CATCOLLECTION>(buf);
 }
 
-inline const char *CATIdentifier() {
+inline const char *CATCOLLECTIONIdentifier() {
   return "$CAT";
 }
 
-inline bool CATBufferHasIdentifier(const void *buf) {
+inline bool CATCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CATIdentifier());
+      buf, CATCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedCATBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCATCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CATIdentifier(), true);
+      buf, CATCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyCATBuffer(
+inline bool VerifyCATCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CAT>(CATIdentifier());
+  return verifier.VerifyBuffer<CATCOLLECTION>(CATCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedCATBuffer(
+inline bool VerifySizePrefixedCATCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CAT>(CATIdentifier());
+  return verifier.VerifySizePrefixedBuffer<CATCOLLECTION>(CATCOLLECTIONIdentifier());
 }
 
-inline void FinishCATBuffer(
+inline void FinishCATCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CAT> root) {
-  fbb.Finish(root, CATIdentifier());
+    ::flatbuffers::Offset<CATCOLLECTION> root) {
+  fbb.Finish(root, CATCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedCATBuffer(
+inline void FinishSizePrefixedCATCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CAT> root) {
-  fbb.FinishSizePrefixed(root, CATIdentifier());
+    ::flatbuffers::Offset<CATCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, CATCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

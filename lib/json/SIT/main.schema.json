@@ -336,5 +336,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/SIT"
+  "$ref" : "#/definitions/SITCOLLECTION"
 }

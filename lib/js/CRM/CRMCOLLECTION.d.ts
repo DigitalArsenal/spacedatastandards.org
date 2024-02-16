@@ -9,6 +9,7 @@ export declare class CRMCOLLECTION implements flatbuffers.IUnpackableObject<CRMC
     __init(i: number, bb: flatbuffers.ByteBuffer): CRMCOLLECTION;
     static getRootAsCRMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CRMCOLLECTION): CRMCOLLECTION;
     static getSizePrefixedRootAsCRMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CRMCOLLECTION): CRMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: CRM): CRM | null;
     recordsLength(): number;
     static startCRMCOLLECTION(builder: flatbuffers.Builder): void;
@@ -16,6 +17,8 @@ export declare class CRMCOLLECTION implements flatbuffers.IUnpackableObject<CRMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCRMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCRMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCRMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCRMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CRMCOLLECTIONT;
     unpackTo(_o: CRMCOLLECTIONT): void;

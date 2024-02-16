@@ -12,7 +12,6 @@ export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): CDM;
     static getRootAsCDM(bb: flatbuffers.ByteBuffer, obj?: CDM): CDM;
     static getSizePrefixedRootAsCDM(bb: flatbuffers.ByteBuffer, obj?: CDM): CDM;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * The version of the CCSDS CDM standard used
      */
@@ -170,8 +169,6 @@ export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
     static addObject1Datasource(builder: flatbuffers.Builder, OBJECT1_DATASOURCEOffset: flatbuffers.Offset): void;
     static addObject2Datasource(builder: flatbuffers.Builder, OBJECT2_DATASOURCEOffset: flatbuffers.Offset): void;
     static endCDM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishCDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedCDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     unpack(): CDMT;
     unpackTo(_o: CDMT): void;
 }

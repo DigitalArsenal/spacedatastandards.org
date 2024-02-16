@@ -12,6 +12,7 @@ export declare class MPECOLLECTION implements flatbuffers.IUnpackableObject<MPEC
     __init(i: number, bb: flatbuffers.ByteBuffer): MPECOLLECTION;
     static getRootAsMPECOLLECTION(bb: flatbuffers.ByteBuffer, obj?: MPECOLLECTION): MPECOLLECTION;
     static getSizePrefixedRootAsMPECOLLECTION(bb: flatbuffers.ByteBuffer, obj?: MPECOLLECTION): MPECOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Default value = U
      */
@@ -48,6 +49,8 @@ export declare class MPECOLLECTION implements flatbuffers.IUnpackableObject<MPEC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endMPECOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishMPECOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedMPECOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createMPECOLLECTION(builder: flatbuffers.Builder, CLASSIFICATION_TYPEOffset: flatbuffers.Offset, REF_FRAME: referenceFrame, REF_FRAME_EPOCH: number, TIME_SYSTEM: timeSystem, MEAN_ELEMENT_THEORY: meanElementTheory, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): MPECOLLECTIONT;
     unpackTo(_o: MPECOLLECTIONT): void;

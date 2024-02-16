@@ -8,7 +8,6 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): PNM;
     static getRootAsPNM(bb: flatbuffers.ByteBuffer, obj?: PNM): PNM;
     static getSizePrefixedRootAsPNM(bb: flatbuffers.ByteBuffer, obj?: PNM): PNM;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * IPFS Content Identifier (CID)
      * The hash of a file stored on the InterPlanetary File System (IPFS).
@@ -147,8 +146,6 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     static addAvaxDigitalSignature(builder: flatbuffers.Builder, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
     static addSolDigitalSignature(builder: flatbuffers.Builder, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
     static endPNM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishPNMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedPNMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createPNM(builder: flatbuffers.Builder, IPFS_CIDOffset: flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PNMT;
     unpackTo(_o: PNMT): void;

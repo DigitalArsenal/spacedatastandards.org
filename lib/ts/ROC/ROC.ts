@@ -27,10 +27,6 @@ static getSizePrefixedRootAsROC(bb:flatbuffers.ByteBuffer, obj?:ROC):ROC {
   return (obj || new ROC()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$ROC');
-}
-
 /**
  * Rocket Name
  */
@@ -138,14 +134,6 @@ static startSustainersVector(builder:flatbuffers.Builder, numElems:number) {
 static endROC(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishROCBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$ROC');
-}
-
-static finishSizePrefixedROCBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$ROC', true);
 }
 
 static createROC(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, FAMILYOffset:flatbuffers.Offset, VARIANTOffset:flatbuffers.Offset, STAGESOffset:flatbuffers.Offset, SUSTAINERSOffset:flatbuffers.Offset):flatbuffers.Offset {

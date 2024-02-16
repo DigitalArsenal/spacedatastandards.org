@@ -588,7 +588,6 @@ class OMM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
         fun createOMM(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CENTER_NAMEOffset: Int, REF_FRAME: Byte, REF_FRAME_EPOCHOffset: Int, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, COMMENTOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, GM: Double, MASS: Double, SOLAR_RAD_AREA: Double, SOLAR_RAD_COEFF: Double, DRAG_AREA: Double, DRAG_COEFF: Double, EPHEMERIS_TYPE: Byte, CLASSIFICATION_TYPEOffset: Int, NORAD_CAT_ID: UInt, ELEMENT_SET_NO: UInt, REV_AT_EPOCH: Double, BSTAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, COV_REF_FRAME: Byte, CX_X: Double, CY_X: Double, CY_Y: Double, CZ_X: Double, CZ_Y: Double, CZ_Z: Double, CX_DOT_X: Double, CX_DOT_Y: Double, CX_DOT_Z: Double, CX_DOT_X_DOT: Double, CY_DOT_X: Double, CY_DOT_Y: Double, CY_DOT_Z: Double, CY_DOT_X_DOT: Double, CY_DOT_Y_DOT: Double, CZ_DOT_X: Double, CZ_DOT_Y: Double, CZ_DOT_Z: Double, CZ_DOT_X_DOT: Double, CZ_DOT_Y_DOT: Double, CZ_DOT_Z_DOT: Double, USER_DEFINED_BIP_0044_TYPE: UInt, USER_DEFINED_OBJECT_DESIGNATOROffset: Int, USER_DEFINED_EARTH_MODELOffset: Int, USER_DEFINED_EPOCH_TIMESTAMP: Double, USER_DEFINED_MICROSECONDS: Double) : Int {
             builder.startTable(60)
             addUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
@@ -718,7 +717,5 @@ class OMM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OMM")
-        fun finishSizePrefixedOMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OMM")
     }
 }

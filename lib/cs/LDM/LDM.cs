@@ -14,7 +14,6 @@ public struct LDM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static LDM GetRootAsLDM(ByteBuffer _bb) { return GetRootAsLDM(_bb, new LDM()); }
   public static LDM GetRootAsLDM(ByteBuffer _bb, LDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool LDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$LDM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -308,8 +307,6 @@ public struct LDM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<LDM>(o);
   }
-  public static void FinishLDMBuffer(FlatBufferBuilder builder, Offset<LDM> offset) { builder.Finish(offset.Value, "$LDM"); }
-  public static void FinishSizePrefixedLDMBuffer(FlatBufferBuilder builder, Offset<LDM> offset) { builder.FinishSizePrefixed(offset.Value, "$LDM"); }
   public LDMT UnPack() {
     var _o = new LDMT();
     this.UnPackTo(_o);
@@ -528,14 +525,6 @@ public class LDMT
     this.COLA_POINTS_OF_CONTACT = null;
     this.ORBITAL_PARAMETERS = null;
     this.BURN_OUT_VECTORS = null;
-  }
-  public static LDMT DeserializeFromBinary(byte[] fbBuffer) {
-    return LDM.GetRootAsLDM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    LDM.FinishLDMBuffer(fbb, LDM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

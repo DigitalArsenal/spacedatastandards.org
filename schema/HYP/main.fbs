@@ -40,5 +40,5 @@ table HYPCOLLECTION {
     RECORDS: [HYP];
 }
 
-root_type HYP;
+root_type HYPCOLLECTION;
 file_identifier "$HYP";

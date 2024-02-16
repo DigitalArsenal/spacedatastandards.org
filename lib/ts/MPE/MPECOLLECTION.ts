@@ -29,6 +29,10 @@ static getSizePrefixedRootAsMPECOLLECTION(bb:flatbuffers.ByteBuffer, obj?:MPECOL
   return (obj || new MPECOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$MPE');
+}
+
 /**
  * Default value = U
  */
@@ -127,6 +131,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endMPECOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishMPECOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$MPE');
+}
+
+static finishSizePrefixedMPECOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$MPE', true);
 }
 
 static createMPECOLLECTION(builder:flatbuffers.Builder, CLASSIFICATION_TYPEOffset:flatbuffers.Offset, REF_FRAME:referenceFrame, REF_FRAME_EPOCH:number, TIME_SYSTEM:timeSystem, MEAN_ELEMENT_THEORY:meanElementTheory, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

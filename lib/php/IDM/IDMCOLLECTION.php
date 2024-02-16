@@ -124,4 +124,9 @@ class IDMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishIDMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$IDM");
+    }
 }

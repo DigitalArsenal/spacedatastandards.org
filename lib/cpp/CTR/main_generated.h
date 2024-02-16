@@ -229,48 +229,48 @@ inline ::flatbuffers::Offset<CTRCOLLECTION> CreateCTRCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const CTR *GetCTR(const void *buf) {
-  return ::flatbuffers::GetRoot<CTR>(buf);
+inline const CTRCOLLECTION *GetCTRCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<CTRCOLLECTION>(buf);
 }
 
-inline const CTR *GetSizePrefixedCTR(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<CTR>(buf);
+inline const CTRCOLLECTION *GetSizePrefixedCTRCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CTRCOLLECTION>(buf);
 }
 
-inline const char *CTRIdentifier() {
+inline const char *CTRCOLLECTIONIdentifier() {
   return "$CTR";
 }
 
-inline bool CTRBufferHasIdentifier(const void *buf) {
+inline bool CTRCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CTRIdentifier());
+      buf, CTRCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedCTRBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCTRCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CTRIdentifier(), true);
+      buf, CTRCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyCTRBuffer(
+inline bool VerifyCTRCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CTR>(CTRIdentifier());
+  return verifier.VerifyBuffer<CTRCOLLECTION>(CTRCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedCTRBuffer(
+inline bool VerifySizePrefixedCTRCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CTR>(CTRIdentifier());
+  return verifier.VerifySizePrefixedBuffer<CTRCOLLECTION>(CTRCOLLECTIONIdentifier());
 }
 
-inline void FinishCTRBuffer(
+inline void FinishCTRCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CTR> root) {
-  fbb.Finish(root, CTRIdentifier());
+    ::flatbuffers::Offset<CTRCOLLECTION> root) {
+  fbb.Finish(root, CTRCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedCTRBuffer(
+inline void FinishSizePrefixedCTRCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CTR> root) {
-  fbb.FinishSizePrefixed(root, CTRIdentifier());
+    ::flatbuffers::Offset<CTRCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, CTRCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

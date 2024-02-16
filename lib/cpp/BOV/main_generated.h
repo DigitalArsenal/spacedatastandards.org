@@ -207,48 +207,48 @@ inline ::flatbuffers::Offset<BOVCOLLECTION> CreateBOVCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const BOV *GetBOV(const void *buf) {
-  return ::flatbuffers::GetRoot<BOV>(buf);
+inline const BOVCOLLECTION *GetBOVCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<BOVCOLLECTION>(buf);
 }
 
-inline const BOV *GetSizePrefixedBOV(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<BOV>(buf);
+inline const BOVCOLLECTION *GetSizePrefixedBOVCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<BOVCOLLECTION>(buf);
 }
 
-inline const char *BOVIdentifier() {
+inline const char *BOVCOLLECTIONIdentifier() {
   return "$BOV";
 }
 
-inline bool BOVBufferHasIdentifier(const void *buf) {
+inline bool BOVCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, BOVIdentifier());
+      buf, BOVCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedBOVBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedBOVCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, BOVIdentifier(), true);
+      buf, BOVCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyBOVBuffer(
+inline bool VerifyBOVCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<BOV>(BOVIdentifier());
+  return verifier.VerifyBuffer<BOVCOLLECTION>(BOVCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedBOVBuffer(
+inline bool VerifySizePrefixedBOVCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<BOV>(BOVIdentifier());
+  return verifier.VerifySizePrefixedBuffer<BOVCOLLECTION>(BOVCOLLECTIONIdentifier());
 }
 
-inline void FinishBOVBuffer(
+inline void FinishBOVCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<BOV> root) {
-  fbb.Finish(root, BOVIdentifier());
+    ::flatbuffers::Offset<BOVCOLLECTION> root) {
+  fbb.Finish(root, BOVCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedBOVBuffer(
+inline void FinishSizePrefixedBOVCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<BOV> root) {
-  fbb.FinishSizePrefixed(root, BOVIdentifier());
+    ::flatbuffers::Offset<BOVCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, BOVCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

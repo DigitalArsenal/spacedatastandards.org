@@ -25,7 +25,6 @@ public final class TDM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static TDM getRootAsTDM(ByteBuffer _bb) { return getRootAsTDM(_bb, new TDM()); }
   public static TDM getRootAsTDM(ByteBuffer _bb, TDM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean TDMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$TDM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public TDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -571,8 +570,6 @@ public final class TDM extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishTDMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$TDM"); }
-  public static void finishSizePrefixedTDMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$TDM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

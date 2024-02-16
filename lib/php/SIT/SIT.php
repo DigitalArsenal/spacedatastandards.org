@@ -592,9 +592,4 @@ class SIT extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishSITBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$SIT");
-    }
 }

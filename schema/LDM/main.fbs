@@ -94,5 +94,5 @@ table LDMCOLLECTION {
   RECORDS: [LDM];
 }
 
-root_type LDM;
+root_type LDMCOLLECTION;
 file_identifier "$LDM";

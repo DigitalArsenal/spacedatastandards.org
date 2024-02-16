@@ -261,5 +261,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/OEM"
+  "$ref" : "#/definitions/OEMCOLLECTION"
 }

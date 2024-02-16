@@ -124,4 +124,9 @@ class PLDCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishPLDCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$PLD");
+    }
 }

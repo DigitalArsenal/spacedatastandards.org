@@ -606,5 +606,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CDM"
+  "$ref" : "#/definitions/CDMCOLLECTION"
 }

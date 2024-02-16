@@ -242,5 +242,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/PLD"
+  "$ref" : "#/definitions/PLDCOLLECTION"
 }

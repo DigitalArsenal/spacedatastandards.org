@@ -10,6 +10,7 @@ export declare class PNMCOLLECTION implements flatbuffers.IUnpackableObject<PNMC
     __init(i: number, bb: flatbuffers.ByteBuffer): PNMCOLLECTION;
     static getRootAsPNMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: PNMCOLLECTION): PNMCOLLECTION;
     static getSizePrefixedRootAsPNMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: PNMCOLLECTION): PNMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: PNM): PNM | null;
     recordsLength(): number;
     static startPNMCOLLECTION(builder: flatbuffers.Builder): void;
@@ -17,6 +18,8 @@ export declare class PNMCOLLECTION implements flatbuffers.IUnpackableObject<PNMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPNMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishPNMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedPNMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createPNMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PNMCOLLECTIONT;
     unpackTo(_o: PNMCOLLECTIONT): void;

@@ -23,6 +23,10 @@ static getSizePrefixedRootAsEOOCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:EOOCOL
   return (obj || new EOOCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$EOO');
+}
+
 RECORDS(index: number, obj?:EOO):EOO|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new EOO()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -56,6 +60,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endEOOCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishEOOCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EOO');
+}
+
+static finishSizePrefixedEOOCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EOO', true);
 }
 
 static createEOOCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

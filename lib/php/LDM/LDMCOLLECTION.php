@@ -124,4 +124,9 @@ class LDMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishLDMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$LDM");
+    }
 }

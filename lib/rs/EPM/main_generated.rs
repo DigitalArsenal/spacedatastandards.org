@@ -2158,85 +2158,85 @@ impl EPMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `EPM`
+/// Verifies that a buffer of bytes contains a `EPMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EPM_unchecked`.
-pub fn root_as_EPM(buf: &[u8]) -> Result<EPM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<EPM>(buf)
+/// `root_as_EPMCOLLECTION_unchecked`.
+pub fn root_as_EPMCOLLECTION(buf: &[u8]) -> Result<EPMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<EPMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `EPM` and returns it.
+/// `EPMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_EPM_unchecked`.
-pub fn size_prefixed_root_as_EPM(buf: &[u8]) -> Result<EPM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<EPM>(buf)
+/// `size_prefixed_root_as_EPMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_EPMCOLLECTION(buf: &[u8]) -> Result<EPMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<EPMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `EPM` and returns it.
+/// contains a `EPMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EPM_unchecked`.
-pub fn root_as_EPM_with_opts<'b, 'o>(
+/// `root_as_EPMCOLLECTION_unchecked`.
+pub fn root_as_EPMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EPM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<EPM<'b>>(opts, buf)
+) -> Result<EPMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<EPMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `EPM` and returns
+/// bytes contains a size prefixed `EPMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EPM_unchecked`.
-pub fn size_prefixed_root_as_EPM_with_opts<'b, 'o>(
+/// `root_as_EPMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_EPMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EPM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<EPM<'b>>(opts, buf)
+) -> Result<EPMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<EPMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a EPM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a EPMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `EPM`.
-pub unsafe fn root_as_EPM_unchecked(buf: &[u8]) -> EPM {
-  flatbuffers::root_unchecked::<EPM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `EPMCOLLECTION`.
+pub unsafe fn root_as_EPMCOLLECTION_unchecked(buf: &[u8]) -> EPMCOLLECTION {
+  flatbuffers::root_unchecked::<EPMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed EPM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed EPMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `EPM`.
-pub unsafe fn size_prefixed_root_as_EPM_unchecked(buf: &[u8]) -> EPM {
-  flatbuffers::size_prefixed_root_unchecked::<EPM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `EPMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_EPMCOLLECTION_unchecked(buf: &[u8]) -> EPMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<EPMCOLLECTION>(buf)
 }
-pub const EPM_IDENTIFIER: &str = "$EPM";
+pub const EPMCOLLECTION_IDENTIFIER: &str = "$EPM";
 
 #[inline]
-pub fn EPM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EPM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn EPM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EPM_IDENTIFIER, true)
+pub fn EPMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EPMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_EPM_buffer<'a, 'b>(
+pub fn EPMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EPMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_EPMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<EPM<'a>>) {
-  fbb.finish(root, Some(EPM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<EPMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(EPMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EPM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EPM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(EPM_IDENTIFIER));
+pub fn finish_size_prefixed_EPMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EPMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(EPMCOLLECTION_IDENTIFIER));
 }

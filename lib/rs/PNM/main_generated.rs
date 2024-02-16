@@ -756,85 +756,85 @@ impl PNMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `PNM`
+/// Verifies that a buffer of bytes contains a `PNMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PNM_unchecked`.
-pub fn root_as_PNM(buf: &[u8]) -> Result<PNM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<PNM>(buf)
+/// `root_as_PNMCOLLECTION_unchecked`.
+pub fn root_as_PNMCOLLECTION(buf: &[u8]) -> Result<PNMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<PNMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `PNM` and returns it.
+/// `PNMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_PNM_unchecked`.
-pub fn size_prefixed_root_as_PNM(buf: &[u8]) -> Result<PNM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<PNM>(buf)
+/// `size_prefixed_root_as_PNMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_PNMCOLLECTION(buf: &[u8]) -> Result<PNMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<PNMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `PNM` and returns it.
+/// contains a `PNMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PNM_unchecked`.
-pub fn root_as_PNM_with_opts<'b, 'o>(
+/// `root_as_PNMCOLLECTION_unchecked`.
+pub fn root_as_PNMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PNM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<PNM<'b>>(opts, buf)
+) -> Result<PNMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<PNMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `PNM` and returns
+/// bytes contains a size prefixed `PNMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PNM_unchecked`.
-pub fn size_prefixed_root_as_PNM_with_opts<'b, 'o>(
+/// `root_as_PNMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_PNMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PNM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<PNM<'b>>(opts, buf)
+) -> Result<PNMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<PNMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a PNM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a PNMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `PNM`.
-pub unsafe fn root_as_PNM_unchecked(buf: &[u8]) -> PNM {
-  flatbuffers::root_unchecked::<PNM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `PNMCOLLECTION`.
+pub unsafe fn root_as_PNMCOLLECTION_unchecked(buf: &[u8]) -> PNMCOLLECTION {
+  flatbuffers::root_unchecked::<PNMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed PNM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed PNMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `PNM`.
-pub unsafe fn size_prefixed_root_as_PNM_unchecked(buf: &[u8]) -> PNM {
-  flatbuffers::size_prefixed_root_unchecked::<PNM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `PNMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_PNMCOLLECTION_unchecked(buf: &[u8]) -> PNMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<PNMCOLLECTION>(buf)
 }
-pub const PNM_IDENTIFIER: &str = "$PNM";
+pub const PNMCOLLECTION_IDENTIFIER: &str = "$PNM";
 
 #[inline]
-pub fn PNM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, PNM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn PNM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, PNM_IDENTIFIER, true)
+pub fn PNMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, PNMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_PNM_buffer<'a, 'b>(
+pub fn PNMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, PNMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_PNMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<PNM<'a>>) {
-  fbb.finish(root, Some(PNM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<PNMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(PNMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_PNM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PNM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(PNM_IDENTIFIER));
+pub fn finish_size_prefixed_PNMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PNMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(PNMCOLLECTION_IDENTIFIER));
 }

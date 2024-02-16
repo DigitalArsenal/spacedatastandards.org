@@ -187,9 +187,4 @@ class OSM extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishOSMBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$OSM");
-    }
 }

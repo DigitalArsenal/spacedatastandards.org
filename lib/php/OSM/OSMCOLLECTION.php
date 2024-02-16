@@ -123,4 +123,9 @@ class OSMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishOSMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$OSM");
+    }
 }

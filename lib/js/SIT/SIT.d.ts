@@ -11,7 +11,6 @@ export declare class SIT implements flatbuffers.IUnpackableObject<SITT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): SIT;
     static getRootAsSIT(bb: flatbuffers.ByteBuffer, obj?: SIT): SIT;
     static getSizePrefixedRootAsSIT(bb: flatbuffers.ByteBuffer, obj?: SIT): SIT;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Unique identifier for the site, BE_NUMBER
      */
@@ -161,8 +160,6 @@ export declare class SIT implements flatbuffers.IUnpackableObject<SITT> {
     static createIntegratedDevicesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startIntegratedDevicesVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSIT(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishSITBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedSITBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     unpack(): SITT;
     unpackTo(_o: SITT): void;
 }

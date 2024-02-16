@@ -25,10 +25,6 @@ static getSizePrefixedRootAsOSM(bb:flatbuffers.ByteBuffer, obj?:OSM):OSM {
   return (obj || new OSM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$OSM');
-}
-
 /**
  * Indicates whether the observation is stable or not
  */
@@ -114,14 +110,6 @@ static addPassDuration(builder:flatbuffers.Builder, PASS_DURATION:number) {
 static endOSM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishOSMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$OSM');
-}
-
-static finishSizePrefixedOSMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$OSM', true);
 }
 
 static createOSM(builder:flatbuffers.Builder, IS_STABLE:boolean, NUM_OBS:number, OBJECT_IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, PASS_STARTOffset:flatbuffers.Offset, PASS_DURATION:number):flatbuffers.Offset {

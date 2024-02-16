@@ -997,5 +997,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/LDM"
+  "$ref" : "#/definitions/LDMCOLLECTION"
 }

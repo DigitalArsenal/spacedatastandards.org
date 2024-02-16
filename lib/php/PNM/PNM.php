@@ -410,9 +410,4 @@ class PNM extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishPNMBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$PNM");
-    }
 }

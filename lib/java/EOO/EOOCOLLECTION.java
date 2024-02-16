@@ -22,6 +22,7 @@ public final class EOOCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static EOOCOLLECTION getRootAsEOOCOLLECTION(ByteBuffer _bb) { return getRootAsEOOCOLLECTION(_bb, new EOOCOLLECTION()); }
   public static EOOCOLLECTION getRootAsEOOCOLLECTION(ByteBuffer _bb, EOOCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean EOOCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$EOO"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public EOOCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -46,6 +47,8 @@ public final class EOOCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishEOOCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$EOO"); }
+  public static void finishSizePrefixedEOOCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$EOO"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

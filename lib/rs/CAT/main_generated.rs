@@ -1332,85 +1332,85 @@ impl CATCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `CAT`
+/// Verifies that a buffer of bytes contains a `CATCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CAT_unchecked`.
-pub fn root_as_CAT(buf: &[u8]) -> Result<CAT, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<CAT>(buf)
+/// `root_as_CATCOLLECTION_unchecked`.
+pub fn root_as_CATCOLLECTION(buf: &[u8]) -> Result<CATCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<CATCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `CAT` and returns it.
+/// `CATCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_CAT_unchecked`.
-pub fn size_prefixed_root_as_CAT(buf: &[u8]) -> Result<CAT, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<CAT>(buf)
+/// `size_prefixed_root_as_CATCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CATCOLLECTION(buf: &[u8]) -> Result<CATCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<CATCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `CAT` and returns it.
+/// contains a `CATCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CAT_unchecked`.
-pub fn root_as_CAT_with_opts<'b, 'o>(
+/// `root_as_CATCOLLECTION_unchecked`.
+pub fn root_as_CATCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CAT<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<CAT<'b>>(opts, buf)
+) -> Result<CATCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<CATCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `CAT` and returns
+/// bytes contains a size prefixed `CATCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CAT_unchecked`.
-pub fn size_prefixed_root_as_CAT_with_opts<'b, 'o>(
+/// `root_as_CATCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CATCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CAT<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<CAT<'b>>(opts, buf)
+) -> Result<CATCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<CATCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a CAT and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CATCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `CAT`.
-pub unsafe fn root_as_CAT_unchecked(buf: &[u8]) -> CAT {
-  flatbuffers::root_unchecked::<CAT>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `CATCOLLECTION`.
+pub unsafe fn root_as_CATCOLLECTION_unchecked(buf: &[u8]) -> CATCOLLECTION {
+  flatbuffers::root_unchecked::<CATCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed CAT and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CATCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `CAT`.
-pub unsafe fn size_prefixed_root_as_CAT_unchecked(buf: &[u8]) -> CAT {
-  flatbuffers::size_prefixed_root_unchecked::<CAT>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CATCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_CATCOLLECTION_unchecked(buf: &[u8]) -> CATCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<CATCOLLECTION>(buf)
 }
-pub const CAT_IDENTIFIER: &str = "$CAT";
+pub const CATCOLLECTION_IDENTIFIER: &str = "$CAT";
 
 #[inline]
-pub fn CAT_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CAT_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn CAT_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CAT_IDENTIFIER, true)
+pub fn CATCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CATCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_CAT_buffer<'a, 'b>(
+pub fn CATCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CATCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_CATCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<CAT<'a>>) {
-  fbb.finish(root, Some(CAT_IDENTIFIER));
+    root: flatbuffers::WIPOffset<CATCOLLECTION<'a>>) {
+  fbb.finish(root, Some(CATCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CAT_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CAT<'a>>) {
-  fbb.finish_size_prefixed(root, Some(CAT_IDENTIFIER));
+pub fn finish_size_prefixed_CATCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CATCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CATCOLLECTION_IDENTIFIER));
 }

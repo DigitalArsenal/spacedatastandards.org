@@ -13,6 +13,7 @@ public struct CTRCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CTRCOLLECTION GetRootAsCTRCOLLECTION(ByteBuffer _bb) { return GetRootAsCTRCOLLECTION(_bb, new CTRCOLLECTION()); }
   public static CTRCOLLECTION GetRootAsCTRCOLLECTION(ByteBuffer _bb, CTRCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool CTRCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CTR"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CTRCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -37,6 +38,8 @@ public struct CTRCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CTRCOLLECTION>(o);
   }
+  public static void FinishCTRCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<CTRCOLLECTION> offset) { builder.Finish(offset.Value, "$CTR"); }
+  public static void FinishSizePrefixedCTRCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<CTRCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$CTR"); }
   public CTRCOLLECTIONT UnPack() {
     var _o = new CTRCOLLECTIONT();
     this.UnPackTo(_o);
@@ -66,6 +69,14 @@ public class CTRCOLLECTIONT
 
   public CTRCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static CTRCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return CTRCOLLECTION.GetRootAsCTRCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    CTRCOLLECTION.FinishCTRCOLLECTIONBuffer(fbb, CTRCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

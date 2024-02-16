@@ -13,6 +13,7 @@ public struct OSMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static OSMCOLLECTION GetRootAsOSMCOLLECTION(ByteBuffer _bb) { return GetRootAsOSMCOLLECTION(_bb, new OSMCOLLECTION()); }
   public static OSMCOLLECTION GetRootAsOSMCOLLECTION(ByteBuffer _bb, OSMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool OSMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OSM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OSMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -37,6 +38,8 @@ public struct OSMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<OSMCOLLECTION>(o);
   }
+  public static void FinishOSMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<OSMCOLLECTION> offset) { builder.Finish(offset.Value, "$OSM"); }
+  public static void FinishSizePrefixedOSMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<OSMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$OSM"); }
   public OSMCOLLECTIONT UnPack() {
     var _o = new OSMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -66,6 +69,14 @@ public class OSMCOLLECTIONT
 
   public OSMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static OSMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return OSMCOLLECTION.GetRootAsOSMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    OSMCOLLECTION.FinishOSMCOLLECTIONBuffer(fbb, OSMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

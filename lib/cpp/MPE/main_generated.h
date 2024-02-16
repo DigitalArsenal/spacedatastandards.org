@@ -473,48 +473,48 @@ inline ::flatbuffers::Offset<MPECOLLECTION> CreateMPECOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const MPE *GetMPE(const void *buf) {
-  return ::flatbuffers::GetRoot<MPE>(buf);
+inline const MPECOLLECTION *GetMPECOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<MPECOLLECTION>(buf);
 }
 
-inline const MPE *GetSizePrefixedMPE(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<MPE>(buf);
+inline const MPECOLLECTION *GetSizePrefixedMPECOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<MPECOLLECTION>(buf);
 }
 
-inline const char *MPEIdentifier() {
+inline const char *MPECOLLECTIONIdentifier() {
   return "$MPE";
 }
 
-inline bool MPEBufferHasIdentifier(const void *buf) {
+inline bool MPECOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, MPEIdentifier());
+      buf, MPECOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedMPEBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedMPECOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, MPEIdentifier(), true);
+      buf, MPECOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyMPEBuffer(
+inline bool VerifyMPECOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<MPE>(MPEIdentifier());
+  return verifier.VerifyBuffer<MPECOLLECTION>(MPECOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedMPEBuffer(
+inline bool VerifySizePrefixedMPECOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<MPE>(MPEIdentifier());
+  return verifier.VerifySizePrefixedBuffer<MPECOLLECTION>(MPECOLLECTIONIdentifier());
 }
 
-inline void FinishMPEBuffer(
+inline void FinishMPECOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MPE> root) {
-  fbb.Finish(root, MPEIdentifier());
+    ::flatbuffers::Offset<MPECOLLECTION> root) {
+  fbb.Finish(root, MPECOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedMPEBuffer(
+inline void FinishSizePrefixedMPECOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MPE> root) {
-  fbb.FinishSizePrefixed(root, MPEIdentifier());
+    ::flatbuffers::Offset<MPECOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, MPECOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

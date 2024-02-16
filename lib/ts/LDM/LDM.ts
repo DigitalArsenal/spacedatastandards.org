@@ -30,10 +30,6 @@ static getSizePrefixedRootAsLDM(bb:flatbuffers.ByteBuffer, obj?:LDM):LDM {
   return (obj || new LDM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$LDM');
-}
-
 /**
  * Launch Site Information
  */
@@ -590,14 +586,6 @@ static startBurnOutVectorsVector(builder:flatbuffers.Builder, numElems:number) {
 static endLDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishLDMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$LDM');
-}
-
-static finishSizePrefixedLDMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$LDM', true);
 }
 
 

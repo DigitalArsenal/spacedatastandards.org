@@ -9,6 +9,7 @@ export declare class PLDCOLLECTION implements flatbuffers.IUnpackableObject<PLDC
     __init(i: number, bb: flatbuffers.ByteBuffer): PLDCOLLECTION;
     static getRootAsPLDCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: PLDCOLLECTION): PLDCOLLECTION;
     static getSizePrefixedRootAsPLDCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: PLDCOLLECTION): PLDCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: PLD): PLD | null;
     recordsLength(): number;
     static startPLDCOLLECTION(builder: flatbuffers.Builder): void;
@@ -16,6 +17,8 @@ export declare class PLDCOLLECTION implements flatbuffers.IUnpackableObject<PLDC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPLDCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishPLDCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedPLDCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createPLDCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PLDCOLLECTIONT;
     unpackTo(_o: PLDCOLLECTIONT): void;

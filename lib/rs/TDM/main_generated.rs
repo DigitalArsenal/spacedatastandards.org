@@ -1936,85 +1936,85 @@ impl TDMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `TDM`
+/// Verifies that a buffer of bytes contains a `TDMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_TDM_unchecked`.
-pub fn root_as_TDM(buf: &[u8]) -> Result<TDM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<TDM>(buf)
+/// `root_as_TDMCOLLECTION_unchecked`.
+pub fn root_as_TDMCOLLECTION(buf: &[u8]) -> Result<TDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<TDMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `TDM` and returns it.
+/// `TDMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_TDM_unchecked`.
-pub fn size_prefixed_root_as_TDM(buf: &[u8]) -> Result<TDM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<TDM>(buf)
+/// `size_prefixed_root_as_TDMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_TDMCOLLECTION(buf: &[u8]) -> Result<TDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<TDMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `TDM` and returns it.
+/// contains a `TDMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_TDM_unchecked`.
-pub fn root_as_TDM_with_opts<'b, 'o>(
+/// `root_as_TDMCOLLECTION_unchecked`.
+pub fn root_as_TDMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TDM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<TDM<'b>>(opts, buf)
+) -> Result<TDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<TDMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `TDM` and returns
+/// bytes contains a size prefixed `TDMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_TDM_unchecked`.
-pub fn size_prefixed_root_as_TDM_with_opts<'b, 'o>(
+/// `root_as_TDMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_TDMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TDM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<TDM<'b>>(opts, buf)
+) -> Result<TDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<TDMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a TDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a TDMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `TDM`.
-pub unsafe fn root_as_TDM_unchecked(buf: &[u8]) -> TDM {
-  flatbuffers::root_unchecked::<TDM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `TDMCOLLECTION`.
+pub unsafe fn root_as_TDMCOLLECTION_unchecked(buf: &[u8]) -> TDMCOLLECTION {
+  flatbuffers::root_unchecked::<TDMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed TDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed TDMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `TDM`.
-pub unsafe fn size_prefixed_root_as_TDM_unchecked(buf: &[u8]) -> TDM {
-  flatbuffers::size_prefixed_root_unchecked::<TDM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `TDMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_TDMCOLLECTION_unchecked(buf: &[u8]) -> TDMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<TDMCOLLECTION>(buf)
 }
-pub const TDM_IDENTIFIER: &str = "$TDM";
+pub const TDMCOLLECTION_IDENTIFIER: &str = "$TDM";
 
 #[inline]
-pub fn TDM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, TDM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn TDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, TDM_IDENTIFIER, true)
+pub fn TDMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, TDMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_TDM_buffer<'a, 'b>(
+pub fn TDMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, TDMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_TDMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<TDM<'a>>) {
-  fbb.finish(root, Some(TDM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<TDMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(TDMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_TDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<TDM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(TDM_IDENTIFIER));
+pub fn finish_size_prefixed_TDMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<TDMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(TDMCOLLECTION_IDENTIFIER));
 }

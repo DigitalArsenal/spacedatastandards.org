@@ -243,5 +243,5 @@ table IDMCOLLECTION {
   RECORDS: [IDM];
 }
 
-root_type IDM;
+root_type IDMCOLLECTION;
 file_identifier "$IDM";

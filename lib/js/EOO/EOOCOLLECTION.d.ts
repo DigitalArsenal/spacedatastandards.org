@@ -6,6 +6,7 @@ export declare class EOOCOLLECTION implements flatbuffers.IUnpackableObject<EOOC
     __init(i: number, bb: flatbuffers.ByteBuffer): EOOCOLLECTION;
     static getRootAsEOOCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: EOOCOLLECTION): EOOCOLLECTION;
     static getSizePrefixedRootAsEOOCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: EOOCOLLECTION): EOOCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: EOO): EOO | null;
     recordsLength(): number;
     static startEOOCOLLECTION(builder: flatbuffers.Builder): void;
@@ -13,6 +14,8 @@ export declare class EOOCOLLECTION implements flatbuffers.IUnpackableObject<EOOC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endEOOCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishEOOCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedEOOCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createEOOCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EOOCOLLECTIONT;
     unpackTo(_o: EOOCOLLECTIONT): void;

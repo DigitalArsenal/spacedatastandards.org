@@ -125,4 +125,9 @@ class ROCCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishROCCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$ROC");
+    }
 }

@@ -14,7 +14,6 @@ public struct CTR : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CTR GetRootAsCTR(ByteBuffer _bb) { return GetRootAsCTR(_bb, new CTR()); }
   public static CTR GetRootAsCTR(ByteBuffer _bb, CTR obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool CTRBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CTR"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CTR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -117,8 +116,6 @@ public struct CTR : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CTR>(o);
   }
-  public static void FinishCTRBuffer(FlatBufferBuilder builder, Offset<CTR> offset) { builder.Finish(offset.Value, "$CTR"); }
-  public static void FinishSizePrefixedCTRBuffer(FlatBufferBuilder builder, Offset<CTR> offset) { builder.FinishSizePrefixed(offset.Value, "$CTR"); }
   public CTRT UnPack() {
     var _o = new CTRT();
     this.UnPackTo(_o);
@@ -177,14 +174,6 @@ public class CTRT
     this.STANAG_CODE = null;
     this.INTERNET_CCTLD = null;
     this.COMMENT = null;
-  }
-  public static CTRT DeserializeFromBinary(byte[] fbBuffer) {
-    return CTR.GetRootAsCTR(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    CTR.FinishCTRBuffer(fbb, CTR.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

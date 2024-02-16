@@ -14,7 +14,6 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): CAT;
     static getRootAsCAT(bb: flatbuffers.ByteBuffer, obj?: CAT): CAT;
     static getSizePrefixedRootAsCAT(bb: flatbuffers.ByteBuffer, obj?: CAT): CAT;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Satellite Name(s)
      */
@@ -143,8 +142,6 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     static createPayloadsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startPayloadsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCAT(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: objectType, OPS_STATUS_CODE: opsStatusCode, OWNEROffset: flatbuffers.Offset, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataStatusCode, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitType, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massType, PAYLOADSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CATT;
     unpackTo(_o: CATT): void;

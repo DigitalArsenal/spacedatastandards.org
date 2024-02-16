@@ -25,10 +25,6 @@ static getSizePrefixedRootAsCSM(bb:flatbuffers.ByteBuffer, obj?:CSM):CSM {
   return (obj || new CSM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$CSM');
-}
-
 /**
  * NORAD Catalog Number for the first object
  */
@@ -172,14 +168,6 @@ static addDilution(builder:flatbuffers.Builder, DILUTION:number) {
 static endCSM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishCSMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$CSM');
-}
-
-static finishSizePrefixedCSMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$CSM', true);
 }
 
 static createCSM(builder:flatbuffers.Builder, NORAD_CAT_ID_1:number, OBJECT_NAME_1Offset:flatbuffers.Offset, DSE_1:number, NORAD_CAT_ID_2:number, OBJECT_NAME_2Offset:flatbuffers.Offset, DSE_2:number, TCA:number, TCA_RANGE:number, TCA_RELATIVE_SPEED:number, MAX_PROB:number, DILUTION:number):flatbuffers.Offset {

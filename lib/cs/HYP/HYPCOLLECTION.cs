@@ -14,6 +14,7 @@ public struct HYPCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static HYPCOLLECTION GetRootAsHYPCOLLECTION(ByteBuffer _bb) { return GetRootAsHYPCOLLECTION(_bb, new HYPCOLLECTION()); }
   public static HYPCOLLECTION GetRootAsHYPCOLLECTION(ByteBuffer _bb, HYPCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool HYPCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$HYP"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public HYPCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct HYPCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<HYPCOLLECTION>(o);
   }
+  public static void FinishHYPCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<HYPCOLLECTION> offset) { builder.Finish(offset.Value, "$HYP"); }
+  public static void FinishSizePrefixedHYPCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<HYPCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$HYP"); }
   public HYPCOLLECTIONT UnPack() {
     var _o = new HYPCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class HYPCOLLECTIONT
 
   public HYPCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static HYPCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return HYPCOLLECTION.GetRootAsHYPCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    HYPCOLLECTION.FinishHYPCOLLECTIONBuffer(fbb, HYPCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

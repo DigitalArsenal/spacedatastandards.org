@@ -74,5 +74,5 @@ table ROCCOLLECTION {
   RECORDS: [ROC];
 }
 
-root_type ROC;
+root_type ROCCOLLECTION;
 file_identifier "$ROC";

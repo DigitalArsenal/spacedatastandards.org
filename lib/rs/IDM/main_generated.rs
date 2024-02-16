@@ -2077,85 +2077,85 @@ impl IDMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `IDM`
+/// Verifies that a buffer of bytes contains a `IDMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_IDM_unchecked`.
-pub fn root_as_IDM(buf: &[u8]) -> Result<IDM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<IDM>(buf)
+/// `root_as_IDMCOLLECTION_unchecked`.
+pub fn root_as_IDMCOLLECTION(buf: &[u8]) -> Result<IDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<IDMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `IDM` and returns it.
+/// `IDMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_IDM_unchecked`.
-pub fn size_prefixed_root_as_IDM(buf: &[u8]) -> Result<IDM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<IDM>(buf)
+/// `size_prefixed_root_as_IDMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_IDMCOLLECTION(buf: &[u8]) -> Result<IDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<IDMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `IDM` and returns it.
+/// contains a `IDMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_IDM_unchecked`.
-pub fn root_as_IDM_with_opts<'b, 'o>(
+/// `root_as_IDMCOLLECTION_unchecked`.
+pub fn root_as_IDMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<IDM<'b>>(opts, buf)
+) -> Result<IDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<IDMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `IDM` and returns
+/// bytes contains a size prefixed `IDMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_IDM_unchecked`.
-pub fn size_prefixed_root_as_IDM_with_opts<'b, 'o>(
+/// `root_as_IDMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_IDMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<IDM<'b>>(opts, buf)
+) -> Result<IDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<IDMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a IDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a IDMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `IDM`.
-pub unsafe fn root_as_IDM_unchecked(buf: &[u8]) -> IDM {
-  flatbuffers::root_unchecked::<IDM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `IDMCOLLECTION`.
+pub unsafe fn root_as_IDMCOLLECTION_unchecked(buf: &[u8]) -> IDMCOLLECTION {
+  flatbuffers::root_unchecked::<IDMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed IDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed IDMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `IDM`.
-pub unsafe fn size_prefixed_root_as_IDM_unchecked(buf: &[u8]) -> IDM {
-  flatbuffers::size_prefixed_root_unchecked::<IDM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `IDMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_IDMCOLLECTION_unchecked(buf: &[u8]) -> IDMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<IDMCOLLECTION>(buf)
 }
-pub const IDM_IDENTIFIER: &str = "$IDM";
+pub const IDMCOLLECTION_IDENTIFIER: &str = "$IDM";
 
 #[inline]
-pub fn IDM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn IDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, true)
+pub fn IDMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, IDMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_IDM_buffer<'a, 'b>(
+pub fn IDMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, IDMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_IDMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<IDM<'a>>) {
-  fbb.finish(root, Some(IDM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<IDMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(IDMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_IDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<IDM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(IDM_IDENTIFIER));
+pub fn finish_size_prefixed_IDMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<IDMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(IDMCOLLECTION_IDENTIFIER));
 }

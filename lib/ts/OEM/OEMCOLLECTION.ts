@@ -26,6 +26,10 @@ static getSizePrefixedRootAsOEMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:OEMCOL
   return (obj || new OEMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$OEM');
+}
+
 /**
  * Array of OEM records
  */
@@ -62,6 +66,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endOEMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishOEMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$OEM');
+}
+
+static finishSizePrefixedOEMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$OEM', true);
 }
 
 static createOEMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

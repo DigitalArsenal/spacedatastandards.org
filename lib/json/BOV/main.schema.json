@@ -42,5 +42,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/BOV"
+  "$ref" : "#/definitions/BOVCOLLECTION"
 }

@@ -8,7 +8,6 @@ export declare class OSM implements flatbuffers.IUnpackableObject<OSMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): OSM;
     static getRootAsOSM(bb: flatbuffers.ByteBuffer, obj?: OSM): OSM;
     static getSizePrefixedRootAsOSM(bb: flatbuffers.ByteBuffer, obj?: OSM): OSM;
-    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Indicates whether the observation is stable or not
      */
@@ -44,8 +43,6 @@ export declare class OSM implements flatbuffers.IUnpackableObject<OSMT> {
     static addPassStart(builder: flatbuffers.Builder, PASS_STARTOffset: flatbuffers.Offset): void;
     static addPassDuration(builder: flatbuffers.Builder, PASS_DURATION: number): void;
     static endOSM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static finishOSMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static finishSizePrefixedOSMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createOSM(builder: flatbuffers.Builder, IS_STABLE: boolean, NUM_OBS: number, OBJECT_IDOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, PASS_STARTOffset: flatbuffers.Offset, PASS_DURATION: number): flatbuffers.Offset;
     unpack(): OSMT;
     unpackTo(_o: OSMT): void;

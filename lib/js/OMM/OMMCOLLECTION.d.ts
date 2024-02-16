@@ -6,6 +6,7 @@ export declare class OMMCOLLECTION implements flatbuffers.IUnpackableObject<OMMC
     __init(i: number, bb: flatbuffers.ByteBuffer): OMMCOLLECTION;
     static getRootAsOMMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: OMMCOLLECTION): OMMCOLLECTION;
     static getSizePrefixedRootAsOMMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: OMMCOLLECTION): OMMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Array of OMM records
      */
@@ -16,6 +17,8 @@ export declare class OMMCOLLECTION implements flatbuffers.IUnpackableObject<OMMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOMMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishOMMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedOMMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createOMMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OMMCOLLECTIONT;
     unpackTo(_o: OMMCOLLECTIONT): void;

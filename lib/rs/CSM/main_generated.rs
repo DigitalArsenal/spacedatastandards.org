@@ -517,85 +517,85 @@ impl CSMCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `CSM`
+/// Verifies that a buffer of bytes contains a `CSMCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CSM_unchecked`.
-pub fn root_as_CSM(buf: &[u8]) -> Result<CSM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<CSM>(buf)
+/// `root_as_CSMCOLLECTION_unchecked`.
+pub fn root_as_CSMCOLLECTION(buf: &[u8]) -> Result<CSMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<CSMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `CSM` and returns it.
+/// `CSMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_CSM_unchecked`.
-pub fn size_prefixed_root_as_CSM(buf: &[u8]) -> Result<CSM, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<CSM>(buf)
+/// `size_prefixed_root_as_CSMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CSMCOLLECTION(buf: &[u8]) -> Result<CSMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<CSMCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `CSM` and returns it.
+/// contains a `CSMCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CSM_unchecked`.
-pub fn root_as_CSM_with_opts<'b, 'o>(
+/// `root_as_CSMCOLLECTION_unchecked`.
+pub fn root_as_CSMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CSM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<CSM<'b>>(opts, buf)
+) -> Result<CSMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<CSMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `CSM` and returns
+/// bytes contains a size prefixed `CSMCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CSM_unchecked`.
-pub fn size_prefixed_root_as_CSM_with_opts<'b, 'o>(
+/// `root_as_CSMCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CSMCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CSM<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<CSM<'b>>(opts, buf)
+) -> Result<CSMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<CSMCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a CSM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CSMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `CSM`.
-pub unsafe fn root_as_CSM_unchecked(buf: &[u8]) -> CSM {
-  flatbuffers::root_unchecked::<CSM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `CSMCOLLECTION`.
+pub unsafe fn root_as_CSMCOLLECTION_unchecked(buf: &[u8]) -> CSMCOLLECTION {
+  flatbuffers::root_unchecked::<CSMCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed CSM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CSMCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `CSM`.
-pub unsafe fn size_prefixed_root_as_CSM_unchecked(buf: &[u8]) -> CSM {
-  flatbuffers::size_prefixed_root_unchecked::<CSM>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CSMCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_CSMCOLLECTION_unchecked(buf: &[u8]) -> CSMCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<CSMCOLLECTION>(buf)
 }
-pub const CSM_IDENTIFIER: &str = "$CSM";
+pub const CSMCOLLECTION_IDENTIFIER: &str = "$CSM";
 
 #[inline]
-pub fn CSM_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CSM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn CSM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CSM_IDENTIFIER, true)
+pub fn CSMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CSMCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_CSM_buffer<'a, 'b>(
+pub fn CSMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CSMCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_CSMCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<CSM<'a>>) {
-  fbb.finish(root, Some(CSM_IDENTIFIER));
+    root: flatbuffers::WIPOffset<CSMCOLLECTION<'a>>) {
+  fbb.finish(root, Some(CSMCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CSM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CSM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(CSM_IDENTIFIER));
+pub fn finish_size_prefixed_CSMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CSMCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CSMCOLLECTION_IDENTIFIER));
 }

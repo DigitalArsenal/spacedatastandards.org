@@ -528,48 +528,48 @@ inline ::flatbuffers::Offset<LDMCOLLECTION> CreateLDMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const LDM *GetLDM(const void *buf) {
-  return ::flatbuffers::GetRoot<LDM>(buf);
+inline const LDMCOLLECTION *GetLDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<LDMCOLLECTION>(buf);
 }
 
-inline const LDM *GetSizePrefixedLDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<LDM>(buf);
+inline const LDMCOLLECTION *GetSizePrefixedLDMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<LDMCOLLECTION>(buf);
 }
 
-inline const char *LDMIdentifier() {
+inline const char *LDMCOLLECTIONIdentifier() {
   return "$LDM";
 }
 
-inline bool LDMBufferHasIdentifier(const void *buf) {
+inline bool LDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LDMIdentifier());
+      buf, LDMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedLDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedLDMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LDMIdentifier(), true);
+      buf, LDMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyLDMBuffer(
+inline bool VerifyLDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<LDM>(LDMIdentifier());
+  return verifier.VerifyBuffer<LDMCOLLECTION>(LDMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedLDMBuffer(
+inline bool VerifySizePrefixedLDMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<LDM>(LDMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<LDMCOLLECTION>(LDMCOLLECTIONIdentifier());
 }
 
-inline void FinishLDMBuffer(
+inline void FinishLDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LDM> root) {
-  fbb.Finish(root, LDMIdentifier());
+    ::flatbuffers::Offset<LDMCOLLECTION> root) {
+  fbb.Finish(root, LDMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedLDMBuffer(
+inline void FinishSizePrefixedLDMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LDM> root) {
-  fbb.FinishSizePrefixed(root, LDMIdentifier());
+    ::flatbuffers::Offset<LDMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, LDMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

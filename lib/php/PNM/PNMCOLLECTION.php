@@ -125,4 +125,9 @@ class PNMCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishPNMCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$PNM");
+    }
 }

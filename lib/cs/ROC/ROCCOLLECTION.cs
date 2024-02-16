@@ -14,6 +14,7 @@ public struct ROCCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static ROCCOLLECTION GetRootAsROCCOLLECTION(ByteBuffer _bb) { return GetRootAsROCCOLLECTION(_bb, new ROCCOLLECTION()); }
   public static ROCCOLLECTION GetRootAsROCCOLLECTION(ByteBuffer _bb, ROCCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool ROCCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$ROC"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ROCCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -39,6 +40,8 @@ public struct ROCCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<ROCCOLLECTION>(o);
   }
+  public static void FinishROCCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<ROCCOLLECTION> offset) { builder.Finish(offset.Value, "$ROC"); }
+  public static void FinishSizePrefixedROCCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<ROCCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$ROC"); }
   public ROCCOLLECTIONT UnPack() {
     var _o = new ROCCOLLECTIONT();
     this.UnPackTo(_o);
@@ -68,6 +71,14 @@ public class ROCCOLLECTIONT
 
   public ROCCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static ROCCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return ROCCOLLECTION.GetRootAsROCCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    ROCCOLLECTION.FinishROCCOLLECTIONBuffer(fbb, ROCCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

@@ -25,7 +25,6 @@ public final class OSM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static OSM getRootAsOSM(ByteBuffer _bb) { return getRootAsOSM(_bb, new OSM()); }
   public static OSM getRootAsOSM(ByteBuffer _bb, OSM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean OSMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$OSM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OSM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -88,8 +87,6 @@ public final class OSM extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishOSMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$OSM"); }
-  public static void finishSizePrefixedOSMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$OSM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

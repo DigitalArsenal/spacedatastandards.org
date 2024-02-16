@@ -25,7 +25,6 @@ public final class PLD extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static PLD getRootAsPLD(ByteBuffer _bb) { return getRootAsPLD(_bb, new PLD()); }
   public static PLD getRootAsPLD(ByteBuffer _bb, PLD obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public static boolean PLDBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$PLD"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public PLD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -82,8 +81,6 @@ public final class PLD extends Table {
     int o = builder.endTable();
     return o;
   }
-  public static void finishPLDBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$PLD"); }
-  public static void finishSizePrefixedPLDBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$PLD"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

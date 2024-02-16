@@ -26,6 +26,10 @@ static getSizePrefixedRootAsCRMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:CRMCOL
   return (obj || new CRMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$CRM');
+}
+
 RECORDS(index: number, obj?:CRM):CRM|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new CRM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -59,6 +63,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endCRMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishCRMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CRM');
+}
+
+static finishSizePrefixedCRMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CRM', true);
 }
 
 static createCRMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

@@ -9,6 +9,7 @@ export declare class SITCOLLECTION implements flatbuffers.IUnpackableObject<SITC
     __init(i: number, bb: flatbuffers.ByteBuffer): SITCOLLECTION;
     static getRootAsSITCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: SITCOLLECTION): SITCOLLECTION;
     static getSizePrefixedRootAsSITCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: SITCOLLECTION): SITCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: SIT): SIT | null;
     recordsLength(): number;
     static startSITCOLLECTION(builder: flatbuffers.Builder): void;
@@ -16,6 +17,8 @@ export declare class SITCOLLECTION implements flatbuffers.IUnpackableObject<SITC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSITCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishSITCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedSITCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createSITCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SITCOLLECTIONT;
     unpackTo(_o: SITCOLLECTIONT): void;

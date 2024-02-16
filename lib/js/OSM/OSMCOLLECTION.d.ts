@@ -6,6 +6,7 @@ export declare class OSMCOLLECTION implements flatbuffers.IUnpackableObject<OSMC
     __init(i: number, bb: flatbuffers.ByteBuffer): OSMCOLLECTION;
     static getRootAsOSMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: OSMCOLLECTION): OSMCOLLECTION;
     static getSizePrefixedRootAsOSMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: OSMCOLLECTION): OSMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: OSM): OSM | null;
     recordsLength(): number;
     static startOSMCOLLECTION(builder: flatbuffers.Builder): void;
@@ -13,6 +14,8 @@ export declare class OSMCOLLECTION implements flatbuffers.IUnpackableObject<OSMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOSMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishOSMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedOSMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createOSMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OSMCOLLECTIONT;
     unpackTo(_o: OSMCOLLECTIONT): void;

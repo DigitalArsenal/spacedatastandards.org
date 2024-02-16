@@ -257,48 +257,48 @@ inline ::flatbuffers::Offset<CSMCOLLECTION> CreateCSMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const CSM *GetCSM(const void *buf) {
-  return ::flatbuffers::GetRoot<CSM>(buf);
+inline const CSMCOLLECTION *GetCSMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<CSMCOLLECTION>(buf);
 }
 
-inline const CSM *GetSizePrefixedCSM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<CSM>(buf);
+inline const CSMCOLLECTION *GetSizePrefixedCSMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CSMCOLLECTION>(buf);
 }
 
-inline const char *CSMIdentifier() {
+inline const char *CSMCOLLECTIONIdentifier() {
   return "$CSM";
 }
 
-inline bool CSMBufferHasIdentifier(const void *buf) {
+inline bool CSMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CSMIdentifier());
+      buf, CSMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedCSMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCSMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CSMIdentifier(), true);
+      buf, CSMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyCSMBuffer(
+inline bool VerifyCSMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CSM>(CSMIdentifier());
+  return verifier.VerifyBuffer<CSMCOLLECTION>(CSMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedCSMBuffer(
+inline bool VerifySizePrefixedCSMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CSM>(CSMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<CSMCOLLECTION>(CSMCOLLECTIONIdentifier());
 }
 
-inline void FinishCSMBuffer(
+inline void FinishCSMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CSM> root) {
-  fbb.Finish(root, CSMIdentifier());
+    ::flatbuffers::Offset<CSMCOLLECTION> root) {
+  fbb.Finish(root, CSMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedCSMBuffer(
+inline void FinishSizePrefixedCSMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CSM> root) {
-  fbb.FinishSizePrefixed(root, CSMIdentifier());
+    ::flatbuffers::Offset<CSMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, CSMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

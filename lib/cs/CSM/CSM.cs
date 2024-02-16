@@ -14,7 +14,6 @@ public struct CSM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CSM GetRootAsCSM(ByteBuffer _bb) { return GetRootAsCSM(_bb, new CSM()); }
   public static CSM GetRootAsCSM(ByteBuffer _bb, CSM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool CSMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CSM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CSM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -96,8 +95,6 @@ public struct CSM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CSM>(o);
   }
-  public static void FinishCSMBuffer(FlatBufferBuilder builder, Offset<CSM> offset) { builder.Finish(offset.Value, "$CSM"); }
-  public static void FinishSizePrefixedCSMBuffer(FlatBufferBuilder builder, Offset<CSM> offset) { builder.FinishSizePrefixed(offset.Value, "$CSM"); }
   public CSMT UnPack() {
     var _o = new CSMT();
     this.UnPackTo(_o);
@@ -162,14 +159,6 @@ public class CSMT
     this.TCA_RELATIVE_SPEED = 0.0;
     this.MAX_PROB = 0.0;
     this.DILUTION = 0.0;
-  }
-  public static CSMT DeserializeFromBinary(byte[] fbBuffer) {
-    return CSM.GetRootAsCSM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    CSM.FinishCSMBuffer(fbb, CSM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

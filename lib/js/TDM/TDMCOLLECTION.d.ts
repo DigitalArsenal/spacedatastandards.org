@@ -9,6 +9,7 @@ export declare class TDMCOLLECTION implements flatbuffers.IUnpackableObject<TDMC
     __init(i: number, bb: flatbuffers.ByteBuffer): TDMCOLLECTION;
     static getRootAsTDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: TDMCOLLECTION): TDMCOLLECTION;
     static getSizePrefixedRootAsTDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: TDMCOLLECTION): TDMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: TDM): TDM | null;
     recordsLength(): number;
     static startTDMCOLLECTION(builder: flatbuffers.Builder): void;
@@ -16,6 +17,8 @@ export declare class TDMCOLLECTION implements flatbuffers.IUnpackableObject<TDMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endTDMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishTDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedTDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createTDMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): TDMCOLLECTIONT;
     unpackTo(_o: TDMCOLLECTIONT): void;

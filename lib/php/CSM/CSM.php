@@ -295,9 +295,4 @@ class CSM extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishCSMBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$CSM");
-    }
 }

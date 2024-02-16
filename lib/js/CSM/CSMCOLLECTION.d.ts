@@ -6,6 +6,7 @@ export declare class CSMCOLLECTION implements flatbuffers.IUnpackableObject<CSMC
     __init(i: number, bb: flatbuffers.ByteBuffer): CSMCOLLECTION;
     static getRootAsCSMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CSMCOLLECTION): CSMCOLLECTION;
     static getSizePrefixedRootAsCSMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CSMCOLLECTION): CSMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * A vector of CSM records
      */
@@ -16,6 +17,8 @@ export declare class CSMCOLLECTION implements flatbuffers.IUnpackableObject<CSMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCSMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCSMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCSMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCSMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CSMCOLLECTIONT;
     unpackTo(_o: CSMCOLLECTIONT): void;

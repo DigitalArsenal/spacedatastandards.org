@@ -563,9 +563,4 @@ class CAT extends Table
         $o = $builder->endObject();
         return $o;
     }
-
-    public static function finishCATBuffer(FlatBufferBuilder $builder, $offset)
-    {
-        $builder->finish($offset, "$CAT");
-    }
 }

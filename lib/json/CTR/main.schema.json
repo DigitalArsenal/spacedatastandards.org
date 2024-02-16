@@ -50,5 +50,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CTR"
+  "$ref" : "#/definitions/CTRCOLLECTION"
 }

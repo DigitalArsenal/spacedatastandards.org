@@ -23,6 +23,10 @@ static getSizePrefixedRootAsCATCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:CATCOL
   return (obj || new CATCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$CAT');
+}
+
 RECORDS(index: number, obj?:CAT):CAT|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new CAT()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -56,6 +60,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endCATCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishCATCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CAT');
+}
+
+static finishSizePrefixedCATCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CAT', true);
 }
 
 static createCATCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

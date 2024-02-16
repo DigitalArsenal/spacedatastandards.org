@@ -6,6 +6,7 @@ export declare class CDMCOLLECTION implements flatbuffers.IUnpackableObject<CDMC
     __init(i: number, bb: flatbuffers.ByteBuffer): CDMCOLLECTION;
     static getRootAsCDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CDMCOLLECTION): CDMCOLLECTION;
     static getSizePrefixedRootAsCDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: CDMCOLLECTION): CDMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * A vector of CDM records
      */
@@ -16,6 +17,8 @@ export declare class CDMCOLLECTION implements flatbuffers.IUnpackableObject<CDMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCDMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCDMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CDMCOLLECTIONT;
     unpackTo(_o: CDMCOLLECTIONT): void;

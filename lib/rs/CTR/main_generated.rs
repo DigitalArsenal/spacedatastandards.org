@@ -468,85 +468,85 @@ impl CTRCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `CTR`
+/// Verifies that a buffer of bytes contains a `CTRCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CTR_unchecked`.
-pub fn root_as_CTR(buf: &[u8]) -> Result<CTR, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<CTR>(buf)
+/// `root_as_CTRCOLLECTION_unchecked`.
+pub fn root_as_CTRCOLLECTION(buf: &[u8]) -> Result<CTRCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<CTRCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `CTR` and returns it.
+/// `CTRCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_CTR_unchecked`.
-pub fn size_prefixed_root_as_CTR(buf: &[u8]) -> Result<CTR, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<CTR>(buf)
+/// `size_prefixed_root_as_CTRCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CTRCOLLECTION(buf: &[u8]) -> Result<CTRCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<CTRCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `CTR` and returns it.
+/// contains a `CTRCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CTR_unchecked`.
-pub fn root_as_CTR_with_opts<'b, 'o>(
+/// `root_as_CTRCOLLECTION_unchecked`.
+pub fn root_as_CTRCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CTR<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<CTR<'b>>(opts, buf)
+) -> Result<CTRCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<CTRCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `CTR` and returns
+/// bytes contains a size prefixed `CTRCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CTR_unchecked`.
-pub fn size_prefixed_root_as_CTR_with_opts<'b, 'o>(
+/// `root_as_CTRCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_CTRCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CTR<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<CTR<'b>>(opts, buf)
+) -> Result<CTRCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<CTRCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a CTR and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CTRCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `CTR`.
-pub unsafe fn root_as_CTR_unchecked(buf: &[u8]) -> CTR {
-  flatbuffers::root_unchecked::<CTR>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `CTRCOLLECTION`.
+pub unsafe fn root_as_CTRCOLLECTION_unchecked(buf: &[u8]) -> CTRCOLLECTION {
+  flatbuffers::root_unchecked::<CTRCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed CTR and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CTRCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `CTR`.
-pub unsafe fn size_prefixed_root_as_CTR_unchecked(buf: &[u8]) -> CTR {
-  flatbuffers::size_prefixed_root_unchecked::<CTR>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CTRCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_CTRCOLLECTION_unchecked(buf: &[u8]) -> CTRCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<CTRCOLLECTION>(buf)
 }
-pub const CTR_IDENTIFIER: &str = "$CTR";
+pub const CTRCOLLECTION_IDENTIFIER: &str = "$CTR";
 
 #[inline]
-pub fn CTR_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CTR_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn CTR_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CTR_IDENTIFIER, true)
+pub fn CTRCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CTRCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_CTR_buffer<'a, 'b>(
+pub fn CTRCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CTRCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_CTRCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<CTR<'a>>) {
-  fbb.finish(root, Some(CTR_IDENTIFIER));
+    root: flatbuffers::WIPOffset<CTRCOLLECTION<'a>>) {
+  fbb.finish(root, Some(CTRCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CTR_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CTR<'a>>) {
-  fbb.finish_size_prefixed(root, Some(CTR_IDENTIFIER));
+pub fn finish_size_prefixed_CTRCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CTRCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CTRCOLLECTION_IDENTIFIER));
 }

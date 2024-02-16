@@ -26,10 +26,6 @@ static getSizePrefixedRootAsEOP(bb:flatbuffers.ByteBuffer, obj?:EOP):EOP {
   return (obj || new EOP()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
-  return bb.__has_identifier('$EOP');
-}
-
 /**
  *  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
  */
@@ -159,14 +155,6 @@ static addDataType(builder:flatbuffers.Builder, DATA_TYPE:DataType) {
 static endEOP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
-}
-
-static finishEOPBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$EOP');
-}
-
-static finishSizePrefixedEOPBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
-  builder.finish(offset, '$EOP', true);
 }
 
 static createEOP(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, MJD:number, X_POLE_WANDER_RADIANS:number, Y_POLE_WANDER_RADIANS:number, X_CELESTIAL_POLE_OFFSET_RADIANS:number, Y_CELESTIAL_POLE_OFFSET_RADIANS:number, UT1_MINUS_UTC_SECONDS:number, TAI_MINUS_UTC_SECONDS:number, LENGTH_OF_DAY_CORRECTION_SECONDS:number, DATA_TYPE:DataType):flatbuffers.Offset {

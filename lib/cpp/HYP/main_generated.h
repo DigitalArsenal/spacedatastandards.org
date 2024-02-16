@@ -397,48 +397,48 @@ inline ::flatbuffers::Offset<HYPCOLLECTION> CreateHYPCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const HYP *GetHYP(const void *buf) {
-  return ::flatbuffers::GetRoot<HYP>(buf);
+inline const HYPCOLLECTION *GetHYPCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<HYPCOLLECTION>(buf);
 }
 
-inline const HYP *GetSizePrefixedHYP(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<HYP>(buf);
+inline const HYPCOLLECTION *GetSizePrefixedHYPCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<HYPCOLLECTION>(buf);
 }
 
-inline const char *HYPIdentifier() {
+inline const char *HYPCOLLECTIONIdentifier() {
   return "$HYP";
 }
 
-inline bool HYPBufferHasIdentifier(const void *buf) {
+inline bool HYPCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, HYPIdentifier());
+      buf, HYPCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedHYPBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedHYPCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, HYPIdentifier(), true);
+      buf, HYPCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyHYPBuffer(
+inline bool VerifyHYPCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<HYP>(HYPIdentifier());
+  return verifier.VerifyBuffer<HYPCOLLECTION>(HYPCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedHYPBuffer(
+inline bool VerifySizePrefixedHYPCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<HYP>(HYPIdentifier());
+  return verifier.VerifySizePrefixedBuffer<HYPCOLLECTION>(HYPCOLLECTIONIdentifier());
 }
 
-inline void FinishHYPBuffer(
+inline void FinishHYPCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<HYP> root) {
-  fbb.Finish(root, HYPIdentifier());
+    ::flatbuffers::Offset<HYPCOLLECTION> root) {
+  fbb.Finish(root, HYPCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedHYPBuffer(
+inline void FinishSizePrefixedHYPCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<HYP> root) {
-  fbb.FinishSizePrefixed(root, HYPIdentifier());
+    ::flatbuffers::Offset<HYPCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, HYPCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

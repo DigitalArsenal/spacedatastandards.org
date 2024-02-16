@@ -88,5 +88,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/MPE"
+  "$ref" : "#/definitions/MPECOLLECTION"
 }

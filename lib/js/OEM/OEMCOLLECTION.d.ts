@@ -9,6 +9,7 @@ export declare class OEMCOLLECTION implements flatbuffers.IUnpackableObject<OEMC
     __init(i: number, bb: flatbuffers.ByteBuffer): OEMCOLLECTION;
     static getRootAsOEMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: OEMCOLLECTION): OEMCOLLECTION;
     static getSizePrefixedRootAsOEMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: OEMCOLLECTION): OEMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Array of OEM records
      */
@@ -19,6 +20,8 @@ export declare class OEMCOLLECTION implements flatbuffers.IUnpackableObject<OEMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOEMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishOEMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedOEMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createOEMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OEMCOLLECTIONT;
     unpackTo(_o: OEMCOLLECTIONT): void;

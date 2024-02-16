@@ -14,6 +14,7 @@ public struct SITCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static SITCOLLECTION GetRootAsSITCOLLECTION(ByteBuffer _bb) { return GetRootAsSITCOLLECTION(_bb, new SITCOLLECTION()); }
   public static SITCOLLECTION GetRootAsSITCOLLECTION(ByteBuffer _bb, SITCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool SITCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$SIT"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SITCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct SITCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<SITCOLLECTION>(o);
   }
+  public static void FinishSITCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<SITCOLLECTION> offset) { builder.Finish(offset.Value, "$SIT"); }
+  public static void FinishSizePrefixedSITCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<SITCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$SIT"); }
   public SITCOLLECTIONT UnPack() {
     var _o = new SITCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class SITCOLLECTIONT
 
   public SITCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static SITCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return SITCOLLECTION.GetRootAsSITCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    SITCOLLECTION.FinishSITCOLLECTIONBuffer(fbb, SITCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

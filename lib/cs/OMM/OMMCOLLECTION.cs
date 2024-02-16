@@ -13,6 +13,7 @@ public struct OMMCOLLECTION : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static OMMCOLLECTION GetRootAsOMMCOLLECTION(ByteBuffer _bb) { return GetRootAsOMMCOLLECTION(_bb, new OMMCOLLECTION()); }
   public static OMMCOLLECTION GetRootAsOMMCOLLECTION(ByteBuffer _bb, OMMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool OMMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OMM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OMMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -38,6 +39,8 @@ public struct OMMCOLLECTION : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<OMMCOLLECTION>(o);
   }
+  public static void FinishOMMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<OMMCOLLECTION> offset) { builder.Finish(offset.Value, "$OMM"); }
+  public static void FinishSizePrefixedOMMCOLLECTIONBuffer(FlatBufferBuilder builder, Offset<OMMCOLLECTION> offset) { builder.FinishSizePrefixed(offset.Value, "$OMM"); }
   public OMMCOLLECTIONT UnPack() {
     var _o = new OMMCOLLECTIONT();
     this.UnPackTo(_o);
@@ -67,6 +70,14 @@ public class OMMCOLLECTIONT
 
   public OMMCOLLECTIONT() {
     this.RECORDS = null;
+  }
+  public static OMMCOLLECTIONT DeserializeFromBinary(byte[] fbBuffer) {
+    return OMMCOLLECTION.GetRootAsOMMCOLLECTION(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    OMMCOLLECTION.FinishOMMCOLLECTIONBuffer(fbb, OMMCOLLECTION.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

@@ -9,6 +9,7 @@ export declare class IDMCOLLECTION implements flatbuffers.IUnpackableObject<IDMC
     __init(i: number, bb: flatbuffers.ByteBuffer): IDMCOLLECTION;
     static getRootAsIDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: IDMCOLLECTION): IDMCOLLECTION;
     static getSizePrefixedRootAsIDMCOLLECTION(bb: flatbuffers.ByteBuffer, obj?: IDMCOLLECTION): IDMCOLLECTION;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     RECORDS(index: number, obj?: IDM): IDM | null;
     recordsLength(): number;
     static startIDMCOLLECTION(builder: flatbuffers.Builder): void;
@@ -16,6 +17,8 @@ export declare class IDMCOLLECTION implements flatbuffers.IUnpackableObject<IDMC
     static createRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endIDMCOLLECTION(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishIDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedIDMCOLLECTIONBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createIDMCOLLECTION(builder: flatbuffers.Builder, RECORDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): IDMCOLLECTIONT;
     unpackTo(_o: IDMCOLLECTIONT): void;

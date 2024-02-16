@@ -22,5 +22,5 @@ table BOVCOLLECTION {
   RECORDS: [BOV];
 }
 
-root_type BOV;
+root_type BOVCOLLECTION;
 file_identifier "$BOV";

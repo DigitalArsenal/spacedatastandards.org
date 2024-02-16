@@ -835,85 +835,85 @@ impl HYPCOLLECTIONT {
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `HYP`
+/// Verifies that a buffer of bytes contains a `HYPCOLLECTION`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_HYP_unchecked`.
-pub fn root_as_HYP(buf: &[u8]) -> Result<HYP, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<HYP>(buf)
+/// `root_as_HYPCOLLECTION_unchecked`.
+pub fn root_as_HYPCOLLECTION(buf: &[u8]) -> Result<HYPCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<HYPCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `HYP` and returns it.
+/// `HYPCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_HYP_unchecked`.
-pub fn size_prefixed_root_as_HYP(buf: &[u8]) -> Result<HYP, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<HYP>(buf)
+/// `size_prefixed_root_as_HYPCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_HYPCOLLECTION(buf: &[u8]) -> Result<HYPCOLLECTION, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<HYPCOLLECTION>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `HYP` and returns it.
+/// contains a `HYPCOLLECTION` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_HYP_unchecked`.
-pub fn root_as_HYP_with_opts<'b, 'o>(
+/// `root_as_HYPCOLLECTION_unchecked`.
+pub fn root_as_HYPCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<HYP<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<HYP<'b>>(opts, buf)
+) -> Result<HYPCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<HYPCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `HYP` and returns
+/// bytes contains a size prefixed `HYPCOLLECTION` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_HYP_unchecked`.
-pub fn size_prefixed_root_as_HYP_with_opts<'b, 'o>(
+/// `root_as_HYPCOLLECTION_unchecked`.
+pub fn size_prefixed_root_as_HYPCOLLECTION_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<HYP<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<HYP<'b>>(opts, buf)
+) -> Result<HYPCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<HYPCOLLECTION<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a HYP and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a HYPCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `HYP`.
-pub unsafe fn root_as_HYP_unchecked(buf: &[u8]) -> HYP {
-  flatbuffers::root_unchecked::<HYP>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `HYPCOLLECTION`.
+pub unsafe fn root_as_HYPCOLLECTION_unchecked(buf: &[u8]) -> HYPCOLLECTION {
+  flatbuffers::root_unchecked::<HYPCOLLECTION>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed HYP and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed HYPCOLLECTION and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `HYP`.
-pub unsafe fn size_prefixed_root_as_HYP_unchecked(buf: &[u8]) -> HYP {
-  flatbuffers::size_prefixed_root_unchecked::<HYP>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `HYPCOLLECTION`.
+pub unsafe fn size_prefixed_root_as_HYPCOLLECTION_unchecked(buf: &[u8]) -> HYPCOLLECTION {
+  flatbuffers::size_prefixed_root_unchecked::<HYPCOLLECTION>(buf)
 }
-pub const HYP_IDENTIFIER: &str = "$HYP";
+pub const HYPCOLLECTION_IDENTIFIER: &str = "$HYP";
 
 #[inline]
-pub fn HYP_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, HYP_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn HYP_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, HYP_IDENTIFIER, true)
+pub fn HYPCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, HYPCOLLECTION_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_HYP_buffer<'a, 'b>(
+pub fn HYPCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, HYPCOLLECTION_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_HYPCOLLECTION_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<HYP<'a>>) {
-  fbb.finish(root, Some(HYP_IDENTIFIER));
+    root: flatbuffers::WIPOffset<HYPCOLLECTION<'a>>) {
+  fbb.finish(root, Some(HYPCOLLECTION_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_HYP_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<HYP<'a>>) {
-  fbb.finish_size_prefixed(root, Some(HYP_IDENTIFIER));
+pub fn finish_size_prefixed_HYPCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<HYPCOLLECTION<'a>>) {
+  fbb.finish_size_prefixed(root, Some(HYPCOLLECTION_IDENTIFIER));
 }

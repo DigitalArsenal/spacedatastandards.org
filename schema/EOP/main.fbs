@@ -41,5 +41,5 @@ table EOPCOLLECTION {
   RECORDS: [EOP];
 }
 
-root_type EOP;
+root_type EOPCOLLECTION;
 file_identifier "$EOP";

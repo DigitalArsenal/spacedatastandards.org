@@ -115,7 +115,6 @@ class MPE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MPE")
         fun createMPE(builder: FlatBufferBuilder, ENTITY_IDOffset: Int, EPOCH: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, BSTAR: Double) : Int {
             builder.startTable(9)
             addBSTAR(builder, BSTAR)
@@ -143,7 +142,5 @@ class MPE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMPEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MPE")
-        fun finishSizePrefixedMPEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MPE")
     }
 }

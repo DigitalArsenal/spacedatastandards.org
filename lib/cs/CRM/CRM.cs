@@ -14,7 +14,6 @@ public struct CRM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static CRM GetRootAsCRM(ByteBuffer _bb) { return GetRootAsCRM(_bb, new CRM()); }
   public static CRM GetRootAsCRM(ByteBuffer _bb, CRM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool CRMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CRM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CRM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -605,8 +604,6 @@ public struct CRM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<CRM>(o);
   }
-  public static void FinishCRMBuffer(FlatBufferBuilder builder, Offset<CRM> offset) { builder.Finish(offset.Value, "$CRM"); }
-  public static void FinishSizePrefixedCRMBuffer(FlatBufferBuilder builder, Offset<CRM> offset) { builder.FinishSizePrefixed(offset.Value, "$CRM"); }
   public CRMT UnPack() {
     var _o = new CRMT();
     this.UnPackTo(_o);
@@ -968,14 +965,6 @@ public class CRMT
     this.SOURCE = null;
     this.ORIGIN = null;
     this.DATA_MODE = null;
-  }
-  public static CRMT DeserializeFromBinary(byte[] fbBuffer) {
-    return CRM.GetRootAsCRM(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    CRM.FinishCRMBuffer(fbb, CRM.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

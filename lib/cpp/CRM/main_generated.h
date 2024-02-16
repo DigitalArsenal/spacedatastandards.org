@@ -1186,48 +1186,48 @@ inline ::flatbuffers::Offset<CRMCOLLECTION> CreateCRMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline const CRM *GetCRM(const void *buf) {
-  return ::flatbuffers::GetRoot<CRM>(buf);
+inline const CRMCOLLECTION *GetCRMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetRoot<CRMCOLLECTION>(buf);
 }
 
-inline const CRM *GetSizePrefixedCRM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<CRM>(buf);
+inline const CRMCOLLECTION *GetSizePrefixedCRMCOLLECTION(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CRMCOLLECTION>(buf);
 }
 
-inline const char *CRMIdentifier() {
+inline const char *CRMCOLLECTIONIdentifier() {
   return "$CRM";
 }
 
-inline bool CRMBufferHasIdentifier(const void *buf) {
+inline bool CRMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CRMIdentifier());
+      buf, CRMCOLLECTIONIdentifier());
 }
 
-inline bool SizePrefixedCRMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCRMCOLLECTIONBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, CRMIdentifier(), true);
+      buf, CRMCOLLECTIONIdentifier(), true);
 }
 
-inline bool VerifyCRMBuffer(
+inline bool VerifyCRMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CRM>(CRMIdentifier());
+  return verifier.VerifyBuffer<CRMCOLLECTION>(CRMCOLLECTIONIdentifier());
 }
 
-inline bool VerifySizePrefixedCRMBuffer(
+inline bool VerifySizePrefixedCRMCOLLECTIONBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CRM>(CRMIdentifier());
+  return verifier.VerifySizePrefixedBuffer<CRMCOLLECTION>(CRMCOLLECTIONIdentifier());
 }
 
-inline void FinishCRMBuffer(
+inline void FinishCRMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CRM> root) {
-  fbb.Finish(root, CRMIdentifier());
+    ::flatbuffers::Offset<CRMCOLLECTION> root) {
+  fbb.Finish(root, CRMCOLLECTIONIdentifier());
 }
 
-inline void FinishSizePrefixedCRMBuffer(
+inline void FinishSizePrefixedCRMCOLLECTIONBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<CRM> root) {
-  fbb.FinishSizePrefixed(root, CRMIdentifier());
+    ::flatbuffers::Offset<CRMCOLLECTION> root) {
+  fbb.FinishSizePrefixed(root, CRMCOLLECTIONIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -14,7 +14,6 @@ public struct ROC : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static ROC GetRootAsROC(ByteBuffer _bb) { return GetRootAsROC(_bb, new ROC()); }
   public static ROC GetRootAsROC(ByteBuffer _bb, ROC obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool ROCBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$ROC"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ROC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -84,8 +83,6 @@ public struct ROC : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<ROC>(o);
   }
-  public static void FinishROCBuffer(FlatBufferBuilder builder, Offset<ROC> offset) { builder.Finish(offset.Value, "$ROC"); }
-  public static void FinishSizePrefixedROCBuffer(FlatBufferBuilder builder, Offset<ROC> offset) { builder.FinishSizePrefixed(offset.Value, "$ROC"); }
   public ROCT UnPack() {
     var _o = new ROCT();
     this.UnPackTo(_o);
@@ -141,14 +138,6 @@ public class ROCT
     this.VARIANT = null;
     this.STAGES = null;
     this.SUSTAINERS = null;
-  }
-  public static ROCT DeserializeFromBinary(byte[] fbBuffer) {
-    return ROC.GetRootAsROC(new ByteBuffer(fbBuffer)).UnPack();
-  }
-  public byte[] SerializeToBinary() {
-    var fbb = new FlatBufferBuilder(0x10000);
-    ROC.FinishROCBuffer(fbb, ROC.Pack(fbb, this));
-    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

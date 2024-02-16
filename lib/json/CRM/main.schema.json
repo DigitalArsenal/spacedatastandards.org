@@ -331,5 +331,5 @@
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CRM"
+  "$ref" : "#/definitions/CRMCOLLECTION"
 }

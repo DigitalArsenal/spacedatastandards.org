@@ -25,6 +25,7 @@ public final class CRMCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static CRMCOLLECTION getRootAsCRMCOLLECTION(ByteBuffer _bb) { return getRootAsCRMCOLLECTION(_bb, new CRMCOLLECTION()); }
   public static CRMCOLLECTION getRootAsCRMCOLLECTION(ByteBuffer _bb, CRMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean CRMCOLLECTIONBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CRM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public CRMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -49,6 +50,8 @@ public final class CRMCOLLECTION extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishCRMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$CRM"); }
+  public static void finishSizePrefixedCRMCOLLECTIONBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$CRM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

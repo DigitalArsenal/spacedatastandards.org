@@ -27,6 +27,10 @@ static getSizePrefixedRootAsPNMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:PNMCOL
   return (obj || new PNMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$PNM');
+}
+
 RECORDS(index: number, obj?:PNM):PNM|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new PNM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -60,6 +64,14 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
 static endPNMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishPNMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PNM');
+}
+
+static finishSizePrefixedPNMCOLLECTIONBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PNM', true);
 }
 
 static createPNMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {

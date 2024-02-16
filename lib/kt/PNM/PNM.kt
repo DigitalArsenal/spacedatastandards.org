@@ -309,7 +309,6 @@ class PNM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PNMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PNM")
         fun createPNM(builder: FlatBufferBuilder, IPFS_CIDOffset: Int, ETH_DIGITAL_SIGNATUREOffset: Int, BTC_DIGITAL_SIGNATUREOffset: Int, LTC_DIGITAL_SIGNATUREOffset: Int, XRP_DIGITAL_SIGNATUREOffset: Int, ADA_DIGITAL_SIGNATUREOffset: Int, XLM_DIGITAL_SIGNATUREOffset: Int, DOGE_DIGITAL_SIGNATUREOffset: Int, XMR_DIGITAL_SIGNATUREOffset: Int, DOT_DIGITAL_SIGNATUREOffset: Int, FIL_DIGITAL_SIGNATUREOffset: Int, XTZ_DIGITAL_SIGNATUREOffset: Int, ATOM_DIGITAL_SIGNATUREOffset: Int, TRX_DIGITAL_SIGNATUREOffset: Int, BNB_DIGITAL_SIGNATUREOffset: Int, AVAX_DIGITAL_SIGNATUREOffset: Int, SOL_DIGITAL_SIGNATUREOffset: Int) : Int {
             builder.startTable(17)
             addSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATUREOffset)
@@ -353,7 +352,5 @@ class PNM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PNM")
-        fun finishSizePrefixedPNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PNM")
     }
 }

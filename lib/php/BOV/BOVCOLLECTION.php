@@ -123,4 +123,9 @@ class BOVCOLLECTION extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishBOVCOLLECTIONBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$BOV");
+    }
 }
