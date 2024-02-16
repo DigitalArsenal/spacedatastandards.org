@@ -42,39 +42,267 @@ IPFS_CID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Unique identifier generated from the data provider's public key
+ * Ethereum Digital Signature
+ * Digital signature of the IPFS CID using Ethereum's signing mechanism.
+ * Refer to the Ethereum Blockchain integration section for details.
  */
-KEY_ADDRESS():string|null
-KEY_ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-KEY_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
+ETH_DIGITAL_SIGNATURE():string|null
+ETH_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ETH_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
- * SpaceDataStandards 4 Character File Identifier
+ * Bitcoin Digital Signature
+ * Digital signature of the IPFS CID using Bitcoin's signing mechanism.
+ * Refer to the Bitcoin Blockchain integration section for details.
  */
-FILE_IDENTIFIER():string|null
-FILE_IDENTIFIER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-FILE_IDENTIFIER(optionalEncoding?:any):string|Uint8Array|null {
+BTC_DIGITAL_SIGNATURE():string|null
+BTC_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BTC_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Litecoin Digital Signature
+ * Digital signature of the IPFS CID using Litecoin's signing mechanism.
+ * Refer to the Litecoin Blockchain integration section for details.
+ */
+LTC_DIGITAL_SIGNATURE():string|null
+LTC_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LTC_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Ripple Digital Signature
+ * Digital signature of the IPFS CID using Ripple's signing mechanism.
+ * Refer to the Ripple Blockchain integration section for details.
+ */
+XRP_DIGITAL_SIGNATURE():string|null
+XRP_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+XRP_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Cardano Digital Signature
+ * Digital signature of the IPFS CID using Cardano's signing mechanism.
+ * Refer to the Cardano Blockchain integration section for details.
+ */
+ADA_DIGITAL_SIGNATURE():string|null
+ADA_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ADA_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Stellar Digital Signature
+ * Digital signature of the IPFS CID using Stellar's signing mechanism.
+ * Refer to the Stellar Blockchain integration section for details.
+ */
+XLM_DIGITAL_SIGNATURE():string|null
+XLM_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+XLM_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Dogecoin Digital Signature
+ * Digital signature of the IPFS CID using Dogecoin's signing mechanism.
+ * Refer to the Dogecoin Blockchain integration section for details.
+ */
+DOGE_DIGITAL_SIGNATURE():string|null
+DOGE_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DOGE_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Monero Digital Signature
+ * Digital signature of the IPFS CID using Monero's signing mechanism.
+ * Refer to the Monero Blockchain integration section for details.
+ */
+XMR_DIGITAL_SIGNATURE():string|null
+XMR_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+XMR_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Polkadot Digital Signature
+ * Digital signature of the IPFS CID using Polkadot's signing mechanism.
+ * Refer to the Polkadot Blockchain integration section for details.
+ */
+DOT_DIGITAL_SIGNATURE():string|null
+DOT_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DOT_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Filecoin Digital Signature
+ * Digital signature of the IPFS CID using Filecoin's signing mechanism.
+ * Refer to the Filecoin Blockchain integration section for details.
+ */
+FIL_DIGITAL_SIGNATURE():string|null
+FIL_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FIL_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Tezos Digital Signature
+ * Digital signature of the IPFS CID using Tezos's signing mechanism.
+ * Refer to the Tezos Blockchain integration section for details.
+ */
+XTZ_DIGITAL_SIGNATURE():string|null
+XTZ_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+XTZ_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Cosmos Digital Signature
+ * Digital signature of the IPFS CID using Cosmos's signing mechanism.
+ * Refer to the Cosmos Blockchain integration section for details.
+ */
+ATOM_DIGITAL_SIGNATURE():string|null
+ATOM_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ATOM_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Tron Digital Signature
+ * Digital signature of the IPFS CID using Tron's signing mechanism.
+ * Refer to the Tron Blockchain integration section for details.
+ */
+TRX_DIGITAL_SIGNATURE():string|null
+TRX_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRX_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Binance Coin Digital Signature
+ * Digital signature of the IPFS CID using Binance Coin's signing mechanism.
+ * Refer to the Binance Coin Blockchain integration section for details.
+ */
+BNB_DIGITAL_SIGNATURE():string|null
+BNB_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BNB_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Avalanche Digital Signature
+ * Digital signature of the IPFS CID using Avalanche's signing mechanism.
+ * Refer to the Avalanche Blockchain integration section for details.
+ */
+AVAX_DIGITAL_SIGNATURE():string|null
+AVAX_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+AVAX_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Solana Digital Signature
+ * Digital signature of the IPFS CID using Solana's signing mechanism.
+ * Refer to the Solana Blockchain integration section for details.
+ */
+SOL_DIGITAL_SIGNATURE():string|null
+SOL_DIGITAL_SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOL_DIGITAL_SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startPNM(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(17);
 }
 
 static addIpfsCid(builder:flatbuffers.Builder, IPFS_CIDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IPFS_CIDOffset, 0);
 }
 
-static addKeyAddress(builder:flatbuffers.Builder, KEY_ADDRESSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, KEY_ADDRESSOffset, 0);
+static addEthDigitalSignature(builder:flatbuffers.Builder, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, ETH_DIGITAL_SIGNATUREOffset, 0);
 }
 
-static addFileIdentifier(builder:flatbuffers.Builder, FILE_IDENTIFIEROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, FILE_IDENTIFIEROffset, 0);
+static addBtcDigitalSignature(builder:flatbuffers.Builder, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, BTC_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addLtcDigitalSignature(builder:flatbuffers.Builder, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, LTC_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addXrpDigitalSignature(builder:flatbuffers.Builder, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, XRP_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addAdaDigitalSignature(builder:flatbuffers.Builder, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, ADA_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addXlmDigitalSignature(builder:flatbuffers.Builder, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, XLM_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addDogeDigitalSignature(builder:flatbuffers.Builder, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, DOGE_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addXmrDigitalSignature(builder:flatbuffers.Builder, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, XMR_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addDotDigitalSignature(builder:flatbuffers.Builder, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, DOT_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addFilDigitalSignature(builder:flatbuffers.Builder, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, FIL_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addXtzDigitalSignature(builder:flatbuffers.Builder, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, XTZ_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addAtomDigitalSignature(builder:flatbuffers.Builder, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, ATOM_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addTrxDigitalSignature(builder:flatbuffers.Builder, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, TRX_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addBnbDigitalSignature(builder:flatbuffers.Builder, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, BNB_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addAvaxDigitalSignature(builder:flatbuffers.Builder, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, AVAX_DIGITAL_SIGNATUREOffset, 0);
+}
+
+static addSolDigitalSignature(builder:flatbuffers.Builder, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, SOL_DIGITAL_SIGNATUREOffset, 0);
 }
 
 static endPNM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -90,47 +318,131 @@ static finishSizePrefixedPNMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PNM', true);
 }
 
-static createPNM(builder:flatbuffers.Builder, IPFS_CIDOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPNM(builder:flatbuffers.Builder, IPFS_CIDOffset:flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PNM.startPNM(builder);
   PNM.addIpfsCid(builder, IPFS_CIDOffset);
-  PNM.addKeyAddress(builder, KEY_ADDRESSOffset);
-  PNM.addFileIdentifier(builder, FILE_IDENTIFIEROffset);
+  PNM.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
+  PNM.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
+  PNM.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
+  PNM.addXrpDigitalSignature(builder, XRP_DIGITAL_SIGNATUREOffset);
+  PNM.addAdaDigitalSignature(builder, ADA_DIGITAL_SIGNATUREOffset);
+  PNM.addXlmDigitalSignature(builder, XLM_DIGITAL_SIGNATUREOffset);
+  PNM.addDogeDigitalSignature(builder, DOGE_DIGITAL_SIGNATUREOffset);
+  PNM.addXmrDigitalSignature(builder, XMR_DIGITAL_SIGNATUREOffset);
+  PNM.addDotDigitalSignature(builder, DOT_DIGITAL_SIGNATUREOffset);
+  PNM.addFilDigitalSignature(builder, FIL_DIGITAL_SIGNATUREOffset);
+  PNM.addXtzDigitalSignature(builder, XTZ_DIGITAL_SIGNATUREOffset);
+  PNM.addAtomDigitalSignature(builder, ATOM_DIGITAL_SIGNATUREOffset);
+  PNM.addTrxDigitalSignature(builder, TRX_DIGITAL_SIGNATUREOffset);
+  PNM.addBnbDigitalSignature(builder, BNB_DIGITAL_SIGNATUREOffset);
+  PNM.addAvaxDigitalSignature(builder, AVAX_DIGITAL_SIGNATUREOffset);
+  PNM.addSolDigitalSignature(builder, SOL_DIGITAL_SIGNATUREOffset);
   return PNM.endPNM(builder);
 }
 
 unpack(): PNMT {
   return new PNMT(
     this.IPFS_CID(),
-    this.KEY_ADDRESS(),
-    this.FILE_IDENTIFIER()
+    this.ETH_DIGITAL_SIGNATURE(),
+    this.BTC_DIGITAL_SIGNATURE(),
+    this.LTC_DIGITAL_SIGNATURE(),
+    this.XRP_DIGITAL_SIGNATURE(),
+    this.ADA_DIGITAL_SIGNATURE(),
+    this.XLM_DIGITAL_SIGNATURE(),
+    this.DOGE_DIGITAL_SIGNATURE(),
+    this.XMR_DIGITAL_SIGNATURE(),
+    this.DOT_DIGITAL_SIGNATURE(),
+    this.FIL_DIGITAL_SIGNATURE(),
+    this.XTZ_DIGITAL_SIGNATURE(),
+    this.ATOM_DIGITAL_SIGNATURE(),
+    this.TRX_DIGITAL_SIGNATURE(),
+    this.BNB_DIGITAL_SIGNATURE(),
+    this.AVAX_DIGITAL_SIGNATURE(),
+    this.SOL_DIGITAL_SIGNATURE()
   );
 }
 
 
 unpackTo(_o: PNMT): void {
   _o.IPFS_CID = this.IPFS_CID();
-  _o.KEY_ADDRESS = this.KEY_ADDRESS();
-  _o.FILE_IDENTIFIER = this.FILE_IDENTIFIER();
+  _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE();
+  _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE();
+  _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE();
+  _o.XRP_DIGITAL_SIGNATURE = this.XRP_DIGITAL_SIGNATURE();
+  _o.ADA_DIGITAL_SIGNATURE = this.ADA_DIGITAL_SIGNATURE();
+  _o.XLM_DIGITAL_SIGNATURE = this.XLM_DIGITAL_SIGNATURE();
+  _o.DOGE_DIGITAL_SIGNATURE = this.DOGE_DIGITAL_SIGNATURE();
+  _o.XMR_DIGITAL_SIGNATURE = this.XMR_DIGITAL_SIGNATURE();
+  _o.DOT_DIGITAL_SIGNATURE = this.DOT_DIGITAL_SIGNATURE();
+  _o.FIL_DIGITAL_SIGNATURE = this.FIL_DIGITAL_SIGNATURE();
+  _o.XTZ_DIGITAL_SIGNATURE = this.XTZ_DIGITAL_SIGNATURE();
+  _o.ATOM_DIGITAL_SIGNATURE = this.ATOM_DIGITAL_SIGNATURE();
+  _o.TRX_DIGITAL_SIGNATURE = this.TRX_DIGITAL_SIGNATURE();
+  _o.BNB_DIGITAL_SIGNATURE = this.BNB_DIGITAL_SIGNATURE();
+  _o.AVAX_DIGITAL_SIGNATURE = this.AVAX_DIGITAL_SIGNATURE();
+  _o.SOL_DIGITAL_SIGNATURE = this.SOL_DIGITAL_SIGNATURE();
 }
 }
 
 export class PNMT implements flatbuffers.IGeneratedObject {
 constructor(
   public IPFS_CID: string|Uint8Array|null = null,
-  public KEY_ADDRESS: string|Uint8Array|null = null,
-  public FILE_IDENTIFIER: string|Uint8Array|null = null
+  public ETH_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public BTC_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public LTC_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public XRP_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public ADA_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public XLM_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public DOGE_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public XMR_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public DOT_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public FIL_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public XTZ_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public ATOM_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public TRX_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public BNB_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public AVAX_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
+  public SOL_DIGITAL_SIGNATURE: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const IPFS_CID = (this.IPFS_CID !== null ? builder.createString(this.IPFS_CID!) : 0);
-  const KEY_ADDRESS = (this.KEY_ADDRESS !== null ? builder.createString(this.KEY_ADDRESS!) : 0);
-  const FILE_IDENTIFIER = (this.FILE_IDENTIFIER !== null ? builder.createString(this.FILE_IDENTIFIER!) : 0);
+  const ETH_DIGITAL_SIGNATURE = (this.ETH_DIGITAL_SIGNATURE !== null ? builder.createString(this.ETH_DIGITAL_SIGNATURE!) : 0);
+  const BTC_DIGITAL_SIGNATURE = (this.BTC_DIGITAL_SIGNATURE !== null ? builder.createString(this.BTC_DIGITAL_SIGNATURE!) : 0);
+  const LTC_DIGITAL_SIGNATURE = (this.LTC_DIGITAL_SIGNATURE !== null ? builder.createString(this.LTC_DIGITAL_SIGNATURE!) : 0);
+  const XRP_DIGITAL_SIGNATURE = (this.XRP_DIGITAL_SIGNATURE !== null ? builder.createString(this.XRP_DIGITAL_SIGNATURE!) : 0);
+  const ADA_DIGITAL_SIGNATURE = (this.ADA_DIGITAL_SIGNATURE !== null ? builder.createString(this.ADA_DIGITAL_SIGNATURE!) : 0);
+  const XLM_DIGITAL_SIGNATURE = (this.XLM_DIGITAL_SIGNATURE !== null ? builder.createString(this.XLM_DIGITAL_SIGNATURE!) : 0);
+  const DOGE_DIGITAL_SIGNATURE = (this.DOGE_DIGITAL_SIGNATURE !== null ? builder.createString(this.DOGE_DIGITAL_SIGNATURE!) : 0);
+  const XMR_DIGITAL_SIGNATURE = (this.XMR_DIGITAL_SIGNATURE !== null ? builder.createString(this.XMR_DIGITAL_SIGNATURE!) : 0);
+  const DOT_DIGITAL_SIGNATURE = (this.DOT_DIGITAL_SIGNATURE !== null ? builder.createString(this.DOT_DIGITAL_SIGNATURE!) : 0);
+  const FIL_DIGITAL_SIGNATURE = (this.FIL_DIGITAL_SIGNATURE !== null ? builder.createString(this.FIL_DIGITAL_SIGNATURE!) : 0);
+  const XTZ_DIGITAL_SIGNATURE = (this.XTZ_DIGITAL_SIGNATURE !== null ? builder.createString(this.XTZ_DIGITAL_SIGNATURE!) : 0);
+  const ATOM_DIGITAL_SIGNATURE = (this.ATOM_DIGITAL_SIGNATURE !== null ? builder.createString(this.ATOM_DIGITAL_SIGNATURE!) : 0);
+  const TRX_DIGITAL_SIGNATURE = (this.TRX_DIGITAL_SIGNATURE !== null ? builder.createString(this.TRX_DIGITAL_SIGNATURE!) : 0);
+  const BNB_DIGITAL_SIGNATURE = (this.BNB_DIGITAL_SIGNATURE !== null ? builder.createString(this.BNB_DIGITAL_SIGNATURE!) : 0);
+  const AVAX_DIGITAL_SIGNATURE = (this.AVAX_DIGITAL_SIGNATURE !== null ? builder.createString(this.AVAX_DIGITAL_SIGNATURE!) : 0);
+  const SOL_DIGITAL_SIGNATURE = (this.SOL_DIGITAL_SIGNATURE !== null ? builder.createString(this.SOL_DIGITAL_SIGNATURE!) : 0);
 
   return PNM.createPNM(builder,
     IPFS_CID,
-    KEY_ADDRESS,
-    FILE_IDENTIFIER
+    ETH_DIGITAL_SIGNATURE,
+    BTC_DIGITAL_SIGNATURE,
+    LTC_DIGITAL_SIGNATURE,
+    XRP_DIGITAL_SIGNATURE,
+    ADA_DIGITAL_SIGNATURE,
+    XLM_DIGITAL_SIGNATURE,
+    DOGE_DIGITAL_SIGNATURE,
+    XMR_DIGITAL_SIGNATURE,
+    DOT_DIGITAL_SIGNATURE,
+    FIL_DIGITAL_SIGNATURE,
+    XTZ_DIGITAL_SIGNATURE,
+    ATOM_DIGITAL_SIGNATURE,
+    TRX_DIGITAL_SIGNATURE,
+    BNB_DIGITAL_SIGNATURE,
+    AVAX_DIGITAL_SIGNATURE,
+    SOL_DIGITAL_SIGNATURE
   );
 }
 }

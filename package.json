@@ -1,6 +1,6 @@
 {
     "name": "tap-schema-workshop",
-    "version": "1.0.98+1708113789447",
+    "version": "1.0.99+1708120242896",
     "type": "module",
     "description": "Node.js application to parse Excel data and convert geospatial information to GeoJSON.",
     "main": "index.js",
