@@ -22,12 +22,12 @@ import kotlin.math.sign
  */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
-class PNM_COLLECTION : Table() {
+class PNMCOLLECTION : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : PNM_COLLECTION {
+    fun __assign(_i: Int, _bb: ByteBuffer) : PNMCOLLECTION {
         __init(_i, _bb)
         return this
     }
@@ -46,17 +46,17 @@ class PNM_COLLECTION : Table() {
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
-        fun getRootAsPNM_COLLECTION(_bb: ByteBuffer): PNM_COLLECTION = getRootAsPNM_COLLECTION(_bb, PNM_COLLECTION())
-        fun getRootAsPNM_COLLECTION(_bb: ByteBuffer, obj: PNM_COLLECTION): PNM_COLLECTION {
+        fun getRootAsPNMCOLLECTION(_bb: ByteBuffer): PNMCOLLECTION = getRootAsPNMCOLLECTION(_bb, PNMCOLLECTION())
+        fun getRootAsPNMCOLLECTION(_bb: ByteBuffer, obj: PNMCOLLECTION): PNMCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPNM_COLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
+        fun createPNMCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
             builder.startTable(1)
             addRECORDS(builder, RECORDSOffset)
-            return endPNM_COLLECTION(builder)
+            return endPNMCOLLECTION(builder)
         }
-        fun startPNM_COLLECTION(builder: FlatBufferBuilder) = builder.startTable(1)
+        fun startPNMCOLLECTION(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addRECORDS(builder: FlatBufferBuilder, RECORDS: Int) = builder.addOffset(0, RECORDS, 0)
         fun createRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -66,7 +66,7 @@ class PNM_COLLECTION : Table() {
             return builder.endVector()
         }
         fun startRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endPNM_COLLECTION(builder: FlatBufferBuilder) : Int {
+        fun endPNMCOLLECTION(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
         }

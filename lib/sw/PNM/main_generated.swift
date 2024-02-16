@@ -216,14 +216,14 @@ public struct PNM: FlatBufferObject, Verifiable {
 
 ///  Collection of Publish Notification Messages
 ///  This table groups multiple PNM records for batch processing and management.
-public struct PNM_COLLECTION: FlatBufferObject, Verifiable {
+public struct PNMCOLLECTION: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
   public static var id: String { "$PNM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PNM_COLLECTION.id, addPrefix: prefix) }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PNMCOLLECTION.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
@@ -236,16 +236,16 @@ public struct PNM_COLLECTION: FlatBufferObject, Verifiable {
   public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
   public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func RECORDS(at index: Int32) -> PNM? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : PNM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startPNM_COLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func startPNMCOLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
-  public static func endPNM_COLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPNM_COLLECTION(
+  public static func endPNMCOLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPNMCOLLECTION(
     _ fbb: inout FlatBufferBuilder,
     RECORDSVectorOffset RECORDS: Offset = Offset()
   ) -> Offset {
-    let __start = PNM_COLLECTION.startPNM_COLLECTION(&fbb)
-    PNM_COLLECTION.addVectorOf(RECORDS: RECORDS, &fbb)
-    return PNM_COLLECTION.endPNM_COLLECTION(&fbb, start: __start)
+    let __start = PNMCOLLECTION.startPNMCOLLECTION(&fbb)
+    PNMCOLLECTION.addVectorOf(RECORDS: RECORDS, &fbb)
+    return PNMCOLLECTION.endPNMCOLLECTION(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {

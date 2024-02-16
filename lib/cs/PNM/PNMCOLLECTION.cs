@@ -8,65 +8,65 @@ using global::Google.FlatBuffers;
 
 /// Collection of Publish Notification Messages
 /// This table groups multiple PNM records for batch processing and management.
-public struct PNM_COLLECTION : IFlatbufferObject
+public struct PNMCOLLECTION : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
-  public static PNM_COLLECTION GetRootAsPNM_COLLECTION(ByteBuffer _bb) { return GetRootAsPNM_COLLECTION(_bb, new PNM_COLLECTION()); }
-  public static PNM_COLLECTION GetRootAsPNM_COLLECTION(ByteBuffer _bb, PNM_COLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static PNMCOLLECTION GetRootAsPNMCOLLECTION(ByteBuffer _bb) { return GetRootAsPNMCOLLECTION(_bb, new PNMCOLLECTION()); }
+  public static PNMCOLLECTION GetRootAsPNMCOLLECTION(ByteBuffer _bb, PNMCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
-  public PNM_COLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public PNMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public PNM? RECORDS(int j) { int o = __p.__offset(4); return o != 0 ? (PNM?)(new PNM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int RECORDSLength { get { int o = __p.__offset(4); return o != 0 ? __p.__vector_len(o) : 0; } }
 
-  public static Offset<PNM_COLLECTION> CreatePNM_COLLECTION(FlatBufferBuilder builder,
+  public static Offset<PNMCOLLECTION> CreatePNMCOLLECTION(FlatBufferBuilder builder,
       VectorOffset RECORDSOffset = default(VectorOffset)) {
     builder.StartTable(1);
-    PNM_COLLECTION.AddRECORDS(builder, RECORDSOffset);
-    return PNM_COLLECTION.EndPNM_COLLECTION(builder);
+    PNMCOLLECTION.AddRECORDS(builder, RECORDSOffset);
+    return PNMCOLLECTION.EndPNMCOLLECTION(builder);
   }
 
-  public static void StartPNM_COLLECTION(FlatBufferBuilder builder) { builder.StartTable(1); }
+  public static void StartPNMCOLLECTION(FlatBufferBuilder builder) { builder.StartTable(1); }
   public static void AddRECORDS(FlatBufferBuilder builder, VectorOffset RECORDSOffset) { builder.AddOffset(0, RECORDSOffset.Value, 0); }
   public static VectorOffset CreateRECORDSVector(FlatBufferBuilder builder, Offset<PNM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, Offset<PNM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PNM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PNM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRECORDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static Offset<PNM_COLLECTION> EndPNM_COLLECTION(FlatBufferBuilder builder) {
+  public static Offset<PNMCOLLECTION> EndPNMCOLLECTION(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    return new Offset<PNM_COLLECTION>(o);
+    return new Offset<PNMCOLLECTION>(o);
   }
-  public PNM_COLLECTIONT UnPack() {
-    var _o = new PNM_COLLECTIONT();
+  public PNMCOLLECTIONT UnPack() {
+    var _o = new PNMCOLLECTIONT();
     this.UnPackTo(_o);
     return _o;
   }
-  public void UnPackTo(PNM_COLLECTIONT _o) {
+  public void UnPackTo(PNMCOLLECTIONT _o) {
     _o.RECORDS = new List<PNMT>();
     for (var _j = 0; _j < this.RECORDSLength; ++_j) {_o.RECORDS.Add(this.RECORDS(_j).HasValue ? this.RECORDS(_j).Value.UnPack() : null);}
   }
-  public static Offset<PNM_COLLECTION> Pack(FlatBufferBuilder builder, PNM_COLLECTIONT _o) {
-    if (_o == null) return default(Offset<PNM_COLLECTION>);
+  public static Offset<PNMCOLLECTION> Pack(FlatBufferBuilder builder, PNMCOLLECTIONT _o) {
+    if (_o == null) return default(Offset<PNMCOLLECTION>);
     var _RECORDS = default(VectorOffset);
     if (_o.RECORDS != null) {
       var __RECORDS = new Offset<PNM>[_o.RECORDS.Count];
       for (var _j = 0; _j < __RECORDS.Length; ++_j) { __RECORDS[_j] = PNM.Pack(builder, _o.RECORDS[_j]); }
       _RECORDS = CreateRECORDSVector(builder, __RECORDS);
     }
-    return CreatePNM_COLLECTION(
+    return CreatePNMCOLLECTION(
       builder,
       _RECORDS);
   }
 }
 
-public class PNM_COLLECTIONT
+public class PNMCOLLECTIONT
 {
   public List<PNMT> RECORDS { get; set; }
 
-  public PNM_COLLECTIONT() {
+  public PNMCOLLECTIONT() {
     this.RECORDS = null;
   }
 }

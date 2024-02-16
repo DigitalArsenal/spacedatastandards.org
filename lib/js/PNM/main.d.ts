@@ -1,3 +1,3 @@
 export { PNM, PNMT } from './PNM.js';
-export { PNM_COLLECTION, PNM_COLLECTIONT } from './PNM_COLLECTION.js';
+export { PNMCOLLECTION, PNMCOLLECTIONT } from './PNMCOLLECTION.js';
 //# sourceMappingURL=main.d.ts.map

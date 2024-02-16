@@ -22,12 +22,12 @@ import java.nio.ByteOrder;
  * This table groups multiple PNM records for batch processing and management.
  */
 @SuppressWarnings("unused")
-public final class PNM_COLLECTION extends Table {
+public final class PNMCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
-  public static PNM_COLLECTION getRootAsPNM_COLLECTION(ByteBuffer _bb) { return getRootAsPNM_COLLECTION(_bb, new PNM_COLLECTION()); }
-  public static PNM_COLLECTION getRootAsPNM_COLLECTION(ByteBuffer _bb, PNM_COLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static PNMCOLLECTION getRootAsPNMCOLLECTION(ByteBuffer _bb) { return getRootAsPNMCOLLECTION(_bb, new PNMCOLLECTION()); }
+  public static PNMCOLLECTION getRootAsPNMCOLLECTION(ByteBuffer _bb, PNMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public PNM_COLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public PNMCOLLECTION __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public PNM RECORDS(int j) { return RECORDS(new PNM(), j); }
   public PNM RECORDS(PNM obj, int j) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
@@ -35,18 +35,18 @@ public final class PNM_COLLECTION extends Table {
   public PNM.Vector recordsVector() { return recordsVector(new PNM.Vector()); }
   public PNM.Vector recordsVector(PNM.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
-  public static int createPNM_COLLECTION(FlatBufferBuilder builder,
+  public static int createPNMCOLLECTION(FlatBufferBuilder builder,
       int RECORDSOffset) {
     builder.startTable(1);
-    PNM_COLLECTION.addRecords(builder, RECORDSOffset);
-    return PNM_COLLECTION.endPNM_COLLECTION(builder);
+    PNMCOLLECTION.addRecords(builder, RECORDSOffset);
+    return PNMCOLLECTION.endPNMCOLLECTION(builder);
   }
 
-  public static void startPNM_COLLECTION(FlatBufferBuilder builder) { builder.startTable(1); }
+  public static void startPNMCOLLECTION(FlatBufferBuilder builder) { builder.startTable(1); }
   public static void addRecords(FlatBufferBuilder builder, int RECORDSOffset) { builder.addOffset(0, RECORDSOffset, 0); }
   public static int createRecordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static int endPNM_COLLECTION(FlatBufferBuilder builder) {
+  public static int endPNMCOLLECTION(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
   }
@@ -54,8 +54,8 @@ public final class PNM_COLLECTION extends Table {
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
 
-    public PNM_COLLECTION get(int j) { return get(new PNM_COLLECTION(), j); }
-    public PNM_COLLECTION get(PNM_COLLECTION obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
+    public PNMCOLLECTION get(int j) { return get(new PNMCOLLECTION(), j); }
+    public PNMCOLLECTION get(PNMCOLLECTION obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

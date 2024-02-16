@@ -16,8 +16,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct PNM;
 struct PNMBuilder;
 
-struct PNM_COLLECTION;
-struct PNM_COLLECTIONBuilder;
+struct PNMCOLLECTION;
+struct PNMCOLLECTIONBuilder;
 
 /// Publish Notification Message
 struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -363,8 +363,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
 
 /// Collection of Publish Notification Messages
 /// This table groups multiple PNM records for batch processing and management.
-struct PNM_COLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PNM_COLLECTIONBuilder Builder;
+struct PNMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PNMCOLLECTIONBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RECORDS = 4
   };
@@ -380,37 +380,37 @@ struct PNM_COLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct PNM_COLLECTIONBuilder {
-  typedef PNM_COLLECTION Table;
+struct PNMCOLLECTIONBuilder {
+  typedef PNMCOLLECTION Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PNM>>> RECORDS) {
-    fbb_.AddOffset(PNM_COLLECTION::VT_RECORDS, RECORDS);
+    fbb_.AddOffset(PNMCOLLECTION::VT_RECORDS, RECORDS);
   }
-  explicit PNM_COLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit PNMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PNM_COLLECTION> Finish() {
+  ::flatbuffers::Offset<PNMCOLLECTION> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PNM_COLLECTION>(end);
+    auto o = ::flatbuffers::Offset<PNMCOLLECTION>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PNM_COLLECTION> CreatePNM_COLLECTION(
+inline ::flatbuffers::Offset<PNMCOLLECTION> CreatePNMCOLLECTION(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PNM>>> RECORDS = 0) {
-  PNM_COLLECTIONBuilder builder_(_fbb);
+  PNMCOLLECTIONBuilder builder_(_fbb);
   builder_.add_RECORDS(RECORDS);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PNM_COLLECTION> CreatePNM_COLLECTIONDirect(
+inline ::flatbuffers::Offset<PNMCOLLECTION> CreatePNMCOLLECTIONDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const std::vector<::flatbuffers::Offset<PNM>> *RECORDS = nullptr) {
   auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PNM>>(*RECORDS) : 0;
-  return CreatePNM_COLLECTION(
+  return CreatePNMCOLLECTION(
       _fbb,
       RECORDS__);
 }

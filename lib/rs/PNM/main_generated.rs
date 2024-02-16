@@ -651,45 +651,45 @@ impl PNMT {
     })
   }
 }
-pub enum PNM_COLLECTIONOffset {}
+pub enum PNMCOLLECTIONOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Collection of Publish Notification Messages
 /// This table groups multiple PNM records for batch processing and management.
-pub struct PNM_COLLECTION<'a> {
+pub struct PNMCOLLECTION<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
 
-impl<'a> flatbuffers::Follow<'a> for PNM_COLLECTION<'a> {
-  type Inner = PNM_COLLECTION<'a>;
+impl<'a> flatbuffers::Follow<'a> for PNMCOLLECTION<'a> {
+  type Inner = PNMCOLLECTION<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: flatbuffers::Table::new(buf, loc) }
   }
 }
 
-impl<'a> PNM_COLLECTION<'a> {
+impl<'a> PNMCOLLECTION<'a> {
   pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    PNM_COLLECTION { _tab: table }
+    PNMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
     _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args PNM_COLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<PNM_COLLECTION<'bldr>> {
-    let mut builder = PNM_COLLECTIONBuilder::new(_fbb);
+    args: &'args PNMCOLLECTIONArgs<'args>
+  ) -> flatbuffers::WIPOffset<PNMCOLLECTION<'bldr>> {
+    let mut builder = PNMCOLLECTIONBuilder::new(_fbb);
     if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> PNM_COLLECTIONT {
+  pub fn unpack(&self) -> PNMCOLLECTIONT {
     let RECORDS = self.RECORDS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
-    PNM_COLLECTIONT {
+    PNMCOLLECTIONT {
       RECORDS,
     }
   }
@@ -699,11 +699,11 @@ impl<'a> PNM_COLLECTION<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<PNM>>>>(PNM_COLLECTION::VT_RECORDS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<PNM>>>>(PNMCOLLECTION::VT_RECORDS, None)}
   }
 }
 
-impl flatbuffers::Verifiable for PNM_COLLECTION<'_> {
+impl flatbuffers::Verifiable for PNMCOLLECTION<'_> {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -715,70 +715,70 @@ impl flatbuffers::Verifiable for PNM_COLLECTION<'_> {
     Ok(())
   }
 }
-pub struct PNM_COLLECTIONArgs<'a> {
+pub struct PNMCOLLECTIONArgs<'a> {
     pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<PNM<'a>>>>>,
 }
-impl<'a> Default for PNM_COLLECTIONArgs<'a> {
+impl<'a> Default for PNMCOLLECTIONArgs<'a> {
   #[inline]
   fn default() -> Self {
-    PNM_COLLECTIONArgs {
+    PNMCOLLECTIONArgs {
       RECORDS: None,
     }
   }
 }
 
-pub struct PNM_COLLECTIONBuilder<'a: 'b, 'b> {
+pub struct PNMCOLLECTIONBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PNM_COLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b> PNMCOLLECTIONBuilder<'a, 'b> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<PNM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM_COLLECTION::VT_RECORDS, RECORDS);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNM_COLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMCOLLECTIONBuilder<'a, 'b> {
     let start = _fbb.start_table();
-    PNM_COLLECTIONBuilder {
+    PNMCOLLECTIONBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<PNM_COLLECTION<'a>> {
+  pub fn finish(self) -> flatbuffers::WIPOffset<PNMCOLLECTION<'a>> {
     let o = self.fbb_.end_table(self.start_);
     flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl core::fmt::Debug for PNM_COLLECTION<'_> {
+impl core::fmt::Debug for PNMCOLLECTION<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("PNM_COLLECTION");
+    let mut ds = f.debug_struct("PNMCOLLECTION");
       ds.field("RECORDS", &self.RECORDS());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct PNM_COLLECTIONT {
+pub struct PNMCOLLECTIONT {
   pub RECORDS: Option<Vec<PNMT>>,
 }
-impl Default for PNM_COLLECTIONT {
+impl Default for PNMCOLLECTIONT {
   fn default() -> Self {
     Self {
       RECORDS: None,
     }
   }
 }
-impl PNM_COLLECTIONT {
+impl PNMCOLLECTIONT {
   pub fn pack<'b>(
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<PNM_COLLECTION<'b>> {
+  ) -> flatbuffers::WIPOffset<PNMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    PNM_COLLECTION::create(_fbb, &PNM_COLLECTIONArgs{
+    PNMCOLLECTION::create(_fbb, &PNMCOLLECTIONArgs{
       RECORDS,
     })
   }

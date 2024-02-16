@@ -3,7 +3,7 @@ import flatbuffers
 
 class PNM
 
-class PNM_COLLECTION
+class PNMCOLLECTION
 
 /// Publish Notification Message
 class PNM : flatbuffers_handle
@@ -162,15 +162,15 @@ struct PNMBuilder:
 
 /// Collection of Publish Notification Messages
 /// This table groups multiple PNM records for batch processing and management.
-class PNM_COLLECTION : flatbuffers_handle
+class PNMCOLLECTION : flatbuffers_handle
     def RECORDS(i:int) -> PNM:
         return PNM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
         return buf_.flatbuffers_field_vector_len(pos_, 4)
 
-def GetRootAsPNM_COLLECTION(buf:string): return PNM_COLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPNMCOLLECTION(buf:string): return PNMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
 
-struct PNM_COLLECTIONBuilder:
+struct PNMCOLLECTIONBuilder:
     b_:flatbuffers_builder
     def start():
         b_.StartObject(1)
@@ -181,9 +181,9 @@ struct PNM_COLLECTIONBuilder:
     def end():
         return b_.EndObject()
 
-def PNM_COLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def PNMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PNM_COLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PNMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

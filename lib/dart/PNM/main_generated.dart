@@ -320,14 +320,14 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
 }
 ///  Collection of Publish Notification Messages
 ///  This table groups multiple PNM records for batch processing and management.
-class PNM_COLLECTION {
-  PNM_COLLECTION._(this._bc, this._bcOffset);
-  factory PNM_COLLECTION(List<int> bytes) {
+class PNMCOLLECTION {
+  PNMCOLLECTION._(this._bc, this._bcOffset);
+  factory PNMCOLLECTION(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PNM_COLLECTION> reader = _PNM_COLLECTIONReader();
+  static const fb.Reader<PNMCOLLECTION> reader = _PNMCOLLECTIONReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
@@ -336,20 +336,20 @@ class PNM_COLLECTION {
 
   @override
   String toString() {
-    return 'PNM_COLLECTION{RECORDS: ${RECORDS}}';
+    return 'PNMCOLLECTION{RECORDS: ${RECORDS}}';
   }
 }
 
-class _PNM_COLLECTIONReader extends fb.TableReader<PNM_COLLECTION> {
-  const _PNM_COLLECTIONReader();
+class _PNMCOLLECTIONReader extends fb.TableReader<PNMCOLLECTION> {
+  const _PNMCOLLECTIONReader();
 
   @override
-  PNM_COLLECTION createObject(fb.BufferContext bc, int offset) => 
-    PNM_COLLECTION._(bc, offset);
+  PNMCOLLECTION createObject(fb.BufferContext bc, int offset) => 
+    PNMCOLLECTION._(bc, offset);
 }
 
-class PNM_COLLECTIONBuilder {
-  PNM_COLLECTIONBuilder(this.fbBuilder);
+class PNMCOLLECTIONBuilder {
+  PNMCOLLECTIONBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -367,10 +367,10 @@ class PNM_COLLECTIONBuilder {
   }
 }
 
-class PNM_COLLECTIONObjectBuilder extends fb.ObjectBuilder {
+class PNMCOLLECTIONObjectBuilder extends fb.ObjectBuilder {
   final List<PNMObjectBuilder>? _RECORDS;
 
-  PNM_COLLECTIONObjectBuilder({
+  PNMCOLLECTIONObjectBuilder({
     List<PNMObjectBuilder>? RECORDS,
   })
       : _RECORDS = RECORDS;

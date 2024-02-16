@@ -9,22 +9,22 @@ import { PNM, PNMT } from './PNM.js';
  * Collection of Publish Notification Messages
  * This table groups multiple PNM records for batch processing and management.
  */
-export class PNM_COLLECTION implements flatbuffers.IUnpackableObject<PNM_COLLECTIONT> {
+export class PNMCOLLECTION implements flatbuffers.IUnpackableObject<PNMCOLLECTIONT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(i:number, bb:flatbuffers.ByteBuffer):PNM_COLLECTION {
+  __init(i:number, bb:flatbuffers.ByteBuffer):PNMCOLLECTION {
   this.bb_pos = i;
   this.bb = bb;
   return this;
 }
 
-static getRootAsPNM_COLLECTION(bb:flatbuffers.ByteBuffer, obj?:PNM_COLLECTION):PNM_COLLECTION {
-  return (obj || new PNM_COLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+static getRootAsPNMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:PNMCOLLECTION):PNMCOLLECTION {
+  return (obj || new PNMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-static getSizePrefixedRootAsPNM_COLLECTION(bb:flatbuffers.ByteBuffer, obj?:PNM_COLLECTION):PNM_COLLECTION {
+static getSizePrefixedRootAsPNMCOLLECTION(bb:flatbuffers.ByteBuffer, obj?:PNMCOLLECTION):PNMCOLLECTION {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new PNM_COLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new PNMCOLLECTION()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
 RECORDS(index: number, obj?:PNM):PNM|null {
@@ -37,7 +37,7 @@ recordsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-static startPNM_COLLECTION(builder:flatbuffers.Builder) {
+static startPNMCOLLECTION(builder:flatbuffers.Builder) {
   builder.startObject(1);
 }
 
@@ -57,39 +57,39 @@ static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static endPNM_COLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endPNMCOLLECTION(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createPNM_COLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {
-  PNM_COLLECTION.startPNM_COLLECTION(builder);
-  PNM_COLLECTION.addRecords(builder, RECORDSOffset);
-  return PNM_COLLECTION.endPNM_COLLECTION(builder);
+static createPNMCOLLECTION(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+  PNMCOLLECTION.startPNMCOLLECTION(builder);
+  PNMCOLLECTION.addRecords(builder, RECORDSOffset);
+  return PNMCOLLECTION.endPNMCOLLECTION(builder);
 }
 
-unpack(): PNM_COLLECTIONT {
-  return new PNM_COLLECTIONT(
+unpack(): PNMCOLLECTIONT {
+  return new PNMCOLLECTIONT(
     this.bb!.createObjList<PNM, PNMT>(this.RECORDS.bind(this), this.recordsLength())
   );
 }
 
 
-unpackTo(_o: PNM_COLLECTIONT): void {
+unpackTo(_o: PNMCOLLECTIONT): void {
   _o.RECORDS = this.bb!.createObjList<PNM, PNMT>(this.RECORDS.bind(this), this.recordsLength());
 }
 }
 
-export class PNM_COLLECTIONT implements flatbuffers.IGeneratedObject {
+export class PNMCOLLECTIONT implements flatbuffers.IGeneratedObject {
 constructor(
   public RECORDS: (PNMT)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const RECORDS = PNM_COLLECTION.createRecordsVector(builder, builder.createObjectOffsetList(this.RECORDS));
+  const RECORDS = PNMCOLLECTION.createRecordsVector(builder, builder.createObjectOffsetList(this.RECORDS));
 
-  return PNM_COLLECTION.createPNM_COLLECTION(builder,
+  return PNMCOLLECTION.createPNMCOLLECTION(builder,
     RECORDS
   );
 }

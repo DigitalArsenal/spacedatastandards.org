@@ -8,29 +8,29 @@ np = import_numpy()
 
 # Collection of Publish Notification Messages
 # This table groups multiple PNM records for batch processing and management.
-class PNM_COLLECTION(object):
+class PNMCOLLECTION(object):
     __slots__ = ['_tab']
 
     @classmethod
     def GetRootAs(cls, buf, offset=0):
         n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
-        x = PNM_COLLECTION()
+        x = PNMCOLLECTION()
         x.Init(buf, n + offset)
         return x
 
     @classmethod
-    def GetRootAsPNM_COLLECTION(cls, buf, offset=0):
+    def GetRootAsPNMCOLLECTION(cls, buf, offset=0):
         """This method is deprecated. Please switch to GetRootAs."""
         return cls.GetRootAs(buf, offset)
     @classmethod
-    def PNM_COLLECTIONBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+    def PNMCOLLECTIONBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
         return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x50\x4E\x4D", size_prefixed=size_prefixed)
 
-    # PNM_COLLECTION
+    # PNMCOLLECTION
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # PNM_COLLECTION
+    # PNMCOLLECTION
     def RECORDS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
@@ -43,47 +43,47 @@ class PNM_COLLECTION(object):
             return obj
         return None
 
-    # PNM_COLLECTION
+    # PNMCOLLECTION
     def RECORDSLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
-    # PNM_COLLECTION
+    # PNMCOLLECTION
     def RECORDSIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def PNM_COLLECTIONStart(builder): builder.StartObject(1)
+def PNMCOLLECTIONStart(builder): builder.StartObject(1)
 def Start(builder):
-    return PNM_COLLECTIONStart(builder)
-def PNM_COLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    return PNMCOLLECTIONStart(builder)
+def PNMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
 def AddRECORDS(builder, RECORDS):
-    return PNM_COLLECTIONAddRECORDS(builder, RECORDS)
-def PNM_COLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    return PNMCOLLECTIONAddRECORDS(builder, RECORDS)
+def PNMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def StartRECORDSVector(builder, numElems):
-    return PNM_COLLECTIONStartRECORDSVector(builder, numElems)
-def PNM_COLLECTIONEnd(builder): return builder.EndObject()
+    return PNMCOLLECTIONStartRECORDSVector(builder, numElems)
+def PNMCOLLECTIONEnd(builder): return builder.EndObject()
 def End(builder):
-    return PNM_COLLECTIONEnd(builder)
+    return PNMCOLLECTIONEnd(builder)
 import PNM
 try:
     from typing import List
 except:
     pass
 
-class PNM_COLLECTIONT(object):
+class PNMCOLLECTIONT(object):
 
-    # PNM_COLLECTIONT
+    # PNMCOLLECTIONT
     def __init__(self):
         self.RECORDS = None  # type: List[PNM.PNMT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PNM_COLLECTION = PNM_COLLECTION()
-        PNM_COLLECTION.Init(buf, pos)
-        return cls.InitFromObj(PNM_COLLECTION)
+        PNMCOLLECTION = PNMCOLLECTION()
+        PNMCOLLECTION.Init(buf, pos)
+        return cls.InitFromObj(PNMCOLLECTION)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -91,36 +91,36 @@ class PNM_COLLECTIONT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PNM_COLLECTION):
-        x = PNM_COLLECTIONT()
-        x._UnPack(PNM_COLLECTION)
+    def InitFromObj(cls, PNMCOLLECTION):
+        x = PNMCOLLECTIONT()
+        x._UnPack(PNMCOLLECTION)
         return x
 
-    # PNM_COLLECTIONT
-    def _UnPack(self, PNM_COLLECTION):
-        if PNM_COLLECTION is None:
+    # PNMCOLLECTIONT
+    def _UnPack(self, PNMCOLLECTION):
+        if PNMCOLLECTION is None:
             return
-        if not PNM_COLLECTION.RECORDSIsNone():
+        if not PNMCOLLECTION.RECORDSIsNone():
             self.RECORDS = []
-            for i in range(PNM_COLLECTION.RECORDSLength()):
-                if PNM_COLLECTION.RECORDS(i) is None:
+            for i in range(PNMCOLLECTION.RECORDSLength()):
+                if PNMCOLLECTION.RECORDS(i) is None:
                     self.RECORDS.append(None)
                 else:
-                    pNM_ = PNM.PNMT.InitFromObj(PNM_COLLECTION.RECORDS(i))
+                    pNM_ = PNM.PNMT.InitFromObj(PNMCOLLECTION.RECORDS(i))
                     self.RECORDS.append(pNM_)
 
-    # PNM_COLLECTIONT
+    # PNMCOLLECTIONT
     def Pack(self, builder):
         if self.RECORDS is not None:
             RECORDSlist = []
             for i in range(len(self.RECORDS)):
                 RECORDSlist.append(self.RECORDS[i].Pack(builder))
-            PNM_COLLECTIONStartRECORDSVector(builder, len(self.RECORDS))
+            PNMCOLLECTIONStartRECORDSVector(builder, len(self.RECORDS))
             for i in reversed(range(len(self.RECORDS))):
                 builder.PrependUOffsetTRelative(RECORDSlist[i])
             RECORDS = builder.EndVector()
-        PNM_COLLECTIONStart(builder)
+        PNMCOLLECTIONStart(builder)
         if self.RECORDS is not None:
-            PNM_COLLECTIONAddRECORDS(builder, RECORDS)
-        PNM_COLLECTION = PNM_COLLECTIONEnd(builder)
-        return PNM_COLLECTION
+            PNMCOLLECTIONAddRECORDS(builder, RECORDS)
+        PNMCOLLECTION = PNMCOLLECTIONEnd(builder)
+        return PNMCOLLECTION

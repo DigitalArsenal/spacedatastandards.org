@@ -8,32 +8,32 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Collection of Publish Notification Messages
 /// This table groups multiple PNM records for batch processing and management.
-class PNM_COLLECTION extends Table
+class PNMCOLLECTION extends Table
 {
     /**
      * @param ByteBuffer $bb
-     * @return PNM_COLLECTION
+     * @return PNMCOLLECTION
      */
-    public static function getRootAsPNM_COLLECTION(ByteBuffer $bb)
+    public static function getRootAsPNMCOLLECTION(ByteBuffer $bb)
     {
-        $obj = new PNM_COLLECTION();
+        $obj = new PNMCOLLECTION();
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
     }
 
-    public static function PNM_COLLECTIONIdentifier()
+    public static function PNMCOLLECTIONIdentifier()
     {
         return "$PNM";
     }
 
-    public static function PNM_COLLECTIONBufferHasIdentifier(ByteBuffer $buf)
+    public static function PNMCOLLECTIONBufferHasIdentifier(ByteBuffer $buf)
     {
-        return self::__has_identifier($buf, self::PNM_COLLECTIONIdentifier());
+        return self::__has_identifier($buf, self::PNMCOLLECTIONIdentifier());
     }
 
     /**
      * @param int $_i offset
      * @param ByteBuffer $_bb
-     * @return PNM_COLLECTION
+     * @return PNMCOLLECTION
      **/
     public function init($_i, ByteBuffer $_bb)
     {
@@ -65,16 +65,16 @@ class PNM_COLLECTION extends Table
      * @param FlatBufferBuilder $builder
      * @return void
      */
-    public static function startPNM_COLLECTION(FlatBufferBuilder $builder)
+    public static function startPNMCOLLECTION(FlatBufferBuilder $builder)
     {
         $builder->StartObject(1);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @return PNM_COLLECTION
+     * @return PNMCOLLECTION
      */
-    public static function createPNM_COLLECTION(FlatBufferBuilder $builder, $RECORDS)
+    public static function createPNMCOLLECTION(FlatBufferBuilder $builder, $RECORDS)
     {
         $builder->startObject(1);
         self::addRECORDS($builder, $RECORDS);
@@ -120,7 +120,7 @@ class PNM_COLLECTION extends Table
      * @param FlatBufferBuilder $builder
      * @return int table offset
      */
-    public static function endPNM_COLLECTION(FlatBufferBuilder $builder)
+    public static function endPNMCOLLECTION(FlatBufferBuilder $builder)
     {
         $o = $builder->endObject();
         return $o;

@@ -91,7 +91,7 @@ table PNM {
 
 /// Collection of Publish Notification Messages
 /// This table groups multiple PNM records for batch processing and management.
-table PNM_COLLECTION {
+table PNMCOLLECTION {
   RECORDS: [PNM];
 }
 

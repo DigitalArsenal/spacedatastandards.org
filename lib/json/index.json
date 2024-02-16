@@ -4310,7 +4310,7 @@
                     },
                     "additionalProperties": false
                 },
-                "PNM_COLLECTION": {
+                "PNMCOLLECTION": {
                     "type": "object",
                     "description": "Collection of Publish Notification Messages\nThis table groups multiple PNM records for batch processing and management.",
                     "properties": {
@@ -4629,7 +4629,7 @@
                     },
                     "additionalProperties": false
                 },
-                "PNM_COLLECTION": {
+                "PNMCOLLECTION": {
                     "type": "object",
                     "description": "Collection of Publish Notification Messages\nThis table groups multiple PNM records for batch processing and management.",
                     "properties": {
