@@ -4233,7 +4233,7 @@
             "definitions": {
                 "PNM": {
                     "type": "object",
-                    "description": "Publish Notification Message\nThis table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.",
+                    "description": "Publish Notification Message",
                     "properties": {
                         "IPFS_CID": {
                             "type": "string",
@@ -4552,7 +4552,7 @@
                 },
                 "PNM": {
                     "type": "object",
-                    "description": "Publish Notification Message\nThis table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.",
+                    "description": "Publish Notification Message",
                     "properties": {
                         "IPFS_CID": {
                             "type": "string",

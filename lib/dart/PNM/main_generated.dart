@@ -6,7 +6,6 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Publish Notification Message
-///  This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 class PNM {
   PNM._(this._bc, this._bcOffset);
   factory PNM(List<int> bytes) {

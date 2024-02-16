@@ -7,7 +7,6 @@ import (
 )
 
 /// Publish Notification Message
-/// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 type PNM struct {
 	_tab flatbuffers.Table
 }

@@ -7,7 +7,6 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Publish Notification Message
-# This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 class PNM(object):
     __slots__ = ['_tab']
 

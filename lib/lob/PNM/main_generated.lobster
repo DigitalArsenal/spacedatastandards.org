@@ -6,7 +6,6 @@ class PNM
 class PNM_COLLECTION
 
 /// Publish Notification Message
-/// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 class PNM : flatbuffers_handle
     /// IPFS Content Identifier (CID)
     /// The hash of a file stored on the InterPlanetary File System (IPFS).

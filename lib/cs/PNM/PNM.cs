@@ -7,7 +7,6 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Publish Notification Message
-/// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 public struct PNM : IFlatbufferObject
 {
   private Table __p;

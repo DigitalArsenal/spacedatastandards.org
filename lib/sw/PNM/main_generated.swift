@@ -5,7 +5,6 @@
 import FlatBuffers
 
 ///  Publish Notification Message
-///  This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 public struct PNM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

@@ -7,7 +7,6 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Publish Notification Message
-/// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 class PNM extends Table
 {
     /**

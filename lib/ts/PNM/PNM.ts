@@ -6,7 +6,6 @@ import * as flatbuffers from 'flatbuffers';
 
 /**
  * Publish Notification Message
- * This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
  */
 export class PNM implements flatbuffers.IUnpackableObject<PNMT> {
   bb: flatbuffers.ByteBuffer|null = null;

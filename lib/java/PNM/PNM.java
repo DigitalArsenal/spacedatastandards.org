@@ -19,7 +19,6 @@ import java.nio.ByteOrder;
 
 /**
  * Publish Notification Message
- * This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
  */
 @SuppressWarnings("unused")
 public final class PNM extends Table {

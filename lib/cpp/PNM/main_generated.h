@@ -20,7 +20,6 @@ struct PNM_COLLECTION;
 struct PNM_COLLECTIONBuilder;
 
 /// Publish Notification Message
-/// This table includes a comprehensive set of cryptographic hashes and a digital signature for file publication.
 struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
