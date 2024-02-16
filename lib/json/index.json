@@ -4243,69 +4243,9 @@
                             "type": "string",
                             "description": "Unique identifier generated from the data provider's public key"
                         },
-                        "ETH_DIGITAL_SIGNATURE": {
+                        "FILE_IDENTIFIER": {
                             "type": "string",
-                            "description": "Ethereum Digital Signature\nDigital signature of the IPFS file hash using Ethereum's signing mechanism.\nRefer to the Ethereum Blockchain integration section for details."
-                        },
-                        "BTC_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Bitcoin Digital Signature\nDigital signature of the IPFS file hash using Bitcoin's signing mechanism.\nRefer to the Bitcoin Blockchain integration section for details."
-                        },
-                        "LTC_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Litecoin Digital Signature\nDigital signature of the IPFS file hash using Litecoin's signing mechanism.\nRefer to the Litecoin Blockchain integration section for details."
-                        },
-                        "XRP_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Ripple Digital Signature\nDigital signature of the IPFS file hash using Ripple's signing mechanism.\nRefer to the Ripple Blockchain integration section for details."
-                        },
-                        "ADA_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Cardano Digital Signature\nDigital signature of the IPFS file hash using Cardano's signing mechanism.\nRefer to the Cardano Blockchain integration section for details."
-                        },
-                        "XLM_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Stellar Digital Signature\nDigital signature of the IPFS file hash using Stellar's signing mechanism.\nRefer to the Stellar Blockchain integration section for details."
-                        },
-                        "DOGE_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Dogecoin Digital Signature\nDigital signature of the IPFS file hash using Dogecoin's signing mechanism.\nRefer to the Dogecoin Blockchain integration section for details."
-                        },
-                        "XMR_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Monero Digital Signature\nDigital signature of the IPFS file hash using Monero's signing mechanism.\nRefer to the Monero Blockchain integration section for details."
-                        },
-                        "DOT_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Polkadot Digital Signature\nDigital signature of the IPFS file hash using Polkadot's signing mechanism.\nRefer to the Polkadot Blockchain integration section for details."
-                        },
-                        "FIL_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Filecoin Digital Signature\nDigital signature of the IPFS file hash using Filecoin's signing mechanism.\nRefer to the Filecoin Blockchain integration section for details."
-                        },
-                        "XTZ_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Tezos Digital Signature\nDigital signature of the IPFS file hash using Tezos's signing mechanism.\nRefer to the Tezos Blockchain integration section for details."
-                        },
-                        "ATOM_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Cosmos Digital Signature\nDigital signature of the IPFS file hash using Cosmos's signing mechanism.\nRefer to the Cosmos Blockchain integration section for details."
-                        },
-                        "TRX_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Tron Digital Signature\nDigital signature of the IPFS file hash using Tron's signing mechanism.\nRefer to the Tron Blockchain integration section for details."
-                        },
-                        "BNB_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Binance Coin Digital Signature\nDigital signature of the IPFS file hash using Binance Coin's signing mechanism.\nRefer to the Binance Coin Blockchain integration section for details."
-                        },
-                        "AVAX_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Avalanche Digital Signature\nDigital signature of the IPFS file hash using Avalanche's signing mechanism.\nRefer to the Avalanche Blockchain integration section for details."
-                        },
-                        "SOL_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Solana Digital Signature\nDigital signature of the IPFS file hash using Solana's signing mechanism.\nRefer to the Solana Blockchain integration section for details."
+                            "description": "SpaceDataStandards 4 Character File Identifier"
                         }
                     },
                     "additionalProperties": false
@@ -4562,69 +4502,9 @@
                             "type": "string",
                             "description": "Unique identifier generated from the data provider's public key"
                         },
-                        "ETH_DIGITAL_SIGNATURE": {
+                        "FILE_IDENTIFIER": {
                             "type": "string",
-                            "description": "Ethereum Digital Signature\nDigital signature of the IPFS file hash using Ethereum's signing mechanism.\nRefer to the Ethereum Blockchain integration section for details."
-                        },
-                        "BTC_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Bitcoin Digital Signature\nDigital signature of the IPFS file hash using Bitcoin's signing mechanism.\nRefer to the Bitcoin Blockchain integration section for details."
-                        },
-                        "LTC_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Litecoin Digital Signature\nDigital signature of the IPFS file hash using Litecoin's signing mechanism.\nRefer to the Litecoin Blockchain integration section for details."
-                        },
-                        "XRP_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Ripple Digital Signature\nDigital signature of the IPFS file hash using Ripple's signing mechanism.\nRefer to the Ripple Blockchain integration section for details."
-                        },
-                        "ADA_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Cardano Digital Signature\nDigital signature of the IPFS file hash using Cardano's signing mechanism.\nRefer to the Cardano Blockchain integration section for details."
-                        },
-                        "XLM_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Stellar Digital Signature\nDigital signature of the IPFS file hash using Stellar's signing mechanism.\nRefer to the Stellar Blockchain integration section for details."
-                        },
-                        "DOGE_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Dogecoin Digital Signature\nDigital signature of the IPFS file hash using Dogecoin's signing mechanism.\nRefer to the Dogecoin Blockchain integration section for details."
-                        },
-                        "XMR_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Monero Digital Signature\nDigital signature of the IPFS file hash using Monero's signing mechanism.\nRefer to the Monero Blockchain integration section for details."
-                        },
-                        "DOT_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Polkadot Digital Signature\nDigital signature of the IPFS file hash using Polkadot's signing mechanism.\nRefer to the Polkadot Blockchain integration section for details."
-                        },
-                        "FIL_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Filecoin Digital Signature\nDigital signature of the IPFS file hash using Filecoin's signing mechanism.\nRefer to the Filecoin Blockchain integration section for details."
-                        },
-                        "XTZ_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Tezos Digital Signature\nDigital signature of the IPFS file hash using Tezos's signing mechanism.\nRefer to the Tezos Blockchain integration section for details."
-                        },
-                        "ATOM_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Cosmos Digital Signature\nDigital signature of the IPFS file hash using Cosmos's signing mechanism.\nRefer to the Cosmos Blockchain integration section for details."
-                        },
-                        "TRX_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Tron Digital Signature\nDigital signature of the IPFS file hash using Tron's signing mechanism.\nRefer to the Tron Blockchain integration section for details."
-                        },
-                        "BNB_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Binance Coin Digital Signature\nDigital signature of the IPFS file hash using Binance Coin's signing mechanism.\nRefer to the Binance Coin Blockchain integration section for details."
-                        },
-                        "AVAX_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Avalanche Digital Signature\nDigital signature of the IPFS file hash using Avalanche's signing mechanism.\nRefer to the Avalanche Blockchain integration section for details."
-                        },
-                        "SOL_DIGITAL_SIGNATURE": {
-                            "type": "string",
-                            "description": "Solana Digital Signature\nDigital signature of the IPFS file hash using Solana's signing mechanism.\nRefer to the Solana Blockchain integration section for details."
+                            "description": "SpaceDataStandards 4 Character File Identifier"
                         }
                     },
                     "additionalProperties": false

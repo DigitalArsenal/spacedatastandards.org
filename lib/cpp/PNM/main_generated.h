@@ -25,22 +25,7 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_IPFS_CID = 4,
     VT_KEY_ADDRESS = 6,
-    VT_ETH_DIGITAL_SIGNATURE = 8,
-    VT_BTC_DIGITAL_SIGNATURE = 10,
-    VT_LTC_DIGITAL_SIGNATURE = 12,
-    VT_XRP_DIGITAL_SIGNATURE = 14,
-    VT_ADA_DIGITAL_SIGNATURE = 16,
-    VT_XLM_DIGITAL_SIGNATURE = 18,
-    VT_DOGE_DIGITAL_SIGNATURE = 20,
-    VT_XMR_DIGITAL_SIGNATURE = 22,
-    VT_DOT_DIGITAL_SIGNATURE = 24,
-    VT_FIL_DIGITAL_SIGNATURE = 26,
-    VT_XTZ_DIGITAL_SIGNATURE = 28,
-    VT_ATOM_DIGITAL_SIGNATURE = 30,
-    VT_TRX_DIGITAL_SIGNATURE = 32,
-    VT_BNB_DIGITAL_SIGNATURE = 34,
-    VT_AVAX_DIGITAL_SIGNATURE = 36,
-    VT_SOL_DIGITAL_SIGNATURE = 38
+    VT_FILE_IDENTIFIER = 8
   };
   /// IPFS Content Identifier (CID)
   /// The hash of a file stored on the InterPlanetary File System (IPFS).
@@ -52,101 +37,9 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *KEY_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
   }
-  /// Ethereum Digital Signature
-  /// Digital signature of the IPFS file hash using Ethereum's signing mechanism.
-  /// Refer to the Ethereum Blockchain integration section for details.
-  const ::flatbuffers::String *ETH_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ETH_DIGITAL_SIGNATURE);
-  }
-  /// Bitcoin Digital Signature
-  /// Digital signature of the IPFS file hash using Bitcoin's signing mechanism.
-  /// Refer to the Bitcoin Blockchain integration section for details.
-  const ::flatbuffers::String *BTC_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BTC_DIGITAL_SIGNATURE);
-  }
-  /// Litecoin Digital Signature
-  /// Digital signature of the IPFS file hash using Litecoin's signing mechanism.
-  /// Refer to the Litecoin Blockchain integration section for details.
-  const ::flatbuffers::String *LTC_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LTC_DIGITAL_SIGNATURE);
-  }
-  /// Ripple Digital Signature
-  /// Digital signature of the IPFS file hash using Ripple's signing mechanism.
-  /// Refer to the Ripple Blockchain integration section for details.
-  const ::flatbuffers::String *XRP_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XRP_DIGITAL_SIGNATURE);
-  }
-  /// Cardano Digital Signature
-  /// Digital signature of the IPFS file hash using Cardano's signing mechanism.
-  /// Refer to the Cardano Blockchain integration section for details.
-  const ::flatbuffers::String *ADA_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADA_DIGITAL_SIGNATURE);
-  }
-  /// Stellar Digital Signature
-  /// Digital signature of the IPFS file hash using Stellar's signing mechanism.
-  /// Refer to the Stellar Blockchain integration section for details.
-  const ::flatbuffers::String *XLM_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XLM_DIGITAL_SIGNATURE);
-  }
-  /// Dogecoin Digital Signature
-  /// Digital signature of the IPFS file hash using Dogecoin's signing mechanism.
-  /// Refer to the Dogecoin Blockchain integration section for details.
-  const ::flatbuffers::String *DOGE_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DOGE_DIGITAL_SIGNATURE);
-  }
-  /// Monero Digital Signature
-  /// Digital signature of the IPFS file hash using Monero's signing mechanism.
-  /// Refer to the Monero Blockchain integration section for details.
-  const ::flatbuffers::String *XMR_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XMR_DIGITAL_SIGNATURE);
-  }
-  /// Polkadot Digital Signature
-  /// Digital signature of the IPFS file hash using Polkadot's signing mechanism.
-  /// Refer to the Polkadot Blockchain integration section for details.
-  const ::flatbuffers::String *DOT_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DOT_DIGITAL_SIGNATURE);
-  }
-  /// Filecoin Digital Signature
-  /// Digital signature of the IPFS file hash using Filecoin's signing mechanism.
-  /// Refer to the Filecoin Blockchain integration section for details.
-  const ::flatbuffers::String *FIL_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FIL_DIGITAL_SIGNATURE);
-  }
-  /// Tezos Digital Signature
-  /// Digital signature of the IPFS file hash using Tezos's signing mechanism.
-  /// Refer to the Tezos Blockchain integration section for details.
-  const ::flatbuffers::String *XTZ_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XTZ_DIGITAL_SIGNATURE);
-  }
-  /// Cosmos Digital Signature
-  /// Digital signature of the IPFS file hash using Cosmos's signing mechanism.
-  /// Refer to the Cosmos Blockchain integration section for details.
-  const ::flatbuffers::String *ATOM_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ATOM_DIGITAL_SIGNATURE);
-  }
-  /// Tron Digital Signature
-  /// Digital signature of the IPFS file hash using Tron's signing mechanism.
-  /// Refer to the Tron Blockchain integration section for details.
-  const ::flatbuffers::String *TRX_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRX_DIGITAL_SIGNATURE);
-  }
-  /// Binance Coin Digital Signature
-  /// Digital signature of the IPFS file hash using Binance Coin's signing mechanism.
-  /// Refer to the Binance Coin Blockchain integration section for details.
-  const ::flatbuffers::String *BNB_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BNB_DIGITAL_SIGNATURE);
-  }
-  /// Avalanche Digital Signature
-  /// Digital signature of the IPFS file hash using Avalanche's signing mechanism.
-  /// Refer to the Avalanche Blockchain integration section for details.
-  const ::flatbuffers::String *AVAX_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AVAX_DIGITAL_SIGNATURE);
-  }
-  /// Solana Digital Signature
-  /// Digital signature of the IPFS file hash using Solana's signing mechanism.
-  /// Refer to the Solana Blockchain integration section for details.
-  const ::flatbuffers::String *SOL_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SOL_DIGITAL_SIGNATURE);
+  /// SpaceDataStandards 4 Character File Identifier
+  const ::flatbuffers::String *FILE_IDENTIFIER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILE_IDENTIFIER);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -154,38 +47,8 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(IPFS_CID()) &&
            VerifyOffset(verifier, VT_KEY_ADDRESS) &&
            verifier.VerifyString(KEY_ADDRESS()) &&
-           VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(BTC_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_LTC_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(LTC_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XRP_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XRP_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_ADA_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(ADA_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XLM_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XLM_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_DOGE_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(DOGE_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XMR_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XMR_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_DOT_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(DOT_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_FIL_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(FIL_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XTZ_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XTZ_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_ATOM_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(ATOM_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_TRX_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(TRX_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_BNB_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(BNB_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_AVAX_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(AVAX_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_SOL_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(SOL_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_FILE_IDENTIFIER) &&
+           verifier.VerifyString(FILE_IDENTIFIER()) &&
            verifier.EndTable();
   }
 };
@@ -200,53 +63,8 @@ struct PNMBuilder {
   void add_KEY_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS) {
     fbb_.AddOffset(PNM::VT_KEY_ADDRESS, KEY_ADDRESS);
   }
-  void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
-  }
-  void add_BTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
-  }
-  void add_LTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
-  }
-  void add_XRP_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
-  }
-  void add_ADA_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
-  }
-  void add_XLM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
-  }
-  void add_DOGE_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
-  }
-  void add_XMR_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
-  }
-  void add_DOT_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
-  }
-  void add_FIL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
-  }
-  void add_XTZ_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
-  }
-  void add_ATOM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
-  }
-  void add_TRX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
-  }
-  void add_BNB_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
-  }
-  void add_AVAX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
-  }
-  void add_SOL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
+  void add_FILE_IDENTIFIER(::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER) {
+    fbb_.AddOffset(PNM::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
   }
   explicit PNMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -263,39 +81,9 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> IPFS_CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER = 0) {
   PNMBuilder builder_(_fbb);
-  builder_.add_SOL_DIGITAL_SIGNATURE(SOL_DIGITAL_SIGNATURE);
-  builder_.add_AVAX_DIGITAL_SIGNATURE(AVAX_DIGITAL_SIGNATURE);
-  builder_.add_BNB_DIGITAL_SIGNATURE(BNB_DIGITAL_SIGNATURE);
-  builder_.add_TRX_DIGITAL_SIGNATURE(TRX_DIGITAL_SIGNATURE);
-  builder_.add_ATOM_DIGITAL_SIGNATURE(ATOM_DIGITAL_SIGNATURE);
-  builder_.add_XTZ_DIGITAL_SIGNATURE(XTZ_DIGITAL_SIGNATURE);
-  builder_.add_FIL_DIGITAL_SIGNATURE(FIL_DIGITAL_SIGNATURE);
-  builder_.add_DOT_DIGITAL_SIGNATURE(DOT_DIGITAL_SIGNATURE);
-  builder_.add_XMR_DIGITAL_SIGNATURE(XMR_DIGITAL_SIGNATURE);
-  builder_.add_DOGE_DIGITAL_SIGNATURE(DOGE_DIGITAL_SIGNATURE);
-  builder_.add_XLM_DIGITAL_SIGNATURE(XLM_DIGITAL_SIGNATURE);
-  builder_.add_ADA_DIGITAL_SIGNATURE(ADA_DIGITAL_SIGNATURE);
-  builder_.add_XRP_DIGITAL_SIGNATURE(XRP_DIGITAL_SIGNATURE);
-  builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
-  builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
-  builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
+  builder_.add_FILE_IDENTIFIER(FILE_IDENTIFIER);
   builder_.add_KEY_ADDRESS(KEY_ADDRESS);
   builder_.add_IPFS_CID(IPFS_CID);
   return builder_.Finish();
@@ -305,60 +93,15 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *IPFS_CID = nullptr,
     const char *KEY_ADDRESS = nullptr,
-    const char *ETH_DIGITAL_SIGNATURE = nullptr,
-    const char *BTC_DIGITAL_SIGNATURE = nullptr,
-    const char *LTC_DIGITAL_SIGNATURE = nullptr,
-    const char *XRP_DIGITAL_SIGNATURE = nullptr,
-    const char *ADA_DIGITAL_SIGNATURE = nullptr,
-    const char *XLM_DIGITAL_SIGNATURE = nullptr,
-    const char *DOGE_DIGITAL_SIGNATURE = nullptr,
-    const char *XMR_DIGITAL_SIGNATURE = nullptr,
-    const char *DOT_DIGITAL_SIGNATURE = nullptr,
-    const char *FIL_DIGITAL_SIGNATURE = nullptr,
-    const char *XTZ_DIGITAL_SIGNATURE = nullptr,
-    const char *ATOM_DIGITAL_SIGNATURE = nullptr,
-    const char *TRX_DIGITAL_SIGNATURE = nullptr,
-    const char *BNB_DIGITAL_SIGNATURE = nullptr,
-    const char *AVAX_DIGITAL_SIGNATURE = nullptr,
-    const char *SOL_DIGITAL_SIGNATURE = nullptr) {
+    const char *FILE_IDENTIFIER = nullptr) {
   auto IPFS_CID__ = IPFS_CID ? _fbb.CreateString(IPFS_CID) : 0;
   auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
-  auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
-  auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
-  auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
-  auto XRP_DIGITAL_SIGNATURE__ = XRP_DIGITAL_SIGNATURE ? _fbb.CreateString(XRP_DIGITAL_SIGNATURE) : 0;
-  auto ADA_DIGITAL_SIGNATURE__ = ADA_DIGITAL_SIGNATURE ? _fbb.CreateString(ADA_DIGITAL_SIGNATURE) : 0;
-  auto XLM_DIGITAL_SIGNATURE__ = XLM_DIGITAL_SIGNATURE ? _fbb.CreateString(XLM_DIGITAL_SIGNATURE) : 0;
-  auto DOGE_DIGITAL_SIGNATURE__ = DOGE_DIGITAL_SIGNATURE ? _fbb.CreateString(DOGE_DIGITAL_SIGNATURE) : 0;
-  auto XMR_DIGITAL_SIGNATURE__ = XMR_DIGITAL_SIGNATURE ? _fbb.CreateString(XMR_DIGITAL_SIGNATURE) : 0;
-  auto DOT_DIGITAL_SIGNATURE__ = DOT_DIGITAL_SIGNATURE ? _fbb.CreateString(DOT_DIGITAL_SIGNATURE) : 0;
-  auto FIL_DIGITAL_SIGNATURE__ = FIL_DIGITAL_SIGNATURE ? _fbb.CreateString(FIL_DIGITAL_SIGNATURE) : 0;
-  auto XTZ_DIGITAL_SIGNATURE__ = XTZ_DIGITAL_SIGNATURE ? _fbb.CreateString(XTZ_DIGITAL_SIGNATURE) : 0;
-  auto ATOM_DIGITAL_SIGNATURE__ = ATOM_DIGITAL_SIGNATURE ? _fbb.CreateString(ATOM_DIGITAL_SIGNATURE) : 0;
-  auto TRX_DIGITAL_SIGNATURE__ = TRX_DIGITAL_SIGNATURE ? _fbb.CreateString(TRX_DIGITAL_SIGNATURE) : 0;
-  auto BNB_DIGITAL_SIGNATURE__ = BNB_DIGITAL_SIGNATURE ? _fbb.CreateString(BNB_DIGITAL_SIGNATURE) : 0;
-  auto AVAX_DIGITAL_SIGNATURE__ = AVAX_DIGITAL_SIGNATURE ? _fbb.CreateString(AVAX_DIGITAL_SIGNATURE) : 0;
-  auto SOL_DIGITAL_SIGNATURE__ = SOL_DIGITAL_SIGNATURE ? _fbb.CreateString(SOL_DIGITAL_SIGNATURE) : 0;
+  auto FILE_IDENTIFIER__ = FILE_IDENTIFIER ? _fbb.CreateString(FILE_IDENTIFIER) : 0;
   return CreatePNM(
       _fbb,
       IPFS_CID__,
       KEY_ADDRESS__,
-      ETH_DIGITAL_SIGNATURE__,
-      BTC_DIGITAL_SIGNATURE__,
-      LTC_DIGITAL_SIGNATURE__,
-      XRP_DIGITAL_SIGNATURE__,
-      ADA_DIGITAL_SIGNATURE__,
-      XLM_DIGITAL_SIGNATURE__,
-      DOGE_DIGITAL_SIGNATURE__,
-      XMR_DIGITAL_SIGNATURE__,
-      DOT_DIGITAL_SIGNATURE__,
-      FIL_DIGITAL_SIGNATURE__,
-      XTZ_DIGITAL_SIGNATURE__,
-      ATOM_DIGITAL_SIGNATURE__,
-      TRX_DIGITAL_SIGNATURE__,
-      BNB_DIGITAL_SIGNATURE__,
-      AVAX_DIGITAL_SIGNATURE__,
-      SOL_DIGITAL_SIGNATURE__);
+      FILE_IDENTIFIER__);
 }
 
 /// Collection of Publish Notification Messages
