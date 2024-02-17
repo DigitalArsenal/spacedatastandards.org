@@ -9,86 +9,90 @@ table PNM {
   /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
   /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
   /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   MULTIFORMAT_ADDRESS: string;
 
+  /// Content Identifier (CID) - Self-describing unique ID for distributed systems
+  /// https://github.com/multiformats/cid
+  CID: string;
+
   /// Ethereum Digital Signature
-  /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
+  /// Digital signature of the CID using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.
   ETH_DIGITAL_SIGNATURE: string;
 
   /// Bitcoin Digital Signature
-  /// Digital signature of the IPFS CID using Bitcoin's signing mechanism.
+  /// Digital signature of the CID using Bitcoin's signing mechanism.
   /// Refer to the Bitcoin Blockchain integration section for details.
   BTC_DIGITAL_SIGNATURE: string;
 
   /// Litecoin Digital Signature
-  /// Digital signature of the IPFS CID using Litecoin's signing mechanism.
+  /// Digital signature of the CID using Litecoin's signing mechanism.
   /// Refer to the Litecoin Blockchain integration section for details.
   LTC_DIGITAL_SIGNATURE: string;
 
   /// Ripple Digital Signature
-  /// Digital signature of the IPFS CID using Ripple's signing mechanism.
+  /// Digital signature of the CID using Ripple's signing mechanism.
   /// Refer to the Ripple Blockchain integration section for details.
   XRP_DIGITAL_SIGNATURE: string;
 
   /// Cardano Digital Signature
-  /// Digital signature of the IPFS CID using Cardano's signing mechanism.
+  /// Digital signature of the CID using Cardano's signing mechanism.
   /// Refer to the Cardano Blockchain integration section for details.
   ADA_DIGITAL_SIGNATURE: string;
 
   /// Stellar Digital Signature
-  /// Digital signature of the IPFS CID using Stellar's signing mechanism.
+  /// Digital signature of the CID using Stellar's signing mechanism.
   /// Refer to the Stellar Blockchain integration section for details.
   XLM_DIGITAL_SIGNATURE: string;
 
   /// Dogecoin Digital Signature
-  /// Digital signature of the IPFS CID using Dogecoin's signing mechanism.
+  /// Digital signature of the CID using Dogecoin's signing mechanism.
   /// Refer to the Dogecoin Blockchain integration section for details.
   DOGE_DIGITAL_SIGNATURE: string;
 
   /// Monero Digital Signature
-  /// Digital signature of the IPFS CID using Monero's signing mechanism.
+  /// Digital signature of the CID using Monero's signing mechanism.
   /// Refer to the Monero Blockchain integration section for details.
   XMR_DIGITAL_SIGNATURE: string;
 
   /// Polkadot Digital Signature
-  /// Digital signature of the IPFS CID using Polkadot's signing mechanism.
+  /// Digital signature of the CID using Polkadot's signing mechanism.
   /// Refer to the Polkadot Blockchain integration section for details.
   DOT_DIGITAL_SIGNATURE: string;
 
   /// Filecoin Digital Signature
-  /// Digital signature of the IPFS CID using Filecoin's signing mechanism.
+  /// Digital signature of the CID using Filecoin's signing mechanism.
   /// Refer to the Filecoin Blockchain integration section for details.
   FIL_DIGITAL_SIGNATURE: string;
 
   /// Tezos Digital Signature
-  /// Digital signature of the IPFS CID using Tezos's signing mechanism.
+  /// Digital signature of the CID using Tezos's signing mechanism.
   /// Refer to the Tezos Blockchain integration section for details.
   XTZ_DIGITAL_SIGNATURE: string;
 
   /// Cosmos Digital Signature
-  /// Digital signature of the IPFS CID using Cosmos's signing mechanism.
+  /// Digital signature of the CID using Cosmos's signing mechanism.
   /// Refer to the Cosmos Blockchain integration section for details.
   ATOM_DIGITAL_SIGNATURE: string;
 
   /// Tron Digital Signature
-  /// Digital signature of the IPFS CID using Tron's signing mechanism.
+  /// Digital signature of the CID using Tron's signing mechanism.
   /// Refer to the Tron Blockchain integration section for details.
   TRX_DIGITAL_SIGNATURE: string;
 
   /// Binance Coin Digital Signature
-  /// Digital signature of the IPFS CID using Binance Coin's signing mechanism.
+  /// Digital signature of the CID using Binance Coin's signing mechanism.
   /// Refer to the Binance Coin Blockchain integration section for details.
   BNB_DIGITAL_SIGNATURE: string;
 
   /// Avalanche Digital Signature
-  /// Digital signature of the IPFS CID using Avalanche's signing mechanism.
+  /// Digital signature of the CID using Avalanche's signing mechanism.
   /// Refer to the Avalanche Blockchain integration section for details.
   AVAX_DIGITAL_SIGNATURE: string;
 
   /// Solana Digital Signature
-  /// Digital signature of the IPFS CID using Solana's signing mechanism.
+  /// Digital signature of the CID using Solana's signing mechanism.
   /// Refer to the Solana Blockchain integration section for details.
   SOL_DIGITAL_SIGNATURE: string;
 }

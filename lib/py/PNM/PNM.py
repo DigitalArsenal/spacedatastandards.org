@@ -35,7 +35,7 @@ class PNM(object):
     # - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
     # - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
     # - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-    # - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+    # - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
     # PNM
     def MULTIFORMAT_ADDRESS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -43,218 +43,230 @@ class PNM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Ethereum Digital Signature
-    # Digital signature of the IPFS CID using Ethereum's signing mechanism.
-    # Refer to the Ethereum Blockchain integration section for details.
+    # Content Identifier (CID) - Self-describing unique ID for distributed systems
+    # https://github.com/multiformats/cid
     # PNM
-    def ETH_DIGITAL_SIGNATURE(self):
+    def CID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Bitcoin Digital Signature
-    # Digital signature of the IPFS CID using Bitcoin's signing mechanism.
-    # Refer to the Bitcoin Blockchain integration section for details.
+    # Ethereum Digital Signature
+    # Digital signature of the CID using Ethereum's signing mechanism.
+    # Refer to the Ethereum Blockchain integration section for details.
     # PNM
-    def BTC_DIGITAL_SIGNATURE(self):
+    def ETH_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Litecoin Digital Signature
-    # Digital signature of the IPFS CID using Litecoin's signing mechanism.
-    # Refer to the Litecoin Blockchain integration section for details.
+    # Bitcoin Digital Signature
+    # Digital signature of the CID using Bitcoin's signing mechanism.
+    # Refer to the Bitcoin Blockchain integration section for details.
     # PNM
-    def LTC_DIGITAL_SIGNATURE(self):
+    def BTC_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Ripple Digital Signature
-    # Digital signature of the IPFS CID using Ripple's signing mechanism.
-    # Refer to the Ripple Blockchain integration section for details.
+    # Litecoin Digital Signature
+    # Digital signature of the CID using Litecoin's signing mechanism.
+    # Refer to the Litecoin Blockchain integration section for details.
     # PNM
-    def XRP_DIGITAL_SIGNATURE(self):
+    def LTC_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Cardano Digital Signature
-    # Digital signature of the IPFS CID using Cardano's signing mechanism.
-    # Refer to the Cardano Blockchain integration section for details.
+    # Ripple Digital Signature
+    # Digital signature of the CID using Ripple's signing mechanism.
+    # Refer to the Ripple Blockchain integration section for details.
     # PNM
-    def ADA_DIGITAL_SIGNATURE(self):
+    def XRP_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Stellar Digital Signature
-    # Digital signature of the IPFS CID using Stellar's signing mechanism.
-    # Refer to the Stellar Blockchain integration section for details.
+    # Cardano Digital Signature
+    # Digital signature of the CID using Cardano's signing mechanism.
+    # Refer to the Cardano Blockchain integration section for details.
     # PNM
-    def XLM_DIGITAL_SIGNATURE(self):
+    def ADA_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Dogecoin Digital Signature
-    # Digital signature of the IPFS CID using Dogecoin's signing mechanism.
-    # Refer to the Dogecoin Blockchain integration section for details.
+    # Stellar Digital Signature
+    # Digital signature of the CID using Stellar's signing mechanism.
+    # Refer to the Stellar Blockchain integration section for details.
     # PNM
-    def DOGE_DIGITAL_SIGNATURE(self):
+    def XLM_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Monero Digital Signature
-    # Digital signature of the IPFS CID using Monero's signing mechanism.
-    # Refer to the Monero Blockchain integration section for details.
+    # Dogecoin Digital Signature
+    # Digital signature of the CID using Dogecoin's signing mechanism.
+    # Refer to the Dogecoin Blockchain integration section for details.
     # PNM
-    def XMR_DIGITAL_SIGNATURE(self):
+    def DOGE_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Polkadot Digital Signature
-    # Digital signature of the IPFS CID using Polkadot's signing mechanism.
-    # Refer to the Polkadot Blockchain integration section for details.
+    # Monero Digital Signature
+    # Digital signature of the CID using Monero's signing mechanism.
+    # Refer to the Monero Blockchain integration section for details.
     # PNM
-    def DOT_DIGITAL_SIGNATURE(self):
+    def XMR_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Filecoin Digital Signature
-    # Digital signature of the IPFS CID using Filecoin's signing mechanism.
-    # Refer to the Filecoin Blockchain integration section for details.
+    # Polkadot Digital Signature
+    # Digital signature of the CID using Polkadot's signing mechanism.
+    # Refer to the Polkadot Blockchain integration section for details.
     # PNM
-    def FIL_DIGITAL_SIGNATURE(self):
+    def DOT_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Tezos Digital Signature
-    # Digital signature of the IPFS CID using Tezos's signing mechanism.
-    # Refer to the Tezos Blockchain integration section for details.
+    # Filecoin Digital Signature
+    # Digital signature of the CID using Filecoin's signing mechanism.
+    # Refer to the Filecoin Blockchain integration section for details.
     # PNM
-    def XTZ_DIGITAL_SIGNATURE(self):
+    def FIL_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Cosmos Digital Signature
-    # Digital signature of the IPFS CID using Cosmos's signing mechanism.
-    # Refer to the Cosmos Blockchain integration section for details.
+    # Tezos Digital Signature
+    # Digital signature of the CID using Tezos's signing mechanism.
+    # Refer to the Tezos Blockchain integration section for details.
     # PNM
-    def ATOM_DIGITAL_SIGNATURE(self):
+    def XTZ_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Tron Digital Signature
-    # Digital signature of the IPFS CID using Tron's signing mechanism.
-    # Refer to the Tron Blockchain integration section for details.
+    # Cosmos Digital Signature
+    # Digital signature of the CID using Cosmos's signing mechanism.
+    # Refer to the Cosmos Blockchain integration section for details.
     # PNM
-    def TRX_DIGITAL_SIGNATURE(self):
+    def ATOM_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Binance Coin Digital Signature
-    # Digital signature of the IPFS CID using Binance Coin's signing mechanism.
-    # Refer to the Binance Coin Blockchain integration section for details.
+    # Tron Digital Signature
+    # Digital signature of the CID using Tron's signing mechanism.
+    # Refer to the Tron Blockchain integration section for details.
     # PNM
-    def BNB_DIGITAL_SIGNATURE(self):
+    def TRX_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Avalanche Digital Signature
-    # Digital signature of the IPFS CID using Avalanche's signing mechanism.
-    # Refer to the Avalanche Blockchain integration section for details.
+    # Binance Coin Digital Signature
+    # Digital signature of the CID using Binance Coin's signing mechanism.
+    # Refer to the Binance Coin Blockchain integration section for details.
     # PNM
-    def AVAX_DIGITAL_SIGNATURE(self):
+    def BNB_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Solana Digital Signature
-    # Digital signature of the IPFS CID using Solana's signing mechanism.
-    # Refer to the Solana Blockchain integration section for details.
+    # Avalanche Digital Signature
+    # Digital signature of the CID using Avalanche's signing mechanism.
+    # Refer to the Avalanche Blockchain integration section for details.
     # PNM
-    def SOL_DIGITAL_SIGNATURE(self):
+    def AVAX_DIGITAL_SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def PNMStart(builder): builder.StartObject(17)
+    # Solana Digital Signature
+    # Digital signature of the CID using Solana's signing mechanism.
+    # Refer to the Solana Blockchain integration section for details.
+    # PNM
+    def SOL_DIGITAL_SIGNATURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def PNMStart(builder): builder.StartObject(18)
 def Start(builder):
     return PNMStart(builder)
 def PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
 def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
     return PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
-def PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
+def PNMAddCID(builder, CID): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
+def AddCID(builder, CID):
+    return PNMAddCID(builder, CID)
+def PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
 def AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE):
     return PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
-def PNMAddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BTC_DIGITAL_SIGNATURE), 0)
+def PNMAddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BTC_DIGITAL_SIGNATURE), 0)
 def AddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE):
     return PNMAddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE)
-def PNMAddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LTC_DIGITAL_SIGNATURE), 0)
+def PNMAddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LTC_DIGITAL_SIGNATURE), 0)
 def AddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE):
     return PNMAddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE)
-def PNMAddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(XRP_DIGITAL_SIGNATURE), 0)
+def PNMAddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(XRP_DIGITAL_SIGNATURE), 0)
 def AddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE):
     return PNMAddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE)
-def PNMAddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ADA_DIGITAL_SIGNATURE), 0)
+def PNMAddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ADA_DIGITAL_SIGNATURE), 0)
 def AddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE):
     return PNMAddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE)
-def PNMAddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(XLM_DIGITAL_SIGNATURE), 0)
+def PNMAddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(XLM_DIGITAL_SIGNATURE), 0)
 def AddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE):
     return PNMAddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE)
-def PNMAddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(DOGE_DIGITAL_SIGNATURE), 0)
+def PNMAddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DOGE_DIGITAL_SIGNATURE), 0)
 def AddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE):
     return PNMAddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE)
-def PNMAddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(XMR_DIGITAL_SIGNATURE), 0)
+def PNMAddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(XMR_DIGITAL_SIGNATURE), 0)
 def AddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE):
     return PNMAddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE)
-def PNMAddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DOT_DIGITAL_SIGNATURE), 0)
+def PNMAddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DOT_DIGITAL_SIGNATURE), 0)
 def AddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE):
     return PNMAddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE)
-def PNMAddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(FIL_DIGITAL_SIGNATURE), 0)
+def PNMAddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(FIL_DIGITAL_SIGNATURE), 0)
 def AddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE):
     return PNMAddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE)
-def PNMAddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(XTZ_DIGITAL_SIGNATURE), 0)
+def PNMAddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(XTZ_DIGITAL_SIGNATURE), 0)
 def AddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE):
     return PNMAddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE)
-def PNMAddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ATOM_DIGITAL_SIGNATURE), 0)
+def PNMAddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ATOM_DIGITAL_SIGNATURE), 0)
 def AddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE):
     return PNMAddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE)
-def PNMAddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TRX_DIGITAL_SIGNATURE), 0)
+def PNMAddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TRX_DIGITAL_SIGNATURE), 0)
 def AddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE):
     return PNMAddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE)
-def PNMAddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(BNB_DIGITAL_SIGNATURE), 0)
+def PNMAddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(BNB_DIGITAL_SIGNATURE), 0)
 def AddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE):
     return PNMAddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE)
-def PNMAddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(AVAX_DIGITAL_SIGNATURE), 0)
+def PNMAddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(AVAX_DIGITAL_SIGNATURE), 0)
 def AddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE):
     return PNMAddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE)
-def PNMAddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SOL_DIGITAL_SIGNATURE), 0)
+def PNMAddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SOL_DIGITAL_SIGNATURE), 0)
 def AddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE):
     return PNMAddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE)
 def PNMEnd(builder): return builder.EndObject()
@@ -266,6 +278,7 @@ class PNMT(object):
     # PNMT
     def __init__(self):
         self.MULTIFORMAT_ADDRESS = None  # type: str
+        self.CID = None  # type: str
         self.ETH_DIGITAL_SIGNATURE = None  # type: str
         self.BTC_DIGITAL_SIGNATURE = None  # type: str
         self.LTC_DIGITAL_SIGNATURE = None  # type: str
@@ -305,6 +318,7 @@ class PNMT(object):
         if PNM is None:
             return
         self.MULTIFORMAT_ADDRESS = PNM.MULTIFORMAT_ADDRESS()
+        self.CID = PNM.CID()
         self.ETH_DIGITAL_SIGNATURE = PNM.ETH_DIGITAL_SIGNATURE()
         self.BTC_DIGITAL_SIGNATURE = PNM.BTC_DIGITAL_SIGNATURE()
         self.LTC_DIGITAL_SIGNATURE = PNM.LTC_DIGITAL_SIGNATURE()
@@ -326,6 +340,8 @@ class PNMT(object):
     def Pack(self, builder):
         if self.MULTIFORMAT_ADDRESS is not None:
             MULTIFORMAT_ADDRESS = builder.CreateString(self.MULTIFORMAT_ADDRESS)
+        if self.CID is not None:
+            CID = builder.CreateString(self.CID)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             ETH_DIGITAL_SIGNATURE = builder.CreateString(self.ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:
@@ -361,6 +377,8 @@ class PNMT(object):
         PNMStart(builder)
         if self.MULTIFORMAT_ADDRESS is not None:
             PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
+        if self.CID is not None:
+            PNMAddCID(builder, CID)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:

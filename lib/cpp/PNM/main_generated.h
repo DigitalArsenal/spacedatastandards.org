@@ -24,22 +24,23 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MULTIFORMAT_ADDRESS = 4,
-    VT_ETH_DIGITAL_SIGNATURE = 6,
-    VT_BTC_DIGITAL_SIGNATURE = 8,
-    VT_LTC_DIGITAL_SIGNATURE = 10,
-    VT_XRP_DIGITAL_SIGNATURE = 12,
-    VT_ADA_DIGITAL_SIGNATURE = 14,
-    VT_XLM_DIGITAL_SIGNATURE = 16,
-    VT_DOGE_DIGITAL_SIGNATURE = 18,
-    VT_XMR_DIGITAL_SIGNATURE = 20,
-    VT_DOT_DIGITAL_SIGNATURE = 22,
-    VT_FIL_DIGITAL_SIGNATURE = 24,
-    VT_XTZ_DIGITAL_SIGNATURE = 26,
-    VT_ATOM_DIGITAL_SIGNATURE = 28,
-    VT_TRX_DIGITAL_SIGNATURE = 30,
-    VT_BNB_DIGITAL_SIGNATURE = 32,
-    VT_AVAX_DIGITAL_SIGNATURE = 34,
-    VT_SOL_DIGITAL_SIGNATURE = 36
+    VT_CID = 6,
+    VT_ETH_DIGITAL_SIGNATURE = 8,
+    VT_BTC_DIGITAL_SIGNATURE = 10,
+    VT_LTC_DIGITAL_SIGNATURE = 12,
+    VT_XRP_DIGITAL_SIGNATURE = 14,
+    VT_ADA_DIGITAL_SIGNATURE = 16,
+    VT_XLM_DIGITAL_SIGNATURE = 18,
+    VT_DOGE_DIGITAL_SIGNATURE = 20,
+    VT_XMR_DIGITAL_SIGNATURE = 22,
+    VT_DOT_DIGITAL_SIGNATURE = 24,
+    VT_FIL_DIGITAL_SIGNATURE = 26,
+    VT_XTZ_DIGITAL_SIGNATURE = 28,
+    VT_ATOM_DIGITAL_SIGNATURE = 30,
+    VT_TRX_DIGITAL_SIGNATURE = 32,
+    VT_BNB_DIGITAL_SIGNATURE = 34,
+    VT_AVAX_DIGITAL_SIGNATURE = 36,
+    VT_SOL_DIGITAL_SIGNATURE = 38
   };
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/
@@ -47,102 +48,107 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
   /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
   /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   const ::flatbuffers::String *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MULTIFORMAT_ADDRESS);
   }
+  /// Content Identifier (CID) - Self-describing unique ID for distributed systems
+  /// https://github.com/multiformats/cid
+  const ::flatbuffers::String *CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CID);
+  }
   /// Ethereum Digital Signature
-  /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
+  /// Digital signature of the CID using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.
   const ::flatbuffers::String *ETH_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ETH_DIGITAL_SIGNATURE);
   }
   /// Bitcoin Digital Signature
-  /// Digital signature of the IPFS CID using Bitcoin's signing mechanism.
+  /// Digital signature of the CID using Bitcoin's signing mechanism.
   /// Refer to the Bitcoin Blockchain integration section for details.
   const ::flatbuffers::String *BTC_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BTC_DIGITAL_SIGNATURE);
   }
   /// Litecoin Digital Signature
-  /// Digital signature of the IPFS CID using Litecoin's signing mechanism.
+  /// Digital signature of the CID using Litecoin's signing mechanism.
   /// Refer to the Litecoin Blockchain integration section for details.
   const ::flatbuffers::String *LTC_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LTC_DIGITAL_SIGNATURE);
   }
   /// Ripple Digital Signature
-  /// Digital signature of the IPFS CID using Ripple's signing mechanism.
+  /// Digital signature of the CID using Ripple's signing mechanism.
   /// Refer to the Ripple Blockchain integration section for details.
   const ::flatbuffers::String *XRP_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XRP_DIGITAL_SIGNATURE);
   }
   /// Cardano Digital Signature
-  /// Digital signature of the IPFS CID using Cardano's signing mechanism.
+  /// Digital signature of the CID using Cardano's signing mechanism.
   /// Refer to the Cardano Blockchain integration section for details.
   const ::flatbuffers::String *ADA_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ADA_DIGITAL_SIGNATURE);
   }
   /// Stellar Digital Signature
-  /// Digital signature of the IPFS CID using Stellar's signing mechanism.
+  /// Digital signature of the CID using Stellar's signing mechanism.
   /// Refer to the Stellar Blockchain integration section for details.
   const ::flatbuffers::String *XLM_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XLM_DIGITAL_SIGNATURE);
   }
   /// Dogecoin Digital Signature
-  /// Digital signature of the IPFS CID using Dogecoin's signing mechanism.
+  /// Digital signature of the CID using Dogecoin's signing mechanism.
   /// Refer to the Dogecoin Blockchain integration section for details.
   const ::flatbuffers::String *DOGE_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DOGE_DIGITAL_SIGNATURE);
   }
   /// Monero Digital Signature
-  /// Digital signature of the IPFS CID using Monero's signing mechanism.
+  /// Digital signature of the CID using Monero's signing mechanism.
   /// Refer to the Monero Blockchain integration section for details.
   const ::flatbuffers::String *XMR_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XMR_DIGITAL_SIGNATURE);
   }
   /// Polkadot Digital Signature
-  /// Digital signature of the IPFS CID using Polkadot's signing mechanism.
+  /// Digital signature of the CID using Polkadot's signing mechanism.
   /// Refer to the Polkadot Blockchain integration section for details.
   const ::flatbuffers::String *DOT_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DOT_DIGITAL_SIGNATURE);
   }
   /// Filecoin Digital Signature
-  /// Digital signature of the IPFS CID using Filecoin's signing mechanism.
+  /// Digital signature of the CID using Filecoin's signing mechanism.
   /// Refer to the Filecoin Blockchain integration section for details.
   const ::flatbuffers::String *FIL_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FIL_DIGITAL_SIGNATURE);
   }
   /// Tezos Digital Signature
-  /// Digital signature of the IPFS CID using Tezos's signing mechanism.
+  /// Digital signature of the CID using Tezos's signing mechanism.
   /// Refer to the Tezos Blockchain integration section for details.
   const ::flatbuffers::String *XTZ_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XTZ_DIGITAL_SIGNATURE);
   }
   /// Cosmos Digital Signature
-  /// Digital signature of the IPFS CID using Cosmos's signing mechanism.
+  /// Digital signature of the CID using Cosmos's signing mechanism.
   /// Refer to the Cosmos Blockchain integration section for details.
   const ::flatbuffers::String *ATOM_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ATOM_DIGITAL_SIGNATURE);
   }
   /// Tron Digital Signature
-  /// Digital signature of the IPFS CID using Tron's signing mechanism.
+  /// Digital signature of the CID using Tron's signing mechanism.
   /// Refer to the Tron Blockchain integration section for details.
   const ::flatbuffers::String *TRX_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRX_DIGITAL_SIGNATURE);
   }
   /// Binance Coin Digital Signature
-  /// Digital signature of the IPFS CID using Binance Coin's signing mechanism.
+  /// Digital signature of the CID using Binance Coin's signing mechanism.
   /// Refer to the Binance Coin Blockchain integration section for details.
   const ::flatbuffers::String *BNB_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BNB_DIGITAL_SIGNATURE);
   }
   /// Avalanche Digital Signature
-  /// Digital signature of the IPFS CID using Avalanche's signing mechanism.
+  /// Digital signature of the CID using Avalanche's signing mechanism.
   /// Refer to the Avalanche Blockchain integration section for details.
   const ::flatbuffers::String *AVAX_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_AVAX_DIGITAL_SIGNATURE);
   }
   /// Solana Digital Signature
-  /// Digital signature of the IPFS CID using Solana's signing mechanism.
+  /// Digital signature of the CID using Solana's signing mechanism.
   /// Refer to the Solana Blockchain integration section for details.
   const ::flatbuffers::String *SOL_DIGITAL_SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOL_DIGITAL_SIGNATURE);
@@ -151,6 +157,8 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
            verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
+           VerifyOffset(verifier, VT_CID) &&
+           verifier.VerifyString(CID()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
            VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
@@ -193,6 +201,9 @@ struct PNMBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS) {
     fbb_.AddOffset(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
+  }
+  void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
+    fbb_.AddOffset(PNM::VT_CID, CID);
   }
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
     fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
@@ -256,6 +267,7 @@ struct PNMBuilder {
 inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
@@ -289,6 +301,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
   builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
   builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
+  builder_.add_CID(CID);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   return builder_.Finish();
 }
@@ -296,6 +309,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
 inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *MULTIFORMAT_ADDRESS = nullptr,
+    const char *CID = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
     const char *BTC_DIGITAL_SIGNATURE = nullptr,
     const char *LTC_DIGITAL_SIGNATURE = nullptr,
@@ -313,6 +327,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     const char *AVAX_DIGITAL_SIGNATURE = nullptr,
     const char *SOL_DIGITAL_SIGNATURE = nullptr) {
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
+  auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
   auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
   auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
@@ -332,6 +347,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
   return CreatePNM(
       _fbb,
       MULTIFORMAT_ADDRESS__,
+      CID__,
       ETH_DIGITAL_SIGNATURE__,
       BTC_DIGITAL_SIGNATURE__,
       LTC_DIGITAL_SIGNATURE__,

@@ -18,22 +18,23 @@ public struct PNM: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case MULTIFORMAT_ADDRESS = 4
-    case ETH_DIGITAL_SIGNATURE = 6
-    case BTC_DIGITAL_SIGNATURE = 8
-    case LTC_DIGITAL_SIGNATURE = 10
-    case XRP_DIGITAL_SIGNATURE = 12
-    case ADA_DIGITAL_SIGNATURE = 14
-    case XLM_DIGITAL_SIGNATURE = 16
-    case DOGE_DIGITAL_SIGNATURE = 18
-    case XMR_DIGITAL_SIGNATURE = 20
-    case DOT_DIGITAL_SIGNATURE = 22
-    case FIL_DIGITAL_SIGNATURE = 24
-    case XTZ_DIGITAL_SIGNATURE = 26
-    case ATOM_DIGITAL_SIGNATURE = 28
-    case TRX_DIGITAL_SIGNATURE = 30
-    case BNB_DIGITAL_SIGNATURE = 32
-    case AVAX_DIGITAL_SIGNATURE = 34
-    case SOL_DIGITAL_SIGNATURE = 36
+    case CID = 6
+    case ETH_DIGITAL_SIGNATURE = 8
+    case BTC_DIGITAL_SIGNATURE = 10
+    case LTC_DIGITAL_SIGNATURE = 12
+    case XRP_DIGITAL_SIGNATURE = 14
+    case ADA_DIGITAL_SIGNATURE = 16
+    case XLM_DIGITAL_SIGNATURE = 18
+    case DOGE_DIGITAL_SIGNATURE = 20
+    case XMR_DIGITAL_SIGNATURE = 22
+    case DOT_DIGITAL_SIGNATURE = 24
+    case FIL_DIGITAL_SIGNATURE = 26
+    case XTZ_DIGITAL_SIGNATURE = 28
+    case ATOM_DIGITAL_SIGNATURE = 30
+    case TRX_DIGITAL_SIGNATURE = 32
+    case BNB_DIGITAL_SIGNATURE = 34
+    case AVAX_DIGITAL_SIGNATURE = 36
+    case SOL_DIGITAL_SIGNATURE = 38
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -44,91 +45,96 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
   ///  - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
   ///  - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-  ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+  ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MULTIFORMAT_ADDRESS.v) }
+  ///  Content Identifier (CID) - Self-describing unique ID for distributed systems
+  ///  https://github.com/multiformats/cid
+  public var CID: String? { let o = _accessor.offset(VTOFFSET.CID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CID.v) }
   ///  Ethereum Digital Signature
-  ///  Digital signature of the IPFS CID using Ethereum's signing mechanism.
+  ///  Digital signature of the CID using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
   public var ETH_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ETH_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ETH_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ETH_DIGITAL_SIGNATURE.v) }
   ///  Bitcoin Digital Signature
-  ///  Digital signature of the IPFS CID using Bitcoin's signing mechanism.
+  ///  Digital signature of the CID using Bitcoin's signing mechanism.
   ///  Refer to the Bitcoin Blockchain integration section for details.
   public var BTC_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.BTC_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BTC_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BTC_DIGITAL_SIGNATURE.v) }
   ///  Litecoin Digital Signature
-  ///  Digital signature of the IPFS CID using Litecoin's signing mechanism.
+  ///  Digital signature of the CID using Litecoin's signing mechanism.
   ///  Refer to the Litecoin Blockchain integration section for details.
   public var LTC_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.LTC_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LTC_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LTC_DIGITAL_SIGNATURE.v) }
   ///  Ripple Digital Signature
-  ///  Digital signature of the IPFS CID using Ripple's signing mechanism.
+  ///  Digital signature of the CID using Ripple's signing mechanism.
   ///  Refer to the Ripple Blockchain integration section for details.
   public var XRP_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XRP_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XRP_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XRP_DIGITAL_SIGNATURE.v) }
   ///  Cardano Digital Signature
-  ///  Digital signature of the IPFS CID using Cardano's signing mechanism.
+  ///  Digital signature of the CID using Cardano's signing mechanism.
   ///  Refer to the Cardano Blockchain integration section for details.
   public var ADA_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ADA_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ADA_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADA_DIGITAL_SIGNATURE.v) }
   ///  Stellar Digital Signature
-  ///  Digital signature of the IPFS CID using Stellar's signing mechanism.
+  ///  Digital signature of the CID using Stellar's signing mechanism.
   ///  Refer to the Stellar Blockchain integration section for details.
   public var XLM_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XLM_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XLM_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XLM_DIGITAL_SIGNATURE.v) }
   ///  Dogecoin Digital Signature
-  ///  Digital signature of the IPFS CID using Dogecoin's signing mechanism.
+  ///  Digital signature of the CID using Dogecoin's signing mechanism.
   ///  Refer to the Dogecoin Blockchain integration section for details.
   public var DOGE_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.DOGE_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DOGE_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOGE_DIGITAL_SIGNATURE.v) }
   ///  Monero Digital Signature
-  ///  Digital signature of the IPFS CID using Monero's signing mechanism.
+  ///  Digital signature of the CID using Monero's signing mechanism.
   ///  Refer to the Monero Blockchain integration section for details.
   public var XMR_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XMR_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XMR_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XMR_DIGITAL_SIGNATURE.v) }
   ///  Polkadot Digital Signature
-  ///  Digital signature of the IPFS CID using Polkadot's signing mechanism.
+  ///  Digital signature of the CID using Polkadot's signing mechanism.
   ///  Refer to the Polkadot Blockchain integration section for details.
   public var DOT_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.DOT_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DOT_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOT_DIGITAL_SIGNATURE.v) }
   ///  Filecoin Digital Signature
-  ///  Digital signature of the IPFS CID using Filecoin's signing mechanism.
+  ///  Digital signature of the CID using Filecoin's signing mechanism.
   ///  Refer to the Filecoin Blockchain integration section for details.
   public var FIL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.FIL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var FIL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FIL_DIGITAL_SIGNATURE.v) }
   ///  Tezos Digital Signature
-  ///  Digital signature of the IPFS CID using Tezos's signing mechanism.
+  ///  Digital signature of the CID using Tezos's signing mechanism.
   ///  Refer to the Tezos Blockchain integration section for details.
   public var XTZ_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XTZ_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XTZ_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XTZ_DIGITAL_SIGNATURE.v) }
   ///  Cosmos Digital Signature
-  ///  Digital signature of the IPFS CID using Cosmos's signing mechanism.
+  ///  Digital signature of the CID using Cosmos's signing mechanism.
   ///  Refer to the Cosmos Blockchain integration section for details.
   public var ATOM_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ATOM_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ATOM_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATOM_DIGITAL_SIGNATURE.v) }
   ///  Tron Digital Signature
-  ///  Digital signature of the IPFS CID using Tron's signing mechanism.
+  ///  Digital signature of the CID using Tron's signing mechanism.
   ///  Refer to the Tron Blockchain integration section for details.
   public var TRX_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.TRX_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRX_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRX_DIGITAL_SIGNATURE.v) }
   ///  Binance Coin Digital Signature
-  ///  Digital signature of the IPFS CID using Binance Coin's signing mechanism.
+  ///  Digital signature of the CID using Binance Coin's signing mechanism.
   ///  Refer to the Binance Coin Blockchain integration section for details.
   public var BNB_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.BNB_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BNB_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BNB_DIGITAL_SIGNATURE.v) }
   ///  Avalanche Digital Signature
-  ///  Digital signature of the IPFS CID using Avalanche's signing mechanism.
+  ///  Digital signature of the CID using Avalanche's signing mechanism.
   ///  Refer to the Avalanche Blockchain integration section for details.
   public var AVAX_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.AVAX_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var AVAX_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AVAX_DIGITAL_SIGNATURE.v) }
   ///  Solana Digital Signature
-  ///  Digital signature of the IPFS CID using Solana's signing mechanism.
+  ///  Digital signature of the CID using Solana's signing mechanism.
   ///  Refer to the Solana Blockchain integration section for details.
   public var SOL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SOL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
-  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
+  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VTOFFSET.CID.p) }
   public static func add(ETH_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETH_DIGITAL_SIGNATURE, at: VTOFFSET.ETH_DIGITAL_SIGNATURE.p) }
   public static func add(BTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BTC_DIGITAL_SIGNATURE, at: VTOFFSET.BTC_DIGITAL_SIGNATURE.p) }
   public static func add(LTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LTC_DIGITAL_SIGNATURE, at: VTOFFSET.LTC_DIGITAL_SIGNATURE.p) }
@@ -149,6 +155,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
     MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
+    CIDOffset CID: Offset = Offset(),
     ETH_DIGITAL_SIGNATUREOffset ETH_DIGITAL_SIGNATURE: Offset = Offset(),
     BTC_DIGITAL_SIGNATUREOffset BTC_DIGITAL_SIGNATURE: Offset = Offset(),
     LTC_DIGITAL_SIGNATUREOffset LTC_DIGITAL_SIGNATURE: Offset = Offset(),
@@ -168,6 +175,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   ) -> Offset {
     let __start = PNM.startPNM(&fbb)
     PNM.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
+    PNM.add(CID: CID, &fbb)
     PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
     PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
     PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
@@ -190,6 +198,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.CID.p, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ETH_DIGITAL_SIGNATURE.p, fieldName: "ETH_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.BTC_DIGITAL_SIGNATURE.p, fieldName: "BTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LTC_DIGITAL_SIGNATURE.p, fieldName: "LTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)

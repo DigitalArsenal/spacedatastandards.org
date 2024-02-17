@@ -27,22 +27,23 @@ impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
 
 impl<'a> PNM<'a> {
   pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 4;
-  pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 6;
-  pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 8;
-  pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
-  pub const VT_XRP_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 12;
-  pub const VT_ADA_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 14;
-  pub const VT_XLM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 16;
-  pub const VT_DOGE_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 18;
-  pub const VT_XMR_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 20;
-  pub const VT_DOT_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 22;
-  pub const VT_FIL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 24;
-  pub const VT_XTZ_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 26;
-  pub const VT_ATOM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 28;
-  pub const VT_TRX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 30;
-  pub const VT_BNB_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 32;
-  pub const VT_AVAX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 34;
-  pub const VT_SOL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 36;
+  pub const VT_CID: flatbuffers::VOffsetT = 6;
+  pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 8;
+  pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
+  pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 12;
+  pub const VT_XRP_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 14;
+  pub const VT_ADA_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 16;
+  pub const VT_XLM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 18;
+  pub const VT_DOGE_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 20;
+  pub const VT_XMR_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 22;
+  pub const VT_DOT_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 24;
+  pub const VT_FIL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 26;
+  pub const VT_XTZ_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 28;
+  pub const VT_ATOM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 30;
+  pub const VT_TRX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 32;
+  pub const VT_BNB_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 34;
+  pub const VT_AVAX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 36;
+  pub const VT_SOL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -70,12 +71,16 @@ impl<'a> PNM<'a> {
     if let Some(x) = args.LTC_DIGITAL_SIGNATURE { builder.add_LTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.BTC_DIGITAL_SIGNATURE { builder.add_BTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.ETH_DIGITAL_SIGNATURE { builder.add_ETH_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.CID { builder.add_CID(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> PNMT {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
+      x.to_string()
+    });
+    let CID = self.CID().map(|x| {
       x.to_string()
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE().map(|x| {
@@ -128,6 +133,7 @@ impl<'a> PNM<'a> {
     });
     PNMT {
       MULTIFORMAT_ADDRESS,
+      CID,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,
@@ -153,7 +159,7 @@ impl<'a> PNM<'a> {
   /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
   /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
   /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   #[inline]
   pub fn MULTIFORMAT_ADDRESS(&self) -> Option<&'a str> {
     // Safety:
@@ -161,8 +167,17 @@ impl<'a> PNM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MULTIFORMAT_ADDRESS, None)}
   }
+  /// Content Identifier (CID) - Self-describing unique ID for distributed systems
+  /// https://github.com/multiformats/cid
+  #[inline]
+  pub fn CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CID, None)}
+  }
   /// Ethereum Digital Signature
-  /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
+  /// Digital signature of the CID using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.
   #[inline]
   pub fn ETH_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -172,7 +187,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ETH_DIGITAL_SIGNATURE, None)}
   }
   /// Bitcoin Digital Signature
-  /// Digital signature of the IPFS CID using Bitcoin's signing mechanism.
+  /// Digital signature of the CID using Bitcoin's signing mechanism.
   /// Refer to the Bitcoin Blockchain integration section for details.
   #[inline]
   pub fn BTC_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -182,7 +197,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BTC_DIGITAL_SIGNATURE, None)}
   }
   /// Litecoin Digital Signature
-  /// Digital signature of the IPFS CID using Litecoin's signing mechanism.
+  /// Digital signature of the CID using Litecoin's signing mechanism.
   /// Refer to the Litecoin Blockchain integration section for details.
   #[inline]
   pub fn LTC_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -192,7 +207,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_LTC_DIGITAL_SIGNATURE, None)}
   }
   /// Ripple Digital Signature
-  /// Digital signature of the IPFS CID using Ripple's signing mechanism.
+  /// Digital signature of the CID using Ripple's signing mechanism.
   /// Refer to the Ripple Blockchain integration section for details.
   #[inline]
   pub fn XRP_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -202,7 +217,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XRP_DIGITAL_SIGNATURE, None)}
   }
   /// Cardano Digital Signature
-  /// Digital signature of the IPFS CID using Cardano's signing mechanism.
+  /// Digital signature of the CID using Cardano's signing mechanism.
   /// Refer to the Cardano Blockchain integration section for details.
   #[inline]
   pub fn ADA_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -212,7 +227,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ADA_DIGITAL_SIGNATURE, None)}
   }
   /// Stellar Digital Signature
-  /// Digital signature of the IPFS CID using Stellar's signing mechanism.
+  /// Digital signature of the CID using Stellar's signing mechanism.
   /// Refer to the Stellar Blockchain integration section for details.
   #[inline]
   pub fn XLM_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -222,7 +237,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XLM_DIGITAL_SIGNATURE, None)}
   }
   /// Dogecoin Digital Signature
-  /// Digital signature of the IPFS CID using Dogecoin's signing mechanism.
+  /// Digital signature of the CID using Dogecoin's signing mechanism.
   /// Refer to the Dogecoin Blockchain integration section for details.
   #[inline]
   pub fn DOGE_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -232,7 +247,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, None)}
   }
   /// Monero Digital Signature
-  /// Digital signature of the IPFS CID using Monero's signing mechanism.
+  /// Digital signature of the CID using Monero's signing mechanism.
   /// Refer to the Monero Blockchain integration section for details.
   #[inline]
   pub fn XMR_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -242,7 +257,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XMR_DIGITAL_SIGNATURE, None)}
   }
   /// Polkadot Digital Signature
-  /// Digital signature of the IPFS CID using Polkadot's signing mechanism.
+  /// Digital signature of the CID using Polkadot's signing mechanism.
   /// Refer to the Polkadot Blockchain integration section for details.
   #[inline]
   pub fn DOT_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -252,7 +267,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOT_DIGITAL_SIGNATURE, None)}
   }
   /// Filecoin Digital Signature
-  /// Digital signature of the IPFS CID using Filecoin's signing mechanism.
+  /// Digital signature of the CID using Filecoin's signing mechanism.
   /// Refer to the Filecoin Blockchain integration section for details.
   #[inline]
   pub fn FIL_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -262,7 +277,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FIL_DIGITAL_SIGNATURE, None)}
   }
   /// Tezos Digital Signature
-  /// Digital signature of the IPFS CID using Tezos's signing mechanism.
+  /// Digital signature of the CID using Tezos's signing mechanism.
   /// Refer to the Tezos Blockchain integration section for details.
   #[inline]
   pub fn XTZ_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -272,7 +287,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, None)}
   }
   /// Cosmos Digital Signature
-  /// Digital signature of the IPFS CID using Cosmos's signing mechanism.
+  /// Digital signature of the CID using Cosmos's signing mechanism.
   /// Refer to the Cosmos Blockchain integration section for details.
   #[inline]
   pub fn ATOM_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -282,7 +297,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, None)}
   }
   /// Tron Digital Signature
-  /// Digital signature of the IPFS CID using Tron's signing mechanism.
+  /// Digital signature of the CID using Tron's signing mechanism.
   /// Refer to the Tron Blockchain integration section for details.
   #[inline]
   pub fn TRX_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -292,7 +307,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TRX_DIGITAL_SIGNATURE, None)}
   }
   /// Binance Coin Digital Signature
-  /// Digital signature of the IPFS CID using Binance Coin's signing mechanism.
+  /// Digital signature of the CID using Binance Coin's signing mechanism.
   /// Refer to the Binance Coin Blockchain integration section for details.
   #[inline]
   pub fn BNB_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -302,7 +317,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BNB_DIGITAL_SIGNATURE, None)}
   }
   /// Avalanche Digital Signature
-  /// Digital signature of the IPFS CID using Avalanche's signing mechanism.
+  /// Digital signature of the CID using Avalanche's signing mechanism.
   /// Refer to the Avalanche Blockchain integration section for details.
   #[inline]
   pub fn AVAX_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -312,7 +327,7 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, None)}
   }
   /// Solana Digital Signature
-  /// Digital signature of the IPFS CID using Solana's signing mechanism.
+  /// Digital signature of the CID using Solana's signing mechanism.
   /// Refer to the Solana Blockchain integration section for details.
   #[inline]
   pub fn SOL_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
@@ -331,6 +346,7 @@ impl flatbuffers::Verifiable for PNM<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ETH_DIGITAL_SIGNATURE", Self::VT_ETH_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BTC_DIGITAL_SIGNATURE", Self::VT_BTC_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LTC_DIGITAL_SIGNATURE", Self::VT_LTC_DIGITAL_SIGNATURE, false)?
@@ -353,6 +369,7 @@ impl flatbuffers::Verifiable for PNM<'_> {
 }
 pub struct PNMArgs<'a> {
     pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ETH_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -375,6 +392,7 @@ impl<'a> Default for PNMArgs<'a> {
   fn default() -> Self {
     PNMArgs {
       MULTIFORMAT_ADDRESS: None,
+      CID: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -403,6 +421,10 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
   #[inline]
   pub fn add_MULTIFORMAT_ADDRESS(&mut self, MULTIFORMAT_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
+  }
+  #[inline]
+  pub fn add_CID(&mut self, CID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CID, CID);
   }
   #[inline]
   pub fn add_ETH_DIGITAL_SIGNATURE(&mut self, ETH_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
@@ -487,6 +509,7 @@ impl core::fmt::Debug for PNM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("PNM");
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
+      ds.field("CID", &self.CID());
       ds.field("ETH_DIGITAL_SIGNATURE", &self.ETH_DIGITAL_SIGNATURE());
       ds.field("BTC_DIGITAL_SIGNATURE", &self.BTC_DIGITAL_SIGNATURE());
       ds.field("LTC_DIGITAL_SIGNATURE", &self.LTC_DIGITAL_SIGNATURE());
@@ -510,6 +533,7 @@ impl core::fmt::Debug for PNM<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct PNMT {
   pub MULTIFORMAT_ADDRESS: Option<String>,
+  pub CID: Option<String>,
   pub ETH_DIGITAL_SIGNATURE: Option<String>,
   pub BTC_DIGITAL_SIGNATURE: Option<String>,
   pub LTC_DIGITAL_SIGNATURE: Option<String>,
@@ -531,6 +555,7 @@ impl Default for PNMT {
   fn default() -> Self {
     Self {
       MULTIFORMAT_ADDRESS: None,
+      CID: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -556,6 +581,9 @@ impl PNMT {
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
   ) -> flatbuffers::WIPOffset<PNM<'b>> {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CID = self.CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE.as_ref().map(|x|{
@@ -608,6 +636,7 @@ impl PNMT {
     });
     PNM::create(_fbb, &PNMArgs{
       MULTIFORMAT_ADDRESS,
+      CID,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,
