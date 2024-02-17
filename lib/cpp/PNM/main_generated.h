@@ -42,6 +42,7 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SOL_DIGITAL_SIGNATURE = 36
   };
   /// Multiformat Address
+  /// https://multiformats.io/multiaddr/
   /// A universal address format for representing multiple network protocols. Examples include:
   /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
   /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone

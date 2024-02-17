@@ -10,6 +10,7 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     static getSizePrefixedRootAsPNM(bb: flatbuffers.ByteBuffer, obj?: PNM): PNM;
     /**
      * Multiformat Address
+     * https://multiformats.io/multiaddr/
      * A universal address format for representing multiple network protocols. Examples include:
      * - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
      * - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
