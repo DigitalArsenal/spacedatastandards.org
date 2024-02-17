@@ -23,7 +23,7 @@ struct PNMCOLLECTIONBuilder;
 struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_IPFS_CID = 4,
+    VT_MULTIFORMAT_ADDRESS = 4,
     VT_ETH_DIGITAL_SIGNATURE = 6,
     VT_BTC_DIGITAL_SIGNATURE = 8,
     VT_LTC_DIGITAL_SIGNATURE = 10,
@@ -41,11 +41,14 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_AVAX_DIGITAL_SIGNATURE = 34,
     VT_SOL_DIGITAL_SIGNATURE = 36
   };
-  /// IPFS Content Identifier (CID)
-  /// The hash of a file stored on the InterPlanetary File System (IPFS).
-  /// Refer to the section on IPFS integration for details.
-  const ::flatbuffers::String *IPFS_CID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IPFS_CID);
+  /// Multiformat Address
+  /// A universal address format for representing multiple network protocols. Examples include:
+  /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+  /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+  /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+  const ::flatbuffers::String *MULTIFORMAT_ADDRESS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MULTIFORMAT_ADDRESS);
   }
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
@@ -145,8 +148,8 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_IPFS_CID) &&
-           verifier.VerifyString(IPFS_CID()) &&
+           VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
+           verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
            VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
@@ -187,8 +190,8 @@ struct PNMBuilder {
   typedef PNM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_IPFS_CID(::flatbuffers::Offset<::flatbuffers::String> IPFS_CID) {
-    fbb_.AddOffset(PNM::VT_IPFS_CID, IPFS_CID);
+  void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS) {
+    fbb_.AddOffset(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
     fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
@@ -251,7 +254,7 @@ struct PNMBuilder {
 
 inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> IPFS_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
@@ -285,13 +288,13 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
   builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
   builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
-  builder_.add_IPFS_CID(IPFS_CID);
+  builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *IPFS_CID = nullptr,
+    const char *MULTIFORMAT_ADDRESS = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
     const char *BTC_DIGITAL_SIGNATURE = nullptr,
     const char *LTC_DIGITAL_SIGNATURE = nullptr,
@@ -308,7 +311,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     const char *BNB_DIGITAL_SIGNATURE = nullptr,
     const char *AVAX_DIGITAL_SIGNATURE = nullptr,
     const char *SOL_DIGITAL_SIGNATURE = nullptr) {
-  auto IPFS_CID__ = IPFS_CID ? _fbb.CreateString(IPFS_CID) : 0;
+  auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
   auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
   auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
@@ -327,7 +330,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
   auto SOL_DIGITAL_SIGNATURE__ = SOL_DIGITAL_SIGNATURE ? _fbb.CreateString(SOL_DIGITAL_SIGNATURE) : 0;
   return CreatePNM(
       _fbb,
-      IPFS_CID__,
+      MULTIFORMAT_ADDRESS__,
       ETH_DIGITAL_SIGNATURE__,
       BTC_DIGITAL_SIGNATURE__,
       LTC_DIGITAL_SIGNATURE__,

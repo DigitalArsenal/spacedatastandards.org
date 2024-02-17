@@ -31,11 +31,14 @@ class PNM : Table() {
         return this
     }
     /**
-     * IPFS Content Identifier (CID)
-     * The hash of a file stored on the InterPlanetary File System (IPFS).
-     * Refer to the section on IPFS integration for details.
+     * Multiformat Address
+     * A universal address format for representing multiple network protocols. Examples include:
+     * - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+     * - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+     * - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+     * - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
      */
-    val IPFS_CID : String?
+    val MULTIFORMAT_ADDRESS : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -44,8 +47,8 @@ class PNM : Table() {
                 null
             }
         }
-    val IPFS_CIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IPFS_CIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val MULTIFORMAT_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun MULTIFORMAT_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Ethereum Digital Signature
      * Digital signature of the IPFS CID using Ethereum's signing mechanism.
@@ -309,7 +312,7 @@ class PNM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPNM(builder: FlatBufferBuilder, IPFS_CIDOffset: Int, ETH_DIGITAL_SIGNATUREOffset: Int, BTC_DIGITAL_SIGNATUREOffset: Int, LTC_DIGITAL_SIGNATUREOffset: Int, XRP_DIGITAL_SIGNATUREOffset: Int, ADA_DIGITAL_SIGNATUREOffset: Int, XLM_DIGITAL_SIGNATUREOffset: Int, DOGE_DIGITAL_SIGNATUREOffset: Int, XMR_DIGITAL_SIGNATUREOffset: Int, DOT_DIGITAL_SIGNATUREOffset: Int, FIL_DIGITAL_SIGNATUREOffset: Int, XTZ_DIGITAL_SIGNATUREOffset: Int, ATOM_DIGITAL_SIGNATUREOffset: Int, TRX_DIGITAL_SIGNATUREOffset: Int, BNB_DIGITAL_SIGNATUREOffset: Int, AVAX_DIGITAL_SIGNATUREOffset: Int, SOL_DIGITAL_SIGNATUREOffset: Int) : Int {
+        fun createPNM(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESSOffset: Int, ETH_DIGITAL_SIGNATUREOffset: Int, BTC_DIGITAL_SIGNATUREOffset: Int, LTC_DIGITAL_SIGNATUREOffset: Int, XRP_DIGITAL_SIGNATUREOffset: Int, ADA_DIGITAL_SIGNATUREOffset: Int, XLM_DIGITAL_SIGNATUREOffset: Int, DOGE_DIGITAL_SIGNATUREOffset: Int, XMR_DIGITAL_SIGNATUREOffset: Int, DOT_DIGITAL_SIGNATUREOffset: Int, FIL_DIGITAL_SIGNATUREOffset: Int, XTZ_DIGITAL_SIGNATUREOffset: Int, ATOM_DIGITAL_SIGNATUREOffset: Int, TRX_DIGITAL_SIGNATUREOffset: Int, BNB_DIGITAL_SIGNATUREOffset: Int, AVAX_DIGITAL_SIGNATUREOffset: Int, SOL_DIGITAL_SIGNATUREOffset: Int) : Int {
             builder.startTable(17)
             addSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATUREOffset)
             addAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATUREOffset)
@@ -327,11 +330,11 @@ class PNM : Table() {
             addLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATUREOffset)
             addBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATUREOffset)
             addETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATUREOffset)
-            addIPFS_CID(builder, IPFS_CIDOffset)
+            addMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset)
             return endPNM(builder)
         }
         fun startPNM(builder: FlatBufferBuilder) = builder.startTable(17)
-        fun addIPFS_CID(builder: FlatBufferBuilder, IPFS_CID: Int) = builder.addOffset(0, IPFS_CID, 0)
+        fun addMULTIFORMAT_ADDRESS(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESS: Int) = builder.addOffset(0, MULTIFORMAT_ADDRESS, 0)
         fun addETH_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ETH_DIGITAL_SIGNATURE: Int) = builder.addOffset(1, ETH_DIGITAL_SIGNATURE, 0)
         fun addBTC_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, BTC_DIGITAL_SIGNATURE: Int) = builder.addOffset(2, BTC_DIGITAL_SIGNATURE, 0)
         fun addLTC_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, LTC_DIGITAL_SIGNATURE: Int) = builder.addOffset(3, LTC_DIGITAL_SIGNATURE, 0)

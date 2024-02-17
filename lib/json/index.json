@@ -4235,9 +4235,9 @@
                     "type": "object",
                     "description": "Publish Notification Message",
                     "properties": {
-                        "IPFS_CID": {
+                        "MULTIFORMAT_ADDRESS": {
                             "type": "string",
-                            "description": "IPFS Content Identifier (CID)\nThe hash of a file stored on the InterPlanetary File System (IPFS).\nRefer to the section on IPFS integration for details."
+                            "description": "Multiformat Address\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`."
                         },
                         "ETH_DIGITAL_SIGNATURE": {
                             "type": "string",
@@ -4550,9 +4550,9 @@
                     "type": "object",
                     "description": "Publish Notification Message",
                     "properties": {
-                        "IPFS_CID": {
+                        "MULTIFORMAT_ADDRESS": {
                             "type": "string",
-                            "description": "IPFS Content Identifier (CID)\nThe hash of a file stored on the InterPlanetary File System (IPFS).\nRefer to the section on IPFS integration for details."
+                            "description": "Multiformat Address\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`."
                         },
                         "ETH_DIGITAL_SIGNATURE": {
                             "type": "string",

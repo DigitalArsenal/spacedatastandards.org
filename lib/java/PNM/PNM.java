@@ -29,13 +29,16 @@ public final class PNM extends Table {
   public PNM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * IPFS Content Identifier (CID)
-   * The hash of a file stored on the InterPlanetary File System (IPFS).
-   * Refer to the section on IPFS integration for details.
+   * Multiformat Address
+   * A universal address format for representing multiple network protocols. Examples include:
+   * - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+   * - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+   * - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+   * - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
    */
-  public String IPFS_CID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IPFS_CIDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer IPFS_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String MULTIFORMAT_ADDRESS() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MULTIFORMAT_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer MULTIFORMAT_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
    * Ethereum Digital Signature
    * Digital signature of the IPFS CID using Ethereum's signing mechanism.
@@ -166,7 +169,7 @@ public final class PNM extends Table {
   public ByteBuffer SOL_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
 
   public static int createPNM(FlatBufferBuilder builder,
-      int IPFS_CIDOffset,
+      int MULTIFORMAT_ADDRESSOffset,
       int ETH_DIGITAL_SIGNATUREOffset,
       int BTC_DIGITAL_SIGNATUREOffset,
       int LTC_DIGITAL_SIGNATUREOffset,
@@ -200,12 +203,12 @@ public final class PNM extends Table {
     PNM.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
     PNM.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
-    PNM.addIpfsCid(builder, IPFS_CIDOffset);
+    PNM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     return PNM.endPNM(builder);
   }
 
   public static void startPNM(FlatBufferBuilder builder) { builder.startTable(17); }
-  public static void addIpfsCid(FlatBufferBuilder builder, int IPFS_CIDOffset) { builder.addOffset(0, IPFS_CIDOffset, 0); }
+  public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(0, MULTIFORMAT_ADDRESSOffset, 0); }
   public static void addEthDigitalSignature(FlatBufferBuilder builder, int ETH_DIGITAL_SIGNATUREOffset) { builder.addOffset(1, ETH_DIGITAL_SIGNATUREOffset, 0); }
   public static void addBtcDigitalSignature(FlatBufferBuilder builder, int BTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(2, BTC_DIGITAL_SIGNATUREOffset, 0); }
   public static void addLtcDigitalSignature(FlatBufferBuilder builder, int LTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(3, LTC_DIGITAL_SIGNATUREOffset, 0); }

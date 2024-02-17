@@ -7,10 +7,13 @@ class PNMCOLLECTION
 
 /// Publish Notification Message
 class PNM : flatbuffers_handle
-    /// IPFS Content Identifier (CID)
-    /// The hash of a file stored on the InterPlanetary File System (IPFS).
-    /// Refer to the section on IPFS integration for details.
-    def IPFS_CID() -> string:
+    /// Multiformat Address
+    /// A universal address format for representing multiple network protocols. Examples include:
+    /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+    /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+    /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+    /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+    def MULTIFORMAT_ADDRESS() -> string:
         return buf_.flatbuffers_field_string(pos_, 4)
     /// Ethereum Digital Signature
     /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
@@ -100,8 +103,8 @@ struct PNMBuilder:
     def start():
         b_.StartObject(17)
         return this
-    def add_IPFS_CID(IPFS_CID:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, IPFS_CID)
+    def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, MULTIFORMAT_ADDRESS)
         return this
     def add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(1, ETH_DIGITAL_SIGNATURE)

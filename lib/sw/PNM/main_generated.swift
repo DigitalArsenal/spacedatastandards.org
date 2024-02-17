@@ -17,7 +17,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case IPFS_CID = 4
+    case MULTIFORMAT_ADDRESS = 4
     case ETH_DIGITAL_SIGNATURE = 6
     case BTC_DIGITAL_SIGNATURE = 8
     case LTC_DIGITAL_SIGNATURE = 10
@@ -38,11 +38,14 @@ public struct PNM: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  ///  IPFS Content Identifier (CID)
-  ///  The hash of a file stored on the InterPlanetary File System (IPFS).
-  ///  Refer to the section on IPFS integration for details.
-  public var IPFS_CID: String? { let o = _accessor.offset(VTOFFSET.IPFS_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IPFS_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IPFS_CID.v) }
+  ///  Multiformat Address
+  ///  A universal address format for representing multiple network protocols. Examples include:
+  ///  - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+  ///  - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+  ///  - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+  ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+  public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MULTIFORMAT_ADDRESS.v) }
   ///  Ethereum Digital Signature
   ///  Digital signature of the IPFS CID using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
@@ -124,7 +127,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public var SOL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SOL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
   public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(IPFS_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IPFS_CID, at: VTOFFSET.IPFS_CID.p) }
+  public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
   public static func add(ETH_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETH_DIGITAL_SIGNATURE, at: VTOFFSET.ETH_DIGITAL_SIGNATURE.p) }
   public static func add(BTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BTC_DIGITAL_SIGNATURE, at: VTOFFSET.BTC_DIGITAL_SIGNATURE.p) }
   public static func add(LTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LTC_DIGITAL_SIGNATURE, at: VTOFFSET.LTC_DIGITAL_SIGNATURE.p) }
@@ -144,7 +147,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
-    IPFS_CIDOffset IPFS_CID: Offset = Offset(),
+    MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
     ETH_DIGITAL_SIGNATUREOffset ETH_DIGITAL_SIGNATURE: Offset = Offset(),
     BTC_DIGITAL_SIGNATUREOffset BTC_DIGITAL_SIGNATURE: Offset = Offset(),
     LTC_DIGITAL_SIGNATUREOffset LTC_DIGITAL_SIGNATURE: Offset = Offset(),
@@ -163,7 +166,7 @@ public struct PNM: FlatBufferObject, Verifiable {
     SOL_DIGITAL_SIGNATUREOffset SOL_DIGITAL_SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = PNM.startPNM(&fbb)
-    PNM.add(IPFS_CID: IPFS_CID, &fbb)
+    PNM.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
     PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
     PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
     PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
@@ -185,7 +188,7 @@ public struct PNM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.IPFS_CID.p, fieldName: "IPFS_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ETH_DIGITAL_SIGNATURE.p, fieldName: "ETH_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.BTC_DIGITAL_SIGNATURE.p, fieldName: "BTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LTC_DIGITAL_SIGNATURE.p, fieldName: "LTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)

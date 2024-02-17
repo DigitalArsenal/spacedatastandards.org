@@ -26,7 +26,7 @@ impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
 }
 
 impl<'a> PNM<'a> {
-  pub const VT_IPFS_CID: flatbuffers::VOffsetT = 4;
+  pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 4;
   pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 6;
   pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 8;
   pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
@@ -70,12 +70,12 @@ impl<'a> PNM<'a> {
     if let Some(x) = args.LTC_DIGITAL_SIGNATURE { builder.add_LTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.BTC_DIGITAL_SIGNATURE { builder.add_BTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.ETH_DIGITAL_SIGNATURE { builder.add_ETH_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.IPFS_CID { builder.add_IPFS_CID(x); }
+    if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> PNMT {
-    let IPFS_CID = self.IPFS_CID().map(|x| {
+    let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
       x.to_string()
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE().map(|x| {
@@ -127,7 +127,7 @@ impl<'a> PNM<'a> {
       x.to_string()
     });
     PNMT {
-      IPFS_CID,
+      MULTIFORMAT_ADDRESS,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,
@@ -147,15 +147,18 @@ impl<'a> PNM<'a> {
     }
   }
 
-  /// IPFS Content Identifier (CID)
-  /// The hash of a file stored on the InterPlanetary File System (IPFS).
-  /// Refer to the section on IPFS integration for details.
+  /// Multiformat Address
+  /// A universal address format for representing multiple network protocols. Examples include:
+  /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+  /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+  /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
   #[inline]
-  pub fn IPFS_CID(&self) -> Option<&'a str> {
+  pub fn MULTIFORMAT_ADDRESS(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_IPFS_CID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MULTIFORMAT_ADDRESS, None)}
   }
   /// Ethereum Digital Signature
   /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
@@ -326,7 +329,7 @@ impl flatbuffers::Verifiable for PNM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IPFS_CID", Self::VT_IPFS_CID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ETH_DIGITAL_SIGNATURE", Self::VT_ETH_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BTC_DIGITAL_SIGNATURE", Self::VT_BTC_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LTC_DIGITAL_SIGNATURE", Self::VT_LTC_DIGITAL_SIGNATURE, false)?
@@ -348,7 +351,7 @@ impl flatbuffers::Verifiable for PNM<'_> {
   }
 }
 pub struct PNMArgs<'a> {
-    pub IPFS_CID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ETH_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -370,7 +373,7 @@ impl<'a> Default for PNMArgs<'a> {
   #[inline]
   fn default() -> Self {
     PNMArgs {
-      IPFS_CID: None,
+      MULTIFORMAT_ADDRESS: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -397,8 +400,8 @@ pub struct PNMBuilder<'a: 'b, 'b> {
 }
 impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
   #[inline]
-  pub fn add_IPFS_CID(&mut self, IPFS_CID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_IPFS_CID, IPFS_CID);
+  pub fn add_MULTIFORMAT_ADDRESS(&mut self, MULTIFORMAT_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   #[inline]
   pub fn add_ETH_DIGITAL_SIGNATURE(&mut self, ETH_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
@@ -482,7 +485,7 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
 impl core::fmt::Debug for PNM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("PNM");
-      ds.field("IPFS_CID", &self.IPFS_CID());
+      ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
       ds.field("ETH_DIGITAL_SIGNATURE", &self.ETH_DIGITAL_SIGNATURE());
       ds.field("BTC_DIGITAL_SIGNATURE", &self.BTC_DIGITAL_SIGNATURE());
       ds.field("LTC_DIGITAL_SIGNATURE", &self.LTC_DIGITAL_SIGNATURE());
@@ -505,7 +508,7 @@ impl core::fmt::Debug for PNM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct PNMT {
-  pub IPFS_CID: Option<String>,
+  pub MULTIFORMAT_ADDRESS: Option<String>,
   pub ETH_DIGITAL_SIGNATURE: Option<String>,
   pub BTC_DIGITAL_SIGNATURE: Option<String>,
   pub LTC_DIGITAL_SIGNATURE: Option<String>,
@@ -526,7 +529,7 @@ pub struct PNMT {
 impl Default for PNMT {
   fn default() -> Self {
     Self {
-      IPFS_CID: None,
+      MULTIFORMAT_ADDRESS: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -551,7 +554,7 @@ impl PNMT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
   ) -> flatbuffers::WIPOffset<PNM<'b>> {
-    let IPFS_CID = self.IPFS_CID.as_ref().map(|x|{
+    let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE.as_ref().map(|x|{
@@ -603,7 +606,7 @@ impl PNMT {
       _fbb.create_string(x)
     });
     PNM::create(_fbb, &PNMArgs{
-      IPFS_CID,
+      MULTIFORMAT_ADDRESS,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,

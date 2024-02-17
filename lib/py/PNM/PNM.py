@@ -29,11 +29,14 @@ class PNM(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # IPFS Content Identifier (CID)
-    # The hash of a file stored on the InterPlanetary File System (IPFS).
-    # Refer to the section on IPFS integration for details.
+    # Multiformat Address
+    # A universal address format for representing multiple network protocols. Examples include:
+    # - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+    # - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+    # - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+    # - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
     # PNM
-    def IPFS_CID(self):
+    def MULTIFORMAT_ADDRESS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -202,9 +205,9 @@ class PNM(object):
 def PNMStart(builder): builder.StartObject(17)
 def Start(builder):
     return PNMStart(builder)
-def PNMAddIPFS_CID(builder, IPFS_CID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(IPFS_CID), 0)
-def AddIPFS_CID(builder, IPFS_CID):
-    return PNMAddIPFS_CID(builder, IPFS_CID)
+def PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
+def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
+    return PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
 def PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
 def AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE):
     return PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
@@ -261,7 +264,7 @@ class PNMT(object):
 
     # PNMT
     def __init__(self):
-        self.IPFS_CID = None  # type: str
+        self.MULTIFORMAT_ADDRESS = None  # type: str
         self.ETH_DIGITAL_SIGNATURE = None  # type: str
         self.BTC_DIGITAL_SIGNATURE = None  # type: str
         self.LTC_DIGITAL_SIGNATURE = None  # type: str
@@ -300,7 +303,7 @@ class PNMT(object):
     def _UnPack(self, PNM):
         if PNM is None:
             return
-        self.IPFS_CID = PNM.IPFS_CID()
+        self.MULTIFORMAT_ADDRESS = PNM.MULTIFORMAT_ADDRESS()
         self.ETH_DIGITAL_SIGNATURE = PNM.ETH_DIGITAL_SIGNATURE()
         self.BTC_DIGITAL_SIGNATURE = PNM.BTC_DIGITAL_SIGNATURE()
         self.LTC_DIGITAL_SIGNATURE = PNM.LTC_DIGITAL_SIGNATURE()
@@ -320,8 +323,8 @@ class PNMT(object):
 
     # PNMT
     def Pack(self, builder):
-        if self.IPFS_CID is not None:
-            IPFS_CID = builder.CreateString(self.IPFS_CID)
+        if self.MULTIFORMAT_ADDRESS is not None:
+            MULTIFORMAT_ADDRESS = builder.CreateString(self.MULTIFORMAT_ADDRESS)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             ETH_DIGITAL_SIGNATURE = builder.CreateString(self.ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:
@@ -355,8 +358,8 @@ class PNMT(object):
         if self.SOL_DIGITAL_SIGNATURE is not None:
             SOL_DIGITAL_SIGNATURE = builder.CreateString(self.SOL_DIGITAL_SIGNATURE)
         PNMStart(builder)
-        if self.IPFS_CID is not None:
-            PNMAddIPFS_CID(builder, IPFS_CID)
+        if self.MULTIFORMAT_ADDRESS is not None:
+            PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:

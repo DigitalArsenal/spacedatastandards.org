@@ -34,10 +34,13 @@ func (rcv *PNM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// IPFS Content Identifier (CID)
-/// The hash of a file stored on the InterPlanetary File System (IPFS).
-/// Refer to the section on IPFS integration for details.
-func (rcv *PNM) IPFS_CID() []byte {
+/// Multiformat Address
+/// A universal address format for representing multiple network protocols. Examples include:
+/// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+/// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+/// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+/// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
+func (rcv *PNM) MULTIFORMAT_ADDRESS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -45,9 +48,12 @@ func (rcv *PNM) IPFS_CID() []byte {
 	return nil
 }
 
-/// IPFS Content Identifier (CID)
-/// The hash of a file stored on the InterPlanetary File System (IPFS).
-/// Refer to the section on IPFS integration for details.
+/// Multiformat Address
+/// A universal address format for representing multiple network protocols. Examples include:
+/// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
+/// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
+/// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
+/// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt - This represents an IPFS address using a CID and a file named `README.txt`.
 /// Ethereum Digital Signature
 /// Digital signature of the IPFS CID using Ethereum's signing mechanism.
 /// Refer to the Ethereum Blockchain integration section for details.
@@ -275,8 +281,8 @@ func (rcv *PNM) SOL_DIGITAL_SIGNATURE() []byte {
 func PNMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
 }
-func PNMAddIPFS_CID(builder *flatbuffers.Builder, IPFS_CID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(IPFS_CID), 0)
+func PNMAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
 }
 func PNMAddETH_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ETH_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ETH_DIGITAL_SIGNATURE), 0)
