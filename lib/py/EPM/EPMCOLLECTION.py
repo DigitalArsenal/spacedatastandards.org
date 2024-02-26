@@ -6,6 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# Collection of Entity Profile Messages
 class EPMCOLLECTION(object):
     __slots__ = ['_tab']
 

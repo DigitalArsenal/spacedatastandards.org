@@ -6,6 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
+/// Collection of Entity Profile Messages
 class EPMCOLLECTION extends Table
 {
     /**

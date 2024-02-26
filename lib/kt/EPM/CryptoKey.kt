@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Crypto Key Information
+ * Represents cryptographic key information
  */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
@@ -86,34 +86,6 @@ class CryptoKey : Table() {
         }
     val XPRIVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun XPRIVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    /**
-     * Address generated from the cryptographic key
-     */
-    val KEY_ADDRESS : String?
-        get() {
-            val o = __offset(12)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val KEY_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun KEY_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    /**
-     * Numerical type of the address generated from the cryptographic key
-     */
-    val ADDRESS_TYPE : String?
-        get() {
-            val o = __offset(14)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ADDRESS_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ADDRESS_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
         fun getRootAsCryptoKey(_bb: ByteBuffer): CryptoKey = getRootAsCryptoKey(_bb, CryptoKey())
@@ -121,23 +93,19 @@ class CryptoKey : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCryptoKey(builder: FlatBufferBuilder, PUBLIC_KEYOffset: Int, XPUBOffset: Int, PRIVATE_KEYOffset: Int, XPRIVOffset: Int, KEY_ADDRESSOffset: Int, ADDRESS_TYPEOffset: Int) : Int {
-            builder.startTable(6)
-            addADDRESS_TYPE(builder, ADDRESS_TYPEOffset)
-            addKEY_ADDRESS(builder, KEY_ADDRESSOffset)
+        fun createCryptoKey(builder: FlatBufferBuilder, PUBLIC_KEYOffset: Int, XPUBOffset: Int, PRIVATE_KEYOffset: Int, XPRIVOffset: Int) : Int {
+            builder.startTable(4)
             addXPRIV(builder, XPRIVOffset)
             addPRIVATE_KEY(builder, PRIVATE_KEYOffset)
             addXPUB(builder, XPUBOffset)
             addPUBLIC_KEY(builder, PUBLIC_KEYOffset)
             return endCryptoKey(builder)
         }
-        fun startCryptoKey(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startCryptoKey(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addPUBLIC_KEY(builder: FlatBufferBuilder, PUBLIC_KEY: Int) = builder.addOffset(0, PUBLIC_KEY, 0)
         fun addXPUB(builder: FlatBufferBuilder, XPUB: Int) = builder.addOffset(1, XPUB, 0)
         fun addPRIVATE_KEY(builder: FlatBufferBuilder, PRIVATE_KEY: Int) = builder.addOffset(2, PRIVATE_KEY, 0)
         fun addXPRIV(builder: FlatBufferBuilder, XPRIV: Int) = builder.addOffset(3, XPRIV, 0)
-        fun addKEY_ADDRESS(builder: FlatBufferBuilder, KEY_ADDRESS: Int) = builder.addOffset(4, KEY_ADDRESS, 0)
-        fun addADDRESS_TYPE(builder: FlatBufferBuilder, ADDRESS_TYPE: Int) = builder.addOffset(5, ADDRESS_TYPE, 0)
         fun endCryptoKey(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

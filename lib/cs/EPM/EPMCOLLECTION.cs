@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Collection of Entity Profile Messages
 public struct EPMCOLLECTION : IFlatbufferObject
 {
   private Table __p;

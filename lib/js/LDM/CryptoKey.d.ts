@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 /**
- * Crypto Key Information
+ * Represents cryptographic key information
  */
 export declare class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKeyT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -28,25 +28,13 @@ export declare class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKe
      */
     XPRIV(): string | null;
     XPRIV(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Address generated from the cryptographic key
-     */
-    KEY_ADDRESS(): string | null;
-    KEY_ADDRESS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Numerical type of the address generated from the cryptographic key
-     */
-    ADDRESS_TYPE(): string | null;
-    ADDRESS_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startCryptoKey(builder: flatbuffers.Builder): void;
     static addPublicKey(builder: flatbuffers.Builder, PUBLIC_KEYOffset: flatbuffers.Offset): void;
     static addXpub(builder: flatbuffers.Builder, XPUBOffset: flatbuffers.Offset): void;
     static addPrivateKey(builder: flatbuffers.Builder, PRIVATE_KEYOffset: flatbuffers.Offset): void;
     static addXpriv(builder: flatbuffers.Builder, XPRIVOffset: flatbuffers.Offset): void;
-    static addKeyAddress(builder: flatbuffers.Builder, KEY_ADDRESSOffset: flatbuffers.Offset): void;
-    static addAddressType(builder: flatbuffers.Builder, ADDRESS_TYPEOffset: flatbuffers.Offset): void;
     static endCryptoKey(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createCryptoKey(builder: flatbuffers.Builder, PUBLIC_KEYOffset: flatbuffers.Offset, XPUBOffset: flatbuffers.Offset, PRIVATE_KEYOffset: flatbuffers.Offset, XPRIVOffset: flatbuffers.Offset, KEY_ADDRESSOffset: flatbuffers.Offset, ADDRESS_TYPEOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCryptoKey(builder: flatbuffers.Builder, PUBLIC_KEYOffset: flatbuffers.Offset, XPUBOffset: flatbuffers.Offset, PRIVATE_KEYOffset: flatbuffers.Offset, XPRIVOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CryptoKeyT;
     unpackTo(_o: CryptoKeyT): void;
 }
@@ -55,9 +43,7 @@ export declare class CryptoKeyT implements flatbuffers.IGeneratedObject {
     XPUB: string | Uint8Array | null;
     PRIVATE_KEY: string | Uint8Array | null;
     XPRIV: string | Uint8Array | null;
-    KEY_ADDRESS: string | Uint8Array | null;
-    ADDRESS_TYPE: string | Uint8Array | null;
-    constructor(PUBLIC_KEY?: string | Uint8Array | null, XPUB?: string | Uint8Array | null, PRIVATE_KEY?: string | Uint8Array | null, XPRIV?: string | Uint8Array | null, KEY_ADDRESS?: string | Uint8Array | null, ADDRESS_TYPE?: string | Uint8Array | null);
+    constructor(PUBLIC_KEY?: string | Uint8Array | null, XPUB?: string | Uint8Array | null, PRIVATE_KEY?: string | Uint8Array | null, XPRIV?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CryptoKey.d.ts.map

@@ -10,45 +10,63 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ENTITY: u8 = 0;
+pub const ENUM_MIN_LDIFATTRIBUTE_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ENTITY: u8 = 2;
+pub const ENUM_MAX_LDIFATTRIBUTE_TYPE: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ENTITY: [Entity; 3] = [
-  Entity::NONE,
-  Entity::Person,
-  Entity::Organization,
+pub const ENUM_VALUES_LDIFATTRIBUTE_TYPE: [LDIFAttributeType; 6] = [
+  LDIFAttributeType::CN,
+  LDIFAttributeType::OU,
+  LDIFAttributeType::O,
+  LDIFAttributeType::DC,
+  LDIFAttributeType::C,
+  LDIFAttributeType::SN,
 ];
 
-/// Union type for Entity, which can be either a Person or an Organization
+/// Enumeration for LDAP attribute types relevant to Distinguished Names
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct Entity(pub u8);
+pub struct LDIFAttributeType(pub i8);
 #[allow(non_upper_case_globals)]
-impl Entity {
-  pub const NONE: Self = Self(0);
-  pub const Person: Self = Self(1);
-  pub const Organization: Self = Self(2);
+impl LDIFAttributeType {
+  /// Common Name
+  pub const CN: Self = Self(0);
+  /// Organizational Unit Name
+  pub const OU: Self = Self(1);
+  /// Organization Name
+  pub const O: Self = Self(2);
+  /// Domain Component
+  pub const DC: Self = Self(3);
+  /// Country Name
+  pub const C: Self = Self(4);
+  /// Surname
+  pub const SN: Self = Self(5);
 
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::NONE,
-    Self::Person,
-    Self::Organization,
+    Self::CN,
+    Self::OU,
+    Self::O,
+    Self::DC,
+    Self::C,
+    Self::SN,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::NONE => Some("NONE"),
-      Self::Person => Some("Person"),
-      Self::Organization => Some("Organization"),
+      Self::CN => Some("CN"),
+      Self::OU => Some("OU"),
+      Self::O => Some("O"),
+      Self::DC => Some("DC"),
+      Self::C => Some("C"),
+      Self::SN => Some("SN"),
       _ => None,
     }
   }
 }
-impl core::fmt::Debug for Entity {
+impl core::fmt::Debug for LDIFAttributeType {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -57,7 +75,97 @@ impl core::fmt::Debug for Entity {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for Entity {
+impl<'a> flatbuffers::Follow<'a> for LDIFAttributeType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for LDIFAttributeType {
+    type Output = LDIFAttributeType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for LDIFAttributeType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for LDIFAttributeType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for LDIFAttributeType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SPECIFIC_ATTRIBUTES: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SPECIFIC_ATTRIBUTES: u8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SPECIFIC_ATTRIBUTES: [SpecificAttributes; 3] = [
+  SpecificAttributes::NONE,
+  SpecificAttributes::PersonAttributes,
+  SpecificAttributes::OrganizationAttributes,
+];
+
+/// Union for specific attributes, distinguishing between Person and Organization
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct SpecificAttributes(pub u8);
+#[allow(non_upper_case_globals)]
+impl SpecificAttributes {
+  pub const NONE: Self = Self(0);
+  pub const PersonAttributes: Self = Self(1);
+  pub const OrganizationAttributes: Self = Self(2);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NONE,
+    Self::PersonAttributes,
+    Self::OrganizationAttributes,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NONE => Some("NONE"),
+      Self::PersonAttributes => Some("PersonAttributes"),
+      Self::OrganizationAttributes => Some("OrganizationAttributes"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for SpecificAttributes {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for SpecificAttributes {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -66,15 +174,15 @@ impl<'a> flatbuffers::Follow<'a> for Entity {
   }
 }
 
-impl flatbuffers::Push for Entity {
-    type Output = Entity;
+impl flatbuffers::Push for SpecificAttributes {
+    type Output = SpecificAttributes;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<u8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for Entity {
+impl flatbuffers::EndianScalar for SpecificAttributes {
   type Scalar = u8;
   #[inline]
   fn to_little_endian(self) -> u8 {
@@ -88,7 +196,7 @@ impl flatbuffers::EndianScalar for Entity {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for Entity {
+impl<'a> flatbuffers::Verifiable for SpecificAttributes {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -98,42 +206,42 @@ impl<'a> flatbuffers::Verifiable for Entity {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for Entity {}
-pub struct EntityUnionTableOffset {}
+impl flatbuffers::SimpleToVerifyInSlice for SpecificAttributes {}
+pub struct SpecificAttributesUnionTableOffset {}
 
 #[allow(clippy::upper_case_acronyms)]
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub enum EntityT {
+pub enum SpecificAttributesT {
   NONE,
-  Person(Box<PersonT>),
-  Organization(Box<OrganizationT>),
+  PersonAttributes(Box<PersonAttributesT>),
+  OrganizationAttributes(Box<OrganizationAttributesT>),
 }
-impl Default for EntityT {
+impl Default for SpecificAttributesT {
   fn default() -> Self {
     Self::NONE
   }
 }
-impl EntityT {
-  pub fn entity_type(&self) -> Entity {
+impl SpecificAttributesT {
+  pub fn specific_attributes_type(&self) -> SpecificAttributes {
     match self {
-      Self::NONE => Entity::NONE,
-      Self::Person(_) => Entity::Person,
-      Self::Organization(_) => Entity::Organization,
+      Self::NONE => SpecificAttributes::NONE,
+      Self::PersonAttributes(_) => SpecificAttributes::PersonAttributes,
+      Self::OrganizationAttributes(_) => SpecificAttributes::OrganizationAttributes,
     }
   }
   pub fn pack(&self, fbb: &mut flatbuffers::FlatBufferBuilder) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
     match self {
       Self::NONE => None,
-      Self::Person(v) => Some(v.pack(fbb).as_union_value()),
-      Self::Organization(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PersonAttributes(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OrganizationAttributes(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
-  /// If the union variant matches, return the owned PersonT, setting the union to NONE.
-  pub fn take_person(&mut self) -> Option<Box<PersonT>> {
-    if let Self::Person(_) = self {
+  /// If the union variant matches, return the owned PersonAttributesT, setting the union to NONE.
+  pub fn take_person_attributes(&mut self) -> Option<Box<PersonAttributesT>> {
+    if let Self::PersonAttributes(_) = self {
       let v = core::mem::replace(self, Self::NONE);
-      if let Self::Person(w) = v {
+      if let Self::PersonAttributes(w) = v {
         Some(w)
       } else {
         unreachable!()
@@ -142,19 +250,19 @@ impl EntityT {
       None
     }
   }
-  /// If the union variant matches, return a reference to the PersonT.
-  pub fn as_person(&self) -> Option<&PersonT> {
-    if let Self::Person(v) = self { Some(v.as_ref()) } else { None }
+  /// If the union variant matches, return a reference to the PersonAttributesT.
+  pub fn as_person_attributes(&self) -> Option<&PersonAttributesT> {
+    if let Self::PersonAttributes(v) = self { Some(v.as_ref()) } else { None }
   }
-  /// If the union variant matches, return a mutable reference to the PersonT.
-  pub fn as_person_mut(&mut self) -> Option<&mut PersonT> {
-    if let Self::Person(v) = self { Some(v.as_mut()) } else { None }
+  /// If the union variant matches, return a mutable reference to the PersonAttributesT.
+  pub fn as_person_attributes_mut(&mut self) -> Option<&mut PersonAttributesT> {
+    if let Self::PersonAttributes(v) = self { Some(v.as_mut()) } else { None }
   }
-  /// If the union variant matches, return the owned OrganizationT, setting the union to NONE.
-  pub fn take_organization(&mut self) -> Option<Box<OrganizationT>> {
-    if let Self::Organization(_) = self {
+  /// If the union variant matches, return the owned OrganizationAttributesT, setting the union to NONE.
+  pub fn take_organization_attributes(&mut self) -> Option<Box<OrganizationAttributesT>> {
+    if let Self::OrganizationAttributes(_) = self {
       let v = core::mem::replace(self, Self::NONE);
-      if let Self::Organization(w) = v {
+      if let Self::OrganizationAttributes(w) = v {
         Some(w)
       } else {
         unreachable!()
@@ -163,19 +271,307 @@ impl EntityT {
       None
     }
   }
-  /// If the union variant matches, return a reference to the OrganizationT.
-  pub fn as_organization(&self) -> Option<&OrganizationT> {
-    if let Self::Organization(v) = self { Some(v.as_ref()) } else { None }
+  /// If the union variant matches, return a reference to the OrganizationAttributesT.
+  pub fn as_organization_attributes(&self) -> Option<&OrganizationAttributesT> {
+    if let Self::OrganizationAttributes(v) = self { Some(v.as_ref()) } else { None }
   }
-  /// If the union variant matches, return a mutable reference to the OrganizationT.
-  pub fn as_organization_mut(&mut self) -> Option<&mut OrganizationT> {
-    if let Self::Organization(v) = self { Some(v.as_mut()) } else { None }
+  /// If the union variant matches, return a mutable reference to the OrganizationAttributesT.
+  pub fn as_organization_attributes_mut(&mut self) -> Option<&mut OrganizationAttributesT> {
+    if let Self::OrganizationAttributes(v) = self { Some(v.as_mut()) } else { None }
+  }
+}
+pub enum DNComponentOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Represents a component of a Distinguished Name (DN) in LDAP
+pub struct DNComponent<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for DNComponent<'a> {
+  type Inner = DNComponent<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> DNComponent<'a> {
+  pub const VT_TYPE: flatbuffers::VOffsetT = 4;
+  pub const VT_VALUE: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    DNComponent { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args DNComponentArgs<'args>
+  ) -> flatbuffers::WIPOffset<DNComponent<'bldr>> {
+    let mut builder = DNComponentBuilder::new(_fbb);
+    if let Some(x) = args.VALUE { builder.add_VALUE(x); }
+    builder.add_TYPE(args.TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> DNComponentT {
+    let TYPE = self.TYPE();
+    let VALUE = self.VALUE().map(|x| {
+      x.to_string()
+    });
+    DNComponentT {
+      TYPE,
+      VALUE,
+    }
+  }
+
+  /// The type of the DN component
+  #[inline]
+  pub fn TYPE(&self) -> LDIFAttributeType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<LDIFAttributeType>(DNComponent::VT_TYPE, Some(LDIFAttributeType::CN)).unwrap()}
+  }
+  /// The value of the DN component
+  #[inline]
+  pub fn VALUE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DNComponent::VT_VALUE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for DNComponent<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<LDIFAttributeType>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VALUE", Self::VT_VALUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct DNComponentArgs<'a> {
+    pub TYPE: LDIFAttributeType,
+    pub VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for DNComponentArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    DNComponentArgs {
+      TYPE: LDIFAttributeType::CN,
+      VALUE: None,
+    }
+  }
+}
+
+pub struct DNComponentBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> DNComponentBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_TYPE(&mut self, TYPE: LDIFAttributeType) {
+    self.fbb_.push_slot::<LDIFAttributeType>(DNComponent::VT_TYPE, TYPE, LDIFAttributeType::CN);
+  }
+  #[inline]
+  pub fn add_VALUE(&mut self, VALUE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DNComponent::VT_VALUE, VALUE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> DNComponentBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    DNComponentBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<DNComponent<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for DNComponent<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("DNComponent");
+      ds.field("TYPE", &self.TYPE());
+      ds.field("VALUE", &self.VALUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct DNComponentT {
+  pub TYPE: LDIFAttributeType,
+  pub VALUE: Option<String>,
+}
+impl Default for DNComponentT {
+  fn default() -> Self {
+    Self {
+      TYPE: LDIFAttributeType::CN,
+      VALUE: None,
+    }
+  }
+}
+impl DNComponentT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<DNComponent<'b>> {
+    let TYPE = self.TYPE;
+    let VALUE = self.VALUE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    DNComponent::create(_fbb, &DNComponentArgs{
+      TYPE,
+      VALUE,
+    })
+  }
+}
+pub enum DistinguishedNameOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Represents a Distinguished Name composed of DNComponents
+pub struct DistinguishedName<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for DistinguishedName<'a> {
+  type Inner = DistinguishedName<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> DistinguishedName<'a> {
+  pub const VT_COMPONENTS: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    DistinguishedName { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args DistinguishedNameArgs<'args>
+  ) -> flatbuffers::WIPOffset<DistinguishedName<'bldr>> {
+    let mut builder = DistinguishedNameBuilder::new(_fbb);
+    if let Some(x) = args.COMPONENTS { builder.add_COMPONENTS(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> DistinguishedNameT {
+    let COMPONENTS = self.COMPONENTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    DistinguishedNameT {
+      COMPONENTS,
+    }
+  }
+
+  /// The sequence of components making up the DN
+  #[inline]
+  pub fn COMPONENTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<DNComponent<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<DNComponent>>>>(DistinguishedName::VT_COMPONENTS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for DistinguishedName<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<DNComponent>>>>("COMPONENTS", Self::VT_COMPONENTS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct DistinguishedNameArgs<'a> {
+    pub COMPONENTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<DNComponent<'a>>>>>,
+}
+impl<'a> Default for DistinguishedNameArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    DistinguishedNameArgs {
+      COMPONENTS: None,
+    }
+  }
+}
+
+pub struct DistinguishedNameBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> DistinguishedNameBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_COMPONENTS(&mut self, COMPONENTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<DNComponent<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DistinguishedName::VT_COMPONENTS, COMPONENTS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> DistinguishedNameBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    DistinguishedNameBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<DistinguishedName<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for DistinguishedName<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("DistinguishedName");
+      ds.field("COMPONENTS", &self.COMPONENTS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct DistinguishedNameT {
+  pub COMPONENTS: Option<Vec<DNComponentT>>,
+}
+impl Default for DistinguishedNameT {
+  fn default() -> Self {
+    Self {
+      COMPONENTS: None,
+    }
+  }
+}
+impl DistinguishedNameT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<DistinguishedName<'b>> {
+    let COMPONENTS = self.COMPONENTS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    DistinguishedName::create(_fbb, &DistinguishedNameArgs{
+      COMPONENTS,
+    })
   }
 }
 pub enum CryptoKeyOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Crypto Key Information
+/// Represents cryptographic key information
 pub struct CryptoKey<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -193,8 +589,6 @@ impl<'a> CryptoKey<'a> {
   pub const VT_XPUB: flatbuffers::VOffsetT = 6;
   pub const VT_PRIVATE_KEY: flatbuffers::VOffsetT = 8;
   pub const VT_XPRIV: flatbuffers::VOffsetT = 10;
-  pub const VT_KEY_ADDRESS: flatbuffers::VOffsetT = 12;
-  pub const VT_ADDRESS_TYPE: flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -206,8 +600,6 @@ impl<'a> CryptoKey<'a> {
     args: &'args CryptoKeyArgs<'args>
   ) -> flatbuffers::WIPOffset<CryptoKey<'bldr>> {
     let mut builder = CryptoKeyBuilder::new(_fbb);
-    if let Some(x) = args.ADDRESS_TYPE { builder.add_ADDRESS_TYPE(x); }
-    if let Some(x) = args.KEY_ADDRESS { builder.add_KEY_ADDRESS(x); }
     if let Some(x) = args.XPRIV { builder.add_XPRIV(x); }
     if let Some(x) = args.PRIVATE_KEY { builder.add_PRIVATE_KEY(x); }
     if let Some(x) = args.XPUB { builder.add_XPUB(x); }
@@ -228,19 +620,11 @@ impl<'a> CryptoKey<'a> {
     let XPRIV = self.XPRIV().map(|x| {
       x.to_string()
     });
-    let KEY_ADDRESS = self.KEY_ADDRESS().map(|x| {
-      x.to_string()
-    });
-    let ADDRESS_TYPE = self.ADDRESS_TYPE().map(|x| {
-      x.to_string()
-    });
     CryptoKeyT {
       PUBLIC_KEY,
       XPUB,
       PRIVATE_KEY,
       XPRIV,
-      KEY_ADDRESS,
-      ADDRESS_TYPE,
     }
   }
 
@@ -276,22 +660,6 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_XPRIV, None)}
   }
-  /// Address generated from the cryptographic key
-  #[inline]
-  pub fn KEY_ADDRESS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_KEY_ADDRESS, None)}
-  }
-  /// Numerical type of the address generated from the cryptographic key
-  #[inline]
-  pub fn ADDRESS_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_ADDRESS_TYPE, None)}
-  }
 }
 
 impl flatbuffers::Verifiable for CryptoKey<'_> {
@@ -305,8 +673,6 @@ impl flatbuffers::Verifiable for CryptoKey<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XPUB", Self::VT_XPUB, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PRIVATE_KEY", Self::VT_PRIVATE_KEY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XPRIV", Self::VT_XPRIV, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KEY_ADDRESS", Self::VT_KEY_ADDRESS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS_TYPE", Self::VT_ADDRESS_TYPE, false)?
      .finish();
     Ok(())
   }
@@ -316,8 +682,6 @@ pub struct CryptoKeyArgs<'a> {
     pub XPUB: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PRIVATE_KEY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub XPRIV: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub KEY_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ADDRESS_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for CryptoKeyArgs<'a> {
   #[inline]
@@ -327,8 +691,6 @@ impl<'a> Default for CryptoKeyArgs<'a> {
       XPUB: None,
       PRIVATE_KEY: None,
       XPRIV: None,
-      KEY_ADDRESS: None,
-      ADDRESS_TYPE: None,
     }
   }
 }
@@ -355,14 +717,6 @@ impl<'a: 'b, 'b> CryptoKeyBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_XPRIV, XPRIV);
   }
   #[inline]
-  pub fn add_KEY_ADDRESS(&mut self, KEY_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_KEY_ADDRESS, KEY_ADDRESS);
-  }
-  #[inline]
-  pub fn add_ADDRESS_TYPE(&mut self, ADDRESS_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
-  }
-  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CryptoKeyBuilder<'a, 'b> {
     let start = _fbb.start_table();
     CryptoKeyBuilder {
@@ -384,8 +738,6 @@ impl core::fmt::Debug for CryptoKey<'_> {
       ds.field("XPUB", &self.XPUB());
       ds.field("PRIVATE_KEY", &self.PRIVATE_KEY());
       ds.field("XPRIV", &self.XPRIV());
-      ds.field("KEY_ADDRESS", &self.KEY_ADDRESS());
-      ds.field("ADDRESS_TYPE", &self.ADDRESS_TYPE());
       ds.finish()
   }
 }
@@ -396,8 +748,6 @@ pub struct CryptoKeyT {
   pub XPUB: Option<String>,
   pub PRIVATE_KEY: Option<String>,
   pub XPRIV: Option<String>,
-  pub KEY_ADDRESS: Option<String>,
-  pub ADDRESS_TYPE: Option<String>,
 }
 impl Default for CryptoKeyT {
   fn default() -> Self {
@@ -406,8 +756,6 @@ impl Default for CryptoKeyT {
       XPUB: None,
       PRIVATE_KEY: None,
       XPRIV: None,
-      KEY_ADDRESS: None,
-      ADDRESS_TYPE: None,
     }
   }
 }
@@ -428,215 +776,109 @@ impl CryptoKeyT {
     let XPRIV = self.XPRIV.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let KEY_ADDRESS = self.KEY_ADDRESS.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ADDRESS_TYPE = self.ADDRESS_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     CryptoKey::create(_fbb, &CryptoKeyArgs{
       PUBLIC_KEY,
       XPUB,
       PRIVATE_KEY,
       XPRIV,
-      KEY_ADDRESS,
-      ADDRESS_TYPE,
     })
   }
 }
-pub enum ContactPointOffset {}
+pub enum AddressOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Information about a contact point
-pub struct ContactPoint<'a> {
+/// Represents a geographic address
+pub struct Address<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
 
-impl<'a> flatbuffers::Follow<'a> for ContactPoint<'a> {
-  type Inner = ContactPoint<'a>;
+impl<'a> flatbuffers::Follow<'a> for Address<'a> {
+  type Inner = Address<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: flatbuffers::Table::new(buf, loc) }
   }
 }
 
-impl<'a> ContactPoint<'a> {
-  pub const VT_NAME: flatbuffers::VOffsetT = 4;
-  pub const VT_CONTACT_TYPE: flatbuffers::VOffsetT = 6;
-  pub const VT_EMAIL: flatbuffers::VOffsetT = 8;
-  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 10;
-  pub const VT_CONTACT_OPTION: flatbuffers::VOffsetT = 12;
-  pub const VT_AREA_SERVED: flatbuffers::VOffsetT = 14;
-  pub const VT_AVAILABLE_LANGUAGE: flatbuffers::VOffsetT = 16;
-  pub const VT_ADDRESS_COUNTRY: flatbuffers::VOffsetT = 18;
-  pub const VT_ADDRESS_REGION: flatbuffers::VOffsetT = 20;
-  pub const VT_ADDRESS_LOCALITY: flatbuffers::VOffsetT = 22;
-  pub const VT_POSTAL_CODE: flatbuffers::VOffsetT = 24;
-  pub const VT_STREET_ADDRESS: flatbuffers::VOffsetT = 26;
-  pub const VT_POST_OFFICE_BOX_NUMBER: flatbuffers::VOffsetT = 28;
+impl<'a> Address<'a> {
+  pub const VT_COUNTRY: flatbuffers::VOffsetT = 4;
+  pub const VT_REGION: flatbuffers::VOffsetT = 6;
+  pub const VT_LOCALITY: flatbuffers::VOffsetT = 8;
+  pub const VT_POSTAL_CODE: flatbuffers::VOffsetT = 10;
+  pub const VT_STREET: flatbuffers::VOffsetT = 12;
+  pub const VT_POST_OFFICE_BOX_NUMBER: flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    ContactPoint { _tab: table }
+    Address { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
     _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args ContactPointArgs<'args>
-  ) -> flatbuffers::WIPOffset<ContactPoint<'bldr>> {
-    let mut builder = ContactPointBuilder::new(_fbb);
+    args: &'args AddressArgs<'args>
+  ) -> flatbuffers::WIPOffset<Address<'bldr>> {
+    let mut builder = AddressBuilder::new(_fbb);
     if let Some(x) = args.POST_OFFICE_BOX_NUMBER { builder.add_POST_OFFICE_BOX_NUMBER(x); }
-    if let Some(x) = args.STREET_ADDRESS { builder.add_STREET_ADDRESS(x); }
+    if let Some(x) = args.STREET { builder.add_STREET(x); }
     if let Some(x) = args.POSTAL_CODE { builder.add_POSTAL_CODE(x); }
-    if let Some(x) = args.ADDRESS_LOCALITY { builder.add_ADDRESS_LOCALITY(x); }
-    if let Some(x) = args.ADDRESS_REGION { builder.add_ADDRESS_REGION(x); }
-    if let Some(x) = args.ADDRESS_COUNTRY { builder.add_ADDRESS_COUNTRY(x); }
-    if let Some(x) = args.AVAILABLE_LANGUAGE { builder.add_AVAILABLE_LANGUAGE(x); }
-    if let Some(x) = args.AREA_SERVED { builder.add_AREA_SERVED(x); }
-    if let Some(x) = args.CONTACT_OPTION { builder.add_CONTACT_OPTION(x); }
-    if let Some(x) = args.TELEPHONE { builder.add_TELEPHONE(x); }
-    if let Some(x) = args.EMAIL { builder.add_EMAIL(x); }
-    if let Some(x) = args.CONTACT_TYPE { builder.add_CONTACT_TYPE(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.LOCALITY { builder.add_LOCALITY(x); }
+    if let Some(x) = args.REGION { builder.add_REGION(x); }
+    if let Some(x) = args.COUNTRY { builder.add_COUNTRY(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> ContactPointT {
-    let NAME = self.NAME().map(|x| {
+  pub fn unpack(&self) -> AddressT {
+    let COUNTRY = self.COUNTRY().map(|x| {
       x.to_string()
     });
-    let CONTACT_TYPE = self.CONTACT_TYPE().map(|x| {
+    let REGION = self.REGION().map(|x| {
       x.to_string()
     });
-    let EMAIL = self.EMAIL().map(|x| {
-      x.to_string()
-    });
-    let TELEPHONE = self.TELEPHONE().map(|x| {
-      x.to_string()
-    });
-    let CONTACT_OPTION = self.CONTACT_OPTION().map(|x| {
-      x.to_string()
-    });
-    let AREA_SERVED = self.AREA_SERVED().map(|x| {
-      x.to_string()
-    });
-    let AVAILABLE_LANGUAGE = self.AVAILABLE_LANGUAGE().map(|x| {
-      x.to_string()
-    });
-    let ADDRESS_COUNTRY = self.ADDRESS_COUNTRY().map(|x| {
-      x.to_string()
-    });
-    let ADDRESS_REGION = self.ADDRESS_REGION().map(|x| {
-      x.to_string()
-    });
-    let ADDRESS_LOCALITY = self.ADDRESS_LOCALITY().map(|x| {
+    let LOCALITY = self.LOCALITY().map(|x| {
       x.to_string()
     });
     let POSTAL_CODE = self.POSTAL_CODE().map(|x| {
       x.to_string()
     });
-    let STREET_ADDRESS = self.STREET_ADDRESS().map(|x| {
+    let STREET = self.STREET().map(|x| {
       x.to_string()
     });
     let POST_OFFICE_BOX_NUMBER = self.POST_OFFICE_BOX_NUMBER().map(|x| {
       x.to_string()
     });
-    ContactPointT {
-      NAME,
-      CONTACT_TYPE,
-      EMAIL,
-      TELEPHONE,
-      CONTACT_OPTION,
-      AREA_SERVED,
-      AVAILABLE_LANGUAGE,
-      ADDRESS_COUNTRY,
-      ADDRESS_REGION,
-      ADDRESS_LOCALITY,
+    AddressT {
+      COUNTRY,
+      REGION,
+      LOCALITY,
       POSTAL_CODE,
-      STREET_ADDRESS,
+      STREET,
       POST_OFFICE_BOX_NUMBER,
     }
   }
 
-  /// Name of the contact point or person
-  #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_NAME, None)}
-  }
-  /// Type of contact (e.g., customer service, technical support)
-  #[inline]
-  pub fn CONTACT_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_CONTACT_TYPE, None)}
-  }
-  /// Email address
-  #[inline]
-  pub fn EMAIL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_EMAIL, None)}
-  }
-  /// Telephone number
-  #[inline]
-  pub fn TELEPHONE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_TELEPHONE, None)}
-  }
-  /// Available contact options (e.g., HearingImpairedSupported)
-  #[inline]
-  pub fn CONTACT_OPTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_CONTACT_OPTION, None)}
-  }
-  /// Geographic area where the service is available
-  #[inline]
-  pub fn AREA_SERVED(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_AREA_SERVED, None)}
-  }
-  /// Language available for communication
-  #[inline]
-  pub fn AVAILABLE_LANGUAGE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_AVAILABLE_LANGUAGE, None)}
-  }
   /// Country of the address
   #[inline]
-  pub fn ADDRESS_COUNTRY(&self) -> Option<&'a str> {
+  pub fn COUNTRY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_ADDRESS_COUNTRY, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Address::VT_COUNTRY, None)}
   }
   /// Region of the address (e.g., state or province)
   #[inline]
-  pub fn ADDRESS_REGION(&self) -> Option<&'a str> {
+  pub fn REGION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_ADDRESS_REGION, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Address::VT_REGION, None)}
   }
   /// Locality of the address (e.g., city or town)
   #[inline]
-  pub fn ADDRESS_LOCALITY(&self) -> Option<&'a str> {
+  pub fn LOCALITY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_ADDRESS_LOCALITY, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Address::VT_LOCALITY, None)}
   }
   /// Postal code of the address
   #[inline]
@@ -644,15 +886,15 @@ impl<'a> ContactPoint<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_POSTAL_CODE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Address::VT_POSTAL_CODE, None)}
   }
   /// Street address
   #[inline]
-  pub fn STREET_ADDRESS(&self) -> Option<&'a str> {
+  pub fn STREET(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_STREET_ADDRESS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Address::VT_STREET, None)}
   }
   /// Post office box number
   #[inline]
@@ -660,583 +902,197 @@ impl<'a> ContactPoint<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ContactPoint::VT_POST_OFFICE_BOX_NUMBER, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Address::VT_POST_OFFICE_BOX_NUMBER, None)}
   }
 }
 
-impl flatbuffers::Verifiable for ContactPoint<'_> {
+impl flatbuffers::Verifiable for Address<'_> {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CONTACT_TYPE", Self::VT_CONTACT_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EMAIL", Self::VT_EMAIL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TELEPHONE", Self::VT_TELEPHONE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CONTACT_OPTION", Self::VT_CONTACT_OPTION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AREA_SERVED", Self::VT_AREA_SERVED, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AVAILABLE_LANGUAGE", Self::VT_AVAILABLE_LANGUAGE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS_COUNTRY", Self::VT_ADDRESS_COUNTRY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS_REGION", Self::VT_ADDRESS_REGION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS_LOCALITY", Self::VT_ADDRESS_LOCALITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COUNTRY", Self::VT_COUNTRY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION", Self::VT_REGION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LOCALITY", Self::VT_LOCALITY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POSTAL_CODE", Self::VT_POSTAL_CODE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STREET_ADDRESS", Self::VT_STREET_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STREET", Self::VT_STREET, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POST_OFFICE_BOX_NUMBER", Self::VT_POST_OFFICE_BOX_NUMBER, false)?
      .finish();
     Ok(())
   }
 }
-pub struct ContactPointArgs<'a> {
-    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CONTACT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub EMAIL: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TELEPHONE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CONTACT_OPTION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AREA_SERVED: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AVAILABLE_LANGUAGE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ADDRESS_COUNTRY: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ADDRESS_REGION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ADDRESS_LOCALITY: Option<flatbuffers::WIPOffset<&'a str>>,
+pub struct AddressArgs<'a> {
+    pub COUNTRY: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REGION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LOCALITY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub POSTAL_CODE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STREET_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STREET: Option<flatbuffers::WIPOffset<&'a str>>,
     pub POST_OFFICE_BOX_NUMBER: Option<flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for ContactPointArgs<'a> {
+impl<'a> Default for AddressArgs<'a> {
   #[inline]
   fn default() -> Self {
-    ContactPointArgs {
-      NAME: None,
-      CONTACT_TYPE: None,
-      EMAIL: None,
-      TELEPHONE: None,
-      CONTACT_OPTION: None,
-      AREA_SERVED: None,
-      AVAILABLE_LANGUAGE: None,
-      ADDRESS_COUNTRY: None,
-      ADDRESS_REGION: None,
-      ADDRESS_LOCALITY: None,
+    AddressArgs {
+      COUNTRY: None,
+      REGION: None,
+      LOCALITY: None,
       POSTAL_CODE: None,
-      STREET_ADDRESS: None,
+      STREET: None,
       POST_OFFICE_BOX_NUMBER: None,
     }
   }
 }
 
-pub struct ContactPointBuilder<'a: 'b, 'b> {
+pub struct AddressBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ContactPointBuilder<'a, 'b> {
+impl<'a: 'b, 'b> AddressBuilder<'a, 'b> {
   #[inline]
-  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_NAME, NAME);
+  pub fn add_COUNTRY(&mut self, COUNTRY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_COUNTRY, COUNTRY);
   }
   #[inline]
-  pub fn add_CONTACT_TYPE(&mut self, CONTACT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_CONTACT_TYPE, CONTACT_TYPE);
+  pub fn add_REGION(&mut self, REGION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_REGION, REGION);
   }
   #[inline]
-  pub fn add_EMAIL(&mut self, EMAIL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_EMAIL, EMAIL);
-  }
-  #[inline]
-  pub fn add_TELEPHONE(&mut self, TELEPHONE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_TELEPHONE, TELEPHONE);
-  }
-  #[inline]
-  pub fn add_CONTACT_OPTION(&mut self, CONTACT_OPTION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_CONTACT_OPTION, CONTACT_OPTION);
-  }
-  #[inline]
-  pub fn add_AREA_SERVED(&mut self, AREA_SERVED: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_AREA_SERVED, AREA_SERVED);
-  }
-  #[inline]
-  pub fn add_AVAILABLE_LANGUAGE(&mut self, AVAILABLE_LANGUAGE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_AVAILABLE_LANGUAGE, AVAILABLE_LANGUAGE);
-  }
-  #[inline]
-  pub fn add_ADDRESS_COUNTRY(&mut self, ADDRESS_COUNTRY: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_ADDRESS_COUNTRY, ADDRESS_COUNTRY);
-  }
-  #[inline]
-  pub fn add_ADDRESS_REGION(&mut self, ADDRESS_REGION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_ADDRESS_REGION, ADDRESS_REGION);
-  }
-  #[inline]
-  pub fn add_ADDRESS_LOCALITY(&mut self, ADDRESS_LOCALITY: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_ADDRESS_LOCALITY, ADDRESS_LOCALITY);
+  pub fn add_LOCALITY(&mut self, LOCALITY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_LOCALITY, LOCALITY);
   }
   #[inline]
   pub fn add_POSTAL_CODE(&mut self, POSTAL_CODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_POSTAL_CODE, POSTAL_CODE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_POSTAL_CODE, POSTAL_CODE);
   }
   #[inline]
-  pub fn add_STREET_ADDRESS(&mut self, STREET_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_STREET_ADDRESS, STREET_ADDRESS);
+  pub fn add_STREET(&mut self, STREET: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_STREET, STREET);
   }
   #[inline]
   pub fn add_POST_OFFICE_BOX_NUMBER(&mut self, POST_OFFICE_BOX_NUMBER: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ContactPoint::VT_POST_OFFICE_BOX_NUMBER, POST_OFFICE_BOX_NUMBER);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_POST_OFFICE_BOX_NUMBER, POST_OFFICE_BOX_NUMBER);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ContactPointBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> AddressBuilder<'a, 'b> {
     let start = _fbb.start_table();
-    ContactPointBuilder {
+    AddressBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<ContactPoint<'a>> {
+  pub fn finish(self) -> flatbuffers::WIPOffset<Address<'a>> {
     let o = self.fbb_.end_table(self.start_);
     flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl core::fmt::Debug for ContactPoint<'_> {
+impl core::fmt::Debug for Address<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("ContactPoint");
-      ds.field("NAME", &self.NAME());
-      ds.field("CONTACT_TYPE", &self.CONTACT_TYPE());
-      ds.field("EMAIL", &self.EMAIL());
-      ds.field("TELEPHONE", &self.TELEPHONE());
-      ds.field("CONTACT_OPTION", &self.CONTACT_OPTION());
-      ds.field("AREA_SERVED", &self.AREA_SERVED());
-      ds.field("AVAILABLE_LANGUAGE", &self.AVAILABLE_LANGUAGE());
-      ds.field("ADDRESS_COUNTRY", &self.ADDRESS_COUNTRY());
-      ds.field("ADDRESS_REGION", &self.ADDRESS_REGION());
-      ds.field("ADDRESS_LOCALITY", &self.ADDRESS_LOCALITY());
+    let mut ds = f.debug_struct("Address");
+      ds.field("COUNTRY", &self.COUNTRY());
+      ds.field("REGION", &self.REGION());
+      ds.field("LOCALITY", &self.LOCALITY());
       ds.field("POSTAL_CODE", &self.POSTAL_CODE());
-      ds.field("STREET_ADDRESS", &self.STREET_ADDRESS());
+      ds.field("STREET", &self.STREET());
       ds.field("POST_OFFICE_BOX_NUMBER", &self.POST_OFFICE_BOX_NUMBER());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct ContactPointT {
-  pub NAME: Option<String>,
-  pub CONTACT_TYPE: Option<String>,
-  pub EMAIL: Option<String>,
-  pub TELEPHONE: Option<String>,
-  pub CONTACT_OPTION: Option<String>,
-  pub AREA_SERVED: Option<String>,
-  pub AVAILABLE_LANGUAGE: Option<String>,
-  pub ADDRESS_COUNTRY: Option<String>,
-  pub ADDRESS_REGION: Option<String>,
-  pub ADDRESS_LOCALITY: Option<String>,
+pub struct AddressT {
+  pub COUNTRY: Option<String>,
+  pub REGION: Option<String>,
+  pub LOCALITY: Option<String>,
   pub POSTAL_CODE: Option<String>,
-  pub STREET_ADDRESS: Option<String>,
+  pub STREET: Option<String>,
   pub POST_OFFICE_BOX_NUMBER: Option<String>,
 }
-impl Default for ContactPointT {
+impl Default for AddressT {
   fn default() -> Self {
     Self {
-      NAME: None,
-      CONTACT_TYPE: None,
-      EMAIL: None,
-      TELEPHONE: None,
-      CONTACT_OPTION: None,
-      AREA_SERVED: None,
-      AVAILABLE_LANGUAGE: None,
-      ADDRESS_COUNTRY: None,
-      ADDRESS_REGION: None,
-      ADDRESS_LOCALITY: None,
+      COUNTRY: None,
+      REGION: None,
+      LOCALITY: None,
       POSTAL_CODE: None,
-      STREET_ADDRESS: None,
+      STREET: None,
       POST_OFFICE_BOX_NUMBER: None,
     }
   }
 }
-impl ContactPointT {
+impl AddressT {
   pub fn pack<'b>(
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<ContactPoint<'b>> {
-    let NAME = self.NAME.as_ref().map(|x|{
+  ) -> flatbuffers::WIPOffset<Address<'b>> {
+    let COUNTRY = self.COUNTRY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let CONTACT_TYPE = self.CONTACT_TYPE.as_ref().map(|x|{
+    let REGION = self.REGION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let EMAIL = self.EMAIL.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TELEPHONE = self.TELEPHONE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CONTACT_OPTION = self.CONTACT_OPTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let AREA_SERVED = self.AREA_SERVED.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let AVAILABLE_LANGUAGE = self.AVAILABLE_LANGUAGE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ADDRESS_COUNTRY = self.ADDRESS_COUNTRY.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ADDRESS_REGION = self.ADDRESS_REGION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ADDRESS_LOCALITY = self.ADDRESS_LOCALITY.as_ref().map(|x|{
+    let LOCALITY = self.LOCALITY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let POSTAL_CODE = self.POSTAL_CODE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let STREET_ADDRESS = self.STREET_ADDRESS.as_ref().map(|x|{
+    let STREET = self.STREET.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let POST_OFFICE_BOX_NUMBER = self.POST_OFFICE_BOX_NUMBER.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    ContactPoint::create(_fbb, &ContactPointArgs{
-      NAME,
-      CONTACT_TYPE,
-      EMAIL,
-      TELEPHONE,
-      CONTACT_OPTION,
-      AREA_SERVED,
-      AVAILABLE_LANGUAGE,
-      ADDRESS_COUNTRY,
-      ADDRESS_REGION,
-      ADDRESS_LOCALITY,
+    Address::create(_fbb, &AddressArgs{
+      COUNTRY,
+      REGION,
+      LOCALITY,
       POSTAL_CODE,
-      STREET_ADDRESS,
+      STREET,
       POST_OFFICE_BOX_NUMBER,
     })
   }
 }
-pub enum OrganizationOffset {}
+pub enum PersonAttributesOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Basic information about an organization
-pub struct Organization<'a> {
+/// Specific attributes for a Person
+pub struct PersonAttributes<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
 
-impl<'a> flatbuffers::Follow<'a> for Organization<'a> {
-  type Inner = Organization<'a>;
+impl<'a> flatbuffers::Follow<'a> for PersonAttributes<'a> {
+  type Inner = PersonAttributes<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: flatbuffers::Table::new(buf, loc) }
   }
 }
 
-impl<'a> Organization<'a> {
-  pub const VT_NAME: flatbuffers::VOffsetT = 4;
-  pub const VT_LEGAL_NAME: flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Organization { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args OrganizationArgs<'args>
-  ) -> flatbuffers::WIPOffset<Organization<'bldr>> {
-    let mut builder = OrganizationBuilder::new(_fbb);
-    if let Some(x) = args.LEGAL_NAME { builder.add_LEGAL_NAME(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> OrganizationT {
-    let NAME = self.NAME().map(|x| {
-      x.to_string()
-    });
-    let LEGAL_NAME = self.LEGAL_NAME().map(|x| {
-      x.to_string()
-    });
-    OrganizationT {
-      NAME,
-      LEGAL_NAME,
-    }
-  }
-
-  /// Common name of the organization
-  #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Organization::VT_NAME, None)}
-  }
-  /// Legal name of the organization
-  #[inline]
-  pub fn LEGAL_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Organization::VT_LEGAL_NAME, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for Organization<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LEGAL_NAME", Self::VT_LEGAL_NAME, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct OrganizationArgs<'a> {
-    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LEGAL_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-}
-impl<'a> Default for OrganizationArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    OrganizationArgs {
-      NAME: None,
-      LEGAL_NAME: None,
-    }
-  }
-}
-
-pub struct OrganizationBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> OrganizationBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Organization::VT_NAME, NAME);
-  }
-  #[inline]
-  pub fn add_LEGAL_NAME(&mut self, LEGAL_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Organization::VT_LEGAL_NAME, LEGAL_NAME);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OrganizationBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    OrganizationBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<Organization<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for Organization<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("Organization");
-      ds.field("NAME", &self.NAME());
-      ds.field("LEGAL_NAME", &self.LEGAL_NAME());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct OrganizationT {
-  pub NAME: Option<String>,
-  pub LEGAL_NAME: Option<String>,
-}
-impl Default for OrganizationT {
-  fn default() -> Self {
-    Self {
-      NAME: None,
-      LEGAL_NAME: None,
-    }
-  }
-}
-impl OrganizationT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<Organization<'b>> {
-    let NAME = self.NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LEGAL_NAME = self.LEGAL_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    Organization::create(_fbb, &OrganizationArgs{
-      NAME,
-      LEGAL_NAME,
-    })
-  }
-}
-pub enum OccupationOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Information about a person's occupation
-pub struct Occupation<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for Occupation<'a> {
-  type Inner = Occupation<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> Occupation<'a> {
-  pub const VT_NAME: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Occupation { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args OccupationArgs<'args>
-  ) -> flatbuffers::WIPOffset<Occupation<'bldr>> {
-    let mut builder = OccupationBuilder::new(_fbb);
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> OccupationT {
-    let NAME = self.NAME().map(|x| {
-      x.to_string()
-    });
-    OccupationT {
-      NAME,
-    }
-  }
-
-  /// Name of the occupation
-  #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Occupation::VT_NAME, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for Occupation<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct OccupationArgs<'a> {
-    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-}
-impl<'a> Default for OccupationArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    OccupationArgs {
-      NAME: None,
-    }
-  }
-}
-
-pub struct OccupationBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> OccupationBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Occupation::VT_NAME, NAME);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OccupationBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    OccupationBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<Occupation<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for Occupation<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("Occupation");
-      ds.field("NAME", &self.NAME());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct OccupationT {
-  pub NAME: Option<String>,
-}
-impl Default for OccupationT {
-  fn default() -> Self {
-    Self {
-      NAME: None,
-    }
-  }
-}
-impl OccupationT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<Occupation<'b>> {
-    let NAME = self.NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    Occupation::create(_fbb, &OccupationArgs{
-      NAME,
-    })
-  }
-}
-pub enum PersonOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Information about a person
-pub struct Person<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for Person<'a> {
-  type Inner = Person<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> Person<'a> {
+impl<'a> PersonAttributes<'a> {
   pub const VT_FAMILY_NAME: flatbuffers::VOffsetT = 4;
   pub const VT_GIVEN_NAME: flatbuffers::VOffsetT = 6;
   pub const VT_ADDITIONAL_NAME: flatbuffers::VOffsetT = 8;
   pub const VT_HONORIFIC_PREFIX: flatbuffers::VOffsetT = 10;
   pub const VT_HONORIFIC_SUFFIX: flatbuffers::VOffsetT = 12;
+  pub const VT_JOB_TITLE: flatbuffers::VOffsetT = 14;
+  pub const VT_OCCUPATION: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Person { _tab: table }
+    PersonAttributes { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
     _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args PersonArgs<'args>
-  ) -> flatbuffers::WIPOffset<Person<'bldr>> {
-    let mut builder = PersonBuilder::new(_fbb);
+    args: &'args PersonAttributesArgs<'args>
+  ) -> flatbuffers::WIPOffset<PersonAttributes<'bldr>> {
+    let mut builder = PersonAttributesBuilder::new(_fbb);
+    if let Some(x) = args.OCCUPATION { builder.add_OCCUPATION(x); }
+    if let Some(x) = args.JOB_TITLE { builder.add_JOB_TITLE(x); }
     if let Some(x) = args.HONORIFIC_SUFFIX { builder.add_HONORIFIC_SUFFIX(x); }
     if let Some(x) = args.HONORIFIC_PREFIX { builder.add_HONORIFIC_PREFIX(x); }
     if let Some(x) = args.ADDITIONAL_NAME { builder.add_ADDITIONAL_NAME(x); }
@@ -1245,7 +1101,7 @@ impl<'a> Person<'a> {
     builder.finish()
   }
 
-  pub fn unpack(&self) -> PersonT {
+  pub fn unpack(&self) -> PersonAttributesT {
     let FAMILY_NAME = self.FAMILY_NAME().map(|x| {
       x.to_string()
     });
@@ -1261,12 +1117,20 @@ impl<'a> Person<'a> {
     let HONORIFIC_SUFFIX = self.HONORIFIC_SUFFIX().map(|x| {
       x.to_string()
     });
-    PersonT {
+    let JOB_TITLE = self.JOB_TITLE().map(|x| {
+      x.to_string()
+    });
+    let OCCUPATION = self.OCCUPATION().map(|x| {
+      x.to_string()
+    });
+    PersonAttributesT {
       FAMILY_NAME,
       GIVEN_NAME,
       ADDITIONAL_NAME,
       HONORIFIC_PREFIX,
       HONORIFIC_SUFFIX,
+      JOB_TITLE,
+      OCCUPATION,
     }
   }
 
@@ -1276,7 +1140,7 @@ impl<'a> Person<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Person::VT_FAMILY_NAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_FAMILY_NAME, None)}
   }
   /// Given name or first name of the person
   #[inline]
@@ -1284,7 +1148,7 @@ impl<'a> Person<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Person::VT_GIVEN_NAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_GIVEN_NAME, None)}
   }
   /// Additional name or middle name of the person
   #[inline]
@@ -1292,27 +1156,43 @@ impl<'a> Person<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Person::VT_ADDITIONAL_NAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_ADDITIONAL_NAME, None)}
   }
-  /// Honorific prefix preceding the person's name
+  /// Honorific prefix preceding the person's name (e.g., Mr., Dr.)
   #[inline]
   pub fn HONORIFIC_PREFIX(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Person::VT_HONORIFIC_PREFIX, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_HONORIFIC_PREFIX, None)}
   }
-  /// Honorific suffix following the person's name
+  /// Honorific suffix following the person's name (e.g., Jr., Sr.)
   #[inline]
   pub fn HONORIFIC_SUFFIX(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Person::VT_HONORIFIC_SUFFIX, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_HONORIFIC_SUFFIX, None)}
+  }
+  /// Job title of the person
+  #[inline]
+  pub fn JOB_TITLE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_JOB_TITLE, None)}
+  }
+  /// Occupation of the person
+  #[inline]
+  pub fn OCCUPATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PersonAttributes::VT_OCCUPATION, None)}
   }
 }
 
-impl flatbuffers::Verifiable for Person<'_> {
+impl flatbuffers::Verifiable for PersonAttributes<'_> {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -1324,91 +1204,109 @@ impl flatbuffers::Verifiable for Person<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDITIONAL_NAME", Self::VT_ADDITIONAL_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HONORIFIC_PREFIX", Self::VT_HONORIFIC_PREFIX, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HONORIFIC_SUFFIX", Self::VT_HONORIFIC_SUFFIX, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("JOB_TITLE", Self::VT_JOB_TITLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OCCUPATION", Self::VT_OCCUPATION, false)?
      .finish();
     Ok(())
   }
 }
-pub struct PersonArgs<'a> {
+pub struct PersonAttributesArgs<'a> {
     pub FAMILY_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub GIVEN_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ADDITIONAL_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub HONORIFIC_PREFIX: Option<flatbuffers::WIPOffset<&'a str>>,
     pub HONORIFIC_SUFFIX: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub JOB_TITLE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OCCUPATION: Option<flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for PersonArgs<'a> {
+impl<'a> Default for PersonAttributesArgs<'a> {
   #[inline]
   fn default() -> Self {
-    PersonArgs {
+    PersonAttributesArgs {
       FAMILY_NAME: None,
       GIVEN_NAME: None,
       ADDITIONAL_NAME: None,
       HONORIFIC_PREFIX: None,
       HONORIFIC_SUFFIX: None,
+      JOB_TITLE: None,
+      OCCUPATION: None,
     }
   }
 }
 
-pub struct PersonBuilder<'a: 'b, 'b> {
+pub struct PersonAttributesBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PersonBuilder<'a, 'b> {
+impl<'a: 'b, 'b> PersonAttributesBuilder<'a, 'b> {
   #[inline]
   pub fn add_FAMILY_NAME(&mut self, FAMILY_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Person::VT_FAMILY_NAME, FAMILY_NAME);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_FAMILY_NAME, FAMILY_NAME);
   }
   #[inline]
   pub fn add_GIVEN_NAME(&mut self, GIVEN_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Person::VT_GIVEN_NAME, GIVEN_NAME);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_GIVEN_NAME, GIVEN_NAME);
   }
   #[inline]
   pub fn add_ADDITIONAL_NAME(&mut self, ADDITIONAL_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Person::VT_ADDITIONAL_NAME, ADDITIONAL_NAME);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_ADDITIONAL_NAME, ADDITIONAL_NAME);
   }
   #[inline]
   pub fn add_HONORIFIC_PREFIX(&mut self, HONORIFIC_PREFIX: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Person::VT_HONORIFIC_PREFIX, HONORIFIC_PREFIX);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_HONORIFIC_PREFIX, HONORIFIC_PREFIX);
   }
   #[inline]
   pub fn add_HONORIFIC_SUFFIX(&mut self, HONORIFIC_SUFFIX: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Person::VT_HONORIFIC_SUFFIX, HONORIFIC_SUFFIX);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_HONORIFIC_SUFFIX, HONORIFIC_SUFFIX);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PersonBuilder<'a, 'b> {
+  pub fn add_JOB_TITLE(&mut self, JOB_TITLE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_JOB_TITLE, JOB_TITLE);
+  }
+  #[inline]
+  pub fn add_OCCUPATION(&mut self, OCCUPATION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PersonAttributes::VT_OCCUPATION, OCCUPATION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PersonAttributesBuilder<'a, 'b> {
     let start = _fbb.start_table();
-    PersonBuilder {
+    PersonAttributesBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<Person<'a>> {
+  pub fn finish(self) -> flatbuffers::WIPOffset<PersonAttributes<'a>> {
     let o = self.fbb_.end_table(self.start_);
     flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl core::fmt::Debug for Person<'_> {
+impl core::fmt::Debug for PersonAttributes<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("Person");
+    let mut ds = f.debug_struct("PersonAttributes");
       ds.field("FAMILY_NAME", &self.FAMILY_NAME());
       ds.field("GIVEN_NAME", &self.GIVEN_NAME());
       ds.field("ADDITIONAL_NAME", &self.ADDITIONAL_NAME());
       ds.field("HONORIFIC_PREFIX", &self.HONORIFIC_PREFIX());
       ds.field("HONORIFIC_SUFFIX", &self.HONORIFIC_SUFFIX());
+      ds.field("JOB_TITLE", &self.JOB_TITLE());
+      ds.field("OCCUPATION", &self.OCCUPATION());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct PersonT {
+pub struct PersonAttributesT {
   pub FAMILY_NAME: Option<String>,
   pub GIVEN_NAME: Option<String>,
   pub ADDITIONAL_NAME: Option<String>,
   pub HONORIFIC_PREFIX: Option<String>,
   pub HONORIFIC_SUFFIX: Option<String>,
+  pub JOB_TITLE: Option<String>,
+  pub OCCUPATION: Option<String>,
 }
-impl Default for PersonT {
+impl Default for PersonAttributesT {
   fn default() -> Self {
     Self {
       FAMILY_NAME: None,
@@ -1416,14 +1314,16 @@ impl Default for PersonT {
       ADDITIONAL_NAME: None,
       HONORIFIC_PREFIX: None,
       HONORIFIC_SUFFIX: None,
+      JOB_TITLE: None,
+      OCCUPATION: None,
     }
   }
 }
-impl PersonT {
+impl PersonAttributesT {
   pub fn pack<'b>(
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<Person<'b>> {
+  ) -> flatbuffers::WIPOffset<PersonAttributes<'b>> {
     let FAMILY_NAME = self.FAMILY_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1439,19 +1339,159 @@ impl PersonT {
     let HONORIFIC_SUFFIX = self.HONORIFIC_SUFFIX.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    Person::create(_fbb, &PersonArgs{
+    let JOB_TITLE = self.JOB_TITLE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OCCUPATION = self.OCCUPATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PersonAttributes::create(_fbb, &PersonAttributesArgs{
       FAMILY_NAME,
       GIVEN_NAME,
       ADDITIONAL_NAME,
       HONORIFIC_PREFIX,
       HONORIFIC_SUFFIX,
+      JOB_TITLE,
+      OCCUPATION,
+    })
+  }
+}
+pub enum OrganizationAttributesOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Specific attributes for an Organization
+pub struct OrganizationAttributes<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for OrganizationAttributes<'a> {
+  type Inner = OrganizationAttributes<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> OrganizationAttributes<'a> {
+  pub const VT_LEGAL_NAME: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    OrganizationAttributes { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args OrganizationAttributesArgs<'args>
+  ) -> flatbuffers::WIPOffset<OrganizationAttributes<'bldr>> {
+    let mut builder = OrganizationAttributesBuilder::new(_fbb);
+    if let Some(x) = args.LEGAL_NAME { builder.add_LEGAL_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> OrganizationAttributesT {
+    let LEGAL_NAME = self.LEGAL_NAME().map(|x| {
+      x.to_string()
+    });
+    OrganizationAttributesT {
+      LEGAL_NAME,
+    }
+  }
+
+  /// Legal name of the organization
+  #[inline]
+  pub fn LEGAL_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OrganizationAttributes::VT_LEGAL_NAME, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for OrganizationAttributes<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LEGAL_NAME", Self::VT_LEGAL_NAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct OrganizationAttributesArgs<'a> {
+    pub LEGAL_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for OrganizationAttributesArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    OrganizationAttributesArgs {
+      LEGAL_NAME: None,
+    }
+  }
+}
+
+pub struct OrganizationAttributesBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> OrganizationAttributesBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_LEGAL_NAME(&mut self, LEGAL_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OrganizationAttributes::VT_LEGAL_NAME, LEGAL_NAME);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OrganizationAttributesBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    OrganizationAttributesBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<OrganizationAttributes<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for OrganizationAttributes<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("OrganizationAttributes");
+      ds.field("LEGAL_NAME", &self.LEGAL_NAME());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OrganizationAttributesT {
+  pub LEGAL_NAME: Option<String>,
+}
+impl Default for OrganizationAttributesT {
+  fn default() -> Self {
+    Self {
+      LEGAL_NAME: None,
+    }
+  }
+}
+impl OrganizationAttributesT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<OrganizationAttributes<'b>> {
+    let LEGAL_NAME = self.LEGAL_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    OrganizationAttributes::create(_fbb, &OrganizationAttributesArgs{
+      LEGAL_NAME,
     })
   }
 }
 pub enum EPMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Entity Profile Message
+/// Represents an entity with common fields and specific attributes for Person or Organization
 pub struct EPM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -1466,20 +1506,13 @@ impl<'a> flatbuffers::Follow<'a> for EPM<'a> {
 
 impl<'a> EPM<'a> {
   pub const VT_NAME: flatbuffers::VOffsetT = 4;
-  pub const VT_ALTERNATE_NAME: flatbuffers::VOffsetT = 6;
-  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 8;
-  pub const VT_IMAGE: flatbuffers::VOffsetT = 10;
-  pub const VT_SAME_AS: flatbuffers::VOffsetT = 12;
-  pub const VT_URL: flatbuffers::VOffsetT = 14;
-  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 16;
-  pub const VT_EMAIL: flatbuffers::VOffsetT = 18;
-  pub const VT_KEY: flatbuffers::VOffsetT = 20;
-  pub const VT_CONTACT_POINT: flatbuffers::VOffsetT = 22;
-  pub const VT_ADDRESS: flatbuffers::VOffsetT = 24;
-  pub const VT_JOB_TITLE: flatbuffers::VOffsetT = 26;
-  pub const VT_ENTITY_TYPE: flatbuffers::VOffsetT = 28;
-  pub const VT_ENTITY: flatbuffers::VOffsetT = 30;
-  pub const VT_HAS_OCCUPATION: flatbuffers::VOffsetT = 32;
+  pub const VT_ALTERNATE_NAMES: flatbuffers::VOffsetT = 6;
+  pub const VT_EMAIL: flatbuffers::VOffsetT = 8;
+  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 10;
+  pub const VT_KEYS: flatbuffers::VOffsetT = 12;
+  pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 14;
+  pub const VT_ATTRIBUTES_TYPE: flatbuffers::VOffsetT = 16;
+  pub const VT_ATTRIBUTES: flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1491,21 +1524,14 @@ impl<'a> EPM<'a> {
     args: &'args EPMArgs<'args>
   ) -> flatbuffers::WIPOffset<EPM<'bldr>> {
     let mut builder = EPMBuilder::new(_fbb);
-    if let Some(x) = args.HAS_OCCUPATION { builder.add_HAS_OCCUPATION(x); }
-    if let Some(x) = args.ENTITY { builder.add_ENTITY(x); }
-    if let Some(x) = args.JOB_TITLE { builder.add_JOB_TITLE(x); }
-    if let Some(x) = args.ADDRESS { builder.add_ADDRESS(x); }
-    if let Some(x) = args.CONTACT_POINT { builder.add_CONTACT_POINT(x); }
-    if let Some(x) = args.KEY { builder.add_KEY(x); }
-    if let Some(x) = args.EMAIL { builder.add_EMAIL(x); }
+    if let Some(x) = args.ATTRIBUTES { builder.add_ATTRIBUTES(x); }
+    if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
+    if let Some(x) = args.KEYS { builder.add_KEYS(x); }
     if let Some(x) = args.TELEPHONE { builder.add_TELEPHONE(x); }
-    if let Some(x) = args.URL { builder.add_URL(x); }
-    if let Some(x) = args.SAME_AS { builder.add_SAME_AS(x); }
-    if let Some(x) = args.IMAGE { builder.add_IMAGE(x); }
-    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
-    if let Some(x) = args.ALTERNATE_NAME { builder.add_ALTERNATE_NAME(x); }
+    if let Some(x) = args.EMAIL { builder.add_EMAIL(x); }
+    if let Some(x) = args.ALTERNATE_NAMES { builder.add_ALTERNATE_NAMES(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.add_ENTITY_type(args.ENTITY_type);
+    builder.add_ATTRIBUTES_type(args.ATTRIBUTES_type);
     builder.finish()
   }
 
@@ -1513,71 +1539,43 @@ impl<'a> EPM<'a> {
     let NAME = self.NAME().map(|x| {
       x.to_string()
     });
-    let ALTERNATE_NAME = self.ALTERNATE_NAME().map(|x| {
-      x.to_string()
+    let ALTERNATE_NAMES = self.ALTERNATE_NAMES().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
     });
-    let DESCRIPTION = self.DESCRIPTION().map(|x| {
-      x.to_string()
-    });
-    let IMAGE = self.IMAGE().map(|x| {
-      x.to_string()
-    });
-    let SAME_AS = self.SAME_AS().map(|x| {
-      x.to_string()
-    });
-    let URL = self.URL().map(|x| {
+    let EMAIL = self.EMAIL().map(|x| {
       x.to_string()
     });
     let TELEPHONE = self.TELEPHONE().map(|x| {
       x.to_string()
     });
-    let EMAIL = self.EMAIL().map(|x| {
-      x.to_string()
-    });
-    let KEY = self.KEY().map(|x| {
+    let KEYS = self.KEYS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
-    let CONTACT_POINT = self.CONTACT_POINT().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
+    let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
     });
-    let ADDRESS = self.ADDRESS().map(|x| {
-      Box::new(x.unpack())
-    });
-    let JOB_TITLE = self.JOB_TITLE().map(|x| {
-      x.to_string()
-    });
-    let ENTITY = match self.entity_type() {
-      Entity::NONE => EntityT::NONE,
-      Entity::Person => EntityT::Person(Box::new(
-        self.ENTITY_as_person()
-            .expect("Invalid union table, expected `Entity::Person`.")
+    let ATTRIBUTES = match self.attributes_type() {
+      SpecificAttributes::NONE => SpecificAttributesT::NONE,
+      SpecificAttributes::PersonAttributes => SpecificAttributesT::PersonAttributes(Box::new(
+        self.ATTRIBUTES_as_person_attributes()
+            .expect("Invalid union table, expected `SpecificAttributes::PersonAttributes`.")
             .unpack()
       )),
-      Entity::Organization => EntityT::Organization(Box::new(
-        self.ENTITY_as_organization()
-            .expect("Invalid union table, expected `Entity::Organization`.")
+      SpecificAttributes::OrganizationAttributes => SpecificAttributesT::OrganizationAttributes(Box::new(
+        self.ATTRIBUTES_as_organization_attributes()
+            .expect("Invalid union table, expected `SpecificAttributes::OrganizationAttributes`.")
             .unpack()
       )),
-      _ => EntityT::NONE,
+      _ => SpecificAttributesT::NONE,
     };
-    let HAS_OCCUPATION = self.HAS_OCCUPATION().map(|x| {
-      Box::new(x.unpack())
-    });
     EPMT {
       NAME,
-      ALTERNATE_NAME,
-      DESCRIPTION,
-      IMAGE,
-      SAME_AS,
-      URL,
-      TELEPHONE,
+      ALTERNATE_NAMES,
       EMAIL,
-      KEY,
-      CONTACT_POINT,
-      ADDRESS,
-      JOB_TITLE,
-      ENTITY,
-      HAS_OCCUPATION,
+      TELEPHONE,
+      KEYS,
+      MULTIFORMAT_ADDRESS,
+      ATTRIBUTES,
     }
   }
 
@@ -1589,55 +1587,15 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_NAME, None)}
   }
-  /// Alternate name for the entity
+  /// Alternate names for the entity
   #[inline]
-  pub fn ALTERNATE_NAME(&self) -> Option<&'a str> {
+  pub fn ALTERNATE_NAMES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_ALTERNATE_NAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(EPM::VT_ALTERNATE_NAMES, None)}
   }
-  /// Description of the entity
-  #[inline]
-  pub fn DESCRIPTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_DESCRIPTION, None)}
-  }
-  /// URL of an image representing the entity
-  #[inline]
-  pub fn IMAGE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_IMAGE, None)}
-  }
-  /// URL of a webpage that unambiguously indicates the entity's identity
-  #[inline]
-  pub fn SAME_AS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_SAME_AS, None)}
-  }
-  /// URL of the entity's website
-  #[inline]
-  pub fn URL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_URL, None)}
-  }
-  /// Telephone number for the entity
-  #[inline]
-  pub fn TELEPHONE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_TELEPHONE, None)}
-  }
-  /// Email address for the entity
+  /// Email address of the entity
   #[inline]
   pub fn EMAIL(&self) -> Option<&'a str> {
     // Safety:
@@ -1645,70 +1603,54 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_EMAIL, None)}
   }
-  /// Cryptographic key information associated with the entity
+  /// Telephone number of the entity
   #[inline]
-  pub fn KEY(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey<'a>>>> {
+  pub fn TELEPHONE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey>>>>(EPM::VT_KEY, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_TELEPHONE, None)}
   }
-  /// Contact points for the entity
+  /// Cryptographic keys associated with the entity
   #[inline]
-  pub fn CONTACT_POINT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ContactPoint<'a>>>> {
+  pub fn KEYS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ContactPoint>>>>(EPM::VT_CONTACT_POINT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey>>>>(EPM::VT_KEYS, None)}
   }
-  /// Address of the entity, using the ContactPoint structure
+  /// Multiformat addresses associated with the entity
   #[inline]
-  pub fn ADDRESS(&self) -> Option<ContactPoint<'a>> {
+  pub fn MULTIFORMAT_ADDRESS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<ContactPoint>>(EPM::VT_ADDRESS, None)}
-  }
-  /// Job title of the entity (applicable to persons)
-  #[inline]
-  pub fn JOB_TITLE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_JOB_TITLE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(EPM::VT_MULTIFORMAT_ADDRESS, None)}
   }
   #[inline]
-  pub fn ENTITY_type(&self) -> Entity {
+  pub fn ATTRIBUTES_type(&self) -> SpecificAttributes {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<Entity>(EPM::VT_ENTITY_TYPE, Some(Entity::NONE)).unwrap()}
+    unsafe { self._tab.get::<SpecificAttributes>(EPM::VT_ATTRIBUTES_TYPE, Some(SpecificAttributes::NONE)).unwrap()}
   }
-  /// Union type to represent either a person or an organization
+  /// Specific attributes for the entity, either Person or Organization
   #[inline]
-  pub fn ENTITY(&self) -> Option<flatbuffers::Table<'a>> {
+  pub fn ATTRIBUTES(&self) -> Option<flatbuffers::Table<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(EPM::VT_ENTITY, None)}
-  }
-  /// Occupation of the entity (applicable to persons)
-  #[inline]
-  pub fn HAS_OCCUPATION(&self) -> Option<Occupation<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Occupation>>(EPM::VT_HAS_OCCUPATION, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(EPM::VT_ATTRIBUTES, None)}
   }
   #[inline]
   #[allow(non_snake_case)]
-  pub fn ENTITY_as_person(&self) -> Option<Person<'a>> {
-    if self.entity_type() == Entity::Person {
-      self.ENTITY().map(|t| {
+  pub fn ATTRIBUTES_as_person_attributes(&self) -> Option<PersonAttributes<'a>> {
+    if self.attributes_type() == SpecificAttributes::PersonAttributes {
+      self.ATTRIBUTES().map(|t| {
        // Safety:
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
-       unsafe { Person::init_from_table(t) }
+       unsafe { PersonAttributes::init_from_table(t) }
      })
     } else {
       None
@@ -1717,13 +1659,13 @@ impl<'a> EPM<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
-  pub fn ENTITY_as_organization(&self) -> Option<Organization<'a>> {
-    if self.entity_type() == Entity::Organization {
-      self.ENTITY().map(|t| {
+  pub fn ATTRIBUTES_as_organization_attributes(&self) -> Option<OrganizationAttributes<'a>> {
+    if self.attributes_type() == SpecificAttributes::OrganizationAttributes {
+      self.ATTRIBUTES().map(|t| {
        // Safety:
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
-       unsafe { Organization::init_from_table(t) }
+       unsafe { OrganizationAttributes::init_from_table(t) }
      })
     } else {
       None
@@ -1740,65 +1682,44 @@ impl flatbuffers::Verifiable for EPM<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ALTERNATE_NAME", Self::VT_ALTERNATE_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE", Self::VT_IMAGE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SAME_AS", Self::VT_SAME_AS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("URL", Self::VT_URL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TELEPHONE", Self::VT_TELEPHONE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ALTERNATE_NAMES", Self::VT_ALTERNATE_NAMES, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EMAIL", Self::VT_EMAIL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CryptoKey>>>>("KEY", Self::VT_KEY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<ContactPoint>>>>("CONTACT_POINT", Self::VT_CONTACT_POINT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<ContactPoint>>("ADDRESS", Self::VT_ADDRESS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("JOB_TITLE", Self::VT_JOB_TITLE, false)?
-     .visit_union::<Entity, _>("entity_type", Self::VT_ENTITY_TYPE, "ENTITY", Self::VT_ENTITY, false, |key, v, pos| {
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TELEPHONE", Self::VT_TELEPHONE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CryptoKey>>>>("KEYS", Self::VT_KEYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
+     .visit_union::<SpecificAttributes, _>("attributes_type", Self::VT_ATTRIBUTES_TYPE, "ATTRIBUTES", Self::VT_ATTRIBUTES, false, |key, v, pos| {
         match key {
-          Entity::Person => v.verify_union_variant::<flatbuffers::ForwardsUOffset<Person>>("Entity::Person", pos),
-          Entity::Organization => v.verify_union_variant::<flatbuffers::ForwardsUOffset<Organization>>("Entity::Organization", pos),
+          SpecificAttributes::PersonAttributes => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PersonAttributes>>("SpecificAttributes::PersonAttributes", pos),
+          SpecificAttributes::OrganizationAttributes => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OrganizationAttributes>>("SpecificAttributes::OrganizationAttributes", pos),
           _ => Ok(()),
         }
      })?
-     .visit_field::<flatbuffers::ForwardsUOffset<Occupation>>("HAS_OCCUPATION", Self::VT_HAS_OCCUPATION, false)?
      .finish();
     Ok(())
   }
 }
 pub struct EPMArgs<'a> {
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ALTERNATE_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub IMAGE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAME_AS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub URL: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TELEPHONE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ALTERNATE_NAMES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub EMAIL: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub KEY: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey<'a>>>>>,
-    pub CONTACT_POINT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ContactPoint<'a>>>>>,
-    pub ADDRESS: Option<flatbuffers::WIPOffset<ContactPoint<'a>>>,
-    pub JOB_TITLE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ENTITY_type: Entity,
-    pub ENTITY: Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>>,
-    pub HAS_OCCUPATION: Option<flatbuffers::WIPOffset<Occupation<'a>>>,
+    pub TELEPHONE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub KEYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey<'a>>>>>,
+    pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub ATTRIBUTES_type: SpecificAttributes,
+    pub ATTRIBUTES: Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>>,
 }
 impl<'a> Default for EPMArgs<'a> {
   #[inline]
   fn default() -> Self {
     EPMArgs {
       NAME: None,
-      ALTERNATE_NAME: None,
-      DESCRIPTION: None,
-      IMAGE: None,
-      SAME_AS: None,
-      URL: None,
-      TELEPHONE: None,
+      ALTERNATE_NAMES: None,
       EMAIL: None,
-      KEY: None,
-      CONTACT_POINT: None,
-      ADDRESS: None,
-      JOB_TITLE: None,
-      ENTITY_type: Entity::NONE,
-      ENTITY: None,
-      HAS_OCCUPATION: None,
+      TELEPHONE: None,
+      KEYS: None,
+      MULTIFORMAT_ADDRESS: None,
+      ATTRIBUTES_type: SpecificAttributes::NONE,
+      ATTRIBUTES: None,
     }
   }
 }
@@ -1813,60 +1734,32 @@ impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_NAME, NAME);
   }
   #[inline]
-  pub fn add_ALTERNATE_NAME(&mut self, ALTERNATE_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_ALTERNATE_NAME, ALTERNATE_NAME);
-  }
-  #[inline]
-  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_DESCRIPTION, DESCRIPTION);
-  }
-  #[inline]
-  pub fn add_IMAGE(&mut self, IMAGE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_IMAGE, IMAGE);
-  }
-  #[inline]
-  pub fn add_SAME_AS(&mut self, SAME_AS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_SAME_AS, SAME_AS);
-  }
-  #[inline]
-  pub fn add_URL(&mut self, URL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_URL, URL);
-  }
-  #[inline]
-  pub fn add_TELEPHONE(&mut self, TELEPHONE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_TELEPHONE, TELEPHONE);
+  pub fn add_ALTERNATE_NAMES(&mut self, ALTERNATE_NAMES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_ALTERNATE_NAMES, ALTERNATE_NAMES);
   }
   #[inline]
   pub fn add_EMAIL(&mut self, EMAIL: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_EMAIL, EMAIL);
   }
   #[inline]
-  pub fn add_KEY(&mut self, KEY: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CryptoKey<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_KEY, KEY);
+  pub fn add_TELEPHONE(&mut self, TELEPHONE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_TELEPHONE, TELEPHONE);
   }
   #[inline]
-  pub fn add_CONTACT_POINT(&mut self, CONTACT_POINT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<ContactPoint<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_CONTACT_POINT, CONTACT_POINT);
+  pub fn add_KEYS(&mut self, KEYS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CryptoKey<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_KEYS, KEYS);
   }
   #[inline]
-  pub fn add_ADDRESS(&mut self, ADDRESS: flatbuffers::WIPOffset<ContactPoint<'b >>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<ContactPoint>>(EPM::VT_ADDRESS, ADDRESS);
+  pub fn add_MULTIFORMAT_ADDRESS(&mut self, MULTIFORMAT_ADDRESS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   #[inline]
-  pub fn add_JOB_TITLE(&mut self, JOB_TITLE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_JOB_TITLE, JOB_TITLE);
+  pub fn add_ATTRIBUTES_type(&mut self, ATTRIBUTES_type: SpecificAttributes) {
+    self.fbb_.push_slot::<SpecificAttributes>(EPM::VT_ATTRIBUTES_TYPE, ATTRIBUTES_type, SpecificAttributes::NONE);
   }
   #[inline]
-  pub fn add_ENTITY_type(&mut self, ENTITY_type: Entity) {
-    self.fbb_.push_slot::<Entity>(EPM::VT_ENTITY_TYPE, ENTITY_type, Entity::NONE);
-  }
-  #[inline]
-  pub fn add_ENTITY(&mut self, ENTITY: flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_ENTITY, ENTITY);
-  }
-  #[inline]
-  pub fn add_HAS_OCCUPATION(&mut self, HAS_OCCUPATION: flatbuffers::WIPOffset<Occupation<'b >>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<Occupation>>(EPM::VT_HAS_OCCUPATION, HAS_OCCUPATION);
+  pub fn add_ATTRIBUTES(&mut self, ATTRIBUTES: flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_ATTRIBUTES, ATTRIBUTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EPMBuilder<'a, 'b> {
@@ -1887,39 +1780,32 @@ impl core::fmt::Debug for EPM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("EPM");
       ds.field("NAME", &self.NAME());
-      ds.field("ALTERNATE_NAME", &self.ALTERNATE_NAME());
-      ds.field("DESCRIPTION", &self.DESCRIPTION());
-      ds.field("IMAGE", &self.IMAGE());
-      ds.field("SAME_AS", &self.SAME_AS());
-      ds.field("URL", &self.URL());
-      ds.field("TELEPHONE", &self.TELEPHONE());
+      ds.field("ALTERNATE_NAMES", &self.ALTERNATE_NAMES());
       ds.field("EMAIL", &self.EMAIL());
-      ds.field("KEY", &self.KEY());
-      ds.field("CONTACT_POINT", &self.CONTACT_POINT());
-      ds.field("ADDRESS", &self.ADDRESS());
-      ds.field("JOB_TITLE", &self.JOB_TITLE());
-      ds.field("ENTITY_type", &self.ENTITY_type());
-      match self.entity_type() {
-        Entity::Person => {
-          if let Some(x) = self.ENTITY_as_person() {
-            ds.field("ENTITY", &x)
+      ds.field("TELEPHONE", &self.TELEPHONE());
+      ds.field("KEYS", &self.KEYS());
+      ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
+      ds.field("ATTRIBUTES_type", &self.ATTRIBUTES_type());
+      match self.attributes_type() {
+        SpecificAttributes::PersonAttributes => {
+          if let Some(x) = self.ATTRIBUTES_as_person_attributes() {
+            ds.field("ATTRIBUTES", &x)
           } else {
-            ds.field("ENTITY", &"InvalidFlatbuffer: Union discriminant does not match value.")
+            ds.field("ATTRIBUTES", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
-        Entity::Organization => {
-          if let Some(x) = self.ENTITY_as_organization() {
-            ds.field("ENTITY", &x)
+        SpecificAttributes::OrganizationAttributes => {
+          if let Some(x) = self.ATTRIBUTES_as_organization_attributes() {
+            ds.field("ATTRIBUTES", &x)
           } else {
-            ds.field("ENTITY", &"InvalidFlatbuffer: Union discriminant does not match value.")
+            ds.field("ATTRIBUTES", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
         _ => {
           let x: Option<()> = None;
-          ds.field("ENTITY", &x)
+          ds.field("ATTRIBUTES", &x)
         },
       };
-      ds.field("HAS_OCCUPATION", &self.HAS_OCCUPATION());
       ds.finish()
   }
 }
@@ -1927,37 +1813,23 @@ impl core::fmt::Debug for EPM<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct EPMT {
   pub NAME: Option<String>,
-  pub ALTERNATE_NAME: Option<String>,
-  pub DESCRIPTION: Option<String>,
-  pub IMAGE: Option<String>,
-  pub SAME_AS: Option<String>,
-  pub URL: Option<String>,
-  pub TELEPHONE: Option<String>,
+  pub ALTERNATE_NAMES: Option<Vec<String>>,
   pub EMAIL: Option<String>,
-  pub KEY: Option<Vec<CryptoKeyT>>,
-  pub CONTACT_POINT: Option<Vec<ContactPointT>>,
-  pub ADDRESS: Option<Box<ContactPointT>>,
-  pub JOB_TITLE: Option<String>,
-  pub ENTITY: EntityT,
-  pub HAS_OCCUPATION: Option<Box<OccupationT>>,
+  pub TELEPHONE: Option<String>,
+  pub KEYS: Option<Vec<CryptoKeyT>>,
+  pub MULTIFORMAT_ADDRESS: Option<Vec<String>>,
+  pub ATTRIBUTES: SpecificAttributesT,
 }
 impl Default for EPMT {
   fn default() -> Self {
     Self {
       NAME: None,
-      ALTERNATE_NAME: None,
-      DESCRIPTION: None,
-      IMAGE: None,
-      SAME_AS: None,
-      URL: None,
-      TELEPHONE: None,
+      ALTERNATE_NAMES: None,
       EMAIL: None,
-      KEY: None,
-      CONTACT_POINT: None,
-      ADDRESS: None,
-      JOB_TITLE: None,
-      ENTITY: EntityT::NONE,
-      HAS_OCCUPATION: None,
+      TELEPHONE: None,
+      KEYS: None,
+      MULTIFORMAT_ADDRESS: None,
+      ATTRIBUTES: SpecificAttributesT::NONE,
     }
   }
 }
@@ -1969,66 +1841,39 @@ impl EPMT {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ALTERNATE_NAME = self.ALTERNATE_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let ALTERNATE_NAMES = self.ALTERNATE_NAMES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let IMAGE = self.IMAGE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SAME_AS = self.SAME_AS.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let URL = self.URL.as_ref().map(|x|{
+    let EMAIL = self.EMAIL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TELEPHONE = self.TELEPHONE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let EMAIL = self.EMAIL.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let KEY = self.KEY.as_ref().map(|x|{
+    let KEYS = self.KEYS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    let CONTACT_POINT = self.CONTACT_POINT.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let ADDRESS = self.ADDRESS.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let JOB_TITLE = self.JOB_TITLE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let entity_type = self.ENTITY.entity_type();
-    let ENTITY = self.ENTITY.pack(_fbb);
-    let HAS_OCCUPATION = self.HAS_OCCUPATION.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
+    let attributes_type = self.ATTRIBUTES.specific_attributes_type();
+    let ATTRIBUTES = self.ATTRIBUTES.pack(_fbb);
     EPM::create(_fbb, &EPMArgs{
       NAME,
-      ALTERNATE_NAME,
-      DESCRIPTION,
-      IMAGE,
-      SAME_AS,
-      URL,
-      TELEPHONE,
+      ALTERNATE_NAMES,
       EMAIL,
-      KEY,
-      CONTACT_POINT,
-      ADDRESS,
-      JOB_TITLE,
-      ENTITY_type,
-      ENTITY,
-      HAS_OCCUPATION,
+      TELEPHONE,
+      KEYS,
+      MULTIFORMAT_ADDRESS,
+      ATTRIBUTES_type,
+      ATTRIBUTES,
     })
   }
 }
 pub enum EPMCOLLECTIONOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Collection of Entity Profile Messages
 pub struct EPMCOLLECTION<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

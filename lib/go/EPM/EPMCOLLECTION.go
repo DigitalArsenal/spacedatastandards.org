@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Collection of Entity Profile Messages
 type EPMCOLLECTION struct {
 	_tab flatbuffers.Table
 }

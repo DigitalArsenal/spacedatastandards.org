@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Crypto Key Information
+/// Represents cryptographic key information
 class CryptoKey extends Table
 {
     /**
@@ -69,42 +69,26 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Address generated from the cryptographic key
-    public function getKEY_ADDRESS()
-    {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Numerical type of the address generated from the cryptographic key
-    public function getADDRESS_TYPE()
-    {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCryptoKey(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CryptoKey
      */
-    public static function createCryptoKey(FlatBufferBuilder $builder, $PUBLIC_KEY, $XPUB, $PRIVATE_KEY, $XPRIV, $KEY_ADDRESS, $ADDRESS_TYPE)
+    public static function createCryptoKey(FlatBufferBuilder $builder, $PUBLIC_KEY, $XPUB, $PRIVATE_KEY, $XPRIV)
     {
-        $builder->startObject(6);
+        $builder->startObject(4);
         self::addPUBLIC_KEY($builder, $PUBLIC_KEY);
         self::addXPUB($builder, $XPUB);
         self::addPRIVATE_KEY($builder, $PRIVATE_KEY);
         self::addXPRIV($builder, $XPRIV);
-        self::addKEY_ADDRESS($builder, $KEY_ADDRESS);
-        self::addADDRESS_TYPE($builder, $ADDRESS_TYPE);
         $o = $builder->endObject();
         return $o;
     }
@@ -147,26 +131,6 @@ class CryptoKey extends Table
     public static function addXPRIV(FlatBufferBuilder $builder, $XPRIV)
     {
         $builder->addOffsetX(3, $XPRIV, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addKEY_ADDRESS(FlatBufferBuilder $builder, $KEY_ADDRESS)
-    {
-        $builder->addOffsetX(4, $KEY_ADDRESS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addADDRESS_TYPE(FlatBufferBuilder $builder, $ADDRESS_TYPE)
-    {
-        $builder->addOffsetX(5, $ADDRESS_TYPE, 0);
     }
 
     /**

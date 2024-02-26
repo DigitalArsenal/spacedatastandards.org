@@ -1,5 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { EPM, EPMT } from './EPM.js';
+/**
+ * Collection of Entity Profile Messages
+ */
 export declare class EPMCOLLECTION implements flatbuffers.IUnpackableObject<EPMCOLLECTIONT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

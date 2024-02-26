@@ -13,20 +13,23 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+struct DNComponent;
+struct DNComponentBuilder;
+
+struct DistinguishedName;
+struct DistinguishedNameBuilder;
+
 struct CryptoKey;
 struct CryptoKeyBuilder;
 
-struct ContactPoint;
-struct ContactPointBuilder;
+struct Address;
+struct AddressBuilder;
 
-struct Organization;
-struct OrganizationBuilder;
+struct PersonAttributes;
+struct PersonAttributesBuilder;
 
-struct Occupation;
-struct OccupationBuilder;
-
-struct Person;
-struct PersonBuilder;
+struct OrganizationAttributes;
+struct OrganizationAttributesBuilder;
 
 struct EPM;
 struct EPMBuilder;
@@ -34,65 +37,232 @@ struct EPMBuilder;
 struct EPMCOLLECTION;
 struct EPMCOLLECTIONBuilder;
 
-/// Union type for Entity, which can be either a Person or an Organization
-enum Entity : uint8_t {
-  Entity_NONE = 0,
-  Entity_Person = 1,
-  Entity_Organization = 2,
-  Entity_MIN = Entity_NONE,
-  Entity_MAX = Entity_Organization
+/// Enumeration for LDAP attribute types relevant to Distinguished Names
+enum LDIFAttributeType : int8_t {
+  /// Common Name
+  LDIFAttributeType_CN = 0,
+  /// Organizational Unit Name
+  LDIFAttributeType_OU = 1,
+  /// Organization Name
+  LDIFAttributeType_O = 2,
+  /// Domain Component
+  LDIFAttributeType_DC = 3,
+  /// Country Name
+  LDIFAttributeType_C = 4,
+  /// Surname
+  LDIFAttributeType_SN = 5,
+  LDIFAttributeType_MIN = LDIFAttributeType_CN,
+  LDIFAttributeType_MAX = LDIFAttributeType_SN
 };
 
-inline const Entity (&EnumValuesEntity())[3] {
-  static const Entity values[] = {
-    Entity_NONE,
-    Entity_Person,
-    Entity_Organization
+inline const LDIFAttributeType (&EnumValuesLDIFAttributeType())[6] {
+  static const LDIFAttributeType values[] = {
+    LDIFAttributeType_CN,
+    LDIFAttributeType_OU,
+    LDIFAttributeType_O,
+    LDIFAttributeType_DC,
+    LDIFAttributeType_C,
+    LDIFAttributeType_SN
   };
   return values;
 }
 
-inline const char * const *EnumNamesEntity() {
-  static const char * const names[4] = {
-    "NONE",
-    "Person",
-    "Organization",
+inline const char * const *EnumNamesLDIFAttributeType() {
+  static const char * const names[7] = {
+    "CN",
+    "OU",
+    "O",
+    "DC",
+    "C",
+    "SN",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNameEntity(Entity e) {
-  if (::flatbuffers::IsOutRange(e, Entity_NONE, Entity_Organization)) return "";
+inline const char *EnumNameLDIFAttributeType(LDIFAttributeType e) {
+  if (::flatbuffers::IsOutRange(e, LDIFAttributeType_CN, LDIFAttributeType_SN)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesEntity()[index];
+  return EnumNamesLDIFAttributeType()[index];
 }
 
-template<typename T> struct EntityTraits {
-  static const Entity enum_value = Entity_NONE;
+/// Union for specific attributes, distinguishing between Person and Organization
+enum SpecificAttributes : uint8_t {
+  SpecificAttributes_NONE = 0,
+  SpecificAttributes_PersonAttributes = 1,
+  SpecificAttributes_OrganizationAttributes = 2,
+  SpecificAttributes_MIN = SpecificAttributes_NONE,
+  SpecificAttributes_MAX = SpecificAttributes_OrganizationAttributes
 };
 
-template<> struct EntityTraits<Person> {
-  static const Entity enum_value = Entity_Person;
+inline const SpecificAttributes (&EnumValuesSpecificAttributes())[3] {
+  static const SpecificAttributes values[] = {
+    SpecificAttributes_NONE,
+    SpecificAttributes_PersonAttributes,
+    SpecificAttributes_OrganizationAttributes
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesSpecificAttributes() {
+  static const char * const names[4] = {
+    "NONE",
+    "PersonAttributes",
+    "OrganizationAttributes",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameSpecificAttributes(SpecificAttributes e) {
+  if (::flatbuffers::IsOutRange(e, SpecificAttributes_NONE, SpecificAttributes_OrganizationAttributes)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesSpecificAttributes()[index];
+}
+
+template<typename T> struct SpecificAttributesTraits {
+  static const SpecificAttributes enum_value = SpecificAttributes_NONE;
 };
 
-template<> struct EntityTraits<Organization> {
-  static const Entity enum_value = Entity_Organization;
+template<> struct SpecificAttributesTraits<PersonAttributes> {
+  static const SpecificAttributes enum_value = SpecificAttributes_PersonAttributes;
 };
 
-bool VerifyEntity(::flatbuffers::Verifier &verifier, const void *obj, Entity type);
-bool VerifyEntityVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+template<> struct SpecificAttributesTraits<OrganizationAttributes> {
+  static const SpecificAttributes enum_value = SpecificAttributes_OrganizationAttributes;
+};
 
-/// Crypto Key Information
+bool VerifySpecificAttributes(::flatbuffers::Verifier &verifier, const void *obj, SpecificAttributes type);
+bool VerifySpecificAttributesVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+
+/// Represents a component of a Distinguished Name (DN) in LDAP
+struct DNComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DNComponentBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TYPE = 4,
+    VT_VALUE = 6
+  };
+  /// The type of the DN component
+  LDIFAttributeType TYPE() const {
+    return static_cast<LDIFAttributeType>(GetField<int8_t>(VT_TYPE, 0));
+  }
+  /// The value of the DN component
+  const ::flatbuffers::String *VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VALUE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.VerifyString(VALUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DNComponentBuilder {
+  typedef DNComponent Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TYPE(LDIFAttributeType TYPE) {
+    fbb_.AddElement<int8_t>(DNComponent::VT_TYPE, static_cast<int8_t>(TYPE), 0);
+  }
+  void add_VALUE(::flatbuffers::Offset<::flatbuffers::String> VALUE) {
+    fbb_.AddOffset(DNComponent::VT_VALUE, VALUE);
+  }
+  explicit DNComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<DNComponent> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<DNComponent>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<DNComponent> CreateDNComponent(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    LDIFAttributeType TYPE = LDIFAttributeType_CN,
+    ::flatbuffers::Offset<::flatbuffers::String> VALUE = 0) {
+  DNComponentBuilder builder_(_fbb);
+  builder_.add_VALUE(VALUE);
+  builder_.add_TYPE(TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<DNComponent> CreateDNComponentDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    LDIFAttributeType TYPE = LDIFAttributeType_CN,
+    const char *VALUE = nullptr) {
+  auto VALUE__ = VALUE ? _fbb.CreateString(VALUE) : 0;
+  return CreateDNComponent(
+      _fbb,
+      TYPE,
+      VALUE__);
+}
+
+/// Represents a Distinguished Name composed of DNComponents
+struct DistinguishedName FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DistinguishedNameBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMPONENTS = 4
+  };
+  /// The sequence of components making up the DN
+  const ::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>> *COMPONENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>> *>(VT_COMPONENTS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMPONENTS) &&
+           verifier.VerifyVector(COMPONENTS()) &&
+           verifier.VerifyVectorOfTables(COMPONENTS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DistinguishedNameBuilder {
+  typedef DistinguishedName Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMPONENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>>> COMPONENTS) {
+    fbb_.AddOffset(DistinguishedName::VT_COMPONENTS, COMPONENTS);
+  }
+  explicit DistinguishedNameBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<DistinguishedName> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<DistinguishedName>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<DistinguishedName> CreateDistinguishedName(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>>> COMPONENTS = 0) {
+  DistinguishedNameBuilder builder_(_fbb);
+  builder_.add_COMPONENTS(COMPONENTS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<DistinguishedName> CreateDistinguishedNameDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<DNComponent>> *COMPONENTS = nullptr) {
+  auto COMPONENTS__ = COMPONENTS ? _fbb.CreateVector<::flatbuffers::Offset<DNComponent>>(*COMPONENTS) : 0;
+  return CreateDistinguishedName(
+      _fbb,
+      COMPONENTS__);
+}
+
+/// Represents cryptographic key information
 struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CryptoKeyBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PUBLIC_KEY = 4,
     VT_XPUB = 6,
     VT_PRIVATE_KEY = 8,
-    VT_XPRIV = 10,
-    VT_KEY_ADDRESS = 12,
-    VT_ADDRESS_TYPE = 14
+    VT_XPRIV = 10
   };
   /// Public part of the cryptographic key
   const ::flatbuffers::String *PUBLIC_KEY() const {
@@ -110,14 +280,6 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *XPRIV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPRIV);
   }
-  /// Address generated from the cryptographic key
-  const ::flatbuffers::String *KEY_ADDRESS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
-  }
-  /// Numerical type of the address generated from the cryptographic key
-  const ::flatbuffers::String *ADDRESS_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_TYPE);
-  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PUBLIC_KEY) &&
@@ -128,10 +290,6 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PRIVATE_KEY()) &&
            VerifyOffset(verifier, VT_XPRIV) &&
            verifier.VerifyString(XPRIV()) &&
-           VerifyOffset(verifier, VT_KEY_ADDRESS) &&
-           verifier.VerifyString(KEY_ADDRESS()) &&
-           VerifyOffset(verifier, VT_ADDRESS_TYPE) &&
-           verifier.VerifyString(ADDRESS_TYPE()) &&
            verifier.EndTable();
   }
 };
@@ -152,12 +310,6 @@ struct CryptoKeyBuilder {
   void add_XPRIV(::flatbuffers::Offset<::flatbuffers::String> XPRIV) {
     fbb_.AddOffset(CryptoKey::VT_XPRIV, XPRIV);
   }
-  void add_KEY_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS) {
-    fbb_.AddOffset(CryptoKey::VT_KEY_ADDRESS, KEY_ADDRESS);
-  }
-  void add_ADDRESS_TYPE(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE) {
-    fbb_.AddOffset(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
-  }
   explicit CryptoKeyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -174,12 +326,8 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
     ::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> XPUB = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PRIVATE_KEY = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0) {
   CryptoKeyBuilder builder_(_fbb);
-  builder_.add_ADDRESS_TYPE(ADDRESS_TYPE);
-  builder_.add_KEY_ADDRESS(KEY_ADDRESS);
   builder_.add_XPRIV(XPRIV);
   builder_.add_PRIVATE_KEY(PRIVATE_KEY);
   builder_.add_XPUB(XPUB);
@@ -192,90 +340,49 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
     const char *PUBLIC_KEY = nullptr,
     const char *XPUB = nullptr,
     const char *PRIVATE_KEY = nullptr,
-    const char *XPRIV = nullptr,
-    const char *KEY_ADDRESS = nullptr,
-    const char *ADDRESS_TYPE = nullptr) {
+    const char *XPRIV = nullptr) {
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto XPUB__ = XPUB ? _fbb.CreateString(XPUB) : 0;
   auto PRIVATE_KEY__ = PRIVATE_KEY ? _fbb.CreateString(PRIVATE_KEY) : 0;
   auto XPRIV__ = XPRIV ? _fbb.CreateString(XPRIV) : 0;
-  auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
-  auto ADDRESS_TYPE__ = ADDRESS_TYPE ? _fbb.CreateString(ADDRESS_TYPE) : 0;
   return CreateCryptoKey(
       _fbb,
       PUBLIC_KEY__,
       XPUB__,
       PRIVATE_KEY__,
-      XPRIV__,
-      KEY_ADDRESS__,
-      ADDRESS_TYPE__);
+      XPRIV__);
 }
 
-/// Information about a contact point
-struct ContactPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ContactPointBuilder Builder;
+/// Represents a geographic address
+struct Address FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AddressBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_CONTACT_TYPE = 6,
-    VT_EMAIL = 8,
-    VT_TELEPHONE = 10,
-    VT_CONTACT_OPTION = 12,
-    VT_AREA_SERVED = 14,
-    VT_AVAILABLE_LANGUAGE = 16,
-    VT_ADDRESS_COUNTRY = 18,
-    VT_ADDRESS_REGION = 20,
-    VT_ADDRESS_LOCALITY = 22,
-    VT_POSTAL_CODE = 24,
-    VT_STREET_ADDRESS = 26,
-    VT_POST_OFFICE_BOX_NUMBER = 28
+    VT_COUNTRY = 4,
+    VT_REGION = 6,
+    VT_LOCALITY = 8,
+    VT_POSTAL_CODE = 10,
+    VT_STREET = 12,
+    VT_POST_OFFICE_BOX_NUMBER = 14
   };
-  /// Name of the contact point or person
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
-  }
-  /// Type of contact (e.g., customer service, technical support)
-  const ::flatbuffers::String *CONTACT_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CONTACT_TYPE);
-  }
-  /// Email address
-  const ::flatbuffers::String *EMAIL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EMAIL);
-  }
-  /// Telephone number
-  const ::flatbuffers::String *TELEPHONE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TELEPHONE);
-  }
-  /// Available contact options (e.g., HearingImpairedSupported)
-  const ::flatbuffers::String *CONTACT_OPTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CONTACT_OPTION);
-  }
-  /// Geographic area where the service is available
-  const ::flatbuffers::String *AREA_SERVED() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AREA_SERVED);
-  }
-  /// Language available for communication
-  const ::flatbuffers::String *AVAILABLE_LANGUAGE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AVAILABLE_LANGUAGE);
-  }
   /// Country of the address
-  const ::flatbuffers::String *ADDRESS_COUNTRY() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_COUNTRY);
+  const ::flatbuffers::String *COUNTRY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COUNTRY);
   }
   /// Region of the address (e.g., state or province)
-  const ::flatbuffers::String *ADDRESS_REGION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_REGION);
+  const ::flatbuffers::String *REGION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REGION);
   }
   /// Locality of the address (e.g., city or town)
-  const ::flatbuffers::String *ADDRESS_LOCALITY() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_LOCALITY);
+  const ::flatbuffers::String *LOCALITY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LOCALITY);
   }
   /// Postal code of the address
   const ::flatbuffers::String *POSTAL_CODE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_POSTAL_CODE);
   }
   /// Street address
-  const ::flatbuffers::String *STREET_ADDRESS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STREET_ADDRESS);
+  const ::flatbuffers::String *STREET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STREET);
   }
   /// Post office box number
   const ::flatbuffers::String *POST_OFFICE_BOX_NUMBER() const {
@@ -283,297 +390,108 @@ struct ContactPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_CONTACT_TYPE) &&
-           verifier.VerifyString(CONTACT_TYPE()) &&
-           VerifyOffset(verifier, VT_EMAIL) &&
-           verifier.VerifyString(EMAIL()) &&
-           VerifyOffset(verifier, VT_TELEPHONE) &&
-           verifier.VerifyString(TELEPHONE()) &&
-           VerifyOffset(verifier, VT_CONTACT_OPTION) &&
-           verifier.VerifyString(CONTACT_OPTION()) &&
-           VerifyOffset(verifier, VT_AREA_SERVED) &&
-           verifier.VerifyString(AREA_SERVED()) &&
-           VerifyOffset(verifier, VT_AVAILABLE_LANGUAGE) &&
-           verifier.VerifyString(AVAILABLE_LANGUAGE()) &&
-           VerifyOffset(verifier, VT_ADDRESS_COUNTRY) &&
-           verifier.VerifyString(ADDRESS_COUNTRY()) &&
-           VerifyOffset(verifier, VT_ADDRESS_REGION) &&
-           verifier.VerifyString(ADDRESS_REGION()) &&
-           VerifyOffset(verifier, VT_ADDRESS_LOCALITY) &&
-           verifier.VerifyString(ADDRESS_LOCALITY()) &&
+           VerifyOffset(verifier, VT_COUNTRY) &&
+           verifier.VerifyString(COUNTRY()) &&
+           VerifyOffset(verifier, VT_REGION) &&
+           verifier.VerifyString(REGION()) &&
+           VerifyOffset(verifier, VT_LOCALITY) &&
+           verifier.VerifyString(LOCALITY()) &&
            VerifyOffset(verifier, VT_POSTAL_CODE) &&
            verifier.VerifyString(POSTAL_CODE()) &&
-           VerifyOffset(verifier, VT_STREET_ADDRESS) &&
-           verifier.VerifyString(STREET_ADDRESS()) &&
+           VerifyOffset(verifier, VT_STREET) &&
+           verifier.VerifyString(STREET()) &&
            VerifyOffset(verifier, VT_POST_OFFICE_BOX_NUMBER) &&
            verifier.VerifyString(POST_OFFICE_BOX_NUMBER()) &&
            verifier.EndTable();
   }
 };
 
-struct ContactPointBuilder {
-  typedef ContactPoint Table;
+struct AddressBuilder {
+  typedef Address Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(ContactPoint::VT_NAME, NAME);
+  void add_COUNTRY(::flatbuffers::Offset<::flatbuffers::String> COUNTRY) {
+    fbb_.AddOffset(Address::VT_COUNTRY, COUNTRY);
   }
-  void add_CONTACT_TYPE(::flatbuffers::Offset<::flatbuffers::String> CONTACT_TYPE) {
-    fbb_.AddOffset(ContactPoint::VT_CONTACT_TYPE, CONTACT_TYPE);
+  void add_REGION(::flatbuffers::Offset<::flatbuffers::String> REGION) {
+    fbb_.AddOffset(Address::VT_REGION, REGION);
   }
-  void add_EMAIL(::flatbuffers::Offset<::flatbuffers::String> EMAIL) {
-    fbb_.AddOffset(ContactPoint::VT_EMAIL, EMAIL);
-  }
-  void add_TELEPHONE(::flatbuffers::Offset<::flatbuffers::String> TELEPHONE) {
-    fbb_.AddOffset(ContactPoint::VT_TELEPHONE, TELEPHONE);
-  }
-  void add_CONTACT_OPTION(::flatbuffers::Offset<::flatbuffers::String> CONTACT_OPTION) {
-    fbb_.AddOffset(ContactPoint::VT_CONTACT_OPTION, CONTACT_OPTION);
-  }
-  void add_AREA_SERVED(::flatbuffers::Offset<::flatbuffers::String> AREA_SERVED) {
-    fbb_.AddOffset(ContactPoint::VT_AREA_SERVED, AREA_SERVED);
-  }
-  void add_AVAILABLE_LANGUAGE(::flatbuffers::Offset<::flatbuffers::String> AVAILABLE_LANGUAGE) {
-    fbb_.AddOffset(ContactPoint::VT_AVAILABLE_LANGUAGE, AVAILABLE_LANGUAGE);
-  }
-  void add_ADDRESS_COUNTRY(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_COUNTRY) {
-    fbb_.AddOffset(ContactPoint::VT_ADDRESS_COUNTRY, ADDRESS_COUNTRY);
-  }
-  void add_ADDRESS_REGION(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_REGION) {
-    fbb_.AddOffset(ContactPoint::VT_ADDRESS_REGION, ADDRESS_REGION);
-  }
-  void add_ADDRESS_LOCALITY(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_LOCALITY) {
-    fbb_.AddOffset(ContactPoint::VT_ADDRESS_LOCALITY, ADDRESS_LOCALITY);
+  void add_LOCALITY(::flatbuffers::Offset<::flatbuffers::String> LOCALITY) {
+    fbb_.AddOffset(Address::VT_LOCALITY, LOCALITY);
   }
   void add_POSTAL_CODE(::flatbuffers::Offset<::flatbuffers::String> POSTAL_CODE) {
-    fbb_.AddOffset(ContactPoint::VT_POSTAL_CODE, POSTAL_CODE);
+    fbb_.AddOffset(Address::VT_POSTAL_CODE, POSTAL_CODE);
   }
-  void add_STREET_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> STREET_ADDRESS) {
-    fbb_.AddOffset(ContactPoint::VT_STREET_ADDRESS, STREET_ADDRESS);
+  void add_STREET(::flatbuffers::Offset<::flatbuffers::String> STREET) {
+    fbb_.AddOffset(Address::VT_STREET, STREET);
   }
   void add_POST_OFFICE_BOX_NUMBER(::flatbuffers::Offset<::flatbuffers::String> POST_OFFICE_BOX_NUMBER) {
-    fbb_.AddOffset(ContactPoint::VT_POST_OFFICE_BOX_NUMBER, POST_OFFICE_BOX_NUMBER);
+    fbb_.AddOffset(Address::VT_POST_OFFICE_BOX_NUMBER, POST_OFFICE_BOX_NUMBER);
   }
-  explicit ContactPointBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit AddressBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<ContactPoint> Finish() {
+  ::flatbuffers::Offset<Address> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ContactPoint>(end);
+    auto o = ::flatbuffers::Offset<Address>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<ContactPoint> CreateContactPoint(
+inline ::flatbuffers::Offset<Address> CreateAddress(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CONTACT_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EMAIL = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TELEPHONE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CONTACT_OPTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> AREA_SERVED = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> AVAILABLE_LANGUAGE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_COUNTRY = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_REGION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_LOCALITY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COUNTRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REGION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LOCALITY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> POSTAL_CODE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> STREET_ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STREET = 0,
     ::flatbuffers::Offset<::flatbuffers::String> POST_OFFICE_BOX_NUMBER = 0) {
-  ContactPointBuilder builder_(_fbb);
+  AddressBuilder builder_(_fbb);
   builder_.add_POST_OFFICE_BOX_NUMBER(POST_OFFICE_BOX_NUMBER);
-  builder_.add_STREET_ADDRESS(STREET_ADDRESS);
+  builder_.add_STREET(STREET);
   builder_.add_POSTAL_CODE(POSTAL_CODE);
-  builder_.add_ADDRESS_LOCALITY(ADDRESS_LOCALITY);
-  builder_.add_ADDRESS_REGION(ADDRESS_REGION);
-  builder_.add_ADDRESS_COUNTRY(ADDRESS_COUNTRY);
-  builder_.add_AVAILABLE_LANGUAGE(AVAILABLE_LANGUAGE);
-  builder_.add_AREA_SERVED(AREA_SERVED);
-  builder_.add_CONTACT_OPTION(CONTACT_OPTION);
-  builder_.add_TELEPHONE(TELEPHONE);
-  builder_.add_EMAIL(EMAIL);
-  builder_.add_CONTACT_TYPE(CONTACT_TYPE);
-  builder_.add_NAME(NAME);
+  builder_.add_LOCALITY(LOCALITY);
+  builder_.add_REGION(REGION);
+  builder_.add_COUNTRY(COUNTRY);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<ContactPoint> CreateContactPointDirect(
+inline ::flatbuffers::Offset<Address> CreateAddressDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *NAME = nullptr,
-    const char *CONTACT_TYPE = nullptr,
-    const char *EMAIL = nullptr,
-    const char *TELEPHONE = nullptr,
-    const char *CONTACT_OPTION = nullptr,
-    const char *AREA_SERVED = nullptr,
-    const char *AVAILABLE_LANGUAGE = nullptr,
-    const char *ADDRESS_COUNTRY = nullptr,
-    const char *ADDRESS_REGION = nullptr,
-    const char *ADDRESS_LOCALITY = nullptr,
+    const char *COUNTRY = nullptr,
+    const char *REGION = nullptr,
+    const char *LOCALITY = nullptr,
     const char *POSTAL_CODE = nullptr,
-    const char *STREET_ADDRESS = nullptr,
+    const char *STREET = nullptr,
     const char *POST_OFFICE_BOX_NUMBER = nullptr) {
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto CONTACT_TYPE__ = CONTACT_TYPE ? _fbb.CreateString(CONTACT_TYPE) : 0;
-  auto EMAIL__ = EMAIL ? _fbb.CreateString(EMAIL) : 0;
-  auto TELEPHONE__ = TELEPHONE ? _fbb.CreateString(TELEPHONE) : 0;
-  auto CONTACT_OPTION__ = CONTACT_OPTION ? _fbb.CreateString(CONTACT_OPTION) : 0;
-  auto AREA_SERVED__ = AREA_SERVED ? _fbb.CreateString(AREA_SERVED) : 0;
-  auto AVAILABLE_LANGUAGE__ = AVAILABLE_LANGUAGE ? _fbb.CreateString(AVAILABLE_LANGUAGE) : 0;
-  auto ADDRESS_COUNTRY__ = ADDRESS_COUNTRY ? _fbb.CreateString(ADDRESS_COUNTRY) : 0;
-  auto ADDRESS_REGION__ = ADDRESS_REGION ? _fbb.CreateString(ADDRESS_REGION) : 0;
-  auto ADDRESS_LOCALITY__ = ADDRESS_LOCALITY ? _fbb.CreateString(ADDRESS_LOCALITY) : 0;
+  auto COUNTRY__ = COUNTRY ? _fbb.CreateString(COUNTRY) : 0;
+  auto REGION__ = REGION ? _fbb.CreateString(REGION) : 0;
+  auto LOCALITY__ = LOCALITY ? _fbb.CreateString(LOCALITY) : 0;
   auto POSTAL_CODE__ = POSTAL_CODE ? _fbb.CreateString(POSTAL_CODE) : 0;
-  auto STREET_ADDRESS__ = STREET_ADDRESS ? _fbb.CreateString(STREET_ADDRESS) : 0;
+  auto STREET__ = STREET ? _fbb.CreateString(STREET) : 0;
   auto POST_OFFICE_BOX_NUMBER__ = POST_OFFICE_BOX_NUMBER ? _fbb.CreateString(POST_OFFICE_BOX_NUMBER) : 0;
-  return CreateContactPoint(
+  return CreateAddress(
       _fbb,
-      NAME__,
-      CONTACT_TYPE__,
-      EMAIL__,
-      TELEPHONE__,
-      CONTACT_OPTION__,
-      AREA_SERVED__,
-      AVAILABLE_LANGUAGE__,
-      ADDRESS_COUNTRY__,
-      ADDRESS_REGION__,
-      ADDRESS_LOCALITY__,
+      COUNTRY__,
+      REGION__,
+      LOCALITY__,
       POSTAL_CODE__,
-      STREET_ADDRESS__,
+      STREET__,
       POST_OFFICE_BOX_NUMBER__);
 }
 
-/// Basic information about an organization
-struct Organization FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OrganizationBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_LEGAL_NAME = 6
-  };
-  /// Common name of the organization
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
-  }
-  /// Legal name of the organization
-  const ::flatbuffers::String *LEGAL_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LEGAL_NAME);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_LEGAL_NAME) &&
-           verifier.VerifyString(LEGAL_NAME()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OrganizationBuilder {
-  typedef Organization Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(Organization::VT_NAME, NAME);
-  }
-  void add_LEGAL_NAME(::flatbuffers::Offset<::flatbuffers::String> LEGAL_NAME) {
-    fbb_.AddOffset(Organization::VT_LEGAL_NAME, LEGAL_NAME);
-  }
-  explicit OrganizationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<Organization> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Organization>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<Organization> CreateOrganization(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LEGAL_NAME = 0) {
-  OrganizationBuilder builder_(_fbb);
-  builder_.add_LEGAL_NAME(LEGAL_NAME);
-  builder_.add_NAME(NAME);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<Organization> CreateOrganizationDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *NAME = nullptr,
-    const char *LEGAL_NAME = nullptr) {
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto LEGAL_NAME__ = LEGAL_NAME ? _fbb.CreateString(LEGAL_NAME) : 0;
-  return CreateOrganization(
-      _fbb,
-      NAME__,
-      LEGAL_NAME__);
-}
-
-/// Information about a person's occupation
-struct Occupation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OccupationBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4
-  };
-  /// Name of the occupation
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OccupationBuilder {
-  typedef Occupation Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(Occupation::VT_NAME, NAME);
-  }
-  explicit OccupationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<Occupation> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Occupation>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<Occupation> CreateOccupation(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0) {
-  OccupationBuilder builder_(_fbb);
-  builder_.add_NAME(NAME);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<Occupation> CreateOccupationDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *NAME = nullptr) {
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  return CreateOccupation(
-      _fbb,
-      NAME__);
-}
-
-/// Information about a person
-struct Person FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PersonBuilder Builder;
+/// Specific attributes for a Person
+struct PersonAttributes FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PersonAttributesBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_FAMILY_NAME = 4,
     VT_GIVEN_NAME = 6,
     VT_ADDITIONAL_NAME = 8,
     VT_HONORIFIC_PREFIX = 10,
-    VT_HONORIFIC_SUFFIX = 12
+    VT_HONORIFIC_SUFFIX = 12,
+    VT_JOB_TITLE = 14,
+    VT_OCCUPATION = 16
   };
   /// Family name or surname of the person
   const ::flatbuffers::String *FAMILY_NAME() const {
@@ -587,13 +505,21 @@ struct Person FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ADDITIONAL_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ADDITIONAL_NAME);
   }
-  /// Honorific prefix preceding the person's name
+  /// Honorific prefix preceding the person's name (e.g., Mr., Dr.)
   const ::flatbuffers::String *HONORIFIC_PREFIX() const {
     return GetPointer<const ::flatbuffers::String *>(VT_HONORIFIC_PREFIX);
   }
-  /// Honorific suffix following the person's name
+  /// Honorific suffix following the person's name (e.g., Jr., Sr.)
   const ::flatbuffers::String *HONORIFIC_SUFFIX() const {
     return GetPointer<const ::flatbuffers::String *>(VT_HONORIFIC_SUFFIX);
+  }
+  /// Job title of the person
+  const ::flatbuffers::String *JOB_TITLE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_JOB_TITLE);
+  }
+  /// Occupation of the person
+  const ::flatbuffers::String *OCCUPATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OCCUPATION);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -607,48 +533,62 @@ struct Person FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(HONORIFIC_PREFIX()) &&
            VerifyOffset(verifier, VT_HONORIFIC_SUFFIX) &&
            verifier.VerifyString(HONORIFIC_SUFFIX()) &&
+           VerifyOffset(verifier, VT_JOB_TITLE) &&
+           verifier.VerifyString(JOB_TITLE()) &&
+           VerifyOffset(verifier, VT_OCCUPATION) &&
+           verifier.VerifyString(OCCUPATION()) &&
            verifier.EndTable();
   }
 };
 
-struct PersonBuilder {
-  typedef Person Table;
+struct PersonAttributesBuilder {
+  typedef PersonAttributes Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_FAMILY_NAME(::flatbuffers::Offset<::flatbuffers::String> FAMILY_NAME) {
-    fbb_.AddOffset(Person::VT_FAMILY_NAME, FAMILY_NAME);
+    fbb_.AddOffset(PersonAttributes::VT_FAMILY_NAME, FAMILY_NAME);
   }
   void add_GIVEN_NAME(::flatbuffers::Offset<::flatbuffers::String> GIVEN_NAME) {
-    fbb_.AddOffset(Person::VT_GIVEN_NAME, GIVEN_NAME);
+    fbb_.AddOffset(PersonAttributes::VT_GIVEN_NAME, GIVEN_NAME);
   }
   void add_ADDITIONAL_NAME(::flatbuffers::Offset<::flatbuffers::String> ADDITIONAL_NAME) {
-    fbb_.AddOffset(Person::VT_ADDITIONAL_NAME, ADDITIONAL_NAME);
+    fbb_.AddOffset(PersonAttributes::VT_ADDITIONAL_NAME, ADDITIONAL_NAME);
   }
   void add_HONORIFIC_PREFIX(::flatbuffers::Offset<::flatbuffers::String> HONORIFIC_PREFIX) {
-    fbb_.AddOffset(Person::VT_HONORIFIC_PREFIX, HONORIFIC_PREFIX);
+    fbb_.AddOffset(PersonAttributes::VT_HONORIFIC_PREFIX, HONORIFIC_PREFIX);
   }
   void add_HONORIFIC_SUFFIX(::flatbuffers::Offset<::flatbuffers::String> HONORIFIC_SUFFIX) {
-    fbb_.AddOffset(Person::VT_HONORIFIC_SUFFIX, HONORIFIC_SUFFIX);
+    fbb_.AddOffset(PersonAttributes::VT_HONORIFIC_SUFFIX, HONORIFIC_SUFFIX);
   }
-  explicit PersonBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_JOB_TITLE(::flatbuffers::Offset<::flatbuffers::String> JOB_TITLE) {
+    fbb_.AddOffset(PersonAttributes::VT_JOB_TITLE, JOB_TITLE);
+  }
+  void add_OCCUPATION(::flatbuffers::Offset<::flatbuffers::String> OCCUPATION) {
+    fbb_.AddOffset(PersonAttributes::VT_OCCUPATION, OCCUPATION);
+  }
+  explicit PersonAttributesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Person> Finish() {
+  ::flatbuffers::Offset<PersonAttributes> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Person>(end);
+    auto o = ::flatbuffers::Offset<PersonAttributes>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Person> CreatePerson(
+inline ::flatbuffers::Offset<PersonAttributes> CreatePersonAttributes(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> FAMILY_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> GIVEN_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ADDITIONAL_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> HONORIFIC_PREFIX = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> HONORIFIC_SUFFIX = 0) {
-  PersonBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::String> HONORIFIC_SUFFIX = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> JOB_TITLE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OCCUPATION = 0) {
+  PersonAttributesBuilder builder_(_fbb);
+  builder_.add_OCCUPATION(OCCUPATION);
+  builder_.add_JOB_TITLE(JOB_TITLE);
   builder_.add_HONORIFIC_SUFFIX(HONORIFIC_SUFFIX);
   builder_.add_HONORIFIC_PREFIX(HONORIFIC_PREFIX);
   builder_.add_ADDITIONAL_NAME(ADDITIONAL_NAME);
@@ -657,156 +597,167 @@ inline ::flatbuffers::Offset<Person> CreatePerson(
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<Person> CreatePersonDirect(
+inline ::flatbuffers::Offset<PersonAttributes> CreatePersonAttributesDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *FAMILY_NAME = nullptr,
     const char *GIVEN_NAME = nullptr,
     const char *ADDITIONAL_NAME = nullptr,
     const char *HONORIFIC_PREFIX = nullptr,
-    const char *HONORIFIC_SUFFIX = nullptr) {
+    const char *HONORIFIC_SUFFIX = nullptr,
+    const char *JOB_TITLE = nullptr,
+    const char *OCCUPATION = nullptr) {
   auto FAMILY_NAME__ = FAMILY_NAME ? _fbb.CreateString(FAMILY_NAME) : 0;
   auto GIVEN_NAME__ = GIVEN_NAME ? _fbb.CreateString(GIVEN_NAME) : 0;
   auto ADDITIONAL_NAME__ = ADDITIONAL_NAME ? _fbb.CreateString(ADDITIONAL_NAME) : 0;
   auto HONORIFIC_PREFIX__ = HONORIFIC_PREFIX ? _fbb.CreateString(HONORIFIC_PREFIX) : 0;
   auto HONORIFIC_SUFFIX__ = HONORIFIC_SUFFIX ? _fbb.CreateString(HONORIFIC_SUFFIX) : 0;
-  return CreatePerson(
+  auto JOB_TITLE__ = JOB_TITLE ? _fbb.CreateString(JOB_TITLE) : 0;
+  auto OCCUPATION__ = OCCUPATION ? _fbb.CreateString(OCCUPATION) : 0;
+  return CreatePersonAttributes(
       _fbb,
       FAMILY_NAME__,
       GIVEN_NAME__,
       ADDITIONAL_NAME__,
       HONORIFIC_PREFIX__,
-      HONORIFIC_SUFFIX__);
+      HONORIFIC_SUFFIX__,
+      JOB_TITLE__,
+      OCCUPATION__);
 }
 
-/// Entity Profile Message
+/// Specific attributes for an Organization
+struct OrganizationAttributes FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OrganizationAttributesBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_LEGAL_NAME = 4
+  };
+  /// Legal name of the organization
+  const ::flatbuffers::String *LEGAL_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LEGAL_NAME);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_LEGAL_NAME) &&
+           verifier.VerifyString(LEGAL_NAME()) &&
+           verifier.EndTable();
+  }
+};
+
+struct OrganizationAttributesBuilder {
+  typedef OrganizationAttributes Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_LEGAL_NAME(::flatbuffers::Offset<::flatbuffers::String> LEGAL_NAME) {
+    fbb_.AddOffset(OrganizationAttributes::VT_LEGAL_NAME, LEGAL_NAME);
+  }
+  explicit OrganizationAttributesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OrganizationAttributes> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OrganizationAttributes>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OrganizationAttributes> CreateOrganizationAttributes(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> LEGAL_NAME = 0) {
+  OrganizationAttributesBuilder builder_(_fbb);
+  builder_.add_LEGAL_NAME(LEGAL_NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<OrganizationAttributes> CreateOrganizationAttributesDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *LEGAL_NAME = nullptr) {
+  auto LEGAL_NAME__ = LEGAL_NAME ? _fbb.CreateString(LEGAL_NAME) : 0;
+  return CreateOrganizationAttributes(
+      _fbb,
+      LEGAL_NAME__);
+}
+
+/// Represents an entity with common fields and specific attributes for Person or Organization
 struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EPMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
-    VT_ALTERNATE_NAME = 6,
-    VT_DESCRIPTION = 8,
-    VT_IMAGE = 10,
-    VT_SAME_AS = 12,
-    VT_URL = 14,
-    VT_TELEPHONE = 16,
-    VT_EMAIL = 18,
-    VT_KEY = 20,
-    VT_CONTACT_POINT = 22,
-    VT_ADDRESS = 24,
-    VT_JOB_TITLE = 26,
-    VT_ENTITY_TYPE = 28,
-    VT_ENTITY = 30,
-    VT_HAS_OCCUPATION = 32
+    VT_ALTERNATE_NAMES = 6,
+    VT_EMAIL = 8,
+    VT_TELEPHONE = 10,
+    VT_KEYS = 12,
+    VT_MULTIFORMAT_ADDRESS = 14,
+    VT_ATTRIBUTES_TYPE = 16,
+    VT_ATTRIBUTES = 18
   };
   /// Common name of the entity (person or organization)
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  /// Alternate name for the entity
-  const ::flatbuffers::String *ALTERNATE_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ALTERNATE_NAME);
+  /// Alternate names for the entity
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_NAMES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALTERNATE_NAMES);
   }
-  /// Description of the entity
-  const ::flatbuffers::String *DESCRIPTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
-  }
-  /// URL of an image representing the entity
-  const ::flatbuffers::String *IMAGE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE);
-  }
-  /// URL of a webpage that unambiguously indicates the entity's identity
-  const ::flatbuffers::String *SAME_AS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SAME_AS);
-  }
-  /// URL of the entity's website
-  const ::flatbuffers::String *URL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_URL);
-  }
-  /// Telephone number for the entity
-  const ::flatbuffers::String *TELEPHONE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TELEPHONE);
-  }
-  /// Email address for the entity
+  /// Email address of the entity
   const ::flatbuffers::String *EMAIL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EMAIL);
   }
-  /// Cryptographic key information associated with the entity
-  const ::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>> *KEY() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>> *>(VT_KEY);
+  /// Telephone number of the entity
+  const ::flatbuffers::String *TELEPHONE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TELEPHONE);
   }
-  /// Contact points for the entity
-  const ::flatbuffers::Vector<::flatbuffers::Offset<ContactPoint>> *CONTACT_POINT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ContactPoint>> *>(VT_CONTACT_POINT);
+  /// Cryptographic keys associated with the entity
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>> *KEYS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>> *>(VT_KEYS);
   }
-  /// Address of the entity, using the ContactPoint structure
-  const ContactPoint *ADDRESS() const {
-    return GetPointer<const ContactPoint *>(VT_ADDRESS);
+  /// Multiformat addresses associated with the entity
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MULTIFORMAT_ADDRESS);
   }
-  /// Job title of the entity (applicable to persons)
-  const ::flatbuffers::String *JOB_TITLE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_JOB_TITLE);
+  SpecificAttributes ATTRIBUTES_type() const {
+    return static_cast<SpecificAttributes>(GetField<uint8_t>(VT_ATTRIBUTES_TYPE, 0));
   }
-  Entity ENTITY_type() const {
-    return static_cast<Entity>(GetField<uint8_t>(VT_ENTITY_TYPE, 0));
+  /// Specific attributes for the entity, either Person or Organization
+  const void *ATTRIBUTES() const {
+    return GetPointer<const void *>(VT_ATTRIBUTES);
   }
-  /// Union type to represent either a person or an organization
-  const void *ENTITY() const {
-    return GetPointer<const void *>(VT_ENTITY);
+  template<typename T> const T *ATTRIBUTES_as() const;
+  const PersonAttributes *ATTRIBUTES_as_PersonAttributes() const {
+    return ATTRIBUTES_type() == SpecificAttributes_PersonAttributes ? static_cast<const PersonAttributes *>(ATTRIBUTES()) : nullptr;
   }
-  template<typename T> const T *ENTITY_as() const;
-  const Person *ENTITY_as_Person() const {
-    return ENTITY_type() == Entity_Person ? static_cast<const Person *>(ENTITY()) : nullptr;
-  }
-  const Organization *ENTITY_as_Organization() const {
-    return ENTITY_type() == Entity_Organization ? static_cast<const Organization *>(ENTITY()) : nullptr;
-  }
-  /// Occupation of the entity (applicable to persons)
-  const Occupation *HAS_OCCUPATION() const {
-    return GetPointer<const Occupation *>(VT_HAS_OCCUPATION);
+  const OrganizationAttributes *ATTRIBUTES_as_OrganizationAttributes() const {
+    return ATTRIBUTES_type() == SpecificAttributes_OrganizationAttributes ? static_cast<const OrganizationAttributes *>(ATTRIBUTES()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_ALTERNATE_NAME) &&
-           verifier.VerifyString(ALTERNATE_NAME()) &&
-           VerifyOffset(verifier, VT_DESCRIPTION) &&
-           verifier.VerifyString(DESCRIPTION()) &&
-           VerifyOffset(verifier, VT_IMAGE) &&
-           verifier.VerifyString(IMAGE()) &&
-           VerifyOffset(verifier, VT_SAME_AS) &&
-           verifier.VerifyString(SAME_AS()) &&
-           VerifyOffset(verifier, VT_URL) &&
-           verifier.VerifyString(URL()) &&
-           VerifyOffset(verifier, VT_TELEPHONE) &&
-           verifier.VerifyString(TELEPHONE()) &&
+           VerifyOffset(verifier, VT_ALTERNATE_NAMES) &&
+           verifier.VerifyVector(ALTERNATE_NAMES()) &&
+           verifier.VerifyVectorOfStrings(ALTERNATE_NAMES()) &&
            VerifyOffset(verifier, VT_EMAIL) &&
            verifier.VerifyString(EMAIL()) &&
-           VerifyOffset(verifier, VT_KEY) &&
-           verifier.VerifyVector(KEY()) &&
-           verifier.VerifyVectorOfTables(KEY()) &&
-           VerifyOffset(verifier, VT_CONTACT_POINT) &&
-           verifier.VerifyVector(CONTACT_POINT()) &&
-           verifier.VerifyVectorOfTables(CONTACT_POINT()) &&
-           VerifyOffset(verifier, VT_ADDRESS) &&
-           verifier.VerifyTable(ADDRESS()) &&
-           VerifyOffset(verifier, VT_JOB_TITLE) &&
-           verifier.VerifyString(JOB_TITLE()) &&
-           VerifyField<uint8_t>(verifier, VT_ENTITY_TYPE, 1) &&
-           VerifyOffset(verifier, VT_ENTITY) &&
-           VerifyEntity(verifier, ENTITY(), ENTITY_type()) &&
-           VerifyOffset(verifier, VT_HAS_OCCUPATION) &&
-           verifier.VerifyTable(HAS_OCCUPATION()) &&
+           VerifyOffset(verifier, VT_TELEPHONE) &&
+           verifier.VerifyString(TELEPHONE()) &&
+           VerifyOffset(verifier, VT_KEYS) &&
+           verifier.VerifyVector(KEYS()) &&
+           verifier.VerifyVectorOfTables(KEYS()) &&
+           VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
+           verifier.VerifyVector(MULTIFORMAT_ADDRESS()) &&
+           verifier.VerifyVectorOfStrings(MULTIFORMAT_ADDRESS()) &&
+           VerifyField<uint8_t>(verifier, VT_ATTRIBUTES_TYPE, 1) &&
+           VerifyOffset(verifier, VT_ATTRIBUTES) &&
+           VerifySpecificAttributes(verifier, ATTRIBUTES(), ATTRIBUTES_type()) &&
            verifier.EndTable();
   }
 };
 
-template<> inline const Person *EPM::ENTITY_as<Person>() const {
-  return ENTITY_as_Person();
+template<> inline const PersonAttributes *EPM::ATTRIBUTES_as<PersonAttributes>() const {
+  return ATTRIBUTES_as_PersonAttributes();
 }
 
-template<> inline const Organization *EPM::ENTITY_as<Organization>() const {
-  return ENTITY_as_Organization();
+template<> inline const OrganizationAttributes *EPM::ATTRIBUTES_as<OrganizationAttributes>() const {
+  return ATTRIBUTES_as_OrganizationAttributes();
 }
 
 struct EPMBuilder {
@@ -816,47 +767,26 @@ struct EPMBuilder {
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
     fbb_.AddOffset(EPM::VT_NAME, NAME);
   }
-  void add_ALTERNATE_NAME(::flatbuffers::Offset<::flatbuffers::String> ALTERNATE_NAME) {
-    fbb_.AddOffset(EPM::VT_ALTERNATE_NAME, ALTERNATE_NAME);
-  }
-  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
-    fbb_.AddOffset(EPM::VT_DESCRIPTION, DESCRIPTION);
-  }
-  void add_IMAGE(::flatbuffers::Offset<::flatbuffers::String> IMAGE) {
-    fbb_.AddOffset(EPM::VT_IMAGE, IMAGE);
-  }
-  void add_SAME_AS(::flatbuffers::Offset<::flatbuffers::String> SAME_AS) {
-    fbb_.AddOffset(EPM::VT_SAME_AS, SAME_AS);
-  }
-  void add_URL(::flatbuffers::Offset<::flatbuffers::String> URL) {
-    fbb_.AddOffset(EPM::VT_URL, URL);
-  }
-  void add_TELEPHONE(::flatbuffers::Offset<::flatbuffers::String> TELEPHONE) {
-    fbb_.AddOffset(EPM::VT_TELEPHONE, TELEPHONE);
+  void add_ALTERNATE_NAMES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_NAMES) {
+    fbb_.AddOffset(EPM::VT_ALTERNATE_NAMES, ALTERNATE_NAMES);
   }
   void add_EMAIL(::flatbuffers::Offset<::flatbuffers::String> EMAIL) {
     fbb_.AddOffset(EPM::VT_EMAIL, EMAIL);
   }
-  void add_KEY(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>>> KEY) {
-    fbb_.AddOffset(EPM::VT_KEY, KEY);
+  void add_TELEPHONE(::flatbuffers::Offset<::flatbuffers::String> TELEPHONE) {
+    fbb_.AddOffset(EPM::VT_TELEPHONE, TELEPHONE);
   }
-  void add_CONTACT_POINT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ContactPoint>>> CONTACT_POINT) {
-    fbb_.AddOffset(EPM::VT_CONTACT_POINT, CONTACT_POINT);
+  void add_KEYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>>> KEYS) {
+    fbb_.AddOffset(EPM::VT_KEYS, KEYS);
   }
-  void add_ADDRESS(::flatbuffers::Offset<ContactPoint> ADDRESS) {
-    fbb_.AddOffset(EPM::VT_ADDRESS, ADDRESS);
+  void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MULTIFORMAT_ADDRESS) {
+    fbb_.AddOffset(EPM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
-  void add_JOB_TITLE(::flatbuffers::Offset<::flatbuffers::String> JOB_TITLE) {
-    fbb_.AddOffset(EPM::VT_JOB_TITLE, JOB_TITLE);
+  void add_ATTRIBUTES_type(SpecificAttributes ATTRIBUTES_type) {
+    fbb_.AddElement<uint8_t>(EPM::VT_ATTRIBUTES_TYPE, static_cast<uint8_t>(ATTRIBUTES_type), 0);
   }
-  void add_ENTITY_type(Entity ENTITY_type) {
-    fbb_.AddElement<uint8_t>(EPM::VT_ENTITY_TYPE, static_cast<uint8_t>(ENTITY_type), 0);
-  }
-  void add_ENTITY(::flatbuffers::Offset<void> ENTITY) {
-    fbb_.AddOffset(EPM::VT_ENTITY, ENTITY);
-  }
-  void add_HAS_OCCUPATION(::flatbuffers::Offset<Occupation> HAS_OCCUPATION) {
-    fbb_.AddOffset(EPM::VT_HAS_OCCUPATION, HAS_OCCUPATION);
+  void add_ATTRIBUTES(::flatbuffers::Offset<void> ATTRIBUTES) {
+    fbb_.AddOffset(EPM::VT_ATTRIBUTES, ATTRIBUTES);
   }
   explicit EPMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -872,86 +802,54 @@ struct EPMBuilder {
 inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ALTERNATE_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> IMAGE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SAME_AS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> URL = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TELEPHONE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_NAMES = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EMAIL = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>>> KEY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ContactPoint>>> CONTACT_POINT = 0,
-    ::flatbuffers::Offset<ContactPoint> ADDRESS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> JOB_TITLE = 0,
-    Entity ENTITY_type = Entity_NONE,
-    ::flatbuffers::Offset<void> ENTITY = 0,
-    ::flatbuffers::Offset<Occupation> HAS_OCCUPATION = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TELEPHONE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>>> KEYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MULTIFORMAT_ADDRESS = 0,
+    SpecificAttributes ATTRIBUTES_type = SpecificAttributes_NONE,
+    ::flatbuffers::Offset<void> ATTRIBUTES = 0) {
   EPMBuilder builder_(_fbb);
-  builder_.add_HAS_OCCUPATION(HAS_OCCUPATION);
-  builder_.add_ENTITY(ENTITY);
-  builder_.add_JOB_TITLE(JOB_TITLE);
-  builder_.add_ADDRESS(ADDRESS);
-  builder_.add_CONTACT_POINT(CONTACT_POINT);
-  builder_.add_KEY(KEY);
-  builder_.add_EMAIL(EMAIL);
+  builder_.add_ATTRIBUTES(ATTRIBUTES);
+  builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
+  builder_.add_KEYS(KEYS);
   builder_.add_TELEPHONE(TELEPHONE);
-  builder_.add_URL(URL);
-  builder_.add_SAME_AS(SAME_AS);
-  builder_.add_IMAGE(IMAGE);
-  builder_.add_DESCRIPTION(DESCRIPTION);
-  builder_.add_ALTERNATE_NAME(ALTERNATE_NAME);
+  builder_.add_EMAIL(EMAIL);
+  builder_.add_ALTERNATE_NAMES(ALTERNATE_NAMES);
   builder_.add_NAME(NAME);
-  builder_.add_ENTITY_type(ENTITY_type);
+  builder_.add_ATTRIBUTES_type(ATTRIBUTES_type);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *NAME = nullptr,
-    const char *ALTERNATE_NAME = nullptr,
-    const char *DESCRIPTION = nullptr,
-    const char *IMAGE = nullptr,
-    const char *SAME_AS = nullptr,
-    const char *URL = nullptr,
-    const char *TELEPHONE = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_NAMES = nullptr,
     const char *EMAIL = nullptr,
-    const std::vector<::flatbuffers::Offset<CryptoKey>> *KEY = nullptr,
-    const std::vector<::flatbuffers::Offset<ContactPoint>> *CONTACT_POINT = nullptr,
-    ::flatbuffers::Offset<ContactPoint> ADDRESS = 0,
-    const char *JOB_TITLE = nullptr,
-    Entity ENTITY_type = Entity_NONE,
-    ::flatbuffers::Offset<void> ENTITY = 0,
-    ::flatbuffers::Offset<Occupation> HAS_OCCUPATION = 0) {
+    const char *TELEPHONE = nullptr,
+    const std::vector<::flatbuffers::Offset<CryptoKey>> *KEYS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS = nullptr,
+    SpecificAttributes ATTRIBUTES_type = SpecificAttributes_NONE,
+    ::flatbuffers::Offset<void> ATTRIBUTES = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto ALTERNATE_NAME__ = ALTERNATE_NAME ? _fbb.CreateString(ALTERNATE_NAME) : 0;
-  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
-  auto IMAGE__ = IMAGE ? _fbb.CreateString(IMAGE) : 0;
-  auto SAME_AS__ = SAME_AS ? _fbb.CreateString(SAME_AS) : 0;
-  auto URL__ = URL ? _fbb.CreateString(URL) : 0;
-  auto TELEPHONE__ = TELEPHONE ? _fbb.CreateString(TELEPHONE) : 0;
+  auto ALTERNATE_NAMES__ = ALTERNATE_NAMES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALTERNATE_NAMES) : 0;
   auto EMAIL__ = EMAIL ? _fbb.CreateString(EMAIL) : 0;
-  auto KEY__ = KEY ? _fbb.CreateVector<::flatbuffers::Offset<CryptoKey>>(*KEY) : 0;
-  auto CONTACT_POINT__ = CONTACT_POINT ? _fbb.CreateVector<::flatbuffers::Offset<ContactPoint>>(*CONTACT_POINT) : 0;
-  auto JOB_TITLE__ = JOB_TITLE ? _fbb.CreateString(JOB_TITLE) : 0;
+  auto TELEPHONE__ = TELEPHONE ? _fbb.CreateString(TELEPHONE) : 0;
+  auto KEYS__ = KEYS ? _fbb.CreateVector<::flatbuffers::Offset<CryptoKey>>(*KEYS) : 0;
+  auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MULTIFORMAT_ADDRESS) : 0;
   return CreateEPM(
       _fbb,
       NAME__,
-      ALTERNATE_NAME__,
-      DESCRIPTION__,
-      IMAGE__,
-      SAME_AS__,
-      URL__,
-      TELEPHONE__,
+      ALTERNATE_NAMES__,
       EMAIL__,
-      KEY__,
-      CONTACT_POINT__,
-      ADDRESS,
-      JOB_TITLE__,
-      ENTITY_type,
-      ENTITY,
-      HAS_OCCUPATION);
+      TELEPHONE__,
+      KEYS__,
+      MULTIFORMAT_ADDRESS__,
+      ATTRIBUTES_type,
+      ATTRIBUTES);
 }
 
+/// Collection of Entity Profile Messages
 struct EPMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EPMCOLLECTIONBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1005,29 +903,29 @@ inline ::flatbuffers::Offset<EPMCOLLECTION> CreateEPMCOLLECTIONDirect(
       RECORDS__);
 }
 
-inline bool VerifyEntity(::flatbuffers::Verifier &verifier, const void *obj, Entity type) {
+inline bool VerifySpecificAttributes(::flatbuffers::Verifier &verifier, const void *obj, SpecificAttributes type) {
   switch (type) {
-    case Entity_NONE: {
+    case SpecificAttributes_NONE: {
       return true;
     }
-    case Entity_Person: {
-      auto ptr = reinterpret_cast<const Person *>(obj);
+    case SpecificAttributes_PersonAttributes: {
+      auto ptr = reinterpret_cast<const PersonAttributes *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Entity_Organization: {
-      auto ptr = reinterpret_cast<const Organization *>(obj);
+    case SpecificAttributes_OrganizationAttributes: {
+      auto ptr = reinterpret_cast<const OrganizationAttributes *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
   }
 }
 
-inline bool VerifyEntityVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
+inline bool VerifySpecificAttributesVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
   if (!values || !types) return !values && !types;
   if (values->size() != types->size()) return false;
   for (::flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
-    if (!VerifyEntity(
-        verifier,  values->Get(i), types->GetEnum<Entity>(i))) {
+    if (!VerifySpecificAttributes(
+        verifier,  values->Get(i), types->GetEnum<SpecificAttributes>(i))) {
       return false;
     }
   }

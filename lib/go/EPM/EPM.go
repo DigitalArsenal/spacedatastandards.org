@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Entity Profile Message
+/// Represents an entity with common fields and specific attributes for Person or Organization
 type EPM struct {
 	_tab flatbuffers.Table
 }
@@ -44,18 +44,27 @@ func (rcv *EPM) NAME() []byte {
 }
 
 /// Common name of the entity (person or organization)
-/// Alternate name for the entity
-func (rcv *EPM) ALTERNATE_NAME() []byte {
+/// Alternate names for the entity
+func (rcv *EPM) ALTERNATE_NAMES(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
 	}
 	return nil
 }
 
-/// Alternate name for the entity
-/// Description of the entity
-func (rcv *EPM) DESCRIPTION() []byte {
+func (rcv *EPM) ALTERNATE_NAMESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Alternate names for the entity
+/// Email address of the entity
+func (rcv *EPM) EMAIL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -63,9 +72,9 @@ func (rcv *EPM) DESCRIPTION() []byte {
 	return nil
 }
 
-/// Description of the entity
-/// URL of an image representing the entity
-func (rcv *EPM) IMAGE() []byte {
+/// Email address of the entity
+/// Telephone number of the entity
+func (rcv *EPM) TELEPHONE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -73,131 +82,63 @@ func (rcv *EPM) IMAGE() []byte {
 	return nil
 }
 
-/// URL of an image representing the entity
-/// URL of a webpage that unambiguously indicates the entity's identity
-func (rcv *EPM) SAME_AS() []byte {
+/// Telephone number of the entity
+/// Cryptographic keys associated with the entity
+func (rcv *EPM) KEYS(obj *CryptoKey, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
 	}
-	return nil
+	return false
 }
 
-/// URL of a webpage that unambiguously indicates the entity's identity
-/// URL of the entity's website
-func (rcv *EPM) URL() []byte {
+func (rcv *EPM) KEYSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Cryptographic keys associated with the entity
+/// Multiformat addresses associated with the entity
+func (rcv *EPM) MULTIFORMAT_ADDRESS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
 	}
 	return nil
 }
 
-/// URL of the entity's website
-/// Telephone number for the entity
-func (rcv *EPM) TELEPHONE() []byte {
+func (rcv *EPM) MULTIFORMAT_ADDRESSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Multiformat addresses associated with the entity
+func (rcv *EPM) AttributesType() SpecificAttributes {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return SpecificAttributes(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-/// Telephone number for the entity
-/// Email address for the entity
-func (rcv *EPM) EMAIL() []byte {
+func (rcv *EPM) MutateAttributesType(n SpecificAttributes) bool {
+	return rcv._tab.MutateByteSlot(16, byte(n))
+}
+
+/// Specific attributes for the entity, either Person or Organization
+func (rcv *EPM) ATTRIBUTES(obj *flatbuffers.Table) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Email address for the entity
-/// Cryptographic key information associated with the entity
-func (rcv *EPM) KEY(obj *CryptoKey, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *EPM) KEYLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-/// Cryptographic key information associated with the entity
-/// Contact points for the entity
-func (rcv *EPM) CONTACT_POINT(obj *ContactPoint, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *EPM) CONTACT_POINTLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-/// Contact points for the entity
-/// Address of the entity, using the ContactPoint structure
-func (rcv *EPM) ADDRESS(obj *ContactPoint) *ContactPoint {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(ContactPoint)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-/// Address of the entity, using the ContactPoint structure
-/// Job title of the entity (applicable to persons)
-func (rcv *EPM) JOB_TITLE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Job title of the entity (applicable to persons)
-func (rcv *EPM) EntityType() Entity {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return Entity(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-func (rcv *EPM) MutateEntityType(n Entity) bool {
-	return rcv._tab.MutateByteSlot(28, byte(n))
-}
-
-/// Union type to represent either a person or an organization
-func (rcv *EPM) ENTITY(obj *flatbuffers.Table) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		rcv._tab.Union(obj, o)
 		return true
@@ -205,75 +146,42 @@ func (rcv *EPM) ENTITY(obj *flatbuffers.Table) bool {
 	return false
 }
 
-/// Union type to represent either a person or an organization
-/// Occupation of the entity (applicable to persons)
-func (rcv *EPM) HAS_OCCUPATION(obj *Occupation) *Occupation {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(Occupation)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-/// Occupation of the entity (applicable to persons)
+/// Specific attributes for the entity, either Person or Organization
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(8)
 }
 func EPMAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
-func EPMAddALTERNATE_NAME(builder *flatbuffers.Builder, ALTERNATE_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ALTERNATE_NAME), 0)
+func EPMAddALTERNATE_NAMES(builder *flatbuffers.Builder, ALTERNATE_NAMES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ALTERNATE_NAMES), 0)
 }
-func EPMAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DESCRIPTION), 0)
-}
-func EPMAddIMAGE(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(IMAGE), 0)
-}
-func EPMAddSAME_AS(builder *flatbuffers.Builder, SAME_AS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SAME_AS), 0)
-}
-func EPMAddURL(builder *flatbuffers.Builder, URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(URL), 0)
-}
-func EPMAddTELEPHONE(builder *flatbuffers.Builder, TELEPHONE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TELEPHONE), 0)
+func EPMStartALTERNATE_NAMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
 }
 func EPMAddEMAIL(builder *flatbuffers.Builder, EMAIL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(EMAIL), 0)
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(EMAIL), 0)
 }
-func EPMAddKEY(builder *flatbuffers.Builder, KEY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(KEY), 0)
+func EPMAddTELEPHONE(builder *flatbuffers.Builder, TELEPHONE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TELEPHONE), 0)
 }
-func EPMStartKEYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func EPMAddKEYS(builder *flatbuffers.Builder, KEYS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(KEYS), 0)
+}
+func EPMStartKEYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func EPMAddCONTACT_POINT(builder *flatbuffers.Builder, CONTACT_POINT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(CONTACT_POINT), 0)
+func EPMAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
 }
-func EPMStartCONTACT_POINTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func EPMStartMULTIFORMAT_ADDRESSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func EPMAddADDRESS(builder *flatbuffers.Builder, ADDRESS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ADDRESS), 0)
+func EPMAddAttributesType(builder *flatbuffers.Builder, attributesType SpecificAttributes) {
+	builder.PrependByteSlot(6, byte(attributesType), 0)
 }
-func EPMAddJOB_TITLE(builder *flatbuffers.Builder, JOB_TITLE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(JOB_TITLE), 0)
-}
-func EPMAddEntityType(builder *flatbuffers.Builder, entityType Entity) {
-	builder.PrependByteSlot(12, byte(entityType), 0)
-}
-func EPMAddENTITY(builder *flatbuffers.Builder, ENTITY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(ENTITY), 0)
-}
-func EPMAddHAS_OCCUPATION(builder *flatbuffers.Builder, HAS_OCCUPATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(HAS_OCCUPATION), 0)
+func EPMAddATTRIBUTES(builder *flatbuffers.Builder, ATTRIBUTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ATTRIBUTES), 0)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

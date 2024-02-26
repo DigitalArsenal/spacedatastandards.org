@@ -1,9 +1,11 @@
-export { ContactPoint, ContactPointT } from './ContactPoint.js';
+export { Address, AddressT } from './Address.js';
 export { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+export { DNComponent, DNComponentT } from './DNComponent.js';
+export { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
 export { EPM, EPMT } from './EPM.js';
 export { EPMCOLLECTION, EPMCOLLECTIONT } from './EPMCOLLECTION.js';
-export { Entity } from './Entity.js';
-export { Occupation, OccupationT } from './Occupation.js';
-export { Organization, OrganizationT } from './Organization.js';
-export { Person, PersonT } from './Person.js';
+export { LDIFAttributeType } from './LDIFAttributeType.js';
+export { OrganizationAttributes, OrganizationAttributesT } from './OrganizationAttributes.js';
+export { PersonAttributes, PersonAttributesT } from './PersonAttributes.js';
+export { SpecificAttributes } from './SpecificAttributes.js';
 //# sourceMappingURL=main.d.ts.map

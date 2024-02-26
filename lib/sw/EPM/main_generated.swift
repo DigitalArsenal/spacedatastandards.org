@@ -4,8 +4,31 @@
 
 import FlatBuffers
 
-///  Union type for Entity, which can be either a Person or an Organization
-public enum Entity: UInt8, UnionEnum {
+///  Enumeration for LDAP attribute types relevant to Distinguished Names
+public enum LDIFAttributeType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Common Name
+  case cn = 0
+  ///  Organizational Unit Name
+  case ou = 1
+  ///  Organization Name
+  case o = 2
+  ///  Domain Component
+  case dc = 3
+  ///  Country Name
+  case c = 4
+  ///  Surname
+  case sn = 5
+
+  public static var max: LDIFAttributeType { return .sn }
+  public static var min: LDIFAttributeType { return .cn }
+}
+
+
+///  Union for specific attributes, distinguishing between Person and Organization
+public enum SpecificAttributes: UInt8, UnionEnum {
   public typealias T = UInt8
 
   public init?(value: T) {
@@ -15,15 +38,103 @@ public enum Entity: UInt8, UnionEnum {
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case none_ = 0
-  case person = 1
-  case organization = 2
+  case personattributes = 1
+  case organizationattributes = 2
 
-  public static var max: Entity { return .organization }
-  public static var min: Entity { return .none_ }
+  public static var max: SpecificAttributes { return .organizationattributes }
+  public static var min: SpecificAttributes { return .none_ }
 }
 
 
-///  Crypto Key Information
+///  Represents a component of a Distinguished Name (DN) in LDAP
+public struct DNComponent: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EPM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DNComponent.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case TYPE = 4
+    case VALUE = 6
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  The type of the DN component
+  public var TYPE: LDIFAttributeType { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .cn : LDIFAttributeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .cn }
+  ///  The value of the DN component
+  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
+  public static func startDNComponent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(TYPE: LDIFAttributeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
+  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
+  public static func endDNComponent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDNComponent(
+    _ fbb: inout FlatBufferBuilder,
+    TYPE: LDIFAttributeType = .cn,
+    VALUEOffset VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = DNComponent.startDNComponent(&fbb)
+    DNComponent.add(TYPE: TYPE, &fbb)
+    DNComponent.add(VALUE: VALUE, &fbb)
+    return DNComponent.endDNComponent(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: LDIFAttributeType.self)
+    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Represents a Distinguished Name composed of DNComponents
+public struct DistinguishedName: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EPM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DistinguishedName.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case COMPONENTS = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  The sequence of components making up the DN
+  public var hasComponents: Bool { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? false : true }
+  public var COMPONENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func COMPONENTS(at index: Int32) -> DNComponent? { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? nil : DNComponent(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public static func startDistinguishedName(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(COMPONENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPONENTS, at: VTOFFSET.COMPONENTS.p) }
+  public static func endDistinguishedName(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDistinguishedName(
+    _ fbb: inout FlatBufferBuilder,
+    COMPONENTSVectorOffset COMPONENTS: Offset = Offset()
+  ) -> Offset {
+    let __start = DistinguishedName.startDistinguishedName(&fbb)
+    DistinguishedName.addVectorOf(COMPONENTS: COMPONENTS, &fbb)
+    return DistinguishedName.endDistinguishedName(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.COMPONENTS.p, fieldName: "COMPONENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<DNComponent>, DNComponent>>.self)
+    _v.finish()
+  }
+}
+
+///  Represents cryptographic key information
 public struct CryptoKey: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
@@ -40,8 +151,6 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     case XPUB = 6
     case PRIVATE_KEY = 8
     case XPRIV = 10
-    case KEY_ADDRESS = 12
-    case ADDRESS_TYPE = 14
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -58,36 +167,24 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
   ///  Extended private key
   public var XPRIV: String? { let o = _accessor.offset(VTOFFSET.XPRIV.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPRIVSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XPRIV.v) }
-  ///  Address generated from the cryptographic key
-  public var KEY_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.KEY_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEY_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ADDRESS.v) }
-  ///  Numerical type of the address generated from the cryptographic key
-  public var ADDRESS_TYPE: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_TYPE.v) }
-  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VTOFFSET.PUBLIC_KEY.p) }
   public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VTOFFSET.XPUB.p) }
   public static func add(PRIVATE_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIVATE_KEY, at: VTOFFSET.PRIVATE_KEY.p) }
   public static func add(XPRIV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPRIV, at: VTOFFSET.XPRIV.p) }
-  public static func add(KEY_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ADDRESS, at: VTOFFSET.KEY_ADDRESS.p) }
-  public static func add(ADDRESS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_TYPE, at: VTOFFSET.ADDRESS_TYPE.p) }
   public static func endCryptoKey(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCryptoKey(
     _ fbb: inout FlatBufferBuilder,
     PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
     XPUBOffset XPUB: Offset = Offset(),
     PRIVATE_KEYOffset PRIVATE_KEY: Offset = Offset(),
-    XPRIVOffset XPRIV: Offset = Offset(),
-    KEY_ADDRESSOffset KEY_ADDRESS: Offset = Offset(),
-    ADDRESS_TYPEOffset ADDRESS_TYPE: Offset = Offset()
+    XPRIVOffset XPRIV: Offset = Offset()
   ) -> Offset {
     let __start = CryptoKey.startCryptoKey(&fbb)
     CryptoKey.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
     CryptoKey.add(XPUB: XPUB, &fbb)
     CryptoKey.add(PRIVATE_KEY: PRIVATE_KEY, &fbb)
     CryptoKey.add(XPRIV: XPRIV, &fbb)
-    CryptoKey.add(KEY_ADDRESS: KEY_ADDRESS, &fbb)
-    CryptoKey.add(ADDRESS_TYPE: ADDRESS_TYPE, &fbb)
     return CryptoKey.endCryptoKey(&fbb, start: __start)
   }
 
@@ -97,245 +194,99 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.XPUB.p, fieldName: "XPUB", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PRIVATE_KEY.p, fieldName: "PRIVATE_KEY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.XPRIV.p, fieldName: "XPRIV", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.KEY_ADDRESS.p, fieldName: "KEY_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADDRESS_TYPE.p, fieldName: "ADDRESS_TYPE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Information about a contact point
-public struct ContactPoint: FlatBufferObject, Verifiable {
+///  Represents a geographic address
+public struct Address: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
   public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ContactPoint.id, addPrefix: prefix) }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Address.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case CONTACT_TYPE = 6
-    case EMAIL = 8
-    case TELEPHONE = 10
-    case CONTACT_OPTION = 12
-    case AREA_SERVED = 14
-    case AVAILABLE_LANGUAGE = 16
-    case ADDRESS_COUNTRY = 18
-    case ADDRESS_REGION = 20
-    case ADDRESS_LOCALITY = 22
-    case POSTAL_CODE = 24
-    case STREET_ADDRESS = 26
-    case POST_OFFICE_BOX_NUMBER = 28
+    case COUNTRY = 4
+    case REGION = 6
+    case LOCALITY = 8
+    case POSTAL_CODE = 10
+    case STREET = 12
+    case POST_OFFICE_BOX_NUMBER = 14
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Name of the contact point or person
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  ///  Type of contact (e.g., customer service, technical support)
-  public var CONTACT_TYPE: String? { let o = _accessor.offset(VTOFFSET.CONTACT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTACT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTACT_TYPE.v) }
-  ///  Email address
-  public var EMAIL: String? { let o = _accessor.offset(VTOFFSET.EMAIL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EMAIL.v) }
-  ///  Telephone number
-  public var TELEPHONE: String? { let o = _accessor.offset(VTOFFSET.TELEPHONE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TELEPHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TELEPHONE.v) }
-  ///  Available contact options (e.g., HearingImpairedSupported)
-  public var CONTACT_OPTION: String? { let o = _accessor.offset(VTOFFSET.CONTACT_OPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTACT_OPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTACT_OPTION.v) }
-  ///  Geographic area where the service is available
-  public var AREA_SERVED: String? { let o = _accessor.offset(VTOFFSET.AREA_SERVED.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AREA_SERVEDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AREA_SERVED.v) }
-  ///  Language available for communication
-  public var AVAILABLE_LANGUAGE: String? { let o = _accessor.offset(VTOFFSET.AVAILABLE_LANGUAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AVAILABLE_LANGUAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AVAILABLE_LANGUAGE.v) }
   ///  Country of the address
-  public var ADDRESS_COUNTRY: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_COUNTRY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESS_COUNTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_COUNTRY.v) }
+  public var COUNTRY: String? { let o = _accessor.offset(VTOFFSET.COUNTRY.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COUNTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COUNTRY.v) }
   ///  Region of the address (e.g., state or province)
-  public var ADDRESS_REGION: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_REGION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESS_REGIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_REGION.v) }
+  public var REGION: String? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION.v) }
   ///  Locality of the address (e.g., city or town)
-  public var ADDRESS_LOCALITY: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_LOCALITY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESS_LOCALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_LOCALITY.v) }
+  public var LOCALITY: String? { let o = _accessor.offset(VTOFFSET.LOCALITY.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LOCALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LOCALITY.v) }
   ///  Postal code of the address
   public var POSTAL_CODE: String? { let o = _accessor.offset(VTOFFSET.POSTAL_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var POSTAL_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSTAL_CODE.v) }
   ///  Street address
-  public var STREET_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.STREET_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STREET_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STREET_ADDRESS.v) }
+  public var STREET: String? { let o = _accessor.offset(VTOFFSET.STREET.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STREETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STREET.v) }
   ///  Post office box number
   public var POST_OFFICE_BOX_NUMBER: String? { let o = _accessor.offset(VTOFFSET.POST_OFFICE_BOX_NUMBER.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var POST_OFFICE_BOX_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POST_OFFICE_BOX_NUMBER.v) }
-  public static func startContactPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(CONTACT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT_TYPE, at: VTOFFSET.CONTACT_TYPE.p) }
-  public static func add(EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMAIL, at: VTOFFSET.EMAIL.p) }
-  public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VTOFFSET.TELEPHONE.p) }
-  public static func add(CONTACT_OPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT_OPTION, at: VTOFFSET.CONTACT_OPTION.p) }
-  public static func add(AREA_SERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AREA_SERVED, at: VTOFFSET.AREA_SERVED.p) }
-  public static func add(AVAILABLE_LANGUAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AVAILABLE_LANGUAGE, at: VTOFFSET.AVAILABLE_LANGUAGE.p) }
-  public static func add(ADDRESS_COUNTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_COUNTRY, at: VTOFFSET.ADDRESS_COUNTRY.p) }
-  public static func add(ADDRESS_REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_REGION, at: VTOFFSET.ADDRESS_REGION.p) }
-  public static func add(ADDRESS_LOCALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_LOCALITY, at: VTOFFSET.ADDRESS_LOCALITY.p) }
+  public static func startAddress(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(COUNTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTRY, at: VTOFFSET.COUNTRY.p) }
+  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VTOFFSET.REGION.p) }
+  public static func add(LOCALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCALITY, at: VTOFFSET.LOCALITY.p) }
   public static func add(POSTAL_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSTAL_CODE, at: VTOFFSET.POSTAL_CODE.p) }
-  public static func add(STREET_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREET_ADDRESS, at: VTOFFSET.STREET_ADDRESS.p) }
+  public static func add(STREET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREET, at: VTOFFSET.STREET.p) }
   public static func add(POST_OFFICE_BOX_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POST_OFFICE_BOX_NUMBER, at: VTOFFSET.POST_OFFICE_BOX_NUMBER.p) }
-  public static func endContactPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createContactPoint(
+  public static func endAddress(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAddress(
     _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset = Offset(),
-    CONTACT_TYPEOffset CONTACT_TYPE: Offset = Offset(),
-    EMAILOffset EMAIL: Offset = Offset(),
-    TELEPHONEOffset TELEPHONE: Offset = Offset(),
-    CONTACT_OPTIONOffset CONTACT_OPTION: Offset = Offset(),
-    AREA_SERVEDOffset AREA_SERVED: Offset = Offset(),
-    AVAILABLE_LANGUAGEOffset AVAILABLE_LANGUAGE: Offset = Offset(),
-    ADDRESS_COUNTRYOffset ADDRESS_COUNTRY: Offset = Offset(),
-    ADDRESS_REGIONOffset ADDRESS_REGION: Offset = Offset(),
-    ADDRESS_LOCALITYOffset ADDRESS_LOCALITY: Offset = Offset(),
+    COUNTRYOffset COUNTRY: Offset = Offset(),
+    REGIONOffset REGION: Offset = Offset(),
+    LOCALITYOffset LOCALITY: Offset = Offset(),
     POSTAL_CODEOffset POSTAL_CODE: Offset = Offset(),
-    STREET_ADDRESSOffset STREET_ADDRESS: Offset = Offset(),
+    STREETOffset STREET: Offset = Offset(),
     POST_OFFICE_BOX_NUMBEROffset POST_OFFICE_BOX_NUMBER: Offset = Offset()
   ) -> Offset {
-    let __start = ContactPoint.startContactPoint(&fbb)
-    ContactPoint.add(NAME: NAME, &fbb)
-    ContactPoint.add(CONTACT_TYPE: CONTACT_TYPE, &fbb)
-    ContactPoint.add(EMAIL: EMAIL, &fbb)
-    ContactPoint.add(TELEPHONE: TELEPHONE, &fbb)
-    ContactPoint.add(CONTACT_OPTION: CONTACT_OPTION, &fbb)
-    ContactPoint.add(AREA_SERVED: AREA_SERVED, &fbb)
-    ContactPoint.add(AVAILABLE_LANGUAGE: AVAILABLE_LANGUAGE, &fbb)
-    ContactPoint.add(ADDRESS_COUNTRY: ADDRESS_COUNTRY, &fbb)
-    ContactPoint.add(ADDRESS_REGION: ADDRESS_REGION, &fbb)
-    ContactPoint.add(ADDRESS_LOCALITY: ADDRESS_LOCALITY, &fbb)
-    ContactPoint.add(POSTAL_CODE: POSTAL_CODE, &fbb)
-    ContactPoint.add(STREET_ADDRESS: STREET_ADDRESS, &fbb)
-    ContactPoint.add(POST_OFFICE_BOX_NUMBER: POST_OFFICE_BOX_NUMBER, &fbb)
-    return ContactPoint.endContactPoint(&fbb, start: __start)
+    let __start = Address.startAddress(&fbb)
+    Address.add(COUNTRY: COUNTRY, &fbb)
+    Address.add(REGION: REGION, &fbb)
+    Address.add(LOCALITY: LOCALITY, &fbb)
+    Address.add(POSTAL_CODE: POSTAL_CODE, &fbb)
+    Address.add(STREET: STREET, &fbb)
+    Address.add(POST_OFFICE_BOX_NUMBER: POST_OFFICE_BOX_NUMBER, &fbb)
+    return Address.endAddress(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTACT_TYPE.p, fieldName: "CONTACT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EMAIL.p, fieldName: "EMAIL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TELEPHONE.p, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTACT_OPTION.p, fieldName: "CONTACT_OPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AREA_SERVED.p, fieldName: "AREA_SERVED", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AVAILABLE_LANGUAGE.p, fieldName: "AVAILABLE_LANGUAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADDRESS_COUNTRY.p, fieldName: "ADDRESS_COUNTRY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADDRESS_REGION.p, fieldName: "ADDRESS_REGION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADDRESS_LOCALITY.p, fieldName: "ADDRESS_LOCALITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.COUNTRY.p, fieldName: "COUNTRY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REGION.p, fieldName: "REGION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LOCALITY.p, fieldName: "LOCALITY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.POSTAL_CODE.p, fieldName: "POSTAL_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STREET_ADDRESS.p, fieldName: "STREET_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.STREET.p, fieldName: "STREET", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.POST_OFFICE_BOX_NUMBER.p, fieldName: "POST_OFFICE_BOX_NUMBER", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Basic information about an organization
-public struct Organization: FlatBufferObject, Verifiable {
+///  Specific attributes for a Person
+public struct PersonAttributes: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
   public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Organization.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case LEGAL_NAME = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Common name of the organization
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  ///  Legal name of the organization
-  public var LEGAL_NAME: String? { let o = _accessor.offset(VTOFFSET.LEGAL_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LEGAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LEGAL_NAME.v) }
-  public static func startOrganization(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
-  public static func endOrganization(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createOrganization(
-    _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset = Offset(),
-    LEGAL_NAMEOffset LEGAL_NAME: Offset = Offset()
-  ) -> Offset {
-    let __start = Organization.startOrganization(&fbb)
-    Organization.add(NAME: NAME, &fbb)
-    Organization.add(LEGAL_NAME: LEGAL_NAME, &fbb)
-    return Organization.endOrganization(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LEGAL_NAME.p, fieldName: "LEGAL_NAME", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Information about a person's occupation
-public struct Occupation: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Occupation.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Name of the occupation
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  public static func startOccupation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func endOccupation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createOccupation(
-    _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset = Offset()
-  ) -> Offset {
-    let __start = Occupation.startOccupation(&fbb)
-    Occupation.add(NAME: NAME, &fbb)
-    return Occupation.endOccupation(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Information about a person
-public struct Person: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Person.id, addPrefix: prefix) }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PersonAttributes.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
@@ -345,6 +296,8 @@ public struct Person: FlatBufferObject, Verifiable {
     case ADDITIONAL_NAME = 8
     case HONORIFIC_PREFIX = 10
     case HONORIFIC_SUFFIX = 12
+    case JOB_TITLE = 14
+    case OCCUPATION = 16
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -358,34 +311,46 @@ public struct Person: FlatBufferObject, Verifiable {
   ///  Additional name or middle name of the person
   public var ADDITIONAL_NAME: String? { let o = _accessor.offset(VTOFFSET.ADDITIONAL_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ADDITIONAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDITIONAL_NAME.v) }
-  ///  Honorific prefix preceding the person's name
+  ///  Honorific prefix preceding the person's name (e.g., Mr., Dr.)
   public var HONORIFIC_PREFIX: String? { let o = _accessor.offset(VTOFFSET.HONORIFIC_PREFIX.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var HONORIFIC_PREFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HONORIFIC_PREFIX.v) }
-  ///  Honorific suffix following the person's name
+  ///  Honorific suffix following the person's name (e.g., Jr., Sr.)
   public var HONORIFIC_SUFFIX: String? { let o = _accessor.offset(VTOFFSET.HONORIFIC_SUFFIX.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var HONORIFIC_SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HONORIFIC_SUFFIX.v) }
-  public static func startPerson(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Job title of the person
+  public var JOB_TITLE: String? { let o = _accessor.offset(VTOFFSET.JOB_TITLE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var JOB_TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.JOB_TITLE.v) }
+  ///  Occupation of the person
+  public var OCCUPATION: String? { let o = _accessor.offset(VTOFFSET.OCCUPATION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OCCUPATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OCCUPATION.v) }
+  public static func startPersonAttributes(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VTOFFSET.FAMILY_NAME.p) }
   public static func add(GIVEN_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GIVEN_NAME, at: VTOFFSET.GIVEN_NAME.p) }
   public static func add(ADDITIONAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDITIONAL_NAME, at: VTOFFSET.ADDITIONAL_NAME.p) }
   public static func add(HONORIFIC_PREFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_PREFIX, at: VTOFFSET.HONORIFIC_PREFIX.p) }
   public static func add(HONORIFIC_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_SUFFIX, at: VTOFFSET.HONORIFIC_SUFFIX.p) }
-  public static func endPerson(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPerson(
+  public static func add(JOB_TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_TITLE, at: VTOFFSET.JOB_TITLE.p) }
+  public static func add(OCCUPATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCUPATION, at: VTOFFSET.OCCUPATION.p) }
+  public static func endPersonAttributes(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPersonAttributes(
     _ fbb: inout FlatBufferBuilder,
     FAMILY_NAMEOffset FAMILY_NAME: Offset = Offset(),
     GIVEN_NAMEOffset GIVEN_NAME: Offset = Offset(),
     ADDITIONAL_NAMEOffset ADDITIONAL_NAME: Offset = Offset(),
     HONORIFIC_PREFIXOffset HONORIFIC_PREFIX: Offset = Offset(),
-    HONORIFIC_SUFFIXOffset HONORIFIC_SUFFIX: Offset = Offset()
+    HONORIFIC_SUFFIXOffset HONORIFIC_SUFFIX: Offset = Offset(),
+    JOB_TITLEOffset JOB_TITLE: Offset = Offset(),
+    OCCUPATIONOffset OCCUPATION: Offset = Offset()
   ) -> Offset {
-    let __start = Person.startPerson(&fbb)
-    Person.add(FAMILY_NAME: FAMILY_NAME, &fbb)
-    Person.add(GIVEN_NAME: GIVEN_NAME, &fbb)
-    Person.add(ADDITIONAL_NAME: ADDITIONAL_NAME, &fbb)
-    Person.add(HONORIFIC_PREFIX: HONORIFIC_PREFIX, &fbb)
-    Person.add(HONORIFIC_SUFFIX: HONORIFIC_SUFFIX, &fbb)
-    return Person.endPerson(&fbb, start: __start)
+    let __start = PersonAttributes.startPersonAttributes(&fbb)
+    PersonAttributes.add(FAMILY_NAME: FAMILY_NAME, &fbb)
+    PersonAttributes.add(GIVEN_NAME: GIVEN_NAME, &fbb)
+    PersonAttributes.add(ADDITIONAL_NAME: ADDITIONAL_NAME, &fbb)
+    PersonAttributes.add(HONORIFIC_PREFIX: HONORIFIC_PREFIX, &fbb)
+    PersonAttributes.add(HONORIFIC_SUFFIX: HONORIFIC_SUFFIX, &fbb)
+    PersonAttributes.add(JOB_TITLE: JOB_TITLE, &fbb)
+    PersonAttributes.add(OCCUPATION: OCCUPATION, &fbb)
+    return PersonAttributes.endPersonAttributes(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
@@ -395,11 +360,53 @@ public struct Person: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ADDITIONAL_NAME.p, fieldName: "ADDITIONAL_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.HONORIFIC_PREFIX.p, fieldName: "HONORIFIC_PREFIX", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.HONORIFIC_SUFFIX.p, fieldName: "HONORIFIC_SUFFIX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.JOB_TITLE.p, fieldName: "JOB_TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OCCUPATION.p, fieldName: "OCCUPATION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Entity Profile Message
+///  Specific attributes for an Organization
+public struct OrganizationAttributes: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EPM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OrganizationAttributes.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case LEGAL_NAME = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Legal name of the organization
+  public var LEGAL_NAME: String? { let o = _accessor.offset(VTOFFSET.LEGAL_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LEGAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LEGAL_NAME.v) }
+  public static func startOrganizationAttributes(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
+  public static func endOrganizationAttributes(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOrganizationAttributes(
+    _ fbb: inout FlatBufferBuilder,
+    LEGAL_NAMEOffset LEGAL_NAME: Offset = Offset()
+  ) -> Offset {
+    let __start = OrganizationAttributes.startOrganizationAttributes(&fbb)
+    OrganizationAttributes.add(LEGAL_NAME: LEGAL_NAME, &fbb)
+    return OrganizationAttributes.endOrganizationAttributes(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.LEGAL_NAME.p, fieldName: "LEGAL_NAME", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Represents an entity with common fields and specific attributes for Person or Organization
 public struct EPM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
@@ -413,20 +420,13 @@ public struct EPM: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case NAME = 4
-    case ALTERNATE_NAME = 6
-    case DESCRIPTION = 8
-    case IMAGE = 10
-    case SAME_AS = 12
-    case URL = 14
-    case TELEPHONE = 16
-    case EMAIL = 18
-    case KEY = 20
-    case CONTACT_POINT = 22
-    case ADDRESS = 24
-    case JOB_TITLE = 26
-    case entityType = 28
-    case ENTITY = 30
-    case HAS_OCCUPATION = 32
+    case ALTERNATE_NAMES = 6
+    case EMAIL = 8
+    case TELEPHONE = 10
+    case KEYS = 12
+    case MULTIFORMAT_ADDRESS = 14
+    case attributesType = 16
+    case ATTRIBUTES = 18
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -434,128 +434,83 @@ public struct EPM: FlatBufferObject, Verifiable {
   ///  Common name of the entity (person or organization)
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  ///  Alternate name for the entity
-  public var ALTERNATE_NAME: String? { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALTERNATE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALTERNATE_NAME.v) }
-  ///  Description of the entity
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
-  ///  URL of an image representing the entity
-  public var IMAGE: String? { let o = _accessor.offset(VTOFFSET.IMAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE.v) }
-  ///  URL of a webpage that unambiguously indicates the entity's identity
-  public var SAME_AS: String? { let o = _accessor.offset(VTOFFSET.SAME_AS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SAME_ASSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SAME_AS.v) }
-  ///  URL of the entity's website
-  public var URL: String? { let o = _accessor.offset(VTOFFSET.URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.URL.v) }
-  ///  Telephone number for the entity
-  public var TELEPHONE: String? { let o = _accessor.offset(VTOFFSET.TELEPHONE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TELEPHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TELEPHONE.v) }
-  ///  Email address for the entity
+  ///  Alternate names for the entity
+  public var hasAlternateNames: Bool { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? false : true }
+  public var ALTERNATE_NAMESCount: Int32 { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ALTERNATE_NAMES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Email address of the entity
   public var EMAIL: String? { let o = _accessor.offset(VTOFFSET.EMAIL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EMAIL.v) }
-  ///  Cryptographic key information associated with the entity
-  public var hasKey: Bool { let o = _accessor.offset(VTOFFSET.KEY.v); return o == 0 ? false : true }
-  public var KEYCount: Int32 { let o = _accessor.offset(VTOFFSET.KEY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func KEY(at index: Int32) -> CryptoKey? { let o = _accessor.offset(VTOFFSET.KEY.v); return o == 0 ? nil : CryptoKey(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  ///  Contact points for the entity
-  public var hasContactPoint: Bool { let o = _accessor.offset(VTOFFSET.CONTACT_POINT.v); return o == 0 ? false : true }
-  public var CONTACT_POINTCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTACT_POINT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTACT_POINT(at index: Int32) -> ContactPoint? { let o = _accessor.offset(VTOFFSET.CONTACT_POINT.v); return o == 0 ? nil : ContactPoint(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  ///  Address of the entity, using the ContactPoint structure
-  public var ADDRESS: ContactPoint? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : ContactPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Job title of the entity (applicable to persons)
-  public var JOB_TITLE: String? { let o = _accessor.offset(VTOFFSET.JOB_TITLE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var JOB_TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.JOB_TITLE.v) }
-  public var entityType: Entity { let o = _accessor.offset(VTOFFSET.entityType.v); return o == 0 ? .none_ : Entity(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
-  ///  Union type to represent either a person or an organization
-  public func ENTITY<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.ENTITY.v); return o == 0 ? nil : _accessor.union(o) }
-  ///  Occupation of the entity (applicable to persons)
-  public var HAS_OCCUPATION: Occupation? { let o = _accessor.offset(VTOFFSET.HAS_OCCUPATION.v); return o == 0 ? nil : Occupation(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Telephone number of the entity
+  public var TELEPHONE: String? { let o = _accessor.offset(VTOFFSET.TELEPHONE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TELEPHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TELEPHONE.v) }
+  ///  Cryptographic keys associated with the entity
+  public var hasKeys: Bool { let o = _accessor.offset(VTOFFSET.KEYS.v); return o == 0 ? false : true }
+  public var KEYSCount: Int32 { let o = _accessor.offset(VTOFFSET.KEYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func KEYS(at index: Int32) -> CryptoKey? { let o = _accessor.offset(VTOFFSET.KEYS.v); return o == 0 ? nil : CryptoKey(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Multiformat addresses associated with the entity
+  public var hasMultiformatAddress: Bool { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? false : true }
+  public var MULTIFORMAT_ADDRESSCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func MULTIFORMAT_ADDRESS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var attributesType: SpecificAttributes { let o = _accessor.offset(VTOFFSET.attributesType.v); return o == 0 ? .none_ : SpecificAttributes(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Specific attributes for the entity, either Person or Organization
+  public func ATTRIBUTES<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.ATTRIBUTES.v); return o == 0 ? nil : _accessor.union(o) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(ALTERNATE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAME, at: VTOFFSET.ALTERNATE_NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VTOFFSET.IMAGE.p) }
-  public static func add(SAME_AS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAME_AS, at: VTOFFSET.SAME_AS.p) }
-  public static func add(URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URL, at: VTOFFSET.URL.p) }
-  public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VTOFFSET.TELEPHONE.p) }
+  public static func addVectorOf(ALTERNATE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAMES, at: VTOFFSET.ALTERNATE_NAMES.p) }
   public static func add(EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMAIL, at: VTOFFSET.EMAIL.p) }
-  public static func addVectorOf(KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY, at: VTOFFSET.KEY.p) }
-  public static func addVectorOf(CONTACT_POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT_POINT, at: VTOFFSET.CONTACT_POINT.p) }
-  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VTOFFSET.ADDRESS.p) }
-  public static func add(JOB_TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_TITLE, at: VTOFFSET.JOB_TITLE.p) }
-  public static func add(entityType: Entity, _ fbb: inout FlatBufferBuilder) { fbb.add(element: entityType.rawValue, def: 0, at: VTOFFSET.entityType.p) }
-  public static func add(ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY, at: VTOFFSET.ENTITY.p) }
-  public static func add(HAS_OCCUPATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HAS_OCCUPATION, at: VTOFFSET.HAS_OCCUPATION.p) }
+  public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VTOFFSET.TELEPHONE.p) }
+  public static func addVectorOf(KEYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYS, at: VTOFFSET.KEYS.p) }
+  public static func addVectorOf(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
+  public static func add(attributesType: SpecificAttributes, _ fbb: inout FlatBufferBuilder) { fbb.add(element: attributesType.rawValue, def: 0, at: VTOFFSET.attributesType.p) }
+  public static func add(ATTRIBUTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTRIBUTES, at: VTOFFSET.ATTRIBUTES.p) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
     NAMEOffset NAME: Offset = Offset(),
-    ALTERNATE_NAMEOffset ALTERNATE_NAME: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    IMAGEOffset IMAGE: Offset = Offset(),
-    SAME_ASOffset SAME_AS: Offset = Offset(),
-    URLOffset URL: Offset = Offset(),
-    TELEPHONEOffset TELEPHONE: Offset = Offset(),
+    ALTERNATE_NAMESVectorOffset ALTERNATE_NAMES: Offset = Offset(),
     EMAILOffset EMAIL: Offset = Offset(),
-    KEYVectorOffset KEY: Offset = Offset(),
-    CONTACT_POINTVectorOffset CONTACT_POINT: Offset = Offset(),
-    ADDRESSOffset ADDRESS: Offset = Offset(),
-    JOB_TITLEOffset JOB_TITLE: Offset = Offset(),
-    entityType: Entity = .none_,
-    ENTITYOffset ENTITY: Offset = Offset(),
-    HAS_OCCUPATIONOffset HAS_OCCUPATION: Offset = Offset()
+    TELEPHONEOffset TELEPHONE: Offset = Offset(),
+    KEYSVectorOffset KEYS: Offset = Offset(),
+    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
+    attributesType: SpecificAttributes = .none_,
+    ATTRIBUTESOffset ATTRIBUTES: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(NAME: NAME, &fbb)
-    EPM.add(ALTERNATE_NAME: ALTERNATE_NAME, &fbb)
-    EPM.add(DESCRIPTION: DESCRIPTION, &fbb)
-    EPM.add(IMAGE: IMAGE, &fbb)
-    EPM.add(SAME_AS: SAME_AS, &fbb)
-    EPM.add(URL: URL, &fbb)
-    EPM.add(TELEPHONE: TELEPHONE, &fbb)
+    EPM.addVectorOf(ALTERNATE_NAMES: ALTERNATE_NAMES, &fbb)
     EPM.add(EMAIL: EMAIL, &fbb)
-    EPM.addVectorOf(KEY: KEY, &fbb)
-    EPM.addVectorOf(CONTACT_POINT: CONTACT_POINT, &fbb)
-    EPM.add(ADDRESS: ADDRESS, &fbb)
-    EPM.add(JOB_TITLE: JOB_TITLE, &fbb)
-    EPM.add(entityType: entityType, &fbb)
-    EPM.add(ENTITY: ENTITY, &fbb)
-    EPM.add(HAS_OCCUPATION: HAS_OCCUPATION, &fbb)
+    EPM.add(TELEPHONE: TELEPHONE, &fbb)
+    EPM.addVectorOf(KEYS: KEYS, &fbb)
+    EPM.addVectorOf(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
+    EPM.add(attributesType: attributesType, &fbb)
+    EPM.add(ATTRIBUTES: ATTRIBUTES, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALTERNATE_NAME.p, fieldName: "ALTERNATE_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMAGE.p, fieldName: "IMAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAME_AS.p, fieldName: "SAME_AS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.URL.p, fieldName: "URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TELEPHONE.p, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ALTERNATE_NAMES.p, fieldName: "ALTERNATE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.EMAIL.p, fieldName: "EMAIL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.KEY.p, fieldName: "KEY", required: false, type: ForwardOffset<Vector<ForwardOffset<CryptoKey>, CryptoKey>>.self)
-    try _v.visit(field: VTOFFSET.CONTACT_POINT.p, fieldName: "CONTACT_POINT", required: false, type: ForwardOffset<Vector<ForwardOffset<ContactPoint>, ContactPoint>>.self)
-    try _v.visit(field: VTOFFSET.ADDRESS.p, fieldName: "ADDRESS", required: false, type: ForwardOffset<ContactPoint>.self)
-    try _v.visit(field: VTOFFSET.JOB_TITLE.p, fieldName: "JOB_TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(unionKey: VTOFFSET.ENTITYType.p, unionField: VTOFFSET.ENTITY.p, unionKeyName: "ENTITYType", fieldName: "ENTITY", required: false, completion: { (verifier, key: Entity, pos) in
+    try _v.visit(field: VTOFFSET.TELEPHONE.p, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.KEYS.p, fieldName: "KEYS", required: false, type: ForwardOffset<Vector<ForwardOffset<CryptoKey>, CryptoKey>>.self)
+    try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(unionKey: VTOFFSET.ATTRIBUTESType.p, unionField: VTOFFSET.ATTRIBUTES.p, unionKeyName: "ATTRIBUTESType", fieldName: "ATTRIBUTES", required: false, completion: { (verifier, key: SpecificAttributes, pos) in
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
-      case .person:
-        try ForwardOffset<Person>.verify(&verifier, at: pos, of: Person.self)
-      case .organization:
-        try ForwardOffset<Organization>.verify(&verifier, at: pos, of: Organization.self)
+      case .personattributes:
+        try ForwardOffset<PersonAttributes>.verify(&verifier, at: pos, of: PersonAttributes.self)
+      case .organizationattributes:
+        try ForwardOffset<OrganizationAttributes>.verify(&verifier, at: pos, of: OrganizationAttributes.self)
       }
     })
-    try _v.visit(field: VTOFFSET.HAS_OCCUPATION.p, fieldName: "HAS_OCCUPATION", required: false, type: ForwardOffset<Occupation>.self)
     _v.finish()
   }
 }
 
+///  Collection of Entity Profile Messages
 public struct EPMCOLLECTION: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Collection of Entity Profile Messages
+ */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class EPMCOLLECTION : Table() {

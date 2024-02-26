@@ -1,13 +1,43 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "Entity" : {
+    "LDIFAttributeType" : {
       "type" : "string",
-      "enum": ["NONE", "Person", "Organization"]
+      "enum": ["CN", "OU", "O", "DC", "C", "SN"]
+    },
+    "SpecificAttributes" : {
+      "type" : "string",
+      "enum": ["NONE", "PersonAttributes", "OrganizationAttributes"]
+    },
+    "DNComponent" : {
+      "type" : "object",
+      "description" : "Represents a component of a Distinguished Name (DN) in LDAP",
+      "properties" : {
+        "TYPE" : {
+                "$ref" : "#/definitions/LDIFAttributeType",
+                "description" : "The type of the DN component"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "The value of the DN component"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DistinguishedName" : {
+      "type" : "object",
+      "description" : "Represents a Distinguished Name composed of DNComponents",
+      "properties" : {
+        "COMPONENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DNComponent"},
+                "description" : "The sequence of components making up the DN"
+              }
+      },
+      "additionalProperties" : false
     },
     "CryptoKey" : {
       "type" : "object",
-      "description" : "Crypto Key Information",
+      "description" : "Represents cryptographic key information",
       "properties" : {
         "PUBLIC_KEY" : {
                 "type" : "string",
@@ -24,59 +54,23 @@
         "XPRIV" : {
                 "type" : "string",
                 "description" : "Extended private key"
-              },
-        "KEY_ADDRESS" : {
-                "type" : "string",
-                "description" : "Address generated from the cryptographic key"
-              },
-        "ADDRESS_TYPE" : {
-                "type" : "string",
-                "description" : "Numerical type of the address generated from the cryptographic key"
               }
       },
       "additionalProperties" : false
     },
-    "ContactPoint" : {
+    "Address" : {
       "type" : "object",
-      "description" : "Information about a contact point",
+      "description" : "Represents a geographic address",
       "properties" : {
-        "NAME" : {
-                "type" : "string",
-                "description" : "Name of the contact point or person"
-              },
-        "CONTACT_TYPE" : {
-                "type" : "string",
-                "description" : "Type of contact (e.g., customer service, technical support)"
-              },
-        "EMAIL" : {
-                "type" : "string",
-                "description" : "Email address"
-              },
-        "TELEPHONE" : {
-                "type" : "string",
-                "description" : "Telephone number"
-              },
-        "CONTACT_OPTION" : {
-                "type" : "string",
-                "description" : "Available contact options (e.g., HearingImpairedSupported)"
-              },
-        "AREA_SERVED" : {
-                "type" : "string",
-                "description" : "Geographic area where the service is available"
-              },
-        "AVAILABLE_LANGUAGE" : {
-                "type" : "string",
-                "description" : "Language available for communication"
-              },
-        "ADDRESS_COUNTRY" : {
+        "COUNTRY" : {
                 "type" : "string",
                 "description" : "Country of the address"
               },
-        "ADDRESS_REGION" : {
+        "REGION" : {
                 "type" : "string",
                 "description" : "Region of the address (e.g., state or province)"
               },
-        "ADDRESS_LOCALITY" : {
+        "LOCALITY" : {
                 "type" : "string",
                 "description" : "Locality of the address (e.g., city or town)"
               },
@@ -84,7 +78,7 @@
                 "type" : "string",
                 "description" : "Postal code of the address"
               },
-        "STREET_ADDRESS" : {
+        "STREET" : {
                 "type" : "string",
                 "description" : "Street address"
               },
@@ -95,35 +89,9 @@
       },
       "additionalProperties" : false
     },
-    "Organization" : {
+    "PersonAttributes" : {
       "type" : "object",
-      "description" : "Basic information about an organization",
-      "properties" : {
-        "NAME" : {
-                "type" : "string",
-                "description" : "Common name of the organization"
-              },
-        "LEGAL_NAME" : {
-                "type" : "string",
-                "description" : "Legal name of the organization"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "Occupation" : {
-      "type" : "object",
-      "description" : "Information about a person's occupation",
-      "properties" : {
-        "NAME" : {
-                "type" : "string",
-                "description" : "Name of the occupation"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "Person" : {
-      "type" : "object",
-      "description" : "Information about a person",
+      "description" : "Specific attributes for a Person",
       "properties" : {
         "FAMILY_NAME" : {
                 "type" : "string",
@@ -139,83 +107,75 @@
               },
         "HONORIFIC_PREFIX" : {
                 "type" : "string",
-                "description" : "Honorific prefix preceding the person's name"
+                "description" : "Honorific prefix preceding the person's name (e.g., Mr., Dr.)"
               },
         "HONORIFIC_SUFFIX" : {
                 "type" : "string",
-                "description" : "Honorific suffix following the person's name"
+                "description" : "Honorific suffix following the person's name (e.g., Jr., Sr.)"
+              },
+        "JOB_TITLE" : {
+                "type" : "string",
+                "description" : "Job title of the person"
+              },
+        "OCCUPATION" : {
+                "type" : "string",
+                "description" : "Occupation of the person"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrganizationAttributes" : {
+      "type" : "object",
+      "description" : "Specific attributes for an Organization",
+      "properties" : {
+        "LEGAL_NAME" : {
+                "type" : "string",
+                "description" : "Legal name of the organization"
               }
       },
       "additionalProperties" : false
     },
     "EPM" : {
       "type" : "object",
-      "description" : "Entity Profile Message",
+      "description" : "Represents an entity with common fields and specific attributes for Person or Organization",
       "properties" : {
         "NAME" : {
                 "type" : "string",
                 "description" : "Common name of the entity (person or organization)"
               },
-        "ALTERNATE_NAME" : {
-                "type" : "string",
-                "description" : "Alternate name for the entity"
-              },
-        "DESCRIPTION" : {
-                "type" : "string",
-                "description" : "Description of the entity"
-              },
-        "IMAGE" : {
-                "type" : "string",
-                "description" : "URL of an image representing the entity"
-              },
-        "SAME_AS" : {
-                "type" : "string",
-                "description" : "URL of a webpage that unambiguously indicates the entity's identity"
-              },
-        "URL" : {
-                "type" : "string",
-                "description" : "URL of the entity's website"
-              },
-        "TELEPHONE" : {
-                "type" : "string",
-                "description" : "Telephone number for the entity"
+        "ALTERNATE_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Alternate names for the entity"
               },
         "EMAIL" : {
                 "type" : "string",
-                "description" : "Email address for the entity"
+                "description" : "Email address of the entity"
               },
-        "KEY" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CryptoKey"},
-                "description" : "Cryptographic key information associated with the entity"
-              },
-        "CONTACT_POINT" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/ContactPoint"},
-                "description" : "Contact points for the entity"
-              },
-        "ADDRESS" : {
-                "$ref" : "#/definitions/ContactPoint",
-                "description" : "Address of the entity, using the ContactPoint structure"
-              },
-        "JOB_TITLE" : {
+        "TELEPHONE" : {
                 "type" : "string",
-                "description" : "Job title of the entity (applicable to persons)"
+                "description" : "Telephone number of the entity"
               },
-        "ENTITY_type" : {
-                "$ref" : "#/definitions/Entity"
+        "KEYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CryptoKey"},
+                "description" : "Cryptographic keys associated with the entity"
               },
-        "ENTITY" : {
-                "anyOf": [{ "$ref" : "#/definitions/Person" },{ "$ref" : "#/definitions/Organization" }],
-                "description" : "Union type to represent either a person or an organization"
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Multiformat addresses associated with the entity"
               },
-        "HAS_OCCUPATION" : {
-                "$ref" : "#/definitions/Occupation",
-                "description" : "Occupation of the entity (applicable to persons)"
+        "ATTRIBUTES_type" : {
+                "$ref" : "#/definitions/SpecificAttributes"
+              },
+        "ATTRIBUTES" : {
+                "anyOf": [{ "$ref" : "#/definitions/PersonAttributes" },{ "$ref" : "#/definitions/OrganizationAttributes" }],
+                "description" : "Specific attributes for the entity, either Person or Organization"
               }
       },
       "additionalProperties" : false
     },
     "EPMCOLLECTION" : {
       "type" : "object",
+      "description" : "Collection of Entity Profile Messages",
       "properties" : {
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/EPM"},

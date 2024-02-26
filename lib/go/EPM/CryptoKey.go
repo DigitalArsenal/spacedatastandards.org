@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Crypto Key Information
+/// Represents cryptographic key information
 type CryptoKey struct {
 	_tab flatbuffers.Table
 }
@@ -74,28 +74,8 @@ func (rcv *CryptoKey) XPRIV() []byte {
 }
 
 /// Extended private key
-/// Address generated from the cryptographic key
-func (rcv *CryptoKey) KEY_ADDRESS() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Address generated from the cryptographic key
-/// Numerical type of the address generated from the cryptographic key
-func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Numerical type of the address generated from the cryptographic key
 func CryptoKeyStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(4)
 }
 func CryptoKeyAddPUBLIC_KEY(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PUBLIC_KEY), 0)
@@ -108,12 +88,6 @@ func CryptoKeyAddPRIVATE_KEY(builder *flatbuffers.Builder, PRIVATE_KEY flatbuffe
 }
 func CryptoKeyAddXPRIV(builder *flatbuffers.Builder, XPRIV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(XPRIV), 0)
-}
-func CryptoKeyAddKEY_ADDRESS(builder *flatbuffers.Builder, KEY_ADDRESS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(KEY_ADDRESS), 0)
-}
-func CryptoKeyAddADDRESS_TYPE(builder *flatbuffers.Builder, ADDRESS_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ADDRESS_TYPE), 0)
 }
 func CryptoKeyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -5,7 +5,7 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * Crypto Key Information
+ * Represents cryptographic key information
  */
 export class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKeyT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -65,28 +65,8 @@ XPRIV(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-/**
- * Address generated from the cryptographic key
- */
-KEY_ADDRESS():string|null
-KEY_ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-KEY_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-/**
- * Numerical type of the address generated from the cryptographic key
- */
-ADDRESS_TYPE():string|null
-ADDRESS_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ADDRESS_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
 static startCryptoKey(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(4);
 }
 
 static addPublicKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset) {
@@ -105,27 +85,17 @@ static addXpriv(builder:flatbuffers.Builder, XPRIVOffset:flatbuffers.Offset) {
   builder.addFieldOffset(3, XPRIVOffset, 0);
 }
 
-static addKeyAddress(builder:flatbuffers.Builder, KEY_ADDRESSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, KEY_ADDRESSOffset, 0);
-}
-
-static addAddressType(builder:flatbuffers.Builder, ADDRESS_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, ADDRESS_TYPEOffset, 0);
-}
-
 static endCryptoKey(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, XPUBOffset:flatbuffers.Offset, PRIVATE_KEYOffset:flatbuffers.Offset, XPRIVOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, ADDRESS_TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, XPUBOffset:flatbuffers.Offset, PRIVATE_KEYOffset:flatbuffers.Offset, XPRIVOffset:flatbuffers.Offset):flatbuffers.Offset {
   CryptoKey.startCryptoKey(builder);
   CryptoKey.addPublicKey(builder, PUBLIC_KEYOffset);
   CryptoKey.addXpub(builder, XPUBOffset);
   CryptoKey.addPrivateKey(builder, PRIVATE_KEYOffset);
   CryptoKey.addXpriv(builder, XPRIVOffset);
-  CryptoKey.addKeyAddress(builder, KEY_ADDRESSOffset);
-  CryptoKey.addAddressType(builder, ADDRESS_TYPEOffset);
   return CryptoKey.endCryptoKey(builder);
 }
 
@@ -134,9 +104,7 @@ unpack(): CryptoKeyT {
     this.PUBLIC_KEY(),
     this.XPUB(),
     this.PRIVATE_KEY(),
-    this.XPRIV(),
-    this.KEY_ADDRESS(),
-    this.ADDRESS_TYPE()
+    this.XPRIV()
   );
 }
 
@@ -146,8 +114,6 @@ unpackTo(_o: CryptoKeyT): void {
   _o.XPUB = this.XPUB();
   _o.PRIVATE_KEY = this.PRIVATE_KEY();
   _o.XPRIV = this.XPRIV();
-  _o.KEY_ADDRESS = this.KEY_ADDRESS();
-  _o.ADDRESS_TYPE = this.ADDRESS_TYPE();
 }
 }
 
@@ -156,9 +122,7 @@ constructor(
   public PUBLIC_KEY: string|Uint8Array|null = null,
   public XPUB: string|Uint8Array|null = null,
   public PRIVATE_KEY: string|Uint8Array|null = null,
-  public XPRIV: string|Uint8Array|null = null,
-  public KEY_ADDRESS: string|Uint8Array|null = null,
-  public ADDRESS_TYPE: string|Uint8Array|null = null
+  public XPRIV: string|Uint8Array|null = null
 ){}
 
 
@@ -167,16 +131,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const XPUB = (this.XPUB !== null ? builder.createString(this.XPUB!) : 0);
   const PRIVATE_KEY = (this.PRIVATE_KEY !== null ? builder.createString(this.PRIVATE_KEY!) : 0);
   const XPRIV = (this.XPRIV !== null ? builder.createString(this.XPRIV!) : 0);
-  const KEY_ADDRESS = (this.KEY_ADDRESS !== null ? builder.createString(this.KEY_ADDRESS!) : 0);
-  const ADDRESS_TYPE = (this.ADDRESS_TYPE !== null ? builder.createString(this.ADDRESS_TYPE!) : 0);
 
   return CryptoKey.createCryptoKey(builder,
     PUBLIC_KEY,
     XPUB,
     PRIVATE_KEY,
-    XPRIV,
-    KEY_ADDRESS,
-    ADDRESS_TYPE
+    XPRIV
   );
 }
 }
