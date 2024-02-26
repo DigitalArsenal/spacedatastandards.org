@@ -105,13 +105,19 @@ class CryptoKey : flatbuffers_handle
     /// Extended private key
     def XPRIV() -> string:
         return buf_.flatbuffers_field_string(pos_, 10)
+    /// Address generated from the cryptographic key
+    def KEY_ADDRESS() -> string:
+        return buf_.flatbuffers_field_string(pos_, 12)
+    /// Numerical type of the address generated from the cryptographic key
+    def ADDRESS_TYPE() -> string:
+        return buf_.flatbuffers_field_string(pos_, 14)
 
 def GetRootAsCryptoKey(buf:string): return CryptoKey { buf, buf.flatbuffers_indirect(0) }
 
 struct CryptoKeyBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(6)
         return this
     def add_PUBLIC_KEY(PUBLIC_KEY:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, PUBLIC_KEY)
@@ -124,6 +130,12 @@ struct CryptoKeyBuilder:
         return this
     def add_XPRIV(XPRIV:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(3, XPRIV)
+        return this
+    def add_KEY_ADDRESS(KEY_ADDRESS:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(4, KEY_ADDRESS)
+        return this
+    def add_ADDRESS_TYPE(ADDRESS_TYPE:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(5, ADDRESS_TYPE)
         return this
     def end():
         return b_.EndObject()

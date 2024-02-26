@@ -3568,6 +3568,14 @@
                         "XPRIV": {
                             "type": "string",
                             "description": "Extended private key"
+                        },
+                        "KEY_ADDRESS": {
+                            "type": "string",
+                            "description": "Address generated from the cryptographic key"
+                        },
+                        "ADDRESS_TYPE": {
+                            "type": "string",
+                            "description": "Numerical type of the address generated from the cryptographic key"
                         }
                     },
                     "additionalProperties": false
@@ -5936,6 +5944,14 @@
                         "XPRIV": {
                             "type": "string",
                             "description": "Extended private key"
+                        },
+                        "KEY_ADDRESS": {
+                            "type": "string",
+                            "description": "Address generated from the cryptographic key"
+                        },
+                        "ADDRESS_TYPE": {
+                            "type": "string",
+                            "description": "Numerical type of the address generated from the cryptographic key"
                         }
                     },
                     "additionalProperties": false

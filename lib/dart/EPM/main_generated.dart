@@ -297,10 +297,14 @@ class CryptoKey {
   String? get PRIVATE_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Extended private key
   String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Address generated from the cryptographic key
+  String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Numerical type of the address generated from the cryptographic key
+  String? get ADDRESS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
 
   @override
   String toString() {
-    return 'CryptoKey{PUBLIC_KEY: ${PUBLIC_KEY}, XPUB: ${XPUB}, PRIVATE_KEY: ${PRIVATE_KEY}, XPRIV: ${XPRIV}}';
+    return 'CryptoKey{PUBLIC_KEY: ${PUBLIC_KEY}, XPUB: ${XPUB}, PRIVATE_KEY: ${PRIVATE_KEY}, XPRIV: ${XPRIV}, KEY_ADDRESS: ${KEY_ADDRESS}, ADDRESS_TYPE: ${ADDRESS_TYPE}}';
   }
 }
 
@@ -318,7 +322,7 @@ class CryptoKeyBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(6);
   }
 
   int addPublicKeyOffset(int? offset) {
@@ -337,6 +341,14 @@ class CryptoKeyBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addKeyAddressOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAddressTypeOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -348,17 +360,23 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
   final String? _XPUB;
   final String? _PRIVATE_KEY;
   final String? _XPRIV;
+  final String? _KEY_ADDRESS;
+  final String? _ADDRESS_TYPE;
 
   CryptoKeyObjectBuilder({
     String? PUBLIC_KEY,
     String? XPUB,
     String? PRIVATE_KEY,
     String? XPRIV,
+    String? KEY_ADDRESS,
+    String? ADDRESS_TYPE,
   })
       : _PUBLIC_KEY = PUBLIC_KEY,
         _XPUB = XPUB,
         _PRIVATE_KEY = PRIVATE_KEY,
-        _XPRIV = XPRIV;
+        _XPRIV = XPRIV,
+        _KEY_ADDRESS = KEY_ADDRESS,
+        _ADDRESS_TYPE = ADDRESS_TYPE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -371,11 +389,17 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PRIVATE_KEY!);
     final int? XPRIVOffset = _XPRIV == null ? null
         : fbBuilder.writeString(_XPRIV!);
-    fbBuilder.startTable(4);
+    final int? KEY_ADDRESSOffset = _KEY_ADDRESS == null ? null
+        : fbBuilder.writeString(_KEY_ADDRESS!);
+    final int? ADDRESS_TYPEOffset = _ADDRESS_TYPE == null ? null
+        : fbBuilder.writeString(_ADDRESS_TYPE!);
+    fbBuilder.startTable(6);
     fbBuilder.addOffset(0, PUBLIC_KEYOffset);
     fbBuilder.addOffset(1, XPUBOffset);
     fbBuilder.addOffset(2, PRIVATE_KEYOffset);
     fbBuilder.addOffset(3, XPRIVOffset);
+    fbBuilder.addOffset(4, KEY_ADDRESSOffset);
+    fbBuilder.addOffset(5, ADDRESS_TYPEOffset);
     return fbBuilder.endTable();
   }
 

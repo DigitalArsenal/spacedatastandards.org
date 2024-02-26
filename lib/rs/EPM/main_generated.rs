@@ -589,6 +589,8 @@ impl<'a> CryptoKey<'a> {
   pub const VT_XPUB: flatbuffers::VOffsetT = 6;
   pub const VT_PRIVATE_KEY: flatbuffers::VOffsetT = 8;
   pub const VT_XPRIV: flatbuffers::VOffsetT = 10;
+  pub const VT_KEY_ADDRESS: flatbuffers::VOffsetT = 12;
+  pub const VT_ADDRESS_TYPE: flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -600,6 +602,8 @@ impl<'a> CryptoKey<'a> {
     args: &'args CryptoKeyArgs<'args>
   ) -> flatbuffers::WIPOffset<CryptoKey<'bldr>> {
     let mut builder = CryptoKeyBuilder::new(_fbb);
+    if let Some(x) = args.ADDRESS_TYPE { builder.add_ADDRESS_TYPE(x); }
+    if let Some(x) = args.KEY_ADDRESS { builder.add_KEY_ADDRESS(x); }
     if let Some(x) = args.XPRIV { builder.add_XPRIV(x); }
     if let Some(x) = args.PRIVATE_KEY { builder.add_PRIVATE_KEY(x); }
     if let Some(x) = args.XPUB { builder.add_XPUB(x); }
@@ -620,11 +624,19 @@ impl<'a> CryptoKey<'a> {
     let XPRIV = self.XPRIV().map(|x| {
       x.to_string()
     });
+    let KEY_ADDRESS = self.KEY_ADDRESS().map(|x| {
+      x.to_string()
+    });
+    let ADDRESS_TYPE = self.ADDRESS_TYPE().map(|x| {
+      x.to_string()
+    });
     CryptoKeyT {
       PUBLIC_KEY,
       XPUB,
       PRIVATE_KEY,
       XPRIV,
+      KEY_ADDRESS,
+      ADDRESS_TYPE,
     }
   }
 
@@ -660,6 +672,22 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_XPRIV, None)}
   }
+  /// Address generated from the cryptographic key
+  #[inline]
+  pub fn KEY_ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_KEY_ADDRESS, None)}
+  }
+  /// Numerical type of the address generated from the cryptographic key
+  #[inline]
+  pub fn ADDRESS_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_ADDRESS_TYPE, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for CryptoKey<'_> {
@@ -673,6 +701,8 @@ impl flatbuffers::Verifiable for CryptoKey<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XPUB", Self::VT_XPUB, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PRIVATE_KEY", Self::VT_PRIVATE_KEY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XPRIV", Self::VT_XPRIV, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KEY_ADDRESS", Self::VT_KEY_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS_TYPE", Self::VT_ADDRESS_TYPE, false)?
      .finish();
     Ok(())
   }
@@ -682,6 +712,8 @@ pub struct CryptoKeyArgs<'a> {
     pub XPUB: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PRIVATE_KEY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub XPRIV: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ADDRESS_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for CryptoKeyArgs<'a> {
   #[inline]
@@ -691,6 +723,8 @@ impl<'a> Default for CryptoKeyArgs<'a> {
       XPUB: None,
       PRIVATE_KEY: None,
       XPRIV: None,
+      KEY_ADDRESS: None,
+      ADDRESS_TYPE: None,
     }
   }
 }
@@ -717,6 +751,14 @@ impl<'a: 'b, 'b> CryptoKeyBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_XPRIV, XPRIV);
   }
   #[inline]
+  pub fn add_KEY_ADDRESS(&mut self, KEY_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_KEY_ADDRESS, KEY_ADDRESS);
+  }
+  #[inline]
+  pub fn add_ADDRESS_TYPE(&mut self, ADDRESS_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CryptoKeyBuilder<'a, 'b> {
     let start = _fbb.start_table();
     CryptoKeyBuilder {
@@ -738,6 +780,8 @@ impl core::fmt::Debug for CryptoKey<'_> {
       ds.field("XPUB", &self.XPUB());
       ds.field("PRIVATE_KEY", &self.PRIVATE_KEY());
       ds.field("XPRIV", &self.XPRIV());
+      ds.field("KEY_ADDRESS", &self.KEY_ADDRESS());
+      ds.field("ADDRESS_TYPE", &self.ADDRESS_TYPE());
       ds.finish()
   }
 }
@@ -748,6 +792,8 @@ pub struct CryptoKeyT {
   pub XPUB: Option<String>,
   pub PRIVATE_KEY: Option<String>,
   pub XPRIV: Option<String>,
+  pub KEY_ADDRESS: Option<String>,
+  pub ADDRESS_TYPE: Option<String>,
 }
 impl Default for CryptoKeyT {
   fn default() -> Self {
@@ -756,6 +802,8 @@ impl Default for CryptoKeyT {
       XPUB: None,
       PRIVATE_KEY: None,
       XPRIV: None,
+      KEY_ADDRESS: None,
+      ADDRESS_TYPE: None,
     }
   }
 }
@@ -776,11 +824,19 @@ impl CryptoKeyT {
     let XPRIV = self.XPRIV.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let KEY_ADDRESS = self.KEY_ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ADDRESS_TYPE = self.ADDRESS_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     CryptoKey::create(_fbb, &CryptoKeyArgs{
       PUBLIC_KEY,
       XPUB,
       PRIVATE_KEY,
       XPRIV,
+      KEY_ADDRESS,
+      ADDRESS_TYPE,
     })
   }
 }

@@ -151,6 +151,8 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     case XPUB = 6
     case PRIVATE_KEY = 8
     case XPRIV = 10
+    case KEY_ADDRESS = 12
+    case ADDRESS_TYPE = 14
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -167,24 +169,36 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
   ///  Extended private key
   public var XPRIV: String? { let o = _accessor.offset(VTOFFSET.XPRIV.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPRIVSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XPRIV.v) }
-  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Address generated from the cryptographic key
+  public var KEY_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.KEY_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ADDRESS.v) }
+  ///  Numerical type of the address generated from the cryptographic key
+  public var ADDRESS_TYPE: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ADDRESS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_TYPE.v) }
+  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VTOFFSET.PUBLIC_KEY.p) }
   public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VTOFFSET.XPUB.p) }
   public static func add(PRIVATE_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIVATE_KEY, at: VTOFFSET.PRIVATE_KEY.p) }
   public static func add(XPRIV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPRIV, at: VTOFFSET.XPRIV.p) }
+  public static func add(KEY_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ADDRESS, at: VTOFFSET.KEY_ADDRESS.p) }
+  public static func add(ADDRESS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_TYPE, at: VTOFFSET.ADDRESS_TYPE.p) }
   public static func endCryptoKey(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCryptoKey(
     _ fbb: inout FlatBufferBuilder,
     PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
     XPUBOffset XPUB: Offset = Offset(),
     PRIVATE_KEYOffset PRIVATE_KEY: Offset = Offset(),
-    XPRIVOffset XPRIV: Offset = Offset()
+    XPRIVOffset XPRIV: Offset = Offset(),
+    KEY_ADDRESSOffset KEY_ADDRESS: Offset = Offset(),
+    ADDRESS_TYPEOffset ADDRESS_TYPE: Offset = Offset()
   ) -> Offset {
     let __start = CryptoKey.startCryptoKey(&fbb)
     CryptoKey.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
     CryptoKey.add(XPUB: XPUB, &fbb)
     CryptoKey.add(PRIVATE_KEY: PRIVATE_KEY, &fbb)
     CryptoKey.add(XPRIV: XPRIV, &fbb)
+    CryptoKey.add(KEY_ADDRESS: KEY_ADDRESS, &fbb)
+    CryptoKey.add(ADDRESS_TYPE: ADDRESS_TYPE, &fbb)
     return CryptoKey.endCryptoKey(&fbb, start: __start)
   }
 
@@ -194,6 +208,8 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.XPUB.p, fieldName: "XPUB", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PRIVATE_KEY.p, fieldName: "PRIVATE_KEY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.XPRIV.p, fieldName: "XPRIV", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.KEY_ADDRESS.p, fieldName: "KEY_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ADDRESS_TYPE.p, fieldName: "ADDRESS_TYPE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

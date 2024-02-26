@@ -49,13 +49,33 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetXPRIVBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetXPRIVArray() { return __p.__vector_as_array<byte>(10); }
+  /// Address generated from the cryptographic key
+  public string KEY_ADDRESS { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetKEY_ADDRESSBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetKEY_ADDRESSBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetKEY_ADDRESSArray() { return __p.__vector_as_array<byte>(12); }
+  /// Numerical type of the address generated from the cryptographic key
+  public string ADDRESS_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetADDRESS_TYPEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetADDRESS_TYPEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetADDRESS_TYPEArray() { return __p.__vector_as_array<byte>(14); }
 
   public static Offset<CryptoKey> CreateCryptoKey(FlatBufferBuilder builder,
       StringOffset PUBLIC_KEYOffset = default(StringOffset),
       StringOffset XPUBOffset = default(StringOffset),
       StringOffset PRIVATE_KEYOffset = default(StringOffset),
-      StringOffset XPRIVOffset = default(StringOffset)) {
-    builder.StartTable(4);
+      StringOffset XPRIVOffset = default(StringOffset),
+      StringOffset KEY_ADDRESSOffset = default(StringOffset),
+      StringOffset ADDRESS_TYPEOffset = default(StringOffset)) {
+    builder.StartTable(6);
+    CryptoKey.AddADDRESS_TYPE(builder, ADDRESS_TYPEOffset);
+    CryptoKey.AddKEY_ADDRESS(builder, KEY_ADDRESSOffset);
     CryptoKey.AddXPRIV(builder, XPRIVOffset);
     CryptoKey.AddPRIVATE_KEY(builder, PRIVATE_KEYOffset);
     CryptoKey.AddXPUB(builder, XPUBOffset);
@@ -63,11 +83,13 @@ public struct CryptoKey : IFlatbufferObject
     return CryptoKey.EndCryptoKey(builder);
   }
 
-  public static void StartCryptoKey(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartCryptoKey(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddPUBLIC_KEY(FlatBufferBuilder builder, StringOffset PUBLIC_KEYOffset) { builder.AddOffset(0, PUBLIC_KEYOffset.Value, 0); }
   public static void AddXPUB(FlatBufferBuilder builder, StringOffset XPUBOffset) { builder.AddOffset(1, XPUBOffset.Value, 0); }
   public static void AddPRIVATE_KEY(FlatBufferBuilder builder, StringOffset PRIVATE_KEYOffset) { builder.AddOffset(2, PRIVATE_KEYOffset.Value, 0); }
   public static void AddXPRIV(FlatBufferBuilder builder, StringOffset XPRIVOffset) { builder.AddOffset(3, XPRIVOffset.Value, 0); }
+  public static void AddKEY_ADDRESS(FlatBufferBuilder builder, StringOffset KEY_ADDRESSOffset) { builder.AddOffset(4, KEY_ADDRESSOffset.Value, 0); }
+  public static void AddADDRESS_TYPE(FlatBufferBuilder builder, StringOffset ADDRESS_TYPEOffset) { builder.AddOffset(5, ADDRESS_TYPEOffset.Value, 0); }
   public static Offset<CryptoKey> EndCryptoKey(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CryptoKey>(o);
@@ -82,6 +104,8 @@ public struct CryptoKey : IFlatbufferObject
     _o.XPUB = this.XPUB;
     _o.PRIVATE_KEY = this.PRIVATE_KEY;
     _o.XPRIV = this.XPRIV;
+    _o.KEY_ADDRESS = this.KEY_ADDRESS;
+    _o.ADDRESS_TYPE = this.ADDRESS_TYPE;
   }
   public static Offset<CryptoKey> Pack(FlatBufferBuilder builder, CryptoKeyT _o) {
     if (_o == null) return default(Offset<CryptoKey>);
@@ -89,12 +113,16 @@ public struct CryptoKey : IFlatbufferObject
     var _XPUB = _o.XPUB == null ? default(StringOffset) : builder.CreateString(_o.XPUB);
     var _PRIVATE_KEY = _o.PRIVATE_KEY == null ? default(StringOffset) : builder.CreateString(_o.PRIVATE_KEY);
     var _XPRIV = _o.XPRIV == null ? default(StringOffset) : builder.CreateString(_o.XPRIV);
+    var _KEY_ADDRESS = _o.KEY_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.KEY_ADDRESS);
+    var _ADDRESS_TYPE = _o.ADDRESS_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ADDRESS_TYPE);
     return CreateCryptoKey(
       builder,
       _PUBLIC_KEY,
       _XPUB,
       _PRIVATE_KEY,
-      _XPRIV);
+      _XPRIV,
+      _KEY_ADDRESS,
+      _ADDRESS_TYPE);
   }
 }
 
@@ -104,12 +132,16 @@ public class CryptoKeyT
   public string XPUB { get; set; }
   public string PRIVATE_KEY { get; set; }
   public string XPRIV { get; set; }
+  public string KEY_ADDRESS { get; set; }
+  public string ADDRESS_TYPE { get; set; }
 
   public CryptoKeyT() {
     this.PUBLIC_KEY = null;
     this.XPUB = null;
     this.PRIVATE_KEY = null;
     this.XPRIV = null;
+    this.KEY_ADDRESS = null;
+    this.ADDRESS_TYPE = null;
   }
 }
 

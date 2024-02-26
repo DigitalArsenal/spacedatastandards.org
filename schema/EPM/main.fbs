@@ -38,6 +38,10 @@ table CryptoKey {
   PRIVATE_KEY: string;
   /// Extended private key
   XPRIV: string;
+  /// Address generated from the cryptographic key
+  KEY_ADDRESS: string;
+  /// Numerical type of the address generated from the cryptographic key
+  ADDRESS_TYPE: string;
 }
 
 /// Represents a geographic address

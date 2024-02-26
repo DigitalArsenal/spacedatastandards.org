@@ -61,7 +61,23 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def CryptoKeyStart(builder): builder.StartObject(4)
+    # Address generated from the cryptographic key
+    # CryptoKey
+    def KEY_ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Numerical type of the address generated from the cryptographic key
+    # CryptoKey
+    def ADDRESS_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def CryptoKeyStart(builder): builder.StartObject(6)
 def Start(builder):
     return CryptoKeyStart(builder)
 def CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY), 0)
@@ -76,6 +92,12 @@ def AddPRIVATE_KEY(builder, PRIVATE_KEY):
 def CryptoKeyAddXPRIV(builder, XPRIV): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(XPRIV), 0)
 def AddXPRIV(builder, XPRIV):
     return CryptoKeyAddXPRIV(builder, XPRIV)
+def CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ADDRESS), 0)
+def AddKEY_ADDRESS(builder, KEY_ADDRESS):
+    return CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
+def CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS_TYPE), 0)
+def AddADDRESS_TYPE(builder, ADDRESS_TYPE):
+    return CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
 def CryptoKeyEnd(builder): return builder.EndObject()
 def End(builder):
     return CryptoKeyEnd(builder)
@@ -88,6 +110,8 @@ class CryptoKeyT(object):
         self.XPUB = None  # type: str
         self.PRIVATE_KEY = None  # type: str
         self.XPRIV = None  # type: str
+        self.KEY_ADDRESS = None  # type: str
+        self.ADDRESS_TYPE = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -114,6 +138,8 @@ class CryptoKeyT(object):
         self.XPUB = cryptoKey.XPUB()
         self.PRIVATE_KEY = cryptoKey.PRIVATE_KEY()
         self.XPRIV = cryptoKey.XPRIV()
+        self.KEY_ADDRESS = cryptoKey.KEY_ADDRESS()
+        self.ADDRESS_TYPE = cryptoKey.ADDRESS_TYPE()
 
     # CryptoKeyT
     def Pack(self, builder):
@@ -125,6 +151,10 @@ class CryptoKeyT(object):
             PRIVATE_KEY = builder.CreateString(self.PRIVATE_KEY)
         if self.XPRIV is not None:
             XPRIV = builder.CreateString(self.XPRIV)
+        if self.KEY_ADDRESS is not None:
+            KEY_ADDRESS = builder.CreateString(self.KEY_ADDRESS)
+        if self.ADDRESS_TYPE is not None:
+            ADDRESS_TYPE = builder.CreateString(self.ADDRESS_TYPE)
         CryptoKeyStart(builder)
         if self.PUBLIC_KEY is not None:
             CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY)
@@ -134,5 +164,9 @@ class CryptoKeyT(object):
             CryptoKeyAddPRIVATE_KEY(builder, PRIVATE_KEY)
         if self.XPRIV is not None:
             CryptoKeyAddXPRIV(builder, XPRIV)
+        if self.KEY_ADDRESS is not None:
+            CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
+        if self.ADDRESS_TYPE is not None:
+            CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
         cryptoKey = CryptoKeyEnd(builder)
         return cryptoKey

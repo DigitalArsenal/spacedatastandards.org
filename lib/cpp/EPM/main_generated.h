@@ -262,7 +262,9 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PUBLIC_KEY = 4,
     VT_XPUB = 6,
     VT_PRIVATE_KEY = 8,
-    VT_XPRIV = 10
+    VT_XPRIV = 10,
+    VT_KEY_ADDRESS = 12,
+    VT_ADDRESS_TYPE = 14
   };
   /// Public part of the cryptographic key
   const ::flatbuffers::String *PUBLIC_KEY() const {
@@ -280,6 +282,14 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *XPRIV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPRIV);
   }
+  /// Address generated from the cryptographic key
+  const ::flatbuffers::String *KEY_ADDRESS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
+  }
+  /// Numerical type of the address generated from the cryptographic key
+  const ::flatbuffers::String *ADDRESS_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_TYPE);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PUBLIC_KEY) &&
@@ -290,6 +300,10 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PRIVATE_KEY()) &&
            VerifyOffset(verifier, VT_XPRIV) &&
            verifier.VerifyString(XPRIV()) &&
+           VerifyOffset(verifier, VT_KEY_ADDRESS) &&
+           verifier.VerifyString(KEY_ADDRESS()) &&
+           VerifyOffset(verifier, VT_ADDRESS_TYPE) &&
+           verifier.VerifyString(ADDRESS_TYPE()) &&
            verifier.EndTable();
   }
 };
@@ -310,6 +324,12 @@ struct CryptoKeyBuilder {
   void add_XPRIV(::flatbuffers::Offset<::flatbuffers::String> XPRIV) {
     fbb_.AddOffset(CryptoKey::VT_XPRIV, XPRIV);
   }
+  void add_KEY_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS) {
+    fbb_.AddOffset(CryptoKey::VT_KEY_ADDRESS, KEY_ADDRESS);
+  }
+  void add_ADDRESS_TYPE(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE) {
+    fbb_.AddOffset(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
+  }
   explicit CryptoKeyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -326,8 +346,12 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
     ::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> XPUB = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PRIVATE_KEY = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0) {
   CryptoKeyBuilder builder_(_fbb);
+  builder_.add_ADDRESS_TYPE(ADDRESS_TYPE);
+  builder_.add_KEY_ADDRESS(KEY_ADDRESS);
   builder_.add_XPRIV(XPRIV);
   builder_.add_PRIVATE_KEY(PRIVATE_KEY);
   builder_.add_XPUB(XPUB);
@@ -340,17 +364,23 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
     const char *PUBLIC_KEY = nullptr,
     const char *XPUB = nullptr,
     const char *PRIVATE_KEY = nullptr,
-    const char *XPRIV = nullptr) {
+    const char *XPRIV = nullptr,
+    const char *KEY_ADDRESS = nullptr,
+    const char *ADDRESS_TYPE = nullptr) {
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto XPUB__ = XPUB ? _fbb.CreateString(XPUB) : 0;
   auto PRIVATE_KEY__ = PRIVATE_KEY ? _fbb.CreateString(PRIVATE_KEY) : 0;
   auto XPRIV__ = XPRIV ? _fbb.CreateString(XPRIV) : 0;
+  auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
+  auto ADDRESS_TYPE__ = ADDRESS_TYPE ? _fbb.CreateString(ADDRESS_TYPE) : 0;
   return CreateCryptoKey(
       _fbb,
       PUBLIC_KEY__,
       XPUB__,
       PRIVATE_KEY__,
-      XPRIV__);
+      XPRIV__,
+      KEY_ADDRESS__,
+      ADDRESS_TYPE__);
 }
 
 /// Represents a geographic address
