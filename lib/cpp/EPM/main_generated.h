@@ -707,7 +707,7 @@ inline ::flatbuffers::Offset<OrganizationAttributes> CreateOrganizationAttribute
       LEGAL_NAME__);
 }
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EPMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

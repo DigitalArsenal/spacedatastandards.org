@@ -4,7 +4,7 @@ import { OrganizationAttributesT } from './OrganizationAttributes.js';
 import { PersonAttributesT } from './PersonAttributes.js';
 import { SpecificAttributes } from './SpecificAttributes.js';
 /**
- * Represents an entity with common fields and specific attributes for Person or Organization
+ * Entity Profile Message
  */
 export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     bb: flatbuffers.ByteBuffer | null;

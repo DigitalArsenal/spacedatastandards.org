@@ -768,7 +768,7 @@ class OrganizationAttributesObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Represents an entity with common fields and specific attributes for Person or Organization
+///  Entity Profile Message
 class EPM {
   EPM._(this._bc, this._bcOffset);
   factory EPM(List<int> bytes) {

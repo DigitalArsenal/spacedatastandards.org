@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 public struct EPM : IFlatbufferObject
 {
   private Table __p;

@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Represents an entity with common fields and specific attributes for Person or Organization
+ * Entity Profile Message
  */
 @SuppressWarnings("unused")
 public final class EPM extends Table {

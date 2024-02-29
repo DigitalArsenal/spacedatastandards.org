@@ -87,7 +87,7 @@ table OrganizationAttributes {
 /// Union for specific attributes, distinguishing between Person and Organization
 union SpecificAttributes { PersonAttributes, OrganizationAttributes }
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 table EPM {
   /// Common name of the entity (person or organization)
   NAME: string;

@@ -422,7 +422,7 @@ public struct OrganizationAttributes: FlatBufferObject, Verifiable {
   }
 }
 
-///  Represents an entity with common fields and specific attributes for Person or Organization
+///  Entity Profile Message
 public struct EPM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

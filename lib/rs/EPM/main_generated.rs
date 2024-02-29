@@ -1547,7 +1547,7 @@ impl OrganizationAttributesT {
 pub enum EPMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 pub struct EPM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

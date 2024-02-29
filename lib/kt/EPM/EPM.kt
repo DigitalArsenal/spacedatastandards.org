@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Represents an entity with common fields and specific attributes for Person or Organization
+ * Entity Profile Message
  */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes

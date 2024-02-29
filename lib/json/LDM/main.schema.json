@@ -503,7 +503,7 @@
     },
     "EPM" : {
       "type" : "object",
-      "description" : "Represents an entity with common fields and specific attributes for Person or Organization",
+      "description" : "Entity Profile Message",
       "properties" : {
         "NAME" : {
                 "type" : "string",

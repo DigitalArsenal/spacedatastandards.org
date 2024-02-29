@@ -263,7 +263,7 @@ struct OrganizationAttributesBuilder:
     def end():
         return b_.EndObject()
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 class EPM : flatbuffers_handle
     /// Common name of the entity (person or organization)
     def NAME() -> string:

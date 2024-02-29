@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 class EPM extends Table
 {
     /**

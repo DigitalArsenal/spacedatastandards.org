@@ -9,7 +9,7 @@ import { SpecificAttributes, unionToSpecificAttributes, unionListToSpecificAttri
 
 
 /**
- * Represents an entity with common fields and specific attributes for Person or Organization
+ * Entity Profile Message
  */
 export class EPM implements flatbuffers.IUnpackableObject<EPMT> {
   bb: flatbuffers.ByteBuffer|null = null;

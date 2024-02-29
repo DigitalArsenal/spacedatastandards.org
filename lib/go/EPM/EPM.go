@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Represents an entity with common fields and specific attributes for Person or Organization
+/// Entity Profile Message
 type EPM struct {
 	_tab flatbuffers.Table
 }

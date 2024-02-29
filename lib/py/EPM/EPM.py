@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Represents an entity with common fields and specific attributes for Person or Organization
+# Entity Profile Message
 class EPM(object):
     __slots__ = ['_tab']
 
