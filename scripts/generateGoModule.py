@@ -10,13 +10,18 @@ def read_package_json(package_json_path):
     return data
 
 
+def initialize_go_module(go_directory, module_path):
+    """Initialize a Go module in the specified directory if not already present"""
+    go_mod_path = os.path.join(go_directory, "go.mod")
+    if not os.path.exists(go_mod_path):
+        os.makedirs(go_directory, exist_ok=True)
+        subprocess.run(["go", "mod", "init", module_path], cwd=go_directory)
+        print(f"Initialized Go module in {go_directory}")
+
+
 def update_flatbuffers_version(go_directory, flatbuffers_version):
     """Update the FlatBuffers version in the go.mod file"""
     go_mod_path = os.path.join(go_directory, "go.mod")
-
-    if not os.path.exists(go_mod_path):
-        print(f"No go.mod file found in {go_directory}")
-        return
 
     # Read the content of go.mod and update the flatbuffers version
     with open(go_mod_path, "r") as file:
@@ -39,12 +44,18 @@ def update_flatbuffers_version(go_directory, flatbuffers_version):
 def main():
     package_json_path = "package.json"
     go_directory = "lib/go"
+    module_path = "github.com/DigitalArsenal/spacedatastandards.org/lib/go"
+
+    # Initialize Go module if not already present
+    initialize_go_module(go_directory, module_path)
 
     # Read the package.json file
     package_data = read_package_json(package_json_path)
 
     # Get the FlatBuffers version from package.json dependencies
-    flatbuffers_version = "v" + package_data["dependencies"]["flatbuffers"]
+    flatbuffers_version = (
+        "v" + package_data["dependencies"]["flatbuffers"] + "+incompatible"
+    )
 
     # Update the FlatBuffers version in the go.mod file
     update_flatbuffers_version(go_directory, flatbuffers_version)
