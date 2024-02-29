@@ -1,6 +1,6 @@
 {
     "name": "tap-schema-workshop",
-    "version": "1.0.106+1708980872005",
+    "version": "1.0.106+1709220973575",
     "type": "module",
     "description": "Node.js application to parse Excel data and convert geospatial information to GeoJSON.",
     "main": "index.js",
@@ -17,7 +17,7 @@
         "postinstall": "cd website && npm i",
         "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main",
         "start": "node index.js",
-        "build": "python ./scripts/generateSource.py && npm run build:js && python ./scripts/generateVersion.py && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py",
+        "build": "python ./scripts/generateSource.py && npm run build:js && python ./scripts/generateVersion.py && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py",
         "build:website": "cd website && npm run build",
         "build:js": "mkdir -p ./lib/js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts",
