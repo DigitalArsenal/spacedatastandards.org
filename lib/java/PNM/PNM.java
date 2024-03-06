@@ -41,12 +41,14 @@ public final class PNM extends Table {
   public ByteBuffer MULTIFORMAT_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer MULTIFORMAT_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Content Identifier (CID) - Self-describing unique ID for distributed systems
-   * https://github.com/multiformats/cid
+   * Concatenated Content Identifier (CID) and File ID
+   * This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+   * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+   * The appended 4-character file ID describes the datatype in the referenced file.
    */
-  public String CID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CIDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public String CID_FID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CID_FIDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer CID_FIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
    * Ethereum Digital Signature
    * Digital signature of the CID using Ethereum's signing mechanism.
@@ -178,7 +180,7 @@ public final class PNM extends Table {
 
   public static int createPNM(FlatBufferBuilder builder,
       int MULTIFORMAT_ADDRESSOffset,
-      int CIDOffset,
+      int CID_FIDOffset,
       int ETH_DIGITAL_SIGNATUREOffset,
       int BTC_DIGITAL_SIGNATUREOffset,
       int LTC_DIGITAL_SIGNATUREOffset,
@@ -212,14 +214,14 @@ public final class PNM extends Table {
     PNM.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
     PNM.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
-    PNM.addCid(builder, CIDOffset);
+    PNM.addCidFid(builder, CID_FIDOffset);
     PNM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     return PNM.endPNM(builder);
   }
 
   public static void startPNM(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(0, MULTIFORMAT_ADDRESSOffset, 0); }
-  public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(1, CIDOffset, 0); }
+  public static void addCidFid(FlatBufferBuilder builder, int CID_FIDOffset) { builder.addOffset(1, CID_FIDOffset, 0); }
   public static void addEthDigitalSignature(FlatBufferBuilder builder, int ETH_DIGITAL_SIGNATUREOffset) { builder.addOffset(2, ETH_DIGITAL_SIGNATUREOffset, 0); }
   public static void addBtcDigitalSignature(FlatBufferBuilder builder, int BTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(3, BTC_DIGITAL_SIGNATUREOffset, 0); }
   public static void addLtcDigitalSignature(FlatBufferBuilder builder, int LTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(4, LTC_DIGITAL_SIGNATUREOffset, 0); }

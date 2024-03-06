@@ -18,7 +18,7 @@ public struct PNM: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case MULTIFORMAT_ADDRESS = 4
-    case CID = 6
+    case CID_FID = 6
     case ETH_DIGITAL_SIGNATURE = 8
     case BTC_DIGITAL_SIGNATURE = 10
     case LTC_DIGITAL_SIGNATURE = 12
@@ -48,10 +48,12 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MULTIFORMAT_ADDRESS.v) }
-  ///  Content Identifier (CID) - Self-describing unique ID for distributed systems
-  ///  https://github.com/multiformats/cid
-  public var CID: String? { let o = _accessor.offset(VTOFFSET.CID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CID.v) }
+  ///  Concatenated Content Identifier (CID) and File ID
+  ///  This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  ///  The appended 4-character file ID describes the datatype in the referenced file.
+  public var CID_FID: String? { let o = _accessor.offset(VTOFFSET.CID_FID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CID_FIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CID_FID.v) }
   ///  Ethereum Digital Signature
   ///  Digital signature of the CID using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
@@ -134,7 +136,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
   public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
-  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VTOFFSET.CID.p) }
+  public static func add(CID_FID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID_FID, at: VTOFFSET.CID_FID.p) }
   public static func add(ETH_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETH_DIGITAL_SIGNATURE, at: VTOFFSET.ETH_DIGITAL_SIGNATURE.p) }
   public static func add(BTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BTC_DIGITAL_SIGNATURE, at: VTOFFSET.BTC_DIGITAL_SIGNATURE.p) }
   public static func add(LTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LTC_DIGITAL_SIGNATURE, at: VTOFFSET.LTC_DIGITAL_SIGNATURE.p) }
@@ -155,7 +157,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
     MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
-    CIDOffset CID: Offset = Offset(),
+    CID_FIDOffset CID_FID: Offset = Offset(),
     ETH_DIGITAL_SIGNATUREOffset ETH_DIGITAL_SIGNATURE: Offset = Offset(),
     BTC_DIGITAL_SIGNATUREOffset BTC_DIGITAL_SIGNATURE: Offset = Offset(),
     LTC_DIGITAL_SIGNATUREOffset LTC_DIGITAL_SIGNATURE: Offset = Offset(),
@@ -175,7 +177,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   ) -> Offset {
     let __start = PNM.startPNM(&fbb)
     PNM.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
-    PNM.add(CID: CID, &fbb)
+    PNM.add(CID_FID: CID_FID, &fbb)
     PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
     PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
     PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
@@ -198,7 +200,7 @@ public struct PNM: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CID.p, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.CID_FID.p, fieldName: "CID_FID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ETH_DIGITAL_SIGNATURE.p, fieldName: "ETH_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.BTC_DIGITAL_SIGNATURE.p, fieldName: "BTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LTC_DIGITAL_SIGNATURE.p, fieldName: "LTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)

@@ -20,11 +20,13 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     MULTIFORMAT_ADDRESS(): string | null;
     MULTIFORMAT_ADDRESS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Content Identifier (CID) - Self-describing unique ID for distributed systems
-     * https://github.com/multiformats/cid
+     * Concatenated Content Identifier (CID) and File ID
+     * This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+     * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+     * The appended 4-character file ID describes the datatype in the referenced file.
      */
-    CID(): string | null;
-    CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    CID_FID(): string | null;
+    CID_FID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Ethereum Digital Signature
      * Digital signature of the CID using Ethereum's signing mechanism.
@@ -139,7 +141,7 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     SOL_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startPNM(builder: flatbuffers.Builder): void;
     static addMultiformatAddress(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset): void;
-    static addCid(builder: flatbuffers.Builder, CIDOffset: flatbuffers.Offset): void;
+    static addCidFid(builder: flatbuffers.Builder, CID_FIDOffset: flatbuffers.Offset): void;
     static addEthDigitalSignature(builder: flatbuffers.Builder, ETH_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
     static addBtcDigitalSignature(builder: flatbuffers.Builder, BTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
     static addLtcDigitalSignature(builder: flatbuffers.Builder, LTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
@@ -157,13 +159,13 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     static addAvaxDigitalSignature(builder: flatbuffers.Builder, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
     static addSolDigitalSignature(builder: flatbuffers.Builder, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
     static endPNM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, CID_FIDOffset: flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PNMT;
     unpackTo(_o: PNMT): void;
 }
 export declare class PNMT implements flatbuffers.IGeneratedObject {
     MULTIFORMAT_ADDRESS: string | Uint8Array | null;
-    CID: string | Uint8Array | null;
+    CID_FID: string | Uint8Array | null;
     ETH_DIGITAL_SIGNATURE: string | Uint8Array | null;
     BTC_DIGITAL_SIGNATURE: string | Uint8Array | null;
     LTC_DIGITAL_SIGNATURE: string | Uint8Array | null;
@@ -180,7 +182,7 @@ export declare class PNMT implements flatbuffers.IGeneratedObject {
     BNB_DIGITAL_SIGNATURE: string | Uint8Array | null;
     AVAX_DIGITAL_SIGNATURE: string | Uint8Array | null;
     SOL_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    constructor(MULTIFORMAT_ADDRESS?: string | Uint8Array | null, CID?: string | Uint8Array | null, ETH_DIGITAL_SIGNATURE?: string | Uint8Array | null, BTC_DIGITAL_SIGNATURE?: string | Uint8Array | null, LTC_DIGITAL_SIGNATURE?: string | Uint8Array | null, XRP_DIGITAL_SIGNATURE?: string | Uint8Array | null, ADA_DIGITAL_SIGNATURE?: string | Uint8Array | null, XLM_DIGITAL_SIGNATURE?: string | Uint8Array | null, DOGE_DIGITAL_SIGNATURE?: string | Uint8Array | null, XMR_DIGITAL_SIGNATURE?: string | Uint8Array | null, DOT_DIGITAL_SIGNATURE?: string | Uint8Array | null, FIL_DIGITAL_SIGNATURE?: string | Uint8Array | null, XTZ_DIGITAL_SIGNATURE?: string | Uint8Array | null, ATOM_DIGITAL_SIGNATURE?: string | Uint8Array | null, TRX_DIGITAL_SIGNATURE?: string | Uint8Array | null, BNB_DIGITAL_SIGNATURE?: string | Uint8Array | null, AVAX_DIGITAL_SIGNATURE?: string | Uint8Array | null, SOL_DIGITAL_SIGNATURE?: string | Uint8Array | null);
+    constructor(MULTIFORMAT_ADDRESS?: string | Uint8Array | null, CID_FID?: string | Uint8Array | null, ETH_DIGITAL_SIGNATURE?: string | Uint8Array | null, BTC_DIGITAL_SIGNATURE?: string | Uint8Array | null, LTC_DIGITAL_SIGNATURE?: string | Uint8Array | null, XRP_DIGITAL_SIGNATURE?: string | Uint8Array | null, ADA_DIGITAL_SIGNATURE?: string | Uint8Array | null, XLM_DIGITAL_SIGNATURE?: string | Uint8Array | null, DOGE_DIGITAL_SIGNATURE?: string | Uint8Array | null, XMR_DIGITAL_SIGNATURE?: string | Uint8Array | null, DOT_DIGITAL_SIGNATURE?: string | Uint8Array | null, FIL_DIGITAL_SIGNATURE?: string | Uint8Array | null, XTZ_DIGITAL_SIGNATURE?: string | Uint8Array | null, ATOM_DIGITAL_SIGNATURE?: string | Uint8Array | null, TRX_DIGITAL_SIGNATURE?: string | Uint8Array | null, BNB_DIGITAL_SIGNATURE?: string | Uint8Array | null, AVAX_DIGITAL_SIGNATURE?: string | Uint8Array | null, SOL_DIGITAL_SIGNATURE?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PNM.d.ts.map

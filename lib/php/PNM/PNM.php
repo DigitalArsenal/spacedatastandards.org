@@ -54,9 +54,11 @@ class PNM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Content Identifier (CID) - Self-describing unique ID for distributed systems
-    /// https://github.com/multiformats/cid
-    public function getCID()
+    /// Concatenated Content Identifier (CID) and File ID
+    /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+    /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+    /// The appended 4-character file ID describes the datatype in the referenced file.
+    public function getCID_FID()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -219,11 +221,11 @@ class PNM extends Table
      * @param FlatBufferBuilder $builder
      * @return PNM
      */
-    public static function createPNM(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $CID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
+    public static function createPNM(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $CID_FID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
     {
         $builder->startObject(18);
         self::addMULTIFORMAT_ADDRESS($builder, $MULTIFORMAT_ADDRESS);
-        self::addCID($builder, $CID);
+        self::addCID_FID($builder, $CID_FID);
         self::addETH_DIGITAL_SIGNATURE($builder, $ETH_DIGITAL_SIGNATURE);
         self::addBTC_DIGITAL_SIGNATURE($builder, $BTC_DIGITAL_SIGNATURE);
         self::addLTC_DIGITAL_SIGNATURE($builder, $LTC_DIGITAL_SIGNATURE);
@@ -259,9 +261,9 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addCID(FlatBufferBuilder $builder, $CID)
+    public static function addCID_FID(FlatBufferBuilder $builder, $CID_FID)
     {
-        $builder->addOffsetX(1, $CID, 0);
+        $builder->addOffsetX(1, $CID_FID, 0);
     }
 
     /**

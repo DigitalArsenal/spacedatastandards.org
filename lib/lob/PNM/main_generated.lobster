@@ -16,9 +16,11 @@ class PNM : flatbuffers_handle
     /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
     def MULTIFORMAT_ADDRESS() -> string:
         return buf_.flatbuffers_field_string(pos_, 4)
-    /// Content Identifier (CID) - Self-describing unique ID for distributed systems
-    /// https://github.com/multiformats/cid
-    def CID() -> string:
+    /// Concatenated Content Identifier (CID) and File ID
+    /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+    /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+    /// The appended 4-character file ID describes the datatype in the referenced file.
+    def CID_FID() -> string:
         return buf_.flatbuffers_field_string(pos_, 6)
     /// Ethereum Digital Signature
     /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -111,8 +113,8 @@ struct PNMBuilder:
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, MULTIFORMAT_ADDRESS)
         return this
-    def add_CID(CID:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(1, CID)
+    def add_CID_FID(CID_FID:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(1, CID_FID)
         return this
     def add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(2, ETH_DIGITAL_SIGNATURE)

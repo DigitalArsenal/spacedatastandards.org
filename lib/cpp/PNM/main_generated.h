@@ -24,7 +24,7 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MULTIFORMAT_ADDRESS = 4,
-    VT_CID = 6,
+    VT_CID_FID = 6,
     VT_ETH_DIGITAL_SIGNATURE = 8,
     VT_BTC_DIGITAL_SIGNATURE = 10,
     VT_LTC_DIGITAL_SIGNATURE = 12,
@@ -52,10 +52,12 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MULTIFORMAT_ADDRESS);
   }
-  /// Content Identifier (CID) - Self-describing unique ID for distributed systems
-  /// https://github.com/multiformats/cid
-  const ::flatbuffers::String *CID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CID);
+  /// Concatenated Content Identifier (CID) and File ID
+  /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  /// The appended 4-character file ID describes the datatype in the referenced file.
+  const ::flatbuffers::String *CID_FID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CID_FID);
   }
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -157,8 +159,8 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
            verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
-           VerifyOffset(verifier, VT_CID) &&
-           verifier.VerifyString(CID()) &&
+           VerifyOffset(verifier, VT_CID_FID) &&
+           verifier.VerifyString(CID_FID()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
            VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
@@ -202,8 +204,8 @@ struct PNMBuilder {
   void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS) {
     fbb_.AddOffset(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
-  void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
-    fbb_.AddOffset(PNM::VT_CID, CID);
+  void add_CID_FID(::flatbuffers::Offset<::flatbuffers::String> CID_FID) {
+    fbb_.AddOffset(PNM::VT_CID_FID, CID_FID);
   }
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
     fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
@@ -267,7 +269,7 @@ struct PNMBuilder {
 inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CID_FID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
@@ -301,7 +303,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
   builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
   builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
-  builder_.add_CID(CID);
+  builder_.add_CID_FID(CID_FID);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   return builder_.Finish();
 }
@@ -309,7 +311,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
 inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *MULTIFORMAT_ADDRESS = nullptr,
-    const char *CID = nullptr,
+    const char *CID_FID = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
     const char *BTC_DIGITAL_SIGNATURE = nullptr,
     const char *LTC_DIGITAL_SIGNATURE = nullptr,
@@ -327,7 +329,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     const char *AVAX_DIGITAL_SIGNATURE = nullptr,
     const char *SOL_DIGITAL_SIGNATURE = nullptr) {
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
-  auto CID__ = CID ? _fbb.CreateString(CID) : 0;
+  auto CID_FID__ = CID_FID ? _fbb.CreateString(CID_FID) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
   auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
   auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
@@ -347,7 +349,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
   return CreatePNM(
       _fbb,
       MULTIFORMAT_ADDRESS__,
-      CID__,
+      CID_FID__,
       ETH_DIGITAL_SIGNATURE__,
       BTC_DIGITAL_SIGNATURE__,
       LTC_DIGITAL_SIGNATURE__,

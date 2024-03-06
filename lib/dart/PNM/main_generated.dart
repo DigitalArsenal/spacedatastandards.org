@@ -26,9 +26,11 @@ class PNM {
   ///  - /dns4/example.com for a domain name resolvable only to IPv4 addresses
   ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   String? get MULTIFORMAT_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Content Identifier (CID) - Self-describing unique ID for distributed systems
-  ///  https://github.com/multiformats/cid
-  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Concatenated Content Identifier (CID) and File ID
+  ///  This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  ///  The appended 4-character file ID describes the datatype in the referenced file.
+  String? get CID_FID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Ethereum Digital Signature
   ///  Digital signature of the CID using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
@@ -96,7 +98,7 @@ class PNM {
 
   @override
   String toString() {
-    return 'PNM{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, CID: ${CID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
+    return 'PNM{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, CID_FID: ${CID_FID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
   }
 }
 
@@ -121,7 +123,7 @@ class PNMBuilder {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addCidOffset(int? offset) {
+  int addCidFidOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
@@ -197,7 +199,7 @@ class PNMBuilder {
 
 class PNMObjectBuilder extends fb.ObjectBuilder {
   final String? _MULTIFORMAT_ADDRESS;
-  final String? _CID;
+  final String? _CID_FID;
   final String? _ETH_DIGITAL_SIGNATURE;
   final String? _BTC_DIGITAL_SIGNATURE;
   final String? _LTC_DIGITAL_SIGNATURE;
@@ -217,7 +219,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
 
   PNMObjectBuilder({
     String? MULTIFORMAT_ADDRESS,
-    String? CID,
+    String? CID_FID,
     String? ETH_DIGITAL_SIGNATURE,
     String? BTC_DIGITAL_SIGNATURE,
     String? LTC_DIGITAL_SIGNATURE,
@@ -236,7 +238,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     String? SOL_DIGITAL_SIGNATURE,
   })
       : _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS,
-        _CID = CID,
+        _CID_FID = CID_FID,
         _ETH_DIGITAL_SIGNATURE = ETH_DIGITAL_SIGNATURE,
         _BTC_DIGITAL_SIGNATURE = BTC_DIGITAL_SIGNATURE,
         _LTC_DIGITAL_SIGNATURE = LTC_DIGITAL_SIGNATURE,
@@ -259,8 +261,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
         : fbBuilder.writeString(_MULTIFORMAT_ADDRESS!);
-    final int? CIDOffset = _CID == null ? null
-        : fbBuilder.writeString(_CID!);
+    final int? CID_FIDOffset = _CID_FID == null ? null
+        : fbBuilder.writeString(_CID_FID!);
     final int? ETH_DIGITAL_SIGNATUREOffset = _ETH_DIGITAL_SIGNATURE == null ? null
         : fbBuilder.writeString(_ETH_DIGITAL_SIGNATURE!);
     final int? BTC_DIGITAL_SIGNATUREOffset = _BTC_DIGITAL_SIGNATURE == null ? null
@@ -295,7 +297,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOL_DIGITAL_SIGNATURE!);
     fbBuilder.startTable(18);
     fbBuilder.addOffset(0, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addOffset(1, CIDOffset);
+    fbBuilder.addOffset(1, CID_FIDOffset);
     fbBuilder.addOffset(2, ETH_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(3, BTC_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(4, LTC_DIGITAL_SIGNATUREOffset);

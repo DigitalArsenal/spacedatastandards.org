@@ -42,12 +42,14 @@ MULTIFORMAT_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Content Identifier (CID) - Self-describing unique ID for distributed systems
- * https://github.com/multiformats/cid
+ * Concatenated Content Identifier (CID) and File ID
+ * This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+ * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+ * The appended 4-character file ID describes the datatype in the referenced file.
  */
-CID():string|null
-CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CID(optionalEncoding?:any):string|Uint8Array|null {
+CID_FID():string|null
+CID_FID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CID_FID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -252,8 +254,8 @@ static addMultiformatAddress(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOff
   builder.addFieldOffset(0, MULTIFORMAT_ADDRESSOffset, 0);
 }
 
-static addCid(builder:flatbuffers.Builder, CIDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, CIDOffset, 0);
+static addCidFid(builder:flatbuffers.Builder, CID_FIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, CID_FIDOffset, 0);
 }
 
 static addEthDigitalSignature(builder:flatbuffers.Builder, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset) {
@@ -325,10 +327,10 @@ static endPNM(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPNM(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPNM(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, CID_FIDOffset:flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PNM.startPNM(builder);
   PNM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
-  PNM.addCid(builder, CIDOffset);
+  PNM.addCidFid(builder, CID_FIDOffset);
   PNM.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
   PNM.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
   PNM.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
@@ -351,7 +353,7 @@ static createPNM(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuff
 unpack(): PNMT {
   return new PNMT(
     this.MULTIFORMAT_ADDRESS(),
-    this.CID(),
+    this.CID_FID(),
     this.ETH_DIGITAL_SIGNATURE(),
     this.BTC_DIGITAL_SIGNATURE(),
     this.LTC_DIGITAL_SIGNATURE(),
@@ -374,7 +376,7 @@ unpack(): PNMT {
 
 unpackTo(_o: PNMT): void {
   _o.MULTIFORMAT_ADDRESS = this.MULTIFORMAT_ADDRESS();
-  _o.CID = this.CID();
+  _o.CID_FID = this.CID_FID();
   _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE();
   _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE();
   _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE();
@@ -397,7 +399,7 @@ unpackTo(_o: PNMT): void {
 export class PNMT implements flatbuffers.IGeneratedObject {
 constructor(
   public MULTIFORMAT_ADDRESS: string|Uint8Array|null = null,
-  public CID: string|Uint8Array|null = null,
+  public CID_FID: string|Uint8Array|null = null,
   public ETH_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
   public BTC_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
   public LTC_DIGITAL_SIGNATURE: string|Uint8Array|null = null,
@@ -419,7 +421,7 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MULTIFORMAT_ADDRESS = (this.MULTIFORMAT_ADDRESS !== null ? builder.createString(this.MULTIFORMAT_ADDRESS!) : 0);
-  const CID = (this.CID !== null ? builder.createString(this.CID!) : 0);
+  const CID_FID = (this.CID_FID !== null ? builder.createString(this.CID_FID!) : 0);
   const ETH_DIGITAL_SIGNATURE = (this.ETH_DIGITAL_SIGNATURE !== null ? builder.createString(this.ETH_DIGITAL_SIGNATURE!) : 0);
   const BTC_DIGITAL_SIGNATURE = (this.BTC_DIGITAL_SIGNATURE !== null ? builder.createString(this.BTC_DIGITAL_SIGNATURE!) : 0);
   const LTC_DIGITAL_SIGNATURE = (this.LTC_DIGITAL_SIGNATURE !== null ? builder.createString(this.LTC_DIGITAL_SIGNATURE!) : 0);
@@ -439,7 +441,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
 
   return PNM.createPNM(builder,
     MULTIFORMAT_ADDRESS,
-    CID,
+    CID_FID,
     ETH_DIGITAL_SIGNATURE,
     BTC_DIGITAL_SIGNATURE,
     LTC_DIGITAL_SIGNATURE,

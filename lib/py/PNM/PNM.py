@@ -43,10 +43,12 @@ class PNM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Content Identifier (CID) - Self-describing unique ID for distributed systems
-    # https://github.com/multiformats/cid
+    # Concatenated Content Identifier (CID) and File ID
+    # This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+    # The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+    # The appended 4-character file ID describes the datatype in the referenced file.
     # PNM
-    def CID(self):
+    def CID_FID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -218,9 +220,9 @@ def Start(builder):
 def PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
 def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
     return PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
-def PNMAddCID(builder, CID): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
-def AddCID(builder, CID):
-    return PNMAddCID(builder, CID)
+def PNMAddCID_FID(builder, CID_FID): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CID_FID), 0)
+def AddCID_FID(builder, CID_FID):
+    return PNMAddCID_FID(builder, CID_FID)
 def PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
 def AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE):
     return PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
@@ -278,7 +280,7 @@ class PNMT(object):
     # PNMT
     def __init__(self):
         self.MULTIFORMAT_ADDRESS = None  # type: str
-        self.CID = None  # type: str
+        self.CID_FID = None  # type: str
         self.ETH_DIGITAL_SIGNATURE = None  # type: str
         self.BTC_DIGITAL_SIGNATURE = None  # type: str
         self.LTC_DIGITAL_SIGNATURE = None  # type: str
@@ -318,7 +320,7 @@ class PNMT(object):
         if PNM is None:
             return
         self.MULTIFORMAT_ADDRESS = PNM.MULTIFORMAT_ADDRESS()
-        self.CID = PNM.CID()
+        self.CID_FID = PNM.CID_FID()
         self.ETH_DIGITAL_SIGNATURE = PNM.ETH_DIGITAL_SIGNATURE()
         self.BTC_DIGITAL_SIGNATURE = PNM.BTC_DIGITAL_SIGNATURE()
         self.LTC_DIGITAL_SIGNATURE = PNM.LTC_DIGITAL_SIGNATURE()
@@ -340,8 +342,8 @@ class PNMT(object):
     def Pack(self, builder):
         if self.MULTIFORMAT_ADDRESS is not None:
             MULTIFORMAT_ADDRESS = builder.CreateString(self.MULTIFORMAT_ADDRESS)
-        if self.CID is not None:
-            CID = builder.CreateString(self.CID)
+        if self.CID_FID is not None:
+            CID_FID = builder.CreateString(self.CID_FID)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             ETH_DIGITAL_SIGNATURE = builder.CreateString(self.ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:
@@ -377,8 +379,8 @@ class PNMT(object):
         PNMStart(builder)
         if self.MULTIFORMAT_ADDRESS is not None:
             PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
-        if self.CID is not None:
-            PNMAddCID(builder, CID)
+        if self.CID_FID is not None:
+            PNMAddCID_FID(builder, CID_FID)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             PNMAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:

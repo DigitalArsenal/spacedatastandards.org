@@ -31,15 +31,17 @@ public struct PNM : IFlatbufferObject
   public ArraySegment<byte>? GetMULTIFORMAT_ADDRESSBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetMULTIFORMAT_ADDRESSArray() { return __p.__vector_as_array<byte>(4); }
-  /// Content Identifier (CID) - Self-describing unique ID for distributed systems
-  /// https://github.com/multiformats/cid
-  public string CID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Concatenated Content Identifier (CID) and File ID
+  /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  /// The appended 4-character file ID describes the datatype in the referenced file.
+  public string CID_FID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCIDBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetCID_FIDBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetCIDBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetCID_FIDBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetCIDArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetCID_FIDArray() { return __p.__vector_as_array<byte>(6); }
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.
@@ -203,7 +205,7 @@ public struct PNM : IFlatbufferObject
 
   public static Offset<PNM> CreatePNM(FlatBufferBuilder builder,
       StringOffset MULTIFORMAT_ADDRESSOffset = default(StringOffset),
-      StringOffset CIDOffset = default(StringOffset),
+      StringOffset CID_FIDOffset = default(StringOffset),
       StringOffset ETH_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset BTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
       StringOffset LTC_DIGITAL_SIGNATUREOffset = default(StringOffset),
@@ -237,14 +239,14 @@ public struct PNM : IFlatbufferObject
     PNM.AddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATUREOffset);
     PNM.AddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATUREOffset);
     PNM.AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATUREOffset);
-    PNM.AddCID(builder, CIDOffset);
+    PNM.AddCID_FID(builder, CID_FIDOffset);
     PNM.AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset);
     return PNM.EndPNM(builder);
   }
 
   public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddMULTIFORMAT_ADDRESS(FlatBufferBuilder builder, StringOffset MULTIFORMAT_ADDRESSOffset) { builder.AddOffset(0, MULTIFORMAT_ADDRESSOffset.Value, 0); }
-  public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(1, CIDOffset.Value, 0); }
+  public static void AddCID_FID(FlatBufferBuilder builder, StringOffset CID_FIDOffset) { builder.AddOffset(1, CID_FIDOffset.Value, 0); }
   public static void AddETH_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset ETH_DIGITAL_SIGNATUREOffset) { builder.AddOffset(2, ETH_DIGITAL_SIGNATUREOffset.Value, 0); }
   public static void AddBTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset BTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(3, BTC_DIGITAL_SIGNATUREOffset.Value, 0); }
   public static void AddLTC_DIGITAL_SIGNATURE(FlatBufferBuilder builder, StringOffset LTC_DIGITAL_SIGNATUREOffset) { builder.AddOffset(4, LTC_DIGITAL_SIGNATUREOffset.Value, 0); }
@@ -272,7 +274,7 @@ public struct PNM : IFlatbufferObject
   }
   public void UnPackTo(PNMT _o) {
     _o.MULTIFORMAT_ADDRESS = this.MULTIFORMAT_ADDRESS;
-    _o.CID = this.CID;
+    _o.CID_FID = this.CID_FID;
     _o.ETH_DIGITAL_SIGNATURE = this.ETH_DIGITAL_SIGNATURE;
     _o.BTC_DIGITAL_SIGNATURE = this.BTC_DIGITAL_SIGNATURE;
     _o.LTC_DIGITAL_SIGNATURE = this.LTC_DIGITAL_SIGNATURE;
@@ -293,7 +295,7 @@ public struct PNM : IFlatbufferObject
   public static Offset<PNM> Pack(FlatBufferBuilder builder, PNMT _o) {
     if (_o == null) return default(Offset<PNM>);
     var _MULTIFORMAT_ADDRESS = _o.MULTIFORMAT_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.MULTIFORMAT_ADDRESS);
-    var _CID = _o.CID == null ? default(StringOffset) : builder.CreateString(_o.CID);
+    var _CID_FID = _o.CID_FID == null ? default(StringOffset) : builder.CreateString(_o.CID_FID);
     var _ETH_DIGITAL_SIGNATURE = _o.ETH_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.ETH_DIGITAL_SIGNATURE);
     var _BTC_DIGITAL_SIGNATURE = _o.BTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.BTC_DIGITAL_SIGNATURE);
     var _LTC_DIGITAL_SIGNATURE = _o.LTC_DIGITAL_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.LTC_DIGITAL_SIGNATURE);
@@ -313,7 +315,7 @@ public struct PNM : IFlatbufferObject
     return CreatePNM(
       builder,
       _MULTIFORMAT_ADDRESS,
-      _CID,
+      _CID_FID,
       _ETH_DIGITAL_SIGNATURE,
       _BTC_DIGITAL_SIGNATURE,
       _LTC_DIGITAL_SIGNATURE,
@@ -336,7 +338,7 @@ public struct PNM : IFlatbufferObject
 public class PNMT
 {
   public string MULTIFORMAT_ADDRESS { get; set; }
-  public string CID { get; set; }
+  public string CID_FID { get; set; }
   public string ETH_DIGITAL_SIGNATURE { get; set; }
   public string BTC_DIGITAL_SIGNATURE { get; set; }
   public string LTC_DIGITAL_SIGNATURE { get; set; }
@@ -356,7 +358,7 @@ public class PNMT
 
   public PNMT() {
     this.MULTIFORMAT_ADDRESS = null;
-    this.CID = null;
+    this.CID_FID = null;
     this.ETH_DIGITAL_SIGNATURE = null;
     this.BTC_DIGITAL_SIGNATURE = null;
     this.LTC_DIGITAL_SIGNATURE = null;
