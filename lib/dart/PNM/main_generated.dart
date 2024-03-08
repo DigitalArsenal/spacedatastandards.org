@@ -6,14 +6,14 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Details of Published Message
-class Detail {
-  Detail._(this._bc, this._bcOffset);
-  factory Detail(List<int> bytes) {
+class PNM {
+  PNM._(this._bc, this._bcOffset);
+  factory PNM(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<Detail> reader = _DetailReader();
+  static const fb.Reader<PNM> reader = _PNMReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
@@ -100,20 +100,20 @@ class Detail {
 
   @override
   String toString() {
-    return 'Detail{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, CID: ${CID}, FID: ${FID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
+    return 'PNM{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, CID: ${CID}, FID: ${FID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
   }
 }
 
-class _DetailReader extends fb.TableReader<Detail> {
-  const _DetailReader();
+class _PNMReader extends fb.TableReader<PNM> {
+  const _PNMReader();
 
   @override
-  Detail createObject(fb.BufferContext bc, int offset) => 
-    Detail._(bc, offset);
+  PNM createObject(fb.BufferContext bc, int offset) => 
+    PNM._(bc, offset);
 }
 
-class DetailBuilder {
-  DetailBuilder(this.fbBuilder);
+class PNMBuilder {
+  PNMBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -203,7 +203,7 @@ class DetailBuilder {
   }
 }
 
-class DetailObjectBuilder extends fb.ObjectBuilder {
+class PNMObjectBuilder extends fb.ObjectBuilder {
   final String? _MULTIFORMAT_ADDRESS;
   final String? _CID;
   final String? _FID;
@@ -224,7 +224,7 @@ class DetailObjectBuilder extends fb.ObjectBuilder {
   final String? _AVAX_DIGITAL_SIGNATURE;
   final String? _SOL_DIGITAL_SIGNATURE;
 
-  DetailObjectBuilder({
+  PNMObjectBuilder({
     String? MULTIFORMAT_ADDRESS,
     String? CID,
     String? FID,
@@ -326,93 +326,6 @@ class DetailObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(16, BNB_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(17, AVAX_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(18, SOL_DIGITAL_SIGNATUREOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Publish Notification Message
-class PNM {
-  PNM._(this._bc, this._bcOffset);
-  factory PNM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PNM> reader = _PNMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Unencrypted PNM Details
-  ///  This field contains the details of the Publish Notification Message without encryption.
-  Detail? get FILE => Detail.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Encrypted PNM Details
-  ///  This field contains the details of the Publish Notification Message with encryption.
-  Detail? get FILE_ENCRYPTED => Detail.reader.vTableGetNullable(_bc, _bcOffset, 6);
-
-  @override
-  String toString() {
-    return 'PNM{FILE: ${FILE}, FILE_ENCRYPTED: ${FILE_ENCRYPTED}}';
-  }
-}
-
-class _PNMReader extends fb.TableReader<PNM> {
-  const _PNMReader();
-
-  @override
-  PNM createObject(fb.BufferContext bc, int offset) => 
-    PNM._(bc, offset);
-}
-
-class PNMBuilder {
-  PNMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addFileOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addFileEncryptedOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PNMObjectBuilder extends fb.ObjectBuilder {
-  final DetailObjectBuilder? _FILE;
-  final DetailObjectBuilder? _FILE_ENCRYPTED;
-
-  PNMObjectBuilder({
-    DetailObjectBuilder? FILE,
-    DetailObjectBuilder? FILE_ENCRYPTED,
-  })
-      : _FILE = FILE,
-        _FILE_ENCRYPTED = FILE_ENCRYPTED;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? FILEOffset = _FILE?.getOrCreateOffset(fbBuilder);
-    final int? FILE_ENCRYPTEDOffset = _FILE_ENCRYPTED?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
-    fbBuilder.addOffset(0, FILEOffset);
-    fbBuilder.addOffset(1, FILE_ENCRYPTEDOffset);
     return fbBuilder.endTable();
   }
 

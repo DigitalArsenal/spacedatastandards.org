@@ -29,7 +29,7 @@
       "type" : "string",
       "enum": ["YES", "NO", "NA"]
     },
-    "Detail" : {
+    "PNM" : {
       "type" : "object",
       "description" : "Details of Published Message",
       "properties" : {
@@ -108,21 +108,6 @@
         "SOL_DIGITAL_SIGNATURE" : {
                 "type" : "string",
                 "description" : "Solana Digital Signature\nDigital signature of the CID using Solana's signing mechanism.\nRefer to the Solana Blockchain integration section for details."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "PNM" : {
-      "type" : "object",
-      "description" : "Publish Notification Message",
-      "properties" : {
-        "FILE" : {
-                "$ref" : "#/definitions/Detail",
-                "description" : "Unencrypted PNM Details\nThis field contains the details of the Publish Notification Message without encryption."
-              },
-        "FILE_ENCRYPTED" : {
-                "$ref" : "#/definitions/Detail",
-                "description" : "Encrypted PNM Details\nThis field contains the details of the Publish Notification Message with encryption."
               }
       },
       "additionalProperties" : false

@@ -5,14 +5,14 @@
 import FlatBuffers
 
 ///  Details of Published Message
-public struct Detail: FlatBufferObject, Verifiable {
+public struct PNM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
   public static var id: String { "$PNM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Detail.id, addPrefix: prefix) }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PNM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
@@ -138,7 +138,7 @@ public struct Detail: FlatBufferObject, Verifiable {
   ///  Refer to the Solana Blockchain integration section for details.
   public var SOL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SOL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
-  public static func startDetail(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VTOFFSET.CID.p) }
   public static func add(FID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FID, at: VTOFFSET.FID.p) }
@@ -158,8 +158,8 @@ public struct Detail: FlatBufferObject, Verifiable {
   public static func add(BNB_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BNB_DIGITAL_SIGNATURE, at: VTOFFSET.BNB_DIGITAL_SIGNATURE.p) }
   public static func add(AVAX_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AVAX_DIGITAL_SIGNATURE, at: VTOFFSET.AVAX_DIGITAL_SIGNATURE.p) }
   public static func add(SOL_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOL_DIGITAL_SIGNATURE, at: VTOFFSET.SOL_DIGITAL_SIGNATURE.p) }
-  public static func endDetail(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createDetail(
+  public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
     MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
     CIDOffset CID: Offset = Offset(),
@@ -181,27 +181,27 @@ public struct Detail: FlatBufferObject, Verifiable {
     AVAX_DIGITAL_SIGNATUREOffset AVAX_DIGITAL_SIGNATURE: Offset = Offset(),
     SOL_DIGITAL_SIGNATUREOffset SOL_DIGITAL_SIGNATURE: Offset = Offset()
   ) -> Offset {
-    let __start = Detail.startDetail(&fbb)
-    Detail.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
-    Detail.add(CID: CID, &fbb)
-    Detail.add(FID: FID, &fbb)
-    Detail.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(XRP_DIGITAL_SIGNATURE: XRP_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(ADA_DIGITAL_SIGNATURE: ADA_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(XLM_DIGITAL_SIGNATURE: XLM_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(DOGE_DIGITAL_SIGNATURE: DOGE_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(XMR_DIGITAL_SIGNATURE: XMR_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(DOT_DIGITAL_SIGNATURE: DOT_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(FIL_DIGITAL_SIGNATURE: FIL_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(XTZ_DIGITAL_SIGNATURE: XTZ_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(ATOM_DIGITAL_SIGNATURE: ATOM_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(TRX_DIGITAL_SIGNATURE: TRX_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(BNB_DIGITAL_SIGNATURE: BNB_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(AVAX_DIGITAL_SIGNATURE: AVAX_DIGITAL_SIGNATURE, &fbb)
-    Detail.add(SOL_DIGITAL_SIGNATURE: SOL_DIGITAL_SIGNATURE, &fbb)
-    return Detail.endDetail(&fbb, start: __start)
+    let __start = PNM.startPNM(&fbb)
+    PNM.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
+    PNM.add(CID: CID, &fbb)
+    PNM.add(FID: FID, &fbb)
+    PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XRP_DIGITAL_SIGNATURE: XRP_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(ADA_DIGITAL_SIGNATURE: ADA_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XLM_DIGITAL_SIGNATURE: XLM_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(DOGE_DIGITAL_SIGNATURE: DOGE_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XMR_DIGITAL_SIGNATURE: XMR_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(DOT_DIGITAL_SIGNATURE: DOT_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(FIL_DIGITAL_SIGNATURE: FIL_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(XTZ_DIGITAL_SIGNATURE: XTZ_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(ATOM_DIGITAL_SIGNATURE: ATOM_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(TRX_DIGITAL_SIGNATURE: TRX_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(BNB_DIGITAL_SIGNATURE: BNB_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(AVAX_DIGITAL_SIGNATURE: AVAX_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(SOL_DIGITAL_SIGNATURE: SOL_DIGITAL_SIGNATURE, &fbb)
+    return PNM.endPNM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
@@ -225,54 +225,6 @@ public struct Detail: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.BNB_DIGITAL_SIGNATURE.p, fieldName: "BNB_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.AVAX_DIGITAL_SIGNATURE.p, fieldName: "AVAX_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SOL_DIGITAL_SIGNATURE.p, fieldName: "SOL_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Publish Notification Message
-public struct PNM: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PNM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PNM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case FILE = 4
-    case FILE_ENCRYPTED = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Unencrypted PNM Details
-  ///  This field contains the details of the Publish Notification Message without encryption.
-  public var FILE: Detail? { let o = _accessor.offset(VTOFFSET.FILE.v); return o == 0 ? nil : Detail(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Encrypted PNM Details
-  ///  This field contains the details of the Publish Notification Message with encryption.
-  public var FILE_ENCRYPTED: Detail? { let o = _accessor.offset(VTOFFSET.FILE_ENCRYPTED.v); return o == 0 ? nil : Detail(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(FILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE, at: VTOFFSET.FILE.p) }
-  public static func add(FILE_ENCRYPTED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_ENCRYPTED, at: VTOFFSET.FILE_ENCRYPTED.p) }
-  public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPNM(
-    _ fbb: inout FlatBufferBuilder,
-    FILEOffset FILE: Offset = Offset(),
-    FILE_ENCRYPTEDOffset FILE_ENCRYPTED: Offset = Offset()
-  ) -> Offset {
-    let __start = PNM.startPNM(&fbb)
-    PNM.add(FILE: FILE, &fbb)
-    PNM.add(FILE_ENCRYPTED: FILE_ENCRYPTED, &fbb)
-    return PNM.endPNM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.FILE.p, fieldName: "FILE", required: false, type: ForwardOffset<Detail>.self)
-    try _v.visit(field: VTOFFSET.FILE_ENCRYPTED.p, fieldName: "FILE_ENCRYPTED", required: false, type: ForwardOffset<Detail>.self)
     _v.finish()
   }
 }

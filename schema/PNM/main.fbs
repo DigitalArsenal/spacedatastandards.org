@@ -1,7 +1,7 @@
 // Publish Notification Message (PNM)
 
 /// Details of Published Message
-table Detail {
+table PNM {
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/
   /// A universal address format for representing multiple network protocols. Examples include:
@@ -99,18 +99,6 @@ table Detail {
   /// Digital signature of the CID using Solana's signing mechanism.
   /// Refer to the Solana Blockchain integration section for details.
   SOL_DIGITAL_SIGNATURE: string;
-}
-
-/// Publish Notification Message
-
-table PNM {
-/// Unencrypted PNM Details
-/// This field contains the details of the Publish Notification Message without encryption.
-FILE: Detail;
-
-/// Encrypted PNM Details
-/// This field contains the details of the Publish Notification Message with encryption.
-FILE_ENCRYPTED: Detail;
 }
 
 /// Collection of Publish Notification Messages

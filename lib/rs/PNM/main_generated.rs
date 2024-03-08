@@ -9,23 +9,23 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
-pub enum DetailOffset {}
+pub enum PNMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Details of Published Message
-pub struct Detail<'a> {
+pub struct PNM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
 
-impl<'a> flatbuffers::Follow<'a> for Detail<'a> {
-  type Inner = Detail<'a>;
+impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
+  type Inner = PNM<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: flatbuffers::Table::new(buf, loc) }
   }
 }
 
-impl<'a> Detail<'a> {
+impl<'a> PNM<'a> {
   pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 4;
   pub const VT_CID: flatbuffers::VOffsetT = 6;
   pub const VT_FID: flatbuffers::VOffsetT = 8;
@@ -48,14 +48,14 @@ impl<'a> Detail<'a> {
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    Detail { _tab: table }
+    PNM { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
     _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args DetailArgs<'args>
-  ) -> flatbuffers::WIPOffset<Detail<'bldr>> {
-    let mut builder = DetailBuilder::new(_fbb);
+    args: &'args PNMArgs<'args>
+  ) -> flatbuffers::WIPOffset<PNM<'bldr>> {
+    let mut builder = PNMBuilder::new(_fbb);
     if let Some(x) = args.SOL_DIGITAL_SIGNATURE { builder.add_SOL_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.AVAX_DIGITAL_SIGNATURE { builder.add_AVAX_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.BNB_DIGITAL_SIGNATURE { builder.add_BNB_DIGITAL_SIGNATURE(x); }
@@ -78,7 +78,7 @@ impl<'a> Detail<'a> {
     builder.finish()
   }
 
-  pub fn unpack(&self) -> DetailT {
+  pub fn unpack(&self) -> PNMT {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
       x.to_string()
     });
@@ -136,7 +136,7 @@ impl<'a> Detail<'a> {
     let SOL_DIGITAL_SIGNATURE = self.SOL_DIGITAL_SIGNATURE().map(|x| {
       x.to_string()
     });
-    DetailT {
+    PNMT {
       MULTIFORMAT_ADDRESS,
       CID,
       FID,
@@ -171,7 +171,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_MULTIFORMAT_ADDRESS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MULTIFORMAT_ADDRESS, None)}
   }
   /// Concatenated Content Identifier (CID)
   /// This field is a unique ID for distributed systems (CID).
@@ -181,7 +181,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_CID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CID, None)}
   }
   /// File ID
   /// This field is the file ID / Name
@@ -190,7 +190,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_FID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FID, None)}
   }
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -200,7 +200,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_ETH_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ETH_DIGITAL_SIGNATURE, None)}
   }
   /// Bitcoin Digital Signature
   /// Digital signature of the CID using Bitcoin's signing mechanism.
@@ -210,7 +210,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_BTC_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BTC_DIGITAL_SIGNATURE, None)}
   }
   /// Litecoin Digital Signature
   /// Digital signature of the CID using Litecoin's signing mechanism.
@@ -220,7 +220,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_LTC_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_LTC_DIGITAL_SIGNATURE, None)}
   }
   /// Ripple Digital Signature
   /// Digital signature of the CID using Ripple's signing mechanism.
@@ -230,7 +230,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_XRP_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XRP_DIGITAL_SIGNATURE, None)}
   }
   /// Cardano Digital Signature
   /// Digital signature of the CID using Cardano's signing mechanism.
@@ -240,7 +240,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_ADA_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ADA_DIGITAL_SIGNATURE, None)}
   }
   /// Stellar Digital Signature
   /// Digital signature of the CID using Stellar's signing mechanism.
@@ -250,7 +250,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_XLM_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XLM_DIGITAL_SIGNATURE, None)}
   }
   /// Dogecoin Digital Signature
   /// Digital signature of the CID using Dogecoin's signing mechanism.
@@ -260,7 +260,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_DOGE_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, None)}
   }
   /// Monero Digital Signature
   /// Digital signature of the CID using Monero's signing mechanism.
@@ -270,7 +270,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_XMR_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XMR_DIGITAL_SIGNATURE, None)}
   }
   /// Polkadot Digital Signature
   /// Digital signature of the CID using Polkadot's signing mechanism.
@@ -280,7 +280,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_DOT_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOT_DIGITAL_SIGNATURE, None)}
   }
   /// Filecoin Digital Signature
   /// Digital signature of the CID using Filecoin's signing mechanism.
@@ -290,7 +290,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_FIL_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FIL_DIGITAL_SIGNATURE, None)}
   }
   /// Tezos Digital Signature
   /// Digital signature of the CID using Tezos's signing mechanism.
@@ -300,7 +300,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_XTZ_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, None)}
   }
   /// Cosmos Digital Signature
   /// Digital signature of the CID using Cosmos's signing mechanism.
@@ -310,7 +310,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_ATOM_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, None)}
   }
   /// Tron Digital Signature
   /// Digital signature of the CID using Tron's signing mechanism.
@@ -320,7 +320,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_TRX_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TRX_DIGITAL_SIGNATURE, None)}
   }
   /// Binance Coin Digital Signature
   /// Digital signature of the CID using Binance Coin's signing mechanism.
@@ -330,7 +330,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_BNB_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BNB_DIGITAL_SIGNATURE, None)}
   }
   /// Avalanche Digital Signature
   /// Digital signature of the CID using Avalanche's signing mechanism.
@@ -340,7 +340,7 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_AVAX_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, None)}
   }
   /// Solana Digital Signature
   /// Digital signature of the CID using Solana's signing mechanism.
@@ -350,11 +350,11 @@ impl<'a> Detail<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_SOL_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SOL_DIGITAL_SIGNATURE, None)}
   }
 }
 
-impl flatbuffers::Verifiable for Detail<'_> {
+impl flatbuffers::Verifiable for PNM<'_> {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -384,7 +384,7 @@ impl flatbuffers::Verifiable for Detail<'_> {
     Ok(())
   }
 }
-pub struct DetailArgs<'a> {
+pub struct PNMArgs<'a> {
     pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FID: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -405,10 +405,10 @@ pub struct DetailArgs<'a> {
     pub AVAX_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SOL_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for DetailArgs<'a> {
+impl<'a> Default for PNMArgs<'a> {
   #[inline]
   fn default() -> Self {
-    DetailArgs {
+    PNMArgs {
       MULTIFORMAT_ADDRESS: None,
       CID: None,
       FID: None,
@@ -432,105 +432,105 @@ impl<'a> Default for DetailArgs<'a> {
   }
 }
 
-pub struct DetailBuilder<'a: 'b, 'b> {
+pub struct PNMBuilder<'a: 'b, 'b> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> DetailBuilder<'a, 'b> {
+impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
   #[inline]
   pub fn add_MULTIFORMAT_ADDRESS(&mut self, MULTIFORMAT_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   #[inline]
   pub fn add_CID(&mut self, CID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_CID, CID);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CID, CID);
   }
   #[inline]
   pub fn add_FID(&mut self, FID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_FID, FID);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FID, FID);
   }
   #[inline]
   pub fn add_ETH_DIGITAL_SIGNATURE(&mut self, ETH_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_BTC_DIGITAL_SIGNATURE(&mut self, BTC_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_LTC_DIGITAL_SIGNATURE(&mut self, LTC_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_XRP_DIGITAL_SIGNATURE(&mut self, XRP_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_ADA_DIGITAL_SIGNATURE(&mut self, ADA_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_XLM_DIGITAL_SIGNATURE(&mut self, XLM_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_DOGE_DIGITAL_SIGNATURE(&mut self, DOGE_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_XMR_DIGITAL_SIGNATURE(&mut self, XMR_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_DOT_DIGITAL_SIGNATURE(&mut self, DOT_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_FIL_DIGITAL_SIGNATURE(&mut self, FIL_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_XTZ_DIGITAL_SIGNATURE(&mut self, XTZ_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_ATOM_DIGITAL_SIGNATURE(&mut self, ATOM_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_TRX_DIGITAL_SIGNATURE(&mut self, TRX_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_BNB_DIGITAL_SIGNATURE(&mut self, BNB_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_AVAX_DIGITAL_SIGNATURE(&mut self, AVAX_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
   }
   #[inline]
   pub fn add_SOL_DIGITAL_SIGNATURE(&mut self, SOL_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> DetailBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMBuilder<'a, 'b> {
     let start = _fbb.start_table();
-    DetailBuilder {
+    PNMBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<Detail<'a>> {
+  pub fn finish(self) -> flatbuffers::WIPOffset<PNM<'a>> {
     let o = self.fbb_.end_table(self.start_);
     flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl core::fmt::Debug for Detail<'_> {
+impl core::fmt::Debug for PNM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("Detail");
+    let mut ds = f.debug_struct("PNM");
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
       ds.field("CID", &self.CID());
       ds.field("FID", &self.FID());
@@ -555,7 +555,7 @@ impl core::fmt::Debug for Detail<'_> {
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct DetailT {
+pub struct PNMT {
   pub MULTIFORMAT_ADDRESS: Option<String>,
   pub CID: Option<String>,
   pub FID: Option<String>,
@@ -576,7 +576,7 @@ pub struct DetailT {
   pub AVAX_DIGITAL_SIGNATURE: Option<String>,
   pub SOL_DIGITAL_SIGNATURE: Option<String>,
 }
-impl Default for DetailT {
+impl Default for PNMT {
   fn default() -> Self {
     Self {
       MULTIFORMAT_ADDRESS: None,
@@ -601,11 +601,11 @@ impl Default for DetailT {
     }
   }
 }
-impl DetailT {
+impl PNMT {
   pub fn pack<'b>(
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<Detail<'b>> {
+  ) -> flatbuffers::WIPOffset<PNM<'b>> {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -663,7 +663,7 @@ impl DetailT {
     let SOL_DIGITAL_SIGNATURE = self.SOL_DIGITAL_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    Detail::create(_fbb, &DetailArgs{
+    PNM::create(_fbb, &PNMArgs{
       MULTIFORMAT_ADDRESS,
       CID,
       FID,
@@ -683,168 +683,6 @@ impl DetailT {
       BNB_DIGITAL_SIGNATURE,
       AVAX_DIGITAL_SIGNATURE,
       SOL_DIGITAL_SIGNATURE,
-    })
-  }
-}
-pub enum PNMOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Publish Notification Message
-pub struct PNM<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
-  type Inner = PNM<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> PNM<'a> {
-  pub const VT_FILE: flatbuffers::VOffsetT = 4;
-  pub const VT_FILE_ENCRYPTED: flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    PNM { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args PNMArgs<'args>
-  ) -> flatbuffers::WIPOffset<PNM<'bldr>> {
-    let mut builder = PNMBuilder::new(_fbb);
-    if let Some(x) = args.FILE_ENCRYPTED { builder.add_FILE_ENCRYPTED(x); }
-    if let Some(x) = args.FILE { builder.add_FILE(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> PNMT {
-    let FILE = self.FILE().map(|x| {
-      Box::new(x.unpack())
-    });
-    let FILE_ENCRYPTED = self.FILE_ENCRYPTED().map(|x| {
-      Box::new(x.unpack())
-    });
-    PNMT {
-      FILE,
-      FILE_ENCRYPTED,
-    }
-  }
-
-  /// Unencrypted PNM Details
-  /// This field contains the details of the Publish Notification Message without encryption.
-  #[inline]
-  pub fn FILE(&self) -> Option<Detail<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Detail>>(PNM::VT_FILE, None)}
-  }
-  /// Encrypted PNM Details
-  /// This field contains the details of the Publish Notification Message with encryption.
-  #[inline]
-  pub fn FILE_ENCRYPTED(&self) -> Option<Detail<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Detail>>(PNM::VT_FILE_ENCRYPTED, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for PNM<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Detail>>("FILE", Self::VT_FILE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<Detail>>("FILE_ENCRYPTED", Self::VT_FILE_ENCRYPTED, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct PNMArgs<'a> {
-    pub FILE: Option<flatbuffers::WIPOffset<Detail<'a>>>,
-    pub FILE_ENCRYPTED: Option<flatbuffers::WIPOffset<Detail<'a>>>,
-}
-impl<'a> Default for PNMArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    PNMArgs {
-      FILE: None,
-      FILE_ENCRYPTED: None,
-    }
-  }
-}
-
-pub struct PNMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_FILE(&mut self, FILE: flatbuffers::WIPOffset<Detail<'b >>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<Detail>>(PNM::VT_FILE, FILE);
-  }
-  #[inline]
-  pub fn add_FILE_ENCRYPTED(&mut self, FILE_ENCRYPTED: flatbuffers::WIPOffset<Detail<'b >>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<Detail>>(PNM::VT_FILE_ENCRYPTED, FILE_ENCRYPTED);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    PNMBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<PNM<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for PNM<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("PNM");
-      ds.field("FILE", &self.FILE());
-      ds.field("FILE_ENCRYPTED", &self.FILE_ENCRYPTED());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PNMT {
-  pub FILE: Option<Box<DetailT>>,
-  pub FILE_ENCRYPTED: Option<Box<DetailT>>,
-}
-impl Default for PNMT {
-  fn default() -> Self {
-    Self {
-      FILE: None,
-      FILE_ENCRYPTED: None,
-    }
-  }
-}
-impl PNMT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<PNM<'b>> {
-    let FILE = self.FILE.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let FILE_ENCRYPTED = self.FILE_ENCRYPTED.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    PNM::create(_fbb, &PNMArgs{
-      FILE,
-      FILE_ENCRYPTED,
     })
   }
 }
