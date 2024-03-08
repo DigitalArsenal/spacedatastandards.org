@@ -28,22 +28,23 @@ struct Detail FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MULTIFORMAT_ADDRESS = 4,
     VT_CID = 6,
-    VT_ETH_DIGITAL_SIGNATURE = 8,
-    VT_BTC_DIGITAL_SIGNATURE = 10,
-    VT_LTC_DIGITAL_SIGNATURE = 12,
-    VT_XRP_DIGITAL_SIGNATURE = 14,
-    VT_ADA_DIGITAL_SIGNATURE = 16,
-    VT_XLM_DIGITAL_SIGNATURE = 18,
-    VT_DOGE_DIGITAL_SIGNATURE = 20,
-    VT_XMR_DIGITAL_SIGNATURE = 22,
-    VT_DOT_DIGITAL_SIGNATURE = 24,
-    VT_FIL_DIGITAL_SIGNATURE = 26,
-    VT_XTZ_DIGITAL_SIGNATURE = 28,
-    VT_ATOM_DIGITAL_SIGNATURE = 30,
-    VT_TRX_DIGITAL_SIGNATURE = 32,
-    VT_BNB_DIGITAL_SIGNATURE = 34,
-    VT_AVAX_DIGITAL_SIGNATURE = 36,
-    VT_SOL_DIGITAL_SIGNATURE = 38
+    VT_FID = 8,
+    VT_ETH_DIGITAL_SIGNATURE = 10,
+    VT_BTC_DIGITAL_SIGNATURE = 12,
+    VT_LTC_DIGITAL_SIGNATURE = 14,
+    VT_XRP_DIGITAL_SIGNATURE = 16,
+    VT_ADA_DIGITAL_SIGNATURE = 18,
+    VT_XLM_DIGITAL_SIGNATURE = 20,
+    VT_DOGE_DIGITAL_SIGNATURE = 22,
+    VT_XMR_DIGITAL_SIGNATURE = 24,
+    VT_DOT_DIGITAL_SIGNATURE = 26,
+    VT_FIL_DIGITAL_SIGNATURE = 28,
+    VT_XTZ_DIGITAL_SIGNATURE = 30,
+    VT_ATOM_DIGITAL_SIGNATURE = 32,
+    VT_TRX_DIGITAL_SIGNATURE = 34,
+    VT_BNB_DIGITAL_SIGNATURE = 36,
+    VT_AVAX_DIGITAL_SIGNATURE = 38,
+    VT_SOL_DIGITAL_SIGNATURE = 40
   };
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/
@@ -60,6 +61,11 @@ struct Detail FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
   const ::flatbuffers::String *CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CID);
+  }
+  /// File ID
+  /// This field is the file ID / Name
+  const ::flatbuffers::String *FID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FID);
   }
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -163,6 +169,8 @@ struct Detail FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
            VerifyOffset(verifier, VT_CID) &&
            verifier.VerifyString(CID()) &&
+           VerifyOffset(verifier, VT_FID) &&
+           verifier.VerifyString(FID()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
            VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
@@ -208,6 +216,9 @@ struct DetailBuilder {
   }
   void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
     fbb_.AddOffset(Detail::VT_CID, CID);
+  }
+  void add_FID(::flatbuffers::Offset<::flatbuffers::String> FID) {
+    fbb_.AddOffset(Detail::VT_FID, FID);
   }
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
     fbb_.AddOffset(Detail::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
@@ -272,6 +283,7 @@ inline ::flatbuffers::Offset<Detail> CreateDetail(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
@@ -305,6 +317,7 @@ inline ::flatbuffers::Offset<Detail> CreateDetail(
   builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
   builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
+  builder_.add_FID(FID);
   builder_.add_CID(CID);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   return builder_.Finish();
@@ -314,6 +327,7 @@ inline ::flatbuffers::Offset<Detail> CreateDetailDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *MULTIFORMAT_ADDRESS = nullptr,
     const char *CID = nullptr,
+    const char *FID = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
     const char *BTC_DIGITAL_SIGNATURE = nullptr,
     const char *LTC_DIGITAL_SIGNATURE = nullptr,
@@ -332,6 +346,7 @@ inline ::flatbuffers::Offset<Detail> CreateDetailDirect(
     const char *SOL_DIGITAL_SIGNATURE = nullptr) {
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
+  auto FID__ = FID ? _fbb.CreateString(FID) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
   auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
   auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
@@ -352,6 +367,7 @@ inline ::flatbuffers::Offset<Detail> CreateDetailDirect(
       _fbb,
       MULTIFORMAT_ADDRESS__,
       CID__,
+      FID__,
       ETH_DIGITAL_SIGNATURE__,
       BTC_DIGITAL_SIGNATURE__,
       LTC_DIGITAL_SIGNATURE__,

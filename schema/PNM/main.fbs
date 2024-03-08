@@ -16,6 +16,10 @@ table Detail {
   /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
   CID: string;
 
+  /// File ID
+  /// This field is the file ID / Name
+  FID: string;
+
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
   /// Refer to the Ethereum Blockchain integration section for details.

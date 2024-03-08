@@ -49,137 +49,145 @@ public final class Detail extends Table {
   public ByteBuffer CIDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
+   * File ID
+   * This field is the file ID / Name
+   */
+  public String FID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FIDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer FIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
    * Ethereum Digital Signature
    * Digital signature of the CID using Ethereum's signing mechanism.
    * Refer to the Ethereum Blockchain integration section for details.
    */
-  public String ETH_DIGITAL_SIGNATURE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ETH_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer ETH_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String ETH_DIGITAL_SIGNATURE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ETH_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ETH_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * Bitcoin Digital Signature
    * Digital signature of the CID using Bitcoin's signing mechanism.
    * Refer to the Bitcoin Blockchain integration section for details.
    */
-  public String BTC_DIGITAL_SIGNATURE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BTC_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer BTC_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String BTC_DIGITAL_SIGNATURE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BTC_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer BTC_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Litecoin Digital Signature
    * Digital signature of the CID using Litecoin's signing mechanism.
    * Refer to the Litecoin Blockchain integration section for details.
    */
-  public String LTC_DIGITAL_SIGNATURE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LTC_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer LTC_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  public String LTC_DIGITAL_SIGNATURE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LTC_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer LTC_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Ripple Digital Signature
    * Digital signature of the CID using Ripple's signing mechanism.
    * Refer to the Ripple Blockchain integration section for details.
    */
-  public String XRP_DIGITAL_SIGNATURE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer XRP_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer XRP_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public String XRP_DIGITAL_SIGNATURE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer XRP_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer XRP_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
   /**
    * Cardano Digital Signature
    * Digital signature of the CID using Cardano's signing mechanism.
    * Refer to the Cardano Blockchain integration section for details.
    */
-  public String ADA_DIGITAL_SIGNATURE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ADA_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer ADA_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public String ADA_DIGITAL_SIGNATURE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ADA_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer ADA_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
   /**
    * Stellar Digital Signature
    * Digital signature of the CID using Stellar's signing mechanism.
    * Refer to the Stellar Blockchain integration section for details.
    */
-  public String XLM_DIGITAL_SIGNATURE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer XLM_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer XLM_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  public String XLM_DIGITAL_SIGNATURE() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer XLM_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer XLM_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
   /**
    * Dogecoin Digital Signature
    * Digital signature of the CID using Dogecoin's signing mechanism.
    * Refer to the Dogecoin Blockchain integration section for details.
    */
-  public String DOGE_DIGITAL_SIGNATURE() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DOGE_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer DOGE_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  public String DOGE_DIGITAL_SIGNATURE() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DOGE_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer DOGE_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
    * Monero Digital Signature
    * Digital signature of the CID using Monero's signing mechanism.
    * Refer to the Monero Blockchain integration section for details.
    */
-  public String XMR_DIGITAL_SIGNATURE() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer XMR_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer XMR_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  public String XMR_DIGITAL_SIGNATURE() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer XMR_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer XMR_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
    * Polkadot Digital Signature
    * Digital signature of the CID using Polkadot's signing mechanism.
    * Refer to the Polkadot Blockchain integration section for details.
    */
-  public String DOT_DIGITAL_SIGNATURE() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DOT_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer DOT_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  public String DOT_DIGITAL_SIGNATURE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DOT_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer DOT_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
   /**
    * Filecoin Digital Signature
    * Digital signature of the CID using Filecoin's signing mechanism.
    * Refer to the Filecoin Blockchain integration section for details.
    */
-  public String FIL_DIGITAL_SIGNATURE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer FIL_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer FIL_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  public String FIL_DIGITAL_SIGNATURE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FIL_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer FIL_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
   /**
    * Tezos Digital Signature
    * Digital signature of the CID using Tezos's signing mechanism.
    * Refer to the Tezos Blockchain integration section for details.
    */
-  public String XTZ_DIGITAL_SIGNATURE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer XTZ_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer XTZ_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  public String XTZ_DIGITAL_SIGNATURE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer XTZ_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer XTZ_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
   /**
    * Cosmos Digital Signature
    * Digital signature of the CID using Cosmos's signing mechanism.
    * Refer to the Cosmos Blockchain integration section for details.
    */
-  public String ATOM_DIGITAL_SIGNATURE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ATOM_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer ATOM_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  public String ATOM_DIGITAL_SIGNATURE() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ATOM_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer ATOM_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
   /**
    * Tron Digital Signature
    * Digital signature of the CID using Tron's signing mechanism.
    * Refer to the Tron Blockchain integration section for details.
    */
-  public String TRX_DIGITAL_SIGNATURE() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRX_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer TRX_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  public String TRX_DIGITAL_SIGNATURE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRX_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer TRX_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
    * Binance Coin Digital Signature
    * Digital signature of the CID using Binance Coin's signing mechanism.
    * Refer to the Binance Coin Blockchain integration section for details.
    */
-  public String BNB_DIGITAL_SIGNATURE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BNB_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer BNB_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public String BNB_DIGITAL_SIGNATURE() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BNB_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer BNB_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
   /**
    * Avalanche Digital Signature
    * Digital signature of the CID using Avalanche's signing mechanism.
    * Refer to the Avalanche Blockchain integration section for details.
    */
-  public String AVAX_DIGITAL_SIGNATURE() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer AVAX_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer AVAX_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  public String AVAX_DIGITAL_SIGNATURE() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer AVAX_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer AVAX_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
   /**
    * Solana Digital Signature
    * Digital signature of the CID using Solana's signing mechanism.
    * Refer to the Solana Blockchain integration section for details.
    */
-  public String SOL_DIGITAL_SIGNATURE() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SOL_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer SOL_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  public String SOL_DIGITAL_SIGNATURE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOL_DIGITAL_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer SOL_DIGITAL_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
 
   public static int createDetail(FlatBufferBuilder builder,
       int MULTIFORMAT_ADDRESSOffset,
       int CIDOffset,
+      int FIDOffset,
       int ETH_DIGITAL_SIGNATUREOffset,
       int BTC_DIGITAL_SIGNATUREOffset,
       int LTC_DIGITAL_SIGNATUREOffset,
@@ -196,7 +204,7 @@ public final class Detail extends Table {
       int BNB_DIGITAL_SIGNATUREOffset,
       int AVAX_DIGITAL_SIGNATUREOffset,
       int SOL_DIGITAL_SIGNATUREOffset) {
-    builder.startTable(18);
+    builder.startTable(19);
     Detail.addSolDigitalSignature(builder, SOL_DIGITAL_SIGNATUREOffset);
     Detail.addAvaxDigitalSignature(builder, AVAX_DIGITAL_SIGNATUREOffset);
     Detail.addBnbDigitalSignature(builder, BNB_DIGITAL_SIGNATUREOffset);
@@ -213,30 +221,32 @@ public final class Detail extends Table {
     Detail.addLtcDigitalSignature(builder, LTC_DIGITAL_SIGNATUREOffset);
     Detail.addBtcDigitalSignature(builder, BTC_DIGITAL_SIGNATUREOffset);
     Detail.addEthDigitalSignature(builder, ETH_DIGITAL_SIGNATUREOffset);
+    Detail.addFid(builder, FIDOffset);
     Detail.addCid(builder, CIDOffset);
     Detail.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     return Detail.endDetail(builder);
   }
 
-  public static void startDetail(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startDetail(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(0, MULTIFORMAT_ADDRESSOffset, 0); }
   public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(1, CIDOffset, 0); }
-  public static void addEthDigitalSignature(FlatBufferBuilder builder, int ETH_DIGITAL_SIGNATUREOffset) { builder.addOffset(2, ETH_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addBtcDigitalSignature(FlatBufferBuilder builder, int BTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(3, BTC_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addLtcDigitalSignature(FlatBufferBuilder builder, int LTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(4, LTC_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addXrpDigitalSignature(FlatBufferBuilder builder, int XRP_DIGITAL_SIGNATUREOffset) { builder.addOffset(5, XRP_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addAdaDigitalSignature(FlatBufferBuilder builder, int ADA_DIGITAL_SIGNATUREOffset) { builder.addOffset(6, ADA_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addXlmDigitalSignature(FlatBufferBuilder builder, int XLM_DIGITAL_SIGNATUREOffset) { builder.addOffset(7, XLM_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addDogeDigitalSignature(FlatBufferBuilder builder, int DOGE_DIGITAL_SIGNATUREOffset) { builder.addOffset(8, DOGE_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addXmrDigitalSignature(FlatBufferBuilder builder, int XMR_DIGITAL_SIGNATUREOffset) { builder.addOffset(9, XMR_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addDotDigitalSignature(FlatBufferBuilder builder, int DOT_DIGITAL_SIGNATUREOffset) { builder.addOffset(10, DOT_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addFilDigitalSignature(FlatBufferBuilder builder, int FIL_DIGITAL_SIGNATUREOffset) { builder.addOffset(11, FIL_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addXtzDigitalSignature(FlatBufferBuilder builder, int XTZ_DIGITAL_SIGNATUREOffset) { builder.addOffset(12, XTZ_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addAtomDigitalSignature(FlatBufferBuilder builder, int ATOM_DIGITAL_SIGNATUREOffset) { builder.addOffset(13, ATOM_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addTrxDigitalSignature(FlatBufferBuilder builder, int TRX_DIGITAL_SIGNATUREOffset) { builder.addOffset(14, TRX_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addBnbDigitalSignature(FlatBufferBuilder builder, int BNB_DIGITAL_SIGNATUREOffset) { builder.addOffset(15, BNB_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addAvaxDigitalSignature(FlatBufferBuilder builder, int AVAX_DIGITAL_SIGNATUREOffset) { builder.addOffset(16, AVAX_DIGITAL_SIGNATUREOffset, 0); }
-  public static void addSolDigitalSignature(FlatBufferBuilder builder, int SOL_DIGITAL_SIGNATUREOffset) { builder.addOffset(17, SOL_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addFid(FlatBufferBuilder builder, int FIDOffset) { builder.addOffset(2, FIDOffset, 0); }
+  public static void addEthDigitalSignature(FlatBufferBuilder builder, int ETH_DIGITAL_SIGNATUREOffset) { builder.addOffset(3, ETH_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addBtcDigitalSignature(FlatBufferBuilder builder, int BTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(4, BTC_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addLtcDigitalSignature(FlatBufferBuilder builder, int LTC_DIGITAL_SIGNATUREOffset) { builder.addOffset(5, LTC_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addXrpDigitalSignature(FlatBufferBuilder builder, int XRP_DIGITAL_SIGNATUREOffset) { builder.addOffset(6, XRP_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addAdaDigitalSignature(FlatBufferBuilder builder, int ADA_DIGITAL_SIGNATUREOffset) { builder.addOffset(7, ADA_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addXlmDigitalSignature(FlatBufferBuilder builder, int XLM_DIGITAL_SIGNATUREOffset) { builder.addOffset(8, XLM_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addDogeDigitalSignature(FlatBufferBuilder builder, int DOGE_DIGITAL_SIGNATUREOffset) { builder.addOffset(9, DOGE_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addXmrDigitalSignature(FlatBufferBuilder builder, int XMR_DIGITAL_SIGNATUREOffset) { builder.addOffset(10, XMR_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addDotDigitalSignature(FlatBufferBuilder builder, int DOT_DIGITAL_SIGNATUREOffset) { builder.addOffset(11, DOT_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addFilDigitalSignature(FlatBufferBuilder builder, int FIL_DIGITAL_SIGNATUREOffset) { builder.addOffset(12, FIL_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addXtzDigitalSignature(FlatBufferBuilder builder, int XTZ_DIGITAL_SIGNATUREOffset) { builder.addOffset(13, XTZ_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addAtomDigitalSignature(FlatBufferBuilder builder, int ATOM_DIGITAL_SIGNATUREOffset) { builder.addOffset(14, ATOM_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addTrxDigitalSignature(FlatBufferBuilder builder, int TRX_DIGITAL_SIGNATUREOffset) { builder.addOffset(15, TRX_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addBnbDigitalSignature(FlatBufferBuilder builder, int BNB_DIGITAL_SIGNATUREOffset) { builder.addOffset(16, BNB_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addAvaxDigitalSignature(FlatBufferBuilder builder, int AVAX_DIGITAL_SIGNATUREOffset) { builder.addOffset(17, AVAX_DIGITAL_SIGNATUREOffset, 0); }
+  public static void addSolDigitalSignature(FlatBufferBuilder builder, int SOL_DIGITAL_SIGNATUREOffset) { builder.addOffset(18, SOL_DIGITAL_SIGNATUREOffset, 0); }
   public static int endDetail(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

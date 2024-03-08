@@ -67,11 +67,10 @@ class Detail : Table() {
     val CIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Ethereum Digital Signature
-     * Digital signature of the CID using Ethereum's signing mechanism.
-     * Refer to the Ethereum Blockchain integration section for details.
+     * File ID
+     * This field is the file ID / Name
      */
-    val ETH_DIGITAL_SIGNATURE : String?
+    val FID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -80,14 +79,14 @@ class Detail : Table() {
                 null
             }
         }
-    val ETH_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ETH_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val FIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun FIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Bitcoin Digital Signature
-     * Digital signature of the CID using Bitcoin's signing mechanism.
-     * Refer to the Bitcoin Blockchain integration section for details.
+     * Ethereum Digital Signature
+     * Digital signature of the CID using Ethereum's signing mechanism.
+     * Refer to the Ethereum Blockchain integration section for details.
      */
-    val BTC_DIGITAL_SIGNATURE : String?
+    val ETH_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -96,14 +95,14 @@ class Detail : Table() {
                 null
             }
         }
-    val BTC_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun BTC_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val ETH_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun ETH_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Litecoin Digital Signature
-     * Digital signature of the CID using Litecoin's signing mechanism.
-     * Refer to the Litecoin Blockchain integration section for details.
+     * Bitcoin Digital Signature
+     * Digital signature of the CID using Bitcoin's signing mechanism.
+     * Refer to the Bitcoin Blockchain integration section for details.
      */
-    val LTC_DIGITAL_SIGNATURE : String?
+    val BTC_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -112,14 +111,14 @@ class Detail : Table() {
                 null
             }
         }
-    val LTC_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun LTC_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val BTC_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun BTC_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Ripple Digital Signature
-     * Digital signature of the CID using Ripple's signing mechanism.
-     * Refer to the Ripple Blockchain integration section for details.
+     * Litecoin Digital Signature
+     * Digital signature of the CID using Litecoin's signing mechanism.
+     * Refer to the Litecoin Blockchain integration section for details.
      */
-    val XRP_DIGITAL_SIGNATURE : String?
+    val LTC_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -128,14 +127,14 @@ class Detail : Table() {
                 null
             }
         }
-    val XRP_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun XRP_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val LTC_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun LTC_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Cardano Digital Signature
-     * Digital signature of the CID using Cardano's signing mechanism.
-     * Refer to the Cardano Blockchain integration section for details.
+     * Ripple Digital Signature
+     * Digital signature of the CID using Ripple's signing mechanism.
+     * Refer to the Ripple Blockchain integration section for details.
      */
-    val ADA_DIGITAL_SIGNATURE : String?
+    val XRP_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -144,14 +143,14 @@ class Detail : Table() {
                 null
             }
         }
-    val ADA_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ADA_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val XRP_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun XRP_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
     /**
-     * Stellar Digital Signature
-     * Digital signature of the CID using Stellar's signing mechanism.
-     * Refer to the Stellar Blockchain integration section for details.
+     * Cardano Digital Signature
+     * Digital signature of the CID using Cardano's signing mechanism.
+     * Refer to the Cardano Blockchain integration section for details.
      */
-    val XLM_DIGITAL_SIGNATURE : String?
+    val ADA_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -160,14 +159,14 @@ class Detail : Table() {
                 null
             }
         }
-    val XLM_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun XLM_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val ADA_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun ADA_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
     /**
-     * Dogecoin Digital Signature
-     * Digital signature of the CID using Dogecoin's signing mechanism.
-     * Refer to the Dogecoin Blockchain integration section for details.
+     * Stellar Digital Signature
+     * Digital signature of the CID using Stellar's signing mechanism.
+     * Refer to the Stellar Blockchain integration section for details.
      */
-    val DOGE_DIGITAL_SIGNATURE : String?
+    val XLM_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -176,14 +175,14 @@ class Detail : Table() {
                 null
             }
         }
-    val DOGE_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun DOGE_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val XLM_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun XLM_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
     /**
-     * Monero Digital Signature
-     * Digital signature of the CID using Monero's signing mechanism.
-     * Refer to the Monero Blockchain integration section for details.
+     * Dogecoin Digital Signature
+     * Digital signature of the CID using Dogecoin's signing mechanism.
+     * Refer to the Dogecoin Blockchain integration section for details.
      */
-    val XMR_DIGITAL_SIGNATURE : String?
+    val DOGE_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -192,14 +191,14 @@ class Detail : Table() {
                 null
             }
         }
-    val XMR_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun XMR_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val DOGE_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun DOGE_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
     /**
-     * Polkadot Digital Signature
-     * Digital signature of the CID using Polkadot's signing mechanism.
-     * Refer to the Polkadot Blockchain integration section for details.
+     * Monero Digital Signature
+     * Digital signature of the CID using Monero's signing mechanism.
+     * Refer to the Monero Blockchain integration section for details.
      */
-    val DOT_DIGITAL_SIGNATURE : String?
+    val XMR_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -208,14 +207,14 @@ class Detail : Table() {
                 null
             }
         }
-    val DOT_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun DOT_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val XMR_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun XMR_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Filecoin Digital Signature
-     * Digital signature of the CID using Filecoin's signing mechanism.
-     * Refer to the Filecoin Blockchain integration section for details.
+     * Polkadot Digital Signature
+     * Digital signature of the CID using Polkadot's signing mechanism.
+     * Refer to the Polkadot Blockchain integration section for details.
      */
-    val FIL_DIGITAL_SIGNATURE : String?
+    val DOT_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -224,14 +223,14 @@ class Detail : Table() {
                 null
             }
         }
-    val FIL_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun FIL_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val DOT_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun DOT_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
     /**
-     * Tezos Digital Signature
-     * Digital signature of the CID using Tezos's signing mechanism.
-     * Refer to the Tezos Blockchain integration section for details.
+     * Filecoin Digital Signature
+     * Digital signature of the CID using Filecoin's signing mechanism.
+     * Refer to the Filecoin Blockchain integration section for details.
      */
-    val XTZ_DIGITAL_SIGNATURE : String?
+    val FIL_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -240,14 +239,14 @@ class Detail : Table() {
                 null
             }
         }
-    val XTZ_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun XTZ_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val FIL_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun FIL_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
     /**
-     * Cosmos Digital Signature
-     * Digital signature of the CID using Cosmos's signing mechanism.
-     * Refer to the Cosmos Blockchain integration section for details.
+     * Tezos Digital Signature
+     * Digital signature of the CID using Tezos's signing mechanism.
+     * Refer to the Tezos Blockchain integration section for details.
      */
-    val ATOM_DIGITAL_SIGNATURE : String?
+    val XTZ_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -256,14 +255,14 @@ class Detail : Table() {
                 null
             }
         }
-    val ATOM_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun ATOM_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val XTZ_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun XTZ_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
     /**
-     * Tron Digital Signature
-     * Digital signature of the CID using Tron's signing mechanism.
-     * Refer to the Tron Blockchain integration section for details.
+     * Cosmos Digital Signature
+     * Digital signature of the CID using Cosmos's signing mechanism.
+     * Refer to the Cosmos Blockchain integration section for details.
      */
-    val TRX_DIGITAL_SIGNATURE : String?
+    val ATOM_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -272,14 +271,14 @@ class Detail : Table() {
                 null
             }
         }
-    val TRX_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun TRX_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val ATOM_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun ATOM_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
     /**
-     * Binance Coin Digital Signature
-     * Digital signature of the CID using Binance Coin's signing mechanism.
-     * Refer to the Binance Coin Blockchain integration section for details.
+     * Tron Digital Signature
+     * Digital signature of the CID using Tron's signing mechanism.
+     * Refer to the Tron Blockchain integration section for details.
      */
-    val BNB_DIGITAL_SIGNATURE : String?
+    val TRX_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -288,14 +287,14 @@ class Detail : Table() {
                 null
             }
         }
-    val BNB_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun BNB_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val TRX_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun TRX_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
     /**
-     * Avalanche Digital Signature
-     * Digital signature of the CID using Avalanche's signing mechanism.
-     * Refer to the Avalanche Blockchain integration section for details.
+     * Binance Coin Digital Signature
+     * Digital signature of the CID using Binance Coin's signing mechanism.
+     * Refer to the Binance Coin Blockchain integration section for details.
      */
-    val AVAX_DIGITAL_SIGNATURE : String?
+    val BNB_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -304,14 +303,14 @@ class Detail : Table() {
                 null
             }
         }
-    val AVAX_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun AVAX_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val BNB_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
+    fun BNB_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
     /**
-     * Solana Digital Signature
-     * Digital signature of the CID using Solana's signing mechanism.
-     * Refer to the Solana Blockchain integration section for details.
+     * Avalanche Digital Signature
+     * Digital signature of the CID using Avalanche's signing mechanism.
+     * Refer to the Avalanche Blockchain integration section for details.
      */
-    val SOL_DIGITAL_SIGNATURE : String?
+    val AVAX_DIGITAL_SIGNATURE : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -320,8 +319,24 @@ class Detail : Table() {
                 null
             }
         }
-    val SOL_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun SOL_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val AVAX_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun AVAX_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Solana Digital Signature
+     * Digital signature of the CID using Solana's signing mechanism.
+     * Refer to the Solana Blockchain integration section for details.
+     */
+    val SOL_DIGITAL_SIGNATURE : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val SOL_DIGITAL_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun SOL_DIGITAL_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
         fun getRootAsDetail(_bb: ByteBuffer): Detail = getRootAsDetail(_bb, Detail())
@@ -329,8 +344,8 @@ class Detail : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDetail(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESSOffset: Int, CIDOffset: Int, ETH_DIGITAL_SIGNATUREOffset: Int, BTC_DIGITAL_SIGNATUREOffset: Int, LTC_DIGITAL_SIGNATUREOffset: Int, XRP_DIGITAL_SIGNATUREOffset: Int, ADA_DIGITAL_SIGNATUREOffset: Int, XLM_DIGITAL_SIGNATUREOffset: Int, DOGE_DIGITAL_SIGNATUREOffset: Int, XMR_DIGITAL_SIGNATUREOffset: Int, DOT_DIGITAL_SIGNATUREOffset: Int, FIL_DIGITAL_SIGNATUREOffset: Int, XTZ_DIGITAL_SIGNATUREOffset: Int, ATOM_DIGITAL_SIGNATUREOffset: Int, TRX_DIGITAL_SIGNATUREOffset: Int, BNB_DIGITAL_SIGNATUREOffset: Int, AVAX_DIGITAL_SIGNATUREOffset: Int, SOL_DIGITAL_SIGNATUREOffset: Int) : Int {
-            builder.startTable(18)
+        fun createDetail(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESSOffset: Int, CIDOffset: Int, FIDOffset: Int, ETH_DIGITAL_SIGNATUREOffset: Int, BTC_DIGITAL_SIGNATUREOffset: Int, LTC_DIGITAL_SIGNATUREOffset: Int, XRP_DIGITAL_SIGNATUREOffset: Int, ADA_DIGITAL_SIGNATUREOffset: Int, XLM_DIGITAL_SIGNATUREOffset: Int, DOGE_DIGITAL_SIGNATUREOffset: Int, XMR_DIGITAL_SIGNATUREOffset: Int, DOT_DIGITAL_SIGNATUREOffset: Int, FIL_DIGITAL_SIGNATUREOffset: Int, XTZ_DIGITAL_SIGNATUREOffset: Int, ATOM_DIGITAL_SIGNATUREOffset: Int, TRX_DIGITAL_SIGNATUREOffset: Int, BNB_DIGITAL_SIGNATUREOffset: Int, AVAX_DIGITAL_SIGNATUREOffset: Int, SOL_DIGITAL_SIGNATUREOffset: Int) : Int {
+            builder.startTable(19)
             addSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATUREOffset)
             addAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATUREOffset)
             addBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATUREOffset)
@@ -347,29 +362,31 @@ class Detail : Table() {
             addLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATUREOffset)
             addBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATUREOffset)
             addETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATUREOffset)
+            addFID(builder, FIDOffset)
             addCID(builder, CIDOffset)
             addMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset)
             return endDetail(builder)
         }
-        fun startDetail(builder: FlatBufferBuilder) = builder.startTable(18)
+        fun startDetail(builder: FlatBufferBuilder) = builder.startTable(19)
         fun addMULTIFORMAT_ADDRESS(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESS: Int) = builder.addOffset(0, MULTIFORMAT_ADDRESS, 0)
         fun addCID(builder: FlatBufferBuilder, CID: Int) = builder.addOffset(1, CID, 0)
-        fun addETH_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ETH_DIGITAL_SIGNATURE: Int) = builder.addOffset(2, ETH_DIGITAL_SIGNATURE, 0)
-        fun addBTC_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, BTC_DIGITAL_SIGNATURE: Int) = builder.addOffset(3, BTC_DIGITAL_SIGNATURE, 0)
-        fun addLTC_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, LTC_DIGITAL_SIGNATURE: Int) = builder.addOffset(4, LTC_DIGITAL_SIGNATURE, 0)
-        fun addXRP_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XRP_DIGITAL_SIGNATURE: Int) = builder.addOffset(5, XRP_DIGITAL_SIGNATURE, 0)
-        fun addADA_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ADA_DIGITAL_SIGNATURE: Int) = builder.addOffset(6, ADA_DIGITAL_SIGNATURE, 0)
-        fun addXLM_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XLM_DIGITAL_SIGNATURE: Int) = builder.addOffset(7, XLM_DIGITAL_SIGNATURE, 0)
-        fun addDOGE_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, DOGE_DIGITAL_SIGNATURE: Int) = builder.addOffset(8, DOGE_DIGITAL_SIGNATURE, 0)
-        fun addXMR_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XMR_DIGITAL_SIGNATURE: Int) = builder.addOffset(9, XMR_DIGITAL_SIGNATURE, 0)
-        fun addDOT_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, DOT_DIGITAL_SIGNATURE: Int) = builder.addOffset(10, DOT_DIGITAL_SIGNATURE, 0)
-        fun addFIL_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, FIL_DIGITAL_SIGNATURE: Int) = builder.addOffset(11, FIL_DIGITAL_SIGNATURE, 0)
-        fun addXTZ_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XTZ_DIGITAL_SIGNATURE: Int) = builder.addOffset(12, XTZ_DIGITAL_SIGNATURE, 0)
-        fun addATOM_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ATOM_DIGITAL_SIGNATURE: Int) = builder.addOffset(13, ATOM_DIGITAL_SIGNATURE, 0)
-        fun addTRX_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, TRX_DIGITAL_SIGNATURE: Int) = builder.addOffset(14, TRX_DIGITAL_SIGNATURE, 0)
-        fun addBNB_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, BNB_DIGITAL_SIGNATURE: Int) = builder.addOffset(15, BNB_DIGITAL_SIGNATURE, 0)
-        fun addAVAX_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, AVAX_DIGITAL_SIGNATURE: Int) = builder.addOffset(16, AVAX_DIGITAL_SIGNATURE, 0)
-        fun addSOL_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, SOL_DIGITAL_SIGNATURE: Int) = builder.addOffset(17, SOL_DIGITAL_SIGNATURE, 0)
+        fun addFID(builder: FlatBufferBuilder, FID: Int) = builder.addOffset(2, FID, 0)
+        fun addETH_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ETH_DIGITAL_SIGNATURE: Int) = builder.addOffset(3, ETH_DIGITAL_SIGNATURE, 0)
+        fun addBTC_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, BTC_DIGITAL_SIGNATURE: Int) = builder.addOffset(4, BTC_DIGITAL_SIGNATURE, 0)
+        fun addLTC_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, LTC_DIGITAL_SIGNATURE: Int) = builder.addOffset(5, LTC_DIGITAL_SIGNATURE, 0)
+        fun addXRP_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XRP_DIGITAL_SIGNATURE: Int) = builder.addOffset(6, XRP_DIGITAL_SIGNATURE, 0)
+        fun addADA_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ADA_DIGITAL_SIGNATURE: Int) = builder.addOffset(7, ADA_DIGITAL_SIGNATURE, 0)
+        fun addXLM_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XLM_DIGITAL_SIGNATURE: Int) = builder.addOffset(8, XLM_DIGITAL_SIGNATURE, 0)
+        fun addDOGE_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, DOGE_DIGITAL_SIGNATURE: Int) = builder.addOffset(9, DOGE_DIGITAL_SIGNATURE, 0)
+        fun addXMR_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XMR_DIGITAL_SIGNATURE: Int) = builder.addOffset(10, XMR_DIGITAL_SIGNATURE, 0)
+        fun addDOT_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, DOT_DIGITAL_SIGNATURE: Int) = builder.addOffset(11, DOT_DIGITAL_SIGNATURE, 0)
+        fun addFIL_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, FIL_DIGITAL_SIGNATURE: Int) = builder.addOffset(12, FIL_DIGITAL_SIGNATURE, 0)
+        fun addXTZ_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, XTZ_DIGITAL_SIGNATURE: Int) = builder.addOffset(13, XTZ_DIGITAL_SIGNATURE, 0)
+        fun addATOM_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, ATOM_DIGITAL_SIGNATURE: Int) = builder.addOffset(14, ATOM_DIGITAL_SIGNATURE, 0)
+        fun addTRX_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, TRX_DIGITAL_SIGNATURE: Int) = builder.addOffset(15, TRX_DIGITAL_SIGNATURE, 0)
+        fun addBNB_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, BNB_DIGITAL_SIGNATURE: Int) = builder.addOffset(16, BNB_DIGITAL_SIGNATURE, 0)
+        fun addAVAX_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, AVAX_DIGITAL_SIGNATURE: Int) = builder.addOffset(17, AVAX_DIGITAL_SIGNATURE, 0)
+        fun addSOL_DIGITAL_SIGNATURE(builder: FlatBufferBuilder, SOL_DIGITAL_SIGNATURE: Int) = builder.addOffset(18, SOL_DIGITAL_SIGNATURE, 0)
         fun endDetail(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

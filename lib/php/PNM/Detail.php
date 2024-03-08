@@ -63,12 +63,20 @@ class Detail extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// File ID
+    /// This field is the file ID / Name
+    public function getFID()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// Ethereum Digital Signature
     /// Digital signature of the CID using Ethereum's signing mechanism.
     /// Refer to the Ethereum Blockchain integration section for details.
     public function getETH_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -77,7 +85,7 @@ class Detail extends Table
     /// Refer to the Bitcoin Blockchain integration section for details.
     public function getBTC_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -86,7 +94,7 @@ class Detail extends Table
     /// Refer to the Litecoin Blockchain integration section for details.
     public function getLTC_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -95,7 +103,7 @@ class Detail extends Table
     /// Refer to the Ripple Blockchain integration section for details.
     public function getXRP_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -104,7 +112,7 @@ class Detail extends Table
     /// Refer to the Cardano Blockchain integration section for details.
     public function getADA_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -113,7 +121,7 @@ class Detail extends Table
     /// Refer to the Stellar Blockchain integration section for details.
     public function getXLM_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -122,7 +130,7 @@ class Detail extends Table
     /// Refer to the Dogecoin Blockchain integration section for details.
     public function getDOGE_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -131,7 +139,7 @@ class Detail extends Table
     /// Refer to the Monero Blockchain integration section for details.
     public function getXMR_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -140,7 +148,7 @@ class Detail extends Table
     /// Refer to the Polkadot Blockchain integration section for details.
     public function getDOT_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -149,7 +157,7 @@ class Detail extends Table
     /// Refer to the Filecoin Blockchain integration section for details.
     public function getFIL_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -158,7 +166,7 @@ class Detail extends Table
     /// Refer to the Tezos Blockchain integration section for details.
     public function getXTZ_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -167,7 +175,7 @@ class Detail extends Table
     /// Refer to the Cosmos Blockchain integration section for details.
     public function getATOM_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -176,7 +184,7 @@ class Detail extends Table
     /// Refer to the Tron Blockchain integration section for details.
     public function getTRX_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -185,7 +193,7 @@ class Detail extends Table
     /// Refer to the Binance Coin Blockchain integration section for details.
     public function getBNB_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -194,7 +202,7 @@ class Detail extends Table
     /// Refer to the Avalanche Blockchain integration section for details.
     public function getAVAX_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -203,7 +211,7 @@ class Detail extends Table
     /// Refer to the Solana Blockchain integration section for details.
     public function getSOL_DIGITAL_SIGNATURE()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -213,18 +221,19 @@ class Detail extends Table
      */
     public static function startDetail(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Detail
      */
-    public static function createDetail(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $CID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
+    public static function createDetail(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $CID, $FID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
     {
-        $builder->startObject(18);
+        $builder->startObject(19);
         self::addMULTIFORMAT_ADDRESS($builder, $MULTIFORMAT_ADDRESS);
         self::addCID($builder, $CID);
+        self::addFID($builder, $FID);
         self::addETH_DIGITAL_SIGNATURE($builder, $ETH_DIGITAL_SIGNATURE);
         self::addBTC_DIGITAL_SIGNATURE($builder, $BTC_DIGITAL_SIGNATURE);
         self::addLTC_DIGITAL_SIGNATURE($builder, $LTC_DIGITAL_SIGNATURE);
@@ -270,9 +279,19 @@ class Detail extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addFID(FlatBufferBuilder $builder, $FID)
+    {
+        $builder->addOffsetX(2, $FID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addETH_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ETH_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(2, $ETH_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(3, $ETH_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -282,7 +301,7 @@ class Detail extends Table
      */
     public static function addBTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BTC_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(3, $BTC_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(4, $BTC_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -292,7 +311,7 @@ class Detail extends Table
      */
     public static function addLTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $LTC_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(4, $LTC_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(5, $LTC_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -302,7 +321,7 @@ class Detail extends Table
      */
     public static function addXRP_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XRP_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(5, $XRP_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(6, $XRP_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -312,7 +331,7 @@ class Detail extends Table
      */
     public static function addADA_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ADA_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(6, $ADA_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(7, $ADA_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -322,7 +341,7 @@ class Detail extends Table
      */
     public static function addXLM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XLM_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(7, $XLM_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(8, $XLM_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -332,7 +351,7 @@ class Detail extends Table
      */
     public static function addDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOGE_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(8, $DOGE_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(9, $DOGE_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -342,7 +361,7 @@ class Detail extends Table
      */
     public static function addXMR_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XMR_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(9, $XMR_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(10, $XMR_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -352,7 +371,7 @@ class Detail extends Table
      */
     public static function addDOT_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOT_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(10, $DOT_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(11, $DOT_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -362,7 +381,7 @@ class Detail extends Table
      */
     public static function addFIL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $FIL_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(11, $FIL_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(12, $FIL_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -372,7 +391,7 @@ class Detail extends Table
      */
     public static function addXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XTZ_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(12, $XTZ_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(13, $XTZ_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -382,7 +401,7 @@ class Detail extends Table
      */
     public static function addATOM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ATOM_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(13, $ATOM_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(14, $ATOM_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -392,7 +411,7 @@ class Detail extends Table
      */
     public static function addTRX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $TRX_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(14, $TRX_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(15, $TRX_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -402,7 +421,7 @@ class Detail extends Table
      */
     public static function addBNB_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BNB_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(15, $BNB_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(16, $BNB_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -412,7 +431,7 @@ class Detail extends Table
      */
     public static function addAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $AVAX_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(16, $AVAX_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(17, $AVAX_DIGITAL_SIGNATURE, 0);
     }
 
     /**
@@ -422,7 +441,7 @@ class Detail extends Table
      */
     public static function addSOL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $SOL_DIGITAL_SIGNATURE)
     {
-        $builder->addOffsetX(17, $SOL_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(18, $SOL_DIGITAL_SIGNATURE, 0);
     }
 
     /**

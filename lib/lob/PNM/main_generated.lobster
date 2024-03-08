@@ -23,93 +23,97 @@ class Detail : flatbuffers_handle
     /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
     def CID() -> string:
         return buf_.flatbuffers_field_string(pos_, 6)
+    /// File ID
+    /// This field is the file ID / Name
+    def FID() -> string:
+        return buf_.flatbuffers_field_string(pos_, 8)
     /// Ethereum Digital Signature
     /// Digital signature of the CID using Ethereum's signing mechanism.
     /// Refer to the Ethereum Blockchain integration section for details.
     def ETH_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return buf_.flatbuffers_field_string(pos_, 10)
     /// Bitcoin Digital Signature
     /// Digital signature of the CID using Bitcoin's signing mechanism.
     /// Refer to the Bitcoin Blockchain integration section for details.
     def BTC_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return buf_.flatbuffers_field_string(pos_, 12)
     /// Litecoin Digital Signature
     /// Digital signature of the CID using Litecoin's signing mechanism.
     /// Refer to the Litecoin Blockchain integration section for details.
     def LTC_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return buf_.flatbuffers_field_string(pos_, 14)
     /// Ripple Digital Signature
     /// Digital signature of the CID using Ripple's signing mechanism.
     /// Refer to the Ripple Blockchain integration section for details.
     def XRP_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return buf_.flatbuffers_field_string(pos_, 16)
     /// Cardano Digital Signature
     /// Digital signature of the CID using Cardano's signing mechanism.
     /// Refer to the Cardano Blockchain integration section for details.
     def ADA_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return buf_.flatbuffers_field_string(pos_, 18)
     /// Stellar Digital Signature
     /// Digital signature of the CID using Stellar's signing mechanism.
     /// Refer to the Stellar Blockchain integration section for details.
     def XLM_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 18)
+        return buf_.flatbuffers_field_string(pos_, 20)
     /// Dogecoin Digital Signature
     /// Digital signature of the CID using Dogecoin's signing mechanism.
     /// Refer to the Dogecoin Blockchain integration section for details.
     def DOGE_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return buf_.flatbuffers_field_string(pos_, 22)
     /// Monero Digital Signature
     /// Digital signature of the CID using Monero's signing mechanism.
     /// Refer to the Monero Blockchain integration section for details.
     def XMR_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 22)
+        return buf_.flatbuffers_field_string(pos_, 24)
     /// Polkadot Digital Signature
     /// Digital signature of the CID using Polkadot's signing mechanism.
     /// Refer to the Polkadot Blockchain integration section for details.
     def DOT_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 24)
+        return buf_.flatbuffers_field_string(pos_, 26)
     /// Filecoin Digital Signature
     /// Digital signature of the CID using Filecoin's signing mechanism.
     /// Refer to the Filecoin Blockchain integration section for details.
     def FIL_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 26)
+        return buf_.flatbuffers_field_string(pos_, 28)
     /// Tezos Digital Signature
     /// Digital signature of the CID using Tezos's signing mechanism.
     /// Refer to the Tezos Blockchain integration section for details.
     def XTZ_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 28)
+        return buf_.flatbuffers_field_string(pos_, 30)
     /// Cosmos Digital Signature
     /// Digital signature of the CID using Cosmos's signing mechanism.
     /// Refer to the Cosmos Blockchain integration section for details.
     def ATOM_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 30)
+        return buf_.flatbuffers_field_string(pos_, 32)
     /// Tron Digital Signature
     /// Digital signature of the CID using Tron's signing mechanism.
     /// Refer to the Tron Blockchain integration section for details.
     def TRX_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 32)
+        return buf_.flatbuffers_field_string(pos_, 34)
     /// Binance Coin Digital Signature
     /// Digital signature of the CID using Binance Coin's signing mechanism.
     /// Refer to the Binance Coin Blockchain integration section for details.
     def BNB_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 34)
+        return buf_.flatbuffers_field_string(pos_, 36)
     /// Avalanche Digital Signature
     /// Digital signature of the CID using Avalanche's signing mechanism.
     /// Refer to the Avalanche Blockchain integration section for details.
     def AVAX_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 36)
+        return buf_.flatbuffers_field_string(pos_, 38)
     /// Solana Digital Signature
     /// Digital signature of the CID using Solana's signing mechanism.
     /// Refer to the Solana Blockchain integration section for details.
     def SOL_DIGITAL_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 38)
+        return buf_.flatbuffers_field_string(pos_, 40)
 
 def GetRootAsDetail(buf:string): return Detail { buf, buf.flatbuffers_indirect(0) }
 
 struct DetailBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(18)
+        b_.StartObject(19)
         return this
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, MULTIFORMAT_ADDRESS)
@@ -117,53 +121,56 @@ struct DetailBuilder:
     def add_CID(CID:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(1, CID)
         return this
+    def add_FID(FID:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(2, FID)
+        return this
     def add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(2, ETH_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(3, ETH_DIGITAL_SIGNATURE)
         return this
     def add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(3, BTC_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(4, BTC_DIGITAL_SIGNATURE)
         return this
     def add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(4, LTC_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(5, LTC_DIGITAL_SIGNATURE)
         return this
     def add_XRP_DIGITAL_SIGNATURE(XRP_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(5, XRP_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(6, XRP_DIGITAL_SIGNATURE)
         return this
     def add_ADA_DIGITAL_SIGNATURE(ADA_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(6, ADA_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(7, ADA_DIGITAL_SIGNATURE)
         return this
     def add_XLM_DIGITAL_SIGNATURE(XLM_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(7, XLM_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(8, XLM_DIGITAL_SIGNATURE)
         return this
     def add_DOGE_DIGITAL_SIGNATURE(DOGE_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(8, DOGE_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(9, DOGE_DIGITAL_SIGNATURE)
         return this
     def add_XMR_DIGITAL_SIGNATURE(XMR_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(9, XMR_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(10, XMR_DIGITAL_SIGNATURE)
         return this
     def add_DOT_DIGITAL_SIGNATURE(DOT_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(10, DOT_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(11, DOT_DIGITAL_SIGNATURE)
         return this
     def add_FIL_DIGITAL_SIGNATURE(FIL_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(11, FIL_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(12, FIL_DIGITAL_SIGNATURE)
         return this
     def add_XTZ_DIGITAL_SIGNATURE(XTZ_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(12, XTZ_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(13, XTZ_DIGITAL_SIGNATURE)
         return this
     def add_ATOM_DIGITAL_SIGNATURE(ATOM_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(13, ATOM_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(14, ATOM_DIGITAL_SIGNATURE)
         return this
     def add_TRX_DIGITAL_SIGNATURE(TRX_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(14, TRX_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(15, TRX_DIGITAL_SIGNATURE)
         return this
     def add_BNB_DIGITAL_SIGNATURE(BNB_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(15, BNB_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(16, BNB_DIGITAL_SIGNATURE)
         return this
     def add_AVAX_DIGITAL_SIGNATURE(AVAX_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(16, AVAX_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(17, AVAX_DIGITAL_SIGNATURE)
         return this
     def add_SOL_DIGITAL_SIGNATURE(SOL_DIGITAL_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(17, SOL_DIGITAL_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(18, SOL_DIGITAL_SIGNATURE)
         return this
     def end():
         return b_.EndObject()

@@ -53,12 +53,21 @@ class Detail(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # File ID
+    # This field is the file ID / Name
+    # Detail
+    def FID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
     # Ethereum Digital Signature
     # Digital signature of the CID using Ethereum's signing mechanism.
     # Refer to the Ethereum Blockchain integration section for details.
     # Detail
     def ETH_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -68,7 +77,7 @@ class Detail(object):
     # Refer to the Bitcoin Blockchain integration section for details.
     # Detail
     def BTC_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -78,7 +87,7 @@ class Detail(object):
     # Refer to the Litecoin Blockchain integration section for details.
     # Detail
     def LTC_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -88,7 +97,7 @@ class Detail(object):
     # Refer to the Ripple Blockchain integration section for details.
     # Detail
     def XRP_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -98,7 +107,7 @@ class Detail(object):
     # Refer to the Cardano Blockchain integration section for details.
     # Detail
     def ADA_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -108,7 +117,7 @@ class Detail(object):
     # Refer to the Stellar Blockchain integration section for details.
     # Detail
     def XLM_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -118,7 +127,7 @@ class Detail(object):
     # Refer to the Dogecoin Blockchain integration section for details.
     # Detail
     def DOGE_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -128,7 +137,7 @@ class Detail(object):
     # Refer to the Monero Blockchain integration section for details.
     # Detail
     def XMR_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -138,7 +147,7 @@ class Detail(object):
     # Refer to the Polkadot Blockchain integration section for details.
     # Detail
     def DOT_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -148,7 +157,7 @@ class Detail(object):
     # Refer to the Filecoin Blockchain integration section for details.
     # Detail
     def FIL_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -158,7 +167,7 @@ class Detail(object):
     # Refer to the Tezos Blockchain integration section for details.
     # Detail
     def XTZ_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -168,7 +177,7 @@ class Detail(object):
     # Refer to the Cosmos Blockchain integration section for details.
     # Detail
     def ATOM_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -178,7 +187,7 @@ class Detail(object):
     # Refer to the Tron Blockchain integration section for details.
     # Detail
     def TRX_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -188,7 +197,7 @@ class Detail(object):
     # Refer to the Binance Coin Blockchain integration section for details.
     # Detail
     def BNB_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -198,7 +207,7 @@ class Detail(object):
     # Refer to the Avalanche Blockchain integration section for details.
     # Detail
     def AVAX_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -208,12 +217,12 @@ class Detail(object):
     # Refer to the Solana Blockchain integration section for details.
     # Detail
     def SOL_DIGITAL_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def DetailStart(builder): builder.StartObject(18)
+def DetailStart(builder): builder.StartObject(19)
 def Start(builder):
     return DetailStart(builder)
 def DetailAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
@@ -222,52 +231,55 @@ def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
 def DetailAddCID(builder, CID): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
 def AddCID(builder, CID):
     return DetailAddCID(builder, CID)
-def DetailAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
+def DetailAddFID(builder, FID): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FID), 0)
+def AddFID(builder, FID):
+    return DetailAddFID(builder, FID)
+def DetailAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ETH_DIGITAL_SIGNATURE), 0)
 def AddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE):
     return DetailAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
-def DetailAddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BTC_DIGITAL_SIGNATURE), 0)
+def DetailAddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(BTC_DIGITAL_SIGNATURE), 0)
 def AddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE):
     return DetailAddBTC_DIGITAL_SIGNATURE(builder, BTC_DIGITAL_SIGNATURE)
-def DetailAddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LTC_DIGITAL_SIGNATURE), 0)
+def DetailAddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(LTC_DIGITAL_SIGNATURE), 0)
 def AddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE):
     return DetailAddLTC_DIGITAL_SIGNATURE(builder, LTC_DIGITAL_SIGNATURE)
-def DetailAddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(XRP_DIGITAL_SIGNATURE), 0)
+def DetailAddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(XRP_DIGITAL_SIGNATURE), 0)
 def AddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE):
     return DetailAddXRP_DIGITAL_SIGNATURE(builder, XRP_DIGITAL_SIGNATURE)
-def DetailAddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ADA_DIGITAL_SIGNATURE), 0)
+def DetailAddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ADA_DIGITAL_SIGNATURE), 0)
 def AddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE):
     return DetailAddADA_DIGITAL_SIGNATURE(builder, ADA_DIGITAL_SIGNATURE)
-def DetailAddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(XLM_DIGITAL_SIGNATURE), 0)
+def DetailAddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(XLM_DIGITAL_SIGNATURE), 0)
 def AddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE):
     return DetailAddXLM_DIGITAL_SIGNATURE(builder, XLM_DIGITAL_SIGNATURE)
-def DetailAddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DOGE_DIGITAL_SIGNATURE), 0)
+def DetailAddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DOGE_DIGITAL_SIGNATURE), 0)
 def AddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE):
     return DetailAddDOGE_DIGITAL_SIGNATURE(builder, DOGE_DIGITAL_SIGNATURE)
-def DetailAddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(XMR_DIGITAL_SIGNATURE), 0)
+def DetailAddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(XMR_DIGITAL_SIGNATURE), 0)
 def AddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE):
     return DetailAddXMR_DIGITAL_SIGNATURE(builder, XMR_DIGITAL_SIGNATURE)
-def DetailAddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DOT_DIGITAL_SIGNATURE), 0)
+def DetailAddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DOT_DIGITAL_SIGNATURE), 0)
 def AddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE):
     return DetailAddDOT_DIGITAL_SIGNATURE(builder, DOT_DIGITAL_SIGNATURE)
-def DetailAddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(FIL_DIGITAL_SIGNATURE), 0)
+def DetailAddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(FIL_DIGITAL_SIGNATURE), 0)
 def AddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE):
     return DetailAddFIL_DIGITAL_SIGNATURE(builder, FIL_DIGITAL_SIGNATURE)
-def DetailAddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(XTZ_DIGITAL_SIGNATURE), 0)
+def DetailAddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(XTZ_DIGITAL_SIGNATURE), 0)
 def AddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE):
     return DetailAddXTZ_DIGITAL_SIGNATURE(builder, XTZ_DIGITAL_SIGNATURE)
-def DetailAddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ATOM_DIGITAL_SIGNATURE), 0)
+def DetailAddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ATOM_DIGITAL_SIGNATURE), 0)
 def AddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE):
     return DetailAddATOM_DIGITAL_SIGNATURE(builder, ATOM_DIGITAL_SIGNATURE)
-def DetailAddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TRX_DIGITAL_SIGNATURE), 0)
+def DetailAddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TRX_DIGITAL_SIGNATURE), 0)
 def AddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE):
     return DetailAddTRX_DIGITAL_SIGNATURE(builder, TRX_DIGITAL_SIGNATURE)
-def DetailAddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(BNB_DIGITAL_SIGNATURE), 0)
+def DetailAddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(BNB_DIGITAL_SIGNATURE), 0)
 def AddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE):
     return DetailAddBNB_DIGITAL_SIGNATURE(builder, BNB_DIGITAL_SIGNATURE)
-def DetailAddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(AVAX_DIGITAL_SIGNATURE), 0)
+def DetailAddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(AVAX_DIGITAL_SIGNATURE), 0)
 def AddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE):
     return DetailAddAVAX_DIGITAL_SIGNATURE(builder, AVAX_DIGITAL_SIGNATURE)
-def DetailAddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SOL_DIGITAL_SIGNATURE), 0)
+def DetailAddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SOL_DIGITAL_SIGNATURE), 0)
 def AddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE):
     return DetailAddSOL_DIGITAL_SIGNATURE(builder, SOL_DIGITAL_SIGNATURE)
 def DetailEnd(builder): return builder.EndObject()
@@ -280,6 +292,7 @@ class DetailT(object):
     def __init__(self):
         self.MULTIFORMAT_ADDRESS = None  # type: str
         self.CID = None  # type: str
+        self.FID = None  # type: str
         self.ETH_DIGITAL_SIGNATURE = None  # type: str
         self.BTC_DIGITAL_SIGNATURE = None  # type: str
         self.LTC_DIGITAL_SIGNATURE = None  # type: str
@@ -320,6 +333,7 @@ class DetailT(object):
             return
         self.MULTIFORMAT_ADDRESS = detail.MULTIFORMAT_ADDRESS()
         self.CID = detail.CID()
+        self.FID = detail.FID()
         self.ETH_DIGITAL_SIGNATURE = detail.ETH_DIGITAL_SIGNATURE()
         self.BTC_DIGITAL_SIGNATURE = detail.BTC_DIGITAL_SIGNATURE()
         self.LTC_DIGITAL_SIGNATURE = detail.LTC_DIGITAL_SIGNATURE()
@@ -343,6 +357,8 @@ class DetailT(object):
             MULTIFORMAT_ADDRESS = builder.CreateString(self.MULTIFORMAT_ADDRESS)
         if self.CID is not None:
             CID = builder.CreateString(self.CID)
+        if self.FID is not None:
+            FID = builder.CreateString(self.FID)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             ETH_DIGITAL_SIGNATURE = builder.CreateString(self.ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:
@@ -380,6 +396,8 @@ class DetailT(object):
             DetailAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
         if self.CID is not None:
             DetailAddCID(builder, CID)
+        if self.FID is not None:
+            DetailAddFID(builder, FID)
         if self.ETH_DIGITAL_SIGNATURE is not None:
             DetailAddETH_DIGITAL_SIGNATURE(builder, ETH_DIGITAL_SIGNATURE)
         if self.BTC_DIGITAL_SIGNATURE is not None:

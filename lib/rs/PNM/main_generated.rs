@@ -28,22 +28,23 @@ impl<'a> flatbuffers::Follow<'a> for Detail<'a> {
 impl<'a> Detail<'a> {
   pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 4;
   pub const VT_CID: flatbuffers::VOffsetT = 6;
-  pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 8;
-  pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
-  pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 12;
-  pub const VT_XRP_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 14;
-  pub const VT_ADA_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 16;
-  pub const VT_XLM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 18;
-  pub const VT_DOGE_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 20;
-  pub const VT_XMR_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 22;
-  pub const VT_DOT_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 24;
-  pub const VT_FIL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 26;
-  pub const VT_XTZ_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 28;
-  pub const VT_ATOM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 30;
-  pub const VT_TRX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 32;
-  pub const VT_BNB_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 34;
-  pub const VT_AVAX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 36;
-  pub const VT_SOL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 38;
+  pub const VT_FID: flatbuffers::VOffsetT = 8;
+  pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
+  pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 12;
+  pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 14;
+  pub const VT_XRP_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 16;
+  pub const VT_ADA_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 18;
+  pub const VT_XLM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 20;
+  pub const VT_DOGE_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 22;
+  pub const VT_XMR_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 24;
+  pub const VT_DOT_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 26;
+  pub const VT_FIL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 28;
+  pub const VT_XTZ_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 30;
+  pub const VT_ATOM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 32;
+  pub const VT_TRX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 34;
+  pub const VT_BNB_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 36;
+  pub const VT_AVAX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 38;
+  pub const VT_SOL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 40;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -71,6 +72,7 @@ impl<'a> Detail<'a> {
     if let Some(x) = args.LTC_DIGITAL_SIGNATURE { builder.add_LTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.BTC_DIGITAL_SIGNATURE { builder.add_BTC_DIGITAL_SIGNATURE(x); }
     if let Some(x) = args.ETH_DIGITAL_SIGNATURE { builder.add_ETH_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.FID { builder.add_FID(x); }
     if let Some(x) = args.CID { builder.add_CID(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
     builder.finish()
@@ -81,6 +83,9 @@ impl<'a> Detail<'a> {
       x.to_string()
     });
     let CID = self.CID().map(|x| {
+      x.to_string()
+    });
+    let FID = self.FID().map(|x| {
       x.to_string()
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE().map(|x| {
@@ -134,6 +139,7 @@ impl<'a> Detail<'a> {
     DetailT {
       MULTIFORMAT_ADDRESS,
       CID,
+      FID,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,
@@ -176,6 +182,15 @@ impl<'a> Detail<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_CID, None)}
+  }
+  /// File ID
+  /// This field is the file ID / Name
+  #[inline]
+  pub fn FID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Detail::VT_FID, None)}
   }
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -348,6 +363,7 @@ impl flatbuffers::Verifiable for Detail<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FID", Self::VT_FID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ETH_DIGITAL_SIGNATURE", Self::VT_ETH_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BTC_DIGITAL_SIGNATURE", Self::VT_BTC_DIGITAL_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LTC_DIGITAL_SIGNATURE", Self::VT_LTC_DIGITAL_SIGNATURE, false)?
@@ -371,6 +387,7 @@ impl flatbuffers::Verifiable for Detail<'_> {
 pub struct DetailArgs<'a> {
     pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ETH_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -394,6 +411,7 @@ impl<'a> Default for DetailArgs<'a> {
     DetailArgs {
       MULTIFORMAT_ADDRESS: None,
       CID: None,
+      FID: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -426,6 +444,10 @@ impl<'a: 'b, 'b> DetailBuilder<'a, 'b> {
   #[inline]
   pub fn add_CID(&mut self, CID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_CID, CID);
+  }
+  #[inline]
+  pub fn add_FID(&mut self, FID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Detail::VT_FID, FID);
   }
   #[inline]
   pub fn add_ETH_DIGITAL_SIGNATURE(&mut self, ETH_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
@@ -511,6 +533,7 @@ impl core::fmt::Debug for Detail<'_> {
     let mut ds = f.debug_struct("Detail");
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
       ds.field("CID", &self.CID());
+      ds.field("FID", &self.FID());
       ds.field("ETH_DIGITAL_SIGNATURE", &self.ETH_DIGITAL_SIGNATURE());
       ds.field("BTC_DIGITAL_SIGNATURE", &self.BTC_DIGITAL_SIGNATURE());
       ds.field("LTC_DIGITAL_SIGNATURE", &self.LTC_DIGITAL_SIGNATURE());
@@ -535,6 +558,7 @@ impl core::fmt::Debug for Detail<'_> {
 pub struct DetailT {
   pub MULTIFORMAT_ADDRESS: Option<String>,
   pub CID: Option<String>,
+  pub FID: Option<String>,
   pub ETH_DIGITAL_SIGNATURE: Option<String>,
   pub BTC_DIGITAL_SIGNATURE: Option<String>,
   pub LTC_DIGITAL_SIGNATURE: Option<String>,
@@ -557,6 +581,7 @@ impl Default for DetailT {
     Self {
       MULTIFORMAT_ADDRESS: None,
       CID: None,
+      FID: None,
       ETH_DIGITAL_SIGNATURE: None,
       BTC_DIGITAL_SIGNATURE: None,
       LTC_DIGITAL_SIGNATURE: None,
@@ -585,6 +610,9 @@ impl DetailT {
       _fbb.create_string(x)
     });
     let CID = self.CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FID = self.FID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE.as_ref().map(|x|{
@@ -638,6 +666,7 @@ impl DetailT {
     Detail::create(_fbb, &DetailArgs{
       MULTIFORMAT_ADDRESS,
       CID,
+      FID,
       ETH_DIGITAL_SIGNATURE,
       BTC_DIGITAL_SIGNATURE,
       LTC_DIGITAL_SIGNATURE,

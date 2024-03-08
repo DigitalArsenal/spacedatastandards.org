@@ -70,11 +70,23 @@ func (rcv *Detail) CID() []byte {
 /// Concatenated Content Identifier (CID)
 /// This field is a unique ID for distributed systems (CID).
 /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+/// File ID
+/// This field is the file ID / Name
+func (rcv *Detail) FID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// File ID
+/// This field is the file ID / Name
 /// Ethereum Digital Signature
 /// Digital signature of the CID using Ethereum's signing mechanism.
 /// Refer to the Ethereum Blockchain integration section for details.
 func (rcv *Detail) ETH_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -88,7 +100,7 @@ func (rcv *Detail) ETH_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Bitcoin's signing mechanism.
 /// Refer to the Bitcoin Blockchain integration section for details.
 func (rcv *Detail) BTC_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -102,7 +114,7 @@ func (rcv *Detail) BTC_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Litecoin's signing mechanism.
 /// Refer to the Litecoin Blockchain integration section for details.
 func (rcv *Detail) LTC_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -116,7 +128,7 @@ func (rcv *Detail) LTC_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Ripple's signing mechanism.
 /// Refer to the Ripple Blockchain integration section for details.
 func (rcv *Detail) XRP_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -130,7 +142,7 @@ func (rcv *Detail) XRP_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Cardano's signing mechanism.
 /// Refer to the Cardano Blockchain integration section for details.
 func (rcv *Detail) ADA_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -144,7 +156,7 @@ func (rcv *Detail) ADA_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Stellar's signing mechanism.
 /// Refer to the Stellar Blockchain integration section for details.
 func (rcv *Detail) XLM_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -158,7 +170,7 @@ func (rcv *Detail) XLM_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Dogecoin's signing mechanism.
 /// Refer to the Dogecoin Blockchain integration section for details.
 func (rcv *Detail) DOGE_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -172,7 +184,7 @@ func (rcv *Detail) DOGE_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Monero's signing mechanism.
 /// Refer to the Monero Blockchain integration section for details.
 func (rcv *Detail) XMR_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -186,7 +198,7 @@ func (rcv *Detail) XMR_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Polkadot's signing mechanism.
 /// Refer to the Polkadot Blockchain integration section for details.
 func (rcv *Detail) DOT_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -200,7 +212,7 @@ func (rcv *Detail) DOT_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Filecoin's signing mechanism.
 /// Refer to the Filecoin Blockchain integration section for details.
 func (rcv *Detail) FIL_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -214,7 +226,7 @@ func (rcv *Detail) FIL_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Tezos's signing mechanism.
 /// Refer to the Tezos Blockchain integration section for details.
 func (rcv *Detail) XTZ_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -228,7 +240,7 @@ func (rcv *Detail) XTZ_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Cosmos's signing mechanism.
 /// Refer to the Cosmos Blockchain integration section for details.
 func (rcv *Detail) ATOM_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -242,7 +254,7 @@ func (rcv *Detail) ATOM_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Tron's signing mechanism.
 /// Refer to the Tron Blockchain integration section for details.
 func (rcv *Detail) TRX_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -256,7 +268,7 @@ func (rcv *Detail) TRX_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Binance Coin's signing mechanism.
 /// Refer to the Binance Coin Blockchain integration section for details.
 func (rcv *Detail) BNB_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -270,7 +282,7 @@ func (rcv *Detail) BNB_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Avalanche's signing mechanism.
 /// Refer to the Avalanche Blockchain integration section for details.
 func (rcv *Detail) AVAX_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -284,7 +296,7 @@ func (rcv *Detail) AVAX_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Solana's signing mechanism.
 /// Refer to the Solana Blockchain integration section for details.
 func (rcv *Detail) SOL_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -295,7 +307,7 @@ func (rcv *Detail) SOL_DIGITAL_SIGNATURE() []byte {
 /// Digital signature of the CID using Solana's signing mechanism.
 /// Refer to the Solana Blockchain integration section for details.
 func DetailStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(19)
 }
 func DetailAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
@@ -303,53 +315,56 @@ func DetailAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDR
 func DetailAddCID(builder *flatbuffers.Builder, CID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CID), 0)
 }
+func DetailAddFID(builder *flatbuffers.Builder, FID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(FID), 0)
+}
 func DetailAddETH_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ETH_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ETH_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ETH_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddBTC_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, BTC_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BTC_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(BTC_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddLTC_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, LTC_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LTC_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(LTC_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddXRP_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XRP_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(XRP_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(XRP_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddADA_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ADA_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ADA_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ADA_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddXLM_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XLM_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(XLM_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(XLM_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddDOGE_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, DOGE_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DOGE_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DOGE_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddXMR_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XMR_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(XMR_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(XMR_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddDOT_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, DOT_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DOT_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DOT_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddFIL_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, FIL_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(FIL_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(FIL_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddXTZ_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XTZ_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(XTZ_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(XTZ_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddATOM_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ATOM_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(ATOM_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(ATOM_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddTRX_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, TRX_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TRX_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(TRX_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddBNB_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, BNB_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(BNB_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(BNB_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddAVAX_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, AVAX_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(AVAX_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(AVAX_DIGITAL_SIGNATURE), 0)
 }
 func DetailAddSOL_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, SOL_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(SOL_DIGITAL_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(SOL_DIGITAL_SIGNATURE), 0)
 }
 func DetailEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

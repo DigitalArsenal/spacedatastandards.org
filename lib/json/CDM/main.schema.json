@@ -41,6 +41,10 @@
                 "type" : "string",
                 "description" : "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid."
               },
+        "FID" : {
+                "type" : "string",
+                "description" : "File ID\nThis field is the file ID / Name"
+              },
         "ETH_DIGITAL_SIGNATURE" : {
                 "type" : "string",
                 "description" : "Ethereum Digital Signature\nDigital signature of the CID using Ethereum's signing mechanism.\nRefer to the Ethereum Blockchain integration section for details."
