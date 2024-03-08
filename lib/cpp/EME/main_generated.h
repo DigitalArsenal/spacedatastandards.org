@@ -20,7 +20,6 @@ struct EMECOLLECTION;
 struct EMECOLLECTIONBuilder;
 
 /// Encrypted Message Envelope (EME)
-/// Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 /// Encrypted Message Envelope
 struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EMEBuilder Builder;

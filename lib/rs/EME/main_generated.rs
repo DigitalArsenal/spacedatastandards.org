@@ -13,7 +13,6 @@ pub enum EMEOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Encrypted Message Envelope (EME)
-/// Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 /// Encrypted Message Envelope
 pub struct EME<'a> {
   pub _tab: flatbuffers::Table<'a>,

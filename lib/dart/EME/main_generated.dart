@@ -6,7 +6,6 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Encrypted Message Envelope (EME)
-///  Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 ///  Encrypted Message Envelope
 class EME {
   EME._(this._bc, this._bcOffset);

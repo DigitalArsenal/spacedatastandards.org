@@ -7,7 +7,6 @@ import (
 )
 
 /// Encrypted Message Envelope (EME)
-/// Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 /// Encrypted Message Envelope
 type EME struct {
 	_tab flatbuffers.Table

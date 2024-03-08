@@ -7,7 +7,6 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Encrypted Message Envelope (EME)
-/// Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 /// Encrypted Message Envelope
 public struct EME : IFlatbufferObject
 {

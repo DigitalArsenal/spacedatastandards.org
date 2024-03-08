@@ -2966,7 +2966,7 @@
             "definitions": {
                 "EME": {
                     "type": "object",
-                    "description": "Encrypted Message Envelope (EME)\nDefine a collection of Encrypted Message Envelopes with detailed ECIES encryption fields\nEncrypted Message Envelope",
+                    "description": "Encrypted Message Envelope (EME)\nEncrypted Message Envelope",
                     "properties": {
                         "ENCRYPTED_BLOB": {
                             "type": "array",

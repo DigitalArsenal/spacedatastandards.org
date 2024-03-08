@@ -6,7 +6,6 @@ class EME
 class EMECOLLECTION
 
 /// Encrypted Message Envelope (EME)
-/// Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 /// Encrypted Message Envelope
 class EME : flatbuffers_handle
     /// Encrypted data blob, containing the ciphertext of the original plaintext message.

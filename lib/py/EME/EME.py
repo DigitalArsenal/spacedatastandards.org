@@ -7,7 +7,6 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Encrypted Message Envelope (EME)
-# Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
 # Encrypted Message Envelope
 class EME(object):
     __slots__ = ['_tab']
