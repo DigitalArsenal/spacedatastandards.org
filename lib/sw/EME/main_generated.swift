@@ -5,7 +5,6 @@
 import FlatBuffers
 
 ///  Encrypted Message Envelope (EME)
-///  Encrypted Message Envelope
 public struct EME: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

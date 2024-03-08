@@ -7,7 +7,6 @@ import (
 )
 
 /// Encrypted Message Envelope (EME)
-/// Encrypted Message Envelope
 type EME struct {
 	_tab flatbuffers.Table
 }

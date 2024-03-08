@@ -19,7 +19,6 @@ import java.nio.ByteOrder;
 
 /**
  * Encrypted Message Envelope (EME)
- * Encrypted Message Envelope
  */
 @SuppressWarnings("unused")
 public final class EME extends Table {
