@@ -1,8 +1,7 @@
 // Publish Notification Message (PNM)
-// Describes content published to IPFS
 
-/// Publish Notification Message
-table PNM {
+/// Details of Published Message
+table Detail {
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/
   /// A universal address format for representing multiple network protocols. Examples include:
@@ -12,11 +11,10 @@ table PNM {
   /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   MULTIFORMAT_ADDRESS: string;
 
-  /// Concatenated Content Identifier (CID) and File ID
-  /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  /// Concatenated Content Identifier (CID)
+  /// This field is a unique ID for distributed systems (CID).
   /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-  /// The appended 4-character file ID describes the datatype in the referenced file.
-  CID_FID: string;
+  CID: string;
 
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -97,6 +95,18 @@ table PNM {
   /// Digital signature of the CID using Solana's signing mechanism.
   /// Refer to the Solana Blockchain integration section for details.
   SOL_DIGITAL_SIGNATURE: string;
+}
+
+/// Publish Notification Message
+
+table PNM {
+/// Unencrypted PNM Details
+/// This field contains the details of the Publish Notification Message without encryption.
+FILE: Detail;
+
+/// Encrypted PNM Details
+/// This field contains the details of the Publish Notification Message with encryption.
+FILE_ENCRYPTED: Detail;
 }
 
 /// Collection of Publish Notification Messages

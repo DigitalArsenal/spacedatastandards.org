@@ -5,15 +5,15 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Publish Notification Message
-class PNM {
-  PNM._(this._bc, this._bcOffset);
-  factory PNM(List<int> bytes) {
+///  Details of Published Message
+class Detail {
+  Detail._(this._bc, this._bcOffset);
+  factory Detail(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<PNM> reader = _PNMReader();
+  static const fb.Reader<Detail> reader = _DetailReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
@@ -26,11 +26,10 @@ class PNM {
   ///  - /dns4/example.com for a domain name resolvable only to IPv4 addresses
   ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   String? get MULTIFORMAT_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Concatenated Content Identifier (CID) and File ID
-  ///  This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  ///  Concatenated Content Identifier (CID)
+  ///  This field is a unique ID for distributed systems (CID).
   ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-  ///  The appended 4-character file ID describes the datatype in the referenced file.
-  String? get CID_FID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Ethereum Digital Signature
   ///  Digital signature of the CID using Ethereum's signing mechanism.
   ///  Refer to the Ethereum Blockchain integration section for details.
@@ -98,20 +97,20 @@ class PNM {
 
   @override
   String toString() {
-    return 'PNM{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, CID_FID: ${CID_FID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
+    return 'Detail{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, CID: ${CID}, ETH_DIGITAL_SIGNATURE: ${ETH_DIGITAL_SIGNATURE}, BTC_DIGITAL_SIGNATURE: ${BTC_DIGITAL_SIGNATURE}, LTC_DIGITAL_SIGNATURE: ${LTC_DIGITAL_SIGNATURE}, XRP_DIGITAL_SIGNATURE: ${XRP_DIGITAL_SIGNATURE}, ADA_DIGITAL_SIGNATURE: ${ADA_DIGITAL_SIGNATURE}, XLM_DIGITAL_SIGNATURE: ${XLM_DIGITAL_SIGNATURE}, DOGE_DIGITAL_SIGNATURE: ${DOGE_DIGITAL_SIGNATURE}, XMR_DIGITAL_SIGNATURE: ${XMR_DIGITAL_SIGNATURE}, DOT_DIGITAL_SIGNATURE: ${DOT_DIGITAL_SIGNATURE}, FIL_DIGITAL_SIGNATURE: ${FIL_DIGITAL_SIGNATURE}, XTZ_DIGITAL_SIGNATURE: ${XTZ_DIGITAL_SIGNATURE}, ATOM_DIGITAL_SIGNATURE: ${ATOM_DIGITAL_SIGNATURE}, TRX_DIGITAL_SIGNATURE: ${TRX_DIGITAL_SIGNATURE}, BNB_DIGITAL_SIGNATURE: ${BNB_DIGITAL_SIGNATURE}, AVAX_DIGITAL_SIGNATURE: ${AVAX_DIGITAL_SIGNATURE}, SOL_DIGITAL_SIGNATURE: ${SOL_DIGITAL_SIGNATURE}}';
   }
 }
 
-class _PNMReader extends fb.TableReader<PNM> {
-  const _PNMReader();
+class _DetailReader extends fb.TableReader<Detail> {
+  const _DetailReader();
 
   @override
-  PNM createObject(fb.BufferContext bc, int offset) => 
-    PNM._(bc, offset);
+  Detail createObject(fb.BufferContext bc, int offset) => 
+    Detail._(bc, offset);
 }
 
-class PNMBuilder {
-  PNMBuilder(this.fbBuilder);
+class DetailBuilder {
+  DetailBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -123,7 +122,7 @@ class PNMBuilder {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addCidFidOffset(int? offset) {
+  int addCidOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
@@ -197,9 +196,9 @@ class PNMBuilder {
   }
 }
 
-class PNMObjectBuilder extends fb.ObjectBuilder {
+class DetailObjectBuilder extends fb.ObjectBuilder {
   final String? _MULTIFORMAT_ADDRESS;
-  final String? _CID_FID;
+  final String? _CID;
   final String? _ETH_DIGITAL_SIGNATURE;
   final String? _BTC_DIGITAL_SIGNATURE;
   final String? _LTC_DIGITAL_SIGNATURE;
@@ -217,9 +216,9 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   final String? _AVAX_DIGITAL_SIGNATURE;
   final String? _SOL_DIGITAL_SIGNATURE;
 
-  PNMObjectBuilder({
+  DetailObjectBuilder({
     String? MULTIFORMAT_ADDRESS,
-    String? CID_FID,
+    String? CID,
     String? ETH_DIGITAL_SIGNATURE,
     String? BTC_DIGITAL_SIGNATURE,
     String? LTC_DIGITAL_SIGNATURE,
@@ -238,7 +237,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     String? SOL_DIGITAL_SIGNATURE,
   })
       : _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS,
-        _CID_FID = CID_FID,
+        _CID = CID,
         _ETH_DIGITAL_SIGNATURE = ETH_DIGITAL_SIGNATURE,
         _BTC_DIGITAL_SIGNATURE = BTC_DIGITAL_SIGNATURE,
         _LTC_DIGITAL_SIGNATURE = LTC_DIGITAL_SIGNATURE,
@@ -261,8 +260,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
         : fbBuilder.writeString(_MULTIFORMAT_ADDRESS!);
-    final int? CID_FIDOffset = _CID_FID == null ? null
-        : fbBuilder.writeString(_CID_FID!);
+    final int? CIDOffset = _CID == null ? null
+        : fbBuilder.writeString(_CID!);
     final int? ETH_DIGITAL_SIGNATUREOffset = _ETH_DIGITAL_SIGNATURE == null ? null
         : fbBuilder.writeString(_ETH_DIGITAL_SIGNATURE!);
     final int? BTC_DIGITAL_SIGNATUREOffset = _BTC_DIGITAL_SIGNATURE == null ? null
@@ -297,7 +296,7 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOL_DIGITAL_SIGNATURE!);
     fbBuilder.startTable(18);
     fbBuilder.addOffset(0, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addOffset(1, CID_FIDOffset);
+    fbBuilder.addOffset(1, CIDOffset);
     fbBuilder.addOffset(2, ETH_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(3, BTC_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(4, LTC_DIGITAL_SIGNATUREOffset);
@@ -314,6 +313,93 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(15, BNB_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(16, AVAX_DIGITAL_SIGNATUREOffset);
     fbBuilder.addOffset(17, SOL_DIGITAL_SIGNATUREOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Publish Notification Message
+class PNM {
+  PNM._(this._bc, this._bcOffset);
+  factory PNM(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PNM> reader = _PNMReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Unencrypted PNM Details
+  ///  This field contains the details of the Publish Notification Message without encryption.
+  Detail? get FILE => Detail.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Encrypted PNM Details
+  ///  This field contains the details of the Publish Notification Message with encryption.
+  Detail? get FILE_ENCRYPTED => Detail.reader.vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'PNM{FILE: ${FILE}, FILE_ENCRYPTED: ${FILE_ENCRYPTED}}';
+  }
+}
+
+class _PNMReader extends fb.TableReader<PNM> {
+  const _PNMReader();
+
+  @override
+  PNM createObject(fb.BufferContext bc, int offset) => 
+    PNM._(bc, offset);
+}
+
+class PNMBuilder {
+  PNMBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addFileOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFileEncryptedOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PNMObjectBuilder extends fb.ObjectBuilder {
+  final DetailObjectBuilder? _FILE;
+  final DetailObjectBuilder? _FILE_ENCRYPTED;
+
+  PNMObjectBuilder({
+    DetailObjectBuilder? FILE,
+    DetailObjectBuilder? FILE_ENCRYPTED,
+  })
+      : _FILE = FILE,
+        _FILE_ENCRYPTED = FILE_ENCRYPTED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FILEOffset = _FILE?.getOrCreateOffset(fbBuilder);
+    final int? FILE_ENCRYPTEDOffset = _FILE_ENCRYPTED?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, FILEOffset);
+    fbBuilder.addOffset(1, FILE_ENCRYPTEDOffset);
     return fbBuilder.endTable();
   }
 

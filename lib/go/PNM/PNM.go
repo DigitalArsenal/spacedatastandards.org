@@ -34,324 +34,48 @@ func (rcv *PNM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Multiformat Address
-/// https://multiformats.io/multiaddr/
-/// A universal address format for representing multiple network protocols. Examples include:
-/// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
-/// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
-/// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-/// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
-func (rcv *PNM) MULTIFORMAT_ADDRESS() []byte {
+/// Unencrypted PNM Details
+/// This field contains the details of the Publish Notification Message without encryption.
+func (rcv *PNM) FILE(obj *Detail) *Detail {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(Detail)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
 	return nil
 }
 
-/// Multiformat Address
-/// https://multiformats.io/multiaddr/
-/// A universal address format for representing multiple network protocols. Examples include:
-/// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
-/// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
-/// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-/// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
-/// Concatenated Content Identifier (CID) and File ID
-/// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
-/// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-/// The appended 4-character file ID describes the datatype in the referenced file.
-func (rcv *PNM) CID_FID() []byte {
+/// Unencrypted PNM Details
+/// This field contains the details of the Publish Notification Message without encryption.
+/// Encrypted PNM Details
+/// This field contains the details of the Publish Notification Message with encryption.
+func (rcv *PNM) FILE_ENCRYPTED(obj *Detail) *Detail {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(Detail)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
 	return nil
 }
 
-/// Concatenated Content Identifier (CID) and File ID
-/// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
-/// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-/// The appended 4-character file ID describes the datatype in the referenced file.
-/// Ethereum Digital Signature
-/// Digital signature of the CID using Ethereum's signing mechanism.
-/// Refer to the Ethereum Blockchain integration section for details.
-func (rcv *PNM) ETH_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Ethereum Digital Signature
-/// Digital signature of the CID using Ethereum's signing mechanism.
-/// Refer to the Ethereum Blockchain integration section for details.
-/// Bitcoin Digital Signature
-/// Digital signature of the CID using Bitcoin's signing mechanism.
-/// Refer to the Bitcoin Blockchain integration section for details.
-func (rcv *PNM) BTC_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Bitcoin Digital Signature
-/// Digital signature of the CID using Bitcoin's signing mechanism.
-/// Refer to the Bitcoin Blockchain integration section for details.
-/// Litecoin Digital Signature
-/// Digital signature of the CID using Litecoin's signing mechanism.
-/// Refer to the Litecoin Blockchain integration section for details.
-func (rcv *PNM) LTC_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Litecoin Digital Signature
-/// Digital signature of the CID using Litecoin's signing mechanism.
-/// Refer to the Litecoin Blockchain integration section for details.
-/// Ripple Digital Signature
-/// Digital signature of the CID using Ripple's signing mechanism.
-/// Refer to the Ripple Blockchain integration section for details.
-func (rcv *PNM) XRP_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Ripple Digital Signature
-/// Digital signature of the CID using Ripple's signing mechanism.
-/// Refer to the Ripple Blockchain integration section for details.
-/// Cardano Digital Signature
-/// Digital signature of the CID using Cardano's signing mechanism.
-/// Refer to the Cardano Blockchain integration section for details.
-func (rcv *PNM) ADA_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Cardano Digital Signature
-/// Digital signature of the CID using Cardano's signing mechanism.
-/// Refer to the Cardano Blockchain integration section for details.
-/// Stellar Digital Signature
-/// Digital signature of the CID using Stellar's signing mechanism.
-/// Refer to the Stellar Blockchain integration section for details.
-func (rcv *PNM) XLM_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Stellar Digital Signature
-/// Digital signature of the CID using Stellar's signing mechanism.
-/// Refer to the Stellar Blockchain integration section for details.
-/// Dogecoin Digital Signature
-/// Digital signature of the CID using Dogecoin's signing mechanism.
-/// Refer to the Dogecoin Blockchain integration section for details.
-func (rcv *PNM) DOGE_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Dogecoin Digital Signature
-/// Digital signature of the CID using Dogecoin's signing mechanism.
-/// Refer to the Dogecoin Blockchain integration section for details.
-/// Monero Digital Signature
-/// Digital signature of the CID using Monero's signing mechanism.
-/// Refer to the Monero Blockchain integration section for details.
-func (rcv *PNM) XMR_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Monero Digital Signature
-/// Digital signature of the CID using Monero's signing mechanism.
-/// Refer to the Monero Blockchain integration section for details.
-/// Polkadot Digital Signature
-/// Digital signature of the CID using Polkadot's signing mechanism.
-/// Refer to the Polkadot Blockchain integration section for details.
-func (rcv *PNM) DOT_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Polkadot Digital Signature
-/// Digital signature of the CID using Polkadot's signing mechanism.
-/// Refer to the Polkadot Blockchain integration section for details.
-/// Filecoin Digital Signature
-/// Digital signature of the CID using Filecoin's signing mechanism.
-/// Refer to the Filecoin Blockchain integration section for details.
-func (rcv *PNM) FIL_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Filecoin Digital Signature
-/// Digital signature of the CID using Filecoin's signing mechanism.
-/// Refer to the Filecoin Blockchain integration section for details.
-/// Tezos Digital Signature
-/// Digital signature of the CID using Tezos's signing mechanism.
-/// Refer to the Tezos Blockchain integration section for details.
-func (rcv *PNM) XTZ_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Tezos Digital Signature
-/// Digital signature of the CID using Tezos's signing mechanism.
-/// Refer to the Tezos Blockchain integration section for details.
-/// Cosmos Digital Signature
-/// Digital signature of the CID using Cosmos's signing mechanism.
-/// Refer to the Cosmos Blockchain integration section for details.
-func (rcv *PNM) ATOM_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Cosmos Digital Signature
-/// Digital signature of the CID using Cosmos's signing mechanism.
-/// Refer to the Cosmos Blockchain integration section for details.
-/// Tron Digital Signature
-/// Digital signature of the CID using Tron's signing mechanism.
-/// Refer to the Tron Blockchain integration section for details.
-func (rcv *PNM) TRX_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Tron Digital Signature
-/// Digital signature of the CID using Tron's signing mechanism.
-/// Refer to the Tron Blockchain integration section for details.
-/// Binance Coin Digital Signature
-/// Digital signature of the CID using Binance Coin's signing mechanism.
-/// Refer to the Binance Coin Blockchain integration section for details.
-func (rcv *PNM) BNB_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Binance Coin Digital Signature
-/// Digital signature of the CID using Binance Coin's signing mechanism.
-/// Refer to the Binance Coin Blockchain integration section for details.
-/// Avalanche Digital Signature
-/// Digital signature of the CID using Avalanche's signing mechanism.
-/// Refer to the Avalanche Blockchain integration section for details.
-func (rcv *PNM) AVAX_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Avalanche Digital Signature
-/// Digital signature of the CID using Avalanche's signing mechanism.
-/// Refer to the Avalanche Blockchain integration section for details.
-/// Solana Digital Signature
-/// Digital signature of the CID using Solana's signing mechanism.
-/// Refer to the Solana Blockchain integration section for details.
-func (rcv *PNM) SOL_DIGITAL_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-/// Solana Digital Signature
-/// Digital signature of the CID using Solana's signing mechanism.
-/// Refer to the Solana Blockchain integration section for details.
+/// Encrypted PNM Details
+/// This field contains the details of the Publish Notification Message with encryption.
 func PNMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(2)
 }
-func PNMAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
+func PNMAddFILE(builder *flatbuffers.Builder, FILE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FILE), 0)
 }
-func PNMAddCID_FID(builder *flatbuffers.Builder, CID_FID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CID_FID), 0)
-}
-func PNMAddETH_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ETH_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ETH_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddBTC_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, BTC_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BTC_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddLTC_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, LTC_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LTC_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddXRP_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XRP_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(XRP_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddADA_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ADA_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ADA_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddXLM_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XLM_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(XLM_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddDOGE_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, DOGE_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DOGE_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddXMR_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XMR_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(XMR_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddDOT_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, DOT_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DOT_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddFIL_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, FIL_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(FIL_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddXTZ_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, XTZ_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(XTZ_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddATOM_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, ATOM_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(ATOM_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddTRX_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, TRX_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TRX_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddBNB_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, BNB_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(BNB_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddAVAX_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, AVAX_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(AVAX_DIGITAL_SIGNATURE), 0)
-}
-func PNMAddSOL_DIGITAL_SIGNATURE(builder *flatbuffers.Builder, SOL_DIGITAL_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(SOL_DIGITAL_SIGNATURE), 0)
+func PNMAddFILE_ENCRYPTED(builder *flatbuffers.Builder, FILE_ENCRYPTED flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FILE_ENCRYPTED), 0)
 }
 func PNMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

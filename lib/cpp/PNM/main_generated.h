@@ -13,18 +13,21 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+struct Detail;
+struct DetailBuilder;
+
 struct PNM;
 struct PNMBuilder;
 
 struct PNMCOLLECTION;
 struct PNMCOLLECTIONBuilder;
 
-/// Publish Notification Message
-struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PNMBuilder Builder;
+/// Details of Published Message
+struct Detail FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DetailBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MULTIFORMAT_ADDRESS = 4,
-    VT_CID_FID = 6,
+    VT_CID = 6,
     VT_ETH_DIGITAL_SIGNATURE = 8,
     VT_BTC_DIGITAL_SIGNATURE = 10,
     VT_LTC_DIGITAL_SIGNATURE = 12,
@@ -52,12 +55,11 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MULTIFORMAT_ADDRESS);
   }
-  /// Concatenated Content Identifier (CID) and File ID
-  /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
+  /// Concatenated Content Identifier (CID)
+  /// This field is a unique ID for distributed systems (CID).
   /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-  /// The appended 4-character file ID describes the datatype in the referenced file.
-  const ::flatbuffers::String *CID_FID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CID_FID);
+  const ::flatbuffers::String *CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CID);
   }
   /// Ethereum Digital Signature
   /// Digital signature of the CID using Ethereum's signing mechanism.
@@ -159,8 +161,8 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
            verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
-           VerifyOffset(verifier, VT_CID_FID) &&
-           verifier.VerifyString(CID_FID()) &&
+           VerifyOffset(verifier, VT_CID) &&
+           verifier.VerifyString(CID()) &&
            VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
            verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
            VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
@@ -197,79 +199,79 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct PNMBuilder {
-  typedef PNM Table;
+struct DetailBuilder {
+  typedef Detail Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS) {
-    fbb_.AddOffset(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
+    fbb_.AddOffset(Detail::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
-  void add_CID_FID(::flatbuffers::Offset<::flatbuffers::String> CID_FID) {
-    fbb_.AddOffset(PNM::VT_CID_FID, CID_FID);
+  void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
+    fbb_.AddOffset(Detail::VT_CID, CID);
   }
   void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
   }
   void add_BTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
   }
   void add_LTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
   }
   void add_XRP_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
   }
   void add_ADA_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
   }
   void add_XLM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
   }
   void add_DOGE_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
   }
   void add_XMR_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
   }
   void add_DOT_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
   }
   void add_FIL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
   }
   void add_XTZ_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
   }
   void add_ATOM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
   }
   void add_TRX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
   }
   void add_BNB_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
   }
   void add_AVAX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
   }
   void add_SOL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
+    fbb_.AddOffset(Detail::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
   }
-  explicit PNMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit DetailBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PNM> Finish() {
+  ::flatbuffers::Offset<Detail> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PNM>(end);
+    auto o = ::flatbuffers::Offset<Detail>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PNM> CreatePNM(
+inline ::flatbuffers::Offset<Detail> CreateDetail(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CID_FID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
@@ -286,7 +288,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE = 0) {
-  PNMBuilder builder_(_fbb);
+  DetailBuilder builder_(_fbb);
   builder_.add_SOL_DIGITAL_SIGNATURE(SOL_DIGITAL_SIGNATURE);
   builder_.add_AVAX_DIGITAL_SIGNATURE(AVAX_DIGITAL_SIGNATURE);
   builder_.add_BNB_DIGITAL_SIGNATURE(BNB_DIGITAL_SIGNATURE);
@@ -303,15 +305,15 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
   builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
   builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
   builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
-  builder_.add_CID_FID(CID_FID);
+  builder_.add_CID(CID);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
+inline ::flatbuffers::Offset<Detail> CreateDetailDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *MULTIFORMAT_ADDRESS = nullptr,
-    const char *CID_FID = nullptr,
+    const char *CID = nullptr,
     const char *ETH_DIGITAL_SIGNATURE = nullptr,
     const char *BTC_DIGITAL_SIGNATURE = nullptr,
     const char *LTC_DIGITAL_SIGNATURE = nullptr,
@@ -329,7 +331,7 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     const char *AVAX_DIGITAL_SIGNATURE = nullptr,
     const char *SOL_DIGITAL_SIGNATURE = nullptr) {
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
-  auto CID_FID__ = CID_FID ? _fbb.CreateString(CID_FID) : 0;
+  auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
   auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
   auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
@@ -346,10 +348,10 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
   auto BNB_DIGITAL_SIGNATURE__ = BNB_DIGITAL_SIGNATURE ? _fbb.CreateString(BNB_DIGITAL_SIGNATURE) : 0;
   auto AVAX_DIGITAL_SIGNATURE__ = AVAX_DIGITAL_SIGNATURE ? _fbb.CreateString(AVAX_DIGITAL_SIGNATURE) : 0;
   auto SOL_DIGITAL_SIGNATURE__ = SOL_DIGITAL_SIGNATURE ? _fbb.CreateString(SOL_DIGITAL_SIGNATURE) : 0;
-  return CreatePNM(
+  return CreateDetail(
       _fbb,
       MULTIFORMAT_ADDRESS__,
-      CID_FID__,
+      CID__,
       ETH_DIGITAL_SIGNATURE__,
       BTC_DIGITAL_SIGNATURE__,
       LTC_DIGITAL_SIGNATURE__,
@@ -366,6 +368,64 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
       BNB_DIGITAL_SIGNATURE__,
       AVAX_DIGITAL_SIGNATURE__,
       SOL_DIGITAL_SIGNATURE__);
+}
+
+/// Publish Notification Message
+struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PNMBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FILE = 4,
+    VT_FILE_ENCRYPTED = 6
+  };
+  /// Unencrypted PNM Details
+  /// This field contains the details of the Publish Notification Message without encryption.
+  const Detail *FILE() const {
+    return GetPointer<const Detail *>(VT_FILE);
+  }
+  /// Encrypted PNM Details
+  /// This field contains the details of the Publish Notification Message with encryption.
+  const Detail *FILE_ENCRYPTED() const {
+    return GetPointer<const Detail *>(VT_FILE_ENCRYPTED);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_FILE) &&
+           verifier.VerifyTable(FILE()) &&
+           VerifyOffset(verifier, VT_FILE_ENCRYPTED) &&
+           verifier.VerifyTable(FILE_ENCRYPTED()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PNMBuilder {
+  typedef PNM Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_FILE(::flatbuffers::Offset<Detail> FILE) {
+    fbb_.AddOffset(PNM::VT_FILE, FILE);
+  }
+  void add_FILE_ENCRYPTED(::flatbuffers::Offset<Detail> FILE_ENCRYPTED) {
+    fbb_.AddOffset(PNM::VT_FILE_ENCRYPTED, FILE_ENCRYPTED);
+  }
+  explicit PNMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PNM> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PNM>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PNM> CreatePNM(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<Detail> FILE = 0,
+    ::flatbuffers::Offset<Detail> FILE_ENCRYPTED = 0) {
+  PNMBuilder builder_(_fbb);
+  builder_.add_FILE_ENCRYPTED(FILE_ENCRYPTED);
+  builder_.add_FILE(FILE);
+  return builder_.Finish();
 }
 
 /// Collection of Publish Notification Messages

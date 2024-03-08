@@ -41,171 +41,22 @@ class PNM extends Table
         return $this;
     }
 
-    /// Multiformat Address
-    /// https://multiformats.io/multiaddr/
-    /// A universal address format for representing multiple network protocols. Examples include:
-    /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
-    /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
-    /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
-    /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
-    public function getMULTIFORMAT_ADDRESS()
+    /// Unencrypted PNM Details
+    /// This field contains the details of the Publish Notification Message without encryption.
+    public function getFILE()
     {
+        $obj = new Detail();
         $o = $this->__offset(4);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Concatenated Content Identifier (CID) and File ID
-    /// This field combines the self-describing unique ID for distributed systems (CID) with the FlatBuffers file ID.
-    /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-    /// The appended 4-character file ID describes the datatype in the referenced file.
-    public function getCID_FID()
+    /// Encrypted PNM Details
+    /// This field contains the details of the Publish Notification Message with encryption.
+    public function getFILE_ENCRYPTED()
     {
+        $obj = new Detail();
         $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Ethereum Digital Signature
-    /// Digital signature of the CID using Ethereum's signing mechanism.
-    /// Refer to the Ethereum Blockchain integration section for details.
-    public function getETH_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(8);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Bitcoin Digital Signature
-    /// Digital signature of the CID using Bitcoin's signing mechanism.
-    /// Refer to the Bitcoin Blockchain integration section for details.
-    public function getBTC_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Litecoin Digital Signature
-    /// Digital signature of the CID using Litecoin's signing mechanism.
-    /// Refer to the Litecoin Blockchain integration section for details.
-    public function getLTC_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Ripple Digital Signature
-    /// Digital signature of the CID using Ripple's signing mechanism.
-    /// Refer to the Ripple Blockchain integration section for details.
-    public function getXRP_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Cardano Digital Signature
-    /// Digital signature of the CID using Cardano's signing mechanism.
-    /// Refer to the Cardano Blockchain integration section for details.
-    public function getADA_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Stellar Digital Signature
-    /// Digital signature of the CID using Stellar's signing mechanism.
-    /// Refer to the Stellar Blockchain integration section for details.
-    public function getXLM_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Dogecoin Digital Signature
-    /// Digital signature of the CID using Dogecoin's signing mechanism.
-    /// Refer to the Dogecoin Blockchain integration section for details.
-    public function getDOGE_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Monero Digital Signature
-    /// Digital signature of the CID using Monero's signing mechanism.
-    /// Refer to the Monero Blockchain integration section for details.
-    public function getXMR_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Polkadot Digital Signature
-    /// Digital signature of the CID using Polkadot's signing mechanism.
-    /// Refer to the Polkadot Blockchain integration section for details.
-    public function getDOT_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Filecoin Digital Signature
-    /// Digital signature of the CID using Filecoin's signing mechanism.
-    /// Refer to the Filecoin Blockchain integration section for details.
-    public function getFIL_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Tezos Digital Signature
-    /// Digital signature of the CID using Tezos's signing mechanism.
-    /// Refer to the Tezos Blockchain integration section for details.
-    public function getXTZ_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Cosmos Digital Signature
-    /// Digital signature of the CID using Cosmos's signing mechanism.
-    /// Refer to the Cosmos Blockchain integration section for details.
-    public function getATOM_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Tron Digital Signature
-    /// Digital signature of the CID using Tron's signing mechanism.
-    /// Refer to the Tron Blockchain integration section for details.
-    public function getTRX_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Binance Coin Digital Signature
-    /// Digital signature of the CID using Binance Coin's signing mechanism.
-    /// Refer to the Binance Coin Blockchain integration section for details.
-    public function getBNB_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(34);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Avalanche Digital Signature
-    /// Digital signature of the CID using Avalanche's signing mechanism.
-    /// Refer to the Avalanche Blockchain integration section for details.
-    public function getAVAX_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Solana Digital Signature
-    /// Digital signature of the CID using Solana's signing mechanism.
-    /// Refer to the Solana Blockchain integration section for details.
-    public function getSOL_DIGITAL_SIGNATURE()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -214,216 +65,40 @@ class PNM extends Table
      */
     public static function startPNM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(2);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PNM
      */
-    public static function createPNM(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $CID_FID, $ETH_DIGITAL_SIGNATURE, $BTC_DIGITAL_SIGNATURE, $LTC_DIGITAL_SIGNATURE, $XRP_DIGITAL_SIGNATURE, $ADA_DIGITAL_SIGNATURE, $XLM_DIGITAL_SIGNATURE, $DOGE_DIGITAL_SIGNATURE, $XMR_DIGITAL_SIGNATURE, $DOT_DIGITAL_SIGNATURE, $FIL_DIGITAL_SIGNATURE, $XTZ_DIGITAL_SIGNATURE, $ATOM_DIGITAL_SIGNATURE, $TRX_DIGITAL_SIGNATURE, $BNB_DIGITAL_SIGNATURE, $AVAX_DIGITAL_SIGNATURE, $SOL_DIGITAL_SIGNATURE)
+    public static function createPNM(FlatBufferBuilder $builder, $FILE, $FILE_ENCRYPTED)
     {
-        $builder->startObject(18);
-        self::addMULTIFORMAT_ADDRESS($builder, $MULTIFORMAT_ADDRESS);
-        self::addCID_FID($builder, $CID_FID);
-        self::addETH_DIGITAL_SIGNATURE($builder, $ETH_DIGITAL_SIGNATURE);
-        self::addBTC_DIGITAL_SIGNATURE($builder, $BTC_DIGITAL_SIGNATURE);
-        self::addLTC_DIGITAL_SIGNATURE($builder, $LTC_DIGITAL_SIGNATURE);
-        self::addXRP_DIGITAL_SIGNATURE($builder, $XRP_DIGITAL_SIGNATURE);
-        self::addADA_DIGITAL_SIGNATURE($builder, $ADA_DIGITAL_SIGNATURE);
-        self::addXLM_DIGITAL_SIGNATURE($builder, $XLM_DIGITAL_SIGNATURE);
-        self::addDOGE_DIGITAL_SIGNATURE($builder, $DOGE_DIGITAL_SIGNATURE);
-        self::addXMR_DIGITAL_SIGNATURE($builder, $XMR_DIGITAL_SIGNATURE);
-        self::addDOT_DIGITAL_SIGNATURE($builder, $DOT_DIGITAL_SIGNATURE);
-        self::addFIL_DIGITAL_SIGNATURE($builder, $FIL_DIGITAL_SIGNATURE);
-        self::addXTZ_DIGITAL_SIGNATURE($builder, $XTZ_DIGITAL_SIGNATURE);
-        self::addATOM_DIGITAL_SIGNATURE($builder, $ATOM_DIGITAL_SIGNATURE);
-        self::addTRX_DIGITAL_SIGNATURE($builder, $TRX_DIGITAL_SIGNATURE);
-        self::addBNB_DIGITAL_SIGNATURE($builder, $BNB_DIGITAL_SIGNATURE);
-        self::addAVAX_DIGITAL_SIGNATURE($builder, $AVAX_DIGITAL_SIGNATURE);
-        self::addSOL_DIGITAL_SIGNATURE($builder, $SOL_DIGITAL_SIGNATURE);
+        $builder->startObject(2);
+        self::addFILE($builder, $FILE);
+        self::addFILE_ENCRYPTED($builder, $FILE_ENCRYPTED);
         $o = $builder->endObject();
         return $o;
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param int
      * @return void
      */
-    public static function addMULTIFORMAT_ADDRESS(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS)
+    public static function addFILE(FlatBufferBuilder $builder, $FILE)
     {
-        $builder->addOffsetX(0, $MULTIFORMAT_ADDRESS, 0);
+        $builder->addOffsetX(0, $FILE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param int
      * @return void
      */
-    public static function addCID_FID(FlatBufferBuilder $builder, $CID_FID)
+    public static function addFILE_ENCRYPTED(FlatBufferBuilder $builder, $FILE_ENCRYPTED)
     {
-        $builder->addOffsetX(1, $CID_FID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addETH_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ETH_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(2, $ETH_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BTC_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(3, $BTC_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLTC_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $LTC_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(4, $LTC_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addXRP_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XRP_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(5, $XRP_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addADA_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ADA_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(6, $ADA_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addXLM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XLM_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(7, $XLM_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDOGE_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOGE_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(8, $DOGE_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addXMR_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XMR_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(9, $XMR_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDOT_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $DOT_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(10, $DOT_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFIL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $FIL_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(11, $FIL_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addXTZ_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $XTZ_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(12, $XTZ_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addATOM_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $ATOM_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(13, $ATOM_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $TRX_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(14, $TRX_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addBNB_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $BNB_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(15, $BNB_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addAVAX_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $AVAX_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(16, $AVAX_DIGITAL_SIGNATURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSOL_DIGITAL_SIGNATURE(FlatBufferBuilder $builder, $SOL_DIGITAL_SIGNATURE)
-    {
-        $builder->addOffsetX(17, $SOL_DIGITAL_SIGNATURE, 0);
+        $builder->addOffsetX(1, $FILE_ENCRYPTED, 0);
     }
 
     /**

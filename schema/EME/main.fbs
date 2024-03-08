@@ -1,0 +1,43 @@
+/// Encrypted Message Envelope (EME)
+/// Define a collection of Encrypted Message Envelopes with detailed ECIES encryption fields
+
+/// Encrypted Message Envelope
+table EME {
+  /// Encrypted data blob, containing the ciphertext of the original plaintext message.
+  ENCRYPTED_BLOB: [ubyte];
+
+  /// Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
+  EPHEMERAL_PUBLIC_KEY: string;
+
+  /// Message Authentication Code to verify the integrity and authenticity of the encrypted message.
+  MAC: string;
+
+  /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+  NONCE: string;
+
+  /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
+  TAG: string;
+
+  /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
+  IV: string;
+
+  /// Identifier for the public key used, aiding in recipient key management and message decryption.
+  PUBLIC_KEY_IDENTIFIER: string;
+
+  /// Specifies the set of cryptographic algorithms used in the encryption process.
+  CIPHER_SUITE: string;
+
+  /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
+  KDF_PARAMETERS: string;
+
+  /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
+  ENCRYPTION_ALGORITHM_PARAMETERS: string;
+}
+
+/// Collection of Encrypted Message Envelopes
+table EMECOLLECTION {
+  RECORDS: [EME];
+}
+
+root_type EMECOLLECTION;
+file_identifier "$EME";

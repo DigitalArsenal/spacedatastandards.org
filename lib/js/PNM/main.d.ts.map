@@ -1,1 +1,1 @@
-{"version":3,"file":"main.d.ts","sourceRoot":"","sources":["../../../ts/PNM/main.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,GAAG,EAAE,IAAI,EAAE,MAAM,UAAU,CAAC;AACrC,OAAO,EAAE,aAAa,EAAE,cAAc,EAAE,MAAM,oBAAoB,CAAC"}
+{"version":3,"file":"main.d.ts","sourceRoot":"","sources":["../../../ts/PNM/main.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,aAAa,CAAC;AAC9C,OAAO,EAAE,GAAG,EAAE,IAAI,EAAE,MAAM,UAAU,CAAC;AACrC,OAAO,EAAE,aAAa,EAAE,cAAc,EAAE,MAAM,oBAAoB,CAAC"}
