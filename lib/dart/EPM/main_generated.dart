@@ -781,31 +781,33 @@ class EPM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Distinguished Name of the entity
+  DistinguishedName? get DN => DistinguishedName.reader.vTableGetNullable(_bc, _bcOffset, 4);
   ///  Common name of the entity (person or organization)
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Alternate names for the entity
-  List<String>? get ALTERNATE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<String>? get ALTERNATE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
   ///  Email address of the entity
-  String? get EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Telephone number of the entity
-  String? get TELEPHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get TELEPHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Cryptographic keys associated with the entity
-  List<CryptoKey>? get KEYS => const fb.ListReader<CryptoKey>(CryptoKey.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  List<CryptoKey>? get KEYS => const fb.ListReader<CryptoKey>(CryptoKey.reader).vTableGetNullable(_bc, _bcOffset, 14);
   ///  Multiformat addresses associated with the entity
-  List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
-  SpecificAttributesTypeId? get attributesType => SpecificAttributesTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 16));
+  List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
+  SpecificAttributesTypeId? get attributesType => SpecificAttributesTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 18));
   ///  Specific attributes for the entity, either Person or Organization
   dynamic get ATTRIBUTES {
     switch (ATTRIBUTESType?.value) {
-      case 1: return PersonAttributes.reader.vTableGetNullable(_bc, _bcOffset, 18);
-      case 2: return OrganizationAttributes.reader.vTableGetNullable(_bc, _bcOffset, 18);
+      case 1: return PersonAttributes.reader.vTableGetNullable(_bc, _bcOffset, 20);
+      case 2: return OrganizationAttributes.reader.vTableGetNullable(_bc, _bcOffset, 20);
       default: return null;
     }
   }
 
   @override
   String toString() {
-    return 'EPM{NAME: ${NAME}, ALTERNATE_NAMES: ${ALTERNATE_NAMES}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, attributesType: ${attributesType}, ATTRIBUTES: ${ATTRIBUTES}}';
+    return 'EPM{DN: ${DN}, NAME: ${NAME}, ALTERNATE_NAMES: ${ALTERNATE_NAMES}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, attributesType: ${attributesType}, ATTRIBUTES: ${ATTRIBUTES}}';
   }
 }
 
@@ -823,39 +825,43 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
   }
 
-  int addNameOffset(int? offset) {
+  int addDnOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addAlternateNamesOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addEmailOffset(int? offset) {
+  int addAlternateNamesOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addTelephoneOffset(int? offset) {
+  int addEmailOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addKeysOffset(int? offset) {
+  int addTelephoneOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addMultiformatAddressOffset(int? offset) {
+  int addKeysOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addMultiformatAddressOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
   int addAttributesType(SpecificAttributesTypeId? attributesType) {
-    fbBuilder.addUint8(6, attributesType?.value);
+    fbBuilder.addUint8(7, attributesType?.value);
     return fbBuilder.offset;
   }
   int addAttributesOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
 
@@ -865,6 +871,7 @@ class EPMBuilder {
 }
 
 class EPMObjectBuilder extends fb.ObjectBuilder {
+  final DistinguishedNameObjectBuilder? _DN;
   final String? _NAME;
   final List<String>? _ALTERNATE_NAMES;
   final String? _EMAIL;
@@ -875,6 +882,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final dynamic _ATTRIBUTES;
 
   EPMObjectBuilder({
+    DistinguishedNameObjectBuilder? DN,
     String? NAME,
     List<String>? ALTERNATE_NAMES,
     String? EMAIL,
@@ -884,7 +892,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     SpecificAttributesTypeId? attributesType,
     dynamic ATTRIBUTES,
   })
-      : _NAME = NAME,
+      : _DN = DN,
+        _NAME = NAME,
         _ALTERNATE_NAMES = ALTERNATE_NAMES,
         _EMAIL = EMAIL,
         _TELEPHONE = TELEPHONE,
@@ -896,6 +905,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
+    final int? DNOffset = _DN?.getOrCreateOffset(fbBuilder);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
     final int? ALTERNATE_NAMESOffset = _ALTERNATE_NAMES == null ? null
@@ -909,15 +919,16 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
         : fbBuilder.writeList(_MULTIFORMAT_ADDRESS!.map(fbBuilder.writeString).toList());
     final int? ATTRIBUTESOffset = _ATTRIBUTES?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addOffset(1, ALTERNATE_NAMESOffset);
-    fbBuilder.addOffset(2, EMAILOffset);
-    fbBuilder.addOffset(3, TELEPHONEOffset);
-    fbBuilder.addOffset(4, KEYSOffset);
-    fbBuilder.addOffset(5, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addUint8(6, _attributesType?.value);
-    fbBuilder.addOffset(7, ATTRIBUTESOffset);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, DNOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, ALTERNATE_NAMESOffset);
+    fbBuilder.addOffset(3, EMAILOffset);
+    fbBuilder.addOffset(4, TELEPHONEOffset);
+    fbBuilder.addOffset(5, KEYSOffset);
+    fbBuilder.addOffset(6, MULTIFORMAT_ADDRESSOffset);
+    fbBuilder.addUint8(7, _attributesType?.value);
+    fbBuilder.addOffset(8, ATTRIBUTESOffset);
     return fbBuilder.endTable();
   }
 

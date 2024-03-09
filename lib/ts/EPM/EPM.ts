@@ -3,6 +3,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+import { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
 import { OrganizationAttributes, OrganizationAttributesT } from './OrganizationAttributes.js';
 import { PersonAttributes, PersonAttributesT } from './PersonAttributes.js';
 import { SpecificAttributes, unionToSpecificAttributes, unionListToSpecificAttributes } from './SpecificAttributes.js';
@@ -30,12 +31,20 @@ static getSizePrefixedRootAsEPM(bb:flatbuffers.ByteBuffer, obj?:EPM):EPM {
 }
 
 /**
+ * Distinguished Name of the entity
+ */
+DN(obj?:DistinguishedName):DistinguishedName|null {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new DistinguishedName()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
  * Common name of the entity (person or organization)
  */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 4);
+  const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -45,12 +54,12 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
 ALTERNATE_NAMES(index: number):string
 ALTERNATE_NAMES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ALTERNATE_NAMES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 alternateNamesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -60,7 +69,7 @@ alternateNamesLength():number {
 EMAIL():string|null
 EMAIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EMAIL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -70,7 +79,7 @@ EMAIL(optionalEncoding?:any):string|Uint8Array|null {
 TELEPHONE():string|null
 TELEPHONE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TELEPHONE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -78,12 +87,12 @@ TELEPHONE(optionalEncoding?:any):string|Uint8Array|null {
  * Cryptographic keys associated with the entity
  */
 KEYS(index: number, obj?:CryptoKey):CryptoKey|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? (obj || new CryptoKey()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 keysLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -93,17 +102,17 @@ keysLength():number {
 MULTIFORMAT_ADDRESS(index: number):string
 MULTIFORMAT_ADDRESS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 MULTIFORMAT_ADDRESS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 multiformatAddressLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 attributesType():SpecificAttributes {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : SpecificAttributes.NONE;
 }
 
@@ -111,20 +120,24 @@ attributesType():SpecificAttributes {
  * Specific attributes for the entity, either Person or Organization
  */
 ATTRIBUTES<T extends flatbuffers.Table>(obj:any):any|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
 }
 
 static startEPM(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(9);
+}
+
+static addDn(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, DNOffset, 0);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, NAMEOffset, 0);
+  builder.addFieldOffset(1, NAMEOffset, 0);
 }
 
 static addAlternateNames(builder:flatbuffers.Builder, ALTERNATE_NAMESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, ALTERNATE_NAMESOffset, 0);
+  builder.addFieldOffset(2, ALTERNATE_NAMESOffset, 0);
 }
 
 static createAlternateNamesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -140,15 +153,15 @@ static startAlternateNamesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addEmail(builder:flatbuffers.Builder, EMAILOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, EMAILOffset, 0);
+  builder.addFieldOffset(3, EMAILOffset, 0);
 }
 
 static addTelephone(builder:flatbuffers.Builder, TELEPHONEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, TELEPHONEOffset, 0);
+  builder.addFieldOffset(4, TELEPHONEOffset, 0);
 }
 
 static addKeys(builder:flatbuffers.Builder, KEYSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, KEYSOffset, 0);
+  builder.addFieldOffset(5, KEYSOffset, 0);
 }
 
 static createKeysVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -164,7 +177,7 @@ static startKeysVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addMultiformatAddress(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, MULTIFORMAT_ADDRESSOffset, 0);
+  builder.addFieldOffset(6, MULTIFORMAT_ADDRESSOffset, 0);
 }
 
 static createMultiformatAddressVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -180,11 +193,11 @@ static startMultiformatAddressVector(builder:flatbuffers.Builder, numElems:numbe
 }
 
 static addAttributesType(builder:flatbuffers.Builder, attributesType:SpecificAttributes) {
-  builder.addFieldInt8(6, attributesType, SpecificAttributes.NONE);
+  builder.addFieldInt8(7, attributesType, SpecificAttributes.NONE);
 }
 
 static addAttributes(builder:flatbuffers.Builder, ATTRIBUTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, ATTRIBUTESOffset, 0);
+  builder.addFieldOffset(8, ATTRIBUTESOffset, 0);
 }
 
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -192,8 +205,9 @@ static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createEPM(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, EMAILOffset:flatbuffers.Offset, TELEPHONEOffset:flatbuffers.Offset, KEYSOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, attributesType:SpecificAttributes, ATTRIBUTESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createEPM(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, EMAILOffset:flatbuffers.Offset, TELEPHONEOffset:flatbuffers.Offset, KEYSOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, attributesType:SpecificAttributes, ATTRIBUTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   EPM.startEPM(builder);
+  EPM.addDn(builder, DNOffset);
   EPM.addName(builder, NAMEOffset);
   EPM.addAlternateNames(builder, ALTERNATE_NAMESOffset);
   EPM.addEmail(builder, EMAILOffset);
@@ -207,6 +221,7 @@ static createEPM(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, ALT
 
 unpack(): EPMT {
   return new EPMT(
+    (this.DN() !== null ? this.DN()!.unpack() : null),
     this.NAME(),
     this.bb!.createScalarList<string>(this.ALTERNATE_NAMES.bind(this), this.alternateNamesLength()),
     this.EMAIL(),
@@ -224,6 +239,7 @@ unpack(): EPMT {
 
 
 unpackTo(_o: EPMT): void {
+  _o.DN = (this.DN() !== null ? this.DN()!.unpack() : null);
   _o.NAME = this.NAME();
   _o.ALTERNATE_NAMES = this.bb!.createScalarList<string>(this.ALTERNATE_NAMES.bind(this), this.alternateNamesLength());
   _o.EMAIL = this.EMAIL();
@@ -241,6 +257,7 @@ unpackTo(_o: EPMT): void {
 
 export class EPMT implements flatbuffers.IGeneratedObject {
 constructor(
+  public DN: DistinguishedNameT|null = null,
   public NAME: string|Uint8Array|null = null,
   public ALTERNATE_NAMES: (string)[] = [],
   public EMAIL: string|Uint8Array|null = null,
@@ -253,6 +270,7 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
+  const DN = (this.DN !== null ? this.DN!.pack(builder) : 0);
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const ALTERNATE_NAMES = EPM.createAlternateNamesVector(builder, builder.createObjectOffsetList(this.ALTERNATE_NAMES));
   const EMAIL = (this.EMAIL !== null ? builder.createString(this.EMAIL!) : 0);
@@ -262,6 +280,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ATTRIBUTES = builder.createObjectOffset(this.ATTRIBUTES);
 
   return EPM.createEPM(builder,
+    DN,
     NAME,
     ALTERNATE_NAMES,
     EMAIL,

@@ -29,52 +29,58 @@ public final class EPM extends Table {
   public EPM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
+   * Distinguished Name of the entity
+   */
+  public DistinguishedName DN() { return DN(new DistinguishedName()); }
+  public DistinguishedName DN(DistinguishedName obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
    * Common name of the entity (person or organization)
    */
-  public String NAME() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String NAME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
    * Alternate names for the entity
    */
-  public String ALTERNATE_NAMES(int j) { int o = __offset(6); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ALTERNATE_NAMESLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
+  public String ALTERNATE_NAMES(int j) { int o = __offset(8); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ALTERNATE_NAMESLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public StringVector alternateNamesVector() { return alternateNamesVector(new StringVector()); }
-  public StringVector alternateNamesVector(StringVector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector alternateNamesVector(StringVector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Email address of the entity
    */
-  public String EMAIL() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EMAILAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer EMAILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String EMAIL() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EMAILAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer EMAILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * Telephone number of the entity
    */
-  public String TELEPHONE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TELEPHONEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer TELEPHONEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String TELEPHONE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TELEPHONEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer TELEPHONEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Cryptographic keys associated with the entity
    */
   public CryptoKey KEYS(int j) { return KEYS(new CryptoKey(), j); }
-  public CryptoKey KEYS(CryptoKey obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int KEYSLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
+  public CryptoKey KEYS(CryptoKey obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int KEYSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
   public CryptoKey.Vector keysVector() { return keysVector(new CryptoKey.Vector()); }
-  public CryptoKey.Vector keysVector(CryptoKey.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public CryptoKey.Vector keysVector(CryptoKey.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Multiformat addresses associated with the entity
    */
-  public String MULTIFORMAT_ADDRESS(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int MULTIFORMAT_ADDRESSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public String MULTIFORMAT_ADDRESS(int j) { int o = __offset(16); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int MULTIFORMAT_ADDRESSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
   public StringVector multiformatAddressVector() { return multiformatAddressVector(new StringVector()); }
-  public StringVector multiformatAddressVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public byte attributesType() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public StringVector multiformatAddressVector(StringVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public byte attributesType() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Specific attributes for the entity, either Person or Organization
    */
-  public Table ATTRIBUTES(Table obj) { int o = __offset(18); return o != 0 ? __union(obj, o + bb_pos) : null; }
+  public Table ATTRIBUTES(Table obj) { int o = __offset(20); return o != 0 ? __union(obj, o + bb_pos) : null; }
 
   public static int createEPM(FlatBufferBuilder builder,
+      int DNOffset,
       int NAMEOffset,
       int ALTERNATE_NAMESOffset,
       int EMAILOffset,
@@ -83,7 +89,7 @@ public final class EPM extends Table {
       int MULTIFORMAT_ADDRESSOffset,
       byte attributesType,
       int ATTRIBUTESOffset) {
-    builder.startTable(8);
+    builder.startTable(9);
     EPM.addAttributes(builder, ATTRIBUTESOffset);
     EPM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     EPM.addKeys(builder, KEYSOffset);
@@ -91,25 +97,27 @@ public final class EPM extends Table {
     EPM.addEmail(builder, EMAILOffset);
     EPM.addAlternateNames(builder, ALTERNATE_NAMESOffset);
     EPM.addName(builder, NAMEOffset);
+    EPM.addDn(builder, DNOffset);
     EPM.addAttributesType(builder, attributesType);
     return EPM.endEPM(builder);
   }
 
-  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(8); }
-  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
-  public static void addAlternateNames(FlatBufferBuilder builder, int ALTERNATE_NAMESOffset) { builder.addOffset(1, ALTERNATE_NAMESOffset, 0); }
+  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(0, DNOffset, 0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
+  public static void addAlternateNames(FlatBufferBuilder builder, int ALTERNATE_NAMESOffset) { builder.addOffset(2, ALTERNATE_NAMESOffset, 0); }
   public static int createAlternateNamesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAlternateNamesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addEmail(FlatBufferBuilder builder, int EMAILOffset) { builder.addOffset(2, EMAILOffset, 0); }
-  public static void addTelephone(FlatBufferBuilder builder, int TELEPHONEOffset) { builder.addOffset(3, TELEPHONEOffset, 0); }
-  public static void addKeys(FlatBufferBuilder builder, int KEYSOffset) { builder.addOffset(4, KEYSOffset, 0); }
+  public static void addEmail(FlatBufferBuilder builder, int EMAILOffset) { builder.addOffset(3, EMAILOffset, 0); }
+  public static void addTelephone(FlatBufferBuilder builder, int TELEPHONEOffset) { builder.addOffset(4, TELEPHONEOffset, 0); }
+  public static void addKeys(FlatBufferBuilder builder, int KEYSOffset) { builder.addOffset(5, KEYSOffset, 0); }
   public static int createKeysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startKeysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(5, MULTIFORMAT_ADDRESSOffset, 0); }
+  public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(6, MULTIFORMAT_ADDRESSOffset, 0); }
   public static int createMultiformatAddressVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMultiformatAddressVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addAttributesType(FlatBufferBuilder builder, byte attributesType) { builder.addByte(6, attributesType, 0); }
-  public static void addAttributes(FlatBufferBuilder builder, int ATTRIBUTESOffset) { builder.addOffset(7, ATTRIBUTESOffset, 0); }
+  public static void addAttributesType(FlatBufferBuilder builder, byte attributesType) { builder.addByte(7, attributesType, 0); }
+  public static void addAttributes(FlatBufferBuilder builder, int ATTRIBUTESOffset) { builder.addOffset(8, ATTRIBUTESOffset, 0); }
   public static int endEPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

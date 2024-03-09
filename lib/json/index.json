@@ -3732,6 +3732,10 @@
                     "type": "object",
                     "description": "Entity Profile Message",
                     "properties": {
+                        "DN": {
+                            "$ref": "#/definitions/DistinguishedName",
+                            "description": "Distinguished Name of the entity"
+                        },
                         "NAME": {
                             "type": "string",
                             "description": "Common name of the entity (person or organization)"
@@ -6116,6 +6120,10 @@
                     "type": "object",
                     "description": "Entity Profile Message",
                     "properties": {
+                        "DN": {
+                            "$ref": "#/definitions/DistinguishedName",
+                            "description": "Distinguished Name of the entity"
+                        },
                         "NAME": {
                             "type": "string",
                             "description": "Common name of the entity (person or organization)"

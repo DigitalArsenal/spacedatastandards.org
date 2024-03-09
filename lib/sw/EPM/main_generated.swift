@@ -435,18 +435,21 @@ public struct EPM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case ALTERNATE_NAMES = 6
-    case EMAIL = 8
-    case TELEPHONE = 10
-    case KEYS = 12
-    case MULTIFORMAT_ADDRESS = 14
-    case attributesType = 16
-    case ATTRIBUTES = 18
+    case DN = 4
+    case NAME = 6
+    case ALTERNATE_NAMES = 8
+    case EMAIL = 10
+    case TELEPHONE = 12
+    case KEYS = 14
+    case MULTIFORMAT_ADDRESS = 16
+    case attributesType = 18
+    case ATTRIBUTES = 20
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Distinguished Name of the entity
+  public var DN: DistinguishedName? { let o = _accessor.offset(VTOFFSET.DN.v); return o == 0 ? nil : DistinguishedName(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Common name of the entity (person or organization)
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
@@ -471,7 +474,8 @@ public struct EPM: FlatBufferObject, Verifiable {
   public var attributesType: SpecificAttributes { let o = _accessor.offset(VTOFFSET.attributesType.v); return o == 0 ? .none_ : SpecificAttributes(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   ///  Specific attributes for the entity, either Person or Organization
   public func ATTRIBUTES<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.ATTRIBUTES.v); return o == 0 ? nil : _accessor.union(o) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VTOFFSET.DN.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func addVectorOf(ALTERNATE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAMES, at: VTOFFSET.ALTERNATE_NAMES.p) }
   public static func add(EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMAIL, at: VTOFFSET.EMAIL.p) }
@@ -483,6 +487,7 @@ public struct EPM: FlatBufferObject, Verifiable {
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
+    DNOffset DN: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
     ALTERNATE_NAMESVectorOffset ALTERNATE_NAMES: Offset = Offset(),
     EMAILOffset EMAIL: Offset = Offset(),
@@ -493,6 +498,7 @@ public struct EPM: FlatBufferObject, Verifiable {
     ATTRIBUTESOffset ATTRIBUTES: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
+    EPM.add(DN: DN, &fbb)
     EPM.add(NAME: NAME, &fbb)
     EPM.addVectorOf(ALTERNATE_NAMES: ALTERNATE_NAMES, &fbb)
     EPM.add(EMAIL: EMAIL, &fbb)
@@ -506,6 +512,7 @@ public struct EPM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.DN.p, fieldName: "DN", required: false, type: ForwardOffset<DistinguishedName>.self)
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ALTERNATE_NAMES.p, fieldName: "ALTERNATE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.EMAIL.p, fieldName: "EMAIL", required: false, type: ForwardOffset<String>.self)

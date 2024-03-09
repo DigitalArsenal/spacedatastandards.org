@@ -265,68 +265,75 @@ struct OrganizationAttributesBuilder:
 
 /// Entity Profile Message
 class EPM : flatbuffers_handle
+    /// Distinguished Name of the entity
+    def DN() -> DistinguishedName?:
+        let o = buf_.flatbuffers_field_table(pos_, 4)
+        return if o: DistinguishedName { buf_, o } else: nil
     /// Common name of the entity (person or organization)
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return buf_.flatbuffers_field_string(pos_, 6)
     /// Alternate names for the entity
     def ALTERNATE_NAMES(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 6) + i * 4)
+        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 8) + i * 4)
     def ALTERNATE_NAMES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 6)
+        return buf_.flatbuffers_field_vector_len(pos_, 8)
     /// Email address of the entity
     def EMAIL() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return buf_.flatbuffers_field_string(pos_, 10)
     /// Telephone number of the entity
     def TELEPHONE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return buf_.flatbuffers_field_string(pos_, 12)
     /// Cryptographic keys associated with the entity
     def KEYS(i:int) -> CryptoKey:
-        return CryptoKey { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 12) + i * 4) }
+        return CryptoKey { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 14) + i * 4) }
     def KEYS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 12)
+        return buf_.flatbuffers_field_vector_len(pos_, 14)
     /// Multiformat addresses associated with the entity
     def MULTIFORMAT_ADDRESS(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 14) + i * 4)
+        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 16) + i * 4)
     def MULTIFORMAT_ADDRESS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 14)
+        return buf_.flatbuffers_field_vector_len(pos_, 16)
     def ATTRIBUTES_type() -> SpecificAttributes:
-        return SpecificAttributes(buf_.flatbuffers_field_uint8(pos_, 16, 0))
+        return SpecificAttributes(buf_.flatbuffers_field_uint8(pos_, 18, 0))
     /// Specific attributes for the entity, either Person or Organization
     def ATTRIBUTES_as_PersonAttributes():
-        return PersonAttributes { buf_, buf_.flatbuffers_field_table(pos_, 18) }
+        return PersonAttributes { buf_, buf_.flatbuffers_field_table(pos_, 20) }
     def ATTRIBUTES_as_OrganizationAttributes():
-        return OrganizationAttributes { buf_, buf_.flatbuffers_field_table(pos_, 18) }
+        return OrganizationAttributes { buf_, buf_.flatbuffers_field_table(pos_, 20) }
 
 def GetRootAsEPM(buf:string): return EPM { buf, buf.flatbuffers_indirect(0) }
 
 struct EPMBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(9)
+        return this
+    def add_DN(DN:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, DN)
         return this
     def add_NAME(NAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        b_.PrependUOffsetTRelativeSlot(1, NAME)
         return this
     def add_ALTERNATE_NAMES(ALTERNATE_NAMES:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(1, ALTERNATE_NAMES)
+        b_.PrependUOffsetTRelativeSlot(2, ALTERNATE_NAMES)
         return this
     def add_EMAIL(EMAIL:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(2, EMAIL)
+        b_.PrependUOffsetTRelativeSlot(3, EMAIL)
         return this
     def add_TELEPHONE(TELEPHONE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(3, TELEPHONE)
+        b_.PrependUOffsetTRelativeSlot(4, TELEPHONE)
         return this
     def add_KEYS(KEYS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(4, KEYS)
+        b_.PrependUOffsetTRelativeSlot(5, KEYS)
         return this
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(5, MULTIFORMAT_ADDRESS)
+        b_.PrependUOffsetTRelativeSlot(6, MULTIFORMAT_ADDRESS)
         return this
     def add_ATTRIBUTES_type(ATTRIBUTES_type:SpecificAttributes):
-        b_.PrependUint8Slot(6, ATTRIBUTES_type, 0)
+        b_.PrependUint8Slot(7, ATTRIBUTES_type, 0)
         return this
     def add_ATTRIBUTES(ATTRIBUTES:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(7, ATTRIBUTES)
+        b_.PrependUOffsetTRelativeSlot(8, ATTRIBUTES)
         return this
     def end():
         return b_.EndObject()

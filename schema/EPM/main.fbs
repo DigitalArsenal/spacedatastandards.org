@@ -89,6 +89,8 @@ union SpecificAttributes { PersonAttributes, OrganizationAttributes }
 
 /// Entity Profile Message
 table EPM {
+  /// Distinguished Name of the entity
+  DN: DistinguishedName;
   /// Common name of the entity (person or organization)
   NAME: string;
   /// Alternate names for the entity

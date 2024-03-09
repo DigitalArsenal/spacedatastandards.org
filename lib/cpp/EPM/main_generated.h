@@ -711,15 +711,20 @@ inline ::flatbuffers::Offset<OrganizationAttributes> CreateOrganizationAttribute
 struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EPMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_ALTERNATE_NAMES = 6,
-    VT_EMAIL = 8,
-    VT_TELEPHONE = 10,
-    VT_KEYS = 12,
-    VT_MULTIFORMAT_ADDRESS = 14,
-    VT_ATTRIBUTES_TYPE = 16,
-    VT_ATTRIBUTES = 18
+    VT_DN = 4,
+    VT_NAME = 6,
+    VT_ALTERNATE_NAMES = 8,
+    VT_EMAIL = 10,
+    VT_TELEPHONE = 12,
+    VT_KEYS = 14,
+    VT_MULTIFORMAT_ADDRESS = 16,
+    VT_ATTRIBUTES_TYPE = 18,
+    VT_ATTRIBUTES = 20
   };
+  /// Distinguished Name of the entity
+  const DistinguishedName *DN() const {
+    return GetPointer<const DistinguishedName *>(VT_DN);
+  }
   /// Common name of the entity (person or organization)
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
@@ -760,6 +765,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_DN) &&
+           verifier.VerifyTable(DN()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
            VerifyOffset(verifier, VT_ALTERNATE_NAMES) &&
@@ -794,6 +801,9 @@ struct EPMBuilder {
   typedef EPM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_DN(::flatbuffers::Offset<DistinguishedName> DN) {
+    fbb_.AddOffset(EPM::VT_DN, DN);
+  }
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
     fbb_.AddOffset(EPM::VT_NAME, NAME);
   }
@@ -831,6 +841,7 @@ struct EPMBuilder {
 
 inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<DistinguishedName> DN = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_NAMES = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EMAIL = 0,
@@ -847,12 +858,14 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
   builder_.add_EMAIL(EMAIL);
   builder_.add_ALTERNATE_NAMES(ALTERNATE_NAMES);
   builder_.add_NAME(NAME);
+  builder_.add_DN(DN);
   builder_.add_ATTRIBUTES_type(ATTRIBUTES_type);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<DistinguishedName> DN = 0,
     const char *NAME = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_NAMES = nullptr,
     const char *EMAIL = nullptr,
@@ -869,6 +882,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MULTIFORMAT_ADDRESS) : 0;
   return CreateEPM(
       _fbb,
+      DN,
       NAME__,
       ALTERNATE_NAMES__,
       EMAIL__,

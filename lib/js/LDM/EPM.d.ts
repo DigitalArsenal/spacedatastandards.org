@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+import { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
 import { OrganizationAttributesT } from './OrganizationAttributes.js';
 import { PersonAttributesT } from './PersonAttributes.js';
 import { SpecificAttributes } from './SpecificAttributes.js';
@@ -12,6 +13,10 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): EPM;
     static getRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
     static getSizePrefixedRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
+    /**
+     * Distinguished Name of the entity
+     */
+    DN(obj?: DistinguishedName): DistinguishedName | null;
     /**
      * Common name of the entity (person or organization)
      */
@@ -50,6 +55,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
      */
     ATTRIBUTES<T extends flatbuffers.Table>(obj: any): any | null;
     static startEPM(builder: flatbuffers.Builder): void;
+    static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addAlternateNames(builder: flatbuffers.Builder, ALTERNATE_NAMESOffset: flatbuffers.Offset): void;
     static createAlternateNamesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -65,11 +71,12 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static addAttributesType(builder: flatbuffers.Builder, attributesType: SpecificAttributes): void;
     static addAttributes(builder: flatbuffers.Builder, ATTRIBUTESOffset: flatbuffers.Offset): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createEPM(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset, ALTERNATE_NAMESOffset: flatbuffers.Offset, EMAILOffset: flatbuffers.Offset, TELEPHONEOffset: flatbuffers.Offset, KEYSOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, attributesType: SpecificAttributes, ATTRIBUTESOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createEPM(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, ALTERNATE_NAMESOffset: flatbuffers.Offset, EMAILOffset: flatbuffers.Offset, TELEPHONEOffset: flatbuffers.Offset, KEYSOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, attributesType: SpecificAttributes, ATTRIBUTESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EPMT;
     unpackTo(_o: EPMT): void;
 }
 export declare class EPMT implements flatbuffers.IGeneratedObject {
+    DN: DistinguishedNameT | null;
     NAME: string | Uint8Array | null;
     ALTERNATE_NAMES: (string)[];
     EMAIL: string | Uint8Array | null;
@@ -78,7 +85,7 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     MULTIFORMAT_ADDRESS: (string)[];
     attributesType: SpecificAttributes;
     ATTRIBUTES: OrganizationAttributesT | PersonAttributesT | null;
-    constructor(NAME?: string | Uint8Array | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], attributesType?: SpecificAttributes, ATTRIBUTES?: OrganizationAttributesT | PersonAttributesT | null);
+    constructor(DN?: DistinguishedNameT | null, NAME?: string | Uint8Array | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], attributesType?: SpecificAttributes, ATTRIBUTES?: OrganizationAttributesT | PersonAttributesT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map

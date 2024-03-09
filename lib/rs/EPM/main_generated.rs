@@ -1561,14 +1561,15 @@ impl<'a> flatbuffers::Follow<'a> for EPM<'a> {
 }
 
 impl<'a> EPM<'a> {
-  pub const VT_NAME: flatbuffers::VOffsetT = 4;
-  pub const VT_ALTERNATE_NAMES: flatbuffers::VOffsetT = 6;
-  pub const VT_EMAIL: flatbuffers::VOffsetT = 8;
-  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 10;
-  pub const VT_KEYS: flatbuffers::VOffsetT = 12;
-  pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 14;
-  pub const VT_ATTRIBUTES_TYPE: flatbuffers::VOffsetT = 16;
-  pub const VT_ATTRIBUTES: flatbuffers::VOffsetT = 18;
+  pub const VT_DN: flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: flatbuffers::VOffsetT = 6;
+  pub const VT_ALTERNATE_NAMES: flatbuffers::VOffsetT = 8;
+  pub const VT_EMAIL: flatbuffers::VOffsetT = 10;
+  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 12;
+  pub const VT_KEYS: flatbuffers::VOffsetT = 14;
+  pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 16;
+  pub const VT_ATTRIBUTES_TYPE: flatbuffers::VOffsetT = 18;
+  pub const VT_ATTRIBUTES: flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1587,11 +1588,15 @@ impl<'a> EPM<'a> {
     if let Some(x) = args.EMAIL { builder.add_EMAIL(x); }
     if let Some(x) = args.ALTERNATE_NAMES { builder.add_ALTERNATE_NAMES(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.DN { builder.add_DN(x); }
     builder.add_ATTRIBUTES_type(args.ATTRIBUTES_type);
     builder.finish()
   }
 
   pub fn unpack(&self) -> EPMT {
+    let DN = self.DN().map(|x| {
+      Box::new(x.unpack())
+    });
     let NAME = self.NAME().map(|x| {
       x.to_string()
     });
@@ -1625,6 +1630,7 @@ impl<'a> EPM<'a> {
       _ => SpecificAttributesT::NONE,
     };
     EPMT {
+      DN,
       NAME,
       ALTERNATE_NAMES,
       EMAIL,
@@ -1635,6 +1641,14 @@ impl<'a> EPM<'a> {
     }
   }
 
+  /// Distinguished Name of the entity
+  #[inline]
+  pub fn DN(&self) -> Option<DistinguishedName<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<DistinguishedName>>(EPM::VT_DN, None)}
+  }
   /// Common name of the entity (person or organization)
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
@@ -1737,6 +1751,7 @@ impl flatbuffers::Verifiable for EPM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<DistinguishedName>>("DN", Self::VT_DN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ALTERNATE_NAMES", Self::VT_ALTERNATE_NAMES, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EMAIL", Self::VT_EMAIL, false)?
@@ -1755,6 +1770,7 @@ impl flatbuffers::Verifiable for EPM<'_> {
   }
 }
 pub struct EPMArgs<'a> {
+    pub DN: Option<flatbuffers::WIPOffset<DistinguishedName<'a>>>,
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ALTERNATE_NAMES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub EMAIL: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1768,6 +1784,7 @@ impl<'a> Default for EPMArgs<'a> {
   #[inline]
   fn default() -> Self {
     EPMArgs {
+      DN: None,
       NAME: None,
       ALTERNATE_NAMES: None,
       EMAIL: None,
@@ -1785,6 +1802,10 @@ pub struct EPMBuilder<'a: 'b, 'b> {
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
 impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_DN(&mut self, DN: flatbuffers::WIPOffset<DistinguishedName<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<DistinguishedName>>(EPM::VT_DN, DN);
+  }
   #[inline]
   pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_NAME, NAME);
@@ -1835,6 +1856,7 @@ impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
 impl core::fmt::Debug for EPM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("EPM");
+      ds.field("DN", &self.DN());
       ds.field("NAME", &self.NAME());
       ds.field("ALTERNATE_NAMES", &self.ALTERNATE_NAMES());
       ds.field("EMAIL", &self.EMAIL());
@@ -1868,6 +1890,7 @@ impl core::fmt::Debug for EPM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct EPMT {
+  pub DN: Option<Box<DistinguishedNameT>>,
   pub NAME: Option<String>,
   pub ALTERNATE_NAMES: Option<Vec<String>>,
   pub EMAIL: Option<String>,
@@ -1879,6 +1902,7 @@ pub struct EPMT {
 impl Default for EPMT {
   fn default() -> Self {
     Self {
+      DN: None,
       NAME: None,
       ALTERNATE_NAMES: None,
       EMAIL: None,
@@ -1894,6 +1918,9 @@ impl EPMT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
   ) -> flatbuffers::WIPOffset<EPM<'b>> {
+    let DN = self.DN.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1915,6 +1942,7 @@ impl EPMT {
     let attributes_type = self.ATTRIBUTES.specific_attributes_type();
     let ATTRIBUTES = self.ATTRIBUTES.pack(_fbb);
     EPM::create(_fbb, &EPMArgs{
+      DN,
       NAME,
       ALTERNATE_NAMES,
       EMAIL,

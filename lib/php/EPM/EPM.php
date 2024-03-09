@@ -41,10 +41,18 @@ class EPM extends Table
         return $this;
     }
 
+    /// Distinguished Name of the entity
+    public function getDN()
+    {
+        $obj = new DistinguishedName();
+        $o = $this->__offset(4);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /// Common name of the entity (person or organization)
     public function getNAME()
     {
-        $o = $this->__offset(4);
+        $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -55,7 +63,7 @@ class EPM extends Table
      */
     public function getALTERNATE_NAMES($j)
     {
-        $o = $this->__offset(6);
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -64,21 +72,21 @@ class EPM extends Table
      */
     public function getALTERNATE_NAMESLength()
     {
-        $o = $this->__offset(6);
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// Email address of the entity
     public function getEMAIL()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Telephone number of the entity
     public function getTELEPHONE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -88,7 +96,7 @@ class EPM extends Table
      */
     public function getKEYS($j)
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         $obj = new CryptoKey();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -98,7 +106,7 @@ class EPM extends Table
      */
     public function getKEYSLength()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -109,7 +117,7 @@ class EPM extends Table
      */
     public function getMULTIFORMAT_ADDRESS($j)
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -118,7 +126,7 @@ class EPM extends Table
      */
     public function getMULTIFORMAT_ADDRESSLength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -127,7 +135,7 @@ class EPM extends Table
      */
     public function getATTRIBUTESType()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \SpecificAttributes::NONE;
     }
 
@@ -137,7 +145,7 @@ class EPM extends Table
      */
     public function getATTRIBUTES($obj)
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__union($obj, $o) : null;
     }
 
@@ -147,16 +155,17 @@ class EPM extends Table
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $NAME, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $ATTRIBUTES_type, $ATTRIBUTES)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $NAME, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $ATTRIBUTES_type, $ATTRIBUTES)
     {
-        $builder->startObject(8);
+        $builder->startObject(9);
+        self::addDN($builder, $DN);
         self::addNAME($builder, $NAME);
         self::addALTERNATE_NAMES($builder, $ALTERNATE_NAMES);
         self::addEMAIL($builder, $EMAIL);
@@ -171,12 +180,22 @@ class EPM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addDN(FlatBufferBuilder $builder, $DN)
+    {
+        $builder->addOffsetX(0, $DN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addNAME(FlatBufferBuilder $builder, $NAME)
     {
-        $builder->addOffsetX(0, $NAME, 0);
+        $builder->addOffsetX(1, $NAME, 0);
     }
 
     /**
@@ -186,7 +205,7 @@ class EPM extends Table
      */
     public static function addALTERNATE_NAMES(FlatBufferBuilder $builder, $ALTERNATE_NAMES)
     {
-        $builder->addOffsetX(1, $ALTERNATE_NAMES, 0);
+        $builder->addOffsetX(2, $ALTERNATE_NAMES, 0);
     }
 
     /**
@@ -220,7 +239,7 @@ class EPM extends Table
      */
     public static function addEMAIL(FlatBufferBuilder $builder, $EMAIL)
     {
-        $builder->addOffsetX(2, $EMAIL, 0);
+        $builder->addOffsetX(3, $EMAIL, 0);
     }
 
     /**
@@ -230,7 +249,7 @@ class EPM extends Table
      */
     public static function addTELEPHONE(FlatBufferBuilder $builder, $TELEPHONE)
     {
-        $builder->addOffsetX(3, $TELEPHONE, 0);
+        $builder->addOffsetX(4, $TELEPHONE, 0);
     }
 
     /**
@@ -240,7 +259,7 @@ class EPM extends Table
      */
     public static function addKEYS(FlatBufferBuilder $builder, $KEYS)
     {
-        $builder->addOffsetX(4, $KEYS, 0);
+        $builder->addOffsetX(5, $KEYS, 0);
     }
 
     /**
@@ -274,7 +293,7 @@ class EPM extends Table
      */
     public static function addMULTIFORMAT_ADDRESS(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS)
     {
-        $builder->addOffsetX(5, $MULTIFORMAT_ADDRESS, 0);
+        $builder->addOffsetX(6, $MULTIFORMAT_ADDRESS, 0);
     }
 
     /**
@@ -308,12 +327,12 @@ class EPM extends Table
      */
     public static function addATTRIBUTESType(FlatBufferBuilder $builder, $ATTRIBUTESType)
     {
-        $builder->addByteX(6, $ATTRIBUTESType, 0);
+        $builder->addByteX(7, $ATTRIBUTESType, 0);
     }
 
     public static function addATTRIBUTES(FlatBufferBuilder $builder, $offset)
     {
-        $builder->addOffsetX(7, $offset, 0);
+        $builder->addOffsetX(8, $offset, 0);
     }
 
     /**
