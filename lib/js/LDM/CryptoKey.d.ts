@@ -34,7 +34,7 @@ export declare class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKe
     KEY_ADDRESS(): string | null;
     KEY_ADDRESS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Numerical type of the address generated from the cryptographic key
+     * Type of the address generated from the cryptographic key
      */
     ADDRESS_TYPE(): string | null;
     ADDRESS_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

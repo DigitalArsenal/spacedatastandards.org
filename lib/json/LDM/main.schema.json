@@ -419,7 +419,7 @@
               },
         "ADDRESS_TYPE" : {
                 "type" : "string",
-                "description" : "Numerical type of the address generated from the cryptographic key"
+                "description" : "Type of the address generated from the cryptographic key"
               }
       },
       "additionalProperties" : false

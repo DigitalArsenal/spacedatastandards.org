@@ -59,7 +59,7 @@ public final class CryptoKey extends Table {
   public ByteBuffer KEY_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer KEY_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * Numerical type of the address generated from the cryptographic key
+   * Type of the address generated from the cryptographic key
    */
   public String ADDRESS_TYPE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ADDRESS_TYPEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }

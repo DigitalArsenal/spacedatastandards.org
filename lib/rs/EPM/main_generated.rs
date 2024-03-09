@@ -680,7 +680,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_KEY_ADDRESS, None)}
   }
-  /// Numerical type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key
   #[inline]
   pub fn ADDRESS_TYPE(&self) -> Option<&'a str> {
     // Safety:

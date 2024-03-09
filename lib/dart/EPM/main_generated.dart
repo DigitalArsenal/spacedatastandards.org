@@ -299,7 +299,7 @@ class CryptoKey {
   String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Address generated from the cryptographic key
   String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Numerical type of the address generated from the cryptographic key
+  ///  Type of the address generated from the cryptographic key
   String? get ADDRESS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
 
   @override

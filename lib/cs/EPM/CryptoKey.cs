@@ -57,7 +57,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetKEY_ADDRESSBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetKEY_ADDRESSArray() { return __p.__vector_as_array<byte>(12); }
-  /// Numerical type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key
   public string ADDRESS_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetADDRESS_TYPEBytes() { return __p.__vector_as_span<byte>(14, 1); }

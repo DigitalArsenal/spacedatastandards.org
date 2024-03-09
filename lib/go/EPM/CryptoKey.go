@@ -84,7 +84,7 @@ func (rcv *CryptoKey) KEY_ADDRESS() []byte {
 }
 
 /// Address generated from the cryptographic key
-/// Numerical type of the address generated from the cryptographic key
+/// Type of the address generated from the cryptographic key
 func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -93,7 +93,7 @@ func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
 	return nil
 }
 
-/// Numerical type of the address generated from the cryptographic key
+/// Type of the address generated from the cryptographic key
 func CryptoKeyStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
 }

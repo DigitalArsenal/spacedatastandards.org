@@ -286,7 +286,7 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *KEY_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
   }
-  /// Numerical type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key
   const ::flatbuffers::String *ADDRESS_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_TYPE);
   }

@@ -76,7 +76,7 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Numerical type of the address generated from the cryptographic key
+    /// Type of the address generated from the cryptographic key
     public function getADDRESS_TYPE()
     {
         $o = $this->__offset(14);

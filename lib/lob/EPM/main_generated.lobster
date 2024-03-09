@@ -108,7 +108,7 @@ class CryptoKey : flatbuffers_handle
     /// Address generated from the cryptographic key
     def KEY_ADDRESS() -> string:
         return buf_.flatbuffers_field_string(pos_, 12)
-    /// Numerical type of the address generated from the cryptographic key
+    /// Type of the address generated from the cryptographic key
     def ADDRESS_TYPE() -> string:
         return buf_.flatbuffers_field_string(pos_, 14)
 

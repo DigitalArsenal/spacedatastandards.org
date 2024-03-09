@@ -101,7 +101,7 @@ class CryptoKey : Table() {
     val KEY_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun KEY_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Numerical type of the address generated from the cryptographic key
+     * Type of the address generated from the cryptographic key
      */
     val ADDRESS_TYPE : String?
         get() {

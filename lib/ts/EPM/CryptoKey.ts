@@ -76,7 +76,7 @@ KEY_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Numerical type of the address generated from the cryptographic key
+ * Type of the address generated from the cryptographic key
  */
 ADDRESS_TYPE():string|null
 ADDRESS_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

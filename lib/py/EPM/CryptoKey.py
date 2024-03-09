@@ -69,7 +69,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Numerical type of the address generated from the cryptographic key
+    # Type of the address generated from the cryptographic key
     # CryptoKey
     def ADDRESS_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))

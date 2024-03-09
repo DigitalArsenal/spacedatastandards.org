@@ -40,7 +40,7 @@ table CryptoKey {
   XPRIV: string;
   /// Address generated from the cryptographic key
   KEY_ADDRESS: string;
-  /// Numerical type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key
   ADDRESS_TYPE: string;
 }
 

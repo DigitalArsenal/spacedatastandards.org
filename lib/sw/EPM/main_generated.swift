@@ -172,7 +172,7 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
   ///  Address generated from the cryptographic key
   public var KEY_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.KEY_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var KEY_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ADDRESS.v) }
-  ///  Numerical type of the address generated from the cryptographic key
+  ///  Type of the address generated from the cryptographic key
   public var ADDRESS_TYPE: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ADDRESS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_TYPE.v) }
   public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
