@@ -7,6 +7,3 @@ export { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
 export { EPM, EPMT } from './EPM.js';
 export { EPMCOLLECTION, EPMCOLLECTIONT } from './EPMCOLLECTION.js';
 export { LDIFAttributeType } from './LDIFAttributeType.js';
-export { OrganizationAttributes, OrganizationAttributesT } from './OrganizationAttributes.js';
-export { PersonAttributes, PersonAttributesT } from './PersonAttributes.js';
-export { SpecificAttributes } from './SpecificAttributes.js';

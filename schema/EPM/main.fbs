@@ -60,8 +60,12 @@ table Address {
   POST_OFFICE_BOX_NUMBER: string;
 }
 
-/// Specific attributes for a Person
-table PersonAttributes {
+/// Entity Profile Message
+table EPM {
+  /// Distinguished Name of the entity
+  DN: DistinguishedName;
+  /// Common name of the entity (person or organization)
+  LEGAL_NAME: string;
   /// Family name or surname of the person
   FAMILY_NAME: string;
   /// Given name or first name of the person
@@ -76,23 +80,6 @@ table PersonAttributes {
   JOB_TITLE: string;
   /// Occupation of the person
   OCCUPATION: string;
-}
-
-/// Specific attributes for an Organization
-table OrganizationAttributes {
-  /// Legal name of the organization
-  LEGAL_NAME: string;
-}
-
-/// Union for specific attributes, distinguishing between Person and Organization
-union SpecificAttributes { PersonAttributes, OrganizationAttributes }
-
-/// Entity Profile Message
-table EPM {
-  /// Distinguished Name of the entity
-  DN: DistinguishedName;
-  /// Common name of the entity (person or organization)
-  NAME: string;
   /// Alternate names for the entity
   ALTERNATE_NAMES: [string];
   /// Email address of the entity
@@ -103,8 +90,6 @@ table EPM {
   KEYS: [CryptoKey];
   /// Multiformat addresses associated with the entity
   MULTIFORMAT_ADDRESS: [string];
-  /// Specific attributes for the entity, either Person or Organization
-  ATTRIBUTES: SpecificAttributes;
 }
 
 /// Collection of Entity Profile Messages

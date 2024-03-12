@@ -50,7 +50,7 @@ func (rcv *EPM) DN(obj *DistinguishedName) *DistinguishedName {
 
 /// Distinguished Name of the entity
 /// Common name of the entity (person or organization)
-func (rcv *EPM) NAME() []byte {
+func (rcv *EPM) LEGAL_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -59,9 +59,79 @@ func (rcv *EPM) NAME() []byte {
 }
 
 /// Common name of the entity (person or organization)
+/// Family name or surname of the person
+func (rcv *EPM) FAMILY_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Family name or surname of the person
+/// Given name or first name of the person
+func (rcv *EPM) GIVEN_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Given name or first name of the person
+/// Additional name or middle name of the person
+func (rcv *EPM) ADDITIONAL_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional name or middle name of the person
+/// Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+func (rcv *EPM) HONORIFIC_PREFIX() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+/// Honorific suffix following the person's name (e.g., Jr., Sr.)
+func (rcv *EPM) HONORIFIC_SUFFIX() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Honorific suffix following the person's name (e.g., Jr., Sr.)
+/// Job title of the person
+func (rcv *EPM) JOB_TITLE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Job title of the person
+/// Occupation of the person
+func (rcv *EPM) OCCUPATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Occupation of the person
 /// Alternate names for the entity
 func (rcv *EPM) ALTERNATE_NAMES(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -70,7 +140,7 @@ func (rcv *EPM) ALTERNATE_NAMES(j int) []byte {
 }
 
 func (rcv *EPM) ALTERNATE_NAMESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -80,7 +150,7 @@ func (rcv *EPM) ALTERNATE_NAMESLength() int {
 /// Alternate names for the entity
 /// Email address of the entity
 func (rcv *EPM) EMAIL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -90,7 +160,7 @@ func (rcv *EPM) EMAIL() []byte {
 /// Email address of the entity
 /// Telephone number of the entity
 func (rcv *EPM) TELEPHONE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -100,7 +170,7 @@ func (rcv *EPM) TELEPHONE() []byte {
 /// Telephone number of the entity
 /// Cryptographic keys associated with the entity
 func (rcv *EPM) KEYS(obj *CryptoKey, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -112,7 +182,7 @@ func (rcv *EPM) KEYS(obj *CryptoKey, j int) bool {
 }
 
 func (rcv *EPM) KEYSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -122,7 +192,7 @@ func (rcv *EPM) KEYSLength() int {
 /// Cryptographic keys associated with the entity
 /// Multiformat addresses associated with the entity
 func (rcv *EPM) MULTIFORMAT_ADDRESS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -131,7 +201,7 @@ func (rcv *EPM) MULTIFORMAT_ADDRESS(j int) []byte {
 }
 
 func (rcv *EPM) MULTIFORMAT_ADDRESSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -139,67 +209,59 @@ func (rcv *EPM) MULTIFORMAT_ADDRESSLength() int {
 }
 
 /// Multiformat addresses associated with the entity
-func (rcv *EPM) AttributesType() SpecificAttributes {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return SpecificAttributes(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-func (rcv *EPM) MutateAttributesType(n SpecificAttributes) bool {
-	return rcv._tab.MutateByteSlot(18, byte(n))
-}
-
-/// Specific attributes for the entity, either Person or Organization
-func (rcv *EPM) ATTRIBUTES(obj *flatbuffers.Table) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		rcv._tab.Union(obj, o)
-		return true
-	}
-	return false
-}
-
-/// Specific attributes for the entity, either Person or Organization
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(14)
 }
 func EPMAddDN(builder *flatbuffers.Builder, DN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DN), 0)
 }
-func EPMAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+func EPMAddLEGAL_NAME(builder *flatbuffers.Builder, LEGAL_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LEGAL_NAME), 0)
+}
+func EPMAddFAMILY_NAME(builder *flatbuffers.Builder, FAMILY_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(FAMILY_NAME), 0)
+}
+func EPMAddGIVEN_NAME(builder *flatbuffers.Builder, GIVEN_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(GIVEN_NAME), 0)
+}
+func EPMAddADDITIONAL_NAME(builder *flatbuffers.Builder, ADDITIONAL_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ADDITIONAL_NAME), 0)
+}
+func EPMAddHONORIFIC_PREFIX(builder *flatbuffers.Builder, HONORIFIC_PREFIX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(HONORIFIC_PREFIX), 0)
+}
+func EPMAddHONORIFIC_SUFFIX(builder *flatbuffers.Builder, HONORIFIC_SUFFIX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(HONORIFIC_SUFFIX), 0)
+}
+func EPMAddJOB_TITLE(builder *flatbuffers.Builder, JOB_TITLE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(JOB_TITLE), 0)
+}
+func EPMAddOCCUPATION(builder *flatbuffers.Builder, OCCUPATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OCCUPATION), 0)
 }
 func EPMAddALTERNATE_NAMES(builder *flatbuffers.Builder, ALTERNATE_NAMES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ALTERNATE_NAMES), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ALTERNATE_NAMES), 0)
 }
 func EPMStartALTERNATE_NAMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func EPMAddEMAIL(builder *flatbuffers.Builder, EMAIL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EMAIL), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(EMAIL), 0)
 }
 func EPMAddTELEPHONE(builder *flatbuffers.Builder, TELEPHONE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TELEPHONE), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TELEPHONE), 0)
 }
 func EPMAddKEYS(builder *flatbuffers.Builder, KEYS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(KEYS), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(KEYS), 0)
 }
 func EPMStartKEYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func EPMAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
 }
 func EPMStartMULTIFORMAT_ADDRESSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
-}
-func EPMAddAttributesType(builder *flatbuffers.Builder, attributesType SpecificAttributes) {
-	builder.PrependByteSlot(7, byte(attributesType), 0)
-}
-func EPMAddATTRIBUTES(builder *flatbuffers.Builder, ATTRIBUTES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ATTRIBUTES), 0)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

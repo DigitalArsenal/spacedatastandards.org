@@ -4,9 +4,6 @@ import * as flatbuffers from 'flatbuffers';
 
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 import { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
-import { OrganizationAttributes, OrganizationAttributesT } from './OrganizationAttributes.js';
-import { PersonAttributes, PersonAttributesT } from './PersonAttributes.js';
-import { SpecificAttributes, unionToSpecificAttributes, unionListToSpecificAttributes } from './SpecificAttributes.js';
 
 
 /**
@@ -41,10 +38,80 @@ DN(obj?:DistinguishedName):DistinguishedName|null {
 /**
  * Common name of the entity (person or organization)
  */
-NAME():string|null
-NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NAME(optionalEncoding?:any):string|Uint8Array|null {
+LEGAL_NAME():string|null
+LEGAL_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LEGAL_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Family name or surname of the person
+ */
+FAMILY_NAME():string|null
+FAMILY_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FAMILY_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Given name or first name of the person
+ */
+GIVEN_NAME():string|null
+GIVEN_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GIVEN_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Additional name or middle name of the person
+ */
+ADDITIONAL_NAME():string|null
+ADDITIONAL_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ADDITIONAL_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+ */
+HONORIFIC_PREFIX():string|null
+HONORIFIC_PREFIX(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+HONORIFIC_PREFIX(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Honorific suffix following the person's name (e.g., Jr., Sr.)
+ */
+HONORIFIC_SUFFIX():string|null
+HONORIFIC_SUFFIX(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+HONORIFIC_SUFFIX(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Job title of the person
+ */
+JOB_TITLE():string|null
+JOB_TITLE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+JOB_TITLE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Occupation of the person
+ */
+OCCUPATION():string|null
+OCCUPATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OCCUPATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -54,12 +121,12 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
 ALTERNATE_NAMES(index: number):string
 ALTERNATE_NAMES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ALTERNATE_NAMES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 alternateNamesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -69,7 +136,7 @@ alternateNamesLength():number {
 EMAIL():string|null
 EMAIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EMAIL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -79,7 +146,7 @@ EMAIL(optionalEncoding?:any):string|Uint8Array|null {
 TELEPHONE():string|null
 TELEPHONE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TELEPHONE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -87,12 +154,12 @@ TELEPHONE(optionalEncoding?:any):string|Uint8Array|null {
  * Cryptographic keys associated with the entity
  */
 KEYS(index: number, obj?:CryptoKey):CryptoKey|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new CryptoKey()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 keysLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -102,42 +169,57 @@ keysLength():number {
 MULTIFORMAT_ADDRESS(index: number):string
 MULTIFORMAT_ADDRESS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 MULTIFORMAT_ADDRESS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 multiformatAddressLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-attributesType():SpecificAttributes {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : SpecificAttributes.NONE;
-}
-
-/**
- * Specific attributes for the entity, either Person or Organization
- */
-ATTRIBUTES<T extends flatbuffers.Table>(obj:any):any|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
-}
-
 static startEPM(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(14);
 }
 
 static addDn(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, DNOffset, 0);
 }
 
-static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, NAMEOffset, 0);
+static addLegalName(builder:flatbuffers.Builder, LEGAL_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, LEGAL_NAMEOffset, 0);
+}
+
+static addFamilyName(builder:flatbuffers.Builder, FAMILY_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, FAMILY_NAMEOffset, 0);
+}
+
+static addGivenName(builder:flatbuffers.Builder, GIVEN_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, GIVEN_NAMEOffset, 0);
+}
+
+static addAdditionalName(builder:flatbuffers.Builder, ADDITIONAL_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, ADDITIONAL_NAMEOffset, 0);
+}
+
+static addHonorificPrefix(builder:flatbuffers.Builder, HONORIFIC_PREFIXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, HONORIFIC_PREFIXOffset, 0);
+}
+
+static addHonorificSuffix(builder:flatbuffers.Builder, HONORIFIC_SUFFIXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, HONORIFIC_SUFFIXOffset, 0);
+}
+
+static addJobTitle(builder:flatbuffers.Builder, JOB_TITLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, JOB_TITLEOffset, 0);
+}
+
+static addOccupation(builder:flatbuffers.Builder, OCCUPATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, OCCUPATIONOffset, 0);
 }
 
 static addAlternateNames(builder:flatbuffers.Builder, ALTERNATE_NAMESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, ALTERNATE_NAMESOffset, 0);
+  builder.addFieldOffset(9, ALTERNATE_NAMESOffset, 0);
 }
 
 static createAlternateNamesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -153,15 +235,15 @@ static startAlternateNamesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addEmail(builder:flatbuffers.Builder, EMAILOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, EMAILOffset, 0);
+  builder.addFieldOffset(10, EMAILOffset, 0);
 }
 
 static addTelephone(builder:flatbuffers.Builder, TELEPHONEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, TELEPHONEOffset, 0);
+  builder.addFieldOffset(11, TELEPHONEOffset, 0);
 }
 
 static addKeys(builder:flatbuffers.Builder, KEYSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, KEYSOffset, 0);
+  builder.addFieldOffset(12, KEYSOffset, 0);
 }
 
 static createKeysVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -177,7 +259,7 @@ static startKeysVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addMultiformatAddress(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, MULTIFORMAT_ADDRESSOffset, 0);
+  builder.addFieldOffset(13, MULTIFORMAT_ADDRESSOffset, 0);
 }
 
 static createMultiformatAddressVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -192,103 +274,118 @@ static startMultiformatAddressVector(builder:flatbuffers.Builder, numElems:numbe
   builder.startVector(4, numElems, 4);
 }
 
-static addAttributesType(builder:flatbuffers.Builder, attributesType:SpecificAttributes) {
-  builder.addFieldInt8(7, attributesType, SpecificAttributes.NONE);
-}
-
-static addAttributes(builder:flatbuffers.Builder, ATTRIBUTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, ATTRIBUTESOffset, 0);
-}
-
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createEPM(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, EMAILOffset:flatbuffers.Offset, TELEPHONEOffset:flatbuffers.Offset, KEYSOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, attributesType:SpecificAttributes, ATTRIBUTESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createEPM(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset, LEGAL_NAMEOffset:flatbuffers.Offset, FAMILY_NAMEOffset:flatbuffers.Offset, GIVEN_NAMEOffset:flatbuffers.Offset, ADDITIONAL_NAMEOffset:flatbuffers.Offset, HONORIFIC_PREFIXOffset:flatbuffers.Offset, HONORIFIC_SUFFIXOffset:flatbuffers.Offset, JOB_TITLEOffset:flatbuffers.Offset, OCCUPATIONOffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, EMAILOffset:flatbuffers.Offset, TELEPHONEOffset:flatbuffers.Offset, KEYSOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset):flatbuffers.Offset {
   EPM.startEPM(builder);
   EPM.addDn(builder, DNOffset);
-  EPM.addName(builder, NAMEOffset);
+  EPM.addLegalName(builder, LEGAL_NAMEOffset);
+  EPM.addFamilyName(builder, FAMILY_NAMEOffset);
+  EPM.addGivenName(builder, GIVEN_NAMEOffset);
+  EPM.addAdditionalName(builder, ADDITIONAL_NAMEOffset);
+  EPM.addHonorificPrefix(builder, HONORIFIC_PREFIXOffset);
+  EPM.addHonorificSuffix(builder, HONORIFIC_SUFFIXOffset);
+  EPM.addJobTitle(builder, JOB_TITLEOffset);
+  EPM.addOccupation(builder, OCCUPATIONOffset);
   EPM.addAlternateNames(builder, ALTERNATE_NAMESOffset);
   EPM.addEmail(builder, EMAILOffset);
   EPM.addTelephone(builder, TELEPHONEOffset);
   EPM.addKeys(builder, KEYSOffset);
   EPM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
-  EPM.addAttributesType(builder, attributesType);
-  EPM.addAttributes(builder, ATTRIBUTESOffset);
   return EPM.endEPM(builder);
 }
 
 unpack(): EPMT {
   return new EPMT(
     (this.DN() !== null ? this.DN()!.unpack() : null),
-    this.NAME(),
+    this.LEGAL_NAME(),
+    this.FAMILY_NAME(),
+    this.GIVEN_NAME(),
+    this.ADDITIONAL_NAME(),
+    this.HONORIFIC_PREFIX(),
+    this.HONORIFIC_SUFFIX(),
+    this.JOB_TITLE(),
+    this.OCCUPATION(),
     this.bb!.createScalarList<string>(this.ALTERNATE_NAMES.bind(this), this.alternateNamesLength()),
     this.EMAIL(),
     this.TELEPHONE(),
     this.bb!.createObjList<CryptoKey, CryptoKeyT>(this.KEYS.bind(this), this.keysLength()),
-    this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength()),
-    this.attributesType(),
-    (() => {
-      const temp = unionToSpecificAttributes(this.attributesType(), this.ATTRIBUTES.bind(this));
-      if(temp === null) { return null; }
-      return temp.unpack()
-  })()
+    this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength())
   );
 }
 
 
 unpackTo(_o: EPMT): void {
   _o.DN = (this.DN() !== null ? this.DN()!.unpack() : null);
-  _o.NAME = this.NAME();
+  _o.LEGAL_NAME = this.LEGAL_NAME();
+  _o.FAMILY_NAME = this.FAMILY_NAME();
+  _o.GIVEN_NAME = this.GIVEN_NAME();
+  _o.ADDITIONAL_NAME = this.ADDITIONAL_NAME();
+  _o.HONORIFIC_PREFIX = this.HONORIFIC_PREFIX();
+  _o.HONORIFIC_SUFFIX = this.HONORIFIC_SUFFIX();
+  _o.JOB_TITLE = this.JOB_TITLE();
+  _o.OCCUPATION = this.OCCUPATION();
   _o.ALTERNATE_NAMES = this.bb!.createScalarList<string>(this.ALTERNATE_NAMES.bind(this), this.alternateNamesLength());
   _o.EMAIL = this.EMAIL();
   _o.TELEPHONE = this.TELEPHONE();
   _o.KEYS = this.bb!.createObjList<CryptoKey, CryptoKeyT>(this.KEYS.bind(this), this.keysLength());
   _o.MULTIFORMAT_ADDRESS = this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength());
-  _o.attributesType = this.attributesType();
-  _o.ATTRIBUTES = (() => {
-      const temp = unionToSpecificAttributes(this.attributesType(), this.ATTRIBUTES.bind(this));
-      if(temp === null) { return null; }
-      return temp.unpack()
-  })();
 }
 }
 
 export class EPMT implements flatbuffers.IGeneratedObject {
 constructor(
   public DN: DistinguishedNameT|null = null,
-  public NAME: string|Uint8Array|null = null,
+  public LEGAL_NAME: string|Uint8Array|null = null,
+  public FAMILY_NAME: string|Uint8Array|null = null,
+  public GIVEN_NAME: string|Uint8Array|null = null,
+  public ADDITIONAL_NAME: string|Uint8Array|null = null,
+  public HONORIFIC_PREFIX: string|Uint8Array|null = null,
+  public HONORIFIC_SUFFIX: string|Uint8Array|null = null,
+  public JOB_TITLE: string|Uint8Array|null = null,
+  public OCCUPATION: string|Uint8Array|null = null,
   public ALTERNATE_NAMES: (string)[] = [],
   public EMAIL: string|Uint8Array|null = null,
   public TELEPHONE: string|Uint8Array|null = null,
   public KEYS: (CryptoKeyT)[] = [],
-  public MULTIFORMAT_ADDRESS: (string)[] = [],
-  public attributesType: SpecificAttributes = SpecificAttributes.NONE,
-  public ATTRIBUTES: OrganizationAttributesT|PersonAttributesT|null = null
+  public MULTIFORMAT_ADDRESS: (string)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DN = (this.DN !== null ? this.DN!.pack(builder) : 0);
-  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
+  const LEGAL_NAME = (this.LEGAL_NAME !== null ? builder.createString(this.LEGAL_NAME!) : 0);
+  const FAMILY_NAME = (this.FAMILY_NAME !== null ? builder.createString(this.FAMILY_NAME!) : 0);
+  const GIVEN_NAME = (this.GIVEN_NAME !== null ? builder.createString(this.GIVEN_NAME!) : 0);
+  const ADDITIONAL_NAME = (this.ADDITIONAL_NAME !== null ? builder.createString(this.ADDITIONAL_NAME!) : 0);
+  const HONORIFIC_PREFIX = (this.HONORIFIC_PREFIX !== null ? builder.createString(this.HONORIFIC_PREFIX!) : 0);
+  const HONORIFIC_SUFFIX = (this.HONORIFIC_SUFFIX !== null ? builder.createString(this.HONORIFIC_SUFFIX!) : 0);
+  const JOB_TITLE = (this.JOB_TITLE !== null ? builder.createString(this.JOB_TITLE!) : 0);
+  const OCCUPATION = (this.OCCUPATION !== null ? builder.createString(this.OCCUPATION!) : 0);
   const ALTERNATE_NAMES = EPM.createAlternateNamesVector(builder, builder.createObjectOffsetList(this.ALTERNATE_NAMES));
   const EMAIL = (this.EMAIL !== null ? builder.createString(this.EMAIL!) : 0);
   const TELEPHONE = (this.TELEPHONE !== null ? builder.createString(this.TELEPHONE!) : 0);
   const KEYS = EPM.createKeysVector(builder, builder.createObjectOffsetList(this.KEYS));
   const MULTIFORMAT_ADDRESS = EPM.createMultiformatAddressVector(builder, builder.createObjectOffsetList(this.MULTIFORMAT_ADDRESS));
-  const ATTRIBUTES = builder.createObjectOffset(this.ATTRIBUTES);
 
   return EPM.createEPM(builder,
     DN,
-    NAME,
+    LEGAL_NAME,
+    FAMILY_NAME,
+    GIVEN_NAME,
+    ADDITIONAL_NAME,
+    HONORIFIC_PREFIX,
+    HONORIFIC_SUFFIX,
+    JOB_TITLE,
+    OCCUPATION,
     ALTERNATE_NAMES,
     EMAIL,
     TELEPHONE,
     KEYS,
-    MULTIFORMAT_ADDRESS,
-    this.attributesType,
-    ATTRIBUTES
+    MULTIFORMAT_ADDRESS
   );
 }
 }

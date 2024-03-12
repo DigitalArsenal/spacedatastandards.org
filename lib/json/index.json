@@ -3192,14 +3192,6 @@
                         "SN"
                     ]
                 },
-                "SpecificAttributes": {
-                    "type": "string",
-                    "enum": [
-                        "NONE",
-                        "PersonAttributes",
-                        "OrganizationAttributes"
-                    ]
-                },
                 "objectType": {
                     "type": "string",
                     "enum": [
@@ -3682,10 +3674,18 @@
                     },
                     "additionalProperties": false
                 },
-                "PersonAttributes": {
+                "EPM": {
                     "type": "object",
-                    "description": "Specific attributes for a Person",
+                    "description": "Entity Profile Message",
                     "properties": {
+                        "DN": {
+                            "$ref": "#/definitions/DistinguishedName",
+                            "description": "Distinguished Name of the entity"
+                        },
+                        "LEGAL_NAME": {
+                            "type": "string",
+                            "description": "Common name of the entity (person or organization)"
+                        },
                         "FAMILY_NAME": {
                             "type": "string",
                             "description": "Family name or surname of the person"
@@ -3713,32 +3713,6 @@
                         "OCCUPATION": {
                             "type": "string",
                             "description": "Occupation of the person"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "OrganizationAttributes": {
-                    "type": "object",
-                    "description": "Specific attributes for an Organization",
-                    "properties": {
-                        "LEGAL_NAME": {
-                            "type": "string",
-                            "description": "Legal name of the organization"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "EPM": {
-                    "type": "object",
-                    "description": "Entity Profile Message",
-                    "properties": {
-                        "DN": {
-                            "$ref": "#/definitions/DistinguishedName",
-                            "description": "Distinguished Name of the entity"
-                        },
-                        "NAME": {
-                            "type": "string",
-                            "description": "Common name of the entity (person or organization)"
                         },
                         "ALTERNATE_NAMES": {
                             "type": "array",
@@ -3768,20 +3742,6 @@
                                 "type": "string"
                             },
                             "description": "Multiformat addresses associated with the entity"
-                        },
-                        "ATTRIBUTES_type": {
-                            "$ref": "#/definitions/SpecificAttributes"
-                        },
-                        "ATTRIBUTES": {
-                            "anyOf": [
-                                {
-                                    "$ref": "#/definitions/PersonAttributes"
-                                },
-                                {
-                                    "$ref": "#/definitions/OrganizationAttributes"
-                                }
-                            ],
-                            "description": "Specific attributes for the entity, either Person or Organization"
                         }
                     },
                     "additionalProperties": false
@@ -5971,14 +5931,6 @@
                         "SN"
                     ]
                 },
-                "SpecificAttributes": {
-                    "type": "string",
-                    "enum": [
-                        "NONE",
-                        "PersonAttributes",
-                        "OrganizationAttributes"
-                    ]
-                },
                 "DNComponent": {
                     "type": "object",
                     "description": "Represents a component of a Distinguished Name (DN) in LDAP",
@@ -6070,10 +6022,18 @@
                     },
                     "additionalProperties": false
                 },
-                "PersonAttributes": {
+                "EPM": {
                     "type": "object",
-                    "description": "Specific attributes for a Person",
+                    "description": "Entity Profile Message",
                     "properties": {
+                        "DN": {
+                            "$ref": "#/definitions/DistinguishedName",
+                            "description": "Distinguished Name of the entity"
+                        },
+                        "LEGAL_NAME": {
+                            "type": "string",
+                            "description": "Common name of the entity (person or organization)"
+                        },
                         "FAMILY_NAME": {
                             "type": "string",
                             "description": "Family name or surname of the person"
@@ -6101,32 +6061,6 @@
                         "OCCUPATION": {
                             "type": "string",
                             "description": "Occupation of the person"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "OrganizationAttributes": {
-                    "type": "object",
-                    "description": "Specific attributes for an Organization",
-                    "properties": {
-                        "LEGAL_NAME": {
-                            "type": "string",
-                            "description": "Legal name of the organization"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "EPM": {
-                    "type": "object",
-                    "description": "Entity Profile Message",
-                    "properties": {
-                        "DN": {
-                            "$ref": "#/definitions/DistinguishedName",
-                            "description": "Distinguished Name of the entity"
-                        },
-                        "NAME": {
-                            "type": "string",
-                            "description": "Common name of the entity (person or organization)"
                         },
                         "ALTERNATE_NAMES": {
                             "type": "array",
@@ -6156,20 +6090,6 @@
                                 "type": "string"
                             },
                             "description": "Multiformat addresses associated with the entity"
-                        },
-                        "ATTRIBUTES_type": {
-                            "$ref": "#/definitions/SpecificAttributes"
-                        },
-                        "ATTRIBUTES": {
-                            "anyOf": [
-                                {
-                                    "$ref": "#/definitions/PersonAttributes"
-                                },
-                                {
-                                    "$ref": "#/definitions/OrganizationAttributes"
-                                }
-                            ],
-                            "description": "Specific attributes for the entity, either Person or Organization"
                         }
                     },
                     "additionalProperties": false

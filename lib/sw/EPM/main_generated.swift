@@ -27,25 +27,6 @@ public enum LDIFAttributeType: Int8, Enum, Verifiable {
 }
 
 
-///  Union for specific attributes, distinguishing between Person and Organization
-public enum SpecificAttributes: UInt8, UnionEnum {
-  public typealias T = UInt8
-
-  public init?(value: T) {
-    self.init(rawValue: value)
-  }
-
-  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
-  public var value: UInt8 { return self.rawValue }
-  case none_ = 0
-  case personattributes = 1
-  case organizationattributes = 2
-
-  public static var max: SpecificAttributes { return .organizationattributes }
-  public static var min: SpecificAttributes { return .none_ }
-}
-
-
 ///  Represents a component of a Distinguished Name (DN) in LDAP
 public struct DNComponent: FlatBufferObject, Verifiable {
 
@@ -294,30 +275,42 @@ public struct Address: FlatBufferObject, Verifiable {
   }
 }
 
-///  Specific attributes for a Person
-public struct PersonAttributes: FlatBufferObject, Verifiable {
+///  Entity Profile Message
+public struct EPM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
   public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PersonAttributes.id, addPrefix: prefix) }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EPM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case FAMILY_NAME = 4
-    case GIVEN_NAME = 6
-    case ADDITIONAL_NAME = 8
-    case HONORIFIC_PREFIX = 10
-    case HONORIFIC_SUFFIX = 12
-    case JOB_TITLE = 14
-    case OCCUPATION = 16
+    case DN = 4
+    case LEGAL_NAME = 6
+    case FAMILY_NAME = 8
+    case GIVEN_NAME = 10
+    case ADDITIONAL_NAME = 12
+    case HONORIFIC_PREFIX = 14
+    case HONORIFIC_SUFFIX = 16
+    case JOB_TITLE = 18
+    case OCCUPATION = 20
+    case ALTERNATE_NAMES = 22
+    case EMAIL = 24
+    case TELEPHONE = 26
+    case KEYS = 28
+    case MULTIFORMAT_ADDRESS = 30
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Distinguished Name of the entity
+  public var DN: DistinguishedName? { let o = _accessor.offset(VTOFFSET.DN.v); return o == 0 ? nil : DistinguishedName(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  ///  Common name of the entity (person or organization)
+  public var LEGAL_NAME: String? { let o = _accessor.offset(VTOFFSET.LEGAL_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LEGAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LEGAL_NAME.v) }
   ///  Family name or surname of the person
   public var FAMILY_NAME: String? { let o = _accessor.offset(VTOFFSET.FAMILY_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var FAMILY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FAMILY_NAME.v) }
@@ -339,120 +332,6 @@ public struct PersonAttributes: FlatBufferObject, Verifiable {
   ///  Occupation of the person
   public var OCCUPATION: String? { let o = _accessor.offset(VTOFFSET.OCCUPATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OCCUPATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OCCUPATION.v) }
-  public static func startPersonAttributes(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VTOFFSET.FAMILY_NAME.p) }
-  public static func add(GIVEN_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GIVEN_NAME, at: VTOFFSET.GIVEN_NAME.p) }
-  public static func add(ADDITIONAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDITIONAL_NAME, at: VTOFFSET.ADDITIONAL_NAME.p) }
-  public static func add(HONORIFIC_PREFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_PREFIX, at: VTOFFSET.HONORIFIC_PREFIX.p) }
-  public static func add(HONORIFIC_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_SUFFIX, at: VTOFFSET.HONORIFIC_SUFFIX.p) }
-  public static func add(JOB_TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_TITLE, at: VTOFFSET.JOB_TITLE.p) }
-  public static func add(OCCUPATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCUPATION, at: VTOFFSET.OCCUPATION.p) }
-  public static func endPersonAttributes(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPersonAttributes(
-    _ fbb: inout FlatBufferBuilder,
-    FAMILY_NAMEOffset FAMILY_NAME: Offset = Offset(),
-    GIVEN_NAMEOffset GIVEN_NAME: Offset = Offset(),
-    ADDITIONAL_NAMEOffset ADDITIONAL_NAME: Offset = Offset(),
-    HONORIFIC_PREFIXOffset HONORIFIC_PREFIX: Offset = Offset(),
-    HONORIFIC_SUFFIXOffset HONORIFIC_SUFFIX: Offset = Offset(),
-    JOB_TITLEOffset JOB_TITLE: Offset = Offset(),
-    OCCUPATIONOffset OCCUPATION: Offset = Offset()
-  ) -> Offset {
-    let __start = PersonAttributes.startPersonAttributes(&fbb)
-    PersonAttributes.add(FAMILY_NAME: FAMILY_NAME, &fbb)
-    PersonAttributes.add(GIVEN_NAME: GIVEN_NAME, &fbb)
-    PersonAttributes.add(ADDITIONAL_NAME: ADDITIONAL_NAME, &fbb)
-    PersonAttributes.add(HONORIFIC_PREFIX: HONORIFIC_PREFIX, &fbb)
-    PersonAttributes.add(HONORIFIC_SUFFIX: HONORIFIC_SUFFIX, &fbb)
-    PersonAttributes.add(JOB_TITLE: JOB_TITLE, &fbb)
-    PersonAttributes.add(OCCUPATION: OCCUPATION, &fbb)
-    return PersonAttributes.endPersonAttributes(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.FAMILY_NAME.p, fieldName: "FAMILY_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GIVEN_NAME.p, fieldName: "GIVEN_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADDITIONAL_NAME.p, fieldName: "ADDITIONAL_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HONORIFIC_PREFIX.p, fieldName: "HONORIFIC_PREFIX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HONORIFIC_SUFFIX.p, fieldName: "HONORIFIC_SUFFIX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.JOB_TITLE.p, fieldName: "JOB_TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OCCUPATION.p, fieldName: "OCCUPATION", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Specific attributes for an Organization
-public struct OrganizationAttributes: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OrganizationAttributes.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case LEGAL_NAME = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Legal name of the organization
-  public var LEGAL_NAME: String? { let o = _accessor.offset(VTOFFSET.LEGAL_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LEGAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LEGAL_NAME.v) }
-  public static func startOrganizationAttributes(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
-  public static func endOrganizationAttributes(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createOrganizationAttributes(
-    _ fbb: inout FlatBufferBuilder,
-    LEGAL_NAMEOffset LEGAL_NAME: Offset = Offset()
-  ) -> Offset {
-    let __start = OrganizationAttributes.startOrganizationAttributes(&fbb)
-    OrganizationAttributes.add(LEGAL_NAME: LEGAL_NAME, &fbb)
-    return OrganizationAttributes.endOrganizationAttributes(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LEGAL_NAME.p, fieldName: "LEGAL_NAME", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Entity Profile Message
-public struct EPM: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EPM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case DN = 4
-    case NAME = 6
-    case ALTERNATE_NAMES = 8
-    case EMAIL = 10
-    case TELEPHONE = 12
-    case KEYS = 14
-    case MULTIFORMAT_ADDRESS = 16
-    case attributesType = 18
-    case ATTRIBUTES = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Distinguished Name of the entity
-  public var DN: DistinguishedName? { let o = _accessor.offset(VTOFFSET.DN.v); return o == 0 ? nil : DistinguishedName(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Common name of the entity (person or organization)
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   ///  Alternate names for the entity
   public var hasAlternateNames: Bool { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? false : true }
   public var ALTERNATE_NAMESCount: Int32 { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
@@ -471,64 +350,73 @@ public struct EPM: FlatBufferObject, Verifiable {
   public var hasMultiformatAddress: Bool { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? false : true }
   public var MULTIFORMAT_ADDRESSCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func MULTIFORMAT_ADDRESS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var attributesType: SpecificAttributes { let o = _accessor.offset(VTOFFSET.attributesType.v); return o == 0 ? .none_ : SpecificAttributes(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
-  ///  Specific attributes for the entity, either Person or Organization
-  public func ATTRIBUTES<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.ATTRIBUTES.v); return o == 0 ? nil : _accessor.union(o) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VTOFFSET.DN.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
+  public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VTOFFSET.FAMILY_NAME.p) }
+  public static func add(GIVEN_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GIVEN_NAME, at: VTOFFSET.GIVEN_NAME.p) }
+  public static func add(ADDITIONAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDITIONAL_NAME, at: VTOFFSET.ADDITIONAL_NAME.p) }
+  public static func add(HONORIFIC_PREFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_PREFIX, at: VTOFFSET.HONORIFIC_PREFIX.p) }
+  public static func add(HONORIFIC_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_SUFFIX, at: VTOFFSET.HONORIFIC_SUFFIX.p) }
+  public static func add(JOB_TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_TITLE, at: VTOFFSET.JOB_TITLE.p) }
+  public static func add(OCCUPATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCUPATION, at: VTOFFSET.OCCUPATION.p) }
   public static func addVectorOf(ALTERNATE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAMES, at: VTOFFSET.ALTERNATE_NAMES.p) }
   public static func add(EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMAIL, at: VTOFFSET.EMAIL.p) }
   public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VTOFFSET.TELEPHONE.p) }
   public static func addVectorOf(KEYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYS, at: VTOFFSET.KEYS.p) }
   public static func addVectorOf(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
-  public static func add(attributesType: SpecificAttributes, _ fbb: inout FlatBufferBuilder) { fbb.add(element: attributesType.rawValue, def: 0, at: VTOFFSET.attributesType.p) }
-  public static func add(ATTRIBUTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTRIBUTES, at: VTOFFSET.ATTRIBUTES.p) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
     DNOffset DN: Offset = Offset(),
-    NAMEOffset NAME: Offset = Offset(),
+    LEGAL_NAMEOffset LEGAL_NAME: Offset = Offset(),
+    FAMILY_NAMEOffset FAMILY_NAME: Offset = Offset(),
+    GIVEN_NAMEOffset GIVEN_NAME: Offset = Offset(),
+    ADDITIONAL_NAMEOffset ADDITIONAL_NAME: Offset = Offset(),
+    HONORIFIC_PREFIXOffset HONORIFIC_PREFIX: Offset = Offset(),
+    HONORIFIC_SUFFIXOffset HONORIFIC_SUFFIX: Offset = Offset(),
+    JOB_TITLEOffset JOB_TITLE: Offset = Offset(),
+    OCCUPATIONOffset OCCUPATION: Offset = Offset(),
     ALTERNATE_NAMESVectorOffset ALTERNATE_NAMES: Offset = Offset(),
     EMAILOffset EMAIL: Offset = Offset(),
     TELEPHONEOffset TELEPHONE: Offset = Offset(),
     KEYSVectorOffset KEYS: Offset = Offset(),
-    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
-    attributesType: SpecificAttributes = .none_,
-    ATTRIBUTESOffset ATTRIBUTES: Offset = Offset()
+    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(DN: DN, &fbb)
-    EPM.add(NAME: NAME, &fbb)
+    EPM.add(LEGAL_NAME: LEGAL_NAME, &fbb)
+    EPM.add(FAMILY_NAME: FAMILY_NAME, &fbb)
+    EPM.add(GIVEN_NAME: GIVEN_NAME, &fbb)
+    EPM.add(ADDITIONAL_NAME: ADDITIONAL_NAME, &fbb)
+    EPM.add(HONORIFIC_PREFIX: HONORIFIC_PREFIX, &fbb)
+    EPM.add(HONORIFIC_SUFFIX: HONORIFIC_SUFFIX, &fbb)
+    EPM.add(JOB_TITLE: JOB_TITLE, &fbb)
+    EPM.add(OCCUPATION: OCCUPATION, &fbb)
     EPM.addVectorOf(ALTERNATE_NAMES: ALTERNATE_NAMES, &fbb)
     EPM.add(EMAIL: EMAIL, &fbb)
     EPM.add(TELEPHONE: TELEPHONE, &fbb)
     EPM.addVectorOf(KEYS: KEYS, &fbb)
     EPM.addVectorOf(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
-    EPM.add(attributesType: attributesType, &fbb)
-    EPM.add(ATTRIBUTES: ATTRIBUTES, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.DN.p, fieldName: "DN", required: false, type: ForwardOffset<DistinguishedName>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LEGAL_NAME.p, fieldName: "LEGAL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FAMILY_NAME.p, fieldName: "FAMILY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.GIVEN_NAME.p, fieldName: "GIVEN_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ADDITIONAL_NAME.p, fieldName: "ADDITIONAL_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.HONORIFIC_PREFIX.p, fieldName: "HONORIFIC_PREFIX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.HONORIFIC_SUFFIX.p, fieldName: "HONORIFIC_SUFFIX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.JOB_TITLE.p, fieldName: "JOB_TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OCCUPATION.p, fieldName: "OCCUPATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ALTERNATE_NAMES.p, fieldName: "ALTERNATE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.EMAIL.p, fieldName: "EMAIL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TELEPHONE.p, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.KEYS.p, fieldName: "KEYS", required: false, type: ForwardOffset<Vector<ForwardOffset<CryptoKey>, CryptoKey>>.self)
     try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(unionKey: VTOFFSET.ATTRIBUTESType.p, unionField: VTOFFSET.ATTRIBUTES.p, unionKeyName: "ATTRIBUTESType", fieldName: "ATTRIBUTES", required: false, completion: { (verifier, key: SpecificAttributes, pos) in
-      switch key {
-      case .none_:
-        break // NOTE - SWIFT doesnt support none
-      case .personattributes:
-        try ForwardOffset<PersonAttributes>.verify(&verifier, at: pos, of: PersonAttributes.self)
-      case .organizationattributes:
-        try ForwardOffset<OrganizationAttributes>.verify(&verifier, at: pos, of: OrganizationAttributes.self)
-      }
-    })
     _v.finish()
   }
 }

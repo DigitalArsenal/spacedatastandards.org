@@ -45,7 +45,7 @@ class EPM : Table() {
     /**
      * Common name of the entity (person or organization)
      */
-    val NAME : String?
+    val LEGAL_NAME : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -54,27 +54,26 @@ class EPM : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val LEGAL_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun LEGAL_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Alternate names for the entity
+     * Family name or surname of the person
      */
-    fun ALTERNATE_NAMES(j: Int) : String? {
-        val o = __offset(8)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val ALTERNATE_NAMESLength : Int
+    val FAMILY_NAME : String?
         get() {
-            val o = __offset(8); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(8)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
+    val FAMILY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun FAMILY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Email address of the entity
+     * Given name or first name of the person
      */
-    val EMAIL : String?
+    val GIVEN_NAME : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +82,12 @@ class EPM : Table() {
                 null
             }
         }
-    val EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val GIVEN_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun GIVEN_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Telephone number of the entity
+     * Additional name or middle name of the person
      */
-    val TELEPHONE : String?
+    val ADDITIONAL_NAME : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,14 +96,113 @@ class EPM : Table() {
                 null
             }
         }
-    val TELEPHONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun TELEPHONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val ADDITIONAL_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun ADDITIONAL_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+     */
+    val HONORIFIC_PREFIX : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val HONORIFIC_PREFIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun HONORIFIC_PREFIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Honorific suffix following the person's name (e.g., Jr., Sr.)
+     */
+    val HONORIFIC_SUFFIX : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val HONORIFIC_SUFFIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun HONORIFIC_SUFFIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Job title of the person
+     */
+    val JOB_TITLE : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val JOB_TITLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun JOB_TITLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Occupation of the person
+     */
+    val OCCUPATION : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val OCCUPATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun OCCUPATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Alternate names for the entity
+     */
+    fun ALTERNATE_NAMES(j: Int) : String? {
+        val o = __offset(22)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val ALTERNATE_NAMESLength : Int
+        get() {
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Email address of the entity
+     */
+    val EMAIL : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Telephone number of the entity
+     */
+    val TELEPHONE : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TELEPHONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun TELEPHONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Cryptographic keys associated with the entity
      */
     fun KEYS(j: Int) : CryptoKey? = KEYS(CryptoKey(), j)
     fun KEYS(obj: CryptoKey, j: Int) : CryptoKey? {
-        val o = __offset(14)
+        val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -113,13 +211,13 @@ class EPM : Table() {
     }
     val KEYSLength : Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Multiformat addresses associated with the entity
      */
     fun MULTIFORMAT_ADDRESS(j: Int) : String? {
-        val o = __offset(16)
+        val o = __offset(30)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -128,19 +226,8 @@ class EPM : Table() {
     }
     val MULTIFORMAT_ADDRESSLength : Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
-    val attributesType : UByte
-        get() {
-            val o = __offset(18)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
-        }
-    /**
-     * Specific attributes for the entity, either Person or Organization
-     */
-    fun ATTRIBUTES(obj: Table) : Table? {
-        val o = __offset(20); return if (o != 0) __union(obj, o + bb_pos) else null
-    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
@@ -148,23 +235,35 @@ class EPM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEPM(builder: FlatBufferBuilder, DNOffset: Int, NAMEOffset: Int, ALTERNATE_NAMESOffset: Int, EMAILOffset: Int, TELEPHONEOffset: Int, KEYSOffset: Int, MULTIFORMAT_ADDRESSOffset: Int, attributesType: UByte, ATTRIBUTESOffset: Int) : Int {
-            builder.startTable(9)
-            addATTRIBUTES(builder, ATTRIBUTESOffset)
+        fun createEPM(builder: FlatBufferBuilder, DNOffset: Int, LEGAL_NAMEOffset: Int, FAMILY_NAMEOffset: Int, GIVEN_NAMEOffset: Int, ADDITIONAL_NAMEOffset: Int, HONORIFIC_PREFIXOffset: Int, HONORIFIC_SUFFIXOffset: Int, JOB_TITLEOffset: Int, OCCUPATIONOffset: Int, ALTERNATE_NAMESOffset: Int, EMAILOffset: Int, TELEPHONEOffset: Int, KEYSOffset: Int, MULTIFORMAT_ADDRESSOffset: Int) : Int {
+            builder.startTable(14)
             addMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset)
             addKEYS(builder, KEYSOffset)
             addTELEPHONE(builder, TELEPHONEOffset)
             addEMAIL(builder, EMAILOffset)
             addALTERNATE_NAMES(builder, ALTERNATE_NAMESOffset)
-            addNAME(builder, NAMEOffset)
+            addOCCUPATION(builder, OCCUPATIONOffset)
+            addJOB_TITLE(builder, JOB_TITLEOffset)
+            addHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIXOffset)
+            addHONORIFIC_PREFIX(builder, HONORIFIC_PREFIXOffset)
+            addADDITIONAL_NAME(builder, ADDITIONAL_NAMEOffset)
+            addGIVEN_NAME(builder, GIVEN_NAMEOffset)
+            addFAMILY_NAME(builder, FAMILY_NAMEOffset)
+            addLEGAL_NAME(builder, LEGAL_NAMEOffset)
             addDN(builder, DNOffset)
-            addATTRIBUTESType(builder, attributesType)
             return endEPM(builder)
         }
-        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addDN(builder: FlatBufferBuilder, DN: Int) = builder.addOffset(0, DN, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addALTERNATE_NAMES(builder: FlatBufferBuilder, ALTERNATE_NAMES: Int) = builder.addOffset(2, ALTERNATE_NAMES, 0)
+        fun addLEGAL_NAME(builder: FlatBufferBuilder, LEGAL_NAME: Int) = builder.addOffset(1, LEGAL_NAME, 0)
+        fun addFAMILY_NAME(builder: FlatBufferBuilder, FAMILY_NAME: Int) = builder.addOffset(2, FAMILY_NAME, 0)
+        fun addGIVEN_NAME(builder: FlatBufferBuilder, GIVEN_NAME: Int) = builder.addOffset(3, GIVEN_NAME, 0)
+        fun addADDITIONAL_NAME(builder: FlatBufferBuilder, ADDITIONAL_NAME: Int) = builder.addOffset(4, ADDITIONAL_NAME, 0)
+        fun addHONORIFIC_PREFIX(builder: FlatBufferBuilder, HONORIFIC_PREFIX: Int) = builder.addOffset(5, HONORIFIC_PREFIX, 0)
+        fun addHONORIFIC_SUFFIX(builder: FlatBufferBuilder, HONORIFIC_SUFFIX: Int) = builder.addOffset(6, HONORIFIC_SUFFIX, 0)
+        fun addJOB_TITLE(builder: FlatBufferBuilder, JOB_TITLE: Int) = builder.addOffset(7, JOB_TITLE, 0)
+        fun addOCCUPATION(builder: FlatBufferBuilder, OCCUPATION: Int) = builder.addOffset(8, OCCUPATION, 0)
+        fun addALTERNATE_NAMES(builder: FlatBufferBuilder, ALTERNATE_NAMES: Int) = builder.addOffset(9, ALTERNATE_NAMES, 0)
         fun createAlternateNamesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -173,9 +272,9 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startAlternateNamesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEMAIL(builder: FlatBufferBuilder, EMAIL: Int) = builder.addOffset(3, EMAIL, 0)
-        fun addTELEPHONE(builder: FlatBufferBuilder, TELEPHONE: Int) = builder.addOffset(4, TELEPHONE, 0)
-        fun addKEYS(builder: FlatBufferBuilder, KEYS: Int) = builder.addOffset(5, KEYS, 0)
+        fun addEMAIL(builder: FlatBufferBuilder, EMAIL: Int) = builder.addOffset(10, EMAIL, 0)
+        fun addTELEPHONE(builder: FlatBufferBuilder, TELEPHONE: Int) = builder.addOffset(11, TELEPHONE, 0)
+        fun addKEYS(builder: FlatBufferBuilder, KEYS: Int) = builder.addOffset(12, KEYS, 0)
         fun createKeysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -184,7 +283,7 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startKeysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMULTIFORMAT_ADDRESS(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESS: Int) = builder.addOffset(6, MULTIFORMAT_ADDRESS, 0)
+        fun addMULTIFORMAT_ADDRESS(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESS: Int) = builder.addOffset(13, MULTIFORMAT_ADDRESS, 0)
         fun createMultiformatAddressVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -193,8 +292,6 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startMultiformatAddressVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addATTRIBUTESType(builder: FlatBufferBuilder, attributesType: UByte) = builder.addByte(7, attributesType.toByte(), 0)
-        fun addATTRIBUTES(builder: FlatBufferBuilder, ATTRIBUTES: Int) = builder.addOffset(8, ATTRIBUTES, 0)
         fun endEPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -16,12 +16,6 @@ enum LDIFAttributeType:
     /// Surname
     LDIFAttributeType_SN = 5
 
-/// Union for specific attributes, distinguishing between Person and Organization
-enum SpecificAttributes:
-    SpecificAttributes_NONE = 0
-    SpecificAttributes_PersonAttributes = 1
-    SpecificAttributes_OrganizationAttributes = 2
-
 class DNComponent
 
 class DistinguishedName
@@ -29,10 +23,6 @@ class DistinguishedName
 class CryptoKey
 
 class Address
-
-class PersonAttributes
-
-class OrganizationAttributes
 
 class EPM
 
@@ -189,80 +179,6 @@ struct AddressBuilder:
     def end():
         return b_.EndObject()
 
-/// Specific attributes for a Person
-class PersonAttributes : flatbuffers_handle
-    /// Family name or surname of the person
-    def FAMILY_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
-    /// Given name or first name of the person
-    def GIVEN_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
-    /// Additional name or middle name of the person
-    def ADDITIONAL_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
-    /// Honorific prefix preceding the person's name (e.g., Mr., Dr.)
-    def HONORIFIC_PREFIX() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
-    /// Honorific suffix following the person's name (e.g., Jr., Sr.)
-    def HONORIFIC_SUFFIX() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
-    /// Job title of the person
-    def JOB_TITLE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
-    /// Occupation of the person
-    def OCCUPATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
-
-def GetRootAsPersonAttributes(buf:string): return PersonAttributes { buf, buf.flatbuffers_indirect(0) }
-
-struct PersonAttributesBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(7)
-        return this
-    def add_FAMILY_NAME(FAMILY_NAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, FAMILY_NAME)
-        return this
-    def add_GIVEN_NAME(GIVEN_NAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(1, GIVEN_NAME)
-        return this
-    def add_ADDITIONAL_NAME(ADDITIONAL_NAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(2, ADDITIONAL_NAME)
-        return this
-    def add_HONORIFIC_PREFIX(HONORIFIC_PREFIX:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(3, HONORIFIC_PREFIX)
-        return this
-    def add_HONORIFIC_SUFFIX(HONORIFIC_SUFFIX:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(4, HONORIFIC_SUFFIX)
-        return this
-    def add_JOB_TITLE(JOB_TITLE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(5, JOB_TITLE)
-        return this
-    def add_OCCUPATION(OCCUPATION:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(6, OCCUPATION)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Specific attributes for an Organization
-class OrganizationAttributes : flatbuffers_handle
-    /// Legal name of the organization
-    def LEGAL_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
-
-def GetRootAsOrganizationAttributes(buf:string): return OrganizationAttributes { buf, buf.flatbuffers_indirect(0) }
-
-struct OrganizationAttributesBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_LEGAL_NAME(LEGAL_NAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, LEGAL_NAME)
-        return this
-    def end():
-        return b_.EndObject()
-
 /// Entity Profile Message
 class EPM : flatbuffers_handle
     /// Distinguished Name of the entity
@@ -270,70 +186,99 @@ class EPM : flatbuffers_handle
         let o = buf_.flatbuffers_field_table(pos_, 4)
         return if o: DistinguishedName { buf_, o } else: nil
     /// Common name of the entity (person or organization)
-    def NAME() -> string:
+    def LEGAL_NAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 6)
+    /// Family name or surname of the person
+    def FAMILY_NAME() -> string:
+        return buf_.flatbuffers_field_string(pos_, 8)
+    /// Given name or first name of the person
+    def GIVEN_NAME() -> string:
+        return buf_.flatbuffers_field_string(pos_, 10)
+    /// Additional name or middle name of the person
+    def ADDITIONAL_NAME() -> string:
+        return buf_.flatbuffers_field_string(pos_, 12)
+    /// Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+    def HONORIFIC_PREFIX() -> string:
+        return buf_.flatbuffers_field_string(pos_, 14)
+    /// Honorific suffix following the person's name (e.g., Jr., Sr.)
+    def HONORIFIC_SUFFIX() -> string:
+        return buf_.flatbuffers_field_string(pos_, 16)
+    /// Job title of the person
+    def JOB_TITLE() -> string:
+        return buf_.flatbuffers_field_string(pos_, 18)
+    /// Occupation of the person
+    def OCCUPATION() -> string:
+        return buf_.flatbuffers_field_string(pos_, 20)
     /// Alternate names for the entity
     def ALTERNATE_NAMES(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 8) + i * 4)
+        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 22) + i * 4)
     def ALTERNATE_NAMES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 8)
+        return buf_.flatbuffers_field_vector_len(pos_, 22)
     /// Email address of the entity
     def EMAIL() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return buf_.flatbuffers_field_string(pos_, 24)
     /// Telephone number of the entity
     def TELEPHONE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return buf_.flatbuffers_field_string(pos_, 26)
     /// Cryptographic keys associated with the entity
     def KEYS(i:int) -> CryptoKey:
-        return CryptoKey { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 14) + i * 4) }
+        return CryptoKey { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 28) + i * 4) }
     def KEYS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 14)
+        return buf_.flatbuffers_field_vector_len(pos_, 28)
     /// Multiformat addresses associated with the entity
     def MULTIFORMAT_ADDRESS(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 16) + i * 4)
+        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 30) + i * 4)
     def MULTIFORMAT_ADDRESS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 16)
-    def ATTRIBUTES_type() -> SpecificAttributes:
-        return SpecificAttributes(buf_.flatbuffers_field_uint8(pos_, 18, 0))
-    /// Specific attributes for the entity, either Person or Organization
-    def ATTRIBUTES_as_PersonAttributes():
-        return PersonAttributes { buf_, buf_.flatbuffers_field_table(pos_, 20) }
-    def ATTRIBUTES_as_OrganizationAttributes():
-        return OrganizationAttributes { buf_, buf_.flatbuffers_field_table(pos_, 20) }
+        return buf_.flatbuffers_field_vector_len(pos_, 30)
 
 def GetRootAsEPM(buf:string): return EPM { buf, buf.flatbuffers_indirect(0) }
 
 struct EPMBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(9)
+        b_.StartObject(14)
         return this
     def add_DN(DN:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, DN)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(1, NAME)
+    def add_LEGAL_NAME(LEGAL_NAME:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(1, LEGAL_NAME)
+        return this
+    def add_FAMILY_NAME(FAMILY_NAME:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(2, FAMILY_NAME)
+        return this
+    def add_GIVEN_NAME(GIVEN_NAME:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(3, GIVEN_NAME)
+        return this
+    def add_ADDITIONAL_NAME(ADDITIONAL_NAME:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(4, ADDITIONAL_NAME)
+        return this
+    def add_HONORIFIC_PREFIX(HONORIFIC_PREFIX:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(5, HONORIFIC_PREFIX)
+        return this
+    def add_HONORIFIC_SUFFIX(HONORIFIC_SUFFIX:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(6, HONORIFIC_SUFFIX)
+        return this
+    def add_JOB_TITLE(JOB_TITLE:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(7, JOB_TITLE)
+        return this
+    def add_OCCUPATION(OCCUPATION:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(8, OCCUPATION)
         return this
     def add_ALTERNATE_NAMES(ALTERNATE_NAMES:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(2, ALTERNATE_NAMES)
+        b_.PrependUOffsetTRelativeSlot(9, ALTERNATE_NAMES)
         return this
     def add_EMAIL(EMAIL:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(3, EMAIL)
+        b_.PrependUOffsetTRelativeSlot(10, EMAIL)
         return this
     def add_TELEPHONE(TELEPHONE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(4, TELEPHONE)
+        b_.PrependUOffsetTRelativeSlot(11, TELEPHONE)
         return this
     def add_KEYS(KEYS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(5, KEYS)
+        b_.PrependUOffsetTRelativeSlot(12, KEYS)
         return this
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(6, MULTIFORMAT_ADDRESS)
-        return this
-    def add_ATTRIBUTES_type(ATTRIBUTES_type:SpecificAttributes):
-        b_.PrependUint8Slot(7, ATTRIBUTES_type, 0)
-        return this
-    def add_ATTRIBUTES(ATTRIBUTES:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(8, ATTRIBUTES)
+        b_.PrependUOffsetTRelativeSlot(13, MULTIFORMAT_ADDRESS)
         return this
     def end():
         return b_.EndObject()

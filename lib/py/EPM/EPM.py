@@ -43,8 +43,64 @@ class EPM(object):
 
     # Common name of the entity (person or organization)
     # EPM
-    def NAME(self):
+    def LEGAL_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Family name or surname of the person
+    # EPM
+    def FAMILY_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Given name or first name of the person
+    # EPM
+    def GIVEN_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Additional name or middle name of the person
+    # EPM
+    def ADDITIONAL_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+    # EPM
+    def HONORIFIC_PREFIX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Honorific suffix following the person's name (e.g., Jr., Sr.)
+    # EPM
+    def HONORIFIC_SUFFIX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Job title of the person
+    # EPM
+    def JOB_TITLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Occupation of the person
+    # EPM
+    def OCCUPATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -52,7 +108,7 @@ class EPM(object):
     # Alternate names for the entity
     # EPM
     def ALTERNATE_NAMES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -60,20 +116,20 @@ class EPM(object):
 
     # EPM
     def ALTERNATE_NAMESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EPM
     def ALTERNATE_NAMESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
     # Email address of the entity
     # EPM
     def EMAIL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -81,7 +137,7 @@ class EPM(object):
     # Telephone number of the entity
     # EPM
     def TELEPHONE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -89,7 +145,7 @@ class EPM(object):
     # Cryptographic keys associated with the entity
     # EPM
     def KEYS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -102,20 +158,20 @@ class EPM(object):
 
     # EPM
     def KEYSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EPM
     def KEYSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
     # Multiformat addresses associated with the entity
     # EPM
     def MULTIFORMAT_ADDRESS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -123,83 +179,77 @@ class EPM(object):
 
     # EPM
     def MULTIFORMAT_ADDRESSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EPM
     def MULTIFORMAT_ADDRESSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
-    # EPM
-    def AttributesType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
-
-    # Specific attributes for the entity, either Person or Organization
-    # EPM
-    def ATTRIBUTES(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            from flatbuffers.table import Table
-            obj = Table(bytearray(), 0)
-            self._tab.Union(obj, o)
-            return obj
-        return None
-
-def EPMStart(builder): builder.StartObject(9)
+def EPMStart(builder): builder.StartObject(14)
 def Start(builder):
     return EPMStart(builder)
 def EPMAddDN(builder, DN): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DN), 0)
 def AddDN(builder, DN):
     return EPMAddDN(builder, DN)
-def EPMAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
-def AddNAME(builder, NAME):
-    return EPMAddNAME(builder, NAME)
-def EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ALTERNATE_NAMES), 0)
+def EPMAddLEGAL_NAME(builder, LEGAL_NAME): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LEGAL_NAME), 0)
+def AddLEGAL_NAME(builder, LEGAL_NAME):
+    return EPMAddLEGAL_NAME(builder, LEGAL_NAME)
+def EPMAddFAMILY_NAME(builder, FAMILY_NAME): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FAMILY_NAME), 0)
+def AddFAMILY_NAME(builder, FAMILY_NAME):
+    return EPMAddFAMILY_NAME(builder, FAMILY_NAME)
+def EPMAddGIVEN_NAME(builder, GIVEN_NAME): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(GIVEN_NAME), 0)
+def AddGIVEN_NAME(builder, GIVEN_NAME):
+    return EPMAddGIVEN_NAME(builder, GIVEN_NAME)
+def EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ADDITIONAL_NAME), 0)
+def AddADDITIONAL_NAME(builder, ADDITIONAL_NAME):
+    return EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME)
+def EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(HONORIFIC_PREFIX), 0)
+def AddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX):
+    return EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX)
+def EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(HONORIFIC_SUFFIX), 0)
+def AddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX):
+    return EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX)
+def EPMAddJOB_TITLE(builder, JOB_TITLE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_TITLE), 0)
+def AddJOB_TITLE(builder, JOB_TITLE):
+    return EPMAddJOB_TITLE(builder, JOB_TITLE)
+def EPMAddOCCUPATION(builder, OCCUPATION): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OCCUPATION), 0)
+def AddOCCUPATION(builder, OCCUPATION):
+    return EPMAddOCCUPATION(builder, OCCUPATION)
+def EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ALTERNATE_NAMES), 0)
 def AddALTERNATE_NAMES(builder, ALTERNATE_NAMES):
     return EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
 def EPMStartALTERNATE_NAMESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def StartALTERNATE_NAMESVector(builder, numElems):
     return EPMStartALTERNATE_NAMESVector(builder, numElems)
-def EPMAddEMAIL(builder, EMAIL): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EMAIL), 0)
+def EPMAddEMAIL(builder, EMAIL): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EMAIL), 0)
 def AddEMAIL(builder, EMAIL):
     return EPMAddEMAIL(builder, EMAIL)
-def EPMAddTELEPHONE(builder, TELEPHONE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TELEPHONE), 0)
+def EPMAddTELEPHONE(builder, TELEPHONE): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TELEPHONE), 0)
 def AddTELEPHONE(builder, TELEPHONE):
     return EPMAddTELEPHONE(builder, TELEPHONE)
-def EPMAddKEYS(builder, KEYS): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(KEYS), 0)
+def EPMAddKEYS(builder, KEYS): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(KEYS), 0)
 def AddKEYS(builder, KEYS):
     return EPMAddKEYS(builder, KEYS)
 def EPMStartKEYSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def StartKEYSVector(builder, numElems):
     return EPMStartKEYSVector(builder, numElems)
-def EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
+def EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
 def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
     return EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
 def EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def StartMULTIFORMAT_ADDRESSVector(builder, numElems):
     return EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems)
-def EPMAddAttributesType(builder, attributesType): builder.PrependUint8Slot(7, attributesType, 0)
-def AddAttributesType(builder, attributesType):
-    return EPMAddAttributesType(builder, attributesType)
-def EPMAddATTRIBUTES(builder, ATTRIBUTES): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ATTRIBUTES), 0)
-def AddATTRIBUTES(builder, ATTRIBUTES):
-    return EPMAddATTRIBUTES(builder, ATTRIBUTES)
 def EPMEnd(builder): return builder.EndObject()
 def End(builder):
     return EPMEnd(builder)
 import CryptoKey
 import DistinguishedName
-import OrganizationAttributes
-import PersonAttributes
-import SpecificAttributes
 try:
-    from typing import List, Optional, Union
+    from typing import List, Optional
 except:
     pass
 
@@ -208,14 +258,19 @@ class EPMT(object):
     # EPMT
     def __init__(self):
         self.DN = None  # type: Optional[DistinguishedName.DistinguishedNameT]
-        self.NAME = None  # type: str
+        self.LEGAL_NAME = None  # type: str
+        self.FAMILY_NAME = None  # type: str
+        self.GIVEN_NAME = None  # type: str
+        self.ADDITIONAL_NAME = None  # type: str
+        self.HONORIFIC_PREFIX = None  # type: str
+        self.HONORIFIC_SUFFIX = None  # type: str
+        self.JOB_TITLE = None  # type: str
+        self.OCCUPATION = None  # type: str
         self.ALTERNATE_NAMES = None  # type: List[str]
         self.EMAIL = None  # type: str
         self.TELEPHONE = None  # type: str
         self.KEYS = None  # type: List[CryptoKey.CryptoKeyT]
         self.MULTIFORMAT_ADDRESS = None  # type: List[str]
-        self.attributesType = 0  # type: int
-        self.ATTRIBUTES = None  # type: Union[None, PersonAttributes.PersonAttributesT, OrganizationAttributes.OrganizationAttributesT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -240,7 +295,14 @@ class EPMT(object):
             return
         if EPM.DN() is not None:
             self.DN = DistinguishedName.DistinguishedNameT.InitFromObj(EPM.DN())
-        self.NAME = EPM.NAME()
+        self.LEGAL_NAME = EPM.LEGAL_NAME()
+        self.FAMILY_NAME = EPM.FAMILY_NAME()
+        self.GIVEN_NAME = EPM.GIVEN_NAME()
+        self.ADDITIONAL_NAME = EPM.ADDITIONAL_NAME()
+        self.HONORIFIC_PREFIX = EPM.HONORIFIC_PREFIX()
+        self.HONORIFIC_SUFFIX = EPM.HONORIFIC_SUFFIX()
+        self.JOB_TITLE = EPM.JOB_TITLE()
+        self.OCCUPATION = EPM.OCCUPATION()
         if not EPM.ALTERNATE_NAMESIsNone():
             self.ALTERNATE_NAMES = []
             for i in range(EPM.ALTERNATE_NAMESLength()):
@@ -259,15 +321,27 @@ class EPMT(object):
             self.MULTIFORMAT_ADDRESS = []
             for i in range(EPM.MULTIFORMAT_ADDRESSLength()):
                 self.MULTIFORMAT_ADDRESS.append(EPM.MULTIFORMAT_ADDRESS(i))
-        self.attributesType = EPM.AttributesType()
-        self.ATTRIBUTES = SpecificAttributes.SpecificAttributesCreator(self.ATTRIBUTESType, EPM.ATTRIBUTES())
 
     # EPMT
     def Pack(self, builder):
         if self.DN is not None:
             DN = self.DN.Pack(builder)
-        if self.NAME is not None:
-            NAME = builder.CreateString(self.NAME)
+        if self.LEGAL_NAME is not None:
+            LEGAL_NAME = builder.CreateString(self.LEGAL_NAME)
+        if self.FAMILY_NAME is not None:
+            FAMILY_NAME = builder.CreateString(self.FAMILY_NAME)
+        if self.GIVEN_NAME is not None:
+            GIVEN_NAME = builder.CreateString(self.GIVEN_NAME)
+        if self.ADDITIONAL_NAME is not None:
+            ADDITIONAL_NAME = builder.CreateString(self.ADDITIONAL_NAME)
+        if self.HONORIFIC_PREFIX is not None:
+            HONORIFIC_PREFIX = builder.CreateString(self.HONORIFIC_PREFIX)
+        if self.HONORIFIC_SUFFIX is not None:
+            HONORIFIC_SUFFIX = builder.CreateString(self.HONORIFIC_SUFFIX)
+        if self.JOB_TITLE is not None:
+            JOB_TITLE = builder.CreateString(self.JOB_TITLE)
+        if self.OCCUPATION is not None:
+            OCCUPATION = builder.CreateString(self.OCCUPATION)
         if self.ALTERNATE_NAMES is not None:
             ALTERNATE_NAMESlist = []
             for i in range(len(self.ALTERNATE_NAMES)):
@@ -296,13 +370,25 @@ class EPMT(object):
             for i in reversed(range(len(self.MULTIFORMAT_ADDRESS))):
                 builder.PrependUOffsetTRelative(MULTIFORMAT_ADDRESSlist[i])
             MULTIFORMAT_ADDRESS = builder.EndVector()
-        if self.ATTRIBUTES is not None:
-            ATTRIBUTES = self.ATTRIBUTES.Pack(builder)
         EPMStart(builder)
         if self.DN is not None:
             EPMAddDN(builder, DN)
-        if self.NAME is not None:
-            EPMAddNAME(builder, NAME)
+        if self.LEGAL_NAME is not None:
+            EPMAddLEGAL_NAME(builder, LEGAL_NAME)
+        if self.FAMILY_NAME is not None:
+            EPMAddFAMILY_NAME(builder, FAMILY_NAME)
+        if self.GIVEN_NAME is not None:
+            EPMAddGIVEN_NAME(builder, GIVEN_NAME)
+        if self.ADDITIONAL_NAME is not None:
+            EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME)
+        if self.HONORIFIC_PREFIX is not None:
+            EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX)
+        if self.HONORIFIC_SUFFIX is not None:
+            EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX)
+        if self.JOB_TITLE is not None:
+            EPMAddJOB_TITLE(builder, JOB_TITLE)
+        if self.OCCUPATION is not None:
+            EPMAddOCCUPATION(builder, OCCUPATION)
         if self.ALTERNATE_NAMES is not None:
             EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
         if self.EMAIL is not None:
@@ -313,8 +399,5 @@ class EPMT(object):
             EPMAddKEYS(builder, KEYS)
         if self.MULTIFORMAT_ADDRESS is not None:
             EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
-        EPMAddAttributesType(builder, self.attributesType)
-        if self.ATTRIBUTES is not None:
-            EPMAddATTRIBUTES(builder, ATTRIBUTES)
         EPM = EPMEnd(builder)
         return EPM

@@ -69,53 +69,6 @@ class _LdifattributeTypeReader extends fb.Reader<LdifattributeType> {
       LdifattributeType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Union for specific attributes, distinguishing between Person and Organization
-class SpecificAttributesTypeId {
-  final int value;
-  const SpecificAttributesTypeId._(this.value);
-
-  factory SpecificAttributesTypeId.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum SpecificAttributesTypeId');
-    }
-    return result;
-  }
-
-  static SpecificAttributesTypeId? _createOrNull(int? value) => 
-      value == null ? null : SpecificAttributesTypeId.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  static const SpecificAttributesTypeId NONE = SpecificAttributesTypeId._(0);
-  static const SpecificAttributesTypeId PersonAttributes = SpecificAttributesTypeId._(1);
-  static const SpecificAttributesTypeId OrganizationAttributes = SpecificAttributesTypeId._(2);
-  static const Map<int, SpecificAttributesTypeId> values = {
-    0: NONE,
-    1: PersonAttributes,
-    2: OrganizationAttributes};
-
-  static const fb.Reader<SpecificAttributesTypeId> reader = _SpecificAttributesTypeIdReader();
-
-  @override
-  String toString() {
-    return 'SpecificAttributesTypeId{value: $value}';
-  }
-}
-
-class _SpecificAttributesTypeIdReader extends fb.Reader<SpecificAttributesTypeId> {
-  const _SpecificAttributesTypeIdReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  SpecificAttributesTypeId read(fb.BufferContext bc, int offset) =>
-      SpecificAttributesTypeId.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
 ///  Represents a component of a Distinguished Name (DN) in LDAP
 class Dncomponent {
   Dncomponent._(this._bc, this._bcOffset);
@@ -546,228 +499,6 @@ class AddressObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Specific attributes for a Person
-class PersonAttributes {
-  PersonAttributes._(this._bc, this._bcOffset);
-  factory PersonAttributes(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PersonAttributes> reader = _PersonAttributesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Family name or surname of the person
-  String? get FAMILY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Given name or first name of the person
-  String? get GIVEN_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Additional name or middle name of the person
-  String? get ADDITIONAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Honorific prefix preceding the person's name (e.g., Mr., Dr.)
-  String? get HONORIFIC_PREFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Honorific suffix following the person's name (e.g., Jr., Sr.)
-  String? get HONORIFIC_SUFFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Job title of the person
-  String? get JOB_TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Occupation of the person
-  String? get OCCUPATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-
-  @override
-  String toString() {
-    return 'PersonAttributes{FAMILY_NAME: ${FAMILY_NAME}, GIVEN_NAME: ${GIVEN_NAME}, ADDITIONAL_NAME: ${ADDITIONAL_NAME}, HONORIFIC_PREFIX: ${HONORIFIC_PREFIX}, HONORIFIC_SUFFIX: ${HONORIFIC_SUFFIX}, JOB_TITLE: ${JOB_TITLE}, OCCUPATION: ${OCCUPATION}}';
-  }
-}
-
-class _PersonAttributesReader extends fb.TableReader<PersonAttributes> {
-  const _PersonAttributesReader();
-
-  @override
-  PersonAttributes createObject(fb.BufferContext bc, int offset) => 
-    PersonAttributes._(bc, offset);
-}
-
-class PersonAttributesBuilder {
-  PersonAttributesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(7);
-  }
-
-  int addFamilyNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addGivenNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addAdditionalNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addHonorificPrefixOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addHonorificSuffixOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addJobTitleOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addOccupationOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PersonAttributesObjectBuilder extends fb.ObjectBuilder {
-  final String? _FAMILY_NAME;
-  final String? _GIVEN_NAME;
-  final String? _ADDITIONAL_NAME;
-  final String? _HONORIFIC_PREFIX;
-  final String? _HONORIFIC_SUFFIX;
-  final String? _JOB_TITLE;
-  final String? _OCCUPATION;
-
-  PersonAttributesObjectBuilder({
-    String? FAMILY_NAME,
-    String? GIVEN_NAME,
-    String? ADDITIONAL_NAME,
-    String? HONORIFIC_PREFIX,
-    String? HONORIFIC_SUFFIX,
-    String? JOB_TITLE,
-    String? OCCUPATION,
-  })
-      : _FAMILY_NAME = FAMILY_NAME,
-        _GIVEN_NAME = GIVEN_NAME,
-        _ADDITIONAL_NAME = ADDITIONAL_NAME,
-        _HONORIFIC_PREFIX = HONORIFIC_PREFIX,
-        _HONORIFIC_SUFFIX = HONORIFIC_SUFFIX,
-        _JOB_TITLE = JOB_TITLE,
-        _OCCUPATION = OCCUPATION;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? FAMILY_NAMEOffset = _FAMILY_NAME == null ? null
-        : fbBuilder.writeString(_FAMILY_NAME!);
-    final int? GIVEN_NAMEOffset = _GIVEN_NAME == null ? null
-        : fbBuilder.writeString(_GIVEN_NAME!);
-    final int? ADDITIONAL_NAMEOffset = _ADDITIONAL_NAME == null ? null
-        : fbBuilder.writeString(_ADDITIONAL_NAME!);
-    final int? HONORIFIC_PREFIXOffset = _HONORIFIC_PREFIX == null ? null
-        : fbBuilder.writeString(_HONORIFIC_PREFIX!);
-    final int? HONORIFIC_SUFFIXOffset = _HONORIFIC_SUFFIX == null ? null
-        : fbBuilder.writeString(_HONORIFIC_SUFFIX!);
-    final int? JOB_TITLEOffset = _JOB_TITLE == null ? null
-        : fbBuilder.writeString(_JOB_TITLE!);
-    final int? OCCUPATIONOffset = _OCCUPATION == null ? null
-        : fbBuilder.writeString(_OCCUPATION!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, FAMILY_NAMEOffset);
-    fbBuilder.addOffset(1, GIVEN_NAMEOffset);
-    fbBuilder.addOffset(2, ADDITIONAL_NAMEOffset);
-    fbBuilder.addOffset(3, HONORIFIC_PREFIXOffset);
-    fbBuilder.addOffset(4, HONORIFIC_SUFFIXOffset);
-    fbBuilder.addOffset(5, JOB_TITLEOffset);
-    fbBuilder.addOffset(6, OCCUPATIONOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Specific attributes for an Organization
-class OrganizationAttributes {
-  OrganizationAttributes._(this._bc, this._bcOffset);
-  factory OrganizationAttributes(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<OrganizationAttributes> reader = _OrganizationAttributesReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Legal name of the organization
-  String? get LEGAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'OrganizationAttributes{LEGAL_NAME: ${LEGAL_NAME}}';
-  }
-}
-
-class _OrganizationAttributesReader extends fb.TableReader<OrganizationAttributes> {
-  const _OrganizationAttributesReader();
-
-  @override
-  OrganizationAttributes createObject(fb.BufferContext bc, int offset) => 
-    OrganizationAttributes._(bc, offset);
-}
-
-class OrganizationAttributesBuilder {
-  OrganizationAttributesBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addLegalNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class OrganizationAttributesObjectBuilder extends fb.ObjectBuilder {
-  final String? _LEGAL_NAME;
-
-  OrganizationAttributesObjectBuilder({
-    String? LEGAL_NAME,
-  })
-      : _LEGAL_NAME = LEGAL_NAME;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? LEGAL_NAMEOffset = _LEGAL_NAME == null ? null
-        : fbBuilder.writeString(_LEGAL_NAME!);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, LEGAL_NAMEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
 ///  Entity Profile Message
 class EPM {
   EPM._(this._bc, this._bcOffset);
@@ -784,30 +515,35 @@ class EPM {
   ///  Distinguished Name of the entity
   DistinguishedName? get DN => DistinguishedName.reader.vTableGetNullable(_bc, _bcOffset, 4);
   ///  Common name of the entity (person or organization)
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get LEGAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Family name or surname of the person
+  String? get FAMILY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Given name or first name of the person
+  String? get GIVEN_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Additional name or middle name of the person
+  String? get ADDITIONAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Honorific prefix preceding the person's name (e.g., Mr., Dr.)
+  String? get HONORIFIC_PREFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Honorific suffix following the person's name (e.g., Jr., Sr.)
+  String? get HONORIFIC_SUFFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Job title of the person
+  String? get JOB_TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Occupation of the person
+  String? get OCCUPATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  Alternate names for the entity
-  List<String>? get ALTERNATE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<String>? get ALTERNATE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
   ///  Email address of the entity
-  String? get EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   ///  Telephone number of the entity
-  String? get TELEPHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get TELEPHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   ///  Cryptographic keys associated with the entity
-  List<CryptoKey>? get KEYS => const fb.ListReader<CryptoKey>(CryptoKey.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<CryptoKey>? get KEYS => const fb.ListReader<CryptoKey>(CryptoKey.reader).vTableGetNullable(_bc, _bcOffset, 28);
   ///  Multiformat addresses associated with the entity
-  List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
-  SpecificAttributesTypeId? get attributesType => SpecificAttributesTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 18));
-  ///  Specific attributes for the entity, either Person or Organization
-  dynamic get ATTRIBUTES {
-    switch (ATTRIBUTESType?.value) {
-      case 1: return PersonAttributes.reader.vTableGetNullable(_bc, _bcOffset, 20);
-      case 2: return OrganizationAttributes.reader.vTableGetNullable(_bc, _bcOffset, 20);
-      default: return null;
-    }
-  }
+  List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
 
   @override
   String toString() {
-    return 'EPM{DN: ${DN}, NAME: ${NAME}, ALTERNATE_NAMES: ${ALTERNATE_NAMES}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, attributesType: ${attributesType}, ATTRIBUTES: ${ATTRIBUTES}}';
+    return 'EPM{DN: ${DN}, LEGAL_NAME: ${LEGAL_NAME}, FAMILY_NAME: ${FAMILY_NAME}, GIVEN_NAME: ${GIVEN_NAME}, ADDITIONAL_NAME: ${ADDITIONAL_NAME}, HONORIFIC_PREFIX: ${HONORIFIC_PREFIX}, HONORIFIC_SUFFIX: ${HONORIFIC_SUFFIX}, JOB_TITLE: ${JOB_TITLE}, OCCUPATION: ${OCCUPATION}, ALTERNATE_NAMES: ${ALTERNATE_NAMES}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}}';
   }
 }
 
@@ -825,43 +561,63 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(14);
   }
 
   int addDnOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addLegalNameOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addAlternateNamesOffset(int? offset) {
+  int addFamilyNameOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addEmailOffset(int? offset) {
+  int addGivenNameOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addTelephoneOffset(int? offset) {
+  int addAdditionalNameOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addKeysOffset(int? offset) {
+  int addHonorificPrefixOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addMultiformatAddressOffset(int? offset) {
+  int addHonorificSuffixOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addAttributesType(SpecificAttributesTypeId? attributesType) {
-    fbBuilder.addUint8(7, attributesType?.value);
+  int addJobTitleOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addAttributesOffset(int? offset) {
+  int addOccupationOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addAlternateNamesOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addEmailOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTelephoneOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addKeysOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addMultiformatAddressOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
 
@@ -872,42 +628,71 @@ class EPMBuilder {
 
 class EPMObjectBuilder extends fb.ObjectBuilder {
   final DistinguishedNameObjectBuilder? _DN;
-  final String? _NAME;
+  final String? _LEGAL_NAME;
+  final String? _FAMILY_NAME;
+  final String? _GIVEN_NAME;
+  final String? _ADDITIONAL_NAME;
+  final String? _HONORIFIC_PREFIX;
+  final String? _HONORIFIC_SUFFIX;
+  final String? _JOB_TITLE;
+  final String? _OCCUPATION;
   final List<String>? _ALTERNATE_NAMES;
   final String? _EMAIL;
   final String? _TELEPHONE;
   final List<CryptoKeyObjectBuilder>? _KEYS;
   final List<String>? _MULTIFORMAT_ADDRESS;
-  final SpecificAttributesTypeId? _attributesType;
-  final dynamic _ATTRIBUTES;
 
   EPMObjectBuilder({
     DistinguishedNameObjectBuilder? DN,
-    String? NAME,
+    String? LEGAL_NAME,
+    String? FAMILY_NAME,
+    String? GIVEN_NAME,
+    String? ADDITIONAL_NAME,
+    String? HONORIFIC_PREFIX,
+    String? HONORIFIC_SUFFIX,
+    String? JOB_TITLE,
+    String? OCCUPATION,
     List<String>? ALTERNATE_NAMES,
     String? EMAIL,
     String? TELEPHONE,
     List<CryptoKeyObjectBuilder>? KEYS,
     List<String>? MULTIFORMAT_ADDRESS,
-    SpecificAttributesTypeId? attributesType,
-    dynamic ATTRIBUTES,
   })
       : _DN = DN,
-        _NAME = NAME,
+        _LEGAL_NAME = LEGAL_NAME,
+        _FAMILY_NAME = FAMILY_NAME,
+        _GIVEN_NAME = GIVEN_NAME,
+        _ADDITIONAL_NAME = ADDITIONAL_NAME,
+        _HONORIFIC_PREFIX = HONORIFIC_PREFIX,
+        _HONORIFIC_SUFFIX = HONORIFIC_SUFFIX,
+        _JOB_TITLE = JOB_TITLE,
+        _OCCUPATION = OCCUPATION,
         _ALTERNATE_NAMES = ALTERNATE_NAMES,
         _EMAIL = EMAIL,
         _TELEPHONE = TELEPHONE,
         _KEYS = KEYS,
-        _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS,
-        _attributesType = attributesType,
-        _ATTRIBUTES = ATTRIBUTES;
+        _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? DNOffset = _DN?.getOrCreateOffset(fbBuilder);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
+    final int? LEGAL_NAMEOffset = _LEGAL_NAME == null ? null
+        : fbBuilder.writeString(_LEGAL_NAME!);
+    final int? FAMILY_NAMEOffset = _FAMILY_NAME == null ? null
+        : fbBuilder.writeString(_FAMILY_NAME!);
+    final int? GIVEN_NAMEOffset = _GIVEN_NAME == null ? null
+        : fbBuilder.writeString(_GIVEN_NAME!);
+    final int? ADDITIONAL_NAMEOffset = _ADDITIONAL_NAME == null ? null
+        : fbBuilder.writeString(_ADDITIONAL_NAME!);
+    final int? HONORIFIC_PREFIXOffset = _HONORIFIC_PREFIX == null ? null
+        : fbBuilder.writeString(_HONORIFIC_PREFIX!);
+    final int? HONORIFIC_SUFFIXOffset = _HONORIFIC_SUFFIX == null ? null
+        : fbBuilder.writeString(_HONORIFIC_SUFFIX!);
+    final int? JOB_TITLEOffset = _JOB_TITLE == null ? null
+        : fbBuilder.writeString(_JOB_TITLE!);
+    final int? OCCUPATIONOffset = _OCCUPATION == null ? null
+        : fbBuilder.writeString(_OCCUPATION!);
     final int? ALTERNATE_NAMESOffset = _ALTERNATE_NAMES == null ? null
         : fbBuilder.writeList(_ALTERNATE_NAMES!.map(fbBuilder.writeString).toList());
     final int? EMAILOffset = _EMAIL == null ? null
@@ -918,17 +703,21 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_KEYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
         : fbBuilder.writeList(_MULTIFORMAT_ADDRESS!.map(fbBuilder.writeString).toList());
-    final int? ATTRIBUTESOffset = _ATTRIBUTES?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, DNOffset);
-    fbBuilder.addOffset(1, NAMEOffset);
-    fbBuilder.addOffset(2, ALTERNATE_NAMESOffset);
-    fbBuilder.addOffset(3, EMAILOffset);
-    fbBuilder.addOffset(4, TELEPHONEOffset);
-    fbBuilder.addOffset(5, KEYSOffset);
-    fbBuilder.addOffset(6, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addUint8(7, _attributesType?.value);
-    fbBuilder.addOffset(8, ATTRIBUTESOffset);
+    fbBuilder.addOffset(1, LEGAL_NAMEOffset);
+    fbBuilder.addOffset(2, FAMILY_NAMEOffset);
+    fbBuilder.addOffset(3, GIVEN_NAMEOffset);
+    fbBuilder.addOffset(4, ADDITIONAL_NAMEOffset);
+    fbBuilder.addOffset(5, HONORIFIC_PREFIXOffset);
+    fbBuilder.addOffset(6, HONORIFIC_SUFFIXOffset);
+    fbBuilder.addOffset(7, JOB_TITLEOffset);
+    fbBuilder.addOffset(8, OCCUPATIONOffset);
+    fbBuilder.addOffset(9, ALTERNATE_NAMESOffset);
+    fbBuilder.addOffset(10, EMAILOffset);
+    fbBuilder.addOffset(11, TELEPHONEOffset);
+    fbBuilder.addOffset(12, KEYSOffset);
+    fbBuilder.addOffset(13, MULTIFORMAT_ADDRESSOffset);
     return fbBuilder.endTable();
   }
 
