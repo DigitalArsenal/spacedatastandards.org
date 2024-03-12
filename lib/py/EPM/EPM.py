@@ -34,11 +34,7 @@ class EPM(object):
     def DN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from DistinguishedName import DistinguishedName
-            obj = DistinguishedName()
-            obj.Init(self._tab.Bytes, x)
-            return obj
+            return self._tab.String(o + self._tab.Pos)
         return None
 
     # Common name of the entity (person or organization)
@@ -247,9 +243,8 @@ def EPMEnd(builder): return builder.EndObject()
 def End(builder):
     return EPMEnd(builder)
 import CryptoKey
-import DistinguishedName
 try:
-    from typing import List, Optional
+    from typing import List
 except:
     pass
 
@@ -257,7 +252,7 @@ class EPMT(object):
 
     # EPMT
     def __init__(self):
-        self.DN = None  # type: Optional[DistinguishedName.DistinguishedNameT]
+        self.DN = None  # type: str
         self.LEGAL_NAME = None  # type: str
         self.FAMILY_NAME = None  # type: str
         self.GIVEN_NAME = None  # type: str
@@ -293,8 +288,7 @@ class EPMT(object):
     def _UnPack(self, EPM):
         if EPM is None:
             return
-        if EPM.DN() is not None:
-            self.DN = DistinguishedName.DistinguishedNameT.InitFromObj(EPM.DN())
+        self.DN = EPM.DN()
         self.LEGAL_NAME = EPM.LEGAL_NAME()
         self.FAMILY_NAME = EPM.FAMILY_NAME()
         self.GIVEN_NAME = EPM.GIVEN_NAME()
@@ -325,7 +319,7 @@ class EPMT(object):
     # EPMT
     def Pack(self, builder):
         if self.DN is not None:
-            DN = self.DN.Pack(builder)
+            DN = builder.CreateString(self.DN)
         if self.LEGAL_NAME is not None:
             LEGAL_NAME = builder.CreateString(self.LEGAL_NAME)
         if self.FAMILY_NAME is not None:

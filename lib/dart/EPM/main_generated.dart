@@ -5,230 +5,6 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Enumeration for LDAP attribute types relevant to Distinguished Names
-class LdifattributeType {
-  final int value;
-  const LdifattributeType._(this.value);
-
-  factory LdifattributeType.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum LdifattributeType');
-    }
-    return result;
-  }
-
-  static LdifattributeType? _createOrNull(int? value) => 
-      value == null ? null : LdifattributeType.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 5;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Common Name
-  static const LdifattributeType CN = LdifattributeType._(0);
-
-  ///  Organizational Unit Name
-  static const LdifattributeType OU = LdifattributeType._(1);
-
-  ///  Organization Name
-  static const LdifattributeType O = LdifattributeType._(2);
-
-  ///  Domain Component
-  static const LdifattributeType DC = LdifattributeType._(3);
-
-  ///  Country Name
-  static const LdifattributeType C = LdifattributeType._(4);
-
-  ///  Surname
-  static const LdifattributeType SN = LdifattributeType._(5);
-  static const Map<int, LdifattributeType> values = {
-    0: CN,
-    1: OU,
-    2: O,
-    3: DC,
-    4: C,
-    5: SN};
-
-  static const fb.Reader<LdifattributeType> reader = _LdifattributeTypeReader();
-
-  @override
-  String toString() {
-    return 'LdifattributeType{value: $value}';
-  }
-}
-
-class _LdifattributeTypeReader extends fb.Reader<LdifattributeType> {
-  const _LdifattributeTypeReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  LdifattributeType read(fb.BufferContext bc, int offset) =>
-      LdifattributeType.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-///  Represents a component of a Distinguished Name (DN) in LDAP
-class Dncomponent {
-  Dncomponent._(this._bc, this._bcOffset);
-  factory Dncomponent(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Dncomponent> reader = _DncomponentReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  The type of the DN component
-  LdifattributeType get TYPE => LdifattributeType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  The value of the DN component
-  String? get VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-
-  @override
-  String toString() {
-    return 'Dncomponent{TYPE: ${TYPE}, VALUE: ${VALUE}}';
-  }
-}
-
-class _DncomponentReader extends fb.TableReader<Dncomponent> {
-  const _DncomponentReader();
-
-  @override
-  Dncomponent createObject(fb.BufferContext bc, int offset) => 
-    Dncomponent._(bc, offset);
-}
-
-class DncomponentBuilder {
-  DncomponentBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addType(LdifattributeType? TYPE) {
-    fbBuilder.addInt8(0, TYPE?.value);
-    return fbBuilder.offset;
-  }
-  int addValueOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class DncomponentObjectBuilder extends fb.ObjectBuilder {
-  final LdifattributeType? _TYPE;
-  final String? _VALUE;
-
-  DncomponentObjectBuilder({
-    LdifattributeType? TYPE,
-    String? VALUE,
-  })
-      : _TYPE = TYPE,
-        _VALUE = VALUE;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? VALUEOffset = _VALUE == null ? null
-        : fbBuilder.writeString(_VALUE!);
-    fbBuilder.startTable(2);
-    fbBuilder.addInt8(0, _TYPE?.value);
-    fbBuilder.addOffset(1, VALUEOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Represents a Distinguished Name composed of DNComponents
-class DistinguishedName {
-  DistinguishedName._(this._bc, this._bcOffset);
-  factory DistinguishedName(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<DistinguishedName> reader = _DistinguishedNameReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  The sequence of components making up the DN
-  List<Dncomponent>? get COMPONENTS => const fb.ListReader<Dncomponent>(Dncomponent.reader).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'DistinguishedName{COMPONENTS: ${COMPONENTS}}';
-  }
-}
-
-class _DistinguishedNameReader extends fb.TableReader<DistinguishedName> {
-  const _DistinguishedNameReader();
-
-  @override
-  DistinguishedName createObject(fb.BufferContext bc, int offset) => 
-    DistinguishedName._(bc, offset);
-}
-
-class DistinguishedNameBuilder {
-  DistinguishedNameBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addComponentsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class DistinguishedNameObjectBuilder extends fb.ObjectBuilder {
-  final List<DncomponentObjectBuilder>? _COMPONENTS;
-
-  DistinguishedNameObjectBuilder({
-    List<DncomponentObjectBuilder>? COMPONENTS,
-  })
-      : _COMPONENTS = COMPONENTS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COMPONENTSOffset = _COMPONENTS == null ? null
-        : fbBuilder.writeList(_COMPONENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, COMPONENTSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
 ///  Represents cryptographic key information
 class CryptoKey {
   CryptoKey._(this._bc, this._bcOffset);
@@ -513,7 +289,7 @@ class EPM {
   final int _bcOffset;
 
   ///  Distinguished Name of the entity
-  DistinguishedName? get DN => DistinguishedName.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  String? get DN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Common name of the entity (person or organization)
   String? get LEGAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Family name or surname of the person
@@ -627,7 +403,7 @@ class EPMBuilder {
 }
 
 class EPMObjectBuilder extends fb.ObjectBuilder {
-  final DistinguishedNameObjectBuilder? _DN;
+  final String? _DN;
   final String? _LEGAL_NAME;
   final String? _FAMILY_NAME;
   final String? _GIVEN_NAME;
@@ -643,7 +419,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _MULTIFORMAT_ADDRESS;
 
   EPMObjectBuilder({
-    DistinguishedNameObjectBuilder? DN,
+    String? DN,
     String? LEGAL_NAME,
     String? FAMILY_NAME,
     String? GIVEN_NAME,
@@ -676,7 +452,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? DNOffset = _DN?.getOrCreateOffset(fbBuilder);
+    final int? DNOffset = _DN == null ? null
+        : fbBuilder.writeString(_DN!);
     final int? LEGAL_NAMEOffset = _LEGAL_NAME == null ? null
         : fbBuilder.writeString(_LEGAL_NAME!);
     final int? FAMILY_NAMEOffset = _FAMILY_NAME == null ? null

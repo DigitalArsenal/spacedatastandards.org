@@ -3,7 +3,6 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
-import { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
 
 
 /**
@@ -30,9 +29,11 @@ static getSizePrefixedRootAsEPM(bb:flatbuffers.ByteBuffer, obj?:EPM):EPM {
 /**
  * Distinguished Name of the entity
  */
-DN(obj?:DistinguishedName):DistinguishedName|null {
+DN():string|null
+DN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DN(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new DistinguishedName()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
@@ -300,7 +301,7 @@ static createEPM(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset, LEGAL
 
 unpack(): EPMT {
   return new EPMT(
-    (this.DN() !== null ? this.DN()!.unpack() : null),
+    this.DN(),
     this.LEGAL_NAME(),
     this.FAMILY_NAME(),
     this.GIVEN_NAME(),
@@ -319,7 +320,7 @@ unpack(): EPMT {
 
 
 unpackTo(_o: EPMT): void {
-  _o.DN = (this.DN() !== null ? this.DN()!.unpack() : null);
+  _o.DN = this.DN();
   _o.LEGAL_NAME = this.LEGAL_NAME();
   _o.FAMILY_NAME = this.FAMILY_NAME();
   _o.GIVEN_NAME = this.GIVEN_NAME();
@@ -338,7 +339,7 @@ unpackTo(_o: EPMT): void {
 
 export class EPMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public DN: DistinguishedNameT|null = null,
+  public DN: string|Uint8Array|null = null,
   public LEGAL_NAME: string|Uint8Array|null = null,
   public FAMILY_NAME: string|Uint8Array|null = null,
   public GIVEN_NAME: string|Uint8Array|null = null,
@@ -356,7 +357,7 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const DN = (this.DN !== null ? this.DN!.pack(builder) : 0);
+  const DN = (this.DN !== null ? builder.createString(this.DN!) : 0);
   const LEGAL_NAME = (this.LEGAL_NAME !== null ? builder.createString(this.LEGAL_NAME!) : 0);
   const FAMILY_NAME = (this.FAMILY_NAME !== null ? builder.createString(this.FAMILY_NAME!) : 0);
   const GIVEN_NAME = (this.GIVEN_NAME !== null ? builder.createString(this.GIVEN_NAME!) : 0);

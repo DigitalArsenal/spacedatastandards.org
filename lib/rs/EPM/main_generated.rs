@@ -9,402 +9,6 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LDIFATTRIBUTE_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LDIFATTRIBUTE_TYPE: i8 = 5;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LDIFATTRIBUTE_TYPE: [LDIFAttributeType; 6] = [
-  LDIFAttributeType::CN,
-  LDIFAttributeType::OU,
-  LDIFAttributeType::O,
-  LDIFAttributeType::DC,
-  LDIFAttributeType::C,
-  LDIFAttributeType::SN,
-];
-
-/// Enumeration for LDAP attribute types relevant to Distinguished Names
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct LDIFAttributeType(pub i8);
-#[allow(non_upper_case_globals)]
-impl LDIFAttributeType {
-  /// Common Name
-  pub const CN: Self = Self(0);
-  /// Organizational Unit Name
-  pub const OU: Self = Self(1);
-  /// Organization Name
-  pub const O: Self = Self(2);
-  /// Domain Component
-  pub const DC: Self = Self(3);
-  /// Country Name
-  pub const C: Self = Self(4);
-  /// Surname
-  pub const SN: Self = Self(5);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 5;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::CN,
-    Self::OU,
-    Self::O,
-    Self::DC,
-    Self::C,
-    Self::SN,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::CN => Some("CN"),
-      Self::OU => Some("OU"),
-      Self::O => Some("O"),
-      Self::DC => Some("DC"),
-      Self::C => Some("C"),
-      Self::SN => Some("SN"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for LDIFAttributeType {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for LDIFAttributeType {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for LDIFAttributeType {
-    type Output = LDIFAttributeType;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for LDIFAttributeType {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for LDIFAttributeType {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for LDIFAttributeType {}
-pub enum DNComponentOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Represents a component of a Distinguished Name (DN) in LDAP
-pub struct DNComponent<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for DNComponent<'a> {
-  type Inner = DNComponent<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> DNComponent<'a> {
-  pub const VT_TYPE: flatbuffers::VOffsetT = 4;
-  pub const VT_VALUE: flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    DNComponent { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args DNComponentArgs<'args>
-  ) -> flatbuffers::WIPOffset<DNComponent<'bldr>> {
-    let mut builder = DNComponentBuilder::new(_fbb);
-    if let Some(x) = args.VALUE { builder.add_VALUE(x); }
-    builder.add_TYPE(args.TYPE);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> DNComponentT {
-    let TYPE = self.TYPE();
-    let VALUE = self.VALUE().map(|x| {
-      x.to_string()
-    });
-    DNComponentT {
-      TYPE,
-      VALUE,
-    }
-  }
-
-  /// The type of the DN component
-  #[inline]
-  pub fn TYPE(&self) -> LDIFAttributeType {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<LDIFAttributeType>(DNComponent::VT_TYPE, Some(LDIFAttributeType::CN)).unwrap()}
-  }
-  /// The value of the DN component
-  #[inline]
-  pub fn VALUE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DNComponent::VT_VALUE, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for DNComponent<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<LDIFAttributeType>("TYPE", Self::VT_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VALUE", Self::VT_VALUE, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct DNComponentArgs<'a> {
-    pub TYPE: LDIFAttributeType,
-    pub VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
-}
-impl<'a> Default for DNComponentArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    DNComponentArgs {
-      TYPE: LDIFAttributeType::CN,
-      VALUE: None,
-    }
-  }
-}
-
-pub struct DNComponentBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> DNComponentBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_TYPE(&mut self, TYPE: LDIFAttributeType) {
-    self.fbb_.push_slot::<LDIFAttributeType>(DNComponent::VT_TYPE, TYPE, LDIFAttributeType::CN);
-  }
-  #[inline]
-  pub fn add_VALUE(&mut self, VALUE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DNComponent::VT_VALUE, VALUE);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> DNComponentBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    DNComponentBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<DNComponent<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for DNComponent<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("DNComponent");
-      ds.field("TYPE", &self.TYPE());
-      ds.field("VALUE", &self.VALUE());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct DNComponentT {
-  pub TYPE: LDIFAttributeType,
-  pub VALUE: Option<String>,
-}
-impl Default for DNComponentT {
-  fn default() -> Self {
-    Self {
-      TYPE: LDIFAttributeType::CN,
-      VALUE: None,
-    }
-  }
-}
-impl DNComponentT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<DNComponent<'b>> {
-    let TYPE = self.TYPE;
-    let VALUE = self.VALUE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    DNComponent::create(_fbb, &DNComponentArgs{
-      TYPE,
-      VALUE,
-    })
-  }
-}
-pub enum DistinguishedNameOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Represents a Distinguished Name composed of DNComponents
-pub struct DistinguishedName<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for DistinguishedName<'a> {
-  type Inner = DistinguishedName<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> DistinguishedName<'a> {
-  pub const VT_COMPONENTS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    DistinguishedName { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args DistinguishedNameArgs<'args>
-  ) -> flatbuffers::WIPOffset<DistinguishedName<'bldr>> {
-    let mut builder = DistinguishedNameBuilder::new(_fbb);
-    if let Some(x) = args.COMPONENTS { builder.add_COMPONENTS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> DistinguishedNameT {
-    let COMPONENTS = self.COMPONENTS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    DistinguishedNameT {
-      COMPONENTS,
-    }
-  }
-
-  /// The sequence of components making up the DN
-  #[inline]
-  pub fn COMPONENTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<DNComponent<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<DNComponent>>>>(DistinguishedName::VT_COMPONENTS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for DistinguishedName<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<DNComponent>>>>("COMPONENTS", Self::VT_COMPONENTS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct DistinguishedNameArgs<'a> {
-    pub COMPONENTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<DNComponent<'a>>>>>,
-}
-impl<'a> Default for DistinguishedNameArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    DistinguishedNameArgs {
-      COMPONENTS: None,
-    }
-  }
-}
-
-pub struct DistinguishedNameBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> DistinguishedNameBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_COMPONENTS(&mut self, COMPONENTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<DNComponent<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DistinguishedName::VT_COMPONENTS, COMPONENTS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> DistinguishedNameBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    DistinguishedNameBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<DistinguishedName<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for DistinguishedName<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("DistinguishedName");
-      ds.field("COMPONENTS", &self.COMPONENTS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct DistinguishedNameT {
-  pub COMPONENTS: Option<Vec<DNComponentT>>,
-}
-impl Default for DistinguishedNameT {
-  fn default() -> Self {
-    Self {
-      COMPONENTS: None,
-    }
-  }
-}
-impl DistinguishedNameT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<DistinguishedName<'b>> {
-    let COMPONENTS = self.COMPONENTS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    DistinguishedName::create(_fbb, &DistinguishedNameArgs{
-      COMPONENTS,
-    })
-  }
-}
 pub enum CryptoKeyOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1010,7 +614,7 @@ impl<'a> EPM<'a> {
 
   pub fn unpack(&self) -> EPMT {
     let DN = self.DN().map(|x| {
-      Box::new(x.unpack())
+      x.to_string()
     });
     let LEGAL_NAME = self.LEGAL_NAME().map(|x| {
       x.to_string()
@@ -1071,11 +675,11 @@ impl<'a> EPM<'a> {
 
   /// Distinguished Name of the entity
   #[inline]
-  pub fn DN(&self) -> Option<DistinguishedName<'a>> {
+  pub fn DN(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<DistinguishedName>>(EPM::VT_DN, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_DN, None)}
   }
   /// Common name of the entity (person or organization)
   #[inline]
@@ -1190,7 +794,7 @@ impl flatbuffers::Verifiable for EPM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<DistinguishedName>>("DN", Self::VT_DN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DN", Self::VT_DN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LEGAL_NAME", Self::VT_LEGAL_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FAMILY_NAME", Self::VT_FAMILY_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GIVEN_NAME", Self::VT_GIVEN_NAME, false)?
@@ -1209,7 +813,7 @@ impl flatbuffers::Verifiable for EPM<'_> {
   }
 }
 pub struct EPMArgs<'a> {
-    pub DN: Option<flatbuffers::WIPOffset<DistinguishedName<'a>>>,
+    pub DN: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LEGAL_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FAMILY_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub GIVEN_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1252,8 +856,8 @@ pub struct EPMBuilder<'a: 'b, 'b> {
 }
 impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
   #[inline]
-  pub fn add_DN(&mut self, DN: flatbuffers::WIPOffset<DistinguishedName<'b >>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<DistinguishedName>>(EPM::VT_DN, DN);
+  pub fn add_DN(&mut self, DN: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_DN, DN);
   }
   #[inline]
   pub fn add_LEGAL_NAME(&mut self, LEGAL_NAME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1345,7 +949,7 @@ impl core::fmt::Debug for EPM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct EPMT {
-  pub DN: Option<Box<DistinguishedNameT>>,
+  pub DN: Option<String>,
   pub LEGAL_NAME: Option<String>,
   pub FAMILY_NAME: Option<String>,
   pub GIVEN_NAME: Option<String>,
@@ -1386,7 +990,7 @@ impl EPMT {
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
   ) -> flatbuffers::WIPOffset<EPM<'b>> {
     let DN = self.DN.as_ref().map(|x|{
-      x.pack(_fbb)
+      _fbb.create_string(x)
     });
     let LEGAL_NAME = self.LEGAL_NAME.as_ref().map(|x|{
       _fbb.create_string(x)

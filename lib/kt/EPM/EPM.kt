@@ -33,15 +33,17 @@ class EPM : Table() {
     /**
      * Distinguished Name of the entity
      */
-    val DN : DistinguishedName? get() = DN(DistinguishedName())
-    fun DN(obj: DistinguishedName) : DistinguishedName? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
+    val DN : String?
+        get() {
+            val o = __offset(4)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    }
+    val DNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun DNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Common name of the entity (person or organization)
      */

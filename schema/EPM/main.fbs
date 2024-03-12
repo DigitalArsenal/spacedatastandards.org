@@ -1,33 +1,3 @@
-/// Enumeration for LDAP attribute types relevant to Distinguished Names
-enum LDIFAttributeType: byte {
-  /// Common Name
-  CN, 
-  /// Organizational Unit Name
-  OU, 
-  /// Organization Name
-  O,  
-  /// Domain Component
-  DC, 
-  /// Country Name
-  C,  
-  /// Surname
-  SN, 
-}
-
-/// Represents a component of a Distinguished Name (DN) in LDAP
-table DNComponent {
-  /// The type of the DN component
-  TYPE: LDIFAttributeType;
-  /// The value of the DN component
-  VALUE: string;
-}
-
-/// Represents a Distinguished Name composed of DNComponents
-table DistinguishedName {
-  /// The sequence of components making up the DN
-  COMPONENTS: [DNComponent];
-}
-
 /// Represents cryptographic key information
 table CryptoKey {
   /// Public part of the cryptographic key
@@ -63,7 +33,7 @@ table Address {
 /// Entity Profile Message
 table EPM {
   /// Distinguished Name of the entity
-  DN: DistinguishedName;
+  DN: string;
   /// Common name of the entity (person or organization)
   LEGAL_NAME: string;
   /// Family name or surname of the person

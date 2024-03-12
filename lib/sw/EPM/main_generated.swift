@@ -4,117 +4,6 @@
 
 import FlatBuffers
 
-///  Enumeration for LDAP attribute types relevant to Distinguished Names
-public enum LDIFAttributeType: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Common Name
-  case cn = 0
-  ///  Organizational Unit Name
-  case ou = 1
-  ///  Organization Name
-  case o = 2
-  ///  Domain Component
-  case dc = 3
-  ///  Country Name
-  case c = 4
-  ///  Surname
-  case sn = 5
-
-  public static var max: LDIFAttributeType { return .sn }
-  public static var min: LDIFAttributeType { return .cn }
-}
-
-
-///  Represents a component of a Distinguished Name (DN) in LDAP
-public struct DNComponent: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DNComponent.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case TYPE = 4
-    case VALUE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  The type of the DN component
-  public var TYPE: LDIFAttributeType { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .cn : LDIFAttributeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .cn }
-  ///  The value of the DN component
-  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
-  public static func startDNComponent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(TYPE: LDIFAttributeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
-  public static func endDNComponent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createDNComponent(
-    _ fbb: inout FlatBufferBuilder,
-    TYPE: LDIFAttributeType = .cn,
-    VALUEOffset VALUE: Offset = Offset()
-  ) -> Offset {
-    let __start = DNComponent.startDNComponent(&fbb)
-    DNComponent.add(TYPE: TYPE, &fbb)
-    DNComponent.add(VALUE: VALUE, &fbb)
-    return DNComponent.endDNComponent(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: LDIFAttributeType.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Represents a Distinguished Name composed of DNComponents
-public struct DistinguishedName: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DistinguishedName.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case COMPONENTS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  The sequence of components making up the DN
-  public var hasComponents: Bool { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? false : true }
-  public var COMPONENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COMPONENTS(at index: Int32) -> DNComponent? { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? nil : DNComponent(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startDistinguishedName(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(COMPONENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPONENTS, at: VTOFFSET.COMPONENTS.p) }
-  public static func endDistinguishedName(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createDistinguishedName(
-    _ fbb: inout FlatBufferBuilder,
-    COMPONENTSVectorOffset COMPONENTS: Offset = Offset()
-  ) -> Offset {
-    let __start = DistinguishedName.startDistinguishedName(&fbb)
-    DistinguishedName.addVectorOf(COMPONENTS: COMPONENTS, &fbb)
-    return DistinguishedName.endDistinguishedName(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMPONENTS.p, fieldName: "COMPONENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<DNComponent>, DNComponent>>.self)
-    _v.finish()
-  }
-}
-
 ///  Represents cryptographic key information
 public struct CryptoKey: FlatBufferObject, Verifiable {
 
@@ -307,7 +196,8 @@ public struct EPM: FlatBufferObject, Verifiable {
   }
 
   ///  Distinguished Name of the entity
-  public var DN: DistinguishedName? { let o = _accessor.offset(VTOFFSET.DN.v); return o == 0 ? nil : DistinguishedName(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DN: String? { let o = _accessor.offset(VTOFFSET.DN.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DN.v) }
   ///  Common name of the entity (person or organization)
   public var LEGAL_NAME: String? { let o = _accessor.offset(VTOFFSET.LEGAL_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LEGAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LEGAL_NAME.v) }
@@ -403,7 +293,7 @@ public struct EPM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DN.p, fieldName: "DN", required: false, type: ForwardOffset<DistinguishedName>.self)
+    try _v.visit(field: VTOFFSET.DN.p, fieldName: "DN", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LEGAL_NAME.p, fieldName: "LEGAL_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.FAMILY_NAME.p, fieldName: "FAMILY_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.GIVEN_NAME.p, fieldName: "GIVEN_NAME", required: false, type: ForwardOffset<String>.self)

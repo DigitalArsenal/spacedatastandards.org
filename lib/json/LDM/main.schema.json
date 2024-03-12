@@ -21,10 +21,6 @@
       "type" : "string",
       "enum": ["LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER"]
     },
-    "LDIFAttributeType" : {
-      "type" : "string",
-      "enum": ["CN", "OU", "O", "DC", "C", "SN"]
-    },
     "objectType" : {
       "type" : "string",
       "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN"]
@@ -363,32 +359,6 @@
       },
       "additionalProperties" : false
     },
-    "DNComponent" : {
-      "type" : "object",
-      "description" : "Represents a component of a Distinguished Name (DN) in LDAP",
-      "properties" : {
-        "TYPE" : {
-                "$ref" : "#/definitions/LDIFAttributeType",
-                "description" : "The type of the DN component"
-              },
-        "VALUE" : {
-                "type" : "string",
-                "description" : "The value of the DN component"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "DistinguishedName" : {
-      "type" : "object",
-      "description" : "Represents a Distinguished Name composed of DNComponents",
-      "properties" : {
-        "COMPONENTS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/DNComponent"},
-                "description" : "The sequence of components making up the DN"
-              }
-      },
-      "additionalProperties" : false
-    },
     "CryptoKey" : {
       "type" : "object",
       "description" : "Represents cryptographic key information",
@@ -456,7 +426,7 @@
       "description" : "Entity Profile Message",
       "properties" : {
         "DN" : {
-                "$ref" : "#/definitions/DistinguishedName",
+                "type" : "string",
                 "description" : "Distinguished Name of the entity"
               },
         "LEGAL_NAME" : {

@@ -13,12 +13,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
-struct DNComponent;
-struct DNComponentBuilder;
-
-struct DistinguishedName;
-struct DistinguishedNameBuilder;
-
 struct CryptoKey;
 struct CryptoKeyBuilder;
 
@@ -30,175 +24,6 @@ struct EPMBuilder;
 
 struct EPMCOLLECTION;
 struct EPMCOLLECTIONBuilder;
-
-/// Enumeration for LDAP attribute types relevant to Distinguished Names
-enum LDIFAttributeType : int8_t {
-  /// Common Name
-  LDIFAttributeType_CN = 0,
-  /// Organizational Unit Name
-  LDIFAttributeType_OU = 1,
-  /// Organization Name
-  LDIFAttributeType_O = 2,
-  /// Domain Component
-  LDIFAttributeType_DC = 3,
-  /// Country Name
-  LDIFAttributeType_C = 4,
-  /// Surname
-  LDIFAttributeType_SN = 5,
-  LDIFAttributeType_MIN = LDIFAttributeType_CN,
-  LDIFAttributeType_MAX = LDIFAttributeType_SN
-};
-
-inline const LDIFAttributeType (&EnumValuesLDIFAttributeType())[6] {
-  static const LDIFAttributeType values[] = {
-    LDIFAttributeType_CN,
-    LDIFAttributeType_OU,
-    LDIFAttributeType_O,
-    LDIFAttributeType_DC,
-    LDIFAttributeType_C,
-    LDIFAttributeType_SN
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesLDIFAttributeType() {
-  static const char * const names[7] = {
-    "CN",
-    "OU",
-    "O",
-    "DC",
-    "C",
-    "SN",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameLDIFAttributeType(LDIFAttributeType e) {
-  if (::flatbuffers::IsOutRange(e, LDIFAttributeType_CN, LDIFAttributeType_SN)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesLDIFAttributeType()[index];
-}
-
-/// Represents a component of a Distinguished Name (DN) in LDAP
-struct DNComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef DNComponentBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_TYPE = 4,
-    VT_VALUE = 6
-  };
-  /// The type of the DN component
-  LDIFAttributeType TYPE() const {
-    return static_cast<LDIFAttributeType>(GetField<int8_t>(VT_TYPE, 0));
-  }
-  /// The value of the DN component
-  const ::flatbuffers::String *VALUE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_VALUE);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
-           VerifyOffset(verifier, VT_VALUE) &&
-           verifier.VerifyString(VALUE()) &&
-           verifier.EndTable();
-  }
-};
-
-struct DNComponentBuilder {
-  typedef DNComponent Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_TYPE(LDIFAttributeType TYPE) {
-    fbb_.AddElement<int8_t>(DNComponent::VT_TYPE, static_cast<int8_t>(TYPE), 0);
-  }
-  void add_VALUE(::flatbuffers::Offset<::flatbuffers::String> VALUE) {
-    fbb_.AddOffset(DNComponent::VT_VALUE, VALUE);
-  }
-  explicit DNComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<DNComponent> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<DNComponent>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<DNComponent> CreateDNComponent(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    LDIFAttributeType TYPE = LDIFAttributeType_CN,
-    ::flatbuffers::Offset<::flatbuffers::String> VALUE = 0) {
-  DNComponentBuilder builder_(_fbb);
-  builder_.add_VALUE(VALUE);
-  builder_.add_TYPE(TYPE);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<DNComponent> CreateDNComponentDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    LDIFAttributeType TYPE = LDIFAttributeType_CN,
-    const char *VALUE = nullptr) {
-  auto VALUE__ = VALUE ? _fbb.CreateString(VALUE) : 0;
-  return CreateDNComponent(
-      _fbb,
-      TYPE,
-      VALUE__);
-}
-
-/// Represents a Distinguished Name composed of DNComponents
-struct DistinguishedName FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef DistinguishedNameBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_COMPONENTS = 4
-  };
-  /// The sequence of components making up the DN
-  const ::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>> *COMPONENTS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>> *>(VT_COMPONENTS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_COMPONENTS) &&
-           verifier.VerifyVector(COMPONENTS()) &&
-           verifier.VerifyVectorOfTables(COMPONENTS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct DistinguishedNameBuilder {
-  typedef DistinguishedName Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_COMPONENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>>> COMPONENTS) {
-    fbb_.AddOffset(DistinguishedName::VT_COMPONENTS, COMPONENTS);
-  }
-  explicit DistinguishedNameBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<DistinguishedName> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<DistinguishedName>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<DistinguishedName> CreateDistinguishedName(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DNComponent>>> COMPONENTS = 0) {
-  DistinguishedNameBuilder builder_(_fbb);
-  builder_.add_COMPONENTS(COMPONENTS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<DistinguishedName> CreateDistinguishedNameDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<DNComponent>> *COMPONENTS = nullptr) {
-  auto COMPONENTS__ = COMPONENTS ? _fbb.CreateVector<::flatbuffers::Offset<DNComponent>>(*COMPONENTS) : 0;
-  return CreateDistinguishedName(
-      _fbb,
-      COMPONENTS__);
-}
 
 /// Represents cryptographic key information
 struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -476,8 +301,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MULTIFORMAT_ADDRESS = 30
   };
   /// Distinguished Name of the entity
-  const DistinguishedName *DN() const {
-    return GetPointer<const DistinguishedName *>(VT_DN);
+  const ::flatbuffers::String *DN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DN);
   }
   /// Common name of the entity (person or organization)
   const ::flatbuffers::String *LEGAL_NAME() const {
@@ -534,7 +359,7 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_DN) &&
-           verifier.VerifyTable(DN()) &&
+           verifier.VerifyString(DN()) &&
            VerifyOffset(verifier, VT_LEGAL_NAME) &&
            verifier.VerifyString(LEGAL_NAME()) &&
            VerifyOffset(verifier, VT_FAMILY_NAME) &&
@@ -572,7 +397,7 @@ struct EPMBuilder {
   typedef EPM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_DN(::flatbuffers::Offset<DistinguishedName> DN) {
+  void add_DN(::flatbuffers::Offset<::flatbuffers::String> DN) {
     fbb_.AddOffset(EPM::VT_DN, DN);
   }
   void add_LEGAL_NAME(::flatbuffers::Offset<::flatbuffers::String> LEGAL_NAME) {
@@ -627,7 +452,7 @@ struct EPMBuilder {
 
 inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<DistinguishedName> DN = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DN = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LEGAL_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FAMILY_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> GIVEN_NAME = 0,
@@ -661,7 +486,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
 
 inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<DistinguishedName> DN = 0,
+    const char *DN = nullptr,
     const char *LEGAL_NAME = nullptr,
     const char *FAMILY_NAME = nullptr,
     const char *GIVEN_NAME = nullptr,
@@ -675,6 +500,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     const char *TELEPHONE = nullptr,
     const std::vector<::flatbuffers::Offset<CryptoKey>> *KEYS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS = nullptr) {
+  auto DN__ = DN ? _fbb.CreateString(DN) : 0;
   auto LEGAL_NAME__ = LEGAL_NAME ? _fbb.CreateString(LEGAL_NAME) : 0;
   auto FAMILY_NAME__ = FAMILY_NAME ? _fbb.CreateString(FAMILY_NAME) : 0;
   auto GIVEN_NAME__ = GIVEN_NAME ? _fbb.CreateString(GIVEN_NAME) : 0;
@@ -690,7 +516,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MULTIFORMAT_ADDRESS) : 0;
   return CreateEPM(
       _fbb,
-      DN,
+      DN__,
       LEGAL_NAME__,
       FAMILY_NAME__,
       GIVEN_NAME__,

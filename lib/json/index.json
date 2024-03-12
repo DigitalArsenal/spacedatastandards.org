@@ -3181,17 +3181,6 @@
                         "OTHER"
                     ]
                 },
-                "LDIFAttributeType": {
-                    "type": "string",
-                    "enum": [
-                        "CN",
-                        "OU",
-                        "O",
-                        "DC",
-                        "C",
-                        "SN"
-                    ]
-                },
                 "objectType": {
                     "type": "string",
                     "enum": [
@@ -3583,35 +3572,6 @@
                     },
                     "additionalProperties": false
                 },
-                "DNComponent": {
-                    "type": "object",
-                    "description": "Represents a component of a Distinguished Name (DN) in LDAP",
-                    "properties": {
-                        "TYPE": {
-                            "$ref": "#/definitions/LDIFAttributeType",
-                            "description": "The type of the DN component"
-                        },
-                        "VALUE": {
-                            "type": "string",
-                            "description": "The value of the DN component"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "DistinguishedName": {
-                    "type": "object",
-                    "description": "Represents a Distinguished Name composed of DNComponents",
-                    "properties": {
-                        "COMPONENTS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/DNComponent"
-                            },
-                            "description": "The sequence of components making up the DN"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "CryptoKey": {
                     "type": "object",
                     "description": "Represents cryptographic key information",
@@ -3679,7 +3639,7 @@
                     "description": "Entity Profile Message",
                     "properties": {
                         "DN": {
-                            "$ref": "#/definitions/DistinguishedName",
+                            "type": "string",
                             "description": "Distinguished Name of the entity"
                         },
                         "LEGAL_NAME": {
@@ -5920,46 +5880,6 @@
         "EPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "LDIFAttributeType": {
-                    "type": "string",
-                    "enum": [
-                        "CN",
-                        "OU",
-                        "O",
-                        "DC",
-                        "C",
-                        "SN"
-                    ]
-                },
-                "DNComponent": {
-                    "type": "object",
-                    "description": "Represents a component of a Distinguished Name (DN) in LDAP",
-                    "properties": {
-                        "TYPE": {
-                            "$ref": "#/definitions/LDIFAttributeType",
-                            "description": "The type of the DN component"
-                        },
-                        "VALUE": {
-                            "type": "string",
-                            "description": "The value of the DN component"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "DistinguishedName": {
-                    "type": "object",
-                    "description": "Represents a Distinguished Name composed of DNComponents",
-                    "properties": {
-                        "COMPONENTS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/DNComponent"
-                            },
-                            "description": "The sequence of components making up the DN"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "CryptoKey": {
                     "type": "object",
                     "description": "Represents cryptographic key information",
@@ -6027,7 +5947,7 @@
                     "description": "Entity Profile Message",
                     "properties": {
                         "DN": {
-                            "$ref": "#/definitions/DistinguishedName",
+                            "type": "string",
                             "description": "Distinguished Name of the entity"
                         },
                         "LEGAL_NAME": {

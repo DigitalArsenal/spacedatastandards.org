@@ -31,8 +31,9 @@ public final class EPM extends Table {
   /**
    * Distinguished Name of the entity
    */
-  public DistinguishedName DN() { return DN(new DistinguishedName()); }
-  public DistinguishedName DN(DistinguishedName obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public String DN() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DNAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer DNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
    * Common name of the entity (person or organization)
    */

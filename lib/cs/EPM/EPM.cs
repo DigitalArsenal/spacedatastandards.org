@@ -18,7 +18,13 @@ public struct EPM : IFlatbufferObject
   public EPM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Distinguished Name of the entity
-  public DistinguishedName? DN { get { int o = __p.__offset(4); return o != 0 ? (DistinguishedName?)(new DistinguishedName()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public string DN { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDNBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
+  public ArraySegment<byte>? GetDNBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetDNArray() { return __p.__vector_as_array<byte>(4); }
   /// Common name of the entity (person or organization)
   public string LEGAL_NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -110,7 +116,7 @@ public struct EPM : IFlatbufferObject
   public int MULTIFORMAT_ADDRESSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<EPM> CreateEPM(FlatBufferBuilder builder,
-      Offset<DistinguishedName> DNOffset = default(Offset<DistinguishedName>),
+      StringOffset DNOffset = default(StringOffset),
       StringOffset LEGAL_NAMEOffset = default(StringOffset),
       StringOffset FAMILY_NAMEOffset = default(StringOffset),
       StringOffset GIVEN_NAMEOffset = default(StringOffset),
@@ -143,7 +149,7 @@ public struct EPM : IFlatbufferObject
   }
 
   public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(14); }
-  public static void AddDN(FlatBufferBuilder builder, Offset<DistinguishedName> DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
+  public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
   public static void AddLEGAL_NAME(FlatBufferBuilder builder, StringOffset LEGAL_NAMEOffset) { builder.AddOffset(1, LEGAL_NAMEOffset.Value, 0); }
   public static void AddFAMILY_NAME(FlatBufferBuilder builder, StringOffset FAMILY_NAMEOffset) { builder.AddOffset(2, FAMILY_NAMEOffset.Value, 0); }
   public static void AddGIVEN_NAME(FlatBufferBuilder builder, StringOffset GIVEN_NAMEOffset) { builder.AddOffset(3, GIVEN_NAMEOffset.Value, 0); }
@@ -182,7 +188,7 @@ public struct EPM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(EPMT _o) {
-    _o.DN = this.DN.HasValue ? this.DN.Value.UnPack() : null;
+    _o.DN = this.DN;
     _o.LEGAL_NAME = this.LEGAL_NAME;
     _o.FAMILY_NAME = this.FAMILY_NAME;
     _o.GIVEN_NAME = this.GIVEN_NAME;
@@ -202,7 +208,7 @@ public struct EPM : IFlatbufferObject
   }
   public static Offset<EPM> Pack(FlatBufferBuilder builder, EPMT _o) {
     if (_o == null) return default(Offset<EPM>);
-    var _DN = _o.DN == null ? default(Offset<DistinguishedName>) : DistinguishedName.Pack(builder, _o.DN);
+    var _DN = _o.DN == null ? default(StringOffset) : builder.CreateString(_o.DN);
     var _LEGAL_NAME = _o.LEGAL_NAME == null ? default(StringOffset) : builder.CreateString(_o.LEGAL_NAME);
     var _FAMILY_NAME = _o.FAMILY_NAME == null ? default(StringOffset) : builder.CreateString(_o.FAMILY_NAME);
     var _GIVEN_NAME = _o.GIVEN_NAME == null ? default(StringOffset) : builder.CreateString(_o.GIVEN_NAME);
@@ -252,7 +258,7 @@ public struct EPM : IFlatbufferObject
 
 public class EPMT
 {
-  public DistinguishedNameT DN { get; set; }
+  public string DN { get; set; }
   public string LEGAL_NAME { get; set; }
   public string FAMILY_NAME { get; set; }
   public string GIVEN_NAME { get; set; }

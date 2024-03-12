@@ -44,9 +44,8 @@ class EPM extends Table
     /// Distinguished Name of the entity
     public function getDN()
     {
-        $obj = new DistinguishedName();
         $o = $this->__offset(4);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Common name of the entity (person or organization)
@@ -215,7 +214,7 @@ class EPM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
     public static function addDN(FlatBufferBuilder $builder, $DN)

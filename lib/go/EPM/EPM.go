@@ -35,15 +35,10 @@ func (rcv *EPM) Table() flatbuffers.Table {
 }
 
 /// Distinguished Name of the entity
-func (rcv *EPM) DN(obj *DistinguishedName) *DistinguishedName {
+func (rcv *EPM) DN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(DistinguishedName)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }

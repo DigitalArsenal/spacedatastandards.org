@@ -1,6 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
-import { DistinguishedName, DistinguishedNameT } from './DistinguishedName.js';
 /**
  * Entity Profile Message
  */
@@ -13,7 +12,8 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     /**
      * Distinguished Name of the entity
      */
-    DN(obj?: DistinguishedName): DistinguishedName | null;
+    DN(): string | null;
+    DN(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Common name of the entity (person or organization)
      */
@@ -108,7 +108,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     unpackTo(_o: EPMT): void;
 }
 export declare class EPMT implements flatbuffers.IGeneratedObject {
-    DN: DistinguishedNameT | null;
+    DN: string | Uint8Array | null;
     LEGAL_NAME: string | Uint8Array | null;
     FAMILY_NAME: string | Uint8Array | null;
     GIVEN_NAME: string | Uint8Array | null;
@@ -122,7 +122,7 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     TELEPHONE: string | Uint8Array | null;
     KEYS: (CryptoKeyT)[];
     MULTIFORMAT_ADDRESS: (string)[];
-    constructor(DN?: DistinguishedNameT | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[]);
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map
