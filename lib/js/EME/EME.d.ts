@@ -8,6 +8,7 @@ export declare class EME implements flatbuffers.IUnpackableObject<EMET> {
     __init(i: number, bb: flatbuffers.ByteBuffer): EME;
     static getRootAsEME(bb: flatbuffers.ByteBuffer, obj?: EME): EME;
     static getSizePrefixedRootAsEME(bb: flatbuffers.ByteBuffer, obj?: EME): EME;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Encrypted data blob, containing the ciphertext of the original plaintext message.
      */
@@ -73,6 +74,8 @@ export declare class EME implements flatbuffers.IUnpackableObject<EMET> {
     static addKdfParameters(builder: flatbuffers.Builder, KDF_PARAMETERSOffset: flatbuffers.Offset): void;
     static addEncryptionAlgorithmParameters(builder: flatbuffers.Builder, ENCRYPTION_ALGORITHM_PARAMETERSOffset: flatbuffers.Offset): void;
     static endEME(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishEMEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedEMEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createEME(builder: flatbuffers.Builder, ENCRYPTED_BLOBOffset: flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset: flatbuffers.Offset, MACOffset: flatbuffers.Offset, NONCEOffset: flatbuffers.Offset, TAGOffset: flatbuffers.Offset, IVOffset: flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset: flatbuffers.Offset, CIPHER_SUITEOffset: flatbuffers.Offset, KDF_PARAMETERSOffset: flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EMET;
     unpackTo(_o: EMET): void;

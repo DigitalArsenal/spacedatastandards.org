@@ -9,6 +9,7 @@ export declare class OEM implements flatbuffers.IUnpackableObject<OEMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): OEM;
     static getRootAsOEM(bb: flatbuffers.ByteBuffer, obj?: OEM): OEM;
     static getSizePrefixedRootAsOEM(bb: flatbuffers.ByteBuffer, obj?: OEM): OEM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * OEM Header
      * OEM Version
@@ -37,6 +38,8 @@ export declare class OEM implements flatbuffers.IUnpackableObject<OEMT> {
     static createEphemerisDataBlockVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startEphemerisDataBlockVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOEM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishOEMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedOEMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createOEM(builder: flatbuffers.Builder, CCSDS_OEM_VERS: number, CREATION_DATEOffset: flatbuffers.Offset, ORIGINATOROffset: flatbuffers.Offset, EPHEMERIS_DATA_BLOCKOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OEMT;
     unpackTo(_o: OEMT): void;

@@ -385,217 +385,86 @@ impl CSMT {
     })
   }
 }
-pub enum CSMCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct CSMCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for CSMCOLLECTION<'a> {
-  type Inner = CSMCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> CSMCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    CSMCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args CSMCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<CSMCOLLECTION<'bldr>> {
-    let mut builder = CSMCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> CSMCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    CSMCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  /// A vector of CSM records
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CSM<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CSM>>>>(CSMCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for CSMCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CSM>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct CSMCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CSM<'a>>>>>,
-}
-impl<'a> Default for CSMCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    CSMCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct CSMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> CSMCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CSM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CSMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CSMCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    CSMCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<CSMCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for CSMCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("CSMCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct CSMCOLLECTIONT {
-  pub RECORDS: Option<Vec<CSMT>>,
-}
-impl Default for CSMCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl CSMCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<CSMCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    CSMCOLLECTION::create(_fbb, &CSMCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `CSMCOLLECTION`
+/// Verifies that a buffer of bytes contains a `CSM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CSMCOLLECTION_unchecked`.
-pub fn root_as_CSMCOLLECTION(buf: &[u8]) -> Result<CSMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<CSMCOLLECTION>(buf)
+/// `root_as_CSM_unchecked`.
+pub fn root_as_CSM(buf: &[u8]) -> Result<CSM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<CSM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `CSMCOLLECTION` and returns it.
+/// `CSM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_CSMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_CSMCOLLECTION(buf: &[u8]) -> Result<CSMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<CSMCOLLECTION>(buf)
+/// `size_prefixed_root_as_CSM_unchecked`.
+pub fn size_prefixed_root_as_CSM(buf: &[u8]) -> Result<CSM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<CSM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `CSMCOLLECTION` and returns it.
+/// contains a `CSM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CSMCOLLECTION_unchecked`.
-pub fn root_as_CSMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_CSM_unchecked`.
+pub fn root_as_CSM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CSMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<CSMCOLLECTION<'b>>(opts, buf)
+) -> Result<CSM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<CSM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `CSMCOLLECTION` and returns
+/// bytes contains a size prefixed `CSM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CSMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_CSMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_CSM_unchecked`.
+pub fn size_prefixed_root_as_CSM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CSMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<CSMCOLLECTION<'b>>(opts, buf)
+) -> Result<CSM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<CSM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a CSMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CSM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `CSMCOLLECTION`.
-pub unsafe fn root_as_CSMCOLLECTION_unchecked(buf: &[u8]) -> CSMCOLLECTION {
-  flatbuffers::root_unchecked::<CSMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `CSM`.
+pub unsafe fn root_as_CSM_unchecked(buf: &[u8]) -> CSM {
+  flatbuffers::root_unchecked::<CSM>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed CSMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CSM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `CSMCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_CSMCOLLECTION_unchecked(buf: &[u8]) -> CSMCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<CSMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CSM`.
+pub unsafe fn size_prefixed_root_as_CSM_unchecked(buf: &[u8]) -> CSM {
+  flatbuffers::size_prefixed_root_unchecked::<CSM>(buf)
 }
-pub const CSMCOLLECTION_IDENTIFIER: &str = "$CSM";
+pub const CSM_IDENTIFIER: &str = "$CSM";
 
 #[inline]
-pub fn CSMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CSMCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn CSMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CSMCOLLECTION_IDENTIFIER, true)
+pub fn CSM_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CSM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_CSMCOLLECTION_buffer<'a, 'b>(
+pub fn CSM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CSM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_CSM_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<CSMCOLLECTION<'a>>) {
-  fbb.finish(root, Some(CSMCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<CSM<'a>>) {
+  fbb.finish(root, Some(CSM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CSMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CSMCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(CSMCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_CSM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CSM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CSM_IDENTIFIER));
 }

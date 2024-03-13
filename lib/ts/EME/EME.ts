@@ -25,6 +25,10 @@ static getSizePrefixedRootAsEME(bb:flatbuffers.ByteBuffer, obj?:EME):EME {
   return (obj || new EME()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$EME');
+}
+
 /**
  * Encrypted data blob, containing the ciphertext of the original plaintext message.
  */
@@ -192,6 +196,14 @@ static addEncryptionAlgorithmParameters(builder:flatbuffers.Builder, ENCRYPTION_
 static endEME(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishEMEBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EME');
+}
+
+static finishSizePrefixedEMEBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EME', true);
 }
 
 static createEME(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset:flatbuffers.Offset, MACOffset:flatbuffers.Offset, NONCEOffset:flatbuffers.Offset, TAGOffset:flatbuffers.Offset, IVOffset:flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset:flatbuffers.Offset, CIPHER_SUITEOffset:flatbuffers.Offset, KDF_PARAMETERSOffset:flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {

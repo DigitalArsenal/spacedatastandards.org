@@ -14,6 +14,7 @@ public struct MPE : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static MPE GetRootAsMPE(ByteBuffer _bb) { return GetRootAsMPE(_bb, new MPE()); }
   public static MPE GetRootAsMPE(ByteBuffer _bb, MPE obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool MPEBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$MPE"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MPE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -79,6 +80,8 @@ public struct MPE : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<MPE>(o);
   }
+  public static void FinishMPEBuffer(FlatBufferBuilder builder, Offset<MPE> offset) { builder.Finish(offset.Value, "$MPE"); }
+  public static void FinishSizePrefixedMPEBuffer(FlatBufferBuilder builder, Offset<MPE> offset) { builder.FinishSizePrefixed(offset.Value, "$MPE"); }
   public MPET UnPack() {
     var _o = new MPET();
     this.UnPackTo(_o);
@@ -134,6 +137,14 @@ public class MPET
     this.ARG_OF_PERICENTER = 0.0;
     this.MEAN_ANOMALY = 0.0;
     this.BSTAR = 0.0;
+  }
+  public static MPET DeserializeFromBinary(byte[] fbBuffer) {
+    return MPE.GetRootAsMPE(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    MPE.FinishMPEBuffer(fbb, MPE.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

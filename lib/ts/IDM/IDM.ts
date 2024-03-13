@@ -32,6 +32,10 @@ static getSizePrefixedRootAsIDM(bb:flatbuffers.ByteBuffer, obj?:IDM):IDM {
   return (obj || new IDM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$IDM');
+}
+
 /**
  * Unique identifier for the EMT
  */
@@ -414,6 +418,14 @@ static addTaskable(builder:flatbuffers.Builder, TASKABLE:boolean) {
 static endIDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishIDMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$IDM');
+}
+
+static finishSizePrefixedIDMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$IDM', true);
 }
 
 

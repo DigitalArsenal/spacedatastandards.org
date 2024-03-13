@@ -192,17 +192,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of IDM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/IDMCOLLECTION"
+  "$ref" : "#/definitions/IDM"
 }

@@ -137,6 +137,7 @@ class CSM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun CSMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CSM")
         fun createCSM(builder: FlatBufferBuilder, NORAD_CAT_ID_1: UInt, OBJECT_NAME_1Offset: Int, DSE_1: Double, NORAD_CAT_ID_2: UInt, OBJECT_NAME_2Offset: Int, DSE_2: Double, TCA: Double, TCA_RANGE: Double, TCA_RELATIVE_SPEED: Double, MAX_PROB: Double, DILUTION: Double) : Int {
             builder.startTable(11)
             addDILUTION(builder, DILUTION)
@@ -168,5 +169,7 @@ class CSM : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishCSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CSM")
+        fun finishSizePrefixedCSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CSM")
     }
 }

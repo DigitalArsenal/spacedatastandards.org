@@ -111,9 +111,6 @@ table CAT {
 }
 
 
-table CATCOLLECTION {
-  RECORDS:[CAT];
-}
 
-root_type CATCOLLECTION;
+root_type CAT;
 file_identifier "$CAT";

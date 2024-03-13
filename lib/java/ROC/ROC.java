@@ -25,6 +25,7 @@ public final class ROC extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static ROC getRootAsROC(ByteBuffer _bb) { return getRootAsROC(_bb, new ROC()); }
   public static ROC getRootAsROC(ByteBuffer _bb, ROC obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean ROCBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$ROC"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public ROC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -92,6 +93,8 @@ public final class ROC extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishROCBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$ROC"); }
+  public static void finishSizePrefixedROCBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$ROC"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

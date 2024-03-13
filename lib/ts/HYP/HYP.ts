@@ -26,6 +26,10 @@ static getSizePrefixedRootAsHYP(bb:flatbuffers.ByteBuffer, obj?:HYP):HYP {
   return (obj || new HYP()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$HYP');
+}
+
 /**
  * Space Objects Involved
  */
@@ -284,6 +288,14 @@ static addEventEndTime(builder:flatbuffers.Builder, EVENT_END_TIMEOffset:flatbuf
 static endHYP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishHYPBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$HYP');
+}
+
+static finishSizePrefixedHYPBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$HYP', true);
 }
 
 static createHYP(builder:flatbuffers.Builder, CAT_IDSOffset:flatbuffers.Offset, SIT_IDSOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CATEGORYOffset:flatbuffers.Offset, ROW_INDICATORSOffset:flatbuffers.Offset, COL_INDICATORSOffset:flatbuffers.Offset, MATRIXOffset:flatbuffers.Offset, SCOREOffset:flatbuffers.Offset, ANALYSIS_METHODOffset:flatbuffers.Offset, EVENT_START_TIMEOffset:flatbuffers.Offset, EVENT_END_TIMEOffset:flatbuffers.Offset):flatbuffers.Offset {

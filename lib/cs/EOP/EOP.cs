@@ -14,6 +14,7 @@ public struct EOP : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static EOP GetRootAsEOP(ByteBuffer _bb) { return GetRootAsEOP(_bb, new EOP()); }
   public static EOP GetRootAsEOP(ByteBuffer _bb, EOP obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool EOPBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EOP"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EOP __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -84,6 +85,8 @@ public struct EOP : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<EOP>(o);
   }
+  public static void FinishEOPBuffer(FlatBufferBuilder builder, Offset<EOP> offset) { builder.Finish(offset.Value, "$EOP"); }
+  public static void FinishSizePrefixedEOPBuffer(FlatBufferBuilder builder, Offset<EOP> offset) { builder.FinishSizePrefixed(offset.Value, "$EOP"); }
   public EOPT UnPack() {
     var _o = new EOPT();
     this.UnPackTo(_o);
@@ -143,6 +146,14 @@ public class EOPT
     this.TAI_MINUS_UTC_SECONDS = 0;
     this.LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f;
     this.DATA_TYPE = DataType.OBSERVED;
+  }
+  public static EOPT DeserializeFromBinary(byte[] fbBuffer) {
+    return EOP.GetRootAsEOP(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    EOP.FinishEOPBuffer(fbb, EOP.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

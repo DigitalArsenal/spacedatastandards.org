@@ -3757,217 +3757,86 @@ impl CDMT {
     })
   }
 }
-pub enum CDMCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct CDMCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for CDMCOLLECTION<'a> {
-  type Inner = CDMCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> CDMCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    CDMCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args CDMCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<CDMCOLLECTION<'bldr>> {
-    let mut builder = CDMCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> CDMCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    CDMCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  /// A vector of CDM records
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CDM<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CDM>>>>(CDMCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for CDMCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CDM>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct CDMCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CDM<'a>>>>>,
-}
-impl<'a> Default for CDMCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    CDMCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct CDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> CDMCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CDM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CDMCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    CDMCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<CDMCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for CDMCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("CDMCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct CDMCOLLECTIONT {
-  pub RECORDS: Option<Vec<CDMT>>,
-}
-impl Default for CDMCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl CDMCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<CDMCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    CDMCOLLECTION::create(_fbb, &CDMCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `CDMCOLLECTION`
+/// Verifies that a buffer of bytes contains a `CDM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CDMCOLLECTION_unchecked`.
-pub fn root_as_CDMCOLLECTION(buf: &[u8]) -> Result<CDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<CDMCOLLECTION>(buf)
+/// `root_as_CDM_unchecked`.
+pub fn root_as_CDM(buf: &[u8]) -> Result<CDM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<CDM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `CDMCOLLECTION` and returns it.
+/// `CDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_CDMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_CDMCOLLECTION(buf: &[u8]) -> Result<CDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<CDMCOLLECTION>(buf)
+/// `size_prefixed_root_as_CDM_unchecked`.
+pub fn size_prefixed_root_as_CDM(buf: &[u8]) -> Result<CDM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<CDM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `CDMCOLLECTION` and returns it.
+/// contains a `CDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CDMCOLLECTION_unchecked`.
-pub fn root_as_CDMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_CDM_unchecked`.
+pub fn root_as_CDM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<CDMCOLLECTION<'b>>(opts, buf)
+) -> Result<CDM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<CDM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `CDMCOLLECTION` and returns
+/// bytes contains a size prefixed `CDM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_CDMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_CDMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_CDM_unchecked`.
+pub fn size_prefixed_root_as_CDM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<CDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<CDMCOLLECTION<'b>>(opts, buf)
+) -> Result<CDM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<CDM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a CDMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `CDMCOLLECTION`.
-pub unsafe fn root_as_CDMCOLLECTION_unchecked(buf: &[u8]) -> CDMCOLLECTION {
-  flatbuffers::root_unchecked::<CDMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `CDM`.
+pub unsafe fn root_as_CDM_unchecked(buf: &[u8]) -> CDM {
+  flatbuffers::root_unchecked::<CDM>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed CDMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `CDMCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_CDMCOLLECTION_unchecked(buf: &[u8]) -> CDMCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<CDMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CDM`.
+pub unsafe fn size_prefixed_root_as_CDM_unchecked(buf: &[u8]) -> CDM {
+  flatbuffers::size_prefixed_root_unchecked::<CDM>(buf)
 }
-pub const CDMCOLLECTION_IDENTIFIER: &str = "$CDM";
+pub const CDM_IDENTIFIER: &str = "$CDM";
 
 #[inline]
-pub fn CDMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CDMCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn CDMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, CDMCOLLECTION_IDENTIFIER, true)
+pub fn CDM_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CDM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_CDMCOLLECTION_buffer<'a, 'b>(
+pub fn CDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, CDM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_CDM_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<CDMCOLLECTION<'a>>) {
-  fbb.finish(root, Some(CDMCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<CDM<'a>>) {
+  fbb.finish(root, Some(CDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CDMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CDMCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(CDMCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_CDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CDM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CDM_IDENTIFIER));
 }

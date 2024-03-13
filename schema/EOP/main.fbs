@@ -37,9 +37,6 @@ table EOP {
 }
 
 /// Collection of EOP records
-table EOPCOLLECTION {
-  RECORDS: [EOP];
-}
 
-root_type EOPCOLLECTION;
+root_type EOP;
 file_identifier "$EOP";

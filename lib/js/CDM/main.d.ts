@@ -1,8 +1,6 @@
 export { CDM, CDMT } from './CDM.js';
-export { CDMCOLLECTION, CDMCOLLECTIONT } from './CDMCOLLECTION.js';
 export { CDMObject, CDMObjectT } from './CDMObject.js';
 export { PNM, PNMT } from './PNM.js';
-export { PNMCOLLECTION, PNMCOLLECTIONT } from './PNMCOLLECTION.js';
 export { covarianceMethod } from './covarianceMethod.js';
 export { maneuverableType } from './maneuverableType.js';
 export { objectCenteredReferenceFrame } from './objectCenteredReferenceFrame.js';

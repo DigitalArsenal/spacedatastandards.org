@@ -269,216 +269,86 @@ impl OSMT {
     })
   }
 }
-pub enum OSMCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct OSMCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for OSMCOLLECTION<'a> {
-  type Inner = OSMCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> OSMCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    OSMCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args OSMCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<OSMCOLLECTION<'bldr>> {
-    let mut builder = OSMCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> OSMCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    OSMCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<OSM<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<OSM>>>>(OSMCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for OSMCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<OSM>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct OSMCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<OSM<'a>>>>>,
-}
-impl<'a> Default for OSMCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    OSMCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct OSMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> OSMCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<OSM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OSMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OSMCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    OSMCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<OSMCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for OSMCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("OSMCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct OSMCOLLECTIONT {
-  pub RECORDS: Option<Vec<OSMT>>,
-}
-impl Default for OSMCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl OSMCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<OSMCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    OSMCOLLECTION::create(_fbb, &OSMCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `OSMCOLLECTION`
+/// Verifies that a buffer of bytes contains a `OSM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OSMCOLLECTION_unchecked`.
-pub fn root_as_OSMCOLLECTION(buf: &[u8]) -> Result<OSMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<OSMCOLLECTION>(buf)
+/// `root_as_OSM_unchecked`.
+pub fn root_as_OSM(buf: &[u8]) -> Result<OSM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<OSM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `OSMCOLLECTION` and returns it.
+/// `OSM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_OSMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_OSMCOLLECTION(buf: &[u8]) -> Result<OSMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<OSMCOLLECTION>(buf)
+/// `size_prefixed_root_as_OSM_unchecked`.
+pub fn size_prefixed_root_as_OSM(buf: &[u8]) -> Result<OSM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<OSM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `OSMCOLLECTION` and returns it.
+/// contains a `OSM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OSMCOLLECTION_unchecked`.
-pub fn root_as_OSMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_OSM_unchecked`.
+pub fn root_as_OSM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<OSMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<OSMCOLLECTION<'b>>(opts, buf)
+) -> Result<OSM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<OSM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `OSMCOLLECTION` and returns
+/// bytes contains a size prefixed `OSM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_OSMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_OSMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_OSM_unchecked`.
+pub fn size_prefixed_root_as_OSM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<OSMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<OSMCOLLECTION<'b>>(opts, buf)
+) -> Result<OSM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<OSM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a OSMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a OSM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `OSMCOLLECTION`.
-pub unsafe fn root_as_OSMCOLLECTION_unchecked(buf: &[u8]) -> OSMCOLLECTION {
-  flatbuffers::root_unchecked::<OSMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `OSM`.
+pub unsafe fn root_as_OSM_unchecked(buf: &[u8]) -> OSM {
+  flatbuffers::root_unchecked::<OSM>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed OSMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed OSM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `OSMCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_OSMCOLLECTION_unchecked(buf: &[u8]) -> OSMCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<OSMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `OSM`.
+pub unsafe fn size_prefixed_root_as_OSM_unchecked(buf: &[u8]) -> OSM {
+  flatbuffers::size_prefixed_root_unchecked::<OSM>(buf)
 }
-pub const OSMCOLLECTION_IDENTIFIER: &str = "$OSM";
+pub const OSM_IDENTIFIER: &str = "$OSM";
 
 #[inline]
-pub fn OSMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, OSMCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn OSMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, OSMCOLLECTION_IDENTIFIER, true)
+pub fn OSM_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, OSM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_OSMCOLLECTION_buffer<'a, 'b>(
+pub fn OSM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, OSM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_OSM_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<OSMCOLLECTION<'a>>) {
-  fbb.finish(root, Some(OSMCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<OSM<'a>>) {
+  fbb.finish(root, Some(OSM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_OSMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OSMCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(OSMCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_OSM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OSM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(OSM_IDENTIFIER));
 }

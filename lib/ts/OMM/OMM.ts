@@ -30,6 +30,10 @@ static getSizePrefixedRootAsOMM(bb:flatbuffers.ByteBuffer, obj?:OMM):OMM {
   return (obj || new OMM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$OMM');
+}
+
 /**
  * OMM Header
  */
@@ -784,6 +788,14 @@ static addUserDefinedMicroseconds(builder:flatbuffers.Builder, USER_DEFINED_MICR
 static endOMM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishOMMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$OMM');
+}
+
+static finishSizePrefixedOMMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$OMM', true);
 }
 
 static createOMM(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REF_FRAME:referenceFrame, REF_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, MEAN_ELEMENT_THEORY:meanElementTheory, COMMENTOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, SEMI_MAJOR_AXIS:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, GM:number, MASS:number, SOLAR_RAD_AREA:number, SOLAR_RAD_COEFF:number, DRAG_AREA:number, DRAG_COEFF:number, EPHEMERIS_TYPE:ephemerisType, CLASSIFICATION_TYPEOffset:flatbuffers.Offset, NORAD_CAT_ID:number, ELEMENT_SET_NO:number, REV_AT_EPOCH:number, BSTAR:number, MEAN_MOTION_DOT:number, MEAN_MOTION_DDOT:number, COV_REF_FRAME:manCovRefFrame, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number, USER_DEFINED_BIP_0044_TYPE:number, USER_DEFINED_OBJECT_DESIGNATOROffset:flatbuffers.Offset, USER_DEFINED_EARTH_MODELOffset:flatbuffers.Offset, USER_DEFINED_EPOCH_TIMESTAMP:number, USER_DEFINED_MICROSECONDS:number):flatbuffers.Offset {

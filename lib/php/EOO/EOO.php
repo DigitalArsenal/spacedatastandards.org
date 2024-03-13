@@ -1783,4 +1783,9 @@ class EOO extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishEOOBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$EOO");
+    }
 }

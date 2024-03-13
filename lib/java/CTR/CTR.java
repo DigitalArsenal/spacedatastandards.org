@@ -25,6 +25,7 @@ public final class CTR extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static CTR getRootAsCTR(ByteBuffer _bb) { return getRootAsCTR(_bb, new CTR()); }
   public static CTR getRootAsCTR(ByteBuffer _bb, CTR obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean CTRBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CTR"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public CTR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -111,6 +112,8 @@ public final class CTR extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishCTRBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$CTR"); }
+  public static void finishSizePrefixedCTRBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$CTR"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

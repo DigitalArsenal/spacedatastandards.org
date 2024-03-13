@@ -25,9 +25,6 @@ struct SUSTAINERBuilder;
 struct ENGINE;
 struct ENGINEBuilder;
 
-struct ROCCOLLECTION;
-struct ROCCOLLECTIONBuilder;
-
 /// Enumeration of Engine Types
 enum ENGINE_TYPE : int8_t {
   ENGINE_TYPE_LIQUID = 0,
@@ -452,102 +449,48 @@ inline ::flatbuffers::Offset<ENGINE> CreateENGINEDirect(
       THRUST);
 }
 
-/// Collection of Rocket Configurations
-struct ROCCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ROCCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  /// Records of Rocket Configurations
-  const ::flatbuffers::Vector<::flatbuffers::Offset<ROC>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ROC>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct ROCCOLLECTIONBuilder {
-  typedef ROCCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ROC>>> RECORDS) {
-    fbb_.AddOffset(ROCCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit ROCCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<ROCCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ROCCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<ROCCOLLECTION> CreateROCCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ROC>>> RECORDS = 0) {
-  ROCCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
+inline const ROC *GetROC(const void *buf) {
+  return ::flatbuffers::GetRoot<ROC>(buf);
 }
 
-inline ::flatbuffers::Offset<ROCCOLLECTION> CreateROCCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<ROC>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<ROC>>(*RECORDS) : 0;
-  return CreateROCCOLLECTION(
-      _fbb,
-      RECORDS__);
+inline const ROC *GetSizePrefixedROC(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<ROC>(buf);
 }
 
-inline const ROCCOLLECTION *GetROCCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetRoot<ROCCOLLECTION>(buf);
-}
-
-inline const ROCCOLLECTION *GetSizePrefixedROCCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<ROCCOLLECTION>(buf);
-}
-
-inline const char *ROCCOLLECTIONIdentifier() {
+inline const char *ROCIdentifier() {
   return "$ROC";
 }
 
-inline bool ROCCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool ROCBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ROCCOLLECTIONIdentifier());
+      buf, ROCIdentifier());
 }
 
-inline bool SizePrefixedROCCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedROCBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ROCCOLLECTIONIdentifier(), true);
+      buf, ROCIdentifier(), true);
 }
 
-inline bool VerifyROCCOLLECTIONBuffer(
+inline bool VerifyROCBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<ROCCOLLECTION>(ROCCOLLECTIONIdentifier());
+  return verifier.VerifyBuffer<ROC>(ROCIdentifier());
 }
 
-inline bool VerifySizePrefixedROCCOLLECTIONBuffer(
+inline bool VerifySizePrefixedROCBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<ROCCOLLECTION>(ROCCOLLECTIONIdentifier());
+  return verifier.VerifySizePrefixedBuffer<ROC>(ROCIdentifier());
 }
 
-inline void FinishROCCOLLECTIONBuffer(
+inline void FinishROCBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ROCCOLLECTION> root) {
-  fbb.Finish(root, ROCCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<ROC> root) {
+  fbb.Finish(root, ROCIdentifier());
 }
 
-inline void FinishSizePrefixedROCCOLLECTIONBuffer(
+inline void FinishSizePrefixedROCBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ROCCOLLECTION> root) {
-  fbb.FinishSizePrefixed(root, ROCCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<ROC> root) {
+  fbb.FinishSizePrefixed(root, ROCIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -277,6 +277,7 @@ class CAT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAT")
         fun createCAT(builder: FlatBufferBuilder, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, NORAD_CAT_ID: UInt, OBJECT_TYPE: Byte, OPS_STATUS_CODE: Byte, OWNEROffset: Int, LAUNCH_DATEOffset: Int, LAUNCH_SITEOffset: Int, DECAY_DATEOffset: Int, PERIOD: Double, INCLINATION: Double, APOGEE: Double, PERIGEE: Double, RCS: Double, DATA_STATUS_CODE: Byte, ORBIT_CENTEROffset: Int, ORBIT_TYPE: Byte, DEPLOYMENT_DATEOffset: Int, MANEUVERABLE: Boolean, SIZE: Double, MASS: Double, MASS_TYPE: Byte, PAYLOADSOffset: Int) : Int {
             builder.startTable(23)
             addMASS(builder, MASS)
@@ -340,5 +341,7 @@ class CAT : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishCATBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CAT")
+        fun finishSizePrefixedCATBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CAT")
     }
 }

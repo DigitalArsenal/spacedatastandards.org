@@ -289,10 +289,6 @@ table CDM {
   OBJECT2_DATASOURCE:PNM;
 }
 
-table CDMCOLLECTION {
-  /// A vector of CDM records
-  RECORDS:[CDM];
-}
 
-root_type CDMCOLLECTION;
+root_type CDM;
 file_identifier "$CDM";

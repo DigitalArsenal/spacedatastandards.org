@@ -694,342 +694,86 @@ impl MPET {
     })
   }
 }
-pub enum MPECOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of MPE Records
-pub struct MPECOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for MPECOLLECTION<'a> {
-  type Inner = MPECOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> MPECOLLECTION<'a> {
-  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 4;
-  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 6;
-  pub const VT_REF_FRAME_EPOCH: flatbuffers::VOffsetT = 8;
-  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 10;
-  pub const VT_MEAN_ELEMENT_THEORY: flatbuffers::VOffsetT = 12;
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 14;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    MPECOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args MPECOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<MPECOLLECTION<'bldr>> {
-    let mut builder = MPECOLLECTIONBuilder::new(_fbb);
-    builder.add_REF_FRAME_EPOCH(args.REF_FRAME_EPOCH);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
-    builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
-    builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
-    builder.add_REF_FRAME(args.REF_FRAME);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> MPECOLLECTIONT {
-    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE().map(|x| {
-      x.to_string()
-    });
-    let REF_FRAME = self.REF_FRAME();
-    let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH();
-    let TIME_SYSTEM = self.TIME_SYSTEM();
-    let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    MPECOLLECTIONT {
-      CLASSIFICATION_TYPE,
-      REF_FRAME,
-      REF_FRAME_EPOCH,
-      TIME_SYSTEM,
-      MEAN_ELEMENT_THEORY,
-      RECORDS,
-    }
-  }
-
-  /// Default value = U
-  #[inline]
-  pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MPECOLLECTION::VT_CLASSIFICATION_TYPE, None)}
-  }
-  /// Name of the reference frame (TEME, EME2000, etc.)
-  #[inline]
-  pub fn REF_FRAME(&self) -> referenceFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(MPECOLLECTION::VT_REF_FRAME, Some(referenceFrame::TEME)).unwrap()}
-  }
-  /// Epoch of the Reference Frame. (UNIX TimeStamp)
-  #[inline]
-  pub fn REF_FRAME_EPOCH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MPECOLLECTION::VT_REF_FRAME_EPOCH, Some(0.0)).unwrap()}
-  }
-  /// Time system used for the orbit state and covariance matrix. (UTC)
-  #[inline]
-  pub fn TIME_SYSTEM(&self) -> timeSystem {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<timeSystem>(MPECOLLECTION::VT_TIME_SYSTEM, Some(timeSystem::UTC)).unwrap()}
-  }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
-  #[inline]
-  pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementTheory {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<meanElementTheory>(MPECOLLECTION::VT_MEAN_ELEMENT_THEORY, Some(meanElementTheory::SGP4)).unwrap()}
-  }
-  /// Array of MPE records
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<MPE<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<MPE>>>>(MPECOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for MPECOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
-     .visit_field::<referenceFrame>("REF_FRAME", Self::VT_REF_FRAME, false)?
-     .visit_field::<f64>("REF_FRAME_EPOCH", Self::VT_REF_FRAME_EPOCH, false)?
-     .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
-     .visit_field::<meanElementTheory>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<MPE>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct MPECOLLECTIONArgs<'a> {
-    pub CLASSIFICATION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REF_FRAME: referenceFrame,
-    pub REF_FRAME_EPOCH: f64,
-    pub TIME_SYSTEM: timeSystem,
-    pub MEAN_ELEMENT_THEORY: meanElementTheory,
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<MPE<'a>>>>>,
-}
-impl<'a> Default for MPECOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    MPECOLLECTIONArgs {
-      CLASSIFICATION_TYPE: None,
-      REF_FRAME: referenceFrame::TEME,
-      REF_FRAME_EPOCH: 0.0,
-      TIME_SYSTEM: timeSystem::UTC,
-      MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct MPECOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> MPECOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_CLASSIFICATION_TYPE(&mut self, CLASSIFICATION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MPECOLLECTION::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
-  }
-  #[inline]
-  pub fn add_REF_FRAME(&mut self, REF_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(MPECOLLECTION::VT_REF_FRAME, REF_FRAME, referenceFrame::TEME);
-  }
-  #[inline]
-  pub fn add_REF_FRAME_EPOCH(&mut self, REF_FRAME_EPOCH: f64) {
-    self.fbb_.push_slot::<f64>(MPECOLLECTION::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH, 0.0);
-  }
-  #[inline]
-  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
-    self.fbb_.push_slot::<timeSystem>(MPECOLLECTION::VT_TIME_SYSTEM, TIME_SYSTEM, timeSystem::UTC);
-  }
-  #[inline]
-  pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementTheory) {
-    self.fbb_.push_slot::<meanElementTheory>(MPECOLLECTION::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementTheory::SGP4);
-  }
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<MPE<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MPECOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> MPECOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    MPECOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<MPECOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for MPECOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("MPECOLLECTION");
-      ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
-      ds.field("REF_FRAME", &self.REF_FRAME());
-      ds.field("REF_FRAME_EPOCH", &self.REF_FRAME_EPOCH());
-      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
-      ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct MPECOLLECTIONT {
-  pub CLASSIFICATION_TYPE: Option<String>,
-  pub REF_FRAME: referenceFrame,
-  pub REF_FRAME_EPOCH: f64,
-  pub TIME_SYSTEM: timeSystem,
-  pub MEAN_ELEMENT_THEORY: meanElementTheory,
-  pub RECORDS: Option<Vec<MPET>>,
-}
-impl Default for MPECOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      CLASSIFICATION_TYPE: None,
-      REF_FRAME: referenceFrame::TEME,
-      REF_FRAME_EPOCH: 0.0,
-      TIME_SYSTEM: timeSystem::UTC,
-      MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
-      RECORDS: None,
-    }
-  }
-}
-impl MPECOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<MPECOLLECTION<'b>> {
-    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let REF_FRAME = self.REF_FRAME;
-    let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH;
-    let TIME_SYSTEM = self.TIME_SYSTEM;
-    let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    MPECOLLECTION::create(_fbb, &MPECOLLECTIONArgs{
-      CLASSIFICATION_TYPE,
-      REF_FRAME,
-      REF_FRAME_EPOCH,
-      TIME_SYSTEM,
-      MEAN_ELEMENT_THEORY,
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `MPECOLLECTION`
+/// Verifies that a buffer of bytes contains a `MPE`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_MPECOLLECTION_unchecked`.
-pub fn root_as_MPECOLLECTION(buf: &[u8]) -> Result<MPECOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<MPECOLLECTION>(buf)
+/// `root_as_MPE_unchecked`.
+pub fn root_as_MPE(buf: &[u8]) -> Result<MPE, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<MPE>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `MPECOLLECTION` and returns it.
+/// `MPE` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_MPECOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_MPECOLLECTION(buf: &[u8]) -> Result<MPECOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<MPECOLLECTION>(buf)
+/// `size_prefixed_root_as_MPE_unchecked`.
+pub fn size_prefixed_root_as_MPE(buf: &[u8]) -> Result<MPE, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<MPE>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `MPECOLLECTION` and returns it.
+/// contains a `MPE` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_MPECOLLECTION_unchecked`.
-pub fn root_as_MPECOLLECTION_with_opts<'b, 'o>(
+/// `root_as_MPE_unchecked`.
+pub fn root_as_MPE_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<MPECOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<MPECOLLECTION<'b>>(opts, buf)
+) -> Result<MPE<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<MPE<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `MPECOLLECTION` and returns
+/// bytes contains a size prefixed `MPE` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_MPECOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_MPECOLLECTION_with_opts<'b, 'o>(
+/// `root_as_MPE_unchecked`.
+pub fn size_prefixed_root_as_MPE_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<MPECOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<MPECOLLECTION<'b>>(opts, buf)
+) -> Result<MPE<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<MPE<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a MPECOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a MPE and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `MPECOLLECTION`.
-pub unsafe fn root_as_MPECOLLECTION_unchecked(buf: &[u8]) -> MPECOLLECTION {
-  flatbuffers::root_unchecked::<MPECOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `MPE`.
+pub unsafe fn root_as_MPE_unchecked(buf: &[u8]) -> MPE {
+  flatbuffers::root_unchecked::<MPE>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed MPECOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed MPE and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `MPECOLLECTION`.
-pub unsafe fn size_prefixed_root_as_MPECOLLECTION_unchecked(buf: &[u8]) -> MPECOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<MPECOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `MPE`.
+pub unsafe fn size_prefixed_root_as_MPE_unchecked(buf: &[u8]) -> MPE {
+  flatbuffers::size_prefixed_root_unchecked::<MPE>(buf)
 }
-pub const MPECOLLECTION_IDENTIFIER: &str = "$MPE";
+pub const MPE_IDENTIFIER: &str = "$MPE";
 
 #[inline]
-pub fn MPECOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, MPECOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn MPECOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, MPECOLLECTION_IDENTIFIER, true)
+pub fn MPE_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, MPE_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_MPECOLLECTION_buffer<'a, 'b>(
+pub fn MPE_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, MPE_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_MPE_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<MPECOLLECTION<'a>>) {
-  fbb.finish(root, Some(MPECOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<MPE<'a>>) {
+  fbb.finish(root, Some(MPE_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_MPECOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<MPECOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(MPECOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_MPE_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<MPE<'a>>) {
+  fbb.finish_size_prefixed(root, Some(MPE_IDENTIFIER));
 }

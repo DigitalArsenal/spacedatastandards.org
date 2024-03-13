@@ -193,16 +193,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of IDM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -230,17 +220,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "PLDCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Payload Information Records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/PLDCOLLECTION"
+  "$ref" : "#/definitions/PLD"
 }

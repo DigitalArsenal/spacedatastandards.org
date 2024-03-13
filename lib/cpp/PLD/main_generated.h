@@ -18,9 +18,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct PLD;
 struct PLDBuilder;
 
-struct PLDCOLLECTION;
-struct PLDCOLLECTIONBuilder;
-
 /// Payload Information
 struct PLD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PLDBuilder Builder;
@@ -154,101 +151,48 @@ inline ::flatbuffers::Offset<PLD> CreatePLDDirect(
       INSTRUMENTS__);
 }
 
-/// Collection of Payload Information Records
-struct PLDCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PLDCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<PLD>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLD>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct PLDCOLLECTIONBuilder {
-  typedef PLDCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> RECORDS) {
-    fbb_.AddOffset(PLDCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit PLDCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PLDCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PLDCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PLDCOLLECTION> CreatePLDCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> RECORDS = 0) {
-  PLDCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
+inline const PLD *GetPLD(const void *buf) {
+  return ::flatbuffers::GetRoot<PLD>(buf);
 }
 
-inline ::flatbuffers::Offset<PLDCOLLECTION> CreatePLDCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<PLD>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PLD>>(*RECORDS) : 0;
-  return CreatePLDCOLLECTION(
-      _fbb,
-      RECORDS__);
+inline const PLD *GetSizePrefixedPLD(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<PLD>(buf);
 }
 
-inline const PLDCOLLECTION *GetPLDCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetRoot<PLDCOLLECTION>(buf);
-}
-
-inline const PLDCOLLECTION *GetSizePrefixedPLDCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<PLDCOLLECTION>(buf);
-}
-
-inline const char *PLDCOLLECTIONIdentifier() {
+inline const char *PLDIdentifier() {
   return "$PLD";
 }
 
-inline bool PLDCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool PLDBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, PLDCOLLECTIONIdentifier());
+      buf, PLDIdentifier());
 }
 
-inline bool SizePrefixedPLDCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedPLDBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, PLDCOLLECTIONIdentifier(), true);
+      buf, PLDIdentifier(), true);
 }
 
-inline bool VerifyPLDCOLLECTIONBuffer(
+inline bool VerifyPLDBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<PLDCOLLECTION>(PLDCOLLECTIONIdentifier());
+  return verifier.VerifyBuffer<PLD>(PLDIdentifier());
 }
 
-inline bool VerifySizePrefixedPLDCOLLECTIONBuffer(
+inline bool VerifySizePrefixedPLDBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<PLDCOLLECTION>(PLDCOLLECTIONIdentifier());
+  return verifier.VerifySizePrefixedBuffer<PLD>(PLDIdentifier());
 }
 
-inline void FinishPLDCOLLECTIONBuffer(
+inline void FinishPLDBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<PLDCOLLECTION> root) {
-  fbb.Finish(root, PLDCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<PLD> root) {
+  fbb.Finish(root, PLDIdentifier());
 }
 
-inline void FinishSizePrefixedPLDCOLLECTIONBuffer(
+inline void FinishSizePrefixedPLDBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<PLDCOLLECTION> root) {
-  fbb.FinishSizePrefixed(root, PLDCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<PLD> root) {
+  fbb.FinishSizePrefixed(root, PLDIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -55,38 +55,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "MPECOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of MPE Records",
-      "properties" : {
-        "CLASSIFICATION_TYPE" : {
-                "type" : "string",
-                "description" : "Default value = U"
-              },
-        "REF_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame",
-                "description" : "Name of the reference frame (TEME, EME2000, etc.)"
-              },
-        "REF_FRAME_EPOCH" : {
-                "type" : "number",
-                "description" : "Epoch of the Reference Frame. (UNIX TimeStamp)"
-              },
-        "TIME_SYSTEM" : {
-                "$ref" : "#/definitions/timeSystem",
-                "description" : "Time system used for the orbit state and covariance matrix. (UTC)"
-              },
-        "MEAN_ELEMENT_THEORY" : {
-                "$ref" : "#/definitions/meanElementTheory",
-                "description" : "Description of the Mean Element Theory. (SGP4,DSST,USM)"
-              },
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/MPE"},
-                "description" : "Array of MPE records"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/MPECOLLECTION"
+  "$ref" : "#/definitions/MPE"
 }

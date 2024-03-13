@@ -26,6 +26,10 @@ static getSizePrefixedRootAsEPM(bb:flatbuffers.ByteBuffer, obj?:EPM):EPM {
   return (obj || new EPM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$EPM');
+}
+
 /**
  * Distinguished Name of the entity
  */
@@ -278,6 +282,14 @@ static startMultiformatAddressVector(builder:flatbuffers.Builder, numElems:numbe
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishEPMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EPM');
+}
+
+static finishSizePrefixedEPMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EPM', true);
 }
 
 static createEPM(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset, LEGAL_NAMEOffset:flatbuffers.Offset, FAMILY_NAMEOffset:flatbuffers.Offset, GIVEN_NAMEOffset:flatbuffers.Offset, ADDITIONAL_NAMEOffset:flatbuffers.Offset, HONORIFIC_PREFIXOffset:flatbuffers.Offset, HONORIFIC_SUFFIXOffset:flatbuffers.Offset, JOB_TITLEOffset:flatbuffers.Offset, OCCUPATIONOffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, EMAILOffset:flatbuffers.Offset, TELEPHONEOffset:flatbuffers.Offset, KEYSOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset):flatbuffers.Offset {

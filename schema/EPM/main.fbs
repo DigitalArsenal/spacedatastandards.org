@@ -71,11 +71,6 @@ table EPM {
   MULTIFORMAT_ADDRESS: [string];
 }
 
-/// Collection of Entity Profile Messages
-table EPMCOLLECTION {
-  /// Records of Entity Profile Messages
-  RECORDS: [EPM];
-}
+root_type EPM;
 
-root_type EPMCOLLECTION;
 file_identifier "$EPM";

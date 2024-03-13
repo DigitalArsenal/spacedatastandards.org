@@ -112,16 +112,6 @@
       },
       "additionalProperties" : false
     },
-    "PNMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Publish Notification Messages\nThis table groups multiple PNM records for batch processing and management.",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PNM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "CDMObject" : {
       "type" : "object",
       "properties" : {
@@ -602,17 +592,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "CDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CDM"},
-                "description" : "A vector of CDM records"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CDMCOLLECTION"
+  "$ref" : "#/definitions/CDM"
 }

@@ -31,16 +31,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "BOVCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/BOV"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/BOVCOLLECTION"
+  "$ref" : "#/definitions/BOV"
 }

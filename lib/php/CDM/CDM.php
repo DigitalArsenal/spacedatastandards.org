@@ -641,4 +641,9 @@ class CDM extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishCDMBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$CDM");
+    }
 }

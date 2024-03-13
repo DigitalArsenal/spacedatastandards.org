@@ -25,6 +25,7 @@ public final class EME extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static EME getRootAsEME(ByteBuffer _bb) { return getRootAsEME(_bb, new EME()); }
   public static EME getRootAsEME(ByteBuffer _bb, EME obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean EMEBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$EME"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public EME __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -135,6 +136,8 @@ public final class EME extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishEMEBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$EME"); }
+  public static void finishSizePrefixedEMEBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$EME"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }

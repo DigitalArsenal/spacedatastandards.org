@@ -197,16 +197,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of IDM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "Geometry" : {
       "type" : "object",
       "description" : "Geometry table with information about geometric properties",
@@ -324,17 +314,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "SITCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of SIT records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SIT"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/SITCOLLECTION"
+  "$ref" : "#/definitions/SIT"
 }

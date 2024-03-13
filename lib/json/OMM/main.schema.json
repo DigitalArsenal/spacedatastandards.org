@@ -267,17 +267,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "OMMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/OMM"},
-                "description" : "Array of OMM records"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/OMMCOLLECTION"
+  "$ref" : "#/definitions/OMM"
 }

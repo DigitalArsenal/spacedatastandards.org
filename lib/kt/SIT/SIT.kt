@@ -346,6 +346,7 @@ class SIT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun SITBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SIT")
         fun createSIT(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, ABBREVIATIONOffset: Int, SITE_TYPE: Byte, CATCODEOffset: Int, NETWORKOffset: Int, LATITUDE: Float, LONGITUDE: Float, ALTITUDE: Float, GEOMETRYOffset: Int, CENTER_POINT_GEOMETRYOffset: Int, CLASSIFICATIONOffset: Int, CTR_IDOffset: Int, CREATED_BYOffset: Int, DESCRIPTIONOffset: Int, MODEL_URLOffset: Int, SOURCEOffset: Int, TASKABLE: Boolean, OPERATIONAL_STATUSOffset: Int, ESTABLISHMENT_DATEOffset: Int, CONTACT_INFOOffset: Int, ENVIRONMENTAL_IMPACTOffset: Int, ACCESSIBILITY_INFRAOffset: Int, INTEGRATED_DEVICESOffset: Int) : Int {
             builder.startTable(24)
             addINTEGRATED_DEVICES(builder, INTEGRATED_DEVICESOffset)
@@ -419,5 +420,7 @@ class SIT : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishSITBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SIT")
+        fun finishSizePrefixedSITBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SIT")
     }
 }

@@ -61,8 +61,6 @@ enum meanElementTheory:
 
 class MPE
 
-class MPECOLLECTION
-
 /// Minimum Propagatable Element Set
 class MPE : flatbuffers_handle
     /// Unique ID as a String
@@ -129,62 +127,4 @@ struct MPEBuilder:
         return this
     def end():
         return b_.EndObject()
-
-/// Collection of MPE Records
-class MPECOLLECTION : flatbuffers_handle
-    /// Default value = U
-    def CLASSIFICATION_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
-    /// Name of the reference frame (TEME, EME2000, etc.)
-    def REF_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 6, 9))
-    /// Epoch of the Reference Frame. (UNIX TimeStamp)
-    def REF_FRAME_EPOCH() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
-    /// Time system used for the orbit state and covariance matrix. (UTC)
-    def TIME_SYSTEM() -> timeSystem:
-        return timeSystem(buf_.flatbuffers_field_int8(pos_, 10, 11))
-    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
-    def MEAN_ELEMENT_THEORY() -> meanElementTheory:
-        return meanElementTheory(buf_.flatbuffers_field_int8(pos_, 12, 0))
-    /// Array of MPE records
-    def RECORDS(i:int) -> MPE:
-        return MPE { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 14) + i * 4) }
-    def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 14)
-
-def GetRootAsMPECOLLECTION(buf:string): return MPECOLLECTION { buf, buf.flatbuffers_indirect(0) }
-
-struct MPECOLLECTIONBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(6)
-        return this
-    def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, CLASSIFICATION_TYPE)
-        return this
-    def add_REF_FRAME(REF_FRAME:referenceFrame):
-        b_.PrependInt8Slot(1, REF_FRAME, 9)
-        return this
-    def add_REF_FRAME_EPOCH(REF_FRAME_EPOCH:float):
-        b_.PrependFloat64Slot(2, REF_FRAME_EPOCH, 0.0)
-        return this
-    def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
-        b_.PrependInt8Slot(3, TIME_SYSTEM, 11)
-        return this
-    def add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY:meanElementTheory):
-        b_.PrependInt8Slot(4, MEAN_ELEMENT_THEORY, 0)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(5, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def MPECOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def MPECOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
 

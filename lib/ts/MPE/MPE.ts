@@ -25,6 +25,10 @@ static getSizePrefixedRootAsMPE(bb:flatbuffers.ByteBuffer, obj?:MPE):MPE {
   return (obj || new MPE()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$MPE');
+}
+
 /**
  * Unique ID as a String
  */
@@ -142,6 +146,14 @@ static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
 static endMPE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishMPEBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$MPE');
+}
+
+static finishSizePrefixedMPEBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$MPE', true);
 }
 
 static createMPE(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, EPOCH:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, BSTAR:number):flatbuffers.Offset {

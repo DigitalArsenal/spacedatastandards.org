@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct OMM;
 struct OMMBuilder;
 
-struct OMMCOLLECTION;
-struct OMMCOLLECTIONBuilder;
-
 enum referenceFrame : int8_t {
   /// Earth Mean Equator and Equinox of J2000
   referenceFrame_EME2000 = 0,
@@ -1120,101 +1117,48 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
       USER_DEFINED_MICROSECONDS);
 }
 
-struct OMMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OMMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  /// Array of OMM records
-  const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OMMCOLLECTIONBuilder {
-  typedef OMMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> RECORDS) {
-    fbb_.AddOffset(OMMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit OMMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<OMMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<OMMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<OMMCOLLECTION> CreateOMMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> RECORDS = 0) {
-  OMMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
+inline const OMM *GetOMM(const void *buf) {
+  return ::flatbuffers::GetRoot<OMM>(buf);
 }
 
-inline ::flatbuffers::Offset<OMMCOLLECTION> CreateOMMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<OMM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<OMM>>(*RECORDS) : 0;
-  return CreateOMMCOLLECTION(
-      _fbb,
-      RECORDS__);
+inline const OMM *GetSizePrefixedOMM(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<OMM>(buf);
 }
 
-inline const OMMCOLLECTION *GetOMMCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetRoot<OMMCOLLECTION>(buf);
-}
-
-inline const OMMCOLLECTION *GetSizePrefixedOMMCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<OMMCOLLECTION>(buf);
-}
-
-inline const char *OMMCOLLECTIONIdentifier() {
+inline const char *OMMIdentifier() {
   return "$OMM";
 }
 
-inline bool OMMCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool OMMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, OMMCOLLECTIONIdentifier());
+      buf, OMMIdentifier());
 }
 
-inline bool SizePrefixedOMMCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedOMMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, OMMCOLLECTIONIdentifier(), true);
+      buf, OMMIdentifier(), true);
 }
 
-inline bool VerifyOMMCOLLECTIONBuffer(
+inline bool VerifyOMMBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<OMMCOLLECTION>(OMMCOLLECTIONIdentifier());
+  return verifier.VerifyBuffer<OMM>(OMMIdentifier());
 }
 
-inline bool VerifySizePrefixedOMMCOLLECTIONBuffer(
+inline bool VerifySizePrefixedOMMBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<OMMCOLLECTION>(OMMCOLLECTIONIdentifier());
+  return verifier.VerifySizePrefixedBuffer<OMM>(OMMIdentifier());
 }
 
-inline void FinishOMMCOLLECTIONBuffer(
+inline void FinishOMMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<OMMCOLLECTION> root) {
-  fbb.Finish(root, OMMCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<OMM> root) {
+  fbb.Finish(root, OMMIdentifier());
 }
 
-inline void FinishSizePrefixedOMMCOLLECTIONBuffer(
+inline void FinishSizePrefixedOMMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<OMMCOLLECTION> root) {
-  fbb.FinishSizePrefixed(root, OMMCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<OMM> root) {
+  fbb.FinishSizePrefixed(root, OMMIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

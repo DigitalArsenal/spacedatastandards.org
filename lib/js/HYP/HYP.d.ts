@@ -9,6 +9,7 @@ export declare class HYP implements flatbuffers.IUnpackableObject<HYPT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): HYP;
     static getRootAsHYP(bb: flatbuffers.ByteBuffer, obj?: HYP): HYP;
     static getSizePrefixedRootAsHYP(bb: flatbuffers.ByteBuffer, obj?: HYP): HYP;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Space Objects Involved
      */
@@ -88,6 +89,8 @@ export declare class HYP implements flatbuffers.IUnpackableObject<HYPT> {
     static addEventStartTime(builder: flatbuffers.Builder, EVENT_START_TIMEOffset: flatbuffers.Offset): void;
     static addEventEndTime(builder: flatbuffers.Builder, EVENT_END_TIMEOffset: flatbuffers.Offset): void;
     static endHYP(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishHYPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedHYPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createHYP(builder: flatbuffers.Builder, CAT_IDSOffset: flatbuffers.Offset, SIT_IDSOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, CATEGORYOffset: flatbuffers.Offset, ROW_INDICATORSOffset: flatbuffers.Offset, COL_INDICATORSOffset: flatbuffers.Offset, MATRIXOffset: flatbuffers.Offset, SCOREOffset: flatbuffers.Offset, ANALYSIS_METHODOffset: flatbuffers.Offset, EVENT_START_TIMEOffset: flatbuffers.Offset, EVENT_END_TIMEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): HYPT;
     unpackTo(_o: HYPT): void;

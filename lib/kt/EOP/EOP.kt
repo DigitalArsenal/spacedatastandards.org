@@ -123,6 +123,7 @@ class EOP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun EOPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOP")
         fun createEOP(builder: FlatBufferBuilder, DATEOffset: Int, MJD: UInt, X_POLE_WANDER_RADIANS: Float, Y_POLE_WANDER_RADIANS: Float, X_CELESTIAL_POLE_OFFSET_RADIANS: Float, Y_CELESTIAL_POLE_OFFSET_RADIANS: Float, UT1_MINUS_UTC_SECONDS: Float, TAI_MINUS_UTC_SECONDS: UShort, LENGTH_OF_DAY_CORRECTION_SECONDS: Float, DATA_TYPE: Byte) : Int {
             builder.startTable(10)
             addLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS)
@@ -152,5 +153,7 @@ class EOP : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishEOPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EOP")
+        fun finishSizePrefixedEOPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EOP")
     }
 }

@@ -347,16 +347,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "EOOCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EOO"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EOOCOLLECTION"
+  "$ref" : "#/definitions/EOO"
 }

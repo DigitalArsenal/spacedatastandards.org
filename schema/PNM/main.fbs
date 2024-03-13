@@ -101,11 +101,5 @@ table PNM {
   SOL_DIGITAL_SIGNATURE: string;
 }
 
-/// Collection of Publish Notification Messages
-/// This table groups multiple PNM records for batch processing and management.
-table PNMCOLLECTION {
-  RECORDS: [PNM];
-}
-
-root_type PNMCOLLECTION;
+root_type PNM;
 file_identifier "$PNM";

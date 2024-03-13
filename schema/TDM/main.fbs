@@ -221,9 +221,6 @@ table TDM {
 }
 
 /// Collection of TDM records
-table TDMCOLLECTION {
-  RECORDS: [TDM];
-}
 
-root_type TDMCOLLECTION;
+root_type TDM;
 file_identifier "$TDM";

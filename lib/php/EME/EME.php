@@ -295,4 +295,9 @@ class EME extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishEMEBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$EME");
+    }
 }

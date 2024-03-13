@@ -67,8 +67,6 @@ class ephemerisDataBlock
 
 class OEM
 
-class OEMCOLLECTION
-
 /// A single ephemeris data line
 class ephemerisDataLine : flatbuffers_handle
     /// Epoch of state vector (ISO 8601)
@@ -457,34 +455,6 @@ struct OEMBuilder:
 def OEMStartEPHEMERIS_DATA_BLOCKVector(b_:flatbuffers_builder, n_:int):
     b_.StartVector(4, n_, 4)
 def OEMCreateEPHEMERIS_DATA_BLOCKVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-/// Collection of OEM messages
-class OEMCOLLECTION : flatbuffers_handle
-    /// Array of OEM records
-    def RECORDS(i:int) -> OEM:
-        return OEM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
-
-def GetRootAsOEMCOLLECTION(buf:string): return OEMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
-
-struct OEMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def OEMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def OEMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

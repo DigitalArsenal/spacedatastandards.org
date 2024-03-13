@@ -31,10 +31,5 @@ table EME {
   ENCRYPTION_ALGORITHM_PARAMETERS: string;
 }
 
-/// Collection of Encrypted Message Envelopes
-table EMECOLLECTION {
-  RECORDS: [EME];
-}
-
-root_type EMECOLLECTION;
+root_type EME;
 file_identifier "$EME";

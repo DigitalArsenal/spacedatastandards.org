@@ -488,4 +488,9 @@ class HYP extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishHYPBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$HYP");
+    }
 }

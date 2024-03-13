@@ -1945,217 +1945,86 @@ impl IDMT {
     })
   }
 }
-pub enum IDMCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of IDM records
-pub struct IDMCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for IDMCOLLECTION<'a> {
-  type Inner = IDMCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> IDMCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    IDMCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args IDMCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<IDMCOLLECTION<'bldr>> {
-    let mut builder = IDMCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> IDMCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    IDMCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<IDM<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<IDM>>>>(IDMCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for IDMCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<IDM>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct IDMCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<IDM<'a>>>>>,
-}
-impl<'a> Default for IDMCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    IDMCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct IDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> IDMCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<IDM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IDMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> IDMCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    IDMCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<IDMCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for IDMCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("IDMCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct IDMCOLLECTIONT {
-  pub RECORDS: Option<Vec<IDMT>>,
-}
-impl Default for IDMCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl IDMCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<IDMCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    IDMCOLLECTION::create(_fbb, &IDMCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `IDMCOLLECTION`
+/// Verifies that a buffer of bytes contains a `IDM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_IDMCOLLECTION_unchecked`.
-pub fn root_as_IDMCOLLECTION(buf: &[u8]) -> Result<IDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<IDMCOLLECTION>(buf)
+/// `root_as_IDM_unchecked`.
+pub fn root_as_IDM(buf: &[u8]) -> Result<IDM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<IDM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `IDMCOLLECTION` and returns it.
+/// `IDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_IDMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_IDMCOLLECTION(buf: &[u8]) -> Result<IDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<IDMCOLLECTION>(buf)
+/// `size_prefixed_root_as_IDM_unchecked`.
+pub fn size_prefixed_root_as_IDM(buf: &[u8]) -> Result<IDM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<IDM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `IDMCOLLECTION` and returns it.
+/// contains a `IDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_IDMCOLLECTION_unchecked`.
-pub fn root_as_IDMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_IDM_unchecked`.
+pub fn root_as_IDM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<IDMCOLLECTION<'b>>(opts, buf)
+) -> Result<IDM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<IDM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `IDMCOLLECTION` and returns
+/// bytes contains a size prefixed `IDM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_IDMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_IDMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_IDM_unchecked`.
+pub fn size_prefixed_root_as_IDM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<IDMCOLLECTION<'b>>(opts, buf)
+) -> Result<IDM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<IDM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a IDMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a IDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `IDMCOLLECTION`.
-pub unsafe fn root_as_IDMCOLLECTION_unchecked(buf: &[u8]) -> IDMCOLLECTION {
-  flatbuffers::root_unchecked::<IDMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `IDM`.
+pub unsafe fn root_as_IDM_unchecked(buf: &[u8]) -> IDM {
+  flatbuffers::root_unchecked::<IDM>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed IDMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed IDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `IDMCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_IDMCOLLECTION_unchecked(buf: &[u8]) -> IDMCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<IDMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `IDM`.
+pub unsafe fn size_prefixed_root_as_IDM_unchecked(buf: &[u8]) -> IDM {
+  flatbuffers::size_prefixed_root_unchecked::<IDM>(buf)
 }
-pub const IDMCOLLECTION_IDENTIFIER: &str = "$IDM";
+pub const IDM_IDENTIFIER: &str = "$IDM";
 
 #[inline]
-pub fn IDMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, IDMCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn IDMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, IDMCOLLECTION_IDENTIFIER, true)
+pub fn IDM_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_IDMCOLLECTION_buffer<'a, 'b>(
+pub fn IDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_IDM_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<IDMCOLLECTION<'a>>) {
-  fbb.finish(root, Some(IDMCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<IDM<'a>>) {
+  fbb.finish(root, Some(IDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_IDMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<IDMCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(IDMCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_IDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<IDM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(IDM_IDENTIFIER));
 }

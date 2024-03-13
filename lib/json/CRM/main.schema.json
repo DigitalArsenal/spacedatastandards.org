@@ -319,17 +319,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "CRMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of CRM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CRM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CRMCOLLECTION"
+  "$ref" : "#/definitions/CRM"
 }

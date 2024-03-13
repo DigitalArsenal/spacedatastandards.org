@@ -24,10 +24,6 @@ table CSM {
   DILUTION: double;   
 }
 
-table CSMCOLLECTION {
-  /// A vector of CSM records
-  RECORDS:[CSM];
-}
 
-root_type CSMCOLLECTION;
+root_type CSM;
 file_identifier "$CSM";

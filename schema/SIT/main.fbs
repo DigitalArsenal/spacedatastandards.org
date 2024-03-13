@@ -83,9 +83,6 @@ table SIT {
 }
 
 /// Collection of SIT records
-table SITCOLLECTION {
-  RECORDS: [SIT];
-}
 
-root_type SITCOLLECTION;
+root_type SIT;
 file_identifier "$SIT";

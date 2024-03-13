@@ -51,17 +51,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "EOPCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of EOP records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EOP"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EOPCOLLECTION"
+  "$ref" : "#/definitions/EOP"
 }

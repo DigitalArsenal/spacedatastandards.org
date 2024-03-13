@@ -3,8 +3,6 @@ import flatbuffers
 
 class CTR
 
-class CTRCOLLECTION
-
 /// Country Identity Message
 class CTR : flatbuffers_handle
     /// ISO 3166 Numeric code
@@ -65,30 +63,4 @@ struct CTRBuilder:
         return this
     def end():
         return b_.EndObject()
-
-class CTRCOLLECTION : flatbuffers_handle
-    def RECORDS(i:int) -> CTR:
-        return CTR { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
-
-def GetRootAsCTRCOLLECTION(buf:string): return CTRCOLLECTION { buf, buf.flatbuffers_indirect(0) }
-
-struct CTRCOLLECTIONBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def CTRCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def CTRCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
 

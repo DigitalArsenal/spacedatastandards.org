@@ -8,6 +8,7 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
     __init(i: number, bb: flatbuffers.ByteBuffer): MPE;
     static getRootAsMPE(bb: flatbuffers.ByteBuffer, obj?: MPE): MPE;
     static getSizePrefixedRootAsMPE(bb: flatbuffers.ByteBuffer, obj?: MPE): MPE;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Unique ID as a String
      */
@@ -56,6 +57,8 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
     static addMeanAnomaly(builder: flatbuffers.Builder, MEAN_ANOMALY: number): void;
     static addBstar(builder: flatbuffers.Builder, BSTAR: number): void;
     static endMPE(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishMPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedMPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createMPE(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset, EPOCH: number, MEAN_MOTION: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, MEAN_ANOMALY: number, BSTAR: number): flatbuffers.Offset;
     unpack(): MPET;
     unpackTo(_o: MPET): void;

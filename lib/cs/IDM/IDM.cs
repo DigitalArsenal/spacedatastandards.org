@@ -14,6 +14,7 @@ public struct IDM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static IDM GetRootAsIDM(ByteBuffer _bb) { return GetRootAsIDM(_bb, new IDM()); }
   public static IDM GetRootAsIDM(ByteBuffer _bb, IDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool IDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$IDM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public IDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -209,6 +210,8 @@ public struct IDM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<IDM>(o);
   }
+  public static void FinishIDMBuffer(FlatBufferBuilder builder, Offset<IDM> offset) { builder.Finish(offset.Value, "$IDM"); }
+  public static void FinishSizePrefixedIDMBuffer(FlatBufferBuilder builder, Offset<IDM> offset) { builder.FinishSizePrefixed(offset.Value, "$IDM"); }
   public IDMT UnPack() {
     var _o = new IDMT();
     this.UnPackTo(_o);
@@ -359,6 +362,14 @@ public class IDMT
     this.LEFT_GEO_BELT_LIMIT = 0.0;
     this.MAGNITUDE_LIMIT = 0.0;
     this.TASKABLE = false;
+  }
+  public static IDMT DeserializeFromBinary(byte[] fbBuffer) {
+    return IDM.GetRootAsIDM(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    IDM.FinishIDMBuffer(fbb, IDM.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

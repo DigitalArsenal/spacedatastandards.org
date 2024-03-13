@@ -9,6 +9,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): EPM;
     static getRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
     static getSizePrefixedRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Distinguished Name of the entity
      */
@@ -103,6 +104,8 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static createMultiformatAddressVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMultiformatAddressVector(builder: flatbuffers.Builder, numElems: number): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createEPM(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset, LEGAL_NAMEOffset: flatbuffers.Offset, FAMILY_NAMEOffset: flatbuffers.Offset, GIVEN_NAMEOffset: flatbuffers.Offset, ADDITIONAL_NAMEOffset: flatbuffers.Offset, HONORIFIC_PREFIXOffset: flatbuffers.Offset, HONORIFIC_SUFFIXOffset: flatbuffers.Offset, JOB_TITLEOffset: flatbuffers.Offset, OCCUPATIONOffset: flatbuffers.Offset, ALTERNATE_NAMESOffset: flatbuffers.Offset, EMAILOffset: flatbuffers.Offset, TELEPHONEOffset: flatbuffers.Offset, KEYSOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EPMT;
     unpackTo(_o: EPMT): void;

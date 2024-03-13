@@ -14,6 +14,7 @@ public struct BOV : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static BOV GetRootAsBOV(ByteBuffer _bb) { return GetRootAsBOV(_bb, new BOV()); }
   public static BOV GetRootAsBOV(ByteBuffer _bb, BOV obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool BOVBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$BOV"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public BOV __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -66,6 +67,8 @@ public struct BOV : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<BOV>(o);
   }
+  public static void FinishBOVBuffer(FlatBufferBuilder builder, Offset<BOV> offset) { builder.Finish(offset.Value, "$BOV"); }
+  public static void FinishSizePrefixedBOVBuffer(FlatBufferBuilder builder, Offset<BOV> offset) { builder.FinishSizePrefixed(offset.Value, "$BOV"); }
   public BOVT UnPack() {
     var _o = new BOVT();
     this.UnPackTo(_o);
@@ -117,6 +120,14 @@ public class BOVT
     this.G_DOT = 0.0;
     this.EPOCH_TIME = null;
     this.TIME_FROM_LAUNCH = 0.0;
+  }
+  public static BOVT DeserializeFromBinary(byte[] fbBuffer) {
+    return BOV.GetRootAsBOV(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    BOV.FinishBOVBuffer(fbb, BOV.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

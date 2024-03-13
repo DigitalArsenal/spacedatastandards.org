@@ -13,6 +13,7 @@ export declare class LDM implements flatbuffers.IUnpackableObject<LDMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): LDM;
     static getRootAsLDM(bb: flatbuffers.ByteBuffer, obj?: LDM): LDM;
     static getSizePrefixedRootAsLDM(bb: flatbuffers.ByteBuffer, obj?: LDM): LDM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Launch Site Information
      */
@@ -202,6 +203,8 @@ export declare class LDM implements flatbuffers.IUnpackableObject<LDMT> {
     static createBurnOutVectorsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startBurnOutVectorsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endLDM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishLDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedLDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     unpack(): LDMT;
     unpackTo(_o: LDMT): void;
 }

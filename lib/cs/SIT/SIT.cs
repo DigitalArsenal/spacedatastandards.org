@@ -14,6 +14,7 @@ public struct SIT : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static SIT GetRootAsSIT(ByteBuffer _bb) { return GetRootAsSIT(_bb, new SIT()); }
   public static SIT GetRootAsSIT(ByteBuffer _bb, SIT obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool SITBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$SIT"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SIT __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -262,6 +263,8 @@ public struct SIT : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<SIT>(o);
   }
+  public static void FinishSITBuffer(FlatBufferBuilder builder, Offset<SIT> offset) { builder.Finish(offset.Value, "$SIT"); }
+  public static void FinishSizePrefixedSITBuffer(FlatBufferBuilder builder, Offset<SIT> offset) { builder.FinishSizePrefixed(offset.Value, "$SIT"); }
   public SITT UnPack() {
     var _o = new SITT();
     this.UnPackTo(_o);
@@ -406,6 +409,14 @@ public class SITT
     this.ENVIRONMENTAL_IMPACT = null;
     this.ACCESSIBILITY_INFRA = null;
     this.INTEGRATED_DEVICES = null;
+  }
+  public static SITT DeserializeFromBinary(byte[] fbBuffer) {
+    return SIT.GetRootAsSIT(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    SIT.FinishSITBuffer(fbb, SIT.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

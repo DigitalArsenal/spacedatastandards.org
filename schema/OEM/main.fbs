@@ -192,10 +192,6 @@ table OEM {
 }
 
 /// Collection of OEM messages
-table OEMCOLLECTION {
-  /// Array of OEM records
-  RECORDS:[OEM];
-}
 
-root_type OEMCOLLECTION;
+root_type OEM;
 file_identifier "$OEM";

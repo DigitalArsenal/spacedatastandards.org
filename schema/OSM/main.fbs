@@ -14,9 +14,6 @@ table OSM {
   PASS_DURATION: int;
 }
 
-table OSMCOLLECTION {
-  RECORDS: [OSM];
-}
 
-root_type OSMCOLLECTION;
+root_type OSM;
 file_identifier "$OSM";

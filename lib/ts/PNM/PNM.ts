@@ -25,6 +25,10 @@ static getSizePrefixedRootAsPNM(bb:flatbuffers.ByteBuffer, obj?:PNM):PNM {
   return (obj || new PNM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$PNM');
+}
+
 /**
  * Multiformat Address
  * https://multiformats.io/multiaddr/
@@ -339,6 +343,14 @@ static addSolDigitalSignature(builder:flatbuffers.Builder, SOL_DIGITAL_SIGNATURE
 static endPNM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishPNMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PNM');
+}
+
+static finishSizePrefixedPNMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PNM', true);
 }
 
 static createPNM(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, FIDOffset:flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset:flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {

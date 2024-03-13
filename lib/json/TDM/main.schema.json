@@ -239,17 +239,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "TDMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of TDM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/TDM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/TDMCOLLECTION"
+  "$ref" : "#/definitions/TDM"
 }

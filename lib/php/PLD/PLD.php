@@ -232,4 +232,9 @@ class PLD extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishPLDBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$PLD");
+    }
 }

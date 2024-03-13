@@ -323,6 +323,7 @@ class IDM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun IDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$IDM")
         fun createIDM(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, DATA_MODE: Byte, UPLINKOffset: Int, DOWNLINKOffset: Int, BEACONOffset: Int, BANDOffset: Int, POLARIZATION_TYPE: Byte, SIMPLE_POLARIZATION: Byte, STOKES_PARAMETERSOffset: Int, POWER_REQUIRED: Double, POWER_TYPEOffset: Int, TRANSMIT: Boolean, RECEIVE: Boolean, SENSOR_TYPE: Byte, SOURCEOffset: Int, LAST_OB_TIMEOffset: Int, LOWER_LEFT_ELEVATION_LIMIT: Double, UPPER_LEFT_AZIMUTH_LIMIT: Double, LOWER_RIGHT_ELEVATION_LIMIT: Double, LOWER_LEFT_AZIMUTH_LIMIT: Double, UPPER_RIGHT_ELEVATION_LIMIT: Double, UPPER_RIGHT_AZIMUTH_LIMIT: Double, LOWER_RIGHT_AZIMUTH_LIMIT: Double, UPPER_LEFT_ELEVATION_LIMIT: Double, RIGHT_GEO_BELT_LIMIT: Double, LEFT_GEO_BELT_LIMIT: Double, MAGNITUDE_LIMIT: Double, TASKABLE: Boolean) : Int {
             builder.startTable(29)
             addMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT)
@@ -398,5 +399,7 @@ class IDM : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishIDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$IDM")
+        fun finishSizePrefixedIDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$IDM")
     }
 }

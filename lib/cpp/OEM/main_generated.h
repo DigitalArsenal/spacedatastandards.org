@@ -25,9 +25,6 @@ struct ephemerisDataBlockBuilder;
 struct OEM;
 struct OEMBuilder;
 
-struct OEMCOLLECTION;
-struct OEMCOLLECTIONBuilder;
-
 enum referenceFrame : int8_t {
   /// Earth Mean Equator and Equinox of J2000
   referenceFrame_EME2000 = 0,
@@ -1070,102 +1067,48 @@ inline ::flatbuffers::Offset<OEM> CreateOEMDirect(
       EPHEMERIS_DATA_BLOCK__);
 }
 
-/// Collection of OEM messages
-struct OEMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OEMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  /// Array of OEM records
-  const ::flatbuffers::Vector<::flatbuffers::Offset<OEM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OEM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OEMCOLLECTIONBuilder {
-  typedef OEMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OEM>>> RECORDS) {
-    fbb_.AddOffset(OEMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit OEMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<OEMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<OEMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<OEMCOLLECTION> CreateOEMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OEM>>> RECORDS = 0) {
-  OEMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
+inline const OEM *GetOEM(const void *buf) {
+  return ::flatbuffers::GetRoot<OEM>(buf);
 }
 
-inline ::flatbuffers::Offset<OEMCOLLECTION> CreateOEMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<OEM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<OEM>>(*RECORDS) : 0;
-  return CreateOEMCOLLECTION(
-      _fbb,
-      RECORDS__);
+inline const OEM *GetSizePrefixedOEM(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<OEM>(buf);
 }
 
-inline const OEMCOLLECTION *GetOEMCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetRoot<OEMCOLLECTION>(buf);
-}
-
-inline const OEMCOLLECTION *GetSizePrefixedOEMCOLLECTION(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<OEMCOLLECTION>(buf);
-}
-
-inline const char *OEMCOLLECTIONIdentifier() {
+inline const char *OEMIdentifier() {
   return "$OEM";
 }
 
-inline bool OEMCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool OEMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, OEMCOLLECTIONIdentifier());
+      buf, OEMIdentifier());
 }
 
-inline bool SizePrefixedOEMCOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedOEMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, OEMCOLLECTIONIdentifier(), true);
+      buf, OEMIdentifier(), true);
 }
 
-inline bool VerifyOEMCOLLECTIONBuffer(
+inline bool VerifyOEMBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<OEMCOLLECTION>(OEMCOLLECTIONIdentifier());
+  return verifier.VerifyBuffer<OEM>(OEMIdentifier());
 }
 
-inline bool VerifySizePrefixedOEMCOLLECTIONBuffer(
+inline bool VerifySizePrefixedOEMBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<OEMCOLLECTION>(OEMCOLLECTIONIdentifier());
+  return verifier.VerifySizePrefixedBuffer<OEM>(OEMIdentifier());
 }
 
-inline void FinishOEMCOLLECTIONBuffer(
+inline void FinishOEMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<OEMCOLLECTION> root) {
-  fbb.Finish(root, OEMCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<OEM> root) {
+  fbb.Finish(root, OEMIdentifier());
 }
 
-inline void FinishSizePrefixedOEMCOLLECTIONBuffer(
+inline void FinishSizePrefixedOEMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<OEMCOLLECTION> root) {
-  fbb.FinishSizePrefixed(root, OEMCOLLECTIONIdentifier());
+    ::flatbuffers::Offset<OEM> root) {
+  fbb.FinishSizePrefixed(root, OEMIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

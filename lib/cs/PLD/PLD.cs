@@ -14,6 +14,7 @@ public struct PLD : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static PLD GetRootAsPLD(ByteBuffer _bb) { return GetRootAsPLD(_bb, new PLD()); }
   public static PLD GetRootAsPLD(ByteBuffer _bb, PLD obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool PLDBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PLD"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PLD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -86,6 +87,8 @@ public struct PLD : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<PLD>(o);
   }
+  public static void FinishPLDBuffer(FlatBufferBuilder builder, Offset<PLD> offset) { builder.Finish(offset.Value, "$PLD"); }
+  public static void FinishSizePrefixedPLDBuffer(FlatBufferBuilder builder, Offset<PLD> offset) { builder.FinishSizePrefixed(offset.Value, "$PLD"); }
   public PLDT UnPack() {
     var _o = new PLDT();
     this.UnPackTo(_o);
@@ -143,6 +146,14 @@ public class PLDT
     this.SOLAR_ARRAY_DIMENSIONS = null;
     this.NOMINAL_OPERATIONAL_LIFETIME = null;
     this.INSTRUMENTS = null;
+  }
+  public static PLDT DeserializeFromBinary(byte[] fbBuffer) {
+    return PLD.GetRootAsPLD(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    PLD.FinishPLDBuffer(fbb, PLD.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

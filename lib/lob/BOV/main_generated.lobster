@@ -3,8 +3,6 @@ import flatbuffers
 
 class BOV
 
-class BOVCOLLECTION
-
 /// Burn Out Vector Message
 class BOV : flatbuffers_handle
     def E_COORDINATE() -> float:
@@ -57,30 +55,4 @@ struct BOVBuilder:
         return this
     def end():
         return b_.EndObject()
-
-class BOVCOLLECTION : flatbuffers_handle
-    def RECORDS(i:int) -> BOV:
-        return BOV { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
-
-def GetRootAsBOVCOLLECTION(buf:string): return BOVCOLLECTION { buf, buf.flatbuffers_indirect(0) }
-
-struct BOVCOLLECTIONBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def BOVCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def BOVCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
 

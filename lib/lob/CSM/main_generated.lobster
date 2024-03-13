@@ -3,8 +3,6 @@ import flatbuffers
 
 class CSM
 
-class CSMCOLLECTION
-
 /// Conjunction Summary Message
 class CSM : flatbuffers_handle
     /// NORAD Catalog Number for the first object
@@ -83,31 +81,4 @@ struct CSMBuilder:
         return this
     def end():
         return b_.EndObject()
-
-class CSMCOLLECTION : flatbuffers_handle
-    /// A vector of CSM records
-    def RECORDS(i:int) -> CSM:
-        return CSM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
-
-def GetRootAsCSMCOLLECTION(buf:string): return CSMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
-
-struct CSMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def CSMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def CSMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
 

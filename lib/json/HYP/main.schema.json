@@ -71,17 +71,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "HYPCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of HYP records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/HYP"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/HYPCOLLECTION"
+  "$ref" : "#/definitions/HYP"
 }

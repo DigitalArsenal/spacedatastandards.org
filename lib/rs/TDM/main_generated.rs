@@ -1804,217 +1804,86 @@ impl TDMT {
     })
   }
 }
-pub enum TDMCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of TDM records
-pub struct TDMCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for TDMCOLLECTION<'a> {
-  type Inner = TDMCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> TDMCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    TDMCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args TDMCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<TDMCOLLECTION<'bldr>> {
-    let mut builder = TDMCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> TDMCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    TDMCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<TDM<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<TDM>>>>(TDMCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for TDMCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<TDM>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct TDMCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<TDM<'a>>>>>,
-}
-impl<'a> Default for TDMCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    TDMCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct TDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> TDMCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<TDM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TDMCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    TDMCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<TDMCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for TDMCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("TDMCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct TDMCOLLECTIONT {
-  pub RECORDS: Option<Vec<TDMT>>,
-}
-impl Default for TDMCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl TDMCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<TDMCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    TDMCOLLECTION::create(_fbb, &TDMCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `TDMCOLLECTION`
+/// Verifies that a buffer of bytes contains a `TDM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_TDMCOLLECTION_unchecked`.
-pub fn root_as_TDMCOLLECTION(buf: &[u8]) -> Result<TDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<TDMCOLLECTION>(buf)
+/// `root_as_TDM_unchecked`.
+pub fn root_as_TDM(buf: &[u8]) -> Result<TDM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<TDM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `TDMCOLLECTION` and returns it.
+/// `TDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_TDMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_TDMCOLLECTION(buf: &[u8]) -> Result<TDMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<TDMCOLLECTION>(buf)
+/// `size_prefixed_root_as_TDM_unchecked`.
+pub fn size_prefixed_root_as_TDM(buf: &[u8]) -> Result<TDM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<TDM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `TDMCOLLECTION` and returns it.
+/// contains a `TDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_TDMCOLLECTION_unchecked`.
-pub fn root_as_TDMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_TDM_unchecked`.
+pub fn root_as_TDM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<TDMCOLLECTION<'b>>(opts, buf)
+) -> Result<TDM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<TDM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `TDMCOLLECTION` and returns
+/// bytes contains a size prefixed `TDM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_TDMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_TDMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_TDM_unchecked`.
+pub fn size_prefixed_root_as_TDM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TDMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<TDMCOLLECTION<'b>>(opts, buf)
+) -> Result<TDM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<TDM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a TDMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a TDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `TDMCOLLECTION`.
-pub unsafe fn root_as_TDMCOLLECTION_unchecked(buf: &[u8]) -> TDMCOLLECTION {
-  flatbuffers::root_unchecked::<TDMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `TDM`.
+pub unsafe fn root_as_TDM_unchecked(buf: &[u8]) -> TDM {
+  flatbuffers::root_unchecked::<TDM>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed TDMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed TDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `TDMCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_TDMCOLLECTION_unchecked(buf: &[u8]) -> TDMCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<TDMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `TDM`.
+pub unsafe fn size_prefixed_root_as_TDM_unchecked(buf: &[u8]) -> TDM {
+  flatbuffers::size_prefixed_root_unchecked::<TDM>(buf)
 }
-pub const TDMCOLLECTION_IDENTIFIER: &str = "$TDM";
+pub const TDM_IDENTIFIER: &str = "$TDM";
 
 #[inline]
-pub fn TDMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, TDMCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn TDMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, TDMCOLLECTION_IDENTIFIER, true)
+pub fn TDM_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, TDM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_TDMCOLLECTION_buffer<'a, 'b>(
+pub fn TDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, TDM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_TDM_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<TDMCOLLECTION<'a>>) {
-  fbb.finish(root, Some(TDMCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<TDM<'a>>) {
+  fbb.finish(root, Some(TDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_TDMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<TDMCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(TDMCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_TDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<TDM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(TDM_IDENTIFIER));
 }

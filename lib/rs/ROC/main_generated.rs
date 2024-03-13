@@ -947,218 +947,86 @@ impl ENGINET {
     })
   }
 }
-pub enum ROCCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of Rocket Configurations
-pub struct ROCCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for ROCCOLLECTION<'a> {
-  type Inner = ROCCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> ROCCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    ROCCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args ROCCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<ROCCOLLECTION<'bldr>> {
-    let mut builder = ROCCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> ROCCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    ROCCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  /// Records of Rocket Configurations
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ROC<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ROC>>>>(ROCCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for ROCCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<ROC>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct ROCCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ROC<'a>>>>>,
-}
-impl<'a> Default for ROCCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    ROCCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct ROCCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> ROCCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<ROC<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ROCCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ROCCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    ROCCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<ROCCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for ROCCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("ROCCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct ROCCOLLECTIONT {
-  pub RECORDS: Option<Vec<ROCT>>,
-}
-impl Default for ROCCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl ROCCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<ROCCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    ROCCOLLECTION::create(_fbb, &ROCCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `ROCCOLLECTION`
+/// Verifies that a buffer of bytes contains a `ROC`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ROCCOLLECTION_unchecked`.
-pub fn root_as_ROCCOLLECTION(buf: &[u8]) -> Result<ROCCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<ROCCOLLECTION>(buf)
+/// `root_as_ROC_unchecked`.
+pub fn root_as_ROC(buf: &[u8]) -> Result<ROC, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<ROC>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `ROCCOLLECTION` and returns it.
+/// `ROC` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_ROCCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_ROCCOLLECTION(buf: &[u8]) -> Result<ROCCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<ROCCOLLECTION>(buf)
+/// `size_prefixed_root_as_ROC_unchecked`.
+pub fn size_prefixed_root_as_ROC(buf: &[u8]) -> Result<ROC, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<ROC>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `ROCCOLLECTION` and returns it.
+/// contains a `ROC` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ROCCOLLECTION_unchecked`.
-pub fn root_as_ROCCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_ROC_unchecked`.
+pub fn root_as_ROC_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ROCCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<ROCCOLLECTION<'b>>(opts, buf)
+) -> Result<ROC<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<ROC<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `ROCCOLLECTION` and returns
+/// bytes contains a size prefixed `ROC` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ROCCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_ROCCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_ROC_unchecked`.
+pub fn size_prefixed_root_as_ROC_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ROCCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<ROCCOLLECTION<'b>>(opts, buf)
+) -> Result<ROC<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<ROC<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a ROCCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a ROC and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `ROCCOLLECTION`.
-pub unsafe fn root_as_ROCCOLLECTION_unchecked(buf: &[u8]) -> ROCCOLLECTION {
-  flatbuffers::root_unchecked::<ROCCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `ROC`.
+pub unsafe fn root_as_ROC_unchecked(buf: &[u8]) -> ROC {
+  flatbuffers::root_unchecked::<ROC>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed ROCCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed ROC and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `ROCCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_ROCCOLLECTION_unchecked(buf: &[u8]) -> ROCCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<ROCCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `ROC`.
+pub unsafe fn size_prefixed_root_as_ROC_unchecked(buf: &[u8]) -> ROC {
+  flatbuffers::size_prefixed_root_unchecked::<ROC>(buf)
 }
-pub const ROCCOLLECTION_IDENTIFIER: &str = "$ROC";
+pub const ROC_IDENTIFIER: &str = "$ROC";
 
 #[inline]
-pub fn ROCCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, ROCCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn ROCCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, ROCCOLLECTION_IDENTIFIER, true)
+pub fn ROC_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, ROC_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_ROCCOLLECTION_buffer<'a, 'b>(
+pub fn ROC_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, ROC_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_ROC_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<ROCCOLLECTION<'a>>) {
-  fbb.finish(root, Some(ROCCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<ROC<'a>>) {
+  fbb.finish(root, Some(ROC_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_ROCCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<ROCCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(ROCCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_ROC_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<ROC<'a>>) {
+  fbb.finish_size_prefixed(root, Some(ROC_IDENTIFIER));
 }

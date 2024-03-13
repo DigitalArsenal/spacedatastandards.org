@@ -25,9 +25,6 @@ table CTR {
   COMMENT: string;
 }
 
-table CTRCOLLECTION {
-  RECORDS: [CTR];
-}
 
-root_type CTRCOLLECTION;
+root_type CTR;
 file_identifier "$CTR";

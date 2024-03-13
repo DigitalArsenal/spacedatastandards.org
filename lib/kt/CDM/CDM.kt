@@ -345,6 +345,7 @@ class CDM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun CDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CDM")
         fun createCDM(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_FOROffset: Int, MESSAGE_IDOffset: Int, TCAOffset: Int, MISS_DISTANCE: Double, RELATIVE_SPEED: Double, RELATIVE_POSITION_R: Double, RELATIVE_POSITION_T: Double, RELATIVE_POSITION_N: Double, RELATIVE_VELOCITY_R: Double, RELATIVE_VELOCITY_T: Double, RELATIVE_VELOCITY_N: Double, START_SCREEN_PERIODOffset: Int, STOP_SCREEN_PERIODOffset: Int, SCREEN_VOLUME_FRAME: Byte, SCREEN_VOLUME_SHAPE: Byte, SCREEN_VOLUME_X: Double, SCREEN_VOLUME_Y: Double, SCREEN_VOLUME_Z: Double, SCREEN_ENTRY_TIMEOffset: Int, SCREEN_EXIT_TIMEOffset: Int, COLLISION_PROBABILITY: Double, COLLISION_PROBABILITY_METHODOffset: Int, OBJECT1Offset: Int, OBJECT2Offset: Int, OBJECT1_DATASOURCEOffset: Int, OBJECT2_DATASOURCEOffset: Int) : Int {
             builder.startTable(29)
             addCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
@@ -412,5 +413,7 @@ class CDM : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishCDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CDM")
+        fun finishSizePrefixedCDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CDM")
     }
 }

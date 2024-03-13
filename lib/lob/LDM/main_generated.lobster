@@ -3,8 +3,6 @@ import flatbuffers
 
 class LDM
 
-class LDMCOLLECTION
-
 /// Launch Data Message
 class LDM : flatbuffers_handle
     /// Launch Site Information
@@ -277,33 +275,6 @@ def LDMCreateORBITAL_PARAMETERSVector(b_:flatbuffers_builder, v_:[flatbuffers_of
 def LDMStartBURN_OUT_VECTORSVector(b_:flatbuffers_builder, n_:int):
     b_.StartVector(4, n_, 4)
 def LDMCreateBURN_OUT_VECTORSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-class LDMCOLLECTION : flatbuffers_handle
-    /// Collection of LDM Records
-    def RECORDS(i:int) -> LDM:
-        return LDM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
-
-def GetRootAsLDMCOLLECTION(buf:string): return LDMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
-
-struct LDMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def LDMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def LDMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

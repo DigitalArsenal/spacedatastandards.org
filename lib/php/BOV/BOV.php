@@ -227,4 +227,9 @@ class BOV extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishBOVBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$BOV");
+    }
 }

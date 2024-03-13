@@ -226,10 +226,6 @@ table OMM {
   USER_DEFINED_MICROSECONDS: double;
 }
 
-table OMMCOLLECTION {
-  /// Array of OMM records
-  RECORDS:[OMM];
-}
 
-root_type OMMCOLLECTION;
+root_type OMM;
 file_identifier "$OMM";

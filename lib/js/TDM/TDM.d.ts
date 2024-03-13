@@ -9,6 +9,7 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): TDM;
     static getRootAsTDM(bb: flatbuffers.ByteBuffer, obj?: TDM): TDM;
     static getSizePrefixedRootAsTDM(bb: flatbuffers.ByteBuffer, obj?: TDM): TDM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
      */
@@ -414,6 +415,8 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
     static createClockDriftVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startClockDriftVector(builder: flatbuffers.Builder, numElems: number): void;
     static endTDM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishTDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedTDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createTDM(builder: flatbuffers.Builder, OBSERVER_IDOffset: flatbuffers.Offset, OBSERVER_X: number, OBSERVER_Y: number, OBSERVER_Z: number, OBSERVER_VX: number, OBSERVER_VY: number, OBSERVER_VZ: number, OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame, OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame, EPOCHOffset: flatbuffers.Offset, CCSDS_TDM_VERSOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset, CREATION_DATEOffset: flatbuffers.Offset, ORIGINATOROffset: flatbuffers.Offset, META_STARTOffset: flatbuffers.Offset, TIME_SYSTEMOffset: flatbuffers.Offset, START_TIMEOffset: flatbuffers.Offset, STOP_TIMEOffset: flatbuffers.Offset, PARTICIPANT_1Offset: flatbuffers.Offset, PARTICIPANT_2Offset: flatbuffers.Offset, PARTICIPANT_3Offset: flatbuffers.Offset, MODEOffset: flatbuffers.Offset, PATH_1: number, PATH_2: number, TRANSMIT_BANDOffset: flatbuffers.Offset, RECEIVE_BANDOffset: flatbuffers.Offset, INTEGRATION_INTERVAL: number, INTEGRATION_REFOffset: flatbuffers.Offset, RECEIVE_DELAY_2: number, RECEIVE_DELAY_3: number, DATA_QUALITYOffset: flatbuffers.Offset, META_STOPOffset: flatbuffers.Offset, DATA_STARTOffset: flatbuffers.Offset, TRANSMIT_FREQ_1: number, RECEIVE_FREQOffset: flatbuffers.Offset, DATA_STOPOffset: flatbuffers.Offset, TIMETAG_REFOffset: flatbuffers.Offset, ANGLE_TYPEOffset: flatbuffers.Offset, ANGLE_1Offset: flatbuffers.Offset, ANGLE_2Offset: flatbuffers.Offset, ANGLE_UNCERTAINTY_1: number, ANGLE_UNCERTAINTY_2: number, RANGE_RATE: number, RANGE_UNCERTAINTY: number, RANGE_MODEOffset: flatbuffers.Offset, RANGE_MODULUS: number, CORRECTION_ANGLE_1: number, CORRECTION_ANGLE_2: number, CORRECTIONS_APPLIEDOffset: flatbuffers.Offset, TROPO_DRYOffset: flatbuffers.Offset, TROPO_WETOffset: flatbuffers.Offset, STECOffset: flatbuffers.Offset, PRESSUREOffset: flatbuffers.Offset, RHUMIDITYOffset: flatbuffers.Offset, TEMPERATUREOffset: flatbuffers.Offset, CLOCK_BIASOffset: flatbuffers.Offset, CLOCK_DRIFTOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): TDMT;
     unpackTo(_o: TDMT): void;

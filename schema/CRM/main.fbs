@@ -236,9 +236,6 @@ table CRM {
 }
 
 /// Collection of CRM records
-table CRMCOLLECTION {
-  RECORDS: [CRM];
-}
 
-root_type CRMCOLLECTION;
+root_type CRM;
 file_identifier "$CRM";

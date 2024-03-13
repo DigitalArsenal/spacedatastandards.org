@@ -277,4 +277,9 @@ class EOP extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishEOPBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$EOP");
+    }
 }

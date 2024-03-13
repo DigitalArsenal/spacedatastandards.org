@@ -69,10 +69,6 @@ table ENGINE {
 }
 
 /// Collection of Rocket Configurations
-table ROCCOLLECTION {
-  /// Records of Rocket Configurations
-  RECORDS: [ROC];
-}
 
-root_type ROCCOLLECTION;
+root_type ROC;
 file_identifier "$ROC";

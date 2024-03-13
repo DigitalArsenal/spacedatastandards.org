@@ -8,6 +8,7 @@ export declare class CSM implements flatbuffers.IUnpackableObject<CSMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): CSM;
     static getRootAsCSM(bb: flatbuffers.ByteBuffer, obj?: CSM): CSM;
     static getSizePrefixedRootAsCSM(bb: flatbuffers.ByteBuffer, obj?: CSM): CSM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * NORAD Catalog Number for the first object
      */
@@ -67,6 +68,8 @@ export declare class CSM implements flatbuffers.IUnpackableObject<CSMT> {
     static addMaxProb(builder: flatbuffers.Builder, MAX_PROB: number): void;
     static addDilution(builder: flatbuffers.Builder, DILUTION: number): void;
     static endCSM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCSMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCSMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCSM(builder: flatbuffers.Builder, NORAD_CAT_ID_1: number, OBJECT_NAME_1Offset: flatbuffers.Offset, DSE_1: number, NORAD_CAT_ID_2: number, OBJECT_NAME_2Offset: flatbuffers.Offset, DSE_2: number, TCA: number, TCA_RANGE: number, TCA_RELATIVE_SPEED: number, MAX_PROB: number, DILUTION: number): flatbuffers.Offset;
     unpack(): CSMT;
     unpackTo(_o: CSMT): void;

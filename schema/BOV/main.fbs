@@ -17,10 +17,5 @@ table BOV {
   TIME_FROM_LAUNCH: double; // Seconds with appropriate precision
 }
 
-// Collection of Burn Out Vector Messages
-table BOVCOLLECTION {
-  RECORDS: [BOV];
-}
-
-root_type BOVCOLLECTION;
+root_type BOV;
 file_identifier "$BOV";

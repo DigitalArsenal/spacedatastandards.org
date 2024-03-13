@@ -51,17 +51,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "CSMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CSM"},
-                "description" : "A vector of CSM records"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CSMCOLLECTION"
+  "$ref" : "#/definitions/CSM"
 }

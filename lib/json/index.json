@@ -86,43 +86,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "MPECOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of MPE Records",
-                    "properties": {
-                        "CLASSIFICATION_TYPE": {
-                            "type": "string",
-                            "description": "Default value = U"
-                        },
-                        "REF_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
-                            "description": "Name of the reference frame (TEME, EME2000, etc.)"
-                        },
-                        "REF_FRAME_EPOCH": {
-                            "type": "number",
-                            "description": "Epoch of the Reference Frame. (UNIX TimeStamp)"
-                        },
-                        "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem",
-                            "description": "Time system used for the orbit state and covariance matrix. (UTC)"
-                        },
-                        "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory",
-                            "description": "Description of the Mean Element Theory. (SGP4,DSST,USM)"
-                        },
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/MPE"
-                            },
-                            "description": "Array of MPE records"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/MPECOLLECTION"
+            "$ref": "#/definitions/MPE"
         },
         "OMM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -438,22 +404,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "OMMCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/OMM"
-                            },
-                            "description": "Array of OMM records"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/OMMCOLLECTION"
+            "$ref": "#/definitions/OMM"
         },
         "PLD": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -714,19 +667,6 @@
                     },
                     "additionalProperties": false
                 },
-                "IDMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of IDM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "PLD": {
                     "type": "object",
                     "description": "Payload Information",
@@ -757,22 +697,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "PLDCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Payload Information Records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PLD"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/PLDCOLLECTION"
+            "$ref": "#/definitions/PLD"
         },
         "CSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -831,22 +758,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "CSMCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/CSM"
-                            },
-                            "description": "A vector of CSM records"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/CSMCOLLECTION"
+            "$ref": "#/definitions/CSM"
         },
         "OSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -885,21 +799,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "OSMCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/OSM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/OSMCOLLECTION"
+            "$ref": "#/definitions/OSM"
         },
         "CAT": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -1208,19 +1110,6 @@
                     },
                     "additionalProperties": false
                 },
-                "IDMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of IDM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "PLD": {
                     "type": "object",
                     "description": "Payload Information",
@@ -1247,19 +1136,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PLDCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Payload Information Records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PLD"
                             }
                         }
                     },
@@ -1368,21 +1244,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "CATCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/CAT"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/CATCOLLECTION"
+            "$ref": "#/definitions/CAT"
         },
         "CRM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -1721,22 +1585,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "CRMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of CRM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/CRM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/CRMCOLLECTION"
+            "$ref": "#/definitions/CRM"
         },
         "TDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -2040,22 +1891,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "TDMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of TDM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/TDMCOLLECTION"
+            "$ref": "#/definitions/TDM"
         },
         "IDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -2315,22 +2153,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "IDMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of IDM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/IDMCOLLECTION"
+            "$ref": "#/definitions/IDM"
         },
         "ROC": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -2448,23 +2273,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "ROCCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Rocket Configurations",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ROC"
-                            },
-                            "description": "Records of Rocket Configurations"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/ROCCOLLECTION"
+            "$ref": "#/definitions/ROC"
         },
         "BOV": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -2499,21 +2310,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "BOVCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BOV"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/BOVCOLLECTION"
+            "$ref": "#/definitions/BOV"
         },
         "EOP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -2575,22 +2374,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "EOPCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of EOP records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/EOP"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/EOPCOLLECTION"
+            "$ref": "#/definitions/EOP"
         },
         "EOO": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -2945,21 +2731,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "EOOCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/EOO"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/EOOCOLLECTION"
+            "$ref": "#/definitions/EOO"
         },
         "EME": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -3015,22 +2789,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "EMECOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Encrypted Message Envelopes",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/EME"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/EMECOLLECTION"
+            "$ref": "#/definitions/EME"
         },
         "SCHEMA_MANIFEST": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -3426,19 +3187,6 @@
                     },
                     "additionalProperties": false
                 },
-                "IDMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of IDM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "Geometry": {
                     "type": "object",
                     "description": "Geometry table with information about geometric properties",
@@ -3562,19 +3310,6 @@
                                 "$ref": "#/definitions/IDM"
                             },
                             "description": "Vector of Integrated Devices (IDM)"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "SITCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of SIT records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/SIT"
-                            }
                         }
                     },
                     "additionalProperties": false
@@ -3717,20 +3452,6 @@
                     },
                     "additionalProperties": false
                 },
-                "EPMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Entity Profile Messages",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/EPM"
-                            },
-                            "description": "Records of Entity Profile Messages"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "PLD": {
                     "type": "object",
                     "description": "Payload Information",
@@ -3757,19 +3478,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PLDCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Payload Information Records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PLD"
                             }
                         }
                     },
@@ -3879,18 +3587,6 @@
                     },
                     "additionalProperties": false
                 },
-                "CATCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/CAT"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "ROC": {
                     "type": "object",
                     "description": "Rocket Configuration",
@@ -3994,20 +3690,6 @@
                     },
                     "additionalProperties": false
                 },
-                "ROCCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Rocket Configurations",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ROC"
-                            },
-                            "description": "Records of Rocket Configurations"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "BOV": {
                     "type": "object",
                     "description": "Burn Out Vector Message",
@@ -4035,18 +3717,6 @@
                         },
                         "TIME_FROM_LAUNCH": {
                             "type": "number"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "BOVCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BOV"
-                            }
                         }
                     },
                     "additionalProperties": false
@@ -4198,22 +3868,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "LDMCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/LDM"
-                            },
-                            "description": "Collection of LDM Records"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/LDMCOLLECTION"
+            "$ref": "#/definitions/LDM"
         },
         "PNM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -4300,22 +3957,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "PNMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Publish Notification Messages\nThis table groups multiple PNM records for batch processing and management.",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PNM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/PNMCOLLECTION"
+            "$ref": "#/definitions/PNM"
         },
         "HYP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -4410,22 +4054,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "HYPCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of HYP records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/HYP"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/HYPCOLLECTION"
+            "$ref": "#/definitions/HYP"
         },
         "CTR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -4468,21 +4099,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "CTRCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/CTR"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/CTRCOLLECTION"
+            "$ref": "#/definitions/CTR"
         },
         "CDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -4620,19 +4239,6 @@
                         "SOL_DIGITAL_SIGNATURE": {
                             "type": "string",
                             "description": "Solana Digital Signature\nDigital signature of the CID using Solana's signing mechanism.\nRefer to the Solana Blockchain integration section for details."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PNMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Publish Notification Messages\nThis table groups multiple PNM records for batch processing and management.",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PNM"
-                            }
                         }
                     },
                     "additionalProperties": false
@@ -5125,22 +4731,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "CDMCOLLECTION": {
-                    "type": "object",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/CDM"
-                            },
-                            "description": "A vector of CDM records"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/CDMCOLLECTION"
+            "$ref": "#/definitions/CDM"
         },
         "SIT": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -5424,19 +5017,6 @@
                     },
                     "additionalProperties": false
                 },
-                "IDMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of IDM records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IDM"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "Geometry": {
                     "type": "object",
                     "description": "Geometry table with information about geometric properties",
@@ -5563,22 +5143,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "SITCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of SIT records",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/SIT"
-                            }
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/SITCOLLECTION"
+            "$ref": "#/definitions/SIT"
         },
         "OEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -5870,23 +5437,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "OEMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of OEM messages",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/OEM"
-                            },
-                            "description": "Array of OEM records"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/OEMCOLLECTION"
+            "$ref": "#/definitions/OEM"
         },
         "EPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -6035,23 +5588,9 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "EPMCOLLECTION": {
-                    "type": "object",
-                    "description": "Collection of Entity Profile Messages",
-                    "properties": {
-                        "RECORDS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/EPM"
-                            },
-                            "description": "Records of Entity Profile Messages"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/EPMCOLLECTION"
+            "$ref": "#/definitions/EPM"
         }
     }
 }

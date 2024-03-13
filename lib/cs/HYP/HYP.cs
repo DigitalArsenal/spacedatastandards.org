@@ -14,6 +14,7 @@ public struct HYP : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static HYP GetRootAsHYP(ByteBuffer _bb) { return GetRootAsHYP(_bb, new HYP()); }
   public static HYP GetRootAsHYP(ByteBuffer _bb, HYP obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool HYPBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$HYP"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public HYP __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -153,6 +154,8 @@ public struct HYP : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<HYP>(o);
   }
+  public static void FinishHYPBuffer(FlatBufferBuilder builder, Offset<HYP> offset) { builder.Finish(offset.Value, "$HYP"); }
+  public static void FinishSizePrefixedHYPBuffer(FlatBufferBuilder builder, Offset<HYP> offset) { builder.FinishSizePrefixed(offset.Value, "$HYP"); }
   public HYPT UnPack() {
     var _o = new HYPT();
     this.UnPackTo(_o);
@@ -261,6 +264,14 @@ public class HYPT
     this.ANALYSIS_METHOD = null;
     this.EVENT_START_TIME = null;
     this.EVENT_END_TIME = null;
+  }
+  public static HYPT DeserializeFromBinary(byte[] fbBuffer) {
+    return HYP.GetRootAsHYP(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    HYP.FinishHYPBuffer(fbb, HYP.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

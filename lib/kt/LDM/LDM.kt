@@ -421,6 +421,7 @@ class LDM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun LDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LDM")
         fun createLDM(builder: FlatBufferBuilder, SITEOffset: Int, AZIMUTH: Float, REFERENCESOffset: Int, AGENCY_NAMEOffset: Int, POINTS_OF_CONTACTOffset: Int, OPERATIONS_POINTS_OF_CONTACTOffset: Int, NETOffset: Int, ROCKET_CONFIGURATIONOffset: Int, MISSION_NAMEOffset: Int, MISSION_DESCRIPTIONOffset: Int, MISSION_TYPEOffset: Int, ORBIT_TYPEOffset: Int, WEATHER_CONDITIONSOffset: Int, LAUNCH_STATUSOffset: Int, WEBCAST_URLOffset: Int, MEDIA_LINKSOffset: Int, EARLIEST_LAUNCH_TIMESOffset: Int, LATEST_LAUNCH_TIMESOffset: Int, LCOLA_WINDOW_CLOSURESOffset: Int, OBJECTSOffset: Int, TRACKING_REQUIREMENTSOffset: Int, COLA_SCREEN_DURATIONOffset: Int, PROBABILITY_OF_COLLISION_THRESHOLDOffset: Int, COLA_RUNS_REQUIREDOffset: Int, COLA_POINTS_OF_CONTACTOffset: Int, ORBITAL_PARAMETERSOffset: Int, BURN_OUT_VECTORSOffset: Int) : Int {
             builder.startTable(27)
             addBURN_OUT_VECTORS(builder, BURN_OUT_VECTORSOffset)
@@ -572,5 +573,7 @@ class LDM : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishLDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LDM")
+        fun finishSizePrefixedLDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LDM")
     }
 }

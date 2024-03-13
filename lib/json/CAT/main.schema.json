@@ -213,16 +213,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of IDM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -247,16 +237,6 @@
               },
         "INSTRUMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "PLDCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Payload Information Records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
               }
       },
       "additionalProperties" : false
@@ -359,16 +339,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "CATCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/CATCOLLECTION"
+  "$ref" : "#/definitions/CAT"
 }

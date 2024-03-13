@@ -442,217 +442,86 @@ impl EOPT {
     })
   }
 }
-pub enum EOPCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of EOP records
-pub struct EOPCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for EOPCOLLECTION<'a> {
-  type Inner = EOPCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> EOPCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    EOPCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args EOPCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<EOPCOLLECTION<'bldr>> {
-    let mut builder = EOPCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> EOPCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    EOPCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EOP<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EOP>>>>(EOPCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for EOPCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<EOP>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct EOPCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EOP<'a>>>>>,
-}
-impl<'a> Default for EOPCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    EOPCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct EOPCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> EOPCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EOP<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOPCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EOPCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    EOPCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<EOPCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for EOPCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("EOPCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct EOPCOLLECTIONT {
-  pub RECORDS: Option<Vec<EOPT>>,
-}
-impl Default for EOPCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl EOPCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<EOPCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    EOPCOLLECTION::create(_fbb, &EOPCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `EOPCOLLECTION`
+/// Verifies that a buffer of bytes contains a `EOP`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EOPCOLLECTION_unchecked`.
-pub fn root_as_EOPCOLLECTION(buf: &[u8]) -> Result<EOPCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<EOPCOLLECTION>(buf)
+/// `root_as_EOP_unchecked`.
+pub fn root_as_EOP(buf: &[u8]) -> Result<EOP, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<EOP>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `EOPCOLLECTION` and returns it.
+/// `EOP` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_EOPCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_EOPCOLLECTION(buf: &[u8]) -> Result<EOPCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<EOPCOLLECTION>(buf)
+/// `size_prefixed_root_as_EOP_unchecked`.
+pub fn size_prefixed_root_as_EOP(buf: &[u8]) -> Result<EOP, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<EOP>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `EOPCOLLECTION` and returns it.
+/// contains a `EOP` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EOPCOLLECTION_unchecked`.
-pub fn root_as_EOPCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_EOP_unchecked`.
+pub fn root_as_EOP_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EOPCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<EOPCOLLECTION<'b>>(opts, buf)
+) -> Result<EOP<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<EOP<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `EOPCOLLECTION` and returns
+/// bytes contains a size prefixed `EOP` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EOPCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_EOPCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_EOP_unchecked`.
+pub fn size_prefixed_root_as_EOP_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EOPCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<EOPCOLLECTION<'b>>(opts, buf)
+) -> Result<EOP<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<EOP<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a EOPCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a EOP and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `EOPCOLLECTION`.
-pub unsafe fn root_as_EOPCOLLECTION_unchecked(buf: &[u8]) -> EOPCOLLECTION {
-  flatbuffers::root_unchecked::<EOPCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `EOP`.
+pub unsafe fn root_as_EOP_unchecked(buf: &[u8]) -> EOP {
+  flatbuffers::root_unchecked::<EOP>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed EOPCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed EOP and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `EOPCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_EOPCOLLECTION_unchecked(buf: &[u8]) -> EOPCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<EOPCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `EOP`.
+pub unsafe fn size_prefixed_root_as_EOP_unchecked(buf: &[u8]) -> EOP {
+  flatbuffers::size_prefixed_root_unchecked::<EOP>(buf)
 }
-pub const EOPCOLLECTION_IDENTIFIER: &str = "$EOP";
+pub const EOP_IDENTIFIER: &str = "$EOP";
 
 #[inline]
-pub fn EOPCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EOPCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn EOPCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EOPCOLLECTION_IDENTIFIER, true)
+pub fn EOP_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EOP_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_EOPCOLLECTION_buffer<'a, 'b>(
+pub fn EOP_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EOP_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_EOP_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<EOPCOLLECTION<'a>>) {
-  fbb.finish(root, Some(EOPCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<EOP<'a>>) {
+  fbb.finish(root, Some(EOP_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EOPCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EOPCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(EOPCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_EOP_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EOP<'a>>) {
+  fbb.finish_size_prefixed(root, Some(EOP_IDENTIFIER));
 }

@@ -393,217 +393,86 @@ impl EMET {
     })
   }
 }
-pub enum EMECOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of Encrypted Message Envelopes
-pub struct EMECOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for EMECOLLECTION<'a> {
-  type Inner = EMECOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> EMECOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    EMECOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args EMECOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<EMECOLLECTION<'bldr>> {
-    let mut builder = EMECOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> EMECOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    EMECOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EME<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EME>>>>(EMECOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for EMECOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<EME>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct EMECOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EME<'a>>>>>,
-}
-impl<'a> Default for EMECOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    EMECOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct EMECOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> EMECOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EME<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EMECOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EMECOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    EMECOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<EMECOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for EMECOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("EMECOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct EMECOLLECTIONT {
-  pub RECORDS: Option<Vec<EMET>>,
-}
-impl Default for EMECOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl EMECOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<EMECOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    EMECOLLECTION::create(_fbb, &EMECOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `EMECOLLECTION`
+/// Verifies that a buffer of bytes contains a `EME`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EMECOLLECTION_unchecked`.
-pub fn root_as_EMECOLLECTION(buf: &[u8]) -> Result<EMECOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<EMECOLLECTION>(buf)
+/// `root_as_EME_unchecked`.
+pub fn root_as_EME(buf: &[u8]) -> Result<EME, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<EME>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `EMECOLLECTION` and returns it.
+/// `EME` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_EMECOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_EMECOLLECTION(buf: &[u8]) -> Result<EMECOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<EMECOLLECTION>(buf)
+/// `size_prefixed_root_as_EME_unchecked`.
+pub fn size_prefixed_root_as_EME(buf: &[u8]) -> Result<EME, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<EME>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `EMECOLLECTION` and returns it.
+/// contains a `EME` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EMECOLLECTION_unchecked`.
-pub fn root_as_EMECOLLECTION_with_opts<'b, 'o>(
+/// `root_as_EME_unchecked`.
+pub fn root_as_EME_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EMECOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<EMECOLLECTION<'b>>(opts, buf)
+) -> Result<EME<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<EME<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `EMECOLLECTION` and returns
+/// bytes contains a size prefixed `EME` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EMECOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_EMECOLLECTION_with_opts<'b, 'o>(
+/// `root_as_EME_unchecked`.
+pub fn size_prefixed_root_as_EME_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EMECOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<EMECOLLECTION<'b>>(opts, buf)
+) -> Result<EME<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<EME<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a EMECOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a EME and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `EMECOLLECTION`.
-pub unsafe fn root_as_EMECOLLECTION_unchecked(buf: &[u8]) -> EMECOLLECTION {
-  flatbuffers::root_unchecked::<EMECOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `EME`.
+pub unsafe fn root_as_EME_unchecked(buf: &[u8]) -> EME {
+  flatbuffers::root_unchecked::<EME>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed EMECOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed EME and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `EMECOLLECTION`.
-pub unsafe fn size_prefixed_root_as_EMECOLLECTION_unchecked(buf: &[u8]) -> EMECOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<EMECOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `EME`.
+pub unsafe fn size_prefixed_root_as_EME_unchecked(buf: &[u8]) -> EME {
+  flatbuffers::size_prefixed_root_unchecked::<EME>(buf)
 }
-pub const EMECOLLECTION_IDENTIFIER: &str = "$EME";
+pub const EME_IDENTIFIER: &str = "$EME";
 
 #[inline]
-pub fn EMECOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EMECOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn EMECOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EMECOLLECTION_IDENTIFIER, true)
+pub fn EME_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EME_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_EMECOLLECTION_buffer<'a, 'b>(
+pub fn EME_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EME_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_EME_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<EMECOLLECTION<'a>>) {
-  fbb.finish(root, Some(EMECOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<EME<'a>>) {
+  fbb.finish(root, Some(EME_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EMECOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EMECOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(EMECOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_EME_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EME<'a>>) {
+  fbb.finish_size_prefixed(root, Some(EME_IDENTIFIER));
 }

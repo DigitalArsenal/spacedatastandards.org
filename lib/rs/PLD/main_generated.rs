@@ -295,217 +295,86 @@ impl PLDT {
     })
   }
 }
-pub enum PLDCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of Payload Information Records
-pub struct PLDCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for PLDCOLLECTION<'a> {
-  type Inner = PLDCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> PLDCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    PLDCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args PLDCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<PLDCOLLECTION<'bldr>> {
-    let mut builder = PLDCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> PLDCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    PLDCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<PLD<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<PLD>>>>(PLDCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for PLDCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<PLD>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct PLDCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<PLD<'a>>>>>,
-}
-impl<'a> Default for PLDCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    PLDCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct PLDCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> PLDCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<PLD<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PLDCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PLDCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    PLDCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<PLDCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for PLDCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("PLDCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PLDCOLLECTIONT {
-  pub RECORDS: Option<Vec<PLDT>>,
-}
-impl Default for PLDCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl PLDCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<PLDCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    PLDCOLLECTION::create(_fbb, &PLDCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `PLDCOLLECTION`
+/// Verifies that a buffer of bytes contains a `PLD`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PLDCOLLECTION_unchecked`.
-pub fn root_as_PLDCOLLECTION(buf: &[u8]) -> Result<PLDCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<PLDCOLLECTION>(buf)
+/// `root_as_PLD_unchecked`.
+pub fn root_as_PLD(buf: &[u8]) -> Result<PLD, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<PLD>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `PLDCOLLECTION` and returns it.
+/// `PLD` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_PLDCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_PLDCOLLECTION(buf: &[u8]) -> Result<PLDCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<PLDCOLLECTION>(buf)
+/// `size_prefixed_root_as_PLD_unchecked`.
+pub fn size_prefixed_root_as_PLD(buf: &[u8]) -> Result<PLD, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<PLD>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `PLDCOLLECTION` and returns it.
+/// contains a `PLD` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PLDCOLLECTION_unchecked`.
-pub fn root_as_PLDCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_PLD_unchecked`.
+pub fn root_as_PLD_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PLDCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<PLDCOLLECTION<'b>>(opts, buf)
+) -> Result<PLD<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<PLD<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `PLDCOLLECTION` and returns
+/// bytes contains a size prefixed `PLD` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_PLDCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_PLDCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_PLD_unchecked`.
+pub fn size_prefixed_root_as_PLD_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PLDCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<PLDCOLLECTION<'b>>(opts, buf)
+) -> Result<PLD<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<PLD<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a PLDCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a PLD and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `PLDCOLLECTION`.
-pub unsafe fn root_as_PLDCOLLECTION_unchecked(buf: &[u8]) -> PLDCOLLECTION {
-  flatbuffers::root_unchecked::<PLDCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `PLD`.
+pub unsafe fn root_as_PLD_unchecked(buf: &[u8]) -> PLD {
+  flatbuffers::root_unchecked::<PLD>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed PLDCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed PLD and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `PLDCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_PLDCOLLECTION_unchecked(buf: &[u8]) -> PLDCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<PLDCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `PLD`.
+pub unsafe fn size_prefixed_root_as_PLD_unchecked(buf: &[u8]) -> PLD {
+  flatbuffers::size_prefixed_root_unchecked::<PLD>(buf)
 }
-pub const PLDCOLLECTION_IDENTIFIER: &str = "$PLD";
+pub const PLD_IDENTIFIER: &str = "$PLD";
 
 #[inline]
-pub fn PLDCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, PLDCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn PLDCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, PLDCOLLECTION_IDENTIFIER, true)
+pub fn PLD_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, PLD_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_PLDCOLLECTION_buffer<'a, 'b>(
+pub fn PLD_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, PLD_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_PLD_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<PLDCOLLECTION<'a>>) {
-  fbb.finish(root, Some(PLDCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<PLD<'a>>) {
+  fbb.finish(root, Some(PLD_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_PLDCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PLDCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(PLDCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_PLD_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PLD<'a>>) {
+  fbb.finish_size_prefixed(root, Some(PLD_IDENTIFIER));
 }

@@ -88,20 +88,6 @@ table MPE {
 }
 
 /// Collection of MPE Records
-table MPECOLLECTION {
-  /// Default value = U
-  CLASSIFICATION_TYPE: string;
-  /// Name of the reference frame (TEME, EME2000, etc.)
-  REF_FRAME:referenceFrame = TEME;
-  /// Epoch of the Reference Frame. (UNIX TimeStamp)
-  REF_FRAME_EPOCH: double;
-  /// Time system used for the orbit state and covariance matrix. (UTC)
-  TIME_SYSTEM:timeSystem = UTC;
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
-  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
-  /// Array of MPE records
-  RECORDS:[MPE];
-}
 
-root_type MPECOLLECTION;
+root_type MPE;
 file_identifier "$MPE";

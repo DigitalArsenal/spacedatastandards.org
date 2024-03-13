@@ -258,9 +258,6 @@ table EOO {
   TYPE: string;
 }
 
-table EOOCOLLECTION {
-  RECORDS: [EOO];
-}
 
-root_type EOOCOLLECTION;
+root_type EOO;
 file_identifier "$EOO";

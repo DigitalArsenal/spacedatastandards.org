@@ -1158,218 +1158,86 @@ impl EPMT {
     })
   }
 }
-pub enum EPMCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of Entity Profile Messages
-pub struct EPMCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for EPMCOLLECTION<'a> {
-  type Inner = EPMCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> EPMCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    EPMCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args EPMCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<EPMCOLLECTION<'bldr>> {
-    let mut builder = EPMCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> EPMCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    EPMCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  /// Records of Entity Profile Messages
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM>>>>(EPMCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for EPMCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<EPM>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct EPMCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EPM<'a>>>>>,
-}
-impl<'a> Default for EPMCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    EPMCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct EPMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> EPMCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EPM<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EPMCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    EPMCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<EPMCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for EPMCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("EPMCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct EPMCOLLECTIONT {
-  pub RECORDS: Option<Vec<EPMT>>,
-}
-impl Default for EPMCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl EPMCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<EPMCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    EPMCOLLECTION::create(_fbb, &EPMCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `EPMCOLLECTION`
+/// Verifies that a buffer of bytes contains a `EPM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EPMCOLLECTION_unchecked`.
-pub fn root_as_EPMCOLLECTION(buf: &[u8]) -> Result<EPMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<EPMCOLLECTION>(buf)
+/// `root_as_EPM_unchecked`.
+pub fn root_as_EPM(buf: &[u8]) -> Result<EPM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<EPM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `EPMCOLLECTION` and returns it.
+/// `EPM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_EPMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_EPMCOLLECTION(buf: &[u8]) -> Result<EPMCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<EPMCOLLECTION>(buf)
+/// `size_prefixed_root_as_EPM_unchecked`.
+pub fn size_prefixed_root_as_EPM(buf: &[u8]) -> Result<EPM, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<EPM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `EPMCOLLECTION` and returns it.
+/// contains a `EPM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EPMCOLLECTION_unchecked`.
-pub fn root_as_EPMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_EPM_unchecked`.
+pub fn root_as_EPM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EPMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<EPMCOLLECTION<'b>>(opts, buf)
+) -> Result<EPM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<EPM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `EPMCOLLECTION` and returns
+/// bytes contains a size prefixed `EPM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_EPMCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_EPMCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_EPM_unchecked`.
+pub fn size_prefixed_root_as_EPM_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<EPMCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<EPMCOLLECTION<'b>>(opts, buf)
+) -> Result<EPM<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<EPM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a EPMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a EPM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `EPMCOLLECTION`.
-pub unsafe fn root_as_EPMCOLLECTION_unchecked(buf: &[u8]) -> EPMCOLLECTION {
-  flatbuffers::root_unchecked::<EPMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `EPM`.
+pub unsafe fn root_as_EPM_unchecked(buf: &[u8]) -> EPM {
+  flatbuffers::root_unchecked::<EPM>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed EPMCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed EPM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `EPMCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_EPMCOLLECTION_unchecked(buf: &[u8]) -> EPMCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<EPMCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `EPM`.
+pub unsafe fn size_prefixed_root_as_EPM_unchecked(buf: &[u8]) -> EPM {
+  flatbuffers::size_prefixed_root_unchecked::<EPM>(buf)
 }
-pub const EPMCOLLECTION_IDENTIFIER: &str = "$EPM";
+pub const EPM_IDENTIFIER: &str = "$EPM";
 
 #[inline]
-pub fn EPMCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EPMCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn EPMCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, EPMCOLLECTION_IDENTIFIER, true)
+pub fn EPM_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EPM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_EPMCOLLECTION_buffer<'a, 'b>(
+pub fn EPM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, EPM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_EPM_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<EPMCOLLECTION<'a>>) {
-  fbb.finish(root, Some(EPMCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<EPM<'a>>) {
+  fbb.finish(root, Some(EPM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EPMCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EPMCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(EPMCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_EPM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EPM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(EPM_IDENTIFIER));
 }

@@ -1615,4 +1615,9 @@ class CRM extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishCRMBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$CRM");
+    }
 }

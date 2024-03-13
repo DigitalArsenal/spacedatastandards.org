@@ -89,10 +89,6 @@ table LDM {
 }
 
 // Collection of Launch Data Messages
-table LDMCOLLECTION {
-  /// Collection of LDM Records
-  RECORDS: [LDM];
-}
 
-root_type LDMCOLLECTION;
+root_type LDM;
 file_identifier "$LDM";

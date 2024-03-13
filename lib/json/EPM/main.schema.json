@@ -133,18 +133,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "EPMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Entity Profile Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EPM"},
-                "description" : "Records of Entity Profile Messages"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EPMCOLLECTION"
+  "$ref" : "#/definitions/EPM"
 }

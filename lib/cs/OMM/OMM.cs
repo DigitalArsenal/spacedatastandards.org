@@ -14,6 +14,7 @@ public struct OMM : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static OMM GetRootAsOMM(ByteBuffer _bb) { return GetRootAsOMM(_bb, new OMM()); }
   public static OMM GetRootAsOMM(ByteBuffer _bb, OMM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool OMMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OMM"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -399,6 +400,8 @@ public struct OMM : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<OMM>(o);
   }
+  public static void FinishOMMBuffer(FlatBufferBuilder builder, Offset<OMM> offset) { builder.Finish(offset.Value, "$OMM"); }
+  public static void FinishSizePrefixedOMMBuffer(FlatBufferBuilder builder, Offset<OMM> offset) { builder.FinishSizePrefixed(offset.Value, "$OMM"); }
   public OMMT UnPack() {
     var _o = new OMMT();
     this.UnPackTo(_o);
@@ -668,6 +671,14 @@ public class OMMT
     this.USER_DEFINED_EARTH_MODEL = null;
     this.USER_DEFINED_EPOCH_TIMESTAMP = 0.0;
     this.USER_DEFINED_MICROSECONDS = 0.0;
+  }
+  public static OMMT DeserializeFromBinary(byte[] fbBuffer) {
+    return OMM.GetRootAsOMM(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    OMM.FinishOMMBuffer(fbb, OMM.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

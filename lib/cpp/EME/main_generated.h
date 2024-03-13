@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct EME;
 struct EMEBuilder;
 
-struct EMECOLLECTION;
-struct EMECOLLECTIONBuilder;
-
 /// Encrypted Message Envelope
 struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EMEBuilder Builder;
@@ -207,101 +204,48 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
       ENCRYPTION_ALGORITHM_PARAMETERS__);
 }
 
-/// Collection of Encrypted Message Envelopes
-struct EMECOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef EMECOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<EME>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EME>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct EMECOLLECTIONBuilder {
-  typedef EMECOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EME>>> RECORDS) {
-    fbb_.AddOffset(EMECOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit EMECOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<EMECOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<EMECOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<EMECOLLECTION> CreateEMECOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EME>>> RECORDS = 0) {
-  EMECOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
+inline const EME *GetEME(const void *buf) {
+  return ::flatbuffers::GetRoot<EME>(buf);
 }
 
-inline ::flatbuffers::Offset<EMECOLLECTION> CreateEMECOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<EME>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<EME>>(*RECORDS) : 0;
-  return CreateEMECOLLECTION(
-      _fbb,
-      RECORDS__);
+inline const EME *GetSizePrefixedEME(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<EME>(buf);
 }
 
-inline const EMECOLLECTION *GetEMECOLLECTION(const void *buf) {
-  return ::flatbuffers::GetRoot<EMECOLLECTION>(buf);
-}
-
-inline const EMECOLLECTION *GetSizePrefixedEMECOLLECTION(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<EMECOLLECTION>(buf);
-}
-
-inline const char *EMECOLLECTIONIdentifier() {
+inline const char *EMEIdentifier() {
   return "$EME";
 }
 
-inline bool EMECOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool EMEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, EMECOLLECTIONIdentifier());
+      buf, EMEIdentifier());
 }
 
-inline bool SizePrefixedEMECOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedEMEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, EMECOLLECTIONIdentifier(), true);
+      buf, EMEIdentifier(), true);
 }
 
-inline bool VerifyEMECOLLECTIONBuffer(
+inline bool VerifyEMEBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<EMECOLLECTION>(EMECOLLECTIONIdentifier());
+  return verifier.VerifyBuffer<EME>(EMEIdentifier());
 }
 
-inline bool VerifySizePrefixedEMECOLLECTIONBuffer(
+inline bool VerifySizePrefixedEMEBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<EMECOLLECTION>(EMECOLLECTIONIdentifier());
+  return verifier.VerifySizePrefixedBuffer<EME>(EMEIdentifier());
 }
 
-inline void FinishEMECOLLECTIONBuffer(
+inline void FinishEMEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<EMECOLLECTION> root) {
-  fbb.Finish(root, EMECOLLECTIONIdentifier());
+    ::flatbuffers::Offset<EME> root) {
+  fbb.Finish(root, EMEIdentifier());
 }
 
-inline void FinishSizePrefixedEMECOLLECTIONBuffer(
+inline void FinishSizePrefixedEMEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<EMECOLLECTION> root) {
-  fbb.FinishSizePrefixed(root, EMECOLLECTIONIdentifier());
+    ::flatbuffers::Offset<EME> root) {
+  fbb.FinishSizePrefixed(root, EMEIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

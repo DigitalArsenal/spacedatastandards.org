@@ -25,6 +25,10 @@ static getSizePrefixedRootAsCTR(bb:flatbuffers.ByteBuffer, obj?:CTR):CTR {
   return (obj || new CTR()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$CTR');
+}
+
 /**
  * ISO 3166 Numeric code
  */
@@ -144,6 +148,14 @@ static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset)
 static endCTR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishCTRBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CTR');
+}
+
+static finishSizePrefixedCTRBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$CTR', true);
 }
 
 static createCTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, GENC_CODEOffset:flatbuffers.Offset, ALPHA_2_CODEOffset:flatbuffers.Offset, ALPHA_3_CODEOffset:flatbuffers.Offset, STANAG_CODEOffset:flatbuffers.Offset, INTERNET_CCTLDOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset):flatbuffers.Offset {

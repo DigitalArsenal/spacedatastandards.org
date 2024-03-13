@@ -1302,4 +1302,9 @@ class OMM extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishOMMBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$OMM");
+    }
 }

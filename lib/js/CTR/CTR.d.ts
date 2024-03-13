@@ -8,6 +8,7 @@ export declare class CTR implements flatbuffers.IUnpackableObject<CTRT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): CTR;
     static getRootAsCTR(bb: flatbuffers.ByteBuffer, obj?: CTR): CTR;
     static getSizePrefixedRootAsCTR(bb: flatbuffers.ByteBuffer, obj?: CTR): CTR;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * ISO 3166 Numeric code
      */
@@ -58,6 +59,8 @@ export declare class CTR implements flatbuffers.IUnpackableObject<CTRT> {
     static addInternetCctld(builder: flatbuffers.Builder, INTERNET_CCTLDOffset: flatbuffers.Offset): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static endCTR(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCTRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCTRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createCTR(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, GENC_CODEOffset: flatbuffers.Offset, ALPHA_2_CODEOffset: flatbuffers.Offset, ALPHA_3_CODEOffset: flatbuffers.Offset, STANAG_CODEOffset: flatbuffers.Offset, INTERNET_CCTLDOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CTRT;
     unpackTo(_o: CTRT): void;

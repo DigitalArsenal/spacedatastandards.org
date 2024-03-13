@@ -248,18 +248,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "OEMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of OEM messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/OEM"},
-                "description" : "Array of OEM records"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/OEMCOLLECTION"
+  "$ref" : "#/definitions/OEM"
 }

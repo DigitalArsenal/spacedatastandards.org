@@ -14,6 +14,7 @@ public struct EME : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
   public static EME GetRootAsEME(ByteBuffer _bb) { return GetRootAsEME(_bb, new EME()); }
   public static EME GetRootAsEME(ByteBuffer _bb, EME obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool EMEBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EME"); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EME __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -144,6 +145,8 @@ public struct EME : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<EME>(o);
   }
+  public static void FinishEMEBuffer(FlatBufferBuilder builder, Offset<EME> offset) { builder.Finish(offset.Value, "$EME"); }
+  public static void FinishSizePrefixedEMEBuffer(FlatBufferBuilder builder, Offset<EME> offset) { builder.FinishSizePrefixed(offset.Value, "$EME"); }
   public EMET UnPack() {
     var _o = new EMET();
     this.UnPackTo(_o);
@@ -217,6 +220,14 @@ public class EMET
     this.CIPHER_SUITE = null;
     this.KDF_PARAMETERS = null;
     this.ENCRYPTION_ALGORITHM_PARAMETERS = null;
+  }
+  public static EMET DeserializeFromBinary(byte[] fbBuffer) {
+    return EME.GetRootAsEME(new ByteBuffer(fbBuffer)).UnPack();
+  }
+  public byte[] SerializeToBinary() {
+    var fbb = new FlatBufferBuilder(0x10000);
+    EME.FinishEMEBuffer(fbb, EME.Pack(fbb, this));
+    return fbb.DataBuffer.ToSizedArray();
   }
 }
 

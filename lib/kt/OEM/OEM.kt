@@ -90,6 +90,7 @@ class OEM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        fun OEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OEM")
         fun createOEM(builder: FlatBufferBuilder, CCSDS_OEM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, EPHEMERIS_DATA_BLOCKOffset: Int) : Int {
             builder.startTable(4)
             addCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS)
@@ -115,5 +116,7 @@ class OEM : Table() {
             val o = builder.endTable()
             return o
         }
+        fun finishOEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OEM")
+        fun finishSizePrefixedOEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OEM")
     }
 }

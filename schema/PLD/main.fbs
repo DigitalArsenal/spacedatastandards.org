@@ -12,9 +12,6 @@ table PLD {
 }
 
 /// Collection of Payload Information Records
-table PLDCOLLECTION {
-  RECORDS: [PLD];
-}
 
-root_type PLDCOLLECTION;
+root_type PLD;
 file_identifier "$PLD";

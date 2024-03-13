@@ -225,16 +225,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of IDM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "Geometry" : {
       "type" : "object",
       "description" : "Geometry table with information about geometric properties",
@@ -349,16 +339,6 @@
         "INTEGRATED_DEVICES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
                 "description" : "Vector of Integrated Devices (IDM)"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SITCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of SIT records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SIT"}
               }
       },
       "additionalProperties" : false
@@ -492,17 +472,6 @@
       },
       "additionalProperties" : false
     },
-    "EPMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Entity Profile Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EPM"},
-                "description" : "Records of Entity Profile Messages"
-              }
-      },
-      "additionalProperties" : false
-    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -527,16 +496,6 @@
               },
         "INSTRUMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "PLDCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Payload Information Records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
               }
       },
       "additionalProperties" : false
@@ -640,15 +599,6 @@
       },
       "additionalProperties" : false
     },
-    "CATCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "ROC" : {
       "type" : "object",
       "description" : "Rocket Configuration",
@@ -741,17 +691,6 @@
       },
       "additionalProperties" : false
     },
-    "ROCCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Rocket Configurations",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/ROC"},
-                "description" : "Records of Rocket Configurations"
-              }
-      },
-      "additionalProperties" : false
-    },
     "BOV" : {
       "type" : "object",
       "description" : "Burn Out Vector Message",
@@ -779,15 +718,6 @@
               },
         "TIME_FROM_LAUNCH" : {
                 "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "BOVCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/BOV"}
               }
       },
       "additionalProperties" : false
@@ -906,17 +836,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "LDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/LDM"},
-                "description" : "Collection of LDM Records"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/LDMCOLLECTION"
+  "$ref" : "#/definitions/LDM"
 }

@@ -433,4 +433,9 @@ class EPM extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishEPMBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$EPM");
+    }
 }

@@ -9,6 +9,7 @@ export declare class EOP implements flatbuffers.IUnpackableObject<EOPT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): EOP;
     static getRootAsEOP(bb: flatbuffers.ByteBuffer, obj?: EOP): EOP;
     static getSizePrefixedRootAsEOP(bb: flatbuffers.ByteBuffer, obj?: EOP): EOP;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      *  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
      */
@@ -62,6 +63,8 @@ export declare class EOP implements flatbuffers.IUnpackableObject<EOPT> {
     static addLengthOfDayCorrectionSeconds(builder: flatbuffers.Builder, LENGTH_OF_DAY_CORRECTION_SECONDS: number): void;
     static addDataType(builder: flatbuffers.Builder, DATA_TYPE: DataType): void;
     static endEOP(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishEOPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedEOPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createEOP(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset, MJD: number, X_POLE_WANDER_RADIANS: number, Y_POLE_WANDER_RADIANS: number, X_CELESTIAL_POLE_OFFSET_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_RADIANS: number, UT1_MINUS_UTC_SECONDS: number, TAI_MINUS_UTC_SECONDS: number, LENGTH_OF_DAY_CORRECTION_SECONDS: number, DATA_TYPE: DataType): flatbuffers.Offset;
     unpack(): EOPT;
     unpackTo(_o: EOPT): void;

@@ -26,6 +26,10 @@ static getSizePrefixedRootAsOEM(bb:flatbuffers.ByteBuffer, obj?:OEM):OEM {
   return (obj || new OEM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$OEM');
+}
+
 /**
  * OEM Header
  * OEM Version
@@ -103,6 +107,14 @@ static startEphemerisDataBlockVector(builder:flatbuffers.Builder, numElems:numbe
 static endOEM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishOEMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$OEM');
+}
+
+static finishSizePrefixedOEMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$OEM', true);
 }
 
 static createOEM(builder:flatbuffers.Builder, CCSDS_OEM_VERS:number, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, EPHEMERIS_DATA_BLOCKOffset:flatbuffers.Offset):flatbuffers.Offset {

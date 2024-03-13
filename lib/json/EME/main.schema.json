@@ -47,17 +47,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "EMECOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Encrypted Message Envelopes",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EME"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EMECOLLECTION"
+  "$ref" : "#/definitions/EME"
 }

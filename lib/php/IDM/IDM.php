@@ -690,4 +690,9 @@ class IDM extends Table
         $o = $builder->endObject();
         return $o;
     }
+
+    public static function finishIDMBuffer(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->finish($offset, "$IDM");
+    }
 }

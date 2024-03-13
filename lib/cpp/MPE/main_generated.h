@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct MPE;
 struct MPEBuilder;
 
-struct MPECOLLECTION;
-struct MPECOLLECTIONBuilder;
-
 enum referenceFrame : int8_t {
   /// Earth Mean Equator and Equinox of J2000
   referenceFrame_EME2000 = 0,
@@ -352,169 +349,48 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
       BSTAR);
 }
 
-/// Collection of MPE Records
-struct MPECOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef MPECOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_CLASSIFICATION_TYPE = 4,
-    VT_REF_FRAME = 6,
-    VT_REF_FRAME_EPOCH = 8,
-    VT_TIME_SYSTEM = 10,
-    VT_MEAN_ELEMENT_THEORY = 12,
-    VT_RECORDS = 14
-  };
-  /// Default value = U
-  const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
-  }
-  /// Name of the reference frame (TEME, EME2000, etc.)
-  referenceFrame REF_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_REF_FRAME, 9));
-  }
-  /// Epoch of the Reference Frame. (UNIX TimeStamp)
-  double REF_FRAME_EPOCH() const {
-    return GetField<double>(VT_REF_FRAME_EPOCH, 0.0);
-  }
-  /// Time system used for the orbit state and covariance matrix. (UTC)
-  timeSystem TIME_SYSTEM() const {
-    return static_cast<timeSystem>(GetField<int8_t>(VT_TIME_SYSTEM, 11));
-  }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
-  meanElementTheory MEAN_ELEMENT_THEORY() const {
-    return static_cast<meanElementTheory>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
-  }
-  /// Array of MPE records
-  const ::flatbuffers::Vector<::flatbuffers::Offset<MPE>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MPE>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_CLASSIFICATION_TYPE) &&
-           verifier.VerifyString(CLASSIFICATION_TYPE()) &&
-           VerifyField<int8_t>(verifier, VT_REF_FRAME, 1) &&
-           VerifyField<double>(verifier, VT_REF_FRAME_EPOCH, 8) &&
-           VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
-           VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct MPECOLLECTIONBuilder {
-  typedef MPECOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_CLASSIFICATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE) {
-    fbb_.AddOffset(MPECOLLECTION::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
-  }
-  void add_REF_FRAME(referenceFrame REF_FRAME) {
-    fbb_.AddElement<int8_t>(MPECOLLECTION::VT_REF_FRAME, static_cast<int8_t>(REF_FRAME), 9);
-  }
-  void add_REF_FRAME_EPOCH(double REF_FRAME_EPOCH) {
-    fbb_.AddElement<double>(MPECOLLECTION::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH, 0.0);
-  }
-  void add_TIME_SYSTEM(timeSystem TIME_SYSTEM) {
-    fbb_.AddElement<int8_t>(MPECOLLECTION::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 11);
-  }
-  void add_MEAN_ELEMENT_THEORY(meanElementTheory MEAN_ELEMENT_THEORY) {
-    fbb_.AddElement<int8_t>(MPECOLLECTION::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
-  }
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MPE>>> RECORDS) {
-    fbb_.AddOffset(MPECOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit MPECOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<MPECOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<MPECOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<MPECOLLECTION> CreateMPECOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE = 0,
-    referenceFrame REF_FRAME = referenceFrame_TEME,
-    double REF_FRAME_EPOCH = 0.0,
-    timeSystem TIME_SYSTEM = timeSystem_UTC,
-    meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MPE>>> RECORDS = 0) {
-  MPECOLLECTIONBuilder builder_(_fbb);
-  builder_.add_REF_FRAME_EPOCH(REF_FRAME_EPOCH);
-  builder_.add_RECORDS(RECORDS);
-  builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
-  builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
-  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
-  builder_.add_REF_FRAME(REF_FRAME);
-  return builder_.Finish();
+inline const MPE *GetMPE(const void *buf) {
+  return ::flatbuffers::GetRoot<MPE>(buf);
 }
 
-inline ::flatbuffers::Offset<MPECOLLECTION> CreateMPECOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *CLASSIFICATION_TYPE = nullptr,
-    referenceFrame REF_FRAME = referenceFrame_TEME,
-    double REF_FRAME_EPOCH = 0.0,
-    timeSystem TIME_SYSTEM = timeSystem_UTC,
-    meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4,
-    const std::vector<::flatbuffers::Offset<MPE>> *RECORDS = nullptr) {
-  auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<MPE>>(*RECORDS) : 0;
-  return CreateMPECOLLECTION(
-      _fbb,
-      CLASSIFICATION_TYPE__,
-      REF_FRAME,
-      REF_FRAME_EPOCH,
-      TIME_SYSTEM,
-      MEAN_ELEMENT_THEORY,
-      RECORDS__);
+inline const MPE *GetSizePrefixedMPE(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<MPE>(buf);
 }
 
-inline const MPECOLLECTION *GetMPECOLLECTION(const void *buf) {
-  return ::flatbuffers::GetRoot<MPECOLLECTION>(buf);
-}
-
-inline const MPECOLLECTION *GetSizePrefixedMPECOLLECTION(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<MPECOLLECTION>(buf);
-}
-
-inline const char *MPECOLLECTIONIdentifier() {
+inline const char *MPEIdentifier() {
   return "$MPE";
 }
 
-inline bool MPECOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool MPEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, MPECOLLECTIONIdentifier());
+      buf, MPEIdentifier());
 }
 
-inline bool SizePrefixedMPECOLLECTIONBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedMPEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, MPECOLLECTIONIdentifier(), true);
+      buf, MPEIdentifier(), true);
 }
 
-inline bool VerifyMPECOLLECTIONBuffer(
+inline bool VerifyMPEBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<MPECOLLECTION>(MPECOLLECTIONIdentifier());
+  return verifier.VerifyBuffer<MPE>(MPEIdentifier());
 }
 
-inline bool VerifySizePrefixedMPECOLLECTIONBuffer(
+inline bool VerifySizePrefixedMPEBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<MPECOLLECTION>(MPECOLLECTIONIdentifier());
+  return verifier.VerifySizePrefixedBuffer<MPE>(MPEIdentifier());
 }
 
-inline void FinishMPECOLLECTIONBuffer(
+inline void FinishMPEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MPECOLLECTION> root) {
-  fbb.Finish(root, MPECOLLECTIONIdentifier());
+    ::flatbuffers::Offset<MPE> root) {
+  fbb.Finish(root, MPEIdentifier());
 }
 
-inline void FinishSizePrefixedMPECOLLECTIONBuffer(
+inline void FinishSizePrefixedMPEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MPECOLLECTION> root) {
-  fbb.FinishSizePrefixed(root, MPECOLLECTIONIdentifier());
+    ::flatbuffers::Offset<MPE> root) {
+  fbb.FinishSizePrefixed(root, MPEIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

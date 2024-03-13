@@ -1076,217 +1076,86 @@ impl SITT {
     })
   }
 }
-pub enum SITCOLLECTIONOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Collection of SIT records
-pub struct SITCOLLECTION<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for SITCOLLECTION<'a> {
-  type Inner = SITCOLLECTION<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> SITCOLLECTION<'a> {
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    SITCOLLECTION { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
-    args: &'args SITCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<SITCOLLECTION<'bldr>> {
-    let mut builder = SITCOLLECTIONBuilder::new(_fbb);
-    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SITCOLLECTIONT {
-    let RECORDS = self.RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    SITCOLLECTIONT {
-      RECORDS,
-    }
-  }
-
-  #[inline]
-  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SIT<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SIT>>>>(SITCOLLECTION::VT_RECORDS, None)}
-  }
-}
-
-impl flatbuffers::Verifiable for SITCOLLECTION<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<SIT>>>>("RECORDS", Self::VT_RECORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SITCOLLECTIONArgs<'a> {
-    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SIT<'a>>>>>,
-}
-impl<'a> Default for SITCOLLECTIONArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    SITCOLLECTIONArgs {
-      RECORDS: None,
-    }
-  }
-}
-
-pub struct SITCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b> SITCOLLECTIONBuilder<'a, 'b> {
-  #[inline]
-  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<SIT<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SITCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SITCOLLECTIONBuilder<'a, 'b> {
-    let start = _fbb.start_table();
-    SITCOLLECTIONBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<SITCOLLECTION<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for SITCOLLECTION<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("SITCOLLECTION");
-      ds.field("RECORDS", &self.RECORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SITCOLLECTIONT {
-  pub RECORDS: Option<Vec<SITT>>,
-}
-impl Default for SITCOLLECTIONT {
-  fn default() -> Self {
-    Self {
-      RECORDS: None,
-    }
-  }
-}
-impl SITCOLLECTIONT {
-  pub fn pack<'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
-  ) -> flatbuffers::WIPOffset<SITCOLLECTION<'b>> {
-    let RECORDS = self.RECORDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    SITCOLLECTION::create(_fbb, &SITCOLLECTIONArgs{
-      RECORDS,
-    })
-  }
-}
 #[inline]
-/// Verifies that a buffer of bytes contains a `SITCOLLECTION`
+/// Verifies that a buffer of bytes contains a `SIT`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_SITCOLLECTION_unchecked`.
-pub fn root_as_SITCOLLECTION(buf: &[u8]) -> Result<SITCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root::<SITCOLLECTION>(buf)
+/// `root_as_SIT_unchecked`.
+pub fn root_as_SIT(buf: &[u8]) -> Result<SIT, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root::<SIT>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `SITCOLLECTION` and returns it.
+/// `SIT` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_SITCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_SITCOLLECTION(buf: &[u8]) -> Result<SITCOLLECTION, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root::<SITCOLLECTION>(buf)
+/// `size_prefixed_root_as_SIT_unchecked`.
+pub fn size_prefixed_root_as_SIT(buf: &[u8]) -> Result<SIT, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root::<SIT>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `SITCOLLECTION` and returns it.
+/// contains a `SIT` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_SITCOLLECTION_unchecked`.
-pub fn root_as_SITCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_SIT_unchecked`.
+pub fn root_as_SIT_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<SITCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::root_with_opts::<SITCOLLECTION<'b>>(opts, buf)
+) -> Result<SIT<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::root_with_opts::<SIT<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `SITCOLLECTION` and returns
+/// bytes contains a size prefixed `SIT` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_SITCOLLECTION_unchecked`.
-pub fn size_prefixed_root_as_SITCOLLECTION_with_opts<'b, 'o>(
+/// `root_as_SIT_unchecked`.
+pub fn size_prefixed_root_as_SIT_with_opts<'b, 'o>(
   opts: &'o flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<SITCOLLECTION<'b>, flatbuffers::InvalidFlatbuffer> {
-  flatbuffers::size_prefixed_root_with_opts::<SITCOLLECTION<'b>>(opts, buf)
+) -> Result<SIT<'b>, flatbuffers::InvalidFlatbuffer> {
+  flatbuffers::size_prefixed_root_with_opts::<SIT<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a SITCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a SIT and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `SITCOLLECTION`.
-pub unsafe fn root_as_SITCOLLECTION_unchecked(buf: &[u8]) -> SITCOLLECTION {
-  flatbuffers::root_unchecked::<SITCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid `SIT`.
+pub unsafe fn root_as_SIT_unchecked(buf: &[u8]) -> SIT {
+  flatbuffers::root_unchecked::<SIT>(buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed SITCOLLECTION and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed SIT and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `SITCOLLECTION`.
-pub unsafe fn size_prefixed_root_as_SITCOLLECTION_unchecked(buf: &[u8]) -> SITCOLLECTION {
-  flatbuffers::size_prefixed_root_unchecked::<SITCOLLECTION>(buf)
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `SIT`.
+pub unsafe fn size_prefixed_root_as_SIT_unchecked(buf: &[u8]) -> SIT {
+  flatbuffers::size_prefixed_root_unchecked::<SIT>(buf)
 }
-pub const SITCOLLECTION_IDENTIFIER: &str = "$SIT";
+pub const SIT_IDENTIFIER: &str = "$SIT";
 
 #[inline]
-pub fn SITCOLLECTION_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, SITCOLLECTION_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn SITCOLLECTION_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  flatbuffers::buffer_has_identifier(buf, SITCOLLECTION_IDENTIFIER, true)
+pub fn SIT_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, SIT_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_SITCOLLECTION_buffer<'a, 'b>(
+pub fn SIT_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  flatbuffers::buffer_has_identifier(buf, SIT_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_SIT_buffer<'a, 'b>(
     fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
-    root: flatbuffers::WIPOffset<SITCOLLECTION<'a>>) {
-  fbb.finish(root, Some(SITCOLLECTION_IDENTIFIER));
+    root: flatbuffers::WIPOffset<SIT<'a>>) {
+  fbb.finish(root, Some(SIT_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_SITCOLLECTION_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<SITCOLLECTION<'a>>) {
-  fbb.finish_size_prefixed(root, Some(SITCOLLECTION_IDENTIFIER));
+pub fn finish_size_prefixed_SIT_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<SIT<'a>>) {
+  fbb.finish_size_prefixed(root, Some(SIT_IDENTIFIER));
 }

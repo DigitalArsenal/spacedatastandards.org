@@ -25,6 +25,7 @@ public final class LDM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
   public static LDM getRootAsLDM(ByteBuffer _bb) { return getRootAsLDM(_bb, new LDM()); }
   public static LDM getRootAsLDM(ByteBuffer _bb, LDM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean LDMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$LDM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public LDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -316,6 +317,8 @@ public final class LDM extends Table {
     int o = builder.endTable();
     return o;
   }
+  public static void finishLDMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$LDM"); }
+  public static void finishSizePrefixedLDMBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "$LDM"); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
