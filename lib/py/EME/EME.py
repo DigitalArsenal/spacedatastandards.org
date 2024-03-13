@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Encrypted Message Envelope (EME)
+# Encrypted Message Envelope
 class EME(object):
     __slots__ = ['_tab']
 

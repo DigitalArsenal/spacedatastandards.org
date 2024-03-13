@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Encrypted Message Envelope (EME)
+///  Encrypted Message Envelope
 class EME {
   EME._(this._bc, this._bcOffset);
   factory EME(List<int> bytes) {

@@ -1,4 +1,4 @@
-/// Encrypted Message Envelope (EME)
+/// Encrypted Message Envelope
 table EME {
   /// Encrypted data blob, containing the ciphertext of the original plaintext message.
   ENCRYPTED_BLOB: [ubyte];

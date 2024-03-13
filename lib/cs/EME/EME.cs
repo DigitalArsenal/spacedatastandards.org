@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Encrypted Message Envelope (EME)
+/// Encrypted Message Envelope
 public struct EME : IFlatbufferObject
 {
   private Table __p;

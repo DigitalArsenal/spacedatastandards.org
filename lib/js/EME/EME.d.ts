@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 /**
- * Encrypted Message Envelope (EME)
+ * Encrypted Message Envelope
  */
 export declare class EME implements flatbuffers.IUnpackableObject<EMET> {
     bb: flatbuffers.ByteBuffer | null;

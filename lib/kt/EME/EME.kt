@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Encrypted Message Envelope (EME)
+ * Encrypted Message Envelope
  */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes

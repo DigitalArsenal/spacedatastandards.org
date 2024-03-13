@@ -5,7 +5,7 @@ class EME
 
 class EMECOLLECTION
 
-/// Encrypted Message Envelope (EME)
+/// Encrypted Message Envelope
 class EME : flatbuffers_handle
     /// Encrypted data blob, containing the ciphertext of the original plaintext message.
     def ENCRYPTED_BLOB(i:int) -> int:

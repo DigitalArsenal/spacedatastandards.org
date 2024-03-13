@@ -3,7 +3,7 @@
   "definitions": {
     "EME" : {
       "type" : "object",
-      "description" : "Encrypted Message Envelope (EME)",
+      "description" : "Encrypted Message Envelope",
       "properties" : {
         "ENCRYPTED_BLOB" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},

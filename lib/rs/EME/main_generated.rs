@@ -12,7 +12,7 @@ use self::flatbuffers::{EndianScalar, Follow};
 pub enum EMEOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Encrypted Message Envelope (EME)
+/// Encrypted Message Envelope
 pub struct EME<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

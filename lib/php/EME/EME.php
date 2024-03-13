@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Encrypted Message Envelope (EME)
+/// Encrypted Message Envelope
 class EME extends Table
 {
     /**

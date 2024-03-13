@@ -19,7 +19,7 @@ struct EMEBuilder;
 struct EMECOLLECTION;
 struct EMECOLLECTIONBuilder;
 
-/// Encrypted Message Envelope (EME)
+/// Encrypted Message Envelope
 struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EMEBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
