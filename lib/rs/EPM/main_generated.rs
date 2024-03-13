@@ -688,11 +688,12 @@ impl<'a> EPM<'a> {
   pub const VT_HONORIFIC_SUFFIX: flatbuffers::VOffsetT = 16;
   pub const VT_JOB_TITLE: flatbuffers::VOffsetT = 18;
   pub const VT_OCCUPATION: flatbuffers::VOffsetT = 20;
-  pub const VT_ALTERNATE_NAMES: flatbuffers::VOffsetT = 22;
-  pub const VT_EMAIL: flatbuffers::VOffsetT = 24;
-  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 26;
-  pub const VT_KEYS: flatbuffers::VOffsetT = 28;
-  pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 30;
+  pub const VT_ADDRESS: flatbuffers::VOffsetT = 22;
+  pub const VT_ALTERNATE_NAMES: flatbuffers::VOffsetT = 24;
+  pub const VT_EMAIL: flatbuffers::VOffsetT = 26;
+  pub const VT_TELEPHONE: flatbuffers::VOffsetT = 28;
+  pub const VT_KEYS: flatbuffers::VOffsetT = 30;
+  pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -709,6 +710,7 @@ impl<'a> EPM<'a> {
     if let Some(x) = args.TELEPHONE { builder.add_TELEPHONE(x); }
     if let Some(x) = args.EMAIL { builder.add_EMAIL(x); }
     if let Some(x) = args.ALTERNATE_NAMES { builder.add_ALTERNATE_NAMES(x); }
+    if let Some(x) = args.ADDRESS { builder.add_ADDRESS(x); }
     if let Some(x) = args.OCCUPATION { builder.add_OCCUPATION(x); }
     if let Some(x) = args.JOB_TITLE { builder.add_JOB_TITLE(x); }
     if let Some(x) = args.HONORIFIC_SUFFIX { builder.add_HONORIFIC_SUFFIX(x); }
@@ -749,6 +751,9 @@ impl<'a> EPM<'a> {
     let OCCUPATION = self.OCCUPATION().map(|x| {
       x.to_string()
     });
+    let ADDRESS = self.ADDRESS().map(|x| {
+      Box::new(x.unpack())
+    });
     let ALTERNATE_NAMES = self.ALTERNATE_NAMES().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
@@ -774,6 +779,7 @@ impl<'a> EPM<'a> {
       HONORIFIC_SUFFIX,
       JOB_TITLE,
       OCCUPATION,
+      ADDRESS,
       ALTERNATE_NAMES,
       EMAIL,
       TELEPHONE,
@@ -854,6 +860,14 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_OCCUPATION, None)}
   }
+  /// Physical Address
+  #[inline]
+  pub fn ADDRESS(&self) -> Option<Address<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Address>>(EPM::VT_ADDRESS, None)}
+  }
   /// Alternate names for the entity
   #[inline]
   pub fn ALTERNATE_NAMES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
@@ -912,6 +926,7 @@ impl flatbuffers::Verifiable for EPM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HONORIFIC_SUFFIX", Self::VT_HONORIFIC_SUFFIX, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("JOB_TITLE", Self::VT_JOB_TITLE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OCCUPATION", Self::VT_OCCUPATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<Address>>("ADDRESS", Self::VT_ADDRESS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ALTERNATE_NAMES", Self::VT_ALTERNATE_NAMES, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EMAIL", Self::VT_EMAIL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TELEPHONE", Self::VT_TELEPHONE, false)?
@@ -931,6 +946,7 @@ pub struct EPMArgs<'a> {
     pub HONORIFIC_SUFFIX: Option<flatbuffers::WIPOffset<&'a str>>,
     pub JOB_TITLE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OCCUPATION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ADDRESS: Option<flatbuffers::WIPOffset<Address<'a>>>,
     pub ALTERNATE_NAMES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub EMAIL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TELEPHONE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -950,6 +966,7 @@ impl<'a> Default for EPMArgs<'a> {
       HONORIFIC_SUFFIX: None,
       JOB_TITLE: None,
       OCCUPATION: None,
+      ADDRESS: None,
       ALTERNATE_NAMES: None,
       EMAIL: None,
       TELEPHONE: None,
@@ -1001,6 +1018,10 @@ impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_OCCUPATION, OCCUPATION);
   }
   #[inline]
+  pub fn add_ADDRESS(&mut self, ADDRESS: flatbuffers::WIPOffset<Address<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<Address>>(EPM::VT_ADDRESS, ADDRESS);
+  }
+  #[inline]
   pub fn add_ALTERNATE_NAMES(&mut self, ALTERNATE_NAMES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_ALTERNATE_NAMES, ALTERNATE_NAMES);
   }
@@ -1047,6 +1068,7 @@ impl core::fmt::Debug for EPM<'_> {
       ds.field("HONORIFIC_SUFFIX", &self.HONORIFIC_SUFFIX());
       ds.field("JOB_TITLE", &self.JOB_TITLE());
       ds.field("OCCUPATION", &self.OCCUPATION());
+      ds.field("ADDRESS", &self.ADDRESS());
       ds.field("ALTERNATE_NAMES", &self.ALTERNATE_NAMES());
       ds.field("EMAIL", &self.EMAIL());
       ds.field("TELEPHONE", &self.TELEPHONE());
@@ -1067,6 +1089,7 @@ pub struct EPMT {
   pub HONORIFIC_SUFFIX: Option<String>,
   pub JOB_TITLE: Option<String>,
   pub OCCUPATION: Option<String>,
+  pub ADDRESS: Option<Box<AddressT>>,
   pub ALTERNATE_NAMES: Option<Vec<String>>,
   pub EMAIL: Option<String>,
   pub TELEPHONE: Option<String>,
@@ -1085,6 +1108,7 @@ impl Default for EPMT {
       HONORIFIC_SUFFIX: None,
       JOB_TITLE: None,
       OCCUPATION: None,
+      ADDRESS: None,
       ALTERNATE_NAMES: None,
       EMAIL: None,
       TELEPHONE: None,
@@ -1125,6 +1149,9 @@ impl EPMT {
     let OCCUPATION = self.OCCUPATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ADDRESS = self.ADDRESS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let ALTERNATE_NAMES = self.ALTERNATE_NAMES.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
@@ -1150,6 +1177,7 @@ impl EPMT {
       HONORIFIC_SUFFIX,
       JOB_TITLE,
       OCCUPATION,
+      ADDRESS,
       ALTERNATE_NAMES,
       EMAIL,
       TELEPHONE,

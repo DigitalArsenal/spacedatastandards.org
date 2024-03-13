@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { Address, AddressT } from './Address.js';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 /**
  * Entity Profile Message
@@ -56,6 +57,10 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     OCCUPATION(): string | null;
     OCCUPATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
+     * Physical Address
+     */
+    ADDRESS(obj?: Address): Address | null;
+    /**
      * Alternate names for the entity
      */
     ALTERNATE_NAMES(index: number): string;
@@ -92,6 +97,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static addHonorificSuffix(builder: flatbuffers.Builder, HONORIFIC_SUFFIXOffset: flatbuffers.Offset): void;
     static addJobTitle(builder: flatbuffers.Builder, JOB_TITLEOffset: flatbuffers.Offset): void;
     static addOccupation(builder: flatbuffers.Builder, OCCUPATIONOffset: flatbuffers.Offset): void;
+    static addAddress(builder: flatbuffers.Builder, ADDRESSOffset: flatbuffers.Offset): void;
     static addAlternateNames(builder: flatbuffers.Builder, ALTERNATE_NAMESOffset: flatbuffers.Offset): void;
     static createAlternateNamesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startAlternateNamesVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -106,7 +112,6 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createEPM(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset, LEGAL_NAMEOffset: flatbuffers.Offset, FAMILY_NAMEOffset: flatbuffers.Offset, GIVEN_NAMEOffset: flatbuffers.Offset, ADDITIONAL_NAMEOffset: flatbuffers.Offset, HONORIFIC_PREFIXOffset: flatbuffers.Offset, HONORIFIC_SUFFIXOffset: flatbuffers.Offset, JOB_TITLEOffset: flatbuffers.Offset, OCCUPATIONOffset: flatbuffers.Offset, ALTERNATE_NAMESOffset: flatbuffers.Offset, EMAILOffset: flatbuffers.Offset, TELEPHONEOffset: flatbuffers.Offset, KEYSOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EPMT;
     unpackTo(_o: EPMT): void;
 }
@@ -120,12 +125,13 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     HONORIFIC_SUFFIX: string | Uint8Array | null;
     JOB_TITLE: string | Uint8Array | null;
     OCCUPATION: string | Uint8Array | null;
+    ADDRESS: AddressT | null;
     ALTERNATE_NAMES: (string)[];
     EMAIL: string | Uint8Array | null;
     TELEPHONE: string | Uint8Array | null;
     KEYS: (CryptoKeyT)[];
     MULTIFORMAT_ADDRESS: (string)[];
-    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[]);
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map

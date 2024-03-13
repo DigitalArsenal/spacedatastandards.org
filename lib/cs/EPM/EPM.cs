@@ -90,31 +90,33 @@ public struct EPM : IFlatbufferObject
   public ArraySegment<byte>? GetOCCUPATIONBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetOCCUPATIONArray() { return __p.__vector_as_array<byte>(20); }
+  /// Physical Address
+  public Address? ADDRESS { get { int o = __p.__offset(22); return o != 0 ? (Address?)(new Address()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Alternate names for the entity
-  public string ALTERNATE_NAMES(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ALTERNATE_NAMESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string ALTERNATE_NAMES(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ALTERNATE_NAMESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Email address of the entity
-  public string EMAIL { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string EMAIL { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEMAILBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetEMAILBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetEMAILBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetEMAILBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetEMAILArray() { return __p.__vector_as_array<byte>(24); }
+  public byte[] GetEMAILArray() { return __p.__vector_as_array<byte>(26); }
   /// Telephone number of the entity
-  public string TELEPHONE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TELEPHONE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTELEPHONEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetTELEPHONEBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetTELEPHONEBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetTELEPHONEBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetTELEPHONEArray() { return __p.__vector_as_array<byte>(26); }
+  public byte[] GetTELEPHONEArray() { return __p.__vector_as_array<byte>(28); }
   /// Cryptographic keys associated with the entity
-  public CryptoKey? KEYS(int j) { int o = __p.__offset(28); return o != 0 ? (CryptoKey?)(new CryptoKey()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int KEYSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public CryptoKey? KEYS(int j) { int o = __p.__offset(30); return o != 0 ? (CryptoKey?)(new CryptoKey()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int KEYSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Multiformat addresses associated with the entity
-  public string MULTIFORMAT_ADDRESS(int j) { int o = __p.__offset(30); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int MULTIFORMAT_ADDRESSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string MULTIFORMAT_ADDRESS(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int MULTIFORMAT_ADDRESSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<EPM> CreateEPM(FlatBufferBuilder builder,
       StringOffset DNOffset = default(StringOffset),
@@ -126,17 +128,19 @@ public struct EPM : IFlatbufferObject
       StringOffset HONORIFIC_SUFFIXOffset = default(StringOffset),
       StringOffset JOB_TITLEOffset = default(StringOffset),
       StringOffset OCCUPATIONOffset = default(StringOffset),
+      Offset<Address> ADDRESSOffset = default(Offset<Address>),
       VectorOffset ALTERNATE_NAMESOffset = default(VectorOffset),
       StringOffset EMAILOffset = default(StringOffset),
       StringOffset TELEPHONEOffset = default(StringOffset),
       VectorOffset KEYSOffset = default(VectorOffset),
       VectorOffset MULTIFORMAT_ADDRESSOffset = default(VectorOffset)) {
-    builder.StartTable(14);
+    builder.StartTable(15);
     EPM.AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset);
     EPM.AddKEYS(builder, KEYSOffset);
     EPM.AddTELEPHONE(builder, TELEPHONEOffset);
     EPM.AddEMAIL(builder, EMAILOffset);
     EPM.AddALTERNATE_NAMES(builder, ALTERNATE_NAMESOffset);
+    EPM.AddADDRESS(builder, ADDRESSOffset);
     EPM.AddOCCUPATION(builder, OCCUPATIONOffset);
     EPM.AddJOB_TITLE(builder, JOB_TITLEOffset);
     EPM.AddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIXOffset);
@@ -149,7 +153,7 @@ public struct EPM : IFlatbufferObject
     return EPM.EndEPM(builder);
   }
 
-  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
   public static void AddLEGAL_NAME(FlatBufferBuilder builder, StringOffset LEGAL_NAMEOffset) { builder.AddOffset(1, LEGAL_NAMEOffset.Value, 0); }
   public static void AddFAMILY_NAME(FlatBufferBuilder builder, StringOffset FAMILY_NAMEOffset) { builder.AddOffset(2, FAMILY_NAMEOffset.Value, 0); }
@@ -159,21 +163,22 @@ public struct EPM : IFlatbufferObject
   public static void AddHONORIFIC_SUFFIX(FlatBufferBuilder builder, StringOffset HONORIFIC_SUFFIXOffset) { builder.AddOffset(6, HONORIFIC_SUFFIXOffset.Value, 0); }
   public static void AddJOB_TITLE(FlatBufferBuilder builder, StringOffset JOB_TITLEOffset) { builder.AddOffset(7, JOB_TITLEOffset.Value, 0); }
   public static void AddOCCUPATION(FlatBufferBuilder builder, StringOffset OCCUPATIONOffset) { builder.AddOffset(8, OCCUPATIONOffset.Value, 0); }
-  public static void AddALTERNATE_NAMES(FlatBufferBuilder builder, VectorOffset ALTERNATE_NAMESOffset) { builder.AddOffset(9, ALTERNATE_NAMESOffset.Value, 0); }
+  public static void AddADDRESS(FlatBufferBuilder builder, Offset<Address> ADDRESSOffset) { builder.AddOffset(9, ADDRESSOffset.Value, 0); }
+  public static void AddALTERNATE_NAMES(FlatBufferBuilder builder, VectorOffset ALTERNATE_NAMESOffset) { builder.AddOffset(10, ALTERNATE_NAMESOffset.Value, 0); }
   public static VectorOffset CreateALTERNATE_NAMESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateALTERNATE_NAMESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALTERNATE_NAMESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALTERNATE_NAMESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartALTERNATE_NAMESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddEMAIL(FlatBufferBuilder builder, StringOffset EMAILOffset) { builder.AddOffset(10, EMAILOffset.Value, 0); }
-  public static void AddTELEPHONE(FlatBufferBuilder builder, StringOffset TELEPHONEOffset) { builder.AddOffset(11, TELEPHONEOffset.Value, 0); }
-  public static void AddKEYS(FlatBufferBuilder builder, VectorOffset KEYSOffset) { builder.AddOffset(12, KEYSOffset.Value, 0); }
+  public static void AddEMAIL(FlatBufferBuilder builder, StringOffset EMAILOffset) { builder.AddOffset(11, EMAILOffset.Value, 0); }
+  public static void AddTELEPHONE(FlatBufferBuilder builder, StringOffset TELEPHONEOffset) { builder.AddOffset(12, TELEPHONEOffset.Value, 0); }
+  public static void AddKEYS(FlatBufferBuilder builder, VectorOffset KEYSOffset) { builder.AddOffset(13, KEYSOffset.Value, 0); }
   public static VectorOffset CreateKEYSVector(FlatBufferBuilder builder, Offset<CryptoKey>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateKEYSVectorBlock(FlatBufferBuilder builder, Offset<CryptoKey>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateKEYSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CryptoKey>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateKEYSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CryptoKey>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartKEYSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddMULTIFORMAT_ADDRESS(FlatBufferBuilder builder, VectorOffset MULTIFORMAT_ADDRESSOffset) { builder.AddOffset(13, MULTIFORMAT_ADDRESSOffset.Value, 0); }
+  public static void AddMULTIFORMAT_ADDRESS(FlatBufferBuilder builder, VectorOffset MULTIFORMAT_ADDRESSOffset) { builder.AddOffset(14, MULTIFORMAT_ADDRESSOffset.Value, 0); }
   public static VectorOffset CreateMULTIFORMAT_ADDRESSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMULTIFORMAT_ADDRESSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMULTIFORMAT_ADDRESSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -200,6 +205,7 @@ public struct EPM : IFlatbufferObject
     _o.HONORIFIC_SUFFIX = this.HONORIFIC_SUFFIX;
     _o.JOB_TITLE = this.JOB_TITLE;
     _o.OCCUPATION = this.OCCUPATION;
+    _o.ADDRESS = this.ADDRESS.HasValue ? this.ADDRESS.Value.UnPack() : null;
     _o.ALTERNATE_NAMES = new List<string>();
     for (var _j = 0; _j < this.ALTERNATE_NAMESLength; ++_j) {_o.ALTERNATE_NAMES.Add(this.ALTERNATE_NAMES(_j));}
     _o.EMAIL = this.EMAIL;
@@ -220,6 +226,7 @@ public struct EPM : IFlatbufferObject
     var _HONORIFIC_SUFFIX = _o.HONORIFIC_SUFFIX == null ? default(StringOffset) : builder.CreateString(_o.HONORIFIC_SUFFIX);
     var _JOB_TITLE = _o.JOB_TITLE == null ? default(StringOffset) : builder.CreateString(_o.JOB_TITLE);
     var _OCCUPATION = _o.OCCUPATION == null ? default(StringOffset) : builder.CreateString(_o.OCCUPATION);
+    var _ADDRESS = _o.ADDRESS == null ? default(Offset<Address>) : Address.Pack(builder, _o.ADDRESS);
     var _ALTERNATE_NAMES = default(VectorOffset);
     if (_o.ALTERNATE_NAMES != null) {
       var __ALTERNATE_NAMES = new StringOffset[_o.ALTERNATE_NAMES.Count];
@@ -251,6 +258,7 @@ public struct EPM : IFlatbufferObject
       _HONORIFIC_SUFFIX,
       _JOB_TITLE,
       _OCCUPATION,
+      _ADDRESS,
       _ALTERNATE_NAMES,
       _EMAIL,
       _TELEPHONE,
@@ -270,6 +278,7 @@ public class EPMT
   public string HONORIFIC_SUFFIX { get; set; }
   public string JOB_TITLE { get; set; }
   public string OCCUPATION { get; set; }
+  public AddressT ADDRESS { get; set; }
   public List<string> ALTERNATE_NAMES { get; set; }
   public string EMAIL { get; set; }
   public string TELEPHONE { get; set; }
@@ -286,6 +295,7 @@ public class EPMT
     this.HONORIFIC_SUFFIX = null;
     this.JOB_TITLE = null;
     this.OCCUPATION = null;
+    this.ADDRESS = null;
     this.ALTERNATE_NAMES = null;
     this.EMAIL = null;
     this.TELEPHONE = null;

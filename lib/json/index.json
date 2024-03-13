@@ -3420,6 +3420,10 @@
                             "type": "string",
                             "description": "Occupation of the person"
                         },
+                        "ADDRESS": {
+                            "$ref": "#/definitions/Address",
+                            "description": "Physical Address"
+                        },
                         "ALTERNATE_NAMES": {
                             "type": "array",
                             "items": {
@@ -5556,6 +5560,10 @@
                         "OCCUPATION": {
                             "type": "string",
                             "description": "Occupation of the person"
+                        },
+                        "ADDRESS": {
+                            "$ref": "#/definitions/Address",
+                            "description": "Physical Address"
                         },
                         "ALTERNATE_NAMES": {
                             "type": "array",

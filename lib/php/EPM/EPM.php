@@ -104,6 +104,14 @@ class EPM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Physical Address
+    public function getADDRESS()
+    {
+        $obj = new Address();
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /// Alternate names for the entity
     /**
      * @param int offset
@@ -111,7 +119,7 @@ class EPM extends Table
      */
     public function getALTERNATE_NAMES($j)
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -120,21 +128,21 @@ class EPM extends Table
      */
     public function getALTERNATE_NAMESLength()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// Email address of the entity
     public function getEMAIL()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Telephone number of the entity
     public function getTELEPHONE()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -144,7 +152,7 @@ class EPM extends Table
      */
     public function getKEYS($j)
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         $obj = new CryptoKey();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -154,7 +162,7 @@ class EPM extends Table
      */
     public function getKEYSLength()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -165,7 +173,7 @@ class EPM extends Table
      */
     public function getMULTIFORMAT_ADDRESS($j)
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -174,7 +182,7 @@ class EPM extends Table
      */
     public function getMULTIFORMAT_ADDRESSLength()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -184,16 +192,16 @@ class EPM extends Table
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS)
     {
-        $builder->startObject(14);
+        $builder->startObject(15);
         self::addDN($builder, $DN);
         self::addLEGAL_NAME($builder, $LEGAL_NAME);
         self::addFAMILY_NAME($builder, $FAMILY_NAME);
@@ -203,6 +211,7 @@ class EPM extends Table
         self::addHONORIFIC_SUFFIX($builder, $HONORIFIC_SUFFIX);
         self::addJOB_TITLE($builder, $JOB_TITLE);
         self::addOCCUPATION($builder, $OCCUPATION);
+        self::addADDRESS($builder, $ADDRESS);
         self::addALTERNATE_NAMES($builder, $ALTERNATE_NAMES);
         self::addEMAIL($builder, $EMAIL);
         self::addTELEPHONE($builder, $TELEPHONE);
@@ -304,12 +313,22 @@ class EPM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addADDRESS(FlatBufferBuilder $builder, $ADDRESS)
+    {
+        $builder->addOffsetX(9, $ADDRESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addALTERNATE_NAMES(FlatBufferBuilder $builder, $ALTERNATE_NAMES)
     {
-        $builder->addOffsetX(9, $ALTERNATE_NAMES, 0);
+        $builder->addOffsetX(10, $ALTERNATE_NAMES, 0);
     }
 
     /**
@@ -343,7 +362,7 @@ class EPM extends Table
      */
     public static function addEMAIL(FlatBufferBuilder $builder, $EMAIL)
     {
-        $builder->addOffsetX(10, $EMAIL, 0);
+        $builder->addOffsetX(11, $EMAIL, 0);
     }
 
     /**
@@ -353,7 +372,7 @@ class EPM extends Table
      */
     public static function addTELEPHONE(FlatBufferBuilder $builder, $TELEPHONE)
     {
-        $builder->addOffsetX(11, $TELEPHONE, 0);
+        $builder->addOffsetX(12, $TELEPHONE, 0);
     }
 
     /**
@@ -363,7 +382,7 @@ class EPM extends Table
      */
     public static function addKEYS(FlatBufferBuilder $builder, $KEYS)
     {
-        $builder->addOffsetX(12, $KEYS, 0);
+        $builder->addOffsetX(13, $KEYS, 0);
     }
 
     /**
@@ -397,7 +416,7 @@ class EPM extends Table
      */
     public static function addMULTIFORMAT_ADDRESS(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS)
     {
-        $builder->addOffsetX(13, $MULTIFORMAT_ADDRESS, 0);
+        $builder->addOffsetX(14, $MULTIFORMAT_ADDRESS, 0);
     }
 
     /**

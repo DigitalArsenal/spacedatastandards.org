@@ -205,11 +205,12 @@ public struct EPM: FlatBufferObject, Verifiable {
     case HONORIFIC_SUFFIX = 16
     case JOB_TITLE = 18
     case OCCUPATION = 20
-    case ALTERNATE_NAMES = 22
-    case EMAIL = 24
-    case TELEPHONE = 26
-    case KEYS = 28
-    case MULTIFORMAT_ADDRESS = 30
+    case ADDRESS = 22
+    case ALTERNATE_NAMES = 24
+    case EMAIL = 26
+    case TELEPHONE = 28
+    case KEYS = 30
+    case MULTIFORMAT_ADDRESS = 32
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -241,6 +242,8 @@ public struct EPM: FlatBufferObject, Verifiable {
   ///  Occupation of the person
   public var OCCUPATION: String? { let o = _accessor.offset(VTOFFSET.OCCUPATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OCCUPATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OCCUPATION.v) }
+  ///  Physical Address
+  public var ADDRESS: Address? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : Address(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Alternate names for the entity
   public var hasAlternateNames: Bool { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? false : true }
   public var ALTERNATE_NAMESCount: Int32 { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
@@ -259,7 +262,7 @@ public struct EPM: FlatBufferObject, Verifiable {
   public var hasMultiformatAddress: Bool { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? false : true }
   public var MULTIFORMAT_ADDRESSCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func MULTIFORMAT_ADDRESS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VTOFFSET.DN.p) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VTOFFSET.FAMILY_NAME.p) }
@@ -269,6 +272,7 @@ public struct EPM: FlatBufferObject, Verifiable {
   public static func add(HONORIFIC_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_SUFFIX, at: VTOFFSET.HONORIFIC_SUFFIX.p) }
   public static func add(JOB_TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_TITLE, at: VTOFFSET.JOB_TITLE.p) }
   public static func add(OCCUPATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCUPATION, at: VTOFFSET.OCCUPATION.p) }
+  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VTOFFSET.ADDRESS.p) }
   public static func addVectorOf(ALTERNATE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAMES, at: VTOFFSET.ALTERNATE_NAMES.p) }
   public static func add(EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMAIL, at: VTOFFSET.EMAIL.p) }
   public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VTOFFSET.TELEPHONE.p) }
@@ -286,6 +290,7 @@ public struct EPM: FlatBufferObject, Verifiable {
     HONORIFIC_SUFFIXOffset HONORIFIC_SUFFIX: Offset = Offset(),
     JOB_TITLEOffset JOB_TITLE: Offset = Offset(),
     OCCUPATIONOffset OCCUPATION: Offset = Offset(),
+    ADDRESSOffset ADDRESS: Offset = Offset(),
     ALTERNATE_NAMESVectorOffset ALTERNATE_NAMES: Offset = Offset(),
     EMAILOffset EMAIL: Offset = Offset(),
     TELEPHONEOffset TELEPHONE: Offset = Offset(),
@@ -302,6 +307,7 @@ public struct EPM: FlatBufferObject, Verifiable {
     EPM.add(HONORIFIC_SUFFIX: HONORIFIC_SUFFIX, &fbb)
     EPM.add(JOB_TITLE: JOB_TITLE, &fbb)
     EPM.add(OCCUPATION: OCCUPATION, &fbb)
+    EPM.add(ADDRESS: ADDRESS, &fbb)
     EPM.addVectorOf(ALTERNATE_NAMES: ALTERNATE_NAMES, &fbb)
     EPM.add(EMAIL: EMAIL, &fbb)
     EPM.add(TELEPHONE: TELEPHONE, &fbb)
@@ -321,6 +327,7 @@ public struct EPM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.HONORIFIC_SUFFIX.p, fieldName: "HONORIFIC_SUFFIX", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.JOB_TITLE.p, fieldName: "JOB_TITLE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OCCUPATION.p, fieldName: "OCCUPATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ADDRESS.p, fieldName: "ADDRESS", required: false, type: ForwardOffset<Address>.self)
     try _v.visit(field: VTOFFSET.ALTERNATE_NAMES.p, fieldName: "ALTERNATE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.EMAIL.p, fieldName: "EMAIL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TELEPHONE.p, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)

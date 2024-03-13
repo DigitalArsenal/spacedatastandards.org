@@ -59,6 +59,8 @@ table EPM {
   JOB_TITLE: string;
   /// Occupation of the person
   OCCUPATION: string;
+  /// Physical Address
+  ADDRESS: Address;
   /// Alternate names for the entity
   ALTERNATE_NAMES: [string];
   /// Email address of the entity

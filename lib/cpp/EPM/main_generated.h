@@ -334,11 +334,12 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HONORIFIC_SUFFIX = 16,
     VT_JOB_TITLE = 18,
     VT_OCCUPATION = 20,
-    VT_ALTERNATE_NAMES = 22,
-    VT_EMAIL = 24,
-    VT_TELEPHONE = 26,
-    VT_KEYS = 28,
-    VT_MULTIFORMAT_ADDRESS = 30
+    VT_ADDRESS = 22,
+    VT_ALTERNATE_NAMES = 24,
+    VT_EMAIL = 26,
+    VT_TELEPHONE = 28,
+    VT_KEYS = 30,
+    VT_MULTIFORMAT_ADDRESS = 32
   };
   /// Distinguished Name of the entity
   const ::flatbuffers::String *DN() const {
@@ -375,6 +376,10 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Occupation of the person
   const ::flatbuffers::String *OCCUPATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OCCUPATION);
+  }
+  /// Physical Address
+  const Address *ADDRESS() const {
+    return GetPointer<const Address *>(VT_ADDRESS);
   }
   /// Alternate names for the entity
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_NAMES() const {
@@ -416,6 +421,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(JOB_TITLE()) &&
            VerifyOffset(verifier, VT_OCCUPATION) &&
            verifier.VerifyString(OCCUPATION()) &&
+           VerifyOffset(verifier, VT_ADDRESS) &&
+           verifier.VerifyTable(ADDRESS()) &&
            VerifyOffset(verifier, VT_ALTERNATE_NAMES) &&
            verifier.VerifyVector(ALTERNATE_NAMES()) &&
            verifier.VerifyVectorOfStrings(ALTERNATE_NAMES()) &&
@@ -464,6 +471,9 @@ struct EPMBuilder {
   void add_OCCUPATION(::flatbuffers::Offset<::flatbuffers::String> OCCUPATION) {
     fbb_.AddOffset(EPM::VT_OCCUPATION, OCCUPATION);
   }
+  void add_ADDRESS(::flatbuffers::Offset<Address> ADDRESS) {
+    fbb_.AddOffset(EPM::VT_ADDRESS, ADDRESS);
+  }
   void add_ALTERNATE_NAMES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_NAMES) {
     fbb_.AddOffset(EPM::VT_ALTERNATE_NAMES, ALTERNATE_NAMES);
   }
@@ -501,6 +511,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::Offset<::flatbuffers::String> HONORIFIC_SUFFIX = 0,
     ::flatbuffers::Offset<::flatbuffers::String> JOB_TITLE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OCCUPATION = 0,
+    ::flatbuffers::Offset<Address> ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_NAMES = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EMAIL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TELEPHONE = 0,
@@ -512,6 +523,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
   builder_.add_TELEPHONE(TELEPHONE);
   builder_.add_EMAIL(EMAIL);
   builder_.add_ALTERNATE_NAMES(ALTERNATE_NAMES);
+  builder_.add_ADDRESS(ADDRESS);
   builder_.add_OCCUPATION(OCCUPATION);
   builder_.add_JOB_TITLE(JOB_TITLE);
   builder_.add_HONORIFIC_SUFFIX(HONORIFIC_SUFFIX);
@@ -535,6 +547,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     const char *HONORIFIC_SUFFIX = nullptr,
     const char *JOB_TITLE = nullptr,
     const char *OCCUPATION = nullptr,
+    ::flatbuffers::Offset<Address> ADDRESS = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_NAMES = nullptr,
     const char *EMAIL = nullptr,
     const char *TELEPHONE = nullptr,
@@ -565,6 +578,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
       HONORIFIC_SUFFIX__,
       JOB_TITLE__,
       OCCUPATION__,
+      ADDRESS,
       ALTERNATE_NAMES__,
       EMAIL__,
       TELEPHONE__,
