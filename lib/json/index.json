@@ -3181,6 +3181,13 @@
                         "OTHER"
                     ]
                 },
+                "KeyType": {
+                    "type": "string",
+                    "enum": [
+                        "signing",
+                        "encryption"
+                    ]
+                },
                 "objectType": {
                     "type": "string",
                     "enum": [
@@ -3599,6 +3606,10 @@
                         "ADDRESS_TYPE": {
                             "type": "string",
                             "description": "Type of the address generated from the cryptographic key"
+                        },
+                        "KEY_TYPE": {
+                            "$ref": "#/definitions/KeyType",
+                            "description": "Type of the cryptographic key (signing or encryption)"
                         }
                     },
                     "additionalProperties": false
@@ -5880,6 +5891,13 @@
         "EPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "KeyType": {
+                    "type": "string",
+                    "enum": [
+                        "signing",
+                        "encryption"
+                    ]
+                },
                 "CryptoKey": {
                     "type": "object",
                     "description": "Represents cryptographic key information",
@@ -5907,6 +5925,10 @@
                         "ADDRESS_TYPE": {
                             "type": "string",
                             "description": "Type of the address generated from the cryptographic key"
+                        },
+                        "KEY_TYPE": {
+                            "$ref": "#/definitions/KeyType",
+                            "description": "Type of the cryptographic key (signing or encryption)"
                         }
                     },
                     "additionalProperties": false

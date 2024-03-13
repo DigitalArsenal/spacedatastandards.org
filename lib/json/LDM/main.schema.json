@@ -21,6 +21,10 @@
       "type" : "string",
       "enum": ["LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER"]
     },
+    "KeyType" : {
+      "type" : "string",
+      "enum": ["signing", "encryption"]
+    },
     "objectType" : {
       "type" : "string",
       "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN"]
@@ -386,6 +390,10 @@
         "ADDRESS_TYPE" : {
                 "type" : "string",
                 "description" : "Type of the address generated from the cryptographic key"
+              },
+        "KEY_TYPE" : {
+                "$ref" : "#/definitions/KeyType",
+                "description" : "Type of the cryptographic key (signing or encryption)"
               }
       },
       "additionalProperties" : false

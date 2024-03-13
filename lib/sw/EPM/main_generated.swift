@@ -4,6 +4,18 @@
 
 import FlatBuffers
 
+public enum KeyType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case signing = 0
+  case encryption = 1
+
+  public static var max: KeyType { return .encryption }
+  public static var min: KeyType { return .signing }
+}
+
+
 ///  Represents cryptographic key information
 public struct CryptoKey: FlatBufferObject, Verifiable {
 
@@ -23,6 +35,7 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     case XPRIV = 10
     case KEY_ADDRESS = 12
     case ADDRESS_TYPE = 14
+    case KEY_TYPE = 16
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -45,13 +58,16 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
   ///  Type of the address generated from the cryptographic key
   public var ADDRESS_TYPE: String? { let o = _accessor.offset(VTOFFSET.ADDRESS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ADDRESS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS_TYPE.v) }
-  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  ///  Type of the cryptographic key (signing or encryption)
+  public var KEY_TYPE: KeyType { let o = _accessor.offset(VTOFFSET.KEY_TYPE.v); return o == 0 ? .signing : KeyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .signing }
+  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VTOFFSET.PUBLIC_KEY.p) }
   public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VTOFFSET.XPUB.p) }
   public static func add(PRIVATE_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIVATE_KEY, at: VTOFFSET.PRIVATE_KEY.p) }
   public static func add(XPRIV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPRIV, at: VTOFFSET.XPRIV.p) }
   public static func add(KEY_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ADDRESS, at: VTOFFSET.KEY_ADDRESS.p) }
   public static func add(ADDRESS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_TYPE, at: VTOFFSET.ADDRESS_TYPE.p) }
+  public static func add(KEY_TYPE: KeyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_TYPE.rawValue, def: 0, at: VTOFFSET.KEY_TYPE.p) }
   public static func endCryptoKey(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCryptoKey(
     _ fbb: inout FlatBufferBuilder,
@@ -60,7 +76,8 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     PRIVATE_KEYOffset PRIVATE_KEY: Offset = Offset(),
     XPRIVOffset XPRIV: Offset = Offset(),
     KEY_ADDRESSOffset KEY_ADDRESS: Offset = Offset(),
-    ADDRESS_TYPEOffset ADDRESS_TYPE: Offset = Offset()
+    ADDRESS_TYPEOffset ADDRESS_TYPE: Offset = Offset(),
+    KEY_TYPE: KeyType = .signing
   ) -> Offset {
     let __start = CryptoKey.startCryptoKey(&fbb)
     CryptoKey.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
@@ -69,6 +86,7 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     CryptoKey.add(XPRIV: XPRIV, &fbb)
     CryptoKey.add(KEY_ADDRESS: KEY_ADDRESS, &fbb)
     CryptoKey.add(ADDRESS_TYPE: ADDRESS_TYPE, &fbb)
+    CryptoKey.add(KEY_TYPE: KEY_TYPE, &fbb)
     return CryptoKey.endCryptoKey(&fbb, start: __start)
   }
 
@@ -80,6 +98,7 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.XPRIV.p, fieldName: "XPRIV", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.KEY_ADDRESS.p, fieldName: "KEY_ADDRESS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ADDRESS_TYPE.p, fieldName: "ADDRESS_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.KEY_TYPE.p, fieldName: "KEY_TYPE", required: false, type: KeyType.self)
     _v.finish()
   }
 }

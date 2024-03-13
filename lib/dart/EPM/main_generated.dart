@@ -5,6 +5,50 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class KeyType {
+  final int value;
+  const KeyType._(this.value);
+
+  factory KeyType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum KeyType');
+    }
+    return result;
+  }
+
+  static KeyType? _createOrNull(int? value) => 
+      value == null ? null : KeyType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const KeyType signing = KeyType._(0);
+  static const KeyType encryption = KeyType._(1);
+  static const Map<int, KeyType> values = {
+    0: signing,
+    1: encryption};
+
+  static const fb.Reader<KeyType> reader = _KeyTypeReader();
+
+  @override
+  String toString() {
+    return 'KeyType{value: $value}';
+  }
+}
+
+class _KeyTypeReader extends fb.Reader<KeyType> {
+  const _KeyTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  KeyType read(fb.BufferContext bc, int offset) =>
+      KeyType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Represents cryptographic key information
 class CryptoKey {
   CryptoKey._(this._bc, this._bcOffset);
@@ -30,10 +74,12 @@ class CryptoKey {
   String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Type of the address generated from the cryptographic key
   String? get ADDRESS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Type of the cryptographic key (signing or encryption)
+  KeyType get KEY_TYPE => KeyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
 
   @override
   String toString() {
-    return 'CryptoKey{PUBLIC_KEY: ${PUBLIC_KEY}, XPUB: ${XPUB}, PRIVATE_KEY: ${PRIVATE_KEY}, XPRIV: ${XPRIV}, KEY_ADDRESS: ${KEY_ADDRESS}, ADDRESS_TYPE: ${ADDRESS_TYPE}}';
+    return 'CryptoKey{PUBLIC_KEY: ${PUBLIC_KEY}, XPUB: ${XPUB}, PRIVATE_KEY: ${PRIVATE_KEY}, XPRIV: ${XPRIV}, KEY_ADDRESS: ${KEY_ADDRESS}, ADDRESS_TYPE: ${ADDRESS_TYPE}, KEY_TYPE: ${KEY_TYPE}}';
   }
 }
 
@@ -51,7 +97,7 @@ class CryptoKeyBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addPublicKeyOffset(int? offset) {
@@ -78,6 +124,10 @@ class CryptoKeyBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addKeyType(KeyType? KEY_TYPE) {
+    fbBuilder.addInt8(6, KEY_TYPE?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -91,6 +141,7 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
   final String? _XPRIV;
   final String? _KEY_ADDRESS;
   final String? _ADDRESS_TYPE;
+  final KeyType? _KEY_TYPE;
 
   CryptoKeyObjectBuilder({
     String? PUBLIC_KEY,
@@ -99,13 +150,15 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
     String? XPRIV,
     String? KEY_ADDRESS,
     String? ADDRESS_TYPE,
+    KeyType? KEY_TYPE,
   })
       : _PUBLIC_KEY = PUBLIC_KEY,
         _XPUB = XPUB,
         _PRIVATE_KEY = PRIVATE_KEY,
         _XPRIV = XPRIV,
         _KEY_ADDRESS = KEY_ADDRESS,
-        _ADDRESS_TYPE = ADDRESS_TYPE;
+        _ADDRESS_TYPE = ADDRESS_TYPE,
+        _KEY_TYPE = KEY_TYPE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -122,13 +175,14 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_KEY_ADDRESS!);
     final int? ADDRESS_TYPEOffset = _ADDRESS_TYPE == null ? null
         : fbBuilder.writeString(_ADDRESS_TYPE!);
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
     fbBuilder.addOffset(0, PUBLIC_KEYOffset);
     fbBuilder.addOffset(1, XPUBOffset);
     fbBuilder.addOffset(2, PRIVATE_KEYOffset);
     fbBuilder.addOffset(3, XPRIVOffset);
     fbBuilder.addOffset(4, KEY_ADDRESSOffset);
     fbBuilder.addOffset(5, ADDRESS_TYPEOffset);
+    fbBuilder.addInt8(6, _KEY_TYPE?.value);
     return fbBuilder.endTable();
   }
 

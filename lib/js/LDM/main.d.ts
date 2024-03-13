@@ -15,6 +15,7 @@ export { FrequencyRange, FrequencyRangeT } from './FrequencyRange.js';
 export { Geometry, GeometryT } from './Geometry.js';
 export { IDM, IDMT } from './IDM.js';
 export { IDMCOLLECTION, IDMCOLLECTIONT } from './IDMCOLLECTION.js';
+export { KeyType } from './KeyType.js';
 export { LDM, LDMT } from './LDM.js';
 export { LDMCOLLECTION, LDMCOLLECTIONT } from './LDMCOLLECTION.js';
 export { PLD, PLDT } from './PLD.js';

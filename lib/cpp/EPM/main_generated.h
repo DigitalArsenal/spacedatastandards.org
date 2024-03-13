@@ -25,6 +25,36 @@ struct EPMBuilder;
 struct EPMCOLLECTION;
 struct EPMCOLLECTIONBuilder;
 
+enum KeyType : int8_t {
+  KeyType_signing = 0,
+  KeyType_encryption = 1,
+  KeyType_MIN = KeyType_signing,
+  KeyType_MAX = KeyType_encryption
+};
+
+inline const KeyType (&EnumValuesKeyType())[2] {
+  static const KeyType values[] = {
+    KeyType_signing,
+    KeyType_encryption
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKeyType() {
+  static const char * const names[3] = {
+    "signing",
+    "encryption",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKeyType(KeyType e) {
+  if (::flatbuffers::IsOutRange(e, KeyType_signing, KeyType_encryption)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKeyType()[index];
+}
+
 /// Represents cryptographic key information
 struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CryptoKeyBuilder Builder;
@@ -34,7 +64,8 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PRIVATE_KEY = 8,
     VT_XPRIV = 10,
     VT_KEY_ADDRESS = 12,
-    VT_ADDRESS_TYPE = 14
+    VT_ADDRESS_TYPE = 14,
+    VT_KEY_TYPE = 16
   };
   /// Public part of the cryptographic key
   const ::flatbuffers::String *PUBLIC_KEY() const {
@@ -60,6 +91,10 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ADDRESS_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_TYPE);
   }
+  /// Type of the cryptographic key (signing or encryption)
+  KeyType KEY_TYPE() const {
+    return static_cast<KeyType>(GetField<int8_t>(VT_KEY_TYPE, 0));
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PUBLIC_KEY) &&
@@ -74,6 +109,7 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(KEY_ADDRESS()) &&
            VerifyOffset(verifier, VT_ADDRESS_TYPE) &&
            verifier.VerifyString(ADDRESS_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_KEY_TYPE, 1) &&
            verifier.EndTable();
   }
 };
@@ -100,6 +136,9 @@ struct CryptoKeyBuilder {
   void add_ADDRESS_TYPE(::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE) {
     fbb_.AddOffset(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
   }
+  void add_KEY_TYPE(KeyType KEY_TYPE) {
+    fbb_.AddElement<int8_t>(CryptoKey::VT_KEY_TYPE, static_cast<int8_t>(KEY_TYPE), 0);
+  }
   explicit CryptoKeyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -118,7 +157,8 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
     ::flatbuffers::Offset<::flatbuffers::String> PRIVATE_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0,
+    KeyType KEY_TYPE = KeyType_signing) {
   CryptoKeyBuilder builder_(_fbb);
   builder_.add_ADDRESS_TYPE(ADDRESS_TYPE);
   builder_.add_KEY_ADDRESS(KEY_ADDRESS);
@@ -126,6 +166,7 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
   builder_.add_PRIVATE_KEY(PRIVATE_KEY);
   builder_.add_XPUB(XPUB);
   builder_.add_PUBLIC_KEY(PUBLIC_KEY);
+  builder_.add_KEY_TYPE(KEY_TYPE);
   return builder_.Finish();
 }
 
@@ -136,7 +177,8 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
     const char *PRIVATE_KEY = nullptr,
     const char *XPRIV = nullptr,
     const char *KEY_ADDRESS = nullptr,
-    const char *ADDRESS_TYPE = nullptr) {
+    const char *ADDRESS_TYPE = nullptr,
+    KeyType KEY_TYPE = KeyType_signing) {
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto XPUB__ = XPUB ? _fbb.CreateString(XPUB) : 0;
   auto PRIVATE_KEY__ = PRIVATE_KEY ? _fbb.CreateString(PRIVATE_KEY) : 0;
@@ -150,7 +192,8 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
       PRIVATE_KEY__,
       XPRIV__,
       KEY_ADDRESS__,
-      ADDRESS_TYPE__);
+      ADDRESS_TYPE__,
+      KEY_TYPE);
 }
 
 /// Represents a geographic address

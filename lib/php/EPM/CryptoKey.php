@@ -83,28 +83,39 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Type of the cryptographic key (signing or encryption)
+    /**
+     * @return sbyte
+     */
+    public function getKEY_TYPE()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KeyType::signing;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCryptoKey(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CryptoKey
      */
-    public static function createCryptoKey(FlatBufferBuilder $builder, $PUBLIC_KEY, $XPUB, $PRIVATE_KEY, $XPRIV, $KEY_ADDRESS, $ADDRESS_TYPE)
+    public static function createCryptoKey(FlatBufferBuilder $builder, $PUBLIC_KEY, $XPUB, $PRIVATE_KEY, $XPRIV, $KEY_ADDRESS, $ADDRESS_TYPE, $KEY_TYPE)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addPUBLIC_KEY($builder, $PUBLIC_KEY);
         self::addXPUB($builder, $XPUB);
         self::addPRIVATE_KEY($builder, $PRIVATE_KEY);
         self::addXPRIV($builder, $XPRIV);
         self::addKEY_ADDRESS($builder, $KEY_ADDRESS);
         self::addADDRESS_TYPE($builder, $ADDRESS_TYPE);
+        self::addKEY_TYPE($builder, $KEY_TYPE);
         $o = $builder->endObject();
         return $o;
     }
@@ -167,6 +178,16 @@ class CryptoKey extends Table
     public static function addADDRESS_TYPE(FlatBufferBuilder $builder, $ADDRESS_TYPE)
     {
         $builder->addOffsetX(5, $ADDRESS_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addKEY_TYPE(FlatBufferBuilder $builder, $KEY_TYPE)
+    {
+        $builder->addSbyteX(6, $KEY_TYPE, 0);
     }
 
     /**

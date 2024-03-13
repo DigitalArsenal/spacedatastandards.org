@@ -1,3 +1,10 @@
+
+
+enum KeyType : byte {
+  signing,
+  encryption
+}
+
 /// Represents cryptographic key information
 table CryptoKey {
   /// Public part of the cryptographic key
@@ -12,6 +19,8 @@ table CryptoKey {
   KEY_ADDRESS: string;
   /// Type of the address generated from the cryptographic key
   ADDRESS_TYPE: string;
+  /// Type of the cryptographic key (signing or encryption)
+  KEY_TYPE: KeyType;
 }
 
 /// Represents a geographic address

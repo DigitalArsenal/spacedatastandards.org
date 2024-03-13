@@ -9,6 +9,91 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KEY_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KEY_TYPE: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KEY_TYPE: [KeyType; 2] = [
+  KeyType::signing,
+  KeyType::encryption,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KeyType(pub i8);
+#[allow(non_upper_case_globals)]
+impl KeyType {
+  pub const signing: Self = Self(0);
+  pub const encryption: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::signing,
+    Self::encryption,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::signing => Some("signing"),
+      Self::encryption => Some("encryption"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for KeyType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for KeyType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for KeyType {
+    type Output = KeyType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for KeyType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for KeyType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for KeyType {}
 pub enum CryptoKeyOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -32,6 +117,7 @@ impl<'a> CryptoKey<'a> {
   pub const VT_XPRIV: flatbuffers::VOffsetT = 10;
   pub const VT_KEY_ADDRESS: flatbuffers::VOffsetT = 12;
   pub const VT_ADDRESS_TYPE: flatbuffers::VOffsetT = 14;
+  pub const VT_KEY_TYPE: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -49,6 +135,7 @@ impl<'a> CryptoKey<'a> {
     if let Some(x) = args.PRIVATE_KEY { builder.add_PRIVATE_KEY(x); }
     if let Some(x) = args.XPUB { builder.add_XPUB(x); }
     if let Some(x) = args.PUBLIC_KEY { builder.add_PUBLIC_KEY(x); }
+    builder.add_KEY_TYPE(args.KEY_TYPE);
     builder.finish()
   }
 
@@ -71,6 +158,7 @@ impl<'a> CryptoKey<'a> {
     let ADDRESS_TYPE = self.ADDRESS_TYPE().map(|x| {
       x.to_string()
     });
+    let KEY_TYPE = self.KEY_TYPE();
     CryptoKeyT {
       PUBLIC_KEY,
       XPUB,
@@ -78,6 +166,7 @@ impl<'a> CryptoKey<'a> {
       XPRIV,
       KEY_ADDRESS,
       ADDRESS_TYPE,
+      KEY_TYPE,
     }
   }
 
@@ -129,6 +218,14 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_ADDRESS_TYPE, None)}
   }
+  /// Type of the cryptographic key (signing or encryption)
+  #[inline]
+  pub fn KEY_TYPE(&self) -> KeyType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KeyType>(CryptoKey::VT_KEY_TYPE, Some(KeyType::signing)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CryptoKey<'_> {
@@ -144,6 +241,7 @@ impl flatbuffers::Verifiable for CryptoKey<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XPRIV", Self::VT_XPRIV, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KEY_ADDRESS", Self::VT_KEY_ADDRESS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS_TYPE", Self::VT_ADDRESS_TYPE, false)?
+     .visit_field::<KeyType>("KEY_TYPE", Self::VT_KEY_TYPE, false)?
      .finish();
     Ok(())
   }
@@ -155,6 +253,7 @@ pub struct CryptoKeyArgs<'a> {
     pub XPRIV: Option<flatbuffers::WIPOffset<&'a str>>,
     pub KEY_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ADDRESS_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_TYPE: KeyType,
 }
 impl<'a> Default for CryptoKeyArgs<'a> {
   #[inline]
@@ -166,6 +265,7 @@ impl<'a> Default for CryptoKeyArgs<'a> {
       XPRIV: None,
       KEY_ADDRESS: None,
       ADDRESS_TYPE: None,
+      KEY_TYPE: KeyType::signing,
     }
   }
 }
@@ -200,6 +300,10 @@ impl<'a: 'b, 'b> CryptoKeyBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_ADDRESS_TYPE, ADDRESS_TYPE);
   }
   #[inline]
+  pub fn add_KEY_TYPE(&mut self, KEY_TYPE: KeyType) {
+    self.fbb_.push_slot::<KeyType>(CryptoKey::VT_KEY_TYPE, KEY_TYPE, KeyType::signing);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CryptoKeyBuilder<'a, 'b> {
     let start = _fbb.start_table();
     CryptoKeyBuilder {
@@ -223,6 +327,7 @@ impl core::fmt::Debug for CryptoKey<'_> {
       ds.field("XPRIV", &self.XPRIV());
       ds.field("KEY_ADDRESS", &self.KEY_ADDRESS());
       ds.field("ADDRESS_TYPE", &self.ADDRESS_TYPE());
+      ds.field("KEY_TYPE", &self.KEY_TYPE());
       ds.finish()
   }
 }
@@ -235,6 +340,7 @@ pub struct CryptoKeyT {
   pub XPRIV: Option<String>,
   pub KEY_ADDRESS: Option<String>,
   pub ADDRESS_TYPE: Option<String>,
+  pub KEY_TYPE: KeyType,
 }
 impl Default for CryptoKeyT {
   fn default() -> Self {
@@ -245,6 +351,7 @@ impl Default for CryptoKeyT {
       XPRIV: None,
       KEY_ADDRESS: None,
       ADDRESS_TYPE: None,
+      KEY_TYPE: KeyType::signing,
     }
   }
 }
@@ -271,6 +378,7 @@ impl CryptoKeyT {
     let ADDRESS_TYPE = self.ADDRESS_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let KEY_TYPE = self.KEY_TYPE;
     CryptoKey::create(_fbb, &CryptoKeyArgs{
       PUBLIC_KEY,
       XPUB,
@@ -278,6 +386,7 @@ impl CryptoKeyT {
       XPRIV,
       KEY_ADDRESS,
       ADDRESS_TYPE,
+      KEY_TYPE,
     })
   }
 }
