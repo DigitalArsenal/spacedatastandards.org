@@ -4,7 +4,7 @@
 @kotlin.ExperimentalUnsignedTypes
 class KeyType private constructor() {
     companion object {
-        const val signing: Byte = 0
-        const val encryption: Byte = 1
+        const val Signing: Byte = 0
+        const val Encryption: Byte = 1
     }
 }

@@ -66,7 +66,7 @@ public struct CryptoKey : IFlatbufferObject
 #endif
   public byte[] GetADDRESS_TYPEArray() { return __p.__vector_as_array<byte>(14); }
   /// Type of the cryptographic key (signing or encryption)
-  public KeyType KEY_TYPE { get { int o = __p.__offset(16); return o != 0 ? (KeyType)__p.bb.GetSbyte(o + __p.bb_pos) : KeyType.signing; } }
+  public KeyType KEY_TYPE { get { int o = __p.__offset(16); return o != 0 ? (KeyType)__p.bb.GetSbyte(o + __p.bb_pos) : KeyType.Signing; } }
 
   public static Offset<CryptoKey> CreateCryptoKey(FlatBufferBuilder builder,
       StringOffset PUBLIC_KEYOffset = default(StringOffset),
@@ -75,7 +75,7 @@ public struct CryptoKey : IFlatbufferObject
       StringOffset XPRIVOffset = default(StringOffset),
       StringOffset KEY_ADDRESSOffset = default(StringOffset),
       StringOffset ADDRESS_TYPEOffset = default(StringOffset),
-      KeyType KEY_TYPE = KeyType.signing) {
+      KeyType KEY_TYPE = KeyType.Signing) {
     builder.StartTable(7);
     CryptoKey.AddADDRESS_TYPE(builder, ADDRESS_TYPEOffset);
     CryptoKey.AddKEY_ADDRESS(builder, KEY_ADDRESSOffset);
@@ -150,7 +150,7 @@ public class CryptoKeyT
     this.XPRIV = null;
     this.KEY_ADDRESS = null;
     this.ADDRESS_TYPE = null;
-    this.KEY_TYPE = KeyType.signing;
+    this.KEY_TYPE = KeyType.Signing;
   }
 }
 

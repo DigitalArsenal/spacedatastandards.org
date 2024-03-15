@@ -16,8 +16,8 @@ pub const ENUM_MAX_KEY_TYPE: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
 pub const ENUM_VALUES_KEY_TYPE: [KeyType; 2] = [
-  KeyType::signing,
-  KeyType::encryption,
+  KeyType::Signing,
+  KeyType::Encryption,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -25,20 +25,20 @@ pub const ENUM_VALUES_KEY_TYPE: [KeyType; 2] = [
 pub struct KeyType(pub i8);
 #[allow(non_upper_case_globals)]
 impl KeyType {
-  pub const signing: Self = Self(0);
-  pub const encryption: Self = Self(1);
+  pub const Signing: Self = Self(0);
+  pub const Encryption: Self = Self(1);
 
   pub const ENUM_MIN: i8 = 0;
   pub const ENUM_MAX: i8 = 1;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::signing,
-    Self::encryption,
+    Self::Signing,
+    Self::Encryption,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::signing => Some("signing"),
-      Self::encryption => Some("encryption"),
+      Self::Signing => Some("Signing"),
+      Self::Encryption => Some("Encryption"),
       _ => None,
     }
   }
@@ -224,7 +224,7 @@ impl<'a> CryptoKey<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<KeyType>(CryptoKey::VT_KEY_TYPE, Some(KeyType::signing)).unwrap()}
+    unsafe { self._tab.get::<KeyType>(CryptoKey::VT_KEY_TYPE, Some(KeyType::Signing)).unwrap()}
   }
 }
 
@@ -265,7 +265,7 @@ impl<'a> Default for CryptoKeyArgs<'a> {
       XPRIV: None,
       KEY_ADDRESS: None,
       ADDRESS_TYPE: None,
-      KEY_TYPE: KeyType::signing,
+      KEY_TYPE: KeyType::Signing,
     }
   }
 }
@@ -301,7 +301,7 @@ impl<'a: 'b, 'b> CryptoKeyBuilder<'a, 'b> {
   }
   #[inline]
   pub fn add_KEY_TYPE(&mut self, KEY_TYPE: KeyType) {
-    self.fbb_.push_slot::<KeyType>(CryptoKey::VT_KEY_TYPE, KEY_TYPE, KeyType::signing);
+    self.fbb_.push_slot::<KeyType>(CryptoKey::VT_KEY_TYPE, KEY_TYPE, KeyType::Signing);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CryptoKeyBuilder<'a, 'b> {
@@ -351,7 +351,7 @@ impl Default for CryptoKeyT {
       XPRIV: None,
       KEY_ADDRESS: None,
       ADDRESS_TYPE: None,
-      KEY_TYPE: KeyType::signing,
+      KEY_TYPE: KeyType::Signing,
     }
   }
 }

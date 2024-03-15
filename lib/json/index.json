@@ -2945,8 +2945,8 @@
                 "KeyType": {
                     "type": "string",
                     "enum": [
-                        "signing",
-                        "encryption"
+                        "Signing",
+                        "Encryption"
                     ]
                 },
                 "objectType": {
@@ -5451,8 +5451,8 @@
                 "KeyType": {
                     "type": "string",
                     "enum": [
-                        "signing",
-                        "encryption"
+                        "Signing",
+                        "Encryption"
                     ]
                 },
                 "CryptoKey": {

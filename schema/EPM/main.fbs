@@ -1,8 +1,8 @@
 
 
 enum KeyType : byte {
-  signing,
-  encryption
+  Signing,
+  Encryption
 }
 
 /// Represents cryptographic key information

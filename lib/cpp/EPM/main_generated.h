@@ -23,31 +23,31 @@ struct EPM;
 struct EPMBuilder;
 
 enum KeyType : int8_t {
-  KeyType_signing = 0,
-  KeyType_encryption = 1,
-  KeyType_MIN = KeyType_signing,
-  KeyType_MAX = KeyType_encryption
+  KeyType_Signing = 0,
+  KeyType_Encryption = 1,
+  KeyType_MIN = KeyType_Signing,
+  KeyType_MAX = KeyType_Encryption
 };
 
 inline const KeyType (&EnumValuesKeyType())[2] {
   static const KeyType values[] = {
-    KeyType_signing,
-    KeyType_encryption
+    KeyType_Signing,
+    KeyType_Encryption
   };
   return values;
 }
 
 inline const char * const *EnumNamesKeyType() {
   static const char * const names[3] = {
-    "signing",
-    "encryption",
+    "Signing",
+    "Encryption",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameKeyType(KeyType e) {
-  if (::flatbuffers::IsOutRange(e, KeyType_signing, KeyType_encryption)) return "";
+  if (::flatbuffers::IsOutRange(e, KeyType_Signing, KeyType_Encryption)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesKeyType()[index];
 }
@@ -155,7 +155,7 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
     ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0,
-    KeyType KEY_TYPE = KeyType_signing) {
+    KeyType KEY_TYPE = KeyType_Signing) {
   CryptoKeyBuilder builder_(_fbb);
   builder_.add_ADDRESS_TYPE(ADDRESS_TYPE);
   builder_.add_KEY_ADDRESS(KEY_ADDRESS);
@@ -175,7 +175,7 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
     const char *XPRIV = nullptr,
     const char *KEY_ADDRESS = nullptr,
     const char *ADDRESS_TYPE = nullptr,
-    KeyType KEY_TYPE = KeyType_signing) {
+    KeyType KEY_TYPE = KeyType_Signing) {
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto XPUB__ = XPUB ? _fbb.CreateString(XPUB) : 0;
   auto PRIVATE_KEY__ = PRIVATE_KEY ? _fbb.CreateString(PRIVATE_KEY) : 0;

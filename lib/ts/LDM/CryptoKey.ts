@@ -91,7 +91,7 @@ ADDRESS_TYPE(optionalEncoding?:any):string|Uint8Array|null {
  */
 KEY_TYPE():KeyType {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : KeyType.signing;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : KeyType.Signing;
 }
 
 static startCryptoKey(builder:flatbuffers.Builder) {
@@ -123,7 +123,7 @@ static addAddressType(builder:flatbuffers.Builder, ADDRESS_TYPEOffset:flatbuffer
 }
 
 static addKeyType(builder:flatbuffers.Builder, KEY_TYPE:KeyType) {
-  builder.addFieldInt8(6, KEY_TYPE, KeyType.signing);
+  builder.addFieldInt8(6, KEY_TYPE, KeyType.Signing);
 }
 
 static endCryptoKey(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -175,7 +175,7 @@ constructor(
   public XPRIV: string|Uint8Array|null = null,
   public KEY_ADDRESS: string|Uint8Array|null = null,
   public ADDRESS_TYPE: string|Uint8Array|null = null,
-  public KEY_TYPE: KeyType = KeyType.signing
+  public KEY_TYPE: KeyType = KeyType.Signing
 ){}
 
 

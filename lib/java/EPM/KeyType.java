@@ -3,10 +3,10 @@
 @SuppressWarnings("unused")
 public final class KeyType {
   private KeyType() { }
-  public static final byte signing = 0;
-  public static final byte encryption = 1;
+  public static final byte Signing = 0;
+  public static final byte Encryption = 1;
 
-  public static final String[] names = { "signing", "encryption", };
+  public static final String[] names = { "Signing", "Encryption", };
 
   public static String name(int e) { return names[e]; }
 }

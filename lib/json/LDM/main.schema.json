@@ -23,7 +23,7 @@
     },
     "KeyType" : {
       "type" : "string",
-      "enum": ["signing", "encryption"]
+      "enum": ["Signing", "Encryption"]
     },
     "objectType" : {
       "type" : "string",

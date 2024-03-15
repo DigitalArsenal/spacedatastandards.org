@@ -3,5 +3,5 @@
 # namespace: 
 
 class KeyType(object):
-    signing = 0
-    encryption = 1
+    Signing = 0
+    Encryption = 1

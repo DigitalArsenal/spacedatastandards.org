@@ -4,7 +4,7 @@
 
 public enum KeyType : sbyte
 {
-  signing = 0,
-  encryption = 1,
+  Signing = 0,
+  Encryption = 1,
 };
 

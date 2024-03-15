@@ -7,18 +7,18 @@ import "strconv"
 type KeyType int8
 
 const (
-	KeyTypesigning    KeyType = 0
-	KeyTypeencryption KeyType = 1
+	KeyTypeSigning    KeyType = 0
+	KeyTypeEncryption KeyType = 1
 )
 
 var EnumNamesKeyType = map[KeyType]string{
-	KeyTypesigning:    "signing",
-	KeyTypeencryption: "encryption",
+	KeyTypeSigning:    "Signing",
+	KeyTypeEncryption: "Encryption",
 }
 
 var EnumValuesKeyType = map[string]KeyType{
-	"signing":    KeyTypesigning,
-	"encryption": KeyTypeencryption,
+	"Signing":    KeyTypeSigning,
+	"Encryption": KeyTypeEncryption,
 }
 
 func (v KeyType) String() string {

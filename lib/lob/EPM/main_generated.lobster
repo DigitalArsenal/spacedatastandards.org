@@ -2,8 +2,8 @@
 import flatbuffers
 
 enum KeyType:
-    KeyType_signing = 0
-    KeyType_encryption = 1
+    KeyType_Signing = 0
+    KeyType_Encryption = 1
 
 class CryptoKey
 

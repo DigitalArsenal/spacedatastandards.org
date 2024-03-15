@@ -3,12 +3,12 @@
 
 class KeyType
 {
-    const signing = 0;
-    const encryption = 1;
+    const Signing = 0;
+    const Encryption = 1;
 
     private static $names = array(
-        KeyType::signing=>"signing",
-        KeyType::encryption=>"encryption",
+        KeyType::Signing=>"Signing",
+        KeyType::Encryption=>"Encryption",
     );
 
     public static function Name($e)

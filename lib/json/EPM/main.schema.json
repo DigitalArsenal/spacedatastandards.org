@@ -3,7 +3,7 @@
   "definitions": {
     "KeyType" : {
       "type" : "string",
-      "enum": ["signing", "encryption"]
+      "enum": ["Signing", "Encryption"]
     },
     "CryptoKey" : {
       "type" : "object",

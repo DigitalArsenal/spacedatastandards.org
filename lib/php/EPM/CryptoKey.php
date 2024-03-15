@@ -90,7 +90,7 @@ class CryptoKey extends Table
     public function getKEY_TYPE()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KeyType::signing;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KeyType::Signing;
     }
 
     /**

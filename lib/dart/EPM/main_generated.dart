@@ -24,11 +24,11 @@ class KeyType {
   static const int maxValue = 1;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const KeyType signing = KeyType._(0);
-  static const KeyType encryption = KeyType._(1);
+  static const KeyType Signing = KeyType._(0);
+  static const KeyType Encryption = KeyType._(1);
   static const Map<int, KeyType> values = {
-    0: signing,
-    1: encryption};
+    0: Signing,
+    1: Encryption};
 
   static const fb.Reader<KeyType> reader = _KeyTypeReader();
 
