@@ -21,7 +21,6 @@ table PNM {
   /// This field is the file ID / Name
   FID: string;
 
-
   /// Digital Signature of the CID
   /// This is the digital signature of the CID, signed using the specified cryptographic method.
   SIGNATURE: string;
