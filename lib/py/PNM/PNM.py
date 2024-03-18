@@ -6,7 +6,6 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Details of Published Message
 class PNM(object):
     __slots__ = ['_tab']
 

@@ -1,7 +1,4 @@
 import * as flatbuffers from 'flatbuffers';
-/**
- * Details of Published Message
- */
 export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

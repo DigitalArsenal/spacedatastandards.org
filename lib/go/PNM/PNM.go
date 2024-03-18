@@ -6,7 +6,6 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Details of Published Message
 type PNM struct {
 	_tab flatbuffers.Table
 }

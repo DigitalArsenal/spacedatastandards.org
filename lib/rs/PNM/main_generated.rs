@@ -12,7 +12,6 @@ use self::flatbuffers::{EndianScalar, Follow};
 pub enum PNMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Details of Published Message
 pub struct PNM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

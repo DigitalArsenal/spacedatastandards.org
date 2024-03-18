@@ -4,7 +4,6 @@
 
 import FlatBuffers
 
-///  Details of Published Message
 public struct PNM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

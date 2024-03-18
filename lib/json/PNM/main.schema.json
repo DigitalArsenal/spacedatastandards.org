@@ -3,7 +3,6 @@
   "definitions": {
     "PNM" : {
       "type" : "object",
-      "description" : "Details of Published Message",
       "properties" : {
         "MULTIFORMAT_ADDRESS" : {
                 "type" : "string",
