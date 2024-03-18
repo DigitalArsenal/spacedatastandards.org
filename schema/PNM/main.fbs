@@ -11,6 +11,9 @@ table PNM {
   /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   MULTIFORMAT_ADDRESS: string;
 
+  /// Publish Time OF THE Publish Notification Message
+  PUBLISH_TIMESTAMP: string;
+
   /// Concatenated Content Identifier (CID)
   /// This field is a unique ID for distributed systems (CID).
   /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
@@ -20,85 +23,22 @@ table PNM {
   /// This field is the file ID / Name
   FID: string;
 
-  /// Ethereum Digital Signature
-  /// Digital signature of the CID using Ethereum's signing mechanism.
-  /// Refer to the Ethereum Blockchain integration section for details.
-  ETH_DIGITAL_SIGNATURE: string;
 
-  /// Bitcoin Digital Signature
-  /// Digital signature of the CID using Bitcoin's signing mechanism.
-  /// Refer to the Bitcoin Blockchain integration section for details.
-  BTC_DIGITAL_SIGNATURE: string;
+  /// Digital Signature of the CID
+  /// This is the digital signature of the CID, signed using the specified cryptographic method.
+  SIGNATURE: string;
 
-  /// Litecoin Digital Signature
-  /// Digital signature of the CID using Litecoin's signing mechanism.
-  /// Refer to the Litecoin Blockchain integration section for details.
-  LTC_DIGITAL_SIGNATURE: string;
+  /// Timestamp Signature
+  /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
+  TIMESTAMP_SIGNATURE: string;
 
-  /// Ripple Digital Signature
-  /// Digital signature of the CID using Ripple's signing mechanism.
-  /// Refer to the Ripple Blockchain integration section for details.
-  XRP_DIGITAL_SIGNATURE: string;
+  /// Type of Cryptographic Signature Used
+  /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+  SIGNATURE_TYPE: string;
 
-  /// Cardano Digital Signature
-  /// Digital signature of the CID using Cardano's signing mechanism.
-  /// Refer to the Cardano Blockchain integration section for details.
-  ADA_DIGITAL_SIGNATURE: string;
-
-  /// Stellar Digital Signature
-  /// Digital signature of the CID using Stellar's signing mechanism.
-  /// Refer to the Stellar Blockchain integration section for details.
-  XLM_DIGITAL_SIGNATURE: string;
-
-  /// Dogecoin Digital Signature
-  /// Digital signature of the CID using Dogecoin's signing mechanism.
-  /// Refer to the Dogecoin Blockchain integration section for details.
-  DOGE_DIGITAL_SIGNATURE: string;
-
-  /// Monero Digital Signature
-  /// Digital signature of the CID using Monero's signing mechanism.
-  /// Refer to the Monero Blockchain integration section for details.
-  XMR_DIGITAL_SIGNATURE: string;
-
-  /// Polkadot Digital Signature
-  /// Digital signature of the CID using Polkadot's signing mechanism.
-  /// Refer to the Polkadot Blockchain integration section for details.
-  DOT_DIGITAL_SIGNATURE: string;
-
-  /// Filecoin Digital Signature
-  /// Digital signature of the CID using Filecoin's signing mechanism.
-  /// Refer to the Filecoin Blockchain integration section for details.
-  FIL_DIGITAL_SIGNATURE: string;
-
-  /// Tezos Digital Signature
-  /// Digital signature of the CID using Tezos's signing mechanism.
-  /// Refer to the Tezos Blockchain integration section for details.
-  XTZ_DIGITAL_SIGNATURE: string;
-
-  /// Cosmos Digital Signature
-  /// Digital signature of the CID using Cosmos's signing mechanism.
-  /// Refer to the Cosmos Blockchain integration section for details.
-  ATOM_DIGITAL_SIGNATURE: string;
-
-  /// Tron Digital Signature
-  /// Digital signature of the CID using Tron's signing mechanism.
-  /// Refer to the Tron Blockchain integration section for details.
-  TRX_DIGITAL_SIGNATURE: string;
-
-  /// Binance Coin Digital Signature
-  /// Digital signature of the CID using Binance Coin's signing mechanism.
-  /// Refer to the Binance Coin Blockchain integration section for details.
-  BNB_DIGITAL_SIGNATURE: string;
-
-  /// Avalanche Digital Signature
-  /// Digital signature of the CID using Avalanche's signing mechanism.
-  /// Refer to the Avalanche Blockchain integration section for details.
-  AVAX_DIGITAL_SIGNATURE: string;
-
-  /// Solana Digital Signature
-  /// Digital signature of the CID using Solana's signing mechanism.
-  /// Refer to the Solana Blockchain integration section for details.
-  SOL_DIGITAL_SIGNATURE: string;
+  /// Type of Cryptographic Signature Used for Timestamp
+  /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+  TIMESTAMP_SIGNATURE_TYPE: string;
 }
 
 root_type PNM;

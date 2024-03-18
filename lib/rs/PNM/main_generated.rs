@@ -27,24 +27,13 @@ impl<'a> flatbuffers::Follow<'a> for PNM<'a> {
 
 impl<'a> PNM<'a> {
   pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 4;
-  pub const VT_CID: flatbuffers::VOffsetT = 6;
-  pub const VT_FID: flatbuffers::VOffsetT = 8;
-  pub const VT_ETH_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 10;
-  pub const VT_BTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 12;
-  pub const VT_LTC_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 14;
-  pub const VT_XRP_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 16;
-  pub const VT_ADA_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 18;
-  pub const VT_XLM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 20;
-  pub const VT_DOGE_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 22;
-  pub const VT_XMR_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 24;
-  pub const VT_DOT_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 26;
-  pub const VT_FIL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 28;
-  pub const VT_XTZ_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 30;
-  pub const VT_ATOM_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 32;
-  pub const VT_TRX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 34;
-  pub const VT_BNB_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 36;
-  pub const VT_AVAX_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 38;
-  pub const VT_SOL_DIGITAL_SIGNATURE: flatbuffers::VOffsetT = 40;
+  pub const VT_PUBLISH_TIMESTAMP: flatbuffers::VOffsetT = 6;
+  pub const VT_CID: flatbuffers::VOffsetT = 8;
+  pub const VT_FID: flatbuffers::VOffsetT = 10;
+  pub const VT_SIGNATURE: flatbuffers::VOffsetT = 12;
+  pub const VT_TIMESTAMP_SIGNATURE: flatbuffers::VOffsetT = 14;
+  pub const VT_SIGNATURE_TYPE: flatbuffers::VOffsetT = 16;
+  pub const VT_TIMESTAMP_SIGNATURE_TYPE: flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -56,24 +45,13 @@ impl<'a> PNM<'a> {
     args: &'args PNMArgs<'args>
   ) -> flatbuffers::WIPOffset<PNM<'bldr>> {
     let mut builder = PNMBuilder::new(_fbb);
-    if let Some(x) = args.SOL_DIGITAL_SIGNATURE { builder.add_SOL_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.AVAX_DIGITAL_SIGNATURE { builder.add_AVAX_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.BNB_DIGITAL_SIGNATURE { builder.add_BNB_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.TRX_DIGITAL_SIGNATURE { builder.add_TRX_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.ATOM_DIGITAL_SIGNATURE { builder.add_ATOM_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.XTZ_DIGITAL_SIGNATURE { builder.add_XTZ_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.FIL_DIGITAL_SIGNATURE { builder.add_FIL_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.DOT_DIGITAL_SIGNATURE { builder.add_DOT_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.XMR_DIGITAL_SIGNATURE { builder.add_XMR_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.DOGE_DIGITAL_SIGNATURE { builder.add_DOGE_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.XLM_DIGITAL_SIGNATURE { builder.add_XLM_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.ADA_DIGITAL_SIGNATURE { builder.add_ADA_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.XRP_DIGITAL_SIGNATURE { builder.add_XRP_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.LTC_DIGITAL_SIGNATURE { builder.add_LTC_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.BTC_DIGITAL_SIGNATURE { builder.add_BTC_DIGITAL_SIGNATURE(x); }
-    if let Some(x) = args.ETH_DIGITAL_SIGNATURE { builder.add_ETH_DIGITAL_SIGNATURE(x); }
+    if let Some(x) = args.TIMESTAMP_SIGNATURE_TYPE { builder.add_TIMESTAMP_SIGNATURE_TYPE(x); }
+    if let Some(x) = args.SIGNATURE_TYPE { builder.add_SIGNATURE_TYPE(x); }
+    if let Some(x) = args.TIMESTAMP_SIGNATURE { builder.add_TIMESTAMP_SIGNATURE(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.FID { builder.add_FID(x); }
     if let Some(x) = args.CID { builder.add_CID(x); }
+    if let Some(x) = args.PUBLISH_TIMESTAMP { builder.add_PUBLISH_TIMESTAMP(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
     builder.finish()
   }
@@ -82,80 +60,36 @@ impl<'a> PNM<'a> {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
       x.to_string()
     });
+    let PUBLISH_TIMESTAMP = self.PUBLISH_TIMESTAMP().map(|x| {
+      x.to_string()
+    });
     let CID = self.CID().map(|x| {
       x.to_string()
     });
     let FID = self.FID().map(|x| {
       x.to_string()
     });
-    let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE().map(|x| {
+    let SIGNATURE = self.SIGNATURE().map(|x| {
       x.to_string()
     });
-    let BTC_DIGITAL_SIGNATURE = self.BTC_DIGITAL_SIGNATURE().map(|x| {
+    let TIMESTAMP_SIGNATURE = self.TIMESTAMP_SIGNATURE().map(|x| {
       x.to_string()
     });
-    let LTC_DIGITAL_SIGNATURE = self.LTC_DIGITAL_SIGNATURE().map(|x| {
+    let SIGNATURE_TYPE = self.SIGNATURE_TYPE().map(|x| {
       x.to_string()
     });
-    let XRP_DIGITAL_SIGNATURE = self.XRP_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let ADA_DIGITAL_SIGNATURE = self.ADA_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let XLM_DIGITAL_SIGNATURE = self.XLM_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let DOGE_DIGITAL_SIGNATURE = self.DOGE_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let XMR_DIGITAL_SIGNATURE = self.XMR_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let DOT_DIGITAL_SIGNATURE = self.DOT_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let FIL_DIGITAL_SIGNATURE = self.FIL_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let XTZ_DIGITAL_SIGNATURE = self.XTZ_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let ATOM_DIGITAL_SIGNATURE = self.ATOM_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let TRX_DIGITAL_SIGNATURE = self.TRX_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let BNB_DIGITAL_SIGNATURE = self.BNB_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let AVAX_DIGITAL_SIGNATURE = self.AVAX_DIGITAL_SIGNATURE().map(|x| {
-      x.to_string()
-    });
-    let SOL_DIGITAL_SIGNATURE = self.SOL_DIGITAL_SIGNATURE().map(|x| {
+    let TIMESTAMP_SIGNATURE_TYPE = self.TIMESTAMP_SIGNATURE_TYPE().map(|x| {
       x.to_string()
     });
     PNMT {
       MULTIFORMAT_ADDRESS,
+      PUBLISH_TIMESTAMP,
       CID,
       FID,
-      ETH_DIGITAL_SIGNATURE,
-      BTC_DIGITAL_SIGNATURE,
-      LTC_DIGITAL_SIGNATURE,
-      XRP_DIGITAL_SIGNATURE,
-      ADA_DIGITAL_SIGNATURE,
-      XLM_DIGITAL_SIGNATURE,
-      DOGE_DIGITAL_SIGNATURE,
-      XMR_DIGITAL_SIGNATURE,
-      DOT_DIGITAL_SIGNATURE,
-      FIL_DIGITAL_SIGNATURE,
-      XTZ_DIGITAL_SIGNATURE,
-      ATOM_DIGITAL_SIGNATURE,
-      TRX_DIGITAL_SIGNATURE,
-      BNB_DIGITAL_SIGNATURE,
-      AVAX_DIGITAL_SIGNATURE,
-      SOL_DIGITAL_SIGNATURE,
+      SIGNATURE,
+      TIMESTAMP_SIGNATURE,
+      SIGNATURE_TYPE,
+      TIMESTAMP_SIGNATURE_TYPE,
     }
   }
 
@@ -172,6 +106,14 @@ impl<'a> PNM<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_MULTIFORMAT_ADDRESS, None)}
+  }
+  /// Publish Time OF THE Publish Notification Message
+  #[inline]
+  pub fn PUBLISH_TIMESTAMP(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_PUBLISH_TIMESTAMP, None)}
   }
   /// Concatenated Content Identifier (CID)
   /// This field is a unique ID for distributed systems (CID).
@@ -192,165 +134,41 @@ impl<'a> PNM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FID, None)}
   }
-  /// Ethereum Digital Signature
-  /// Digital signature of the CID using Ethereum's signing mechanism.
-  /// Refer to the Ethereum Blockchain integration section for details.
+  /// Digital Signature of the CID
+  /// This is the digital signature of the CID, signed using the specified cryptographic method.
   #[inline]
-  pub fn ETH_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
+  pub fn SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ETH_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SIGNATURE, None)}
   }
-  /// Bitcoin Digital Signature
-  /// Digital signature of the CID using Bitcoin's signing mechanism.
-  /// Refer to the Bitcoin Blockchain integration section for details.
+  /// Timestamp Signature
+  /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
   #[inline]
-  pub fn BTC_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
+  pub fn TIMESTAMP_SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BTC_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TIMESTAMP_SIGNATURE, None)}
   }
-  /// Litecoin Digital Signature
-  /// Digital signature of the CID using Litecoin's signing mechanism.
-  /// Refer to the Litecoin Blockchain integration section for details.
+  /// Type of Cryptographic Signature Used
+  /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
   #[inline]
-  pub fn LTC_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
+  pub fn SIGNATURE_TYPE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_LTC_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SIGNATURE_TYPE, None)}
   }
-  /// Ripple Digital Signature
-  /// Digital signature of the CID using Ripple's signing mechanism.
-  /// Refer to the Ripple Blockchain integration section for details.
+  /// Type of Cryptographic Signature Used for Timestamp
+  /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
   #[inline]
-  pub fn XRP_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
+  pub fn TIMESTAMP_SIGNATURE_TYPE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XRP_DIGITAL_SIGNATURE, None)}
-  }
-  /// Cardano Digital Signature
-  /// Digital signature of the CID using Cardano's signing mechanism.
-  /// Refer to the Cardano Blockchain integration section for details.
-  #[inline]
-  pub fn ADA_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ADA_DIGITAL_SIGNATURE, None)}
-  }
-  /// Stellar Digital Signature
-  /// Digital signature of the CID using Stellar's signing mechanism.
-  /// Refer to the Stellar Blockchain integration section for details.
-  #[inline]
-  pub fn XLM_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XLM_DIGITAL_SIGNATURE, None)}
-  }
-  /// Dogecoin Digital Signature
-  /// Digital signature of the CID using Dogecoin's signing mechanism.
-  /// Refer to the Dogecoin Blockchain integration section for details.
-  #[inline]
-  pub fn DOGE_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, None)}
-  }
-  /// Monero Digital Signature
-  /// Digital signature of the CID using Monero's signing mechanism.
-  /// Refer to the Monero Blockchain integration section for details.
-  #[inline]
-  pub fn XMR_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XMR_DIGITAL_SIGNATURE, None)}
-  }
-  /// Polkadot Digital Signature
-  /// Digital signature of the CID using Polkadot's signing mechanism.
-  /// Refer to the Polkadot Blockchain integration section for details.
-  #[inline]
-  pub fn DOT_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_DOT_DIGITAL_SIGNATURE, None)}
-  }
-  /// Filecoin Digital Signature
-  /// Digital signature of the CID using Filecoin's signing mechanism.
-  /// Refer to the Filecoin Blockchain integration section for details.
-  #[inline]
-  pub fn FIL_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FIL_DIGITAL_SIGNATURE, None)}
-  }
-  /// Tezos Digital Signature
-  /// Digital signature of the CID using Tezos's signing mechanism.
-  /// Refer to the Tezos Blockchain integration section for details.
-  #[inline]
-  pub fn XTZ_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, None)}
-  }
-  /// Cosmos Digital Signature
-  /// Digital signature of the CID using Cosmos's signing mechanism.
-  /// Refer to the Cosmos Blockchain integration section for details.
-  #[inline]
-  pub fn ATOM_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, None)}
-  }
-  /// Tron Digital Signature
-  /// Digital signature of the CID using Tron's signing mechanism.
-  /// Refer to the Tron Blockchain integration section for details.
-  #[inline]
-  pub fn TRX_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TRX_DIGITAL_SIGNATURE, None)}
-  }
-  /// Binance Coin Digital Signature
-  /// Digital signature of the CID using Binance Coin's signing mechanism.
-  /// Refer to the Binance Coin Blockchain integration section for details.
-  #[inline]
-  pub fn BNB_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_BNB_DIGITAL_SIGNATURE, None)}
-  }
-  /// Avalanche Digital Signature
-  /// Digital signature of the CID using Avalanche's signing mechanism.
-  /// Refer to the Avalanche Blockchain integration section for details.
-  #[inline]
-  pub fn AVAX_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, None)}
-  }
-  /// Solana Digital Signature
-  /// Digital signature of the CID using Solana's signing mechanism.
-  /// Refer to the Solana Blockchain integration section for details.
-  #[inline]
-  pub fn SOL_DIGITAL_SIGNATURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_SOL_DIGITAL_SIGNATURE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_TIMESTAMP_SIGNATURE_TYPE, None)}
   }
 }
 
@@ -362,72 +180,39 @@ impl flatbuffers::Verifiable for PNM<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PUBLISH_TIMESTAMP", Self::VT_PUBLISH_TIMESTAMP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FID", Self::VT_FID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ETH_DIGITAL_SIGNATURE", Self::VT_ETH_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BTC_DIGITAL_SIGNATURE", Self::VT_BTC_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LTC_DIGITAL_SIGNATURE", Self::VT_LTC_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XRP_DIGITAL_SIGNATURE", Self::VT_XRP_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADA_DIGITAL_SIGNATURE", Self::VT_ADA_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XLM_DIGITAL_SIGNATURE", Self::VT_XLM_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DOGE_DIGITAL_SIGNATURE", Self::VT_DOGE_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XMR_DIGITAL_SIGNATURE", Self::VT_XMR_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DOT_DIGITAL_SIGNATURE", Self::VT_DOT_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FIL_DIGITAL_SIGNATURE", Self::VT_FIL_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XTZ_DIGITAL_SIGNATURE", Self::VT_XTZ_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATOM_DIGITAL_SIGNATURE", Self::VT_ATOM_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRX_DIGITAL_SIGNATURE", Self::VT_TRX_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BNB_DIGITAL_SIGNATURE", Self::VT_BNB_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AVAX_DIGITAL_SIGNATURE", Self::VT_AVAX_DIGITAL_SIGNATURE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOL_DIGITAL_SIGNATURE", Self::VT_SOL_DIGITAL_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIMESTAMP_SIGNATURE", Self::VT_TIMESTAMP_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_TYPE", Self::VT_SIGNATURE_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIMESTAMP_SIGNATURE_TYPE", Self::VT_TIMESTAMP_SIGNATURE_TYPE, false)?
      .finish();
     Ok(())
   }
 }
 pub struct PNMArgs<'a> {
     pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLISH_TIMESTAMP: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ETH_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LTC_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub XRP_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ADA_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub XLM_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DOGE_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub XMR_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DOT_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FIL_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub XTZ_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ATOM_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRX_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BNB_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AVAX_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SOL_DIGITAL_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TIMESTAMP_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TIMESTAMP_SIGNATURE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for PNMArgs<'a> {
   #[inline]
   fn default() -> Self {
     PNMArgs {
       MULTIFORMAT_ADDRESS: None,
+      PUBLISH_TIMESTAMP: None,
       CID: None,
       FID: None,
-      ETH_DIGITAL_SIGNATURE: None,
-      BTC_DIGITAL_SIGNATURE: None,
-      LTC_DIGITAL_SIGNATURE: None,
-      XRP_DIGITAL_SIGNATURE: None,
-      ADA_DIGITAL_SIGNATURE: None,
-      XLM_DIGITAL_SIGNATURE: None,
-      DOGE_DIGITAL_SIGNATURE: None,
-      XMR_DIGITAL_SIGNATURE: None,
-      DOT_DIGITAL_SIGNATURE: None,
-      FIL_DIGITAL_SIGNATURE: None,
-      XTZ_DIGITAL_SIGNATURE: None,
-      ATOM_DIGITAL_SIGNATURE: None,
-      TRX_DIGITAL_SIGNATURE: None,
-      BNB_DIGITAL_SIGNATURE: None,
-      AVAX_DIGITAL_SIGNATURE: None,
-      SOL_DIGITAL_SIGNATURE: None,
+      SIGNATURE: None,
+      TIMESTAMP_SIGNATURE: None,
+      SIGNATURE_TYPE: None,
+      TIMESTAMP_SIGNATURE_TYPE: None,
     }
   }
 }
@@ -442,6 +227,10 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   #[inline]
+  pub fn add_PUBLISH_TIMESTAMP(&mut self, PUBLISH_TIMESTAMP: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_PUBLISH_TIMESTAMP, PUBLISH_TIMESTAMP);
+  }
+  #[inline]
   pub fn add_CID(&mut self, CID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CID, CID);
   }
@@ -450,68 +239,20 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FID, FID);
   }
   #[inline]
-  pub fn add_ETH_DIGITAL_SIGNATURE(&mut self, ETH_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SIGNATURE, SIGNATURE);
   }
   #[inline]
-  pub fn add_BTC_DIGITAL_SIGNATURE(&mut self, BTC_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
+  pub fn add_TIMESTAMP_SIGNATURE(&mut self, TIMESTAMP_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TIMESTAMP_SIGNATURE, TIMESTAMP_SIGNATURE);
   }
   #[inline]
-  pub fn add_LTC_DIGITAL_SIGNATURE(&mut self, LTC_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
+  pub fn add_SIGNATURE_TYPE(&mut self, SIGNATURE_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SIGNATURE_TYPE, SIGNATURE_TYPE);
   }
   #[inline]
-  pub fn add_XRP_DIGITAL_SIGNATURE(&mut self, XRP_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_ADA_DIGITAL_SIGNATURE(&mut self, ADA_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_XLM_DIGITAL_SIGNATURE(&mut self, XLM_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_DOGE_DIGITAL_SIGNATURE(&mut self, DOGE_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_XMR_DIGITAL_SIGNATURE(&mut self, XMR_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_DOT_DIGITAL_SIGNATURE(&mut self, DOT_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_FIL_DIGITAL_SIGNATURE(&mut self, FIL_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_XTZ_DIGITAL_SIGNATURE(&mut self, XTZ_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_ATOM_DIGITAL_SIGNATURE(&mut self, ATOM_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_TRX_DIGITAL_SIGNATURE(&mut self, TRX_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_BNB_DIGITAL_SIGNATURE(&mut self, BNB_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_AVAX_DIGITAL_SIGNATURE(&mut self, AVAX_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
-  }
-  #[inline]
-  pub fn add_SOL_DIGITAL_SIGNATURE(&mut self, SOL_DIGITAL_SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
+  pub fn add_TIMESTAMP_SIGNATURE_TYPE(&mut self, TIMESTAMP_SIGNATURE_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TIMESTAMP_SIGNATURE_TYPE, TIMESTAMP_SIGNATURE_TYPE);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMBuilder<'a, 'b> {
@@ -532,24 +273,13 @@ impl core::fmt::Debug for PNM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("PNM");
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
+      ds.field("PUBLISH_TIMESTAMP", &self.PUBLISH_TIMESTAMP());
       ds.field("CID", &self.CID());
       ds.field("FID", &self.FID());
-      ds.field("ETH_DIGITAL_SIGNATURE", &self.ETH_DIGITAL_SIGNATURE());
-      ds.field("BTC_DIGITAL_SIGNATURE", &self.BTC_DIGITAL_SIGNATURE());
-      ds.field("LTC_DIGITAL_SIGNATURE", &self.LTC_DIGITAL_SIGNATURE());
-      ds.field("XRP_DIGITAL_SIGNATURE", &self.XRP_DIGITAL_SIGNATURE());
-      ds.field("ADA_DIGITAL_SIGNATURE", &self.ADA_DIGITAL_SIGNATURE());
-      ds.field("XLM_DIGITAL_SIGNATURE", &self.XLM_DIGITAL_SIGNATURE());
-      ds.field("DOGE_DIGITAL_SIGNATURE", &self.DOGE_DIGITAL_SIGNATURE());
-      ds.field("XMR_DIGITAL_SIGNATURE", &self.XMR_DIGITAL_SIGNATURE());
-      ds.field("DOT_DIGITAL_SIGNATURE", &self.DOT_DIGITAL_SIGNATURE());
-      ds.field("FIL_DIGITAL_SIGNATURE", &self.FIL_DIGITAL_SIGNATURE());
-      ds.field("XTZ_DIGITAL_SIGNATURE", &self.XTZ_DIGITAL_SIGNATURE());
-      ds.field("ATOM_DIGITAL_SIGNATURE", &self.ATOM_DIGITAL_SIGNATURE());
-      ds.field("TRX_DIGITAL_SIGNATURE", &self.TRX_DIGITAL_SIGNATURE());
-      ds.field("BNB_DIGITAL_SIGNATURE", &self.BNB_DIGITAL_SIGNATURE());
-      ds.field("AVAX_DIGITAL_SIGNATURE", &self.AVAX_DIGITAL_SIGNATURE());
-      ds.field("SOL_DIGITAL_SIGNATURE", &self.SOL_DIGITAL_SIGNATURE());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("TIMESTAMP_SIGNATURE", &self.TIMESTAMP_SIGNATURE());
+      ds.field("SIGNATURE_TYPE", &self.SIGNATURE_TYPE());
+      ds.field("TIMESTAMP_SIGNATURE_TYPE", &self.TIMESTAMP_SIGNATURE_TYPE());
       ds.finish()
   }
 }
@@ -557,47 +287,25 @@ impl core::fmt::Debug for PNM<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct PNMT {
   pub MULTIFORMAT_ADDRESS: Option<String>,
+  pub PUBLISH_TIMESTAMP: Option<String>,
   pub CID: Option<String>,
   pub FID: Option<String>,
-  pub ETH_DIGITAL_SIGNATURE: Option<String>,
-  pub BTC_DIGITAL_SIGNATURE: Option<String>,
-  pub LTC_DIGITAL_SIGNATURE: Option<String>,
-  pub XRP_DIGITAL_SIGNATURE: Option<String>,
-  pub ADA_DIGITAL_SIGNATURE: Option<String>,
-  pub XLM_DIGITAL_SIGNATURE: Option<String>,
-  pub DOGE_DIGITAL_SIGNATURE: Option<String>,
-  pub XMR_DIGITAL_SIGNATURE: Option<String>,
-  pub DOT_DIGITAL_SIGNATURE: Option<String>,
-  pub FIL_DIGITAL_SIGNATURE: Option<String>,
-  pub XTZ_DIGITAL_SIGNATURE: Option<String>,
-  pub ATOM_DIGITAL_SIGNATURE: Option<String>,
-  pub TRX_DIGITAL_SIGNATURE: Option<String>,
-  pub BNB_DIGITAL_SIGNATURE: Option<String>,
-  pub AVAX_DIGITAL_SIGNATURE: Option<String>,
-  pub SOL_DIGITAL_SIGNATURE: Option<String>,
+  pub SIGNATURE: Option<String>,
+  pub TIMESTAMP_SIGNATURE: Option<String>,
+  pub SIGNATURE_TYPE: Option<String>,
+  pub TIMESTAMP_SIGNATURE_TYPE: Option<String>,
 }
 impl Default for PNMT {
   fn default() -> Self {
     Self {
       MULTIFORMAT_ADDRESS: None,
+      PUBLISH_TIMESTAMP: None,
       CID: None,
       FID: None,
-      ETH_DIGITAL_SIGNATURE: None,
-      BTC_DIGITAL_SIGNATURE: None,
-      LTC_DIGITAL_SIGNATURE: None,
-      XRP_DIGITAL_SIGNATURE: None,
-      ADA_DIGITAL_SIGNATURE: None,
-      XLM_DIGITAL_SIGNATURE: None,
-      DOGE_DIGITAL_SIGNATURE: None,
-      XMR_DIGITAL_SIGNATURE: None,
-      DOT_DIGITAL_SIGNATURE: None,
-      FIL_DIGITAL_SIGNATURE: None,
-      XTZ_DIGITAL_SIGNATURE: None,
-      ATOM_DIGITAL_SIGNATURE: None,
-      TRX_DIGITAL_SIGNATURE: None,
-      BNB_DIGITAL_SIGNATURE: None,
-      AVAX_DIGITAL_SIGNATURE: None,
-      SOL_DIGITAL_SIGNATURE: None,
+      SIGNATURE: None,
+      TIMESTAMP_SIGNATURE: None,
+      SIGNATURE_TYPE: None,
+      TIMESTAMP_SIGNATURE_TYPE: None,
     }
   }
 }
@@ -609,80 +317,36 @@ impl PNMT {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let PUBLISH_TIMESTAMP = self.PUBLISH_TIMESTAMP.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let CID = self.CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let FID = self.FID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ETH_DIGITAL_SIGNATURE = self.ETH_DIGITAL_SIGNATURE.as_ref().map(|x|{
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let BTC_DIGITAL_SIGNATURE = self.BTC_DIGITAL_SIGNATURE.as_ref().map(|x|{
+    let TIMESTAMP_SIGNATURE = self.TIMESTAMP_SIGNATURE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LTC_DIGITAL_SIGNATURE = self.LTC_DIGITAL_SIGNATURE.as_ref().map(|x|{
+    let SIGNATURE_TYPE = self.SIGNATURE_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let XRP_DIGITAL_SIGNATURE = self.XRP_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ADA_DIGITAL_SIGNATURE = self.ADA_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let XLM_DIGITAL_SIGNATURE = self.XLM_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DOGE_DIGITAL_SIGNATURE = self.DOGE_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let XMR_DIGITAL_SIGNATURE = self.XMR_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DOT_DIGITAL_SIGNATURE = self.DOT_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FIL_DIGITAL_SIGNATURE = self.FIL_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let XTZ_DIGITAL_SIGNATURE = self.XTZ_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ATOM_DIGITAL_SIGNATURE = self.ATOM_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TRX_DIGITAL_SIGNATURE = self.TRX_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let BNB_DIGITAL_SIGNATURE = self.BNB_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let AVAX_DIGITAL_SIGNATURE = self.AVAX_DIGITAL_SIGNATURE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SOL_DIGITAL_SIGNATURE = self.SOL_DIGITAL_SIGNATURE.as_ref().map(|x|{
+    let TIMESTAMP_SIGNATURE_TYPE = self.TIMESTAMP_SIGNATURE_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     PNM::create(_fbb, &PNMArgs{
       MULTIFORMAT_ADDRESS,
+      PUBLISH_TIMESTAMP,
       CID,
       FID,
-      ETH_DIGITAL_SIGNATURE,
-      BTC_DIGITAL_SIGNATURE,
-      LTC_DIGITAL_SIGNATURE,
-      XRP_DIGITAL_SIGNATURE,
-      ADA_DIGITAL_SIGNATURE,
-      XLM_DIGITAL_SIGNATURE,
-      DOGE_DIGITAL_SIGNATURE,
-      XMR_DIGITAL_SIGNATURE,
-      DOT_DIGITAL_SIGNATURE,
-      FIL_DIGITAL_SIGNATURE,
-      XTZ_DIGITAL_SIGNATURE,
-      ATOM_DIGITAL_SIGNATURE,
-      TRX_DIGITAL_SIGNATURE,
-      BNB_DIGITAL_SIGNATURE,
-      AVAX_DIGITAL_SIGNATURE,
-      SOL_DIGITAL_SIGNATURE,
+      SIGNATURE,
+      TIMESTAMP_SIGNATURE,
+      SIGNATURE_TYPE,
+      TIMESTAMP_SIGNATURE_TYPE,
     })
   }
 }

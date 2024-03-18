@@ -21,24 +21,13 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MULTIFORMAT_ADDRESS = 4,
-    VT_CID = 6,
-    VT_FID = 8,
-    VT_ETH_DIGITAL_SIGNATURE = 10,
-    VT_BTC_DIGITAL_SIGNATURE = 12,
-    VT_LTC_DIGITAL_SIGNATURE = 14,
-    VT_XRP_DIGITAL_SIGNATURE = 16,
-    VT_ADA_DIGITAL_SIGNATURE = 18,
-    VT_XLM_DIGITAL_SIGNATURE = 20,
-    VT_DOGE_DIGITAL_SIGNATURE = 22,
-    VT_XMR_DIGITAL_SIGNATURE = 24,
-    VT_DOT_DIGITAL_SIGNATURE = 26,
-    VT_FIL_DIGITAL_SIGNATURE = 28,
-    VT_XTZ_DIGITAL_SIGNATURE = 30,
-    VT_ATOM_DIGITAL_SIGNATURE = 32,
-    VT_TRX_DIGITAL_SIGNATURE = 34,
-    VT_BNB_DIGITAL_SIGNATURE = 36,
-    VT_AVAX_DIGITAL_SIGNATURE = 38,
-    VT_SOL_DIGITAL_SIGNATURE = 40
+    VT_PUBLISH_TIMESTAMP = 6,
+    VT_CID = 8,
+    VT_FID = 10,
+    VT_SIGNATURE = 12,
+    VT_TIMESTAMP_SIGNATURE = 14,
+    VT_SIGNATURE_TYPE = 16,
+    VT_TIMESTAMP_SIGNATURE_TYPE = 18
   };
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/
@@ -49,6 +38,10 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   const ::flatbuffers::String *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MULTIFORMAT_ADDRESS);
+  }
+  /// Publish Time OF THE Publish Notification Message
+  const ::flatbuffers::String *PUBLISH_TIMESTAMP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISH_TIMESTAMP);
   }
   /// Concatenated Content Identifier (CID)
   /// This field is a unique ID for distributed systems (CID).
@@ -61,142 +54,44 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *FID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FID);
   }
-  /// Ethereum Digital Signature
-  /// Digital signature of the CID using Ethereum's signing mechanism.
-  /// Refer to the Ethereum Blockchain integration section for details.
-  const ::flatbuffers::String *ETH_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ETH_DIGITAL_SIGNATURE);
+  /// Digital Signature of the CID
+  /// This is the digital signature of the CID, signed using the specified cryptographic method.
+  const ::flatbuffers::String *SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE);
   }
-  /// Bitcoin Digital Signature
-  /// Digital signature of the CID using Bitcoin's signing mechanism.
-  /// Refer to the Bitcoin Blockchain integration section for details.
-  const ::flatbuffers::String *BTC_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BTC_DIGITAL_SIGNATURE);
+  /// Timestamp Signature
+  /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
+  const ::flatbuffers::String *TIMESTAMP_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIMESTAMP_SIGNATURE);
   }
-  /// Litecoin Digital Signature
-  /// Digital signature of the CID using Litecoin's signing mechanism.
-  /// Refer to the Litecoin Blockchain integration section for details.
-  const ::flatbuffers::String *LTC_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LTC_DIGITAL_SIGNATURE);
+  /// Type of Cryptographic Signature Used
+  /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+  const ::flatbuffers::String *SIGNATURE_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE_TYPE);
   }
-  /// Ripple Digital Signature
-  /// Digital signature of the CID using Ripple's signing mechanism.
-  /// Refer to the Ripple Blockchain integration section for details.
-  const ::flatbuffers::String *XRP_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XRP_DIGITAL_SIGNATURE);
-  }
-  /// Cardano Digital Signature
-  /// Digital signature of the CID using Cardano's signing mechanism.
-  /// Refer to the Cardano Blockchain integration section for details.
-  const ::flatbuffers::String *ADA_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ADA_DIGITAL_SIGNATURE);
-  }
-  /// Stellar Digital Signature
-  /// Digital signature of the CID using Stellar's signing mechanism.
-  /// Refer to the Stellar Blockchain integration section for details.
-  const ::flatbuffers::String *XLM_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XLM_DIGITAL_SIGNATURE);
-  }
-  /// Dogecoin Digital Signature
-  /// Digital signature of the CID using Dogecoin's signing mechanism.
-  /// Refer to the Dogecoin Blockchain integration section for details.
-  const ::flatbuffers::String *DOGE_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DOGE_DIGITAL_SIGNATURE);
-  }
-  /// Monero Digital Signature
-  /// Digital signature of the CID using Monero's signing mechanism.
-  /// Refer to the Monero Blockchain integration section for details.
-  const ::flatbuffers::String *XMR_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XMR_DIGITAL_SIGNATURE);
-  }
-  /// Polkadot Digital Signature
-  /// Digital signature of the CID using Polkadot's signing mechanism.
-  /// Refer to the Polkadot Blockchain integration section for details.
-  const ::flatbuffers::String *DOT_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DOT_DIGITAL_SIGNATURE);
-  }
-  /// Filecoin Digital Signature
-  /// Digital signature of the CID using Filecoin's signing mechanism.
-  /// Refer to the Filecoin Blockchain integration section for details.
-  const ::flatbuffers::String *FIL_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FIL_DIGITAL_SIGNATURE);
-  }
-  /// Tezos Digital Signature
-  /// Digital signature of the CID using Tezos's signing mechanism.
-  /// Refer to the Tezos Blockchain integration section for details.
-  const ::flatbuffers::String *XTZ_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XTZ_DIGITAL_SIGNATURE);
-  }
-  /// Cosmos Digital Signature
-  /// Digital signature of the CID using Cosmos's signing mechanism.
-  /// Refer to the Cosmos Blockchain integration section for details.
-  const ::flatbuffers::String *ATOM_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ATOM_DIGITAL_SIGNATURE);
-  }
-  /// Tron Digital Signature
-  /// Digital signature of the CID using Tron's signing mechanism.
-  /// Refer to the Tron Blockchain integration section for details.
-  const ::flatbuffers::String *TRX_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRX_DIGITAL_SIGNATURE);
-  }
-  /// Binance Coin Digital Signature
-  /// Digital signature of the CID using Binance Coin's signing mechanism.
-  /// Refer to the Binance Coin Blockchain integration section for details.
-  const ::flatbuffers::String *BNB_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BNB_DIGITAL_SIGNATURE);
-  }
-  /// Avalanche Digital Signature
-  /// Digital signature of the CID using Avalanche's signing mechanism.
-  /// Refer to the Avalanche Blockchain integration section for details.
-  const ::flatbuffers::String *AVAX_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AVAX_DIGITAL_SIGNATURE);
-  }
-  /// Solana Digital Signature
-  /// Digital signature of the CID using Solana's signing mechanism.
-  /// Refer to the Solana Blockchain integration section for details.
-  const ::flatbuffers::String *SOL_DIGITAL_SIGNATURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SOL_DIGITAL_SIGNATURE);
+  /// Type of Cryptographic Signature Used for Timestamp
+  /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+  const ::flatbuffers::String *TIMESTAMP_SIGNATURE_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIMESTAMP_SIGNATURE_TYPE);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
            verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
+           VerifyOffset(verifier, VT_PUBLISH_TIMESTAMP) &&
+           verifier.VerifyString(PUBLISH_TIMESTAMP()) &&
            VerifyOffset(verifier, VT_CID) &&
            verifier.VerifyString(CID()) &&
            VerifyOffset(verifier, VT_FID) &&
            verifier.VerifyString(FID()) &&
-           VerifyOffset(verifier, VT_ETH_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(ETH_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_BTC_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(BTC_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_LTC_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(LTC_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XRP_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XRP_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_ADA_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(ADA_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XLM_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XLM_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_DOGE_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(DOGE_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XMR_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XMR_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_DOT_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(DOT_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_FIL_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(FIL_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_XTZ_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(XTZ_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_ATOM_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(ATOM_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_TRX_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(TRX_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_BNB_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(BNB_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_AVAX_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(AVAX_DIGITAL_SIGNATURE()) &&
-           VerifyOffset(verifier, VT_SOL_DIGITAL_SIGNATURE) &&
-           verifier.VerifyString(SOL_DIGITAL_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_SIGNATURE) &&
+           verifier.VerifyString(SIGNATURE()) &&
+           VerifyOffset(verifier, VT_TIMESTAMP_SIGNATURE) &&
+           verifier.VerifyString(TIMESTAMP_SIGNATURE()) &&
+           VerifyOffset(verifier, VT_SIGNATURE_TYPE) &&
+           verifier.VerifyString(SIGNATURE_TYPE()) &&
+           VerifyOffset(verifier, VT_TIMESTAMP_SIGNATURE_TYPE) &&
+           verifier.VerifyString(TIMESTAMP_SIGNATURE_TYPE()) &&
            verifier.EndTable();
   }
 };
@@ -208,59 +103,26 @@ struct PNMBuilder {
   void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS) {
     fbb_.AddOffset(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
+  void add_PUBLISH_TIMESTAMP(::flatbuffers::Offset<::flatbuffers::String> PUBLISH_TIMESTAMP) {
+    fbb_.AddOffset(PNM::VT_PUBLISH_TIMESTAMP, PUBLISH_TIMESTAMP);
+  }
   void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
     fbb_.AddOffset(PNM::VT_CID, CID);
   }
   void add_FID(::flatbuffers::Offset<::flatbuffers::String> FID) {
     fbb_.AddOffset(PNM::VT_FID, FID);
   }
-  void add_ETH_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ETH_DIGITAL_SIGNATURE, ETH_DIGITAL_SIGNATURE);
+  void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_SIGNATURE, SIGNATURE);
   }
-  void add_BTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_BTC_DIGITAL_SIGNATURE, BTC_DIGITAL_SIGNATURE);
+  void add_TIMESTAMP_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> TIMESTAMP_SIGNATURE) {
+    fbb_.AddOffset(PNM::VT_TIMESTAMP_SIGNATURE, TIMESTAMP_SIGNATURE);
   }
-  void add_LTC_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_LTC_DIGITAL_SIGNATURE, LTC_DIGITAL_SIGNATURE);
+  void add_SIGNATURE_TYPE(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE) {
+    fbb_.AddOffset(PNM::VT_SIGNATURE_TYPE, SIGNATURE_TYPE);
   }
-  void add_XRP_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XRP_DIGITAL_SIGNATURE, XRP_DIGITAL_SIGNATURE);
-  }
-  void add_ADA_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ADA_DIGITAL_SIGNATURE, ADA_DIGITAL_SIGNATURE);
-  }
-  void add_XLM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XLM_DIGITAL_SIGNATURE, XLM_DIGITAL_SIGNATURE);
-  }
-  void add_DOGE_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_DOGE_DIGITAL_SIGNATURE, DOGE_DIGITAL_SIGNATURE);
-  }
-  void add_XMR_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XMR_DIGITAL_SIGNATURE, XMR_DIGITAL_SIGNATURE);
-  }
-  void add_DOT_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_DOT_DIGITAL_SIGNATURE, DOT_DIGITAL_SIGNATURE);
-  }
-  void add_FIL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_FIL_DIGITAL_SIGNATURE, FIL_DIGITAL_SIGNATURE);
-  }
-  void add_XTZ_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_XTZ_DIGITAL_SIGNATURE, XTZ_DIGITAL_SIGNATURE);
-  }
-  void add_ATOM_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_ATOM_DIGITAL_SIGNATURE, ATOM_DIGITAL_SIGNATURE);
-  }
-  void add_TRX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_TRX_DIGITAL_SIGNATURE, TRX_DIGITAL_SIGNATURE);
-  }
-  void add_BNB_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_BNB_DIGITAL_SIGNATURE, BNB_DIGITAL_SIGNATURE);
-  }
-  void add_AVAX_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_AVAX_DIGITAL_SIGNATURE, AVAX_DIGITAL_SIGNATURE);
-  }
-  void add_SOL_DIGITAL_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE) {
-    fbb_.AddOffset(PNM::VT_SOL_DIGITAL_SIGNATURE, SOL_DIGITAL_SIGNATURE);
+  void add_TIMESTAMP_SIGNATURE_TYPE(::flatbuffers::Offset<::flatbuffers::String> TIMESTAMP_SIGNATURE_TYPE) {
+    fbb_.AddOffset(PNM::VT_TIMESTAMP_SIGNATURE_TYPE, TIMESTAMP_SIGNATURE_TYPE);
   }
   explicit PNMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -276,43 +138,21 @@ struct PNMBuilder {
 inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISH_TIMESTAMP = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ETH_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BTC_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LTC_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XRP_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ADA_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XLM_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DOGE_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XMR_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DOT_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FIL_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> XTZ_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ATOM_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRX_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BNB_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> AVAX_DIGITAL_SIGNATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SOL_DIGITAL_SIGNATURE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIMESTAMP_SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIMESTAMP_SIGNATURE_TYPE = 0) {
   PNMBuilder builder_(_fbb);
-  builder_.add_SOL_DIGITAL_SIGNATURE(SOL_DIGITAL_SIGNATURE);
-  builder_.add_AVAX_DIGITAL_SIGNATURE(AVAX_DIGITAL_SIGNATURE);
-  builder_.add_BNB_DIGITAL_SIGNATURE(BNB_DIGITAL_SIGNATURE);
-  builder_.add_TRX_DIGITAL_SIGNATURE(TRX_DIGITAL_SIGNATURE);
-  builder_.add_ATOM_DIGITAL_SIGNATURE(ATOM_DIGITAL_SIGNATURE);
-  builder_.add_XTZ_DIGITAL_SIGNATURE(XTZ_DIGITAL_SIGNATURE);
-  builder_.add_FIL_DIGITAL_SIGNATURE(FIL_DIGITAL_SIGNATURE);
-  builder_.add_DOT_DIGITAL_SIGNATURE(DOT_DIGITAL_SIGNATURE);
-  builder_.add_XMR_DIGITAL_SIGNATURE(XMR_DIGITAL_SIGNATURE);
-  builder_.add_DOGE_DIGITAL_SIGNATURE(DOGE_DIGITAL_SIGNATURE);
-  builder_.add_XLM_DIGITAL_SIGNATURE(XLM_DIGITAL_SIGNATURE);
-  builder_.add_ADA_DIGITAL_SIGNATURE(ADA_DIGITAL_SIGNATURE);
-  builder_.add_XRP_DIGITAL_SIGNATURE(XRP_DIGITAL_SIGNATURE);
-  builder_.add_LTC_DIGITAL_SIGNATURE(LTC_DIGITAL_SIGNATURE);
-  builder_.add_BTC_DIGITAL_SIGNATURE(BTC_DIGITAL_SIGNATURE);
-  builder_.add_ETH_DIGITAL_SIGNATURE(ETH_DIGITAL_SIGNATURE);
+  builder_.add_TIMESTAMP_SIGNATURE_TYPE(TIMESTAMP_SIGNATURE_TYPE);
+  builder_.add_SIGNATURE_TYPE(SIGNATURE_TYPE);
+  builder_.add_TIMESTAMP_SIGNATURE(TIMESTAMP_SIGNATURE);
+  builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_FID(FID);
   builder_.add_CID(CID);
+  builder_.add_PUBLISH_TIMESTAMP(PUBLISH_TIMESTAMP);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   return builder_.Finish();
 }
@@ -320,64 +160,31 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
 inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *MULTIFORMAT_ADDRESS = nullptr,
+    const char *PUBLISH_TIMESTAMP = nullptr,
     const char *CID = nullptr,
     const char *FID = nullptr,
-    const char *ETH_DIGITAL_SIGNATURE = nullptr,
-    const char *BTC_DIGITAL_SIGNATURE = nullptr,
-    const char *LTC_DIGITAL_SIGNATURE = nullptr,
-    const char *XRP_DIGITAL_SIGNATURE = nullptr,
-    const char *ADA_DIGITAL_SIGNATURE = nullptr,
-    const char *XLM_DIGITAL_SIGNATURE = nullptr,
-    const char *DOGE_DIGITAL_SIGNATURE = nullptr,
-    const char *XMR_DIGITAL_SIGNATURE = nullptr,
-    const char *DOT_DIGITAL_SIGNATURE = nullptr,
-    const char *FIL_DIGITAL_SIGNATURE = nullptr,
-    const char *XTZ_DIGITAL_SIGNATURE = nullptr,
-    const char *ATOM_DIGITAL_SIGNATURE = nullptr,
-    const char *TRX_DIGITAL_SIGNATURE = nullptr,
-    const char *BNB_DIGITAL_SIGNATURE = nullptr,
-    const char *AVAX_DIGITAL_SIGNATURE = nullptr,
-    const char *SOL_DIGITAL_SIGNATURE = nullptr) {
+    const char *SIGNATURE = nullptr,
+    const char *TIMESTAMP_SIGNATURE = nullptr,
+    const char *SIGNATURE_TYPE = nullptr,
+    const char *TIMESTAMP_SIGNATURE_TYPE = nullptr) {
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
+  auto PUBLISH_TIMESTAMP__ = PUBLISH_TIMESTAMP ? _fbb.CreateString(PUBLISH_TIMESTAMP) : 0;
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto FID__ = FID ? _fbb.CreateString(FID) : 0;
-  auto ETH_DIGITAL_SIGNATURE__ = ETH_DIGITAL_SIGNATURE ? _fbb.CreateString(ETH_DIGITAL_SIGNATURE) : 0;
-  auto BTC_DIGITAL_SIGNATURE__ = BTC_DIGITAL_SIGNATURE ? _fbb.CreateString(BTC_DIGITAL_SIGNATURE) : 0;
-  auto LTC_DIGITAL_SIGNATURE__ = LTC_DIGITAL_SIGNATURE ? _fbb.CreateString(LTC_DIGITAL_SIGNATURE) : 0;
-  auto XRP_DIGITAL_SIGNATURE__ = XRP_DIGITAL_SIGNATURE ? _fbb.CreateString(XRP_DIGITAL_SIGNATURE) : 0;
-  auto ADA_DIGITAL_SIGNATURE__ = ADA_DIGITAL_SIGNATURE ? _fbb.CreateString(ADA_DIGITAL_SIGNATURE) : 0;
-  auto XLM_DIGITAL_SIGNATURE__ = XLM_DIGITAL_SIGNATURE ? _fbb.CreateString(XLM_DIGITAL_SIGNATURE) : 0;
-  auto DOGE_DIGITAL_SIGNATURE__ = DOGE_DIGITAL_SIGNATURE ? _fbb.CreateString(DOGE_DIGITAL_SIGNATURE) : 0;
-  auto XMR_DIGITAL_SIGNATURE__ = XMR_DIGITAL_SIGNATURE ? _fbb.CreateString(XMR_DIGITAL_SIGNATURE) : 0;
-  auto DOT_DIGITAL_SIGNATURE__ = DOT_DIGITAL_SIGNATURE ? _fbb.CreateString(DOT_DIGITAL_SIGNATURE) : 0;
-  auto FIL_DIGITAL_SIGNATURE__ = FIL_DIGITAL_SIGNATURE ? _fbb.CreateString(FIL_DIGITAL_SIGNATURE) : 0;
-  auto XTZ_DIGITAL_SIGNATURE__ = XTZ_DIGITAL_SIGNATURE ? _fbb.CreateString(XTZ_DIGITAL_SIGNATURE) : 0;
-  auto ATOM_DIGITAL_SIGNATURE__ = ATOM_DIGITAL_SIGNATURE ? _fbb.CreateString(ATOM_DIGITAL_SIGNATURE) : 0;
-  auto TRX_DIGITAL_SIGNATURE__ = TRX_DIGITAL_SIGNATURE ? _fbb.CreateString(TRX_DIGITAL_SIGNATURE) : 0;
-  auto BNB_DIGITAL_SIGNATURE__ = BNB_DIGITAL_SIGNATURE ? _fbb.CreateString(BNB_DIGITAL_SIGNATURE) : 0;
-  auto AVAX_DIGITAL_SIGNATURE__ = AVAX_DIGITAL_SIGNATURE ? _fbb.CreateString(AVAX_DIGITAL_SIGNATURE) : 0;
-  auto SOL_DIGITAL_SIGNATURE__ = SOL_DIGITAL_SIGNATURE ? _fbb.CreateString(SOL_DIGITAL_SIGNATURE) : 0;
+  auto SIGNATURE__ = SIGNATURE ? _fbb.CreateString(SIGNATURE) : 0;
+  auto TIMESTAMP_SIGNATURE__ = TIMESTAMP_SIGNATURE ? _fbb.CreateString(TIMESTAMP_SIGNATURE) : 0;
+  auto SIGNATURE_TYPE__ = SIGNATURE_TYPE ? _fbb.CreateString(SIGNATURE_TYPE) : 0;
+  auto TIMESTAMP_SIGNATURE_TYPE__ = TIMESTAMP_SIGNATURE_TYPE ? _fbb.CreateString(TIMESTAMP_SIGNATURE_TYPE) : 0;
   return CreatePNM(
       _fbb,
       MULTIFORMAT_ADDRESS__,
+      PUBLISH_TIMESTAMP__,
       CID__,
       FID__,
-      ETH_DIGITAL_SIGNATURE__,
-      BTC_DIGITAL_SIGNATURE__,
-      LTC_DIGITAL_SIGNATURE__,
-      XRP_DIGITAL_SIGNATURE__,
-      ADA_DIGITAL_SIGNATURE__,
-      XLM_DIGITAL_SIGNATURE__,
-      DOGE_DIGITAL_SIGNATURE__,
-      XMR_DIGITAL_SIGNATURE__,
-      DOT_DIGITAL_SIGNATURE__,
-      FIL_DIGITAL_SIGNATURE__,
-      XTZ_DIGITAL_SIGNATURE__,
-      ATOM_DIGITAL_SIGNATURE__,
-      TRX_DIGITAL_SIGNATURE__,
-      BNB_DIGITAL_SIGNATURE__,
-      AVAX_DIGITAL_SIGNATURE__,
-      SOL_DIGITAL_SIGNATURE__);
+      SIGNATURE__,
+      TIMESTAMP_SIGNATURE__,
+      SIGNATURE_TYPE__,
+      TIMESTAMP_SIGNATURE_TYPE__);
 }
 
 inline const PNM *GetPNM(const void *buf) {

@@ -18,24 +18,13 @@ public struct PNM: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case MULTIFORMAT_ADDRESS = 4
-    case CID = 6
-    case FID = 8
-    case ETH_DIGITAL_SIGNATURE = 10
-    case BTC_DIGITAL_SIGNATURE = 12
-    case LTC_DIGITAL_SIGNATURE = 14
-    case XRP_DIGITAL_SIGNATURE = 16
-    case ADA_DIGITAL_SIGNATURE = 18
-    case XLM_DIGITAL_SIGNATURE = 20
-    case DOGE_DIGITAL_SIGNATURE = 22
-    case XMR_DIGITAL_SIGNATURE = 24
-    case DOT_DIGITAL_SIGNATURE = 26
-    case FIL_DIGITAL_SIGNATURE = 28
-    case XTZ_DIGITAL_SIGNATURE = 30
-    case ATOM_DIGITAL_SIGNATURE = 32
-    case TRX_DIGITAL_SIGNATURE = 34
-    case BNB_DIGITAL_SIGNATURE = 36
-    case AVAX_DIGITAL_SIGNATURE = 38
-    case SOL_DIGITAL_SIGNATURE = 40
+    case PUBLISH_TIMESTAMP = 6
+    case CID = 8
+    case FID = 10
+    case SIGNATURE = 12
+    case TIMESTAMP_SIGNATURE = 14
+    case SIGNATURE_TYPE = 16
+    case TIMESTAMP_SIGNATURE_TYPE = 18
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -49,6 +38,9 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
   public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MULTIFORMAT_ADDRESS.v) }
+  ///  Publish Time OF THE Publish Notification Message
+  public var PUBLISH_TIMESTAMP: String? { let o = _accessor.offset(VTOFFSET.PUBLISH_TIMESTAMP.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISH_TIMESTAMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLISH_TIMESTAMP.v) }
   ///  Concatenated Content Identifier (CID)
   ///  This field is a unique ID for distributed systems (CID).
   ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
@@ -58,173 +50,65 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  This field is the file ID / Name
   public var FID: String? { let o = _accessor.offset(VTOFFSET.FID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var FIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FID.v) }
-  ///  Ethereum Digital Signature
-  ///  Digital signature of the CID using Ethereum's signing mechanism.
-  ///  Refer to the Ethereum Blockchain integration section for details.
-  public var ETH_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ETH_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ETH_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ETH_DIGITAL_SIGNATURE.v) }
-  ///  Bitcoin Digital Signature
-  ///  Digital signature of the CID using Bitcoin's signing mechanism.
-  ///  Refer to the Bitcoin Blockchain integration section for details.
-  public var BTC_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.BTC_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BTC_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BTC_DIGITAL_SIGNATURE.v) }
-  ///  Litecoin Digital Signature
-  ///  Digital signature of the CID using Litecoin's signing mechanism.
-  ///  Refer to the Litecoin Blockchain integration section for details.
-  public var LTC_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.LTC_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LTC_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LTC_DIGITAL_SIGNATURE.v) }
-  ///  Ripple Digital Signature
-  ///  Digital signature of the CID using Ripple's signing mechanism.
-  ///  Refer to the Ripple Blockchain integration section for details.
-  public var XRP_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XRP_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XRP_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XRP_DIGITAL_SIGNATURE.v) }
-  ///  Cardano Digital Signature
-  ///  Digital signature of the CID using Cardano's signing mechanism.
-  ///  Refer to the Cardano Blockchain integration section for details.
-  public var ADA_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ADA_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADA_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADA_DIGITAL_SIGNATURE.v) }
-  ///  Stellar Digital Signature
-  ///  Digital signature of the CID using Stellar's signing mechanism.
-  ///  Refer to the Stellar Blockchain integration section for details.
-  public var XLM_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XLM_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XLM_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XLM_DIGITAL_SIGNATURE.v) }
-  ///  Dogecoin Digital Signature
-  ///  Digital signature of the CID using Dogecoin's signing mechanism.
-  ///  Refer to the Dogecoin Blockchain integration section for details.
-  public var DOGE_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.DOGE_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DOGE_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOGE_DIGITAL_SIGNATURE.v) }
-  ///  Monero Digital Signature
-  ///  Digital signature of the CID using Monero's signing mechanism.
-  ///  Refer to the Monero Blockchain integration section for details.
-  public var XMR_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XMR_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XMR_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XMR_DIGITAL_SIGNATURE.v) }
-  ///  Polkadot Digital Signature
-  ///  Digital signature of the CID using Polkadot's signing mechanism.
-  ///  Refer to the Polkadot Blockchain integration section for details.
-  public var DOT_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.DOT_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DOT_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOT_DIGITAL_SIGNATURE.v) }
-  ///  Filecoin Digital Signature
-  ///  Digital signature of the CID using Filecoin's signing mechanism.
-  ///  Refer to the Filecoin Blockchain integration section for details.
-  public var FIL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.FIL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FIL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FIL_DIGITAL_SIGNATURE.v) }
-  ///  Tezos Digital Signature
-  ///  Digital signature of the CID using Tezos's signing mechanism.
-  ///  Refer to the Tezos Blockchain integration section for details.
-  public var XTZ_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.XTZ_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XTZ_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XTZ_DIGITAL_SIGNATURE.v) }
-  ///  Cosmos Digital Signature
-  ///  Digital signature of the CID using Cosmos's signing mechanism.
-  ///  Refer to the Cosmos Blockchain integration section for details.
-  public var ATOM_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.ATOM_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATOM_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATOM_DIGITAL_SIGNATURE.v) }
-  ///  Tron Digital Signature
-  ///  Digital signature of the CID using Tron's signing mechanism.
-  ///  Refer to the Tron Blockchain integration section for details.
-  public var TRX_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.TRX_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRX_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRX_DIGITAL_SIGNATURE.v) }
-  ///  Binance Coin Digital Signature
-  ///  Digital signature of the CID using Binance Coin's signing mechanism.
-  ///  Refer to the Binance Coin Blockchain integration section for details.
-  public var BNB_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.BNB_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BNB_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BNB_DIGITAL_SIGNATURE.v) }
-  ///  Avalanche Digital Signature
-  ///  Digital signature of the CID using Avalanche's signing mechanism.
-  ///  Refer to the Avalanche Blockchain integration section for details.
-  public var AVAX_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.AVAX_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AVAX_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AVAX_DIGITAL_SIGNATURE.v) }
-  ///  Solana Digital Signature
-  ///  Digital signature of the CID using Solana's signing mechanism.
-  ///  Refer to the Solana Blockchain integration section for details.
-  public var SOL_DIGITAL_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SOL_DIGITAL_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOL_DIGITAL_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOL_DIGITAL_SIGNATURE.v) }
-  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  ///  Digital Signature of the CID
+  ///  This is the digital signature of the CID, signed using the specified cryptographic method.
+  public var SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) }
+  ///  Timestamp Signature
+  ///  Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
+  public var TIMESTAMP_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.TIMESTAMP_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESTAMP_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIMESTAMP_SIGNATURE.v) }
+  ///  Type of Cryptographic Signature Used
+  ///  Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+  public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE_TYPE.v) }
+  ///  Type of Cryptographic Signature Used for Timestamp
+  ///  Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+  public var TIMESTAMP_SIGNATURE_TYPE: String? { let o = _accessor.offset(VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESTAMP_SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.v) }
+  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
+  public static func add(PUBLISH_TIMESTAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISH_TIMESTAMP, at: VTOFFSET.PUBLISH_TIMESTAMP.p) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VTOFFSET.CID.p) }
   public static func add(FID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FID, at: VTOFFSET.FID.p) }
-  public static func add(ETH_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETH_DIGITAL_SIGNATURE, at: VTOFFSET.ETH_DIGITAL_SIGNATURE.p) }
-  public static func add(BTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BTC_DIGITAL_SIGNATURE, at: VTOFFSET.BTC_DIGITAL_SIGNATURE.p) }
-  public static func add(LTC_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LTC_DIGITAL_SIGNATURE, at: VTOFFSET.LTC_DIGITAL_SIGNATURE.p) }
-  public static func add(XRP_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XRP_DIGITAL_SIGNATURE, at: VTOFFSET.XRP_DIGITAL_SIGNATURE.p) }
-  public static func add(ADA_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADA_DIGITAL_SIGNATURE, at: VTOFFSET.ADA_DIGITAL_SIGNATURE.p) }
-  public static func add(XLM_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XLM_DIGITAL_SIGNATURE, at: VTOFFSET.XLM_DIGITAL_SIGNATURE.p) }
-  public static func add(DOGE_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOGE_DIGITAL_SIGNATURE, at: VTOFFSET.DOGE_DIGITAL_SIGNATURE.p) }
-  public static func add(XMR_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XMR_DIGITAL_SIGNATURE, at: VTOFFSET.XMR_DIGITAL_SIGNATURE.p) }
-  public static func add(DOT_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOT_DIGITAL_SIGNATURE, at: VTOFFSET.DOT_DIGITAL_SIGNATURE.p) }
-  public static func add(FIL_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIL_DIGITAL_SIGNATURE, at: VTOFFSET.FIL_DIGITAL_SIGNATURE.p) }
-  public static func add(XTZ_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XTZ_DIGITAL_SIGNATURE, at: VTOFFSET.XTZ_DIGITAL_SIGNATURE.p) }
-  public static func add(ATOM_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATOM_DIGITAL_SIGNATURE, at: VTOFFSET.ATOM_DIGITAL_SIGNATURE.p) }
-  public static func add(TRX_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRX_DIGITAL_SIGNATURE, at: VTOFFSET.TRX_DIGITAL_SIGNATURE.p) }
-  public static func add(BNB_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BNB_DIGITAL_SIGNATURE, at: VTOFFSET.BNB_DIGITAL_SIGNATURE.p) }
-  public static func add(AVAX_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AVAX_DIGITAL_SIGNATURE, at: VTOFFSET.AVAX_DIGITAL_SIGNATURE.p) }
-  public static func add(SOL_DIGITAL_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOL_DIGITAL_SIGNATURE, at: VTOFFSET.SOL_DIGITAL_SIGNATURE.p) }
+  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
+  public static func add(TIMESTAMP_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE, at: VTOFFSET.TIMESTAMP_SIGNATURE.p) }
+  public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VTOFFSET.SIGNATURE_TYPE.p) }
+  public static func add(TIMESTAMP_SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE_TYPE, at: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.p) }
   public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
     MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
+    PUBLISH_TIMESTAMPOffset PUBLISH_TIMESTAMP: Offset = Offset(),
     CIDOffset CID: Offset = Offset(),
     FIDOffset FID: Offset = Offset(),
-    ETH_DIGITAL_SIGNATUREOffset ETH_DIGITAL_SIGNATURE: Offset = Offset(),
-    BTC_DIGITAL_SIGNATUREOffset BTC_DIGITAL_SIGNATURE: Offset = Offset(),
-    LTC_DIGITAL_SIGNATUREOffset LTC_DIGITAL_SIGNATURE: Offset = Offset(),
-    XRP_DIGITAL_SIGNATUREOffset XRP_DIGITAL_SIGNATURE: Offset = Offset(),
-    ADA_DIGITAL_SIGNATUREOffset ADA_DIGITAL_SIGNATURE: Offset = Offset(),
-    XLM_DIGITAL_SIGNATUREOffset XLM_DIGITAL_SIGNATURE: Offset = Offset(),
-    DOGE_DIGITAL_SIGNATUREOffset DOGE_DIGITAL_SIGNATURE: Offset = Offset(),
-    XMR_DIGITAL_SIGNATUREOffset XMR_DIGITAL_SIGNATURE: Offset = Offset(),
-    DOT_DIGITAL_SIGNATUREOffset DOT_DIGITAL_SIGNATURE: Offset = Offset(),
-    FIL_DIGITAL_SIGNATUREOffset FIL_DIGITAL_SIGNATURE: Offset = Offset(),
-    XTZ_DIGITAL_SIGNATUREOffset XTZ_DIGITAL_SIGNATURE: Offset = Offset(),
-    ATOM_DIGITAL_SIGNATUREOffset ATOM_DIGITAL_SIGNATURE: Offset = Offset(),
-    TRX_DIGITAL_SIGNATUREOffset TRX_DIGITAL_SIGNATURE: Offset = Offset(),
-    BNB_DIGITAL_SIGNATUREOffset BNB_DIGITAL_SIGNATURE: Offset = Offset(),
-    AVAX_DIGITAL_SIGNATUREOffset AVAX_DIGITAL_SIGNATURE: Offset = Offset(),
-    SOL_DIGITAL_SIGNATUREOffset SOL_DIGITAL_SIGNATURE: Offset = Offset()
+    SIGNATUREOffset SIGNATURE: Offset = Offset(),
+    TIMESTAMP_SIGNATUREOffset TIMESTAMP_SIGNATURE: Offset = Offset(),
+    SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset = Offset(),
+    TIMESTAMP_SIGNATURE_TYPEOffset TIMESTAMP_SIGNATURE_TYPE: Offset = Offset()
   ) -> Offset {
     let __start = PNM.startPNM(&fbb)
     PNM.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
+    PNM.add(PUBLISH_TIMESTAMP: PUBLISH_TIMESTAMP, &fbb)
     PNM.add(CID: CID, &fbb)
     PNM.add(FID: FID, &fbb)
-    PNM.add(ETH_DIGITAL_SIGNATURE: ETH_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(BTC_DIGITAL_SIGNATURE: BTC_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(LTC_DIGITAL_SIGNATURE: LTC_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(XRP_DIGITAL_SIGNATURE: XRP_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(ADA_DIGITAL_SIGNATURE: ADA_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(XLM_DIGITAL_SIGNATURE: XLM_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(DOGE_DIGITAL_SIGNATURE: DOGE_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(XMR_DIGITAL_SIGNATURE: XMR_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(DOT_DIGITAL_SIGNATURE: DOT_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(FIL_DIGITAL_SIGNATURE: FIL_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(XTZ_DIGITAL_SIGNATURE: XTZ_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(ATOM_DIGITAL_SIGNATURE: ATOM_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(TRX_DIGITAL_SIGNATURE: TRX_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(BNB_DIGITAL_SIGNATURE: BNB_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(AVAX_DIGITAL_SIGNATURE: AVAX_DIGITAL_SIGNATURE, &fbb)
-    PNM.add(SOL_DIGITAL_SIGNATURE: SOL_DIGITAL_SIGNATURE, &fbb)
+    PNM.add(SIGNATURE: SIGNATURE, &fbb)
+    PNM.add(TIMESTAMP_SIGNATURE: TIMESTAMP_SIGNATURE, &fbb)
+    PNM.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
+    PNM.add(TIMESTAMP_SIGNATURE_TYPE: TIMESTAMP_SIGNATURE_TYPE, &fbb)
     return PNM.endPNM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PUBLISH_TIMESTAMP.p, fieldName: "PUBLISH_TIMESTAMP", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CID.p, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.FID.p, fieldName: "FID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ETH_DIGITAL_SIGNATURE.p, fieldName: "ETH_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BTC_DIGITAL_SIGNATURE.p, fieldName: "BTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LTC_DIGITAL_SIGNATURE.p, fieldName: "LTC_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.XRP_DIGITAL_SIGNATURE.p, fieldName: "XRP_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ADA_DIGITAL_SIGNATURE.p, fieldName: "ADA_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.XLM_DIGITAL_SIGNATURE.p, fieldName: "XLM_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DOGE_DIGITAL_SIGNATURE.p, fieldName: "DOGE_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.XMR_DIGITAL_SIGNATURE.p, fieldName: "XMR_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DOT_DIGITAL_SIGNATURE.p, fieldName: "DOT_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FIL_DIGITAL_SIGNATURE.p, fieldName: "FIL_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.XTZ_DIGITAL_SIGNATURE.p, fieldName: "XTZ_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ATOM_DIGITAL_SIGNATURE.p, fieldName: "ATOM_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRX_DIGITAL_SIGNATURE.p, fieldName: "TRX_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BNB_DIGITAL_SIGNATURE.p, fieldName: "BNB_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AVAX_DIGITAL_SIGNATURE.p, fieldName: "AVAX_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOL_DIGITAL_SIGNATURE.p, fieldName: "SOL_DIGITAL_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TIMESTAMP_SIGNATURE.p, fieldName: "TIMESTAMP_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SIGNATURE_TYPE.p, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.p, fieldName: "TIMESTAMP_SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

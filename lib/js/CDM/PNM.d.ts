@@ -20,6 +20,11 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     MULTIFORMAT_ADDRESS(): string | null;
     MULTIFORMAT_ADDRESS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
+     * Publish Time OF THE Publish Notification Message
+     */
+    PUBLISH_TIMESTAMP(): string | null;
+    PUBLISH_TIMESTAMP(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
      * Concatenated Content Identifier (CID)
      * This field is a unique ID for distributed systems (CID).
      * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
@@ -33,163 +38,53 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     FID(): string | null;
     FID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Ethereum Digital Signature
-     * Digital signature of the CID using Ethereum's signing mechanism.
-     * Refer to the Ethereum Blockchain integration section for details.
+     * Digital Signature of the CID
+     * This is the digital signature of the CID, signed using the specified cryptographic method.
      */
-    ETH_DIGITAL_SIGNATURE(): string | null;
-    ETH_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    SIGNATURE(): string | null;
+    SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Bitcoin Digital Signature
-     * Digital signature of the CID using Bitcoin's signing mechanism.
-     * Refer to the Bitcoin Blockchain integration section for details.
+     * Timestamp Signature
+     * Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
      */
-    BTC_DIGITAL_SIGNATURE(): string | null;
-    BTC_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TIMESTAMP_SIGNATURE(): string | null;
+    TIMESTAMP_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Litecoin Digital Signature
-     * Digital signature of the CID using Litecoin's signing mechanism.
-     * Refer to the Litecoin Blockchain integration section for details.
+     * Type of Cryptographic Signature Used
+     * Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
      */
-    LTC_DIGITAL_SIGNATURE(): string | null;
-    LTC_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    SIGNATURE_TYPE(): string | null;
+    SIGNATURE_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Ripple Digital Signature
-     * Digital signature of the CID using Ripple's signing mechanism.
-     * Refer to the Ripple Blockchain integration section for details.
+     * Type of Cryptographic Signature Used for Timestamp
+     * Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
      */
-    XRP_DIGITAL_SIGNATURE(): string | null;
-    XRP_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Cardano Digital Signature
-     * Digital signature of the CID using Cardano's signing mechanism.
-     * Refer to the Cardano Blockchain integration section for details.
-     */
-    ADA_DIGITAL_SIGNATURE(): string | null;
-    ADA_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Stellar Digital Signature
-     * Digital signature of the CID using Stellar's signing mechanism.
-     * Refer to the Stellar Blockchain integration section for details.
-     */
-    XLM_DIGITAL_SIGNATURE(): string | null;
-    XLM_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Dogecoin Digital Signature
-     * Digital signature of the CID using Dogecoin's signing mechanism.
-     * Refer to the Dogecoin Blockchain integration section for details.
-     */
-    DOGE_DIGITAL_SIGNATURE(): string | null;
-    DOGE_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Monero Digital Signature
-     * Digital signature of the CID using Monero's signing mechanism.
-     * Refer to the Monero Blockchain integration section for details.
-     */
-    XMR_DIGITAL_SIGNATURE(): string | null;
-    XMR_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Polkadot Digital Signature
-     * Digital signature of the CID using Polkadot's signing mechanism.
-     * Refer to the Polkadot Blockchain integration section for details.
-     */
-    DOT_DIGITAL_SIGNATURE(): string | null;
-    DOT_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Filecoin Digital Signature
-     * Digital signature of the CID using Filecoin's signing mechanism.
-     * Refer to the Filecoin Blockchain integration section for details.
-     */
-    FIL_DIGITAL_SIGNATURE(): string | null;
-    FIL_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Tezos Digital Signature
-     * Digital signature of the CID using Tezos's signing mechanism.
-     * Refer to the Tezos Blockchain integration section for details.
-     */
-    XTZ_DIGITAL_SIGNATURE(): string | null;
-    XTZ_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Cosmos Digital Signature
-     * Digital signature of the CID using Cosmos's signing mechanism.
-     * Refer to the Cosmos Blockchain integration section for details.
-     */
-    ATOM_DIGITAL_SIGNATURE(): string | null;
-    ATOM_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Tron Digital Signature
-     * Digital signature of the CID using Tron's signing mechanism.
-     * Refer to the Tron Blockchain integration section for details.
-     */
-    TRX_DIGITAL_SIGNATURE(): string | null;
-    TRX_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Binance Coin Digital Signature
-     * Digital signature of the CID using Binance Coin's signing mechanism.
-     * Refer to the Binance Coin Blockchain integration section for details.
-     */
-    BNB_DIGITAL_SIGNATURE(): string | null;
-    BNB_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Avalanche Digital Signature
-     * Digital signature of the CID using Avalanche's signing mechanism.
-     * Refer to the Avalanche Blockchain integration section for details.
-     */
-    AVAX_DIGITAL_SIGNATURE(): string | null;
-    AVAX_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * Solana Digital Signature
-     * Digital signature of the CID using Solana's signing mechanism.
-     * Refer to the Solana Blockchain integration section for details.
-     */
-    SOL_DIGITAL_SIGNATURE(): string | null;
-    SOL_DIGITAL_SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TIMESTAMP_SIGNATURE_TYPE(): string | null;
+    TIMESTAMP_SIGNATURE_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startPNM(builder: flatbuffers.Builder): void;
     static addMultiformatAddress(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset): void;
+    static addPublishTimestamp(builder: flatbuffers.Builder, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset): void;
     static addCid(builder: flatbuffers.Builder, CIDOffset: flatbuffers.Offset): void;
     static addFid(builder: flatbuffers.Builder, FIDOffset: flatbuffers.Offset): void;
-    static addEthDigitalSignature(builder: flatbuffers.Builder, ETH_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addBtcDigitalSignature(builder: flatbuffers.Builder, BTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addLtcDigitalSignature(builder: flatbuffers.Builder, LTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addXrpDigitalSignature(builder: flatbuffers.Builder, XRP_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addAdaDigitalSignature(builder: flatbuffers.Builder, ADA_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addXlmDigitalSignature(builder: flatbuffers.Builder, XLM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addDogeDigitalSignature(builder: flatbuffers.Builder, DOGE_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addXmrDigitalSignature(builder: flatbuffers.Builder, XMR_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addDotDigitalSignature(builder: flatbuffers.Builder, DOT_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addFilDigitalSignature(builder: flatbuffers.Builder, FIL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addXtzDigitalSignature(builder: flatbuffers.Builder, XTZ_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addAtomDigitalSignature(builder: flatbuffers.Builder, ATOM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addTrxDigitalSignature(builder: flatbuffers.Builder, TRX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addBnbDigitalSignature(builder: flatbuffers.Builder, BNB_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addAvaxDigitalSignature(builder: flatbuffers.Builder, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
-    static addSolDigitalSignature(builder: flatbuffers.Builder, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): void;
+    static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
+    static addTimestampSignature(builder: flatbuffers.Builder, TIMESTAMP_SIGNATUREOffset: flatbuffers.Offset): void;
+    static addSignatureType(builder: flatbuffers.Builder, SIGNATURE_TYPEOffset: flatbuffers.Offset): void;
+    static addTimestampSignatureType(builder: flatbuffers.Builder, TIMESTAMP_SIGNATURE_TYPEOffset: flatbuffers.Offset): void;
     static endPNM(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, FIDOffset: flatbuffers.Offset, ETH_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, LTC_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XRP_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ADA_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XLM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOGE_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XMR_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, DOT_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, FIL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, XTZ_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, ATOM_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, TRX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, BNB_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, AVAX_DIGITAL_SIGNATUREOffset: flatbuffers.Offset, SOL_DIGITAL_SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, FIDOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, TIMESTAMP_SIGNATUREOffset: flatbuffers.Offset, SIGNATURE_TYPEOffset: flatbuffers.Offset, TIMESTAMP_SIGNATURE_TYPEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PNMT;
     unpackTo(_o: PNMT): void;
 }
 export declare class PNMT implements flatbuffers.IGeneratedObject {
     MULTIFORMAT_ADDRESS: string | Uint8Array | null;
+    PUBLISH_TIMESTAMP: string | Uint8Array | null;
     CID: string | Uint8Array | null;
     FID: string | Uint8Array | null;
-    ETH_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    BTC_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    LTC_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    XRP_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    ADA_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    XLM_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    DOGE_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    XMR_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    DOT_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    FIL_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    XTZ_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    ATOM_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    TRX_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    BNB_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    AVAX_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    SOL_DIGITAL_SIGNATURE: string | Uint8Array | null;
-    constructor(MULTIFORMAT_ADDRESS?: string | Uint8Array | null, CID?: string | Uint8Array | null, FID?: string | Uint8Array | null, ETH_DIGITAL_SIGNATURE?: string | Uint8Array | null, BTC_DIGITAL_SIGNATURE?: string | Uint8Array | null, LTC_DIGITAL_SIGNATURE?: string | Uint8Array | null, XRP_DIGITAL_SIGNATURE?: string | Uint8Array | null, ADA_DIGITAL_SIGNATURE?: string | Uint8Array | null, XLM_DIGITAL_SIGNATURE?: string | Uint8Array | null, DOGE_DIGITAL_SIGNATURE?: string | Uint8Array | null, XMR_DIGITAL_SIGNATURE?: string | Uint8Array | null, DOT_DIGITAL_SIGNATURE?: string | Uint8Array | null, FIL_DIGITAL_SIGNATURE?: string | Uint8Array | null, XTZ_DIGITAL_SIGNATURE?: string | Uint8Array | null, ATOM_DIGITAL_SIGNATURE?: string | Uint8Array | null, TRX_DIGITAL_SIGNATURE?: string | Uint8Array | null, BNB_DIGITAL_SIGNATURE?: string | Uint8Array | null, AVAX_DIGITAL_SIGNATURE?: string | Uint8Array | null, SOL_DIGITAL_SIGNATURE?: string | Uint8Array | null);
+    SIGNATURE: string | Uint8Array | null;
+    TIMESTAMP_SIGNATURE: string | Uint8Array | null;
+    SIGNATURE_TYPE: string | Uint8Array | null;
+    TIMESTAMP_SIGNATURE_TYPE: string | Uint8Array | null;
+    constructor(MULTIFORMAT_ADDRESS?: string | Uint8Array | null, PUBLISH_TIMESTAMP?: string | Uint8Array | null, CID?: string | Uint8Array | null, FID?: string | Uint8Array | null, SIGNATURE?: string | Uint8Array | null, TIMESTAMP_SIGNATURE?: string | Uint8Array | null, SIGNATURE_TYPE?: string | Uint8Array | null, TIMESTAMP_SIGNATURE_TYPE?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PNM.d.ts.map
