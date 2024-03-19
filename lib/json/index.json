@@ -3881,6 +3881,7 @@
             "definitions": {
                 "PNM": {
                     "type": "object",
+                    "description": "Publish Notification Message",
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
@@ -4121,6 +4122,7 @@
                 },
                 "PNM": {
                     "type": "object",
+                    "description": "Publish Notification Message",
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",

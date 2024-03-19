@@ -6,6 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
+/// Publish Notification Message
 class PNM extends Table
 {
     /**

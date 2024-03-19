@@ -3,6 +3,7 @@ import flatbuffers
 
 class PNM
 
+/// Publish Notification Message
 class PNM : flatbuffers_handle
     /// Multiformat Address
     /// https://multiformats.io/multiaddr/

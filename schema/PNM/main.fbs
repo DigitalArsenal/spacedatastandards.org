@@ -1,4 +1,4 @@
-// Publish Notification Message
+/// Publish Notification Message
 table PNM {
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/

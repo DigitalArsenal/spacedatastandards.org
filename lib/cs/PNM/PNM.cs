@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Publish Notification Message
 public struct PNM : IFlatbufferObject
 {
   private Table __p;

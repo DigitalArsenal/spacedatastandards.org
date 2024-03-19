@@ -12,6 +12,7 @@ use self::flatbuffers::{EndianScalar, Follow};
 pub enum PNMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Publish Notification Message
 pub struct PNM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

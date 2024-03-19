@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Publish Notification Message
+ */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class PNM : Table() {

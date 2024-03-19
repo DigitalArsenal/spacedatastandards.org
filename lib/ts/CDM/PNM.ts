@@ -4,6 +4,9 @@ import * as flatbuffers from 'flatbuffers';
 
 
 
+/**
+ * Publish Notification Message
+ */
 export class PNM implements flatbuffers.IUnpackableObject<PNMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

@@ -16,6 +16,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct PNM;
 struct PNMBuilder;
 
+/// Publish Notification Message
 struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PNMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

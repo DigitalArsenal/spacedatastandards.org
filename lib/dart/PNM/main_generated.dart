@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+///  Publish Notification Message
 class PNM {
   PNM._(this._bc, this._bcOffset);
   factory PNM(List<int> bytes) {

@@ -17,6 +17,9 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * Publish Notification Message
+ */
 @SuppressWarnings("unused")
 public final class PNM extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
