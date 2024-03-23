@@ -349,19 +349,19 @@
       "properties" : {
         "PUBLIC_KEY" : {
                 "type" : "string",
-                "description" : "Public part of the cryptographic key"
+                "description" : "Public part of the cryptographic key, in hexidecimal format"
               },
         "XPUB" : {
                 "type" : "string",
-                "description" : "Extended public key"
+                "description" : "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
               },
         "PRIVATE_KEY" : {
                 "type" : "string",
-                "description" : "Private part of the cryptographic key, should be kept secret"
+                "description" : "Private part of the cryptographic key in hexidecimal format, should be kept secret"
               },
         "XPRIV" : {
                 "type" : "string",
-                "description" : "Extended private key"
+                "description" : "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
               },
         "KEY_ADDRESS" : {
                 "type" : "string",

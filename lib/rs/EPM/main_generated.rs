@@ -170,7 +170,7 @@ impl<'a> CryptoKey<'a> {
     }
   }
 
-  /// Public part of the cryptographic key
+  /// Public part of the cryptographic key, in hexidecimal format
   #[inline]
   pub fn PUBLIC_KEY(&self) -> Option<&'a str> {
     // Safety:
@@ -178,7 +178,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_PUBLIC_KEY, None)}
   }
-  /// Extended public key
+  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   #[inline]
   pub fn XPUB(&self) -> Option<&'a str> {
     // Safety:
@@ -186,7 +186,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_XPUB, None)}
   }
-  /// Private part of the cryptographic key, should be kept secret
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
   #[inline]
   pub fn PRIVATE_KEY(&self) -> Option<&'a str> {
     // Safety:
@@ -194,7 +194,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_PRIVATE_KEY, None)}
   }
-  /// Extended private key
+  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   #[inline]
   pub fn XPRIV(&self) -> Option<&'a str> {
     // Safety:

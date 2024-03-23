@@ -13,16 +13,16 @@ class EPM
 
 /// Represents cryptographic key information
 class CryptoKey : flatbuffers_handle
-    /// Public part of the cryptographic key
+    /// Public part of the cryptographic key, in hexidecimal format
     def PUBLIC_KEY() -> string:
         return buf_.flatbuffers_field_string(pos_, 4)
-    /// Extended public key
+    /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     def XPUB() -> string:
         return buf_.flatbuffers_field_string(pos_, 6)
-    /// Private part of the cryptographic key, should be kept secret
+    /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
     def PRIVATE_KEY() -> string:
         return buf_.flatbuffers_field_string(pos_, 8)
-    /// Extended private key
+    /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     def XPRIV() -> string:
         return buf_.flatbuffers_field_string(pos_, 10)
     /// Address generated from the cryptographic key

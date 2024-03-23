@@ -64,19 +64,19 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ADDRESS_TYPE = 14,
     VT_KEY_TYPE = 16
   };
-  /// Public part of the cryptographic key
+  /// Public part of the cryptographic key, in hexidecimal format
   const ::flatbuffers::String *PUBLIC_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PUBLIC_KEY);
   }
-  /// Extended public key
+  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   const ::flatbuffers::String *XPUB() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPUB);
   }
-  /// Private part of the cryptographic key, should be kept secret
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
   const ::flatbuffers::String *PRIVATE_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRIVATE_KEY);
   }
-  /// Extended private key
+  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   const ::flatbuffers::String *XPRIV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPRIV);
   }

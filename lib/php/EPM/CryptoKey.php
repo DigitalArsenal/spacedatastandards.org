@@ -41,28 +41,28 @@ class CryptoKey extends Table
         return $this;
     }
 
-    /// Public part of the cryptographic key
+    /// Public part of the cryptographic key, in hexidecimal format
     public function getPUBLIC_KEY()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Extended public key
+    /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     public function getXPUB()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Private part of the cryptographic key, should be kept secret
+    /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
     public function getPRIVATE_KEY()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Extended private key
+    /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     public function getXPRIV()
     {
         $o = $this->__offset(10);

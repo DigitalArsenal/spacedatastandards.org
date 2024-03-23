@@ -31,7 +31,7 @@ class CryptoKey : Table() {
         return this
     }
     /**
-     * Public part of the cryptographic key
+     * Public part of the cryptographic key, in hexidecimal format
      */
     val PUBLIC_KEY : String?
         get() {
@@ -45,7 +45,7 @@ class CryptoKey : Table() {
     val PUBLIC_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun PUBLIC_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Extended public key
+     * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
      */
     val XPUB : String?
         get() {
@@ -59,7 +59,7 @@ class CryptoKey : Table() {
     val XPUBAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun XPUBInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Private part of the cryptographic key, should be kept secret
+     * Private part of the cryptographic key in hexidecimal format, should be kept secret 
      */
     val PRIVATE_KEY : String?
         get() {
@@ -73,7 +73,7 @@ class CryptoKey : Table() {
     val PRIVATE_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun PRIVATE_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Extended private key
+     * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
      */
     val XPRIV : String?
         get() {

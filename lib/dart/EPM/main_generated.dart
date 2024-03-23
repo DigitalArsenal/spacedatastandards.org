@@ -62,13 +62,13 @@ class CryptoKey {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Public part of the cryptographic key
+  ///  Public part of the cryptographic key, in hexidecimal format
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Extended public key
+  ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Private part of the cryptographic key, should be kept secret
+  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret 
   String? get PRIVATE_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Extended private key
+  ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Address generated from the cryptographic key
   String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);

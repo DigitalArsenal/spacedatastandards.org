@@ -17,7 +17,7 @@ public struct CryptoKey : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CryptoKey __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Public part of the cryptographic key
+  /// Public part of the cryptographic key, in hexidecimal format
   public string PUBLIC_KEY { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPUBLIC_KEYBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -25,7 +25,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetPUBLIC_KEYBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetPUBLIC_KEYArray() { return __p.__vector_as_array<byte>(4); }
-  /// Extended public key
+  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   public string XPUB { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetXPUBBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,7 +33,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetXPUBBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetXPUBArray() { return __p.__vector_as_array<byte>(6); }
-  /// Private part of the cryptographic key, should be kept secret
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
   public string PRIVATE_KEY { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPRIVATE_KEYBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -41,7 +41,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetPRIVATE_KEYBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetPRIVATE_KEYArray() { return __p.__vector_as_array<byte>(8); }
-  /// Extended private key
+  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   public string XPRIV { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetXPRIVBytes() { return __p.__vector_as_span<byte>(10, 1); }

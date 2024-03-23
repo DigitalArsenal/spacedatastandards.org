@@ -29,25 +29,25 @@ public final class CryptoKey extends Table {
   public CryptoKey __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Public part of the cryptographic key
+   * Public part of the cryptographic key, in hexidecimal format
    */
   public String PUBLIC_KEY() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PUBLIC_KEYAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer PUBLIC_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Extended public key
+   * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
    */
   public String XPUB() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer XPUBAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer XPUBInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
-   * Private part of the cryptographic key, should be kept secret
+   * Private part of the cryptographic key in hexidecimal format, should be kept secret 
    */
   public String PRIVATE_KEY() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PRIVATE_KEYAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer PRIVATE_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Extended private key
+   * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
    */
   public String XPRIV() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer XPRIVAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }

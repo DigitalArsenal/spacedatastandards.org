@@ -40,16 +40,16 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  ///  Public part of the cryptographic key
+  ///  Public part of the cryptographic key, in hexidecimal format
   public var PUBLIC_KEY: String? { let o = _accessor.offset(VTOFFSET.PUBLIC_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLIC_KEY.v) }
-  ///  Extended public key
+  ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   public var XPUB: String? { let o = _accessor.offset(VTOFFSET.XPUB.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XPUB.v) }
-  ///  Private part of the cryptographic key, should be kept secret
+  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret 
   public var PRIVATE_KEY: String? { let o = _accessor.offset(VTOFFSET.PRIVATE_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PRIVATE_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PRIVATE_KEY.v) }
-  ///  Extended private key
+  ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   public var XPRIV: String? { let o = _accessor.offset(VTOFFSET.XPRIV.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPRIVSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XPRIV.v) }
   ///  Address generated from the cryptographic key

@@ -29,7 +29,7 @@ class CryptoKey(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Public part of the cryptographic key
+    # Public part of the cryptographic key, in hexidecimal format
     # CryptoKey
     def PUBLIC_KEY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,7 +37,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Extended public key
+    # Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     # CryptoKey
     def XPUB(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,7 +45,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Private part of the cryptographic key, should be kept secret
+    # Private part of the cryptographic key in hexidecimal format, should be kept secret 
     # CryptoKey
     def PRIVATE_KEY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -53,7 +53,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Extended private key
+    # Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     # CryptoKey
     def XPRIV(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))

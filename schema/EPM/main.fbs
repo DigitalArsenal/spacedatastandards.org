@@ -7,13 +7,13 @@ enum KeyType : byte {
 
 /// Represents cryptographic key information
 table CryptoKey {
-  /// Public part of the cryptographic key
+  /// Public part of the cryptographic key, in hexidecimal format
   PUBLIC_KEY: string;
-  /// Extended public key
+  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   XPUB: string;
-  /// Private part of the cryptographic key, should be kept secret
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
   PRIVATE_KEY: string;
-  /// Extended private key
+  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   XPRIV: string;
   /// Address generated from the cryptographic key
   KEY_ADDRESS: string;

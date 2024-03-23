@@ -27,7 +27,7 @@ static getSizePrefixedRootAsCryptoKey(bb:flatbuffers.ByteBuffer, obj?:CryptoKey)
 }
 
 /**
- * Public part of the cryptographic key
+ * Public part of the cryptographic key, in hexidecimal format
  */
 PUBLIC_KEY():string|null
 PUBLIC_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -37,7 +37,7 @@ PUBLIC_KEY(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Extended public key
+ * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
  */
 XPUB():string|null
 XPUB(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -47,7 +47,7 @@ XPUB(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Private part of the cryptographic key, should be kept secret
+ * Private part of the cryptographic key in hexidecimal format, should be kept secret 
  */
 PRIVATE_KEY():string|null
 PRIVATE_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -57,7 +57,7 @@ PRIVATE_KEY(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Extended private key
+ * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
  */
 XPRIV():string|null
 XPRIV(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
