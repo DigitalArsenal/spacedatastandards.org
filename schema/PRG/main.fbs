@@ -1,0 +1,27 @@
+/// Program Description Message
+table PRG {
+  /// The name of the program
+  NAME: string;
+
+  /// Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
+  HD_KEY_PATH: string;
+
+  /// Vector of standard message types used by the program
+  MESSAGE_TYPES: [string];
+
+  /// Vector of users associated with the program, each user can have assigned message types
+  USERS: [USR];
+}
+
+// User information, including assigned message types
+table USR {
+\
+  ID: string;
+
+  // Vector of message types assigned to the user, indicating which messages the user can access or use
+  // Location: Specified by user
+  MESSAGE_TYPES: [string];
+}
+
+root_type PRG;
+file_identifier "$PRG";
