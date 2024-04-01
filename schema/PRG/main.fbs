@@ -15,7 +15,6 @@ table PRG {
 
 // User information, including assigned message types
 table USR {
-\
   ID: string;
 
   // Vector of message types assigned to the user, indicating which messages the user can access or use

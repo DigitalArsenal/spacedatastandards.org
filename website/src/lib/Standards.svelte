@@ -28,10 +28,10 @@
 
   // Function to filter standards
   const filterStandards = (searchTerm: string) => {
-    searchTerm = searchTerm.toLowerCase();
+    searchTerm = searchTerm?.toLowerCase() || "";
     const filtered = manifestData?.RECORDS.filter((standard: any) => {
       const standardData = jsonDSchema.STANDARDS[getKey(standard)];
-      return JSON.stringify(standardData).toLowerCase().includes(searchTerm);
+      return JSON.stringify(standardData)?.toLowerCase().includes(searchTerm);
     });
     filteredStandards.set(filtered || []);
   };

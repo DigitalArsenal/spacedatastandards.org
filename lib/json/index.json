@@ -5511,6 +5511,56 @@
                 }
             },
             "$ref": "#/definitions/EPM"
+        },
+        "PRG": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "PRG": {
+                    "type": "object",
+                    "description": "Program Description Message",
+                    "properties": {
+                        "NAME": {
+                            "type": "string",
+                            "description": "The name of the program"
+                        },
+                        "HD_KEY_PATH": {
+                            "type": "string",
+                            "description": "Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets"
+                        },
+                        "MESSAGE_TYPES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Vector of standard message types used by the program"
+                        },
+                        "USERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/USR"
+                            },
+                            "description": "Vector of users associated with the program, each user can have assigned message types"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "USR": {
+                    "type": "object",
+                    "properties": {
+                        "ID": {
+                            "type": "string"
+                        },
+                        "MESSAGE_TYPES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/PRG"
         }
     }
 }
