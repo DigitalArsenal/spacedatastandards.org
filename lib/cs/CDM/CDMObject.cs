@@ -24,274 +24,223 @@ public struct CDMObject : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(4); }
-  /// Object number
-  public objectNumber OBJECT { get { int o = __p.__offset(6); return o != 0 ? (objectNumber)__p.bb.GetSbyte(o + __p.bb_pos) : objectNumber.OBJECT1; } }
-  /// Object designator
-  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
-#else
-  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(8); }
-#endif
-  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(8); }
-  /// Catalog name
-  public string CATALOG_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCATALOG_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
-#else
-  public ArraySegment<byte>? GetCATALOG_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
-  public byte[] GetCATALOG_NAMEArray() { return __p.__vector_as_array<byte>(10); }
-  /// Object name
-  public string OBJECT_NAME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_NAMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
-#else
-  public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(12); }
-#endif
-  public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(12); }
-  /// International designator
-  public string INTERNATIONAL_DESIGNATOR { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetINTERNATIONAL_DESIGNATORBytes() { return __p.__vector_as_span<byte>(14, 1); }
-#else
-  public ArraySegment<byte>? GetINTERNATIONAL_DESIGNATORBytes() { return __p.__vector_as_arraysegment(14); }
-#endif
-  public byte[] GetINTERNATIONAL_DESIGNATORArray() { return __p.__vector_as_array<byte>(14); }
-  /// Object type
-  public objectType OBJECT_TYPE { get { int o = __p.__offset(16); return o != 0 ? (objectType)__p.bb.GetSbyte(o + __p.bb_pos) : objectType.PAYLOAD; } }
+  public CAT? OBJECT { get { int o = __p.__offset(6); return o != 0 ? (CAT?)(new CAT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Point of Contact
+  public EPM? POC { get { int o = __p.__offset(8); return o != 0 ? (EPM?)(new EPM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Operator contact position
-  public string OPERATOR_CONTACT_POSITION { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string OPERATOR_CONTACT_POSITION { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOPERATOR_CONTACT_POSITIONBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetOPERATOR_CONTACT_POSITIONBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetOPERATOR_CONTACT_POSITIONBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetOPERATOR_CONTACT_POSITIONBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetOPERATOR_CONTACT_POSITIONArray() { return __p.__vector_as_array<byte>(18); }
+  public byte[] GetOPERATOR_CONTACT_POSITIONArray() { return __p.__vector_as_array<byte>(10); }
   /// Operator organization
-  public string OPERATOR_ORGANIZATION { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string OPERATOR_ORGANIZATION { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOPERATOR_ORGANIZATIONBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetOPERATOR_ORGANIZATIONBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetOPERATOR_ORGANIZATIONBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetOPERATOR_ORGANIZATIONBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetOPERATOR_ORGANIZATIONArray() { return __p.__vector_as_array<byte>(20); }
+  public byte[] GetOPERATOR_ORGANIZATIONArray() { return __p.__vector_as_array<byte>(12); }
   /// Ephemeris name
-  public string EPHEMERIS_NAME { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string EPHEMERIS_NAME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEPHEMERIS_NAMEBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetEPHEMERIS_NAMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetEPHEMERIS_NAMEBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetEPHEMERIS_NAMEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetEPHEMERIS_NAMEArray() { return __p.__vector_as_array<byte>(22); }
+  public byte[] GetEPHEMERIS_NAMEArray() { return __p.__vector_as_array<byte>(14); }
   /// Covariance method
-  public covarianceMethod COVARIANCE_METHOD { get { int o = __p.__offset(24); return o != 0 ? (covarianceMethod)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceMethod.CALCULATED; } }
-  /// Maneuverable type
-  public maneuverableType MANEUVERABLE { get { int o = __p.__offset(26); return o != 0 ? (maneuverableType)__p.bb.GetSbyte(o + __p.bb_pos) : maneuverableType.YES; } }
-  /// Orbit center
-  public string ORBIT_CENTER { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetORBIT_CENTERBytes() { return __p.__vector_as_span<byte>(28, 1); }
-#else
-  public ArraySegment<byte>? GetORBIT_CENTERBytes() { return __p.__vector_as_arraysegment(28); }
-#endif
-  public byte[] GetORBIT_CENTERArray() { return __p.__vector_as_array<byte>(28); }
-  /// Reference frame
-  public referenceFrame REF_FRAME { get { int o = __p.__offset(30); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.EME2000; } }
+  public covarianceMethod COVARIANCE_METHOD { get { int o = __p.__offset(16); return o != 0 ? (covarianceMethod)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceMethod.CALCULATED; } }
+  /// Reference Frame in which the object position is defined
+  public referenceFrame REF_FRAME { get { int o = __p.__offset(18); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
   /// Gravity model
-  public string GRAVITY_MODEL { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string GRAVITY_MODEL { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetGRAVITY_MODELBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetGRAVITY_MODELBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetGRAVITY_MODELBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetGRAVITY_MODELBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetGRAVITY_MODELArray() { return __p.__vector_as_array<byte>(32); }
+  public byte[] GetGRAVITY_MODELArray() { return __p.__vector_as_array<byte>(20); }
   /// Atmospheric model
-  public string ATMOSPHERIC_MODEL { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ATMOSPHERIC_MODEL { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetATMOSPHERIC_MODELArray() { return __p.__vector_as_array<byte>(34); }
+  public byte[] GetATMOSPHERIC_MODELArray() { return __p.__vector_as_array<byte>(22); }
   /// N-body perturbations
-  public string N_BODY_PERTURBATIONS { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string N_BODY_PERTURBATIONS { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetN_BODY_PERTURBATIONSBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetN_BODY_PERTURBATIONSBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetN_BODY_PERTURBATIONSBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetN_BODY_PERTURBATIONSBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetN_BODY_PERTURBATIONSArray() { return __p.__vector_as_array<byte>(36); }
+  public byte[] GetN_BODY_PERTURBATIONSArray() { return __p.__vector_as_array<byte>(24); }
   /// Solar radiation pressure
-  public bool SOLAR_RAD_PRESSURE { get { int o = __p.__offset(38); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool SOLAR_RAD_PRESSURE { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Earth tides
-  public bool EARTH_TIDES { get { int o = __p.__offset(40); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool EARTH_TIDES { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Intrack thrust
-  public bool INTRACK_THRUST { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool INTRACK_THRUST { get { int o = __p.__offset(30); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Time of last observation start
-  public string TIME_LASTOB_START { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TIME_LASTOB_START { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTIME_LASTOB_STARTBytes() { return __p.__vector_as_span<byte>(44, 1); }
+  public Span<byte> GetTIME_LASTOB_STARTBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetTIME_LASTOB_STARTBytes() { return __p.__vector_as_arraysegment(44); }
+  public ArraySegment<byte>? GetTIME_LASTOB_STARTBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetTIME_LASTOB_STARTArray() { return __p.__vector_as_array<byte>(44); }
+  public byte[] GetTIME_LASTOB_STARTArray() { return __p.__vector_as_array<byte>(32); }
   /// Time of last observation end
-  public string TIME_LASTOB_END { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TIME_LASTOB_END { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTIME_LASTOB_ENDBytes() { return __p.__vector_as_span<byte>(46, 1); }
+  public Span<byte> GetTIME_LASTOB_ENDBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetTIME_LASTOB_ENDBytes() { return __p.__vector_as_arraysegment(46); }
+  public ArraySegment<byte>? GetTIME_LASTOB_ENDBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetTIME_LASTOB_ENDArray() { return __p.__vector_as_array<byte>(46); }
+  public byte[] GetTIME_LASTOB_ENDArray() { return __p.__vector_as_array<byte>(34); }
   /// Recommended observation data span
-  public double RECOMMENDED_OD_SPAN { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RECOMMENDED_OD_SPAN { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Actual observation data span
-  public double ACTUAL_OD_SPAN { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ACTUAL_OD_SPAN { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Number of observations available
-  public uint OBS_AVAILABLE { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint OBS_AVAILABLE { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Number of observations used
-  public uint OBS_USED { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint OBS_USED { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Number of tracks available
-  public uint TRACKS_AVAILABLE { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint TRACKS_AVAILABLE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Number of tracks used
-  public uint TRACKS_USED { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint TRACKS_USED { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Residuals accepted
-  public double RESIDUALS_ACCEPTED { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RESIDUALS_ACCEPTED { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Weighted root mean square
-  public double WEIGHTED_RMS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double WEIGHTED_RMS { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Area of the object
-  public double AREA_PC { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double AREA_PC { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Area of the object drag
-  public double AREA_DRG { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double AREA_DRG { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Area of the object solar radiation pressure
-  public double AREA_SRP { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Mass of the object
-  public double MASS { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double AREA_SRP { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Object's area-to-mass ratio
-  public double CR_AREA_OVER_MASS { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CR_AREA_OVER_MASS { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Object's thrust acceleration
-  public double THRUST_ACCELERATION { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double THRUST_ACCELERATION { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Object's solar flux
-  public double SEDR { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double SEDR { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// X-coordinate of the object's position in RTN coordinates
-  public double X { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double X { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Y-coordinate of the object's position in RTN
-  public double Y { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double Y { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Z-coordinate of the object's position in RTN
-  public double Z { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double Z { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// X-coordinate of the object's position in RTN coordinates
-  public double X_DOT { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double X_DOT { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Y-coordinate of the object's position in RTN
-  public double Y_DOT { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double Y_DOT { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Z-coordinate of the object's position in RTN
-  public double Z_DOT { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double Z_DOT { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CR_R { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CR_R { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CT_R { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CT_R { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CT_T { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CT_T { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CN_R { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CN_R { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CN_T { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CN_T { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CN_N { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CN_N { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CRDOT_R { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CRDOT_R { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CRDOT_T { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CRDOT_T { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CRDOT_N { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CRDOT_N { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CRDOT_RDOT { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CRDOT_RDOT { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTDOT_R { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTDOT_R { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTDOT_T { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTDOT_T { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTDOT_N { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTDOT_N { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTDOT_RDOT { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTDOT_RDOT { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTDOT_TDOT { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTDOT_TDOT { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CNDOT_R { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CNDOT_R { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CNDOT_T { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CNDOT_T { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CNDOT_N { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CNDOT_N { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CNDOT_RDOT { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CNDOT_RDOT { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CNDOT_TDOT { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CNDOT_TDOT { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CNDOT_NDOT { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CNDOT_NDOT { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_R { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_R { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_T { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_T { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_N { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_N { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_RDOT { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_RDOT { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_TDOT { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_TDOT { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_NDOT { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_NDOT { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CDRG_DRG { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CDRG_DRG { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_R { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_R { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_T { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_T { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_N { get { int o = __p.__offset(150); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_N { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_RDOT { get { int o = __p.__offset(152); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_RDOT { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_TDOT { get { int o = __p.__offset(154); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_TDOT { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_NDOT { get { int o = __p.__offset(156); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_NDOT { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_DRG { get { int o = __p.__offset(158); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_DRG { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CSRP_SRP { get { int o = __p.__offset(160); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CSRP_SRP { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_R { get { int o = __p.__offset(162); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_R { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_T { get { int o = __p.__offset(164); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_T { get { int o = __p.__offset(150); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_N { get { int o = __p.__offset(166); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_N { get { int o = __p.__offset(152); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_RDOT { get { int o = __p.__offset(168); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_RDOT { get { int o = __p.__offset(154); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_TDOT { get { int o = __p.__offset(170); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_TDOT { get { int o = __p.__offset(156); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_NDOT { get { int o = __p.__offset(172); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_NDOT { get { int o = __p.__offset(158); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_DRG { get { int o = __p.__offset(174); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_DRG { get { int o = __p.__offset(160); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_SRP { get { int o = __p.__offset(176); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_SRP { get { int o = __p.__offset(162); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance Matrix component
-  public double CTHR_THR { get { int o = __p.__offset(178); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CTHR_THR { get { int o = __p.__offset(164); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CDMObject> CreateCDMObject(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
-      objectNumber OBJECT = objectNumber.OBJECT1,
-      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
-      StringOffset CATALOG_NAMEOffset = default(StringOffset),
-      StringOffset OBJECT_NAMEOffset = default(StringOffset),
-      StringOffset INTERNATIONAL_DESIGNATOROffset = default(StringOffset),
-      objectType OBJECT_TYPE = objectType.PAYLOAD,
+      Offset<CAT> OBJECTOffset = default(Offset<CAT>),
+      Offset<EPM> POCOffset = default(Offset<EPM>),
       StringOffset OPERATOR_CONTACT_POSITIONOffset = default(StringOffset),
       StringOffset OPERATOR_ORGANIZATIONOffset = default(StringOffset),
       StringOffset EPHEMERIS_NAMEOffset = default(StringOffset),
       covarianceMethod COVARIANCE_METHOD = covarianceMethod.CALCULATED,
-      maneuverableType MANEUVERABLE = maneuverableType.YES,
-      StringOffset ORBIT_CENTEROffset = default(StringOffset),
-      referenceFrame REF_FRAME = referenceFrame.EME2000,
+      referenceFrame REF_FRAME = referenceFrame.ECEF,
       StringOffset GRAVITY_MODELOffset = default(StringOffset),
       StringOffset ATMOSPHERIC_MODELOffset = default(StringOffset),
       StringOffset N_BODY_PERTURBATIONSOffset = default(StringOffset),
@@ -311,7 +260,6 @@ public struct CDMObject : IFlatbufferObject
       double AREA_PC = 0.0,
       double AREA_DRG = 0.0,
       double AREA_SRP = 0.0,
-      double MASS = 0.0,
       double CR_AREA_OVER_MASS = 0.0,
       double THRUST_ACCELERATION = 0.0,
       double SEDR = 0.0,
@@ -366,7 +314,7 @@ public struct CDMObject : IFlatbufferObject
       double CTHR_DRG = 0.0,
       double CTHR_SRP = 0.0,
       double CTHR_THR = 0.0) {
-    builder.StartTable(88);
+    builder.StartTable(81);
     CDMObject.AddCTHR_THR(builder, CTHR_THR);
     CDMObject.AddCTHR_SRP(builder, CTHR_SRP);
     CDMObject.AddCTHR_DRG(builder, CTHR_DRG);
@@ -421,7 +369,6 @@ public struct CDMObject : IFlatbufferObject
     CDMObject.AddSEDR(builder, SEDR);
     CDMObject.AddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION);
     CDMObject.AddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS);
-    CDMObject.AddMASS(builder, MASS);
     CDMObject.AddAREA_SRP(builder, AREA_SRP);
     CDMObject.AddAREA_DRG(builder, AREA_DRG);
     CDMObject.AddAREA_PC(builder, AREA_PC);
@@ -438,115 +385,102 @@ public struct CDMObject : IFlatbufferObject
     CDMObject.AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONSOffset);
     CDMObject.AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODELOffset);
     CDMObject.AddGRAVITY_MODEL(builder, GRAVITY_MODELOffset);
-    CDMObject.AddORBIT_CENTER(builder, ORBIT_CENTEROffset);
     CDMObject.AddEPHEMERIS_NAME(builder, EPHEMERIS_NAMEOffset);
     CDMObject.AddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATIONOffset);
     CDMObject.AddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITIONOffset);
-    CDMObject.AddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOROffset);
-    CDMObject.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
-    CDMObject.AddCATALOG_NAME(builder, CATALOG_NAMEOffset);
-    CDMObject.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
+    CDMObject.AddPOC(builder, POCOffset);
+    CDMObject.AddOBJECT(builder, OBJECTOffset);
     CDMObject.AddCOMMENT(builder, COMMENTOffset);
     CDMObject.AddINTRACK_THRUST(builder, INTRACK_THRUST);
     CDMObject.AddEARTH_TIDES(builder, EARTH_TIDES);
     CDMObject.AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE);
     CDMObject.AddREF_FRAME(builder, REF_FRAME);
-    CDMObject.AddMANEUVERABLE(builder, MANEUVERABLE);
     CDMObject.AddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD);
-    CDMObject.AddOBJECT_TYPE(builder, OBJECT_TYPE);
-    CDMObject.AddOBJECT(builder, OBJECT);
     return CDMObject.EndCDMObject(builder);
   }
 
-  public static void StartCDMObject(FlatBufferBuilder builder) { builder.StartTable(88); }
+  public static void StartCDMObject(FlatBufferBuilder builder) { builder.StartTable(81); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
-  public static void AddOBJECT(FlatBufferBuilder builder, objectNumber OBJECT) { builder.AddSbyte(1, (sbyte)OBJECT, 0); }
-  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(2, OBJECT_DESIGNATOROffset.Value, 0); }
-  public static void AddCATALOG_NAME(FlatBufferBuilder builder, StringOffset CATALOG_NAMEOffset) { builder.AddOffset(3, CATALOG_NAMEOffset.Value, 0); }
-  public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(4, OBJECT_NAMEOffset.Value, 0); }
-  public static void AddINTERNATIONAL_DESIGNATOR(FlatBufferBuilder builder, StringOffset INTERNATIONAL_DESIGNATOROffset) { builder.AddOffset(5, INTERNATIONAL_DESIGNATOROffset.Value, 0); }
-  public static void AddOBJECT_TYPE(FlatBufferBuilder builder, objectType OBJECT_TYPE) { builder.AddSbyte(6, (sbyte)OBJECT_TYPE, 0); }
-  public static void AddOPERATOR_CONTACT_POSITION(FlatBufferBuilder builder, StringOffset OPERATOR_CONTACT_POSITIONOffset) { builder.AddOffset(7, OPERATOR_CONTACT_POSITIONOffset.Value, 0); }
-  public static void AddOPERATOR_ORGANIZATION(FlatBufferBuilder builder, StringOffset OPERATOR_ORGANIZATIONOffset) { builder.AddOffset(8, OPERATOR_ORGANIZATIONOffset.Value, 0); }
-  public static void AddEPHEMERIS_NAME(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAMEOffset) { builder.AddOffset(9, EPHEMERIS_NAMEOffset.Value, 0); }
-  public static void AddCOVARIANCE_METHOD(FlatBufferBuilder builder, covarianceMethod COVARIANCE_METHOD) { builder.AddSbyte(10, (sbyte)COVARIANCE_METHOD, 0); }
-  public static void AddMANEUVERABLE(FlatBufferBuilder builder, maneuverableType MANEUVERABLE) { builder.AddSbyte(11, (sbyte)MANEUVERABLE, 0); }
-  public static void AddORBIT_CENTER(FlatBufferBuilder builder, StringOffset ORBIT_CENTEROffset) { builder.AddOffset(12, ORBIT_CENTEROffset.Value, 0); }
-  public static void AddREF_FRAME(FlatBufferBuilder builder, referenceFrame REF_FRAME) { builder.AddSbyte(13, (sbyte)REF_FRAME, 0); }
-  public static void AddGRAVITY_MODEL(FlatBufferBuilder builder, StringOffset GRAVITY_MODELOffset) { builder.AddOffset(14, GRAVITY_MODELOffset.Value, 0); }
-  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODELOffset) { builder.AddOffset(15, ATMOSPHERIC_MODELOffset.Value, 0); }
-  public static void AddN_BODY_PERTURBATIONS(FlatBufferBuilder builder, StringOffset N_BODY_PERTURBATIONSOffset) { builder.AddOffset(16, N_BODY_PERTURBATIONSOffset.Value, 0); }
-  public static void AddSOLAR_RAD_PRESSURE(FlatBufferBuilder builder, bool SOLAR_RAD_PRESSURE) { builder.AddBool(17, SOLAR_RAD_PRESSURE, false); }
-  public static void AddEARTH_TIDES(FlatBufferBuilder builder, bool EARTH_TIDES) { builder.AddBool(18, EARTH_TIDES, false); }
-  public static void AddINTRACK_THRUST(FlatBufferBuilder builder, bool INTRACK_THRUST) { builder.AddBool(19, INTRACK_THRUST, false); }
-  public static void AddTIME_LASTOB_START(FlatBufferBuilder builder, StringOffset TIME_LASTOB_STARTOffset) { builder.AddOffset(20, TIME_LASTOB_STARTOffset.Value, 0); }
-  public static void AddTIME_LASTOB_END(FlatBufferBuilder builder, StringOffset TIME_LASTOB_ENDOffset) { builder.AddOffset(21, TIME_LASTOB_ENDOffset.Value, 0); }
-  public static void AddRECOMMENDED_OD_SPAN(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.AddDouble(22, RECOMMENDED_OD_SPAN, 0.0); }
-  public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(23, ACTUAL_OD_SPAN, 0.0); }
-  public static void AddOBS_AVAILABLE(FlatBufferBuilder builder, uint OBS_AVAILABLE) { builder.AddUint(24, OBS_AVAILABLE, 0); }
-  public static void AddOBS_USED(FlatBufferBuilder builder, uint OBS_USED) { builder.AddUint(25, OBS_USED, 0); }
-  public static void AddTRACKS_AVAILABLE(FlatBufferBuilder builder, uint TRACKS_AVAILABLE) { builder.AddUint(26, TRACKS_AVAILABLE, 0); }
-  public static void AddTRACKS_USED(FlatBufferBuilder builder, uint TRACKS_USED) { builder.AddUint(27, TRACKS_USED, 0); }
-  public static void AddRESIDUALS_ACCEPTED(FlatBufferBuilder builder, double RESIDUALS_ACCEPTED) { builder.AddDouble(28, RESIDUALS_ACCEPTED, 0.0); }
-  public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(29, WEIGHTED_RMS, 0.0); }
-  public static void AddAREA_PC(FlatBufferBuilder builder, double AREA_PC) { builder.AddDouble(30, AREA_PC, 0.0); }
-  public static void AddAREA_DRG(FlatBufferBuilder builder, double AREA_DRG) { builder.AddDouble(31, AREA_DRG, 0.0); }
-  public static void AddAREA_SRP(FlatBufferBuilder builder, double AREA_SRP) { builder.AddDouble(32, AREA_SRP, 0.0); }
-  public static void AddMASS(FlatBufferBuilder builder, double MASS) { builder.AddDouble(33, MASS, 0.0); }
-  public static void AddCR_AREA_OVER_MASS(FlatBufferBuilder builder, double CR_AREA_OVER_MASS) { builder.AddDouble(34, CR_AREA_OVER_MASS, 0.0); }
-  public static void AddTHRUST_ACCELERATION(FlatBufferBuilder builder, double THRUST_ACCELERATION) { builder.AddDouble(35, THRUST_ACCELERATION, 0.0); }
-  public static void AddSEDR(FlatBufferBuilder builder, double SEDR) { builder.AddDouble(36, SEDR, 0.0); }
-  public static void AddX(FlatBufferBuilder builder, double X) { builder.AddDouble(37, X, 0.0); }
-  public static void AddY(FlatBufferBuilder builder, double Y) { builder.AddDouble(38, Y, 0.0); }
-  public static void AddZ(FlatBufferBuilder builder, double Z) { builder.AddDouble(39, Z, 0.0); }
-  public static void AddX_DOT(FlatBufferBuilder builder, double X_DOT) { builder.AddDouble(40, X_DOT, 0.0); }
-  public static void AddY_DOT(FlatBufferBuilder builder, double Y_DOT) { builder.AddDouble(41, Y_DOT, 0.0); }
-  public static void AddZ_DOT(FlatBufferBuilder builder, double Z_DOT) { builder.AddDouble(42, Z_DOT, 0.0); }
-  public static void AddCR_R(FlatBufferBuilder builder, double CR_R) { builder.AddDouble(43, CR_R, 0.0); }
-  public static void AddCT_R(FlatBufferBuilder builder, double CT_R) { builder.AddDouble(44, CT_R, 0.0); }
-  public static void AddCT_T(FlatBufferBuilder builder, double CT_T) { builder.AddDouble(45, CT_T, 0.0); }
-  public static void AddCN_R(FlatBufferBuilder builder, double CN_R) { builder.AddDouble(46, CN_R, 0.0); }
-  public static void AddCN_T(FlatBufferBuilder builder, double CN_T) { builder.AddDouble(47, CN_T, 0.0); }
-  public static void AddCN_N(FlatBufferBuilder builder, double CN_N) { builder.AddDouble(48, CN_N, 0.0); }
-  public static void AddCRDOT_R(FlatBufferBuilder builder, double CRDOT_R) { builder.AddDouble(49, CRDOT_R, 0.0); }
-  public static void AddCRDOT_T(FlatBufferBuilder builder, double CRDOT_T) { builder.AddDouble(50, CRDOT_T, 0.0); }
-  public static void AddCRDOT_N(FlatBufferBuilder builder, double CRDOT_N) { builder.AddDouble(51, CRDOT_N, 0.0); }
-  public static void AddCRDOT_RDOT(FlatBufferBuilder builder, double CRDOT_RDOT) { builder.AddDouble(52, CRDOT_RDOT, 0.0); }
-  public static void AddCTDOT_R(FlatBufferBuilder builder, double CTDOT_R) { builder.AddDouble(53, CTDOT_R, 0.0); }
-  public static void AddCTDOT_T(FlatBufferBuilder builder, double CTDOT_T) { builder.AddDouble(54, CTDOT_T, 0.0); }
-  public static void AddCTDOT_N(FlatBufferBuilder builder, double CTDOT_N) { builder.AddDouble(55, CTDOT_N, 0.0); }
-  public static void AddCTDOT_RDOT(FlatBufferBuilder builder, double CTDOT_RDOT) { builder.AddDouble(56, CTDOT_RDOT, 0.0); }
-  public static void AddCTDOT_TDOT(FlatBufferBuilder builder, double CTDOT_TDOT) { builder.AddDouble(57, CTDOT_TDOT, 0.0); }
-  public static void AddCNDOT_R(FlatBufferBuilder builder, double CNDOT_R) { builder.AddDouble(58, CNDOT_R, 0.0); }
-  public static void AddCNDOT_T(FlatBufferBuilder builder, double CNDOT_T) { builder.AddDouble(59, CNDOT_T, 0.0); }
-  public static void AddCNDOT_N(FlatBufferBuilder builder, double CNDOT_N) { builder.AddDouble(60, CNDOT_N, 0.0); }
-  public static void AddCNDOT_RDOT(FlatBufferBuilder builder, double CNDOT_RDOT) { builder.AddDouble(61, CNDOT_RDOT, 0.0); }
-  public static void AddCNDOT_TDOT(FlatBufferBuilder builder, double CNDOT_TDOT) { builder.AddDouble(62, CNDOT_TDOT, 0.0); }
-  public static void AddCNDOT_NDOT(FlatBufferBuilder builder, double CNDOT_NDOT) { builder.AddDouble(63, CNDOT_NDOT, 0.0); }
-  public static void AddCDRG_R(FlatBufferBuilder builder, double CDRG_R) { builder.AddDouble(64, CDRG_R, 0.0); }
-  public static void AddCDRG_T(FlatBufferBuilder builder, double CDRG_T) { builder.AddDouble(65, CDRG_T, 0.0); }
-  public static void AddCDRG_N(FlatBufferBuilder builder, double CDRG_N) { builder.AddDouble(66, CDRG_N, 0.0); }
-  public static void AddCDRG_RDOT(FlatBufferBuilder builder, double CDRG_RDOT) { builder.AddDouble(67, CDRG_RDOT, 0.0); }
-  public static void AddCDRG_TDOT(FlatBufferBuilder builder, double CDRG_TDOT) { builder.AddDouble(68, CDRG_TDOT, 0.0); }
-  public static void AddCDRG_NDOT(FlatBufferBuilder builder, double CDRG_NDOT) { builder.AddDouble(69, CDRG_NDOT, 0.0); }
-  public static void AddCDRG_DRG(FlatBufferBuilder builder, double CDRG_DRG) { builder.AddDouble(70, CDRG_DRG, 0.0); }
-  public static void AddCSRP_R(FlatBufferBuilder builder, double CSRP_R) { builder.AddDouble(71, CSRP_R, 0.0); }
-  public static void AddCSRP_T(FlatBufferBuilder builder, double CSRP_T) { builder.AddDouble(72, CSRP_T, 0.0); }
-  public static void AddCSRP_N(FlatBufferBuilder builder, double CSRP_N) { builder.AddDouble(73, CSRP_N, 0.0); }
-  public static void AddCSRP_RDOT(FlatBufferBuilder builder, double CSRP_RDOT) { builder.AddDouble(74, CSRP_RDOT, 0.0); }
-  public static void AddCSRP_TDOT(FlatBufferBuilder builder, double CSRP_TDOT) { builder.AddDouble(75, CSRP_TDOT, 0.0); }
-  public static void AddCSRP_NDOT(FlatBufferBuilder builder, double CSRP_NDOT) { builder.AddDouble(76, CSRP_NDOT, 0.0); }
-  public static void AddCSRP_DRG(FlatBufferBuilder builder, double CSRP_DRG) { builder.AddDouble(77, CSRP_DRG, 0.0); }
-  public static void AddCSRP_SRP(FlatBufferBuilder builder, double CSRP_SRP) { builder.AddDouble(78, CSRP_SRP, 0.0); }
-  public static void AddCTHR_R(FlatBufferBuilder builder, double CTHR_R) { builder.AddDouble(79, CTHR_R, 0.0); }
-  public static void AddCTHR_T(FlatBufferBuilder builder, double CTHR_T) { builder.AddDouble(80, CTHR_T, 0.0); }
-  public static void AddCTHR_N(FlatBufferBuilder builder, double CTHR_N) { builder.AddDouble(81, CTHR_N, 0.0); }
-  public static void AddCTHR_RDOT(FlatBufferBuilder builder, double CTHR_RDOT) { builder.AddDouble(82, CTHR_RDOT, 0.0); }
-  public static void AddCTHR_TDOT(FlatBufferBuilder builder, double CTHR_TDOT) { builder.AddDouble(83, CTHR_TDOT, 0.0); }
-  public static void AddCTHR_NDOT(FlatBufferBuilder builder, double CTHR_NDOT) { builder.AddDouble(84, CTHR_NDOT, 0.0); }
-  public static void AddCTHR_DRG(FlatBufferBuilder builder, double CTHR_DRG) { builder.AddDouble(85, CTHR_DRG, 0.0); }
-  public static void AddCTHR_SRP(FlatBufferBuilder builder, double CTHR_SRP) { builder.AddDouble(86, CTHR_SRP, 0.0); }
-  public static void AddCTHR_THR(FlatBufferBuilder builder, double CTHR_THR) { builder.AddDouble(87, CTHR_THR, 0.0); }
+  public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
+  public static void AddPOC(FlatBufferBuilder builder, Offset<EPM> POCOffset) { builder.AddOffset(2, POCOffset.Value, 0); }
+  public static void AddOPERATOR_CONTACT_POSITION(FlatBufferBuilder builder, StringOffset OPERATOR_CONTACT_POSITIONOffset) { builder.AddOffset(3, OPERATOR_CONTACT_POSITIONOffset.Value, 0); }
+  public static void AddOPERATOR_ORGANIZATION(FlatBufferBuilder builder, StringOffset OPERATOR_ORGANIZATIONOffset) { builder.AddOffset(4, OPERATOR_ORGANIZATIONOffset.Value, 0); }
+  public static void AddEPHEMERIS_NAME(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAMEOffset) { builder.AddOffset(5, EPHEMERIS_NAMEOffset.Value, 0); }
+  public static void AddCOVARIANCE_METHOD(FlatBufferBuilder builder, covarianceMethod COVARIANCE_METHOD) { builder.AddSbyte(6, (sbyte)COVARIANCE_METHOD, 0); }
+  public static void AddREF_FRAME(FlatBufferBuilder builder, referenceFrame REF_FRAME) { builder.AddSbyte(7, (sbyte)REF_FRAME, 0); }
+  public static void AddGRAVITY_MODEL(FlatBufferBuilder builder, StringOffset GRAVITY_MODELOffset) { builder.AddOffset(8, GRAVITY_MODELOffset.Value, 0); }
+  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODELOffset) { builder.AddOffset(9, ATMOSPHERIC_MODELOffset.Value, 0); }
+  public static void AddN_BODY_PERTURBATIONS(FlatBufferBuilder builder, StringOffset N_BODY_PERTURBATIONSOffset) { builder.AddOffset(10, N_BODY_PERTURBATIONSOffset.Value, 0); }
+  public static void AddSOLAR_RAD_PRESSURE(FlatBufferBuilder builder, bool SOLAR_RAD_PRESSURE) { builder.AddBool(11, SOLAR_RAD_PRESSURE, false); }
+  public static void AddEARTH_TIDES(FlatBufferBuilder builder, bool EARTH_TIDES) { builder.AddBool(12, EARTH_TIDES, false); }
+  public static void AddINTRACK_THRUST(FlatBufferBuilder builder, bool INTRACK_THRUST) { builder.AddBool(13, INTRACK_THRUST, false); }
+  public static void AddTIME_LASTOB_START(FlatBufferBuilder builder, StringOffset TIME_LASTOB_STARTOffset) { builder.AddOffset(14, TIME_LASTOB_STARTOffset.Value, 0); }
+  public static void AddTIME_LASTOB_END(FlatBufferBuilder builder, StringOffset TIME_LASTOB_ENDOffset) { builder.AddOffset(15, TIME_LASTOB_ENDOffset.Value, 0); }
+  public static void AddRECOMMENDED_OD_SPAN(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.AddDouble(16, RECOMMENDED_OD_SPAN, 0.0); }
+  public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(17, ACTUAL_OD_SPAN, 0.0); }
+  public static void AddOBS_AVAILABLE(FlatBufferBuilder builder, uint OBS_AVAILABLE) { builder.AddUint(18, OBS_AVAILABLE, 0); }
+  public static void AddOBS_USED(FlatBufferBuilder builder, uint OBS_USED) { builder.AddUint(19, OBS_USED, 0); }
+  public static void AddTRACKS_AVAILABLE(FlatBufferBuilder builder, uint TRACKS_AVAILABLE) { builder.AddUint(20, TRACKS_AVAILABLE, 0); }
+  public static void AddTRACKS_USED(FlatBufferBuilder builder, uint TRACKS_USED) { builder.AddUint(21, TRACKS_USED, 0); }
+  public static void AddRESIDUALS_ACCEPTED(FlatBufferBuilder builder, double RESIDUALS_ACCEPTED) { builder.AddDouble(22, RESIDUALS_ACCEPTED, 0.0); }
+  public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(23, WEIGHTED_RMS, 0.0); }
+  public static void AddAREA_PC(FlatBufferBuilder builder, double AREA_PC) { builder.AddDouble(24, AREA_PC, 0.0); }
+  public static void AddAREA_DRG(FlatBufferBuilder builder, double AREA_DRG) { builder.AddDouble(25, AREA_DRG, 0.0); }
+  public static void AddAREA_SRP(FlatBufferBuilder builder, double AREA_SRP) { builder.AddDouble(26, AREA_SRP, 0.0); }
+  public static void AddCR_AREA_OVER_MASS(FlatBufferBuilder builder, double CR_AREA_OVER_MASS) { builder.AddDouble(27, CR_AREA_OVER_MASS, 0.0); }
+  public static void AddTHRUST_ACCELERATION(FlatBufferBuilder builder, double THRUST_ACCELERATION) { builder.AddDouble(28, THRUST_ACCELERATION, 0.0); }
+  public static void AddSEDR(FlatBufferBuilder builder, double SEDR) { builder.AddDouble(29, SEDR, 0.0); }
+  public static void AddX(FlatBufferBuilder builder, double X) { builder.AddDouble(30, X, 0.0); }
+  public static void AddY(FlatBufferBuilder builder, double Y) { builder.AddDouble(31, Y, 0.0); }
+  public static void AddZ(FlatBufferBuilder builder, double Z) { builder.AddDouble(32, Z, 0.0); }
+  public static void AddX_DOT(FlatBufferBuilder builder, double X_DOT) { builder.AddDouble(33, X_DOT, 0.0); }
+  public static void AddY_DOT(FlatBufferBuilder builder, double Y_DOT) { builder.AddDouble(34, Y_DOT, 0.0); }
+  public static void AddZ_DOT(FlatBufferBuilder builder, double Z_DOT) { builder.AddDouble(35, Z_DOT, 0.0); }
+  public static void AddCR_R(FlatBufferBuilder builder, double CR_R) { builder.AddDouble(36, CR_R, 0.0); }
+  public static void AddCT_R(FlatBufferBuilder builder, double CT_R) { builder.AddDouble(37, CT_R, 0.0); }
+  public static void AddCT_T(FlatBufferBuilder builder, double CT_T) { builder.AddDouble(38, CT_T, 0.0); }
+  public static void AddCN_R(FlatBufferBuilder builder, double CN_R) { builder.AddDouble(39, CN_R, 0.0); }
+  public static void AddCN_T(FlatBufferBuilder builder, double CN_T) { builder.AddDouble(40, CN_T, 0.0); }
+  public static void AddCN_N(FlatBufferBuilder builder, double CN_N) { builder.AddDouble(41, CN_N, 0.0); }
+  public static void AddCRDOT_R(FlatBufferBuilder builder, double CRDOT_R) { builder.AddDouble(42, CRDOT_R, 0.0); }
+  public static void AddCRDOT_T(FlatBufferBuilder builder, double CRDOT_T) { builder.AddDouble(43, CRDOT_T, 0.0); }
+  public static void AddCRDOT_N(FlatBufferBuilder builder, double CRDOT_N) { builder.AddDouble(44, CRDOT_N, 0.0); }
+  public static void AddCRDOT_RDOT(FlatBufferBuilder builder, double CRDOT_RDOT) { builder.AddDouble(45, CRDOT_RDOT, 0.0); }
+  public static void AddCTDOT_R(FlatBufferBuilder builder, double CTDOT_R) { builder.AddDouble(46, CTDOT_R, 0.0); }
+  public static void AddCTDOT_T(FlatBufferBuilder builder, double CTDOT_T) { builder.AddDouble(47, CTDOT_T, 0.0); }
+  public static void AddCTDOT_N(FlatBufferBuilder builder, double CTDOT_N) { builder.AddDouble(48, CTDOT_N, 0.0); }
+  public static void AddCTDOT_RDOT(FlatBufferBuilder builder, double CTDOT_RDOT) { builder.AddDouble(49, CTDOT_RDOT, 0.0); }
+  public static void AddCTDOT_TDOT(FlatBufferBuilder builder, double CTDOT_TDOT) { builder.AddDouble(50, CTDOT_TDOT, 0.0); }
+  public static void AddCNDOT_R(FlatBufferBuilder builder, double CNDOT_R) { builder.AddDouble(51, CNDOT_R, 0.0); }
+  public static void AddCNDOT_T(FlatBufferBuilder builder, double CNDOT_T) { builder.AddDouble(52, CNDOT_T, 0.0); }
+  public static void AddCNDOT_N(FlatBufferBuilder builder, double CNDOT_N) { builder.AddDouble(53, CNDOT_N, 0.0); }
+  public static void AddCNDOT_RDOT(FlatBufferBuilder builder, double CNDOT_RDOT) { builder.AddDouble(54, CNDOT_RDOT, 0.0); }
+  public static void AddCNDOT_TDOT(FlatBufferBuilder builder, double CNDOT_TDOT) { builder.AddDouble(55, CNDOT_TDOT, 0.0); }
+  public static void AddCNDOT_NDOT(FlatBufferBuilder builder, double CNDOT_NDOT) { builder.AddDouble(56, CNDOT_NDOT, 0.0); }
+  public static void AddCDRG_R(FlatBufferBuilder builder, double CDRG_R) { builder.AddDouble(57, CDRG_R, 0.0); }
+  public static void AddCDRG_T(FlatBufferBuilder builder, double CDRG_T) { builder.AddDouble(58, CDRG_T, 0.0); }
+  public static void AddCDRG_N(FlatBufferBuilder builder, double CDRG_N) { builder.AddDouble(59, CDRG_N, 0.0); }
+  public static void AddCDRG_RDOT(FlatBufferBuilder builder, double CDRG_RDOT) { builder.AddDouble(60, CDRG_RDOT, 0.0); }
+  public static void AddCDRG_TDOT(FlatBufferBuilder builder, double CDRG_TDOT) { builder.AddDouble(61, CDRG_TDOT, 0.0); }
+  public static void AddCDRG_NDOT(FlatBufferBuilder builder, double CDRG_NDOT) { builder.AddDouble(62, CDRG_NDOT, 0.0); }
+  public static void AddCDRG_DRG(FlatBufferBuilder builder, double CDRG_DRG) { builder.AddDouble(63, CDRG_DRG, 0.0); }
+  public static void AddCSRP_R(FlatBufferBuilder builder, double CSRP_R) { builder.AddDouble(64, CSRP_R, 0.0); }
+  public static void AddCSRP_T(FlatBufferBuilder builder, double CSRP_T) { builder.AddDouble(65, CSRP_T, 0.0); }
+  public static void AddCSRP_N(FlatBufferBuilder builder, double CSRP_N) { builder.AddDouble(66, CSRP_N, 0.0); }
+  public static void AddCSRP_RDOT(FlatBufferBuilder builder, double CSRP_RDOT) { builder.AddDouble(67, CSRP_RDOT, 0.0); }
+  public static void AddCSRP_TDOT(FlatBufferBuilder builder, double CSRP_TDOT) { builder.AddDouble(68, CSRP_TDOT, 0.0); }
+  public static void AddCSRP_NDOT(FlatBufferBuilder builder, double CSRP_NDOT) { builder.AddDouble(69, CSRP_NDOT, 0.0); }
+  public static void AddCSRP_DRG(FlatBufferBuilder builder, double CSRP_DRG) { builder.AddDouble(70, CSRP_DRG, 0.0); }
+  public static void AddCSRP_SRP(FlatBufferBuilder builder, double CSRP_SRP) { builder.AddDouble(71, CSRP_SRP, 0.0); }
+  public static void AddCTHR_R(FlatBufferBuilder builder, double CTHR_R) { builder.AddDouble(72, CTHR_R, 0.0); }
+  public static void AddCTHR_T(FlatBufferBuilder builder, double CTHR_T) { builder.AddDouble(73, CTHR_T, 0.0); }
+  public static void AddCTHR_N(FlatBufferBuilder builder, double CTHR_N) { builder.AddDouble(74, CTHR_N, 0.0); }
+  public static void AddCTHR_RDOT(FlatBufferBuilder builder, double CTHR_RDOT) { builder.AddDouble(75, CTHR_RDOT, 0.0); }
+  public static void AddCTHR_TDOT(FlatBufferBuilder builder, double CTHR_TDOT) { builder.AddDouble(76, CTHR_TDOT, 0.0); }
+  public static void AddCTHR_NDOT(FlatBufferBuilder builder, double CTHR_NDOT) { builder.AddDouble(77, CTHR_NDOT, 0.0); }
+  public static void AddCTHR_DRG(FlatBufferBuilder builder, double CTHR_DRG) { builder.AddDouble(78, CTHR_DRG, 0.0); }
+  public static void AddCTHR_SRP(FlatBufferBuilder builder, double CTHR_SRP) { builder.AddDouble(79, CTHR_SRP, 0.0); }
+  public static void AddCTHR_THR(FlatBufferBuilder builder, double CTHR_THR) { builder.AddDouble(80, CTHR_THR, 0.0); }
   public static Offset<CDMObject> EndCDMObject(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CDMObject>(o);
@@ -558,18 +492,12 @@ public struct CDMObject : IFlatbufferObject
   }
   public void UnPackTo(CDMObjectT _o) {
     _o.COMMENT = this.COMMENT;
-    _o.OBJECT = this.OBJECT;
-    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
-    _o.CATALOG_NAME = this.CATALOG_NAME;
-    _o.OBJECT_NAME = this.OBJECT_NAME;
-    _o.INTERNATIONAL_DESIGNATOR = this.INTERNATIONAL_DESIGNATOR;
-    _o.OBJECT_TYPE = this.OBJECT_TYPE;
+    _o.OBJECT = this.OBJECT.HasValue ? this.OBJECT.Value.UnPack() : null;
+    _o.POC = this.POC.HasValue ? this.POC.Value.UnPack() : null;
     _o.OPERATOR_CONTACT_POSITION = this.OPERATOR_CONTACT_POSITION;
     _o.OPERATOR_ORGANIZATION = this.OPERATOR_ORGANIZATION;
     _o.EPHEMERIS_NAME = this.EPHEMERIS_NAME;
     _o.COVARIANCE_METHOD = this.COVARIANCE_METHOD;
-    _o.MANEUVERABLE = this.MANEUVERABLE;
-    _o.ORBIT_CENTER = this.ORBIT_CENTER;
     _o.REF_FRAME = this.REF_FRAME;
     _o.GRAVITY_MODEL = this.GRAVITY_MODEL;
     _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL;
@@ -590,7 +518,6 @@ public struct CDMObject : IFlatbufferObject
     _o.AREA_PC = this.AREA_PC;
     _o.AREA_DRG = this.AREA_DRG;
     _o.AREA_SRP = this.AREA_SRP;
-    _o.MASS = this.MASS;
     _o.CR_AREA_OVER_MASS = this.CR_AREA_OVER_MASS;
     _o.THRUST_ACCELERATION = this.THRUST_ACCELERATION;
     _o.SEDR = this.SEDR;
@@ -649,14 +576,11 @@ public struct CDMObject : IFlatbufferObject
   public static Offset<CDMObject> Pack(FlatBufferBuilder builder, CDMObjectT _o) {
     if (_o == null) return default(Offset<CDMObject>);
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
-    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
-    var _CATALOG_NAME = _o.CATALOG_NAME == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_NAME);
-    var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
-    var _INTERNATIONAL_DESIGNATOR = _o.INTERNATIONAL_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.INTERNATIONAL_DESIGNATOR);
+    var _OBJECT = _o.OBJECT == null ? default(Offset<CAT>) : CAT.Pack(builder, _o.OBJECT);
+    var _POC = _o.POC == null ? default(Offset<EPM>) : EPM.Pack(builder, _o.POC);
     var _OPERATOR_CONTACT_POSITION = _o.OPERATOR_CONTACT_POSITION == null ? default(StringOffset) : builder.CreateString(_o.OPERATOR_CONTACT_POSITION);
     var _OPERATOR_ORGANIZATION = _o.OPERATOR_ORGANIZATION == null ? default(StringOffset) : builder.CreateString(_o.OPERATOR_ORGANIZATION);
     var _EPHEMERIS_NAME = _o.EPHEMERIS_NAME == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME);
-    var _ORBIT_CENTER = _o.ORBIT_CENTER == null ? default(StringOffset) : builder.CreateString(_o.ORBIT_CENTER);
     var _GRAVITY_MODEL = _o.GRAVITY_MODEL == null ? default(StringOffset) : builder.CreateString(_o.GRAVITY_MODEL);
     var _ATMOSPHERIC_MODEL = _o.ATMOSPHERIC_MODEL == null ? default(StringOffset) : builder.CreateString(_o.ATMOSPHERIC_MODEL);
     var _N_BODY_PERTURBATIONS = _o.N_BODY_PERTURBATIONS == null ? default(StringOffset) : builder.CreateString(_o.N_BODY_PERTURBATIONS);
@@ -665,18 +589,12 @@ public struct CDMObject : IFlatbufferObject
     return CreateCDMObject(
       builder,
       _COMMENT,
-      _o.OBJECT,
-      _OBJECT_DESIGNATOR,
-      _CATALOG_NAME,
-      _OBJECT_NAME,
-      _INTERNATIONAL_DESIGNATOR,
-      _o.OBJECT_TYPE,
+      _OBJECT,
+      _POC,
       _OPERATOR_CONTACT_POSITION,
       _OPERATOR_ORGANIZATION,
       _EPHEMERIS_NAME,
       _o.COVARIANCE_METHOD,
-      _o.MANEUVERABLE,
-      _ORBIT_CENTER,
       _o.REF_FRAME,
       _GRAVITY_MODEL,
       _ATMOSPHERIC_MODEL,
@@ -697,7 +615,6 @@ public struct CDMObject : IFlatbufferObject
       _o.AREA_PC,
       _o.AREA_DRG,
       _o.AREA_SRP,
-      _o.MASS,
       _o.CR_AREA_OVER_MASS,
       _o.THRUST_ACCELERATION,
       _o.SEDR,
@@ -758,18 +675,12 @@ public struct CDMObject : IFlatbufferObject
 public class CDMObjectT
 {
   public string COMMENT { get; set; }
-  public objectNumber OBJECT { get; set; }
-  public string OBJECT_DESIGNATOR { get; set; }
-  public string CATALOG_NAME { get; set; }
-  public string OBJECT_NAME { get; set; }
-  public string INTERNATIONAL_DESIGNATOR { get; set; }
-  public objectType OBJECT_TYPE { get; set; }
+  public CATT OBJECT { get; set; }
+  public EPMT POC { get; set; }
   public string OPERATOR_CONTACT_POSITION { get; set; }
   public string OPERATOR_ORGANIZATION { get; set; }
   public string EPHEMERIS_NAME { get; set; }
   public covarianceMethod COVARIANCE_METHOD { get; set; }
-  public maneuverableType MANEUVERABLE { get; set; }
-  public string ORBIT_CENTER { get; set; }
   public referenceFrame REF_FRAME { get; set; }
   public string GRAVITY_MODEL { get; set; }
   public string ATMOSPHERIC_MODEL { get; set; }
@@ -790,7 +701,6 @@ public class CDMObjectT
   public double AREA_PC { get; set; }
   public double AREA_DRG { get; set; }
   public double AREA_SRP { get; set; }
-  public double MASS { get; set; }
   public double CR_AREA_OVER_MASS { get; set; }
   public double THRUST_ACCELERATION { get; set; }
   public double SEDR { get; set; }
@@ -848,19 +758,13 @@ public class CDMObjectT
 
   public CDMObjectT() {
     this.COMMENT = null;
-    this.OBJECT = objectNumber.OBJECT1;
-    this.OBJECT_DESIGNATOR = null;
-    this.CATALOG_NAME = null;
-    this.OBJECT_NAME = null;
-    this.INTERNATIONAL_DESIGNATOR = null;
-    this.OBJECT_TYPE = objectType.PAYLOAD;
+    this.OBJECT = null;
+    this.POC = null;
     this.OPERATOR_CONTACT_POSITION = null;
     this.OPERATOR_ORGANIZATION = null;
     this.EPHEMERIS_NAME = null;
     this.COVARIANCE_METHOD = covarianceMethod.CALCULATED;
-    this.MANEUVERABLE = maneuverableType.YES;
-    this.ORBIT_CENTER = null;
-    this.REF_FRAME = referenceFrame.EME2000;
+    this.REF_FRAME = referenceFrame.ECEF;
     this.GRAVITY_MODEL = null;
     this.ATMOSPHERIC_MODEL = null;
     this.N_BODY_PERTURBATIONS = null;
@@ -880,7 +784,6 @@ public class CDMObjectT
     this.AREA_PC = 0.0;
     this.AREA_DRG = 0.0;
     this.AREA_SRP = 0.0;
-    this.MASS = 0.0;
     this.CR_AREA_OVER_MASS = 0.0;
     this.THRUST_ACCELERATION = 0.0;
     this.SEDR = 0.0;

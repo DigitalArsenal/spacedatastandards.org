@@ -31,63 +31,43 @@ class CSM : Table() {
         return this
     }
     /**
-     * NORAD Catalog Number for the first object
-     */
-    val NORAD_CAT_ID_1 : UInt
-        get() {
-            val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
-        }
-    /**
      * Satellite name for the first object
      */
-    val OBJECT_NAME_1 : String?
-        get() {
-            val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+    val OBJECT_1 : CAT? get() = OBJECT_1(CAT())
+    fun OBJECT_1(obj: CAT) : CAT? {
+        val o = __offset(4)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
-    val OBJECT_NAME_1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OBJECT_NAME_1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    }
     /**
      * Days since epoch for the first object
      */
     val DSE_1 : Double
         get() {
-            val o = __offset(8)
+            val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * NORAD Catalog Number for the second object
-     */
-    val NORAD_CAT_ID_2 : UInt
-        get() {
-            val o = __offset(10)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
      * Satellite name for the second object
      */
-    val OBJECT_NAME_2 : String?
-        get() {
-            val o = __offset(12)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+    val OBJECT_2 : CAT? get() = OBJECT_2(CAT())
+    fun OBJECT_2(obj: CAT) : CAT? {
+        val o = __offset(8)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
-    val OBJECT_NAME_2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun OBJECT_NAME_2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    }
     /**
      * Days since epoch for the second object
      */
     val DSE_2 : Double
         get() {
-            val o = __offset(14)
+            val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -95,7 +75,7 @@ class CSM : Table() {
      */
     val TCA : Double
         get() {
-            val o = __offset(16)
+            val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -103,7 +83,7 @@ class CSM : Table() {
      */
     val TCA_RANGE : Double
         get() {
-            val o = __offset(18)
+            val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -111,7 +91,7 @@ class CSM : Table() {
      */
     val TCA_RELATIVE_SPEED : Double
         get() {
-            val o = __offset(20)
+            val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -119,7 +99,7 @@ class CSM : Table() {
      */
     val MAX_PROB : Double
         get() {
-            val o = __offset(22)
+            val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -127,7 +107,7 @@ class CSM : Table() {
      */
     val DILUTION : Double
         get() {
-            val o = __offset(24)
+            val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
@@ -138,8 +118,8 @@ class CSM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CSMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CSM")
-        fun createCSM(builder: FlatBufferBuilder, NORAD_CAT_ID_1: UInt, OBJECT_NAME_1Offset: Int, DSE_1: Double, NORAD_CAT_ID_2: UInt, OBJECT_NAME_2Offset: Int, DSE_2: Double, TCA: Double, TCA_RANGE: Double, TCA_RELATIVE_SPEED: Double, MAX_PROB: Double, DILUTION: Double) : Int {
-            builder.startTable(11)
+        fun createCSM(builder: FlatBufferBuilder, OBJECT_1Offset: Int, DSE_1: Double, OBJECT_2Offset: Int, DSE_2: Double, TCA: Double, TCA_RANGE: Double, TCA_RELATIVE_SPEED: Double, MAX_PROB: Double, DILUTION: Double) : Int {
+            builder.startTable(9)
             addDILUTION(builder, DILUTION)
             addMAX_PROB(builder, MAX_PROB)
             addTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED)
@@ -147,24 +127,20 @@ class CSM : Table() {
             addTCA(builder, TCA)
             addDSE_2(builder, DSE_2)
             addDSE_1(builder, DSE_1)
-            addOBJECT_NAME_2(builder, OBJECT_NAME_2Offset)
-            addNORAD_CAT_ID_2(builder, NORAD_CAT_ID_2)
-            addOBJECT_NAME_1(builder, OBJECT_NAME_1Offset)
-            addNORAD_CAT_ID_1(builder, NORAD_CAT_ID_1)
+            addOBJECT_2(builder, OBJECT_2Offset)
+            addOBJECT_1(builder, OBJECT_1Offset)
             return endCSM(builder)
         }
-        fun startCSM(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addNORAD_CAT_ID_1(builder: FlatBufferBuilder, NORAD_CAT_ID_1: UInt) = builder.addInt(0, NORAD_CAT_ID_1.toInt(), 0)
-        fun addOBJECT_NAME_1(builder: FlatBufferBuilder, OBJECT_NAME_1: Int) = builder.addOffset(1, OBJECT_NAME_1, 0)
-        fun addDSE_1(builder: FlatBufferBuilder, DSE_1: Double) = builder.addDouble(2, DSE_1, 0.0)
-        fun addNORAD_CAT_ID_2(builder: FlatBufferBuilder, NORAD_CAT_ID_2: UInt) = builder.addInt(3, NORAD_CAT_ID_2.toInt(), 0)
-        fun addOBJECT_NAME_2(builder: FlatBufferBuilder, OBJECT_NAME_2: Int) = builder.addOffset(4, OBJECT_NAME_2, 0)
-        fun addDSE_2(builder: FlatBufferBuilder, DSE_2: Double) = builder.addDouble(5, DSE_2, 0.0)
-        fun addTCA(builder: FlatBufferBuilder, TCA: Double) = builder.addDouble(6, TCA, 0.0)
-        fun addTCA_RANGE(builder: FlatBufferBuilder, TCA_RANGE: Double) = builder.addDouble(7, TCA_RANGE, 0.0)
-        fun addTCA_RELATIVE_SPEED(builder: FlatBufferBuilder, TCA_RELATIVE_SPEED: Double) = builder.addDouble(8, TCA_RELATIVE_SPEED, 0.0)
-        fun addMAX_PROB(builder: FlatBufferBuilder, MAX_PROB: Double) = builder.addDouble(9, MAX_PROB, 0.0)
-        fun addDILUTION(builder: FlatBufferBuilder, DILUTION: Double) = builder.addDouble(10, DILUTION, 0.0)
+        fun startCSM(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun addOBJECT_1(builder: FlatBufferBuilder, OBJECT_1: Int) = builder.addOffset(0, OBJECT_1, 0)
+        fun addDSE_1(builder: FlatBufferBuilder, DSE_1: Double) = builder.addDouble(1, DSE_1, 0.0)
+        fun addOBJECT_2(builder: FlatBufferBuilder, OBJECT_2: Int) = builder.addOffset(2, OBJECT_2, 0)
+        fun addDSE_2(builder: FlatBufferBuilder, DSE_2: Double) = builder.addDouble(3, DSE_2, 0.0)
+        fun addTCA(builder: FlatBufferBuilder, TCA: Double) = builder.addDouble(4, TCA, 0.0)
+        fun addTCA_RANGE(builder: FlatBufferBuilder, TCA_RANGE: Double) = builder.addDouble(5, TCA_RANGE, 0.0)
+        fun addTCA_RELATIVE_SPEED(builder: FlatBufferBuilder, TCA_RELATIVE_SPEED: Double) = builder.addDouble(6, TCA_RELATIVE_SPEED, 0.0)
+        fun addMAX_PROB(builder: FlatBufferBuilder, MAX_PROB: Double) = builder.addDouble(7, MAX_PROB, 0.0)
+        fun addDILUTION(builder: FlatBufferBuilder, DILUTION: Double) = builder.addDouble(8, DILUTION, 0.0)
         fun endCSM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

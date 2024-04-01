@@ -771,17 +771,11 @@ class EOO : Table() {
     /**
      * Reference frame of the observation
      */
-    val REFERENCE_FRAME : String?
+    val REFERENCE_FRAME : Byte
         get() {
             val o = __offset(160)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(160, 1)
-    fun REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 160, 1)
     /**
      * Reference frame of the sensor
      */
@@ -862,13 +856,12 @@ class EOO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
-        fun createEOO(builder: FlatBufferBuilder, EOBSERVATION_IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHODOffset: Int, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAMEOffset: Int, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPEOffset: Int) : Int {
+        fun createEOO(builder: FlatBufferBuilder, EOBSERVATION_IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHODOffset: Int, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPEOffset: Int) : Int {
             builder.startTable(85)
             addTYPE(builder, TYPEOffset)
             addSOURCE_DL(builder, SOURCE_DLOffset)
             addORIG_NETWORK(builder, ORIG_NETWORKOffset)
             addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
             addCREATED_BY(builder, CREATED_BYOffset)
             addCREATED_AT(builder, CREATED_ATOffset)
             addDATA_MODE(builder, DATA_MODEOffset)
@@ -948,6 +941,7 @@ class EOO : Table() {
             addEOBSERVATION_ID(builder, EOBSERVATION_IDOffset)
             addPENUMBRA(builder, PENUMBRA)
             addUMBRA(builder, UMBRA)
+            addREFERENCE_FRAME(builder, REFERENCE_FRAME)
             addUCT(builder, UCT)
             return endEOO(builder)
         }
@@ -1030,7 +1024,7 @@ class EOO : Table() {
         fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Int) = builder.addOffset(75, DATA_MODE, 0)
         fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(76, CREATED_AT, 0)
         fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(77, CREATED_BY, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(78, REFERENCE_FRAME, 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(78, REFERENCE_FRAME, 0)
         fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(79, SEN_REFERENCE_FRAME, 0)
         fun addUMBRA(builder: FlatBufferBuilder, UMBRA: Boolean) = builder.addBoolean(80, UMBRA, false)
         fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(81, PENUMBRA, false)

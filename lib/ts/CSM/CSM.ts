@@ -2,6 +2,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CAT, CATT } from './CAT.js';
 
 
 /**
@@ -30,54 +31,34 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * NORAD Catalog Number for the first object
- */
-NORAD_CAT_ID_1():number {
-  const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
-}
-
-/**
  * Satellite name for the first object
  */
-OBJECT_NAME_1():string|null
-OBJECT_NAME_1(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_NAME_1(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+OBJECT_1(obj?:CAT):CAT|null {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new CAT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * Days since epoch for the first object
  */
 DSE_1():number {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * NORAD Catalog Number for the second object
- */
-NORAD_CAT_ID_2():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
 /**
  * Satellite name for the second object
  */
-OBJECT_NAME_2():string|null
-OBJECT_NAME_2(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_NAME_2(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+OBJECT_2(obj?:CAT):CAT|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? (obj || new CAT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * Days since epoch for the second object
  */
 DSE_2():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -85,7 +66,7 @@ DSE_2():number {
  * Time of closest approach as a Unix timestamp
  */
 TCA():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -93,7 +74,7 @@ TCA():number {
  * The distance or range between the two objects at TCA
  */
 TCA_RANGE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -101,7 +82,7 @@ TCA_RANGE():number {
  * The magnitude of the relative velocity at TCA
  */
 TCA_RELATIVE_SPEED():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -109,7 +90,7 @@ TCA_RELATIVE_SPEED():number {
  * Maximum probability
  */
 MAX_PROB():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -117,56 +98,48 @@ MAX_PROB():number {
  * Standard deviation that produces the maximum probability
  */
 DILUTION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 static startCSM(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(9);
 }
 
-static addNoradCatId1(builder:flatbuffers.Builder, NORAD_CAT_ID_1:number) {
-  builder.addFieldInt32(0, NORAD_CAT_ID_1, 0);
-}
-
-static addObjectName1(builder:flatbuffers.Builder, OBJECT_NAME_1Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, OBJECT_NAME_1Offset, 0);
+static addObject1(builder:flatbuffers.Builder, OBJECT_1Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, OBJECT_1Offset, 0);
 }
 
 static addDse1(builder:flatbuffers.Builder, DSE_1:number) {
-  builder.addFieldFloat64(2, DSE_1, 0.0);
+  builder.addFieldFloat64(1, DSE_1, 0.0);
 }
 
-static addNoradCatId2(builder:flatbuffers.Builder, NORAD_CAT_ID_2:number) {
-  builder.addFieldInt32(3, NORAD_CAT_ID_2, 0);
-}
-
-static addObjectName2(builder:flatbuffers.Builder, OBJECT_NAME_2Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, OBJECT_NAME_2Offset, 0);
+static addObject2(builder:flatbuffers.Builder, OBJECT_2Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, OBJECT_2Offset, 0);
 }
 
 static addDse2(builder:flatbuffers.Builder, DSE_2:number) {
-  builder.addFieldFloat64(5, DSE_2, 0.0);
+  builder.addFieldFloat64(3, DSE_2, 0.0);
 }
 
 static addTca(builder:flatbuffers.Builder, TCA:number) {
-  builder.addFieldFloat64(6, TCA, 0.0);
+  builder.addFieldFloat64(4, TCA, 0.0);
 }
 
 static addTcaRange(builder:flatbuffers.Builder, TCA_RANGE:number) {
-  builder.addFieldFloat64(7, TCA_RANGE, 0.0);
+  builder.addFieldFloat64(5, TCA_RANGE, 0.0);
 }
 
 static addTcaRelativeSpeed(builder:flatbuffers.Builder, TCA_RELATIVE_SPEED:number) {
-  builder.addFieldFloat64(8, TCA_RELATIVE_SPEED, 0.0);
+  builder.addFieldFloat64(6, TCA_RELATIVE_SPEED, 0.0);
 }
 
 static addMaxProb(builder:flatbuffers.Builder, MAX_PROB:number) {
-  builder.addFieldFloat64(9, MAX_PROB, 0.0);
+  builder.addFieldFloat64(7, MAX_PROB, 0.0);
 }
 
 static addDilution(builder:flatbuffers.Builder, DILUTION:number) {
-  builder.addFieldFloat64(10, DILUTION, 0.0);
+  builder.addFieldFloat64(8, DILUTION, 0.0);
 }
 
 static endCSM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -182,29 +155,12 @@ static finishSizePrefixedCSMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CSM', true);
 }
 
-static createCSM(builder:flatbuffers.Builder, NORAD_CAT_ID_1:number, OBJECT_NAME_1Offset:flatbuffers.Offset, DSE_1:number, NORAD_CAT_ID_2:number, OBJECT_NAME_2Offset:flatbuffers.Offset, DSE_2:number, TCA:number, TCA_RANGE:number, TCA_RELATIVE_SPEED:number, MAX_PROB:number, DILUTION:number):flatbuffers.Offset {
-  CSM.startCSM(builder);
-  CSM.addNoradCatId1(builder, NORAD_CAT_ID_1);
-  CSM.addObjectName1(builder, OBJECT_NAME_1Offset);
-  CSM.addDse1(builder, DSE_1);
-  CSM.addNoradCatId2(builder, NORAD_CAT_ID_2);
-  CSM.addObjectName2(builder, OBJECT_NAME_2Offset);
-  CSM.addDse2(builder, DSE_2);
-  CSM.addTca(builder, TCA);
-  CSM.addTcaRange(builder, TCA_RANGE);
-  CSM.addTcaRelativeSpeed(builder, TCA_RELATIVE_SPEED);
-  CSM.addMaxProb(builder, MAX_PROB);
-  CSM.addDilution(builder, DILUTION);
-  return CSM.endCSM(builder);
-}
 
 unpack(): CSMT {
   return new CSMT(
-    this.NORAD_CAT_ID_1(),
-    this.OBJECT_NAME_1(),
+    (this.OBJECT_1() !== null ? this.OBJECT_1()!.unpack() : null),
     this.DSE_1(),
-    this.NORAD_CAT_ID_2(),
-    this.OBJECT_NAME_2(),
+    (this.OBJECT_2() !== null ? this.OBJECT_2()!.unpack() : null),
     this.DSE_2(),
     this.TCA(),
     this.TCA_RANGE(),
@@ -216,11 +172,9 @@ unpack(): CSMT {
 
 
 unpackTo(_o: CSMT): void {
-  _o.NORAD_CAT_ID_1 = this.NORAD_CAT_ID_1();
-  _o.OBJECT_NAME_1 = this.OBJECT_NAME_1();
+  _o.OBJECT_1 = (this.OBJECT_1() !== null ? this.OBJECT_1()!.unpack() : null);
   _o.DSE_1 = this.DSE_1();
-  _o.NORAD_CAT_ID_2 = this.NORAD_CAT_ID_2();
-  _o.OBJECT_NAME_2 = this.OBJECT_NAME_2();
+  _o.OBJECT_2 = (this.OBJECT_2() !== null ? this.OBJECT_2()!.unpack() : null);
   _o.DSE_2 = this.DSE_2();
   _o.TCA = this.TCA();
   _o.TCA_RANGE = this.TCA_RANGE();
@@ -232,11 +186,9 @@ unpackTo(_o: CSMT): void {
 
 export class CSMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public NORAD_CAT_ID_1: number = 0,
-  public OBJECT_NAME_1: string|Uint8Array|null = null,
+  public OBJECT_1: CATT|null = null,
   public DSE_1: number = 0.0,
-  public NORAD_CAT_ID_2: number = 0,
-  public OBJECT_NAME_2: string|Uint8Array|null = null,
+  public OBJECT_2: CATT|null = null,
   public DSE_2: number = 0.0,
   public TCA: number = 0.0,
   public TCA_RANGE: number = 0.0,
@@ -247,21 +199,20 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const OBJECT_NAME_1 = (this.OBJECT_NAME_1 !== null ? builder.createString(this.OBJECT_NAME_1!) : 0);
-  const OBJECT_NAME_2 = (this.OBJECT_NAME_2 !== null ? builder.createString(this.OBJECT_NAME_2!) : 0);
+  const OBJECT_1 = (this.OBJECT_1 !== null ? this.OBJECT_1!.pack(builder) : 0);
+  const OBJECT_2 = (this.OBJECT_2 !== null ? this.OBJECT_2!.pack(builder) : 0);
 
-  return CSM.createCSM(builder,
-    this.NORAD_CAT_ID_1,
-    OBJECT_NAME_1,
-    this.DSE_1,
-    this.NORAD_CAT_ID_2,
-    OBJECT_NAME_2,
-    this.DSE_2,
-    this.TCA,
-    this.TCA_RANGE,
-    this.TCA_RELATIVE_SPEED,
-    this.MAX_PROB,
-    this.DILUTION
-  );
+  CSM.startCSM(builder);
+  CSM.addObject1(builder, OBJECT_1);
+  CSM.addDse1(builder, this.DSE_1);
+  CSM.addObject2(builder, OBJECT_2);
+  CSM.addDse2(builder, this.DSE_2);
+  CSM.addTca(builder, this.TCA);
+  CSM.addTcaRange(builder, this.TCA_RANGE);
+  CSM.addTcaRelativeSpeed(builder, this.TCA_RELATIVE_SPEED);
+  CSM.addMaxProb(builder, this.MAX_PROB);
+  CSM.addDilution(builder, this.DILUTION);
+
+  return CSM.endCSM(builder);
 }
 }

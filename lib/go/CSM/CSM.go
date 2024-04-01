@@ -34,25 +34,16 @@ func (rcv *CSM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// NORAD Catalog Number for the first object
-func (rcv *CSM) NORAD_CAT_ID_1() uint32 {
+/// Satellite name for the first object
+func (rcv *CSM) OBJECT_1(obj *CAT) *CAT {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-/// NORAD Catalog Number for the first object
-func (rcv *CSM) MutateNORAD_CAT_ID_1(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(4, n)
-}
-
-/// Satellite name for the first object
-func (rcv *CSM) OBJECT_NAME_1() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CAT)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
 	return nil
 }
@@ -60,7 +51,7 @@ func (rcv *CSM) OBJECT_NAME_1() []byte {
 /// Satellite name for the first object
 /// Days since epoch for the first object
 func (rcv *CSM) DSE_1() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -69,28 +60,19 @@ func (rcv *CSM) DSE_1() float64 {
 
 /// Days since epoch for the first object
 func (rcv *CSM) MutateDSE_1(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(8, n)
-}
-
-/// NORAD Catalog Number for the second object
-func (rcv *CSM) NORAD_CAT_ID_2() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-/// NORAD Catalog Number for the second object
-func (rcv *CSM) MutateNORAD_CAT_ID_2(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(10, n)
+	return rcv._tab.MutateFloat64Slot(6, n)
 }
 
 /// Satellite name for the second object
-func (rcv *CSM) OBJECT_NAME_2() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+func (rcv *CSM) OBJECT_2(obj *CAT) *CAT {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CAT)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
 	return nil
 }
@@ -98,7 +80,7 @@ func (rcv *CSM) OBJECT_NAME_2() []byte {
 /// Satellite name for the second object
 /// Days since epoch for the second object
 func (rcv *CSM) DSE_2() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -107,12 +89,12 @@ func (rcv *CSM) DSE_2() float64 {
 
 /// Days since epoch for the second object
 func (rcv *CSM) MutateDSE_2(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(14, n)
+	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
 /// Time of closest approach as a Unix timestamp
 func (rcv *CSM) TCA() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -121,12 +103,12 @@ func (rcv *CSM) TCA() float64 {
 
 /// Time of closest approach as a Unix timestamp
 func (rcv *CSM) MutateTCA(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(16, n)
+	return rcv._tab.MutateFloat64Slot(12, n)
 }
 
 /// The distance or range between the two objects at TCA
 func (rcv *CSM) TCA_RANGE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -135,12 +117,12 @@ func (rcv *CSM) TCA_RANGE() float64 {
 
 /// The distance or range between the two objects at TCA
 func (rcv *CSM) MutateTCA_RANGE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(18, n)
+	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
 /// The magnitude of the relative velocity at TCA
 func (rcv *CSM) TCA_RELATIVE_SPEED() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -149,12 +131,12 @@ func (rcv *CSM) TCA_RELATIVE_SPEED() float64 {
 
 /// The magnitude of the relative velocity at TCA
 func (rcv *CSM) MutateTCA_RELATIVE_SPEED(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(20, n)
+	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
 /// Maximum probability
 func (rcv *CSM) MAX_PROB() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -163,12 +145,12 @@ func (rcv *CSM) MAX_PROB() float64 {
 
 /// Maximum probability
 func (rcv *CSM) MutateMAX_PROB(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(22, n)
+	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
 /// Standard deviation that produces the maximum probability
 func (rcv *CSM) DILUTION() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -177,44 +159,38 @@ func (rcv *CSM) DILUTION() float64 {
 
 /// Standard deviation that produces the maximum probability
 func (rcv *CSM) MutateDILUTION(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
+	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
 func CSMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(9)
 }
-func CSMAddNORAD_CAT_ID_1(builder *flatbuffers.Builder, NORAD_CAT_ID_1 uint32) {
-	builder.PrependUint32Slot(0, NORAD_CAT_ID_1, 0)
-}
-func CSMAddOBJECT_NAME_1(builder *flatbuffers.Builder, OBJECT_NAME_1 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT_NAME_1), 0)
+func CSMAddOBJECT_1(builder *flatbuffers.Builder, OBJECT_1 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_1), 0)
 }
 func CSMAddDSE_1(builder *flatbuffers.Builder, DSE_1 float64) {
-	builder.PrependFloat64Slot(2, DSE_1, 0.0)
+	builder.PrependFloat64Slot(1, DSE_1, 0.0)
 }
-func CSMAddNORAD_CAT_ID_2(builder *flatbuffers.Builder, NORAD_CAT_ID_2 uint32) {
-	builder.PrependUint32Slot(3, NORAD_CAT_ID_2, 0)
-}
-func CSMAddOBJECT_NAME_2(builder *flatbuffers.Builder, OBJECT_NAME_2 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_NAME_2), 0)
+func CSMAddOBJECT_2(builder *flatbuffers.Builder, OBJECT_2 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_2), 0)
 }
 func CSMAddDSE_2(builder *flatbuffers.Builder, DSE_2 float64) {
-	builder.PrependFloat64Slot(5, DSE_2, 0.0)
+	builder.PrependFloat64Slot(3, DSE_2, 0.0)
 }
 func CSMAddTCA(builder *flatbuffers.Builder, TCA float64) {
-	builder.PrependFloat64Slot(6, TCA, 0.0)
+	builder.PrependFloat64Slot(4, TCA, 0.0)
 }
 func CSMAddTCA_RANGE(builder *flatbuffers.Builder, TCA_RANGE float64) {
-	builder.PrependFloat64Slot(7, TCA_RANGE, 0.0)
+	builder.PrependFloat64Slot(5, TCA_RANGE, 0.0)
 }
 func CSMAddTCA_RELATIVE_SPEED(builder *flatbuffers.Builder, TCA_RELATIVE_SPEED float64) {
-	builder.PrependFloat64Slot(8, TCA_RELATIVE_SPEED, 0.0)
+	builder.PrependFloat64Slot(6, TCA_RELATIVE_SPEED, 0.0)
 }
 func CSMAddMAX_PROB(builder *flatbuffers.Builder, MAX_PROB float64) {
-	builder.PrependFloat64Slot(9, MAX_PROB, 0.0)
+	builder.PrependFloat64Slot(7, MAX_PROB, 0.0)
 }
 func CSMAddDILUTION(builder *flatbuffers.Builder, DILUTION float64) {
-	builder.PrependFloat64Slot(10, DILUTION, 0.0)
+	builder.PrependFloat64Slot(8, DILUTION, 0.0)
 }
 func CSMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

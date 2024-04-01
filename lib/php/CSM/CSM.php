@@ -41,21 +41,12 @@ class CSM extends Table
         return $this;
     }
 
-    /// NORAD Catalog Number for the first object
-    /**
-     * @return uint
-     */
-    public function getNORAD_CAT_ID_1()
-    {
-        $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
-    }
-
     /// Satellite name for the first object
-    public function getOBJECT_NAME_1()
+    public function getOBJECT_1()
     {
-        $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        $obj = new CAT();
+        $o = $this->__offset(4);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Days since epoch for the first object
@@ -64,25 +55,16 @@ class CSM extends Table
      */
     public function getDSE_1()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// NORAD Catalog Number for the second object
-    /**
-     * @return uint
-     */
-    public function getNORAD_CAT_ID_2()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
-    }
-
     /// Satellite name for the second object
-    public function getOBJECT_NAME_2()
+    public function getOBJECT_2()
     {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        $obj = new CAT();
+        $o = $this->__offset(8);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Days since epoch for the second object
@@ -91,7 +73,7 @@ class CSM extends Table
      */
     public function getDSE_2()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -101,7 +83,7 @@ class CSM extends Table
      */
     public function getTCA()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -111,7 +93,7 @@ class CSM extends Table
      */
     public function getTCA_RANGE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -121,7 +103,7 @@ class CSM extends Table
      */
     public function getTCA_RELATIVE_SPEED()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -131,7 +113,7 @@ class CSM extends Table
      */
     public function getMAX_PROB()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -141,7 +123,7 @@ class CSM extends Table
      */
     public function getDILUTION()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -151,21 +133,19 @@ class CSM extends Table
      */
     public static function startCSM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CSM
      */
-    public static function createCSM(FlatBufferBuilder $builder, $NORAD_CAT_ID_1, $OBJECT_NAME_1, $DSE_1, $NORAD_CAT_ID_2, $OBJECT_NAME_2, $DSE_2, $TCA, $TCA_RANGE, $TCA_RELATIVE_SPEED, $MAX_PROB, $DILUTION)
+    public static function createCSM(FlatBufferBuilder $builder, $OBJECT_1, $DSE_1, $OBJECT_2, $DSE_2, $TCA, $TCA_RANGE, $TCA_RELATIVE_SPEED, $MAX_PROB, $DILUTION)
     {
-        $builder->startObject(11);
-        self::addNORAD_CAT_ID_1($builder, $NORAD_CAT_ID_1);
-        self::addOBJECT_NAME_1($builder, $OBJECT_NAME_1);
+        $builder->startObject(9);
+        self::addOBJECT_1($builder, $OBJECT_1);
         self::addDSE_1($builder, $DSE_1);
-        self::addNORAD_CAT_ID_2($builder, $NORAD_CAT_ID_2);
-        self::addOBJECT_NAME_2($builder, $OBJECT_NAME_2);
+        self::addOBJECT_2($builder, $OBJECT_2);
         self::addDSE_2($builder, $DSE_2);
         self::addTCA($builder, $TCA);
         self::addTCA_RANGE($builder, $TCA_RANGE);
@@ -178,22 +158,12 @@ class CSM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param uint
+     * @param int
      * @return void
      */
-    public static function addNORAD_CAT_ID_1(FlatBufferBuilder $builder, $NORAD_CAT_ID_1)
+    public static function addOBJECT_1(FlatBufferBuilder $builder, $OBJECT_1)
     {
-        $builder->addUintX(0, $NORAD_CAT_ID_1, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOBJECT_NAME_1(FlatBufferBuilder $builder, $OBJECT_NAME_1)
-    {
-        $builder->addOffsetX(1, $OBJECT_NAME_1, 0);
+        $builder->addOffsetX(0, $OBJECT_1, 0);
     }
 
     /**
@@ -203,27 +173,17 @@ class CSM extends Table
      */
     public static function addDSE_1(FlatBufferBuilder $builder, $DSE_1)
     {
-        $builder->addDoubleX(2, $DSE_1, 0.0);
+        $builder->addDoubleX(1, $DSE_1, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param uint
+     * @param int
      * @return void
      */
-    public static function addNORAD_CAT_ID_2(FlatBufferBuilder $builder, $NORAD_CAT_ID_2)
+    public static function addOBJECT_2(FlatBufferBuilder $builder, $OBJECT_2)
     {
-        $builder->addUintX(3, $NORAD_CAT_ID_2, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOBJECT_NAME_2(FlatBufferBuilder $builder, $OBJECT_NAME_2)
-    {
-        $builder->addOffsetX(4, $OBJECT_NAME_2, 0);
+        $builder->addOffsetX(2, $OBJECT_2, 0);
     }
 
     /**
@@ -233,7 +193,7 @@ class CSM extends Table
      */
     public static function addDSE_2(FlatBufferBuilder $builder, $DSE_2)
     {
-        $builder->addDoubleX(5, $DSE_2, 0.0);
+        $builder->addDoubleX(3, $DSE_2, 0.0);
     }
 
     /**
@@ -243,7 +203,7 @@ class CSM extends Table
      */
     public static function addTCA(FlatBufferBuilder $builder, $TCA)
     {
-        $builder->addDoubleX(6, $TCA, 0.0);
+        $builder->addDoubleX(4, $TCA, 0.0);
     }
 
     /**
@@ -253,7 +213,7 @@ class CSM extends Table
      */
     public static function addTCA_RANGE(FlatBufferBuilder $builder, $TCA_RANGE)
     {
-        $builder->addDoubleX(7, $TCA_RANGE, 0.0);
+        $builder->addDoubleX(5, $TCA_RANGE, 0.0);
     }
 
     /**
@@ -263,7 +223,7 @@ class CSM extends Table
      */
     public static function addTCA_RELATIVE_SPEED(FlatBufferBuilder $builder, $TCA_RELATIVE_SPEED)
     {
-        $builder->addDoubleX(8, $TCA_RELATIVE_SPEED, 0.0);
+        $builder->addDoubleX(6, $TCA_RELATIVE_SPEED, 0.0);
     }
 
     /**
@@ -273,7 +233,7 @@ class CSM extends Table
      */
     public static function addMAX_PROB(FlatBufferBuilder $builder, $MAX_PROB)
     {
-        $builder->addDoubleX(9, $MAX_PROB, 0.0);
+        $builder->addDoubleX(7, $MAX_PROB, 0.0);
     }
 
     /**
@@ -283,7 +243,7 @@ class CSM extends Table
      */
     public static function addDILUTION(FlatBufferBuilder $builder, $DILUTION)
     {
-        $builder->addDoubleX(10, $DILUTION, 0.0);
+        $builder->addDoubleX(8, $DILUTION, 0.0);
     }
 
     /**

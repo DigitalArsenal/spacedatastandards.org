@@ -30,67 +30,55 @@ public final class CSM extends Table {
   public CSM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * NORAD Catalog Number for the first object
-   */
-  public long NORAD_CAT_ID_1() { int o = __offset(4); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  /**
    * Satellite name for the first object
    */
-  public String OBJECT_NAME_1() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_NAME_1AsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer OBJECT_NAME_1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public CAT OBJECT_1() { return OBJECT_1(new CAT()); }
+  public CAT OBJECT_1(CAT obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Days since epoch for the first object
    */
-  public double DSE_1() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * NORAD Catalog Number for the second object
-   */
-  public long NORAD_CAT_ID_2() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public double DSE_1() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Satellite name for the second object
    */
-  public String OBJECT_NAME_2() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_NAME_2AsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer OBJECT_NAME_2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  public CAT OBJECT_2() { return OBJECT_2(new CAT()); }
+  public CAT OBJECT_2(CAT obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Days since epoch for the second object
    */
-  public double DSE_2() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double DSE_2() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Time of closest approach as a Unix timestamp
    */
-  public double TCA() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TCA() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * The distance or range between the two objects at TCA
    */
-  public double TCA_RANGE() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TCA_RANGE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * The magnitude of the relative velocity at TCA
    */
-  public double TCA_RELATIVE_SPEED() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TCA_RELATIVE_SPEED() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Maximum probability
    */
-  public double MAX_PROB() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MAX_PROB() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Standard deviation that produces the maximum probability
    */
-  public double DILUTION() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double DILUTION() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCSM(FlatBufferBuilder builder,
-      long NORAD_CAT_ID_1,
-      int OBJECT_NAME_1Offset,
+      int OBJECT_1Offset,
       double DSE_1,
-      long NORAD_CAT_ID_2,
-      int OBJECT_NAME_2Offset,
+      int OBJECT_2Offset,
       double DSE_2,
       double TCA,
       double TCA_RANGE,
       double TCA_RELATIVE_SPEED,
       double MAX_PROB,
       double DILUTION) {
-    builder.startTable(11);
+    builder.startTable(9);
     CSM.addDilution(builder, DILUTION);
     CSM.addMaxProb(builder, MAX_PROB);
     CSM.addTcaRelativeSpeed(builder, TCA_RELATIVE_SPEED);
@@ -98,25 +86,21 @@ public final class CSM extends Table {
     CSM.addTca(builder, TCA);
     CSM.addDse2(builder, DSE_2);
     CSM.addDse1(builder, DSE_1);
-    CSM.addObjectName2(builder, OBJECT_NAME_2Offset);
-    CSM.addNoradCatId2(builder, NORAD_CAT_ID_2);
-    CSM.addObjectName1(builder, OBJECT_NAME_1Offset);
-    CSM.addNoradCatId1(builder, NORAD_CAT_ID_1);
+    CSM.addObject2(builder, OBJECT_2Offset);
+    CSM.addObject1(builder, OBJECT_1Offset);
     return CSM.endCSM(builder);
   }
 
-  public static void startCSM(FlatBufferBuilder builder) { builder.startTable(11); }
-  public static void addNoradCatId1(FlatBufferBuilder builder, long NORAD_CAT_ID_1) { builder.addInt(0, (int) NORAD_CAT_ID_1, (int) 0L); }
-  public static void addObjectName1(FlatBufferBuilder builder, int OBJECT_NAME_1Offset) { builder.addOffset(1, OBJECT_NAME_1Offset, 0); }
-  public static void addDse1(FlatBufferBuilder builder, double DSE_1) { builder.addDouble(2, DSE_1, 0.0); }
-  public static void addNoradCatId2(FlatBufferBuilder builder, long NORAD_CAT_ID_2) { builder.addInt(3, (int) NORAD_CAT_ID_2, (int) 0L); }
-  public static void addObjectName2(FlatBufferBuilder builder, int OBJECT_NAME_2Offset) { builder.addOffset(4, OBJECT_NAME_2Offset, 0); }
-  public static void addDse2(FlatBufferBuilder builder, double DSE_2) { builder.addDouble(5, DSE_2, 0.0); }
-  public static void addTca(FlatBufferBuilder builder, double TCA) { builder.addDouble(6, TCA, 0.0); }
-  public static void addTcaRange(FlatBufferBuilder builder, double TCA_RANGE) { builder.addDouble(7, TCA_RANGE, 0.0); }
-  public static void addTcaRelativeSpeed(FlatBufferBuilder builder, double TCA_RELATIVE_SPEED) { builder.addDouble(8, TCA_RELATIVE_SPEED, 0.0); }
-  public static void addMaxProb(FlatBufferBuilder builder, double MAX_PROB) { builder.addDouble(9, MAX_PROB, 0.0); }
-  public static void addDilution(FlatBufferBuilder builder, double DILUTION) { builder.addDouble(10, DILUTION, 0.0); }
+  public static void startCSM(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void addObject1(FlatBufferBuilder builder, int OBJECT_1Offset) { builder.addOffset(0, OBJECT_1Offset, 0); }
+  public static void addDse1(FlatBufferBuilder builder, double DSE_1) { builder.addDouble(1, DSE_1, 0.0); }
+  public static void addObject2(FlatBufferBuilder builder, int OBJECT_2Offset) { builder.addOffset(2, OBJECT_2Offset, 0); }
+  public static void addDse2(FlatBufferBuilder builder, double DSE_2) { builder.addDouble(3, DSE_2, 0.0); }
+  public static void addTca(FlatBufferBuilder builder, double TCA) { builder.addDouble(4, TCA, 0.0); }
+  public static void addTcaRange(FlatBufferBuilder builder, double TCA_RANGE) { builder.addDouble(5, TCA_RANGE, 0.0); }
+  public static void addTcaRelativeSpeed(FlatBufferBuilder builder, double TCA_RELATIVE_SPEED) { builder.addDouble(6, TCA_RELATIVE_SPEED, 0.0); }
+  public static void addMaxProb(FlatBufferBuilder builder, double MAX_PROB) { builder.addDouble(7, MAX_PROB, 0.0); }
+  public static void addDilution(FlatBufferBuilder builder, double DILUTION) { builder.addDouble(8, DILUTION, 0.0); }
   public static int endCSM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -1,3 +1,5 @@
+include "../RFM/main.fbs";
+
 // Space Data Standard - 5 - Orbit Ephemeris Message (OEM)
 // Description
 // Orbit information may be exchanged between two participants by sending an
@@ -6,31 +8,6 @@
 // message recipient must have a means of interpolating across these state vectors to obtain the
 // state at an arbitrary time contained within the span of the ephemeris.
 // CCSDS Reference documentation: 502x0b2c1e2.
-
-enum referenceFrame : byte {
-  /// Earth Mean Equator and Equinox of J2000
-  EME2000,
-  /// Geocentric Celestial Reference Frame
-  GCRF,
-  /// Greenwich Rotating Coordinates
-  GRC,
-  /// International Celestial Reference Frame
-  ICRF,
-  /// International Terrestrial Reference Frame 2000
-  ITRF2000,
-  /// International Terrestrial Reference Frame 1993
-  ITRF93,
-  /// International Terrestrial Reference Frame 1997
-  ITRF97,
-  /// Mars Centered Inertial
-  MCI,
-  /// True of Date, Rotating
-  TDR,
-  /// True Equator Mean Equinox
-  TEME,
-  /// True of Date
-  TOD
-}
 
 enum timeSystem : byte {
   /// Greenwich Mean Sidereal Time

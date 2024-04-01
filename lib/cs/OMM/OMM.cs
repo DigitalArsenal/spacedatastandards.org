@@ -342,7 +342,7 @@ public struct OMM : IFlatbufferObject
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(4, OBJECT_IDOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(5, CENTER_NAMEOffset.Value, 0); }
-  public static void AddREF_FRAME(FlatBufferBuilder builder, referenceFrame REF_FRAME) { builder.AddSbyte(6, (sbyte)REF_FRAME, 9); }
+  public static void AddREF_FRAME(FlatBufferBuilder builder, referenceFrame REF_FRAME) { builder.AddSbyte(6, (sbyte)REF_FRAME, 2); }
   public static void AddREF_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REF_FRAME_EPOCHOffset) { builder.AddOffset(7, REF_FRAME_EPOCHOffset.Value, 0); }
   public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(8, (sbyte)TIME_SYSTEM, 11); }
   public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementTheory MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }

@@ -4,191 +4,17 @@
 // @generated
 
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_REFERENCE_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REFERENCE_FRAME: i8 = 2;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REFERENCE_FRAME: [referenceFrame; 3] = [
-  referenceFrame::EME2000,
-  referenceFrame::GCRF,
-  referenceFrame::ITRF,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct referenceFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl referenceFrame {
-  /// Earth Mean Equator and Equinox of J2000
-  pub const EME2000: Self = Self(0);
-  /// Geocentric Celestial Reference Frame
-  pub const GCRF: Self = Self(1);
-  /// International Terrestrial Reference Frame
-  pub const ITRF: Self = Self(2);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::EME2000,
-    Self::GCRF,
-    Self::ITRF,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::EME2000 => Some("EME2000"),
-      Self::GCRF => Some("GCRF"),
-      Self::ITRF => Some("ITRF"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for referenceFrame {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for referenceFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for referenceFrame {
-    type Output = referenceFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for referenceFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for referenceFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for referenceFrame {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_OBJECT_CENTERED_REFERENCE_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_OBJECT_CENTERED_REFERENCE_FRAME: i8 = 1;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_OBJECT_CENTERED_REFERENCE_FRAME: [objectCenteredReferenceFrame; 2] = [
-  objectCenteredReferenceFrame::RTN,
-  objectCenteredReferenceFrame::TVN,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct objectCenteredReferenceFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl objectCenteredReferenceFrame {
-  /// Radial, Transverse, Normal
-  pub const RTN: Self = Self(0);
-  /// Transverse, Velocity, Normal
-  pub const TVN: Self = Self(1);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 1;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::RTN,
-    Self::TVN,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::RTN => Some("RTN"),
-      Self::TVN => Some("TVN"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for objectCenteredReferenceFrame {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for objectCenteredReferenceFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for objectCenteredReferenceFrame {
-    type Output = objectCenteredReferenceFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for objectCenteredReferenceFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for objectCenteredReferenceFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for objectCenteredReferenceFrame {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCREENING_VOLUME_SHAPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -275,188 +101,6 @@ impl<'a> flatbuffers::Verifiable for screeningVolumeShape {
 
 impl flatbuffers::SimpleToVerifyInSlice for screeningVolumeShape {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_OBJECT_NUMBER: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_OBJECT_NUMBER: i8 = 1;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_OBJECT_NUMBER: [objectNumber; 2] = [
-  objectNumber::OBJECT1,
-  objectNumber::OBJECT2,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct objectNumber(pub i8);
-#[allow(non_upper_case_globals)]
-impl objectNumber {
-  pub const OBJECT1: Self = Self(0);
-  pub const OBJECT2: Self = Self(1);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 1;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::OBJECT1,
-    Self::OBJECT2,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::OBJECT1 => Some("OBJECT1"),
-      Self::OBJECT2 => Some("OBJECT2"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for objectNumber {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for objectNumber {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for objectNumber {
-    type Output = objectNumber;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for objectNumber {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for objectNumber {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for objectNumber {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_OBJECT_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_OBJECT_TYPE: i8 = 4;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_OBJECT_TYPE: [objectType; 5] = [
-  objectType::PAYLOAD,
-  objectType::ROCKET_BODY,
-  objectType::DEBRIS,
-  objectType::UNKNOWN,
-  objectType::OTHER,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct objectType(pub i8);
-#[allow(non_upper_case_globals)]
-impl objectType {
-  pub const PAYLOAD: Self = Self(0);
-  pub const ROCKET_BODY: Self = Self(1);
-  pub const DEBRIS: Self = Self(2);
-  pub const UNKNOWN: Self = Self(3);
-  pub const OTHER: Self = Self(4);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 4;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::PAYLOAD,
-    Self::ROCKET_BODY,
-    Self::DEBRIS,
-    Self::UNKNOWN,
-    Self::OTHER,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::PAYLOAD => Some("PAYLOAD"),
-      Self::ROCKET_BODY => Some("ROCKET_BODY"),
-      Self::DEBRIS => Some("DEBRIS"),
-      Self::UNKNOWN => Some("UNKNOWN"),
-      Self::OTHER => Some("OTHER"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for objectType {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for objectType {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for objectType {
-    type Output = objectType;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for objectType {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for objectType {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for objectType {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_COVARIANCE_METHOD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MAX_COVARIANCE_METHOD: i8 = 1;
@@ -541,95 +185,6 @@ impl<'a> flatbuffers::Verifiable for covarianceMethod {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for covarianceMethod {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MANEUVERABLE_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MANEUVERABLE_TYPE: i8 = 2;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MANEUVERABLE_TYPE: [maneuverableType; 3] = [
-  maneuverableType::YES,
-  maneuverableType::NO,
-  maneuverableType::NA,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct maneuverableType(pub i8);
-#[allow(non_upper_case_globals)]
-impl maneuverableType {
-  pub const YES: Self = Self(0);
-  pub const NO: Self = Self(1);
-  pub const NA: Self = Self(2);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::YES,
-    Self::NO,
-    Self::NA,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::YES => Some("YES"),
-      Self::NO => Some("NO"),
-      Self::NA => Some("NA"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for maneuverableType {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for maneuverableType {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for maneuverableType {
-    type Output = maneuverableType;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for maneuverableType {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for maneuverableType {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for maneuverableType {}
 pub enum CDMObjectOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -648,92 +203,85 @@ impl<'a> flatbuffers::Follow<'a> for CDMObject<'a> {
 impl<'a> CDMObject<'a> {
   pub const VT_COMMENT: flatbuffers::VOffsetT = 4;
   pub const VT_OBJECT: flatbuffers::VOffsetT = 6;
-  pub const VT_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 8;
-  pub const VT_CATALOG_NAME: flatbuffers::VOffsetT = 10;
-  pub const VT_OBJECT_NAME: flatbuffers::VOffsetT = 12;
-  pub const VT_INTERNATIONAL_DESIGNATOR: flatbuffers::VOffsetT = 14;
-  pub const VT_OBJECT_TYPE: flatbuffers::VOffsetT = 16;
-  pub const VT_OPERATOR_CONTACT_POSITION: flatbuffers::VOffsetT = 18;
-  pub const VT_OPERATOR_ORGANIZATION: flatbuffers::VOffsetT = 20;
-  pub const VT_EPHEMERIS_NAME: flatbuffers::VOffsetT = 22;
-  pub const VT_COVARIANCE_METHOD: flatbuffers::VOffsetT = 24;
-  pub const VT_MANEUVERABLE: flatbuffers::VOffsetT = 26;
-  pub const VT_ORBIT_CENTER: flatbuffers::VOffsetT = 28;
-  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 30;
-  pub const VT_GRAVITY_MODEL: flatbuffers::VOffsetT = 32;
-  pub const VT_ATMOSPHERIC_MODEL: flatbuffers::VOffsetT = 34;
-  pub const VT_N_BODY_PERTURBATIONS: flatbuffers::VOffsetT = 36;
-  pub const VT_SOLAR_RAD_PRESSURE: flatbuffers::VOffsetT = 38;
-  pub const VT_EARTH_TIDES: flatbuffers::VOffsetT = 40;
-  pub const VT_INTRACK_THRUST: flatbuffers::VOffsetT = 42;
-  pub const VT_TIME_LASTOB_START: flatbuffers::VOffsetT = 44;
-  pub const VT_TIME_LASTOB_END: flatbuffers::VOffsetT = 46;
-  pub const VT_RECOMMENDED_OD_SPAN: flatbuffers::VOffsetT = 48;
-  pub const VT_ACTUAL_OD_SPAN: flatbuffers::VOffsetT = 50;
-  pub const VT_OBS_AVAILABLE: flatbuffers::VOffsetT = 52;
-  pub const VT_OBS_USED: flatbuffers::VOffsetT = 54;
-  pub const VT_TRACKS_AVAILABLE: flatbuffers::VOffsetT = 56;
-  pub const VT_TRACKS_USED: flatbuffers::VOffsetT = 58;
-  pub const VT_RESIDUALS_ACCEPTED: flatbuffers::VOffsetT = 60;
-  pub const VT_WEIGHTED_RMS: flatbuffers::VOffsetT = 62;
-  pub const VT_AREA_PC: flatbuffers::VOffsetT = 64;
-  pub const VT_AREA_DRG: flatbuffers::VOffsetT = 66;
-  pub const VT_AREA_SRP: flatbuffers::VOffsetT = 68;
-  pub const VT_MASS: flatbuffers::VOffsetT = 70;
-  pub const VT_CR_AREA_OVER_MASS: flatbuffers::VOffsetT = 72;
-  pub const VT_THRUST_ACCELERATION: flatbuffers::VOffsetT = 74;
-  pub const VT_SEDR: flatbuffers::VOffsetT = 76;
-  pub const VT_X: flatbuffers::VOffsetT = 78;
-  pub const VT_Y: flatbuffers::VOffsetT = 80;
-  pub const VT_Z: flatbuffers::VOffsetT = 82;
-  pub const VT_X_DOT: flatbuffers::VOffsetT = 84;
-  pub const VT_Y_DOT: flatbuffers::VOffsetT = 86;
-  pub const VT_Z_DOT: flatbuffers::VOffsetT = 88;
-  pub const VT_CR_R: flatbuffers::VOffsetT = 90;
-  pub const VT_CT_R: flatbuffers::VOffsetT = 92;
-  pub const VT_CT_T: flatbuffers::VOffsetT = 94;
-  pub const VT_CN_R: flatbuffers::VOffsetT = 96;
-  pub const VT_CN_T: flatbuffers::VOffsetT = 98;
-  pub const VT_CN_N: flatbuffers::VOffsetT = 100;
-  pub const VT_CRDOT_R: flatbuffers::VOffsetT = 102;
-  pub const VT_CRDOT_T: flatbuffers::VOffsetT = 104;
-  pub const VT_CRDOT_N: flatbuffers::VOffsetT = 106;
-  pub const VT_CRDOT_RDOT: flatbuffers::VOffsetT = 108;
-  pub const VT_CTDOT_R: flatbuffers::VOffsetT = 110;
-  pub const VT_CTDOT_T: flatbuffers::VOffsetT = 112;
-  pub const VT_CTDOT_N: flatbuffers::VOffsetT = 114;
-  pub const VT_CTDOT_RDOT: flatbuffers::VOffsetT = 116;
-  pub const VT_CTDOT_TDOT: flatbuffers::VOffsetT = 118;
-  pub const VT_CNDOT_R: flatbuffers::VOffsetT = 120;
-  pub const VT_CNDOT_T: flatbuffers::VOffsetT = 122;
-  pub const VT_CNDOT_N: flatbuffers::VOffsetT = 124;
-  pub const VT_CNDOT_RDOT: flatbuffers::VOffsetT = 126;
-  pub const VT_CNDOT_TDOT: flatbuffers::VOffsetT = 128;
-  pub const VT_CNDOT_NDOT: flatbuffers::VOffsetT = 130;
-  pub const VT_CDRG_R: flatbuffers::VOffsetT = 132;
-  pub const VT_CDRG_T: flatbuffers::VOffsetT = 134;
-  pub const VT_CDRG_N: flatbuffers::VOffsetT = 136;
-  pub const VT_CDRG_RDOT: flatbuffers::VOffsetT = 138;
-  pub const VT_CDRG_TDOT: flatbuffers::VOffsetT = 140;
-  pub const VT_CDRG_NDOT: flatbuffers::VOffsetT = 142;
-  pub const VT_CDRG_DRG: flatbuffers::VOffsetT = 144;
-  pub const VT_CSRP_R: flatbuffers::VOffsetT = 146;
-  pub const VT_CSRP_T: flatbuffers::VOffsetT = 148;
-  pub const VT_CSRP_N: flatbuffers::VOffsetT = 150;
-  pub const VT_CSRP_RDOT: flatbuffers::VOffsetT = 152;
-  pub const VT_CSRP_TDOT: flatbuffers::VOffsetT = 154;
-  pub const VT_CSRP_NDOT: flatbuffers::VOffsetT = 156;
-  pub const VT_CSRP_DRG: flatbuffers::VOffsetT = 158;
-  pub const VT_CSRP_SRP: flatbuffers::VOffsetT = 160;
-  pub const VT_CTHR_R: flatbuffers::VOffsetT = 162;
-  pub const VT_CTHR_T: flatbuffers::VOffsetT = 164;
-  pub const VT_CTHR_N: flatbuffers::VOffsetT = 166;
-  pub const VT_CTHR_RDOT: flatbuffers::VOffsetT = 168;
-  pub const VT_CTHR_TDOT: flatbuffers::VOffsetT = 170;
-  pub const VT_CTHR_NDOT: flatbuffers::VOffsetT = 172;
-  pub const VT_CTHR_DRG: flatbuffers::VOffsetT = 174;
-  pub const VT_CTHR_SRP: flatbuffers::VOffsetT = 176;
-  pub const VT_CTHR_THR: flatbuffers::VOffsetT = 178;
+  pub const VT_POC: flatbuffers::VOffsetT = 8;
+  pub const VT_OPERATOR_CONTACT_POSITION: flatbuffers::VOffsetT = 10;
+  pub const VT_OPERATOR_ORGANIZATION: flatbuffers::VOffsetT = 12;
+  pub const VT_EPHEMERIS_NAME: flatbuffers::VOffsetT = 14;
+  pub const VT_COVARIANCE_METHOD: flatbuffers::VOffsetT = 16;
+  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 18;
+  pub const VT_GRAVITY_MODEL: flatbuffers::VOffsetT = 20;
+  pub const VT_ATMOSPHERIC_MODEL: flatbuffers::VOffsetT = 22;
+  pub const VT_N_BODY_PERTURBATIONS: flatbuffers::VOffsetT = 24;
+  pub const VT_SOLAR_RAD_PRESSURE: flatbuffers::VOffsetT = 26;
+  pub const VT_EARTH_TIDES: flatbuffers::VOffsetT = 28;
+  pub const VT_INTRACK_THRUST: flatbuffers::VOffsetT = 30;
+  pub const VT_TIME_LASTOB_START: flatbuffers::VOffsetT = 32;
+  pub const VT_TIME_LASTOB_END: flatbuffers::VOffsetT = 34;
+  pub const VT_RECOMMENDED_OD_SPAN: flatbuffers::VOffsetT = 36;
+  pub const VT_ACTUAL_OD_SPAN: flatbuffers::VOffsetT = 38;
+  pub const VT_OBS_AVAILABLE: flatbuffers::VOffsetT = 40;
+  pub const VT_OBS_USED: flatbuffers::VOffsetT = 42;
+  pub const VT_TRACKS_AVAILABLE: flatbuffers::VOffsetT = 44;
+  pub const VT_TRACKS_USED: flatbuffers::VOffsetT = 46;
+  pub const VT_RESIDUALS_ACCEPTED: flatbuffers::VOffsetT = 48;
+  pub const VT_WEIGHTED_RMS: flatbuffers::VOffsetT = 50;
+  pub const VT_AREA_PC: flatbuffers::VOffsetT = 52;
+  pub const VT_AREA_DRG: flatbuffers::VOffsetT = 54;
+  pub const VT_AREA_SRP: flatbuffers::VOffsetT = 56;
+  pub const VT_CR_AREA_OVER_MASS: flatbuffers::VOffsetT = 58;
+  pub const VT_THRUST_ACCELERATION: flatbuffers::VOffsetT = 60;
+  pub const VT_SEDR: flatbuffers::VOffsetT = 62;
+  pub const VT_X: flatbuffers::VOffsetT = 64;
+  pub const VT_Y: flatbuffers::VOffsetT = 66;
+  pub const VT_Z: flatbuffers::VOffsetT = 68;
+  pub const VT_X_DOT: flatbuffers::VOffsetT = 70;
+  pub const VT_Y_DOT: flatbuffers::VOffsetT = 72;
+  pub const VT_Z_DOT: flatbuffers::VOffsetT = 74;
+  pub const VT_CR_R: flatbuffers::VOffsetT = 76;
+  pub const VT_CT_R: flatbuffers::VOffsetT = 78;
+  pub const VT_CT_T: flatbuffers::VOffsetT = 80;
+  pub const VT_CN_R: flatbuffers::VOffsetT = 82;
+  pub const VT_CN_T: flatbuffers::VOffsetT = 84;
+  pub const VT_CN_N: flatbuffers::VOffsetT = 86;
+  pub const VT_CRDOT_R: flatbuffers::VOffsetT = 88;
+  pub const VT_CRDOT_T: flatbuffers::VOffsetT = 90;
+  pub const VT_CRDOT_N: flatbuffers::VOffsetT = 92;
+  pub const VT_CRDOT_RDOT: flatbuffers::VOffsetT = 94;
+  pub const VT_CTDOT_R: flatbuffers::VOffsetT = 96;
+  pub const VT_CTDOT_T: flatbuffers::VOffsetT = 98;
+  pub const VT_CTDOT_N: flatbuffers::VOffsetT = 100;
+  pub const VT_CTDOT_RDOT: flatbuffers::VOffsetT = 102;
+  pub const VT_CTDOT_TDOT: flatbuffers::VOffsetT = 104;
+  pub const VT_CNDOT_R: flatbuffers::VOffsetT = 106;
+  pub const VT_CNDOT_T: flatbuffers::VOffsetT = 108;
+  pub const VT_CNDOT_N: flatbuffers::VOffsetT = 110;
+  pub const VT_CNDOT_RDOT: flatbuffers::VOffsetT = 112;
+  pub const VT_CNDOT_TDOT: flatbuffers::VOffsetT = 114;
+  pub const VT_CNDOT_NDOT: flatbuffers::VOffsetT = 116;
+  pub const VT_CDRG_R: flatbuffers::VOffsetT = 118;
+  pub const VT_CDRG_T: flatbuffers::VOffsetT = 120;
+  pub const VT_CDRG_N: flatbuffers::VOffsetT = 122;
+  pub const VT_CDRG_RDOT: flatbuffers::VOffsetT = 124;
+  pub const VT_CDRG_TDOT: flatbuffers::VOffsetT = 126;
+  pub const VT_CDRG_NDOT: flatbuffers::VOffsetT = 128;
+  pub const VT_CDRG_DRG: flatbuffers::VOffsetT = 130;
+  pub const VT_CSRP_R: flatbuffers::VOffsetT = 132;
+  pub const VT_CSRP_T: flatbuffers::VOffsetT = 134;
+  pub const VT_CSRP_N: flatbuffers::VOffsetT = 136;
+  pub const VT_CSRP_RDOT: flatbuffers::VOffsetT = 138;
+  pub const VT_CSRP_TDOT: flatbuffers::VOffsetT = 140;
+  pub const VT_CSRP_NDOT: flatbuffers::VOffsetT = 142;
+  pub const VT_CSRP_DRG: flatbuffers::VOffsetT = 144;
+  pub const VT_CSRP_SRP: flatbuffers::VOffsetT = 146;
+  pub const VT_CTHR_R: flatbuffers::VOffsetT = 148;
+  pub const VT_CTHR_T: flatbuffers::VOffsetT = 150;
+  pub const VT_CTHR_N: flatbuffers::VOffsetT = 152;
+  pub const VT_CTHR_RDOT: flatbuffers::VOffsetT = 154;
+  pub const VT_CTHR_TDOT: flatbuffers::VOffsetT = 156;
+  pub const VT_CTHR_NDOT: flatbuffers::VOffsetT = 158;
+  pub const VT_CTHR_DRG: flatbuffers::VOffsetT = 160;
+  pub const VT_CTHR_SRP: flatbuffers::VOffsetT = 162;
+  pub const VT_CTHR_THR: flatbuffers::VOffsetT = 164;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -799,7 +347,6 @@ impl<'a> CDMObject<'a> {
     builder.add_SEDR(args.SEDR);
     builder.add_THRUST_ACCELERATION(args.THRUST_ACCELERATION);
     builder.add_CR_AREA_OVER_MASS(args.CR_AREA_OVER_MASS);
-    builder.add_MASS(args.MASS);
     builder.add_AREA_SRP(args.AREA_SRP);
     builder.add_AREA_DRG(args.AREA_DRG);
     builder.add_AREA_PC(args.AREA_PC);
@@ -816,23 +363,17 @@ impl<'a> CDMObject<'a> {
     if let Some(x) = args.N_BODY_PERTURBATIONS { builder.add_N_BODY_PERTURBATIONS(x); }
     if let Some(x) = args.ATMOSPHERIC_MODEL { builder.add_ATMOSPHERIC_MODEL(x); }
     if let Some(x) = args.GRAVITY_MODEL { builder.add_GRAVITY_MODEL(x); }
-    if let Some(x) = args.ORBIT_CENTER { builder.add_ORBIT_CENTER(x); }
     if let Some(x) = args.EPHEMERIS_NAME { builder.add_EPHEMERIS_NAME(x); }
     if let Some(x) = args.OPERATOR_ORGANIZATION { builder.add_OPERATOR_ORGANIZATION(x); }
     if let Some(x) = args.OPERATOR_CONTACT_POSITION { builder.add_OPERATOR_CONTACT_POSITION(x); }
-    if let Some(x) = args.INTERNATIONAL_DESIGNATOR { builder.add_INTERNATIONAL_DESIGNATOR(x); }
-    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
-    if let Some(x) = args.CATALOG_NAME { builder.add_CATALOG_NAME(x); }
-    if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
+    if let Some(x) = args.POC { builder.add_POC(x); }
+    if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     builder.add_INTRACK_THRUST(args.INTRACK_THRUST);
     builder.add_EARTH_TIDES(args.EARTH_TIDES);
     builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
     builder.add_REF_FRAME(args.REF_FRAME);
-    builder.add_MANEUVERABLE(args.MANEUVERABLE);
     builder.add_COVARIANCE_METHOD(args.COVARIANCE_METHOD);
-    builder.add_OBJECT_TYPE(args.OBJECT_TYPE);
-    builder.add_OBJECT(args.OBJECT);
     builder.finish()
   }
 
@@ -840,20 +381,12 @@ impl<'a> CDMObject<'a> {
     let COMMENT = self.COMMENT().map(|x| {
       x.to_string()
     });
-    let OBJECT = self.OBJECT();
-    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
-      x.to_string()
+    let OBJECT = self.OBJECT().map(|x| {
+      Box::new(x.unpack())
     });
-    let CATALOG_NAME = self.CATALOG_NAME().map(|x| {
-      x.to_string()
+    let POC = self.POC().map(|x| {
+      Box::new(x.unpack())
     });
-    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
-      x.to_string()
-    });
-    let INTERNATIONAL_DESIGNATOR = self.INTERNATIONAL_DESIGNATOR().map(|x| {
-      x.to_string()
-    });
-    let OBJECT_TYPE = self.OBJECT_TYPE();
     let OPERATOR_CONTACT_POSITION = self.OPERATOR_CONTACT_POSITION().map(|x| {
       x.to_string()
     });
@@ -864,10 +397,6 @@ impl<'a> CDMObject<'a> {
       x.to_string()
     });
     let COVARIANCE_METHOD = self.COVARIANCE_METHOD();
-    let MANEUVERABLE = self.MANEUVERABLE();
-    let ORBIT_CENTER = self.ORBIT_CENTER().map(|x| {
-      x.to_string()
-    });
     let REF_FRAME = self.REF_FRAME();
     let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
       x.to_string()
@@ -898,7 +427,6 @@ impl<'a> CDMObject<'a> {
     let AREA_PC = self.AREA_PC();
     let AREA_DRG = self.AREA_DRG();
     let AREA_SRP = self.AREA_SRP();
-    let MASS = self.MASS();
     let CR_AREA_OVER_MASS = self.CR_AREA_OVER_MASS();
     let THRUST_ACCELERATION = self.THRUST_ACCELERATION();
     let SEDR = self.SEDR();
@@ -956,17 +484,11 @@ impl<'a> CDMObject<'a> {
     CDMObjectT {
       COMMENT,
       OBJECT,
-      OBJECT_DESIGNATOR,
-      CATALOG_NAME,
-      OBJECT_NAME,
-      INTERNATIONAL_DESIGNATOR,
-      OBJECT_TYPE,
+      POC,
       OPERATOR_CONTACT_POSITION,
       OPERATOR_ORGANIZATION,
       EPHEMERIS_NAME,
       COVARIANCE_METHOD,
-      MANEUVERABLE,
-      ORBIT_CENTER,
       REF_FRAME,
       GRAVITY_MODEL,
       ATMOSPHERIC_MODEL,
@@ -987,7 +509,6 @@ impl<'a> CDMObject<'a> {
       AREA_PC,
       AREA_DRG,
       AREA_SRP,
-      MASS,
       CR_AREA_OVER_MASS,
       THRUST_ACCELERATION,
       SEDR,
@@ -1053,53 +574,20 @@ impl<'a> CDMObject<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_COMMENT, None)}
   }
-  /// Object number
   #[inline]
-  pub fn OBJECT(&self) -> objectNumber {
+  pub fn OBJECT(&self) -> Option<CAT<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<objectNumber>(CDMObject::VT_OBJECT, Some(objectNumber::OBJECT1)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CAT>>(CDMObject::VT_OBJECT, None)}
   }
-  /// Object designator
+  /// Point of Contact
   #[inline]
-  pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+  pub fn POC(&self) -> Option<EPM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_OBJECT_DESIGNATOR, None)}
-  }
-  /// Catalog name
-  #[inline]
-  pub fn CATALOG_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_CATALOG_NAME, None)}
-  }
-  /// Object name
-  #[inline]
-  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_OBJECT_NAME, None)}
-  }
-  /// International designator
-  #[inline]
-  pub fn INTERNATIONAL_DESIGNATOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_INTERNATIONAL_DESIGNATOR, None)}
-  }
-  /// Object type
-  #[inline]
-  pub fn OBJECT_TYPE(&self) -> objectType {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<objectType>(CDMObject::VT_OBJECT_TYPE, Some(objectType::PAYLOAD)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<EPM>>(CDMObject::VT_POC, None)}
   }
   /// Operator contact position
   #[inline]
@@ -1133,29 +621,13 @@ impl<'a> CDMObject<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<covarianceMethod>(CDMObject::VT_COVARIANCE_METHOD, Some(covarianceMethod::CALCULATED)).unwrap()}
   }
-  /// Maneuverable type
-  #[inline]
-  pub fn MANEUVERABLE(&self) -> maneuverableType {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<maneuverableType>(CDMObject::VT_MANEUVERABLE, Some(maneuverableType::YES)).unwrap()}
-  }
-  /// Orbit center
-  #[inline]
-  pub fn ORBIT_CENTER(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_ORBIT_CENTER, None)}
-  }
-  /// Reference frame
+  /// Reference Frame in which the object position is defined
   #[inline]
   pub fn REF_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(CDMObject::VT_REF_FRAME, Some(referenceFrame::EME2000)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(CDMObject::VT_REF_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// Gravity model
   #[inline]
@@ -1308,14 +780,6 @@ impl<'a> CDMObject<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CDMObject::VT_AREA_SRP, Some(0.0)).unwrap()}
-  }
-  /// Mass of the object
-  #[inline]
-  pub fn MASS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_MASS, Some(0.0)).unwrap()}
   }
   /// Object's area-to-mass ratio
   #[inline]
@@ -1759,18 +1223,12 @@ impl flatbuffers::Verifiable for CDMObject<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
-     .visit_field::<objectNumber>("OBJECT", Self::VT_OBJECT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CATALOG_NAME", Self::VT_CATALOG_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INTERNATIONAL_DESIGNATOR", Self::VT_INTERNATIONAL_DESIGNATOR, false)?
-     .visit_field::<objectType>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<EPM>>("POC", Self::VT_POC, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPERATOR_CONTACT_POSITION", Self::VT_OPERATOR_CONTACT_POSITION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPERATOR_ORGANIZATION", Self::VT_OPERATOR_ORGANIZATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME", Self::VT_EPHEMERIS_NAME, false)?
      .visit_field::<covarianceMethod>("COVARIANCE_METHOD", Self::VT_COVARIANCE_METHOD, false)?
-     .visit_field::<maneuverableType>("MANEUVERABLE", Self::VT_MANEUVERABLE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORBIT_CENTER", Self::VT_ORBIT_CENTER, false)?
      .visit_field::<referenceFrame>("REF_FRAME", Self::VT_REF_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
@@ -1791,7 +1249,6 @@ impl flatbuffers::Verifiable for CDMObject<'_> {
      .visit_field::<f64>("AREA_PC", Self::VT_AREA_PC, false)?
      .visit_field::<f64>("AREA_DRG", Self::VT_AREA_DRG, false)?
      .visit_field::<f64>("AREA_SRP", Self::VT_AREA_SRP, false)?
-     .visit_field::<f64>("MASS", Self::VT_MASS, false)?
      .visit_field::<f64>("CR_AREA_OVER_MASS", Self::VT_CR_AREA_OVER_MASS, false)?
      .visit_field::<f64>("THRUST_ACCELERATION", Self::VT_THRUST_ACCELERATION, false)?
      .visit_field::<f64>("SEDR", Self::VT_SEDR, false)?
@@ -1852,18 +1309,12 @@ impl flatbuffers::Verifiable for CDMObject<'_> {
 }
 pub struct CDMObjectArgs<'a> {
     pub COMMENT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT: objectNumber,
-    pub OBJECT_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CATALOG_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub INTERNATIONAL_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_TYPE: objectType,
+    pub OBJECT: Option<flatbuffers::WIPOffset<CAT<'a>>>,
+    pub POC: Option<flatbuffers::WIPOffset<EPM<'a>>>,
     pub OPERATOR_CONTACT_POSITION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OPERATOR_ORGANIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EPHEMERIS_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COVARIANCE_METHOD: covarianceMethod,
-    pub MANEUVERABLE: maneuverableType,
-    pub ORBIT_CENTER: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REF_FRAME: referenceFrame,
     pub GRAVITY_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ATMOSPHERIC_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1884,7 +1335,6 @@ pub struct CDMObjectArgs<'a> {
     pub AREA_PC: f64,
     pub AREA_DRG: f64,
     pub AREA_SRP: f64,
-    pub MASS: f64,
     pub CR_AREA_OVER_MASS: f64,
     pub THRUST_ACCELERATION: f64,
     pub SEDR: f64,
@@ -1945,19 +1395,13 @@ impl<'a> Default for CDMObjectArgs<'a> {
   fn default() -> Self {
     CDMObjectArgs {
       COMMENT: None,
-      OBJECT: objectNumber::OBJECT1,
-      OBJECT_DESIGNATOR: None,
-      CATALOG_NAME: None,
-      OBJECT_NAME: None,
-      INTERNATIONAL_DESIGNATOR: None,
-      OBJECT_TYPE: objectType::PAYLOAD,
+      OBJECT: None,
+      POC: None,
       OPERATOR_CONTACT_POSITION: None,
       OPERATOR_ORGANIZATION: None,
       EPHEMERIS_NAME: None,
       COVARIANCE_METHOD: covarianceMethod::CALCULATED,
-      MANEUVERABLE: maneuverableType::YES,
-      ORBIT_CENTER: None,
-      REF_FRAME: referenceFrame::EME2000,
+      REF_FRAME: referenceFrame::ECEF,
       GRAVITY_MODEL: None,
       ATMOSPHERIC_MODEL: None,
       N_BODY_PERTURBATIONS: None,
@@ -1977,7 +1421,6 @@ impl<'a> Default for CDMObjectArgs<'a> {
       AREA_PC: 0.0,
       AREA_DRG: 0.0,
       AREA_SRP: 0.0,
-      MASS: 0.0,
       CR_AREA_OVER_MASS: 0.0,
       THRUST_ACCELERATION: 0.0,
       SEDR: 0.0,
@@ -2046,28 +1489,12 @@ impl<'a: 'b, 'b> CDMObjectBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_COMMENT, COMMENT);
   }
   #[inline]
-  pub fn add_OBJECT(&mut self, OBJECT: objectNumber) {
-    self.fbb_.push_slot::<objectNumber>(CDMObject::VT_OBJECT, OBJECT, objectNumber::OBJECT1);
+  pub fn add_OBJECT(&mut self, OBJECT: flatbuffers::WIPOffset<CAT<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CAT>>(CDMObject::VT_OBJECT, OBJECT);
   }
   #[inline]
-  pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
-  }
-  #[inline]
-  pub fn add_CATALOG_NAME(&mut self, CATALOG_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_CATALOG_NAME, CATALOG_NAME);
-  }
-  #[inline]
-  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  #[inline]
-  pub fn add_INTERNATIONAL_DESIGNATOR(&mut self, INTERNATIONAL_DESIGNATOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_INTERNATIONAL_DESIGNATOR, INTERNATIONAL_DESIGNATOR);
-  }
-  #[inline]
-  pub fn add_OBJECT_TYPE(&mut self, OBJECT_TYPE: objectType) {
-    self.fbb_.push_slot::<objectType>(CDMObject::VT_OBJECT_TYPE, OBJECT_TYPE, objectType::PAYLOAD);
+  pub fn add_POC(&mut self, POC: flatbuffers::WIPOffset<EPM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<EPM>>(CDMObject::VT_POC, POC);
   }
   #[inline]
   pub fn add_OPERATOR_CONTACT_POSITION(&mut self, OPERATOR_CONTACT_POSITION: flatbuffers::WIPOffset<&'b  str>) {
@@ -2086,16 +1513,8 @@ impl<'a: 'b, 'b> CDMObjectBuilder<'a, 'b> {
     self.fbb_.push_slot::<covarianceMethod>(CDMObject::VT_COVARIANCE_METHOD, COVARIANCE_METHOD, covarianceMethod::CALCULATED);
   }
   #[inline]
-  pub fn add_MANEUVERABLE(&mut self, MANEUVERABLE: maneuverableType) {
-    self.fbb_.push_slot::<maneuverableType>(CDMObject::VT_MANEUVERABLE, MANEUVERABLE, maneuverableType::YES);
-  }
-  #[inline]
-  pub fn add_ORBIT_CENTER(&mut self, ORBIT_CENTER: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_ORBIT_CENTER, ORBIT_CENTER);
-  }
-  #[inline]
   pub fn add_REF_FRAME(&mut self, REF_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(CDMObject::VT_REF_FRAME, REF_FRAME, referenceFrame::EME2000);
+    self.fbb_.push_slot::<referenceFrame>(CDMObject::VT_REF_FRAME, REF_FRAME, referenceFrame::ECEF);
   }
   #[inline]
   pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: flatbuffers::WIPOffset<&'b  str>) {
@@ -2172,10 +1591,6 @@ impl<'a: 'b, 'b> CDMObjectBuilder<'a, 'b> {
   #[inline]
   pub fn add_AREA_SRP(&mut self, AREA_SRP: f64) {
     self.fbb_.push_slot::<f64>(CDMObject::VT_AREA_SRP, AREA_SRP, 0.0);
-  }
-  #[inline]
-  pub fn add_MASS(&mut self, MASS: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_MASS, MASS, 0.0);
   }
   #[inline]
   pub fn add_CR_AREA_OVER_MASS(&mut self, CR_AREA_OVER_MASS: f64) {
@@ -2413,17 +1828,11 @@ impl core::fmt::Debug for CDMObject<'_> {
     let mut ds = f.debug_struct("CDMObject");
       ds.field("COMMENT", &self.COMMENT());
       ds.field("OBJECT", &self.OBJECT());
-      ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
-      ds.field("CATALOG_NAME", &self.CATALOG_NAME());
-      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
-      ds.field("INTERNATIONAL_DESIGNATOR", &self.INTERNATIONAL_DESIGNATOR());
-      ds.field("OBJECT_TYPE", &self.OBJECT_TYPE());
+      ds.field("POC", &self.POC());
       ds.field("OPERATOR_CONTACT_POSITION", &self.OPERATOR_CONTACT_POSITION());
       ds.field("OPERATOR_ORGANIZATION", &self.OPERATOR_ORGANIZATION());
       ds.field("EPHEMERIS_NAME", &self.EPHEMERIS_NAME());
       ds.field("COVARIANCE_METHOD", &self.COVARIANCE_METHOD());
-      ds.field("MANEUVERABLE", &self.MANEUVERABLE());
-      ds.field("ORBIT_CENTER", &self.ORBIT_CENTER());
       ds.field("REF_FRAME", &self.REF_FRAME());
       ds.field("GRAVITY_MODEL", &self.GRAVITY_MODEL());
       ds.field("ATMOSPHERIC_MODEL", &self.ATMOSPHERIC_MODEL());
@@ -2444,7 +1853,6 @@ impl core::fmt::Debug for CDMObject<'_> {
       ds.field("AREA_PC", &self.AREA_PC());
       ds.field("AREA_DRG", &self.AREA_DRG());
       ds.field("AREA_SRP", &self.AREA_SRP());
-      ds.field("MASS", &self.MASS());
       ds.field("CR_AREA_OVER_MASS", &self.CR_AREA_OVER_MASS());
       ds.field("THRUST_ACCELERATION", &self.THRUST_ACCELERATION());
       ds.field("SEDR", &self.SEDR());
@@ -2506,18 +1914,12 @@ impl core::fmt::Debug for CDMObject<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct CDMObjectT {
   pub COMMENT: Option<String>,
-  pub OBJECT: objectNumber,
-  pub OBJECT_DESIGNATOR: Option<String>,
-  pub CATALOG_NAME: Option<String>,
-  pub OBJECT_NAME: Option<String>,
-  pub INTERNATIONAL_DESIGNATOR: Option<String>,
-  pub OBJECT_TYPE: objectType,
+  pub OBJECT: Option<Box<CATT>>,
+  pub POC: Option<Box<EPMT>>,
   pub OPERATOR_CONTACT_POSITION: Option<String>,
   pub OPERATOR_ORGANIZATION: Option<String>,
   pub EPHEMERIS_NAME: Option<String>,
   pub COVARIANCE_METHOD: covarianceMethod,
-  pub MANEUVERABLE: maneuverableType,
-  pub ORBIT_CENTER: Option<String>,
   pub REF_FRAME: referenceFrame,
   pub GRAVITY_MODEL: Option<String>,
   pub ATMOSPHERIC_MODEL: Option<String>,
@@ -2538,7 +1940,6 @@ pub struct CDMObjectT {
   pub AREA_PC: f64,
   pub AREA_DRG: f64,
   pub AREA_SRP: f64,
-  pub MASS: f64,
   pub CR_AREA_OVER_MASS: f64,
   pub THRUST_ACCELERATION: f64,
   pub SEDR: f64,
@@ -2598,19 +1999,13 @@ impl Default for CDMObjectT {
   fn default() -> Self {
     Self {
       COMMENT: None,
-      OBJECT: objectNumber::OBJECT1,
-      OBJECT_DESIGNATOR: None,
-      CATALOG_NAME: None,
-      OBJECT_NAME: None,
-      INTERNATIONAL_DESIGNATOR: None,
-      OBJECT_TYPE: objectType::PAYLOAD,
+      OBJECT: None,
+      POC: None,
       OPERATOR_CONTACT_POSITION: None,
       OPERATOR_ORGANIZATION: None,
       EPHEMERIS_NAME: None,
       COVARIANCE_METHOD: covarianceMethod::CALCULATED,
-      MANEUVERABLE: maneuverableType::YES,
-      ORBIT_CENTER: None,
-      REF_FRAME: referenceFrame::EME2000,
+      REF_FRAME: referenceFrame::ECEF,
       GRAVITY_MODEL: None,
       ATMOSPHERIC_MODEL: None,
       N_BODY_PERTURBATIONS: None,
@@ -2630,7 +2025,6 @@ impl Default for CDMObjectT {
       AREA_PC: 0.0,
       AREA_DRG: 0.0,
       AREA_SRP: 0.0,
-      MASS: 0.0,
       CR_AREA_OVER_MASS: 0.0,
       THRUST_ACCELERATION: 0.0,
       SEDR: 0.0,
@@ -2696,20 +2090,12 @@ impl CDMObjectT {
     let COMMENT = self.COMMENT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let OBJECT = self.OBJECT;
-    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let OBJECT = self.OBJECT.as_ref().map(|x|{
+      x.pack(_fbb)
     });
-    let CATALOG_NAME = self.CATALOG_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let POC = self.POC.as_ref().map(|x|{
+      x.pack(_fbb)
     });
-    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let INTERNATIONAL_DESIGNATOR = self.INTERNATIONAL_DESIGNATOR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let OBJECT_TYPE = self.OBJECT_TYPE;
     let OPERATOR_CONTACT_POSITION = self.OPERATOR_CONTACT_POSITION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2720,10 +2106,6 @@ impl CDMObjectT {
       _fbb.create_string(x)
     });
     let COVARIANCE_METHOD = self.COVARIANCE_METHOD;
-    let MANEUVERABLE = self.MANEUVERABLE;
-    let ORBIT_CENTER = self.ORBIT_CENTER.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let REF_FRAME = self.REF_FRAME;
     let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2754,7 +2136,6 @@ impl CDMObjectT {
     let AREA_PC = self.AREA_PC;
     let AREA_DRG = self.AREA_DRG;
     let AREA_SRP = self.AREA_SRP;
-    let MASS = self.MASS;
     let CR_AREA_OVER_MASS = self.CR_AREA_OVER_MASS;
     let THRUST_ACCELERATION = self.THRUST_ACCELERATION;
     let SEDR = self.SEDR;
@@ -2812,17 +2193,11 @@ impl CDMObjectT {
     CDMObject::create(_fbb, &CDMObjectArgs{
       COMMENT,
       OBJECT,
-      OBJECT_DESIGNATOR,
-      CATALOG_NAME,
-      OBJECT_NAME,
-      INTERNATIONAL_DESIGNATOR,
-      OBJECT_TYPE,
+      POC,
       OPERATOR_CONTACT_POSITION,
       OPERATOR_ORGANIZATION,
       EPHEMERIS_NAME,
       COVARIANCE_METHOD,
-      MANEUVERABLE,
-      ORBIT_CENTER,
       REF_FRAME,
       GRAVITY_MODEL,
       ATMOSPHERIC_MODEL,
@@ -2843,7 +2218,6 @@ impl CDMObjectT {
       AREA_PC,
       AREA_DRG,
       AREA_SRP,
-      MASS,
       CR_AREA_OVER_MASS,
       THRUST_ACCELERATION,
       SEDR,
@@ -3211,11 +2585,11 @@ impl<'a> CDM<'a> {
   }
   /// The reference frame for the screening volume
   #[inline]
-  pub fn SCREEN_VOLUME_FRAME(&self) -> objectCenteredReferenceFrame {
+  pub fn SCREEN_VOLUME_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<objectCenteredReferenceFrame>(CDM::VT_SCREEN_VOLUME_FRAME, Some(objectCenteredReferenceFrame::RTN)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(CDM::VT_SCREEN_VOLUME_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// The shape of the screening volume
   #[inline]
@@ -3338,7 +2712,7 @@ impl flatbuffers::Verifiable for CDM<'_> {
      .visit_field::<f64>("RELATIVE_VELOCITY_N", Self::VT_RELATIVE_VELOCITY_N, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_SCREEN_PERIOD", Self::VT_START_SCREEN_PERIOD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STOP_SCREEN_PERIOD", Self::VT_STOP_SCREEN_PERIOD, false)?
-     .visit_field::<objectCenteredReferenceFrame>("SCREEN_VOLUME_FRAME", Self::VT_SCREEN_VOLUME_FRAME, false)?
+     .visit_field::<referenceFrame>("SCREEN_VOLUME_FRAME", Self::VT_SCREEN_VOLUME_FRAME, false)?
      .visit_field::<screeningVolumeShape>("SCREEN_VOLUME_SHAPE", Self::VT_SCREEN_VOLUME_SHAPE, false)?
      .visit_field::<f64>("SCREEN_VOLUME_X", Self::VT_SCREEN_VOLUME_X, false)?
      .visit_field::<f64>("SCREEN_VOLUME_Y", Self::VT_SCREEN_VOLUME_Y, false)?
@@ -3372,7 +2746,7 @@ pub struct CDMArgs<'a> {
     pub RELATIVE_VELOCITY_N: f64,
     pub START_SCREEN_PERIOD: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STOP_SCREEN_PERIOD: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame,
+    pub SCREEN_VOLUME_FRAME: referenceFrame,
     pub SCREEN_VOLUME_SHAPE: screeningVolumeShape,
     pub SCREEN_VOLUME_X: f64,
     pub SCREEN_VOLUME_Y: f64,
@@ -3406,7 +2780,7 @@ impl<'a> Default for CDMArgs<'a> {
       RELATIVE_VELOCITY_N: 0.0,
       START_SCREEN_PERIOD: None,
       STOP_SCREEN_PERIOD: None,
-      SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame::RTN,
+      SCREEN_VOLUME_FRAME: referenceFrame::ECEF,
       SCREEN_VOLUME_SHAPE: screeningVolumeShape::ELLIPSOID,
       SCREEN_VOLUME_X: 0.0,
       SCREEN_VOLUME_Y: 0.0,
@@ -3493,8 +2867,8 @@ impl<'a: 'b, 'b> CDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDM::VT_STOP_SCREEN_PERIOD, STOP_SCREEN_PERIOD);
   }
   #[inline]
-  pub fn add_SCREEN_VOLUME_FRAME(&mut self, SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame) {
-    self.fbb_.push_slot::<objectCenteredReferenceFrame>(CDM::VT_SCREEN_VOLUME_FRAME, SCREEN_VOLUME_FRAME, objectCenteredReferenceFrame::RTN);
+  pub fn add_SCREEN_VOLUME_FRAME(&mut self, SCREEN_VOLUME_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(CDM::VT_SCREEN_VOLUME_FRAME, SCREEN_VOLUME_FRAME, referenceFrame::ECEF);
   }
   #[inline]
   pub fn add_SCREEN_VOLUME_SHAPE(&mut self, SCREEN_VOLUME_SHAPE: screeningVolumeShape) {
@@ -3613,7 +2987,7 @@ pub struct CDMT {
   pub RELATIVE_VELOCITY_N: f64,
   pub START_SCREEN_PERIOD: Option<String>,
   pub STOP_SCREEN_PERIOD: Option<String>,
-  pub SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame,
+  pub SCREEN_VOLUME_FRAME: referenceFrame,
   pub SCREEN_VOLUME_SHAPE: screeningVolumeShape,
   pub SCREEN_VOLUME_X: f64,
   pub SCREEN_VOLUME_Y: f64,
@@ -3646,7 +3020,7 @@ impl Default for CDMT {
       RELATIVE_VELOCITY_N: 0.0,
       START_SCREEN_PERIOD: None,
       STOP_SCREEN_PERIOD: None,
-      SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame::RTN,
+      SCREEN_VOLUME_FRAME: referenceFrame::ECEF,
       SCREEN_VOLUME_SHAPE: screeningVolumeShape::ELLIPSOID,
       SCREEN_VOLUME_X: 0.0,
       SCREEN_VOLUME_Y: 0.0,

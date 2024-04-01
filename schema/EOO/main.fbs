@@ -1,3 +1,4 @@
+include "../RFM/main.fbs";
 
 /// Electro-Optical Observation
 table EOO {
@@ -237,7 +238,7 @@ table EOO {
   CREATED_BY: string;
 
   /// Reference frame of the observation
-  REFERENCE_FRAME: string;
+  REFERENCE_FRAME: referenceFrame;
 
   /// Reference frame of the sensor
   SEN_REFERENCE_FRAME: string;

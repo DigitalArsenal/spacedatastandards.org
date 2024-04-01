@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct ephemerisDataLine;
 struct ephemerisDataLineBuilder;
 
@@ -24,74 +26,6 @@ struct ephemerisDataBlockBuilder;
 
 struct OEM;
 struct OEMBuilder;
-
-enum referenceFrame : int8_t {
-  /// Earth Mean Equator and Equinox of J2000
-  referenceFrame_EME2000 = 0,
-  /// Geocentric Celestial Reference Frame
-  referenceFrame_GCRF = 1,
-  /// Greenwich Rotating Coordinates
-  referenceFrame_GRC = 2,
-  /// International Celestial Reference Frame
-  referenceFrame_ICRF = 3,
-  /// International Terrestrial Reference Frame 2000
-  referenceFrame_ITRF2000 = 4,
-  /// International Terrestrial Reference Frame 1993
-  referenceFrame_ITRF93 = 5,
-  /// International Terrestrial Reference Frame 1997
-  referenceFrame_ITRF97 = 6,
-  /// Mars Centered Inertial
-  referenceFrame_MCI = 7,
-  /// True of Date, Rotating
-  referenceFrame_TDR = 8,
-  /// True Equator Mean Equinox
-  referenceFrame_TEME = 9,
-  /// True of Date
-  referenceFrame_TOD = 10,
-  referenceFrame_MIN = referenceFrame_EME2000,
-  referenceFrame_MAX = referenceFrame_TOD
-};
-
-inline const referenceFrame (&EnumValuesreferenceFrame())[11] {
-  static const referenceFrame values[] = {
-    referenceFrame_EME2000,
-    referenceFrame_GCRF,
-    referenceFrame_GRC,
-    referenceFrame_ICRF,
-    referenceFrame_ITRF2000,
-    referenceFrame_ITRF93,
-    referenceFrame_ITRF97,
-    referenceFrame_MCI,
-    referenceFrame_TDR,
-    referenceFrame_TEME,
-    referenceFrame_TOD
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesreferenceFrame() {
-  static const char * const names[12] = {
-    "EME2000",
-    "GCRF",
-    "GRC",
-    "ICRF",
-    "ITRF2000",
-    "ITRF93",
-    "ITRF97",
-    "MCI",
-    "TDR",
-    "TEME",
-    "TOD",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamereferenceFrame(referenceFrame e) {
-  if (::flatbuffers::IsOutRange(e, referenceFrame_EME2000, referenceFrame_TOD)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesreferenceFrame()[index];
-}
 
 enum timeSystem : int8_t {
   /// Greenwich Mean Sidereal Time
@@ -891,7 +825,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
-    referenceFrame REF_FRAME = referenceFrame_EME2000,
+    referenceFrame REF_FRAME = referenceFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_EPOCH = 0,
     timeSystem TIME_SYSTEM = timeSystem_GMST,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
@@ -927,7 +861,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const char *OBJECT_NAME = nullptr,
     const char *OBJECT_ID = nullptr,
     const char *CENTER_NAME = nullptr,
-    referenceFrame REF_FRAME = referenceFrame_EME2000,
+    referenceFrame REF_FRAME = referenceFrame_ECEF,
     const char *REF_FRAME_EPOCH = nullptr,
     timeSystem TIME_SYSTEM = timeSystem_GMST,
     const char *START_TIME = nullptr,

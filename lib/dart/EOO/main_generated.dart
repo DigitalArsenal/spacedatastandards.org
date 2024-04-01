@@ -5,6 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
+
 ///  Electro-Optical Observation
 class EOO {
   EOO._(this._bc, this._bcOffset);
@@ -175,7 +177,7 @@ class EOO {
   ///  User who created the record
   String? get CREATED_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
   ///  Reference frame of the observation
-  String? get REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 160);
+  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 160, 0));
   ///  Reference frame of the sensor
   String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 162);
   ///  Flag for umbra (total eclipse)
@@ -524,8 +526,8 @@ class EOOBuilder {
     fbBuilder.addOffset(77, offset);
     return fbBuilder.offset;
   }
-  int addReferenceFrameOffset(int? offset) {
-    fbBuilder.addOffset(78, offset);
+  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+    fbBuilder.addInt8(78, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
   int addSenReferenceFrameOffset(int? offset) {
@@ -637,7 +639,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final String? _DATA_MODE;
   final String? _CREATED_AT;
   final String? _CREATED_BY;
-  final String? _REFERENCE_FRAME;
+  final ReferenceFrame? _REFERENCE_FRAME;
   final String? _SEN_REFERENCE_FRAME;
   final bool? _UMBRA;
   final bool? _PENUMBRA;
@@ -724,7 +726,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     String? DATA_MODE,
     String? CREATED_AT,
     String? CREATED_BY,
-    String? REFERENCE_FRAME,
+    ReferenceFrame? REFERENCE_FRAME,
     String? SEN_REFERENCE_FRAME,
     bool? UMBRA,
     bool? PENUMBRA,
@@ -859,8 +861,6 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CREATED_AT!);
     final int? CREATED_BYOffset = _CREATED_BY == null ? null
         : fbBuilder.writeString(_CREATED_BY!);
-    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME == null ? null
-        : fbBuilder.writeString(_REFERENCE_FRAME!);
     final int? SEN_REFERENCE_FRAMEOffset = _SEN_REFERENCE_FRAME == null ? null
         : fbBuilder.writeString(_SEN_REFERENCE_FRAME!);
     final int? ORIG_NETWORKOffset = _ORIG_NETWORK == null ? null
@@ -948,7 +948,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(75, DATA_MODEOffset);
     fbBuilder.addOffset(76, CREATED_ATOffset);
     fbBuilder.addOffset(77, CREATED_BYOffset);
-    fbBuilder.addOffset(78, REFERENCE_FRAMEOffset);
+    fbBuilder.addInt8(78, _REFERENCE_FRAME?.value);
     fbBuilder.addOffset(79, SEN_REFERENCE_FRAMEOffset);
     fbBuilder.addBool(80, _UMBRA);
     fbBuilder.addBool(81, _PENUMBRA);

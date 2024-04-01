@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct EOO;
 struct EOOBuilder;
 
@@ -419,8 +421,8 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATED_BY);
   }
   /// Reference frame of the observation
-  const ::flatbuffers::String *REFERENCE_FRAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME);
+  referenceFrame REFERENCE_FRAME() const {
+    return static_cast<referenceFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
   /// Reference frame of the sensor
   const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
@@ -545,8 +547,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CREATED_AT()) &&
            VerifyOffset(verifier, VT_CREATED_BY) &&
            verifier.VerifyString(CREATED_BY()) &&
-           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
-           verifier.VerifyString(REFERENCE_FRAME()) &&
+           VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
            VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
            verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
            VerifyField<uint8_t>(verifier, VT_UMBRA, 1) &&
@@ -799,8 +800,8 @@ struct EOOBuilder {
   void add_CREATED_BY(::flatbuffers::Offset<::flatbuffers::String> CREATED_BY) {
     fbb_.AddOffset(EOO::VT_CREATED_BY, CREATED_BY);
   }
-  void add_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME) {
-    fbb_.AddOffset(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  void add_REFERENCE_FRAME(referenceFrame REFERENCE_FRAME) {
+    fbb_.AddElement<int8_t>(EOO::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
   void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
     fbb_.AddOffset(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
@@ -911,7 +912,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     ::flatbuffers::Offset<::flatbuffers::String> DATA_MODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME = 0,
+    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
     bool UMBRA = false,
     bool PENUMBRA = false,
@@ -923,7 +924,6 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_SOURCE_DL(SOURCE_DL);
   builder_.add_ORIG_NETWORK(ORIG_NETWORK);
   builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
-  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_CREATED_BY(CREATED_BY);
   builder_.add_CREATED_AT(CREATED_AT);
   builder_.add_DATA_MODE(DATA_MODE);
@@ -1003,6 +1003,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_EOBSERVATION_ID(EOBSERVATION_ID);
   builder_.add_PENUMBRA(PENUMBRA);
   builder_.add_UMBRA(UMBRA);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_UCT(UCT);
   return builder_.Finish();
 }
@@ -1087,7 +1088,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     const char *DATA_MODE = nullptr,
     const char *CREATED_AT = nullptr,
     const char *CREATED_BY = nullptr,
-    const char *REFERENCE_FRAME = nullptr,
+    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
     const char *SEN_REFERENCE_FRAME = nullptr,
     bool UMBRA = false,
     bool PENUMBRA = false,
@@ -1113,7 +1114,6 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
   auto DATA_MODE__ = DATA_MODE ? _fbb.CreateString(DATA_MODE) : 0;
   auto CREATED_AT__ = CREATED_AT ? _fbb.CreateString(CREATED_AT) : 0;
   auto CREATED_BY__ = CREATED_BY ? _fbb.CreateString(CREATED_BY) : 0;
-  auto REFERENCE_FRAME__ = REFERENCE_FRAME ? _fbb.CreateString(REFERENCE_FRAME) : 0;
   auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
   auto ORIG_NETWORK__ = ORIG_NETWORK ? _fbb.CreateString(ORIG_NETWORK) : 0;
   auto SOURCE_DL__ = SOURCE_DL ? _fbb.CreateString(SOURCE_DL) : 0;
@@ -1198,7 +1198,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       DATA_MODE__,
       CREATED_AT__,
       CREATED_BY__,
-      REFERENCE_FRAME__,
+      REFERENCE_FRAME,
       SEN_REFERENCE_FRAME__,
       UMBRA,
       PENUMBRA,

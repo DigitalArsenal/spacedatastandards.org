@@ -3,7 +3,7 @@
   "definitions": {
     "referenceFrame" : {
       "type" : "string",
-      "enum": ["EME2000", "GCRF", "GRC", "ICRF", "ITRF2000", "ITRF93", "ITRF97", "MCI", "TDR", "TEME", "TOD"]
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF"]
     },
     "timeSystem" : {
       "type" : "string",
@@ -12,6 +12,15 @@
     "manCovRefFrame" : {
       "type" : "string",
       "enum": ["RSW", "RTN", "TNW"]
+    },
+    "RFM" : {
+      "type" : "object",
+      "properties" : {
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame"
+              }
+      },
+      "additionalProperties" : false
     },
     "ephemerisDataLine" : {
       "type" : "object",

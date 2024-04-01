@@ -1,4 +1,5 @@
 export { OEM, OEMT } from './OEM.js';
+export { RFM, RFMT } from './RFM.js';
 export { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 export { ephemerisDataBlock, ephemerisDataBlockT } from './ephemerisDataBlock.js';
 export { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';

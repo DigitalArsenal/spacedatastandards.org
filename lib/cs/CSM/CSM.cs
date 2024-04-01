@@ -18,54 +18,36 @@ public struct CSM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CSM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// NORAD Catalog Number for the first object
-  public uint NORAD_CAT_ID_1 { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Satellite name for the first object
-  public string OBJECT_NAME_1 { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_NAME_1Bytes() { return __p.__vector_as_span<byte>(6, 1); }
-#else
-  public ArraySegment<byte>? GetOBJECT_NAME_1Bytes() { return __p.__vector_as_arraysegment(6); }
-#endif
-  public byte[] GetOBJECT_NAME_1Array() { return __p.__vector_as_array<byte>(6); }
+  public CAT? OBJECT_1 { get { int o = __p.__offset(4); return o != 0 ? (CAT?)(new CAT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Days since epoch for the first object
-  public double DSE_1 { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// NORAD Catalog Number for the second object
-  public uint NORAD_CAT_ID_2 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public double DSE_1 { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Satellite name for the second object
-  public string OBJECT_NAME_2 { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_NAME_2Bytes() { return __p.__vector_as_span<byte>(12, 1); }
-#else
-  public ArraySegment<byte>? GetOBJECT_NAME_2Bytes() { return __p.__vector_as_arraysegment(12); }
-#endif
-  public byte[] GetOBJECT_NAME_2Array() { return __p.__vector_as_array<byte>(12); }
+  public CAT? OBJECT_2 { get { int o = __p.__offset(8); return o != 0 ? (CAT?)(new CAT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Days since epoch for the second object
-  public double DSE_2 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double DSE_2 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Time of closest approach as a Unix timestamp
-  public double TCA { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TCA { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// The distance or range between the two objects at TCA
-  public double TCA_RANGE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TCA_RANGE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// The magnitude of the relative velocity at TCA
-  public double TCA_RELATIVE_SPEED { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TCA_RELATIVE_SPEED { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Maximum probability
-  public double MAX_PROB { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MAX_PROB { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Standard deviation that produces the maximum probability
-  public double DILUTION { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double DILUTION { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CSM> CreateCSM(FlatBufferBuilder builder,
-      uint NORAD_CAT_ID_1 = 0,
-      StringOffset OBJECT_NAME_1Offset = default(StringOffset),
+      Offset<CAT> OBJECT_1Offset = default(Offset<CAT>),
       double DSE_1 = 0.0,
-      uint NORAD_CAT_ID_2 = 0,
-      StringOffset OBJECT_NAME_2Offset = default(StringOffset),
+      Offset<CAT> OBJECT_2Offset = default(Offset<CAT>),
       double DSE_2 = 0.0,
       double TCA = 0.0,
       double TCA_RANGE = 0.0,
       double TCA_RELATIVE_SPEED = 0.0,
       double MAX_PROB = 0.0,
       double DILUTION = 0.0) {
-    builder.StartTable(11);
+    builder.StartTable(9);
     CSM.AddDILUTION(builder, DILUTION);
     CSM.AddMAX_PROB(builder, MAX_PROB);
     CSM.AddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED);
@@ -73,25 +55,21 @@ public struct CSM : IFlatbufferObject
     CSM.AddTCA(builder, TCA);
     CSM.AddDSE_2(builder, DSE_2);
     CSM.AddDSE_1(builder, DSE_1);
-    CSM.AddOBJECT_NAME_2(builder, OBJECT_NAME_2Offset);
-    CSM.AddNORAD_CAT_ID_2(builder, NORAD_CAT_ID_2);
-    CSM.AddOBJECT_NAME_1(builder, OBJECT_NAME_1Offset);
-    CSM.AddNORAD_CAT_ID_1(builder, NORAD_CAT_ID_1);
+    CSM.AddOBJECT_2(builder, OBJECT_2Offset);
+    CSM.AddOBJECT_1(builder, OBJECT_1Offset);
     return CSM.EndCSM(builder);
   }
 
-  public static void StartCSM(FlatBufferBuilder builder) { builder.StartTable(11); }
-  public static void AddNORAD_CAT_ID_1(FlatBufferBuilder builder, uint NORAD_CAT_ID_1) { builder.AddUint(0, NORAD_CAT_ID_1, 0); }
-  public static void AddOBJECT_NAME_1(FlatBufferBuilder builder, StringOffset OBJECT_NAME_1Offset) { builder.AddOffset(1, OBJECT_NAME_1Offset.Value, 0); }
-  public static void AddDSE_1(FlatBufferBuilder builder, double DSE_1) { builder.AddDouble(2, DSE_1, 0.0); }
-  public static void AddNORAD_CAT_ID_2(FlatBufferBuilder builder, uint NORAD_CAT_ID_2) { builder.AddUint(3, NORAD_CAT_ID_2, 0); }
-  public static void AddOBJECT_NAME_2(FlatBufferBuilder builder, StringOffset OBJECT_NAME_2Offset) { builder.AddOffset(4, OBJECT_NAME_2Offset.Value, 0); }
-  public static void AddDSE_2(FlatBufferBuilder builder, double DSE_2) { builder.AddDouble(5, DSE_2, 0.0); }
-  public static void AddTCA(FlatBufferBuilder builder, double TCA) { builder.AddDouble(6, TCA, 0.0); }
-  public static void AddTCA_RANGE(FlatBufferBuilder builder, double TCA_RANGE) { builder.AddDouble(7, TCA_RANGE, 0.0); }
-  public static void AddTCA_RELATIVE_SPEED(FlatBufferBuilder builder, double TCA_RELATIVE_SPEED) { builder.AddDouble(8, TCA_RELATIVE_SPEED, 0.0); }
-  public static void AddMAX_PROB(FlatBufferBuilder builder, double MAX_PROB) { builder.AddDouble(9, MAX_PROB, 0.0); }
-  public static void AddDILUTION(FlatBufferBuilder builder, double DILUTION) { builder.AddDouble(10, DILUTION, 0.0); }
+  public static void StartCSM(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void AddOBJECT_1(FlatBufferBuilder builder, Offset<CAT> OBJECT_1Offset) { builder.AddOffset(0, OBJECT_1Offset.Value, 0); }
+  public static void AddDSE_1(FlatBufferBuilder builder, double DSE_1) { builder.AddDouble(1, DSE_1, 0.0); }
+  public static void AddOBJECT_2(FlatBufferBuilder builder, Offset<CAT> OBJECT_2Offset) { builder.AddOffset(2, OBJECT_2Offset.Value, 0); }
+  public static void AddDSE_2(FlatBufferBuilder builder, double DSE_2) { builder.AddDouble(3, DSE_2, 0.0); }
+  public static void AddTCA(FlatBufferBuilder builder, double TCA) { builder.AddDouble(4, TCA, 0.0); }
+  public static void AddTCA_RANGE(FlatBufferBuilder builder, double TCA_RANGE) { builder.AddDouble(5, TCA_RANGE, 0.0); }
+  public static void AddTCA_RELATIVE_SPEED(FlatBufferBuilder builder, double TCA_RELATIVE_SPEED) { builder.AddDouble(6, TCA_RELATIVE_SPEED, 0.0); }
+  public static void AddMAX_PROB(FlatBufferBuilder builder, double MAX_PROB) { builder.AddDouble(7, MAX_PROB, 0.0); }
+  public static void AddDILUTION(FlatBufferBuilder builder, double DILUTION) { builder.AddDouble(8, DILUTION, 0.0); }
   public static Offset<CSM> EndCSM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CSM>(o);
@@ -104,11 +82,9 @@ public struct CSM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(CSMT _o) {
-    _o.NORAD_CAT_ID_1 = this.NORAD_CAT_ID_1;
-    _o.OBJECT_NAME_1 = this.OBJECT_NAME_1;
+    _o.OBJECT_1 = this.OBJECT_1.HasValue ? this.OBJECT_1.Value.UnPack() : null;
     _o.DSE_1 = this.DSE_1;
-    _o.NORAD_CAT_ID_2 = this.NORAD_CAT_ID_2;
-    _o.OBJECT_NAME_2 = this.OBJECT_NAME_2;
+    _o.OBJECT_2 = this.OBJECT_2.HasValue ? this.OBJECT_2.Value.UnPack() : null;
     _o.DSE_2 = this.DSE_2;
     _o.TCA = this.TCA;
     _o.TCA_RANGE = this.TCA_RANGE;
@@ -118,15 +94,13 @@ public struct CSM : IFlatbufferObject
   }
   public static Offset<CSM> Pack(FlatBufferBuilder builder, CSMT _o) {
     if (_o == null) return default(Offset<CSM>);
-    var _OBJECT_NAME_1 = _o.OBJECT_NAME_1 == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME_1);
-    var _OBJECT_NAME_2 = _o.OBJECT_NAME_2 == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME_2);
+    var _OBJECT_1 = _o.OBJECT_1 == null ? default(Offset<CAT>) : CAT.Pack(builder, _o.OBJECT_1);
+    var _OBJECT_2 = _o.OBJECT_2 == null ? default(Offset<CAT>) : CAT.Pack(builder, _o.OBJECT_2);
     return CreateCSM(
       builder,
-      _o.NORAD_CAT_ID_1,
-      _OBJECT_NAME_1,
+      _OBJECT_1,
       _o.DSE_1,
-      _o.NORAD_CAT_ID_2,
-      _OBJECT_NAME_2,
+      _OBJECT_2,
       _o.DSE_2,
       _o.TCA,
       _o.TCA_RANGE,
@@ -138,11 +112,9 @@ public struct CSM : IFlatbufferObject
 
 public class CSMT
 {
-  public uint NORAD_CAT_ID_1 { get; set; }
-  public string OBJECT_NAME_1 { get; set; }
+  public CATT OBJECT_1 { get; set; }
   public double DSE_1 { get; set; }
-  public uint NORAD_CAT_ID_2 { get; set; }
-  public string OBJECT_NAME_2 { get; set; }
+  public CATT OBJECT_2 { get; set; }
   public double DSE_2 { get; set; }
   public double TCA { get; set; }
   public double TCA_RANGE { get; set; }
@@ -151,11 +123,9 @@ public class CSMT
   public double DILUTION { get; set; }
 
   public CSMT() {
-    this.NORAD_CAT_ID_1 = 0;
-    this.OBJECT_NAME_1 = null;
+    this.OBJECT_1 = null;
     this.DSE_1 = 0.0;
-    this.NORAD_CAT_ID_2 = 0;
-    this.OBJECT_NAME_2 = null;
+    this.OBJECT_2 = null;
     this.DSE_2 = 0.0;
     this.TCA = 0.0;
     this.TCA_RANGE = 0.0;

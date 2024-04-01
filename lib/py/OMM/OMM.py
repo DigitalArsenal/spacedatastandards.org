@@ -84,7 +84,7 @@ class OMM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 9
+        return 2
 
     # REF_FRAME_EPOCH
     # OMM
@@ -535,7 +535,7 @@ def AddOBJECT_ID(builder, OBJECT_ID):
 def OMMAddCENTER_NAME(builder, CENTER_NAME): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
 def AddCENTER_NAME(builder, CENTER_NAME):
     return OMMAddCENTER_NAME(builder, CENTER_NAME)
-def OMMAddREF_FRAME(builder, REF_FRAME): builder.PrependInt8Slot(6, REF_FRAME, 9)
+def OMMAddREF_FRAME(builder, REF_FRAME): builder.PrependInt8Slot(6, REF_FRAME, 2)
 def AddREF_FRAME(builder, REF_FRAME):
     return OMMAddREF_FRAME(builder, REF_FRAME)
 def OMMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME_EPOCH), 0)
@@ -711,7 +711,7 @@ class OMMT(object):
         self.OBJECT_NAME = None  # type: str
         self.OBJECT_ID = None  # type: str
         self.CENTER_NAME = None  # type: str
-        self.REF_FRAME = 9  # type: int
+        self.REF_FRAME = 2  # type: int
         self.REF_FRAME_EPOCH = None  # type: str
         self.TIME_SYSTEM = 11  # type: int
         self.MEAN_ELEMENT_THEORY = 0  # type: int

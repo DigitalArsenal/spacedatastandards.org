@@ -231,16 +231,16 @@ func (rcv *CDM) STOP_SCREEN_PERIOD() []byte {
 
 /// The end time of the screening period
 /// The reference frame for the screening volume
-func (rcv *CDM) SCREEN_VOLUME_FRAME() objectCenteredReferenceFrame {
+func (rcv *CDM) SCREEN_VOLUME_FRAME() referenceFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return objectCenteredReferenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// The reference frame for the screening volume
-func (rcv *CDM) MutateSCREEN_VOLUME_FRAME(n objectCenteredReferenceFrame) bool {
+func (rcv *CDM) MutateSCREEN_VOLUME_FRAME(n referenceFrame) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
 }
 
@@ -455,7 +455,7 @@ func CDMAddSTART_SCREEN_PERIOD(builder *flatbuffers.Builder, START_SCREEN_PERIOD
 func CDMAddSTOP_SCREEN_PERIOD(builder *flatbuffers.Builder, STOP_SCREEN_PERIOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(STOP_SCREEN_PERIOD), 0)
 }
-func CDMAddSCREEN_VOLUME_FRAME(builder *flatbuffers.Builder, SCREEN_VOLUME_FRAME objectCenteredReferenceFrame) {
+func CDMAddSCREEN_VOLUME_FRAME(builder *flatbuffers.Builder, SCREEN_VOLUME_FRAME referenceFrame) {
 	builder.PrependInt8Slot(16, int8(SCREEN_VOLUME_FRAME), 0)
 }
 func CDMAddSCREEN_VOLUME_SHAPE(builder *flatbuffers.Builder, SCREEN_VOLUME_SHAPE screeningVolumeShape) {

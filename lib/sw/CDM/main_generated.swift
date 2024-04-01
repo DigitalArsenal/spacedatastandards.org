@@ -4,36 +4,6 @@
 
 import FlatBuffers
 
-public enum referenceFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Earth Mean Equator and Equinox of J2000
-  case eme2000 = 0
-  ///  Geocentric Celestial Reference Frame
-  case gcrf = 1
-  ///  International Terrestrial Reference Frame
-  case itrf = 2
-
-  public static var max: referenceFrame { return .itrf }
-  public static var min: referenceFrame { return .eme2000 }
-}
-
-
-public enum objectCenteredReferenceFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Radial, Transverse, Normal
-  case rtn = 0
-  ///  Transverse, Velocity, Normal
-  case tvn = 1
-
-  public static var max: objectCenteredReferenceFrame { return .tvn }
-  public static var min: objectCenteredReferenceFrame { return .rtn }
-}
-
-
 public enum screeningVolumeShape: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -46,33 +16,6 @@ public enum screeningVolumeShape: Int8, Enum, Verifiable {
 }
 
 
-public enum objectNumber: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case object1 = 0
-  case object2 = 1
-
-  public static var max: objectNumber { return .object2 }
-  public static var min: objectNumber { return .object1 }
-}
-
-
-public enum objectType: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case payload = 0
-  case rocketBody = 1
-  case debris = 2
-  case unknown = 3
-  case other = 4
-
-  public static var max: objectType { return .other }
-  public static var min: objectType { return .payload }
-}
-
-
 public enum covarianceMethod: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -82,19 +25,6 @@ public enum covarianceMethod: Int8, Enum, Verifiable {
 
   public static var max: covarianceMethod { return .default_ }
   public static var min: covarianceMethod { return .calculated }
-}
-
-
-public enum maneuverableType: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case yes = 0
-  case no = 1
-  case na = 2
-
-  public static var max: maneuverableType { return .na }
-  public static var min: maneuverableType { return .yes }
 }
 
 
@@ -112,92 +42,85 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case COMMENT = 4
     case OBJECT = 6
-    case OBJECT_DESIGNATOR = 8
-    case CATALOG_NAME = 10
-    case OBJECT_NAME = 12
-    case INTERNATIONAL_DESIGNATOR = 14
-    case OBJECT_TYPE = 16
-    case OPERATOR_CONTACT_POSITION = 18
-    case OPERATOR_ORGANIZATION = 20
-    case EPHEMERIS_NAME = 22
-    case COVARIANCE_METHOD = 24
-    case MANEUVERABLE = 26
-    case ORBIT_CENTER = 28
-    case REF_FRAME = 30
-    case GRAVITY_MODEL = 32
-    case ATMOSPHERIC_MODEL = 34
-    case N_BODY_PERTURBATIONS = 36
-    case SOLAR_RAD_PRESSURE = 38
-    case EARTH_TIDES = 40
-    case INTRACK_THRUST = 42
-    case TIME_LASTOB_START = 44
-    case TIME_LASTOB_END = 46
-    case RECOMMENDED_OD_SPAN = 48
-    case ACTUAL_OD_SPAN = 50
-    case OBS_AVAILABLE = 52
-    case OBS_USED = 54
-    case TRACKS_AVAILABLE = 56
-    case TRACKS_USED = 58
-    case RESIDUALS_ACCEPTED = 60
-    case WEIGHTED_RMS = 62
-    case AREA_PC = 64
-    case AREA_DRG = 66
-    case AREA_SRP = 68
-    case MASS = 70
-    case CR_AREA_OVER_MASS = 72
-    case THRUST_ACCELERATION = 74
-    case SEDR = 76
-    case X = 78
-    case Y = 80
-    case Z = 82
-    case X_DOT = 84
-    case Y_DOT = 86
-    case Z_DOT = 88
-    case CR_R = 90
-    case CT_R = 92
-    case CT_T = 94
-    case CN_R = 96
-    case CN_T = 98
-    case CN_N = 100
-    case CRDOT_R = 102
-    case CRDOT_T = 104
-    case CRDOT_N = 106
-    case CRDOT_RDOT = 108
-    case CTDOT_R = 110
-    case CTDOT_T = 112
-    case CTDOT_N = 114
-    case CTDOT_RDOT = 116
-    case CTDOT_TDOT = 118
-    case CNDOT_R = 120
-    case CNDOT_T = 122
-    case CNDOT_N = 124
-    case CNDOT_RDOT = 126
-    case CNDOT_TDOT = 128
-    case CNDOT_NDOT = 130
-    case CDRG_R = 132
-    case CDRG_T = 134
-    case CDRG_N = 136
-    case CDRG_RDOT = 138
-    case CDRG_TDOT = 140
-    case CDRG_NDOT = 142
-    case CDRG_DRG = 144
-    case CSRP_R = 146
-    case CSRP_T = 148
-    case CSRP_N = 150
-    case CSRP_RDOT = 152
-    case CSRP_TDOT = 154
-    case CSRP_NDOT = 156
-    case CSRP_DRG = 158
-    case CSRP_SRP = 160
-    case CTHR_R = 162
-    case CTHR_T = 164
-    case CTHR_N = 166
-    case CTHR_RDOT = 168
-    case CTHR_TDOT = 170
-    case CTHR_NDOT = 172
-    case CTHR_DRG = 174
-    case CTHR_SRP = 176
-    case CTHR_THR = 178
+    case POC = 8
+    case OPERATOR_CONTACT_POSITION = 10
+    case OPERATOR_ORGANIZATION = 12
+    case EPHEMERIS_NAME = 14
+    case COVARIANCE_METHOD = 16
+    case REF_FRAME = 18
+    case GRAVITY_MODEL = 20
+    case ATMOSPHERIC_MODEL = 22
+    case N_BODY_PERTURBATIONS = 24
+    case SOLAR_RAD_PRESSURE = 26
+    case EARTH_TIDES = 28
+    case INTRACK_THRUST = 30
+    case TIME_LASTOB_START = 32
+    case TIME_LASTOB_END = 34
+    case RECOMMENDED_OD_SPAN = 36
+    case ACTUAL_OD_SPAN = 38
+    case OBS_AVAILABLE = 40
+    case OBS_USED = 42
+    case TRACKS_AVAILABLE = 44
+    case TRACKS_USED = 46
+    case RESIDUALS_ACCEPTED = 48
+    case WEIGHTED_RMS = 50
+    case AREA_PC = 52
+    case AREA_DRG = 54
+    case AREA_SRP = 56
+    case CR_AREA_OVER_MASS = 58
+    case THRUST_ACCELERATION = 60
+    case SEDR = 62
+    case X = 64
+    case Y = 66
+    case Z = 68
+    case X_DOT = 70
+    case Y_DOT = 72
+    case Z_DOT = 74
+    case CR_R = 76
+    case CT_R = 78
+    case CT_T = 80
+    case CN_R = 82
+    case CN_T = 84
+    case CN_N = 86
+    case CRDOT_R = 88
+    case CRDOT_T = 90
+    case CRDOT_N = 92
+    case CRDOT_RDOT = 94
+    case CTDOT_R = 96
+    case CTDOT_T = 98
+    case CTDOT_N = 100
+    case CTDOT_RDOT = 102
+    case CTDOT_TDOT = 104
+    case CNDOT_R = 106
+    case CNDOT_T = 108
+    case CNDOT_N = 110
+    case CNDOT_RDOT = 112
+    case CNDOT_TDOT = 114
+    case CNDOT_NDOT = 116
+    case CDRG_R = 118
+    case CDRG_T = 120
+    case CDRG_N = 122
+    case CDRG_RDOT = 124
+    case CDRG_TDOT = 126
+    case CDRG_NDOT = 128
+    case CDRG_DRG = 130
+    case CSRP_R = 132
+    case CSRP_T = 134
+    case CSRP_N = 136
+    case CSRP_RDOT = 138
+    case CSRP_TDOT = 140
+    case CSRP_NDOT = 142
+    case CSRP_DRG = 144
+    case CSRP_SRP = 146
+    case CTHR_R = 148
+    case CTHR_T = 150
+    case CTHR_N = 152
+    case CTHR_RDOT = 154
+    case CTHR_TDOT = 156
+    case CTHR_NDOT = 158
+    case CTHR_DRG = 160
+    case CTHR_SRP = 162
+    case CTHR_THR = 164
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -205,22 +128,9 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   ///  A comment
   public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
-  ///  Object number
-  public var OBJECT: objectNumber { let o = _accessor.offset(VTOFFSET.OBJECT.v); return o == 0 ? .object1 : objectNumber(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .object1 }
-  ///  Object designator
-  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_DESIGNATOR.v) }
-  ///  Catalog name
-  public var CATALOG_NAME: String? { let o = _accessor.offset(VTOFFSET.CATALOG_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CATALOG_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CATALOG_NAME.v) }
-  ///  Object name
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
-  ///  International designator
-  public var INTERNATIONAL_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.INTERNATIONAL_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERNATIONAL_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERNATIONAL_DESIGNATOR.v) }
-  ///  Object type
-  public var OBJECT_TYPE: objectType { let o = _accessor.offset(VTOFFSET.OBJECT_TYPE.v); return o == 0 ? .payload : objectType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .payload }
+  public var OBJECT: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  ///  Point of Contact
+  public var POC: EPM? { let o = _accessor.offset(VTOFFSET.POC.v); return o == 0 ? nil : EPM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Operator contact position
   public var OPERATOR_CONTACT_POSITION: String? { let o = _accessor.offset(VTOFFSET.OPERATOR_CONTACT_POSITION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPERATOR_CONTACT_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATOR_CONTACT_POSITION.v) }
@@ -232,13 +142,8 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public var EPHEMERIS_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPHEMERIS_NAME.v) }
   ///  Covariance method
   public var COVARIANCE_METHOD: covarianceMethod { let o = _accessor.offset(VTOFFSET.COVARIANCE_METHOD.v); return o == 0 ? .calculated : covarianceMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .calculated }
-  ///  Maneuverable type
-  public var MANEUVERABLE: maneuverableType { let o = _accessor.offset(VTOFFSET.MANEUVERABLE.v); return o == 0 ? .yes : maneuverableType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .yes }
-  ///  Orbit center
-  public var ORBIT_CENTER: String? { let o = _accessor.offset(VTOFFSET.ORBIT_CENTER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORBIT_CENTERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORBIT_CENTER.v) }
-  ///  Reference frame
-  public var REF_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? .eme2000 : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eme2000 }
+  ///  Reference Frame in which the object position is defined
+  public var REF_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Gravity model
   public var GRAVITY_MODEL: String? { let o = _accessor.offset(VTOFFSET.GRAVITY_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GRAVITY_MODEL.v) }
@@ -282,8 +187,6 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public var AREA_DRG: Double { let o = _accessor.offset(VTOFFSET.AREA_DRG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Area of the object solar radiation pressure
   public var AREA_SRP: Double { let o = _accessor.offset(VTOFFSET.AREA_SRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Mass of the object
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Object's area-to-mass ratio
   public var CR_AREA_OVER_MASS: Double { let o = _accessor.offset(VTOFFSET.CR_AREA_OVER_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Object's thrust acceleration
@@ -392,20 +295,14 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public var CTHR_SRP: Double { let o = _accessor.offset(VTOFFSET.CTHR_SRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Covariance Matrix component
   public var CTHR_THR: Double { let o = _accessor.offset(VTOFFSET.CTHR_THR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startCDMObject(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 88) }
+  public static func startCDMObject(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 81) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
-  public static func add(OBJECT: objectNumber, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT.rawValue, def: 0, at: VTOFFSET.OBJECT.p) }
-  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VTOFFSET.OBJECT_DESIGNATOR.p) }
-  public static func add(CATALOG_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_NAME, at: VTOFFSET.CATALOG_NAME.p) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
-  public static func add(INTERNATIONAL_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNATIONAL_DESIGNATOR, at: VTOFFSET.INTERNATIONAL_DESIGNATOR.p) }
-  public static func add(OBJECT_TYPE: objectType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_TYPE.rawValue, def: 0, at: VTOFFSET.OBJECT_TYPE.p) }
+  public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
+  public static func add(POC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POC, at: VTOFFSET.POC.p) }
   public static func add(OPERATOR_CONTACT_POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_CONTACT_POSITION, at: VTOFFSET.OPERATOR_CONTACT_POSITION.p) }
   public static func add(OPERATOR_ORGANIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_ORGANIZATION, at: VTOFFSET.OPERATOR_ORGANIZATION.p) }
   public static func add(EPHEMERIS_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_NAME, at: VTOFFSET.EPHEMERIS_NAME.p) }
   public static func add(COVARIANCE_METHOD: covarianceMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVARIANCE_METHOD.rawValue, def: 0, at: VTOFFSET.COVARIANCE_METHOD.p) }
-  public static func add(MANEUVERABLE: maneuverableType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVERABLE.rawValue, def: 0, at: VTOFFSET.MANEUVERABLE.p) }
-  public static func add(ORBIT_CENTER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_CENTER, at: VTOFFSET.ORBIT_CENTER.p) }
   public static func add(REF_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME.rawValue, def: 0, at: VTOFFSET.REF_FRAME.p) }
   public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VTOFFSET.GRAVITY_MODEL.p) }
   public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VTOFFSET.ATMOSPHERIC_MODEL.p) }
@@ -429,7 +326,6 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public static func add(AREA_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_PC, def: 0.0, at: VTOFFSET.AREA_PC.p) }
   public static func add(AREA_DRG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_DRG, def: 0.0, at: VTOFFSET.AREA_DRG.p) }
   public static func add(AREA_SRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_SRP, def: 0.0, at: VTOFFSET.AREA_SRP.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
   public static func add(CR_AREA_OVER_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CR_AREA_OVER_MASS, def: 0.0, at: VTOFFSET.CR_AREA_OVER_MASS.p) }
   public static func add(THRUST_ACCELERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST_ACCELERATION, def: 0.0, at: VTOFFSET.THRUST_ACCELERATION.p) }
   public static func add(SEDR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEDR, def: 0.0, at: VTOFFSET.SEDR.p) }
@@ -488,19 +384,13 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public static func createCDMObject(
     _ fbb: inout FlatBufferBuilder,
     COMMENTOffset COMMENT: Offset = Offset(),
-    OBJECT: objectNumber = .object1,
-    OBJECT_DESIGNATOROffset OBJECT_DESIGNATOR: Offset = Offset(),
-    CATALOG_NAMEOffset CATALOG_NAME: Offset = Offset(),
-    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
-    INTERNATIONAL_DESIGNATOROffset INTERNATIONAL_DESIGNATOR: Offset = Offset(),
-    OBJECT_TYPE: objectType = .payload,
+    OBJECTOffset OBJECT: Offset = Offset(),
+    POCOffset POC: Offset = Offset(),
     OPERATOR_CONTACT_POSITIONOffset OPERATOR_CONTACT_POSITION: Offset = Offset(),
     OPERATOR_ORGANIZATIONOffset OPERATOR_ORGANIZATION: Offset = Offset(),
     EPHEMERIS_NAMEOffset EPHEMERIS_NAME: Offset = Offset(),
     COVARIANCE_METHOD: covarianceMethod = .calculated,
-    MANEUVERABLE: maneuverableType = .yes,
-    ORBIT_CENTEROffset ORBIT_CENTER: Offset = Offset(),
-    REF_FRAME: referenceFrame = .eme2000,
+    REF_FRAME: referenceFrame = .ecef,
     GRAVITY_MODELOffset GRAVITY_MODEL: Offset = Offset(),
     ATMOSPHERIC_MODELOffset ATMOSPHERIC_MODEL: Offset = Offset(),
     N_BODY_PERTURBATIONSOffset N_BODY_PERTURBATIONS: Offset = Offset(),
@@ -520,7 +410,6 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     AREA_PC: Double = 0.0,
     AREA_DRG: Double = 0.0,
     AREA_SRP: Double = 0.0,
-    MASS: Double = 0.0,
     CR_AREA_OVER_MASS: Double = 0.0,
     THRUST_ACCELERATION: Double = 0.0,
     SEDR: Double = 0.0,
@@ -579,17 +468,11 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     let __start = CDMObject.startCDMObject(&fbb)
     CDMObject.add(COMMENT: COMMENT, &fbb)
     CDMObject.add(OBJECT: OBJECT, &fbb)
-    CDMObject.add(OBJECT_DESIGNATOR: OBJECT_DESIGNATOR, &fbb)
-    CDMObject.add(CATALOG_NAME: CATALOG_NAME, &fbb)
-    CDMObject.add(OBJECT_NAME: OBJECT_NAME, &fbb)
-    CDMObject.add(INTERNATIONAL_DESIGNATOR: INTERNATIONAL_DESIGNATOR, &fbb)
-    CDMObject.add(OBJECT_TYPE: OBJECT_TYPE, &fbb)
+    CDMObject.add(POC: POC, &fbb)
     CDMObject.add(OPERATOR_CONTACT_POSITION: OPERATOR_CONTACT_POSITION, &fbb)
     CDMObject.add(OPERATOR_ORGANIZATION: OPERATOR_ORGANIZATION, &fbb)
     CDMObject.add(EPHEMERIS_NAME: EPHEMERIS_NAME, &fbb)
     CDMObject.add(COVARIANCE_METHOD: COVARIANCE_METHOD, &fbb)
-    CDMObject.add(MANEUVERABLE: MANEUVERABLE, &fbb)
-    CDMObject.add(ORBIT_CENTER: ORBIT_CENTER, &fbb)
     CDMObject.add(REF_FRAME: REF_FRAME, &fbb)
     CDMObject.add(GRAVITY_MODEL: GRAVITY_MODEL, &fbb)
     CDMObject.add(ATMOSPHERIC_MODEL: ATMOSPHERIC_MODEL, &fbb)
@@ -610,7 +493,6 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     CDMObject.add(AREA_PC: AREA_PC, &fbb)
     CDMObject.add(AREA_DRG: AREA_DRG, &fbb)
     CDMObject.add(AREA_SRP: AREA_SRP, &fbb)
-    CDMObject.add(MASS: MASS, &fbb)
     CDMObject.add(CR_AREA_OVER_MASS: CR_AREA_OVER_MASS, &fbb)
     CDMObject.add(THRUST_ACCELERATION: THRUST_ACCELERATION, &fbb)
     CDMObject.add(SEDR: SEDR, &fbb)
@@ -671,18 +553,12 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT.p, fieldName: "OBJECT", required: false, type: objectNumber.self)
-    try _v.visit(field: VTOFFSET.OBJECT_DESIGNATOR.p, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CATALOG_NAME.p, fieldName: "CATALOG_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTERNATIONAL_DESIGNATOR.p, fieldName: "INTERNATIONAL_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_TYPE.p, fieldName: "OBJECT_TYPE", required: false, type: objectType.self)
+    try _v.visit(field: VTOFFSET.OBJECT.p, fieldName: "OBJECT", required: false, type: ForwardOffset<CAT>.self)
+    try _v.visit(field: VTOFFSET.POC.p, fieldName: "POC", required: false, type: ForwardOffset<EPM>.self)
     try _v.visit(field: VTOFFSET.OPERATOR_CONTACT_POSITION.p, fieldName: "OPERATOR_CONTACT_POSITION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OPERATOR_ORGANIZATION.p, fieldName: "OPERATOR_ORGANIZATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EPHEMERIS_NAME.p, fieldName: "EPHEMERIS_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COVARIANCE_METHOD.p, fieldName: "COVARIANCE_METHOD", required: false, type: covarianceMethod.self)
-    try _v.visit(field: VTOFFSET.MANEUVERABLE.p, fieldName: "MANEUVERABLE", required: false, type: maneuverableType.self)
-    try _v.visit(field: VTOFFSET.ORBIT_CENTER.p, fieldName: "ORBIT_CENTER", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: referenceFrame.self)
     try _v.visit(field: VTOFFSET.GRAVITY_MODEL.p, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ATMOSPHERIC_MODEL.p, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<String>.self)
@@ -703,7 +579,6 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.AREA_PC.p, fieldName: "AREA_PC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.AREA_DRG.p, fieldName: "AREA_DRG", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.AREA_SRP.p, fieldName: "AREA_SRP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CR_AREA_OVER_MASS.p, fieldName: "CR_AREA_OVER_MASS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.THRUST_ACCELERATION.p, fieldName: "THRUST_ACCELERATION", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SEDR.p, fieldName: "SEDR", required: false, type: Double.self)
@@ -848,7 +723,7 @@ public struct CDM: FlatBufferObject, Verifiable {
   public var STOP_SCREEN_PERIOD: String? { let o = _accessor.offset(VTOFFSET.STOP_SCREEN_PERIOD.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STOP_SCREEN_PERIODSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_SCREEN_PERIOD.v) }
   ///  The reference frame for the screening volume
-  public var SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame { let o = _accessor.offset(VTOFFSET.SCREEN_VOLUME_FRAME.v); return o == 0 ? .rtn : objectCenteredReferenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rtn }
+  public var SCREEN_VOLUME_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.SCREEN_VOLUME_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  The shape of the screening volume
   public var SCREEN_VOLUME_SHAPE: screeningVolumeShape { let o = _accessor.offset(VTOFFSET.SCREEN_VOLUME_SHAPE.v); return o == 0 ? .ellipsoid : screeningVolumeShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ellipsoid }
   ///  The X dimension of the screening volume
@@ -893,7 +768,7 @@ public struct CDM: FlatBufferObject, Verifiable {
   public static func add(RELATIVE_VELOCITY_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_VELOCITY_N, def: 0.0, at: VTOFFSET.RELATIVE_VELOCITY_N.p) }
   public static func add(START_SCREEN_PERIOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_SCREEN_PERIOD, at: VTOFFSET.START_SCREEN_PERIOD.p) }
   public static func add(STOP_SCREEN_PERIOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_SCREEN_PERIOD, at: VTOFFSET.STOP_SCREEN_PERIOD.p) }
-  public static func add(SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_FRAME.rawValue, def: 0, at: VTOFFSET.SCREEN_VOLUME_FRAME.p) }
+  public static func add(SCREEN_VOLUME_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_FRAME.rawValue, def: 0, at: VTOFFSET.SCREEN_VOLUME_FRAME.p) }
   public static func add(SCREEN_VOLUME_SHAPE: screeningVolumeShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_SHAPE.rawValue, def: 0, at: VTOFFSET.SCREEN_VOLUME_SHAPE.p) }
   public static func add(SCREEN_VOLUME_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_X, def: 0.0, at: VTOFFSET.SCREEN_VOLUME_X.p) }
   public static func add(SCREEN_VOLUME_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_Y, def: 0.0, at: VTOFFSET.SCREEN_VOLUME_Y.p) }
@@ -925,7 +800,7 @@ public struct CDM: FlatBufferObject, Verifiable {
     RELATIVE_VELOCITY_N: Double = 0.0,
     START_SCREEN_PERIODOffset START_SCREEN_PERIOD: Offset = Offset(),
     STOP_SCREEN_PERIODOffset STOP_SCREEN_PERIOD: Offset = Offset(),
-    SCREEN_VOLUME_FRAME: objectCenteredReferenceFrame = .rtn,
+    SCREEN_VOLUME_FRAME: referenceFrame = .ecef,
     SCREEN_VOLUME_SHAPE: screeningVolumeShape = .ellipsoid,
     SCREEN_VOLUME_X: Double = 0.0,
     SCREEN_VOLUME_Y: Double = 0.0,
@@ -990,7 +865,7 @@ public struct CDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.RELATIVE_VELOCITY_N.p, fieldName: "RELATIVE_VELOCITY_N", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.START_SCREEN_PERIOD.p, fieldName: "START_SCREEN_PERIOD", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STOP_SCREEN_PERIOD.p, fieldName: "STOP_SCREEN_PERIOD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCREEN_VOLUME_FRAME.p, fieldName: "SCREEN_VOLUME_FRAME", required: false, type: objectCenteredReferenceFrame.self)
+    try _v.visit(field: VTOFFSET.SCREEN_VOLUME_FRAME.p, fieldName: "SCREEN_VOLUME_FRAME", required: false, type: referenceFrame.self)
     try _v.visit(field: VTOFFSET.SCREEN_VOLUME_SHAPE.p, fieldName: "SCREEN_VOLUME_SHAPE", required: false, type: screeningVolumeShape.self)
     try _v.visit(field: VTOFFSET.SCREEN_VOLUME_X.p, fieldName: "SCREEN_VOLUME_X", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SCREEN_VOLUME_Y.p, fieldName: "SCREEN_VOLUME_Y", required: false, type: Double.self)

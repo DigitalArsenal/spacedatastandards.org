@@ -106,7 +106,7 @@ func (rcv *OMM) REF_FRAME() referenceFrame {
 	if o != 0 {
 		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return 9
+	return 2
 }
 
 /// Name of the reference frame (TEME, EME2000, etc.)
@@ -862,7 +862,7 @@ func OMMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOf
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CENTER_NAME), 0)
 }
 func OMMAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME referenceFrame) {
-	builder.PrependInt8Slot(6, int8(REF_FRAME), 9)
+	builder.PrependInt8Slot(6, int8(REF_FRAME), 2)
 }
 func OMMAddREF_FRAME_EPOCH(builder *flatbuffers.Builder, REF_FRAME_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REF_FRAME_EPOCH), 0)

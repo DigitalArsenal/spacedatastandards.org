@@ -3,6 +3,7 @@
 
 // @generated
 
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -126,7 +127,6 @@ impl<'a> EOO<'a> {
     if let Some(x) = args.SOURCE_DL { builder.add_SOURCE_DL(x); }
     if let Some(x) = args.ORIG_NETWORK { builder.add_ORIG_NETWORK(x); }
     if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
-    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     if let Some(x) = args.CREATED_BY { builder.add_CREATED_BY(x); }
     if let Some(x) = args.CREATED_AT { builder.add_CREATED_AT(x); }
     if let Some(x) = args.DATA_MODE { builder.add_DATA_MODE(x); }
@@ -206,6 +206,7 @@ impl<'a> EOO<'a> {
     if let Some(x) = args.EOBSERVATION_ID { builder.add_EOBSERVATION_ID(x); }
     builder.add_PENUMBRA(args.PENUMBRA);
     builder.add_UMBRA(args.UMBRA);
+    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.add_UCT(args.UCT);
     builder.finish()
   }
@@ -327,9 +328,7 @@ impl<'a> EOO<'a> {
     let CREATED_BY = self.CREATED_BY().map(|x| {
       x.to_string()
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
-      x.to_string()
-    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME();
     let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
       x.to_string()
     });
@@ -1059,11 +1058,11 @@ impl<'a> EOO<'a> {
   }
   /// Reference frame of the observation
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> Option<&'a str> {
+  pub fn REFERENCE_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_REFERENCE_FRAME, None)}
+    unsafe { self._tab.get::<referenceFrame>(EOO::VT_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// Reference frame of the sensor
   #[inline]
@@ -1200,7 +1199,7 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DATA_MODE", Self::VT_DATA_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_BY", Self::VT_CREATED_BY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<referenceFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
      .visit_field::<bool>("UMBRA", Self::VT_UMBRA, false)?
      .visit_field::<bool>("PENUMBRA", Self::VT_PENUMBRA, false)?
@@ -1290,7 +1289,7 @@ pub struct EOOArgs<'a> {
     pub DATA_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CREATED_AT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CREATED_BY: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: referenceFrame,
     pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub UMBRA: bool,
     pub PENUMBRA: bool,
@@ -1380,7 +1379,7 @@ impl<'a> Default for EOOArgs<'a> {
       DATA_MODE: None,
       CREATED_AT: None,
       CREATED_BY: None,
-      REFERENCE_FRAME: None,
+      REFERENCE_FRAME: referenceFrame::ECEF,
       SEN_REFERENCE_FRAME: None,
       UMBRA: false,
       PENUMBRA: false,
@@ -1709,8 +1708,8 @@ impl<'a: 'b, 'b> EOOBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_CREATED_BY, CREATED_BY);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME, referenceFrame::ECEF);
   }
   #[inline]
   pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1923,7 +1922,7 @@ pub struct EOOT {
   pub DATA_MODE: Option<String>,
   pub CREATED_AT: Option<String>,
   pub CREATED_BY: Option<String>,
-  pub REFERENCE_FRAME: Option<String>,
+  pub REFERENCE_FRAME: referenceFrame,
   pub SEN_REFERENCE_FRAME: Option<String>,
   pub UMBRA: bool,
   pub PENUMBRA: bool,
@@ -2012,7 +2011,7 @@ impl Default for EOOT {
       DATA_MODE: None,
       CREATED_AT: None,
       CREATED_BY: None,
-      REFERENCE_FRAME: None,
+      REFERENCE_FRAME: referenceFrame::ECEF,
       SEN_REFERENCE_FRAME: None,
       UMBRA: false,
       PENUMBRA: false,
@@ -2143,9 +2142,7 @@ impl EOOT {
     let CREATED_BY = self.CREATED_BY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME;
     let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });

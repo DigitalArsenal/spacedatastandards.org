@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { ByteBuffer } from "flatbuffers";
+  import { location, push, querystring } from "svelte-spa-router";
+
   import {
     SCHEMA_MANIFEST,
     SCHEMA_MANIFESTT,
@@ -9,10 +11,31 @@
   } from "standards/ts/SCHEMA_MANIFEST/main";
   import jsonSchema from "standards/json/index.json";
   import dataSchema from "root/scripts/datatypes.json";
+  import search from "svelte-awesome/icons/search";
 
   interface SelectedFiles {
     [key: string]: string; // Define the type for selectedFiles
   }
+
+  function updateSearch(asdf: string | null) {
+    if (!manifestData) return;
+    if (asdf) {
+      // Construct the new query string
+      const queryParams = new URLSearchParams();
+      queryParams.set("search", asdf);
+
+      // Update the URL with the new query string
+      push(`#${$location}?${queryParams}`);
+    } else {
+      push(`#${$location}`);
+    }
+  }
+  const setSearch = (searchQueryParam: string | null) => {
+    if (searchQueryParam && $searchInput !== searchQueryParam) {
+      searchInput.set(searchQueryParam);
+      updateSearch(searchQueryParam);
+    }
+  };
 
   let idlContent = writable("");
   let selectedFiles = writable<SelectedFiles>({}); // Use the interface for the store
@@ -39,7 +62,9 @@
   // Update filteredStandards whenever searchInput changes
   searchInput.subscribe((value) => {
     filterStandards(value);
+    updateSearch(value);
   });
+
   onMount(async () => {
     try {
       const response = await fetch("./dist/manifest.fb");
@@ -73,10 +98,19 @@
       return files;
     });
   };
+
+  $: {
+    if (manifestData) {
+      const params = new URLSearchParams($querystring);
+      const searchQueryParam = params.get("search");
+      setSearch(searchQueryParam);
+    }
+  }
 </script>
 
 <div class="text-black flex gap-2 fixed max-h-[calc(100vh-4rem)] top-16 w-full">
-  <div class="list-section overflow-x-hidden pt-12 min-w-[500px] w-1/2 select-none">
+  <div
+    class="list-section overflow-x-hidden pt-12 min-w-[500px] w-1/2 select-none">
     <input
       type="search"
       bind:value={$searchInput}
@@ -101,7 +135,6 @@
             on:click={() => {
               //@ts-ignore
               idlContent.set(standard.idl?.toString());
-
             }}>Show IDL</button>
         </p>
         {#if standard.files && standard.files.length > 0}

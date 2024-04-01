@@ -765,10 +765,13 @@ class EOO extends Table
     }
 
     /// Reference frame of the observation
+    /**
+     * @return sbyte
+     */
     public function getREFERENCE_FRAME()
     {
         $o = $this->__offset(160);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
     }
 
     /// Reference frame of the sensor
@@ -1706,12 +1709,12 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
     {
-        $builder->addOffsetX(78, $REFERENCE_FRAME, 0);
+        $builder->addSbyteX(78, $REFERENCE_FRAME, 0);
     }
 
     /**

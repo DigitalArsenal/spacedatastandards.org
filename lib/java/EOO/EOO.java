@@ -382,9 +382,7 @@ public final class EOO extends Table {
   /**
    * Reference frame of the observation
    */
-  public String REFERENCE_FRAME() { int o = __offset(160); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(160, 1); }
-  public ByteBuffer REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 160, 1); }
+  public byte REFERENCE_FRAME() { int o = __offset(160); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Reference frame of the sensor
    */
@@ -497,7 +495,7 @@ public final class EOO extends Table {
       int DATA_MODEOffset,
       int CREATED_ATOffset,
       int CREATED_BYOffset,
-      int REFERENCE_FRAMEOffset,
+      byte REFERENCE_FRAME,
       int SEN_REFERENCE_FRAMEOffset,
       boolean UMBRA,
       boolean PENUMBRA,
@@ -509,7 +507,6 @@ public final class EOO extends Table {
     EOO.addSourceDl(builder, SOURCE_DLOffset);
     EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
     EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
-    EOO.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
     EOO.addCreatedBy(builder, CREATED_BYOffset);
     EOO.addCreatedAt(builder, CREATED_ATOffset);
     EOO.addDataMode(builder, DATA_MODEOffset);
@@ -589,6 +586,7 @@ public final class EOO extends Table {
     EOO.addEobservationId(builder, EOBSERVATION_IDOffset);
     EOO.addPenumbra(builder, PENUMBRA);
     EOO.addUmbra(builder, UMBRA);
+    EOO.addReferenceFrame(builder, REFERENCE_FRAME);
     EOO.addUct(builder, UCT);
     return EOO.endEOO(builder);
   }
@@ -672,7 +670,7 @@ public final class EOO extends Table {
   public static void addDataMode(FlatBufferBuilder builder, int DATA_MODEOffset) { builder.addOffset(75, DATA_MODEOffset, 0); }
   public static void addCreatedAt(FlatBufferBuilder builder, int CREATED_ATOffset) { builder.addOffset(76, CREATED_ATOffset, 0); }
   public static void addCreatedBy(FlatBufferBuilder builder, int CREATED_BYOffset) { builder.addOffset(77, CREATED_BYOffset, 0); }
-  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(78, REFERENCE_FRAMEOffset, 0); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(78, REFERENCE_FRAME, 0); }
   public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(79, SEN_REFERENCE_FRAMEOffset, 0); }
   public static void addUmbra(FlatBufferBuilder builder, boolean UMBRA) { builder.addBoolean(80, UMBRA, false); }
   public static void addPenumbra(FlatBufferBuilder builder, boolean PENUMBRA) { builder.addBoolean(81, PENUMBRA, false); }

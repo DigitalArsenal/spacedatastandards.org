@@ -1,37 +1,11 @@
 include "../PNM/main.fbs";
-
-enum referenceFrame : byte {
-  /// Earth Mean Equator and Equinox of J2000
-  EME2000,
-  /// Geocentric Celestial Reference Frame
-  GCRF,
-  /// International Terrestrial Reference Frame
-  ITRF
-}
-
-enum objectCenteredReferenceFrame : byte {
-  /// Radial, Transverse, Normal
-  RTN,
-  /// Transverse, Velocity, Normal
-  TVN
-}
+include "../CAT/main.fbs";
+include "../EPM/main.fbs";
+include "../RFM/main.fbs";
 
 enum screeningVolumeShape : byte {
   ELLIPSOID,
   BOX
-}
-
-enum objectNumber : byte {
-  OBJECT1,
-  OBJECT2
-}
-
-enum objectType : byte {
-  PAYLOAD,
-  ROCKET_BODY,
-  DEBRIS,
-  UNKNOWN,
-  OTHER
 }
 
 enum covarianceMethod : byte {
@@ -39,27 +13,13 @@ enum covarianceMethod : byte {
   DEFAULT
 }
 
-enum maneuverableType : byte {
-  YES,
-  NO,
-  NA
-}
-
 table CDMObject {
   /// A comment
   COMMENT:string;
-  /// Object number
-  OBJECT:objectNumber;
-  /// Object designator
-  OBJECT_DESIGNATOR:string;
-  /// Catalog name
-  CATALOG_NAME:string;
-  /// Object name
-  OBJECT_NAME:string;
-  /// International designator
-  INTERNATIONAL_DESIGNATOR:string;
-  /// Object type
-  OBJECT_TYPE:objectType;
+  // Catalog Definition
+  OBJECT:CAT;
+  /// Point of Contact
+  POC:EPM;
   /// Operator contact position
   OPERATOR_CONTACT_POSITION:string;
   /// Operator organization
@@ -68,11 +28,7 @@ table CDMObject {
   EPHEMERIS_NAME:string;
   /// Covariance method
   COVARIANCE_METHOD:covarianceMethod;
-  /// Maneuverable type
-  MANEUVERABLE:maneuverableType;
-  /// Orbit center
-  ORBIT_CENTER:string;
-  /// Reference frame
+  /// Reference Frame in which the object position is defined
   REF_FRAME:referenceFrame;
   /// Gravity model
   GRAVITY_MODEL:string;
@@ -112,8 +68,6 @@ table CDMObject {
   AREA_DRG:double;
   /// Area of the object solar radiation pressure
   AREA_SRP:double;
-  /// Mass of the object
-  MASS:double;
   /// Object's area-to-mass ratio
   CR_AREA_OVER_MASS:double;
   /// Object's thrust acceleration
@@ -262,7 +216,7 @@ table CDM {
   /// The end time of the screening period
   STOP_SCREEN_PERIOD:string;
   /// The reference frame for the screening volume
-  SCREEN_VOLUME_FRAME:objectCenteredReferenceFrame;
+  SCREEN_VOLUME_FRAME:referenceFrame;
   /// The shape of the screening volume
   SCREEN_VOLUME_SHAPE:screeningVolumeShape;
   /// The X dimension of the screening volume

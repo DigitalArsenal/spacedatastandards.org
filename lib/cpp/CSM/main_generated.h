@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct CSM;
 struct CSMBuilder;
 
@@ -20,37 +22,27 @@ struct CSMBuilder;
 struct CSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CSMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NORAD_CAT_ID_1 = 4,
-    VT_OBJECT_NAME_1 = 6,
-    VT_DSE_1 = 8,
-    VT_NORAD_CAT_ID_2 = 10,
-    VT_OBJECT_NAME_2 = 12,
-    VT_DSE_2 = 14,
-    VT_TCA = 16,
-    VT_TCA_RANGE = 18,
-    VT_TCA_RELATIVE_SPEED = 20,
-    VT_MAX_PROB = 22,
-    VT_DILUTION = 24
+    VT_OBJECT_1 = 4,
+    VT_DSE_1 = 6,
+    VT_OBJECT_2 = 8,
+    VT_DSE_2 = 10,
+    VT_TCA = 12,
+    VT_TCA_RANGE = 14,
+    VT_TCA_RELATIVE_SPEED = 16,
+    VT_MAX_PROB = 18,
+    VT_DILUTION = 20
   };
-  /// NORAD Catalog Number for the first object
-  uint32_t NORAD_CAT_ID_1() const {
-    return GetField<uint32_t>(VT_NORAD_CAT_ID_1, 0);
-  }
   /// Satellite name for the first object
-  const ::flatbuffers::String *OBJECT_NAME_1() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME_1);
+  const CAT *OBJECT_1() const {
+    return GetPointer<const CAT *>(VT_OBJECT_1);
   }
   /// Days since epoch for the first object
   double DSE_1() const {
     return GetField<double>(VT_DSE_1, 0.0);
   }
-  /// NORAD Catalog Number for the second object
-  uint32_t NORAD_CAT_ID_2() const {
-    return GetField<uint32_t>(VT_NORAD_CAT_ID_2, 0);
-  }
   /// Satellite name for the second object
-  const ::flatbuffers::String *OBJECT_NAME_2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME_2);
+  const CAT *OBJECT_2() const {
+    return GetPointer<const CAT *>(VT_OBJECT_2);
   }
   /// Days since epoch for the second object
   double DSE_2() const {
@@ -78,13 +70,11 @@ struct CSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID_1, 4) &&
-           VerifyOffset(verifier, VT_OBJECT_NAME_1) &&
-           verifier.VerifyString(OBJECT_NAME_1()) &&
+           VerifyOffset(verifier, VT_OBJECT_1) &&
+           verifier.VerifyTable(OBJECT_1()) &&
            VerifyField<double>(verifier, VT_DSE_1, 8) &&
-           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID_2, 4) &&
-           VerifyOffset(verifier, VT_OBJECT_NAME_2) &&
-           verifier.VerifyString(OBJECT_NAME_2()) &&
+           VerifyOffset(verifier, VT_OBJECT_2) &&
+           verifier.VerifyTable(OBJECT_2()) &&
            VerifyField<double>(verifier, VT_DSE_2, 8) &&
            VerifyField<double>(verifier, VT_TCA, 8) &&
            VerifyField<double>(verifier, VT_TCA_RANGE, 8) &&
@@ -99,20 +89,14 @@ struct CSMBuilder {
   typedef CSM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_NORAD_CAT_ID_1(uint32_t NORAD_CAT_ID_1) {
-    fbb_.AddElement<uint32_t>(CSM::VT_NORAD_CAT_ID_1, NORAD_CAT_ID_1, 0);
-  }
-  void add_OBJECT_NAME_1(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME_1) {
-    fbb_.AddOffset(CSM::VT_OBJECT_NAME_1, OBJECT_NAME_1);
+  void add_OBJECT_1(::flatbuffers::Offset<CAT> OBJECT_1) {
+    fbb_.AddOffset(CSM::VT_OBJECT_1, OBJECT_1);
   }
   void add_DSE_1(double DSE_1) {
     fbb_.AddElement<double>(CSM::VT_DSE_1, DSE_1, 0.0);
   }
-  void add_NORAD_CAT_ID_2(uint32_t NORAD_CAT_ID_2) {
-    fbb_.AddElement<uint32_t>(CSM::VT_NORAD_CAT_ID_2, NORAD_CAT_ID_2, 0);
-  }
-  void add_OBJECT_NAME_2(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME_2) {
-    fbb_.AddOffset(CSM::VT_OBJECT_NAME_2, OBJECT_NAME_2);
+  void add_OBJECT_2(::flatbuffers::Offset<CAT> OBJECT_2) {
+    fbb_.AddOffset(CSM::VT_OBJECT_2, OBJECT_2);
   }
   void add_DSE_2(double DSE_2) {
     fbb_.AddElement<double>(CSM::VT_DSE_2, DSE_2, 0.0);
@@ -145,11 +129,9 @@ struct CSMBuilder {
 
 inline ::flatbuffers::Offset<CSM> CreateCSM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint32_t NORAD_CAT_ID_1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME_1 = 0,
+    ::flatbuffers::Offset<CAT> OBJECT_1 = 0,
     double DSE_1 = 0.0,
-    uint32_t NORAD_CAT_ID_2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME_2 = 0,
+    ::flatbuffers::Offset<CAT> OBJECT_2 = 0,
     double DSE_2 = 0.0,
     double TCA = 0.0,
     double TCA_RANGE = 0.0,
@@ -164,41 +146,9 @@ inline ::flatbuffers::Offset<CSM> CreateCSM(
   builder_.add_TCA(TCA);
   builder_.add_DSE_2(DSE_2);
   builder_.add_DSE_1(DSE_1);
-  builder_.add_OBJECT_NAME_2(OBJECT_NAME_2);
-  builder_.add_NORAD_CAT_ID_2(NORAD_CAT_ID_2);
-  builder_.add_OBJECT_NAME_1(OBJECT_NAME_1);
-  builder_.add_NORAD_CAT_ID_1(NORAD_CAT_ID_1);
+  builder_.add_OBJECT_2(OBJECT_2);
+  builder_.add_OBJECT_1(OBJECT_1);
   return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<CSM> CreateCSMDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint32_t NORAD_CAT_ID_1 = 0,
-    const char *OBJECT_NAME_1 = nullptr,
-    double DSE_1 = 0.0,
-    uint32_t NORAD_CAT_ID_2 = 0,
-    const char *OBJECT_NAME_2 = nullptr,
-    double DSE_2 = 0.0,
-    double TCA = 0.0,
-    double TCA_RANGE = 0.0,
-    double TCA_RELATIVE_SPEED = 0.0,
-    double MAX_PROB = 0.0,
-    double DILUTION = 0.0) {
-  auto OBJECT_NAME_1__ = OBJECT_NAME_1 ? _fbb.CreateString(OBJECT_NAME_1) : 0;
-  auto OBJECT_NAME_2__ = OBJECT_NAME_2 ? _fbb.CreateString(OBJECT_NAME_2) : 0;
-  return CreateCSM(
-      _fbb,
-      NORAD_CAT_ID_1,
-      OBJECT_NAME_1__,
-      DSE_1,
-      NORAD_CAT_ID_2,
-      OBJECT_NAME_2__,
-      DSE_2,
-      TCA,
-      TCA_RANGE,
-      TCA_RELATIVE_SPEED,
-      MAX_PROB,
-      DILUTION);
 }
 
 inline const CSM *GetCSM(const void *buf) {

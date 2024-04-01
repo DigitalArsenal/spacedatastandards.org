@@ -47,72 +47,39 @@ class CDMObject extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Object number
-    /**
-     * @return sbyte
-     */
     public function getOBJECT()
     {
+        $obj = new CAT();
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \objectNumber::OBJECT1;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Object designator
-    public function getOBJECT_DESIGNATOR()
+    /// Point of Contact
+    public function getPOC()
     {
+        $obj = new EPM();
         $o = $this->__offset(8);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Catalog name
-    public function getCATALOG_NAME()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Object name
-    public function getOBJECT_NAME()
-    {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// International designator
-    public function getINTERNATIONAL_DESIGNATOR()
-    {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Object type
-    /**
-     * @return sbyte
-     */
-    public function getOBJECT_TYPE()
-    {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \objectType::PAYLOAD;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Operator contact position
     public function getOPERATOR_CONTACT_POSITION()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Operator organization
     public function getOPERATOR_ORGANIZATION()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Ephemeris name
     public function getEPHEMERIS_NAME()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -122,55 +89,38 @@ class CDMObject extends Table
      */
     public function getCOVARIANCE_METHOD()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceMethod::CALCULATED;
     }
 
-    /// Maneuverable type
-    /**
-     * @return sbyte
-     */
-    public function getMANEUVERABLE()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \maneuverableType::YES;
-    }
-
-    /// Orbit center
-    public function getORBIT_CENTER()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Reference frame
+    /// Reference Frame in which the object position is defined
     /**
      * @return sbyte
      */
     public function getREF_FRAME()
     {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::EME2000;
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
     }
 
     /// Gravity model
     public function getGRAVITY_MODEL()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Atmospheric model
     public function getATMOSPHERIC_MODEL()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// N-body perturbations
     public function getN_BODY_PERTURBATIONS()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -180,7 +130,7 @@ class CDMObject extends Table
      */
     public function getSOLAR_RAD_PRESSURE()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -190,7 +140,7 @@ class CDMObject extends Table
      */
     public function getEARTH_TIDES()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -200,21 +150,21 @@ class CDMObject extends Table
      */
     public function getINTRACK_THRUST()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
     /// Time of last observation start
     public function getTIME_LASTOB_START()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Time of last observation end
     public function getTIME_LASTOB_END()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -224,7 +174,7 @@ class CDMObject extends Table
      */
     public function getRECOMMENDED_OD_SPAN()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -234,7 +184,7 @@ class CDMObject extends Table
      */
     public function getACTUAL_OD_SPAN()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -244,7 +194,7 @@ class CDMObject extends Table
      */
     public function getOBS_AVAILABLE()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -254,7 +204,7 @@ class CDMObject extends Table
      */
     public function getOBS_USED()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -264,7 +214,7 @@ class CDMObject extends Table
      */
     public function getTRACKS_AVAILABLE()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -274,7 +224,7 @@ class CDMObject extends Table
      */
     public function getTRACKS_USED()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -284,7 +234,7 @@ class CDMObject extends Table
      */
     public function getRESIDUALS_ACCEPTED()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -294,7 +244,7 @@ class CDMObject extends Table
      */
     public function getWEIGHTED_RMS()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -304,7 +254,7 @@ class CDMObject extends Table
      */
     public function getAREA_PC()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -314,7 +264,7 @@ class CDMObject extends Table
      */
     public function getAREA_DRG()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -324,17 +274,7 @@ class CDMObject extends Table
      */
     public function getAREA_SRP()
     {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// Mass of the object
-    /**
-     * @return double
-     */
-    public function getMASS()
-    {
-        $o = $this->__offset(70);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -344,7 +284,7 @@ class CDMObject extends Table
      */
     public function getCR_AREA_OVER_MASS()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -354,7 +294,7 @@ class CDMObject extends Table
      */
     public function getTHRUST_ACCELERATION()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -364,7 +304,7 @@ class CDMObject extends Table
      */
     public function getSEDR()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -374,7 +314,7 @@ class CDMObject extends Table
      */
     public function getX()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -384,7 +324,7 @@ class CDMObject extends Table
      */
     public function getY()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -394,7 +334,7 @@ class CDMObject extends Table
      */
     public function getZ()
     {
-        $o = $this->__offset(82);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -404,7 +344,7 @@ class CDMObject extends Table
      */
     public function getX_DOT()
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -414,7 +354,7 @@ class CDMObject extends Table
      */
     public function getY_DOT()
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -424,7 +364,7 @@ class CDMObject extends Table
      */
     public function getZ_DOT()
     {
-        $o = $this->__offset(88);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -434,7 +374,7 @@ class CDMObject extends Table
      */
     public function getCR_R()
     {
-        $o = $this->__offset(90);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -444,7 +384,7 @@ class CDMObject extends Table
      */
     public function getCT_R()
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -454,7 +394,7 @@ class CDMObject extends Table
      */
     public function getCT_T()
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -464,7 +404,7 @@ class CDMObject extends Table
      */
     public function getCN_R()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -474,7 +414,7 @@ class CDMObject extends Table
      */
     public function getCN_T()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -484,7 +424,7 @@ class CDMObject extends Table
      */
     public function getCN_N()
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -494,7 +434,7 @@ class CDMObject extends Table
      */
     public function getCRDOT_R()
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -504,7 +444,7 @@ class CDMObject extends Table
      */
     public function getCRDOT_T()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -514,7 +454,7 @@ class CDMObject extends Table
      */
     public function getCRDOT_N()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -524,7 +464,7 @@ class CDMObject extends Table
      */
     public function getCRDOT_RDOT()
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -534,7 +474,7 @@ class CDMObject extends Table
      */
     public function getCTDOT_R()
     {
-        $o = $this->__offset(110);
+        $o = $this->__offset(96);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -544,7 +484,7 @@ class CDMObject extends Table
      */
     public function getCTDOT_T()
     {
-        $o = $this->__offset(112);
+        $o = $this->__offset(98);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -554,7 +494,7 @@ class CDMObject extends Table
      */
     public function getCTDOT_N()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(100);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -564,7 +504,7 @@ class CDMObject extends Table
      */
     public function getCTDOT_RDOT()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(102);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -574,7 +514,7 @@ class CDMObject extends Table
      */
     public function getCTDOT_TDOT()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -584,7 +524,7 @@ class CDMObject extends Table
      */
     public function getCNDOT_R()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -594,7 +534,7 @@ class CDMObject extends Table
      */
     public function getCNDOT_T()
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(108);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -604,7 +544,7 @@ class CDMObject extends Table
      */
     public function getCNDOT_N()
     {
-        $o = $this->__offset(124);
+        $o = $this->__offset(110);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -614,7 +554,7 @@ class CDMObject extends Table
      */
     public function getCNDOT_RDOT()
     {
-        $o = $this->__offset(126);
+        $o = $this->__offset(112);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -624,7 +564,7 @@ class CDMObject extends Table
      */
     public function getCNDOT_TDOT()
     {
-        $o = $this->__offset(128);
+        $o = $this->__offset(114);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -634,7 +574,7 @@ class CDMObject extends Table
      */
     public function getCNDOT_NDOT()
     {
-        $o = $this->__offset(130);
+        $o = $this->__offset(116);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -644,7 +584,7 @@ class CDMObject extends Table
      */
     public function getCDRG_R()
     {
-        $o = $this->__offset(132);
+        $o = $this->__offset(118);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -654,7 +594,7 @@ class CDMObject extends Table
      */
     public function getCDRG_T()
     {
-        $o = $this->__offset(134);
+        $o = $this->__offset(120);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -664,7 +604,7 @@ class CDMObject extends Table
      */
     public function getCDRG_N()
     {
-        $o = $this->__offset(136);
+        $o = $this->__offset(122);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -674,7 +614,7 @@ class CDMObject extends Table
      */
     public function getCDRG_RDOT()
     {
-        $o = $this->__offset(138);
+        $o = $this->__offset(124);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -684,7 +624,7 @@ class CDMObject extends Table
      */
     public function getCDRG_TDOT()
     {
-        $o = $this->__offset(140);
+        $o = $this->__offset(126);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -694,7 +634,7 @@ class CDMObject extends Table
      */
     public function getCDRG_NDOT()
     {
-        $o = $this->__offset(142);
+        $o = $this->__offset(128);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -704,7 +644,7 @@ class CDMObject extends Table
      */
     public function getCDRG_DRG()
     {
-        $o = $this->__offset(144);
+        $o = $this->__offset(130);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -714,7 +654,7 @@ class CDMObject extends Table
      */
     public function getCSRP_R()
     {
-        $o = $this->__offset(146);
+        $o = $this->__offset(132);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -724,7 +664,7 @@ class CDMObject extends Table
      */
     public function getCSRP_T()
     {
-        $o = $this->__offset(148);
+        $o = $this->__offset(134);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -734,7 +674,7 @@ class CDMObject extends Table
      */
     public function getCSRP_N()
     {
-        $o = $this->__offset(150);
+        $o = $this->__offset(136);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -744,7 +684,7 @@ class CDMObject extends Table
      */
     public function getCSRP_RDOT()
     {
-        $o = $this->__offset(152);
+        $o = $this->__offset(138);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -754,7 +694,7 @@ class CDMObject extends Table
      */
     public function getCSRP_TDOT()
     {
-        $o = $this->__offset(154);
+        $o = $this->__offset(140);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -764,7 +704,7 @@ class CDMObject extends Table
      */
     public function getCSRP_NDOT()
     {
-        $o = $this->__offset(156);
+        $o = $this->__offset(142);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -774,7 +714,7 @@ class CDMObject extends Table
      */
     public function getCSRP_DRG()
     {
-        $o = $this->__offset(158);
+        $o = $this->__offset(144);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -784,7 +724,7 @@ class CDMObject extends Table
      */
     public function getCSRP_SRP()
     {
-        $o = $this->__offset(160);
+        $o = $this->__offset(146);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -794,7 +734,7 @@ class CDMObject extends Table
      */
     public function getCTHR_R()
     {
-        $o = $this->__offset(162);
+        $o = $this->__offset(148);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -804,7 +744,7 @@ class CDMObject extends Table
      */
     public function getCTHR_T()
     {
-        $o = $this->__offset(164);
+        $o = $this->__offset(150);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -814,7 +754,7 @@ class CDMObject extends Table
      */
     public function getCTHR_N()
     {
-        $o = $this->__offset(166);
+        $o = $this->__offset(152);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -824,7 +764,7 @@ class CDMObject extends Table
      */
     public function getCTHR_RDOT()
     {
-        $o = $this->__offset(168);
+        $o = $this->__offset(154);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -834,7 +774,7 @@ class CDMObject extends Table
      */
     public function getCTHR_TDOT()
     {
-        $o = $this->__offset(170);
+        $o = $this->__offset(156);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -844,7 +784,7 @@ class CDMObject extends Table
      */
     public function getCTHR_NDOT()
     {
-        $o = $this->__offset(172);
+        $o = $this->__offset(158);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -854,7 +794,7 @@ class CDMObject extends Table
      */
     public function getCTHR_DRG()
     {
-        $o = $this->__offset(174);
+        $o = $this->__offset(160);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -864,7 +804,7 @@ class CDMObject extends Table
      */
     public function getCTHR_SRP()
     {
-        $o = $this->__offset(176);
+        $o = $this->__offset(162);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -874,7 +814,7 @@ class CDMObject extends Table
      */
     public function getCTHR_THR()
     {
-        $o = $this->__offset(178);
+        $o = $this->__offset(164);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -884,29 +824,23 @@ class CDMObject extends Table
      */
     public static function startCDMObject(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(88);
+        $builder->StartObject(81);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CDMObject
      */
-    public static function createCDMObject(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $OBJECT_DESIGNATOR, $CATALOG_NAME, $OBJECT_NAME, $INTERNATIONAL_DESIGNATOR, $OBJECT_TYPE, $OPERATOR_CONTACT_POSITION, $OPERATOR_ORGANIZATION, $EPHEMERIS_NAME, $COVARIANCE_METHOD, $MANEUVERABLE, $ORBIT_CENTER, $REF_FRAME, $GRAVITY_MODEL, $ATMOSPHERIC_MODEL, $N_BODY_PERTURBATIONS, $SOLAR_RAD_PRESSURE, $EARTH_TIDES, $INTRACK_THRUST, $TIME_LASTOB_START, $TIME_LASTOB_END, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $OBS_USED, $TRACKS_AVAILABLE, $TRACKS_USED, $RESIDUALS_ACCEPTED, $WEIGHTED_RMS, $AREA_PC, $AREA_DRG, $AREA_SRP, $MASS, $CR_AREA_OVER_MASS, $THRUST_ACCELERATION, $SEDR, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $CR_R, $CT_R, $CT_T, $CN_R, $CN_T, $CN_N, $CRDOT_R, $CRDOT_T, $CRDOT_N, $CRDOT_RDOT, $CTDOT_R, $CTDOT_T, $CTDOT_N, $CTDOT_RDOT, $CTDOT_TDOT, $CNDOT_R, $CNDOT_T, $CNDOT_N, $CNDOT_RDOT, $CNDOT_TDOT, $CNDOT_NDOT, $CDRG_R, $CDRG_T, $CDRG_N, $CDRG_RDOT, $CDRG_TDOT, $CDRG_NDOT, $CDRG_DRG, $CSRP_R, $CSRP_T, $CSRP_N, $CSRP_RDOT, $CSRP_TDOT, $CSRP_NDOT, $CSRP_DRG, $CSRP_SRP, $CTHR_R, $CTHR_T, $CTHR_N, $CTHR_RDOT, $CTHR_TDOT, $CTHR_NDOT, $CTHR_DRG, $CTHR_SRP, $CTHR_THR)
+    public static function createCDMObject(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $POC, $OPERATOR_CONTACT_POSITION, $OPERATOR_ORGANIZATION, $EPHEMERIS_NAME, $COVARIANCE_METHOD, $REF_FRAME, $GRAVITY_MODEL, $ATMOSPHERIC_MODEL, $N_BODY_PERTURBATIONS, $SOLAR_RAD_PRESSURE, $EARTH_TIDES, $INTRACK_THRUST, $TIME_LASTOB_START, $TIME_LASTOB_END, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $OBS_USED, $TRACKS_AVAILABLE, $TRACKS_USED, $RESIDUALS_ACCEPTED, $WEIGHTED_RMS, $AREA_PC, $AREA_DRG, $AREA_SRP, $CR_AREA_OVER_MASS, $THRUST_ACCELERATION, $SEDR, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $CR_R, $CT_R, $CT_T, $CN_R, $CN_T, $CN_N, $CRDOT_R, $CRDOT_T, $CRDOT_N, $CRDOT_RDOT, $CTDOT_R, $CTDOT_T, $CTDOT_N, $CTDOT_RDOT, $CTDOT_TDOT, $CNDOT_R, $CNDOT_T, $CNDOT_N, $CNDOT_RDOT, $CNDOT_TDOT, $CNDOT_NDOT, $CDRG_R, $CDRG_T, $CDRG_N, $CDRG_RDOT, $CDRG_TDOT, $CDRG_NDOT, $CDRG_DRG, $CSRP_R, $CSRP_T, $CSRP_N, $CSRP_RDOT, $CSRP_TDOT, $CSRP_NDOT, $CSRP_DRG, $CSRP_SRP, $CTHR_R, $CTHR_T, $CTHR_N, $CTHR_RDOT, $CTHR_TDOT, $CTHR_NDOT, $CTHR_DRG, $CTHR_SRP, $CTHR_THR)
     {
-        $builder->startObject(88);
+        $builder->startObject(81);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
-        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
-        self::addCATALOG_NAME($builder, $CATALOG_NAME);
-        self::addOBJECT_NAME($builder, $OBJECT_NAME);
-        self::addINTERNATIONAL_DESIGNATOR($builder, $INTERNATIONAL_DESIGNATOR);
-        self::addOBJECT_TYPE($builder, $OBJECT_TYPE);
+        self::addPOC($builder, $POC);
         self::addOPERATOR_CONTACT_POSITION($builder, $OPERATOR_CONTACT_POSITION);
         self::addOPERATOR_ORGANIZATION($builder, $OPERATOR_ORGANIZATION);
         self::addEPHEMERIS_NAME($builder, $EPHEMERIS_NAME);
         self::addCOVARIANCE_METHOD($builder, $COVARIANCE_METHOD);
-        self::addMANEUVERABLE($builder, $MANEUVERABLE);
-        self::addORBIT_CENTER($builder, $ORBIT_CENTER);
         self::addREF_FRAME($builder, $REF_FRAME);
         self::addGRAVITY_MODEL($builder, $GRAVITY_MODEL);
         self::addATMOSPHERIC_MODEL($builder, $ATMOSPHERIC_MODEL);
@@ -927,7 +861,6 @@ class CDMObject extends Table
         self::addAREA_PC($builder, $AREA_PC);
         self::addAREA_DRG($builder, $AREA_DRG);
         self::addAREA_SRP($builder, $AREA_SRP);
-        self::addMASS($builder, $MASS);
         self::addCR_AREA_OVER_MASS($builder, $CR_AREA_OVER_MASS);
         self::addTHRUST_ACCELERATION($builder, $THRUST_ACCELERATION);
         self::addSEDR($builder, $SEDR);
@@ -998,62 +931,22 @@ class CDMObject extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param int
      * @return void
      */
     public static function addOBJECT(FlatBufferBuilder $builder, $OBJECT)
     {
-        $builder->addSbyteX(1, $OBJECT, 0);
+        $builder->addOffsetX(1, $OBJECT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param int
      * @return void
      */
-    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    public static function addPOC(FlatBufferBuilder $builder, $POC)
     {
-        $builder->addOffsetX(2, $OBJECT_DESIGNATOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCATALOG_NAME(FlatBufferBuilder $builder, $CATALOG_NAME)
-    {
-        $builder->addOffsetX(3, $CATALOG_NAME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOBJECT_NAME(FlatBufferBuilder $builder, $OBJECT_NAME)
-    {
-        $builder->addOffsetX(4, $OBJECT_NAME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addINTERNATIONAL_DESIGNATOR(FlatBufferBuilder $builder, $INTERNATIONAL_DESIGNATOR)
-    {
-        $builder->addOffsetX(5, $INTERNATIONAL_DESIGNATOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param sbyte
-     * @return void
-     */
-    public static function addOBJECT_TYPE(FlatBufferBuilder $builder, $OBJECT_TYPE)
-    {
-        $builder->addSbyteX(6, $OBJECT_TYPE, 0);
+        $builder->addOffsetX(2, $POC, 0);
     }
 
     /**
@@ -1063,7 +956,7 @@ class CDMObject extends Table
      */
     public static function addOPERATOR_CONTACT_POSITION(FlatBufferBuilder $builder, $OPERATOR_CONTACT_POSITION)
     {
-        $builder->addOffsetX(7, $OPERATOR_CONTACT_POSITION, 0);
+        $builder->addOffsetX(3, $OPERATOR_CONTACT_POSITION, 0);
     }
 
     /**
@@ -1073,7 +966,7 @@ class CDMObject extends Table
      */
     public static function addOPERATOR_ORGANIZATION(FlatBufferBuilder $builder, $OPERATOR_ORGANIZATION)
     {
-        $builder->addOffsetX(8, $OPERATOR_ORGANIZATION, 0);
+        $builder->addOffsetX(4, $OPERATOR_ORGANIZATION, 0);
     }
 
     /**
@@ -1083,7 +976,7 @@ class CDMObject extends Table
      */
     public static function addEPHEMERIS_NAME(FlatBufferBuilder $builder, $EPHEMERIS_NAME)
     {
-        $builder->addOffsetX(9, $EPHEMERIS_NAME, 0);
+        $builder->addOffsetX(5, $EPHEMERIS_NAME, 0);
     }
 
     /**
@@ -1093,27 +986,7 @@ class CDMObject extends Table
      */
     public static function addCOVARIANCE_METHOD(FlatBufferBuilder $builder, $COVARIANCE_METHOD)
     {
-        $builder->addSbyteX(10, $COVARIANCE_METHOD, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param sbyte
-     * @return void
-     */
-    public static function addMANEUVERABLE(FlatBufferBuilder $builder, $MANEUVERABLE)
-    {
-        $builder->addSbyteX(11, $MANEUVERABLE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addORBIT_CENTER(FlatBufferBuilder $builder, $ORBIT_CENTER)
-    {
-        $builder->addOffsetX(12, $ORBIT_CENTER, 0);
+        $builder->addSbyteX(6, $COVARIANCE_METHOD, 0);
     }
 
     /**
@@ -1123,7 +996,7 @@ class CDMObject extends Table
      */
     public static function addREF_FRAME(FlatBufferBuilder $builder, $REF_FRAME)
     {
-        $builder->addSbyteX(13, $REF_FRAME, 0);
+        $builder->addSbyteX(7, $REF_FRAME, 0);
     }
 
     /**
@@ -1133,7 +1006,7 @@ class CDMObject extends Table
      */
     public static function addGRAVITY_MODEL(FlatBufferBuilder $builder, $GRAVITY_MODEL)
     {
-        $builder->addOffsetX(14, $GRAVITY_MODEL, 0);
+        $builder->addOffsetX(8, $GRAVITY_MODEL, 0);
     }
 
     /**
@@ -1143,7 +1016,7 @@ class CDMObject extends Table
      */
     public static function addATMOSPHERIC_MODEL(FlatBufferBuilder $builder, $ATMOSPHERIC_MODEL)
     {
-        $builder->addOffsetX(15, $ATMOSPHERIC_MODEL, 0);
+        $builder->addOffsetX(9, $ATMOSPHERIC_MODEL, 0);
     }
 
     /**
@@ -1153,7 +1026,7 @@ class CDMObject extends Table
      */
     public static function addN_BODY_PERTURBATIONS(FlatBufferBuilder $builder, $N_BODY_PERTURBATIONS)
     {
-        $builder->addOffsetX(16, $N_BODY_PERTURBATIONS, 0);
+        $builder->addOffsetX(10, $N_BODY_PERTURBATIONS, 0);
     }
 
     /**
@@ -1163,7 +1036,7 @@ class CDMObject extends Table
      */
     public static function addSOLAR_RAD_PRESSURE(FlatBufferBuilder $builder, $SOLAR_RAD_PRESSURE)
     {
-        $builder->addBoolX(17, $SOLAR_RAD_PRESSURE, false);
+        $builder->addBoolX(11, $SOLAR_RAD_PRESSURE, false);
     }
 
     /**
@@ -1173,7 +1046,7 @@ class CDMObject extends Table
      */
     public static function addEARTH_TIDES(FlatBufferBuilder $builder, $EARTH_TIDES)
     {
-        $builder->addBoolX(18, $EARTH_TIDES, false);
+        $builder->addBoolX(12, $EARTH_TIDES, false);
     }
 
     /**
@@ -1183,7 +1056,7 @@ class CDMObject extends Table
      */
     public static function addINTRACK_THRUST(FlatBufferBuilder $builder, $INTRACK_THRUST)
     {
-        $builder->addBoolX(19, $INTRACK_THRUST, false);
+        $builder->addBoolX(13, $INTRACK_THRUST, false);
     }
 
     /**
@@ -1193,7 +1066,7 @@ class CDMObject extends Table
      */
     public static function addTIME_LASTOB_START(FlatBufferBuilder $builder, $TIME_LASTOB_START)
     {
-        $builder->addOffsetX(20, $TIME_LASTOB_START, 0);
+        $builder->addOffsetX(14, $TIME_LASTOB_START, 0);
     }
 
     /**
@@ -1203,7 +1076,7 @@ class CDMObject extends Table
      */
     public static function addTIME_LASTOB_END(FlatBufferBuilder $builder, $TIME_LASTOB_END)
     {
-        $builder->addOffsetX(21, $TIME_LASTOB_END, 0);
+        $builder->addOffsetX(15, $TIME_LASTOB_END, 0);
     }
 
     /**
@@ -1213,7 +1086,7 @@ class CDMObject extends Table
      */
     public static function addRECOMMENDED_OD_SPAN(FlatBufferBuilder $builder, $RECOMMENDED_OD_SPAN)
     {
-        $builder->addDoubleX(22, $RECOMMENDED_OD_SPAN, 0.0);
+        $builder->addDoubleX(16, $RECOMMENDED_OD_SPAN, 0.0);
     }
 
     /**
@@ -1223,7 +1096,7 @@ class CDMObject extends Table
      */
     public static function addACTUAL_OD_SPAN(FlatBufferBuilder $builder, $ACTUAL_OD_SPAN)
     {
-        $builder->addDoubleX(23, $ACTUAL_OD_SPAN, 0.0);
+        $builder->addDoubleX(17, $ACTUAL_OD_SPAN, 0.0);
     }
 
     /**
@@ -1233,7 +1106,7 @@ class CDMObject extends Table
      */
     public static function addOBS_AVAILABLE(FlatBufferBuilder $builder, $OBS_AVAILABLE)
     {
-        $builder->addUintX(24, $OBS_AVAILABLE, 0);
+        $builder->addUintX(18, $OBS_AVAILABLE, 0);
     }
 
     /**
@@ -1243,7 +1116,7 @@ class CDMObject extends Table
      */
     public static function addOBS_USED(FlatBufferBuilder $builder, $OBS_USED)
     {
-        $builder->addUintX(25, $OBS_USED, 0);
+        $builder->addUintX(19, $OBS_USED, 0);
     }
 
     /**
@@ -1253,7 +1126,7 @@ class CDMObject extends Table
      */
     public static function addTRACKS_AVAILABLE(FlatBufferBuilder $builder, $TRACKS_AVAILABLE)
     {
-        $builder->addUintX(26, $TRACKS_AVAILABLE, 0);
+        $builder->addUintX(20, $TRACKS_AVAILABLE, 0);
     }
 
     /**
@@ -1263,7 +1136,7 @@ class CDMObject extends Table
      */
     public static function addTRACKS_USED(FlatBufferBuilder $builder, $TRACKS_USED)
     {
-        $builder->addUintX(27, $TRACKS_USED, 0);
+        $builder->addUintX(21, $TRACKS_USED, 0);
     }
 
     /**
@@ -1273,7 +1146,7 @@ class CDMObject extends Table
      */
     public static function addRESIDUALS_ACCEPTED(FlatBufferBuilder $builder, $RESIDUALS_ACCEPTED)
     {
-        $builder->addDoubleX(28, $RESIDUALS_ACCEPTED, 0.0);
+        $builder->addDoubleX(22, $RESIDUALS_ACCEPTED, 0.0);
     }
 
     /**
@@ -1283,7 +1156,7 @@ class CDMObject extends Table
      */
     public static function addWEIGHTED_RMS(FlatBufferBuilder $builder, $WEIGHTED_RMS)
     {
-        $builder->addDoubleX(29, $WEIGHTED_RMS, 0.0);
+        $builder->addDoubleX(23, $WEIGHTED_RMS, 0.0);
     }
 
     /**
@@ -1293,7 +1166,7 @@ class CDMObject extends Table
      */
     public static function addAREA_PC(FlatBufferBuilder $builder, $AREA_PC)
     {
-        $builder->addDoubleX(30, $AREA_PC, 0.0);
+        $builder->addDoubleX(24, $AREA_PC, 0.0);
     }
 
     /**
@@ -1303,7 +1176,7 @@ class CDMObject extends Table
      */
     public static function addAREA_DRG(FlatBufferBuilder $builder, $AREA_DRG)
     {
-        $builder->addDoubleX(31, $AREA_DRG, 0.0);
+        $builder->addDoubleX(25, $AREA_DRG, 0.0);
     }
 
     /**
@@ -1313,17 +1186,7 @@ class CDMObject extends Table
      */
     public static function addAREA_SRP(FlatBufferBuilder $builder, $AREA_SRP)
     {
-        $builder->addDoubleX(32, $AREA_SRP, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMASS(FlatBufferBuilder $builder, $MASS)
-    {
-        $builder->addDoubleX(33, $MASS, 0.0);
+        $builder->addDoubleX(26, $AREA_SRP, 0.0);
     }
 
     /**
@@ -1333,7 +1196,7 @@ class CDMObject extends Table
      */
     public static function addCR_AREA_OVER_MASS(FlatBufferBuilder $builder, $CR_AREA_OVER_MASS)
     {
-        $builder->addDoubleX(34, $CR_AREA_OVER_MASS, 0.0);
+        $builder->addDoubleX(27, $CR_AREA_OVER_MASS, 0.0);
     }
 
     /**
@@ -1343,7 +1206,7 @@ class CDMObject extends Table
      */
     public static function addTHRUST_ACCELERATION(FlatBufferBuilder $builder, $THRUST_ACCELERATION)
     {
-        $builder->addDoubleX(35, $THRUST_ACCELERATION, 0.0);
+        $builder->addDoubleX(28, $THRUST_ACCELERATION, 0.0);
     }
 
     /**
@@ -1353,7 +1216,7 @@ class CDMObject extends Table
      */
     public static function addSEDR(FlatBufferBuilder $builder, $SEDR)
     {
-        $builder->addDoubleX(36, $SEDR, 0.0);
+        $builder->addDoubleX(29, $SEDR, 0.0);
     }
 
     /**
@@ -1363,7 +1226,7 @@ class CDMObject extends Table
      */
     public static function addX(FlatBufferBuilder $builder, $X)
     {
-        $builder->addDoubleX(37, $X, 0.0);
+        $builder->addDoubleX(30, $X, 0.0);
     }
 
     /**
@@ -1373,7 +1236,7 @@ class CDMObject extends Table
      */
     public static function addY(FlatBufferBuilder $builder, $Y)
     {
-        $builder->addDoubleX(38, $Y, 0.0);
+        $builder->addDoubleX(31, $Y, 0.0);
     }
 
     /**
@@ -1383,7 +1246,7 @@ class CDMObject extends Table
      */
     public static function addZ(FlatBufferBuilder $builder, $Z)
     {
-        $builder->addDoubleX(39, $Z, 0.0);
+        $builder->addDoubleX(32, $Z, 0.0);
     }
 
     /**
@@ -1393,7 +1256,7 @@ class CDMObject extends Table
      */
     public static function addX_DOT(FlatBufferBuilder $builder, $X_DOT)
     {
-        $builder->addDoubleX(40, $X_DOT, 0.0);
+        $builder->addDoubleX(33, $X_DOT, 0.0);
     }
 
     /**
@@ -1403,7 +1266,7 @@ class CDMObject extends Table
      */
     public static function addY_DOT(FlatBufferBuilder $builder, $Y_DOT)
     {
-        $builder->addDoubleX(41, $Y_DOT, 0.0);
+        $builder->addDoubleX(34, $Y_DOT, 0.0);
     }
 
     /**
@@ -1413,7 +1276,7 @@ class CDMObject extends Table
      */
     public static function addZ_DOT(FlatBufferBuilder $builder, $Z_DOT)
     {
-        $builder->addDoubleX(42, $Z_DOT, 0.0);
+        $builder->addDoubleX(35, $Z_DOT, 0.0);
     }
 
     /**
@@ -1423,7 +1286,7 @@ class CDMObject extends Table
      */
     public static function addCR_R(FlatBufferBuilder $builder, $CR_R)
     {
-        $builder->addDoubleX(43, $CR_R, 0.0);
+        $builder->addDoubleX(36, $CR_R, 0.0);
     }
 
     /**
@@ -1433,7 +1296,7 @@ class CDMObject extends Table
      */
     public static function addCT_R(FlatBufferBuilder $builder, $CT_R)
     {
-        $builder->addDoubleX(44, $CT_R, 0.0);
+        $builder->addDoubleX(37, $CT_R, 0.0);
     }
 
     /**
@@ -1443,7 +1306,7 @@ class CDMObject extends Table
      */
     public static function addCT_T(FlatBufferBuilder $builder, $CT_T)
     {
-        $builder->addDoubleX(45, $CT_T, 0.0);
+        $builder->addDoubleX(38, $CT_T, 0.0);
     }
 
     /**
@@ -1453,7 +1316,7 @@ class CDMObject extends Table
      */
     public static function addCN_R(FlatBufferBuilder $builder, $CN_R)
     {
-        $builder->addDoubleX(46, $CN_R, 0.0);
+        $builder->addDoubleX(39, $CN_R, 0.0);
     }
 
     /**
@@ -1463,7 +1326,7 @@ class CDMObject extends Table
      */
     public static function addCN_T(FlatBufferBuilder $builder, $CN_T)
     {
-        $builder->addDoubleX(47, $CN_T, 0.0);
+        $builder->addDoubleX(40, $CN_T, 0.0);
     }
 
     /**
@@ -1473,7 +1336,7 @@ class CDMObject extends Table
      */
     public static function addCN_N(FlatBufferBuilder $builder, $CN_N)
     {
-        $builder->addDoubleX(48, $CN_N, 0.0);
+        $builder->addDoubleX(41, $CN_N, 0.0);
     }
 
     /**
@@ -1483,7 +1346,7 @@ class CDMObject extends Table
      */
     public static function addCRDOT_R(FlatBufferBuilder $builder, $CRDOT_R)
     {
-        $builder->addDoubleX(49, $CRDOT_R, 0.0);
+        $builder->addDoubleX(42, $CRDOT_R, 0.0);
     }
 
     /**
@@ -1493,7 +1356,7 @@ class CDMObject extends Table
      */
     public static function addCRDOT_T(FlatBufferBuilder $builder, $CRDOT_T)
     {
-        $builder->addDoubleX(50, $CRDOT_T, 0.0);
+        $builder->addDoubleX(43, $CRDOT_T, 0.0);
     }
 
     /**
@@ -1503,7 +1366,7 @@ class CDMObject extends Table
      */
     public static function addCRDOT_N(FlatBufferBuilder $builder, $CRDOT_N)
     {
-        $builder->addDoubleX(51, $CRDOT_N, 0.0);
+        $builder->addDoubleX(44, $CRDOT_N, 0.0);
     }
 
     /**
@@ -1513,7 +1376,7 @@ class CDMObject extends Table
      */
     public static function addCRDOT_RDOT(FlatBufferBuilder $builder, $CRDOT_RDOT)
     {
-        $builder->addDoubleX(52, $CRDOT_RDOT, 0.0);
+        $builder->addDoubleX(45, $CRDOT_RDOT, 0.0);
     }
 
     /**
@@ -1523,7 +1386,7 @@ class CDMObject extends Table
      */
     public static function addCTDOT_R(FlatBufferBuilder $builder, $CTDOT_R)
     {
-        $builder->addDoubleX(53, $CTDOT_R, 0.0);
+        $builder->addDoubleX(46, $CTDOT_R, 0.0);
     }
 
     /**
@@ -1533,7 +1396,7 @@ class CDMObject extends Table
      */
     public static function addCTDOT_T(FlatBufferBuilder $builder, $CTDOT_T)
     {
-        $builder->addDoubleX(54, $CTDOT_T, 0.0);
+        $builder->addDoubleX(47, $CTDOT_T, 0.0);
     }
 
     /**
@@ -1543,7 +1406,7 @@ class CDMObject extends Table
      */
     public static function addCTDOT_N(FlatBufferBuilder $builder, $CTDOT_N)
     {
-        $builder->addDoubleX(55, $CTDOT_N, 0.0);
+        $builder->addDoubleX(48, $CTDOT_N, 0.0);
     }
 
     /**
@@ -1553,7 +1416,7 @@ class CDMObject extends Table
      */
     public static function addCTDOT_RDOT(FlatBufferBuilder $builder, $CTDOT_RDOT)
     {
-        $builder->addDoubleX(56, $CTDOT_RDOT, 0.0);
+        $builder->addDoubleX(49, $CTDOT_RDOT, 0.0);
     }
 
     /**
@@ -1563,7 +1426,7 @@ class CDMObject extends Table
      */
     public static function addCTDOT_TDOT(FlatBufferBuilder $builder, $CTDOT_TDOT)
     {
-        $builder->addDoubleX(57, $CTDOT_TDOT, 0.0);
+        $builder->addDoubleX(50, $CTDOT_TDOT, 0.0);
     }
 
     /**
@@ -1573,7 +1436,7 @@ class CDMObject extends Table
      */
     public static function addCNDOT_R(FlatBufferBuilder $builder, $CNDOT_R)
     {
-        $builder->addDoubleX(58, $CNDOT_R, 0.0);
+        $builder->addDoubleX(51, $CNDOT_R, 0.0);
     }
 
     /**
@@ -1583,7 +1446,7 @@ class CDMObject extends Table
      */
     public static function addCNDOT_T(FlatBufferBuilder $builder, $CNDOT_T)
     {
-        $builder->addDoubleX(59, $CNDOT_T, 0.0);
+        $builder->addDoubleX(52, $CNDOT_T, 0.0);
     }
 
     /**
@@ -1593,7 +1456,7 @@ class CDMObject extends Table
      */
     public static function addCNDOT_N(FlatBufferBuilder $builder, $CNDOT_N)
     {
-        $builder->addDoubleX(60, $CNDOT_N, 0.0);
+        $builder->addDoubleX(53, $CNDOT_N, 0.0);
     }
 
     /**
@@ -1603,7 +1466,7 @@ class CDMObject extends Table
      */
     public static function addCNDOT_RDOT(FlatBufferBuilder $builder, $CNDOT_RDOT)
     {
-        $builder->addDoubleX(61, $CNDOT_RDOT, 0.0);
+        $builder->addDoubleX(54, $CNDOT_RDOT, 0.0);
     }
 
     /**
@@ -1613,7 +1476,7 @@ class CDMObject extends Table
      */
     public static function addCNDOT_TDOT(FlatBufferBuilder $builder, $CNDOT_TDOT)
     {
-        $builder->addDoubleX(62, $CNDOT_TDOT, 0.0);
+        $builder->addDoubleX(55, $CNDOT_TDOT, 0.0);
     }
 
     /**
@@ -1623,7 +1486,7 @@ class CDMObject extends Table
      */
     public static function addCNDOT_NDOT(FlatBufferBuilder $builder, $CNDOT_NDOT)
     {
-        $builder->addDoubleX(63, $CNDOT_NDOT, 0.0);
+        $builder->addDoubleX(56, $CNDOT_NDOT, 0.0);
     }
 
     /**
@@ -1633,7 +1496,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_R(FlatBufferBuilder $builder, $CDRG_R)
     {
-        $builder->addDoubleX(64, $CDRG_R, 0.0);
+        $builder->addDoubleX(57, $CDRG_R, 0.0);
     }
 
     /**
@@ -1643,7 +1506,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_T(FlatBufferBuilder $builder, $CDRG_T)
     {
-        $builder->addDoubleX(65, $CDRG_T, 0.0);
+        $builder->addDoubleX(58, $CDRG_T, 0.0);
     }
 
     /**
@@ -1653,7 +1516,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_N(FlatBufferBuilder $builder, $CDRG_N)
     {
-        $builder->addDoubleX(66, $CDRG_N, 0.0);
+        $builder->addDoubleX(59, $CDRG_N, 0.0);
     }
 
     /**
@@ -1663,7 +1526,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_RDOT(FlatBufferBuilder $builder, $CDRG_RDOT)
     {
-        $builder->addDoubleX(67, $CDRG_RDOT, 0.0);
+        $builder->addDoubleX(60, $CDRG_RDOT, 0.0);
     }
 
     /**
@@ -1673,7 +1536,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_TDOT(FlatBufferBuilder $builder, $CDRG_TDOT)
     {
-        $builder->addDoubleX(68, $CDRG_TDOT, 0.0);
+        $builder->addDoubleX(61, $CDRG_TDOT, 0.0);
     }
 
     /**
@@ -1683,7 +1546,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_NDOT(FlatBufferBuilder $builder, $CDRG_NDOT)
     {
-        $builder->addDoubleX(69, $CDRG_NDOT, 0.0);
+        $builder->addDoubleX(62, $CDRG_NDOT, 0.0);
     }
 
     /**
@@ -1693,7 +1556,7 @@ class CDMObject extends Table
      */
     public static function addCDRG_DRG(FlatBufferBuilder $builder, $CDRG_DRG)
     {
-        $builder->addDoubleX(70, $CDRG_DRG, 0.0);
+        $builder->addDoubleX(63, $CDRG_DRG, 0.0);
     }
 
     /**
@@ -1703,7 +1566,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_R(FlatBufferBuilder $builder, $CSRP_R)
     {
-        $builder->addDoubleX(71, $CSRP_R, 0.0);
+        $builder->addDoubleX(64, $CSRP_R, 0.0);
     }
 
     /**
@@ -1713,7 +1576,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_T(FlatBufferBuilder $builder, $CSRP_T)
     {
-        $builder->addDoubleX(72, $CSRP_T, 0.0);
+        $builder->addDoubleX(65, $CSRP_T, 0.0);
     }
 
     /**
@@ -1723,7 +1586,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_N(FlatBufferBuilder $builder, $CSRP_N)
     {
-        $builder->addDoubleX(73, $CSRP_N, 0.0);
+        $builder->addDoubleX(66, $CSRP_N, 0.0);
     }
 
     /**
@@ -1733,7 +1596,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_RDOT(FlatBufferBuilder $builder, $CSRP_RDOT)
     {
-        $builder->addDoubleX(74, $CSRP_RDOT, 0.0);
+        $builder->addDoubleX(67, $CSRP_RDOT, 0.0);
     }
 
     /**
@@ -1743,7 +1606,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_TDOT(FlatBufferBuilder $builder, $CSRP_TDOT)
     {
-        $builder->addDoubleX(75, $CSRP_TDOT, 0.0);
+        $builder->addDoubleX(68, $CSRP_TDOT, 0.0);
     }
 
     /**
@@ -1753,7 +1616,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_NDOT(FlatBufferBuilder $builder, $CSRP_NDOT)
     {
-        $builder->addDoubleX(76, $CSRP_NDOT, 0.0);
+        $builder->addDoubleX(69, $CSRP_NDOT, 0.0);
     }
 
     /**
@@ -1763,7 +1626,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_DRG(FlatBufferBuilder $builder, $CSRP_DRG)
     {
-        $builder->addDoubleX(77, $CSRP_DRG, 0.0);
+        $builder->addDoubleX(70, $CSRP_DRG, 0.0);
     }
 
     /**
@@ -1773,7 +1636,7 @@ class CDMObject extends Table
      */
     public static function addCSRP_SRP(FlatBufferBuilder $builder, $CSRP_SRP)
     {
-        $builder->addDoubleX(78, $CSRP_SRP, 0.0);
+        $builder->addDoubleX(71, $CSRP_SRP, 0.0);
     }
 
     /**
@@ -1783,7 +1646,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_R(FlatBufferBuilder $builder, $CTHR_R)
     {
-        $builder->addDoubleX(79, $CTHR_R, 0.0);
+        $builder->addDoubleX(72, $CTHR_R, 0.0);
     }
 
     /**
@@ -1793,7 +1656,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_T(FlatBufferBuilder $builder, $CTHR_T)
     {
-        $builder->addDoubleX(80, $CTHR_T, 0.0);
+        $builder->addDoubleX(73, $CTHR_T, 0.0);
     }
 
     /**
@@ -1803,7 +1666,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_N(FlatBufferBuilder $builder, $CTHR_N)
     {
-        $builder->addDoubleX(81, $CTHR_N, 0.0);
+        $builder->addDoubleX(74, $CTHR_N, 0.0);
     }
 
     /**
@@ -1813,7 +1676,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_RDOT(FlatBufferBuilder $builder, $CTHR_RDOT)
     {
-        $builder->addDoubleX(82, $CTHR_RDOT, 0.0);
+        $builder->addDoubleX(75, $CTHR_RDOT, 0.0);
     }
 
     /**
@@ -1823,7 +1686,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_TDOT(FlatBufferBuilder $builder, $CTHR_TDOT)
     {
-        $builder->addDoubleX(83, $CTHR_TDOT, 0.0);
+        $builder->addDoubleX(76, $CTHR_TDOT, 0.0);
     }
 
     /**
@@ -1833,7 +1696,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_NDOT(FlatBufferBuilder $builder, $CTHR_NDOT)
     {
-        $builder->addDoubleX(84, $CTHR_NDOT, 0.0);
+        $builder->addDoubleX(77, $CTHR_NDOT, 0.0);
     }
 
     /**
@@ -1843,7 +1706,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_DRG(FlatBufferBuilder $builder, $CTHR_DRG)
     {
-        $builder->addDoubleX(85, $CTHR_DRG, 0.0);
+        $builder->addDoubleX(78, $CTHR_DRG, 0.0);
     }
 
     /**
@@ -1853,7 +1716,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_SRP(FlatBufferBuilder $builder, $CTHR_SRP)
     {
-        $builder->addDoubleX(86, $CTHR_SRP, 0.0);
+        $builder->addDoubleX(79, $CTHR_SRP, 0.0);
     }
 
     /**
@@ -1863,7 +1726,7 @@ class CDMObject extends Table
      */
     public static function addCTHR_THR(FlatBufferBuilder $builder, $CTHR_THR)
     {
-        $builder->addDoubleX(87, $CTHR_THR, 0.0);
+        $builder->addDoubleX(80, $CTHR_THR, 0.0);
     }
 
     /**

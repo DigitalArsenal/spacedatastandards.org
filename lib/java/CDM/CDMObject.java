@@ -31,395 +31,350 @@ public final class CDMObject extends Table {
   public String COMMENT() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public CAT OBJECT() { return OBJECT(new CAT()); }
+  public CAT OBJECT(CAT obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * Object number
+   * Point of Contact
    */
-  public byte OBJECT() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  /**
-   * Object designator
-   */
-  public String OBJECT_DESIGNATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  /**
-   * Catalog name
-   */
-  public String CATALOG_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CATALOG_NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer CATALOG_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  /**
-   * Object name
-   */
-  public String OBJECT_NAME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer OBJECT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  /**
-   * International designator
-   */
-  public String INTERNATIONAL_DESIGNATOR() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INTERNATIONAL_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer INTERNATIONAL_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  /**
-   * Object type
-   */
-  public byte OBJECT_TYPE() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public EPM POC() { return POC(new EPM()); }
+  public EPM POC(EPM obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Operator contact position
    */
-  public String OPERATOR_CONTACT_POSITION() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OPERATOR_CONTACT_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer OPERATOR_CONTACT_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  public String OPERATOR_CONTACT_POSITION() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OPERATOR_CONTACT_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer OPERATOR_CONTACT_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * Operator organization
    */
-  public String OPERATOR_ORGANIZATION() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OPERATOR_ORGANIZATIONAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer OPERATOR_ORGANIZATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  public String OPERATOR_ORGANIZATION() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OPERATOR_ORGANIZATIONAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer OPERATOR_ORGANIZATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Ephemeris name
    */
-  public String EPHEMERIS_NAME() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EPHEMERIS_NAMEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer EPHEMERIS_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  public String EPHEMERIS_NAME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer EPHEMERIS_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Covariance method
    */
-  public byte COVARIANCE_METHOD() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte COVARIANCE_METHOD() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Maneuverable type
+   * Reference Frame in which the object position is defined
    */
-  public byte MANEUVERABLE() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  /**
-   * Orbit center
-   */
-  public String ORBIT_CENTER() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORBIT_CENTERAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer ORBIT_CENTERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
-  /**
-   * Reference frame
-   */
-  public byte REF_FRAME() { int o = __offset(30); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte REF_FRAME() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Gravity model
    */
-  public String GRAVITY_MODEL() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer GRAVITY_MODELAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer GRAVITY_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  public String GRAVITY_MODEL() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GRAVITY_MODELAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer GRAVITY_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
   /**
    * Atmospheric model
    */
-  public String ATMOSPHERIC_MODEL() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ATMOSPHERIC_MODELAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer ATMOSPHERIC_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public String ATMOSPHERIC_MODEL() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ATMOSPHERIC_MODELAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer ATMOSPHERIC_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
    * N-body perturbations
    */
-  public String N_BODY_PERTURBATIONS() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer N_BODY_PERTURBATIONSAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer N_BODY_PERTURBATIONSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  public String N_BODY_PERTURBATIONS() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer N_BODY_PERTURBATIONSAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer N_BODY_PERTURBATIONSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
    * Solar radiation pressure
    */
-  public boolean SOLAR_RAD_PRESSURE() { int o = __offset(38); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean SOLAR_RAD_PRESSURE() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * Earth tides
    */
-  public boolean EARTH_TIDES() { int o = __offset(40); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean EARTH_TIDES() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * Intrack thrust
    */
-  public boolean INTRACK_THRUST() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean INTRACK_THRUST() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * Time of last observation start
    */
-  public String TIME_LASTOB_START() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TIME_LASTOB_STARTAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
-  public ByteBuffer TIME_LASTOB_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  public String TIME_LASTOB_START() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_LASTOB_STARTAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer TIME_LASTOB_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
   /**
    * Time of last observation end
    */
-  public String TIME_LASTOB_END() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TIME_LASTOB_ENDAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
-  public ByteBuffer TIME_LASTOB_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  public String TIME_LASTOB_END() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_LASTOB_ENDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer TIME_LASTOB_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
    * Recommended observation data span
    */
-  public double RECOMMENDED_OD_SPAN() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RECOMMENDED_OD_SPAN() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Actual observation data span
    */
-  public double ACTUAL_OD_SPAN() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ACTUAL_OD_SPAN() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Number of observations available
    */
-  public long OBS_AVAILABLE() { int o = __offset(52); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long OBS_AVAILABLE() { int o = __offset(40); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Number of observations used
    */
-  public long OBS_USED() { int o = __offset(54); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long OBS_USED() { int o = __offset(42); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Number of tracks available
    */
-  public long TRACKS_AVAILABLE() { int o = __offset(56); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long TRACKS_AVAILABLE() { int o = __offset(44); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Number of tracks used
    */
-  public long TRACKS_USED() { int o = __offset(58); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long TRACKS_USED() { int o = __offset(46); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Residuals accepted
    */
-  public double RESIDUALS_ACCEPTED() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RESIDUALS_ACCEPTED() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Weighted root mean square
    */
-  public double WEIGHTED_RMS() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double WEIGHTED_RMS() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Area of the object
    */
-  public double AREA_PC() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double AREA_PC() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Area of the object drag
    */
-  public double AREA_DRG() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double AREA_DRG() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Area of the object solar radiation pressure
    */
-  public double AREA_SRP() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Mass of the object
-   */
-  public double MASS() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double AREA_SRP() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Object's area-to-mass ratio
    */
-  public double CR_AREA_OVER_MASS() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CR_AREA_OVER_MASS() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Object's thrust acceleration
    */
-  public double THRUST_ACCELERATION() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double THRUST_ACCELERATION() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Object's solar flux
    */
-  public double SEDR() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SEDR() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * X-coordinate of the object's position in RTN coordinates
    */
-  public double X() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double X() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Y-coordinate of the object's position in RTN
    */
-  public double Y() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double Y() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Z-coordinate of the object's position in RTN
    */
-  public double Z() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double Z() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * X-coordinate of the object's position in RTN coordinates
    */
-  public double X_DOT() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double X_DOT() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Y-coordinate of the object's position in RTN
    */
-  public double Y_DOT() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double Y_DOT() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Z-coordinate of the object's position in RTN
    */
-  public double Z_DOT() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double Z_DOT() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CR_R() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CR_R() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CT_R() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CT_R() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CT_T() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CT_T() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CN_R() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CN_R() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CN_T() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CN_T() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CN_N() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CN_N() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CRDOT_R() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CRDOT_R() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CRDOT_T() { int o = __offset(104); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CRDOT_T() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CRDOT_N() { int o = __offset(106); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CRDOT_N() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CRDOT_RDOT() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CRDOT_RDOT() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTDOT_R() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTDOT_R() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTDOT_T() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTDOT_T() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTDOT_N() { int o = __offset(114); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTDOT_N() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTDOT_RDOT() { int o = __offset(116); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTDOT_RDOT() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTDOT_TDOT() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTDOT_TDOT() { int o = __offset(104); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CNDOT_R() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CNDOT_R() { int o = __offset(106); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CNDOT_T() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CNDOT_T() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CNDOT_N() { int o = __offset(124); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CNDOT_N() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CNDOT_RDOT() { int o = __offset(126); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CNDOT_RDOT() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CNDOT_TDOT() { int o = __offset(128); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CNDOT_TDOT() { int o = __offset(114); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CNDOT_NDOT() { int o = __offset(130); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CNDOT_NDOT() { int o = __offset(116); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_R() { int o = __offset(132); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_R() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_T() { int o = __offset(134); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_T() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_N() { int o = __offset(136); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_N() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_RDOT() { int o = __offset(138); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_RDOT() { int o = __offset(124); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_TDOT() { int o = __offset(140); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_TDOT() { int o = __offset(126); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_NDOT() { int o = __offset(142); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_NDOT() { int o = __offset(128); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CDRG_DRG() { int o = __offset(144); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CDRG_DRG() { int o = __offset(130); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_R() { int o = __offset(146); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_R() { int o = __offset(132); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_T() { int o = __offset(148); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_T() { int o = __offset(134); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_N() { int o = __offset(150); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_N() { int o = __offset(136); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_RDOT() { int o = __offset(152); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_RDOT() { int o = __offset(138); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_TDOT() { int o = __offset(154); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_TDOT() { int o = __offset(140); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_NDOT() { int o = __offset(156); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_NDOT() { int o = __offset(142); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_DRG() { int o = __offset(158); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_DRG() { int o = __offset(144); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CSRP_SRP() { int o = __offset(160); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CSRP_SRP() { int o = __offset(146); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_R() { int o = __offset(162); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_R() { int o = __offset(148); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_T() { int o = __offset(164); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_T() { int o = __offset(150); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_N() { int o = __offset(166); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_N() { int o = __offset(152); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_RDOT() { int o = __offset(168); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_RDOT() { int o = __offset(154); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_TDOT() { int o = __offset(170); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_TDOT() { int o = __offset(156); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_NDOT() { int o = __offset(172); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_NDOT() { int o = __offset(158); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_DRG() { int o = __offset(174); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_DRG() { int o = __offset(160); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_SRP() { int o = __offset(176); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_SRP() { int o = __offset(162); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance Matrix component
    */
-  public double CTHR_THR() { int o = __offset(178); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CTHR_THR() { int o = __offset(164); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCDMObject(FlatBufferBuilder builder,
       int COMMENTOffset,
-      byte OBJECT,
-      int OBJECT_DESIGNATOROffset,
-      int CATALOG_NAMEOffset,
-      int OBJECT_NAMEOffset,
-      int INTERNATIONAL_DESIGNATOROffset,
-      byte OBJECT_TYPE,
+      int OBJECTOffset,
+      int POCOffset,
       int OPERATOR_CONTACT_POSITIONOffset,
       int OPERATOR_ORGANIZATIONOffset,
       int EPHEMERIS_NAMEOffset,
       byte COVARIANCE_METHOD,
-      byte MANEUVERABLE,
-      int ORBIT_CENTEROffset,
       byte REF_FRAME,
       int GRAVITY_MODELOffset,
       int ATMOSPHERIC_MODELOffset,
@@ -440,7 +395,6 @@ public final class CDMObject extends Table {
       double AREA_PC,
       double AREA_DRG,
       double AREA_SRP,
-      double MASS,
       double CR_AREA_OVER_MASS,
       double THRUST_ACCELERATION,
       double SEDR,
@@ -495,7 +449,7 @@ public final class CDMObject extends Table {
       double CTHR_DRG,
       double CTHR_SRP,
       double CTHR_THR) {
-    builder.startTable(88);
+    builder.startTable(81);
     CDMObject.addCthrThr(builder, CTHR_THR);
     CDMObject.addCthrSrp(builder, CTHR_SRP);
     CDMObject.addCthrDrg(builder, CTHR_DRG);
@@ -550,7 +504,6 @@ public final class CDMObject extends Table {
     CDMObject.addSedr(builder, SEDR);
     CDMObject.addThrustAcceleration(builder, THRUST_ACCELERATION);
     CDMObject.addCrAreaOverMass(builder, CR_AREA_OVER_MASS);
-    CDMObject.addMass(builder, MASS);
     CDMObject.addAreaSrp(builder, AREA_SRP);
     CDMObject.addAreaDrg(builder, AREA_DRG);
     CDMObject.addAreaPc(builder, AREA_PC);
@@ -567,115 +520,102 @@ public final class CDMObject extends Table {
     CDMObject.addNBodyPerturbations(builder, N_BODY_PERTURBATIONSOffset);
     CDMObject.addAtmosphericModel(builder, ATMOSPHERIC_MODELOffset);
     CDMObject.addGravityModel(builder, GRAVITY_MODELOffset);
-    CDMObject.addOrbitCenter(builder, ORBIT_CENTEROffset);
     CDMObject.addEphemerisName(builder, EPHEMERIS_NAMEOffset);
     CDMObject.addOperatorOrganization(builder, OPERATOR_ORGANIZATIONOffset);
     CDMObject.addOperatorContactPosition(builder, OPERATOR_CONTACT_POSITIONOffset);
-    CDMObject.addInternationalDesignator(builder, INTERNATIONAL_DESIGNATOROffset);
-    CDMObject.addObjectName(builder, OBJECT_NAMEOffset);
-    CDMObject.addCatalogName(builder, CATALOG_NAMEOffset);
-    CDMObject.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+    CDMObject.addPoc(builder, POCOffset);
+    CDMObject.addObject(builder, OBJECTOffset);
     CDMObject.addComment(builder, COMMENTOffset);
     CDMObject.addIntrackThrust(builder, INTRACK_THRUST);
     CDMObject.addEarthTides(builder, EARTH_TIDES);
     CDMObject.addSolarRadPressure(builder, SOLAR_RAD_PRESSURE);
     CDMObject.addRefFrame(builder, REF_FRAME);
-    CDMObject.addManeuverable(builder, MANEUVERABLE);
     CDMObject.addCovarianceMethod(builder, COVARIANCE_METHOD);
-    CDMObject.addObjectType(builder, OBJECT_TYPE);
-    CDMObject.addObject(builder, OBJECT);
     return CDMObject.endCDMObject(builder);
   }
 
-  public static void startCDMObject(FlatBufferBuilder builder) { builder.startTable(88); }
+  public static void startCDMObject(FlatBufferBuilder builder) { builder.startTable(81); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
-  public static void addObject(FlatBufferBuilder builder, byte OBJECT) { builder.addByte(1, OBJECT, 0); }
-  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(2, OBJECT_DESIGNATOROffset, 0); }
-  public static void addCatalogName(FlatBufferBuilder builder, int CATALOG_NAMEOffset) { builder.addOffset(3, CATALOG_NAMEOffset, 0); }
-  public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(4, OBJECT_NAMEOffset, 0); }
-  public static void addInternationalDesignator(FlatBufferBuilder builder, int INTERNATIONAL_DESIGNATOROffset) { builder.addOffset(5, INTERNATIONAL_DESIGNATOROffset, 0); }
-  public static void addObjectType(FlatBufferBuilder builder, byte OBJECT_TYPE) { builder.addByte(6, OBJECT_TYPE, 0); }
-  public static void addOperatorContactPosition(FlatBufferBuilder builder, int OPERATOR_CONTACT_POSITIONOffset) { builder.addOffset(7, OPERATOR_CONTACT_POSITIONOffset, 0); }
-  public static void addOperatorOrganization(FlatBufferBuilder builder, int OPERATOR_ORGANIZATIONOffset) { builder.addOffset(8, OPERATOR_ORGANIZATIONOffset, 0); }
-  public static void addEphemerisName(FlatBufferBuilder builder, int EPHEMERIS_NAMEOffset) { builder.addOffset(9, EPHEMERIS_NAMEOffset, 0); }
-  public static void addCovarianceMethod(FlatBufferBuilder builder, byte COVARIANCE_METHOD) { builder.addByte(10, COVARIANCE_METHOD, 0); }
-  public static void addManeuverable(FlatBufferBuilder builder, byte MANEUVERABLE) { builder.addByte(11, MANEUVERABLE, 0); }
-  public static void addOrbitCenter(FlatBufferBuilder builder, int ORBIT_CENTEROffset) { builder.addOffset(12, ORBIT_CENTEROffset, 0); }
-  public static void addRefFrame(FlatBufferBuilder builder, byte REF_FRAME) { builder.addByte(13, REF_FRAME, 0); }
-  public static void addGravityModel(FlatBufferBuilder builder, int GRAVITY_MODELOffset) { builder.addOffset(14, GRAVITY_MODELOffset, 0); }
-  public static void addAtmosphericModel(FlatBufferBuilder builder, int ATMOSPHERIC_MODELOffset) { builder.addOffset(15, ATMOSPHERIC_MODELOffset, 0); }
-  public static void addNBodyPerturbations(FlatBufferBuilder builder, int N_BODY_PERTURBATIONSOffset) { builder.addOffset(16, N_BODY_PERTURBATIONSOffset, 0); }
-  public static void addSolarRadPressure(FlatBufferBuilder builder, boolean SOLAR_RAD_PRESSURE) { builder.addBoolean(17, SOLAR_RAD_PRESSURE, false); }
-  public static void addEarthTides(FlatBufferBuilder builder, boolean EARTH_TIDES) { builder.addBoolean(18, EARTH_TIDES, false); }
-  public static void addIntrackThrust(FlatBufferBuilder builder, boolean INTRACK_THRUST) { builder.addBoolean(19, INTRACK_THRUST, false); }
-  public static void addTimeLastobStart(FlatBufferBuilder builder, int TIME_LASTOB_STARTOffset) { builder.addOffset(20, TIME_LASTOB_STARTOffset, 0); }
-  public static void addTimeLastobEnd(FlatBufferBuilder builder, int TIME_LASTOB_ENDOffset) { builder.addOffset(21, TIME_LASTOB_ENDOffset, 0); }
-  public static void addRecommendedOdSpan(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.addDouble(22, RECOMMENDED_OD_SPAN, 0.0); }
-  public static void addActualOdSpan(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.addDouble(23, ACTUAL_OD_SPAN, 0.0); }
-  public static void addObsAvailable(FlatBufferBuilder builder, long OBS_AVAILABLE) { builder.addInt(24, (int) OBS_AVAILABLE, (int) 0L); }
-  public static void addObsUsed(FlatBufferBuilder builder, long OBS_USED) { builder.addInt(25, (int) OBS_USED, (int) 0L); }
-  public static void addTracksAvailable(FlatBufferBuilder builder, long TRACKS_AVAILABLE) { builder.addInt(26, (int) TRACKS_AVAILABLE, (int) 0L); }
-  public static void addTracksUsed(FlatBufferBuilder builder, long TRACKS_USED) { builder.addInt(27, (int) TRACKS_USED, (int) 0L); }
-  public static void addResidualsAccepted(FlatBufferBuilder builder, double RESIDUALS_ACCEPTED) { builder.addDouble(28, RESIDUALS_ACCEPTED, 0.0); }
-  public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(29, WEIGHTED_RMS, 0.0); }
-  public static void addAreaPc(FlatBufferBuilder builder, double AREA_PC) { builder.addDouble(30, AREA_PC, 0.0); }
-  public static void addAreaDrg(FlatBufferBuilder builder, double AREA_DRG) { builder.addDouble(31, AREA_DRG, 0.0); }
-  public static void addAreaSrp(FlatBufferBuilder builder, double AREA_SRP) { builder.addDouble(32, AREA_SRP, 0.0); }
-  public static void addMass(FlatBufferBuilder builder, double MASS) { builder.addDouble(33, MASS, 0.0); }
-  public static void addCrAreaOverMass(FlatBufferBuilder builder, double CR_AREA_OVER_MASS) { builder.addDouble(34, CR_AREA_OVER_MASS, 0.0); }
-  public static void addThrustAcceleration(FlatBufferBuilder builder, double THRUST_ACCELERATION) { builder.addDouble(35, THRUST_ACCELERATION, 0.0); }
-  public static void addSedr(FlatBufferBuilder builder, double SEDR) { builder.addDouble(36, SEDR, 0.0); }
-  public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(37, X, 0.0); }
-  public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(38, Y, 0.0); }
-  public static void addZ(FlatBufferBuilder builder, double Z) { builder.addDouble(39, Z, 0.0); }
-  public static void addXDot(FlatBufferBuilder builder, double X_DOT) { builder.addDouble(40, X_DOT, 0.0); }
-  public static void addYDot(FlatBufferBuilder builder, double Y_DOT) { builder.addDouble(41, Y_DOT, 0.0); }
-  public static void addZDot(FlatBufferBuilder builder, double Z_DOT) { builder.addDouble(42, Z_DOT, 0.0); }
-  public static void addCrR(FlatBufferBuilder builder, double CR_R) { builder.addDouble(43, CR_R, 0.0); }
-  public static void addCtR(FlatBufferBuilder builder, double CT_R) { builder.addDouble(44, CT_R, 0.0); }
-  public static void addCtT(FlatBufferBuilder builder, double CT_T) { builder.addDouble(45, CT_T, 0.0); }
-  public static void addCnR(FlatBufferBuilder builder, double CN_R) { builder.addDouble(46, CN_R, 0.0); }
-  public static void addCnT(FlatBufferBuilder builder, double CN_T) { builder.addDouble(47, CN_T, 0.0); }
-  public static void addCnN(FlatBufferBuilder builder, double CN_N) { builder.addDouble(48, CN_N, 0.0); }
-  public static void addCrdotR(FlatBufferBuilder builder, double CRDOT_R) { builder.addDouble(49, CRDOT_R, 0.0); }
-  public static void addCrdotT(FlatBufferBuilder builder, double CRDOT_T) { builder.addDouble(50, CRDOT_T, 0.0); }
-  public static void addCrdotN(FlatBufferBuilder builder, double CRDOT_N) { builder.addDouble(51, CRDOT_N, 0.0); }
-  public static void addCrdotRdot(FlatBufferBuilder builder, double CRDOT_RDOT) { builder.addDouble(52, CRDOT_RDOT, 0.0); }
-  public static void addCtdotR(FlatBufferBuilder builder, double CTDOT_R) { builder.addDouble(53, CTDOT_R, 0.0); }
-  public static void addCtdotT(FlatBufferBuilder builder, double CTDOT_T) { builder.addDouble(54, CTDOT_T, 0.0); }
-  public static void addCtdotN(FlatBufferBuilder builder, double CTDOT_N) { builder.addDouble(55, CTDOT_N, 0.0); }
-  public static void addCtdotRdot(FlatBufferBuilder builder, double CTDOT_RDOT) { builder.addDouble(56, CTDOT_RDOT, 0.0); }
-  public static void addCtdotTdot(FlatBufferBuilder builder, double CTDOT_TDOT) { builder.addDouble(57, CTDOT_TDOT, 0.0); }
-  public static void addCndotR(FlatBufferBuilder builder, double CNDOT_R) { builder.addDouble(58, CNDOT_R, 0.0); }
-  public static void addCndotT(FlatBufferBuilder builder, double CNDOT_T) { builder.addDouble(59, CNDOT_T, 0.0); }
-  public static void addCndotN(FlatBufferBuilder builder, double CNDOT_N) { builder.addDouble(60, CNDOT_N, 0.0); }
-  public static void addCndotRdot(FlatBufferBuilder builder, double CNDOT_RDOT) { builder.addDouble(61, CNDOT_RDOT, 0.0); }
-  public static void addCndotTdot(FlatBufferBuilder builder, double CNDOT_TDOT) { builder.addDouble(62, CNDOT_TDOT, 0.0); }
-  public static void addCndotNdot(FlatBufferBuilder builder, double CNDOT_NDOT) { builder.addDouble(63, CNDOT_NDOT, 0.0); }
-  public static void addCdrgR(FlatBufferBuilder builder, double CDRG_R) { builder.addDouble(64, CDRG_R, 0.0); }
-  public static void addCdrgT(FlatBufferBuilder builder, double CDRG_T) { builder.addDouble(65, CDRG_T, 0.0); }
-  public static void addCdrgN(FlatBufferBuilder builder, double CDRG_N) { builder.addDouble(66, CDRG_N, 0.0); }
-  public static void addCdrgRdot(FlatBufferBuilder builder, double CDRG_RDOT) { builder.addDouble(67, CDRG_RDOT, 0.0); }
-  public static void addCdrgTdot(FlatBufferBuilder builder, double CDRG_TDOT) { builder.addDouble(68, CDRG_TDOT, 0.0); }
-  public static void addCdrgNdot(FlatBufferBuilder builder, double CDRG_NDOT) { builder.addDouble(69, CDRG_NDOT, 0.0); }
-  public static void addCdrgDrg(FlatBufferBuilder builder, double CDRG_DRG) { builder.addDouble(70, CDRG_DRG, 0.0); }
-  public static void addCsrpR(FlatBufferBuilder builder, double CSRP_R) { builder.addDouble(71, CSRP_R, 0.0); }
-  public static void addCsrpT(FlatBufferBuilder builder, double CSRP_T) { builder.addDouble(72, CSRP_T, 0.0); }
-  public static void addCsrpN(FlatBufferBuilder builder, double CSRP_N) { builder.addDouble(73, CSRP_N, 0.0); }
-  public static void addCsrpRdot(FlatBufferBuilder builder, double CSRP_RDOT) { builder.addDouble(74, CSRP_RDOT, 0.0); }
-  public static void addCsrpTdot(FlatBufferBuilder builder, double CSRP_TDOT) { builder.addDouble(75, CSRP_TDOT, 0.0); }
-  public static void addCsrpNdot(FlatBufferBuilder builder, double CSRP_NDOT) { builder.addDouble(76, CSRP_NDOT, 0.0); }
-  public static void addCsrpDrg(FlatBufferBuilder builder, double CSRP_DRG) { builder.addDouble(77, CSRP_DRG, 0.0); }
-  public static void addCsrpSrp(FlatBufferBuilder builder, double CSRP_SRP) { builder.addDouble(78, CSRP_SRP, 0.0); }
-  public static void addCthrR(FlatBufferBuilder builder, double CTHR_R) { builder.addDouble(79, CTHR_R, 0.0); }
-  public static void addCthrT(FlatBufferBuilder builder, double CTHR_T) { builder.addDouble(80, CTHR_T, 0.0); }
-  public static void addCthrN(FlatBufferBuilder builder, double CTHR_N) { builder.addDouble(81, CTHR_N, 0.0); }
-  public static void addCthrRdot(FlatBufferBuilder builder, double CTHR_RDOT) { builder.addDouble(82, CTHR_RDOT, 0.0); }
-  public static void addCthrTdot(FlatBufferBuilder builder, double CTHR_TDOT) { builder.addDouble(83, CTHR_TDOT, 0.0); }
-  public static void addCthrNdot(FlatBufferBuilder builder, double CTHR_NDOT) { builder.addDouble(84, CTHR_NDOT, 0.0); }
-  public static void addCthrDrg(FlatBufferBuilder builder, double CTHR_DRG) { builder.addDouble(85, CTHR_DRG, 0.0); }
-  public static void addCthrSrp(FlatBufferBuilder builder, double CTHR_SRP) { builder.addDouble(86, CTHR_SRP, 0.0); }
-  public static void addCthrThr(FlatBufferBuilder builder, double CTHR_THR) { builder.addDouble(87, CTHR_THR, 0.0); }
+  public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
+  public static void addPoc(FlatBufferBuilder builder, int POCOffset) { builder.addOffset(2, POCOffset, 0); }
+  public static void addOperatorContactPosition(FlatBufferBuilder builder, int OPERATOR_CONTACT_POSITIONOffset) { builder.addOffset(3, OPERATOR_CONTACT_POSITIONOffset, 0); }
+  public static void addOperatorOrganization(FlatBufferBuilder builder, int OPERATOR_ORGANIZATIONOffset) { builder.addOffset(4, OPERATOR_ORGANIZATIONOffset, 0); }
+  public static void addEphemerisName(FlatBufferBuilder builder, int EPHEMERIS_NAMEOffset) { builder.addOffset(5, EPHEMERIS_NAMEOffset, 0); }
+  public static void addCovarianceMethod(FlatBufferBuilder builder, byte COVARIANCE_METHOD) { builder.addByte(6, COVARIANCE_METHOD, 0); }
+  public static void addRefFrame(FlatBufferBuilder builder, byte REF_FRAME) { builder.addByte(7, REF_FRAME, 0); }
+  public static void addGravityModel(FlatBufferBuilder builder, int GRAVITY_MODELOffset) { builder.addOffset(8, GRAVITY_MODELOffset, 0); }
+  public static void addAtmosphericModel(FlatBufferBuilder builder, int ATMOSPHERIC_MODELOffset) { builder.addOffset(9, ATMOSPHERIC_MODELOffset, 0); }
+  public static void addNBodyPerturbations(FlatBufferBuilder builder, int N_BODY_PERTURBATIONSOffset) { builder.addOffset(10, N_BODY_PERTURBATIONSOffset, 0); }
+  public static void addSolarRadPressure(FlatBufferBuilder builder, boolean SOLAR_RAD_PRESSURE) { builder.addBoolean(11, SOLAR_RAD_PRESSURE, false); }
+  public static void addEarthTides(FlatBufferBuilder builder, boolean EARTH_TIDES) { builder.addBoolean(12, EARTH_TIDES, false); }
+  public static void addIntrackThrust(FlatBufferBuilder builder, boolean INTRACK_THRUST) { builder.addBoolean(13, INTRACK_THRUST, false); }
+  public static void addTimeLastobStart(FlatBufferBuilder builder, int TIME_LASTOB_STARTOffset) { builder.addOffset(14, TIME_LASTOB_STARTOffset, 0); }
+  public static void addTimeLastobEnd(FlatBufferBuilder builder, int TIME_LASTOB_ENDOffset) { builder.addOffset(15, TIME_LASTOB_ENDOffset, 0); }
+  public static void addRecommendedOdSpan(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.addDouble(16, RECOMMENDED_OD_SPAN, 0.0); }
+  public static void addActualOdSpan(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.addDouble(17, ACTUAL_OD_SPAN, 0.0); }
+  public static void addObsAvailable(FlatBufferBuilder builder, long OBS_AVAILABLE) { builder.addInt(18, (int) OBS_AVAILABLE, (int) 0L); }
+  public static void addObsUsed(FlatBufferBuilder builder, long OBS_USED) { builder.addInt(19, (int) OBS_USED, (int) 0L); }
+  public static void addTracksAvailable(FlatBufferBuilder builder, long TRACKS_AVAILABLE) { builder.addInt(20, (int) TRACKS_AVAILABLE, (int) 0L); }
+  public static void addTracksUsed(FlatBufferBuilder builder, long TRACKS_USED) { builder.addInt(21, (int) TRACKS_USED, (int) 0L); }
+  public static void addResidualsAccepted(FlatBufferBuilder builder, double RESIDUALS_ACCEPTED) { builder.addDouble(22, RESIDUALS_ACCEPTED, 0.0); }
+  public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(23, WEIGHTED_RMS, 0.0); }
+  public static void addAreaPc(FlatBufferBuilder builder, double AREA_PC) { builder.addDouble(24, AREA_PC, 0.0); }
+  public static void addAreaDrg(FlatBufferBuilder builder, double AREA_DRG) { builder.addDouble(25, AREA_DRG, 0.0); }
+  public static void addAreaSrp(FlatBufferBuilder builder, double AREA_SRP) { builder.addDouble(26, AREA_SRP, 0.0); }
+  public static void addCrAreaOverMass(FlatBufferBuilder builder, double CR_AREA_OVER_MASS) { builder.addDouble(27, CR_AREA_OVER_MASS, 0.0); }
+  public static void addThrustAcceleration(FlatBufferBuilder builder, double THRUST_ACCELERATION) { builder.addDouble(28, THRUST_ACCELERATION, 0.0); }
+  public static void addSedr(FlatBufferBuilder builder, double SEDR) { builder.addDouble(29, SEDR, 0.0); }
+  public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(30, X, 0.0); }
+  public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(31, Y, 0.0); }
+  public static void addZ(FlatBufferBuilder builder, double Z) { builder.addDouble(32, Z, 0.0); }
+  public static void addXDot(FlatBufferBuilder builder, double X_DOT) { builder.addDouble(33, X_DOT, 0.0); }
+  public static void addYDot(FlatBufferBuilder builder, double Y_DOT) { builder.addDouble(34, Y_DOT, 0.0); }
+  public static void addZDot(FlatBufferBuilder builder, double Z_DOT) { builder.addDouble(35, Z_DOT, 0.0); }
+  public static void addCrR(FlatBufferBuilder builder, double CR_R) { builder.addDouble(36, CR_R, 0.0); }
+  public static void addCtR(FlatBufferBuilder builder, double CT_R) { builder.addDouble(37, CT_R, 0.0); }
+  public static void addCtT(FlatBufferBuilder builder, double CT_T) { builder.addDouble(38, CT_T, 0.0); }
+  public static void addCnR(FlatBufferBuilder builder, double CN_R) { builder.addDouble(39, CN_R, 0.0); }
+  public static void addCnT(FlatBufferBuilder builder, double CN_T) { builder.addDouble(40, CN_T, 0.0); }
+  public static void addCnN(FlatBufferBuilder builder, double CN_N) { builder.addDouble(41, CN_N, 0.0); }
+  public static void addCrdotR(FlatBufferBuilder builder, double CRDOT_R) { builder.addDouble(42, CRDOT_R, 0.0); }
+  public static void addCrdotT(FlatBufferBuilder builder, double CRDOT_T) { builder.addDouble(43, CRDOT_T, 0.0); }
+  public static void addCrdotN(FlatBufferBuilder builder, double CRDOT_N) { builder.addDouble(44, CRDOT_N, 0.0); }
+  public static void addCrdotRdot(FlatBufferBuilder builder, double CRDOT_RDOT) { builder.addDouble(45, CRDOT_RDOT, 0.0); }
+  public static void addCtdotR(FlatBufferBuilder builder, double CTDOT_R) { builder.addDouble(46, CTDOT_R, 0.0); }
+  public static void addCtdotT(FlatBufferBuilder builder, double CTDOT_T) { builder.addDouble(47, CTDOT_T, 0.0); }
+  public static void addCtdotN(FlatBufferBuilder builder, double CTDOT_N) { builder.addDouble(48, CTDOT_N, 0.0); }
+  public static void addCtdotRdot(FlatBufferBuilder builder, double CTDOT_RDOT) { builder.addDouble(49, CTDOT_RDOT, 0.0); }
+  public static void addCtdotTdot(FlatBufferBuilder builder, double CTDOT_TDOT) { builder.addDouble(50, CTDOT_TDOT, 0.0); }
+  public static void addCndotR(FlatBufferBuilder builder, double CNDOT_R) { builder.addDouble(51, CNDOT_R, 0.0); }
+  public static void addCndotT(FlatBufferBuilder builder, double CNDOT_T) { builder.addDouble(52, CNDOT_T, 0.0); }
+  public static void addCndotN(FlatBufferBuilder builder, double CNDOT_N) { builder.addDouble(53, CNDOT_N, 0.0); }
+  public static void addCndotRdot(FlatBufferBuilder builder, double CNDOT_RDOT) { builder.addDouble(54, CNDOT_RDOT, 0.0); }
+  public static void addCndotTdot(FlatBufferBuilder builder, double CNDOT_TDOT) { builder.addDouble(55, CNDOT_TDOT, 0.0); }
+  public static void addCndotNdot(FlatBufferBuilder builder, double CNDOT_NDOT) { builder.addDouble(56, CNDOT_NDOT, 0.0); }
+  public static void addCdrgR(FlatBufferBuilder builder, double CDRG_R) { builder.addDouble(57, CDRG_R, 0.0); }
+  public static void addCdrgT(FlatBufferBuilder builder, double CDRG_T) { builder.addDouble(58, CDRG_T, 0.0); }
+  public static void addCdrgN(FlatBufferBuilder builder, double CDRG_N) { builder.addDouble(59, CDRG_N, 0.0); }
+  public static void addCdrgRdot(FlatBufferBuilder builder, double CDRG_RDOT) { builder.addDouble(60, CDRG_RDOT, 0.0); }
+  public static void addCdrgTdot(FlatBufferBuilder builder, double CDRG_TDOT) { builder.addDouble(61, CDRG_TDOT, 0.0); }
+  public static void addCdrgNdot(FlatBufferBuilder builder, double CDRG_NDOT) { builder.addDouble(62, CDRG_NDOT, 0.0); }
+  public static void addCdrgDrg(FlatBufferBuilder builder, double CDRG_DRG) { builder.addDouble(63, CDRG_DRG, 0.0); }
+  public static void addCsrpR(FlatBufferBuilder builder, double CSRP_R) { builder.addDouble(64, CSRP_R, 0.0); }
+  public static void addCsrpT(FlatBufferBuilder builder, double CSRP_T) { builder.addDouble(65, CSRP_T, 0.0); }
+  public static void addCsrpN(FlatBufferBuilder builder, double CSRP_N) { builder.addDouble(66, CSRP_N, 0.0); }
+  public static void addCsrpRdot(FlatBufferBuilder builder, double CSRP_RDOT) { builder.addDouble(67, CSRP_RDOT, 0.0); }
+  public static void addCsrpTdot(FlatBufferBuilder builder, double CSRP_TDOT) { builder.addDouble(68, CSRP_TDOT, 0.0); }
+  public static void addCsrpNdot(FlatBufferBuilder builder, double CSRP_NDOT) { builder.addDouble(69, CSRP_NDOT, 0.0); }
+  public static void addCsrpDrg(FlatBufferBuilder builder, double CSRP_DRG) { builder.addDouble(70, CSRP_DRG, 0.0); }
+  public static void addCsrpSrp(FlatBufferBuilder builder, double CSRP_SRP) { builder.addDouble(71, CSRP_SRP, 0.0); }
+  public static void addCthrR(FlatBufferBuilder builder, double CTHR_R) { builder.addDouble(72, CTHR_R, 0.0); }
+  public static void addCthrT(FlatBufferBuilder builder, double CTHR_T) { builder.addDouble(73, CTHR_T, 0.0); }
+  public static void addCthrN(FlatBufferBuilder builder, double CTHR_N) { builder.addDouble(74, CTHR_N, 0.0); }
+  public static void addCthrRdot(FlatBufferBuilder builder, double CTHR_RDOT) { builder.addDouble(75, CTHR_RDOT, 0.0); }
+  public static void addCthrTdot(FlatBufferBuilder builder, double CTHR_TDOT) { builder.addDouble(76, CTHR_TDOT, 0.0); }
+  public static void addCthrNdot(FlatBufferBuilder builder, double CTHR_NDOT) { builder.addDouble(77, CTHR_NDOT, 0.0); }
+  public static void addCthrDrg(FlatBufferBuilder builder, double CTHR_DRG) { builder.addDouble(78, CTHR_DRG, 0.0); }
+  public static void addCthrSrp(FlatBufferBuilder builder, double CTHR_SRP) { builder.addDouble(79, CTHR_SRP, 0.0); }
+  public static void addCthrThr(FlatBufferBuilder builder, double CTHR_THR) { builder.addDouble(80, CTHR_THR, 0.0); }
   public static int endCDMObject(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

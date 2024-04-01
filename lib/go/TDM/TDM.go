@@ -129,30 +129,30 @@ func (rcv *TDM) MutateOBSERVER_VZ(n float64) bool {
 }
 
 /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-func (rcv *TDM) OBSERVER_POSITION_REFERENCE_FRAME() OBSERVERLocationReferenceFrame {
+func (rcv *TDM) OBSERVER_POSITION_REFERENCE_FRAME() referenceFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return OBSERVERLocationReferenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-func (rcv *TDM) MutateOBSERVER_POSITION_REFERENCE_FRAME(n OBSERVERLocationReferenceFrame) bool {
+func (rcv *TDM) MutateOBSERVER_POSITION_REFERENCE_FRAME(n referenceFrame) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
 }
 
 /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-func (rcv *TDM) OBS_REFERENCE_FRAME() OBSERVERLocationReferenceFrame {
+func (rcv *TDM) OBS_REFERENCE_FRAME() referenceFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return OBSERVERLocationReferenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-func (rcv *TDM) MutateOBS_REFERENCE_FRAME(n OBSERVERLocationReferenceFrame) bool {
+func (rcv *TDM) MutateOBS_REFERENCE_FRAME(n referenceFrame) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
 }
 
@@ -923,10 +923,10 @@ func TDMAddOBSERVER_VY(builder *flatbuffers.Builder, OBSERVER_VY float64) {
 func TDMAddOBSERVER_VZ(builder *flatbuffers.Builder, OBSERVER_VZ float64) {
 	builder.PrependFloat64Slot(6, OBSERVER_VZ, 0.0)
 }
-func TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder *flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAME OBSERVERLocationReferenceFrame) {
+func TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder *flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAME referenceFrame) {
 	builder.PrependInt8Slot(7, int8(OBSERVER_POSITION_REFERENCE_FRAME), 0)
 }
-func TDMAddOBS_REFERENCE_FRAME(builder *flatbuffers.Builder, OBS_REFERENCE_FRAME OBSERVERLocationReferenceFrame) {
+func TDMAddOBS_REFERENCE_FRAME(builder *flatbuffers.Builder, OBS_REFERENCE_FRAME referenceFrame) {
 	builder.PrependInt8Slot(8, int8(OBS_REFERENCE_FRAME), 0)
 }
 func TDMAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {

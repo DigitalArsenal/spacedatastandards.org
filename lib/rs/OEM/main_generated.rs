@@ -3,144 +3,13 @@
 
 // @generated
 
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_REFERENCE_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REFERENCE_FRAME: i8 = 10;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REFERENCE_FRAME: [referenceFrame; 11] = [
-  referenceFrame::EME2000,
-  referenceFrame::GCRF,
-  referenceFrame::GRC,
-  referenceFrame::ICRF,
-  referenceFrame::ITRF2000,
-  referenceFrame::ITRF93,
-  referenceFrame::ITRF97,
-  referenceFrame::MCI,
-  referenceFrame::TDR,
-  referenceFrame::TEME,
-  referenceFrame::TOD,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct referenceFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl referenceFrame {
-  /// Earth Mean Equator and Equinox of J2000
-  pub const EME2000: Self = Self(0);
-  /// Geocentric Celestial Reference Frame
-  pub const GCRF: Self = Self(1);
-  /// Greenwich Rotating Coordinates
-  pub const GRC: Self = Self(2);
-  /// International Celestial Reference Frame
-  pub const ICRF: Self = Self(3);
-  /// International Terrestrial Reference Frame 2000
-  pub const ITRF2000: Self = Self(4);
-  /// International Terrestrial Reference Frame 1993
-  pub const ITRF93: Self = Self(5);
-  /// International Terrestrial Reference Frame 1997
-  pub const ITRF97: Self = Self(6);
-  /// Mars Centered Inertial
-  pub const MCI: Self = Self(7);
-  /// True of Date, Rotating
-  pub const TDR: Self = Self(8);
-  /// True Equator Mean Equinox
-  pub const TEME: Self = Self(9);
-  /// True of Date
-  pub const TOD: Self = Self(10);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 10;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::EME2000,
-    Self::GCRF,
-    Self::GRC,
-    Self::ICRF,
-    Self::ITRF2000,
-    Self::ITRF93,
-    Self::ITRF97,
-    Self::MCI,
-    Self::TDR,
-    Self::TEME,
-    Self::TOD,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::EME2000 => Some("EME2000"),
-      Self::GCRF => Some("GCRF"),
-      Self::GRC => Some("GRC"),
-      Self::ICRF => Some("ICRF"),
-      Self::ITRF2000 => Some("ITRF2000"),
-      Self::ITRF93 => Some("ITRF93"),
-      Self::ITRF97 => Some("ITRF97"),
-      Self::MCI => Some("MCI"),
-      Self::TDR => Some("TDR"),
-      Self::TEME => Some("TEME"),
-      Self::TOD => Some("TOD"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for referenceFrame {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for referenceFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for referenceFrame {
-    type Output = referenceFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for referenceFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for referenceFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for referenceFrame {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_TIME_SYSTEM: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1536,7 +1405,7 @@ impl<'a> ephemerisDataBlock<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(ephemerisDataBlock::VT_REF_FRAME, Some(referenceFrame::EME2000)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(ephemerisDataBlock::VT_REF_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   #[inline]
@@ -1671,7 +1540,7 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REF_FRAME: referenceFrame::EME2000,
+      REF_FRAME: referenceFrame::ECEF,
       REF_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,
@@ -1709,7 +1578,7 @@ impl<'a: 'b, 'b> ephemerisDataBlockBuilder<'a, 'b> {
   }
   #[inline]
   pub fn add_REF_FRAME(&mut self, REF_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(ephemerisDataBlock::VT_REF_FRAME, REF_FRAME, referenceFrame::EME2000);
+    self.fbb_.push_slot::<referenceFrame>(ephemerisDataBlock::VT_REF_FRAME, REF_FRAME, referenceFrame::ECEF);
   }
   #[inline]
   pub fn add_REF_FRAME_EPOCH(&mut self, REF_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -1813,7 +1682,7 @@ impl Default for ephemerisDataBlockT {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REF_FRAME: referenceFrame::EME2000,
+      REF_FRAME: referenceFrame::ECEF,
       REF_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,

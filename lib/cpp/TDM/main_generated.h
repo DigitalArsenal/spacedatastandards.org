@@ -13,112 +13,10 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
               FLATBUFFERS_VERSION_REVISION == 3,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct TDM;
 struct TDMBuilder;
-
-enum OBSERVERLocationReferenceFrame : int8_t {
-  /// Earth Mean Equator and Equinox of J2000
-  OBSERVERLocationReferenceFrame_EME2000 = 0,
-  ///  Geocentric Celestial Reference Frame
-  OBSERVERLocationReferenceFrame_GCRF = 1,
-  /// Greenwich Rotating Coordinates
-  OBSERVERLocationReferenceFrame_GRC = 2,
-  /// International Celestial Reference Frame
-  OBSERVERLocationReferenceFrame_ICRF = 3,
-  /// International Terrestrial Reference Frame 2000
-  OBSERVERLocationReferenceFrame_ITRF2000 = 4,
-  /// International Terrestrial Reference Frame 1993
-  OBSERVERLocationReferenceFrame_ITRF93 = 5,
-  /// International Terrestrial Reference Frame 1997
-  OBSERVERLocationReferenceFrame_ITRF97 = 6,
-  /// Mars Centered Inertial
-  OBSERVERLocationReferenceFrame_MCI = 7,
-  /// True of Date, Rotating
-  OBSERVERLocationReferenceFrame_TDR = 8,
-  /// True Equator Mean Equinox
-  OBSERVERLocationReferenceFrame_TEME = 9,
-  /// True of Date
-  OBSERVERLocationReferenceFrame_TOD = 10,
-  /// Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
-  OBSERVERLocationReferenceFrame_VVLH = 11,
-  /// Radial-Intrack-Crosstrack (RIC): A local orbital reference frame with the radial axis pointing away from the central body, the intrack axis in the direction of motion, and the crosstrack axis completing the right-handed system.
-  OBSERVERLocationReferenceFrame_RIC = 12,
-  /// Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
-  OBSERVERLocationReferenceFrame_VLVH = 13,
-  /// East-North-Up (ENU): A terrestrial reference frame where the X-axis points East, the Y-axis points North, and the Z-axis points Up (away from the center of the Earth).
-  OBSERVERLocationReferenceFrame_ENU = 14,
-  /// North-East-Down (NED): Similar to ENU, but with axes oriented Northward, Eastward, and Downward towards the Earth's center.
-  OBSERVERLocationReferenceFrame_NED = 15,
-  /// Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
-  OBSERVERLocationReferenceFrame_LTP = 16,
-  /// Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
-  OBSERVERLocationReferenceFrame_LVLH = 17,
-  /// Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
-  OBSERVERLocationReferenceFrame_PNE = 18,
-  /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
-  OBSERVERLocationReferenceFrame_BRF = 19,
-  OBSERVERLocationReferenceFrame_MIN = OBSERVERLocationReferenceFrame_EME2000,
-  OBSERVERLocationReferenceFrame_MAX = OBSERVERLocationReferenceFrame_BRF
-};
-
-inline const OBSERVERLocationReferenceFrame (&EnumValuesOBSERVERLocationReferenceFrame())[20] {
-  static const OBSERVERLocationReferenceFrame values[] = {
-    OBSERVERLocationReferenceFrame_EME2000,
-    OBSERVERLocationReferenceFrame_GCRF,
-    OBSERVERLocationReferenceFrame_GRC,
-    OBSERVERLocationReferenceFrame_ICRF,
-    OBSERVERLocationReferenceFrame_ITRF2000,
-    OBSERVERLocationReferenceFrame_ITRF93,
-    OBSERVERLocationReferenceFrame_ITRF97,
-    OBSERVERLocationReferenceFrame_MCI,
-    OBSERVERLocationReferenceFrame_TDR,
-    OBSERVERLocationReferenceFrame_TEME,
-    OBSERVERLocationReferenceFrame_TOD,
-    OBSERVERLocationReferenceFrame_VVLH,
-    OBSERVERLocationReferenceFrame_RIC,
-    OBSERVERLocationReferenceFrame_VLVH,
-    OBSERVERLocationReferenceFrame_ENU,
-    OBSERVERLocationReferenceFrame_NED,
-    OBSERVERLocationReferenceFrame_LTP,
-    OBSERVERLocationReferenceFrame_LVLH,
-    OBSERVERLocationReferenceFrame_PNE,
-    OBSERVERLocationReferenceFrame_BRF
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesOBSERVERLocationReferenceFrame() {
-  static const char * const names[21] = {
-    "EME2000",
-    "GCRF",
-    "GRC",
-    "ICRF",
-    "ITRF2000",
-    "ITRF93",
-    "ITRF97",
-    "MCI",
-    "TDR",
-    "TEME",
-    "TOD",
-    "VVLH",
-    "RIC",
-    "VLVH",
-    "ENU",
-    "NED",
-    "LTP",
-    "LVLH",
-    "PNE",
-    "BRF",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameOBSERVERLocationReferenceFrame(OBSERVERLocationReferenceFrame e) {
-  if (::flatbuffers::IsOutRange(e, OBSERVERLocationReferenceFrame_EME2000, OBSERVERLocationReferenceFrame_BRF)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesOBSERVERLocationReferenceFrame()[index];
-}
 
 /// Tracking Data Message
 struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -211,12 +109,12 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<double>(VT_OBSERVER_VZ, 0.0);
   }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  OBSERVERLocationReferenceFrame OBSERVER_POSITION_REFERENCE_FRAME() const {
-    return static_cast<OBSERVERLocationReferenceFrame>(GetField<int8_t>(VT_OBSERVER_POSITION_REFERENCE_FRAME, 0));
+  referenceFrame OBSERVER_POSITION_REFERENCE_FRAME() const {
+    return static_cast<referenceFrame>(GetField<int8_t>(VT_OBSERVER_POSITION_REFERENCE_FRAME, 0));
   }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  OBSERVERLocationReferenceFrame OBS_REFERENCE_FRAME() const {
-    return static_cast<OBSERVERLocationReferenceFrame>(GetField<int8_t>(VT_OBS_REFERENCE_FRAME, 0));
+  referenceFrame OBS_REFERENCE_FRAME() const {
+    return static_cast<referenceFrame>(GetField<int8_t>(VT_OBS_REFERENCE_FRAME, 0));
   }
   /// Epoch or observation time -  CCSDS 503.0-B-1
   const ::flatbuffers::String *EPOCH() const {
@@ -537,10 +435,10 @@ struct TDMBuilder {
   void add_OBSERVER_VZ(double OBSERVER_VZ) {
     fbb_.AddElement<double>(TDM::VT_OBSERVER_VZ, OBSERVER_VZ, 0.0);
   }
-  void add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVERLocationReferenceFrame OBSERVER_POSITION_REFERENCE_FRAME) {
+  void add_OBSERVER_POSITION_REFERENCE_FRAME(referenceFrame OBSERVER_POSITION_REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, static_cast<int8_t>(OBSERVER_POSITION_REFERENCE_FRAME), 0);
   }
-  void add_OBS_REFERENCE_FRAME(OBSERVERLocationReferenceFrame OBS_REFERENCE_FRAME) {
+  void add_OBS_REFERENCE_FRAME(referenceFrame OBS_REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(TDM::VT_OBS_REFERENCE_FRAME, static_cast<int8_t>(OBS_REFERENCE_FRAME), 0);
   }
   void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
@@ -707,8 +605,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
     double OBSERVER_VX = 0.0,
     double OBSERVER_VY = 0.0,
     double OBSERVER_VZ = 0.0,
-    OBSERVERLocationReferenceFrame OBSERVER_POSITION_REFERENCE_FRAME = OBSERVERLocationReferenceFrame_EME2000,
-    OBSERVERLocationReferenceFrame OBS_REFERENCE_FRAME = OBSERVERLocationReferenceFrame_EME2000,
+    referenceFrame OBSERVER_POSITION_REFERENCE_FRAME = referenceFrame_ECEF,
+    referenceFrame OBS_REFERENCE_FRAME = referenceFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CCSDS_TDM_VERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
@@ -827,8 +725,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     double OBSERVER_VX = 0.0,
     double OBSERVER_VY = 0.0,
     double OBSERVER_VZ = 0.0,
-    OBSERVERLocationReferenceFrame OBSERVER_POSITION_REFERENCE_FRAME = OBSERVERLocationReferenceFrame_EME2000,
-    OBSERVERLocationReferenceFrame OBS_REFERENCE_FRAME = OBSERVERLocationReferenceFrame_EME2000,
+    referenceFrame OBSERVER_POSITION_REFERENCE_FRAME = referenceFrame_ECEF,
+    referenceFrame OBS_REFERENCE_FRAME = referenceFrame_ECEF,
     const char *EPOCH = nullptr,
     const char *CCSDS_TDM_VERS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,

@@ -4,38 +4,6 @@
 
 import FlatBuffers
 
-public enum referenceFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Earth Mean Equator and Equinox of J2000
-  case eme2000 = 0
-  ///  Geocentric Celestial Reference Frame
-  case gcrf = 1
-  ///  Greenwich Rotating Coordinates
-  case grc = 2
-  ///  International Celestial Reference Frame
-  case icrf = 3
-  ///  International Terrestrial Reference Frame 2000
-  case itrf2000 = 4
-  ///  International Terrestrial Reference Frame 1993
-  case itrf93 = 5
-  ///  International Terrestrial Reference Frame 1997
-  case itrf97 = 6
-  ///  Mars Centered Inertial
-  case mci = 7
-  ///  True of Date, Rotating
-  case tdr = 8
-  ///  True Equator Mean Equinox
-  case teme = 9
-  ///  True of Date
-  case tod = 10
-
-  public static var max: referenceFrame { return .tod }
-  public static var min: referenceFrame { return .eme2000 }
-}
-
-
 public enum timeSystem: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -428,7 +396,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  public var REF_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? .eme2000 : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eme2000 }
+  public var REF_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
   public var REF_FRAME_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var REF_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME_EPOCH.v) }
@@ -482,7 +450,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
     OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
     CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
-    REF_FRAME: referenceFrame = .eme2000,
+    REF_FRAME: referenceFrame = .ecef,
     REF_FRAME_EPOCHOffset REF_FRAME_EPOCH: Offset = Offset(),
     TIME_SYSTEM: timeSystem = .gmst,
     START_TIMEOffset START_TIME: Offset = Offset(),

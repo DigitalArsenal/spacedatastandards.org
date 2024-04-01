@@ -4,38 +4,6 @@
 
 import FlatBuffers
 
-public enum referenceFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Earth Mean Equator and Equinox of J2000
-  case eme2000 = 0
-  ///  Geocentric Celestial Reference Frame
-  case gcrf = 1
-  ///  Greenwich Rotating Coordinates
-  case grc = 2
-  ///  International Celestial Reference Frame
-  case icrf = 3
-  ///  International Terrestrial Reference Frame 2000
-  case itrf2000 = 4
-  ///  International Terrestrial Reference Frame 1993
-  case itrf93 = 5
-  ///  International Terrestrial Reference Frame 1997
-  case itrf97 = 6
-  ///  Mars Centered Inertial
-  case mci = 7
-  ///  True of Date, Rotating
-  case tdr = 8
-  ///  True Equator Mean Equinox
-  case teme = 9
-  ///  True of Date
-  case tod = 10
-
-  public static var max: referenceFrame { return .tod }
-  public static var min: referenceFrame { return .eme2000 }
-}
-
-
 public enum ephemerisType: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -342,7 +310,7 @@ public struct OMM: FlatBufferObject, Verifiable {
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
-  public static func add(REF_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME.rawValue, def: 9, at: VTOFFSET.REF_FRAME.p) }
+  public static func add(REF_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME.rawValue, def: 2, at: VTOFFSET.REF_FRAME.p) }
   public static func add(REF_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_EPOCH, at: VTOFFSET.REF_FRAME_EPOCH.p) }
   public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 11, at: VTOFFSET.TIME_SYSTEM.p) }
   public static func add(MEAN_ELEMENT_THEORY: meanElementTheory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VTOFFSET.MEAN_ELEMENT_THEORY.p) }

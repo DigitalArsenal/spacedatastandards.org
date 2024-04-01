@@ -36,58 +36,33 @@ class CDMObject(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Object number
     # CDMObject
     def OBJECT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CAT import CAT
+            obj = CAT()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
-    # Object designator
+    # Point of Contact
     # CDMObject
-    def OBJECT_DESIGNATOR(self):
+    def POC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from EPM import EPM
+            obj = EPM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
         return None
-
-    # Catalog name
-    # CDMObject
-    def CATALOG_NAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # Object name
-    # CDMObject
-    def OBJECT_NAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # International designator
-    # CDMObject
-    def INTERNATIONAL_DESIGNATOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # Object type
-    # CDMObject
-    def OBJECT_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
 
     # Operator contact position
     # CDMObject
     def OPERATOR_CONTACT_POSITION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -95,7 +70,7 @@ class CDMObject(object):
     # Operator organization
     # CDMObject
     def OPERATOR_ORGANIZATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -103,7 +78,7 @@ class CDMObject(object):
     # Ephemeris name
     # CDMObject
     def EPHEMERIS_NAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -111,31 +86,15 @@ class CDMObject(object):
     # Covariance method
     # CDMObject
     def COVARIANCE_METHOD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Maneuverable type
-    # CDMObject
-    def MANEUVERABLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
-
-    # Orbit center
-    # CDMObject
-    def ORBIT_CENTER(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # Reference frame
+    # Reference Frame in which the object position is defined
     # CDMObject
     def REF_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
@@ -143,7 +102,7 @@ class CDMObject(object):
     # Gravity model
     # CDMObject
     def GRAVITY_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -151,7 +110,7 @@ class CDMObject(object):
     # Atmospheric model
     # CDMObject
     def ATMOSPHERIC_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -159,7 +118,7 @@ class CDMObject(object):
     # N-body perturbations
     # CDMObject
     def N_BODY_PERTURBATIONS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -167,7 +126,7 @@ class CDMObject(object):
     # Solar radiation pressure
     # CDMObject
     def SOLAR_RAD_PRESSURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
@@ -175,7 +134,7 @@ class CDMObject(object):
     # Earth tides
     # CDMObject
     def EARTH_TIDES(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
@@ -183,7 +142,7 @@ class CDMObject(object):
     # Intrack thrust
     # CDMObject
     def INTRACK_THRUST(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
@@ -191,7 +150,7 @@ class CDMObject(object):
     # Time of last observation start
     # CDMObject
     def TIME_LASTOB_START(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -199,7 +158,7 @@ class CDMObject(object):
     # Time of last observation end
     # CDMObject
     def TIME_LASTOB_END(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -207,7 +166,7 @@ class CDMObject(object):
     # Recommended observation data span
     # CDMObject
     def RECOMMENDED_OD_SPAN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -215,7 +174,7 @@ class CDMObject(object):
     # Actual observation data span
     # CDMObject
     def ACTUAL_OD_SPAN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -223,7 +182,7 @@ class CDMObject(object):
     # Number of observations available
     # CDMObject
     def OBS_AVAILABLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -231,7 +190,7 @@ class CDMObject(object):
     # Number of observations used
     # CDMObject
     def OBS_USED(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -239,7 +198,7 @@ class CDMObject(object):
     # Number of tracks available
     # CDMObject
     def TRACKS_AVAILABLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -247,7 +206,7 @@ class CDMObject(object):
     # Number of tracks used
     # CDMObject
     def TRACKS_USED(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -255,7 +214,7 @@ class CDMObject(object):
     # Residuals accepted
     # CDMObject
     def RESIDUALS_ACCEPTED(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -263,7 +222,7 @@ class CDMObject(object):
     # Weighted root mean square
     # CDMObject
     def WEIGHTED_RMS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -271,7 +230,7 @@ class CDMObject(object):
     # Area of the object
     # CDMObject
     def AREA_PC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -279,7 +238,7 @@ class CDMObject(object):
     # Area of the object drag
     # CDMObject
     def AREA_DRG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -287,15 +246,7 @@ class CDMObject(object):
     # Area of the object solar radiation pressure
     # CDMObject
     def AREA_SRP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # Mass of the object
-    # CDMObject
-    def MASS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -303,7 +254,7 @@ class CDMObject(object):
     # Object's area-to-mass ratio
     # CDMObject
     def CR_AREA_OVER_MASS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -311,7 +262,7 @@ class CDMObject(object):
     # Object's thrust acceleration
     # CDMObject
     def THRUST_ACCELERATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -319,7 +270,7 @@ class CDMObject(object):
     # Object's solar flux
     # CDMObject
     def SEDR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -327,7 +278,7 @@ class CDMObject(object):
     # X-coordinate of the object's position in RTN coordinates
     # CDMObject
     def X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -335,7 +286,7 @@ class CDMObject(object):
     # Y-coordinate of the object's position in RTN
     # CDMObject
     def Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -343,7 +294,7 @@ class CDMObject(object):
     # Z-coordinate of the object's position in RTN
     # CDMObject
     def Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -351,7 +302,7 @@ class CDMObject(object):
     # X-coordinate of the object's position in RTN coordinates
     # CDMObject
     def X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -359,7 +310,7 @@ class CDMObject(object):
     # Y-coordinate of the object's position in RTN
     # CDMObject
     def Y_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -367,7 +318,7 @@ class CDMObject(object):
     # Z-coordinate of the object's position in RTN
     # CDMObject
     def Z_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -375,7 +326,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CR_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -383,7 +334,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CT_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -391,7 +342,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CT_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -399,7 +350,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CN_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -407,7 +358,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CN_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -415,7 +366,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CN_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -423,7 +374,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CRDOT_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -431,7 +382,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CRDOT_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -439,7 +390,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CRDOT_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -447,7 +398,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CRDOT_RDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -455,7 +406,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTDOT_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -463,7 +414,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTDOT_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -471,7 +422,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTDOT_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -479,7 +430,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTDOT_RDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -487,7 +438,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTDOT_TDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -495,7 +446,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CNDOT_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -503,7 +454,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CNDOT_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -511,7 +462,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CNDOT_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -519,7 +470,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CNDOT_RDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -527,7 +478,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CNDOT_TDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -535,7 +486,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CNDOT_NDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -543,7 +494,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -551,7 +502,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -559,7 +510,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -567,7 +518,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_RDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -575,7 +526,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_TDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -583,7 +534,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_NDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -591,7 +542,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CDRG_DRG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -599,7 +550,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -607,7 +558,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -615,7 +566,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -623,7 +574,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_RDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -631,7 +582,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_TDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -639,7 +590,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_NDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -647,7 +598,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_DRG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -655,7 +606,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CSRP_SRP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -663,7 +614,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_R(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -671,7 +622,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_T(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -679,7 +630,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_N(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -687,7 +638,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_RDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -695,7 +646,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_TDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -703,7 +654,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_NDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -711,7 +662,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_DRG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -719,7 +670,7 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_SRP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(176))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -727,299 +678,278 @@ class CDMObject(object):
     # Covariance Matrix component
     # CDMObject
     def CTHR_THR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def CDMObjectStart(builder): builder.StartObject(88)
+def CDMObjectStart(builder): builder.StartObject(81)
 def Start(builder):
     return CDMObjectStart(builder)
 def CDMObjectAddCOMMENT(builder, COMMENT): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
 def AddCOMMENT(builder, COMMENT):
     return CDMObjectAddCOMMENT(builder, COMMENT)
-def CDMObjectAddOBJECT(builder, OBJECT): builder.PrependInt8Slot(1, OBJECT, 0)
+def CDMObjectAddOBJECT(builder, OBJECT): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
 def AddOBJECT(builder, OBJECT):
     return CDMObjectAddOBJECT(builder, OBJECT)
-def CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
-def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
-    return CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
-def CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_NAME), 0)
-def AddCATALOG_NAME(builder, CATALOG_NAME):
-    return CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME)
-def CDMObjectAddOBJECT_NAME(builder, OBJECT_NAME): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
-def AddOBJECT_NAME(builder, OBJECT_NAME):
-    return CDMObjectAddOBJECT_NAME(builder, OBJECT_NAME)
-def CDMObjectAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(INTERNATIONAL_DESIGNATOR), 0)
-def AddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR):
-    return CDMObjectAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR)
-def CDMObjectAddOBJECT_TYPE(builder, OBJECT_TYPE): builder.PrependInt8Slot(6, OBJECT_TYPE, 0)
-def AddOBJECT_TYPE(builder, OBJECT_TYPE):
-    return CDMObjectAddOBJECT_TYPE(builder, OBJECT_TYPE)
-def CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_CONTACT_POSITION), 0)
+def CDMObjectAddPOC(builder, POC): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POC), 0)
+def AddPOC(builder, POC):
+    return CDMObjectAddPOC(builder, POC)
+def CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_CONTACT_POSITION), 0)
 def AddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION):
     return CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
-def CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ORGANIZATION), 0)
+def CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ORGANIZATION), 0)
 def AddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION):
     return CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION)
-def CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME), 0)
+def CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME), 0)
 def AddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
     return CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
-def CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD): builder.PrependInt8Slot(10, COVARIANCE_METHOD, 0)
+def CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD): builder.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
 def AddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD):
     return CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
-def CDMObjectAddMANEUVERABLE(builder, MANEUVERABLE): builder.PrependInt8Slot(11, MANEUVERABLE, 0)
-def AddMANEUVERABLE(builder, MANEUVERABLE):
-    return CDMObjectAddMANEUVERABLE(builder, MANEUVERABLE)
-def CDMObjectAddORBIT_CENTER(builder, ORBIT_CENTER): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_CENTER), 0)
-def AddORBIT_CENTER(builder, ORBIT_CENTER):
-    return CDMObjectAddORBIT_CENTER(builder, ORBIT_CENTER)
-def CDMObjectAddREF_FRAME(builder, REF_FRAME): builder.PrependInt8Slot(13, REF_FRAME, 0)
+def CDMObjectAddREF_FRAME(builder, REF_FRAME): builder.PrependInt8Slot(7, REF_FRAME, 0)
 def AddREF_FRAME(builder, REF_FRAME):
     return CDMObjectAddREF_FRAME(builder, REF_FRAME)
-def CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
+def CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
 def AddGRAVITY_MODEL(builder, GRAVITY_MODEL):
     return CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
-def CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
+def CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
 def AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
     return CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
-def CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
+def CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
 def AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
     return CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
-def CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE): builder.PrependBoolSlot(17, SOLAR_RAD_PRESSURE, 0)
+def CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE): builder.PrependBoolSlot(11, SOLAR_RAD_PRESSURE, 0)
 def AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
     return CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
-def CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES): builder.PrependBoolSlot(18, EARTH_TIDES, 0)
+def CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES): builder.PrependBoolSlot(12, EARTH_TIDES, 0)
 def AddEARTH_TIDES(builder, EARTH_TIDES):
     return CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES)
-def CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST): builder.PrependBoolSlot(19, INTRACK_THRUST, 0)
+def CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST): builder.PrependBoolSlot(13, INTRACK_THRUST, 0)
 def AddINTRACK_THRUST(builder, INTRACK_THRUST):
     return CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST)
-def CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_START), 0)
+def CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_START), 0)
 def AddTIME_LASTOB_START(builder, TIME_LASTOB_START):
     return CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
-def CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_END), 0)
+def CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_END), 0)
 def AddTIME_LASTOB_END(builder, TIME_LASTOB_END):
     return CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
-def CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN): builder.PrependFloat64Slot(22, RECOMMENDED_OD_SPAN, 0.0)
+def CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN): builder.PrependFloat64Slot(16, RECOMMENDED_OD_SPAN, 0.0)
 def AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
     return CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
-def CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN): builder.PrependFloat64Slot(23, ACTUAL_OD_SPAN, 0.0)
+def CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN): builder.PrependFloat64Slot(17, ACTUAL_OD_SPAN, 0.0)
 def AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
     return CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
-def CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE): builder.PrependUint32Slot(24, OBS_AVAILABLE, 0)
+def CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE): builder.PrependUint32Slot(18, OBS_AVAILABLE, 0)
 def AddOBS_AVAILABLE(builder, OBS_AVAILABLE):
     return CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
-def CDMObjectAddOBS_USED(builder, OBS_USED): builder.PrependUint32Slot(25, OBS_USED, 0)
+def CDMObjectAddOBS_USED(builder, OBS_USED): builder.PrependUint32Slot(19, OBS_USED, 0)
 def AddOBS_USED(builder, OBS_USED):
     return CDMObjectAddOBS_USED(builder, OBS_USED)
-def CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE): builder.PrependUint32Slot(26, TRACKS_AVAILABLE, 0)
+def CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE): builder.PrependUint32Slot(20, TRACKS_AVAILABLE, 0)
 def AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
     return CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
-def CDMObjectAddTRACKS_USED(builder, TRACKS_USED): builder.PrependUint32Slot(27, TRACKS_USED, 0)
+def CDMObjectAddTRACKS_USED(builder, TRACKS_USED): builder.PrependUint32Slot(21, TRACKS_USED, 0)
 def AddTRACKS_USED(builder, TRACKS_USED):
     return CDMObjectAddTRACKS_USED(builder, TRACKS_USED)
-def CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED): builder.PrependFloat64Slot(28, RESIDUALS_ACCEPTED, 0.0)
+def CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED): builder.PrependFloat64Slot(22, RESIDUALS_ACCEPTED, 0.0)
 def AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
     return CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
-def CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS): builder.PrependFloat64Slot(29, WEIGHTED_RMS, 0.0)
+def CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS): builder.PrependFloat64Slot(23, WEIGHTED_RMS, 0.0)
 def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
     return CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
-def CDMObjectAddAREA_PC(builder, AREA_PC): builder.PrependFloat64Slot(30, AREA_PC, 0.0)
+def CDMObjectAddAREA_PC(builder, AREA_PC): builder.PrependFloat64Slot(24, AREA_PC, 0.0)
 def AddAREA_PC(builder, AREA_PC):
     return CDMObjectAddAREA_PC(builder, AREA_PC)
-def CDMObjectAddAREA_DRG(builder, AREA_DRG): builder.PrependFloat64Slot(31, AREA_DRG, 0.0)
+def CDMObjectAddAREA_DRG(builder, AREA_DRG): builder.PrependFloat64Slot(25, AREA_DRG, 0.0)
 def AddAREA_DRG(builder, AREA_DRG):
     return CDMObjectAddAREA_DRG(builder, AREA_DRG)
-def CDMObjectAddAREA_SRP(builder, AREA_SRP): builder.PrependFloat64Slot(32, AREA_SRP, 0.0)
+def CDMObjectAddAREA_SRP(builder, AREA_SRP): builder.PrependFloat64Slot(26, AREA_SRP, 0.0)
 def AddAREA_SRP(builder, AREA_SRP):
     return CDMObjectAddAREA_SRP(builder, AREA_SRP)
-def CDMObjectAddMASS(builder, MASS): builder.PrependFloat64Slot(33, MASS, 0.0)
-def AddMASS(builder, MASS):
-    return CDMObjectAddMASS(builder, MASS)
-def CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS): builder.PrependFloat64Slot(34, CR_AREA_OVER_MASS, 0.0)
+def CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS): builder.PrependFloat64Slot(27, CR_AREA_OVER_MASS, 0.0)
 def AddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS):
     return CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS)
-def CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION): builder.PrependFloat64Slot(35, THRUST_ACCELERATION, 0.0)
+def CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION): builder.PrependFloat64Slot(28, THRUST_ACCELERATION, 0.0)
 def AddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
     return CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
-def CDMObjectAddSEDR(builder, SEDR): builder.PrependFloat64Slot(36, SEDR, 0.0)
+def CDMObjectAddSEDR(builder, SEDR): builder.PrependFloat64Slot(29, SEDR, 0.0)
 def AddSEDR(builder, SEDR):
     return CDMObjectAddSEDR(builder, SEDR)
-def CDMObjectAddX(builder, X): builder.PrependFloat64Slot(37, X, 0.0)
+def CDMObjectAddX(builder, X): builder.PrependFloat64Slot(30, X, 0.0)
 def AddX(builder, X):
     return CDMObjectAddX(builder, X)
-def CDMObjectAddY(builder, Y): builder.PrependFloat64Slot(38, Y, 0.0)
+def CDMObjectAddY(builder, Y): builder.PrependFloat64Slot(31, Y, 0.0)
 def AddY(builder, Y):
     return CDMObjectAddY(builder, Y)
-def CDMObjectAddZ(builder, Z): builder.PrependFloat64Slot(39, Z, 0.0)
+def CDMObjectAddZ(builder, Z): builder.PrependFloat64Slot(32, Z, 0.0)
 def AddZ(builder, Z):
     return CDMObjectAddZ(builder, Z)
-def CDMObjectAddX_DOT(builder, X_DOT): builder.PrependFloat64Slot(40, X_DOT, 0.0)
+def CDMObjectAddX_DOT(builder, X_DOT): builder.PrependFloat64Slot(33, X_DOT, 0.0)
 def AddX_DOT(builder, X_DOT):
     return CDMObjectAddX_DOT(builder, X_DOT)
-def CDMObjectAddY_DOT(builder, Y_DOT): builder.PrependFloat64Slot(41, Y_DOT, 0.0)
+def CDMObjectAddY_DOT(builder, Y_DOT): builder.PrependFloat64Slot(34, Y_DOT, 0.0)
 def AddY_DOT(builder, Y_DOT):
     return CDMObjectAddY_DOT(builder, Y_DOT)
-def CDMObjectAddZ_DOT(builder, Z_DOT): builder.PrependFloat64Slot(42, Z_DOT, 0.0)
+def CDMObjectAddZ_DOT(builder, Z_DOT): builder.PrependFloat64Slot(35, Z_DOT, 0.0)
 def AddZ_DOT(builder, Z_DOT):
     return CDMObjectAddZ_DOT(builder, Z_DOT)
-def CDMObjectAddCR_R(builder, CR_R): builder.PrependFloat64Slot(43, CR_R, 0.0)
+def CDMObjectAddCR_R(builder, CR_R): builder.PrependFloat64Slot(36, CR_R, 0.0)
 def AddCR_R(builder, CR_R):
     return CDMObjectAddCR_R(builder, CR_R)
-def CDMObjectAddCT_R(builder, CT_R): builder.PrependFloat64Slot(44, CT_R, 0.0)
+def CDMObjectAddCT_R(builder, CT_R): builder.PrependFloat64Slot(37, CT_R, 0.0)
 def AddCT_R(builder, CT_R):
     return CDMObjectAddCT_R(builder, CT_R)
-def CDMObjectAddCT_T(builder, CT_T): builder.PrependFloat64Slot(45, CT_T, 0.0)
+def CDMObjectAddCT_T(builder, CT_T): builder.PrependFloat64Slot(38, CT_T, 0.0)
 def AddCT_T(builder, CT_T):
     return CDMObjectAddCT_T(builder, CT_T)
-def CDMObjectAddCN_R(builder, CN_R): builder.PrependFloat64Slot(46, CN_R, 0.0)
+def CDMObjectAddCN_R(builder, CN_R): builder.PrependFloat64Slot(39, CN_R, 0.0)
 def AddCN_R(builder, CN_R):
     return CDMObjectAddCN_R(builder, CN_R)
-def CDMObjectAddCN_T(builder, CN_T): builder.PrependFloat64Slot(47, CN_T, 0.0)
+def CDMObjectAddCN_T(builder, CN_T): builder.PrependFloat64Slot(40, CN_T, 0.0)
 def AddCN_T(builder, CN_T):
     return CDMObjectAddCN_T(builder, CN_T)
-def CDMObjectAddCN_N(builder, CN_N): builder.PrependFloat64Slot(48, CN_N, 0.0)
+def CDMObjectAddCN_N(builder, CN_N): builder.PrependFloat64Slot(41, CN_N, 0.0)
 def AddCN_N(builder, CN_N):
     return CDMObjectAddCN_N(builder, CN_N)
-def CDMObjectAddCRDOT_R(builder, CRDOT_R): builder.PrependFloat64Slot(49, CRDOT_R, 0.0)
+def CDMObjectAddCRDOT_R(builder, CRDOT_R): builder.PrependFloat64Slot(42, CRDOT_R, 0.0)
 def AddCRDOT_R(builder, CRDOT_R):
     return CDMObjectAddCRDOT_R(builder, CRDOT_R)
-def CDMObjectAddCRDOT_T(builder, CRDOT_T): builder.PrependFloat64Slot(50, CRDOT_T, 0.0)
+def CDMObjectAddCRDOT_T(builder, CRDOT_T): builder.PrependFloat64Slot(43, CRDOT_T, 0.0)
 def AddCRDOT_T(builder, CRDOT_T):
     return CDMObjectAddCRDOT_T(builder, CRDOT_T)
-def CDMObjectAddCRDOT_N(builder, CRDOT_N): builder.PrependFloat64Slot(51, CRDOT_N, 0.0)
+def CDMObjectAddCRDOT_N(builder, CRDOT_N): builder.PrependFloat64Slot(44, CRDOT_N, 0.0)
 def AddCRDOT_N(builder, CRDOT_N):
     return CDMObjectAddCRDOT_N(builder, CRDOT_N)
-def CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT): builder.PrependFloat64Slot(52, CRDOT_RDOT, 0.0)
+def CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT): builder.PrependFloat64Slot(45, CRDOT_RDOT, 0.0)
 def AddCRDOT_RDOT(builder, CRDOT_RDOT):
     return CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT)
-def CDMObjectAddCTDOT_R(builder, CTDOT_R): builder.PrependFloat64Slot(53, CTDOT_R, 0.0)
+def CDMObjectAddCTDOT_R(builder, CTDOT_R): builder.PrependFloat64Slot(46, CTDOT_R, 0.0)
 def AddCTDOT_R(builder, CTDOT_R):
     return CDMObjectAddCTDOT_R(builder, CTDOT_R)
-def CDMObjectAddCTDOT_T(builder, CTDOT_T): builder.PrependFloat64Slot(54, CTDOT_T, 0.0)
+def CDMObjectAddCTDOT_T(builder, CTDOT_T): builder.PrependFloat64Slot(47, CTDOT_T, 0.0)
 def AddCTDOT_T(builder, CTDOT_T):
     return CDMObjectAddCTDOT_T(builder, CTDOT_T)
-def CDMObjectAddCTDOT_N(builder, CTDOT_N): builder.PrependFloat64Slot(55, CTDOT_N, 0.0)
+def CDMObjectAddCTDOT_N(builder, CTDOT_N): builder.PrependFloat64Slot(48, CTDOT_N, 0.0)
 def AddCTDOT_N(builder, CTDOT_N):
     return CDMObjectAddCTDOT_N(builder, CTDOT_N)
-def CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT): builder.PrependFloat64Slot(56, CTDOT_RDOT, 0.0)
+def CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT): builder.PrependFloat64Slot(49, CTDOT_RDOT, 0.0)
 def AddCTDOT_RDOT(builder, CTDOT_RDOT):
     return CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT)
-def CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT): builder.PrependFloat64Slot(57, CTDOT_TDOT, 0.0)
+def CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT): builder.PrependFloat64Slot(50, CTDOT_TDOT, 0.0)
 def AddCTDOT_TDOT(builder, CTDOT_TDOT):
     return CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT)
-def CDMObjectAddCNDOT_R(builder, CNDOT_R): builder.PrependFloat64Slot(58, CNDOT_R, 0.0)
+def CDMObjectAddCNDOT_R(builder, CNDOT_R): builder.PrependFloat64Slot(51, CNDOT_R, 0.0)
 def AddCNDOT_R(builder, CNDOT_R):
     return CDMObjectAddCNDOT_R(builder, CNDOT_R)
-def CDMObjectAddCNDOT_T(builder, CNDOT_T): builder.PrependFloat64Slot(59, CNDOT_T, 0.0)
+def CDMObjectAddCNDOT_T(builder, CNDOT_T): builder.PrependFloat64Slot(52, CNDOT_T, 0.0)
 def AddCNDOT_T(builder, CNDOT_T):
     return CDMObjectAddCNDOT_T(builder, CNDOT_T)
-def CDMObjectAddCNDOT_N(builder, CNDOT_N): builder.PrependFloat64Slot(60, CNDOT_N, 0.0)
+def CDMObjectAddCNDOT_N(builder, CNDOT_N): builder.PrependFloat64Slot(53, CNDOT_N, 0.0)
 def AddCNDOT_N(builder, CNDOT_N):
     return CDMObjectAddCNDOT_N(builder, CNDOT_N)
-def CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT): builder.PrependFloat64Slot(61, CNDOT_RDOT, 0.0)
+def CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT): builder.PrependFloat64Slot(54, CNDOT_RDOT, 0.0)
 def AddCNDOT_RDOT(builder, CNDOT_RDOT):
     return CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT)
-def CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT): builder.PrependFloat64Slot(62, CNDOT_TDOT, 0.0)
+def CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT): builder.PrependFloat64Slot(55, CNDOT_TDOT, 0.0)
 def AddCNDOT_TDOT(builder, CNDOT_TDOT):
     return CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT)
-def CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT): builder.PrependFloat64Slot(63, CNDOT_NDOT, 0.0)
+def CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT): builder.PrependFloat64Slot(56, CNDOT_NDOT, 0.0)
 def AddCNDOT_NDOT(builder, CNDOT_NDOT):
     return CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT)
-def CDMObjectAddCDRG_R(builder, CDRG_R): builder.PrependFloat64Slot(64, CDRG_R, 0.0)
+def CDMObjectAddCDRG_R(builder, CDRG_R): builder.PrependFloat64Slot(57, CDRG_R, 0.0)
 def AddCDRG_R(builder, CDRG_R):
     return CDMObjectAddCDRG_R(builder, CDRG_R)
-def CDMObjectAddCDRG_T(builder, CDRG_T): builder.PrependFloat64Slot(65, CDRG_T, 0.0)
+def CDMObjectAddCDRG_T(builder, CDRG_T): builder.PrependFloat64Slot(58, CDRG_T, 0.0)
 def AddCDRG_T(builder, CDRG_T):
     return CDMObjectAddCDRG_T(builder, CDRG_T)
-def CDMObjectAddCDRG_N(builder, CDRG_N): builder.PrependFloat64Slot(66, CDRG_N, 0.0)
+def CDMObjectAddCDRG_N(builder, CDRG_N): builder.PrependFloat64Slot(59, CDRG_N, 0.0)
 def AddCDRG_N(builder, CDRG_N):
     return CDMObjectAddCDRG_N(builder, CDRG_N)
-def CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT): builder.PrependFloat64Slot(67, CDRG_RDOT, 0.0)
+def CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT): builder.PrependFloat64Slot(60, CDRG_RDOT, 0.0)
 def AddCDRG_RDOT(builder, CDRG_RDOT):
     return CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT)
-def CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT): builder.PrependFloat64Slot(68, CDRG_TDOT, 0.0)
+def CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT): builder.PrependFloat64Slot(61, CDRG_TDOT, 0.0)
 def AddCDRG_TDOT(builder, CDRG_TDOT):
     return CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT)
-def CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT): builder.PrependFloat64Slot(69, CDRG_NDOT, 0.0)
+def CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT): builder.PrependFloat64Slot(62, CDRG_NDOT, 0.0)
 def AddCDRG_NDOT(builder, CDRG_NDOT):
     return CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT)
-def CDMObjectAddCDRG_DRG(builder, CDRG_DRG): builder.PrependFloat64Slot(70, CDRG_DRG, 0.0)
+def CDMObjectAddCDRG_DRG(builder, CDRG_DRG): builder.PrependFloat64Slot(63, CDRG_DRG, 0.0)
 def AddCDRG_DRG(builder, CDRG_DRG):
     return CDMObjectAddCDRG_DRG(builder, CDRG_DRG)
-def CDMObjectAddCSRP_R(builder, CSRP_R): builder.PrependFloat64Slot(71, CSRP_R, 0.0)
+def CDMObjectAddCSRP_R(builder, CSRP_R): builder.PrependFloat64Slot(64, CSRP_R, 0.0)
 def AddCSRP_R(builder, CSRP_R):
     return CDMObjectAddCSRP_R(builder, CSRP_R)
-def CDMObjectAddCSRP_T(builder, CSRP_T): builder.PrependFloat64Slot(72, CSRP_T, 0.0)
+def CDMObjectAddCSRP_T(builder, CSRP_T): builder.PrependFloat64Slot(65, CSRP_T, 0.0)
 def AddCSRP_T(builder, CSRP_T):
     return CDMObjectAddCSRP_T(builder, CSRP_T)
-def CDMObjectAddCSRP_N(builder, CSRP_N): builder.PrependFloat64Slot(73, CSRP_N, 0.0)
+def CDMObjectAddCSRP_N(builder, CSRP_N): builder.PrependFloat64Slot(66, CSRP_N, 0.0)
 def AddCSRP_N(builder, CSRP_N):
     return CDMObjectAddCSRP_N(builder, CSRP_N)
-def CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT): builder.PrependFloat64Slot(74, CSRP_RDOT, 0.0)
+def CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT): builder.PrependFloat64Slot(67, CSRP_RDOT, 0.0)
 def AddCSRP_RDOT(builder, CSRP_RDOT):
     return CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT)
-def CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT): builder.PrependFloat64Slot(75, CSRP_TDOT, 0.0)
+def CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT): builder.PrependFloat64Slot(68, CSRP_TDOT, 0.0)
 def AddCSRP_TDOT(builder, CSRP_TDOT):
     return CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT)
-def CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT): builder.PrependFloat64Slot(76, CSRP_NDOT, 0.0)
+def CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT): builder.PrependFloat64Slot(69, CSRP_NDOT, 0.0)
 def AddCSRP_NDOT(builder, CSRP_NDOT):
     return CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT)
-def CDMObjectAddCSRP_DRG(builder, CSRP_DRG): builder.PrependFloat64Slot(77, CSRP_DRG, 0.0)
+def CDMObjectAddCSRP_DRG(builder, CSRP_DRG): builder.PrependFloat64Slot(70, CSRP_DRG, 0.0)
 def AddCSRP_DRG(builder, CSRP_DRG):
     return CDMObjectAddCSRP_DRG(builder, CSRP_DRG)
-def CDMObjectAddCSRP_SRP(builder, CSRP_SRP): builder.PrependFloat64Slot(78, CSRP_SRP, 0.0)
+def CDMObjectAddCSRP_SRP(builder, CSRP_SRP): builder.PrependFloat64Slot(71, CSRP_SRP, 0.0)
 def AddCSRP_SRP(builder, CSRP_SRP):
     return CDMObjectAddCSRP_SRP(builder, CSRP_SRP)
-def CDMObjectAddCTHR_R(builder, CTHR_R): builder.PrependFloat64Slot(79, CTHR_R, 0.0)
+def CDMObjectAddCTHR_R(builder, CTHR_R): builder.PrependFloat64Slot(72, CTHR_R, 0.0)
 def AddCTHR_R(builder, CTHR_R):
     return CDMObjectAddCTHR_R(builder, CTHR_R)
-def CDMObjectAddCTHR_T(builder, CTHR_T): builder.PrependFloat64Slot(80, CTHR_T, 0.0)
+def CDMObjectAddCTHR_T(builder, CTHR_T): builder.PrependFloat64Slot(73, CTHR_T, 0.0)
 def AddCTHR_T(builder, CTHR_T):
     return CDMObjectAddCTHR_T(builder, CTHR_T)
-def CDMObjectAddCTHR_N(builder, CTHR_N): builder.PrependFloat64Slot(81, CTHR_N, 0.0)
+def CDMObjectAddCTHR_N(builder, CTHR_N): builder.PrependFloat64Slot(74, CTHR_N, 0.0)
 def AddCTHR_N(builder, CTHR_N):
     return CDMObjectAddCTHR_N(builder, CTHR_N)
-def CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT): builder.PrependFloat64Slot(82, CTHR_RDOT, 0.0)
+def CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT): builder.PrependFloat64Slot(75, CTHR_RDOT, 0.0)
 def AddCTHR_RDOT(builder, CTHR_RDOT):
     return CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT)
-def CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT): builder.PrependFloat64Slot(83, CTHR_TDOT, 0.0)
+def CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT): builder.PrependFloat64Slot(76, CTHR_TDOT, 0.0)
 def AddCTHR_TDOT(builder, CTHR_TDOT):
     return CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT)
-def CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT): builder.PrependFloat64Slot(84, CTHR_NDOT, 0.0)
+def CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT): builder.PrependFloat64Slot(77, CTHR_NDOT, 0.0)
 def AddCTHR_NDOT(builder, CTHR_NDOT):
     return CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT)
-def CDMObjectAddCTHR_DRG(builder, CTHR_DRG): builder.PrependFloat64Slot(85, CTHR_DRG, 0.0)
+def CDMObjectAddCTHR_DRG(builder, CTHR_DRG): builder.PrependFloat64Slot(78, CTHR_DRG, 0.0)
 def AddCTHR_DRG(builder, CTHR_DRG):
     return CDMObjectAddCTHR_DRG(builder, CTHR_DRG)
-def CDMObjectAddCTHR_SRP(builder, CTHR_SRP): builder.PrependFloat64Slot(86, CTHR_SRP, 0.0)
+def CDMObjectAddCTHR_SRP(builder, CTHR_SRP): builder.PrependFloat64Slot(79, CTHR_SRP, 0.0)
 def AddCTHR_SRP(builder, CTHR_SRP):
     return CDMObjectAddCTHR_SRP(builder, CTHR_SRP)
-def CDMObjectAddCTHR_THR(builder, CTHR_THR): builder.PrependFloat64Slot(87, CTHR_THR, 0.0)
+def CDMObjectAddCTHR_THR(builder, CTHR_THR): builder.PrependFloat64Slot(80, CTHR_THR, 0.0)
 def AddCTHR_THR(builder, CTHR_THR):
     return CDMObjectAddCTHR_THR(builder, CTHR_THR)
 def CDMObjectEnd(builder): return builder.EndObject()
 def End(builder):
     return CDMObjectEnd(builder)
+import CAT
+import EPM
+try:
+    from typing import Optional
+except:
+    pass
 
 class CDMObjectT(object):
 
     # CDMObjectT
     def __init__(self):
         self.COMMENT = None  # type: str
-        self.OBJECT = 0  # type: int
-        self.OBJECT_DESIGNATOR = None  # type: str
-        self.CATALOG_NAME = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.INTERNATIONAL_DESIGNATOR = None  # type: str
-        self.OBJECT_TYPE = 0  # type: int
+        self.OBJECT = None  # type: Optional[CAT.CATT]
+        self.POC = None  # type: Optional[EPM.EPMT]
         self.OPERATOR_CONTACT_POSITION = None  # type: str
         self.OPERATOR_ORGANIZATION = None  # type: str
         self.EPHEMERIS_NAME = None  # type: str
         self.COVARIANCE_METHOD = 0  # type: int
-        self.MANEUVERABLE = 0  # type: int
-        self.ORBIT_CENTER = None  # type: str
         self.REF_FRAME = 0  # type: int
         self.GRAVITY_MODEL = None  # type: str
         self.ATMOSPHERIC_MODEL = None  # type: str
@@ -1040,7 +970,6 @@ class CDMObjectT(object):
         self.AREA_PC = 0.0  # type: float
         self.AREA_DRG = 0.0  # type: float
         self.AREA_SRP = 0.0  # type: float
-        self.MASS = 0.0  # type: float
         self.CR_AREA_OVER_MASS = 0.0  # type: float
         self.THRUST_ACCELERATION = 0.0  # type: float
         self.SEDR = 0.0  # type: float
@@ -1118,18 +1047,14 @@ class CDMObjectT(object):
         if cdmobject is None:
             return
         self.COMMENT = cdmobject.COMMENT()
-        self.OBJECT = cdmobject.OBJECT()
-        self.OBJECT_DESIGNATOR = cdmobject.OBJECT_DESIGNATOR()
-        self.CATALOG_NAME = cdmobject.CATALOG_NAME()
-        self.OBJECT_NAME = cdmobject.OBJECT_NAME()
-        self.INTERNATIONAL_DESIGNATOR = cdmobject.INTERNATIONAL_DESIGNATOR()
-        self.OBJECT_TYPE = cdmobject.OBJECT_TYPE()
+        if cdmobject.OBJECT() is not None:
+            self.OBJECT = CAT.CATT.InitFromObj(cdmobject.OBJECT())
+        if cdmobject.POC() is not None:
+            self.POC = EPM.EPMT.InitFromObj(cdmobject.POC())
         self.OPERATOR_CONTACT_POSITION = cdmobject.OPERATOR_CONTACT_POSITION()
         self.OPERATOR_ORGANIZATION = cdmobject.OPERATOR_ORGANIZATION()
         self.EPHEMERIS_NAME = cdmobject.EPHEMERIS_NAME()
         self.COVARIANCE_METHOD = cdmobject.COVARIANCE_METHOD()
-        self.MANEUVERABLE = cdmobject.MANEUVERABLE()
-        self.ORBIT_CENTER = cdmobject.ORBIT_CENTER()
         self.REF_FRAME = cdmobject.REF_FRAME()
         self.GRAVITY_MODEL = cdmobject.GRAVITY_MODEL()
         self.ATMOSPHERIC_MODEL = cdmobject.ATMOSPHERIC_MODEL()
@@ -1150,7 +1075,6 @@ class CDMObjectT(object):
         self.AREA_PC = cdmobject.AREA_PC()
         self.AREA_DRG = cdmobject.AREA_DRG()
         self.AREA_SRP = cdmobject.AREA_SRP()
-        self.MASS = cdmobject.MASS()
         self.CR_AREA_OVER_MASS = cdmobject.CR_AREA_OVER_MASS()
         self.THRUST_ACCELERATION = cdmobject.THRUST_ACCELERATION()
         self.SEDR = cdmobject.SEDR()
@@ -1210,22 +1134,16 @@ class CDMObjectT(object):
     def Pack(self, builder):
         if self.COMMENT is not None:
             COMMENT = builder.CreateString(self.COMMENT)
-        if self.OBJECT_DESIGNATOR is not None:
-            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
-        if self.CATALOG_NAME is not None:
-            CATALOG_NAME = builder.CreateString(self.CATALOG_NAME)
-        if self.OBJECT_NAME is not None:
-            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
-        if self.INTERNATIONAL_DESIGNATOR is not None:
-            INTERNATIONAL_DESIGNATOR = builder.CreateString(self.INTERNATIONAL_DESIGNATOR)
+        if self.OBJECT is not None:
+            OBJECT = self.OBJECT.Pack(builder)
+        if self.POC is not None:
+            POC = self.POC.Pack(builder)
         if self.OPERATOR_CONTACT_POSITION is not None:
             OPERATOR_CONTACT_POSITION = builder.CreateString(self.OPERATOR_CONTACT_POSITION)
         if self.OPERATOR_ORGANIZATION is not None:
             OPERATOR_ORGANIZATION = builder.CreateString(self.OPERATOR_ORGANIZATION)
         if self.EPHEMERIS_NAME is not None:
             EPHEMERIS_NAME = builder.CreateString(self.EPHEMERIS_NAME)
-        if self.ORBIT_CENTER is not None:
-            ORBIT_CENTER = builder.CreateString(self.ORBIT_CENTER)
         if self.GRAVITY_MODEL is not None:
             GRAVITY_MODEL = builder.CreateString(self.GRAVITY_MODEL)
         if self.ATMOSPHERIC_MODEL is not None:
@@ -1239,16 +1157,10 @@ class CDMObjectT(object):
         CDMObjectStart(builder)
         if self.COMMENT is not None:
             CDMObjectAddCOMMENT(builder, COMMENT)
-        CDMObjectAddOBJECT(builder, self.OBJECT)
-        if self.OBJECT_DESIGNATOR is not None:
-            CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
-        if self.CATALOG_NAME is not None:
-            CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME)
-        if self.OBJECT_NAME is not None:
-            CDMObjectAddOBJECT_NAME(builder, OBJECT_NAME)
-        if self.INTERNATIONAL_DESIGNATOR is not None:
-            CDMObjectAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR)
-        CDMObjectAddOBJECT_TYPE(builder, self.OBJECT_TYPE)
+        if self.OBJECT is not None:
+            CDMObjectAddOBJECT(builder, OBJECT)
+        if self.POC is not None:
+            CDMObjectAddPOC(builder, POC)
         if self.OPERATOR_CONTACT_POSITION is not None:
             CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
         if self.OPERATOR_ORGANIZATION is not None:
@@ -1256,9 +1168,6 @@ class CDMObjectT(object):
         if self.EPHEMERIS_NAME is not None:
             CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
         CDMObjectAddCOVARIANCE_METHOD(builder, self.COVARIANCE_METHOD)
-        CDMObjectAddMANEUVERABLE(builder, self.MANEUVERABLE)
-        if self.ORBIT_CENTER is not None:
-            CDMObjectAddORBIT_CENTER(builder, ORBIT_CENTER)
         CDMObjectAddREF_FRAME(builder, self.REF_FRAME)
         if self.GRAVITY_MODEL is not None:
             CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
@@ -1284,7 +1193,6 @@ class CDMObjectT(object):
         CDMObjectAddAREA_PC(builder, self.AREA_PC)
         CDMObjectAddAREA_DRG(builder, self.AREA_DRG)
         CDMObjectAddAREA_SRP(builder, self.AREA_SRP)
-        CDMObjectAddMASS(builder, self.MASS)
         CDMObjectAddCR_AREA_OVER_MASS(builder, self.CR_AREA_OVER_MASS)
         CDMObjectAddTHRUST_ACCELERATION(builder, self.THRUST_ACCELERATION)
         CDMObjectAddSEDR(builder, self.SEDR)

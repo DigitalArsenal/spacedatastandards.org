@@ -289,13 +289,7 @@ public struct EOO : IFlatbufferObject
 #endif
   public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(158); }
   /// Reference frame of the observation
-  public string REFERENCE_FRAME { get { int o = __p.__offset(160); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetREFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(160, 1); }
-#else
-  public ArraySegment<byte>? GetREFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(160); }
-#endif
-  public byte[] GetREFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(160); }
+  public referenceFrame REFERENCE_FRAME { get { int o = __p.__offset(160); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
   /// Reference frame of the sensor
   public string SEN_REFERENCE_FRAME { get { int o = __p.__offset(162); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -412,7 +406,7 @@ public struct EOO : IFlatbufferObject
       StringOffset DATA_MODEOffset = default(StringOffset),
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset CREATED_BYOffset = default(StringOffset),
-      StringOffset REFERENCE_FRAMEOffset = default(StringOffset),
+      referenceFrame REFERENCE_FRAME = referenceFrame.ECEF,
       StringOffset SEN_REFERENCE_FRAMEOffset = default(StringOffset),
       bool UMBRA = false,
       bool PENUMBRA = false,
@@ -424,7 +418,6 @@ public struct EOO : IFlatbufferObject
     EOO.AddSOURCE_DL(builder, SOURCE_DLOffset);
     EOO.AddORIG_NETWORK(builder, ORIG_NETWORKOffset);
     EOO.AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset);
-    EOO.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
     EOO.AddCREATED_BY(builder, CREATED_BYOffset);
     EOO.AddCREATED_AT(builder, CREATED_ATOffset);
     EOO.AddDATA_MODE(builder, DATA_MODEOffset);
@@ -504,6 +497,7 @@ public struct EOO : IFlatbufferObject
     EOO.AddEOBSERVATION_ID(builder, EOBSERVATION_IDOffset);
     EOO.AddPENUMBRA(builder, PENUMBRA);
     EOO.AddUMBRA(builder, UMBRA);
+    EOO.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
     EOO.AddUCT(builder, UCT);
     return EOO.EndEOO(builder);
   }
@@ -587,7 +581,7 @@ public struct EOO : IFlatbufferObject
   public static void AddDATA_MODE(FlatBufferBuilder builder, StringOffset DATA_MODEOffset) { builder.AddOffset(75, DATA_MODEOffset.Value, 0); }
   public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(76, CREATED_ATOffset.Value, 0); }
   public static void AddCREATED_BY(FlatBufferBuilder builder, StringOffset CREATED_BYOffset) { builder.AddOffset(77, CREATED_BYOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, StringOffset REFERENCE_FRAMEOffset) { builder.AddOffset(78, REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame REFERENCE_FRAME) { builder.AddSbyte(78, (sbyte)REFERENCE_FRAME, 0); }
   public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset SEN_REFERENCE_FRAMEOffset) { builder.AddOffset(79, SEN_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddUMBRA(FlatBufferBuilder builder, bool UMBRA) { builder.AddBool(80, UMBRA, false); }
   public static void AddPENUMBRA(FlatBufferBuilder builder, bool PENUMBRA) { builder.AddBool(81, PENUMBRA, false); }
@@ -713,7 +707,6 @@ public struct EOO : IFlatbufferObject
     var _DATA_MODE = _o.DATA_MODE == null ? default(StringOffset) : builder.CreateString(_o.DATA_MODE);
     var _CREATED_AT = _o.CREATED_AT == null ? default(StringOffset) : builder.CreateString(_o.CREATED_AT);
     var _CREATED_BY = _o.CREATED_BY == null ? default(StringOffset) : builder.CreateString(_o.CREATED_BY);
-    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_FRAME);
     var _SEN_REFERENCE_FRAME = _o.SEN_REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.SEN_REFERENCE_FRAME);
     var _ORIG_NETWORK = _o.ORIG_NETWORK == null ? default(StringOffset) : builder.CreateString(_o.ORIG_NETWORK);
     var _SOURCE_DL = _o.SOURCE_DL == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_DL);
@@ -798,7 +791,7 @@ public struct EOO : IFlatbufferObject
       _DATA_MODE,
       _CREATED_AT,
       _CREATED_BY,
-      _REFERENCE_FRAME,
+      _o.REFERENCE_FRAME,
       _SEN_REFERENCE_FRAME,
       _o.UMBRA,
       _o.PENUMBRA,
@@ -888,7 +881,7 @@ public class EOOT
   public string DATA_MODE { get; set; }
   public string CREATED_AT { get; set; }
   public string CREATED_BY { get; set; }
-  public string REFERENCE_FRAME { get; set; }
+  public referenceFrame REFERENCE_FRAME { get; set; }
   public string SEN_REFERENCE_FRAME { get; set; }
   public bool UMBRA { get; set; }
   public bool PENUMBRA { get; set; }
@@ -975,7 +968,7 @@ public class EOOT
     this.DATA_MODE = null;
     this.CREATED_AT = null;
     this.CREATED_BY = null;
-    this.REFERENCE_FRAME = null;
+    this.REFERENCE_FRAME = referenceFrame.ECEF;
     this.SEN_REFERENCE_FRAME = null;
     this.UMBRA = false;
     this.PENUMBRA = false;

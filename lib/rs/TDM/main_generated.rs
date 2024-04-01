@@ -3,189 +3,13 @@
 
 // @generated
 
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_OBSERVERLOCATION_REFERENCE_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_OBSERVERLOCATION_REFERENCE_FRAME: i8 = 19;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_OBSERVERLOCATION_REFERENCE_FRAME: [OBSERVERLocationReferenceFrame; 20] = [
-  OBSERVERLocationReferenceFrame::EME2000,
-  OBSERVERLocationReferenceFrame::GCRF,
-  OBSERVERLocationReferenceFrame::GRC,
-  OBSERVERLocationReferenceFrame::ICRF,
-  OBSERVERLocationReferenceFrame::ITRF2000,
-  OBSERVERLocationReferenceFrame::ITRF93,
-  OBSERVERLocationReferenceFrame::ITRF97,
-  OBSERVERLocationReferenceFrame::MCI,
-  OBSERVERLocationReferenceFrame::TDR,
-  OBSERVERLocationReferenceFrame::TEME,
-  OBSERVERLocationReferenceFrame::TOD,
-  OBSERVERLocationReferenceFrame::VVLH,
-  OBSERVERLocationReferenceFrame::RIC,
-  OBSERVERLocationReferenceFrame::VLVH,
-  OBSERVERLocationReferenceFrame::ENU,
-  OBSERVERLocationReferenceFrame::NED,
-  OBSERVERLocationReferenceFrame::LTP,
-  OBSERVERLocationReferenceFrame::LVLH,
-  OBSERVERLocationReferenceFrame::PNE,
-  OBSERVERLocationReferenceFrame::BRF,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct OBSERVERLocationReferenceFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl OBSERVERLocationReferenceFrame {
-  /// Earth Mean Equator and Equinox of J2000
-  pub const EME2000: Self = Self(0);
-  ///  Geocentric Celestial Reference Frame
-  pub const GCRF: Self = Self(1);
-  /// Greenwich Rotating Coordinates
-  pub const GRC: Self = Self(2);
-  /// International Celestial Reference Frame
-  pub const ICRF: Self = Self(3);
-  /// International Terrestrial Reference Frame 2000
-  pub const ITRF2000: Self = Self(4);
-  /// International Terrestrial Reference Frame 1993
-  pub const ITRF93: Self = Self(5);
-  /// International Terrestrial Reference Frame 1997
-  pub const ITRF97: Self = Self(6);
-  /// Mars Centered Inertial
-  pub const MCI: Self = Self(7);
-  /// True of Date, Rotating
-  pub const TDR: Self = Self(8);
-  /// True Equator Mean Equinox
-  pub const TEME: Self = Self(9);
-  /// True of Date
-  pub const TOD: Self = Self(10);
-  /// Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
-  pub const VVLH: Self = Self(11);
-  /// Radial-Intrack-Crosstrack (RIC): A local orbital reference frame with the radial axis pointing away from the central body, the intrack axis in the direction of motion, and the crosstrack axis completing the right-handed system.
-  pub const RIC: Self = Self(12);
-  /// Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
-  pub const VLVH: Self = Self(13);
-  /// East-North-Up (ENU): A terrestrial reference frame where the X-axis points East, the Y-axis points North, and the Z-axis points Up (away from the center of the Earth).
-  pub const ENU: Self = Self(14);
-  /// North-East-Down (NED): Similar to ENU, but with axes oriented Northward, Eastward, and Downward towards the Earth's center.
-  pub const NED: Self = Self(15);
-  /// Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
-  pub const LTP: Self = Self(16);
-  /// Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
-  pub const LVLH: Self = Self(17);
-  /// Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
-  pub const PNE: Self = Self(18);
-  /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
-  pub const BRF: Self = Self(19);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 19;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::EME2000,
-    Self::GCRF,
-    Self::GRC,
-    Self::ICRF,
-    Self::ITRF2000,
-    Self::ITRF93,
-    Self::ITRF97,
-    Self::MCI,
-    Self::TDR,
-    Self::TEME,
-    Self::TOD,
-    Self::VVLH,
-    Self::RIC,
-    Self::VLVH,
-    Self::ENU,
-    Self::NED,
-    Self::LTP,
-    Self::LVLH,
-    Self::PNE,
-    Self::BRF,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::EME2000 => Some("EME2000"),
-      Self::GCRF => Some("GCRF"),
-      Self::GRC => Some("GRC"),
-      Self::ICRF => Some("ICRF"),
-      Self::ITRF2000 => Some("ITRF2000"),
-      Self::ITRF93 => Some("ITRF93"),
-      Self::ITRF97 => Some("ITRF97"),
-      Self::MCI => Some("MCI"),
-      Self::TDR => Some("TDR"),
-      Self::TEME => Some("TEME"),
-      Self::TOD => Some("TOD"),
-      Self::VVLH => Some("VVLH"),
-      Self::RIC => Some("RIC"),
-      Self::VLVH => Some("VLVH"),
-      Self::ENU => Some("ENU"),
-      Self::NED => Some("NED"),
-      Self::LTP => Some("LTP"),
-      Self::LVLH => Some("LVLH"),
-      Self::PNE => Some("PNE"),
-      Self::BRF => Some("BRF"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for OBSERVERLocationReferenceFrame {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for OBSERVERLocationReferenceFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for OBSERVERLocationReferenceFrame {
-    type Output = OBSERVERLocationReferenceFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for OBSERVERLocationReferenceFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for OBSERVERLocationReferenceFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for OBSERVERLocationReferenceFrame {}
 pub enum TDMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -580,19 +404,19 @@ impl<'a> TDM<'a> {
   }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
   #[inline]
-  pub fn OBSERVER_POSITION_REFERENCE_FRAME(&self) -> OBSERVERLocationReferenceFrame {
+  pub fn OBSERVER_POSITION_REFERENCE_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<OBSERVERLocationReferenceFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, Some(OBSERVERLocationReferenceFrame::EME2000)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
   #[inline]
-  pub fn OBS_REFERENCE_FRAME(&self) -> OBSERVERLocationReferenceFrame {
+  pub fn OBS_REFERENCE_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<OBSERVERLocationReferenceFrame>(TDM::VT_OBS_REFERENCE_FRAME, Some(OBSERVERLocationReferenceFrame::EME2000)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(TDM::VT_OBS_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// Epoch or observation time -  CCSDS 503.0-B-1
   #[inline]
@@ -996,8 +820,8 @@ impl flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<f64>("OBSERVER_VX", Self::VT_OBSERVER_VX, false)?
      .visit_field::<f64>("OBSERVER_VY", Self::VT_OBSERVER_VY, false)?
      .visit_field::<f64>("OBSERVER_VZ", Self::VT_OBSERVER_VZ, false)?
-     .visit_field::<OBSERVERLocationReferenceFrame>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
-     .visit_field::<OBSERVERLocationReferenceFrame>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
+     .visit_field::<referenceFrame>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
+     .visit_field::<referenceFrame>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CCSDS_TDM_VERS", Self::VT_CCSDS_TDM_VERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
@@ -1058,8 +882,8 @@ pub struct TDMArgs<'a> {
     pub OBSERVER_VX: f64,
     pub OBSERVER_VY: f64,
     pub OBSERVER_VZ: f64,
-    pub OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame,
-    pub OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame,
+    pub OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame,
+    pub OBS_REFERENCE_FRAME: referenceFrame,
     pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CCSDS_TDM_VERS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COMMENT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
@@ -1120,8 +944,8 @@ impl<'a> Default for TDMArgs<'a> {
       OBSERVER_VX: 0.0,
       OBSERVER_VY: 0.0,
       OBSERVER_VZ: 0.0,
-      OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame::EME2000,
-      OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame::EME2000,
+      OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame::ECEF,
+      OBS_REFERENCE_FRAME: referenceFrame::ECEF,
       EPOCH: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,
@@ -1208,12 +1032,12 @@ impl<'a: 'b, 'b> TDMBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(TDM::VT_OBSERVER_VZ, OBSERVER_VZ, 0.0);
   }
   #[inline]
-  pub fn add_OBSERVER_POSITION_REFERENCE_FRAME(&mut self, OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame) {
-    self.fbb_.push_slot::<OBSERVERLocationReferenceFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME, OBSERVERLocationReferenceFrame::EME2000);
+  pub fn add_OBSERVER_POSITION_REFERENCE_FRAME(&mut self, OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME, referenceFrame::ECEF);
   }
   #[inline]
-  pub fn add_OBS_REFERENCE_FRAME(&mut self, OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame) {
-    self.fbb_.push_slot::<OBSERVERLocationReferenceFrame>(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME, OBSERVERLocationReferenceFrame::EME2000);
+  pub fn add_OBS_REFERENCE_FRAME(&mut self, OBS_REFERENCE_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME, referenceFrame::ECEF);
   }
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -1495,8 +1319,8 @@ pub struct TDMT {
   pub OBSERVER_VX: f64,
   pub OBSERVER_VY: f64,
   pub OBSERVER_VZ: f64,
-  pub OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame,
-  pub OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame,
+  pub OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame,
+  pub OBS_REFERENCE_FRAME: referenceFrame,
   pub EPOCH: Option<String>,
   pub CCSDS_TDM_VERS: Option<String>,
   pub COMMENT: Option<Vec<String>>,
@@ -1556,8 +1380,8 @@ impl Default for TDMT {
       OBSERVER_VX: 0.0,
       OBSERVER_VY: 0.0,
       OBSERVER_VZ: 0.0,
-      OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame::EME2000,
-      OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame::EME2000,
+      OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame::ECEF,
+      OBS_REFERENCE_FRAME: referenceFrame::ECEF,
       EPOCH: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,

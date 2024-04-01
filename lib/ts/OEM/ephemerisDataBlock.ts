@@ -74,7 +74,7 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
  */
 REF_FRAME():referenceFrame {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.EME2000;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
 }
 
 /**
@@ -200,7 +200,7 @@ static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.
 }
 
 static addRefFrame(builder:flatbuffers.Builder, REF_FRAME:referenceFrame) {
-  builder.addFieldInt8(4, REF_FRAME, referenceFrame.EME2000);
+  builder.addFieldInt8(4, REF_FRAME, referenceFrame.ECEF);
 }
 
 static addRefFrameEpoch(builder:flatbuffers.Builder, REF_FRAME_EPOCHOffset:flatbuffers.Offset) {
@@ -338,7 +338,7 @@ constructor(
   public OBJECT_NAME: string|Uint8Array|null = null,
   public OBJECT_ID: string|Uint8Array|null = null,
   public CENTER_NAME: string|Uint8Array|null = null,
-  public REF_FRAME: referenceFrame = referenceFrame.EME2000,
+  public REF_FRAME: referenceFrame = referenceFrame.ECEF,
   public REF_FRAME_EPOCH: string|Uint8Array|null = null,
   public TIME_SYSTEM: timeSystem = timeSystem.GMST,
   public START_TIME: string|Uint8Array|null = null,

@@ -4,38 +4,6 @@
 
 import FlatBuffers
 
-public enum referenceFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Earth Mean Equator and Equinox of J2000
-  case eme2000 = 0
-  ///  Geocentric Celestial Reference Frame
-  case gcrf = 1
-  ///  Greenwich Rotating Coordinates
-  case grc = 2
-  ///  International Celestial Reference Frame
-  case icrf = 3
-  ///  International Terrestrial Reference Frame 2000
-  case itrf2000 = 4
-  ///  International Terrestrial Reference Frame 1993
-  case itrf93 = 5
-  ///  International Terrestrial Reference Frame 1997
-  case itrf97 = 6
-  ///  Mars Centered Inertial
-  case mci = 7
-  ///  True of Date, Rotating
-  case tdr = 8
-  ///  True Equator Mean Equinox
-  case teme = 9
-  ///  True of Date
-  case tod = 10
-
-  public static var max: referenceFrame { return .tod }
-  public static var min: referenceFrame { return .eme2000 }
-}
-
-
 public enum timeSystem: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }

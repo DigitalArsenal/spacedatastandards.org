@@ -1,10 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "referenceFrame" : {
-      "type" : "string",
-      "enum": ["EME2000", "GCRF", "GRC", "ICRF", "ITRF2000", "ITRF93", "ITRF97", "MCI", "TDR", "TEME", "TOD"]
-    },
     "timeSystem" : {
       "type" : "string",
       "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]

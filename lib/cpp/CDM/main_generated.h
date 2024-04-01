@@ -14,80 +14,15 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
              "Non-compatible flatbuffers version included");
 
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct CDMObject;
 struct CDMObjectBuilder;
 
 struct CDM;
 struct CDMBuilder;
-
-enum referenceFrame : int8_t {
-  /// Earth Mean Equator and Equinox of J2000
-  referenceFrame_EME2000 = 0,
-  /// Geocentric Celestial Reference Frame
-  referenceFrame_GCRF = 1,
-  /// International Terrestrial Reference Frame
-  referenceFrame_ITRF = 2,
-  referenceFrame_MIN = referenceFrame_EME2000,
-  referenceFrame_MAX = referenceFrame_ITRF
-};
-
-inline const referenceFrame (&EnumValuesreferenceFrame())[3] {
-  static const referenceFrame values[] = {
-    referenceFrame_EME2000,
-    referenceFrame_GCRF,
-    referenceFrame_ITRF
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesreferenceFrame() {
-  static const char * const names[4] = {
-    "EME2000",
-    "GCRF",
-    "ITRF",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamereferenceFrame(referenceFrame e) {
-  if (::flatbuffers::IsOutRange(e, referenceFrame_EME2000, referenceFrame_ITRF)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesreferenceFrame()[index];
-}
-
-enum objectCenteredReferenceFrame : int8_t {
-  /// Radial, Transverse, Normal
-  objectCenteredReferenceFrame_RTN = 0,
-  /// Transverse, Velocity, Normal
-  objectCenteredReferenceFrame_TVN = 1,
-  objectCenteredReferenceFrame_MIN = objectCenteredReferenceFrame_RTN,
-  objectCenteredReferenceFrame_MAX = objectCenteredReferenceFrame_TVN
-};
-
-inline const objectCenteredReferenceFrame (&EnumValuesobjectCenteredReferenceFrame())[2] {
-  static const objectCenteredReferenceFrame values[] = {
-    objectCenteredReferenceFrame_RTN,
-    objectCenteredReferenceFrame_TVN
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesobjectCenteredReferenceFrame() {
-  static const char * const names[3] = {
-    "RTN",
-    "TVN",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameobjectCenteredReferenceFrame(objectCenteredReferenceFrame e) {
-  if (::flatbuffers::IsOutRange(e, objectCenteredReferenceFrame_RTN, objectCenteredReferenceFrame_TVN)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesobjectCenteredReferenceFrame()[index];
-}
 
 enum screeningVolumeShape : int8_t {
   screeningVolumeShape_ELLIPSOID = 0,
@@ -117,75 +52,6 @@ inline const char *EnumNamescreeningVolumeShape(screeningVolumeShape e) {
   if (::flatbuffers::IsOutRange(e, screeningVolumeShape_ELLIPSOID, screeningVolumeShape_BOX)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscreeningVolumeShape()[index];
-}
-
-enum objectNumber : int8_t {
-  objectNumber_OBJECT1 = 0,
-  objectNumber_OBJECT2 = 1,
-  objectNumber_MIN = objectNumber_OBJECT1,
-  objectNumber_MAX = objectNumber_OBJECT2
-};
-
-inline const objectNumber (&EnumValuesobjectNumber())[2] {
-  static const objectNumber values[] = {
-    objectNumber_OBJECT1,
-    objectNumber_OBJECT2
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesobjectNumber() {
-  static const char * const names[3] = {
-    "OBJECT1",
-    "OBJECT2",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameobjectNumber(objectNumber e) {
-  if (::flatbuffers::IsOutRange(e, objectNumber_OBJECT1, objectNumber_OBJECT2)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesobjectNumber()[index];
-}
-
-enum objectType : int8_t {
-  objectType_PAYLOAD = 0,
-  objectType_ROCKET_BODY = 1,
-  objectType_DEBRIS = 2,
-  objectType_UNKNOWN = 3,
-  objectType_OTHER = 4,
-  objectType_MIN = objectType_PAYLOAD,
-  objectType_MAX = objectType_OTHER
-};
-
-inline const objectType (&EnumValuesobjectType())[5] {
-  static const objectType values[] = {
-    objectType_PAYLOAD,
-    objectType_ROCKET_BODY,
-    objectType_DEBRIS,
-    objectType_UNKNOWN,
-    objectType_OTHER
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesobjectType() {
-  static const char * const names[6] = {
-    "PAYLOAD",
-    "ROCKET_BODY",
-    "DEBRIS",
-    "UNKNOWN",
-    "OTHER",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameobjectType(objectType e) {
-  if (::flatbuffers::IsOutRange(e, objectType_PAYLOAD, objectType_OTHER)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesobjectType()[index];
 }
 
 enum covarianceMethod : int8_t {
@@ -218,158 +84,101 @@ inline const char *EnumNamecovarianceMethod(covarianceMethod e) {
   return EnumNamescovarianceMethod()[index];
 }
 
-enum maneuverableType : int8_t {
-  maneuverableType_YES = 0,
-  maneuverableType_NO = 1,
-  maneuverableType_NA = 2,
-  maneuverableType_MIN = maneuverableType_YES,
-  maneuverableType_MAX = maneuverableType_NA
-};
-
-inline const maneuverableType (&EnumValuesmaneuverableType())[3] {
-  static const maneuverableType values[] = {
-    maneuverableType_YES,
-    maneuverableType_NO,
-    maneuverableType_NA
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesmaneuverableType() {
-  static const char * const names[4] = {
-    "YES",
-    "NO",
-    "NA",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamemaneuverableType(maneuverableType e) {
-  if (::flatbuffers::IsOutRange(e, maneuverableType_YES, maneuverableType_NA)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesmaneuverableType()[index];
-}
-
 struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CDMObjectBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_COMMENT = 4,
     VT_OBJECT = 6,
-    VT_OBJECT_DESIGNATOR = 8,
-    VT_CATALOG_NAME = 10,
-    VT_OBJECT_NAME = 12,
-    VT_INTERNATIONAL_DESIGNATOR = 14,
-    VT_OBJECT_TYPE = 16,
-    VT_OPERATOR_CONTACT_POSITION = 18,
-    VT_OPERATOR_ORGANIZATION = 20,
-    VT_EPHEMERIS_NAME = 22,
-    VT_COVARIANCE_METHOD = 24,
-    VT_MANEUVERABLE = 26,
-    VT_ORBIT_CENTER = 28,
-    VT_REF_FRAME = 30,
-    VT_GRAVITY_MODEL = 32,
-    VT_ATMOSPHERIC_MODEL = 34,
-    VT_N_BODY_PERTURBATIONS = 36,
-    VT_SOLAR_RAD_PRESSURE = 38,
-    VT_EARTH_TIDES = 40,
-    VT_INTRACK_THRUST = 42,
-    VT_TIME_LASTOB_START = 44,
-    VT_TIME_LASTOB_END = 46,
-    VT_RECOMMENDED_OD_SPAN = 48,
-    VT_ACTUAL_OD_SPAN = 50,
-    VT_OBS_AVAILABLE = 52,
-    VT_OBS_USED = 54,
-    VT_TRACKS_AVAILABLE = 56,
-    VT_TRACKS_USED = 58,
-    VT_RESIDUALS_ACCEPTED = 60,
-    VT_WEIGHTED_RMS = 62,
-    VT_AREA_PC = 64,
-    VT_AREA_DRG = 66,
-    VT_AREA_SRP = 68,
-    VT_MASS = 70,
-    VT_CR_AREA_OVER_MASS = 72,
-    VT_THRUST_ACCELERATION = 74,
-    VT_SEDR = 76,
-    VT_X = 78,
-    VT_Y = 80,
-    VT_Z = 82,
-    VT_X_DOT = 84,
-    VT_Y_DOT = 86,
-    VT_Z_DOT = 88,
-    VT_CR_R = 90,
-    VT_CT_R = 92,
-    VT_CT_T = 94,
-    VT_CN_R = 96,
-    VT_CN_T = 98,
-    VT_CN_N = 100,
-    VT_CRDOT_R = 102,
-    VT_CRDOT_T = 104,
-    VT_CRDOT_N = 106,
-    VT_CRDOT_RDOT = 108,
-    VT_CTDOT_R = 110,
-    VT_CTDOT_T = 112,
-    VT_CTDOT_N = 114,
-    VT_CTDOT_RDOT = 116,
-    VT_CTDOT_TDOT = 118,
-    VT_CNDOT_R = 120,
-    VT_CNDOT_T = 122,
-    VT_CNDOT_N = 124,
-    VT_CNDOT_RDOT = 126,
-    VT_CNDOT_TDOT = 128,
-    VT_CNDOT_NDOT = 130,
-    VT_CDRG_R = 132,
-    VT_CDRG_T = 134,
-    VT_CDRG_N = 136,
-    VT_CDRG_RDOT = 138,
-    VT_CDRG_TDOT = 140,
-    VT_CDRG_NDOT = 142,
-    VT_CDRG_DRG = 144,
-    VT_CSRP_R = 146,
-    VT_CSRP_T = 148,
-    VT_CSRP_N = 150,
-    VT_CSRP_RDOT = 152,
-    VT_CSRP_TDOT = 154,
-    VT_CSRP_NDOT = 156,
-    VT_CSRP_DRG = 158,
-    VT_CSRP_SRP = 160,
-    VT_CTHR_R = 162,
-    VT_CTHR_T = 164,
-    VT_CTHR_N = 166,
-    VT_CTHR_RDOT = 168,
-    VT_CTHR_TDOT = 170,
-    VT_CTHR_NDOT = 172,
-    VT_CTHR_DRG = 174,
-    VT_CTHR_SRP = 176,
-    VT_CTHR_THR = 178
+    VT_POC = 8,
+    VT_OPERATOR_CONTACT_POSITION = 10,
+    VT_OPERATOR_ORGANIZATION = 12,
+    VT_EPHEMERIS_NAME = 14,
+    VT_COVARIANCE_METHOD = 16,
+    VT_REF_FRAME = 18,
+    VT_GRAVITY_MODEL = 20,
+    VT_ATMOSPHERIC_MODEL = 22,
+    VT_N_BODY_PERTURBATIONS = 24,
+    VT_SOLAR_RAD_PRESSURE = 26,
+    VT_EARTH_TIDES = 28,
+    VT_INTRACK_THRUST = 30,
+    VT_TIME_LASTOB_START = 32,
+    VT_TIME_LASTOB_END = 34,
+    VT_RECOMMENDED_OD_SPAN = 36,
+    VT_ACTUAL_OD_SPAN = 38,
+    VT_OBS_AVAILABLE = 40,
+    VT_OBS_USED = 42,
+    VT_TRACKS_AVAILABLE = 44,
+    VT_TRACKS_USED = 46,
+    VT_RESIDUALS_ACCEPTED = 48,
+    VT_WEIGHTED_RMS = 50,
+    VT_AREA_PC = 52,
+    VT_AREA_DRG = 54,
+    VT_AREA_SRP = 56,
+    VT_CR_AREA_OVER_MASS = 58,
+    VT_THRUST_ACCELERATION = 60,
+    VT_SEDR = 62,
+    VT_X = 64,
+    VT_Y = 66,
+    VT_Z = 68,
+    VT_X_DOT = 70,
+    VT_Y_DOT = 72,
+    VT_Z_DOT = 74,
+    VT_CR_R = 76,
+    VT_CT_R = 78,
+    VT_CT_T = 80,
+    VT_CN_R = 82,
+    VT_CN_T = 84,
+    VT_CN_N = 86,
+    VT_CRDOT_R = 88,
+    VT_CRDOT_T = 90,
+    VT_CRDOT_N = 92,
+    VT_CRDOT_RDOT = 94,
+    VT_CTDOT_R = 96,
+    VT_CTDOT_T = 98,
+    VT_CTDOT_N = 100,
+    VT_CTDOT_RDOT = 102,
+    VT_CTDOT_TDOT = 104,
+    VT_CNDOT_R = 106,
+    VT_CNDOT_T = 108,
+    VT_CNDOT_N = 110,
+    VT_CNDOT_RDOT = 112,
+    VT_CNDOT_TDOT = 114,
+    VT_CNDOT_NDOT = 116,
+    VT_CDRG_R = 118,
+    VT_CDRG_T = 120,
+    VT_CDRG_N = 122,
+    VT_CDRG_RDOT = 124,
+    VT_CDRG_TDOT = 126,
+    VT_CDRG_NDOT = 128,
+    VT_CDRG_DRG = 130,
+    VT_CSRP_R = 132,
+    VT_CSRP_T = 134,
+    VT_CSRP_N = 136,
+    VT_CSRP_RDOT = 138,
+    VT_CSRP_TDOT = 140,
+    VT_CSRP_NDOT = 142,
+    VT_CSRP_DRG = 144,
+    VT_CSRP_SRP = 146,
+    VT_CTHR_R = 148,
+    VT_CTHR_T = 150,
+    VT_CTHR_N = 152,
+    VT_CTHR_RDOT = 154,
+    VT_CTHR_TDOT = 156,
+    VT_CTHR_NDOT = 158,
+    VT_CTHR_DRG = 160,
+    VT_CTHR_SRP = 162,
+    VT_CTHR_THR = 164
   };
   /// A comment
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
-  /// Object number
-  objectNumber OBJECT() const {
-    return static_cast<objectNumber>(GetField<int8_t>(VT_OBJECT, 0));
+  const CAT *OBJECT() const {
+    return GetPointer<const CAT *>(VT_OBJECT);
   }
-  /// Object designator
-  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
-  }
-  /// Catalog name
-  const ::flatbuffers::String *CATALOG_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CATALOG_NAME);
-  }
-  /// Object name
-  const ::flatbuffers::String *OBJECT_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
-  }
-  /// International designator
-  const ::flatbuffers::String *INTERNATIONAL_DESIGNATOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_INTERNATIONAL_DESIGNATOR);
-  }
-  /// Object type
-  objectType OBJECT_TYPE() const {
-    return static_cast<objectType>(GetField<int8_t>(VT_OBJECT_TYPE, 0));
+  /// Point of Contact
+  const EPM *POC() const {
+    return GetPointer<const EPM *>(VT_POC);
   }
   /// Operator contact position
   const ::flatbuffers::String *OPERATOR_CONTACT_POSITION() const {
@@ -387,15 +196,7 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   covarianceMethod COVARIANCE_METHOD() const {
     return static_cast<covarianceMethod>(GetField<int8_t>(VT_COVARIANCE_METHOD, 0));
   }
-  /// Maneuverable type
-  maneuverableType MANEUVERABLE() const {
-    return static_cast<maneuverableType>(GetField<int8_t>(VT_MANEUVERABLE, 0));
-  }
-  /// Orbit center
-  const ::flatbuffers::String *ORBIT_CENTER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORBIT_CENTER);
-  }
-  /// Reference frame
+  /// Reference Frame in which the object position is defined
   referenceFrame REF_FRAME() const {
     return static_cast<referenceFrame>(GetField<int8_t>(VT_REF_FRAME, 0));
   }
@@ -474,10 +275,6 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Area of the object solar radiation pressure
   double AREA_SRP() const {
     return GetField<double>(VT_AREA_SRP, 0.0);
-  }
-  /// Mass of the object
-  double MASS() const {
-    return GetField<double>(VT_MASS, 0.0);
   }
   /// Object's area-to-mass ratio
   double CR_AREA_OVER_MASS() const {
@@ -699,16 +496,10 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COMMENT) &&
            verifier.VerifyString(COMMENT()) &&
-           VerifyField<int8_t>(verifier, VT_OBJECT, 1) &&
-           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
-           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
-           VerifyOffset(verifier, VT_CATALOG_NAME) &&
-           verifier.VerifyString(CATALOG_NAME()) &&
-           VerifyOffset(verifier, VT_OBJECT_NAME) &&
-           verifier.VerifyString(OBJECT_NAME()) &&
-           VerifyOffset(verifier, VT_INTERNATIONAL_DESIGNATOR) &&
-           verifier.VerifyString(INTERNATIONAL_DESIGNATOR()) &&
-           VerifyField<int8_t>(verifier, VT_OBJECT_TYPE, 1) &&
+           VerifyOffset(verifier, VT_OBJECT) &&
+           verifier.VerifyTable(OBJECT()) &&
+           VerifyOffset(verifier, VT_POC) &&
+           verifier.VerifyTable(POC()) &&
            VerifyOffset(verifier, VT_OPERATOR_CONTACT_POSITION) &&
            verifier.VerifyString(OPERATOR_CONTACT_POSITION()) &&
            VerifyOffset(verifier, VT_OPERATOR_ORGANIZATION) &&
@@ -716,9 +507,6 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_EPHEMERIS_NAME) &&
            verifier.VerifyString(EPHEMERIS_NAME()) &&
            VerifyField<int8_t>(verifier, VT_COVARIANCE_METHOD, 1) &&
-           VerifyField<int8_t>(verifier, VT_MANEUVERABLE, 1) &&
-           VerifyOffset(verifier, VT_ORBIT_CENTER) &&
-           verifier.VerifyString(ORBIT_CENTER()) &&
            VerifyField<int8_t>(verifier, VT_REF_FRAME, 1) &&
            VerifyOffset(verifier, VT_GRAVITY_MODEL) &&
            verifier.VerifyString(GRAVITY_MODEL()) &&
@@ -744,7 +532,6 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_AREA_PC, 8) &&
            VerifyField<double>(verifier, VT_AREA_DRG, 8) &&
            VerifyField<double>(verifier, VT_AREA_SRP, 8) &&
-           VerifyField<double>(verifier, VT_MASS, 8) &&
            VerifyField<double>(verifier, VT_CR_AREA_OVER_MASS, 8) &&
            VerifyField<double>(verifier, VT_THRUST_ACCELERATION, 8) &&
            VerifyField<double>(verifier, VT_SEDR, 8) &&
@@ -810,23 +597,11 @@ struct CDMObjectBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
     fbb_.AddOffset(CDMObject::VT_COMMENT, COMMENT);
   }
-  void add_OBJECT(objectNumber OBJECT) {
-    fbb_.AddElement<int8_t>(CDMObject::VT_OBJECT, static_cast<int8_t>(OBJECT), 0);
+  void add_OBJECT(::flatbuffers::Offset<CAT> OBJECT) {
+    fbb_.AddOffset(CDMObject::VT_OBJECT, OBJECT);
   }
-  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
-    fbb_.AddOffset(CDMObject::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
-  }
-  void add_CATALOG_NAME(::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME) {
-    fbb_.AddOffset(CDMObject::VT_CATALOG_NAME, CATALOG_NAME);
-  }
-  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
-    fbb_.AddOffset(CDMObject::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  void add_INTERNATIONAL_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> INTERNATIONAL_DESIGNATOR) {
-    fbb_.AddOffset(CDMObject::VT_INTERNATIONAL_DESIGNATOR, INTERNATIONAL_DESIGNATOR);
-  }
-  void add_OBJECT_TYPE(objectType OBJECT_TYPE) {
-    fbb_.AddElement<int8_t>(CDMObject::VT_OBJECT_TYPE, static_cast<int8_t>(OBJECT_TYPE), 0);
+  void add_POC(::flatbuffers::Offset<EPM> POC) {
+    fbb_.AddOffset(CDMObject::VT_POC, POC);
   }
   void add_OPERATOR_CONTACT_POSITION(::flatbuffers::Offset<::flatbuffers::String> OPERATOR_CONTACT_POSITION) {
     fbb_.AddOffset(CDMObject::VT_OPERATOR_CONTACT_POSITION, OPERATOR_CONTACT_POSITION);
@@ -839,12 +614,6 @@ struct CDMObjectBuilder {
   }
   void add_COVARIANCE_METHOD(covarianceMethod COVARIANCE_METHOD) {
     fbb_.AddElement<int8_t>(CDMObject::VT_COVARIANCE_METHOD, static_cast<int8_t>(COVARIANCE_METHOD), 0);
-  }
-  void add_MANEUVERABLE(maneuverableType MANEUVERABLE) {
-    fbb_.AddElement<int8_t>(CDMObject::VT_MANEUVERABLE, static_cast<int8_t>(MANEUVERABLE), 0);
-  }
-  void add_ORBIT_CENTER(::flatbuffers::Offset<::flatbuffers::String> ORBIT_CENTER) {
-    fbb_.AddOffset(CDMObject::VT_ORBIT_CENTER, ORBIT_CENTER);
   }
   void add_REF_FRAME(referenceFrame REF_FRAME) {
     fbb_.AddElement<int8_t>(CDMObject::VT_REF_FRAME, static_cast<int8_t>(REF_FRAME), 0);
@@ -905,9 +674,6 @@ struct CDMObjectBuilder {
   }
   void add_AREA_SRP(double AREA_SRP) {
     fbb_.AddElement<double>(CDMObject::VT_AREA_SRP, AREA_SRP, 0.0);
-  }
-  void add_MASS(double MASS) {
-    fbb_.AddElement<double>(CDMObject::VT_MASS, MASS, 0.0);
   }
   void add_CR_AREA_OVER_MASS(double CR_AREA_OVER_MASS) {
     fbb_.AddElement<double>(CDMObject::VT_CR_AREA_OVER_MASS, CR_AREA_OVER_MASS, 0.0);
@@ -1085,19 +851,13 @@ struct CDMObjectBuilder {
 inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
-    objectNumber OBJECT = objectNumber_OBJECT1,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> INTERNATIONAL_DESIGNATOR = 0,
-    objectType OBJECT_TYPE = objectType_PAYLOAD,
+    ::flatbuffers::Offset<CAT> OBJECT = 0,
+    ::flatbuffers::Offset<EPM> POC = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OPERATOR_CONTACT_POSITION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OPERATOR_ORGANIZATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME = 0,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    maneuverableType MANEUVERABLE = maneuverableType_YES,
-    ::flatbuffers::Offset<::flatbuffers::String> ORBIT_CENTER = 0,
-    referenceFrame REF_FRAME = referenceFrame_EME2000,
+    referenceFrame REF_FRAME = referenceFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> N_BODY_PERTURBATIONS = 0,
@@ -1117,7 +877,6 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     double AREA_PC = 0.0,
     double AREA_DRG = 0.0,
     double AREA_SRP = 0.0,
-    double MASS = 0.0,
     double CR_AREA_OVER_MASS = 0.0,
     double THRUST_ACCELERATION = 0.0,
     double SEDR = 0.0,
@@ -1227,7 +986,6 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_SEDR(SEDR);
   builder_.add_THRUST_ACCELERATION(THRUST_ACCELERATION);
   builder_.add_CR_AREA_OVER_MASS(CR_AREA_OVER_MASS);
-  builder_.add_MASS(MASS);
   builder_.add_AREA_SRP(AREA_SRP);
   builder_.add_AREA_DRG(AREA_DRG);
   builder_.add_AREA_PC(AREA_PC);
@@ -1244,42 +1002,30 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_N_BODY_PERTURBATIONS(N_BODY_PERTURBATIONS);
   builder_.add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL);
   builder_.add_GRAVITY_MODEL(GRAVITY_MODEL);
-  builder_.add_ORBIT_CENTER(ORBIT_CENTER);
   builder_.add_EPHEMERIS_NAME(EPHEMERIS_NAME);
   builder_.add_OPERATOR_ORGANIZATION(OPERATOR_ORGANIZATION);
   builder_.add_OPERATOR_CONTACT_POSITION(OPERATOR_CONTACT_POSITION);
-  builder_.add_INTERNATIONAL_DESIGNATOR(INTERNATIONAL_DESIGNATOR);
-  builder_.add_OBJECT_NAME(OBJECT_NAME);
-  builder_.add_CATALOG_NAME(CATALOG_NAME);
-  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
+  builder_.add_POC(POC);
+  builder_.add_OBJECT(OBJECT);
   builder_.add_COMMENT(COMMENT);
   builder_.add_INTRACK_THRUST(INTRACK_THRUST);
   builder_.add_EARTH_TIDES(EARTH_TIDES);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
   builder_.add_REF_FRAME(REF_FRAME);
-  builder_.add_MANEUVERABLE(MANEUVERABLE);
   builder_.add_COVARIANCE_METHOD(COVARIANCE_METHOD);
-  builder_.add_OBJECT_TYPE(OBJECT_TYPE);
-  builder_.add_OBJECT(OBJECT);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *COMMENT = nullptr,
-    objectNumber OBJECT = objectNumber_OBJECT1,
-    const char *OBJECT_DESIGNATOR = nullptr,
-    const char *CATALOG_NAME = nullptr,
-    const char *OBJECT_NAME = nullptr,
-    const char *INTERNATIONAL_DESIGNATOR = nullptr,
-    objectType OBJECT_TYPE = objectType_PAYLOAD,
+    ::flatbuffers::Offset<CAT> OBJECT = 0,
+    ::flatbuffers::Offset<EPM> POC = 0,
     const char *OPERATOR_CONTACT_POSITION = nullptr,
     const char *OPERATOR_ORGANIZATION = nullptr,
     const char *EPHEMERIS_NAME = nullptr,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    maneuverableType MANEUVERABLE = maneuverableType_YES,
-    const char *ORBIT_CENTER = nullptr,
-    referenceFrame REF_FRAME = referenceFrame_EME2000,
+    referenceFrame REF_FRAME = referenceFrame_ECEF,
     const char *GRAVITY_MODEL = nullptr,
     const char *ATMOSPHERIC_MODEL = nullptr,
     const char *N_BODY_PERTURBATIONS = nullptr,
@@ -1299,7 +1045,6 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     double AREA_PC = 0.0,
     double AREA_DRG = 0.0,
     double AREA_SRP = 0.0,
-    double MASS = 0.0,
     double CR_AREA_OVER_MASS = 0.0,
     double THRUST_ACCELERATION = 0.0,
     double SEDR = 0.0,
@@ -1355,14 +1100,9 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     double CTHR_SRP = 0.0,
     double CTHR_THR = 0.0) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
-  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
-  auto CATALOG_NAME__ = CATALOG_NAME ? _fbb.CreateString(CATALOG_NAME) : 0;
-  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
-  auto INTERNATIONAL_DESIGNATOR__ = INTERNATIONAL_DESIGNATOR ? _fbb.CreateString(INTERNATIONAL_DESIGNATOR) : 0;
   auto OPERATOR_CONTACT_POSITION__ = OPERATOR_CONTACT_POSITION ? _fbb.CreateString(OPERATOR_CONTACT_POSITION) : 0;
   auto OPERATOR_ORGANIZATION__ = OPERATOR_ORGANIZATION ? _fbb.CreateString(OPERATOR_ORGANIZATION) : 0;
   auto EPHEMERIS_NAME__ = EPHEMERIS_NAME ? _fbb.CreateString(EPHEMERIS_NAME) : 0;
-  auto ORBIT_CENTER__ = ORBIT_CENTER ? _fbb.CreateString(ORBIT_CENTER) : 0;
   auto GRAVITY_MODEL__ = GRAVITY_MODEL ? _fbb.CreateString(GRAVITY_MODEL) : 0;
   auto ATMOSPHERIC_MODEL__ = ATMOSPHERIC_MODEL ? _fbb.CreateString(ATMOSPHERIC_MODEL) : 0;
   auto N_BODY_PERTURBATIONS__ = N_BODY_PERTURBATIONS ? _fbb.CreateString(N_BODY_PERTURBATIONS) : 0;
@@ -1372,17 +1112,11 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
       _fbb,
       COMMENT__,
       OBJECT,
-      OBJECT_DESIGNATOR__,
-      CATALOG_NAME__,
-      OBJECT_NAME__,
-      INTERNATIONAL_DESIGNATOR__,
-      OBJECT_TYPE,
+      POC,
       OPERATOR_CONTACT_POSITION__,
       OPERATOR_ORGANIZATION__,
       EPHEMERIS_NAME__,
       COVARIANCE_METHOD,
-      MANEUVERABLE,
-      ORBIT_CENTER__,
       REF_FRAME,
       GRAVITY_MODEL__,
       ATMOSPHERIC_MODEL__,
@@ -1403,7 +1137,6 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
       AREA_PC,
       AREA_DRG,
       AREA_SRP,
-      MASS,
       CR_AREA_OVER_MASS,
       THRUST_ACCELERATION,
       SEDR,
@@ -1559,8 +1292,8 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_STOP_SCREEN_PERIOD);
   }
   /// The reference frame for the screening volume
-  objectCenteredReferenceFrame SCREEN_VOLUME_FRAME() const {
-    return static_cast<objectCenteredReferenceFrame>(GetField<int8_t>(VT_SCREEN_VOLUME_FRAME, 0));
+  referenceFrame SCREEN_VOLUME_FRAME() const {
+    return static_cast<referenceFrame>(GetField<int8_t>(VT_SCREEN_VOLUME_FRAME, 0));
   }
   /// The shape of the screening volume
   screeningVolumeShape SCREEN_VOLUME_SHAPE() const {
@@ -1711,7 +1444,7 @@ struct CDMBuilder {
   void add_STOP_SCREEN_PERIOD(::flatbuffers::Offset<::flatbuffers::String> STOP_SCREEN_PERIOD) {
     fbb_.AddOffset(CDM::VT_STOP_SCREEN_PERIOD, STOP_SCREEN_PERIOD);
   }
-  void add_SCREEN_VOLUME_FRAME(objectCenteredReferenceFrame SCREEN_VOLUME_FRAME) {
+  void add_SCREEN_VOLUME_FRAME(referenceFrame SCREEN_VOLUME_FRAME) {
     fbb_.AddElement<int8_t>(CDM::VT_SCREEN_VOLUME_FRAME, static_cast<int8_t>(SCREEN_VOLUME_FRAME), 0);
   }
   void add_SCREEN_VOLUME_SHAPE(screeningVolumeShape SCREEN_VOLUME_SHAPE) {
@@ -1779,7 +1512,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
     double RELATIVE_VELOCITY_N = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> START_SCREEN_PERIOD = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STOP_SCREEN_PERIOD = 0,
-    objectCenteredReferenceFrame SCREEN_VOLUME_FRAME = objectCenteredReferenceFrame_RTN,
+    referenceFrame SCREEN_VOLUME_FRAME = referenceFrame_ECEF,
     screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape_ELLIPSOID,
     double SCREEN_VOLUME_X = 0.0,
     double SCREEN_VOLUME_Y = 0.0,
@@ -1843,7 +1576,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
     double RELATIVE_VELOCITY_N = 0.0,
     const char *START_SCREEN_PERIOD = nullptr,
     const char *STOP_SCREEN_PERIOD = nullptr,
-    objectCenteredReferenceFrame SCREEN_VOLUME_FRAME = objectCenteredReferenceFrame_RTN,
+    referenceFrame SCREEN_VOLUME_FRAME = referenceFrame_ECEF,
     screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape_ELLIPSOID,
     double SCREEN_VOLUME_X = 0.0,
     double SCREEN_VOLUME_Y = 0.0,

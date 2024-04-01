@@ -4,56 +4,6 @@
 
 import FlatBuffers
 
-public enum OBSERVERLocationReferenceFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Earth Mean Equator and Equinox of J2000
-  case eme2000 = 0
-  ///   Geocentric Celestial Reference Frame
-  case gcrf = 1
-  ///  Greenwich Rotating Coordinates
-  case grc = 2
-  ///  International Celestial Reference Frame
-  case icrf = 3
-  ///  International Terrestrial Reference Frame 2000
-  case itrf2000 = 4
-  ///  International Terrestrial Reference Frame 1993
-  case itrf93 = 5
-  ///  International Terrestrial Reference Frame 1997
-  case itrf97 = 6
-  ///  Mars Centered Inertial
-  case mci = 7
-  ///  True of Date, Rotating
-  case tdr = 8
-  ///  True Equator Mean Equinox
-  case teme = 9
-  ///  True of Date
-  case tod = 10
-  ///  Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
-  case vvlh = 11
-  ///  Radial-Intrack-Crosstrack (RIC): A local orbital reference frame with the radial axis pointing away from the central body, the intrack axis in the direction of motion, and the crosstrack axis completing the right-handed system.
-  case ric = 12
-  ///  Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
-  case vlvh = 13
-  ///  East-North-Up (ENU): A terrestrial reference frame where the X-axis points East, the Y-axis points North, and the Z-axis points Up (away from the center of the Earth).
-  case enu = 14
-  ///  North-East-Down (NED): Similar to ENU, but with axes oriented Northward, Eastward, and Downward towards the Earth's center.
-  case ned = 15
-  ///  Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
-  case ltp = 16
-  ///  Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
-  case lvlh = 17
-  ///  Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
-  case pne = 18
-  ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
-  case brf = 19
-
-  public static var max: OBSERVERLocationReferenceFrame { return .brf }
-  public static var min: OBSERVERLocationReferenceFrame { return .eme2000 }
-}
-
-
 ///  Tracking Data Message
 public struct TDM: FlatBufferObject, Verifiable {
 
@@ -144,9 +94,9 @@ public struct TDM: FlatBufferObject, Verifiable {
   ///  Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   public var OBSERVER_VZ: Double { let o = _accessor.offset(VTOFFSET.OBSERVER_VZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  public var OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame { let o = _accessor.offset(VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.v); return o == 0 ? .eme2000 : OBSERVERLocationReferenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eme2000 }
+  public var OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  public var OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame { let o = _accessor.offset(VTOFFSET.OBS_REFERENCE_FRAME.v); return o == 0 ? .eme2000 : OBSERVERLocationReferenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eme2000 }
+  public var OBS_REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.OBS_REFERENCE_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Epoch or observation time -  CCSDS 503.0-B-1
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
@@ -311,8 +261,8 @@ public struct TDM: FlatBufferObject, Verifiable {
   public static func add(OBSERVER_VX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_VX, def: 0.0, at: VTOFFSET.OBSERVER_VX.p) }
   public static func add(OBSERVER_VY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_VY, def: 0.0, at: VTOFFSET.OBSERVER_VY.p) }
   public static func add(OBSERVER_VZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_VZ, def: 0.0, at: VTOFFSET.OBSERVER_VZ.p) }
-  public static func add(OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_POSITION_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p) }
-  public static func add(OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.OBS_REFERENCE_FRAME.p) }
+  public static func add(OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_POSITION_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p) }
+  public static func add(OBS_REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.OBS_REFERENCE_FRAME.p) }
   public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
   public static func add(CCSDS_TDM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TDM_VERS, at: VTOFFSET.CCSDS_TDM_VERS.p) }
   public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
@@ -371,8 +321,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     OBSERVER_VX: Double = 0.0,
     OBSERVER_VY: Double = 0.0,
     OBSERVER_VZ: Double = 0.0,
-    OBSERVER_POSITION_REFERENCE_FRAME: OBSERVERLocationReferenceFrame = .eme2000,
-    OBS_REFERENCE_FRAME: OBSERVERLocationReferenceFrame = .eme2000,
+    OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame = .ecef,
+    OBS_REFERENCE_FRAME: referenceFrame = .ecef,
     EPOCHOffset EPOCH: Offset = Offset(),
     CCSDS_TDM_VERSOffset CCSDS_TDM_VERS: Offset = Offset(),
     COMMENTVectorOffset COMMENT: Offset = Offset(),
@@ -492,8 +442,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OBSERVER_VX.p, fieldName: "OBSERVER_VX", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.OBSERVER_VY.p, fieldName: "OBSERVER_VY", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.OBSERVER_VZ.p, fieldName: "OBSERVER_VZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p, fieldName: "OBSERVER_POSITION_REFERENCE_FRAME", required: false, type: OBSERVERLocationReferenceFrame.self)
-    try _v.visit(field: VTOFFSET.OBS_REFERENCE_FRAME.p, fieldName: "OBS_REFERENCE_FRAME", required: false, type: OBSERVERLocationReferenceFrame.self)
+    try _v.visit(field: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p, fieldName: "OBSERVER_POSITION_REFERENCE_FRAME", required: false, type: referenceFrame.self)
+    try _v.visit(field: VTOFFSET.OBS_REFERENCE_FRAME.p, fieldName: "OBS_REFERENCE_FRAME", required: false, type: referenceFrame.self)
     try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CCSDS_TDM_VERS.p, fieldName: "CCSDS_TDM_VERS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)

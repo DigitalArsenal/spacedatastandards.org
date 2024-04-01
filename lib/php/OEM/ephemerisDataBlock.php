@@ -76,7 +76,7 @@ class ephemerisDataBlock extends Table
     public function getREF_FRAME()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::EME2000;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
     }
 
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame

@@ -5,124 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class ObserverlocationReferenceFrame {
-  final int value;
-  const ObserverlocationReferenceFrame._(this.value);
-
-  factory ObserverlocationReferenceFrame.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum ObserverlocationReferenceFrame');
-    }
-    return result;
-  }
-
-  static ObserverlocationReferenceFrame? _createOrNull(int? value) => 
-      value == null ? null : ObserverlocationReferenceFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 19;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Earth Mean Equator and Equinox of J2000
-  static const ObserverlocationReferenceFrame EME2000 = ObserverlocationReferenceFrame._(0);
-
-  ///   Geocentric Celestial Reference Frame
-  static const ObserverlocationReferenceFrame GCRF = ObserverlocationReferenceFrame._(1);
-
-  ///  Greenwich Rotating Coordinates
-  static const ObserverlocationReferenceFrame GRC = ObserverlocationReferenceFrame._(2);
-
-  ///  International Celestial Reference Frame
-  static const ObserverlocationReferenceFrame ICRF = ObserverlocationReferenceFrame._(3);
-
-  ///  International Terrestrial Reference Frame 2000
-  static const ObserverlocationReferenceFrame ITRF2000 = ObserverlocationReferenceFrame._(4);
-
-  ///  International Terrestrial Reference Frame 1993
-  static const ObserverlocationReferenceFrame ITRF93 = ObserverlocationReferenceFrame._(5);
-
-  ///  International Terrestrial Reference Frame 1997
-  static const ObserverlocationReferenceFrame ITRF97 = ObserverlocationReferenceFrame._(6);
-
-  ///  Mars Centered Inertial
-  static const ObserverlocationReferenceFrame MCI = ObserverlocationReferenceFrame._(7);
-
-  ///  True of Date, Rotating
-  static const ObserverlocationReferenceFrame TDR = ObserverlocationReferenceFrame._(8);
-
-  ///  True Equator Mean Equinox
-  static const ObserverlocationReferenceFrame TEME = ObserverlocationReferenceFrame._(9);
-
-  ///  True of Date
-  static const ObserverlocationReferenceFrame TOD = ObserverlocationReferenceFrame._(10);
-
-  ///  Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
-  static const ObserverlocationReferenceFrame VVLH = ObserverlocationReferenceFrame._(11);
-
-  ///  Radial-Intrack-Crosstrack (RIC): A local orbital reference frame with the radial axis pointing away from the central body, the intrack axis in the direction of motion, and the crosstrack axis completing the right-handed system.
-  static const ObserverlocationReferenceFrame RIC = ObserverlocationReferenceFrame._(12);
-
-  ///  Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
-  static const ObserverlocationReferenceFrame VLVH = ObserverlocationReferenceFrame._(13);
-
-  ///  East-North-Up (ENU): A terrestrial reference frame where the X-axis points East, the Y-axis points North, and the Z-axis points Up (away from the center of the Earth).
-  static const ObserverlocationReferenceFrame ENU = ObserverlocationReferenceFrame._(14);
-
-  ///  North-East-Down (NED): Similar to ENU, but with axes oriented Northward, Eastward, and Downward towards the Earth's center.
-  static const ObserverlocationReferenceFrame NED = ObserverlocationReferenceFrame._(15);
-
-  ///  Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
-  static const ObserverlocationReferenceFrame LTP = ObserverlocationReferenceFrame._(16);
-
-  ///  Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
-  static const ObserverlocationReferenceFrame LVLH = ObserverlocationReferenceFrame._(17);
-
-  ///  Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
-  static const ObserverlocationReferenceFrame PNE = ObserverlocationReferenceFrame._(18);
-
-  ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
-  static const ObserverlocationReferenceFrame BRF = ObserverlocationReferenceFrame._(19);
-  static const Map<int, ObserverlocationReferenceFrame> values = {
-    0: EME2000,
-    1: GCRF,
-    2: GRC,
-    3: ICRF,
-    4: ITRF2000,
-    5: ITRF93,
-    6: ITRF97,
-    7: MCI,
-    8: TDR,
-    9: TEME,
-    10: TOD,
-    11: VVLH,
-    12: RIC,
-    13: VLVH,
-    14: ENU,
-    15: NED,
-    16: LTP,
-    17: LVLH,
-    18: PNE,
-    19: BRF};
-
-  static const fb.Reader<ObserverlocationReferenceFrame> reader = _ObserverlocationReferenceFrameReader();
-
-  @override
-  String toString() {
-    return 'ObserverlocationReferenceFrame{value: $value}';
-  }
-}
-
-class _ObserverlocationReferenceFrameReader extends fb.Reader<ObserverlocationReferenceFrame> {
-  const _ObserverlocationReferenceFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ObserverlocationReferenceFrame read(fb.BufferContext bc, int offset) =>
-      ObserverlocationReferenceFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
+import './main_generated.dart';
 
 ///  Tracking Data Message
 class TDM {
@@ -152,9 +35,9 @@ class TDM {
   ///  Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   double get OBSERVER_VZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  ObserverlocationReferenceFrame get OBSERVER_POSITION_REFERENCE_FRAME => ObserverlocationReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ReferenceFrame get OBSERVER_POSITION_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  ObserverlocationReferenceFrame get OBS_REFERENCE_FRAME => ObserverlocationReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ReferenceFrame get OBS_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
   ///  Epoch or observation time -  CCSDS 503.0-B-1
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  TDM version number -  CCSDS 503.0-B-1, Page D-9
@@ -305,11 +188,11 @@ class TDMBuilder {
     fbBuilder.addFloat64(6, OBSERVER_VZ);
     return fbBuilder.offset;
   }
-  int addObserverPositionReferenceFrame(ObserverlocationReferenceFrame? OBSERVER_POSITION_REFERENCE_FRAME) {
+  int addObserverPositionReferenceFrame(ReferenceFrame? OBSERVER_POSITION_REFERENCE_FRAME) {
     fbBuilder.addInt8(7, OBSERVER_POSITION_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
-  int addObsReferenceFrame(ObserverlocationReferenceFrame? OBS_REFERENCE_FRAME) {
+  int addObsReferenceFrame(ReferenceFrame? OBS_REFERENCE_FRAME) {
     fbBuilder.addInt8(8, OBS_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -519,8 +402,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
   final double? _OBSERVER_VX;
   final double? _OBSERVER_VY;
   final double? _OBSERVER_VZ;
-  final ObserverlocationReferenceFrame? _OBSERVER_POSITION_REFERENCE_FRAME;
-  final ObserverlocationReferenceFrame? _OBS_REFERENCE_FRAME;
+  final ReferenceFrame? _OBSERVER_POSITION_REFERENCE_FRAME;
+  final ReferenceFrame? _OBS_REFERENCE_FRAME;
   final String? _EPOCH;
   final String? _CCSDS_TDM_VERS;
   final List<String>? _COMMENT;
@@ -578,8 +461,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
     double? OBSERVER_VX,
     double? OBSERVER_VY,
     double? OBSERVER_VZ,
-    ObserverlocationReferenceFrame? OBSERVER_POSITION_REFERENCE_FRAME,
-    ObserverlocationReferenceFrame? OBS_REFERENCE_FRAME,
+    ReferenceFrame? OBSERVER_POSITION_REFERENCE_FRAME,
+    ReferenceFrame? OBS_REFERENCE_FRAME,
     String? EPOCH,
     String? CCSDS_TDM_VERS,
     List<String>? COMMENT,

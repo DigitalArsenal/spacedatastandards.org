@@ -282,8 +282,7 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var CREATED_BY: String? { let o = _accessor.offset(VTOFFSET.CREATED_BY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CREATED_BYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATED_BY.v) }
   ///  Reference frame of the observation
-  public var REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME.v) }
+  public var REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Reference frame of the sensor
   public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
@@ -380,7 +379,7 @@ public struct EOO: FlatBufferObject, Verifiable {
   public static func add(DATA_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_MODE, at: VTOFFSET.DATA_MODE.p) }
   public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VTOFFSET.CREATED_AT.p) }
   public static func add(CREATED_BY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_BY, at: VTOFFSET.CREATED_BY.p) }
-  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public static func add(REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
   public static func add(UMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UMBRA, def: false,
    at: VTOFFSET.UMBRA.p) }
@@ -470,7 +469,7 @@ public struct EOO: FlatBufferObject, Verifiable {
     DATA_MODEOffset DATA_MODE: Offset = Offset(),
     CREATED_ATOffset CREATED_AT: Offset = Offset(),
     CREATED_BYOffset CREATED_BY: Offset = Offset(),
-    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    REFERENCE_FRAME: referenceFrame = .ecef,
     SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
     UMBRA: Bool = false,
     PENUMBRA: Bool = false,
@@ -647,7 +646,7 @@ public struct EOO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.DATA_MODE.p, fieldName: "DATA_MODE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CREATED_AT.p, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CREATED_BY.p, fieldName: "CREATED_BY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: referenceFrame.self)
     try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.UMBRA.p, fieldName: "UMBRA", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.PENUMBRA.p, fieldName: "PENUMBRA", required: false, type: Bool.self)

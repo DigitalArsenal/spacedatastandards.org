@@ -3,6 +3,9 @@
 
 // @generated
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -26,17 +29,15 @@ impl<'a> flatbuffers::Follow<'a> for CSM<'a> {
 }
 
 impl<'a> CSM<'a> {
-  pub const VT_NORAD_CAT_ID_1: flatbuffers::VOffsetT = 4;
-  pub const VT_OBJECT_NAME_1: flatbuffers::VOffsetT = 6;
-  pub const VT_DSE_1: flatbuffers::VOffsetT = 8;
-  pub const VT_NORAD_CAT_ID_2: flatbuffers::VOffsetT = 10;
-  pub const VT_OBJECT_NAME_2: flatbuffers::VOffsetT = 12;
-  pub const VT_DSE_2: flatbuffers::VOffsetT = 14;
-  pub const VT_TCA: flatbuffers::VOffsetT = 16;
-  pub const VT_TCA_RANGE: flatbuffers::VOffsetT = 18;
-  pub const VT_TCA_RELATIVE_SPEED: flatbuffers::VOffsetT = 20;
-  pub const VT_MAX_PROB: flatbuffers::VOffsetT = 22;
-  pub const VT_DILUTION: flatbuffers::VOffsetT = 24;
+  pub const VT_OBJECT_1: flatbuffers::VOffsetT = 4;
+  pub const VT_DSE_1: flatbuffers::VOffsetT = 6;
+  pub const VT_OBJECT_2: flatbuffers::VOffsetT = 8;
+  pub const VT_DSE_2: flatbuffers::VOffsetT = 10;
+  pub const VT_TCA: flatbuffers::VOffsetT = 12;
+  pub const VT_TCA_RANGE: flatbuffers::VOffsetT = 14;
+  pub const VT_TCA_RELATIVE_SPEED: flatbuffers::VOffsetT = 16;
+  pub const VT_MAX_PROB: flatbuffers::VOffsetT = 18;
+  pub const VT_DILUTION: flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -55,22 +56,18 @@ impl<'a> CSM<'a> {
     builder.add_TCA(args.TCA);
     builder.add_DSE_2(args.DSE_2);
     builder.add_DSE_1(args.DSE_1);
-    if let Some(x) = args.OBJECT_NAME_2 { builder.add_OBJECT_NAME_2(x); }
-    builder.add_NORAD_CAT_ID_2(args.NORAD_CAT_ID_2);
-    if let Some(x) = args.OBJECT_NAME_1 { builder.add_OBJECT_NAME_1(x); }
-    builder.add_NORAD_CAT_ID_1(args.NORAD_CAT_ID_1);
+    if let Some(x) = args.OBJECT_2 { builder.add_OBJECT_2(x); }
+    if let Some(x) = args.OBJECT_1 { builder.add_OBJECT_1(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> CSMT {
-    let NORAD_CAT_ID_1 = self.NORAD_CAT_ID_1();
-    let OBJECT_NAME_1 = self.OBJECT_NAME_1().map(|x| {
-      x.to_string()
+    let OBJECT_1 = self.OBJECT_1().map(|x| {
+      Box::new(x.unpack())
     });
     let DSE_1 = self.DSE_1();
-    let NORAD_CAT_ID_2 = self.NORAD_CAT_ID_2();
-    let OBJECT_NAME_2 = self.OBJECT_NAME_2().map(|x| {
-      x.to_string()
+    let OBJECT_2 = self.OBJECT_2().map(|x| {
+      Box::new(x.unpack())
     });
     let DSE_2 = self.DSE_2();
     let TCA = self.TCA();
@@ -79,11 +76,9 @@ impl<'a> CSM<'a> {
     let MAX_PROB = self.MAX_PROB();
     let DILUTION = self.DILUTION();
     CSMT {
-      NORAD_CAT_ID_1,
-      OBJECT_NAME_1,
+      OBJECT_1,
       DSE_1,
-      NORAD_CAT_ID_2,
-      OBJECT_NAME_2,
+      OBJECT_2,
       DSE_2,
       TCA,
       TCA_RANGE,
@@ -93,21 +88,13 @@ impl<'a> CSM<'a> {
     }
   }
 
-  /// NORAD Catalog Number for the first object
-  #[inline]
-  pub fn NORAD_CAT_ID_1(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(CSM::VT_NORAD_CAT_ID_1, Some(0)).unwrap()}
-  }
   /// Satellite name for the first object
   #[inline]
-  pub fn OBJECT_NAME_1(&self) -> Option<&'a str> {
+  pub fn OBJECT_1(&self) -> Option<CAT<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CSM::VT_OBJECT_NAME_1, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CAT>>(CSM::VT_OBJECT_1, None)}
   }
   /// Days since epoch for the first object
   #[inline]
@@ -117,21 +104,13 @@ impl<'a> CSM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CSM::VT_DSE_1, Some(0.0)).unwrap()}
   }
-  /// NORAD Catalog Number for the second object
-  #[inline]
-  pub fn NORAD_CAT_ID_2(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(CSM::VT_NORAD_CAT_ID_2, Some(0)).unwrap()}
-  }
   /// Satellite name for the second object
   #[inline]
-  pub fn OBJECT_NAME_2(&self) -> Option<&'a str> {
+  pub fn OBJECT_2(&self) -> Option<CAT<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CSM::VT_OBJECT_NAME_2, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CAT>>(CSM::VT_OBJECT_2, None)}
   }
   /// Days since epoch for the second object
   #[inline]
@@ -190,11 +169,9 @@ impl flatbuffers::Verifiable for CSM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<u32>("NORAD_CAT_ID_1", Self::VT_NORAD_CAT_ID_1, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME_1", Self::VT_OBJECT_NAME_1, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CAT>>("OBJECT_1", Self::VT_OBJECT_1, false)?
      .visit_field::<f64>("DSE_1", Self::VT_DSE_1, false)?
-     .visit_field::<u32>("NORAD_CAT_ID_2", Self::VT_NORAD_CAT_ID_2, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME_2", Self::VT_OBJECT_NAME_2, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CAT>>("OBJECT_2", Self::VT_OBJECT_2, false)?
      .visit_field::<f64>("DSE_2", Self::VT_DSE_2, false)?
      .visit_field::<f64>("TCA", Self::VT_TCA, false)?
      .visit_field::<f64>("TCA_RANGE", Self::VT_TCA_RANGE, false)?
@@ -206,11 +183,9 @@ impl flatbuffers::Verifiable for CSM<'_> {
   }
 }
 pub struct CSMArgs<'a> {
-    pub NORAD_CAT_ID_1: u32,
-    pub OBJECT_NAME_1: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_1: Option<flatbuffers::WIPOffset<CAT<'a>>>,
     pub DSE_1: f64,
-    pub NORAD_CAT_ID_2: u32,
-    pub OBJECT_NAME_2: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_2: Option<flatbuffers::WIPOffset<CAT<'a>>>,
     pub DSE_2: f64,
     pub TCA: f64,
     pub TCA_RANGE: f64,
@@ -222,11 +197,9 @@ impl<'a> Default for CSMArgs<'a> {
   #[inline]
   fn default() -> Self {
     CSMArgs {
-      NORAD_CAT_ID_1: 0,
-      OBJECT_NAME_1: None,
+      OBJECT_1: None,
       DSE_1: 0.0,
-      NORAD_CAT_ID_2: 0,
-      OBJECT_NAME_2: None,
+      OBJECT_2: None,
       DSE_2: 0.0,
       TCA: 0.0,
       TCA_RANGE: 0.0,
@@ -243,24 +216,16 @@ pub struct CSMBuilder<'a: 'b, 'b> {
 }
 impl<'a: 'b, 'b> CSMBuilder<'a, 'b> {
   #[inline]
-  pub fn add_NORAD_CAT_ID_1(&mut self, NORAD_CAT_ID_1: u32) {
-    self.fbb_.push_slot::<u32>(CSM::VT_NORAD_CAT_ID_1, NORAD_CAT_ID_1, 0);
-  }
-  #[inline]
-  pub fn add_OBJECT_NAME_1(&mut self, OBJECT_NAME_1: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CSM::VT_OBJECT_NAME_1, OBJECT_NAME_1);
+  pub fn add_OBJECT_1(&mut self, OBJECT_1: flatbuffers::WIPOffset<CAT<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CAT>>(CSM::VT_OBJECT_1, OBJECT_1);
   }
   #[inline]
   pub fn add_DSE_1(&mut self, DSE_1: f64) {
     self.fbb_.push_slot::<f64>(CSM::VT_DSE_1, DSE_1, 0.0);
   }
   #[inline]
-  pub fn add_NORAD_CAT_ID_2(&mut self, NORAD_CAT_ID_2: u32) {
-    self.fbb_.push_slot::<u32>(CSM::VT_NORAD_CAT_ID_2, NORAD_CAT_ID_2, 0);
-  }
-  #[inline]
-  pub fn add_OBJECT_NAME_2(&mut self, OBJECT_NAME_2: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CSM::VT_OBJECT_NAME_2, OBJECT_NAME_2);
+  pub fn add_OBJECT_2(&mut self, OBJECT_2: flatbuffers::WIPOffset<CAT<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CAT>>(CSM::VT_OBJECT_2, OBJECT_2);
   }
   #[inline]
   pub fn add_DSE_2(&mut self, DSE_2: f64) {
@@ -304,11 +269,9 @@ impl<'a: 'b, 'b> CSMBuilder<'a, 'b> {
 impl core::fmt::Debug for CSM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("CSM");
-      ds.field("NORAD_CAT_ID_1", &self.NORAD_CAT_ID_1());
-      ds.field("OBJECT_NAME_1", &self.OBJECT_NAME_1());
+      ds.field("OBJECT_1", &self.OBJECT_1());
       ds.field("DSE_1", &self.DSE_1());
-      ds.field("NORAD_CAT_ID_2", &self.NORAD_CAT_ID_2());
-      ds.field("OBJECT_NAME_2", &self.OBJECT_NAME_2());
+      ds.field("OBJECT_2", &self.OBJECT_2());
       ds.field("DSE_2", &self.DSE_2());
       ds.field("TCA", &self.TCA());
       ds.field("TCA_RANGE", &self.TCA_RANGE());
@@ -321,11 +284,9 @@ impl core::fmt::Debug for CSM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct CSMT {
-  pub NORAD_CAT_ID_1: u32,
-  pub OBJECT_NAME_1: Option<String>,
+  pub OBJECT_1: Option<Box<CATT>>,
   pub DSE_1: f64,
-  pub NORAD_CAT_ID_2: u32,
-  pub OBJECT_NAME_2: Option<String>,
+  pub OBJECT_2: Option<Box<CATT>>,
   pub DSE_2: f64,
   pub TCA: f64,
   pub TCA_RANGE: f64,
@@ -336,11 +297,9 @@ pub struct CSMT {
 impl Default for CSMT {
   fn default() -> Self {
     Self {
-      NORAD_CAT_ID_1: 0,
-      OBJECT_NAME_1: None,
+      OBJECT_1: None,
       DSE_1: 0.0,
-      NORAD_CAT_ID_2: 0,
-      OBJECT_NAME_2: None,
+      OBJECT_2: None,
       DSE_2: 0.0,
       TCA: 0.0,
       TCA_RANGE: 0.0,
@@ -355,14 +314,12 @@ impl CSMT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
   ) -> flatbuffers::WIPOffset<CSM<'b>> {
-    let NORAD_CAT_ID_1 = self.NORAD_CAT_ID_1;
-    let OBJECT_NAME_1 = self.OBJECT_NAME_1.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let OBJECT_1 = self.OBJECT_1.as_ref().map(|x|{
+      x.pack(_fbb)
     });
     let DSE_1 = self.DSE_1;
-    let NORAD_CAT_ID_2 = self.NORAD_CAT_ID_2;
-    let OBJECT_NAME_2 = self.OBJECT_NAME_2.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let OBJECT_2 = self.OBJECT_2.as_ref().map(|x|{
+      x.pack(_fbb)
     });
     let DSE_2 = self.DSE_2;
     let TCA = self.TCA;
@@ -371,11 +328,9 @@ impl CSMT {
     let MAX_PROB = self.MAX_PROB;
     let DILUTION = self.DILUTION;
     CSM::create(_fbb, &CSMArgs{
-      NORAD_CAT_ID_1,
-      OBJECT_NAME_1,
+      OBJECT_1,
       DSE_1,
-      NORAD_CAT_ID_2,
-      OBJECT_NAME_2,
+      OBJECT_2,
       DSE_2,
       TCA,
       TCA_RANGE,

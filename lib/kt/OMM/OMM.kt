@@ -115,7 +115,7 @@ class OMM : Table() {
     val REF_FRAME : Byte
         get() {
             val o = __offset(16)
-            return if(o != 0) bb.get(o + bb_pos) else 9
+            return if(o != 0) bb.get(o + bb_pos) else 2
         }
     /**
      * REF_FRAME_EPOCH
@@ -660,7 +660,7 @@ class OMM : Table() {
         fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
         fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(4, OBJECT_ID, 0)
         fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(5, CENTER_NAME, 0)
-        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: Byte) = builder.addByte(6, REF_FRAME, 9)
+        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: Byte) = builder.addByte(6, REF_FRAME, 2)
         fun addREF_FRAME_EPOCH(builder: FlatBufferBuilder, REF_FRAME_EPOCH: Int) = builder.addOffset(7, REF_FRAME_EPOCH, 0)
         fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(8, TIME_SYSTEM, 11)
         fun addMEAN_ELEMENT_THEORY(builder: FlatBufferBuilder, MEAN_ELEMENT_THEORY: Byte) = builder.addByte(9, MEAN_ELEMENT_THEORY, 0)

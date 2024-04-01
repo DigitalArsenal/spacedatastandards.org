@@ -67,7 +67,7 @@ public final class OMM extends Table {
   /**
    * Name of the reference frame (TEME, EME2000, etc.)
    */
-  public byte REF_FRAME() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 9; }
+  public byte REF_FRAME() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 2; }
   /**
    * REF_FRAME_EPOCH
    */
@@ -429,7 +429,7 @@ public final class OMM extends Table {
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(3, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(4, OBJECT_IDOffset, 0); }
   public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(5, CENTER_NAMEOffset, 0); }
-  public static void addRefFrame(FlatBufferBuilder builder, byte REF_FRAME) { builder.addByte(6, REF_FRAME, 9); }
+  public static void addRefFrame(FlatBufferBuilder builder, byte REF_FRAME) { builder.addByte(6, REF_FRAME, 2); }
   public static void addRefFrameEpoch(FlatBufferBuilder builder, int REF_FRAME_EPOCHOffset) { builder.addOffset(7, REF_FRAME_EPOCHOffset, 0); }
   public static void addTimeSystem(FlatBufferBuilder builder, byte TIME_SYSTEM) { builder.addByte(8, TIME_SYSTEM, 11); }
   public static void addMeanElementTheory(FlatBufferBuilder builder, byte MEAN_ELEMENT_THEORY) { builder.addByte(9, MEAN_ELEMENT_THEORY, 0); }

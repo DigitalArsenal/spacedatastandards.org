@@ -760,7 +760,7 @@ class OMM extends Table
      */
     public static function addREF_FRAME(FlatBufferBuilder $builder, $REF_FRAME)
     {
-        $builder->addSbyteX(6, $REF_FRAME, 9);
+        $builder->addSbyteX(6, $REF_FRAME, 2);
     }
 
     /**

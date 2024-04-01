@@ -115,7 +115,7 @@ class TDM extends Table
     public function getOBSERVER_POSITION_REFERENCE_FRAME()
     {
         $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \OBSERVERLocationReferenceFrame::EME2000;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
     }
 
     /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
@@ -125,7 +125,7 @@ class TDM extends Table
     public function getOBS_REFERENCE_FRAME()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \OBSERVERLocationReferenceFrame::EME2000;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
     }
 
     /// Epoch or observation time -  CCSDS 503.0-B-1

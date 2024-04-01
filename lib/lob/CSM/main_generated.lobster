@@ -5,79 +5,69 @@ class CSM
 
 /// Conjunction Summary Message
 class CSM : flatbuffers_handle
-    /// NORAD Catalog Number for the first object
-    def NORAD_CAT_ID_1() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 4, 0)
     /// Satellite name for the first object
-    def OBJECT_NAME_1() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+    def OBJECT_1() -> CAT?:
+        let o = buf_.flatbuffers_field_table(pos_, 4)
+        return if o: CAT { buf_, o } else: nil
     /// Days since epoch for the first object
     def DSE_1() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
-    /// NORAD Catalog Number for the second object
-    def NORAD_CAT_ID_2() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 10, 0)
+        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
     /// Satellite name for the second object
-    def OBJECT_NAME_2() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+    def OBJECT_2() -> CAT?:
+        let o = buf_.flatbuffers_field_table(pos_, 8)
+        return if o: CAT { buf_, o } else: nil
     /// Days since epoch for the second object
     def DSE_2() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
+        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
     /// Time of closest approach as a Unix timestamp
     def TCA() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
+        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
     /// The distance or range between the two objects at TCA
     def TCA_RANGE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
     /// The magnitude of the relative velocity at TCA
     def TCA_RELATIVE_SPEED() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
     /// Maximum probability
     def MAX_PROB() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 22, 0.0)
+        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
     /// Standard deviation that produces the maximum probability
     def DILUTION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 24, 0.0)
+        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
 
 def GetRootAsCSM(buf:string): return CSM { buf, buf.flatbuffers_indirect(0) }
 
 struct CSMBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(9)
         return this
-    def add_NORAD_CAT_ID_1(NORAD_CAT_ID_1:int):
-        b_.PrependUint32Slot(0, NORAD_CAT_ID_1, 0)
-        return this
-    def add_OBJECT_NAME_1(OBJECT_NAME_1:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(1, OBJECT_NAME_1)
+    def add_OBJECT_1(OBJECT_1:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, OBJECT_1)
         return this
     def add_DSE_1(DSE_1:float):
-        b_.PrependFloat64Slot(2, DSE_1, 0.0)
+        b_.PrependFloat64Slot(1, DSE_1, 0.0)
         return this
-    def add_NORAD_CAT_ID_2(NORAD_CAT_ID_2:int):
-        b_.PrependUint32Slot(3, NORAD_CAT_ID_2, 0)
-        return this
-    def add_OBJECT_NAME_2(OBJECT_NAME_2:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(4, OBJECT_NAME_2)
+    def add_OBJECT_2(OBJECT_2:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(2, OBJECT_2)
         return this
     def add_DSE_2(DSE_2:float):
-        b_.PrependFloat64Slot(5, DSE_2, 0.0)
+        b_.PrependFloat64Slot(3, DSE_2, 0.0)
         return this
     def add_TCA(TCA:float):
-        b_.PrependFloat64Slot(6, TCA, 0.0)
+        b_.PrependFloat64Slot(4, TCA, 0.0)
         return this
     def add_TCA_RANGE(TCA_RANGE:float):
-        b_.PrependFloat64Slot(7, TCA_RANGE, 0.0)
+        b_.PrependFloat64Slot(5, TCA_RANGE, 0.0)
         return this
     def add_TCA_RELATIVE_SPEED(TCA_RELATIVE_SPEED:float):
-        b_.PrependFloat64Slot(8, TCA_RELATIVE_SPEED, 0.0)
+        b_.PrependFloat64Slot(6, TCA_RELATIVE_SPEED, 0.0)
         return this
     def add_MAX_PROB(MAX_PROB:float):
-        b_.PrependFloat64Slot(9, MAX_PROB, 0.0)
+        b_.PrependFloat64Slot(7, MAX_PROB, 0.0)
         return this
     def add_DILUTION(DILUTION:float):
-        b_.PrependFloat64Slot(10, DILUTION, 0.0)
+        b_.PrependFloat64Slot(8, DILUTION, 0.0)
         return this
     def end():
         return b_.EndObject()

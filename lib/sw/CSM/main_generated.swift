@@ -17,33 +17,25 @@ public struct CSM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case NORAD_CAT_ID_1 = 4
-    case OBJECT_NAME_1 = 6
-    case DSE_1 = 8
-    case NORAD_CAT_ID_2 = 10
-    case OBJECT_NAME_2 = 12
-    case DSE_2 = 14
-    case TCA = 16
-    case TCA_RANGE = 18
-    case TCA_RELATIVE_SPEED = 20
-    case MAX_PROB = 22
-    case DILUTION = 24
+    case OBJECT_1 = 4
+    case DSE_1 = 6
+    case OBJECT_2 = 8
+    case DSE_2 = 10
+    case TCA = 12
+    case TCA_RANGE = 14
+    case TCA_RELATIVE_SPEED = 16
+    case MAX_PROB = 18
+    case DILUTION = 20
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  NORAD Catalog Number for the first object
-  public var NORAD_CAT_ID_1: UInt32 { let o = _accessor.offset(VTOFFSET.NORAD_CAT_ID_1.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Satellite name for the first object
-  public var OBJECT_NAME_1: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME_1.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAME_1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME_1.v) }
+  public var OBJECT_1: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT_1.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Days since epoch for the first object
   public var DSE_1: Double { let o = _accessor.offset(VTOFFSET.DSE_1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  NORAD Catalog Number for the second object
-  public var NORAD_CAT_ID_2: UInt32 { let o = _accessor.offset(VTOFFSET.NORAD_CAT_ID_2.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Satellite name for the second object
-  public var OBJECT_NAME_2: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME_2.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAME_2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME_2.v) }
+  public var OBJECT_2: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT_2.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Days since epoch for the second object
   public var DSE_2: Double { let o = _accessor.offset(VTOFFSET.DSE_2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time of closest approach as a Unix timestamp
@@ -56,12 +48,10 @@ public struct CSM: FlatBufferObject, Verifiable {
   public var MAX_PROB: Double { let o = _accessor.offset(VTOFFSET.MAX_PROB.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Standard deviation that produces the maximum probability
   public var DILUTION: Double { let o = _accessor.offset(VTOFFSET.DILUTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startCSM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(NORAD_CAT_ID_1: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID_1, def: 0, at: VTOFFSET.NORAD_CAT_ID_1.p) }
-  public static func add(OBJECT_NAME_1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME_1, at: VTOFFSET.OBJECT_NAME_1.p) }
+  public static func startCSM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(OBJECT_1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_1, at: VTOFFSET.OBJECT_1.p) }
   public static func add(DSE_1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DSE_1, def: 0.0, at: VTOFFSET.DSE_1.p) }
-  public static func add(NORAD_CAT_ID_2: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID_2, def: 0, at: VTOFFSET.NORAD_CAT_ID_2.p) }
-  public static func add(OBJECT_NAME_2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME_2, at: VTOFFSET.OBJECT_NAME_2.p) }
+  public static func add(OBJECT_2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_2, at: VTOFFSET.OBJECT_2.p) }
   public static func add(DSE_2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DSE_2, def: 0.0, at: VTOFFSET.DSE_2.p) }
   public static func add(TCA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA, def: 0.0, at: VTOFFSET.TCA.p) }
   public static func add(TCA_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA_RANGE, def: 0.0, at: VTOFFSET.TCA_RANGE.p) }
@@ -71,11 +61,9 @@ public struct CSM: FlatBufferObject, Verifiable {
   public static func endCSM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCSM(
     _ fbb: inout FlatBufferBuilder,
-    NORAD_CAT_ID_1: UInt32 = 0,
-    OBJECT_NAME_1Offset OBJECT_NAME_1: Offset = Offset(),
+    OBJECT_1Offset OBJECT_1: Offset = Offset(),
     DSE_1: Double = 0.0,
-    NORAD_CAT_ID_2: UInt32 = 0,
-    OBJECT_NAME_2Offset OBJECT_NAME_2: Offset = Offset(),
+    OBJECT_2Offset OBJECT_2: Offset = Offset(),
     DSE_2: Double = 0.0,
     TCA: Double = 0.0,
     TCA_RANGE: Double = 0.0,
@@ -84,11 +72,9 @@ public struct CSM: FlatBufferObject, Verifiable {
     DILUTION: Double = 0.0
   ) -> Offset {
     let __start = CSM.startCSM(&fbb)
-    CSM.add(NORAD_CAT_ID_1: NORAD_CAT_ID_1, &fbb)
-    CSM.add(OBJECT_NAME_1: OBJECT_NAME_1, &fbb)
+    CSM.add(OBJECT_1: OBJECT_1, &fbb)
     CSM.add(DSE_1: DSE_1, &fbb)
-    CSM.add(NORAD_CAT_ID_2: NORAD_CAT_ID_2, &fbb)
-    CSM.add(OBJECT_NAME_2: OBJECT_NAME_2, &fbb)
+    CSM.add(OBJECT_2: OBJECT_2, &fbb)
     CSM.add(DSE_2: DSE_2, &fbb)
     CSM.add(TCA: TCA, &fbb)
     CSM.add(TCA_RANGE: TCA_RANGE, &fbb)
@@ -100,11 +86,9 @@ public struct CSM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NORAD_CAT_ID_1.p, fieldName: "NORAD_CAT_ID_1", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME_1.p, fieldName: "OBJECT_NAME_1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OBJECT_1.p, fieldName: "OBJECT_1", required: false, type: ForwardOffset<CAT>.self)
     try _v.visit(field: VTOFFSET.DSE_1.p, fieldName: "DSE_1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NORAD_CAT_ID_2.p, fieldName: "NORAD_CAT_ID_2", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME_2.p, fieldName: "OBJECT_NAME_2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OBJECT_2.p, fieldName: "OBJECT_2", required: false, type: ForwardOffset<CAT>.self)
     try _v.visit(field: VTOFFSET.DSE_2.p, fieldName: "DSE_2", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TCA.p, fieldName: "TCA", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TCA_RANGE.p, fieldName: "TCA_RANGE", required: false, type: Double.self)

@@ -50,7 +50,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(10); }
   /// Name of the reference frame (TEME, EME2000, etc.)
-  public referenceFrame REF_FRAME { get { int o = __p.__offset(12); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.EME2000; } }
+  public referenceFrame REF_FRAME { get { int o = __p.__offset(12); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   public string REF_FRAME_EPOCH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -115,7 +115,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       StringOffset OBJECT_IDOffset = default(StringOffset),
       StringOffset CENTER_NAMEOffset = default(StringOffset),
-      referenceFrame REF_FRAME = referenceFrame.EME2000,
+      referenceFrame REF_FRAME = referenceFrame.ECEF,
       StringOffset REF_FRAME_EPOCHOffset = default(StringOffset),
       timeSystem TIME_SYSTEM = timeSystem.GMST,
       StringOffset START_TIMEOffset = default(StringOffset),
@@ -266,7 +266,7 @@ public class ephemerisDataBlockT
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
     this.CENTER_NAME = null;
-    this.REF_FRAME = referenceFrame.EME2000;
+    this.REF_FRAME = referenceFrame.ECEF;
     this.REF_FRAME_EPOCH = null;
     this.TIME_SYSTEM = timeSystem.GMST;
     this.START_TIME = null;

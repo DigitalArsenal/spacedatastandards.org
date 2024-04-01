@@ -5,6 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
+
 ///  Conjunction Summary Message
 class CSM {
   CSM._(this._bc, this._bcOffset);
@@ -18,32 +20,28 @@ class CSM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  NORAD Catalog Number for the first object
-  int get NORAD_CAT_ID_1 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
   ///  Satellite name for the first object
-  String? get OBJECT_NAME_1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  CAT? get OBJECT_1 => CAT.reader.vTableGetNullable(_bc, _bcOffset, 4);
   ///  Days since epoch for the first object
-  double get DSE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  NORAD Catalog Number for the second object
-  int get NORAD_CAT_ID_2 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  double get DSE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   ///  Satellite name for the second object
-  String? get OBJECT_NAME_2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  CAT? get OBJECT_2 => CAT.reader.vTableGetNullable(_bc, _bcOffset, 8);
   ///  Days since epoch for the second object
-  double get DSE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get DSE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   ///  Time of closest approach as a Unix timestamp
-  double get TCA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get TCA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   ///  The distance or range between the two objects at TCA
-  double get TCA_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get TCA_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   ///  The magnitude of the relative velocity at TCA
-  double get TCA_RELATIVE_SPEED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get TCA_RELATIVE_SPEED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  Maximum probability
-  double get MAX_PROB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get MAX_PROB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   ///  Standard deviation that produces the maximum probability
-  double get DILUTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get DILUTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
 
   @override
   String toString() {
-    return 'CSM{NORAD_CAT_ID_1: ${NORAD_CAT_ID_1}, OBJECT_NAME_1: ${OBJECT_NAME_1}, DSE_1: ${DSE_1}, NORAD_CAT_ID_2: ${NORAD_CAT_ID_2}, OBJECT_NAME_2: ${OBJECT_NAME_2}, DSE_2: ${DSE_2}, TCA: ${TCA}, TCA_RANGE: ${TCA_RANGE}, TCA_RELATIVE_SPEED: ${TCA_RELATIVE_SPEED}, MAX_PROB: ${MAX_PROB}, DILUTION: ${DILUTION}}';
+    return 'CSM{OBJECT_1: ${OBJECT_1}, DSE_1: ${DSE_1}, OBJECT_2: ${OBJECT_2}, DSE_2: ${DSE_2}, TCA: ${TCA}, TCA_RANGE: ${TCA_RANGE}, TCA_RELATIVE_SPEED: ${TCA_RELATIVE_SPEED}, MAX_PROB: ${MAX_PROB}, DILUTION: ${DILUTION}}';
   }
 }
 
@@ -61,51 +59,43 @@ class CSMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(9);
   }
 
-  int addNoradCatId1(int? NORAD_CAT_ID_1) {
-    fbBuilder.addUint32(0, NORAD_CAT_ID_1);
-    return fbBuilder.offset;
-  }
-  int addObjectName1Offset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addObject1Offset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
   int addDse1(double? DSE_1) {
-    fbBuilder.addFloat64(2, DSE_1);
+    fbBuilder.addFloat64(1, DSE_1);
     return fbBuilder.offset;
   }
-  int addNoradCatId2(int? NORAD_CAT_ID_2) {
-    fbBuilder.addUint32(3, NORAD_CAT_ID_2);
-    return fbBuilder.offset;
-  }
-  int addObjectName2Offset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addObject2Offset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
   int addDse2(double? DSE_2) {
-    fbBuilder.addFloat64(5, DSE_2);
+    fbBuilder.addFloat64(3, DSE_2);
     return fbBuilder.offset;
   }
   int addTca(double? TCA) {
-    fbBuilder.addFloat64(6, TCA);
+    fbBuilder.addFloat64(4, TCA);
     return fbBuilder.offset;
   }
   int addTcaRange(double? TCA_RANGE) {
-    fbBuilder.addFloat64(7, TCA_RANGE);
+    fbBuilder.addFloat64(5, TCA_RANGE);
     return fbBuilder.offset;
   }
   int addTcaRelativeSpeed(double? TCA_RELATIVE_SPEED) {
-    fbBuilder.addFloat64(8, TCA_RELATIVE_SPEED);
+    fbBuilder.addFloat64(6, TCA_RELATIVE_SPEED);
     return fbBuilder.offset;
   }
   int addMaxProb(double? MAX_PROB) {
-    fbBuilder.addFloat64(9, MAX_PROB);
+    fbBuilder.addFloat64(7, MAX_PROB);
     return fbBuilder.offset;
   }
   int addDilution(double? DILUTION) {
-    fbBuilder.addFloat64(10, DILUTION);
+    fbBuilder.addFloat64(8, DILUTION);
     return fbBuilder.offset;
   }
 
@@ -115,11 +105,9 @@ class CSMBuilder {
 }
 
 class CSMObjectBuilder extends fb.ObjectBuilder {
-  final int? _NORAD_CAT_ID_1;
-  final String? _OBJECT_NAME_1;
+  final CATObjectBuilder? _OBJECT_1;
   final double? _DSE_1;
-  final int? _NORAD_CAT_ID_2;
-  final String? _OBJECT_NAME_2;
+  final CATObjectBuilder? _OBJECT_2;
   final double? _DSE_2;
   final double? _TCA;
   final double? _TCA_RANGE;
@@ -128,11 +116,9 @@ class CSMObjectBuilder extends fb.ObjectBuilder {
   final double? _DILUTION;
 
   CSMObjectBuilder({
-    int? NORAD_CAT_ID_1,
-    String? OBJECT_NAME_1,
+    CATObjectBuilder? OBJECT_1,
     double? DSE_1,
-    int? NORAD_CAT_ID_2,
-    String? OBJECT_NAME_2,
+    CATObjectBuilder? OBJECT_2,
     double? DSE_2,
     double? TCA,
     double? TCA_RANGE,
@@ -140,11 +126,9 @@ class CSMObjectBuilder extends fb.ObjectBuilder {
     double? MAX_PROB,
     double? DILUTION,
   })
-      : _NORAD_CAT_ID_1 = NORAD_CAT_ID_1,
-        _OBJECT_NAME_1 = OBJECT_NAME_1,
+      : _OBJECT_1 = OBJECT_1,
         _DSE_1 = DSE_1,
-        _NORAD_CAT_ID_2 = NORAD_CAT_ID_2,
-        _OBJECT_NAME_2 = OBJECT_NAME_2,
+        _OBJECT_2 = OBJECT_2,
         _DSE_2 = DSE_2,
         _TCA = TCA,
         _TCA_RANGE = TCA_RANGE,
@@ -155,22 +139,18 @@ class CSMObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? OBJECT_NAME_1Offset = _OBJECT_NAME_1 == null ? null
-        : fbBuilder.writeString(_OBJECT_NAME_1!);
-    final int? OBJECT_NAME_2Offset = _OBJECT_NAME_2 == null ? null
-        : fbBuilder.writeString(_OBJECT_NAME_2!);
-    fbBuilder.startTable(11);
-    fbBuilder.addUint32(0, _NORAD_CAT_ID_1);
-    fbBuilder.addOffset(1, OBJECT_NAME_1Offset);
-    fbBuilder.addFloat64(2, _DSE_1);
-    fbBuilder.addUint32(3, _NORAD_CAT_ID_2);
-    fbBuilder.addOffset(4, OBJECT_NAME_2Offset);
-    fbBuilder.addFloat64(5, _DSE_2);
-    fbBuilder.addFloat64(6, _TCA);
-    fbBuilder.addFloat64(7, _TCA_RANGE);
-    fbBuilder.addFloat64(8, _TCA_RELATIVE_SPEED);
-    fbBuilder.addFloat64(9, _MAX_PROB);
-    fbBuilder.addFloat64(10, _DILUTION);
+    final int? OBJECT_1Offset = _OBJECT_1?.getOrCreateOffset(fbBuilder);
+    final int? OBJECT_2Offset = _OBJECT_2?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, OBJECT_1Offset);
+    fbBuilder.addFloat64(1, _DSE_1);
+    fbBuilder.addOffset(2, OBJECT_2Offset);
+    fbBuilder.addFloat64(3, _DSE_2);
+    fbBuilder.addFloat64(4, _TCA);
+    fbBuilder.addFloat64(5, _TCA_RANGE);
+    fbBuilder.addFloat64(6, _TCA_RELATIVE_SPEED);
+    fbBuilder.addFloat64(7, _MAX_PROB);
+    fbBuilder.addFloat64(8, _DILUTION);
     return fbBuilder.endTable();
   }
 

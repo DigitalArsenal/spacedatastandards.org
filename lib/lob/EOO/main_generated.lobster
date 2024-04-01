@@ -240,8 +240,8 @@ class EOO : flatbuffers_handle
     def CREATED_BY() -> string:
         return buf_.flatbuffers_field_string(pos_, 158)
     /// Reference frame of the observation
-    def REFERENCE_FRAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 160)
+    def REFERENCE_FRAME() -> referenceFrame:
+        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 160, 0))
     /// Reference frame of the sensor
     def SEN_REFERENCE_FRAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 162)
@@ -502,8 +502,8 @@ struct EOOBuilder:
     def add_CREATED_BY(CREATED_BY:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(77, CREATED_BY)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(78, REFERENCE_FRAME)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:referenceFrame):
+        b_.PrependInt8Slot(78, REFERENCE_FRAME, 0)
         return this
     def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(79, SEN_REFERENCE_FRAME)

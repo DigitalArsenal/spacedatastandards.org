@@ -658,8 +658,8 @@ class EOO(object):
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
     # Reference frame of the sensor
     # EOO
@@ -946,7 +946,7 @@ def AddCREATED_AT(builder, CREATED_AT):
 def EOOAddCREATED_BY(builder, CREATED_BY): builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
 def AddCREATED_BY(builder, CREATED_BY):
     return EOOAddCREATED_BY(builder, CREATED_BY)
-def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME): builder.PrependUOffsetTRelativeSlot(78, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
+def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME): builder.PrependInt8Slot(78, REFERENCE_FRAME, 0)
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     return EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME): builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
@@ -1053,7 +1053,7 @@ class EOOT(object):
         self.DATA_MODE = None  # type: str
         self.CREATED_AT = None  # type: str
         self.CREATED_BY = None  # type: str
-        self.REFERENCE_FRAME = None  # type: str
+        self.REFERENCE_FRAME = 0  # type: int
         self.SEN_REFERENCE_FRAME = None  # type: str
         self.UMBRA = False  # type: bool
         self.PENUMBRA = False  # type: bool
@@ -1208,8 +1208,6 @@ class EOOT(object):
             CREATED_AT = builder.CreateString(self.CREATED_AT)
         if self.CREATED_BY is not None:
             CREATED_BY = builder.CreateString(self.CREATED_BY)
-        if self.REFERENCE_FRAME is not None:
-            REFERENCE_FRAME = builder.CreateString(self.REFERENCE_FRAME)
         if self.SEN_REFERENCE_FRAME is not None:
             SEN_REFERENCE_FRAME = builder.CreateString(self.SEN_REFERENCE_FRAME)
         if self.ORIG_NETWORK is not None:
@@ -1316,8 +1314,7 @@ class EOOT(object):
             EOOAddCREATED_AT(builder, CREATED_AT)
         if self.CREATED_BY is not None:
             EOOAddCREATED_BY(builder, CREATED_BY)
-        if self.REFERENCE_FRAME is not None:
-            EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        EOOAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)
         if self.SEN_REFERENCE_FRAME is not None:
             EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
         EOOAddUMBRA(builder, self.UMBRA)
