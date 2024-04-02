@@ -26,6 +26,10 @@ static getSizePrefixedRootAsPLD(bb:flatbuffers.ByteBuffer, obj?:PLD):PLD {
   return (obj || new PLD()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$PLD');
+}
+
 PAYLOAD_DURATION():string|null
 PAYLOAD_DURATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PAYLOAD_DURATION(optionalEncoding?:any):string|Uint8Array|null {
@@ -121,6 +125,14 @@ static startInstrumentsVector(builder:flatbuffers.Builder, numElems:number) {
 static endPLD(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishPLDBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PLD');
+}
+
+static finishSizePrefixedPLDBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PLD', true);
 }
 
 static createPLD(builder:flatbuffers.Builder, PAYLOAD_DURATIONOffset:flatbuffers.Offset, MASS_AT_LAUNCH:number, DIMENSIONSOffset:flatbuffers.Offset, SOLAR_ARRAY_AREA:number, SOLAR_ARRAY_DIMENSIONSOffset:flatbuffers.Offset, NOMINAL_OPERATIONAL_LIFETIMEOffset:flatbuffers.Offset, INSTRUMENTSOffset:flatbuffers.Offset):flatbuffers.Offset {

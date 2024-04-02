@@ -8,6 +8,7 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): PNM;
     static getRootAsPNM(bb: flatbuffers.ByteBuffer, obj?: PNM): PNM;
     static getSizePrefixedRootAsPNM(bb: flatbuffers.ByteBuffer, obj?: PNM): PNM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Multiformat Address
      * https://multiformats.io/multiaddr/
@@ -71,6 +72,8 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     static addSignatureType(builder: flatbuffers.Builder, SIGNATURE_TYPEOffset: flatbuffers.Offset): void;
     static addTimestampSignatureType(builder: flatbuffers.Builder, TIMESTAMP_SIGNATURE_TYPEOffset: flatbuffers.Offset): void;
     static endPNM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishPNMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedPNMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, FIDOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, TIMESTAMP_SIGNATUREOffset: flatbuffers.Offset, SIGNATURE_TYPEOffset: flatbuffers.Offset, TIMESTAMP_SIGNATURE_TYPEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PNMT;
     unpackTo(_o: PNMT): void;

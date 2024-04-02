@@ -10,6 +10,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): EPM;
     static getRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
     static getSizePrefixedRootAsEPM(bb: flatbuffers.ByteBuffer, obj?: EPM): EPM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Distinguished Name of the entity
      */
@@ -109,6 +110,8 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static createMultiformatAddressVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMultiformatAddressVector(builder: flatbuffers.Builder, numElems: number): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     unpack(): EPMT;
     unpackTo(_o: EPMT): void;
 }

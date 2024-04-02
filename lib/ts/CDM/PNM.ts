@@ -25,6 +25,10 @@ static getSizePrefixedRootAsPNM(bb:flatbuffers.ByteBuffer, obj?:PNM):PNM {
   return (obj || new PNM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$PNM');
+}
+
 /**
  * Multiformat Address
  * https://multiformats.io/multiaddr/
@@ -157,6 +161,14 @@ static addTimestampSignatureType(builder:flatbuffers.Builder, TIMESTAMP_SIGNATUR
 static endPNM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishPNMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PNM');
+}
+
+static finishSizePrefixedPNMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$PNM', true);
 }
 
 static createPNM(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, PUBLISH_TIMESTAMPOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, FIDOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset, TIMESTAMP_SIGNATUREOffset:flatbuffers.Offset, SIGNATURE_TYPEOffset:flatbuffers.Offset, TIMESTAMP_SIGNATURE_TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {

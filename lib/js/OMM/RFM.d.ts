@@ -6,10 +6,13 @@ export declare class RFM implements flatbuffers.IUnpackableObject<RFMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): RFM;
     static getRootAsRFM(bb: flatbuffers.ByteBuffer, obj?: RFM): RFM;
     static getSizePrefixedRootAsRFM(bb: flatbuffers.ByteBuffer, obj?: RFM): RFM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     REFERENCE_FRAME(): referenceFrame;
     static startRFM(builder: flatbuffers.Builder): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAME: referenceFrame): void;
     static endRFM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishRFMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedRFMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createRFM(builder: flatbuffers.Builder, REFERENCE_FRAME: referenceFrame): flatbuffers.Offset;
     unpack(): RFMT;
     unpackTo(_o: RFMT): void;

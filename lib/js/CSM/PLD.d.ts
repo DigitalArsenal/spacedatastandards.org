@@ -9,6 +9,7 @@ export declare class PLD implements flatbuffers.IUnpackableObject<PLDT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): PLD;
     static getRootAsPLD(bb: flatbuffers.ByteBuffer, obj?: PLD): PLD;
     static getSizePrefixedRootAsPLD(bb: flatbuffers.ByteBuffer, obj?: PLD): PLD;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     PAYLOAD_DURATION(): string | null;
     PAYLOAD_DURATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     MASS_AT_LAUNCH(): number;
@@ -32,6 +33,8 @@ export declare class PLD implements flatbuffers.IUnpackableObject<PLDT> {
     static createInstrumentsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startInstrumentsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPLD(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishPLDBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedPLDBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static createPLD(builder: flatbuffers.Builder, PAYLOAD_DURATIONOffset: flatbuffers.Offset, MASS_AT_LAUNCH: number, DIMENSIONSOffset: flatbuffers.Offset, SOLAR_ARRAY_AREA: number, SOLAR_ARRAY_DIMENSIONSOffset: flatbuffers.Offset, NOMINAL_OPERATIONAL_LIFETIMEOffset: flatbuffers.Offset, INSTRUMENTSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PLDT;
     unpackTo(_o: PLDT): void;

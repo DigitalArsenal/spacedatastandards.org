@@ -1,7 +1,7 @@
 import os
+import shutil
 import subprocess
 import json
-import shutil
 
 # Get the directory in which the current script is located
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,50 +21,51 @@ OUTPUT_DIR = os.path.abspath(os.path.join(script_dir, "..", "lib"))
 shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Store the current directory
-CURRENT_DIR = os.getcwd()
 
-# Navigate to the schema directory
-os.chdir(SRC_DIR)
+# Helper function to find all fbs files referenced by main.fbs
+def find_referenced_fbs(directory):
+    referenced_files = []
+    main_fbs_path = os.path.join(directory, "main.fbs")
+    if os.path.isfile(main_fbs_path):
+        with open(main_fbs_path, "r") as f:
+            lines = f.readlines()
+        for line in lines:
+            if line.startswith("include"):
+                # Extract the file name and assume it's directly under the same directory
+                included_file = line.split('"')[1]
+                included_path = os.path.join(directory, included_file)
+                if os.path.isfile(included_path):
+                    referenced_files.append(included_path)
+                    # Recursively check for files included in the included files
+                    referenced_files.extend(
+                        find_referenced_fbs(os.path.dirname(included_path))
+                    )
+    return referenced_files
 
-# Process each entry in the JSON data
-for entry in data:
-    # Unpack the entry
-    args, lang_name, ext, type = (
-        entry if isinstance(entry, list) else (entry, *entry[1:])
-    )
-    args = args if isinstance(args, list) else [args]
 
-    # Loop through all subdirectories in the schema directory
-    for dir in os.listdir("."):
-        if os.path.isdir(dir):
-            # Define the output path for each directory
-            OUTPUT_PATH = os.path.join(CURRENT_DIR, OUTPUT_DIR, ext)
+# Process each subdirectory in the schema directory
+for subdir in os.listdir(SRC_DIR):
+    subdir_path = os.path.join(SRC_DIR, subdir)
+    if os.path.isdir(subdir_path):
+        referenced_files = find_referenced_fbs(subdir_path)
+
+        # Add main.fbs file path if not already included
+        main_fbs_path = os.path.join(subdir_path, "main.fbs")
+        if main_fbs_path not in referenced_files:
+            referenced_files.append(main_fbs_path)
+
+        # Process each entry in the JSON data
+        for entry in data:
+            args, lang_name, ext, _ = (
+                entry if isinstance(entry, list) else (entry, *entry[1:])
+            )
+            args = args if isinstance(args, list) else [args]
+
+            # Define the output path for the specific language extension
+            OUTPUT_PATH = os.path.join(OUTPUT_DIR, ext, subdir)
             os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-            # Navigate into the source subdirectory
-            os.chdir(dir)
-
-            # Find all .fbs files in the directory
-            for fbs in os.listdir("."):
-                if fbs.endswith(".fbs") and os.path.getsize(fbs) > 0:
-                    # Define the directory path for each file
-                    dir_path = os.path.join(OUTPUT_PATH, dir)
-                    os.makedirs(dir_path, exist_ok=True)
-
-                    # Prepare the command
-                    command = ["flatc"]
-                    # Append '--gen-all' only for TypeScript
-                    if lang_name == 'TypeScript':
-                        command.append("--gen-all")
-                    # Add the rest of the arguments
-                    command.extend(args)
-                    command.extend(["-o", dir_path, fbs])
-                    
-                    subprocess.run(command)
-            # Go back to the schema directory before the next iteration
-            os.chdir(SRC_DIR)
-
-# Go back to the original directory
-os.chdir(CURRENT_DIR)
+            # Prepare the command
+            command = ["flatc", *args, "-o", OUTPUT_PATH] + referenced_files
+            subprocess.run(command)
 print("Code Generation Complete.")

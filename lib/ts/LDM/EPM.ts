@@ -27,6 +27,10 @@ static getSizePrefixedRootAsEPM(bb:flatbuffers.ByteBuffer, obj?:EPM):EPM {
   return (obj || new EPM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$EPM');
+}
+
 /**
  * Distinguished Name of the entity
  */
@@ -291,6 +295,14 @@ static startMultiformatAddressVector(builder:flatbuffers.Builder, numElems:numbe
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishEPMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EPM');
+}
+
+static finishSizePrefixedEPMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$EPM', true);
 }
 
 

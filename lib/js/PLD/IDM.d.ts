@@ -15,6 +15,7 @@ export declare class IDM implements flatbuffers.IUnpackableObject<IDMT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): IDM;
     static getRootAsIDM(bb: flatbuffers.ByteBuffer, obj?: IDM): IDM;
     static getSizePrefixedRootAsIDM(bb: flatbuffers.ByteBuffer, obj?: IDM): IDM;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Unique identifier for the EMT
      */
@@ -170,6 +171,8 @@ export declare class IDM implements flatbuffers.IUnpackableObject<IDMT> {
     static addMagnitudeLimit(builder: flatbuffers.Builder, MAGNITUDE_LIMIT: number): void;
     static addTaskable(builder: flatbuffers.Builder, TASKABLE: boolean): void;
     static endIDM(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishIDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedIDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     unpack(): IDMT;
     unpackTo(_o: IDMT): void;
 }

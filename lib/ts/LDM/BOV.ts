@@ -25,6 +25,10 @@ static getSizePrefixedRootAsBOV(bb:flatbuffers.ByteBuffer, obj?:BOV):BOV {
   return (obj || new BOV()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$BOV');
+}
+
 E_COORDINATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
@@ -106,6 +110,14 @@ static addTimeFromLaunch(builder:flatbuffers.Builder, TIME_FROM_LAUNCH:number) {
 static endBOV(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishBOVBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$BOV');
+}
+
+static finishSizePrefixedBOVBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$BOV', true);
 }
 
 static createBOV(builder:flatbuffers.Builder, E_COORDINATE:number, F_COORDINATE:number, G_COORDINATE:number, E_DOT:number, F_DOT:number, G_DOT:number, EPOCH_TIMEOffset:flatbuffers.Offset, TIME_FROM_LAUNCH:number):flatbuffers.Offset {

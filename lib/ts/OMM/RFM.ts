@@ -23,6 +23,10 @@ static getSizePrefixedRootAsRFM(bb:flatbuffers.ByteBuffer, obj?:RFM):RFM {
   return (obj || new RFM()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$RFM');
+}
+
 REFERENCE_FRAME():referenceFrame {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
@@ -39,6 +43,14 @@ static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:referenceF
 static endRFM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishRFMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$RFM');
+}
+
+static finishSizePrefixedRFMBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$RFM', true);
 }
 
 static createRFM(builder:flatbuffers.Builder, REFERENCE_FRAME:referenceFrame):flatbuffers.Offset {

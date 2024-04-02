@@ -28,6 +28,10 @@ static getSizePrefixedRootAsSIT(bb:flatbuffers.ByteBuffer, obj?:SIT):SIT {
   return (obj || new SIT()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
+  return bb.__has_identifier('$SIT');
+}
+
 /**
  * Unique identifier for the site, BE_NUMBER
  */
@@ -399,6 +403,14 @@ static startIntegratedDevicesVector(builder:flatbuffers.Builder, numElems:number
 static endSIT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
+}
+
+static finishSITBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$SIT');
+}
+
+static finishSizePrefixedSITBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+  builder.finish(offset, '$SIT', true);
 }
 
 
