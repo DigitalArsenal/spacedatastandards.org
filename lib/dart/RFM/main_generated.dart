@@ -136,6 +136,7 @@ class _ReferenceFrameReader extends fb.Reader<ReferenceFrame> {
       ReferenceFrame.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Reference Frame Message
 class RFM {
   RFM._(this._bc, this._bcOffset);
   factory RFM(List<int> bytes) {

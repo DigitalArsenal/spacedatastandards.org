@@ -1,5 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { referenceFrame } from './referenceFrame.js';
+/**
+ * Reference Frame Message
+ */
 export declare class RFM implements flatbuffers.IUnpackableObject<RFMT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

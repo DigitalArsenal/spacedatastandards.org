@@ -60,6 +60,7 @@ public enum referenceFrame: Int8, Enum, Verifiable {
 }
 
 
+///  Reference Frame Message
 public struct RFM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

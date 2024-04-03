@@ -23,6 +23,7 @@
     },
     "RFM" : {
       "type" : "object",
+      "description" : "Reference Frame Message",
       "properties" : {
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/referenceFrame"

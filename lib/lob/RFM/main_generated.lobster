@@ -51,6 +51,7 @@ enum referenceFrame:
 
 class RFM
 
+/// Reference Frame Message
 class RFM : flatbuffers_handle
     def REFERENCE_FRAME() -> referenceFrame:
         return referenceFrame(buf_.flatbuffers_field_int8(pos_, 4, 0))

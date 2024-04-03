@@ -48,7 +48,7 @@ enum referenceFrame : byte {
   BRF,
 }
 
-// Reference Frame Message
+/// Reference Frame Message
 table RFM{
     REFERENCE_FRAME: referenceFrame;
 }

@@ -6,6 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# Reference Frame Message
 class RFM(object):
     __slots__ = ['_tab']
 
