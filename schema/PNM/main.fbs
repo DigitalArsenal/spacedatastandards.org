@@ -18,8 +18,12 @@ table PNM {
   CID: string;
 
   /// File ID
-  /// This field is the file ID / Name
-  FID: string;
+  /// This field is the Name
+  FILE_NAME: string;
+
+  /// File ID
+  /// This field is the file ID / Standard Type
+  FILE_ID: string;
 
   /// Digital Signature of the CID
   /// This is the digital signature of the CID, signed using the specified cryptographic method.

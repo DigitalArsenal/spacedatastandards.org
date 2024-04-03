@@ -62,10 +62,19 @@ class PNM(object):
         return None
 
     # File ID
-    # This field is the file ID / Name
+    # This field is the Name
     # PNM
-    def FID(self):
+    def FILE_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # File ID
+    # This field is the file ID / Standard Type
+    # PNM
+    def FILE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -74,7 +83,7 @@ class PNM(object):
     # This is the digital signature of the CID, signed using the specified cryptographic method.
     # PNM
     def SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -83,7 +92,7 @@ class PNM(object):
     # Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
     # PNM
     def TIMESTAMP_SIGNATURE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -92,7 +101,7 @@ class PNM(object):
     # Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     # PNM
     def SIGNATURE_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -101,12 +110,12 @@ class PNM(object):
     # Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     # PNM
     def TIMESTAMP_SIGNATURE_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def PNMStart(builder): builder.StartObject(8)
+def PNMStart(builder): builder.StartObject(9)
 def Start(builder):
     return PNMStart(builder)
 def PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
@@ -118,19 +127,22 @@ def AddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP):
 def PNMAddCID(builder, CID): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
 def AddCID(builder, CID):
     return PNMAddCID(builder, CID)
-def PNMAddFID(builder, FID): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FID), 0)
-def AddFID(builder, FID):
-    return PNMAddFID(builder, FID)
-def PNMAddSIGNATURE(builder, SIGNATURE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+def PNMAddFILE_NAME(builder, FILE_NAME): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_NAME), 0)
+def AddFILE_NAME(builder, FILE_NAME):
+    return PNMAddFILE_NAME(builder, FILE_NAME)
+def PNMAddFILE_ID(builder, FILE_ID): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_ID), 0)
+def AddFILE_ID(builder, FILE_ID):
+    return PNMAddFILE_ID(builder, FILE_ID)
+def PNMAddSIGNATURE(builder, SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
 def AddSIGNATURE(builder, SIGNATURE):
     return PNMAddSIGNATURE(builder, SIGNATURE)
-def PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE), 0)
+def PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE), 0)
 def AddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE):
     return PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE)
-def PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
+def PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
 def AddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     return PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE)
-def PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE_TYPE), 0)
+def PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE_TYPE), 0)
 def AddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE):
     return PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE)
 def PNMEnd(builder): return builder.EndObject()
@@ -144,7 +156,8 @@ class PNMT(object):
         self.MULTIFORMAT_ADDRESS = None  # type: str
         self.PUBLISH_TIMESTAMP = None  # type: str
         self.CID = None  # type: str
-        self.FID = None  # type: str
+        self.FILE_NAME = None  # type: str
+        self.FILE_ID = None  # type: str
         self.SIGNATURE = None  # type: str
         self.TIMESTAMP_SIGNATURE = None  # type: str
         self.SIGNATURE_TYPE = None  # type: str
@@ -174,7 +187,8 @@ class PNMT(object):
         self.MULTIFORMAT_ADDRESS = PNM.MULTIFORMAT_ADDRESS()
         self.PUBLISH_TIMESTAMP = PNM.PUBLISH_TIMESTAMP()
         self.CID = PNM.CID()
-        self.FID = PNM.FID()
+        self.FILE_NAME = PNM.FILE_NAME()
+        self.FILE_ID = PNM.FILE_ID()
         self.SIGNATURE = PNM.SIGNATURE()
         self.TIMESTAMP_SIGNATURE = PNM.TIMESTAMP_SIGNATURE()
         self.SIGNATURE_TYPE = PNM.SIGNATURE_TYPE()
@@ -188,8 +202,10 @@ class PNMT(object):
             PUBLISH_TIMESTAMP = builder.CreateString(self.PUBLISH_TIMESTAMP)
         if self.CID is not None:
             CID = builder.CreateString(self.CID)
-        if self.FID is not None:
-            FID = builder.CreateString(self.FID)
+        if self.FILE_NAME is not None:
+            FILE_NAME = builder.CreateString(self.FILE_NAME)
+        if self.FILE_ID is not None:
+            FILE_ID = builder.CreateString(self.FILE_ID)
         if self.SIGNATURE is not None:
             SIGNATURE = builder.CreateString(self.SIGNATURE)
         if self.TIMESTAMP_SIGNATURE is not None:
@@ -205,8 +221,10 @@ class PNMT(object):
             PNMAddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP)
         if self.CID is not None:
             PNMAddCID(builder, CID)
-        if self.FID is not None:
-            PNMAddFID(builder, FID)
+        if self.FILE_NAME is not None:
+            PNMAddFILE_NAME(builder, FILE_NAME)
+        if self.FILE_ID is not None:
+            PNMAddFILE_ID(builder, FILE_ID)
         if self.SIGNATURE is not None:
             PNMAddSIGNATURE(builder, SIGNATURE)
         if self.TIMESTAMP_SIGNATURE is not None:

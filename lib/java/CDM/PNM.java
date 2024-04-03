@@ -57,70 +57,80 @@ public final class PNM extends Table {
   public ByteBuffer CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
    * File ID
-   * This field is the file ID / Name
+   * This field is the Name
    */
-  public String FID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer FIDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer FIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String FILE_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer FILE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * File ID
+   * This field is the file ID / Standard Type
+   */
+  public String FILE_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer FILE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Digital Signature of the CID
    * This is the digital signature of the CID, signed using the specified cryptographic method.
    */
-  public String SIGNATURE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  public String SIGNATURE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Timestamp Signature
    * Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
    */
-  public String TIMESTAMP_SIGNATURE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TIMESTAMP_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer TIMESTAMP_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public String TIMESTAMP_SIGNATURE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIMESTAMP_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer TIMESTAMP_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
   /**
    * Type of Cryptographic Signature Used
    * Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
    */
-  public String SIGNATURE_TYPE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SIGNATURE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer SIGNATURE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public String SIGNATURE_TYPE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SIGNATURE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer SIGNATURE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
   /**
    * Type of Cryptographic Signature Used for Timestamp
    * Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
    */
-  public String TIMESTAMP_SIGNATURE_TYPE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TIMESTAMP_SIGNATURE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer TIMESTAMP_SIGNATURE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  public String TIMESTAMP_SIGNATURE_TYPE() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIMESTAMP_SIGNATURE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer TIMESTAMP_SIGNATURE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
 
   public static int createPNM(FlatBufferBuilder builder,
       int MULTIFORMAT_ADDRESSOffset,
       int PUBLISH_TIMESTAMPOffset,
       int CIDOffset,
-      int FIDOffset,
+      int FILE_NAMEOffset,
+      int FILE_IDOffset,
       int SIGNATUREOffset,
       int TIMESTAMP_SIGNATUREOffset,
       int SIGNATURE_TYPEOffset,
       int TIMESTAMP_SIGNATURE_TYPEOffset) {
-    builder.startTable(8);
+    builder.startTable(9);
     PNM.addTimestampSignatureType(builder, TIMESTAMP_SIGNATURE_TYPEOffset);
     PNM.addSignatureType(builder, SIGNATURE_TYPEOffset);
     PNM.addTimestampSignature(builder, TIMESTAMP_SIGNATUREOffset);
     PNM.addSignature(builder, SIGNATUREOffset);
-    PNM.addFid(builder, FIDOffset);
+    PNM.addFileId(builder, FILE_IDOffset);
+    PNM.addFileName(builder, FILE_NAMEOffset);
     PNM.addCid(builder, CIDOffset);
     PNM.addPublishTimestamp(builder, PUBLISH_TIMESTAMPOffset);
     PNM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     return PNM.endPNM(builder);
   }
 
-  public static void startPNM(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startPNM(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(0, MULTIFORMAT_ADDRESSOffset, 0); }
   public static void addPublishTimestamp(FlatBufferBuilder builder, int PUBLISH_TIMESTAMPOffset) { builder.addOffset(1, PUBLISH_TIMESTAMPOffset, 0); }
   public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(2, CIDOffset, 0); }
-  public static void addFid(FlatBufferBuilder builder, int FIDOffset) { builder.addOffset(3, FIDOffset, 0); }
-  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(4, SIGNATUREOffset, 0); }
-  public static void addTimestampSignature(FlatBufferBuilder builder, int TIMESTAMP_SIGNATUREOffset) { builder.addOffset(5, TIMESTAMP_SIGNATUREOffset, 0); }
-  public static void addSignatureType(FlatBufferBuilder builder, int SIGNATURE_TYPEOffset) { builder.addOffset(6, SIGNATURE_TYPEOffset, 0); }
-  public static void addTimestampSignatureType(FlatBufferBuilder builder, int TIMESTAMP_SIGNATURE_TYPEOffset) { builder.addOffset(7, TIMESTAMP_SIGNATURE_TYPEOffset, 0); }
+  public static void addFileName(FlatBufferBuilder builder, int FILE_NAMEOffset) { builder.addOffset(3, FILE_NAMEOffset, 0); }
+  public static void addFileId(FlatBufferBuilder builder, int FILE_IDOffset) { builder.addOffset(4, FILE_IDOffset, 0); }
+  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(5, SIGNATUREOffset, 0); }
+  public static void addTimestampSignature(FlatBufferBuilder builder, int TIMESTAMP_SIGNATUREOffset) { builder.addOffset(6, TIMESTAMP_SIGNATUREOffset, 0); }
+  public static void addSignatureType(FlatBufferBuilder builder, int SIGNATURE_TYPEOffset) { builder.addOffset(7, SIGNATURE_TYPEOffset, 0); }
+  public static void addTimestampSignatureType(FlatBufferBuilder builder, int TIMESTAMP_SIGNATURE_TYPEOffset) { builder.addOffset(8, TIMESTAMP_SIGNATURE_TYPEOffset, 0); }
   public static int endPNM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

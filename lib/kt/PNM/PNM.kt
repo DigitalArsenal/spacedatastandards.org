@@ -82,9 +82,9 @@ class PNM : Table() {
     fun CIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * File ID
-     * This field is the file ID / Name
+     * This field is the Name
      */
-    val FID : String?
+    val FILE_NAME : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -93,13 +93,13 @@ class PNM : Table() {
                 null
             }
         }
-    val FIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun FIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val FILE_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun FILE_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Digital Signature of the CID
-     * This is the digital signature of the CID, signed using the specified cryptographic method.
+     * File ID
+     * This field is the file ID / Standard Type
      */
-    val SIGNATURE : String?
+    val FILE_ID : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -108,13 +108,13 @@ class PNM : Table() {
                 null
             }
         }
-    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val FILE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun FILE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Timestamp Signature
-     * Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
+     * Digital Signature of the CID
+     * This is the digital signature of the CID, signed using the specified cryptographic method.
      */
-    val TIMESTAMP_SIGNATURE : String?
+    val SIGNATURE : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -123,13 +123,13 @@ class PNM : Table() {
                 null
             }
         }
-    val TIMESTAMP_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun TIMESTAMP_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Type of Cryptographic Signature Used
-     * Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+     * Timestamp Signature
+     * Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
      */
-    val SIGNATURE_TYPE : String?
+    val TIMESTAMP_SIGNATURE : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -138,13 +138,13 @@ class PNM : Table() {
                 null
             }
         }
-    val SIGNATURE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun SIGNATURE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val TIMESTAMP_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun TIMESTAMP_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
     /**
-     * Type of Cryptographic Signature Used for Timestamp
-     * Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+     * Type of Cryptographic Signature Used
+     * Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
      */
-    val TIMESTAMP_SIGNATURE_TYPE : String?
+    val SIGNATURE_TYPE : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -153,8 +153,23 @@ class PNM : Table() {
                 null
             }
         }
-    val TIMESTAMP_SIGNATURE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun TIMESTAMP_SIGNATURE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val SIGNATURE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun SIGNATURE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Type of Cryptographic Signature Used for Timestamp
+     * Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
+     */
+    val TIMESTAMP_SIGNATURE_TYPE : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TIMESTAMP_SIGNATURE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun TIMESTAMP_SIGNATURE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
         fun getRootAsPNM(_bb: ByteBuffer): PNM = getRootAsPNM(_bb, PNM())
@@ -163,27 +178,29 @@ class PNM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PNMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PNM")
-        fun createPNM(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESSOffset: Int, PUBLISH_TIMESTAMPOffset: Int, CIDOffset: Int, FIDOffset: Int, SIGNATUREOffset: Int, TIMESTAMP_SIGNATUREOffset: Int, SIGNATURE_TYPEOffset: Int, TIMESTAMP_SIGNATURE_TYPEOffset: Int) : Int {
-            builder.startTable(8)
+        fun createPNM(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESSOffset: Int, PUBLISH_TIMESTAMPOffset: Int, CIDOffset: Int, FILE_NAMEOffset: Int, FILE_IDOffset: Int, SIGNATUREOffset: Int, TIMESTAMP_SIGNATUREOffset: Int, SIGNATURE_TYPEOffset: Int, TIMESTAMP_SIGNATURE_TYPEOffset: Int) : Int {
+            builder.startTable(9)
             addTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPEOffset)
             addSIGNATURE_TYPE(builder, SIGNATURE_TYPEOffset)
             addTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATUREOffset)
             addSIGNATURE(builder, SIGNATUREOffset)
-            addFID(builder, FIDOffset)
+            addFILE_ID(builder, FILE_IDOffset)
+            addFILE_NAME(builder, FILE_NAMEOffset)
             addCID(builder, CIDOffset)
             addPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMPOffset)
             addMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset)
             return endPNM(builder)
         }
-        fun startPNM(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startPNM(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addMULTIFORMAT_ADDRESS(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESS: Int) = builder.addOffset(0, MULTIFORMAT_ADDRESS, 0)
         fun addPUBLISH_TIMESTAMP(builder: FlatBufferBuilder, PUBLISH_TIMESTAMP: Int) = builder.addOffset(1, PUBLISH_TIMESTAMP, 0)
         fun addCID(builder: FlatBufferBuilder, CID: Int) = builder.addOffset(2, CID, 0)
-        fun addFID(builder: FlatBufferBuilder, FID: Int) = builder.addOffset(3, FID, 0)
-        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(4, SIGNATURE, 0)
-        fun addTIMESTAMP_SIGNATURE(builder: FlatBufferBuilder, TIMESTAMP_SIGNATURE: Int) = builder.addOffset(5, TIMESTAMP_SIGNATURE, 0)
-        fun addSIGNATURE_TYPE(builder: FlatBufferBuilder, SIGNATURE_TYPE: Int) = builder.addOffset(6, SIGNATURE_TYPE, 0)
-        fun addTIMESTAMP_SIGNATURE_TYPE(builder: FlatBufferBuilder, TIMESTAMP_SIGNATURE_TYPE: Int) = builder.addOffset(7, TIMESTAMP_SIGNATURE_TYPE, 0)
+        fun addFILE_NAME(builder: FlatBufferBuilder, FILE_NAME: Int) = builder.addOffset(3, FILE_NAME, 0)
+        fun addFILE_ID(builder: FlatBufferBuilder, FILE_ID: Int) = builder.addOffset(4, FILE_ID, 0)
+        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(5, SIGNATURE, 0)
+        fun addTIMESTAMP_SIGNATURE(builder: FlatBufferBuilder, TIMESTAMP_SIGNATURE: Int) = builder.addOffset(6, TIMESTAMP_SIGNATURE, 0)
+        fun addSIGNATURE_TYPE(builder: FlatBufferBuilder, SIGNATURE_TYPE: Int) = builder.addOffset(7, SIGNATURE_TYPE, 0)
+        fun addTIMESTAMP_SIGNATURE_TYPE(builder: FlatBufferBuilder, TIMESTAMP_SIGNATURE_TYPE: Int) = builder.addOffset(8, TIMESTAMP_SIGNATURE_TYPE, 0)
         fun endPNM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -71,10 +71,18 @@ class PNM extends Table
     }
 
     /// File ID
-    /// This field is the file ID / Name
-    public function getFID()
+    /// This field is the Name
+    public function getFILE_NAME()
     {
         $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// File ID
+    /// This field is the file ID / Standard Type
+    public function getFILE_ID()
+    {
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -82,7 +90,7 @@ class PNM extends Table
     /// This is the digital signature of the CID, signed using the specified cryptographic method.
     public function getSIGNATURE()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -90,7 +98,7 @@ class PNM extends Table
     /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
     public function getTIMESTAMP_SIGNATURE()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -98,7 +106,7 @@ class PNM extends Table
     /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     public function getSIGNATURE_TYPE()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -106,7 +114,7 @@ class PNM extends Table
     /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     public function getTIMESTAMP_SIGNATURE_TYPE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -116,20 +124,21 @@ class PNM extends Table
      */
     public static function startPNM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PNM
      */
-    public static function createPNM(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $PUBLISH_TIMESTAMP, $CID, $FID, $SIGNATURE, $TIMESTAMP_SIGNATURE, $SIGNATURE_TYPE, $TIMESTAMP_SIGNATURE_TYPE)
+    public static function createPNM(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS, $PUBLISH_TIMESTAMP, $CID, $FILE_NAME, $FILE_ID, $SIGNATURE, $TIMESTAMP_SIGNATURE, $SIGNATURE_TYPE, $TIMESTAMP_SIGNATURE_TYPE)
     {
-        $builder->startObject(8);
+        $builder->startObject(9);
         self::addMULTIFORMAT_ADDRESS($builder, $MULTIFORMAT_ADDRESS);
         self::addPUBLISH_TIMESTAMP($builder, $PUBLISH_TIMESTAMP);
         self::addCID($builder, $CID);
-        self::addFID($builder, $FID);
+        self::addFILE_NAME($builder, $FILE_NAME);
+        self::addFILE_ID($builder, $FILE_ID);
         self::addSIGNATURE($builder, $SIGNATURE);
         self::addTIMESTAMP_SIGNATURE($builder, $TIMESTAMP_SIGNATURE);
         self::addSIGNATURE_TYPE($builder, $SIGNATURE_TYPE);
@@ -173,9 +182,19 @@ class PNM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addFID(FlatBufferBuilder $builder, $FID)
+    public static function addFILE_NAME(FlatBufferBuilder $builder, $FILE_NAME)
     {
-        $builder->addOffsetX(3, $FID, 0);
+        $builder->addOffsetX(3, $FILE_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFILE_ID(FlatBufferBuilder $builder, $FILE_ID)
+    {
+        $builder->addOffsetX(4, $FILE_ID, 0);
     }
 
     /**
@@ -185,7 +204,7 @@ class PNM extends Table
      */
     public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
     {
-        $builder->addOffsetX(4, $SIGNATURE, 0);
+        $builder->addOffsetX(5, $SIGNATURE, 0);
     }
 
     /**
@@ -195,7 +214,7 @@ class PNM extends Table
      */
     public static function addTIMESTAMP_SIGNATURE(FlatBufferBuilder $builder, $TIMESTAMP_SIGNATURE)
     {
-        $builder->addOffsetX(5, $TIMESTAMP_SIGNATURE, 0);
+        $builder->addOffsetX(6, $TIMESTAMP_SIGNATURE, 0);
     }
 
     /**
@@ -205,7 +224,7 @@ class PNM extends Table
      */
     public static function addSIGNATURE_TYPE(FlatBufferBuilder $builder, $SIGNATURE_TYPE)
     {
-        $builder->addOffsetX(6, $SIGNATURE_TYPE, 0);
+        $builder->addOffsetX(7, $SIGNATURE_TYPE, 0);
     }
 
     /**
@@ -215,7 +234,7 @@ class PNM extends Table
      */
     public static function addTIMESTAMP_SIGNATURE_TYPE(FlatBufferBuilder $builder, $TIMESTAMP_SIGNATURE_TYPE)
     {
-        $builder->addOffsetX(7, $TIMESTAMP_SIGNATURE_TYPE, 0);
+        $builder->addOffsetX(8, $TIMESTAMP_SIGNATURE_TYPE, 0);
     }
 
     /**

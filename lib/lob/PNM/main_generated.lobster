@@ -23,32 +23,36 @@ class PNM : flatbuffers_handle
     def CID() -> string:
         return buf_.flatbuffers_field_string(pos_, 8)
     /// File ID
-    /// This field is the file ID / Name
-    def FID() -> string:
+    /// This field is the Name
+    def FILE_NAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 10)
+    /// File ID
+    /// This field is the file ID / Standard Type
+    def FILE_ID() -> string:
+        return buf_.flatbuffers_field_string(pos_, 12)
     /// Digital Signature of the CID
     /// This is the digital signature of the CID, signed using the specified cryptographic method.
     def SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return buf_.flatbuffers_field_string(pos_, 14)
     /// Timestamp Signature
     /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
     def TIMESTAMP_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return buf_.flatbuffers_field_string(pos_, 16)
     /// Type of Cryptographic Signature Used
     /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     def SIGNATURE_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return buf_.flatbuffers_field_string(pos_, 18)
     /// Type of Cryptographic Signature Used for Timestamp
     /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     def TIMESTAMP_SIGNATURE_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 18)
+        return buf_.flatbuffers_field_string(pos_, 20)
 
 def GetRootAsPNM(buf:string): return PNM { buf, buf.flatbuffers_indirect(0) }
 
 struct PNMBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(9)
         return this
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, MULTIFORMAT_ADDRESS)
@@ -59,20 +63,23 @@ struct PNMBuilder:
     def add_CID(CID:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(2, CID)
         return this
-    def add_FID(FID:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(3, FID)
+    def add_FILE_NAME(FILE_NAME:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(3, FILE_NAME)
+        return this
+    def add_FILE_ID(FILE_ID:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(4, FILE_ID)
         return this
     def add_SIGNATURE(SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(4, SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(5, SIGNATURE)
         return this
     def add_TIMESTAMP_SIGNATURE(TIMESTAMP_SIGNATURE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(5, TIMESTAMP_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(6, TIMESTAMP_SIGNATURE)
         return this
     def add_SIGNATURE_TYPE(SIGNATURE_TYPE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(6, SIGNATURE_TYPE)
+        b_.PrependUOffsetTRelativeSlot(7, SIGNATURE_TYPE)
         return this
     def add_TIMESTAMP_SIGNATURE_TYPE(TIMESTAMP_SIGNATURE_TYPE:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(7, TIMESTAMP_SIGNATURE_TYPE)
+        b_.PrependUOffsetTRelativeSlot(8, TIMESTAMP_SIGNATURE_TYPE)
         return this
     def end():
         return b_.EndObject()

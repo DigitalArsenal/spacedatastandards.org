@@ -33,24 +33,27 @@ class PNM {
   ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
   String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  File ID
-  ///  This field is the file ID / Name
-  String? get FID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  This field is the Name
+  String? get FILE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  File ID
+  ///  This field is the file ID / Standard Type
+  String? get FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Digital Signature of the CID
   ///  This is the digital signature of the CID, signed using the specified cryptographic method.
-  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Timestamp Signature
   ///  Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
-  String? get TIMESTAMP_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get TIMESTAMP_SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   ///  Type of Cryptographic Signature Used
   ///  Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
-  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Type of Cryptographic Signature Used for Timestamp
   ///  Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
-  String? get TIMESTAMP_SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get TIMESTAMP_SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
 
   @override
   String toString() {
-    return 'PNM{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, PUBLISH_TIMESTAMP: ${PUBLISH_TIMESTAMP}, CID: ${CID}, FID: ${FID}, SIGNATURE: ${SIGNATURE}, TIMESTAMP_SIGNATURE: ${TIMESTAMP_SIGNATURE}, SIGNATURE_TYPE: ${SIGNATURE_TYPE}, TIMESTAMP_SIGNATURE_TYPE: ${TIMESTAMP_SIGNATURE_TYPE}}';
+    return 'PNM{MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, PUBLISH_TIMESTAMP: ${PUBLISH_TIMESTAMP}, CID: ${CID}, FILE_NAME: ${FILE_NAME}, FILE_ID: ${FILE_ID}, SIGNATURE: ${SIGNATURE}, TIMESTAMP_SIGNATURE: ${TIMESTAMP_SIGNATURE}, SIGNATURE_TYPE: ${SIGNATURE_TYPE}, TIMESTAMP_SIGNATURE_TYPE: ${TIMESTAMP_SIGNATURE_TYPE}}';
   }
 }
 
@@ -68,7 +71,7 @@ class PNMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
   }
 
   int addMultiformatAddressOffset(int? offset) {
@@ -83,24 +86,28 @@ class PNMBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addFidOffset(int? offset) {
+  int addFileNameOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSignatureOffset(int? offset) {
+  int addFileIdOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addTimestampSignatureOffset(int? offset) {
+  int addSignatureOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addSignatureTypeOffset(int? offset) {
+  int addTimestampSignatureOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addTimestampSignatureTypeOffset(int? offset) {
+  int addSignatureTypeOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addTimestampSignatureTypeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
 
@@ -113,7 +120,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
   final String? _MULTIFORMAT_ADDRESS;
   final String? _PUBLISH_TIMESTAMP;
   final String? _CID;
-  final String? _FID;
+  final String? _FILE_NAME;
+  final String? _FILE_ID;
   final String? _SIGNATURE;
   final String? _TIMESTAMP_SIGNATURE;
   final String? _SIGNATURE_TYPE;
@@ -123,7 +131,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
     String? MULTIFORMAT_ADDRESS,
     String? PUBLISH_TIMESTAMP,
     String? CID,
-    String? FID,
+    String? FILE_NAME,
+    String? FILE_ID,
     String? SIGNATURE,
     String? TIMESTAMP_SIGNATURE,
     String? SIGNATURE_TYPE,
@@ -132,7 +141,8 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
       : _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS,
         _PUBLISH_TIMESTAMP = PUBLISH_TIMESTAMP,
         _CID = CID,
-        _FID = FID,
+        _FILE_NAME = FILE_NAME,
+        _FILE_ID = FILE_ID,
         _SIGNATURE = SIGNATURE,
         _TIMESTAMP_SIGNATURE = TIMESTAMP_SIGNATURE,
         _SIGNATURE_TYPE = SIGNATURE_TYPE,
@@ -147,8 +157,10 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PUBLISH_TIMESTAMP!);
     final int? CIDOffset = _CID == null ? null
         : fbBuilder.writeString(_CID!);
-    final int? FIDOffset = _FID == null ? null
-        : fbBuilder.writeString(_FID!);
+    final int? FILE_NAMEOffset = _FILE_NAME == null ? null
+        : fbBuilder.writeString(_FILE_NAME!);
+    final int? FILE_IDOffset = _FILE_ID == null ? null
+        : fbBuilder.writeString(_FILE_ID!);
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeString(_SIGNATURE!);
     final int? TIMESTAMP_SIGNATUREOffset = _TIMESTAMP_SIGNATURE == null ? null
@@ -157,15 +169,16 @@ class PNMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SIGNATURE_TYPE!);
     final int? TIMESTAMP_SIGNATURE_TYPEOffset = _TIMESTAMP_SIGNATURE_TYPE == null ? null
         : fbBuilder.writeString(_TIMESTAMP_SIGNATURE_TYPE!);
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
     fbBuilder.addOffset(0, MULTIFORMAT_ADDRESSOffset);
     fbBuilder.addOffset(1, PUBLISH_TIMESTAMPOffset);
     fbBuilder.addOffset(2, CIDOffset);
-    fbBuilder.addOffset(3, FIDOffset);
-    fbBuilder.addOffset(4, SIGNATUREOffset);
-    fbBuilder.addOffset(5, TIMESTAMP_SIGNATUREOffset);
-    fbBuilder.addOffset(6, SIGNATURE_TYPEOffset);
-    fbBuilder.addOffset(7, TIMESTAMP_SIGNATURE_TYPEOffset);
+    fbBuilder.addOffset(3, FILE_NAMEOffset);
+    fbBuilder.addOffset(4, FILE_IDOffset);
+    fbBuilder.addOffset(5, SIGNATUREOffset);
+    fbBuilder.addOffset(6, TIMESTAMP_SIGNATUREOffset);
+    fbBuilder.addOffset(7, SIGNATURE_TYPEOffset);
+    fbBuilder.addOffset(8, TIMESTAMP_SIGNATURE_TYPEOffset);
     return fbBuilder.endTable();
   }
 

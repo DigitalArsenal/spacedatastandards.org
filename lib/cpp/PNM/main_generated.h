@@ -23,11 +23,12 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MULTIFORMAT_ADDRESS = 4,
     VT_PUBLISH_TIMESTAMP = 6,
     VT_CID = 8,
-    VT_FID = 10,
-    VT_SIGNATURE = 12,
-    VT_TIMESTAMP_SIGNATURE = 14,
-    VT_SIGNATURE_TYPE = 16,
-    VT_TIMESTAMP_SIGNATURE_TYPE = 18
+    VT_FILE_NAME = 10,
+    VT_FILE_ID = 12,
+    VT_SIGNATURE = 14,
+    VT_TIMESTAMP_SIGNATURE = 16,
+    VT_SIGNATURE_TYPE = 18,
+    VT_TIMESTAMP_SIGNATURE_TYPE = 20
   };
   /// Multiformat Address
   /// https://multiformats.io/multiaddr/
@@ -50,9 +51,14 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_CID);
   }
   /// File ID
-  /// This field is the file ID / Name
-  const ::flatbuffers::String *FID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FID);
+  /// This field is the Name
+  const ::flatbuffers::String *FILE_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILE_NAME);
+  }
+  /// File ID
+  /// This field is the file ID / Standard Type
+  const ::flatbuffers::String *FILE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
   }
   /// Digital Signature of the CID
   /// This is the digital signature of the CID, signed using the specified cryptographic method.
@@ -82,8 +88,10 @@ struct PNM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PUBLISH_TIMESTAMP()) &&
            VerifyOffset(verifier, VT_CID) &&
            verifier.VerifyString(CID()) &&
-           VerifyOffset(verifier, VT_FID) &&
-           verifier.VerifyString(FID()) &&
+           VerifyOffset(verifier, VT_FILE_NAME) &&
+           verifier.VerifyString(FILE_NAME()) &&
+           VerifyOffset(verifier, VT_FILE_ID) &&
+           verifier.VerifyString(FILE_ID()) &&
            VerifyOffset(verifier, VT_SIGNATURE) &&
            verifier.VerifyString(SIGNATURE()) &&
            VerifyOffset(verifier, VT_TIMESTAMP_SIGNATURE) &&
@@ -109,8 +117,11 @@ struct PNMBuilder {
   void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
     fbb_.AddOffset(PNM::VT_CID, CID);
   }
-  void add_FID(::flatbuffers::Offset<::flatbuffers::String> FID) {
-    fbb_.AddOffset(PNM::VT_FID, FID);
+  void add_FILE_NAME(::flatbuffers::Offset<::flatbuffers::String> FILE_NAME) {
+    fbb_.AddOffset(PNM::VT_FILE_NAME, FILE_NAME);
+  }
+  void add_FILE_ID(::flatbuffers::Offset<::flatbuffers::String> FILE_ID) {
+    fbb_.AddOffset(PNM::VT_FILE_ID, FILE_ID);
   }
   void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE) {
     fbb_.AddOffset(PNM::VT_SIGNATURE, SIGNATURE);
@@ -140,7 +151,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLISH_TIMESTAMP = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FILE_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FILE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TIMESTAMP_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE = 0,
@@ -150,7 +162,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNM(
   builder_.add_SIGNATURE_TYPE(SIGNATURE_TYPE);
   builder_.add_TIMESTAMP_SIGNATURE(TIMESTAMP_SIGNATURE);
   builder_.add_SIGNATURE(SIGNATURE);
-  builder_.add_FID(FID);
+  builder_.add_FILE_ID(FILE_ID);
+  builder_.add_FILE_NAME(FILE_NAME);
   builder_.add_CID(CID);
   builder_.add_PUBLISH_TIMESTAMP(PUBLISH_TIMESTAMP);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
@@ -162,7 +175,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
     const char *MULTIFORMAT_ADDRESS = nullptr,
     const char *PUBLISH_TIMESTAMP = nullptr,
     const char *CID = nullptr,
-    const char *FID = nullptr,
+    const char *FILE_NAME = nullptr,
+    const char *FILE_ID = nullptr,
     const char *SIGNATURE = nullptr,
     const char *TIMESTAMP_SIGNATURE = nullptr,
     const char *SIGNATURE_TYPE = nullptr,
@@ -170,7 +184,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto PUBLISH_TIMESTAMP__ = PUBLISH_TIMESTAMP ? _fbb.CreateString(PUBLISH_TIMESTAMP) : 0;
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
-  auto FID__ = FID ? _fbb.CreateString(FID) : 0;
+  auto FILE_NAME__ = FILE_NAME ? _fbb.CreateString(FILE_NAME) : 0;
+  auto FILE_ID__ = FILE_ID ? _fbb.CreateString(FILE_ID) : 0;
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateString(SIGNATURE) : 0;
   auto TIMESTAMP_SIGNATURE__ = TIMESTAMP_SIGNATURE ? _fbb.CreateString(TIMESTAMP_SIGNATURE) : 0;
   auto SIGNATURE_TYPE__ = SIGNATURE_TYPE ? _fbb.CreateString(SIGNATURE_TYPE) : 0;
@@ -180,7 +195,8 @@ inline ::flatbuffers::Offset<PNM> CreatePNMDirect(
       MULTIFORMAT_ADDRESS__,
       PUBLISH_TIMESTAMP__,
       CID__,
-      FID__,
+      FILE_NAME__,
+      FILE_ID__,
       SIGNATURE__,
       TIMESTAMP_SIGNATURE__,
       SIGNATURE_TYPE__,

@@ -4419,9 +4419,13 @@
                             "type": "string",
                             "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid."
                         },
-                        "FID": {
+                        "FILE_NAME": {
                             "type": "string",
-                            "description": "File ID\nThis field is the file ID / Name"
+                            "description": "File ID\nThis field is the Name"
+                        },
+                        "FILE_ID": {
+                            "type": "string",
+                            "description": "File ID\nThis field is the file ID / Standard Type"
                         },
                         "SIGNATURE": {
                             "type": "string",
@@ -4780,9 +4784,13 @@
                             "type": "string",
                             "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid."
                         },
-                        "FID": {
+                        "FILE_NAME": {
                             "type": "string",
-                            "description": "File ID\nThis field is the file ID / Name"
+                            "description": "File ID\nThis field is the Name"
+                        },
+                        "FILE_ID": {
+                            "type": "string",
+                            "description": "File ID\nThis field is the file ID / Standard Type"
                         },
                         "SIGNATURE": {
                             "type": "string",

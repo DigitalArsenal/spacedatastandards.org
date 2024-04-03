@@ -29,11 +29,12 @@ impl<'a> PNM<'a> {
   pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 4;
   pub const VT_PUBLISH_TIMESTAMP: flatbuffers::VOffsetT = 6;
   pub const VT_CID: flatbuffers::VOffsetT = 8;
-  pub const VT_FID: flatbuffers::VOffsetT = 10;
-  pub const VT_SIGNATURE: flatbuffers::VOffsetT = 12;
-  pub const VT_TIMESTAMP_SIGNATURE: flatbuffers::VOffsetT = 14;
-  pub const VT_SIGNATURE_TYPE: flatbuffers::VOffsetT = 16;
-  pub const VT_TIMESTAMP_SIGNATURE_TYPE: flatbuffers::VOffsetT = 18;
+  pub const VT_FILE_NAME: flatbuffers::VOffsetT = 10;
+  pub const VT_FILE_ID: flatbuffers::VOffsetT = 12;
+  pub const VT_SIGNATURE: flatbuffers::VOffsetT = 14;
+  pub const VT_TIMESTAMP_SIGNATURE: flatbuffers::VOffsetT = 16;
+  pub const VT_SIGNATURE_TYPE: flatbuffers::VOffsetT = 18;
+  pub const VT_TIMESTAMP_SIGNATURE_TYPE: flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -49,7 +50,8 @@ impl<'a> PNM<'a> {
     if let Some(x) = args.SIGNATURE_TYPE { builder.add_SIGNATURE_TYPE(x); }
     if let Some(x) = args.TIMESTAMP_SIGNATURE { builder.add_TIMESTAMP_SIGNATURE(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
-    if let Some(x) = args.FID { builder.add_FID(x); }
+    if let Some(x) = args.FILE_ID { builder.add_FILE_ID(x); }
+    if let Some(x) = args.FILE_NAME { builder.add_FILE_NAME(x); }
     if let Some(x) = args.CID { builder.add_CID(x); }
     if let Some(x) = args.PUBLISH_TIMESTAMP { builder.add_PUBLISH_TIMESTAMP(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
@@ -66,7 +68,10 @@ impl<'a> PNM<'a> {
     let CID = self.CID().map(|x| {
       x.to_string()
     });
-    let FID = self.FID().map(|x| {
+    let FILE_NAME = self.FILE_NAME().map(|x| {
+      x.to_string()
+    });
+    let FILE_ID = self.FILE_ID().map(|x| {
       x.to_string()
     });
     let SIGNATURE = self.SIGNATURE().map(|x| {
@@ -85,7 +90,8 @@ impl<'a> PNM<'a> {
       MULTIFORMAT_ADDRESS,
       PUBLISH_TIMESTAMP,
       CID,
-      FID,
+      FILE_NAME,
+      FILE_ID,
       SIGNATURE,
       TIMESTAMP_SIGNATURE,
       SIGNATURE_TYPE,
@@ -126,13 +132,22 @@ impl<'a> PNM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_CID, None)}
   }
   /// File ID
-  /// This field is the file ID / Name
+  /// This field is the Name
   #[inline]
-  pub fn FID(&self) -> Option<&'a str> {
+  pub fn FILE_NAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FILE_NAME, None)}
+  }
+  /// File ID
+  /// This field is the file ID / Standard Type
+  #[inline]
+  pub fn FILE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(PNM::VT_FILE_ID, None)}
   }
   /// Digital Signature of the CID
   /// This is the digital signature of the CID, signed using the specified cryptographic method.
@@ -182,7 +197,8 @@ impl flatbuffers::Verifiable for PNM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PUBLISH_TIMESTAMP", Self::VT_PUBLISH_TIMESTAMP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FID", Self::VT_FID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FILE_NAME", Self::VT_FILE_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FILE_ID", Self::VT_FILE_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIMESTAMP_SIGNATURE", Self::VT_TIMESTAMP_SIGNATURE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_TYPE", Self::VT_SIGNATURE_TYPE, false)?
@@ -195,7 +211,8 @@ pub struct PNMArgs<'a> {
     pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PUBLISH_TIMESTAMP: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FILE_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FILE_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TIMESTAMP_SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -208,7 +225,8 @@ impl<'a> Default for PNMArgs<'a> {
       MULTIFORMAT_ADDRESS: None,
       PUBLISH_TIMESTAMP: None,
       CID: None,
-      FID: None,
+      FILE_NAME: None,
+      FILE_ID: None,
       SIGNATURE: None,
       TIMESTAMP_SIGNATURE: None,
       SIGNATURE_TYPE: None,
@@ -235,8 +253,12 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_CID, CID);
   }
   #[inline]
-  pub fn add_FID(&mut self, FID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FID, FID);
+  pub fn add_FILE_NAME(&mut self, FILE_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FILE_NAME, FILE_NAME);
+  }
+  #[inline]
+  pub fn add_FILE_ID(&mut self, FILE_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_FILE_ID, FILE_ID);
   }
   #[inline]
   pub fn add_SIGNATURE(&mut self, SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
@@ -275,7 +297,8 @@ impl core::fmt::Debug for PNM<'_> {
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
       ds.field("PUBLISH_TIMESTAMP", &self.PUBLISH_TIMESTAMP());
       ds.field("CID", &self.CID());
-      ds.field("FID", &self.FID());
+      ds.field("FILE_NAME", &self.FILE_NAME());
+      ds.field("FILE_ID", &self.FILE_ID());
       ds.field("SIGNATURE", &self.SIGNATURE());
       ds.field("TIMESTAMP_SIGNATURE", &self.TIMESTAMP_SIGNATURE());
       ds.field("SIGNATURE_TYPE", &self.SIGNATURE_TYPE());
@@ -289,7 +312,8 @@ pub struct PNMT {
   pub MULTIFORMAT_ADDRESS: Option<String>,
   pub PUBLISH_TIMESTAMP: Option<String>,
   pub CID: Option<String>,
-  pub FID: Option<String>,
+  pub FILE_NAME: Option<String>,
+  pub FILE_ID: Option<String>,
   pub SIGNATURE: Option<String>,
   pub TIMESTAMP_SIGNATURE: Option<String>,
   pub SIGNATURE_TYPE: Option<String>,
@@ -301,7 +325,8 @@ impl Default for PNMT {
       MULTIFORMAT_ADDRESS: None,
       PUBLISH_TIMESTAMP: None,
       CID: None,
-      FID: None,
+      FILE_NAME: None,
+      FILE_ID: None,
       SIGNATURE: None,
       TIMESTAMP_SIGNATURE: None,
       SIGNATURE_TYPE: None,
@@ -323,7 +348,10 @@ impl PNMT {
     let CID = self.CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let FID = self.FID.as_ref().map(|x|{
+    let FILE_NAME = self.FILE_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FILE_ID = self.FILE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
@@ -342,7 +370,8 @@ impl PNMT {
       MULTIFORMAT_ADDRESS,
       PUBLISH_TIMESTAMP,
       CID,
-      FID,
+      FILE_NAME,
+      FILE_ID,
       SIGNATURE,
       TIMESTAMP_SIGNATURE,
       SIGNATURE_TYPE,

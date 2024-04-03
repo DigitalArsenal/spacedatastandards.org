@@ -51,81 +51,93 @@ public struct PNM : IFlatbufferObject
 #endif
   public byte[] GetCIDArray() { return __p.__vector_as_array<byte>(8); }
   /// File ID
-  /// This field is the file ID / Name
-  public string FID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// This field is the Name
+  public string FILE_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFIDBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetFILE_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetFIDBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetFILE_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetFIDArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetFILE_NAMEArray() { return __p.__vector_as_array<byte>(10); }
+  /// File ID
+  /// This field is the file ID / Standard Type
+  public string FILE_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFILE_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetFILE_IDBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetFILE_IDArray() { return __p.__vector_as_array<byte>(12); }
   /// Digital Signature of the CID
   /// This is the digital signature of the CID, signed using the specified cryptographic method.
-  public string SIGNATURE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SIGNATURE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(12); }
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(14); }
   /// Timestamp Signature
   /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
-  public string TIMESTAMP_SIGNATURE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TIMESTAMP_SIGNATURE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTIMESTAMP_SIGNATUREBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetTIMESTAMP_SIGNATUREBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetTIMESTAMP_SIGNATUREBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetTIMESTAMP_SIGNATUREBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetTIMESTAMP_SIGNATUREArray() { return __p.__vector_as_array<byte>(14); }
+  public byte[] GetTIMESTAMP_SIGNATUREArray() { return __p.__vector_as_array<byte>(16); }
   /// Type of Cryptographic Signature Used
   /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
-  public string SIGNATURE_TYPE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SIGNATURE_TYPE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIGNATURE_TYPEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetSIGNATURE_TYPEBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetSIGNATURE_TYPEBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetSIGNATURE_TYPEBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetSIGNATURE_TYPEArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetSIGNATURE_TYPEArray() { return __p.__vector_as_array<byte>(18); }
   /// Type of Cryptographic Signature Used for Timestamp
   /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
-  public string TIMESTAMP_SIGNATURE_TYPE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TIMESTAMP_SIGNATURE_TYPE { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTIMESTAMP_SIGNATURE_TYPEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetTIMESTAMP_SIGNATURE_TYPEBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetTIMESTAMP_SIGNATURE_TYPEBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetTIMESTAMP_SIGNATURE_TYPEBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetTIMESTAMP_SIGNATURE_TYPEArray() { return __p.__vector_as_array<byte>(18); }
+  public byte[] GetTIMESTAMP_SIGNATURE_TYPEArray() { return __p.__vector_as_array<byte>(20); }
 
   public static Offset<PNM> CreatePNM(FlatBufferBuilder builder,
       StringOffset MULTIFORMAT_ADDRESSOffset = default(StringOffset),
       StringOffset PUBLISH_TIMESTAMPOffset = default(StringOffset),
       StringOffset CIDOffset = default(StringOffset),
-      StringOffset FIDOffset = default(StringOffset),
+      StringOffset FILE_NAMEOffset = default(StringOffset),
+      StringOffset FILE_IDOffset = default(StringOffset),
       StringOffset SIGNATUREOffset = default(StringOffset),
       StringOffset TIMESTAMP_SIGNATUREOffset = default(StringOffset),
       StringOffset SIGNATURE_TYPEOffset = default(StringOffset),
       StringOffset TIMESTAMP_SIGNATURE_TYPEOffset = default(StringOffset)) {
-    builder.StartTable(8);
+    builder.StartTable(9);
     PNM.AddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPEOffset);
     PNM.AddSIGNATURE_TYPE(builder, SIGNATURE_TYPEOffset);
     PNM.AddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATUREOffset);
     PNM.AddSIGNATURE(builder, SIGNATUREOffset);
-    PNM.AddFID(builder, FIDOffset);
+    PNM.AddFILE_ID(builder, FILE_IDOffset);
+    PNM.AddFILE_NAME(builder, FILE_NAMEOffset);
     PNM.AddCID(builder, CIDOffset);
     PNM.AddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMPOffset);
     PNM.AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset);
     return PNM.EndPNM(builder);
   }
 
-  public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartPNM(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddMULTIFORMAT_ADDRESS(FlatBufferBuilder builder, StringOffset MULTIFORMAT_ADDRESSOffset) { builder.AddOffset(0, MULTIFORMAT_ADDRESSOffset.Value, 0); }
   public static void AddPUBLISH_TIMESTAMP(FlatBufferBuilder builder, StringOffset PUBLISH_TIMESTAMPOffset) { builder.AddOffset(1, PUBLISH_TIMESTAMPOffset.Value, 0); }
   public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(2, CIDOffset.Value, 0); }
-  public static void AddFID(FlatBufferBuilder builder, StringOffset FIDOffset) { builder.AddOffset(3, FIDOffset.Value, 0); }
-  public static void AddSIGNATURE(FlatBufferBuilder builder, StringOffset SIGNATUREOffset) { builder.AddOffset(4, SIGNATUREOffset.Value, 0); }
-  public static void AddTIMESTAMP_SIGNATURE(FlatBufferBuilder builder, StringOffset TIMESTAMP_SIGNATUREOffset) { builder.AddOffset(5, TIMESTAMP_SIGNATUREOffset.Value, 0); }
-  public static void AddSIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset SIGNATURE_TYPEOffset) { builder.AddOffset(6, SIGNATURE_TYPEOffset.Value, 0); }
-  public static void AddTIMESTAMP_SIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset TIMESTAMP_SIGNATURE_TYPEOffset) { builder.AddOffset(7, TIMESTAMP_SIGNATURE_TYPEOffset.Value, 0); }
+  public static void AddFILE_NAME(FlatBufferBuilder builder, StringOffset FILE_NAMEOffset) { builder.AddOffset(3, FILE_NAMEOffset.Value, 0); }
+  public static void AddFILE_ID(FlatBufferBuilder builder, StringOffset FILE_IDOffset) { builder.AddOffset(4, FILE_IDOffset.Value, 0); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, StringOffset SIGNATUREOffset) { builder.AddOffset(5, SIGNATUREOffset.Value, 0); }
+  public static void AddTIMESTAMP_SIGNATURE(FlatBufferBuilder builder, StringOffset TIMESTAMP_SIGNATUREOffset) { builder.AddOffset(6, TIMESTAMP_SIGNATUREOffset.Value, 0); }
+  public static void AddSIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset SIGNATURE_TYPEOffset) { builder.AddOffset(7, SIGNATURE_TYPEOffset.Value, 0); }
+  public static void AddTIMESTAMP_SIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset TIMESTAMP_SIGNATURE_TYPEOffset) { builder.AddOffset(8, TIMESTAMP_SIGNATURE_TYPEOffset.Value, 0); }
   public static Offset<PNM> EndPNM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PNM>(o);
@@ -141,7 +153,8 @@ public struct PNM : IFlatbufferObject
     _o.MULTIFORMAT_ADDRESS = this.MULTIFORMAT_ADDRESS;
     _o.PUBLISH_TIMESTAMP = this.PUBLISH_TIMESTAMP;
     _o.CID = this.CID;
-    _o.FID = this.FID;
+    _o.FILE_NAME = this.FILE_NAME;
+    _o.FILE_ID = this.FILE_ID;
     _o.SIGNATURE = this.SIGNATURE;
     _o.TIMESTAMP_SIGNATURE = this.TIMESTAMP_SIGNATURE;
     _o.SIGNATURE_TYPE = this.SIGNATURE_TYPE;
@@ -152,7 +165,8 @@ public struct PNM : IFlatbufferObject
     var _MULTIFORMAT_ADDRESS = _o.MULTIFORMAT_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.MULTIFORMAT_ADDRESS);
     var _PUBLISH_TIMESTAMP = _o.PUBLISH_TIMESTAMP == null ? default(StringOffset) : builder.CreateString(_o.PUBLISH_TIMESTAMP);
     var _CID = _o.CID == null ? default(StringOffset) : builder.CreateString(_o.CID);
-    var _FID = _o.FID == null ? default(StringOffset) : builder.CreateString(_o.FID);
+    var _FILE_NAME = _o.FILE_NAME == null ? default(StringOffset) : builder.CreateString(_o.FILE_NAME);
+    var _FILE_ID = _o.FILE_ID == null ? default(StringOffset) : builder.CreateString(_o.FILE_ID);
     var _SIGNATURE = _o.SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE);
     var _TIMESTAMP_SIGNATURE = _o.TIMESTAMP_SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.TIMESTAMP_SIGNATURE);
     var _SIGNATURE_TYPE = _o.SIGNATURE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE_TYPE);
@@ -162,7 +176,8 @@ public struct PNM : IFlatbufferObject
       _MULTIFORMAT_ADDRESS,
       _PUBLISH_TIMESTAMP,
       _CID,
-      _FID,
+      _FILE_NAME,
+      _FILE_ID,
       _SIGNATURE,
       _TIMESTAMP_SIGNATURE,
       _SIGNATURE_TYPE,
@@ -175,7 +190,8 @@ public class PNMT
   public string MULTIFORMAT_ADDRESS { get; set; }
   public string PUBLISH_TIMESTAMP { get; set; }
   public string CID { get; set; }
-  public string FID { get; set; }
+  public string FILE_NAME { get; set; }
+  public string FILE_ID { get; set; }
   public string SIGNATURE { get; set; }
   public string TIMESTAMP_SIGNATURE { get; set; }
   public string SIGNATURE_TYPE { get; set; }
@@ -185,7 +201,8 @@ public class PNMT
     this.MULTIFORMAT_ADDRESS = null;
     this.PUBLISH_TIMESTAMP = null;
     this.CID = null;
-    this.FID = null;
+    this.FILE_NAME = null;
+    this.FILE_ID = null;
     this.SIGNATURE = null;
     this.TIMESTAMP_SIGNATURE = null;
     this.SIGNATURE_TYPE = null;

@@ -20,11 +20,12 @@ public struct PNM: FlatBufferObject, Verifiable {
     case MULTIFORMAT_ADDRESS = 4
     case PUBLISH_TIMESTAMP = 6
     case CID = 8
-    case FID = 10
-    case SIGNATURE = 12
-    case TIMESTAMP_SIGNATURE = 14
-    case SIGNATURE_TYPE = 16
-    case TIMESTAMP_SIGNATURE_TYPE = 18
+    case FILE_NAME = 10
+    case FILE_ID = 12
+    case SIGNATURE = 14
+    case TIMESTAMP_SIGNATURE = 16
+    case SIGNATURE_TYPE = 18
+    case TIMESTAMP_SIGNATURE_TYPE = 20
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -47,9 +48,13 @@ public struct PNM: FlatBufferObject, Verifiable {
   public var CID: String? { let o = _accessor.offset(VTOFFSET.CID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CID.v) }
   ///  File ID
-  ///  This field is the file ID / Name
-  public var FID: String? { let o = _accessor.offset(VTOFFSET.FID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FID.v) }
+  ///  This field is the Name
+  public var FILE_NAME: String? { let o = _accessor.offset(VTOFFSET.FILE_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILE_NAME.v) }
+  ///  File ID
+  ///  This field is the file ID / Standard Type
+  public var FILE_ID: String? { let o = _accessor.offset(VTOFFSET.FILE_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILE_ID.v) }
   ///  Digital Signature of the CID
   ///  This is the digital signature of the CID, signed using the specified cryptographic method.
   public var SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
@@ -66,11 +71,12 @@ public struct PNM: FlatBufferObject, Verifiable {
   ///  Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
   public var TIMESTAMP_SIGNATURE_TYPE: String? { let o = _accessor.offset(VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TIMESTAMP_SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.v) }
-  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
   public static func add(PUBLISH_TIMESTAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISH_TIMESTAMP, at: VTOFFSET.PUBLISH_TIMESTAMP.p) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VTOFFSET.CID.p) }
-  public static func add(FID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FID, at: VTOFFSET.FID.p) }
+  public static func add(FILE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_NAME, at: VTOFFSET.FILE_NAME.p) }
+  public static func add(FILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_ID, at: VTOFFSET.FILE_ID.p) }
   public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
   public static func add(TIMESTAMP_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE, at: VTOFFSET.TIMESTAMP_SIGNATURE.p) }
   public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VTOFFSET.SIGNATURE_TYPE.p) }
@@ -81,7 +87,8 @@ public struct PNM: FlatBufferObject, Verifiable {
     MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
     PUBLISH_TIMESTAMPOffset PUBLISH_TIMESTAMP: Offset = Offset(),
     CIDOffset CID: Offset = Offset(),
-    FIDOffset FID: Offset = Offset(),
+    FILE_NAMEOffset FILE_NAME: Offset = Offset(),
+    FILE_IDOffset FILE_ID: Offset = Offset(),
     SIGNATUREOffset SIGNATURE: Offset = Offset(),
     TIMESTAMP_SIGNATUREOffset TIMESTAMP_SIGNATURE: Offset = Offset(),
     SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset = Offset(),
@@ -91,7 +98,8 @@ public struct PNM: FlatBufferObject, Verifiable {
     PNM.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
     PNM.add(PUBLISH_TIMESTAMP: PUBLISH_TIMESTAMP, &fbb)
     PNM.add(CID: CID, &fbb)
-    PNM.add(FID: FID, &fbb)
+    PNM.add(FILE_NAME: FILE_NAME, &fbb)
+    PNM.add(FILE_ID: FILE_ID, &fbb)
     PNM.add(SIGNATURE: SIGNATURE, &fbb)
     PNM.add(TIMESTAMP_SIGNATURE: TIMESTAMP_SIGNATURE, &fbb)
     PNM.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
@@ -104,7 +112,8 @@ public struct PNM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PUBLISH_TIMESTAMP.p, fieldName: "PUBLISH_TIMESTAMP", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CID.p, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FID.p, fieldName: "FID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FILE_NAME.p, fieldName: "FILE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FILE_ID.p, fieldName: "FILE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TIMESTAMP_SIGNATURE.p, fieldName: "TIMESTAMP_SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SIGNATURE_TYPE.p, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)

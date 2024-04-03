@@ -34,10 +34,16 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * File ID
-     * This field is the file ID / Name
+     * This field is the Name
      */
-    FID(): string | null;
-    FID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    FILE_NAME(): string | null;
+    FILE_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * File ID
+     * This field is the file ID / Standard Type
+     */
+    FILE_ID(): string | null;
+    FILE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Digital Signature of the CID
      * This is the digital signature of the CID, signed using the specified cryptographic method.
@@ -66,7 +72,8 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     static addMultiformatAddress(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset): void;
     static addPublishTimestamp(builder: flatbuffers.Builder, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset): void;
     static addCid(builder: flatbuffers.Builder, CIDOffset: flatbuffers.Offset): void;
-    static addFid(builder: flatbuffers.Builder, FIDOffset: flatbuffers.Offset): void;
+    static addFileName(builder: flatbuffers.Builder, FILE_NAMEOffset: flatbuffers.Offset): void;
+    static addFileId(builder: flatbuffers.Builder, FILE_IDOffset: flatbuffers.Offset): void;
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
     static addTimestampSignature(builder: flatbuffers.Builder, TIMESTAMP_SIGNATUREOffset: flatbuffers.Offset): void;
     static addSignatureType(builder: flatbuffers.Builder, SIGNATURE_TYPEOffset: flatbuffers.Offset): void;
@@ -74,7 +81,7 @@ export declare class PNM implements flatbuffers.IUnpackableObject<PNMT> {
     static endPNM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPNMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPNMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, FIDOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, TIMESTAMP_SIGNATUREOffset: flatbuffers.Offset, SIGNATURE_TYPEOffset: flatbuffers.Offset, TIMESTAMP_SIGNATURE_TYPEOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPNM(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, FILE_NAMEOffset: flatbuffers.Offset, FILE_IDOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, TIMESTAMP_SIGNATUREOffset: flatbuffers.Offset, SIGNATURE_TYPEOffset: flatbuffers.Offset, TIMESTAMP_SIGNATURE_TYPEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PNMT;
     unpackTo(_o: PNMT): void;
 }
@@ -82,12 +89,13 @@ export declare class PNMT implements flatbuffers.IGeneratedObject {
     MULTIFORMAT_ADDRESS: string | Uint8Array | null;
     PUBLISH_TIMESTAMP: string | Uint8Array | null;
     CID: string | Uint8Array | null;
-    FID: string | Uint8Array | null;
+    FILE_NAME: string | Uint8Array | null;
+    FILE_ID: string | Uint8Array | null;
     SIGNATURE: string | Uint8Array | null;
     TIMESTAMP_SIGNATURE: string | Uint8Array | null;
     SIGNATURE_TYPE: string | Uint8Array | null;
     TIMESTAMP_SIGNATURE_TYPE: string | Uint8Array | null;
-    constructor(MULTIFORMAT_ADDRESS?: string | Uint8Array | null, PUBLISH_TIMESTAMP?: string | Uint8Array | null, CID?: string | Uint8Array | null, FID?: string | Uint8Array | null, SIGNATURE?: string | Uint8Array | null, TIMESTAMP_SIGNATURE?: string | Uint8Array | null, SIGNATURE_TYPE?: string | Uint8Array | null, TIMESTAMP_SIGNATURE_TYPE?: string | Uint8Array | null);
+    constructor(MULTIFORMAT_ADDRESS?: string | Uint8Array | null, PUBLISH_TIMESTAMP?: string | Uint8Array | null, CID?: string | Uint8Array | null, FILE_NAME?: string | Uint8Array | null, FILE_ID?: string | Uint8Array | null, SIGNATURE?: string | Uint8Array | null, TIMESTAMP_SIGNATURE?: string | Uint8Array | null, SIGNATURE_TYPE?: string | Uint8Array | null, TIMESTAMP_SIGNATURE_TYPE?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PNM.d.ts.map

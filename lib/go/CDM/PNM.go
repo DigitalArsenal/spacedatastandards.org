@@ -81,8 +81,8 @@ func (rcv *PNM) CID() []byte {
 /// This field is a unique ID for distributed systems (CID).
 /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
 /// File ID
-/// This field is the file ID / Name
-func (rcv *PNM) FID() []byte {
+/// This field is the Name
+func (rcv *PNM) FILE_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -91,11 +91,23 @@ func (rcv *PNM) FID() []byte {
 }
 
 /// File ID
-/// This field is the file ID / Name
+/// This field is the Name
+/// File ID
+/// This field is the file ID / Standard Type
+func (rcv *PNM) FILE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// File ID
+/// This field is the file ID / Standard Type
 /// Digital Signature of the CID
 /// This is the digital signature of the CID, signed using the specified cryptographic method.
 func (rcv *PNM) SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -107,7 +119,7 @@ func (rcv *PNM) SIGNATURE() []byte {
 /// Timestamp Signature
 /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
 func (rcv *PNM) TIMESTAMP_SIGNATURE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -119,7 +131,7 @@ func (rcv *PNM) TIMESTAMP_SIGNATURE() []byte {
 /// Type of Cryptographic Signature Used
 /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
 func (rcv *PNM) SIGNATURE_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -131,7 +143,7 @@ func (rcv *PNM) SIGNATURE_TYPE() []byte {
 /// Type of Cryptographic Signature Used for Timestamp
 /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
 func (rcv *PNM) TIMESTAMP_SIGNATURE_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -141,7 +153,7 @@ func (rcv *PNM) TIMESTAMP_SIGNATURE_TYPE() []byte {
 /// Type of Cryptographic Signature Used for Timestamp
 /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
 func PNMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(9)
 }
 func PNMAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
@@ -152,20 +164,23 @@ func PNMAddPUBLISH_TIMESTAMP(builder *flatbuffers.Builder, PUBLISH_TIMESTAMP fla
 func PNMAddCID(builder *flatbuffers.Builder, CID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CID), 0)
 }
-func PNMAddFID(builder *flatbuffers.Builder, FID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(FID), 0)
+func PNMAddFILE_NAME(builder *flatbuffers.Builder, FILE_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(FILE_NAME), 0)
+}
+func PNMAddFILE_ID(builder *flatbuffers.Builder, FILE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(FILE_ID), 0)
 }
 func PNMAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SIGNATURE), 0)
 }
 func PNMAddTIMESTAMP_SIGNATURE(builder *flatbuffers.Builder, TIMESTAMP_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TIMESTAMP_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TIMESTAMP_SIGNATURE), 0)
 }
 func PNMAddSIGNATURE_TYPE(builder *flatbuffers.Builder, SIGNATURE_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SIGNATURE_TYPE), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SIGNATURE_TYPE), 0)
 }
 func PNMAddTIMESTAMP_SIGNATURE_TYPE(builder *flatbuffers.Builder, TIMESTAMP_SIGNATURE_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TIMESTAMP_SIGNATURE_TYPE), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(TIMESTAMP_SIGNATURE_TYPE), 0)
 }
 func PNMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
