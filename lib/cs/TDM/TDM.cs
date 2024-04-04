@@ -133,229 +133,245 @@ public struct TDM : IFlatbufferObject
   public ArraySegment<byte>? GetPARTICIPANT_3Bytes() { return __p.__vector_as_arraysegment(44); }
 #endif
   public byte[] GetPARTICIPANT_3Array() { return __p.__vector_as_array<byte>(44); }
+  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  public string PARTICIPANT_4 { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPARTICIPANT_4Bytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetPARTICIPANT_4Bytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetPARTICIPANT_4Array() { return __p.__vector_as_array<byte>(46); }
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  public string PARTICIPANT_5 { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPARTICIPANT_5Bytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetPARTICIPANT_5Bytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetPARTICIPANT_5Array() { return __p.__vector_as_array<byte>(48); }
   /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
-  public string MODE { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string MODE { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMODEBytes() { return __p.__vector_as_span<byte>(46, 1); }
+  public Span<byte> GetMODEBytes() { return __p.__vector_as_span<byte>(50, 1); }
 #else
-  public ArraySegment<byte>? GetMODEBytes() { return __p.__vector_as_arraysegment(46); }
+  public ArraySegment<byte>? GetMODEBytes() { return __p.__vector_as_arraysegment(50); }
 #endif
-  public byte[] GetMODEArray() { return __p.__vector_as_array<byte>(46); }
+  public byte[] GetMODEArray() { return __p.__vector_as_array<byte>(50); }
   /// First path in TDM -  CCSDS 503.0-B-1, Page D-9
-  public ushort PATH_1 { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public ushort PATH_1 { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
-  public ushort PATH_2 { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public ushort PATH_2 { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// Transmit band -  CCSDS 503.0-B-1, Page D-9
-  public string TRANSMIT_BAND { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TRANSMIT_BAND { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRANSMIT_BANDBytes() { return __p.__vector_as_span<byte>(52, 1); }
+  public Span<byte> GetTRANSMIT_BANDBytes() { return __p.__vector_as_span<byte>(56, 1); }
 #else
-  public ArraySegment<byte>? GetTRANSMIT_BANDBytes() { return __p.__vector_as_arraysegment(52); }
+  public ArraySegment<byte>? GetTRANSMIT_BANDBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
-  public byte[] GetTRANSMIT_BANDArray() { return __p.__vector_as_array<byte>(52); }
+  public byte[] GetTRANSMIT_BANDArray() { return __p.__vector_as_array<byte>(56); }
   /// Receive band -  CCSDS 503.0-B-1, Page D-9
-  public string RECEIVE_BAND { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string RECEIVE_BAND { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRECEIVE_BANDBytes() { return __p.__vector_as_span<byte>(54, 1); }
+  public Span<byte> GetRECEIVE_BANDBytes() { return __p.__vector_as_span<byte>(58, 1); }
 #else
-  public ArraySegment<byte>? GetRECEIVE_BANDBytes() { return __p.__vector_as_arraysegment(54); }
+  public ArraySegment<byte>? GetRECEIVE_BANDBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
-  public byte[] GetRECEIVE_BANDArray() { return __p.__vector_as_array<byte>(54); }
+  public byte[] GetRECEIVE_BANDArray() { return __p.__vector_as_array<byte>(58); }
   /// Integration interval -  CCSDS 503.0-B-1, Page D-9
-  public float INTEGRATION_INTERVAL { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float INTEGRATION_INTERVAL { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Integration reference -  CCSDS 503.0-B-1, Page D-9
-  public string INTEGRATION_REF { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string INTEGRATION_REF { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetINTEGRATION_REFBytes() { return __p.__vector_as_span<byte>(58, 1); }
+  public Span<byte> GetINTEGRATION_REFBytes() { return __p.__vector_as_span<byte>(62, 1); }
 #else
-  public ArraySegment<byte>? GetINTEGRATION_REFBytes() { return __p.__vector_as_arraysegment(58); }
+  public ArraySegment<byte>? GetINTEGRATION_REFBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetINTEGRATION_REFArray() { return __p.__vector_as_array<byte>(58); }
+  public byte[] GetINTEGRATION_REFArray() { return __p.__vector_as_array<byte>(62); }
   /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
-  public double RECEIVE_DELAY_2 { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RECEIVE_DELAY_2 { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
-  public double RECEIVE_DELAY_3 { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RECEIVE_DELAY_3 { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Data quality -  CCSDS 503.0-B-1, Page D-9
-  public string DATA_QUALITY { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DATA_QUALITY { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDATA_QUALITYBytes() { return __p.__vector_as_span<byte>(64, 1); }
+  public Span<byte> GetDATA_QUALITYBytes() { return __p.__vector_as_span<byte>(68, 1); }
 #else
-  public ArraySegment<byte>? GetDATA_QUALITYBytes() { return __p.__vector_as_arraysegment(64); }
+  public ArraySegment<byte>? GetDATA_QUALITYBytes() { return __p.__vector_as_arraysegment(68); }
 #endif
-  public byte[] GetDATA_QUALITYArray() { return __p.__vector_as_array<byte>(64); }
+  public byte[] GetDATA_QUALITYArray() { return __p.__vector_as_array<byte>(68); }
   /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
-  public string META_STOP { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string META_STOP { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMETA_STOPBytes() { return __p.__vector_as_span<byte>(66, 1); }
+  public Span<byte> GetMETA_STOPBytes() { return __p.__vector_as_span<byte>(70, 1); }
 #else
-  public ArraySegment<byte>? GetMETA_STOPBytes() { return __p.__vector_as_arraysegment(66); }
+  public ArraySegment<byte>? GetMETA_STOPBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
-  public byte[] GetMETA_STOPArray() { return __p.__vector_as_array<byte>(66); }
+  public byte[] GetMETA_STOPArray() { return __p.__vector_as_array<byte>(70); }
   /// Start of data section -  CCSDS 503.0-B-1, Page D-9
-  public string DATA_START { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DATA_START { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDATA_STARTBytes() { return __p.__vector_as_span<byte>(68, 1); }
+  public Span<byte> GetDATA_STARTBytes() { return __p.__vector_as_span<byte>(72, 1); }
 #else
-  public ArraySegment<byte>? GetDATA_STARTBytes() { return __p.__vector_as_arraysegment(68); }
+  public ArraySegment<byte>? GetDATA_STARTBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
-  public byte[] GetDATA_STARTArray() { return __p.__vector_as_array<byte>(68); }
+  public byte[] GetDATA_STARTArray() { return __p.__vector_as_array<byte>(72); }
   /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
-  public double TRANSMIT_FREQ_1 { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRANSMIT_FREQ_1 { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Receive frequency -  CCSDS 503.0-B-1, Page D-9
-  public double RECEIVE_FREQ(int j) { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int RECEIVE_FREQLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double RECEIVE_FREQ(int j) { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int RECEIVE_FREQLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetRECEIVE_FREQBytes() { return __p.__vector_as_span<double>(72, 8); }
+  public Span<double> GetRECEIVE_FREQBytes() { return __p.__vector_as_span<double>(76, 8); }
 #else
-  public ArraySegment<byte>? GetRECEIVE_FREQBytes() { return __p.__vector_as_arraysegment(72); }
+  public ArraySegment<byte>? GetRECEIVE_FREQBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
-  public double[] GetRECEIVE_FREQArray() { return __p.__vector_as_array<double>(72); }
+  public double[] GetRECEIVE_FREQArray() { return __p.__vector_as_array<double>(76); }
   /// End of data section -  CCSDS 503.0-B-1, Page D-9
-  public string DATA_STOP { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DATA_STOP { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDATA_STOPBytes() { return __p.__vector_as_span<byte>(74, 1); }
+  public Span<byte> GetDATA_STOPBytes() { return __p.__vector_as_span<byte>(78, 1); }
 #else
-  public ArraySegment<byte>? GetDATA_STOPBytes() { return __p.__vector_as_arraysegment(74); }
+  public ArraySegment<byte>? GetDATA_STOPBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
-  public byte[] GetDATA_STOPArray() { return __p.__vector_as_array<byte>(74); }
+  public byte[] GetDATA_STOPArray() { return __p.__vector_as_array<byte>(78); }
   /// Additional properties as required by the specific application of the TDM...
   /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
-  public string TIMETAG_REF { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TIMETAG_REF { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTIMETAG_REFBytes() { return __p.__vector_as_span<byte>(76, 1); }
+  public Span<byte> GetTIMETAG_REFBytes() { return __p.__vector_as_span<byte>(80, 1); }
 #else
-  public ArraySegment<byte>? GetTIMETAG_REFBytes() { return __p.__vector_as_arraysegment(76); }
+  public ArraySegment<byte>? GetTIMETAG_REFBytes() { return __p.__vector_as_arraysegment(80); }
 #endif
-  public byte[] GetTIMETAG_REFArray() { return __p.__vector_as_array<byte>(76); }
+  public byte[] GetTIMETAG_REFArray() { return __p.__vector_as_array<byte>(80); }
   /// Type of angle data -  CCSDS 503.0-B-1, Page D-12
   /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
-  public string ANGLE_TYPE { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ANGLE_TYPE { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetANGLE_TYPEBytes() { return __p.__vector_as_span<byte>(78, 1); }
+  public Span<byte> GetANGLE_TYPEBytes() { return __p.__vector_as_span<byte>(82, 1); }
 #else
-  public ArraySegment<byte>? GetANGLE_TYPEBytes() { return __p.__vector_as_arraysegment(78); }
+  public ArraySegment<byte>? GetANGLE_TYPEBytes() { return __p.__vector_as_arraysegment(82); }
 #endif
-  public byte[] GetANGLE_TYPEArray() { return __p.__vector_as_array<byte>(78); }
+  public byte[] GetANGLE_TYPEArray() { return __p.__vector_as_array<byte>(82); }
   /// First angle value -  CCSDS 503.0-B-1, Page D-12
-  public float ANGLE_1(int j) { int o = __p.__offset(80); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
-  public int ANGLE_1Length { get { int o = __p.__offset(80); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public float ANGLE_1(int j) { int o = __p.__offset(84); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
+  public int ANGLE_1Length { get { int o = __p.__offset(84); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<float> GetANGLE_1Bytes() { return __p.__vector_as_span<float>(80, 4); }
+  public Span<float> GetANGLE_1Bytes() { return __p.__vector_as_span<float>(84, 4); }
 #else
-  public ArraySegment<byte>? GetANGLE_1Bytes() { return __p.__vector_as_arraysegment(80); }
+  public ArraySegment<byte>? GetANGLE_1Bytes() { return __p.__vector_as_arraysegment(84); }
 #endif
-  public float[] GetANGLE_1Array() { return __p.__vector_as_array<float>(80); }
+  public float[] GetANGLE_1Array() { return __p.__vector_as_array<float>(84); }
   /// Second angle value -  CCSDS 503.0-B-1, Page D-12
-  public float ANGLE_2(int j) { int o = __p.__offset(82); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
-  public int ANGLE_2Length { get { int o = __p.__offset(82); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public float ANGLE_2(int j) { int o = __p.__offset(86); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
+  public int ANGLE_2Length { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<float> GetANGLE_2Bytes() { return __p.__vector_as_span<float>(82, 4); }
+  public Span<float> GetANGLE_2Bytes() { return __p.__vector_as_span<float>(86, 4); }
 #else
-  public ArraySegment<byte>? GetANGLE_2Bytes() { return __p.__vector_as_arraysegment(82); }
+  public ArraySegment<byte>? GetANGLE_2Bytes() { return __p.__vector_as_arraysegment(86); }
 #endif
-  public float[] GetANGLE_2Array() { return __p.__vector_as_array<float>(82); }
+  public float[] GetANGLE_2Array() { return __p.__vector_as_array<float>(86); }
   /// Uncertainty of first angle -  CCSDS 503.0-B-1
-  public float ANGLE_UNCERTAINTY_1 { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float ANGLE_UNCERTAINTY_1 { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Uncertainty of second angle -  CCSDS 503.0-B-1
-  public float ANGLE_UNCERTAINTY_2 { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float ANGLE_UNCERTAINTY_2 { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Rate of change of range -  CCSDS 503.0-B-1
-  public double RANGE_RATE { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RANGE_RATE { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Uncertainty in range -  CCSDS 503.0-B-1
-  public double RANGE_UNCERTAINTY { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RANGE_UNCERTAINTY { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
-  public string RANGE_MODE { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string RANGE_MODE { get { int o = __p.__offset(96); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRANGE_MODEBytes() { return __p.__vector_as_span<byte>(92, 1); }
+  public Span<byte> GetRANGE_MODEBytes() { return __p.__vector_as_span<byte>(96, 1); }
 #else
-  public ArraySegment<byte>? GetRANGE_MODEBytes() { return __p.__vector_as_arraysegment(92); }
+  public ArraySegment<byte>? GetRANGE_MODEBytes() { return __p.__vector_as_arraysegment(96); }
 #endif
-  public byte[] GetRANGE_MODEArray() { return __p.__vector_as_array<byte>(92); }
+  public byte[] GetRANGE_MODEArray() { return __p.__vector_as_array<byte>(96); }
   /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
-  public double RANGE_MODULUS { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RANGE_MODULUS { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// First correction angle -  CCSDS 503.0-B-1, Page D-12
-  public float CORRECTION_ANGLE_1 { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float CORRECTION_ANGLE_1 { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Second correction angle -  CCSDS 503.0-B-1, Page D-12
-  public float CORRECTION_ANGLE_2 { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float CORRECTION_ANGLE_2 { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
-  public string CORRECTIONS_APPLIED { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CORRECTIONS_APPLIED { get { int o = __p.__offset(104); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCORRECTIONS_APPLIEDBytes() { return __p.__vector_as_span<byte>(100, 1); }
+  public Span<byte> GetCORRECTIONS_APPLIEDBytes() { return __p.__vector_as_span<byte>(104, 1); }
 #else
-  public ArraySegment<byte>? GetCORRECTIONS_APPLIEDBytes() { return __p.__vector_as_arraysegment(100); }
+  public ArraySegment<byte>? GetCORRECTIONS_APPLIEDBytes() { return __p.__vector_as_arraysegment(104); }
 #endif
-  public byte[] GetCORRECTIONS_APPLIEDArray() { return __p.__vector_as_array<byte>(100); }
+  public byte[] GetCORRECTIONS_APPLIEDArray() { return __p.__vector_as_array<byte>(104); }
   /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
-  public double TROPO_DRY(int j) { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int TROPO_DRYLength { get { int o = __p.__offset(102); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double TROPO_DRY(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int TROPO_DRYLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetTROPO_DRYBytes() { return __p.__vector_as_span<double>(102, 8); }
+  public Span<double> GetTROPO_DRYBytes() { return __p.__vector_as_span<double>(106, 8); }
 #else
-  public ArraySegment<byte>? GetTROPO_DRYBytes() { return __p.__vector_as_arraysegment(102); }
+  public ArraySegment<byte>? GetTROPO_DRYBytes() { return __p.__vector_as_arraysegment(106); }
 #endif
-  public double[] GetTROPO_DRYArray() { return __p.__vector_as_array<double>(102); }
+  public double[] GetTROPO_DRYArray() { return __p.__vector_as_array<double>(106); }
   /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
-  public double TROPO_WET(int j) { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int TROPO_WETLength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double TROPO_WET(int j) { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int TROPO_WETLength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetTROPO_WETBytes() { return __p.__vector_as_span<double>(104, 8); }
+  public Span<double> GetTROPO_WETBytes() { return __p.__vector_as_span<double>(108, 8); }
 #else
-  public ArraySegment<byte>? GetTROPO_WETBytes() { return __p.__vector_as_arraysegment(104); }
+  public ArraySegment<byte>? GetTROPO_WETBytes() { return __p.__vector_as_arraysegment(108); }
 #endif
-  public double[] GetTROPO_WETArray() { return __p.__vector_as_array<double>(104); }
+  public double[] GetTROPO_WETArray() { return __p.__vector_as_array<double>(108); }
   /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13
-  public double STEC(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int STECLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double STEC(int j) { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int STECLength { get { int o = __p.__offset(110); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetSTECBytes() { return __p.__vector_as_span<double>(106, 8); }
+  public Span<double> GetSTECBytes() { return __p.__vector_as_span<double>(110, 8); }
 #else
-  public ArraySegment<byte>? GetSTECBytes() { return __p.__vector_as_arraysegment(106); }
+  public ArraySegment<byte>? GetSTECBytes() { return __p.__vector_as_arraysegment(110); }
 #endif
-  public double[] GetSTECArray() { return __p.__vector_as_array<double>(106); }
+  public double[] GetSTECArray() { return __p.__vector_as_array<double>(110); }
   /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
-  public double PRESSURE(int j) { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int PRESSURELength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double PRESSURE(int j) { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int PRESSURELength { get { int o = __p.__offset(112); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetPRESSUREBytes() { return __p.__vector_as_span<double>(108, 8); }
+  public Span<double> GetPRESSUREBytes() { return __p.__vector_as_span<double>(112, 8); }
 #else
-  public ArraySegment<byte>? GetPRESSUREBytes() { return __p.__vector_as_arraysegment(108); }
+  public ArraySegment<byte>? GetPRESSUREBytes() { return __p.__vector_as_arraysegment(112); }
 #endif
-  public double[] GetPRESSUREArray() { return __p.__vector_as_array<double>(108); }
+  public double[] GetPRESSUREArray() { return __p.__vector_as_array<double>(112); }
   /// Relative humidity -  CCSDS 503.0-B-1, Page D-14
-  public double RHUMIDITY(int j) { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int RHUMIDITYLength { get { int o = __p.__offset(110); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double RHUMIDITY(int j) { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int RHUMIDITYLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetRHUMIDITYBytes() { return __p.__vector_as_span<double>(110, 8); }
+  public Span<double> GetRHUMIDITYBytes() { return __p.__vector_as_span<double>(114, 8); }
 #else
-  public ArraySegment<byte>? GetRHUMIDITYBytes() { return __p.__vector_as_arraysegment(110); }
+  public ArraySegment<byte>? GetRHUMIDITYBytes() { return __p.__vector_as_arraysegment(114); }
 #endif
-  public double[] GetRHUMIDITYArray() { return __p.__vector_as_array<double>(110); }
+  public double[] GetRHUMIDITYArray() { return __p.__vector_as_array<double>(114); }
   /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14
-  public double TEMPERATURE(int j) { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int TEMPERATURELength { get { int o = __p.__offset(112); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double TEMPERATURE(int j) { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int TEMPERATURELength { get { int o = __p.__offset(116); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetTEMPERATUREBytes() { return __p.__vector_as_span<double>(112, 8); }
+  public Span<double> GetTEMPERATUREBytes() { return __p.__vector_as_span<double>(116, 8); }
 #else
-  public ArraySegment<byte>? GetTEMPERATUREBytes() { return __p.__vector_as_arraysegment(112); }
+  public ArraySegment<byte>? GetTEMPERATUREBytes() { return __p.__vector_as_arraysegment(116); }
 #endif
-  public double[] GetTEMPERATUREArray() { return __p.__vector_as_array<double>(112); }
+  public double[] GetTEMPERATUREArray() { return __p.__vector_as_array<double>(116); }
   /// Clock bias values -  CCSDS 503.0-B-1, Page D-15
-  public double CLOCK_BIAS(int j) { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int CLOCK_BIASLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double CLOCK_BIAS(int j) { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int CLOCK_BIASLength { get { int o = __p.__offset(118); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetCLOCK_BIASBytes() { return __p.__vector_as_span<double>(114, 8); }
+  public Span<double> GetCLOCK_BIASBytes() { return __p.__vector_as_span<double>(118, 8); }
 #else
-  public ArraySegment<byte>? GetCLOCK_BIASBytes() { return __p.__vector_as_arraysegment(114); }
+  public ArraySegment<byte>? GetCLOCK_BIASBytes() { return __p.__vector_as_arraysegment(118); }
 #endif
-  public double[] GetCLOCK_BIASArray() { return __p.__vector_as_array<double>(114); }
+  public double[] GetCLOCK_BIASArray() { return __p.__vector_as_array<double>(118); }
   /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
-  public double CLOCK_DRIFT(int j) { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int CLOCK_DRIFTLength { get { int o = __p.__offset(116); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double CLOCK_DRIFT(int j) { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int CLOCK_DRIFTLength { get { int o = __p.__offset(120); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetCLOCK_DRIFTBytes() { return __p.__vector_as_span<double>(116, 8); }
+  public Span<double> GetCLOCK_DRIFTBytes() { return __p.__vector_as_span<double>(120, 8); }
 #else
-  public ArraySegment<byte>? GetCLOCK_DRIFTBytes() { return __p.__vector_as_arraysegment(116); }
+  public ArraySegment<byte>? GetCLOCK_DRIFTBytes() { return __p.__vector_as_arraysegment(120); }
 #endif
-  public double[] GetCLOCK_DRIFTArray() { return __p.__vector_as_array<double>(116); }
+  public double[] GetCLOCK_DRIFTArray() { return __p.__vector_as_array<double>(120); }
 
   public static Offset<TDM> CreateTDM(FlatBufferBuilder builder,
       StringOffset OBSERVER_IDOffset = default(StringOffset),
@@ -379,6 +395,8 @@ public struct TDM : IFlatbufferObject
       StringOffset PARTICIPANT_1Offset = default(StringOffset),
       StringOffset PARTICIPANT_2Offset = default(StringOffset),
       StringOffset PARTICIPANT_3Offset = default(StringOffset),
+      StringOffset PARTICIPANT_4Offset = default(StringOffset),
+      StringOffset PARTICIPANT_5Offset = default(StringOffset),
       StringOffset MODEOffset = default(StringOffset),
       ushort PATH_1 = 0,
       ushort PATH_2 = 0,
@@ -415,7 +433,7 @@ public struct TDM : IFlatbufferObject
       VectorOffset TEMPERATUREOffset = default(VectorOffset),
       VectorOffset CLOCK_BIASOffset = default(VectorOffset),
       VectorOffset CLOCK_DRIFTOffset = default(VectorOffset)) {
-    builder.StartTable(57);
+    builder.StartTable(59);
     TDM.AddRANGE_MODULUS(builder, RANGE_MODULUS);
     TDM.AddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY);
     TDM.AddRANGE_RATE(builder, RANGE_RATE);
@@ -456,6 +474,8 @@ public struct TDM : IFlatbufferObject
     TDM.AddRECEIVE_BAND(builder, RECEIVE_BANDOffset);
     TDM.AddTRANSMIT_BAND(builder, TRANSMIT_BANDOffset);
     TDM.AddMODE(builder, MODEOffset);
+    TDM.AddPARTICIPANT_5(builder, PARTICIPANT_5Offset);
+    TDM.AddPARTICIPANT_4(builder, PARTICIPANT_4Offset);
     TDM.AddPARTICIPANT_3(builder, PARTICIPANT_3Offset);
     TDM.AddPARTICIPANT_2(builder, PARTICIPANT_2Offset);
     TDM.AddPARTICIPANT_1(builder, PARTICIPANT_1Offset);
@@ -476,7 +496,7 @@ public struct TDM : IFlatbufferObject
     return TDM.EndTDM(builder);
   }
 
-  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(57); }
+  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(59); }
   public static void AddOBSERVER_ID(FlatBufferBuilder builder, StringOffset OBSERVER_IDOffset) { builder.AddOffset(0, OBSERVER_IDOffset.Value, 0); }
   public static void AddOBSERVER_X(FlatBufferBuilder builder, double OBSERVER_X) { builder.AddDouble(1, OBSERVER_X, 0.0); }
   public static void AddOBSERVER_Y(FlatBufferBuilder builder, double OBSERVER_Y) { builder.AddDouble(2, OBSERVER_Y, 0.0); }
@@ -503,92 +523,94 @@ public struct TDM : IFlatbufferObject
   public static void AddPARTICIPANT_1(FlatBufferBuilder builder, StringOffset PARTICIPANT_1Offset) { builder.AddOffset(18, PARTICIPANT_1Offset.Value, 0); }
   public static void AddPARTICIPANT_2(FlatBufferBuilder builder, StringOffset PARTICIPANT_2Offset) { builder.AddOffset(19, PARTICIPANT_2Offset.Value, 0); }
   public static void AddPARTICIPANT_3(FlatBufferBuilder builder, StringOffset PARTICIPANT_3Offset) { builder.AddOffset(20, PARTICIPANT_3Offset.Value, 0); }
-  public static void AddMODE(FlatBufferBuilder builder, StringOffset MODEOffset) { builder.AddOffset(21, MODEOffset.Value, 0); }
-  public static void AddPATH_1(FlatBufferBuilder builder, ushort PATH_1) { builder.AddUshort(22, PATH_1, 0); }
-  public static void AddPATH_2(FlatBufferBuilder builder, ushort PATH_2) { builder.AddUshort(23, PATH_2, 0); }
-  public static void AddTRANSMIT_BAND(FlatBufferBuilder builder, StringOffset TRANSMIT_BANDOffset) { builder.AddOffset(24, TRANSMIT_BANDOffset.Value, 0); }
-  public static void AddRECEIVE_BAND(FlatBufferBuilder builder, StringOffset RECEIVE_BANDOffset) { builder.AddOffset(25, RECEIVE_BANDOffset.Value, 0); }
-  public static void AddINTEGRATION_INTERVAL(FlatBufferBuilder builder, float INTEGRATION_INTERVAL) { builder.AddFloat(26, INTEGRATION_INTERVAL, 0.0f); }
-  public static void AddINTEGRATION_REF(FlatBufferBuilder builder, StringOffset INTEGRATION_REFOffset) { builder.AddOffset(27, INTEGRATION_REFOffset.Value, 0); }
-  public static void AddRECEIVE_DELAY_2(FlatBufferBuilder builder, double RECEIVE_DELAY_2) { builder.AddDouble(28, RECEIVE_DELAY_2, 0.0); }
-  public static void AddRECEIVE_DELAY_3(FlatBufferBuilder builder, double RECEIVE_DELAY_3) { builder.AddDouble(29, RECEIVE_DELAY_3, 0.0); }
-  public static void AddDATA_QUALITY(FlatBufferBuilder builder, StringOffset DATA_QUALITYOffset) { builder.AddOffset(30, DATA_QUALITYOffset.Value, 0); }
-  public static void AddMETA_STOP(FlatBufferBuilder builder, StringOffset META_STOPOffset) { builder.AddOffset(31, META_STOPOffset.Value, 0); }
-  public static void AddDATA_START(FlatBufferBuilder builder, StringOffset DATA_STARTOffset) { builder.AddOffset(32, DATA_STARTOffset.Value, 0); }
-  public static void AddTRANSMIT_FREQ_1(FlatBufferBuilder builder, double TRANSMIT_FREQ_1) { builder.AddDouble(33, TRANSMIT_FREQ_1, 0.0); }
-  public static void AddRECEIVE_FREQ(FlatBufferBuilder builder, VectorOffset RECEIVE_FREQOffset) { builder.AddOffset(34, RECEIVE_FREQOffset.Value, 0); }
+  public static void AddPARTICIPANT_4(FlatBufferBuilder builder, StringOffset PARTICIPANT_4Offset) { builder.AddOffset(21, PARTICIPANT_4Offset.Value, 0); }
+  public static void AddPARTICIPANT_5(FlatBufferBuilder builder, StringOffset PARTICIPANT_5Offset) { builder.AddOffset(22, PARTICIPANT_5Offset.Value, 0); }
+  public static void AddMODE(FlatBufferBuilder builder, StringOffset MODEOffset) { builder.AddOffset(23, MODEOffset.Value, 0); }
+  public static void AddPATH_1(FlatBufferBuilder builder, ushort PATH_1) { builder.AddUshort(24, PATH_1, 0); }
+  public static void AddPATH_2(FlatBufferBuilder builder, ushort PATH_2) { builder.AddUshort(25, PATH_2, 0); }
+  public static void AddTRANSMIT_BAND(FlatBufferBuilder builder, StringOffset TRANSMIT_BANDOffset) { builder.AddOffset(26, TRANSMIT_BANDOffset.Value, 0); }
+  public static void AddRECEIVE_BAND(FlatBufferBuilder builder, StringOffset RECEIVE_BANDOffset) { builder.AddOffset(27, RECEIVE_BANDOffset.Value, 0); }
+  public static void AddINTEGRATION_INTERVAL(FlatBufferBuilder builder, float INTEGRATION_INTERVAL) { builder.AddFloat(28, INTEGRATION_INTERVAL, 0.0f); }
+  public static void AddINTEGRATION_REF(FlatBufferBuilder builder, StringOffset INTEGRATION_REFOffset) { builder.AddOffset(29, INTEGRATION_REFOffset.Value, 0); }
+  public static void AddRECEIVE_DELAY_2(FlatBufferBuilder builder, double RECEIVE_DELAY_2) { builder.AddDouble(30, RECEIVE_DELAY_2, 0.0); }
+  public static void AddRECEIVE_DELAY_3(FlatBufferBuilder builder, double RECEIVE_DELAY_3) { builder.AddDouble(31, RECEIVE_DELAY_3, 0.0); }
+  public static void AddDATA_QUALITY(FlatBufferBuilder builder, StringOffset DATA_QUALITYOffset) { builder.AddOffset(32, DATA_QUALITYOffset.Value, 0); }
+  public static void AddMETA_STOP(FlatBufferBuilder builder, StringOffset META_STOPOffset) { builder.AddOffset(33, META_STOPOffset.Value, 0); }
+  public static void AddDATA_START(FlatBufferBuilder builder, StringOffset DATA_STARTOffset) { builder.AddOffset(34, DATA_STARTOffset.Value, 0); }
+  public static void AddTRANSMIT_FREQ_1(FlatBufferBuilder builder, double TRANSMIT_FREQ_1) { builder.AddDouble(35, TRANSMIT_FREQ_1, 0.0); }
+  public static void AddRECEIVE_FREQ(FlatBufferBuilder builder, VectorOffset RECEIVE_FREQOffset) { builder.AddOffset(36, RECEIVE_FREQOffset.Value, 0); }
   public static VectorOffset CreateRECEIVE_FREQVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateRECEIVE_FREQVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECEIVE_FREQVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECEIVE_FREQVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRECEIVE_FREQVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddDATA_STOP(FlatBufferBuilder builder, StringOffset DATA_STOPOffset) { builder.AddOffset(35, DATA_STOPOffset.Value, 0); }
-  public static void AddTIMETAG_REF(FlatBufferBuilder builder, StringOffset TIMETAG_REFOffset) { builder.AddOffset(36, TIMETAG_REFOffset.Value, 0); }
-  public static void AddANGLE_TYPE(FlatBufferBuilder builder, StringOffset ANGLE_TYPEOffset) { builder.AddOffset(37, ANGLE_TYPEOffset.Value, 0); }
-  public static void AddANGLE_1(FlatBufferBuilder builder, VectorOffset ANGLE_1Offset) { builder.AddOffset(38, ANGLE_1Offset.Value, 0); }
+  public static void AddDATA_STOP(FlatBufferBuilder builder, StringOffset DATA_STOPOffset) { builder.AddOffset(37, DATA_STOPOffset.Value, 0); }
+  public static void AddTIMETAG_REF(FlatBufferBuilder builder, StringOffset TIMETAG_REFOffset) { builder.AddOffset(38, TIMETAG_REFOffset.Value, 0); }
+  public static void AddANGLE_TYPE(FlatBufferBuilder builder, StringOffset ANGLE_TYPEOffset) { builder.AddOffset(39, ANGLE_TYPEOffset.Value, 0); }
+  public static void AddANGLE_1(FlatBufferBuilder builder, VectorOffset ANGLE_1Offset) { builder.AddOffset(40, ANGLE_1Offset.Value, 0); }
   public static VectorOffset CreateANGLE_1Vector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateANGLE_1VectorBlock(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateANGLE_1VectorBlock(FlatBufferBuilder builder, ArraySegment<float> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateANGLE_1VectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<float>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartANGLE_1Vector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddANGLE_2(FlatBufferBuilder builder, VectorOffset ANGLE_2Offset) { builder.AddOffset(39, ANGLE_2Offset.Value, 0); }
+  public static void AddANGLE_2(FlatBufferBuilder builder, VectorOffset ANGLE_2Offset) { builder.AddOffset(41, ANGLE_2Offset.Value, 0); }
   public static VectorOffset CreateANGLE_2Vector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateANGLE_2VectorBlock(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateANGLE_2VectorBlock(FlatBufferBuilder builder, ArraySegment<float> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateANGLE_2VectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<float>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartANGLE_2Vector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddANGLE_UNCERTAINTY_1(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_1) { builder.AddFloat(40, ANGLE_UNCERTAINTY_1, 0.0f); }
-  public static void AddANGLE_UNCERTAINTY_2(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_2) { builder.AddFloat(41, ANGLE_UNCERTAINTY_2, 0.0f); }
-  public static void AddRANGE_RATE(FlatBufferBuilder builder, double RANGE_RATE) { builder.AddDouble(42, RANGE_RATE, 0.0); }
-  public static void AddRANGE_UNCERTAINTY(FlatBufferBuilder builder, double RANGE_UNCERTAINTY) { builder.AddDouble(43, RANGE_UNCERTAINTY, 0.0); }
-  public static void AddRANGE_MODE(FlatBufferBuilder builder, StringOffset RANGE_MODEOffset) { builder.AddOffset(44, RANGE_MODEOffset.Value, 0); }
-  public static void AddRANGE_MODULUS(FlatBufferBuilder builder, double RANGE_MODULUS) { builder.AddDouble(45, RANGE_MODULUS, 0.0); }
-  public static void AddCORRECTION_ANGLE_1(FlatBufferBuilder builder, float CORRECTION_ANGLE_1) { builder.AddFloat(46, CORRECTION_ANGLE_1, 0.0f); }
-  public static void AddCORRECTION_ANGLE_2(FlatBufferBuilder builder, float CORRECTION_ANGLE_2) { builder.AddFloat(47, CORRECTION_ANGLE_2, 0.0f); }
-  public static void AddCORRECTIONS_APPLIED(FlatBufferBuilder builder, StringOffset CORRECTIONS_APPLIEDOffset) { builder.AddOffset(48, CORRECTIONS_APPLIEDOffset.Value, 0); }
-  public static void AddTROPO_DRY(FlatBufferBuilder builder, VectorOffset TROPO_DRYOffset) { builder.AddOffset(49, TROPO_DRYOffset.Value, 0); }
+  public static void AddANGLE_UNCERTAINTY_1(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_1) { builder.AddFloat(42, ANGLE_UNCERTAINTY_1, 0.0f); }
+  public static void AddANGLE_UNCERTAINTY_2(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_2) { builder.AddFloat(43, ANGLE_UNCERTAINTY_2, 0.0f); }
+  public static void AddRANGE_RATE(FlatBufferBuilder builder, double RANGE_RATE) { builder.AddDouble(44, RANGE_RATE, 0.0); }
+  public static void AddRANGE_UNCERTAINTY(FlatBufferBuilder builder, double RANGE_UNCERTAINTY) { builder.AddDouble(45, RANGE_UNCERTAINTY, 0.0); }
+  public static void AddRANGE_MODE(FlatBufferBuilder builder, StringOffset RANGE_MODEOffset) { builder.AddOffset(46, RANGE_MODEOffset.Value, 0); }
+  public static void AddRANGE_MODULUS(FlatBufferBuilder builder, double RANGE_MODULUS) { builder.AddDouble(47, RANGE_MODULUS, 0.0); }
+  public static void AddCORRECTION_ANGLE_1(FlatBufferBuilder builder, float CORRECTION_ANGLE_1) { builder.AddFloat(48, CORRECTION_ANGLE_1, 0.0f); }
+  public static void AddCORRECTION_ANGLE_2(FlatBufferBuilder builder, float CORRECTION_ANGLE_2) { builder.AddFloat(49, CORRECTION_ANGLE_2, 0.0f); }
+  public static void AddCORRECTIONS_APPLIED(FlatBufferBuilder builder, StringOffset CORRECTIONS_APPLIEDOffset) { builder.AddOffset(50, CORRECTIONS_APPLIEDOffset.Value, 0); }
+  public static void AddTROPO_DRY(FlatBufferBuilder builder, VectorOffset TROPO_DRYOffset) { builder.AddOffset(51, TROPO_DRYOffset.Value, 0); }
   public static VectorOffset CreateTROPO_DRYVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateTROPO_DRYVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTROPO_DRYVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTROPO_DRYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTROPO_DRYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddTROPO_WET(FlatBufferBuilder builder, VectorOffset TROPO_WETOffset) { builder.AddOffset(50, TROPO_WETOffset.Value, 0); }
+  public static void AddTROPO_WET(FlatBufferBuilder builder, VectorOffset TROPO_WETOffset) { builder.AddOffset(52, TROPO_WETOffset.Value, 0); }
   public static VectorOffset CreateTROPO_WETVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateTROPO_WETVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTROPO_WETVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTROPO_WETVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTROPO_WETVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddSTEC(FlatBufferBuilder builder, VectorOffset STECOffset) { builder.AddOffset(51, STECOffset.Value, 0); }
+  public static void AddSTEC(FlatBufferBuilder builder, VectorOffset STECOffset) { builder.AddOffset(53, STECOffset.Value, 0); }
   public static VectorOffset CreateSTECVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSTECVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSTECVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSTECVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSTECVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddPRESSURE(FlatBufferBuilder builder, VectorOffset PRESSUREOffset) { builder.AddOffset(52, PRESSUREOffset.Value, 0); }
+  public static void AddPRESSURE(FlatBufferBuilder builder, VectorOffset PRESSUREOffset) { builder.AddOffset(54, PRESSUREOffset.Value, 0); }
   public static VectorOffset CreatePRESSUREVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreatePRESSUREVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePRESSUREVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePRESSUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPRESSUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddRHUMIDITY(FlatBufferBuilder builder, VectorOffset RHUMIDITYOffset) { builder.AddOffset(53, RHUMIDITYOffset.Value, 0); }
+  public static void AddRHUMIDITY(FlatBufferBuilder builder, VectorOffset RHUMIDITYOffset) { builder.AddOffset(55, RHUMIDITYOffset.Value, 0); }
   public static VectorOffset CreateRHUMIDITYVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateRHUMIDITYVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRHUMIDITYVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRHUMIDITYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRHUMIDITYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddTEMPERATURE(FlatBufferBuilder builder, VectorOffset TEMPERATUREOffset) { builder.AddOffset(54, TEMPERATUREOffset.Value, 0); }
+  public static void AddTEMPERATURE(FlatBufferBuilder builder, VectorOffset TEMPERATUREOffset) { builder.AddOffset(56, TEMPERATUREOffset.Value, 0); }
   public static VectorOffset CreateTEMPERATUREVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateTEMPERATUREVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTEMPERATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTEMPERATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTEMPERATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddCLOCK_BIAS(FlatBufferBuilder builder, VectorOffset CLOCK_BIASOffset) { builder.AddOffset(55, CLOCK_BIASOffset.Value, 0); }
+  public static void AddCLOCK_BIAS(FlatBufferBuilder builder, VectorOffset CLOCK_BIASOffset) { builder.AddOffset(57, CLOCK_BIASOffset.Value, 0); }
   public static VectorOffset CreateCLOCK_BIASVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_BIASVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_BIASVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_BIASVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCLOCK_BIASVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddCLOCK_DRIFT(FlatBufferBuilder builder, VectorOffset CLOCK_DRIFTOffset) { builder.AddOffset(56, CLOCK_DRIFTOffset.Value, 0); }
+  public static void AddCLOCK_DRIFT(FlatBufferBuilder builder, VectorOffset CLOCK_DRIFTOffset) { builder.AddOffset(58, CLOCK_DRIFTOffset.Value, 0); }
   public static VectorOffset CreateCLOCK_DRIFTVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_DRIFTVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_DRIFTVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
@@ -628,6 +650,8 @@ public struct TDM : IFlatbufferObject
     _o.PARTICIPANT_1 = this.PARTICIPANT_1;
     _o.PARTICIPANT_2 = this.PARTICIPANT_2;
     _o.PARTICIPANT_3 = this.PARTICIPANT_3;
+    _o.PARTICIPANT_4 = this.PARTICIPANT_4;
+    _o.PARTICIPANT_5 = this.PARTICIPANT_5;
     _o.MODE = this.MODE;
     _o.PATH_1 = this.PATH_1;
     _o.PATH_2 = this.PATH_2;
@@ -696,6 +720,8 @@ public struct TDM : IFlatbufferObject
     var _PARTICIPANT_1 = _o.PARTICIPANT_1 == null ? default(StringOffset) : builder.CreateString(_o.PARTICIPANT_1);
     var _PARTICIPANT_2 = _o.PARTICIPANT_2 == null ? default(StringOffset) : builder.CreateString(_o.PARTICIPANT_2);
     var _PARTICIPANT_3 = _o.PARTICIPANT_3 == null ? default(StringOffset) : builder.CreateString(_o.PARTICIPANT_3);
+    var _PARTICIPANT_4 = _o.PARTICIPANT_4 == null ? default(StringOffset) : builder.CreateString(_o.PARTICIPANT_4);
+    var _PARTICIPANT_5 = _o.PARTICIPANT_5 == null ? default(StringOffset) : builder.CreateString(_o.PARTICIPANT_5);
     var _MODE = _o.MODE == null ? default(StringOffset) : builder.CreateString(_o.MODE);
     var _TRANSMIT_BAND = _o.TRANSMIT_BAND == null ? default(StringOffset) : builder.CreateString(_o.TRANSMIT_BAND);
     var _RECEIVE_BAND = _o.RECEIVE_BAND == null ? default(StringOffset) : builder.CreateString(_o.RECEIVE_BAND);
@@ -786,6 +812,8 @@ public struct TDM : IFlatbufferObject
       _PARTICIPANT_1,
       _PARTICIPANT_2,
       _PARTICIPANT_3,
+      _PARTICIPANT_4,
+      _PARTICIPANT_5,
       _MODE,
       _o.PATH_1,
       _o.PATH_2,
@@ -848,6 +876,8 @@ public class TDMT
   public string PARTICIPANT_1 { get; set; }
   public string PARTICIPANT_2 { get; set; }
   public string PARTICIPANT_3 { get; set; }
+  public string PARTICIPANT_4 { get; set; }
+  public string PARTICIPANT_5 { get; set; }
   public string MODE { get; set; }
   public ushort PATH_1 { get; set; }
   public ushort PATH_2 { get; set; }
@@ -907,6 +937,8 @@ public class TDMT
     this.PARTICIPANT_1 = null;
     this.PARTICIPANT_2 = null;
     this.PARTICIPANT_3 = null;
+    this.PARTICIPANT_4 = null;
+    this.PARTICIPANT_5 = null;
     this.MODE = null;
     this.PATH_1 = 0;
     this.PATH_2 = 0;

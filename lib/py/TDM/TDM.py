@@ -210,10 +210,26 @@ class TDM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+    # TDM
+    def PARTICIPANT_4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+    # TDM
+    def PARTICIPANT_5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
     # Mode of TDM -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def MODE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -221,7 +237,7 @@ class TDM(object):
     # First path in TDM -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def PATH_1(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
@@ -229,7 +245,7 @@ class TDM(object):
     # Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def PATH_2(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
@@ -237,7 +253,7 @@ class TDM(object):
     # Transmit band -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def TRANSMIT_BAND(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -245,7 +261,7 @@ class TDM(object):
     # Receive band -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def RECEIVE_BAND(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -253,7 +269,7 @@ class TDM(object):
     # Integration interval -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def INTEGRATION_INTERVAL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -261,7 +277,7 @@ class TDM(object):
     # Integration reference -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def INTEGRATION_REF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -269,7 +285,7 @@ class TDM(object):
     # Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def RECEIVE_DELAY_2(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -277,7 +293,7 @@ class TDM(object):
     # Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def RECEIVE_DELAY_3(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -285,7 +301,7 @@ class TDM(object):
     # Data quality -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def DATA_QUALITY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -293,7 +309,7 @@ class TDM(object):
     # End of metadata section -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def META_STOP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -301,7 +317,7 @@ class TDM(object):
     # Start of data section -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def DATA_START(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -309,7 +325,7 @@ class TDM(object):
     # Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def TRANSMIT_FREQ_1(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -317,7 +333,7 @@ class TDM(object):
     # Receive frequency -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def RECEIVE_FREQ(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -325,27 +341,27 @@ class TDM(object):
 
     # TDM
     def RECEIVE_FREQAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def RECEIVE_FREQLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def RECEIVE_FREQIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
     # End of data section -  CCSDS 503.0-B-1, Page D-9
     # TDM
     def DATA_STOP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -354,7 +370,7 @@ class TDM(object):
     # Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
     # TDM
     def TIMETAG_REF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -363,7 +379,7 @@ class TDM(object):
     # Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
     # TDM
     def ANGLE_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -371,7 +387,7 @@ class TDM(object):
     # First angle value -  CCSDS 503.0-B-1, Page D-12
     # TDM
     def ANGLE_1(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -379,27 +395,27 @@ class TDM(object):
 
     # TDM
     def ANGLE_1AsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
         return 0
 
     # TDM
     def ANGLE_1Length(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def ANGLE_1IsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         return o == 0
 
     # Second angle value -  CCSDS 503.0-B-1, Page D-12
     # TDM
     def ANGLE_2(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -407,27 +423,27 @@ class TDM(object):
 
     # TDM
     def ANGLE_2AsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
         return 0
 
     # TDM
     def ANGLE_2Length(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def ANGLE_2IsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         return o == 0
 
     # Uncertainty of first angle -  CCSDS 503.0-B-1
     # TDM
     def ANGLE_UNCERTAINTY_1(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -435,7 +451,7 @@ class TDM(object):
     # Uncertainty of second angle -  CCSDS 503.0-B-1
     # TDM
     def ANGLE_UNCERTAINTY_2(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -443,7 +459,7 @@ class TDM(object):
     # Rate of change of range -  CCSDS 503.0-B-1
     # TDM
     def RANGE_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -451,7 +467,7 @@ class TDM(object):
     # Uncertainty in range -  CCSDS 503.0-B-1
     # TDM
     def RANGE_UNCERTAINTY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -459,7 +475,7 @@ class TDM(object):
     # Mode of range data -  CCSDS 503.0-B-1, Page D-10
     # TDM
     def RANGE_MODE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -467,7 +483,7 @@ class TDM(object):
     # Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
     # TDM
     def RANGE_MODULUS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -475,7 +491,7 @@ class TDM(object):
     # First correction angle -  CCSDS 503.0-B-1, Page D-12
     # TDM
     def CORRECTION_ANGLE_1(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -483,7 +499,7 @@ class TDM(object):
     # Second correction angle -  CCSDS 503.0-B-1, Page D-12
     # TDM
     def CORRECTION_ANGLE_2(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -491,7 +507,7 @@ class TDM(object):
     # Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
     # TDM
     def CORRECTIONS_APPLIED(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -499,7 +515,7 @@ class TDM(object):
     # Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
     # TDM
     def TROPO_DRY(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -507,27 +523,27 @@ class TDM(object):
 
     # TDM
     def TROPO_DRYAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def TROPO_DRYLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def TROPO_DRYIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         return o == 0
 
     # Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
     # TDM
     def TROPO_WET(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -535,27 +551,27 @@ class TDM(object):
 
     # TDM
     def TROPO_WETAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def TROPO_WETLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def TROPO_WETIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         return o == 0
 
     # Slant total electron content -  CCSDS 503.0-B-1, Page D-13
     # TDM
     def STEC(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -563,27 +579,27 @@ class TDM(object):
 
     # TDM
     def STECAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def STECLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def STECIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         return o == 0
 
     # Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
     # TDM
     def PRESSURE(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -591,27 +607,27 @@ class TDM(object):
 
     # TDM
     def PRESSUREAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def PRESSURELength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def PRESSUREIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         return o == 0
 
     # Relative humidity -  CCSDS 503.0-B-1, Page D-14
     # TDM
     def RHUMIDITY(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -619,27 +635,27 @@ class TDM(object):
 
     # TDM
     def RHUMIDITYAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def RHUMIDITYLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def RHUMIDITYIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         return o == 0
 
     # Ambient temperature -  CCSDS 503.0-B-1, Page D-14
     # TDM
     def TEMPERATURE(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -647,27 +663,27 @@ class TDM(object):
 
     # TDM
     def TEMPERATUREAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def TEMPERATURELength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def TEMPERATUREIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         return o == 0
 
     # Clock bias values -  CCSDS 503.0-B-1, Page D-15
     # TDM
     def CLOCK_BIAS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -675,27 +691,27 @@ class TDM(object):
 
     # TDM
     def CLOCK_BIASAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def CLOCK_BIASLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def CLOCK_BIASIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         return o == 0
 
     # Clock drift values -  CCSDS 503.0-B-1, Page D-15
     # TDM
     def CLOCK_DRIFT(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -703,24 +719,24 @@ class TDM(object):
 
     # TDM
     def CLOCK_DRIFTAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # TDM
     def CLOCK_DRIFTLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def CLOCK_DRIFTIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         return o == 0
 
-def TDMStart(builder): builder.StartObject(57)
+def TDMStart(builder): builder.StartObject(59)
 def Start(builder):
     return TDMStart(builder)
 def TDMAddOBSERVER_ID(builder, OBSERVER_ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVER_ID), 0)
@@ -789,142 +805,148 @@ def AddPARTICIPANT_2(builder, PARTICIPANT_2):
 def TDMAddPARTICIPANT_3(builder, PARTICIPANT_3): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_3), 0)
 def AddPARTICIPANT_3(builder, PARTICIPANT_3):
     return TDMAddPARTICIPANT_3(builder, PARTICIPANT_3)
-def TDMAddMODE(builder, MODE): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(MODE), 0)
+def TDMAddPARTICIPANT_4(builder, PARTICIPANT_4): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_4), 0)
+def AddPARTICIPANT_4(builder, PARTICIPANT_4):
+    return TDMAddPARTICIPANT_4(builder, PARTICIPANT_4)
+def TDMAddPARTICIPANT_5(builder, PARTICIPANT_5): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_5), 0)
+def AddPARTICIPANT_5(builder, PARTICIPANT_5):
+    return TDMAddPARTICIPANT_5(builder, PARTICIPANT_5)
+def TDMAddMODE(builder, MODE): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(MODE), 0)
 def AddMODE(builder, MODE):
     return TDMAddMODE(builder, MODE)
-def TDMAddPATH_1(builder, PATH_1): builder.PrependUint16Slot(22, PATH_1, 0)
+def TDMAddPATH_1(builder, PATH_1): builder.PrependUint16Slot(24, PATH_1, 0)
 def AddPATH_1(builder, PATH_1):
     return TDMAddPATH_1(builder, PATH_1)
-def TDMAddPATH_2(builder, PATH_2): builder.PrependUint16Slot(23, PATH_2, 0)
+def TDMAddPATH_2(builder, PATH_2): builder.PrependUint16Slot(25, PATH_2, 0)
 def AddPATH_2(builder, PATH_2):
     return TDMAddPATH_2(builder, PATH_2)
-def TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_BAND), 0)
+def TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_BAND), 0)
 def AddTRANSMIT_BAND(builder, TRANSMIT_BAND):
     return TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND)
-def TDMAddRECEIVE_BAND(builder, RECEIVE_BAND): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_BAND), 0)
+def TDMAddRECEIVE_BAND(builder, RECEIVE_BAND): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_BAND), 0)
 def AddRECEIVE_BAND(builder, RECEIVE_BAND):
     return TDMAddRECEIVE_BAND(builder, RECEIVE_BAND)
-def TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL): builder.PrependFloat32Slot(26, INTEGRATION_INTERVAL, 0.0)
+def TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL): builder.PrependFloat32Slot(28, INTEGRATION_INTERVAL, 0.0)
 def AddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL):
     return TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL)
-def TDMAddINTEGRATION_REF(builder, INTEGRATION_REF): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATION_REF), 0)
+def TDMAddINTEGRATION_REF(builder, INTEGRATION_REF): builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATION_REF), 0)
 def AddINTEGRATION_REF(builder, INTEGRATION_REF):
     return TDMAddINTEGRATION_REF(builder, INTEGRATION_REF)
-def TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2): builder.PrependFloat64Slot(28, RECEIVE_DELAY_2, 0.0)
+def TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2): builder.PrependFloat64Slot(30, RECEIVE_DELAY_2, 0.0)
 def AddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2):
     return TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2)
-def TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3): builder.PrependFloat64Slot(29, RECEIVE_DELAY_3, 0.0)
+def TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3): builder.PrependFloat64Slot(31, RECEIVE_DELAY_3, 0.0)
 def AddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3):
     return TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3)
-def TDMAddDATA_QUALITY(builder, DATA_QUALITY): builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_QUALITY), 0)
+def TDMAddDATA_QUALITY(builder, DATA_QUALITY): builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_QUALITY), 0)
 def AddDATA_QUALITY(builder, DATA_QUALITY):
     return TDMAddDATA_QUALITY(builder, DATA_QUALITY)
-def TDMAddMETA_STOP(builder, META_STOP): builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(META_STOP), 0)
+def TDMAddMETA_STOP(builder, META_STOP): builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(META_STOP), 0)
 def AddMETA_STOP(builder, META_STOP):
     return TDMAddMETA_STOP(builder, META_STOP)
-def TDMAddDATA_START(builder, DATA_START): builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_START), 0)
+def TDMAddDATA_START(builder, DATA_START): builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_START), 0)
 def AddDATA_START(builder, DATA_START):
     return TDMAddDATA_START(builder, DATA_START)
-def TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1): builder.PrependFloat64Slot(33, TRANSMIT_FREQ_1, 0.0)
+def TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1): builder.PrependFloat64Slot(35, TRANSMIT_FREQ_1, 0.0)
 def AddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1):
     return TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1)
-def TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ): builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_FREQ), 0)
+def TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ): builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_FREQ), 0)
 def AddRECEIVE_FREQ(builder, RECEIVE_FREQ):
     return TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ)
 def TDMStartRECEIVE_FREQVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartRECEIVE_FREQVector(builder, numElems):
     return TDMStartRECEIVE_FREQVector(builder, numElems)
-def TDMAddDATA_STOP(builder, DATA_STOP): builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
+def TDMAddDATA_STOP(builder, DATA_STOP): builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
 def AddDATA_STOP(builder, DATA_STOP):
     return TDMAddDATA_STOP(builder, DATA_STOP)
-def TDMAddTIMETAG_REF(builder, TIMETAG_REF): builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(TIMETAG_REF), 0)
+def TDMAddTIMETAG_REF(builder, TIMETAG_REF): builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(TIMETAG_REF), 0)
 def AddTIMETAG_REF(builder, TIMETAG_REF):
     return TDMAddTIMETAG_REF(builder, TIMETAG_REF)
-def TDMAddANGLE_TYPE(builder, ANGLE_TYPE): builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_TYPE), 0)
+def TDMAddANGLE_TYPE(builder, ANGLE_TYPE): builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_TYPE), 0)
 def AddANGLE_TYPE(builder, ANGLE_TYPE):
     return TDMAddANGLE_TYPE(builder, ANGLE_TYPE)
-def TDMAddANGLE_1(builder, ANGLE_1): builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_1), 0)
+def TDMAddANGLE_1(builder, ANGLE_1): builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_1), 0)
 def AddANGLE_1(builder, ANGLE_1):
     return TDMAddANGLE_1(builder, ANGLE_1)
 def TDMStartANGLE_1Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def StartANGLE_1Vector(builder, numElems):
     return TDMStartANGLE_1Vector(builder, numElems)
-def TDMAddANGLE_2(builder, ANGLE_2): builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_2), 0)
+def TDMAddANGLE_2(builder, ANGLE_2): builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_2), 0)
 def AddANGLE_2(builder, ANGLE_2):
     return TDMAddANGLE_2(builder, ANGLE_2)
 def TDMStartANGLE_2Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def StartANGLE_2Vector(builder, numElems):
     return TDMStartANGLE_2Vector(builder, numElems)
-def TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1): builder.PrependFloat32Slot(40, ANGLE_UNCERTAINTY_1, 0.0)
+def TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1): builder.PrependFloat32Slot(42, ANGLE_UNCERTAINTY_1, 0.0)
 def AddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1):
     return TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1)
-def TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2): builder.PrependFloat32Slot(41, ANGLE_UNCERTAINTY_2, 0.0)
+def TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2): builder.PrependFloat32Slot(43, ANGLE_UNCERTAINTY_2, 0.0)
 def AddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2):
     return TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2)
-def TDMAddRANGE_RATE(builder, RANGE_RATE): builder.PrependFloat64Slot(42, RANGE_RATE, 0.0)
+def TDMAddRANGE_RATE(builder, RANGE_RATE): builder.PrependFloat64Slot(44, RANGE_RATE, 0.0)
 def AddRANGE_RATE(builder, RANGE_RATE):
     return TDMAddRANGE_RATE(builder, RANGE_RATE)
-def TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY): builder.PrependFloat64Slot(43, RANGE_UNCERTAINTY, 0.0)
+def TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY): builder.PrependFloat64Slot(45, RANGE_UNCERTAINTY, 0.0)
 def AddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY):
     return TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY)
-def TDMAddRANGE_MODE(builder, RANGE_MODE): builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_MODE), 0)
+def TDMAddRANGE_MODE(builder, RANGE_MODE): builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_MODE), 0)
 def AddRANGE_MODE(builder, RANGE_MODE):
     return TDMAddRANGE_MODE(builder, RANGE_MODE)
-def TDMAddRANGE_MODULUS(builder, RANGE_MODULUS): builder.PrependFloat64Slot(45, RANGE_MODULUS, 0.0)
+def TDMAddRANGE_MODULUS(builder, RANGE_MODULUS): builder.PrependFloat64Slot(47, RANGE_MODULUS, 0.0)
 def AddRANGE_MODULUS(builder, RANGE_MODULUS):
     return TDMAddRANGE_MODULUS(builder, RANGE_MODULUS)
-def TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1): builder.PrependFloat32Slot(46, CORRECTION_ANGLE_1, 0.0)
+def TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1): builder.PrependFloat32Slot(48, CORRECTION_ANGLE_1, 0.0)
 def AddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1):
     return TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1)
-def TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2): builder.PrependFloat32Slot(47, CORRECTION_ANGLE_2, 0.0)
+def TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2): builder.PrependFloat32Slot(49, CORRECTION_ANGLE_2, 0.0)
 def AddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2):
     return TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2)
-def TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED): builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(CORRECTIONS_APPLIED), 0)
+def TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED): builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(CORRECTIONS_APPLIED), 0)
 def AddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED):
     return TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED)
-def TDMAddTROPO_DRY(builder, TROPO_DRY): builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_DRY), 0)
+def TDMAddTROPO_DRY(builder, TROPO_DRY): builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_DRY), 0)
 def AddTROPO_DRY(builder, TROPO_DRY):
     return TDMAddTROPO_DRY(builder, TROPO_DRY)
 def TDMStartTROPO_DRYVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartTROPO_DRYVector(builder, numElems):
     return TDMStartTROPO_DRYVector(builder, numElems)
-def TDMAddTROPO_WET(builder, TROPO_WET): builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_WET), 0)
+def TDMAddTROPO_WET(builder, TROPO_WET): builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_WET), 0)
 def AddTROPO_WET(builder, TROPO_WET):
     return TDMAddTROPO_WET(builder, TROPO_WET)
 def TDMStartTROPO_WETVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartTROPO_WETVector(builder, numElems):
     return TDMStartTROPO_WETVector(builder, numElems)
-def TDMAddSTEC(builder, STEC): builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(STEC), 0)
+def TDMAddSTEC(builder, STEC): builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(STEC), 0)
 def AddSTEC(builder, STEC):
     return TDMAddSTEC(builder, STEC)
 def TDMStartSTECVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartSTECVector(builder, numElems):
     return TDMStartSTECVector(builder, numElems)
-def TDMAddPRESSURE(builder, PRESSURE): builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(PRESSURE), 0)
+def TDMAddPRESSURE(builder, PRESSURE): builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(PRESSURE), 0)
 def AddPRESSURE(builder, PRESSURE):
     return TDMAddPRESSURE(builder, PRESSURE)
 def TDMStartPRESSUREVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartPRESSUREVector(builder, numElems):
     return TDMStartPRESSUREVector(builder, numElems)
-def TDMAddRHUMIDITY(builder, RHUMIDITY): builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(RHUMIDITY), 0)
+def TDMAddRHUMIDITY(builder, RHUMIDITY): builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(RHUMIDITY), 0)
 def AddRHUMIDITY(builder, RHUMIDITY):
     return TDMAddRHUMIDITY(builder, RHUMIDITY)
 def TDMStartRHUMIDITYVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartRHUMIDITYVector(builder, numElems):
     return TDMStartRHUMIDITYVector(builder, numElems)
-def TDMAddTEMPERATURE(builder, TEMPERATURE): builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(TEMPERATURE), 0)
+def TDMAddTEMPERATURE(builder, TEMPERATURE): builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(TEMPERATURE), 0)
 def AddTEMPERATURE(builder, TEMPERATURE):
     return TDMAddTEMPERATURE(builder, TEMPERATURE)
 def TDMStartTEMPERATUREVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartTEMPERATUREVector(builder, numElems):
     return TDMStartTEMPERATUREVector(builder, numElems)
-def TDMAddCLOCK_BIAS(builder, CLOCK_BIAS): builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_BIAS), 0)
+def TDMAddCLOCK_BIAS(builder, CLOCK_BIAS): builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_BIAS), 0)
 def AddCLOCK_BIAS(builder, CLOCK_BIAS):
     return TDMAddCLOCK_BIAS(builder, CLOCK_BIAS)
 def TDMStartCLOCK_BIASVector(builder, numElems): return builder.StartVector(8, numElems, 8)
 def StartCLOCK_BIASVector(builder, numElems):
     return TDMStartCLOCK_BIASVector(builder, numElems)
-def TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT): builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_DRIFT), 0)
+def TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT): builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_DRIFT), 0)
 def AddCLOCK_DRIFT(builder, CLOCK_DRIFT):
     return TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
 def TDMStartCLOCK_DRIFTVector(builder, numElems): return builder.StartVector(8, numElems, 8)
@@ -963,6 +985,8 @@ class TDMT(object):
         self.PARTICIPANT_1 = None  # type: str
         self.PARTICIPANT_2 = None  # type: str
         self.PARTICIPANT_3 = None  # type: str
+        self.PARTICIPANT_4 = None  # type: str
+        self.PARTICIPANT_5 = None  # type: str
         self.MODE = None  # type: str
         self.PATH_1 = 0  # type: int
         self.PATH_2 = 0  # type: int
@@ -1045,6 +1069,8 @@ class TDMT(object):
         self.PARTICIPANT_1 = TDM.PARTICIPANT_1()
         self.PARTICIPANT_2 = TDM.PARTICIPANT_2()
         self.PARTICIPANT_3 = TDM.PARTICIPANT_3()
+        self.PARTICIPANT_4 = TDM.PARTICIPANT_4()
+        self.PARTICIPANT_5 = TDM.PARTICIPANT_5()
         self.MODE = TDM.MODE()
         self.PATH_1 = TDM.PATH_1()
         self.PATH_2 = TDM.PATH_2()
@@ -1182,6 +1208,10 @@ class TDMT(object):
             PARTICIPANT_2 = builder.CreateString(self.PARTICIPANT_2)
         if self.PARTICIPANT_3 is not None:
             PARTICIPANT_3 = builder.CreateString(self.PARTICIPANT_3)
+        if self.PARTICIPANT_4 is not None:
+            PARTICIPANT_4 = builder.CreateString(self.PARTICIPANT_4)
+        if self.PARTICIPANT_5 is not None:
+            PARTICIPANT_5 = builder.CreateString(self.PARTICIPANT_5)
         if self.MODE is not None:
             MODE = builder.CreateString(self.MODE)
         if self.TRANSMIT_BAND is not None:
@@ -1329,6 +1359,10 @@ class TDMT(object):
             TDMAddPARTICIPANT_2(builder, PARTICIPANT_2)
         if self.PARTICIPANT_3 is not None:
             TDMAddPARTICIPANT_3(builder, PARTICIPANT_3)
+        if self.PARTICIPANT_4 is not None:
+            TDMAddPARTICIPANT_4(builder, PARTICIPANT_4)
+        if self.PARTICIPANT_5 is not None:
+            TDMAddPARTICIPANT_5(builder, PARTICIPANT_5)
         if self.MODE is not None:
             TDMAddMODE(builder, MODE)
         TDMAddPATH_1(builder, self.PATH_1)

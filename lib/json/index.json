@@ -2198,6 +2198,14 @@
                             "type": "string",
                             "description": "Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9"
                         },
+                        "PARTICIPANT_4": {
+                            "type": "string",
+                            "description": "Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9"
+                        },
+                        "PARTICIPANT_5": {
+                            "type": "string",
+                            "description": "Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9"
+                        },
                         "MODE": {
                             "type": "string",
                             "description": "Mode of TDM -  CCSDS 503.0-B-1, Page D-9"

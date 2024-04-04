@@ -43,42 +43,44 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PARTICIPANT_1 = 40,
     VT_PARTICIPANT_2 = 42,
     VT_PARTICIPANT_3 = 44,
-    VT_MODE = 46,
-    VT_PATH_1 = 48,
-    VT_PATH_2 = 50,
-    VT_TRANSMIT_BAND = 52,
-    VT_RECEIVE_BAND = 54,
-    VT_INTEGRATION_INTERVAL = 56,
-    VT_INTEGRATION_REF = 58,
-    VT_RECEIVE_DELAY_2 = 60,
-    VT_RECEIVE_DELAY_3 = 62,
-    VT_DATA_QUALITY = 64,
-    VT_META_STOP = 66,
-    VT_DATA_START = 68,
-    VT_TRANSMIT_FREQ_1 = 70,
-    VT_RECEIVE_FREQ = 72,
-    VT_DATA_STOP = 74,
-    VT_TIMETAG_REF = 76,
-    VT_ANGLE_TYPE = 78,
-    VT_ANGLE_1 = 80,
-    VT_ANGLE_2 = 82,
-    VT_ANGLE_UNCERTAINTY_1 = 84,
-    VT_ANGLE_UNCERTAINTY_2 = 86,
-    VT_RANGE_RATE = 88,
-    VT_RANGE_UNCERTAINTY = 90,
-    VT_RANGE_MODE = 92,
-    VT_RANGE_MODULUS = 94,
-    VT_CORRECTION_ANGLE_1 = 96,
-    VT_CORRECTION_ANGLE_2 = 98,
-    VT_CORRECTIONS_APPLIED = 100,
-    VT_TROPO_DRY = 102,
-    VT_TROPO_WET = 104,
-    VT_STEC = 106,
-    VT_PRESSURE = 108,
-    VT_RHUMIDITY = 110,
-    VT_TEMPERATURE = 112,
-    VT_CLOCK_BIAS = 114,
-    VT_CLOCK_DRIFT = 116
+    VT_PARTICIPANT_4 = 46,
+    VT_PARTICIPANT_5 = 48,
+    VT_MODE = 50,
+    VT_PATH_1 = 52,
+    VT_PATH_2 = 54,
+    VT_TRANSMIT_BAND = 56,
+    VT_RECEIVE_BAND = 58,
+    VT_INTEGRATION_INTERVAL = 60,
+    VT_INTEGRATION_REF = 62,
+    VT_RECEIVE_DELAY_2 = 64,
+    VT_RECEIVE_DELAY_3 = 66,
+    VT_DATA_QUALITY = 68,
+    VT_META_STOP = 70,
+    VT_DATA_START = 72,
+    VT_TRANSMIT_FREQ_1 = 74,
+    VT_RECEIVE_FREQ = 76,
+    VT_DATA_STOP = 78,
+    VT_TIMETAG_REF = 80,
+    VT_ANGLE_TYPE = 82,
+    VT_ANGLE_1 = 84,
+    VT_ANGLE_2 = 86,
+    VT_ANGLE_UNCERTAINTY_1 = 88,
+    VT_ANGLE_UNCERTAINTY_2 = 90,
+    VT_RANGE_RATE = 92,
+    VT_RANGE_UNCERTAINTY = 94,
+    VT_RANGE_MODE = 96,
+    VT_RANGE_MODULUS = 98,
+    VT_CORRECTION_ANGLE_1 = 100,
+    VT_CORRECTION_ANGLE_2 = 102,
+    VT_CORRECTIONS_APPLIED = 104,
+    VT_TROPO_DRY = 106,
+    VT_TROPO_WET = 108,
+    VT_STEC = 110,
+    VT_PRESSURE = 112,
+    VT_RHUMIDITY = 114,
+    VT_TEMPERATURE = 116,
+    VT_CLOCK_BIAS = 118,
+    VT_CLOCK_DRIFT = 120
   };
   /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
   const ::flatbuffers::String *OBSERVER_ID() const {
@@ -163,6 +165,14 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
   const ::flatbuffers::String *PARTICIPANT_3() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_3);
+  }
+  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  const ::flatbuffers::String *PARTICIPANT_4() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_4);
+  }
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  const ::flatbuffers::String *PARTICIPANT_5() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_5);
   }
   /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
   const ::flatbuffers::String *MODE() const {
@@ -347,6 +357,10 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(PARTICIPANT_2()) &&
            VerifyOffset(verifier, VT_PARTICIPANT_3) &&
            verifier.VerifyString(PARTICIPANT_3()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_4) &&
+           verifier.VerifyString(PARTICIPANT_4()) &&
+           VerifyOffset(verifier, VT_PARTICIPANT_5) &&
+           verifier.VerifyString(PARTICIPANT_5()) &&
            VerifyOffset(verifier, VT_MODE) &&
            verifier.VerifyString(MODE()) &&
            VerifyField<uint16_t>(verifier, VT_PATH_1, 2) &&
@@ -476,6 +490,12 @@ struct TDMBuilder {
   }
   void add_PARTICIPANT_3(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_3) {
     fbb_.AddOffset(TDM::VT_PARTICIPANT_3, PARTICIPANT_3);
+  }
+  void add_PARTICIPANT_4(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_4) {
+    fbb_.AddOffset(TDM::VT_PARTICIPANT_4, PARTICIPANT_4);
+  }
+  void add_PARTICIPANT_5(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_5) {
+    fbb_.AddOffset(TDM::VT_PARTICIPANT_5, PARTICIPANT_5);
   }
   void add_MODE(::flatbuffers::Offset<::flatbuffers::String> MODE) {
     fbb_.AddOffset(TDM::VT_MODE, MODE);
@@ -619,6 +639,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
     ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_1 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_2 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_3 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_4 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_5 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MODE = 0,
     uint16_t PATH_1 = 0,
     uint16_t PATH_2 = 0,
@@ -696,6 +718,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_RECEIVE_BAND(RECEIVE_BAND);
   builder_.add_TRANSMIT_BAND(TRANSMIT_BAND);
   builder_.add_MODE(MODE);
+  builder_.add_PARTICIPANT_5(PARTICIPANT_5);
+  builder_.add_PARTICIPANT_4(PARTICIPANT_4);
   builder_.add_PARTICIPANT_3(PARTICIPANT_3);
   builder_.add_PARTICIPANT_2(PARTICIPANT_2);
   builder_.add_PARTICIPANT_1(PARTICIPANT_1);
@@ -739,6 +763,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     const char *PARTICIPANT_1 = nullptr,
     const char *PARTICIPANT_2 = nullptr,
     const char *PARTICIPANT_3 = nullptr,
+    const char *PARTICIPANT_4 = nullptr,
+    const char *PARTICIPANT_5 = nullptr,
     const char *MODE = nullptr,
     uint16_t PATH_1 = 0,
     uint16_t PATH_2 = 0,
@@ -788,6 +814,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
   auto PARTICIPANT_1__ = PARTICIPANT_1 ? _fbb.CreateString(PARTICIPANT_1) : 0;
   auto PARTICIPANT_2__ = PARTICIPANT_2 ? _fbb.CreateString(PARTICIPANT_2) : 0;
   auto PARTICIPANT_3__ = PARTICIPANT_3 ? _fbb.CreateString(PARTICIPANT_3) : 0;
+  auto PARTICIPANT_4__ = PARTICIPANT_4 ? _fbb.CreateString(PARTICIPANT_4) : 0;
+  auto PARTICIPANT_5__ = PARTICIPANT_5 ? _fbb.CreateString(PARTICIPANT_5) : 0;
   auto MODE__ = MODE ? _fbb.CreateString(MODE) : 0;
   auto TRANSMIT_BAND__ = TRANSMIT_BAND ? _fbb.CreateString(TRANSMIT_BAND) : 0;
   auto RECEIVE_BAND__ = RECEIVE_BAND ? _fbb.CreateString(RECEIVE_BAND) : 0;
@@ -834,6 +862,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
       PARTICIPANT_1__,
       PARTICIPANT_2__,
       PARTICIPANT_3__,
+      PARTICIPANT_4__,
+      PARTICIPANT_5__,
       MODE__,
       PATH_1,
       PATH_2,

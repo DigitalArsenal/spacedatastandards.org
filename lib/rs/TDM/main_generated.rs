@@ -48,42 +48,44 @@ impl<'a> TDM<'a> {
   pub const VT_PARTICIPANT_1: flatbuffers::VOffsetT = 40;
   pub const VT_PARTICIPANT_2: flatbuffers::VOffsetT = 42;
   pub const VT_PARTICIPANT_3: flatbuffers::VOffsetT = 44;
-  pub const VT_MODE: flatbuffers::VOffsetT = 46;
-  pub const VT_PATH_1: flatbuffers::VOffsetT = 48;
-  pub const VT_PATH_2: flatbuffers::VOffsetT = 50;
-  pub const VT_TRANSMIT_BAND: flatbuffers::VOffsetT = 52;
-  pub const VT_RECEIVE_BAND: flatbuffers::VOffsetT = 54;
-  pub const VT_INTEGRATION_INTERVAL: flatbuffers::VOffsetT = 56;
-  pub const VT_INTEGRATION_REF: flatbuffers::VOffsetT = 58;
-  pub const VT_RECEIVE_DELAY_2: flatbuffers::VOffsetT = 60;
-  pub const VT_RECEIVE_DELAY_3: flatbuffers::VOffsetT = 62;
-  pub const VT_DATA_QUALITY: flatbuffers::VOffsetT = 64;
-  pub const VT_META_STOP: flatbuffers::VOffsetT = 66;
-  pub const VT_DATA_START: flatbuffers::VOffsetT = 68;
-  pub const VT_TRANSMIT_FREQ_1: flatbuffers::VOffsetT = 70;
-  pub const VT_RECEIVE_FREQ: flatbuffers::VOffsetT = 72;
-  pub const VT_DATA_STOP: flatbuffers::VOffsetT = 74;
-  pub const VT_TIMETAG_REF: flatbuffers::VOffsetT = 76;
-  pub const VT_ANGLE_TYPE: flatbuffers::VOffsetT = 78;
-  pub const VT_ANGLE_1: flatbuffers::VOffsetT = 80;
-  pub const VT_ANGLE_2: flatbuffers::VOffsetT = 82;
-  pub const VT_ANGLE_UNCERTAINTY_1: flatbuffers::VOffsetT = 84;
-  pub const VT_ANGLE_UNCERTAINTY_2: flatbuffers::VOffsetT = 86;
-  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 88;
-  pub const VT_RANGE_UNCERTAINTY: flatbuffers::VOffsetT = 90;
-  pub const VT_RANGE_MODE: flatbuffers::VOffsetT = 92;
-  pub const VT_RANGE_MODULUS: flatbuffers::VOffsetT = 94;
-  pub const VT_CORRECTION_ANGLE_1: flatbuffers::VOffsetT = 96;
-  pub const VT_CORRECTION_ANGLE_2: flatbuffers::VOffsetT = 98;
-  pub const VT_CORRECTIONS_APPLIED: flatbuffers::VOffsetT = 100;
-  pub const VT_TROPO_DRY: flatbuffers::VOffsetT = 102;
-  pub const VT_TROPO_WET: flatbuffers::VOffsetT = 104;
-  pub const VT_STEC: flatbuffers::VOffsetT = 106;
-  pub const VT_PRESSURE: flatbuffers::VOffsetT = 108;
-  pub const VT_RHUMIDITY: flatbuffers::VOffsetT = 110;
-  pub const VT_TEMPERATURE: flatbuffers::VOffsetT = 112;
-  pub const VT_CLOCK_BIAS: flatbuffers::VOffsetT = 114;
-  pub const VT_CLOCK_DRIFT: flatbuffers::VOffsetT = 116;
+  pub const VT_PARTICIPANT_4: flatbuffers::VOffsetT = 46;
+  pub const VT_PARTICIPANT_5: flatbuffers::VOffsetT = 48;
+  pub const VT_MODE: flatbuffers::VOffsetT = 50;
+  pub const VT_PATH_1: flatbuffers::VOffsetT = 52;
+  pub const VT_PATH_2: flatbuffers::VOffsetT = 54;
+  pub const VT_TRANSMIT_BAND: flatbuffers::VOffsetT = 56;
+  pub const VT_RECEIVE_BAND: flatbuffers::VOffsetT = 58;
+  pub const VT_INTEGRATION_INTERVAL: flatbuffers::VOffsetT = 60;
+  pub const VT_INTEGRATION_REF: flatbuffers::VOffsetT = 62;
+  pub const VT_RECEIVE_DELAY_2: flatbuffers::VOffsetT = 64;
+  pub const VT_RECEIVE_DELAY_3: flatbuffers::VOffsetT = 66;
+  pub const VT_DATA_QUALITY: flatbuffers::VOffsetT = 68;
+  pub const VT_META_STOP: flatbuffers::VOffsetT = 70;
+  pub const VT_DATA_START: flatbuffers::VOffsetT = 72;
+  pub const VT_TRANSMIT_FREQ_1: flatbuffers::VOffsetT = 74;
+  pub const VT_RECEIVE_FREQ: flatbuffers::VOffsetT = 76;
+  pub const VT_DATA_STOP: flatbuffers::VOffsetT = 78;
+  pub const VT_TIMETAG_REF: flatbuffers::VOffsetT = 80;
+  pub const VT_ANGLE_TYPE: flatbuffers::VOffsetT = 82;
+  pub const VT_ANGLE_1: flatbuffers::VOffsetT = 84;
+  pub const VT_ANGLE_2: flatbuffers::VOffsetT = 86;
+  pub const VT_ANGLE_UNCERTAINTY_1: flatbuffers::VOffsetT = 88;
+  pub const VT_ANGLE_UNCERTAINTY_2: flatbuffers::VOffsetT = 90;
+  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 92;
+  pub const VT_RANGE_UNCERTAINTY: flatbuffers::VOffsetT = 94;
+  pub const VT_RANGE_MODE: flatbuffers::VOffsetT = 96;
+  pub const VT_RANGE_MODULUS: flatbuffers::VOffsetT = 98;
+  pub const VT_CORRECTION_ANGLE_1: flatbuffers::VOffsetT = 100;
+  pub const VT_CORRECTION_ANGLE_2: flatbuffers::VOffsetT = 102;
+  pub const VT_CORRECTIONS_APPLIED: flatbuffers::VOffsetT = 104;
+  pub const VT_TROPO_DRY: flatbuffers::VOffsetT = 106;
+  pub const VT_TROPO_WET: flatbuffers::VOffsetT = 108;
+  pub const VT_STEC: flatbuffers::VOffsetT = 110;
+  pub const VT_PRESSURE: flatbuffers::VOffsetT = 112;
+  pub const VT_RHUMIDITY: flatbuffers::VOffsetT = 114;
+  pub const VT_TEMPERATURE: flatbuffers::VOffsetT = 116;
+  pub const VT_CLOCK_BIAS: flatbuffers::VOffsetT = 118;
+  pub const VT_CLOCK_DRIFT: flatbuffers::VOffsetT = 120;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -135,6 +137,8 @@ impl<'a> TDM<'a> {
     if let Some(x) = args.RECEIVE_BAND { builder.add_RECEIVE_BAND(x); }
     if let Some(x) = args.TRANSMIT_BAND { builder.add_TRANSMIT_BAND(x); }
     if let Some(x) = args.MODE { builder.add_MODE(x); }
+    if let Some(x) = args.PARTICIPANT_5 { builder.add_PARTICIPANT_5(x); }
+    if let Some(x) = args.PARTICIPANT_4 { builder.add_PARTICIPANT_4(x); }
     if let Some(x) = args.PARTICIPANT_3 { builder.add_PARTICIPANT_3(x); }
     if let Some(x) = args.PARTICIPANT_2 { builder.add_PARTICIPANT_2(x); }
     if let Some(x) = args.PARTICIPANT_1 { builder.add_PARTICIPANT_1(x); }
@@ -201,6 +205,12 @@ impl<'a> TDM<'a> {
       x.to_string()
     });
     let PARTICIPANT_3 = self.PARTICIPANT_3().map(|x| {
+      x.to_string()
+    });
+    let PARTICIPANT_4 = self.PARTICIPANT_4().map(|x| {
+      x.to_string()
+    });
+    let PARTICIPANT_5 = self.PARTICIPANT_5().map(|x| {
       x.to_string()
     });
     let MODE = self.MODE().map(|x| {
@@ -307,6 +317,8 @@ impl<'a> TDM<'a> {
       PARTICIPANT_1,
       PARTICIPANT_2,
       PARTICIPANT_3,
+      PARTICIPANT_4,
+      PARTICIPANT_5,
       MODE,
       PATH_1,
       PATH_2,
@@ -513,6 +525,22 @@ impl<'a> TDM<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TDM::VT_PARTICIPANT_3, None)}
+  }
+  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  #[inline]
+  pub fn PARTICIPANT_4(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TDM::VT_PARTICIPANT_4, None)}
+  }
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  #[inline]
+  pub fn PARTICIPANT_5(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TDM::VT_PARTICIPANT_5, None)}
   }
   /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
   #[inline]
@@ -834,6 +862,8 @@ impl flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_1", Self::VT_PARTICIPANT_1, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_2", Self::VT_PARTICIPANT_2, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_3", Self::VT_PARTICIPANT_3, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_4", Self::VT_PARTICIPANT_4, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PARTICIPANT_5", Self::VT_PARTICIPANT_5, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MODE", Self::VT_MODE, false)?
      .visit_field::<u16>("PATH_1", Self::VT_PATH_1, false)?
      .visit_field::<u16>("PATH_2", Self::VT_PATH_2, false)?
@@ -896,6 +926,8 @@ pub struct TDMArgs<'a> {
     pub PARTICIPANT_1: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PARTICIPANT_2: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PARTICIPANT_3: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_4: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICIPANT_5: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PATH_1: u16,
     pub PATH_2: u16,
@@ -958,6 +990,8 @@ impl<'a> Default for TDMArgs<'a> {
       PARTICIPANT_1: None,
       PARTICIPANT_2: None,
       PARTICIPANT_3: None,
+      PARTICIPANT_4: None,
+      PARTICIPANT_5: None,
       MODE: None,
       PATH_1: 0,
       PATH_2: 0,
@@ -1086,6 +1120,14 @@ impl<'a: 'b, 'b> TDMBuilder<'a, 'b> {
   #[inline]
   pub fn add_PARTICIPANT_3(&mut self, PARTICIPANT_3: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_PARTICIPANT_3, PARTICIPANT_3);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_4(&mut self, PARTICIPANT_4: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_PARTICIPANT_4, PARTICIPANT_4);
+  }
+  #[inline]
+  pub fn add_PARTICIPANT_5(&mut self, PARTICIPANT_5: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_PARTICIPANT_5, PARTICIPANT_5);
   }
   #[inline]
   pub fn add_MODE(&mut self, MODE: flatbuffers::WIPOffset<&'b  str>) {
@@ -1270,6 +1312,8 @@ impl core::fmt::Debug for TDM<'_> {
       ds.field("PARTICIPANT_1", &self.PARTICIPANT_1());
       ds.field("PARTICIPANT_2", &self.PARTICIPANT_2());
       ds.field("PARTICIPANT_3", &self.PARTICIPANT_3());
+      ds.field("PARTICIPANT_4", &self.PARTICIPANT_4());
+      ds.field("PARTICIPANT_5", &self.PARTICIPANT_5());
       ds.field("MODE", &self.MODE());
       ds.field("PATH_1", &self.PATH_1());
       ds.field("PATH_2", &self.PATH_2());
@@ -1333,6 +1377,8 @@ pub struct TDMT {
   pub PARTICIPANT_1: Option<String>,
   pub PARTICIPANT_2: Option<String>,
   pub PARTICIPANT_3: Option<String>,
+  pub PARTICIPANT_4: Option<String>,
+  pub PARTICIPANT_5: Option<String>,
   pub MODE: Option<String>,
   pub PATH_1: u16,
   pub PATH_2: u16,
@@ -1394,6 +1440,8 @@ impl Default for TDMT {
       PARTICIPANT_1: None,
       PARTICIPANT_2: None,
       PARTICIPANT_3: None,
+      PARTICIPANT_4: None,
+      PARTICIPANT_5: None,
       MODE: None,
       PATH_1: 0,
       PATH_2: 0,
@@ -1483,6 +1531,12 @@ impl TDMT {
       _fbb.create_string(x)
     });
     let PARTICIPANT_3 = self.PARTICIPANT_3.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_4 = self.PARTICIPANT_4.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARTICIPANT_5 = self.PARTICIPANT_5.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let MODE = self.MODE.as_ref().map(|x|{
@@ -1589,6 +1643,8 @@ impl TDMT {
       PARTICIPANT_1,
       PARTICIPANT_2,
       PARTICIPANT_3,
+      PARTICIPANT_4,
+      PARTICIPANT_5,
       MODE,
       PATH_1,
       PATH_2,

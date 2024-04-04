@@ -141,230 +141,242 @@ public final class TDM extends Table {
   public ByteBuffer PARTICIPANT_3AsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
   public ByteBuffer PARTICIPANT_3InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
   /**
+   * Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+   */
+  public String PARTICIPANT_4() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PARTICIPANT_4AsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer PARTICIPANT_4InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+   */
+  public String PARTICIPANT_5() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PARTICIPANT_5AsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer PARTICIPANT_5InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
    * Mode of TDM -  CCSDS 503.0-B-1, Page D-9
    */
-  public String MODE() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MODEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
-  public ByteBuffer MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  public String MODE() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MODEAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
   /**
    * First path in TDM -  CCSDS 503.0-B-1, Page D-9
    */
-  public int PATH_1() { int o = __offset(48); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  public int PATH_1() { int o = __offset(52); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
   /**
    * Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
    */
-  public int PATH_2() { int o = __offset(50); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  public int PATH_2() { int o = __offset(54); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
   /**
    * Transmit band -  CCSDS 503.0-B-1, Page D-9
    */
-  public String TRANSMIT_BAND() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRANSMIT_BANDAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
-  public ByteBuffer TRANSMIT_BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  public String TRANSMIT_BAND() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRANSMIT_BANDAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer TRANSMIT_BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
   /**
    * Receive band -  CCSDS 503.0-B-1, Page D-9
    */
-  public String RECEIVE_BAND() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RECEIVE_BANDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
-  public ByteBuffer RECEIVE_BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  public String RECEIVE_BAND() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RECEIVE_BANDAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer RECEIVE_BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
   /**
    * Integration interval -  CCSDS 503.0-B-1, Page D-9
    */
-  public float INTEGRATION_INTERVAL() { int o = __offset(56); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float INTEGRATION_INTERVAL() { int o = __offset(60); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Integration reference -  CCSDS 503.0-B-1, Page D-9
    */
-  public String INTEGRATION_REF() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INTEGRATION_REFAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
-  public ByteBuffer INTEGRATION_REFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  public String INTEGRATION_REF() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INTEGRATION_REFAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer INTEGRATION_REFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
   /**
    * Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
    */
-  public double RECEIVE_DELAY_2() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RECEIVE_DELAY_2() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
    */
-  public double RECEIVE_DELAY_3() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RECEIVE_DELAY_3() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Data quality -  CCSDS 503.0-B-1, Page D-9
    */
-  public String DATA_QUALITY() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DATA_QUALITYAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
-  public ByteBuffer DATA_QUALITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  public String DATA_QUALITY() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATA_QUALITYAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer DATA_QUALITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
   /**
    * End of metadata section -  CCSDS 503.0-B-1, Page D-9
    */
-  public String META_STOP() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer META_STOPAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
-  public ByteBuffer META_STOPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  public String META_STOP() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer META_STOPAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer META_STOPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
   /**
    * Start of data section -  CCSDS 503.0-B-1, Page D-9
    */
-  public String DATA_START() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DATA_STARTAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
-  public ByteBuffer DATA_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  public String DATA_START() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATA_STARTAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer DATA_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
   /**
    * Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
    */
-  public double TRANSMIT_FREQ_1() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRANSMIT_FREQ_1() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Receive frequency -  CCSDS 503.0-B-1, Page D-9
    */
-  public double RECEIVE_FREQ(int j) { int o = __offset(72); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int RECEIVE_FREQLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public double RECEIVE_FREQ(int j) { int o = __offset(76); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int RECEIVE_FREQLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector receiveFreqVector() { return receiveFreqVector(new DoubleVector()); }
-  public DoubleVector receiveFreqVector(DoubleVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer RECEIVE_FREQAsByteBuffer() { return __vector_as_bytebuffer(72, 8); }
-  public ByteBuffer RECEIVE_FREQInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 8); }
+  public DoubleVector receiveFreqVector(DoubleVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer RECEIVE_FREQAsByteBuffer() { return __vector_as_bytebuffer(76, 8); }
+  public ByteBuffer RECEIVE_FREQInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 8); }
   /**
    * End of data section -  CCSDS 503.0-B-1, Page D-9
    */
-  public String DATA_STOP() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DATA_STOPAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
-  public ByteBuffer DATA_STOPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  public String DATA_STOP() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATA_STOPAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer DATA_STOPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
   /**
    * Additional properties as required by the specific application of the TDM...
    * Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
    */
-  public String TIMETAG_REF() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TIMETAG_REFAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
-  public ByteBuffer TIMETAG_REFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  public String TIMETAG_REF() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIMETAG_REFAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer TIMETAG_REFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
   /**
    * Type of angle data -  CCSDS 503.0-B-1, Page D-12
    * Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
    */
-  public String ANGLE_TYPE() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ANGLE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
-  public ByteBuffer ANGLE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  public String ANGLE_TYPE() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ANGLE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer ANGLE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
   /**
    * First angle value -  CCSDS 503.0-B-1, Page D-12
    */
-  public float ANGLE_1(int j) { int o = __offset(80); return o != 0 ? bb.getFloat(__vector(o) + j * 4) : 0; }
-  public int ANGLE_1Length() { int o = __offset(80); return o != 0 ? __vector_len(o) : 0; }
+  public float ANGLE_1(int j) { int o = __offset(84); return o != 0 ? bb.getFloat(__vector(o) + j * 4) : 0; }
+  public int ANGLE_1Length() { int o = __offset(84); return o != 0 ? __vector_len(o) : 0; }
   public FloatVector angle1Vector() { return angle1Vector(new FloatVector()); }
-  public FloatVector angle1Vector(FloatVector obj) { int o = __offset(80); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer ANGLE_1AsByteBuffer() { return __vector_as_bytebuffer(80, 4); }
-  public ByteBuffer ANGLE_1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 4); }
+  public FloatVector angle1Vector(FloatVector obj) { int o = __offset(84); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ANGLE_1AsByteBuffer() { return __vector_as_bytebuffer(84, 4); }
+  public ByteBuffer ANGLE_1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 4); }
   /**
    * Second angle value -  CCSDS 503.0-B-1, Page D-12
    */
-  public float ANGLE_2(int j) { int o = __offset(82); return o != 0 ? bb.getFloat(__vector(o) + j * 4) : 0; }
-  public int ANGLE_2Length() { int o = __offset(82); return o != 0 ? __vector_len(o) : 0; }
+  public float ANGLE_2(int j) { int o = __offset(86); return o != 0 ? bb.getFloat(__vector(o) + j * 4) : 0; }
+  public int ANGLE_2Length() { int o = __offset(86); return o != 0 ? __vector_len(o) : 0; }
   public FloatVector angle2Vector() { return angle2Vector(new FloatVector()); }
-  public FloatVector angle2Vector(FloatVector obj) { int o = __offset(82); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer ANGLE_2AsByteBuffer() { return __vector_as_bytebuffer(82, 4); }
-  public ByteBuffer ANGLE_2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 4); }
+  public FloatVector angle2Vector(FloatVector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ANGLE_2AsByteBuffer() { return __vector_as_bytebuffer(86, 4); }
+  public ByteBuffer ANGLE_2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 4); }
   /**
    * Uncertainty of first angle -  CCSDS 503.0-B-1
    */
-  public float ANGLE_UNCERTAINTY_1() { int o = __offset(84); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ANGLE_UNCERTAINTY_1() { int o = __offset(88); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Uncertainty of second angle -  CCSDS 503.0-B-1
    */
-  public float ANGLE_UNCERTAINTY_2() { int o = __offset(86); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ANGLE_UNCERTAINTY_2() { int o = __offset(90); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Rate of change of range -  CCSDS 503.0-B-1
    */
-  public double RANGE_RATE() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RANGE_RATE() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Uncertainty in range -  CCSDS 503.0-B-1
    */
-  public double RANGE_UNCERTAINTY() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RANGE_UNCERTAINTY() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Mode of range data -  CCSDS 503.0-B-1, Page D-10
    */
-  public String RANGE_MODE() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RANGE_MODEAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
-  public ByteBuffer RANGE_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  public String RANGE_MODE() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RANGE_MODEAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
+  public ByteBuffer RANGE_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
   /**
    * Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
    */
-  public double RANGE_MODULUS() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double RANGE_MODULUS() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * First correction angle -  CCSDS 503.0-B-1, Page D-12
    */
-  public float CORRECTION_ANGLE_1() { int o = __offset(96); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float CORRECTION_ANGLE_1() { int o = __offset(100); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Second correction angle -  CCSDS 503.0-B-1, Page D-12
    */
-  public float CORRECTION_ANGLE_2() { int o = __offset(98); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float CORRECTION_ANGLE_2() { int o = __offset(102); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
    */
-  public String CORRECTIONS_APPLIED() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CORRECTIONS_APPLIEDAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
-  public ByteBuffer CORRECTIONS_APPLIEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
+  public String CORRECTIONS_APPLIED() { int o = __offset(104); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CORRECTIONS_APPLIEDAsByteBuffer() { return __vector_as_bytebuffer(104, 1); }
+  public ByteBuffer CORRECTIONS_APPLIEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 1); }
   /**
    * Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
    */
-  public double TROPO_DRY(int j) { int o = __offset(102); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int TROPO_DRYLength() { int o = __offset(102); return o != 0 ? __vector_len(o) : 0; }
+  public double TROPO_DRY(int j) { int o = __offset(106); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int TROPO_DRYLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector tropoDryVector() { return tropoDryVector(new DoubleVector()); }
-  public DoubleVector tropoDryVector(DoubleVector obj) { int o = __offset(102); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer TROPO_DRYAsByteBuffer() { return __vector_as_bytebuffer(102, 8); }
-  public ByteBuffer TROPO_DRYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 8); }
+  public DoubleVector tropoDryVector(DoubleVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer TROPO_DRYAsByteBuffer() { return __vector_as_bytebuffer(106, 8); }
+  public ByteBuffer TROPO_DRYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 8); }
   /**
    * Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
    */
-  public double TROPO_WET(int j) { int o = __offset(104); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int TROPO_WETLength() { int o = __offset(104); return o != 0 ? __vector_len(o) : 0; }
+  public double TROPO_WET(int j) { int o = __offset(108); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int TROPO_WETLength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector tropoWetVector() { return tropoWetVector(new DoubleVector()); }
-  public DoubleVector tropoWetVector(DoubleVector obj) { int o = __offset(104); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer TROPO_WETAsByteBuffer() { return __vector_as_bytebuffer(104, 8); }
-  public ByteBuffer TROPO_WETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 8); }
+  public DoubleVector tropoWetVector(DoubleVector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer TROPO_WETAsByteBuffer() { return __vector_as_bytebuffer(108, 8); }
+  public ByteBuffer TROPO_WETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 8); }
   /**
    * Slant total electron content -  CCSDS 503.0-B-1, Page D-13
    */
-  public double STEC(int j) { int o = __offset(106); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int STECLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public double STEC(int j) { int o = __offset(110); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int STECLength() { int o = __offset(110); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector stecVector() { return stecVector(new DoubleVector()); }
-  public DoubleVector stecVector(DoubleVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer STECAsByteBuffer() { return __vector_as_bytebuffer(106, 8); }
-  public ByteBuffer STECInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 8); }
+  public DoubleVector stecVector(DoubleVector obj) { int o = __offset(110); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer STECAsByteBuffer() { return __vector_as_bytebuffer(110, 8); }
+  public ByteBuffer STECInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 110, 8); }
   /**
    * Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
    */
-  public double PRESSURE(int j) { int o = __offset(108); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int PRESSURELength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
+  public double PRESSURE(int j) { int o = __offset(112); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int PRESSURELength() { int o = __offset(112); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector pressureVector() { return pressureVector(new DoubleVector()); }
-  public DoubleVector pressureVector(DoubleVector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer PRESSUREAsByteBuffer() { return __vector_as_bytebuffer(108, 8); }
-  public ByteBuffer PRESSUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 8); }
+  public DoubleVector pressureVector(DoubleVector obj) { int o = __offset(112); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer PRESSUREAsByteBuffer() { return __vector_as_bytebuffer(112, 8); }
+  public ByteBuffer PRESSUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 112, 8); }
   /**
    * Relative humidity -  CCSDS 503.0-B-1, Page D-14
    */
-  public double RHUMIDITY(int j) { int o = __offset(110); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int RHUMIDITYLength() { int o = __offset(110); return o != 0 ? __vector_len(o) : 0; }
+  public double RHUMIDITY(int j) { int o = __offset(114); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int RHUMIDITYLength() { int o = __offset(114); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector rhumidityVector() { return rhumidityVector(new DoubleVector()); }
-  public DoubleVector rhumidityVector(DoubleVector obj) { int o = __offset(110); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer RHUMIDITYAsByteBuffer() { return __vector_as_bytebuffer(110, 8); }
-  public ByteBuffer RHUMIDITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 110, 8); }
+  public DoubleVector rhumidityVector(DoubleVector obj) { int o = __offset(114); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer RHUMIDITYAsByteBuffer() { return __vector_as_bytebuffer(114, 8); }
+  public ByteBuffer RHUMIDITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 114, 8); }
   /**
    * Ambient temperature -  CCSDS 503.0-B-1, Page D-14
    */
-  public double TEMPERATURE(int j) { int o = __offset(112); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int TEMPERATURELength() { int o = __offset(112); return o != 0 ? __vector_len(o) : 0; }
+  public double TEMPERATURE(int j) { int o = __offset(116); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int TEMPERATURELength() { int o = __offset(116); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector temperatureVector() { return temperatureVector(new DoubleVector()); }
-  public DoubleVector temperatureVector(DoubleVector obj) { int o = __offset(112); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer TEMPERATUREAsByteBuffer() { return __vector_as_bytebuffer(112, 8); }
-  public ByteBuffer TEMPERATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 112, 8); }
+  public DoubleVector temperatureVector(DoubleVector obj) { int o = __offset(116); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer TEMPERATUREAsByteBuffer() { return __vector_as_bytebuffer(116, 8); }
+  public ByteBuffer TEMPERATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 8); }
   /**
    * Clock bias values -  CCSDS 503.0-B-1, Page D-15
    */
-  public double CLOCK_BIAS(int j) { int o = __offset(114); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int CLOCK_BIASLength() { int o = __offset(114); return o != 0 ? __vector_len(o) : 0; }
+  public double CLOCK_BIAS(int j) { int o = __offset(118); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int CLOCK_BIASLength() { int o = __offset(118); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector clockBiasVector() { return clockBiasVector(new DoubleVector()); }
-  public DoubleVector clockBiasVector(DoubleVector obj) { int o = __offset(114); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer CLOCK_BIASAsByteBuffer() { return __vector_as_bytebuffer(114, 8); }
-  public ByteBuffer CLOCK_BIASInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 114, 8); }
+  public DoubleVector clockBiasVector(DoubleVector obj) { int o = __offset(118); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CLOCK_BIASAsByteBuffer() { return __vector_as_bytebuffer(118, 8); }
+  public ByteBuffer CLOCK_BIASInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 8); }
   /**
    * Clock drift values -  CCSDS 503.0-B-1, Page D-15
    */
-  public double CLOCK_DRIFT(int j) { int o = __offset(116); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int CLOCK_DRIFTLength() { int o = __offset(116); return o != 0 ? __vector_len(o) : 0; }
+  public double CLOCK_DRIFT(int j) { int o = __offset(120); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int CLOCK_DRIFTLength() { int o = __offset(120); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector clockDriftVector() { return clockDriftVector(new DoubleVector()); }
-  public DoubleVector clockDriftVector(DoubleVector obj) { int o = __offset(116); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer CLOCK_DRIFTAsByteBuffer() { return __vector_as_bytebuffer(116, 8); }
-  public ByteBuffer CLOCK_DRIFTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 8); }
+  public DoubleVector clockDriftVector(DoubleVector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CLOCK_DRIFTAsByteBuffer() { return __vector_as_bytebuffer(120, 8); }
+  public ByteBuffer CLOCK_DRIFTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 120, 8); }
 
   public static int createTDM(FlatBufferBuilder builder,
       int OBSERVER_IDOffset,
@@ -388,6 +400,8 @@ public final class TDM extends Table {
       int PARTICIPANT_1Offset,
       int PARTICIPANT_2Offset,
       int PARTICIPANT_3Offset,
+      int PARTICIPANT_4Offset,
+      int PARTICIPANT_5Offset,
       int MODEOffset,
       int PATH_1,
       int PATH_2,
@@ -424,7 +438,7 @@ public final class TDM extends Table {
       int TEMPERATUREOffset,
       int CLOCK_BIASOffset,
       int CLOCK_DRIFTOffset) {
-    builder.startTable(57);
+    builder.startTable(59);
     TDM.addRangeModulus(builder, RANGE_MODULUS);
     TDM.addRangeUncertainty(builder, RANGE_UNCERTAINTY);
     TDM.addRangeRate(builder, RANGE_RATE);
@@ -465,6 +479,8 @@ public final class TDM extends Table {
     TDM.addReceiveBand(builder, RECEIVE_BANDOffset);
     TDM.addTransmitBand(builder, TRANSMIT_BANDOffset);
     TDM.addMode(builder, MODEOffset);
+    TDM.addParticipant5(builder, PARTICIPANT_5Offset);
+    TDM.addParticipant4(builder, PARTICIPANT_4Offset);
     TDM.addParticipant3(builder, PARTICIPANT_3Offset);
     TDM.addParticipant2(builder, PARTICIPANT_2Offset);
     TDM.addParticipant1(builder, PARTICIPANT_1Offset);
@@ -485,7 +501,7 @@ public final class TDM extends Table {
     return TDM.endTDM(builder);
   }
 
-  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(57); }
+  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(59); }
   public static void addObserverId(FlatBufferBuilder builder, int OBSERVER_IDOffset) { builder.addOffset(0, OBSERVER_IDOffset, 0); }
   public static void addObserverX(FlatBufferBuilder builder, double OBSERVER_X) { builder.addDouble(1, OBSERVER_X, 0.0); }
   public static void addObserverY(FlatBufferBuilder builder, double OBSERVER_Y) { builder.addDouble(2, OBSERVER_Y, 0.0); }
@@ -509,62 +525,64 @@ public final class TDM extends Table {
   public static void addParticipant1(FlatBufferBuilder builder, int PARTICIPANT_1Offset) { builder.addOffset(18, PARTICIPANT_1Offset, 0); }
   public static void addParticipant2(FlatBufferBuilder builder, int PARTICIPANT_2Offset) { builder.addOffset(19, PARTICIPANT_2Offset, 0); }
   public static void addParticipant3(FlatBufferBuilder builder, int PARTICIPANT_3Offset) { builder.addOffset(20, PARTICIPANT_3Offset, 0); }
-  public static void addMode(FlatBufferBuilder builder, int MODEOffset) { builder.addOffset(21, MODEOffset, 0); }
-  public static void addPath1(FlatBufferBuilder builder, int PATH_1) { builder.addShort(22, (short) PATH_1, (short) 0); }
-  public static void addPath2(FlatBufferBuilder builder, int PATH_2) { builder.addShort(23, (short) PATH_2, (short) 0); }
-  public static void addTransmitBand(FlatBufferBuilder builder, int TRANSMIT_BANDOffset) { builder.addOffset(24, TRANSMIT_BANDOffset, 0); }
-  public static void addReceiveBand(FlatBufferBuilder builder, int RECEIVE_BANDOffset) { builder.addOffset(25, RECEIVE_BANDOffset, 0); }
-  public static void addIntegrationInterval(FlatBufferBuilder builder, float INTEGRATION_INTERVAL) { builder.addFloat(26, INTEGRATION_INTERVAL, 0.0f); }
-  public static void addIntegrationRef(FlatBufferBuilder builder, int INTEGRATION_REFOffset) { builder.addOffset(27, INTEGRATION_REFOffset, 0); }
-  public static void addReceiveDelay2(FlatBufferBuilder builder, double RECEIVE_DELAY_2) { builder.addDouble(28, RECEIVE_DELAY_2, 0.0); }
-  public static void addReceiveDelay3(FlatBufferBuilder builder, double RECEIVE_DELAY_3) { builder.addDouble(29, RECEIVE_DELAY_3, 0.0); }
-  public static void addDataQuality(FlatBufferBuilder builder, int DATA_QUALITYOffset) { builder.addOffset(30, DATA_QUALITYOffset, 0); }
-  public static void addMetaStop(FlatBufferBuilder builder, int META_STOPOffset) { builder.addOffset(31, META_STOPOffset, 0); }
-  public static void addDataStart(FlatBufferBuilder builder, int DATA_STARTOffset) { builder.addOffset(32, DATA_STARTOffset, 0); }
-  public static void addTransmitFreq1(FlatBufferBuilder builder, double TRANSMIT_FREQ_1) { builder.addDouble(33, TRANSMIT_FREQ_1, 0.0); }
-  public static void addReceiveFreq(FlatBufferBuilder builder, int RECEIVE_FREQOffset) { builder.addOffset(34, RECEIVE_FREQOffset, 0); }
+  public static void addParticipant4(FlatBufferBuilder builder, int PARTICIPANT_4Offset) { builder.addOffset(21, PARTICIPANT_4Offset, 0); }
+  public static void addParticipant5(FlatBufferBuilder builder, int PARTICIPANT_5Offset) { builder.addOffset(22, PARTICIPANT_5Offset, 0); }
+  public static void addMode(FlatBufferBuilder builder, int MODEOffset) { builder.addOffset(23, MODEOffset, 0); }
+  public static void addPath1(FlatBufferBuilder builder, int PATH_1) { builder.addShort(24, (short) PATH_1, (short) 0); }
+  public static void addPath2(FlatBufferBuilder builder, int PATH_2) { builder.addShort(25, (short) PATH_2, (short) 0); }
+  public static void addTransmitBand(FlatBufferBuilder builder, int TRANSMIT_BANDOffset) { builder.addOffset(26, TRANSMIT_BANDOffset, 0); }
+  public static void addReceiveBand(FlatBufferBuilder builder, int RECEIVE_BANDOffset) { builder.addOffset(27, RECEIVE_BANDOffset, 0); }
+  public static void addIntegrationInterval(FlatBufferBuilder builder, float INTEGRATION_INTERVAL) { builder.addFloat(28, INTEGRATION_INTERVAL, 0.0f); }
+  public static void addIntegrationRef(FlatBufferBuilder builder, int INTEGRATION_REFOffset) { builder.addOffset(29, INTEGRATION_REFOffset, 0); }
+  public static void addReceiveDelay2(FlatBufferBuilder builder, double RECEIVE_DELAY_2) { builder.addDouble(30, RECEIVE_DELAY_2, 0.0); }
+  public static void addReceiveDelay3(FlatBufferBuilder builder, double RECEIVE_DELAY_3) { builder.addDouble(31, RECEIVE_DELAY_3, 0.0); }
+  public static void addDataQuality(FlatBufferBuilder builder, int DATA_QUALITYOffset) { builder.addOffset(32, DATA_QUALITYOffset, 0); }
+  public static void addMetaStop(FlatBufferBuilder builder, int META_STOPOffset) { builder.addOffset(33, META_STOPOffset, 0); }
+  public static void addDataStart(FlatBufferBuilder builder, int DATA_STARTOffset) { builder.addOffset(34, DATA_STARTOffset, 0); }
+  public static void addTransmitFreq1(FlatBufferBuilder builder, double TRANSMIT_FREQ_1) { builder.addDouble(35, TRANSMIT_FREQ_1, 0.0); }
+  public static void addReceiveFreq(FlatBufferBuilder builder, int RECEIVE_FREQOffset) { builder.addOffset(36, RECEIVE_FREQOffset, 0); }
   public static int createReceiveFreqVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startReceiveFreqVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addDataStop(FlatBufferBuilder builder, int DATA_STOPOffset) { builder.addOffset(35, DATA_STOPOffset, 0); }
-  public static void addTimetagRef(FlatBufferBuilder builder, int TIMETAG_REFOffset) { builder.addOffset(36, TIMETAG_REFOffset, 0); }
-  public static void addAngleType(FlatBufferBuilder builder, int ANGLE_TYPEOffset) { builder.addOffset(37, ANGLE_TYPEOffset, 0); }
-  public static void addAngle1(FlatBufferBuilder builder, int ANGLE_1Offset) { builder.addOffset(38, ANGLE_1Offset, 0); }
+  public static void addDataStop(FlatBufferBuilder builder, int DATA_STOPOffset) { builder.addOffset(37, DATA_STOPOffset, 0); }
+  public static void addTimetagRef(FlatBufferBuilder builder, int TIMETAG_REFOffset) { builder.addOffset(38, TIMETAG_REFOffset, 0); }
+  public static void addAngleType(FlatBufferBuilder builder, int ANGLE_TYPEOffset) { builder.addOffset(39, ANGLE_TYPEOffset, 0); }
+  public static void addAngle1(FlatBufferBuilder builder, int ANGLE_1Offset) { builder.addOffset(40, ANGLE_1Offset, 0); }
   public static int createAngle1Vector(FlatBufferBuilder builder, float[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addFloat(data[i]); return builder.endVector(); }
   public static void startAngle1Vector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addAngle2(FlatBufferBuilder builder, int ANGLE_2Offset) { builder.addOffset(39, ANGLE_2Offset, 0); }
+  public static void addAngle2(FlatBufferBuilder builder, int ANGLE_2Offset) { builder.addOffset(41, ANGLE_2Offset, 0); }
   public static int createAngle2Vector(FlatBufferBuilder builder, float[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addFloat(data[i]); return builder.endVector(); }
   public static void startAngle2Vector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addAngleUncertainty1(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_1) { builder.addFloat(40, ANGLE_UNCERTAINTY_1, 0.0f); }
-  public static void addAngleUncertainty2(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_2) { builder.addFloat(41, ANGLE_UNCERTAINTY_2, 0.0f); }
-  public static void addRangeRate(FlatBufferBuilder builder, double RANGE_RATE) { builder.addDouble(42, RANGE_RATE, 0.0); }
-  public static void addRangeUncertainty(FlatBufferBuilder builder, double RANGE_UNCERTAINTY) { builder.addDouble(43, RANGE_UNCERTAINTY, 0.0); }
-  public static void addRangeMode(FlatBufferBuilder builder, int RANGE_MODEOffset) { builder.addOffset(44, RANGE_MODEOffset, 0); }
-  public static void addRangeModulus(FlatBufferBuilder builder, double RANGE_MODULUS) { builder.addDouble(45, RANGE_MODULUS, 0.0); }
-  public static void addCorrectionAngle1(FlatBufferBuilder builder, float CORRECTION_ANGLE_1) { builder.addFloat(46, CORRECTION_ANGLE_1, 0.0f); }
-  public static void addCorrectionAngle2(FlatBufferBuilder builder, float CORRECTION_ANGLE_2) { builder.addFloat(47, CORRECTION_ANGLE_2, 0.0f); }
-  public static void addCorrectionsApplied(FlatBufferBuilder builder, int CORRECTIONS_APPLIEDOffset) { builder.addOffset(48, CORRECTIONS_APPLIEDOffset, 0); }
-  public static void addTropoDry(FlatBufferBuilder builder, int TROPO_DRYOffset) { builder.addOffset(49, TROPO_DRYOffset, 0); }
+  public static void addAngleUncertainty1(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_1) { builder.addFloat(42, ANGLE_UNCERTAINTY_1, 0.0f); }
+  public static void addAngleUncertainty2(FlatBufferBuilder builder, float ANGLE_UNCERTAINTY_2) { builder.addFloat(43, ANGLE_UNCERTAINTY_2, 0.0f); }
+  public static void addRangeRate(FlatBufferBuilder builder, double RANGE_RATE) { builder.addDouble(44, RANGE_RATE, 0.0); }
+  public static void addRangeUncertainty(FlatBufferBuilder builder, double RANGE_UNCERTAINTY) { builder.addDouble(45, RANGE_UNCERTAINTY, 0.0); }
+  public static void addRangeMode(FlatBufferBuilder builder, int RANGE_MODEOffset) { builder.addOffset(46, RANGE_MODEOffset, 0); }
+  public static void addRangeModulus(FlatBufferBuilder builder, double RANGE_MODULUS) { builder.addDouble(47, RANGE_MODULUS, 0.0); }
+  public static void addCorrectionAngle1(FlatBufferBuilder builder, float CORRECTION_ANGLE_1) { builder.addFloat(48, CORRECTION_ANGLE_1, 0.0f); }
+  public static void addCorrectionAngle2(FlatBufferBuilder builder, float CORRECTION_ANGLE_2) { builder.addFloat(49, CORRECTION_ANGLE_2, 0.0f); }
+  public static void addCorrectionsApplied(FlatBufferBuilder builder, int CORRECTIONS_APPLIEDOffset) { builder.addOffset(50, CORRECTIONS_APPLIEDOffset, 0); }
+  public static void addTropoDry(FlatBufferBuilder builder, int TROPO_DRYOffset) { builder.addOffset(51, TROPO_DRYOffset, 0); }
   public static int createTropoDryVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startTropoDryVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addTropoWet(FlatBufferBuilder builder, int TROPO_WETOffset) { builder.addOffset(50, TROPO_WETOffset, 0); }
+  public static void addTropoWet(FlatBufferBuilder builder, int TROPO_WETOffset) { builder.addOffset(52, TROPO_WETOffset, 0); }
   public static int createTropoWetVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startTropoWetVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addStec(FlatBufferBuilder builder, int STECOffset) { builder.addOffset(51, STECOffset, 0); }
+  public static void addStec(FlatBufferBuilder builder, int STECOffset) { builder.addOffset(53, STECOffset, 0); }
   public static int createStecVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startStecVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addPressure(FlatBufferBuilder builder, int PRESSUREOffset) { builder.addOffset(52, PRESSUREOffset, 0); }
+  public static void addPressure(FlatBufferBuilder builder, int PRESSUREOffset) { builder.addOffset(54, PRESSUREOffset, 0); }
   public static int createPressureVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startPressureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addRhumidity(FlatBufferBuilder builder, int RHUMIDITYOffset) { builder.addOffset(53, RHUMIDITYOffset, 0); }
+  public static void addRhumidity(FlatBufferBuilder builder, int RHUMIDITYOffset) { builder.addOffset(55, RHUMIDITYOffset, 0); }
   public static int createRhumidityVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startRhumidityVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addTemperature(FlatBufferBuilder builder, int TEMPERATUREOffset) { builder.addOffset(54, TEMPERATUREOffset, 0); }
+  public static void addTemperature(FlatBufferBuilder builder, int TEMPERATUREOffset) { builder.addOffset(56, TEMPERATUREOffset, 0); }
   public static int createTemperatureVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startTemperatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addClockBias(FlatBufferBuilder builder, int CLOCK_BIASOffset) { builder.addOffset(55, CLOCK_BIASOffset, 0); }
+  public static void addClockBias(FlatBufferBuilder builder, int CLOCK_BIASOffset) { builder.addOffset(57, CLOCK_BIASOffset, 0); }
   public static int createClockBiasVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startClockBiasVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addClockDrift(FlatBufferBuilder builder, int CLOCK_DRIFTOffset) { builder.addOffset(56, CLOCK_DRIFTOffset, 0); }
+  public static void addClockDrift(FlatBufferBuilder builder, int CLOCK_DRIFTOffset) { builder.addOffset(58, CLOCK_DRIFTOffset, 0); }
   public static int createClockDriftVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startClockDriftVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endTDM(FlatBufferBuilder builder) {

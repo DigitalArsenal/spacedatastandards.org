@@ -285,9 +285,29 @@ func (rcv *TDM) PARTICIPANT_3() []byte {
 }
 
 /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+/// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+func (rcv *TDM) PARTICIPANT_4() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+/// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+func (rcv *TDM) PARTICIPANT_5() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
 /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MODE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -297,7 +317,7 @@ func (rcv *TDM) MODE() []byte {
 /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
 /// First path in TDM -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) PATH_1() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
@@ -306,12 +326,12 @@ func (rcv *TDM) PATH_1() uint16 {
 
 /// First path in TDM -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutatePATH_1(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(48, n)
+	return rcv._tab.MutateUint16Slot(52, n)
 }
 
 /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) PATH_2() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
@@ -320,12 +340,12 @@ func (rcv *TDM) PATH_2() uint16 {
 
 /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutatePATH_2(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(50, n)
+	return rcv._tab.MutateUint16Slot(54, n)
 }
 
 /// Transmit band -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) TRANSMIT_BAND() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -335,7 +355,7 @@ func (rcv *TDM) TRANSMIT_BAND() []byte {
 /// Transmit band -  CCSDS 503.0-B-1, Page D-9
 /// Receive band -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) RECEIVE_BAND() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -345,7 +365,7 @@ func (rcv *TDM) RECEIVE_BAND() []byte {
 /// Receive band -  CCSDS 503.0-B-1, Page D-9
 /// Integration interval -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) INTEGRATION_INTERVAL() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -354,12 +374,12 @@ func (rcv *TDM) INTEGRATION_INTERVAL() float32 {
 
 /// Integration interval -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutateINTEGRATION_INTERVAL(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(56, n)
+	return rcv._tab.MutateFloat32Slot(60, n)
 }
 
 /// Integration reference -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) INTEGRATION_REF() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -369,7 +389,7 @@ func (rcv *TDM) INTEGRATION_REF() []byte {
 /// Integration reference -  CCSDS 503.0-B-1, Page D-9
 /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) RECEIVE_DELAY_2() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -378,12 +398,12 @@ func (rcv *TDM) RECEIVE_DELAY_2() float64 {
 
 /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutateRECEIVE_DELAY_2(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(60, n)
+	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
 /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) RECEIVE_DELAY_3() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -392,12 +412,12 @@ func (rcv *TDM) RECEIVE_DELAY_3() float64 {
 
 /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutateRECEIVE_DELAY_3(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(62, n)
+	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
 /// Data quality -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) DATA_QUALITY() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -407,7 +427,7 @@ func (rcv *TDM) DATA_QUALITY() []byte {
 /// Data quality -  CCSDS 503.0-B-1, Page D-9
 /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) META_STOP() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -417,7 +437,7 @@ func (rcv *TDM) META_STOP() []byte {
 /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
 /// Start of data section -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) DATA_START() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -427,7 +447,7 @@ func (rcv *TDM) DATA_START() []byte {
 /// Start of data section -  CCSDS 503.0-B-1, Page D-9
 /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) TRANSMIT_FREQ_1() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -436,12 +456,12 @@ func (rcv *TDM) TRANSMIT_FREQ_1() float64 {
 
 /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutateTRANSMIT_FREQ_1(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(70, n)
+	return rcv._tab.MutateFloat64Slot(74, n)
 }
 
 /// Receive frequency -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) RECEIVE_FREQ(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -450,7 +470,7 @@ func (rcv *TDM) RECEIVE_FREQ(j int) float64 {
 }
 
 func (rcv *TDM) RECEIVE_FREQLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -459,7 +479,7 @@ func (rcv *TDM) RECEIVE_FREQLength() int {
 
 /// Receive frequency -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MutateRECEIVE_FREQ(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -469,7 +489,7 @@ func (rcv *TDM) MutateRECEIVE_FREQ(j int, n float64) bool {
 
 /// End of data section -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) DATA_STOP() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -480,7 +500,7 @@ func (rcv *TDM) DATA_STOP() []byte {
 /// Additional properties as required by the specific application of the TDM...
 /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
 func (rcv *TDM) TIMETAG_REF() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -492,7 +512,7 @@ func (rcv *TDM) TIMETAG_REF() []byte {
 /// Type of angle data -  CCSDS 503.0-B-1, Page D-12
 /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
 func (rcv *TDM) ANGLE_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -503,7 +523,7 @@ func (rcv *TDM) ANGLE_TYPE() []byte {
 /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
 /// First angle value -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) ANGLE_1(j int) float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat32(a + flatbuffers.UOffsetT(j*4))
@@ -512,7 +532,7 @@ func (rcv *TDM) ANGLE_1(j int) float32 {
 }
 
 func (rcv *TDM) ANGLE_1Length() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -521,7 +541,7 @@ func (rcv *TDM) ANGLE_1Length() int {
 
 /// First angle value -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) MutateANGLE_1(j int, n float32) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat32(a+flatbuffers.UOffsetT(j*4), n)
@@ -531,7 +551,7 @@ func (rcv *TDM) MutateANGLE_1(j int, n float32) bool {
 
 /// Second angle value -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) ANGLE_2(j int) float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat32(a + flatbuffers.UOffsetT(j*4))
@@ -540,7 +560,7 @@ func (rcv *TDM) ANGLE_2(j int) float32 {
 }
 
 func (rcv *TDM) ANGLE_2Length() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -549,7 +569,7 @@ func (rcv *TDM) ANGLE_2Length() int {
 
 /// Second angle value -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) MutateANGLE_2(j int, n float32) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat32(a+flatbuffers.UOffsetT(j*4), n)
@@ -559,7 +579,7 @@ func (rcv *TDM) MutateANGLE_2(j int, n float32) bool {
 
 /// Uncertainty of first angle -  CCSDS 503.0-B-1
 func (rcv *TDM) ANGLE_UNCERTAINTY_1() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -568,12 +588,12 @@ func (rcv *TDM) ANGLE_UNCERTAINTY_1() float32 {
 
 /// Uncertainty of first angle -  CCSDS 503.0-B-1
 func (rcv *TDM) MutateANGLE_UNCERTAINTY_1(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(84, n)
+	return rcv._tab.MutateFloat32Slot(88, n)
 }
 
 /// Uncertainty of second angle -  CCSDS 503.0-B-1
 func (rcv *TDM) ANGLE_UNCERTAINTY_2() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -582,12 +602,12 @@ func (rcv *TDM) ANGLE_UNCERTAINTY_2() float32 {
 
 /// Uncertainty of second angle -  CCSDS 503.0-B-1
 func (rcv *TDM) MutateANGLE_UNCERTAINTY_2(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(86, n)
+	return rcv._tab.MutateFloat32Slot(90, n)
 }
 
 /// Rate of change of range -  CCSDS 503.0-B-1
 func (rcv *TDM) RANGE_RATE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -596,12 +616,12 @@ func (rcv *TDM) RANGE_RATE() float64 {
 
 /// Rate of change of range -  CCSDS 503.0-B-1
 func (rcv *TDM) MutateRANGE_RATE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(88, n)
+	return rcv._tab.MutateFloat64Slot(92, n)
 }
 
 /// Uncertainty in range -  CCSDS 503.0-B-1
 func (rcv *TDM) RANGE_UNCERTAINTY() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -610,12 +630,12 @@ func (rcv *TDM) RANGE_UNCERTAINTY() float64 {
 
 /// Uncertainty in range -  CCSDS 503.0-B-1
 func (rcv *TDM) MutateRANGE_UNCERTAINTY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(90, n)
+	return rcv._tab.MutateFloat64Slot(94, n)
 }
 
 /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
 func (rcv *TDM) RANGE_MODE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -625,7 +645,7 @@ func (rcv *TDM) RANGE_MODE() []byte {
 /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
 /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
 func (rcv *TDM) RANGE_MODULUS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -634,12 +654,12 @@ func (rcv *TDM) RANGE_MODULUS() float64 {
 
 /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
 func (rcv *TDM) MutateRANGE_MODULUS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(94, n)
+	return rcv._tab.MutateFloat64Slot(98, n)
 }
 
 /// First correction angle -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) CORRECTION_ANGLE_1() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -648,12 +668,12 @@ func (rcv *TDM) CORRECTION_ANGLE_1() float32 {
 
 /// First correction angle -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) MutateCORRECTION_ANGLE_1(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(96, n)
+	return rcv._tab.MutateFloat32Slot(100, n)
 }
 
 /// Second correction angle -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) CORRECTION_ANGLE_2() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -662,12 +682,12 @@ func (rcv *TDM) CORRECTION_ANGLE_2() float32 {
 
 /// Second correction angle -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) MutateCORRECTION_ANGLE_2(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(98, n)
+	return rcv._tab.MutateFloat32Slot(102, n)
 }
 
 /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
 func (rcv *TDM) CORRECTIONS_APPLIED() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -677,7 +697,7 @@ func (rcv *TDM) CORRECTIONS_APPLIED() []byte {
 /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
 /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) TROPO_DRY(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -686,7 +706,7 @@ func (rcv *TDM) TROPO_DRY(j int) float64 {
 }
 
 func (rcv *TDM) TROPO_DRYLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -695,7 +715,7 @@ func (rcv *TDM) TROPO_DRYLength() int {
 
 /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) MutateTROPO_DRY(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -705,7 +725,7 @@ func (rcv *TDM) MutateTROPO_DRY(j int, n float64) bool {
 
 /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) TROPO_WET(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -714,7 +734,7 @@ func (rcv *TDM) TROPO_WET(j int) float64 {
 }
 
 func (rcv *TDM) TROPO_WETLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -723,7 +743,7 @@ func (rcv *TDM) TROPO_WETLength() int {
 
 /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) MutateTROPO_WET(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -733,7 +753,7 @@ func (rcv *TDM) MutateTROPO_WET(j int, n float64) bool {
 
 /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13
 func (rcv *TDM) STEC(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -742,7 +762,7 @@ func (rcv *TDM) STEC(j int) float64 {
 }
 
 func (rcv *TDM) STECLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -751,7 +771,7 @@ func (rcv *TDM) STECLength() int {
 
 /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13
 func (rcv *TDM) MutateSTEC(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -761,7 +781,7 @@ func (rcv *TDM) MutateSTEC(j int, n float64) bool {
 
 /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) PRESSURE(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -770,7 +790,7 @@ func (rcv *TDM) PRESSURE(j int) float64 {
 }
 
 func (rcv *TDM) PRESSURELength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -779,7 +799,7 @@ func (rcv *TDM) PRESSURELength() int {
 
 /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) MutatePRESSURE(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -789,7 +809,7 @@ func (rcv *TDM) MutatePRESSURE(j int, n float64) bool {
 
 /// Relative humidity -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) RHUMIDITY(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -798,7 +818,7 @@ func (rcv *TDM) RHUMIDITY(j int) float64 {
 }
 
 func (rcv *TDM) RHUMIDITYLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -807,7 +827,7 @@ func (rcv *TDM) RHUMIDITYLength() int {
 
 /// Relative humidity -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) MutateRHUMIDITY(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -817,7 +837,7 @@ func (rcv *TDM) MutateRHUMIDITY(j int, n float64) bool {
 
 /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) TEMPERATURE(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -826,7 +846,7 @@ func (rcv *TDM) TEMPERATURE(j int) float64 {
 }
 
 func (rcv *TDM) TEMPERATURELength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -835,7 +855,7 @@ func (rcv *TDM) TEMPERATURELength() int {
 
 /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14
 func (rcv *TDM) MutateTEMPERATURE(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -845,7 +865,7 @@ func (rcv *TDM) MutateTEMPERATURE(j int, n float64) bool {
 
 /// Clock bias values -  CCSDS 503.0-B-1, Page D-15
 func (rcv *TDM) CLOCK_BIAS(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -854,7 +874,7 @@ func (rcv *TDM) CLOCK_BIAS(j int) float64 {
 }
 
 func (rcv *TDM) CLOCK_BIASLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -863,7 +883,7 @@ func (rcv *TDM) CLOCK_BIASLength() int {
 
 /// Clock bias values -  CCSDS 503.0-B-1, Page D-15
 func (rcv *TDM) MutateCLOCK_BIAS(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -873,7 +893,7 @@ func (rcv *TDM) MutateCLOCK_BIAS(j int, n float64) bool {
 
 /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
 func (rcv *TDM) CLOCK_DRIFT(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -882,7 +902,7 @@ func (rcv *TDM) CLOCK_DRIFT(j int) float64 {
 }
 
 func (rcv *TDM) CLOCK_DRIFTLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -891,7 +911,7 @@ func (rcv *TDM) CLOCK_DRIFTLength() int {
 
 /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
 func (rcv *TDM) MutateCLOCK_DRIFT(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -900,7 +920,7 @@ func (rcv *TDM) MutateCLOCK_DRIFT(j int, n float64) bool {
 }
 
 func TDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(57)
+	builder.StartObject(59)
 }
 func TDMAddOBSERVER_ID(builder *flatbuffers.Builder, OBSERVER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBSERVER_ID), 0)
@@ -968,143 +988,149 @@ func TDMAddPARTICIPANT_2(builder *flatbuffers.Builder, PARTICIPANT_2 flatbuffers
 func TDMAddPARTICIPANT_3(builder *flatbuffers.Builder, PARTICIPANT_3 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(PARTICIPANT_3), 0)
 }
+func TDMAddPARTICIPANT_4(builder *flatbuffers.Builder, PARTICIPANT_4 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(PARTICIPANT_4), 0)
+}
+func TDMAddPARTICIPANT_5(builder *flatbuffers.Builder, PARTICIPANT_5 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(PARTICIPANT_5), 0)
+}
 func TDMAddMODE(builder *flatbuffers.Builder, MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(MODE), 0)
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(MODE), 0)
 }
 func TDMAddPATH_1(builder *flatbuffers.Builder, PATH_1 uint16) {
-	builder.PrependUint16Slot(22, PATH_1, 0)
+	builder.PrependUint16Slot(24, PATH_1, 0)
 }
 func TDMAddPATH_2(builder *flatbuffers.Builder, PATH_2 uint16) {
-	builder.PrependUint16Slot(23, PATH_2, 0)
+	builder.PrependUint16Slot(25, PATH_2, 0)
 }
 func TDMAddTRANSMIT_BAND(builder *flatbuffers.Builder, TRANSMIT_BAND flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(TRANSMIT_BAND), 0)
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(TRANSMIT_BAND), 0)
 }
 func TDMAddRECEIVE_BAND(builder *flatbuffers.Builder, RECEIVE_BAND flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(RECEIVE_BAND), 0)
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(RECEIVE_BAND), 0)
 }
 func TDMAddINTEGRATION_INTERVAL(builder *flatbuffers.Builder, INTEGRATION_INTERVAL float32) {
-	builder.PrependFloat32Slot(26, INTEGRATION_INTERVAL, 0.0)
+	builder.PrependFloat32Slot(28, INTEGRATION_INTERVAL, 0.0)
 }
 func TDMAddINTEGRATION_REF(builder *flatbuffers.Builder, INTEGRATION_REF flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(INTEGRATION_REF), 0)
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(INTEGRATION_REF), 0)
 }
 func TDMAddRECEIVE_DELAY_2(builder *flatbuffers.Builder, RECEIVE_DELAY_2 float64) {
-	builder.PrependFloat64Slot(28, RECEIVE_DELAY_2, 0.0)
+	builder.PrependFloat64Slot(30, RECEIVE_DELAY_2, 0.0)
 }
 func TDMAddRECEIVE_DELAY_3(builder *flatbuffers.Builder, RECEIVE_DELAY_3 float64) {
-	builder.PrependFloat64Slot(29, RECEIVE_DELAY_3, 0.0)
+	builder.PrependFloat64Slot(31, RECEIVE_DELAY_3, 0.0)
 }
 func TDMAddDATA_QUALITY(builder *flatbuffers.Builder, DATA_QUALITY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(DATA_QUALITY), 0)
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(DATA_QUALITY), 0)
 }
 func TDMAddMETA_STOP(builder *flatbuffers.Builder, META_STOP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(META_STOP), 0)
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(META_STOP), 0)
 }
 func TDMAddDATA_START(builder *flatbuffers.Builder, DATA_START flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(DATA_START), 0)
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(DATA_START), 0)
 }
 func TDMAddTRANSMIT_FREQ_1(builder *flatbuffers.Builder, TRANSMIT_FREQ_1 float64) {
-	builder.PrependFloat64Slot(33, TRANSMIT_FREQ_1, 0.0)
+	builder.PrependFloat64Slot(35, TRANSMIT_FREQ_1, 0.0)
 }
 func TDMAddRECEIVE_FREQ(builder *flatbuffers.Builder, RECEIVE_FREQ flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(RECEIVE_FREQ), 0)
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(RECEIVE_FREQ), 0)
 }
 func TDMStartRECEIVE_FREQVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddDATA_STOP(builder *flatbuffers.Builder, DATA_STOP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(DATA_STOP), 0)
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(DATA_STOP), 0)
 }
 func TDMAddTIMETAG_REF(builder *flatbuffers.Builder, TIMETAG_REF flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(TIMETAG_REF), 0)
+	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(TIMETAG_REF), 0)
 }
 func TDMAddANGLE_TYPE(builder *flatbuffers.Builder, ANGLE_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(ANGLE_TYPE), 0)
+	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(ANGLE_TYPE), 0)
 }
 func TDMAddANGLE_1(builder *flatbuffers.Builder, ANGLE_1 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(ANGLE_1), 0)
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(ANGLE_1), 0)
 }
 func TDMStartANGLE_1Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func TDMAddANGLE_2(builder *flatbuffers.Builder, ANGLE_2 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(ANGLE_2), 0)
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(ANGLE_2), 0)
 }
 func TDMStartANGLE_2Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func TDMAddANGLE_UNCERTAINTY_1(builder *flatbuffers.Builder, ANGLE_UNCERTAINTY_1 float32) {
-	builder.PrependFloat32Slot(40, ANGLE_UNCERTAINTY_1, 0.0)
+	builder.PrependFloat32Slot(42, ANGLE_UNCERTAINTY_1, 0.0)
 }
 func TDMAddANGLE_UNCERTAINTY_2(builder *flatbuffers.Builder, ANGLE_UNCERTAINTY_2 float32) {
-	builder.PrependFloat32Slot(41, ANGLE_UNCERTAINTY_2, 0.0)
+	builder.PrependFloat32Slot(43, ANGLE_UNCERTAINTY_2, 0.0)
 }
 func TDMAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float64) {
-	builder.PrependFloat64Slot(42, RANGE_RATE, 0.0)
+	builder.PrependFloat64Slot(44, RANGE_RATE, 0.0)
 }
 func TDMAddRANGE_UNCERTAINTY(builder *flatbuffers.Builder, RANGE_UNCERTAINTY float64) {
-	builder.PrependFloat64Slot(43, RANGE_UNCERTAINTY, 0.0)
+	builder.PrependFloat64Slot(45, RANGE_UNCERTAINTY, 0.0)
 }
 func TDMAddRANGE_MODE(builder *flatbuffers.Builder, RANGE_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(RANGE_MODE), 0)
+	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(RANGE_MODE), 0)
 }
 func TDMAddRANGE_MODULUS(builder *flatbuffers.Builder, RANGE_MODULUS float64) {
-	builder.PrependFloat64Slot(45, RANGE_MODULUS, 0.0)
+	builder.PrependFloat64Slot(47, RANGE_MODULUS, 0.0)
 }
 func TDMAddCORRECTION_ANGLE_1(builder *flatbuffers.Builder, CORRECTION_ANGLE_1 float32) {
-	builder.PrependFloat32Slot(46, CORRECTION_ANGLE_1, 0.0)
+	builder.PrependFloat32Slot(48, CORRECTION_ANGLE_1, 0.0)
 }
 func TDMAddCORRECTION_ANGLE_2(builder *flatbuffers.Builder, CORRECTION_ANGLE_2 float32) {
-	builder.PrependFloat32Slot(47, CORRECTION_ANGLE_2, 0.0)
+	builder.PrependFloat32Slot(49, CORRECTION_ANGLE_2, 0.0)
 }
 func TDMAddCORRECTIONS_APPLIED(builder *flatbuffers.Builder, CORRECTIONS_APPLIED flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(CORRECTIONS_APPLIED), 0)
+	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(CORRECTIONS_APPLIED), 0)
 }
 func TDMAddTROPO_DRY(builder *flatbuffers.Builder, TROPO_DRY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(TROPO_DRY), 0)
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(TROPO_DRY), 0)
 }
 func TDMStartTROPO_DRYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddTROPO_WET(builder *flatbuffers.Builder, TROPO_WET flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(TROPO_WET), 0)
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(TROPO_WET), 0)
 }
 func TDMStartTROPO_WETVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddSTEC(builder *flatbuffers.Builder, STEC flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(STEC), 0)
+	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(STEC), 0)
 }
 func TDMStartSTECVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddPRESSURE(builder *flatbuffers.Builder, PRESSURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(PRESSURE), 0)
+	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(PRESSURE), 0)
 }
 func TDMStartPRESSUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddRHUMIDITY(builder *flatbuffers.Builder, RHUMIDITY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(RHUMIDITY), 0)
+	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(RHUMIDITY), 0)
 }
 func TDMStartRHUMIDITYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddTEMPERATURE(builder *flatbuffers.Builder, TEMPERATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(TEMPERATURE), 0)
+	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(TEMPERATURE), 0)
 }
 func TDMStartTEMPERATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddCLOCK_BIAS(builder *flatbuffers.Builder, CLOCK_BIAS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(CLOCK_BIAS), 0)
+	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(CLOCK_BIAS), 0)
 }
 func TDMStartCLOCK_BIASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
 func TDMAddCLOCK_DRIFT(builder *flatbuffers.Builder, CLOCK_DRIFT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(CLOCK_DRIFT), 0)
+	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(CLOCK_DRIFT), 0)
 }
 func TDMStartCLOCK_DRIFTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)

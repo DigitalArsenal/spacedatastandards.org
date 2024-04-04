@@ -67,6 +67,12 @@ table TDM {
   /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
   PARTICIPANT_3: string;
 
+  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  PARTICIPANT_4: string;
+
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  PARTICIPANT_5: string;
+
   /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
   MODE: string;
 

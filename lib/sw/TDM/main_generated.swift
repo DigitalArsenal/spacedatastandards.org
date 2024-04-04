@@ -38,42 +38,44 @@ public struct TDM: FlatBufferObject, Verifiable {
     case PARTICIPANT_1 = 40
     case PARTICIPANT_2 = 42
     case PARTICIPANT_3 = 44
-    case MODE = 46
-    case PATH_1 = 48
-    case PATH_2 = 50
-    case TRANSMIT_BAND = 52
-    case RECEIVE_BAND = 54
-    case INTEGRATION_INTERVAL = 56
-    case INTEGRATION_REF = 58
-    case RECEIVE_DELAY_2 = 60
-    case RECEIVE_DELAY_3 = 62
-    case DATA_QUALITY = 64
-    case META_STOP = 66
-    case DATA_START = 68
-    case TRANSMIT_FREQ_1 = 70
-    case RECEIVE_FREQ = 72
-    case DATA_STOP = 74
-    case TIMETAG_REF = 76
-    case ANGLE_TYPE = 78
-    case ANGLE_1 = 80
-    case ANGLE_2 = 82
-    case ANGLE_UNCERTAINTY_1 = 84
-    case ANGLE_UNCERTAINTY_2 = 86
-    case RANGE_RATE = 88
-    case RANGE_UNCERTAINTY = 90
-    case RANGE_MODE = 92
-    case RANGE_MODULUS = 94
-    case CORRECTION_ANGLE_1 = 96
-    case CORRECTION_ANGLE_2 = 98
-    case CORRECTIONS_APPLIED = 100
-    case TROPO_DRY = 102
-    case TROPO_WET = 104
-    case STEC = 106
-    case PRESSURE = 108
-    case RHUMIDITY = 110
-    case TEMPERATURE = 112
-    case CLOCK_BIAS = 114
-    case CLOCK_DRIFT = 116
+    case PARTICIPANT_4 = 46
+    case PARTICIPANT_5 = 48
+    case MODE = 50
+    case PATH_1 = 52
+    case PATH_2 = 54
+    case TRANSMIT_BAND = 56
+    case RECEIVE_BAND = 58
+    case INTEGRATION_INTERVAL = 60
+    case INTEGRATION_REF = 62
+    case RECEIVE_DELAY_2 = 64
+    case RECEIVE_DELAY_3 = 66
+    case DATA_QUALITY = 68
+    case META_STOP = 70
+    case DATA_START = 72
+    case TRANSMIT_FREQ_1 = 74
+    case RECEIVE_FREQ = 76
+    case DATA_STOP = 78
+    case TIMETAG_REF = 80
+    case ANGLE_TYPE = 82
+    case ANGLE_1 = 84
+    case ANGLE_2 = 86
+    case ANGLE_UNCERTAINTY_1 = 88
+    case ANGLE_UNCERTAINTY_2 = 90
+    case RANGE_RATE = 92
+    case RANGE_UNCERTAINTY = 94
+    case RANGE_MODE = 96
+    case RANGE_MODULUS = 98
+    case CORRECTION_ANGLE_1 = 100
+    case CORRECTION_ANGLE_2 = 102
+    case CORRECTIONS_APPLIED = 104
+    case TROPO_DRY = 106
+    case TROPO_WET = 108
+    case STEC = 110
+    case PRESSURE = 112
+    case RHUMIDITY = 114
+    case TEMPERATURE = 116
+    case CLOCK_BIAS = 118
+    case CLOCK_DRIFT = 120
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -134,6 +136,12 @@ public struct TDM: FlatBufferObject, Verifiable {
   ///  Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
   public var PARTICIPANT_3: String? { let o = _accessor.offset(VTOFFSET.PARTICIPANT_3.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PARTICIPANT_3SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARTICIPANT_3.v) }
+  ///  Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  public var PARTICIPANT_4: String? { let o = _accessor.offset(VTOFFSET.PARTICIPANT_4.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARTICIPANT_4SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARTICIPANT_4.v) }
+  ///  Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  public var PARTICIPANT_5: String? { let o = _accessor.offset(VTOFFSET.PARTICIPANT_5.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARTICIPANT_5SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARTICIPANT_5.v) }
   ///  Mode of TDM -  CCSDS 503.0-B-1, Page D-9
   public var MODE: String? { let o = _accessor.offset(VTOFFSET.MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODE.v) }
@@ -253,7 +261,7 @@ public struct TDM: FlatBufferObject, Verifiable {
   public var CLOCK_DRIFTCount: Int32 { let o = _accessor.offset(VTOFFSET.CLOCK_DRIFT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func CLOCK_DRIFT(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.CLOCK_DRIFT.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
   public var CLOCK_DRIFT: [Double] { return _accessor.getVector(at: VTOFFSET.CLOCK_DRIFT.v) ?? [] }
-  public static func startTDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 57) }
+  public static func startTDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
   public static func add(OBSERVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_ID, at: VTOFFSET.OBSERVER_ID.p) }
   public static func add(OBSERVER_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_X, def: 0.0, at: VTOFFSET.OBSERVER_X.p) }
   public static func add(OBSERVER_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_Y, def: 0.0, at: VTOFFSET.OBSERVER_Y.p) }
@@ -275,6 +283,8 @@ public struct TDM: FlatBufferObject, Verifiable {
   public static func add(PARTICIPANT_1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTICIPANT_1, at: VTOFFSET.PARTICIPANT_1.p) }
   public static func add(PARTICIPANT_2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTICIPANT_2, at: VTOFFSET.PARTICIPANT_2.p) }
   public static func add(PARTICIPANT_3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTICIPANT_3, at: VTOFFSET.PARTICIPANT_3.p) }
+  public static func add(PARTICIPANT_4: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTICIPANT_4, at: VTOFFSET.PARTICIPANT_4.p) }
+  public static func add(PARTICIPANT_5: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTICIPANT_5, at: VTOFFSET.PARTICIPANT_5.p) }
   public static func add(MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODE, at: VTOFFSET.MODE.p) }
   public static func add(PATH_1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH_1, def: 0, at: VTOFFSET.PATH_1.p) }
   public static func add(PATH_2: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH_2, def: 0, at: VTOFFSET.PATH_2.p) }
@@ -335,6 +345,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     PARTICIPANT_1Offset PARTICIPANT_1: Offset = Offset(),
     PARTICIPANT_2Offset PARTICIPANT_2: Offset = Offset(),
     PARTICIPANT_3Offset PARTICIPANT_3: Offset = Offset(),
+    PARTICIPANT_4Offset PARTICIPANT_4: Offset = Offset(),
+    PARTICIPANT_5Offset PARTICIPANT_5: Offset = Offset(),
     MODEOffset MODE: Offset = Offset(),
     PATH_1: UInt16 = 0,
     PATH_2: UInt16 = 0,
@@ -394,6 +406,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     TDM.add(PARTICIPANT_1: PARTICIPANT_1, &fbb)
     TDM.add(PARTICIPANT_2: PARTICIPANT_2, &fbb)
     TDM.add(PARTICIPANT_3: PARTICIPANT_3, &fbb)
+    TDM.add(PARTICIPANT_4: PARTICIPANT_4, &fbb)
+    TDM.add(PARTICIPANT_5: PARTICIPANT_5, &fbb)
     TDM.add(MODE: MODE, &fbb)
     TDM.add(PATH_1: PATH_1, &fbb)
     TDM.add(PATH_2: PATH_2, &fbb)
@@ -456,6 +470,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.PARTICIPANT_1.p, fieldName: "PARTICIPANT_1", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PARTICIPANT_2.p, fieldName: "PARTICIPANT_2", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PARTICIPANT_3.p, fieldName: "PARTICIPANT_3", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PARTICIPANT_4.p, fieldName: "PARTICIPANT_4", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PARTICIPANT_5.p, fieldName: "PARTICIPANT_5", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.MODE.p, fieldName: "MODE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PATH_1.p, fieldName: "PATH_1", required: false, type: UInt16.self)
     try _v.visit(field: VTOFFSET.PATH_2.p, fieldName: "PATH_2", required: false, type: UInt16.self)
