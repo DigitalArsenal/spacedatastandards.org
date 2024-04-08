@@ -218,7 +218,7 @@ class TDM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+    # Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
     # TDM
     def PARTICIPANT_5(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))

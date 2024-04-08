@@ -295,7 +295,7 @@ func (rcv *TDM) PARTICIPANT_4() []byte {
 }
 
 /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
-/// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+/// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
 func (rcv *TDM) PARTICIPANT_5() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -304,7 +304,7 @@ func (rcv *TDM) PARTICIPANT_5() []byte {
 	return nil
 }
 
-/// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+/// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
 /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) MODE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))

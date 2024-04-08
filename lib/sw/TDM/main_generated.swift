@@ -139,7 +139,7 @@ public struct TDM: FlatBufferObject, Verifiable {
   ///  Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
   public var PARTICIPANT_4: String? { let o = _accessor.offset(VTOFFSET.PARTICIPANT_4.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PARTICIPANT_4SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARTICIPANT_4.v) }
-  ///  Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  ///  Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
   public var PARTICIPANT_5: String? { let o = _accessor.offset(VTOFFSET.PARTICIPANT_5.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PARTICIPANT_5SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARTICIPANT_5.v) }
   ///  Mode of TDM -  CCSDS 503.0-B-1, Page D-9

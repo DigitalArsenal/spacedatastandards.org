@@ -64,7 +64,7 @@ class TDM {
   String? get PARTICIPANT_3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
   ///  Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
   String? get PARTICIPANT_4 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
-  ///  Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+  ///  Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
   String? get PARTICIPANT_5 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
   ///  Mode of TDM -  CCSDS 503.0-B-1, Page D-9
   String? get MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);

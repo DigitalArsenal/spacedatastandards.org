@@ -109,7 +109,7 @@
               },
         "PARTICIPANT_5" : {
                 "type" : "string",
-                "description" : "Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9"
+                "description" : "Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant"
               },
         "MODE" : {
                 "type" : "string",

@@ -147,7 +147,7 @@ public final class TDM extends Table {
   public ByteBuffer PARTICIPANT_4AsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
   public ByteBuffer PARTICIPANT_4InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
   /**
-   * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
+   * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
    */
   public String PARTICIPANT_5() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PARTICIPANT_5AsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
