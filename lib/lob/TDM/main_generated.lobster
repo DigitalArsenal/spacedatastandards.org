@@ -73,7 +73,7 @@ class TDM : flatbuffers_handle
     /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     def PARTICIPANT_4() -> string:
         return buf_.flatbuffers_field_string(pos_, 46)
-    /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+    /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
     def PARTICIPANT_5() -> string:
         return buf_.flatbuffers_field_string(pos_, 48)
     /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9

@@ -292,7 +292,7 @@ class TDM : Table() {
     val PARTICIPANT_4AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
     fun PARTICIPANT_4InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
     /**
-     * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+     * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
      */
     val PARTICIPANT_5 : String?
         get() {

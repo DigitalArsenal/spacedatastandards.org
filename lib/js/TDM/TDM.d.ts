@@ -114,7 +114,7 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
     PARTICIPANT_4(): string | null;
     PARTICIPANT_4(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+     * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
      */
     PARTICIPANT_5(): string | null;
     PARTICIPANT_5(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

@@ -232,7 +232,7 @@ class TDM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+    /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
     public function getPARTICIPANT_5()
     {
         $o = $this->__offset(48);

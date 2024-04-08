@@ -141,7 +141,7 @@ public struct TDM : IFlatbufferObject
   public ArraySegment<byte>? GetPARTICIPANT_4Bytes() { return __p.__vector_as_arraysegment(46); }
 #endif
   public byte[] GetPARTICIPANT_4Array() { return __p.__vector_as_array<byte>(46); }
-  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
   public string PARTICIPANT_5 { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPARTICIPANT_5Bytes() { return __p.__vector_as_span<byte>(48, 1); }

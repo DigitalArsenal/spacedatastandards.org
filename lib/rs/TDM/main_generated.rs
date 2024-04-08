@@ -534,7 +534,7 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TDM::VT_PARTICIPANT_4, None)}
   }
-  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
   #[inline]
   pub fn PARTICIPANT_5(&self) -> Option<&'a str> {
     // Safety:

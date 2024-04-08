@@ -170,7 +170,7 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PARTICIPANT_4() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_4);
   }
-  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participant
+  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
   const ::flatbuffers::String *PARTICIPANT_5() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_5);
   }
