@@ -10,7 +10,6 @@
         "lib/ts/",
         "lib/json/",
         "dist/",
-        "LICENSE",
         "README"
     ],
     "scripts": {
@@ -24,7 +23,7 @@
         "dev": "npm run build && cd website && npm run dev"
     },
     "author": "",
-    "license": "ISC",
+    "license": "Apache-2.0",
     "dependencies": {
         "ajv": "^8.12.0",
         "flatbuffers": "23.3.3",
