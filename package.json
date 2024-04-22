@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.0.139+1713801701964",
+    "version": "1.0.139+1713802294366",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -16,13 +16,13 @@
         "postinstall": "cd website && npm i",
         "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main",
         "start": "node index.js",
-        "build": "python ./scripts/generateSource.py && npm run build:js && python ./scripts/generateVersion.py && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
+        "build": "python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateGoModule.py",
         "build:website": "cd website && npm run build",
-        "build:js": "mkdir -p ./lib/js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts",
+        "build:js": "mkdir -p ./lib/js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && python3 ./scripts/generatePackageJSON.py",
         "dev": "npm run build && cd website && npm run dev"
     },
-    "author": "",
+    "author": "sds@digitalarsenal.io",
     "license": "Apache-2.0",
     "dependencies": {
         "ajv": "^8.12.0",

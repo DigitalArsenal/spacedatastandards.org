@@ -1,0 +1,11 @@
+{
+    "name": "spacedatastandards.org",
+    "version": "1.0.139+1713802294366",
+    "type": "module",
+    "description": "space data standards framework based on ccsds standards and google flatbuffers",
+    "author": "sds@digitalarsenal.io",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "flatbuffers": "23.3.3"
+    }
+}
