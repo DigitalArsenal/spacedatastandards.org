@@ -42,10 +42,12 @@ enum timeSystem:
 enum meanElementTheory:
     /// Simplified General Perturbation Model 4
     meanElementTheory_SGP4 = 0
+    /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+    meanElementTheory_SGP4XP = 1
     /// Draper Semi-analytical Satellite Theory
-    meanElementTheory_DSST = 1
+    meanElementTheory_DSST = 2
     /// Universal Semianalytical Method
-    meanElementTheory_USM = 2
+    meanElementTheory_USM = 3
 
 enum manCovRefFrame:
     /// Another name for 'Radial, Transverse, Normal'

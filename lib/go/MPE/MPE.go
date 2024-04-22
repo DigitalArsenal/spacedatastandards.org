@@ -156,8 +156,22 @@ func (rcv *MPE) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
+/// Description of the Mean Element Theory. (SGP4,DSST,USM)
+func (rcv *MPE) MEAN_ELEMENT_THEORY() meanElementTheory {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return meanElementTheory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Description of the Mean Element Theory. (SGP4,DSST,USM)
+func (rcv *MPE) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
+	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
 func MPEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(10)
 }
 func MPEAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENTITY_ID), 0)
@@ -185,6 +199,9 @@ func MPEAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 }
 func MPEAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
 	builder.PrependFloat64Slot(8, BSTAR, 0.0)
+}
+func MPEAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+	builder.PrependInt8Slot(9, int8(MEAN_ELEMENT_THEORY), 0)
 }
 func MPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

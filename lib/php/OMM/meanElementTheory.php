@@ -5,13 +5,16 @@ class meanElementTheory
 {
     /// Simplified General Perturbation Model 4
     const SGP4 = 0;
+    /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+    const SGP4XP = 1;
     /// Draper Semi-analytical Satellite Theory
-    const DSST = 1;
+    const DSST = 2;
     /// Universal Semianalytical Method
-    const USM = 2;
+    const USM = 3;
 
     private static $names = array(
         meanElementTheory::SGP4=>"SGP4",
+        meanElementTheory::SGP4XP=>"SGP4XP",
         meanElementTheory::DSST=>"DSST",
         meanElementTheory::USM=>"USM",
     );

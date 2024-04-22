@@ -9,12 +9,16 @@ class meanElementTheory private constructor() {
          */
         const val SGP4: Byte = 0
         /**
+         * Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+         */
+        const val SGP4XP: Byte = 1
+        /**
          * Draper Semi-analytical Satellite Theory
          */
-        const val DSST: Byte = 1
+        const val DSST: Byte = 2
         /**
          * Universal Semianalytical Method
          */
-        const val USM: Byte = 2
+        const val USM: Byte = 3
     }
 }

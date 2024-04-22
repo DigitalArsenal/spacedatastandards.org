@@ -91,17 +91,20 @@ inline const char *EnumNametimeSystem(timeSystem e) {
 enum meanElementTheory : int8_t {
   /// Simplified General Perturbation Model 4
   meanElementTheory_SGP4 = 0,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  meanElementTheory_SGP4XP = 1,
   /// Draper Semi-analytical Satellite Theory
-  meanElementTheory_DSST = 1,
+  meanElementTheory_DSST = 2,
   /// Universal Semianalytical Method
-  meanElementTheory_USM = 2,
+  meanElementTheory_USM = 3,
   meanElementTheory_MIN = meanElementTheory_SGP4,
   meanElementTheory_MAX = meanElementTheory_USM
 };
 
-inline const meanElementTheory (&EnumValuesmeanElementTheory())[3] {
+inline const meanElementTheory (&EnumValuesmeanElementTheory())[4] {
   static const meanElementTheory values[] = {
     meanElementTheory_SGP4,
+    meanElementTheory_SGP4XP,
     meanElementTheory_DSST,
     meanElementTheory_USM
   };
@@ -109,8 +112,9 @@ inline const meanElementTheory (&EnumValuesmeanElementTheory())[3] {
 }
 
 inline const char * const *EnumNamesmeanElementTheory() {
-  static const char * const names[4] = {
+  static const char * const names[5] = {
     "SGP4",
+    "SGP4XP",
     "DSST",
     "USM",
     nullptr
@@ -136,7 +140,8 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RA_OF_ASC_NODE = 14,
     VT_ARG_OF_PERICENTER = 16,
     VT_MEAN_ANOMALY = 18,
-    VT_BSTAR = 20
+    VT_BSTAR = 20,
+    VT_MEAN_ELEMENT_THEORY = 22
   };
   /// Unique ID as a String
   const ::flatbuffers::String *ENTITY_ID() const {
@@ -174,6 +179,10 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double BSTAR() const {
     return GetField<double>(VT_BSTAR, 0.0);
   }
+  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  meanElementTheory MEAN_ELEMENT_THEORY() const {
+    return static_cast<meanElementTheory>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ENTITY_ID) &&
@@ -186,6 +195,7 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_ARG_OF_PERICENTER, 8) &&
            VerifyField<double>(verifier, VT_MEAN_ANOMALY, 8) &&
            VerifyField<double>(verifier, VT_BSTAR, 8) &&
+           VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
            verifier.EndTable();
   }
 };
@@ -221,6 +231,9 @@ struct MPEBuilder {
   void add_BSTAR(double BSTAR) {
     fbb_.AddElement<double>(MPE::VT_BSTAR, BSTAR, 0.0);
   }
+  void add_MEAN_ELEMENT_THEORY(meanElementTheory MEAN_ELEMENT_THEORY) {
+    fbb_.AddElement<int8_t>(MPE::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
+  }
   explicit MPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -242,7 +255,8 @@ inline ::flatbuffers::Offset<MPE> CreateMPE(
     double RA_OF_ASC_NODE = 0.0,
     double ARG_OF_PERICENTER = 0.0,
     double MEAN_ANOMALY = 0.0,
-    double BSTAR = 0.0) {
+    double BSTAR = 0.0,
+    meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4) {
   MPEBuilder builder_(_fbb);
   builder_.add_BSTAR(BSTAR);
   builder_.add_MEAN_ANOMALY(MEAN_ANOMALY);
@@ -253,6 +267,7 @@ inline ::flatbuffers::Offset<MPE> CreateMPE(
   builder_.add_MEAN_MOTION(MEAN_MOTION);
   builder_.add_EPOCH(EPOCH);
   builder_.add_ENTITY_ID(ENTITY_ID);
+  builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   return builder_.Finish();
 }
 
@@ -266,7 +281,8 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
     double RA_OF_ASC_NODE = 0.0,
     double ARG_OF_PERICENTER = 0.0,
     double MEAN_ANOMALY = 0.0,
-    double BSTAR = 0.0) {
+    double BSTAR = 0.0,
+    meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4) {
   auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
   return CreateMPE(
       _fbb,
@@ -278,7 +294,8 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
       RA_OF_ASC_NODE,
       ARG_OF_PERICENTER,
       MEAN_ANOMALY,
-      BSTAR);
+      BSTAR,
+      MEAN_ELEMENT_THEORY);
 }
 
 inline const MPE *GetMPE(const void *buf) {

@@ -101,7 +101,15 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def MPEStart(builder): builder.StartObject(9)
+    # Description of the Mean Element Theory. (SGP4,DSST,USM)
+    # MPE
+    def MEAN_ELEMENT_THEORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def MPEStart(builder): builder.StartObject(10)
 def Start(builder):
     return MPEStart(builder)
 def MPEAddENTITY_ID(builder, ENTITY_ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_ID), 0)
@@ -131,6 +139,9 @@ def AddMEAN_ANOMALY(builder, MEAN_ANOMALY):
 def MPEAddBSTAR(builder, BSTAR): builder.PrependFloat64Slot(8, BSTAR, 0.0)
 def AddBSTAR(builder, BSTAR):
     return MPEAddBSTAR(builder, BSTAR)
+def MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY): builder.PrependInt8Slot(9, MEAN_ELEMENT_THEORY, 0)
+def AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
+    return MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 def MPEEnd(builder): return builder.EndObject()
 def End(builder):
     return MPEEnd(builder)
@@ -148,6 +159,7 @@ class MPET(object):
         self.ARG_OF_PERICENTER = 0.0  # type: float
         self.MEAN_ANOMALY = 0.0  # type: float
         self.BSTAR = 0.0  # type: float
+        self.MEAN_ELEMENT_THEORY = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -179,6 +191,7 @@ class MPET(object):
         self.ARG_OF_PERICENTER = MPE.ARG_OF_PERICENTER()
         self.MEAN_ANOMALY = MPE.MEAN_ANOMALY()
         self.BSTAR = MPE.BSTAR()
+        self.MEAN_ELEMENT_THEORY = MPE.MEAN_ELEMENT_THEORY()
 
     # MPET
     def Pack(self, builder):
@@ -195,5 +208,6 @@ class MPET(object):
         MPEAddARG_OF_PERICENTER(builder, self.ARG_OF_PERICENTER)
         MPEAddMEAN_ANOMALY(builder, self.MEAN_ANOMALY)
         MPEAddBSTAR(builder, self.BSTAR)
+        MPEAddMEAN_ELEMENT_THEORY(builder, self.MEAN_ELEMENT_THEORY)
         MPE = MPEEnd(builder)
         return MPE

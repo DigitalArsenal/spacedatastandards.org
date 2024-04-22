@@ -108,21 +108,25 @@ class MeanElementTheory {
       value == null ? null : MeanElementTheory.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static bool containsValue(int value) => values.containsKey(value);
 
   ///  Simplified General Perturbation Model 4
   static const MeanElementTheory SGP4 = MeanElementTheory._(0);
 
+  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  static const MeanElementTheory SGP4XP = MeanElementTheory._(1);
+
   ///  Draper Semi-analytical Satellite Theory
-  static const MeanElementTheory DSST = MeanElementTheory._(1);
+  static const MeanElementTheory DSST = MeanElementTheory._(2);
 
   ///  Universal Semianalytical Method
-  static const MeanElementTheory USM = MeanElementTheory._(2);
+  static const MeanElementTheory USM = MeanElementTheory._(3);
   static const Map<int, MeanElementTheory> values = {
     0: SGP4,
-    1: DSST,
-    2: USM};
+    1: SGP4XP,
+    2: DSST,
+    3: USM};
 
   static const fb.Reader<MeanElementTheory> reader = _MeanElementTheoryReader();
 
@@ -174,10 +178,12 @@ class MPE {
   double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   ///  SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
   double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
+  MeanElementTheory get MEAN_ELEMENT_THEORY => MeanElementTheory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
 
   @override
   String toString() {
-    return 'MPE{ENTITY_ID: ${ENTITY_ID}, EPOCH: ${EPOCH}, MEAN_MOTION: ${MEAN_MOTION}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RA_OF_ASC_NODE: ${RA_OF_ASC_NODE}, ARG_OF_PERICENTER: ${ARG_OF_PERICENTER}, MEAN_ANOMALY: ${MEAN_ANOMALY}, BSTAR: ${BSTAR}}';
+    return 'MPE{ENTITY_ID: ${ENTITY_ID}, EPOCH: ${EPOCH}, MEAN_MOTION: ${MEAN_MOTION}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RA_OF_ASC_NODE: ${RA_OF_ASC_NODE}, ARG_OF_PERICENTER: ${ARG_OF_PERICENTER}, MEAN_ANOMALY: ${MEAN_ANOMALY}, BSTAR: ${BSTAR}, MEAN_ELEMENT_THEORY: ${MEAN_ELEMENT_THEORY}}';
   }
 }
 
@@ -195,7 +201,7 @@ class MPEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
   }
 
   int addEntityIdOffset(int? offset) {
@@ -234,6 +240,10 @@ class MPEBuilder {
     fbBuilder.addFloat64(8, BSTAR);
     return fbBuilder.offset;
   }
+  int addMeanElementTheory(MeanElementTheory? MEAN_ELEMENT_THEORY) {
+    fbBuilder.addInt8(9, MEAN_ELEMENT_THEORY?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -250,6 +260,7 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
   final double? _ARG_OF_PERICENTER;
   final double? _MEAN_ANOMALY;
   final double? _BSTAR;
+  final MeanElementTheory? _MEAN_ELEMENT_THEORY;
 
   MPEObjectBuilder({
     String? ENTITY_ID,
@@ -261,6 +272,7 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
     double? ARG_OF_PERICENTER,
     double? MEAN_ANOMALY,
     double? BSTAR,
+    MeanElementTheory? MEAN_ELEMENT_THEORY,
   })
       : _ENTITY_ID = ENTITY_ID,
         _EPOCH = EPOCH,
@@ -270,14 +282,15 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
         _RA_OF_ASC_NODE = RA_OF_ASC_NODE,
         _ARG_OF_PERICENTER = ARG_OF_PERICENTER,
         _MEAN_ANOMALY = MEAN_ANOMALY,
-        _BSTAR = BSTAR;
+        _BSTAR = BSTAR,
+        _MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
         : fbBuilder.writeString(_ENTITY_ID!);
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, ENTITY_IDOffset);
     fbBuilder.addFloat64(1, _EPOCH);
     fbBuilder.addFloat64(2, _MEAN_MOTION);
@@ -287,6 +300,7 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(6, _ARG_OF_PERICENTER);
     fbBuilder.addFloat64(7, _MEAN_ANOMALY);
     fbBuilder.addFloat64(8, _BSTAR);
+    fbBuilder.addInt8(9, _MEAN_ELEMENT_THEORY?.value);
     return fbBuilder.endTable();
   }
 

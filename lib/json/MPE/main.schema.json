@@ -7,7 +7,7 @@
     },
     "meanElementTheory" : {
       "type" : "string",
-      "enum": ["SGP4", "DSST", "USM"]
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
     },
     "MPE" : {
       "type" : "object",
@@ -48,6 +48,10 @@
         "BSTAR" : {
                 "type" : "number",
                 "description" : "SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory",
+                "description" : "Description of the Mean Element Theory. (SGP4,DSST,USM)"
               }
       },
       "additionalProperties" : false

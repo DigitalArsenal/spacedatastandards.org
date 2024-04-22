@@ -64,10 +64,12 @@ public enum meanElementTheory: Int8, Enum, Verifiable {
   public var value: Int8 { return self.rawValue }
   ///  Simplified General Perturbation Model 4
   case sgp4 = 0
+  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  case sgp4xp = 1
   ///  Draper Semi-analytical Satellite Theory
-  case dsst = 1
+  case dsst = 2
   ///  Universal Semianalytical Method
-  case usm = 2
+  case usm = 3
 
   public static var max: meanElementTheory { return .usm }
   public static var min: meanElementTheory { return .sgp4 }

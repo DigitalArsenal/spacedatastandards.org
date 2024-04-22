@@ -149,11 +149,12 @@ impl flatbuffers::SimpleToVerifyInSlice for timeSystem {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_MEAN_ELEMENT_THEORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MEAN_ELEMENT_THEORY: i8 = 2;
+pub const ENUM_MAX_MEAN_ELEMENT_THEORY: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 3] = [
+pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 4] = [
   meanElementTheory::SGP4,
+  meanElementTheory::SGP4XP,
   meanElementTheory::DSST,
   meanElementTheory::USM,
 ];
@@ -165,15 +166,18 @@ pub struct meanElementTheory(pub i8);
 impl meanElementTheory {
   /// Simplified General Perturbation Model 4
   pub const SGP4: Self = Self(0);
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  pub const SGP4XP: Self = Self(1);
   /// Draper Semi-analytical Satellite Theory
-  pub const DSST: Self = Self(1);
+  pub const DSST: Self = Self(2);
   /// Universal Semianalytical Method
-  pub const USM: Self = Self(2);
+  pub const USM: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_MAX: i8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::SGP4,
+    Self::SGP4XP,
     Self::DSST,
     Self::USM,
   ];
@@ -181,6 +185,7 @@ impl meanElementTheory {
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::SGP4 => Some("SGP4"),
+      Self::SGP4XP => Some("SGP4XP"),
       Self::DSST => Some("DSST"),
       Self::USM => Some("USM"),
       _ => None,
@@ -264,6 +269,7 @@ impl<'a> MPE<'a> {
   pub const VT_ARG_OF_PERICENTER: flatbuffers::VOffsetT = 16;
   pub const VT_MEAN_ANOMALY: flatbuffers::VOffsetT = 18;
   pub const VT_BSTAR: flatbuffers::VOffsetT = 20;
+  pub const VT_MEAN_ELEMENT_THEORY: flatbuffers::VOffsetT = 22;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -284,6 +290,7 @@ impl<'a> MPE<'a> {
     builder.add_MEAN_MOTION(args.MEAN_MOTION);
     builder.add_EPOCH(args.EPOCH);
     if let Some(x) = args.ENTITY_ID { builder.add_ENTITY_ID(x); }
+    builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
     builder.finish()
   }
 
@@ -299,6 +306,7 @@ impl<'a> MPE<'a> {
     let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
     let MEAN_ANOMALY = self.MEAN_ANOMALY();
     let BSTAR = self.BSTAR();
+    let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
     MPET {
       ENTITY_ID,
       EPOCH,
@@ -309,6 +317,7 @@ impl<'a> MPE<'a> {
       ARG_OF_PERICENTER,
       MEAN_ANOMALY,
       BSTAR,
+      MEAN_ELEMENT_THEORY,
     }
   }
 
@@ -384,6 +393,14 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_BSTAR, Some(0.0)).unwrap()}
   }
+  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  #[inline]
+  pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementTheory {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<meanElementTheory>(MPE::VT_MEAN_ELEMENT_THEORY, Some(meanElementTheory::SGP4)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for MPE<'_> {
@@ -402,6 +419,7 @@ impl flatbuffers::Verifiable for MPE<'_> {
      .visit_field::<f64>("ARG_OF_PERICENTER", Self::VT_ARG_OF_PERICENTER, false)?
      .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
      .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
+     .visit_field::<meanElementTheory>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
      .finish();
     Ok(())
   }
@@ -416,6 +434,7 @@ pub struct MPEArgs<'a> {
     pub ARG_OF_PERICENTER: f64,
     pub MEAN_ANOMALY: f64,
     pub BSTAR: f64,
+    pub MEAN_ELEMENT_THEORY: meanElementTheory,
 }
 impl<'a> Default for MPEArgs<'a> {
   #[inline]
@@ -430,6 +449,7 @@ impl<'a> Default for MPEArgs<'a> {
       ARG_OF_PERICENTER: 0.0,
       MEAN_ANOMALY: 0.0,
       BSTAR: 0.0,
+      MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
     }
   }
 }
@@ -476,6 +496,10 @@ impl<'a: 'b, 'b> MPEBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(MPE::VT_BSTAR, BSTAR, 0.0);
   }
   #[inline]
+  pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementTheory) {
+    self.fbb_.push_slot::<meanElementTheory>(MPE::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementTheory::SGP4);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> MPEBuilder<'a, 'b> {
     let start = _fbb.start_table();
     MPEBuilder {
@@ -502,6 +526,7 @@ impl core::fmt::Debug for MPE<'_> {
       ds.field("ARG_OF_PERICENTER", &self.ARG_OF_PERICENTER());
       ds.field("MEAN_ANOMALY", &self.MEAN_ANOMALY());
       ds.field("BSTAR", &self.BSTAR());
+      ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
       ds.finish()
   }
 }
@@ -517,6 +542,7 @@ pub struct MPET {
   pub ARG_OF_PERICENTER: f64,
   pub MEAN_ANOMALY: f64,
   pub BSTAR: f64,
+  pub MEAN_ELEMENT_THEORY: meanElementTheory,
 }
 impl Default for MPET {
   fn default() -> Self {
@@ -530,6 +556,7 @@ impl Default for MPET {
       ARG_OF_PERICENTER: 0.0,
       MEAN_ANOMALY: 0.0,
       BSTAR: 0.0,
+      MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
     }
   }
 }
@@ -549,6 +576,7 @@ impl MPET {
     let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
     let MEAN_ANOMALY = self.MEAN_ANOMALY;
     let BSTAR = self.BSTAR;
+    let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
     MPE::create(_fbb, &MPEArgs{
       ENTITY_ID,
       EPOCH,
@@ -559,6 +587,7 @@ impl MPET {
       ARG_OF_PERICENTER,
       MEAN_ANOMALY,
       BSTAR,
+      MEAN_ELEMENT_THEORY,
     })
   }
 }

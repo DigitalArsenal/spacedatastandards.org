@@ -2,6 +2,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { meanElementTheory } from './meanElementTheory.js';
 
 
 /**
@@ -103,8 +104,16 @@ BSTAR():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Description of the Mean Element Theory. (SGP4,DSST,USM)
+ */
+MEAN_ELEMENT_THEORY():meanElementTheory {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementTheory.SGP4;
+}
+
 static startMPE(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(10);
 }
 
 static addEntityId(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset) {
@@ -143,6 +152,10 @@ static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
   builder.addFieldFloat64(8, BSTAR, 0.0);
 }
 
+static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementTheory) {
+  builder.addFieldInt8(9, MEAN_ELEMENT_THEORY, meanElementTheory.SGP4);
+}
+
 static endMPE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -156,7 +169,7 @@ static finishSizePrefixedMPEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MPE', true);
 }
 
-static createMPE(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, EPOCH:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, BSTAR:number):flatbuffers.Offset {
+static createMPE(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, EPOCH:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, BSTAR:number, MEAN_ELEMENT_THEORY:meanElementTheory):flatbuffers.Offset {
   MPE.startMPE(builder);
   MPE.addEntityId(builder, ENTITY_IDOffset);
   MPE.addEpoch(builder, EPOCH);
@@ -167,6 +180,7 @@ static createMPE(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset
   MPE.addArgOfPericenter(builder, ARG_OF_PERICENTER);
   MPE.addMeanAnomaly(builder, MEAN_ANOMALY);
   MPE.addBstar(builder, BSTAR);
+  MPE.addMeanElementTheory(builder, MEAN_ELEMENT_THEORY);
   return MPE.endMPE(builder);
 }
 
@@ -180,7 +194,8 @@ unpack(): MPET {
     this.RA_OF_ASC_NODE(),
     this.ARG_OF_PERICENTER(),
     this.MEAN_ANOMALY(),
-    this.BSTAR()
+    this.BSTAR(),
+    this.MEAN_ELEMENT_THEORY()
   );
 }
 
@@ -195,6 +210,7 @@ unpackTo(_o: MPET): void {
   _o.ARG_OF_PERICENTER = this.ARG_OF_PERICENTER();
   _o.MEAN_ANOMALY = this.MEAN_ANOMALY();
   _o.BSTAR = this.BSTAR();
+  _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY();
 }
 }
 
@@ -208,7 +224,8 @@ constructor(
   public RA_OF_ASC_NODE: number = 0.0,
   public ARG_OF_PERICENTER: number = 0.0,
   public MEAN_ANOMALY: number = 0.0,
-  public BSTAR: number = 0.0
+  public BSTAR: number = 0.0,
+  public MEAN_ELEMENT_THEORY: meanElementTheory = meanElementTheory.SGP4
 ){}
 
 
@@ -224,7 +241,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RA_OF_ASC_NODE,
     this.ARG_OF_PERICENTER,
     this.MEAN_ANOMALY,
-    this.BSTAR
+    this.BSTAR,
+    this.MEAN_ELEMENT_THEORY
   );
 }
 }

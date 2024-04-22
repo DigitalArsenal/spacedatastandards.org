@@ -15,7 +15,7 @@
     },
     "meanElementTheory" : {
       "type" : "string",
-      "enum": ["SGP4", "DSST", "USM"]
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
     },
     "manCovRefFrame" : {
       "type" : "string",

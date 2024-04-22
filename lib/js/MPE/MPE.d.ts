@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { meanElementTheory } from './meanElementTheory.js';
 /**
  * Minimum Propagatable Element Set
  */
@@ -46,6 +47,10 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
      * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
      */
     BSTAR(): number;
+    /**
+     * Description of the Mean Element Theory. (SGP4,DSST,USM)
+     */
+    MEAN_ELEMENT_THEORY(): meanElementTheory;
     static startMPE(builder: flatbuffers.Builder): void;
     static addEntityId(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCH: number): void;
@@ -56,10 +61,11 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
     static addArgOfPericenter(builder: flatbuffers.Builder, ARG_OF_PERICENTER: number): void;
     static addMeanAnomaly(builder: flatbuffers.Builder, MEAN_ANOMALY: number): void;
     static addBstar(builder: flatbuffers.Builder, BSTAR: number): void;
+    static addMeanElementTheory(builder: flatbuffers.Builder, MEAN_ELEMENT_THEORY: meanElementTheory): void;
     static endMPE(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishMPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedMPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createMPE(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset, EPOCH: number, MEAN_MOTION: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, MEAN_ANOMALY: number, BSTAR: number): flatbuffers.Offset;
+    static createMPE(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset, EPOCH: number, MEAN_MOTION: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, MEAN_ANOMALY: number, BSTAR: number, MEAN_ELEMENT_THEORY: meanElementTheory): flatbuffers.Offset;
     unpack(): MPET;
     unpackTo(_o: MPET): void;
 }
@@ -73,7 +79,8 @@ export declare class MPET implements flatbuffers.IGeneratedObject {
     ARG_OF_PERICENTER: number;
     MEAN_ANOMALY: number;
     BSTAR: number;
-    constructor(ENTITY_ID?: string | Uint8Array | null, EPOCH?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, BSTAR?: number);
+    MEAN_ELEMENT_THEORY: meanElementTheory;
+    constructor(ENTITY_ID?: string | Uint8Array | null, EPOCH?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, BSTAR?: number, MEAN_ELEMENT_THEORY?: meanElementTheory);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=MPE.d.ts.map

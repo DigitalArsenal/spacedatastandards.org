@@ -34,6 +34,8 @@ enum timeSystem : byte {
 enum meanElementTheory : byte {
   /// Simplified General Perturbation Model 4
   SGP4,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  SGP4XP,
   /// Draper Semi-analytical Satellite Theory
   DSST,
   /// Universal Semianalytical Method
@@ -60,6 +62,8 @@ table MPE {
   MEAN_ANOMALY: double;
   /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
   BSTAR: double;
+  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
 }
 
 /// Collection of MPE Records

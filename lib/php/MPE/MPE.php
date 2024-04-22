@@ -128,22 +128,32 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+    /**
+     * @return sbyte
+     */
+    public function getMEAN_ELEMENT_THEORY()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementTheory::SGP4;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMPE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MPE
      */
-    public static function createMPE(FlatBufferBuilder $builder, $ENTITY_ID, $EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BSTAR)
+    public static function createMPE(FlatBufferBuilder $builder, $ENTITY_ID, $EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BSTAR, $MEAN_ELEMENT_THEORY)
     {
-        $builder->startObject(9);
+        $builder->startObject(10);
         self::addENTITY_ID($builder, $ENTITY_ID);
         self::addEPOCH($builder, $EPOCH);
         self::addMEAN_MOTION($builder, $MEAN_MOTION);
@@ -153,6 +163,7 @@ class MPE extends Table
         self::addARG_OF_PERICENTER($builder, $ARG_OF_PERICENTER);
         self::addMEAN_ANOMALY($builder, $MEAN_ANOMALY);
         self::addBSTAR($builder, $BSTAR);
+        self::addMEAN_ELEMENT_THEORY($builder, $MEAN_ELEMENT_THEORY);
         $o = $builder->endObject();
         return $o;
     }
@@ -245,6 +256,16 @@ class MPE extends Table
     public static function addBSTAR(FlatBufferBuilder $builder, $BSTAR)
     {
         $builder->addDoubleX(8, $BSTAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addMEAN_ELEMENT_THEORY(FlatBufferBuilder $builder, $MEAN_ELEMENT_THEORY)
+    {
+        $builder->addSbyteX(9, $MEAN_ELEMENT_THEORY, 0);
     }
 
     /**

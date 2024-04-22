@@ -169,21 +169,25 @@ class MeanElementTheory {
       value == null ? null : MeanElementTheory.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static bool containsValue(int value) => values.containsKey(value);
 
   ///  Simplified General Perturbation Model 4
   static const MeanElementTheory SGP4 = MeanElementTheory._(0);
 
+  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  static const MeanElementTheory SGP4XP = MeanElementTheory._(1);
+
   ///  Draper Semi-analytical Satellite Theory
-  static const MeanElementTheory DSST = MeanElementTheory._(1);
+  static const MeanElementTheory DSST = MeanElementTheory._(2);
 
   ///  Universal Semianalytical Method
-  static const MeanElementTheory USM = MeanElementTheory._(2);
+  static const MeanElementTheory USM = MeanElementTheory._(3);
   static const Map<int, MeanElementTheory> values = {
     0: SGP4,
-    1: DSST,
-    2: USM};
+    1: SGP4XP,
+    2: DSST,
+    3: USM};
 
   static const fb.Reader<MeanElementTheory> reader = _MeanElementTheoryReader();
 

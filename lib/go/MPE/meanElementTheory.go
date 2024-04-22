@@ -8,23 +8,27 @@ type meanElementTheory int8
 
 const (
 	/// Simplified General Perturbation Model 4
-	meanElementTheorySGP4 meanElementTheory = 0
+	meanElementTheorySGP4   meanElementTheory = 0
+	/// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+	meanElementTheorySGP4XP meanElementTheory = 1
 	/// Draper Semi-analytical Satellite Theory
-	meanElementTheoryDSST meanElementTheory = 1
+	meanElementTheoryDSST   meanElementTheory = 2
 	/// Universal Semianalytical Method
-	meanElementTheoryUSM  meanElementTheory = 2
+	meanElementTheoryUSM    meanElementTheory = 3
 )
 
 var EnumNamesmeanElementTheory = map[meanElementTheory]string{
-	meanElementTheorySGP4: "SGP4",
-	meanElementTheoryDSST: "DSST",
-	meanElementTheoryUSM:  "USM",
+	meanElementTheorySGP4:   "SGP4",
+	meanElementTheorySGP4XP: "SGP4XP",
+	meanElementTheoryDSST:   "DSST",
+	meanElementTheoryUSM:    "USM",
 }
 
 var EnumValuesmeanElementTheory = map[string]meanElementTheory{
-	"SGP4": meanElementTheorySGP4,
-	"DSST": meanElementTheoryDSST,
-	"USM":  meanElementTheoryUSM,
+	"SGP4":   meanElementTheorySGP4,
+	"SGP4XP": meanElementTheorySGP4XP,
+	"DSST":   meanElementTheoryDSST,
+	"USM":    meanElementTheoryUSM,
 }
 
 func (v meanElementTheory) String() string {

@@ -252,11 +252,12 @@ impl flatbuffers::SimpleToVerifyInSlice for timeSystem {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_MEAN_ELEMENT_THEORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MEAN_ELEMENT_THEORY: i8 = 2;
+pub const ENUM_MAX_MEAN_ELEMENT_THEORY: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 3] = [
+pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 4] = [
   meanElementTheory::SGP4,
+  meanElementTheory::SGP4XP,
   meanElementTheory::DSST,
   meanElementTheory::USM,
 ];
@@ -268,15 +269,18 @@ pub struct meanElementTheory(pub i8);
 impl meanElementTheory {
   /// Simplified General Perturbation Model 4
   pub const SGP4: Self = Self(0);
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  pub const SGP4XP: Self = Self(1);
   /// Draper Semi-analytical Satellite Theory
-  pub const DSST: Self = Self(1);
+  pub const DSST: Self = Self(2);
   /// Universal Semianalytical Method
-  pub const USM: Self = Self(2);
+  pub const USM: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_MAX: i8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::SGP4,
+    Self::SGP4XP,
     Self::DSST,
     Self::USM,
   ];
@@ -284,6 +288,7 @@ impl meanElementTheory {
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::SGP4 => Some("SGP4"),
+      Self::SGP4XP => Some("SGP4XP"),
       Self::DSST => Some("DSST"),
       Self::USM => Some("USM"),
       _ => None,

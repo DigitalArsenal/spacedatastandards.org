@@ -44,10 +44,12 @@ public enum meanElementTheory: Int8, Enum, Verifiable {
   public var value: Int8 { return self.rawValue }
   ///  Simplified General Perturbation Model 4
   case sgp4 = 0
+  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  case sgp4xp = 1
   ///  Draper Semi-analytical Satellite Theory
-  case dsst = 1
+  case dsst = 2
   ///  Universal Semianalytical Method
-  case usm = 2
+  case usm = 3
 
   public static var max: meanElementTheory { return .usm }
   public static var min: meanElementTheory { return .sgp4 }
@@ -76,6 +78,7 @@ public struct MPE: FlatBufferObject, Verifiable {
     case ARG_OF_PERICENTER = 16
     case MEAN_ANOMALY = 18
     case BSTAR = 20
+    case MEAN_ELEMENT_THEORY = 22
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -99,7 +102,9 @@ public struct MPE: FlatBufferObject, Verifiable {
   public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
   public var BSTAR: Double { let o = _accessor.offset(VTOFFSET.BSTAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startMPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
+  public var MEAN_ELEMENT_THEORY: meanElementTheory { let o = _accessor.offset(VTOFFSET.MEAN_ELEMENT_THEORY.v); return o == 0 ? .sgp4 : meanElementTheory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
+  public static func startMPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VTOFFSET.ENTITY_ID.p) }
   public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VTOFFSET.EPOCH.p) }
   public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VTOFFSET.MEAN_MOTION.p) }
@@ -109,6 +114,7 @@ public struct MPE: FlatBufferObject, Verifiable {
   public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VTOFFSET.ARG_OF_PERICENTER.p) }
   public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VTOFFSET.MEAN_ANOMALY.p) }
   public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VTOFFSET.BSTAR.p) }
+  public static func add(MEAN_ELEMENT_THEORY: meanElementTheory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VTOFFSET.MEAN_ELEMENT_THEORY.p) }
   public static func endMPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMPE(
     _ fbb: inout FlatBufferBuilder,
@@ -120,7 +126,8 @@ public struct MPE: FlatBufferObject, Verifiable {
     RA_OF_ASC_NODE: Double = 0.0,
     ARG_OF_PERICENTER: Double = 0.0,
     MEAN_ANOMALY: Double = 0.0,
-    BSTAR: Double = 0.0
+    BSTAR: Double = 0.0,
+    MEAN_ELEMENT_THEORY: meanElementTheory = .sgp4
   ) -> Offset {
     let __start = MPE.startMPE(&fbb)
     MPE.add(ENTITY_ID: ENTITY_ID, &fbb)
@@ -132,6 +139,7 @@ public struct MPE: FlatBufferObject, Verifiable {
     MPE.add(ARG_OF_PERICENTER: ARG_OF_PERICENTER, &fbb)
     MPE.add(MEAN_ANOMALY: MEAN_ANOMALY, &fbb)
     MPE.add(BSTAR: BSTAR, &fbb)
+    MPE.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
     return MPE.endMPE(&fbb, start: __start)
   }
 
@@ -146,6 +154,7 @@ public struct MPE: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ARG_OF_PERICENTER.p, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MEAN_ANOMALY.p, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BSTAR.p, fieldName: "BSTAR", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MEAN_ELEMENT_THEORY.p, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementTheory.self)
     _v.finish()
   }
 }

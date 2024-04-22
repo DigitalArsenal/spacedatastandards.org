@@ -137,17 +137,20 @@ inline const char *EnumNametimeSystem(timeSystem e) {
 enum meanElementTheory : int8_t {
   /// Simplified General Perturbation Model 4
   meanElementTheory_SGP4 = 0,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  meanElementTheory_SGP4XP = 1,
   /// Draper Semi-analytical Satellite Theory
-  meanElementTheory_DSST = 1,
+  meanElementTheory_DSST = 2,
   /// Universal Semianalytical Method
-  meanElementTheory_USM = 2,
+  meanElementTheory_USM = 3,
   meanElementTheory_MIN = meanElementTheory_SGP4,
   meanElementTheory_MAX = meanElementTheory_USM
 };
 
-inline const meanElementTheory (&EnumValuesmeanElementTheory())[3] {
+inline const meanElementTheory (&EnumValuesmeanElementTheory())[4] {
   static const meanElementTheory values[] = {
     meanElementTheory_SGP4,
+    meanElementTheory_SGP4XP,
     meanElementTheory_DSST,
     meanElementTheory_USM
   };
@@ -155,8 +158,9 @@ inline const meanElementTheory (&EnumValuesmeanElementTheory())[3] {
 }
 
 inline const char * const *EnumNamesmeanElementTheory() {
-  static const char * const names[4] = {
+  static const char * const names[5] = {
     "SGP4",
+    "SGP4XP",
     "DSST",
     "USM",
     nullptr

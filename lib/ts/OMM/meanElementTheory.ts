@@ -7,12 +7,17 @@ export enum meanElementTheory {
   SGP4 = 0,
 
   /**
+   * Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+   */
+  SGP4XP = 1,
+
+  /**
    * Draper Semi-analytical Satellite Theory
    */
-  DSST = 1,
+  DSST = 2,
 
   /**
    * Universal Semianalytical Method
    */
-  USM = 2
+  USM = 3
 }

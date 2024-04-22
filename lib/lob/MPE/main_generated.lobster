@@ -30,10 +30,12 @@ enum timeSystem:
 enum meanElementTheory:
     /// Simplified General Perturbation Model 4
     meanElementTheory_SGP4 = 0
+    /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+    meanElementTheory_SGP4XP = 1
     /// Draper Semi-analytical Satellite Theory
-    meanElementTheory_DSST = 1
+    meanElementTheory_DSST = 2
     /// Universal Semianalytical Method
-    meanElementTheory_USM = 2
+    meanElementTheory_USM = 3
 
 class MPE
 
@@ -66,13 +68,16 @@ class MPE : flatbuffers_handle
     /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
     def BSTAR() -> float:
         return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+    def MEAN_ELEMENT_THEORY() -> meanElementTheory:
+        return meanElementTheory(buf_.flatbuffers_field_int8(pos_, 22, 0))
 
 def GetRootAsMPE(buf:string): return MPE { buf, buf.flatbuffers_indirect(0) }
 
 struct MPEBuilder:
     b_:flatbuffers_builder
     def start():
-        b_.StartObject(9)
+        b_.StartObject(10)
         return this
     def add_ENTITY_ID(ENTITY_ID:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, ENTITY_ID)
@@ -100,6 +105,9 @@ struct MPEBuilder:
         return this
     def add_BSTAR(BSTAR:float):
         b_.PrependFloat64Slot(8, BSTAR, 0.0)
+        return this
+    def add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY:meanElementTheory):
+        b_.PrependInt8Slot(9, MEAN_ELEMENT_THEORY, 0)
         return this
     def end():
         return b_.EndObject()
