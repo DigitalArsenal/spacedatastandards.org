@@ -1,8 +1,8 @@
 {
-    "name": "tap-schema-workshop",
-    "version": "1.0.139+1712578315678",
+    "name": "spacedatastandards.org",
+    "version": "1.0.139+1713801701964",
     "type": "module",
-    "description": "Node.js application to parse Excel data and convert geospatial information to GeoJSON.",
+    "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
     "files": [
         "schema/",
