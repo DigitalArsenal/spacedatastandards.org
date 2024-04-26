@@ -16,6 +16,9 @@ def read_and_modify_package_json():
     with open(path_to_package_json, "r") as file:
         package_data = json.load(file)
 
+    # Update the 'name' property
+    package_data["name"] = "@digitalarsenal/standards"  # Set the desired name here
+
     # Remove the 'scripts' property
     if "scripts" in package_data:
         del package_data["scripts"]
