@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.0.141+1714161039996",
+    "version": "1.0.141+1714242097548",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -19,7 +19,7 @@
         "build": "python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateGoModule.py",
         "build:website": "cd website && npm run build",
-        "build:js": "mkdir -p ./lib/js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && python3 ./scripts/generatePackageJSON.py",
+        "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "dev": "npm run build && cd website && npm run dev"
     },
     "author": "sds@digitalarsenal.io",
