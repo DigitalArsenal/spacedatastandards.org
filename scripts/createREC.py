@@ -26,10 +26,11 @@ def create_schema_file(schema_files, output_dir):
         types.append(base_type)
 
     header = "\n".join(imports) + "\n\n"
-    
-    # Prepare the union definition with newlines properly handled outside the f-string expression
-    union_body = ',\n  '.join(types)
-    union_def = f"union RecordType {{\n  {union_body}\n}}  // Union of all record types\n\n"
+
+    # Formatting types in groups of four per line
+    formatted_types = [", ".join(types[i : i + 4]) for i in range(0, len(types), 4)]
+    formatted_union_body = ",\n  ".join(formatted_types)
+    union_def = f"union RecordType {{\n  {formatted_union_body}\n}}  // Union of all record types\n\n"
 
     body = (
         "table Record {\n"
@@ -54,7 +55,6 @@ def create_schema_file(schema_files, output_dir):
 def main():
     schema_dir = "./schema"
     output_dir = f"{schema_dir}/REC"
-    # You can change 'REC' to any other directory you need to skip
     schema_files = list_schema_files(schema_dir, skip_dir="REC")
     create_schema_file(schema_files, output_dir)
 

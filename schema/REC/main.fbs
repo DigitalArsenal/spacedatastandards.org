@@ -27,33 +27,13 @@ include "../EPM/main.fbs";
 include "../PRG/main.fbs";
 
 union RecordType {
-  MPE,
-  OMM,
-  PLD,
-  RFM,
-  CSM,
-  OSM,
-  CAT,
-  CRM,
-  SCM,
-  TDM,
-  IDM,
-  MET,
-  ROC,
-  BOV,
-  EOP,
-  EOO,
-  EME,
-  LDM,
-  PNM,
-  HYP,
-  CTR,
-  CDM,
-  SIT,
-  OEM,
-  TIM,
-  EPM,
-  PRG
+  MPE, OMM, PLD, RFM,
+  CSM, OSM, CAT, CRM,
+  SCM, TDM, IDM, MET,
+  ROC, BOV, EOP, EOO,
+  EME, LDM, PNM, HYP,
+  CTR, CDM, SIT, OEM,
+  TIM, EPM, PRG
 }  // Union of all record types
 
 table Record {
