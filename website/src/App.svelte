@@ -3,7 +3,6 @@
   import { derived } from "svelte/store";
   import "./app.css";
   import Standards from "./lib/Standards.svelte";
-  import Form from "./lib/Form.svelte";
   import packageJSON from "root/package.json";
   import Icon from "svelte-awesome";
   import { github } from "svelte-awesome/icons";
@@ -12,10 +11,6 @@
     "/": Standards,
     "/standards": Standards,
   };
-
-  if (window.location.host !== "spacedatastandards.org") {
-    routes["/form"] = Form;
-  }
 
   const currentPath = derived(location, ($location) => {
     // If the path is empty or not recognized, redirect to '/standards'
