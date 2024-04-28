@@ -26,18 +26,20 @@ def create_schema_file(schema_files, output_dir):
         types.append(base_type)
 
     header = "\n".join(imports) + "\n\n"
-    union_def = (
-        f"union RecordType {{ {' , '.join(types)} }}  // Union of all record types\n\n"
-    )
+    
+    # Prepare the union definition with newlines properly handled outside the f-string expression
+    union_body = ',\n  '.join(types)
+    union_def = f"union RecordType {{\n  {union_body}\n}}  // Union of all record types\n\n"
+
     body = (
         "table Record {\n"
-        "    value: RecordType; \n"
+        "  value: RecordType; \n"
         "}\n\n"
         "/// Collection of Standard Records\n"
         "table REC {\n"
-        "    version: string;\n"
-        "    standard: string;\n"
-        "    RECORDS: [Record]; \n"
+        "  version: string;\n"
+        "  standard: string;\n"
+        "  RECORDS: [Record]; \n"
         "}\n\n"
         "root_type REC;\n"
         'file_identifier "$REC";\n'

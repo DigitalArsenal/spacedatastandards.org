@@ -5,11 +5,11 @@ table CSM {
   /// Satellite name for the first object
   OBJECT_1: CAT;
   /// Days since epoch for the first object
-  DSE_1: double;          
+  DSE_1: double;      
   /// Satellite name for the second object
-  OBJECT_2: CAT;      
+  OBJECT_2: CAT;    
   /// Days since epoch for the second object
-  DSE_2: double;       
+  DSE_2: double;     
   /// Time of closest approach as a Unix timestamp
   TCA: double;
   /// The distance or range between the two objects at TCA

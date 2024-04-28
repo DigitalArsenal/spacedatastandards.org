@@ -54,7 +54,7 @@ enum referenceFrame : byte {
 
 /// Reference Frame Message
 table RFM{
-    REFERENCE_FRAME: referenceFrame;
+  REFERENCE_FRAME: referenceFrame;
 }
 
 root_type RFM;
