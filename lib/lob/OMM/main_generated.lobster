@@ -13,50 +13,6 @@ enum ephemerisType:
     /// Simplified Deep Space Perturbation Model 8
     ephemerisType_SDP8 = 4
 
-enum timeSystem:
-    /// Greenwich Mean Sidereal Time
-    timeSystem_GMST = 0
-    /// Global Positioning System
-    timeSystem_GPS = 1
-    /// Mission Elapsed Time
-    timeSystem_MET = 2
-    /// Mission Relative Time
-    timeSystem_MRT = 3
-    /// Spacecraft Clock (receiver)
-    timeSystem_SCLK = 4
-    /// International Atomic Time
-    timeSystem_TAI = 5
-    /// Barycentric Coordinate Time
-    timeSystem_TCB = 6
-    /// Barycentric Dynamical Time
-    timeSystem_TDB = 7
-    /// Geocentric Coordinate Time
-    timeSystem_TCG = 8
-    /// Terrestrial Time
-    timeSystem_TT = 9
-    /// Universal Time
-    timeSystem_UT1 = 10
-    /// Coordinated Universal Time
-    timeSystem_UTC = 11
-
-enum meanElementTheory:
-    /// Simplified General Perturbation Model 4
-    meanElementTheory_SGP4 = 0
-    /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-    meanElementTheory_SGP4XP = 1
-    /// Draper Semi-analytical Satellite Theory
-    meanElementTheory_DSST = 2
-    /// Universal Semianalytical Method
-    meanElementTheory_USM = 3
-
-enum manCovRefFrame:
-    /// Another name for 'Radial, Transverse, Normal'
-    manCovRefFrame_RSW = 0
-    /// Radial, Transverse, Normal
-    manCovRefFrame_RTN = 1
-    /// A local orbital coordinate frame
-    manCovRefFrame_TNW = 2
-
 class OMM
 
 /// Orbit Mean Elements Message
@@ -81,10 +37,10 @@ class OMM : flatbuffers_handle
     def CENTER_NAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 14)
     /// Name of the reference frame (TEME, EME2000, etc.)
-    def REF_FRAME() -> referenceFrame:
+    def REFERENCE_FRAME() -> referenceFrame:
         return referenceFrame(buf_.flatbuffers_field_int8(pos_, 16, 2))
-    /// REF_FRAME_EPOCH
-    def REF_FRAME_EPOCH() -> string:
+    /// REFERENCE_FRAME_EPOCH
+    def REFERENCE_FRAME_EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 18)
     /// Time system used for the orbit state and covariance matrix. (UTC)
     def TIME_SYSTEM() -> timeSystem:
@@ -166,8 +122,8 @@ class OMM : flatbuffers_handle
         return buf_.flatbuffers_field_float64(pos_, 68, 0.0)
     /// Position/Velocity Covariance Matrix
     /// Reference frame for the covariance matrix
-    def COV_REF_FRAME() -> manCovRefFrame:
-        return manCovRefFrame(buf_.flatbuffers_field_int8(pos_, 70, 0))
+    def COV_REFERENCE_FRAME() -> referenceFrame:
+        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 70, 23))
     /// Covariance matrix [1,1] km**2
     def CX_X() -> float:
         return buf_.flatbuffers_field_float64(pos_, 72, 0.0)
@@ -272,11 +228,11 @@ struct OMMBuilder:
     def add_CENTER_NAME(CENTER_NAME:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(5, CENTER_NAME)
         return this
-    def add_REF_FRAME(REF_FRAME:referenceFrame):
-        b_.PrependInt8Slot(6, REF_FRAME, 2)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:referenceFrame):
+        b_.PrependInt8Slot(6, REFERENCE_FRAME, 2)
         return this
-    def add_REF_FRAME_EPOCH(REF_FRAME_EPOCH:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(7, REF_FRAME_EPOCH)
+    def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(7, REFERENCE_FRAME_EPOCH)
         return this
     def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
         b_.PrependInt8Slot(8, TIME_SYSTEM, 11)
@@ -353,8 +309,8 @@ struct OMMBuilder:
     def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
         b_.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
         return this
-    def add_COV_REF_FRAME(COV_REF_FRAME:manCovRefFrame):
-        b_.PrependInt8Slot(33, COV_REF_FRAME, 0)
+    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:referenceFrame):
+        b_.PrependInt8Slot(33, COV_REFERENCE_FRAME, 23)
         return this
     def add_CX_X(CX_X:float):
         b_.PrependFloat64Slot(34, CX_X, 0.0)

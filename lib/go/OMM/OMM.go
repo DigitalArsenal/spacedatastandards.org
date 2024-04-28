@@ -101,7 +101,7 @@ func (rcv *OMM) CENTER_NAME() []byte {
 
 /// Origin of reference frame (EARTH, MARS, MOON, etc.)
 /// Name of the reference frame (TEME, EME2000, etc.)
-func (rcv *OMM) REF_FRAME() referenceFrame {
+func (rcv *OMM) REFERENCE_FRAME() referenceFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
@@ -110,12 +110,12 @@ func (rcv *OMM) REF_FRAME() referenceFrame {
 }
 
 /// Name of the reference frame (TEME, EME2000, etc.)
-func (rcv *OMM) MutateREF_FRAME(n referenceFrame) bool {
+func (rcv *OMM) MutateREFERENCE_FRAME(n referenceFrame) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
 }
 
-/// REF_FRAME_EPOCH
-func (rcv *OMM) REF_FRAME_EPOCH() []byte {
+/// REFERENCE_FRAME_EPOCH
+func (rcv *OMM) REFERENCE_FRAME_EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -123,7 +123,7 @@ func (rcv *OMM) REF_FRAME_EPOCH() []byte {
 	return nil
 }
 
-/// REF_FRAME_EPOCH
+/// REFERENCE_FRAME_EPOCH
 /// Time system used for the orbit state and covariance matrix. (UTC)
 func (rcv *OMM) TIME_SYSTEM() timeSystem {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
@@ -470,17 +470,17 @@ func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 
 /// Position/Velocity Covariance Matrix
 /// Reference frame for the covariance matrix
-func (rcv *OMM) COV_REF_FRAME() manCovRefFrame {
+func (rcv *OMM) COV_REFERENCE_FRAME() referenceFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
-		return manCovRefFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return 0
+	return 23
 }
 
 /// Position/Velocity Covariance Matrix
 /// Reference frame for the covariance matrix
-func (rcv *OMM) MutateCOV_REF_FRAME(n manCovRefFrame) bool {
+func (rcv *OMM) MutateCOV_REFERENCE_FRAME(n referenceFrame) bool {
 	return rcv._tab.MutateInt8Slot(70, int8(n))
 }
 
@@ -861,11 +861,11 @@ func OMMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffset
 func OMMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CENTER_NAME), 0)
 }
-func OMMAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME referenceFrame) {
-	builder.PrependInt8Slot(6, int8(REF_FRAME), 2)
+func OMMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME referenceFrame) {
+	builder.PrependInt8Slot(6, int8(REFERENCE_FRAME), 2)
 }
-func OMMAddREF_FRAME_EPOCH(builder *flatbuffers.Builder, REF_FRAME_EPOCH flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REF_FRAME_EPOCH), 0)
+func OMMAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REFERENCE_FRAME_EPOCH), 0)
 }
 func OMMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
 	builder.PrependInt8Slot(8, int8(TIME_SYSTEM), 11)
@@ -942,8 +942,8 @@ func OMMAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64
 func OMMAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
 	builder.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
 }
-func OMMAddCOV_REF_FRAME(builder *flatbuffers.Builder, COV_REF_FRAME manCovRefFrame) {
-	builder.PrependInt8Slot(33, int8(COV_REF_FRAME), 0)
+func OMMAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME referenceFrame) {
+	builder.PrependInt8Slot(33, int8(COV_REFERENCE_FRAME), 23)
 }
 func OMMAddCX_X(builder *flatbuffers.Builder, CX_X float64) {
 	builder.PrependFloat64Slot(34, CX_X, 0.0)

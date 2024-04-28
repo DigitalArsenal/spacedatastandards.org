@@ -4,58 +4,6 @@
 
 import FlatBuffers
 
-public enum timeSystem: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Greenwich Mean Sidereal Time
-  case gmst = 0
-  ///  Global Positioning System
-  case gps = 1
-  ///  Mission Elapsed Time
-  case met = 2
-  ///  Mission Relative Time
-  case mrt = 3
-  ///  Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  case sclk = 4
-  ///  International Atomic Time
-  case tai = 5
-  ///  Barycentric Coordinate Time
-  case tcb = 6
-  ///  Barycentric Dynamical Time
-  case tdb = 7
-  ///  Geocentric Coordinate Time
-  case tcg = 8
-  ///  Terrestrial Time
-  case tt = 9
-  ///  Universal Time
-  case ut1 = 10
-  ///  Coordinated Universal Time
-  case utc = 11
-
-  public static var max: timeSystem { return .utc }
-  public static var min: timeSystem { return .gmst }
-}
-
-
-public enum meanElementTheory: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Simplified General Perturbation Model 4
-  case sgp4 = 0
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  case sgp4xp = 1
-  ///  Draper Semi-analytical Satellite Theory
-  case dsst = 2
-  ///  Universal Semianalytical Method
-  case usm = 3
-
-  public static var max: meanElementTheory { return .usm }
-  public static var min: meanElementTheory { return .sgp4 }
-}
-
-
 ///  Minimum Propagatable Element Set
 public struct MPE: FlatBufferObject, Verifiable {
 

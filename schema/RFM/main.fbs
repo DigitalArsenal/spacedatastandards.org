@@ -46,6 +46,10 @@ enum referenceFrame : byte {
   PNE,
   /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
   BRF,
+  /// Another name for 'Radial, Transverse, Normal'
+  RSW,
+  /// A local orbital coordinate frame
+  TNW
 }
 
 /// Reference Frame Message

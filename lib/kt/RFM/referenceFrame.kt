@@ -96,5 +96,13 @@ class referenceFrame private constructor() {
          * Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
          */
         const val BRF: Byte = 22
+        /**
+         * Another name for 'Radial, Transverse, Normal'
+         */
+        const val RSW: Byte = 23
+        /**
+         * A local orbital coordinate frame
+         */
+        const val TNW: Byte = 24
     }
 }

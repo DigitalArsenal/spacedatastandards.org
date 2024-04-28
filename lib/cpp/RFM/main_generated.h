@@ -63,11 +63,15 @@ enum referenceFrame : int8_t {
   referenceFrame_PNE = 21,
   /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
   referenceFrame_BRF = 22,
+  /// Another name for 'Radial, Transverse, Normal'
+  referenceFrame_RSW = 23,
+  /// A local orbital coordinate frame
+  referenceFrame_TNW = 24,
   referenceFrame_MIN = referenceFrame_ECEF,
-  referenceFrame_MAX = referenceFrame_BRF
+  referenceFrame_MAX = referenceFrame_TNW
 };
 
-inline const referenceFrame (&EnumValuesreferenceFrame())[23] {
+inline const referenceFrame (&EnumValuesreferenceFrame())[25] {
   static const referenceFrame values[] = {
     referenceFrame_ECEF,
     referenceFrame_ICRF,
@@ -91,13 +95,15 @@ inline const referenceFrame (&EnumValuesreferenceFrame())[23] {
     referenceFrame_LTP,
     referenceFrame_LVLH,
     referenceFrame_PNE,
-    referenceFrame_BRF
+    referenceFrame_BRF,
+    referenceFrame_RSW,
+    referenceFrame_TNW
   };
   return values;
 }
 
 inline const char * const *EnumNamesreferenceFrame() {
-  static const char * const names[24] = {
+  static const char * const names[26] = {
     "ECEF",
     "ICRF",
     "TEME",
@@ -121,13 +127,15 @@ inline const char * const *EnumNamesreferenceFrame() {
     "LVLH",
     "PNE",
     "BRF",
+    "RSW",
+    "TNW",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamereferenceFrame(referenceFrame e) {
-  if (::flatbuffers::IsOutRange(e, referenceFrame_ECEF, referenceFrame_BRF)) return "";
+  if (::flatbuffers::IsOutRange(e, referenceFrame_ECEF, referenceFrame_TNW)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesreferenceFrame()[index];
 }

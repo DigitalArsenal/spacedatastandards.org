@@ -37,7 +37,7 @@ class CDMObject : flatbuffers_handle
     def COVARIANCE_METHOD() -> covarianceMethod:
         return covarianceMethod(buf_.flatbuffers_field_int8(pos_, 16, 0))
     /// Reference Frame in which the object position is defined
-    def REF_FRAME() -> referenceFrame:
+    def REFERENCE_FRAME() -> referenceFrame:
         return referenceFrame(buf_.flatbuffers_field_int8(pos_, 18, 0))
     /// Gravity model
     def GRAVITY_MODEL() -> string:
@@ -287,8 +287,8 @@ struct CDMObjectBuilder:
     def add_COVARIANCE_METHOD(COVARIANCE_METHOD:covarianceMethod):
         b_.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
         return this
-    def add_REF_FRAME(REF_FRAME:referenceFrame):
-        b_.PrependInt8Slot(7, REF_FRAME, 0)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:referenceFrame):
+        b_.PrependInt8Slot(7, REFERENCE_FRAME, 0)
         return this
     def add_GRAVITY_MODEL(GRAVITY_MODEL:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(8, GRAVITY_MODEL)

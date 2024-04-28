@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "TIM" : {
+      "type" : "object",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TIM"
+}

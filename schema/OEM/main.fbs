@@ -1,4 +1,5 @@
 include "../RFM/main.fbs";
+include "../TIM/main.fbs";
 
 // Space Data Standard - 5 - Orbit Ephemeris Message (OEM)
 // Description
@@ -8,42 +9,6 @@ include "../RFM/main.fbs";
 // message recipient must have a means of interpolating across these state vectors to obtain the
 // state at an arbitrary time contained within the span of the ephemeris.
 // CCSDS Reference documentation: 502x0b2c1e2.
-
-enum timeSystem : byte {
-  /// Greenwich Mean Sidereal Time
-  GMST,
-  /// Global Positioning System
-  GPS,
-  /// Mission Elapsed Time
-  MET,
-  /// Mission Relative Time
-  MRT,
-  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  SCLK,
-  /// International Atomic Time
-  TAI,
-  /// Barycentric Coordinate Time
-  TCB,
-  /// Barycentric Dynamical Time
-  TDB,
-  /// Geocentric Coordinate Time
-  TCG,
-  /// Terrestrial Time
-  TT,
-  /// Universal Time
-  UT1,
-  /// Coordinated Universal Time
-  UTC
-}
-
-enum manCovRefFrame : byte {
-  /// Another name for 'Radial, Transverse, Normal'
-  RSW,
-  /// Radial, Transverse, Normal
-  RTN,
-  /// A local orbital coordinate frame
-  TNW
-}
 
 /// A single ephemeris data line
 table ephemerisDataLine {
@@ -74,7 +39,7 @@ table covarianceMatrixLine {
   /// Epoch
   EPOCH:string;
   /// Reference frame for the covariance matrix
-  COV_REF_FRAME:manCovRefFrame;
+  COV_REFERENCE_FRAME:referenceFrame;
   /// Covariance matrix [1,1] km**2
   CX_X:double;
   /// Covariance matrix [2,1] km**2
@@ -130,9 +95,9 @@ table ephemerisDataBlock {
   /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   CENTER_NAME:string;
   /// Name of the reference frame (TEME, EME2000, etc.)
-  REF_FRAME:referenceFrame;
+  REFERENCE_FRAME:referenceFrame;
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
-  REF_FRAME_EPOCH:string;
+  REFERENCE_FRAME_EPOCH:string;
   /// Time system used for the orbit state and covariance matrix. (UTC)
   TIME_SYSTEM:timeSystem;
   /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)

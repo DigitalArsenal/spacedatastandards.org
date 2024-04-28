@@ -94,7 +94,7 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OPERATOR_ORGANIZATION = 12,
     VT_EPHEMERIS_NAME = 14,
     VT_COVARIANCE_METHOD = 16,
-    VT_REF_FRAME = 18,
+    VT_REFERENCE_FRAME = 18,
     VT_GRAVITY_MODEL = 20,
     VT_ATMOSPHERIC_MODEL = 22,
     VT_N_BODY_PERTURBATIONS = 24,
@@ -197,8 +197,8 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return static_cast<covarianceMethod>(GetField<int8_t>(VT_COVARIANCE_METHOD, 0));
   }
   /// Reference Frame in which the object position is defined
-  referenceFrame REF_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_REF_FRAME, 0));
+  referenceFrame REFERENCE_FRAME() const {
+    return static_cast<referenceFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
   /// Gravity model
   const ::flatbuffers::String *GRAVITY_MODEL() const {
@@ -507,7 +507,7 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_EPHEMERIS_NAME) &&
            verifier.VerifyString(EPHEMERIS_NAME()) &&
            VerifyField<int8_t>(verifier, VT_COVARIANCE_METHOD, 1) &&
-           VerifyField<int8_t>(verifier, VT_REF_FRAME, 1) &&
+           VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
            VerifyOffset(verifier, VT_GRAVITY_MODEL) &&
            verifier.VerifyString(GRAVITY_MODEL()) &&
            VerifyOffset(verifier, VT_ATMOSPHERIC_MODEL) &&
@@ -615,8 +615,8 @@ struct CDMObjectBuilder {
   void add_COVARIANCE_METHOD(covarianceMethod COVARIANCE_METHOD) {
     fbb_.AddElement<int8_t>(CDMObject::VT_COVARIANCE_METHOD, static_cast<int8_t>(COVARIANCE_METHOD), 0);
   }
-  void add_REF_FRAME(referenceFrame REF_FRAME) {
-    fbb_.AddElement<int8_t>(CDMObject::VT_REF_FRAME, static_cast<int8_t>(REF_FRAME), 0);
+  void add_REFERENCE_FRAME(referenceFrame REFERENCE_FRAME) {
+    fbb_.AddElement<int8_t>(CDMObject::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
   void add_GRAVITY_MODEL(::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL) {
     fbb_.AddOffset(CDMObject::VT_GRAVITY_MODEL, GRAVITY_MODEL);
@@ -857,7 +857,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     ::flatbuffers::Offset<::flatbuffers::String> OPERATOR_ORGANIZATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME = 0,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    referenceFrame REF_FRAME = referenceFrame_ECEF,
+    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> N_BODY_PERTURBATIONS = 0,
@@ -1011,7 +1011,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_INTRACK_THRUST(INTRACK_THRUST);
   builder_.add_EARTH_TIDES(EARTH_TIDES);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
-  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_COVARIANCE_METHOD(COVARIANCE_METHOD);
   return builder_.Finish();
 }
@@ -1025,7 +1025,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     const char *OPERATOR_ORGANIZATION = nullptr,
     const char *EPHEMERIS_NAME = nullptr,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    referenceFrame REF_FRAME = referenceFrame_ECEF,
+    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
     const char *GRAVITY_MODEL = nullptr,
     const char *ATMOSPHERIC_MODEL = nullptr,
     const char *N_BODY_PERTURBATIONS = nullptr,
@@ -1117,7 +1117,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
       OPERATOR_ORGANIZATION__,
       EPHEMERIS_NAME__,
       COVARIANCE_METHOD,
-      REF_FRAME,
+      REFERENCE_FRAME,
       GRAVITY_MODEL__,
       ATMOSPHERIC_MODEL__,
       N_BODY_PERTURBATIONS__,

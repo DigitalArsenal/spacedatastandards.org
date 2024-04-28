@@ -1,0 +1,43 @@
+include "../MPE/main.fbs";
+include "../OMM/main.fbs";
+include "../PLD/main.fbs";
+include "../RFM/main.fbs";
+include "../CSM/main.fbs";
+include "../OSM/main.fbs";
+include "../CAT/main.fbs";
+include "../CRM/main.fbs";
+include "../SCM/main.fbs";
+include "../TDM/main.fbs";
+include "../IDM/main.fbs";
+include "../MET/main.fbs";
+include "../ROC/main.fbs";
+include "../BOV/main.fbs";
+include "../EOP/main.fbs";
+include "../EOO/main.fbs";
+include "../EME/main.fbs";
+include "../LDM/main.fbs";
+include "../PNM/main.fbs";
+include "../HYP/main.fbs";
+include "../CTR/main.fbs";
+include "../CDM/main.fbs";
+include "../SIT/main.fbs";
+include "../OEM/main.fbs";
+include "../TIM/main.fbs";
+include "../EPM/main.fbs";
+include "../PRG/main.fbs";
+
+union RecordType { MPE , OMM , PLD , RFM , CSM , OSM , CAT , CRM , SCM , TDM , IDM , MET , ROC , BOV , EOP , EOO , EME , LDM , PNM , HYP , CTR , CDM , SIT , OEM , TIM , EPM , PRG }  // Union of all record types
+
+table Record {
+    value: RecordType; 
+}
+
+/// Collection of Standard Records
+table REC {
+    version: string;
+    standard: string;
+    RECORDS: [Record]; 
+}
+
+root_type REC;
+file_identifier "$REC";

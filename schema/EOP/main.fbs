@@ -36,7 +36,5 @@ table EOP {
   DATA_TYPE: DataType;
 }
 
-/// Collection of EOP records
-
 root_type EOP;
 file_identifier "$EOP";

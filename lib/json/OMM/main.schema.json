@@ -3,11 +3,7 @@
   "definitions": {
     "referenceFrame" : {
       "type" : "string",
-      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF"]
-    },
-    "ephemerisType" : {
-      "type" : "string",
-      "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW"]
     },
     "timeSystem" : {
       "type" : "string",
@@ -17,9 +13,9 @@
       "type" : "string",
       "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
     },
-    "manCovRefFrame" : {
+    "ephemerisType" : {
       "type" : "string",
-      "enum": ["RSW", "RTN", "TNW"]
+      "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
     },
     "RFM" : {
       "type" : "object",
@@ -27,6 +23,24 @@
       "properties" : {
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/referenceFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MET" : {
+      "type" : "object",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory"
               }
       },
       "additionalProperties" : false
@@ -59,13 +73,13 @@
                 "type" : "string",
                 "description" : "Origin of reference frame (EARTH, MARS, MOON, etc.)"
               },
-        "REF_FRAME" : {
+        "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/referenceFrame",
                 "description" : "Name of the reference frame (TEME, EME2000, etc.)"
               },
-        "REF_FRAME_EPOCH" : {
+        "REFERENCE_FRAME_EPOCH" : {
                 "type" : "string",
-                "description" : "REF_FRAME_EPOCH"
+                "description" : "REFERENCE_FRAME_EPOCH"
               },
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem",
@@ -167,8 +181,8 @@
                 "type" : "number",
                 "description" : "Second Time Derivative of Mean Motion"
               },
-        "COV_REF_FRAME" : {
-                "$ref" : "#/definitions/manCovRefFrame",
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame",
                 "description" : "Position/Velocity Covariance Matrix\nReference frame for the covariance matrix"
               },
         "CX_X" : {

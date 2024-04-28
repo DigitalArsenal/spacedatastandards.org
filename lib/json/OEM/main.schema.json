@@ -3,15 +3,11 @@
   "definitions": {
     "referenceFrame" : {
       "type" : "string",
-      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF"]
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW"]
     },
     "timeSystem" : {
       "type" : "string",
       "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
-    },
-    "manCovRefFrame" : {
-      "type" : "string",
-      "enum": ["RSW", "RTN", "TNW"]
     },
     "RFM" : {
       "type" : "object",
@@ -19,6 +15,15 @@
       "properties" : {
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/referenceFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
               }
       },
       "additionalProperties" : false
@@ -78,8 +83,8 @@
                 "type" : "string",
                 "description" : "Epoch"
               },
-        "COV_REF_FRAME" : {
-                "$ref" : "#/definitions/manCovRefFrame",
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame",
                 "description" : "Reference frame for the covariance matrix"
               },
         "CX_X" : {
@@ -189,11 +194,11 @@
                 "type" : "string",
                 "description" : "Origin of reference frame (EARTH, MARS, MOON, etc.)"
               },
-        "REF_FRAME" : {
+        "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/referenceFrame",
                 "description" : "Name of the reference frame (TEME, EME2000, etc.)"
               },
-        "REF_FRAME_EPOCH" : {
+        "REFERENCE_FRAME_EPOCH" : {
                 "type" : "string",
                 "description" : "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
               },

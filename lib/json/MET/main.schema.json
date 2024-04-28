@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "meanElementTheory" : {
+      "type" : "string",
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "MET" : {
+      "type" : "object",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MET"
+}

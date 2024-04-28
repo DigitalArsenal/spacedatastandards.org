@@ -48,6 +48,10 @@ enum referenceFrame:
     referenceFrame_PNE = 21
     /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
     referenceFrame_BRF = 22
+    /// Another name for 'Radial, Transverse, Normal'
+    referenceFrame_RSW = 23
+    /// A local orbital coordinate frame
+    referenceFrame_TNW = 24
 
 class RFM
 

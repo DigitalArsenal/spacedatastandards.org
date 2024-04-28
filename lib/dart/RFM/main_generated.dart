@@ -21,7 +21,7 @@ class ReferenceFrame {
       value == null ? null : ReferenceFrame.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 22;
+  static const int maxValue = 24;
   static bool containsValue(int value) => values.containsKey(value);
 
   ///  Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
@@ -92,6 +92,12 @@ class ReferenceFrame {
 
   ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
   static const ReferenceFrame BRF = ReferenceFrame._(22);
+
+  ///  Another name for 'Radial, Transverse, Normal'
+  static const ReferenceFrame RSW = ReferenceFrame._(23);
+
+  ///  A local orbital coordinate frame
+  static const ReferenceFrame TNW = ReferenceFrame._(24);
   static const Map<int, ReferenceFrame> values = {
     0: ECEF,
     1: ICRF,
@@ -115,7 +121,9 @@ class ReferenceFrame {
     19: LTP,
     20: LVLH,
     21: PNE,
-    22: BRF};
+    22: BRF,
+    23: RSW,
+    24: TNW};
 
   static const fb.Reader<ReferenceFrame> reader = _ReferenceFrameReader();
 

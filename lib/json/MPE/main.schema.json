@@ -1,13 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "timeSystem" : {
-      "type" : "string",
-      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
-    },
     "meanElementTheory" : {
       "type" : "string",
       "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "MET" : {
+      "type" : "object",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory"
+              }
+      },
+      "additionalProperties" : false
     },
     "MPE" : {
       "type" : "object",

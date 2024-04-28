@@ -7,13 +7,11 @@ import sys
 
 # Set the path for the FlatBuffers schema files
 script_dir = os.path.dirname(os.path.abspath(__file__))
-SRC_DIR = os.path.abspath(
-    os.path.join(script_dir, "..", "lib", "py", "SCHEMA_MANIFEST")
-)
+SRC_DIR = os.path.abspath(os.path.join(script_dir, "..", "lib", "py", "SCM"))
 sys.path.append(SRC_DIR)
 
-from SCHEMA_MANIFEST import SCHEMA_MANIFEST
-from SCHEMA_MANIFEST import SCHEMA_MANIFESTT
+from SCM import SCM
+from SCM import SCMT
 from SCHEMA_STANDARD import SCHEMA_STANDARDT
 
 
@@ -23,12 +21,12 @@ def read_manifest_flatbuffer(file_path):
         buf = f.read()
 
     # Get the root of the FlatBuffer
-    manifest = SCHEMA_MANIFEST.GetRootAsSCHEMA_MANIFEST(buf, 0)
+    manifest = SCM.GetRootAsSCM(buf, 0)
     return manifest
 
 
 def manifest_to_dict(manifest):
-    """Convert the SCHEMA_MANIFEST object to a Python dictionary."""
+    """Convert the SCM object to a Python dictionary."""
     manifest_dict = {"version": manifest.Version().decode("utf-8"), "STANDARDS": {}}
     for i in range(manifest.RECORDSLength()):
         standard = manifest.RECORDS(i)
@@ -115,12 +113,12 @@ def main():
         standard_obj.files = value["files"]
         standards_objects.append(standard_obj)
 
-    # Create SCHEMA_MANIFESTT object
-    manifest_obj = SCHEMA_MANIFESTT()
+    # Create SCMT object
+    manifest_obj = SCMT()
     manifest_obj.version = version
     manifest_obj.RECORDS = standards_objects
 
-    # Serialize the SCHEMA_MANIFESTT object to a FlatBuffer
+    # Serialize the SCMT object to a FlatBuffer
     builder = flatbuffers.Builder(0)
     builder.Finish(manifest_obj.Pack(builder))
     manifest_buf = builder.Output()

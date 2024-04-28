@@ -15,7 +15,7 @@ const (
 	timeSystemMET  timeSystem = 2
 	/// Mission Relative Time
 	timeSystemMRT  timeSystem = 3
-	/// Spacecraft Clock (receiver)
+	/// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
 	timeSystemSCLK timeSystem = 4
 	/// International Atomic Time
 	timeSystemTAI  timeSystem = 5

@@ -24,74 +24,6 @@ public enum ephemerisType: Int8, Enum, Verifiable {
 }
 
 
-public enum timeSystem: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Greenwich Mean Sidereal Time
-  case gmst = 0
-  ///  Global Positioning System
-  case gps = 1
-  ///  Mission Elapsed Time
-  case met = 2
-  ///  Mission Relative Time
-  case mrt = 3
-  ///  Spacecraft Clock (receiver)
-  case sclk = 4
-  ///  International Atomic Time
-  case tai = 5
-  ///  Barycentric Coordinate Time
-  case tcb = 6
-  ///  Barycentric Dynamical Time
-  case tdb = 7
-  ///  Geocentric Coordinate Time
-  case tcg = 8
-  ///  Terrestrial Time
-  case tt = 9
-  ///  Universal Time
-  case ut1 = 10
-  ///  Coordinated Universal Time
-  case utc = 11
-
-  public static var max: timeSystem { return .utc }
-  public static var min: timeSystem { return .gmst }
-}
-
-
-public enum meanElementTheory: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Simplified General Perturbation Model 4
-  case sgp4 = 0
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  case sgp4xp = 1
-  ///  Draper Semi-analytical Satellite Theory
-  case dsst = 2
-  ///  Universal Semianalytical Method
-  case usm = 3
-
-  public static var max: meanElementTheory { return .usm }
-  public static var min: meanElementTheory { return .sgp4 }
-}
-
-
-public enum manCovRefFrame: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Another name for 'Radial, Transverse, Normal'
-  case rsw = 0
-  ///  Radial, Transverse, Normal
-  case rtn = 1
-  ///  A local orbital coordinate frame
-  case tnw = 2
-
-  public static var max: manCovRefFrame { return .tnw }
-  public static var min: manCovRefFrame { return .rsw }
-}
-
-
 ///  Orbit Mean Elements Message
 public struct OMM: FlatBufferObject, Verifiable {
 
@@ -111,8 +43,8 @@ public struct OMM: FlatBufferObject, Verifiable {
     case OBJECT_NAME = 10
     case OBJECT_ID = 12
     case CENTER_NAME = 14
-    case REF_FRAME = 16
-    case REF_FRAME_EPOCH = 18
+    case REFERENCE_FRAME = 16
+    case REFERENCE_FRAME_EPOCH = 18
     case TIME_SYSTEM = 20
     case MEAN_ELEMENT_THEORY = 22
     case COMMENT = 24
@@ -138,7 +70,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     case BSTAR = 64
     case MEAN_MOTION_DOT = 66
     case MEAN_MOTION_DDOT = 68
-    case COV_REF_FRAME = 70
+    case COV_REFERENCE_FRAME = 70
     case CX_X = 72
     case CY_X = 74
     case CY_Y = 76
@@ -188,10 +120,10 @@ public struct OMM: FlatBufferObject, Verifiable {
   public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  public var REF_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? .teme : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .teme }
-  ///  REF_FRAME_EPOCH
-  public var REF_FRAME_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REF_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME_EPOCH.v) }
+  public var REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .teme : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .teme }
+  ///  REFERENCE_FRAME_EPOCH
+  public var REFERENCE_FRAME_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME_EPOCH.v) }
   ///  Time system used for the orbit state and covariance matrix. (UTC)
   public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .utc : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utc }
   ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
@@ -250,7 +182,7 @@ public struct OMM: FlatBufferObject, Verifiable {
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position/Velocity Covariance Matrix
   ///  Reference frame for the covariance matrix
-  public var COV_REF_FRAME: manCovRefFrame { let o = _accessor.offset(VTOFFSET.COV_REF_FRAME.v); return o == 0 ? .rsw : manCovRefFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rsw }
+  public var COV_REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? .rsw : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rsw }
   ///  Covariance matrix [1,1] km**2
   public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Covariance matrix [2,1] km**2
@@ -312,8 +244,8 @@ public struct OMM: FlatBufferObject, Verifiable {
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
-  public static func add(REF_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME.rawValue, def: 2, at: VTOFFSET.REF_FRAME.p) }
-  public static func add(REF_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_EPOCH, at: VTOFFSET.REF_FRAME_EPOCH.p) }
+  public static func add(REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 2, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public static func add(REFERENCE_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME_EPOCH, at: VTOFFSET.REFERENCE_FRAME_EPOCH.p) }
   public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 11, at: VTOFFSET.TIME_SYSTEM.p) }
   public static func add(MEAN_ELEMENT_THEORY: meanElementTheory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VTOFFSET.MEAN_ELEMENT_THEORY.p) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
@@ -339,7 +271,7 @@ public struct OMM: FlatBufferObject, Verifiable {
   public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VTOFFSET.BSTAR.p) }
   public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DOT.p) }
   public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DDOT.p) }
-  public static func add(COV_REF_FRAME: manCovRefFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_REF_FRAME.rawValue, def: 0, at: VTOFFSET.COV_REF_FRAME.p) }
+  public static func add(COV_REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_REFERENCE_FRAME.rawValue, def: 23, at: VTOFFSET.COV_REFERENCE_FRAME.p) }
   public static func add(CX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_X, def: 0.0, at: VTOFFSET.CX_X.p) }
   public static func add(CY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_X, def: 0.0, at: VTOFFSET.CY_X.p) }
   public static func add(CY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_Y, def: 0.0, at: VTOFFSET.CY_Y.p) }
@@ -375,8 +307,8 @@ public struct OMM: FlatBufferObject, Verifiable {
     OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
     OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
     CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
-    REF_FRAME: referenceFrame = .teme,
-    REF_FRAME_EPOCHOffset REF_FRAME_EPOCH: Offset = Offset(),
+    REFERENCE_FRAME: referenceFrame = .teme,
+    REFERENCE_FRAME_EPOCHOffset REFERENCE_FRAME_EPOCH: Offset = Offset(),
     TIME_SYSTEM: timeSystem = .utc,
     MEAN_ELEMENT_THEORY: meanElementTheory = .sgp4,
     COMMENTOffset COMMENT: Offset = Offset(),
@@ -402,7 +334,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     BSTAR: Double = 0.0,
     MEAN_MOTION_DOT: Double = 0.0,
     MEAN_MOTION_DDOT: Double = 0.0,
-    COV_REF_FRAME: manCovRefFrame = .rsw,
+    COV_REFERENCE_FRAME: referenceFrame = .rsw,
     CX_X: Double = 0.0,
     CY_X: Double = 0.0,
     CY_Y: Double = 0.0,
@@ -437,8 +369,8 @@ public struct OMM: FlatBufferObject, Verifiable {
     OMM.add(OBJECT_NAME: OBJECT_NAME, &fbb)
     OMM.add(OBJECT_ID: OBJECT_ID, &fbb)
     OMM.add(CENTER_NAME: CENTER_NAME, &fbb)
-    OMM.add(REF_FRAME: REF_FRAME, &fbb)
-    OMM.add(REF_FRAME_EPOCH: REF_FRAME_EPOCH, &fbb)
+    OMM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    OMM.add(REFERENCE_FRAME_EPOCH: REFERENCE_FRAME_EPOCH, &fbb)
     OMM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
     OMM.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
     OMM.add(COMMENT: COMMENT, &fbb)
@@ -464,7 +396,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     OMM.add(BSTAR: BSTAR, &fbb)
     OMM.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
     OMM.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
-    OMM.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
+    OMM.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
     OMM.add(CX_X: CX_X, &fbb)
     OMM.add(CY_X: CY_X, &fbb)
     OMM.add(CY_Y: CY_Y, &fbb)
@@ -502,8 +434,8 @@ public struct OMM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: referenceFrame.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME_EPOCH.p, fieldName: "REF_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: referenceFrame.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME_EPOCH.p, fieldName: "REFERENCE_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timeSystem.self)
     try _v.visit(field: VTOFFSET.MEAN_ELEMENT_THEORY.p, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementTheory.self)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
@@ -529,7 +461,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.BSTAR.p, fieldName: "BSTAR", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MEAN_MOTION_DOT.p, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MEAN_MOTION_DDOT.p, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COV_REF_FRAME.p, fieldName: "COV_REF_FRAME", required: false, type: manCovRefFrame.self)
+    try _v.visit(field: VTOFFSET.COV_REFERENCE_FRAME.p, fieldName: "COV_REFERENCE_FRAME", required: false, type: referenceFrame.self)
     try _v.visit(field: VTOFFSET.CX_X.p, fieldName: "CX_X", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CY_X.p, fieldName: "CY_X", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CY_Y.p, fieldName: "CY_Y", required: false, type: Double.self)

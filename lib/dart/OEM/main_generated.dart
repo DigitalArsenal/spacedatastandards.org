@@ -7,144 +7,6 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-class TimeSystem {
-  final int value;
-  const TimeSystem._(this.value);
-
-  factory TimeSystem.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum TimeSystem');
-    }
-    return result;
-  }
-
-  static TimeSystem? _createOrNull(int? value) => 
-      value == null ? null : TimeSystem.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 11;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Greenwich Mean Sidereal Time
-  static const TimeSystem GMST = TimeSystem._(0);
-
-  ///  Global Positioning System
-  static const TimeSystem GPS = TimeSystem._(1);
-
-  ///  Mission Elapsed Time
-  static const TimeSystem MET = TimeSystem._(2);
-
-  ///  Mission Relative Time
-  static const TimeSystem MRT = TimeSystem._(3);
-
-  ///  Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  static const TimeSystem SCLK = TimeSystem._(4);
-
-  ///  International Atomic Time
-  static const TimeSystem TAI = TimeSystem._(5);
-
-  ///  Barycentric Coordinate Time
-  static const TimeSystem TCB = TimeSystem._(6);
-
-  ///  Barycentric Dynamical Time
-  static const TimeSystem TDB = TimeSystem._(7);
-
-  ///  Geocentric Coordinate Time
-  static const TimeSystem TCG = TimeSystem._(8);
-
-  ///  Terrestrial Time
-  static const TimeSystem TT = TimeSystem._(9);
-
-  ///  Universal Time
-  static const TimeSystem UT1 = TimeSystem._(10);
-
-  ///  Coordinated Universal Time
-  static const TimeSystem UTC = TimeSystem._(11);
-  static const Map<int, TimeSystem> values = {
-    0: GMST,
-    1: GPS,
-    2: MET,
-    3: MRT,
-    4: SCLK,
-    5: TAI,
-    6: TCB,
-    7: TDB,
-    8: TCG,
-    9: TT,
-    10: UT1,
-    11: UTC};
-
-  static const fb.Reader<TimeSystem> reader = _TimeSystemReader();
-
-  @override
-  String toString() {
-    return 'TimeSystem{value: $value}';
-  }
-}
-
-class _TimeSystemReader extends fb.Reader<TimeSystem> {
-  const _TimeSystemReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  TimeSystem read(fb.BufferContext bc, int offset) =>
-      TimeSystem.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-class ManCovRefFrame {
-  final int value;
-  const ManCovRefFrame._(this.value);
-
-  factory ManCovRefFrame.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum ManCovRefFrame');
-    }
-    return result;
-  }
-
-  static ManCovRefFrame? _createOrNull(int? value) => 
-      value == null ? null : ManCovRefFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Another name for 'Radial, Transverse, Normal'
-  static const ManCovRefFrame RSW = ManCovRefFrame._(0);
-
-  ///  Radial, Transverse, Normal
-  static const ManCovRefFrame RTN = ManCovRefFrame._(1);
-
-  ///  A local orbital coordinate frame
-  static const ManCovRefFrame TNW = ManCovRefFrame._(2);
-  static const Map<int, ManCovRefFrame> values = {
-    0: RSW,
-    1: RTN,
-    2: TNW};
-
-  static const fb.Reader<ManCovRefFrame> reader = _ManCovRefFrameReader();
-
-  @override
-  String toString() {
-    return 'ManCovRefFrame{value: $value}';
-  }
-}
-
-class _ManCovRefFrameReader extends fb.Reader<ManCovRefFrame> {
-  const _ManCovRefFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ManCovRefFrame read(fb.BufferContext bc, int offset) =>
-      ManCovRefFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
 ///  A single ephemeris data line
 class EphemerisDataLine {
   EphemerisDataLine._(this._bc, this._bcOffset);
@@ -326,7 +188,7 @@ class CovarianceMatrixLine {
   ///  Epoch
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Reference frame for the covariance matrix
-  ManCovRefFrame get COV_REF_FRAME => ManCovRefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ReferenceFrame get COV_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   ///  Covariance matrix [1,1] km**2
   double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   ///  Covariance matrix [2,1] km**2
@@ -372,7 +234,7 @@ class CovarianceMatrixLine {
 
   @override
   String toString() {
-    return 'CovarianceMatrixLine{EPOCH: ${EPOCH}, COV_REF_FRAME: ${COV_REF_FRAME}, CX_X: ${CX_X}, CY_X: ${CY_X}, CY_Y: ${CY_Y}, CZ_X: ${CZ_X}, CZ_Y: ${CZ_Y}, CZ_Z: ${CZ_Z}, CX_DOT_X: ${CX_DOT_X}, CX_DOT_Y: ${CX_DOT_Y}, CX_DOT_Z: ${CX_DOT_Z}, CX_DOT_X_DOT: ${CX_DOT_X_DOT}, CY_DOT_X: ${CY_DOT_X}, CY_DOT_Y: ${CY_DOT_Y}, CY_DOT_Z: ${CY_DOT_Z}, CY_DOT_X_DOT: ${CY_DOT_X_DOT}, CY_DOT_Y_DOT: ${CY_DOT_Y_DOT}, CZ_DOT_X: ${CZ_DOT_X}, CZ_DOT_Y: ${CZ_DOT_Y}, CZ_DOT_Z: ${CZ_DOT_Z}, CZ_DOT_X_DOT: ${CZ_DOT_X_DOT}, CZ_DOT_Y_DOT: ${CZ_DOT_Y_DOT}, CZ_DOT_Z_DOT: ${CZ_DOT_Z_DOT}}';
+    return 'CovarianceMatrixLine{EPOCH: ${EPOCH}, COV_REFERENCE_FRAME: ${COV_REFERENCE_FRAME}, CX_X: ${CX_X}, CY_X: ${CY_X}, CY_Y: ${CY_Y}, CZ_X: ${CZ_X}, CZ_Y: ${CZ_Y}, CZ_Z: ${CZ_Z}, CX_DOT_X: ${CX_DOT_X}, CX_DOT_Y: ${CX_DOT_Y}, CX_DOT_Z: ${CX_DOT_Z}, CX_DOT_X_DOT: ${CX_DOT_X_DOT}, CY_DOT_X: ${CY_DOT_X}, CY_DOT_Y: ${CY_DOT_Y}, CY_DOT_Z: ${CY_DOT_Z}, CY_DOT_X_DOT: ${CY_DOT_X_DOT}, CY_DOT_Y_DOT: ${CY_DOT_Y_DOT}, CZ_DOT_X: ${CZ_DOT_X}, CZ_DOT_Y: ${CZ_DOT_Y}, CZ_DOT_Z: ${CZ_DOT_Z}, CZ_DOT_X_DOT: ${CZ_DOT_X_DOT}, CZ_DOT_Y_DOT: ${CZ_DOT_Y_DOT}, CZ_DOT_Z_DOT: ${CZ_DOT_Z_DOT}}';
   }
 }
 
@@ -397,8 +259,8 @@ class CovarianceMatrixLineBuilder {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addCovRefFrame(ManCovRefFrame? COV_REF_FRAME) {
-    fbBuilder.addInt8(1, COV_REF_FRAME?.value);
+  int addCovReferenceFrame(ReferenceFrame? COV_REFERENCE_FRAME) {
+    fbBuilder.addInt8(1, COV_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
   int addCxX(double? CX_X) {
@@ -493,7 +355,7 @@ class CovarianceMatrixLineBuilder {
 
 class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
   final String? _EPOCH;
-  final ManCovRefFrame? _COV_REF_FRAME;
+  final ReferenceFrame? _COV_REFERENCE_FRAME;
   final double? _CX_X;
   final double? _CY_X;
   final double? _CY_Y;
@@ -518,7 +380,7 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
 
   CovarianceMatrixLineObjectBuilder({
     String? EPOCH,
-    ManCovRefFrame? COV_REF_FRAME,
+    ReferenceFrame? COV_REFERENCE_FRAME,
     double? CX_X,
     double? CY_X,
     double? CY_Y,
@@ -542,7 +404,7 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
     double? CZ_DOT_Z_DOT,
   })
       : _EPOCH = EPOCH,
-        _COV_REF_FRAME = COV_REF_FRAME,
+        _COV_REFERENCE_FRAME = COV_REFERENCE_FRAME,
         _CX_X = CX_X,
         _CY_X = CY_X,
         _CY_Y = CY_Y,
@@ -572,7 +434,7 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EPOCH!);
     fbBuilder.startTable(23);
     fbBuilder.addOffset(0, EPOCHOffset);
-    fbBuilder.addInt8(1, _COV_REF_FRAME?.value);
+    fbBuilder.addInt8(1, _COV_REFERENCE_FRAME?.value);
     fbBuilder.addFloat64(2, _CX_X);
     fbBuilder.addFloat64(3, _CY_X);
     fbBuilder.addFloat64(4, _CY_Y);
@@ -627,9 +489,9 @@ class EphemerisDataBlock {
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  ReferenceFrame get REF_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
-  String? get REF_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Time system used for the orbit state and covariance matrix. (UTC)
   TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -651,7 +513,7 @@ class EphemerisDataBlock {
 
   @override
   String toString() {
-    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, CENTER_NAME: ${CENTER_NAME}, REF_FRAME: ${REF_FRAME}, REF_FRAME_EPOCH: ${REF_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
+    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
   }
 }
 
@@ -688,11 +550,11 @@ class EphemerisDataBlockBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addRefFrame(ReferenceFrame? REF_FRAME) {
-    fbBuilder.addInt8(4, REF_FRAME?.value);
+  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+    fbBuilder.addInt8(4, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
-  int addRefFrameEpochOffset(int? offset) {
+  int addReferenceFrameEpochOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
@@ -743,8 +605,8 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
   final String? _CENTER_NAME;
-  final ReferenceFrame? _REF_FRAME;
-  final String? _REF_FRAME_EPOCH;
+  final ReferenceFrame? _REFERENCE_FRAME;
+  final String? _REFERENCE_FRAME_EPOCH;
   final TimeSystem? _TIME_SYSTEM;
   final String? _START_TIME;
   final String? _USEABLE_START_TIME;
@@ -760,8 +622,8 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     String? OBJECT_NAME,
     String? OBJECT_ID,
     String? CENTER_NAME,
-    ReferenceFrame? REF_FRAME,
-    String? REF_FRAME_EPOCH,
+    ReferenceFrame? REFERENCE_FRAME,
+    String? REFERENCE_FRAME_EPOCH,
     TimeSystem? TIME_SYSTEM,
     String? START_TIME,
     String? USEABLE_START_TIME,
@@ -776,8 +638,8 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         _OBJECT_NAME = OBJECT_NAME,
         _OBJECT_ID = OBJECT_ID,
         _CENTER_NAME = CENTER_NAME,
-        _REF_FRAME = REF_FRAME,
-        _REF_FRAME_EPOCH = REF_FRAME_EPOCH,
+        _REFERENCE_FRAME = REFERENCE_FRAME,
+        _REFERENCE_FRAME_EPOCH = REFERENCE_FRAME_EPOCH,
         _TIME_SYSTEM = TIME_SYSTEM,
         _START_TIME = START_TIME,
         _USEABLE_START_TIME = USEABLE_START_TIME,
@@ -799,8 +661,8 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBJECT_ID!);
     final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
         : fbBuilder.writeString(_CENTER_NAME!);
-    final int? REF_FRAME_EPOCHOffset = _REF_FRAME_EPOCH == null ? null
-        : fbBuilder.writeString(_REF_FRAME_EPOCH!);
+    final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME_EPOCH!);
     final int? START_TIMEOffset = _START_TIME == null ? null
         : fbBuilder.writeString(_START_TIME!);
     final int? USEABLE_START_TIMEOffset = _USEABLE_START_TIME == null ? null
@@ -820,8 +682,8 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(1, OBJECT_NAMEOffset);
     fbBuilder.addOffset(2, OBJECT_IDOffset);
     fbBuilder.addOffset(3, CENTER_NAMEOffset);
-    fbBuilder.addInt8(4, _REF_FRAME?.value);
-    fbBuilder.addOffset(5, REF_FRAME_EPOCHOffset);
+    fbBuilder.addInt8(4, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(5, REFERENCE_FRAME_EPOCHOffset);
     fbBuilder.addInt8(6, _TIME_SYSTEM?.value);
     fbBuilder.addOffset(7, START_TIMEOffset);
     fbBuilder.addOffset(8, USEABLE_START_TIMEOffset);

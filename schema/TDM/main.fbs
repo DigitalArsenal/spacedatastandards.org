@@ -184,7 +184,5 @@ table TDM {
   CLOCK_DRIFT: [double];
 }
 
-/// Collection of TDM records
-
 root_type TDM;
 file_identifier "$TDM";

@@ -35,7 +35,5 @@ table HYP {
     EVENT_END_TIME: string;
 }
 
-/// Collection of HYP records
-
 root_type HYP;
 file_identifier "$HYP";

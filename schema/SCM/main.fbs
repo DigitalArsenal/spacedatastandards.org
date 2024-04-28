@@ -1,0 +1,24 @@
+/// Schema Standard Definition
+table SCHEMA_STANDARD {
+    /// Unique identifier for the standard
+    key: string;
+
+    /// IDL
+    idl: string;
+
+    /// List Of File Paths
+    files: [string];
+}
+
+/// Schema Manifest
+table SCM {
+    /// Version of Space Data Standards
+    version: string;
+
+    /// Standards Dictionary
+    RECORDS: [SCHEMA_STANDARD];
+}
+
+/// Declaring the root type
+root_type SCM;
+file_identifier "$SCM";

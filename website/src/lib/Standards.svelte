@@ -5,10 +5,10 @@
   import { location, push, querystring } from "svelte-spa-router";
 
   import {
-    SCHEMA_MANIFEST,
-    SCHEMA_MANIFESTT,
+    SCM,
+    SCMT,
     SCHEMA_STANDARDT,
-  } from "standards/ts/SCHEMA_MANIFEST/main";
+  } from "standards/ts/SCM/main";
   import jsonSchema from "standards/json/index.json";
   import dataSchema from "root/scripts/datatypes.json";
   import search from "svelte-awesome/icons/search";
@@ -41,7 +41,7 @@
   let selectedFiles = writable<SelectedFiles>({}); // Use the interface for the store
 
   const jsonDSchema: any = jsonSchema;
-  let manifestData: SCHEMA_MANIFESTT;
+  let manifestData: SCMT;
 
   const getKey = (standard: any) => {
     return standard.key?.toString() || "";
@@ -74,8 +74,8 @@
       const arrayBuffer = await response.arrayBuffer();
 
       const bytes = new ByteBuffer(new Uint8Array(arrayBuffer));
-      manifestData = new SCHEMA_MANIFESTT();
-      SCHEMA_MANIFEST.getRootAsSCHEMA_MANIFEST(bytes).unpackTo(manifestData);
+      manifestData = new SCMT();
+      SCM.getRootAsSCM(bytes).unpackTo(manifestData);
     } catch (error) {
       console.error("Error fetching and parsing manifest:", error);
     }

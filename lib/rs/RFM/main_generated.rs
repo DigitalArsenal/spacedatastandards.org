@@ -12,10 +12,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_REFERENCE_FRAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REFERENCE_FRAME: i8 = 22;
+pub const ENUM_MAX_REFERENCE_FRAME: i8 = 24;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REFERENCE_FRAME: [referenceFrame; 23] = [
+pub const ENUM_VALUES_REFERENCE_FRAME: [referenceFrame; 25] = [
   referenceFrame::ECEF,
   referenceFrame::ICRF,
   referenceFrame::TEME,
@@ -39,6 +39,8 @@ pub const ENUM_VALUES_REFERENCE_FRAME: [referenceFrame; 23] = [
   referenceFrame::LVLH,
   referenceFrame::PNE,
   referenceFrame::BRF,
+  referenceFrame::RSW,
+  referenceFrame::TNW,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -92,9 +94,13 @@ impl referenceFrame {
   pub const PNE: Self = Self(21);
   /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
   pub const BRF: Self = Self(22);
+  /// Another name for 'Radial, Transverse, Normal'
+  pub const RSW: Self = Self(23);
+  /// A local orbital coordinate frame
+  pub const TNW: Self = Self(24);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 22;
+  pub const ENUM_MAX: i8 = 24;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::ECEF,
     Self::ICRF,
@@ -119,6 +125,8 @@ impl referenceFrame {
     Self::LVLH,
     Self::PNE,
     Self::BRF,
+    Self::RSW,
+    Self::TNW,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -146,6 +154,8 @@ impl referenceFrame {
       Self::LVLH => Some("LVLH"),
       Self::PNE => Some("PNE"),
       Self::BRF => Some("BRF"),
+      Self::RSW => Some("RSW"),
+      Self::TNW => Some("TNW"),
       _ => None,
     }
   }

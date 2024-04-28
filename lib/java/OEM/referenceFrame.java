@@ -95,8 +95,16 @@ public final class referenceFrame {
    * Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
    */
   public static final byte BRF = 22;
+  /**
+   * Another name for 'Radial, Transverse, Normal'
+   */
+  public static final byte RSW = 23;
+  /**
+   * A local orbital coordinate frame
+   */
+  public static final byte TNW = 24;
 
-  public static final String[] names = { "ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", };
+  public static final String[] names = { "ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", };
 
   public static String name(int e) { return names[e]; }
 }

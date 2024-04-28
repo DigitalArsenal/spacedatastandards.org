@@ -4,6 +4,8 @@
 // @generated
 
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -112,332 +114,6 @@ impl<'a> flatbuffers::Verifiable for ephemerisType {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for ephemerisType {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_TIME_SYSTEM: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TIME_SYSTEM: i8 = 11;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TIME_SYSTEM: [timeSystem; 12] = [
-  timeSystem::GMST,
-  timeSystem::GPS,
-  timeSystem::MET,
-  timeSystem::MRT,
-  timeSystem::SCLK,
-  timeSystem::TAI,
-  timeSystem::TCB,
-  timeSystem::TDB,
-  timeSystem::TCG,
-  timeSystem::TT,
-  timeSystem::UT1,
-  timeSystem::UTC,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct timeSystem(pub i8);
-#[allow(non_upper_case_globals)]
-impl timeSystem {
-  /// Greenwich Mean Sidereal Time
-  pub const GMST: Self = Self(0);
-  /// Global Positioning System
-  pub const GPS: Self = Self(1);
-  /// Mission Elapsed Time
-  pub const MET: Self = Self(2);
-  /// Mission Relative Time
-  pub const MRT: Self = Self(3);
-  /// Spacecraft Clock (receiver)
-  pub const SCLK: Self = Self(4);
-  /// International Atomic Time
-  pub const TAI: Self = Self(5);
-  /// Barycentric Coordinate Time
-  pub const TCB: Self = Self(6);
-  /// Barycentric Dynamical Time
-  pub const TDB: Self = Self(7);
-  /// Geocentric Coordinate Time
-  pub const TCG: Self = Self(8);
-  /// Terrestrial Time
-  pub const TT: Self = Self(9);
-  /// Universal Time
-  pub const UT1: Self = Self(10);
-  /// Coordinated Universal Time
-  pub const UTC: Self = Self(11);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 11;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::GMST,
-    Self::GPS,
-    Self::MET,
-    Self::MRT,
-    Self::SCLK,
-    Self::TAI,
-    Self::TCB,
-    Self::TDB,
-    Self::TCG,
-    Self::TT,
-    Self::UT1,
-    Self::UTC,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::GMST => Some("GMST"),
-      Self::GPS => Some("GPS"),
-      Self::MET => Some("MET"),
-      Self::MRT => Some("MRT"),
-      Self::SCLK => Some("SCLK"),
-      Self::TAI => Some("TAI"),
-      Self::TCB => Some("TCB"),
-      Self::TDB => Some("TDB"),
-      Self::TCG => Some("TCG"),
-      Self::TT => Some("TT"),
-      Self::UT1 => Some("UT1"),
-      Self::UTC => Some("UTC"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for timeSystem {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for timeSystem {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for timeSystem {
-    type Output = timeSystem;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for timeSystem {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for timeSystem {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for timeSystem {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MEAN_ELEMENT_THEORY: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MEAN_ELEMENT_THEORY: i8 = 3;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 4] = [
-  meanElementTheory::SGP4,
-  meanElementTheory::SGP4XP,
-  meanElementTheory::DSST,
-  meanElementTheory::USM,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct meanElementTheory(pub i8);
-#[allow(non_upper_case_globals)]
-impl meanElementTheory {
-  /// Simplified General Perturbation Model 4
-  pub const SGP4: Self = Self(0);
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  pub const SGP4XP: Self = Self(1);
-  /// Draper Semi-analytical Satellite Theory
-  pub const DSST: Self = Self(2);
-  /// Universal Semianalytical Method
-  pub const USM: Self = Self(3);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::SGP4,
-    Self::SGP4XP,
-    Self::DSST,
-    Self::USM,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::SGP4 => Some("SGP4"),
-      Self::SGP4XP => Some("SGP4XP"),
-      Self::DSST => Some("DSST"),
-      Self::USM => Some("USM"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for meanElementTheory {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for meanElementTheory {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for meanElementTheory {
-    type Output = meanElementTheory;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for meanElementTheory {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for meanElementTheory {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for meanElementTheory {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MAN_COV_REF_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MAN_COV_REF_FRAME: i8 = 2;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MAN_COV_REF_FRAME: [manCovRefFrame; 3] = [
-  manCovRefFrame::RSW,
-  manCovRefFrame::RTN,
-  manCovRefFrame::TNW,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct manCovRefFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl manCovRefFrame {
-  /// Another name for 'Radial, Transverse, Normal'
-  pub const RSW: Self = Self(0);
-  /// Radial, Transverse, Normal
-  pub const RTN: Self = Self(1);
-  /// A local orbital coordinate frame
-  pub const TNW: Self = Self(2);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::RSW,
-    Self::RTN,
-    Self::TNW,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::RSW => Some("RSW"),
-      Self::RTN => Some("RTN"),
-      Self::TNW => Some("TNW"),
-      _ => None,
-    }
-  }
-}
-impl core::fmt::Debug for manCovRefFrame {
-  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> flatbuffers::Follow<'a> for manCovRefFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
-    Self(b)
-  }
-}
-
-impl flatbuffers::Push for manCovRefFrame {
-    type Output = manCovRefFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
-    }
-}
-
-impl flatbuffers::EndianScalar for manCovRefFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> flatbuffers::Verifiable for manCovRefFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl flatbuffers::SimpleToVerifyInSlice for manCovRefFrame {}
 pub enum OMMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -461,8 +137,8 @@ impl<'a> OMM<'a> {
   pub const VT_OBJECT_NAME: flatbuffers::VOffsetT = 10;
   pub const VT_OBJECT_ID: flatbuffers::VOffsetT = 12;
   pub const VT_CENTER_NAME: flatbuffers::VOffsetT = 14;
-  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 16;
-  pub const VT_REF_FRAME_EPOCH: flatbuffers::VOffsetT = 18;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 16;
+  pub const VT_REFERENCE_FRAME_EPOCH: flatbuffers::VOffsetT = 18;
   pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 20;
   pub const VT_MEAN_ELEMENT_THEORY: flatbuffers::VOffsetT = 22;
   pub const VT_COMMENT: flatbuffers::VOffsetT = 24;
@@ -488,7 +164,7 @@ impl<'a> OMM<'a> {
   pub const VT_BSTAR: flatbuffers::VOffsetT = 64;
   pub const VT_MEAN_MOTION_DOT: flatbuffers::VOffsetT = 66;
   pub const VT_MEAN_MOTION_DDOT: flatbuffers::VOffsetT = 68;
-  pub const VT_COV_REF_FRAME: flatbuffers::VOffsetT = 70;
+  pub const VT_COV_REFERENCE_FRAME: flatbuffers::VOffsetT = 70;
   pub const VT_CX_X: flatbuffers::VOffsetT = 72;
   pub const VT_CY_X: flatbuffers::VOffsetT = 74;
   pub const VT_CY_Y: flatbuffers::VOffsetT = 76;
@@ -575,17 +251,17 @@ impl<'a> OMM<'a> {
     if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
-    if let Some(x) = args.REF_FRAME_EPOCH { builder.add_REF_FRAME_EPOCH(x); }
+    if let Some(x) = args.REFERENCE_FRAME_EPOCH { builder.add_REFERENCE_FRAME_EPOCH(x); }
     if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
-    builder.add_COV_REF_FRAME(args.COV_REF_FRAME);
+    builder.add_COV_REFERENCE_FRAME(args.COV_REFERENCE_FRAME);
     builder.add_EPHEMERIS_TYPE(args.EPHEMERIS_TYPE);
     builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
-    builder.add_REF_FRAME(args.REF_FRAME);
+    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.finish()
   }
 
@@ -606,8 +282,8 @@ impl<'a> OMM<'a> {
     let CENTER_NAME = self.CENTER_NAME().map(|x| {
       x.to_string()
     });
-    let REF_FRAME = self.REF_FRAME();
-    let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH().map(|x| {
+    let REFERENCE_FRAME = self.REFERENCE_FRAME();
+    let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH().map(|x| {
       x.to_string()
     });
     let TIME_SYSTEM = self.TIME_SYSTEM();
@@ -641,7 +317,7 @@ impl<'a> OMM<'a> {
     let BSTAR = self.BSTAR();
     let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT();
     let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT();
-    let COV_REF_FRAME = self.COV_REF_FRAME();
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME();
     let CX_X = self.CX_X();
     let CY_X = self.CY_X();
     let CY_Y = self.CY_Y();
@@ -679,8 +355,8 @@ impl<'a> OMM<'a> {
       OBJECT_NAME,
       OBJECT_ID,
       CENTER_NAME,
-      REF_FRAME,
-      REF_FRAME_EPOCH,
+      REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH,
       TIME_SYSTEM,
       MEAN_ELEMENT_THEORY,
       COMMENT,
@@ -706,7 +382,7 @@ impl<'a> OMM<'a> {
       BSTAR,
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
-      COV_REF_FRAME,
+      COV_REFERENCE_FRAME,
       CX_X,
       CY_X,
       CY_Y,
@@ -787,19 +463,19 @@ impl<'a> OMM<'a> {
   }
   /// Name of the reference frame (TEME, EME2000, etc.)
   #[inline]
-  pub fn REF_FRAME(&self) -> referenceFrame {
+  pub fn REFERENCE_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(OMM::VT_REF_FRAME, Some(referenceFrame::TEME)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(OMM::VT_REFERENCE_FRAME, Some(referenceFrame::TEME)).unwrap()}
   }
-  /// REF_FRAME_EPOCH
+  /// REFERENCE_FRAME_EPOCH
   #[inline]
-  pub fn REF_FRAME_EPOCH(&self) -> Option<&'a str> {
+  pub fn REFERENCE_FRAME_EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_REF_FRAME_EPOCH, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_REFERENCE_FRAME_EPOCH, None)}
   }
   /// Time system used for the orbit state and covariance matrix. (UTC)
   #[inline]
@@ -1007,11 +683,11 @@ impl<'a> OMM<'a> {
   /// Position/Velocity Covariance Matrix
   /// Reference frame for the covariance matrix
   #[inline]
-  pub fn COV_REF_FRAME(&self) -> manCovRefFrame {
+  pub fn COV_REFERENCE_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<manCovRefFrame>(OMM::VT_COV_REF_FRAME, Some(manCovRefFrame::RSW)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(OMM::VT_COV_REFERENCE_FRAME, Some(referenceFrame::RSW)).unwrap()}
   }
   /// Covariance matrix [1,1] km**2
   #[inline]
@@ -1236,8 +912,8 @@ impl flatbuffers::Verifiable for OMM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
-     .visit_field::<referenceFrame>("REF_FRAME", Self::VT_REF_FRAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME_EPOCH", Self::VT_REF_FRAME_EPOCH, false)?
+     .visit_field::<referenceFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
      .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<meanElementTheory>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
@@ -1263,7 +939,7 @@ impl flatbuffers::Verifiable for OMM<'_> {
      .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
      .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
      .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
-     .visit_field::<manCovRefFrame>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
+     .visit_field::<referenceFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
      .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
      .visit_field::<f64>("CY_Y", Self::VT_CY_Y, false)?
@@ -1301,8 +977,8 @@ pub struct OMMArgs<'a> {
     pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CENTER_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REF_FRAME: referenceFrame,
-    pub REF_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: referenceFrame,
+    pub REFERENCE_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TIME_SYSTEM: timeSystem,
     pub MEAN_ELEMENT_THEORY: meanElementTheory,
     pub COMMENT: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1328,7 +1004,7 @@ pub struct OMMArgs<'a> {
     pub BSTAR: f64,
     pub MEAN_MOTION_DOT: f64,
     pub MEAN_MOTION_DDOT: f64,
-    pub COV_REF_FRAME: manCovRefFrame,
+    pub COV_REFERENCE_FRAME: referenceFrame,
     pub CX_X: f64,
     pub CY_X: f64,
     pub CY_Y: f64,
@@ -1366,8 +1042,8 @@ impl<'a> Default for OMMArgs<'a> {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REF_FRAME: referenceFrame::TEME,
-      REF_FRAME_EPOCH: None,
+      REFERENCE_FRAME: referenceFrame::TEME,
+      REFERENCE_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::UTC,
       MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
       COMMENT: None,
@@ -1393,7 +1069,7 @@ impl<'a> Default for OMMArgs<'a> {
       BSTAR: 0.0,
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
-      COV_REF_FRAME: manCovRefFrame::RSW,
+      COV_REFERENCE_FRAME: referenceFrame::RSW,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -1454,12 +1130,12 @@ impl<'a: 'b, 'b> OMMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OMM::VT_CENTER_NAME, CENTER_NAME);
   }
   #[inline]
-  pub fn add_REF_FRAME(&mut self, REF_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(OMM::VT_REF_FRAME, REF_FRAME, referenceFrame::TEME);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(OMM::VT_REFERENCE_FRAME, REFERENCE_FRAME, referenceFrame::TEME);
   }
   #[inline]
-  pub fn add_REF_FRAME_EPOCH(&mut self, REF_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OMM::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH);
+  pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OMM::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
   }
   #[inline]
   pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
@@ -1562,8 +1238,8 @@ impl<'a: 'b, 'b> OMMBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(OMM::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
   }
   #[inline]
-  pub fn add_COV_REF_FRAME(&mut self, COV_REF_FRAME: manCovRefFrame) {
-    self.fbb_.push_slot::<manCovRefFrame>(OMM::VT_COV_REF_FRAME, COV_REF_FRAME, manCovRefFrame::RSW);
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, referenceFrame::RSW);
   }
   #[inline]
   pub fn add_CX_X(&mut self, CX_X: f64) {
@@ -1693,8 +1369,8 @@ impl core::fmt::Debug for OMM<'_> {
       ds.field("OBJECT_NAME", &self.OBJECT_NAME());
       ds.field("OBJECT_ID", &self.OBJECT_ID());
       ds.field("CENTER_NAME", &self.CENTER_NAME());
-      ds.field("REF_FRAME", &self.REF_FRAME());
-      ds.field("REF_FRAME_EPOCH", &self.REF_FRAME_EPOCH());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("REFERENCE_FRAME_EPOCH", &self.REFERENCE_FRAME_EPOCH());
       ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
       ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
       ds.field("COMMENT", &self.COMMENT());
@@ -1720,7 +1396,7 @@ impl core::fmt::Debug for OMM<'_> {
       ds.field("BSTAR", &self.BSTAR());
       ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
       ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
-      ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
+      ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
       ds.field("CX_X", &self.CX_X());
       ds.field("CY_X", &self.CY_X());
       ds.field("CY_Y", &self.CY_Y());
@@ -1759,8 +1435,8 @@ pub struct OMMT {
   pub OBJECT_NAME: Option<String>,
   pub OBJECT_ID: Option<String>,
   pub CENTER_NAME: Option<String>,
-  pub REF_FRAME: referenceFrame,
-  pub REF_FRAME_EPOCH: Option<String>,
+  pub REFERENCE_FRAME: referenceFrame,
+  pub REFERENCE_FRAME_EPOCH: Option<String>,
   pub TIME_SYSTEM: timeSystem,
   pub MEAN_ELEMENT_THEORY: meanElementTheory,
   pub COMMENT: Option<String>,
@@ -1786,7 +1462,7 @@ pub struct OMMT {
   pub BSTAR: f64,
   pub MEAN_MOTION_DOT: f64,
   pub MEAN_MOTION_DDOT: f64,
-  pub COV_REF_FRAME: manCovRefFrame,
+  pub COV_REFERENCE_FRAME: referenceFrame,
   pub CX_X: f64,
   pub CY_X: f64,
   pub CY_Y: f64,
@@ -1823,8 +1499,8 @@ impl Default for OMMT {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REF_FRAME: referenceFrame::TEME,
-      REF_FRAME_EPOCH: None,
+      REFERENCE_FRAME: referenceFrame::TEME,
+      REFERENCE_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::UTC,
       MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
       COMMENT: None,
@@ -1850,7 +1526,7 @@ impl Default for OMMT {
       BSTAR: 0.0,
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
-      COV_REF_FRAME: manCovRefFrame::RSW,
+      COV_REFERENCE_FRAME: referenceFrame::RSW,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -1901,8 +1577,8 @@ impl OMMT {
     let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REF_FRAME = self.REF_FRAME;
-    let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH.as_ref().map(|x|{
+    let REFERENCE_FRAME = self.REFERENCE_FRAME;
+    let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TIME_SYSTEM = self.TIME_SYSTEM;
@@ -1936,7 +1612,7 @@ impl OMMT {
     let BSTAR = self.BSTAR;
     let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT;
     let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT;
-    let COV_REF_FRAME = self.COV_REF_FRAME;
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME;
     let CX_X = self.CX_X;
     let CY_X = self.CY_X;
     let CY_Y = self.CY_Y;
@@ -1974,8 +1650,8 @@ impl OMMT {
       OBJECT_NAME,
       OBJECT_ID,
       CENTER_NAME,
-      REF_FRAME,
-      REF_FRAME_EPOCH,
+      REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH,
       TIME_SYSTEM,
       MEAN_ELEMENT_THEORY,
       COMMENT,
@@ -2001,7 +1677,7 @@ impl OMMT {
       BSTAR,
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
-      COV_REF_FRAME,
+      COV_REFERENCE_FRAME,
       CX_X,
       CY_X,
       CY_Y,

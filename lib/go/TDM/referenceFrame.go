@@ -53,6 +53,10 @@ const (
 	referenceFramePNE      referenceFrame = 21
 	/// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
 	referenceFrameBRF      referenceFrame = 22
+	/// Another name for 'Radial, Transverse, Normal'
+	referenceFrameRSW      referenceFrame = 23
+	/// A local orbital coordinate frame
+	referenceFrameTNW      referenceFrame = 24
 )
 
 var EnumNamesreferenceFrame = map[referenceFrame]string{
@@ -79,6 +83,8 @@ var EnumNamesreferenceFrame = map[referenceFrame]string{
 	referenceFrameLVLH:     "LVLH",
 	referenceFramePNE:      "PNE",
 	referenceFrameBRF:      "BRF",
+	referenceFrameRSW:      "RSW",
+	referenceFrameTNW:      "TNW",
 }
 
 var EnumValuesreferenceFrame = map[string]referenceFrame{
@@ -105,6 +111,8 @@ var EnumValuesreferenceFrame = map[string]referenceFrame{
 	"LVLH":     referenceFrameLVLH,
 	"PNE":      referenceFramePNE,
 	"BRF":      referenceFrameBRF,
+	"RSW":      referenceFrameRSW,
+	"TNW":      referenceFrameTNW,
 }
 
 func (v referenceFrame) String() string {

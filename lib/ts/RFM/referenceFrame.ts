@@ -114,5 +114,15 @@ export enum referenceFrame {
   /**
    * Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
    */
-  BRF = 22
+  BRF = 22,
+
+  /**
+   * Another name for 'Radial, Transverse, Normal'
+   */
+  RSW = 23,
+
+  /**
+   * A local orbital coordinate frame
+   */
+  TNW = 24
 }

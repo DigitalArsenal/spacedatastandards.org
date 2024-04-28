@@ -1,46 +1,10 @@
+include "../MET/main.fbs";
+
 // Space Data Standard - 6 - Minimum-Propagatable-Element-Set (MPE)
 // Description
 // Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit.
 // Legacy format description can be found here.
 // CCSDS Reference documentation: 502x0b2c1e2.
-
-enum timeSystem : byte {
-  /// Greenwich Mean Sidereal Time
-  GMST,
-  /// Global Positioning System
-  GPS,
-  /// Mission Elapsed Time
-  MET,
-  /// Mission Relative Time
-  MRT,
-  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  SCLK,
-  /// International Atomic Time
-  TAI,
-  /// Barycentric Coordinate Time
-  TCB,
-  /// Barycentric Dynamical Time
-  TDB,
-  /// Geocentric Coordinate Time
-  TCG,
-  /// Terrestrial Time
-  TT,
-  /// Universal Time
-  UT1,
-  /// Coordinated Universal Time
-  UTC
-}
-
-enum meanElementTheory : byte {
-  /// Simplified General Perturbation Model 4
-  SGP4,
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  SGP4XP,
-  /// Draper Semi-analytical Satellite Theory
-  DSST,
-  /// Universal Semianalytical Method
-  USM
-}
 
 /// Minimum Propagatable Element Set
 table MPE {  
@@ -65,8 +29,6 @@ table MPE {
   /// Description of the Mean Element Theory. (SGP4,DSST,USM)
   MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
 }
-
-/// Collection of MPE Records
 
 root_type MPE;
 file_identifier "$MPE";

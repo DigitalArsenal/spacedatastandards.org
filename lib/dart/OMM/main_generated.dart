@@ -66,199 +66,6 @@ class _EphemerisTypeReader extends fb.Reader<EphemerisType> {
       EphemerisType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-class TimeSystem {
-  final int value;
-  const TimeSystem._(this.value);
-
-  factory TimeSystem.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum TimeSystem');
-    }
-    return result;
-  }
-
-  static TimeSystem? _createOrNull(int? value) => 
-      value == null ? null : TimeSystem.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 11;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Greenwich Mean Sidereal Time
-  static const TimeSystem GMST = TimeSystem._(0);
-
-  ///  Global Positioning System
-  static const TimeSystem GPS = TimeSystem._(1);
-
-  ///  Mission Elapsed Time
-  static const TimeSystem MET = TimeSystem._(2);
-
-  ///  Mission Relative Time
-  static const TimeSystem MRT = TimeSystem._(3);
-
-  ///  Spacecraft Clock (receiver)
-  static const TimeSystem SCLK = TimeSystem._(4);
-
-  ///  International Atomic Time
-  static const TimeSystem TAI = TimeSystem._(5);
-
-  ///  Barycentric Coordinate Time
-  static const TimeSystem TCB = TimeSystem._(6);
-
-  ///  Barycentric Dynamical Time
-  static const TimeSystem TDB = TimeSystem._(7);
-
-  ///  Geocentric Coordinate Time
-  static const TimeSystem TCG = TimeSystem._(8);
-
-  ///  Terrestrial Time
-  static const TimeSystem TT = TimeSystem._(9);
-
-  ///  Universal Time
-  static const TimeSystem UT1 = TimeSystem._(10);
-
-  ///  Coordinated Universal Time
-  static const TimeSystem UTC = TimeSystem._(11);
-  static const Map<int, TimeSystem> values = {
-    0: GMST,
-    1: GPS,
-    2: MET,
-    3: MRT,
-    4: SCLK,
-    5: TAI,
-    6: TCB,
-    7: TDB,
-    8: TCG,
-    9: TT,
-    10: UT1,
-    11: UTC};
-
-  static const fb.Reader<TimeSystem> reader = _TimeSystemReader();
-
-  @override
-  String toString() {
-    return 'TimeSystem{value: $value}';
-  }
-}
-
-class _TimeSystemReader extends fb.Reader<TimeSystem> {
-  const _TimeSystemReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  TimeSystem read(fb.BufferContext bc, int offset) =>
-      TimeSystem.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-class MeanElementTheory {
-  final int value;
-  const MeanElementTheory._(this.value);
-
-  factory MeanElementTheory.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum MeanElementTheory');
-    }
-    return result;
-  }
-
-  static MeanElementTheory? _createOrNull(int? value) => 
-      value == null ? null : MeanElementTheory.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 3;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Simplified General Perturbation Model 4
-  static const MeanElementTheory SGP4 = MeanElementTheory._(0);
-
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  static const MeanElementTheory SGP4XP = MeanElementTheory._(1);
-
-  ///  Draper Semi-analytical Satellite Theory
-  static const MeanElementTheory DSST = MeanElementTheory._(2);
-
-  ///  Universal Semianalytical Method
-  static const MeanElementTheory USM = MeanElementTheory._(3);
-  static const Map<int, MeanElementTheory> values = {
-    0: SGP4,
-    1: SGP4XP,
-    2: DSST,
-    3: USM};
-
-  static const fb.Reader<MeanElementTheory> reader = _MeanElementTheoryReader();
-
-  @override
-  String toString() {
-    return 'MeanElementTheory{value: $value}';
-  }
-}
-
-class _MeanElementTheoryReader extends fb.Reader<MeanElementTheory> {
-  const _MeanElementTheoryReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  MeanElementTheory read(fb.BufferContext bc, int offset) =>
-      MeanElementTheory.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
-class ManCovRefFrame {
-  final int value;
-  const ManCovRefFrame._(this.value);
-
-  factory ManCovRefFrame.fromValue(int value) {
-    final result = values[value];
-    if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum ManCovRefFrame');
-    }
-    return result;
-  }
-
-  static ManCovRefFrame? _createOrNull(int? value) => 
-      value == null ? null : ManCovRefFrame.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 2;
-  static bool containsValue(int value) => values.containsKey(value);
-
-  ///  Another name for 'Radial, Transverse, Normal'
-  static const ManCovRefFrame RSW = ManCovRefFrame._(0);
-
-  ///  Radial, Transverse, Normal
-  static const ManCovRefFrame RTN = ManCovRefFrame._(1);
-
-  ///  A local orbital coordinate frame
-  static const ManCovRefFrame TNW = ManCovRefFrame._(2);
-  static const Map<int, ManCovRefFrame> values = {
-    0: RSW,
-    1: RTN,
-    2: TNW};
-
-  static const fb.Reader<ManCovRefFrame> reader = _ManCovRefFrameReader();
-
-  @override
-  String toString() {
-    return 'ManCovRefFrame{value: $value}';
-  }
-}
-
-class _ManCovRefFrameReader extends fb.Reader<ManCovRefFrame> {
-  const _ManCovRefFrameReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  ManCovRefFrame read(fb.BufferContext bc, int offset) =>
-      ManCovRefFrame.fromValue(const fb.Int8Reader().read(bc, offset));
-}
-
 ///  Orbit Mean Elements Message
 class OMM {
   OMM._(this._bc, this._bcOffset);
@@ -286,9 +93,9 @@ class OMM {
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  ReferenceFrame get REF_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 2));
-  ///  REF_FRAME_EPOCH
-  String? get REF_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 2));
+  ///  REFERENCE_FRAME_EPOCH
+  String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Time system used for the orbit state and covariance matrix. (UTC)
   TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 11));
   ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
@@ -344,7 +151,7 @@ class OMM {
   double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
   ///  Position/Velocity Covariance Matrix
   ///  Reference frame for the covariance matrix
-  ManCovRefFrame get COV_REF_FRAME => ManCovRefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 0));
+  ReferenceFrame get COV_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 23));
   ///  Covariance matrix [1,1] km**2
   double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
   ///  Covariance matrix [2,1] km**2
@@ -400,7 +207,7 @@ class OMM {
 
   @override
   String toString() {
-    return 'OMM{CCSDS_OMM_VERS: ${CCSDS_OMM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, CENTER_NAME: ${CENTER_NAME}, REF_FRAME: ${REF_FRAME}, REF_FRAME_EPOCH: ${REF_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, MEAN_ELEMENT_THEORY: ${MEAN_ELEMENT_THEORY}, COMMENT: ${COMMENT}, EPOCH: ${EPOCH}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, MEAN_MOTION: ${MEAN_MOTION}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RA_OF_ASC_NODE: ${RA_OF_ASC_NODE}, ARG_OF_PERICENTER: ${ARG_OF_PERICENTER}, MEAN_ANOMALY: ${MEAN_ANOMALY}, GM: ${GM}, MASS: ${MASS}, SOLAR_RAD_AREA: ${SOLAR_RAD_AREA}, SOLAR_RAD_COEFF: ${SOLAR_RAD_COEFF}, DRAG_AREA: ${DRAG_AREA}, DRAG_COEFF: ${DRAG_COEFF}, EPHEMERIS_TYPE: ${EPHEMERIS_TYPE}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, NORAD_CAT_ID: ${NORAD_CAT_ID}, ELEMENT_SET_NO: ${ELEMENT_SET_NO}, REV_AT_EPOCH: ${REV_AT_EPOCH}, BSTAR: ${BSTAR}, MEAN_MOTION_DOT: ${MEAN_MOTION_DOT}, MEAN_MOTION_DDOT: ${MEAN_MOTION_DDOT}, COV_REF_FRAME: ${COV_REF_FRAME}, CX_X: ${CX_X}, CY_X: ${CY_X}, CY_Y: ${CY_Y}, CZ_X: ${CZ_X}, CZ_Y: ${CZ_Y}, CZ_Z: ${CZ_Z}, CX_DOT_X: ${CX_DOT_X}, CX_DOT_Y: ${CX_DOT_Y}, CX_DOT_Z: ${CX_DOT_Z}, CX_DOT_X_DOT: ${CX_DOT_X_DOT}, CY_DOT_X: ${CY_DOT_X}, CY_DOT_Y: ${CY_DOT_Y}, CY_DOT_Z: ${CY_DOT_Z}, CY_DOT_X_DOT: ${CY_DOT_X_DOT}, CY_DOT_Y_DOT: ${CY_DOT_Y_DOT}, CZ_DOT_X: ${CZ_DOT_X}, CZ_DOT_Y: ${CZ_DOT_Y}, CZ_DOT_Z: ${CZ_DOT_Z}, CZ_DOT_X_DOT: ${CZ_DOT_X_DOT}, CZ_DOT_Y_DOT: ${CZ_DOT_Y_DOT}, CZ_DOT_Z_DOT: ${CZ_DOT_Z_DOT}, USER_DEFINED_BIP_0044_TYPE: ${USER_DEFINED_BIP_0044_TYPE}, USER_DEFINED_OBJECT_DESIGNATOR: ${USER_DEFINED_OBJECT_DESIGNATOR}, USER_DEFINED_EARTH_MODEL: ${USER_DEFINED_EARTH_MODEL}, USER_DEFINED_EPOCH_TIMESTAMP: ${USER_DEFINED_EPOCH_TIMESTAMP}, USER_DEFINED_MICROSECONDS: ${USER_DEFINED_MICROSECONDS}}';
+    return 'OMM{CCSDS_OMM_VERS: ${CCSDS_OMM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, MEAN_ELEMENT_THEORY: ${MEAN_ELEMENT_THEORY}, COMMENT: ${COMMENT}, EPOCH: ${EPOCH}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, MEAN_MOTION: ${MEAN_MOTION}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RA_OF_ASC_NODE: ${RA_OF_ASC_NODE}, ARG_OF_PERICENTER: ${ARG_OF_PERICENTER}, MEAN_ANOMALY: ${MEAN_ANOMALY}, GM: ${GM}, MASS: ${MASS}, SOLAR_RAD_AREA: ${SOLAR_RAD_AREA}, SOLAR_RAD_COEFF: ${SOLAR_RAD_COEFF}, DRAG_AREA: ${DRAG_AREA}, DRAG_COEFF: ${DRAG_COEFF}, EPHEMERIS_TYPE: ${EPHEMERIS_TYPE}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, NORAD_CAT_ID: ${NORAD_CAT_ID}, ELEMENT_SET_NO: ${ELEMENT_SET_NO}, REV_AT_EPOCH: ${REV_AT_EPOCH}, BSTAR: ${BSTAR}, MEAN_MOTION_DOT: ${MEAN_MOTION_DOT}, MEAN_MOTION_DDOT: ${MEAN_MOTION_DDOT}, COV_REFERENCE_FRAME: ${COV_REFERENCE_FRAME}, CX_X: ${CX_X}, CY_X: ${CY_X}, CY_Y: ${CY_Y}, CZ_X: ${CZ_X}, CZ_Y: ${CZ_Y}, CZ_Z: ${CZ_Z}, CX_DOT_X: ${CX_DOT_X}, CX_DOT_Y: ${CX_DOT_Y}, CX_DOT_Z: ${CX_DOT_Z}, CX_DOT_X_DOT: ${CX_DOT_X_DOT}, CY_DOT_X: ${CY_DOT_X}, CY_DOT_Y: ${CY_DOT_Y}, CY_DOT_Z: ${CY_DOT_Z}, CY_DOT_X_DOT: ${CY_DOT_X_DOT}, CY_DOT_Y_DOT: ${CY_DOT_Y_DOT}, CZ_DOT_X: ${CZ_DOT_X}, CZ_DOT_Y: ${CZ_DOT_Y}, CZ_DOT_Z: ${CZ_DOT_Z}, CZ_DOT_X_DOT: ${CZ_DOT_X_DOT}, CZ_DOT_Y_DOT: ${CZ_DOT_Y_DOT}, CZ_DOT_Z_DOT: ${CZ_DOT_Z_DOT}, USER_DEFINED_BIP_0044_TYPE: ${USER_DEFINED_BIP_0044_TYPE}, USER_DEFINED_OBJECT_DESIGNATOR: ${USER_DEFINED_OBJECT_DESIGNATOR}, USER_DEFINED_EARTH_MODEL: ${USER_DEFINED_EARTH_MODEL}, USER_DEFINED_EPOCH_TIMESTAMP: ${USER_DEFINED_EPOCH_TIMESTAMP}, USER_DEFINED_MICROSECONDS: ${USER_DEFINED_MICROSECONDS}}';
   }
 }
 
@@ -445,11 +252,11 @@ class OMMBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addRefFrame(ReferenceFrame? REF_FRAME) {
-    fbBuilder.addInt8(6, REF_FRAME?.value);
+  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+    fbBuilder.addInt8(6, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
-  int addRefFrameEpochOffset(int? offset) {
+  int addReferenceFrameEpochOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
@@ -553,8 +360,8 @@ class OMMBuilder {
     fbBuilder.addFloat64(32, MEAN_MOTION_DDOT);
     return fbBuilder.offset;
   }
-  int addCovRefFrame(ManCovRefFrame? COV_REF_FRAME) {
-    fbBuilder.addInt8(33, COV_REF_FRAME?.value);
+  int addCovReferenceFrame(ReferenceFrame? COV_REFERENCE_FRAME) {
+    fbBuilder.addInt8(33, COV_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
   int addCxX(double? CX_X) {
@@ -674,8 +481,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
   final String? _CENTER_NAME;
-  final ReferenceFrame? _REF_FRAME;
-  final String? _REF_FRAME_EPOCH;
+  final ReferenceFrame? _REFERENCE_FRAME;
+  final String? _REFERENCE_FRAME_EPOCH;
   final TimeSystem? _TIME_SYSTEM;
   final MeanElementTheory? _MEAN_ELEMENT_THEORY;
   final String? _COMMENT;
@@ -701,7 +508,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final double? _BSTAR;
   final double? _MEAN_MOTION_DOT;
   final double? _MEAN_MOTION_DDOT;
-  final ManCovRefFrame? _COV_REF_FRAME;
+  final ReferenceFrame? _COV_REFERENCE_FRAME;
   final double? _CX_X;
   final double? _CY_X;
   final double? _CY_Y;
@@ -736,8 +543,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     String? OBJECT_NAME,
     String? OBJECT_ID,
     String? CENTER_NAME,
-    ReferenceFrame? REF_FRAME,
-    String? REF_FRAME_EPOCH,
+    ReferenceFrame? REFERENCE_FRAME,
+    String? REFERENCE_FRAME_EPOCH,
     TimeSystem? TIME_SYSTEM,
     MeanElementTheory? MEAN_ELEMENT_THEORY,
     String? COMMENT,
@@ -763,7 +570,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     double? BSTAR,
     double? MEAN_MOTION_DOT,
     double? MEAN_MOTION_DDOT,
-    ManCovRefFrame? COV_REF_FRAME,
+    ReferenceFrame? COV_REFERENCE_FRAME,
     double? CX_X,
     double? CY_X,
     double? CY_Y,
@@ -797,8 +604,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         _OBJECT_NAME = OBJECT_NAME,
         _OBJECT_ID = OBJECT_ID,
         _CENTER_NAME = CENTER_NAME,
-        _REF_FRAME = REF_FRAME,
-        _REF_FRAME_EPOCH = REF_FRAME_EPOCH,
+        _REFERENCE_FRAME = REFERENCE_FRAME,
+        _REFERENCE_FRAME_EPOCH = REFERENCE_FRAME_EPOCH,
         _TIME_SYSTEM = TIME_SYSTEM,
         _MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY,
         _COMMENT = COMMENT,
@@ -824,7 +631,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         _BSTAR = BSTAR,
         _MEAN_MOTION_DOT = MEAN_MOTION_DOT,
         _MEAN_MOTION_DDOT = MEAN_MOTION_DDOT,
-        _COV_REF_FRAME = COV_REF_FRAME,
+        _COV_REFERENCE_FRAME = COV_REFERENCE_FRAME,
         _CX_X = CX_X,
         _CY_X = CY_X,
         _CY_Y = CY_Y,
@@ -865,8 +672,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBJECT_ID!);
     final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
         : fbBuilder.writeString(_CENTER_NAME!);
-    final int? REF_FRAME_EPOCHOffset = _REF_FRAME_EPOCH == null ? null
-        : fbBuilder.writeString(_REF_FRAME_EPOCH!);
+    final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_REFERENCE_FRAME_EPOCH!);
     final int? COMMENTOffset = _COMMENT == null ? null
         : fbBuilder.writeString(_COMMENT!);
     final int? EPOCHOffset = _EPOCH == null ? null
@@ -884,8 +691,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(3, OBJECT_NAMEOffset);
     fbBuilder.addOffset(4, OBJECT_IDOffset);
     fbBuilder.addOffset(5, CENTER_NAMEOffset);
-    fbBuilder.addInt8(6, _REF_FRAME?.value);
-    fbBuilder.addOffset(7, REF_FRAME_EPOCHOffset);
+    fbBuilder.addInt8(6, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(7, REFERENCE_FRAME_EPOCHOffset);
     fbBuilder.addInt8(8, _TIME_SYSTEM?.value);
     fbBuilder.addInt8(9, _MEAN_ELEMENT_THEORY?.value);
     fbBuilder.addOffset(10, COMMENTOffset);
@@ -911,7 +718,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(30, _BSTAR);
     fbBuilder.addFloat64(31, _MEAN_MOTION_DOT);
     fbBuilder.addFloat64(32, _MEAN_MOTION_DDOT);
-    fbBuilder.addInt8(33, _COV_REF_FRAME?.value);
+    fbBuilder.addInt8(33, _COV_REFERENCE_FRAME?.value);
     fbBuilder.addFloat64(34, _CX_X);
     fbBuilder.addFloat64(35, _CY_X);
     fbBuilder.addFloat64(36, _CY_Y);

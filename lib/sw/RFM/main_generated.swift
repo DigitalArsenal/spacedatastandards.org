@@ -54,8 +54,12 @@ public enum referenceFrame: Int8, Enum, Verifiable {
   case pne = 21
   ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
   case brf = 22
+  ///  Another name for 'Radial, Transverse, Normal'
+  case rsw = 23
+  ///  A local orbital coordinate frame
+  case tnw = 24
 
-  public static var max: referenceFrame { return .brf }
+  public static var max: referenceFrame { return .tnw }
   public static var min: referenceFrame { return .ecef }
 }
 

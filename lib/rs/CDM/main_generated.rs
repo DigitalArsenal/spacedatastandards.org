@@ -208,7 +208,7 @@ impl<'a> CDMObject<'a> {
   pub const VT_OPERATOR_ORGANIZATION: flatbuffers::VOffsetT = 12;
   pub const VT_EPHEMERIS_NAME: flatbuffers::VOffsetT = 14;
   pub const VT_COVARIANCE_METHOD: flatbuffers::VOffsetT = 16;
-  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 18;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 18;
   pub const VT_GRAVITY_MODEL: flatbuffers::VOffsetT = 20;
   pub const VT_ATMOSPHERIC_MODEL: flatbuffers::VOffsetT = 22;
   pub const VT_N_BODY_PERTURBATIONS: flatbuffers::VOffsetT = 24;
@@ -372,7 +372,7 @@ impl<'a> CDMObject<'a> {
     builder.add_INTRACK_THRUST(args.INTRACK_THRUST);
     builder.add_EARTH_TIDES(args.EARTH_TIDES);
     builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
-    builder.add_REF_FRAME(args.REF_FRAME);
+    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.add_COVARIANCE_METHOD(args.COVARIANCE_METHOD);
     builder.finish()
   }
@@ -397,7 +397,7 @@ impl<'a> CDMObject<'a> {
       x.to_string()
     });
     let COVARIANCE_METHOD = self.COVARIANCE_METHOD();
-    let REF_FRAME = self.REF_FRAME();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME();
     let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
       x.to_string()
     });
@@ -489,7 +489,7 @@ impl<'a> CDMObject<'a> {
       OPERATOR_ORGANIZATION,
       EPHEMERIS_NAME,
       COVARIANCE_METHOD,
-      REF_FRAME,
+      REFERENCE_FRAME,
       GRAVITY_MODEL,
       ATMOSPHERIC_MODEL,
       N_BODY_PERTURBATIONS,
@@ -623,11 +623,11 @@ impl<'a> CDMObject<'a> {
   }
   /// Reference Frame in which the object position is defined
   #[inline]
-  pub fn REF_FRAME(&self) -> referenceFrame {
+  pub fn REFERENCE_FRAME(&self) -> referenceFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(CDMObject::VT_REF_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<referenceFrame>(CDMObject::VT_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
   }
   /// Gravity model
   #[inline]
@@ -1229,7 +1229,7 @@ impl flatbuffers::Verifiable for CDMObject<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPERATOR_ORGANIZATION", Self::VT_OPERATOR_ORGANIZATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME", Self::VT_EPHEMERIS_NAME, false)?
      .visit_field::<covarianceMethod>("COVARIANCE_METHOD", Self::VT_COVARIANCE_METHOD, false)?
-     .visit_field::<referenceFrame>("REF_FRAME", Self::VT_REF_FRAME, false)?
+     .visit_field::<referenceFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("N_BODY_PERTURBATIONS", Self::VT_N_BODY_PERTURBATIONS, false)?
@@ -1315,7 +1315,7 @@ pub struct CDMObjectArgs<'a> {
     pub OPERATOR_ORGANIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EPHEMERIS_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COVARIANCE_METHOD: covarianceMethod,
-    pub REF_FRAME: referenceFrame,
+    pub REFERENCE_FRAME: referenceFrame,
     pub GRAVITY_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ATMOSPHERIC_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub N_BODY_PERTURBATIONS: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1401,7 +1401,7 @@ impl<'a> Default for CDMObjectArgs<'a> {
       OPERATOR_ORGANIZATION: None,
       EPHEMERIS_NAME: None,
       COVARIANCE_METHOD: covarianceMethod::CALCULATED,
-      REF_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: referenceFrame::ECEF,
       GRAVITY_MODEL: None,
       ATMOSPHERIC_MODEL: None,
       N_BODY_PERTURBATIONS: None,
@@ -1513,8 +1513,8 @@ impl<'a: 'b, 'b> CDMObjectBuilder<'a, 'b> {
     self.fbb_.push_slot::<covarianceMethod>(CDMObject::VT_COVARIANCE_METHOD, COVARIANCE_METHOD, covarianceMethod::CALCULATED);
   }
   #[inline]
-  pub fn add_REF_FRAME(&mut self, REF_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(CDMObject::VT_REF_FRAME, REF_FRAME, referenceFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: referenceFrame) {
+    self.fbb_.push_slot::<referenceFrame>(CDMObject::VT_REFERENCE_FRAME, REFERENCE_FRAME, referenceFrame::ECEF);
   }
   #[inline]
   pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: flatbuffers::WIPOffset<&'b  str>) {
@@ -1833,7 +1833,7 @@ impl core::fmt::Debug for CDMObject<'_> {
       ds.field("OPERATOR_ORGANIZATION", &self.OPERATOR_ORGANIZATION());
       ds.field("EPHEMERIS_NAME", &self.EPHEMERIS_NAME());
       ds.field("COVARIANCE_METHOD", &self.COVARIANCE_METHOD());
-      ds.field("REF_FRAME", &self.REF_FRAME());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
       ds.field("GRAVITY_MODEL", &self.GRAVITY_MODEL());
       ds.field("ATMOSPHERIC_MODEL", &self.ATMOSPHERIC_MODEL());
       ds.field("N_BODY_PERTURBATIONS", &self.N_BODY_PERTURBATIONS());
@@ -1920,7 +1920,7 @@ pub struct CDMObjectT {
   pub OPERATOR_ORGANIZATION: Option<String>,
   pub EPHEMERIS_NAME: Option<String>,
   pub COVARIANCE_METHOD: covarianceMethod,
-  pub REF_FRAME: referenceFrame,
+  pub REFERENCE_FRAME: referenceFrame,
   pub GRAVITY_MODEL: Option<String>,
   pub ATMOSPHERIC_MODEL: Option<String>,
   pub N_BODY_PERTURBATIONS: Option<String>,
@@ -2005,7 +2005,7 @@ impl Default for CDMObjectT {
       OPERATOR_ORGANIZATION: None,
       EPHEMERIS_NAME: None,
       COVARIANCE_METHOD: covarianceMethod::CALCULATED,
-      REF_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: referenceFrame::ECEF,
       GRAVITY_MODEL: None,
       ATMOSPHERIC_MODEL: None,
       N_BODY_PERTURBATIONS: None,
@@ -2106,7 +2106,7 @@ impl CDMObjectT {
       _fbb.create_string(x)
     });
     let COVARIANCE_METHOD = self.COVARIANCE_METHOD;
-    let REF_FRAME = self.REF_FRAME;
+    let REFERENCE_FRAME = self.REFERENCE_FRAME;
     let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2198,7 +2198,7 @@ impl CDMObjectT {
       OPERATOR_ORGANIZATION,
       EPHEMERIS_NAME,
       COVARIANCE_METHOD,
-      REF_FRAME,
+      REFERENCE_FRAME,
       GRAVITY_MODEL,
       ATMOSPHERIC_MODEL,
       N_BODY_PERTURBATIONS,

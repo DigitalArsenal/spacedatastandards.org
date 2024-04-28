@@ -1,0 +1,32 @@
+enum timeSystem : byte {
+  /// Greenwich Mean Sidereal Time
+  GMST,
+  /// Global Positioning System
+  GPS,
+  /// Mission Elapsed Time
+  MET,
+  /// Mission Relative Time
+  MRT,
+  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
+  SCLK,
+  /// International Atomic Time
+  TAI,
+  /// Barycentric Coordinate Time
+  TCB,
+  /// Barycentric Dynamical Time
+  TDB,
+  /// Geocentric Coordinate Time
+  TCG,
+  /// Terrestrial Time
+  TT,
+  /// Universal Time
+  UT1,
+  /// Coordinated Universal Time
+  UTC
+}
+
+table TIM {
+    TIME_SYSTEM: timeSystem;
+}
+root_type TIM;
+file_identifier "$TIM";

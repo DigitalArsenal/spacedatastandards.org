@@ -1,0 +1,16 @@
+enum meanElementTheory : byte {
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  SGP4XP,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM
+}
+
+table MET {
+  MEAN_ELEMENT_THEORY:meanElementTheory;
+}
+root_type MET;
+file_identifier "$MET";

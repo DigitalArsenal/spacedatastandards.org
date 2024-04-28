@@ -47,7 +47,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     case OPERATOR_ORGANIZATION = 12
     case EPHEMERIS_NAME = 14
     case COVARIANCE_METHOD = 16
-    case REF_FRAME = 18
+    case REFERENCE_FRAME = 18
     case GRAVITY_MODEL = 20
     case ATMOSPHERIC_MODEL = 22
     case N_BODY_PERTURBATIONS = 24
@@ -143,7 +143,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   ///  Covariance method
   public var COVARIANCE_METHOD: covarianceMethod { let o = _accessor.offset(VTOFFSET.COVARIANCE_METHOD.v); return o == 0 ? .calculated : covarianceMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .calculated }
   ///  Reference Frame in which the object position is defined
-  public var REF_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Gravity model
   public var GRAVITY_MODEL: String? { let o = _accessor.offset(VTOFFSET.GRAVITY_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GRAVITY_MODEL.v) }
@@ -303,7 +303,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public static func add(OPERATOR_ORGANIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_ORGANIZATION, at: VTOFFSET.OPERATOR_ORGANIZATION.p) }
   public static func add(EPHEMERIS_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_NAME, at: VTOFFSET.EPHEMERIS_NAME.p) }
   public static func add(COVARIANCE_METHOD: covarianceMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVARIANCE_METHOD.rawValue, def: 0, at: VTOFFSET.COVARIANCE_METHOD.p) }
-  public static func add(REF_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME.rawValue, def: 0, at: VTOFFSET.REF_FRAME.p) }
+  public static func add(REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VTOFFSET.GRAVITY_MODEL.p) }
   public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VTOFFSET.ATMOSPHERIC_MODEL.p) }
   public static func add(N_BODY_PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: N_BODY_PERTURBATIONS, at: VTOFFSET.N_BODY_PERTURBATIONS.p) }
@@ -390,7 +390,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     OPERATOR_ORGANIZATIONOffset OPERATOR_ORGANIZATION: Offset = Offset(),
     EPHEMERIS_NAMEOffset EPHEMERIS_NAME: Offset = Offset(),
     COVARIANCE_METHOD: covarianceMethod = .calculated,
-    REF_FRAME: referenceFrame = .ecef,
+    REFERENCE_FRAME: referenceFrame = .ecef,
     GRAVITY_MODELOffset GRAVITY_MODEL: Offset = Offset(),
     ATMOSPHERIC_MODELOffset ATMOSPHERIC_MODEL: Offset = Offset(),
     N_BODY_PERTURBATIONSOffset N_BODY_PERTURBATIONS: Offset = Offset(),
@@ -473,7 +473,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     CDMObject.add(OPERATOR_ORGANIZATION: OPERATOR_ORGANIZATION, &fbb)
     CDMObject.add(EPHEMERIS_NAME: EPHEMERIS_NAME, &fbb)
     CDMObject.add(COVARIANCE_METHOD: COVARIANCE_METHOD, &fbb)
-    CDMObject.add(REF_FRAME: REF_FRAME, &fbb)
+    CDMObject.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
     CDMObject.add(GRAVITY_MODEL: GRAVITY_MODEL, &fbb)
     CDMObject.add(ATMOSPHERIC_MODEL: ATMOSPHERIC_MODEL, &fbb)
     CDMObject.add(N_BODY_PERTURBATIONS: N_BODY_PERTURBATIONS, &fbb)
@@ -559,7 +559,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OPERATOR_ORGANIZATION.p, fieldName: "OPERATOR_ORGANIZATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EPHEMERIS_NAME.p, fieldName: "EPHEMERIS_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COVARIANCE_METHOD.p, fieldName: "COVARIANCE_METHOD", required: false, type: covarianceMethod.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: referenceFrame.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: referenceFrame.self)
     try _v.visit(field: VTOFFSET.GRAVITY_MODEL.p, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ATMOSPHERIC_MODEL.p, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.N_BODY_PERTURBATIONS.p, fieldName: "N_BODY_PERTURBATIONS", required: false, type: ForwardOffset<String>.self)

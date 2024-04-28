@@ -49,6 +49,10 @@ class referenceFrame
     const PNE = 21;
     /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
     const BRF = 22;
+    /// Another name for 'Radial, Transverse, Normal'
+    const RSW = 23;
+    /// A local orbital coordinate frame
+    const TNW = 24;
 
     private static $names = array(
         referenceFrame::ECEF=>"ECEF",
@@ -74,6 +78,8 @@ class referenceFrame
         referenceFrame::LVLH=>"LVLH",
         referenceFrame::PNE=>"PNE",
         referenceFrame::BRF=>"BRF",
+        referenceFrame::RSW=>"RSW",
+        referenceFrame::TNW=>"TNW",
     );
 
     public static function Name($e)

@@ -29,7 +29,7 @@ table CDMObject {
   /// Covariance method
   COVARIANCE_METHOD:covarianceMethod;
   /// Reference Frame in which the object position is defined
-  REF_FRAME:referenceFrame;
+  REFERENCE_FRAME:referenceFrame;
   /// Gravity model
   GRAVITY_MODEL:string;
   /// Atmospheric model

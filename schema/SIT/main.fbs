@@ -82,7 +82,5 @@ table SIT {
   INTEGRATED_DEVICES: [IDM];
 }
 
-/// Collection of SIT records
-
 root_type SIT;
 file_identifier "$SIT";

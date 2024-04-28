@@ -11,7 +11,5 @@ table PLD {
   INSTRUMENTS: [IDM]; // Vector of Instrument Data Messages
 }
 
-/// Collection of Payload Information Records
-
 root_type PLD;
 file_identifier "$PLD";
