@@ -1,5 +1,5 @@
 {
-    "version": "1.0.160+1714491797988",
+    "version": "1.0.161+1714492446178",
     "STANDARDS": {
         "MPE": {
             "IDL": "include \"../MET/main.fbs\";\n\n// Space Data Standard - 6 - Minimum-Propagatable-Element-Set (MPE)\n// Description\n// Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit.\n// Legacy format description can be found here.\n// CCSDS Reference documentation: 502x0b2c1e2.\n\n/// Minimum Propagatable Element Set\ntable MPE {  \n  /// Unique ID as a String\n  ENTITY_ID: string;\n  /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)\n  EPOCH: double;\n  /// Semi-major axis in km or mean motion in rev/day\n  MEAN_MOTION: double;\n  /// Eccentricity\n  ECCENTRICITY: double;\n  /// Inclination\n  INCLINATION: double;\n  /// Right ascension of ascending node\n  RA_OF_ASC_NODE: double;\n  /// Argument of pericenter\n  ARG_OF_PERICENTER: double;\n  /// Mean anomaly\n  MEAN_ANOMALY: double;\n  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])\n  BSTAR: double;\n  /// Description of the Mean Element Theory. (SGP4,DSST,USM)\n  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;\n}\n\nroot_type MPE;\nfile_identifier \"$MPE\";\n",

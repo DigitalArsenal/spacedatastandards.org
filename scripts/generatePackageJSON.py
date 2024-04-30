@@ -27,7 +27,7 @@ def read_and_modify_package_json():
     if "main" in package_data:
         del package_data["main"]
 
-    # Remove the 'main' property
+    # Remove the 'files' property
     if "files" in package_data:
         del package_data["files"]
 
@@ -49,6 +49,11 @@ def read_and_modify_package_json():
     # Write the modified data to the new package.json file
     with open(new_package_json_path, "w") as new_file:
         json.dump(package_data, new_file, indent=4)
+
+    # Create a .gitignore file in the same directory
+    gitignore_path = os.path.join(new_directory_path, ".gitignore")
+    with open(gitignore_path, "w") as gitignore_file:
+        gitignore_file.write("node_modules\n")
 
 
 # Run the function
