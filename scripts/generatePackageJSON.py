@@ -23,10 +23,6 @@ def read_and_modify_package_json():
     if "scripts" in package_data:
         del package_data["scripts"]
 
-    # Remove the 'main' property
-    if "main" in package_data:
-        del package_data["main"]
-
     # Remove the 'files' property
     if "files" in package_data:
         del package_data["files"]
