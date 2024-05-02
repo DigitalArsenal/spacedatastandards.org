@@ -16,93 +16,93 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct RFM;
 struct RFMBuilder;
 
-enum referenceFrame : int8_t {
+enum refFrame : int8_t {
   /// Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
-  referenceFrame_ECEF = 0,
+  refFrame_ECEF = 0,
   /// International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
-  referenceFrame_ICRF = 1,
+  refFrame_ICRF = 1,
   /// True Equator Mean Equinox (TEME): Used in SGP4 model for satellite tracking. Accounts for Earth's precession and nutation. Dynamic frame useful for orbit prediction.
-  referenceFrame_TEME = 2,
+  refFrame_TEME = 2,
   /// East-North-Up (ENU): Local tangent plane system for surface points. "East" eastward, "North" northward, "Up" perpendicular to Earth's surface. Suited for stationary or slow-moving objects at low altitudes.
-  referenceFrame_ENU = 3,
+  refFrame_ENU = 3,
   /// North-East-Down (NED): Common in aviation and navigation. "North" northward, "East" eastward, "Down" towards Earth's center. Aligns with gravity, intuitive for aircraft and vehicles.
-  referenceFrame_NED = 4,
+  refFrame_NED = 4,
   /// North-East-Up (NEU): Similar to NED but "Up" axis is opposite to gravity. Suited for applications preferring a conventional "Up" direction.
-  referenceFrame_NEU = 5,
+  refFrame_NEU = 5,
   /// Radial-Intrack-Cross-track (RIC): Aligned with spacecraft's UVW system. "Radial" axis towards spacecraft, "In-track" perpendicular to radial and cross-track, "Cross-track" normal to orbit plane. Used for spacecraft orientation and tracking.
-  referenceFrame_RIC = 6,
+  refFrame_RIC = 6,
   /// Earth Mean Equator and Equinox of J2000 (J2000): An Earth-Centered Inertial (ECI) frame defined by Earth's mean equator and equinox at the start of the year 2000. Fixed relative to distant stars, used for celestial mechanics and space navigation.
-  referenceFrame_J2000 = 7,
+  refFrame_J2000 = 7,
   /// Geocentric Celestial Reference Frame
-  referenceFrame_GCRF = 8,
+  refFrame_GCRF = 8,
   /// Greenwich Rotating Coordinates
-  referenceFrame_GRC = 9,
+  refFrame_GRC = 9,
   /// International Terrestrial Reference Frame 2000
-  referenceFrame_ITRF2000 = 10,
+  refFrame_ITRF2000 = 10,
   /// International Terrestrial Reference Frame 1993
-  referenceFrame_ITRF93 = 11,
+  refFrame_ITRF93 = 11,
   /// International Terrestrial Reference Frame 1997
-  referenceFrame_ITRF97 = 12,
+  refFrame_ITRF97 = 12,
   /// True of Date, Rotating
-  referenceFrame_TDR = 13,
+  refFrame_TDR = 13,
   /// True of Date
-  referenceFrame_TOD = 14,
+  refFrame_TOD = 14,
   /// Radial, Transverse, Normal
-  referenceFrame_RTN = 15,
+  refFrame_RTN = 15,
   /// Transverse, Velocity, Normal
-  referenceFrame_TVN = 16,
+  refFrame_TVN = 16,
   /// Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
-  referenceFrame_VVLH = 17,
+  refFrame_VVLH = 17,
   /// Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
-  referenceFrame_VLVH = 18,
+  refFrame_VLVH = 18,
   /// Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
-  referenceFrame_LTP = 19,
+  refFrame_LTP = 19,
   /// Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
-  referenceFrame_LVLH = 20,
+  refFrame_LVLH = 20,
   /// Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
-  referenceFrame_PNE = 21,
+  refFrame_PNE = 21,
   /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
-  referenceFrame_BRF = 22,
+  refFrame_BRF = 22,
   /// Another name for 'Radial, Transverse, Normal'
-  referenceFrame_RSW = 23,
+  refFrame_RSW = 23,
   /// A local orbital coordinate frame
-  referenceFrame_TNW = 24,
-  referenceFrame_MIN = referenceFrame_ECEF,
-  referenceFrame_MAX = referenceFrame_TNW
+  refFrame_TNW = 24,
+  refFrame_MIN = refFrame_ECEF,
+  refFrame_MAX = refFrame_TNW
 };
 
-inline const referenceFrame (&EnumValuesreferenceFrame())[25] {
-  static const referenceFrame values[] = {
-    referenceFrame_ECEF,
-    referenceFrame_ICRF,
-    referenceFrame_TEME,
-    referenceFrame_ENU,
-    referenceFrame_NED,
-    referenceFrame_NEU,
-    referenceFrame_RIC,
-    referenceFrame_J2000,
-    referenceFrame_GCRF,
-    referenceFrame_GRC,
-    referenceFrame_ITRF2000,
-    referenceFrame_ITRF93,
-    referenceFrame_ITRF97,
-    referenceFrame_TDR,
-    referenceFrame_TOD,
-    referenceFrame_RTN,
-    referenceFrame_TVN,
-    referenceFrame_VVLH,
-    referenceFrame_VLVH,
-    referenceFrame_LTP,
-    referenceFrame_LVLH,
-    referenceFrame_PNE,
-    referenceFrame_BRF,
-    referenceFrame_RSW,
-    referenceFrame_TNW
+inline const refFrame (&EnumValuesrefFrame())[25] {
+  static const refFrame values[] = {
+    refFrame_ECEF,
+    refFrame_ICRF,
+    refFrame_TEME,
+    refFrame_ENU,
+    refFrame_NED,
+    refFrame_NEU,
+    refFrame_RIC,
+    refFrame_J2000,
+    refFrame_GCRF,
+    refFrame_GRC,
+    refFrame_ITRF2000,
+    refFrame_ITRF93,
+    refFrame_ITRF97,
+    refFrame_TDR,
+    refFrame_TOD,
+    refFrame_RTN,
+    refFrame_TVN,
+    refFrame_VVLH,
+    refFrame_VLVH,
+    refFrame_LTP,
+    refFrame_LVLH,
+    refFrame_PNE,
+    refFrame_BRF,
+    refFrame_RSW,
+    refFrame_TNW
   };
   return values;
 }
 
-inline const char * const *EnumNamesreferenceFrame() {
+inline const char * const *EnumNamesrefFrame() {
   static const char * const names[26] = {
     "ECEF",
     "ICRF",
@@ -134,10 +134,10 @@ inline const char * const *EnumNamesreferenceFrame() {
   return names;
 }
 
-inline const char *EnumNamereferenceFrame(referenceFrame e) {
-  if (::flatbuffers::IsOutRange(e, referenceFrame_ECEF, referenceFrame_TNW)) return "";
+inline const char *EnumNamerefFrame(refFrame e) {
+  if (::flatbuffers::IsOutRange(e, refFrame_ECEF, refFrame_TNW)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesreferenceFrame()[index];
+  return EnumNamesrefFrame()[index];
 }
 
 /// Reference Frame Message
@@ -146,8 +146,8 @@ struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_REFERENCE_FRAME = 4
   };
-  referenceFrame REFERENCE_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  refFrame REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -160,7 +160,7 @@ struct RFMBuilder {
   typedef RFM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_REFERENCE_FRAME(referenceFrame REFERENCE_FRAME) {
+  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(RFM::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
   explicit RFMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -176,7 +176,7 @@ struct RFMBuilder {
 
 inline ::flatbuffers::Offset<RFM> CreateRFM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF) {
+    refFrame REFERENCE_FRAME = refFrame_ECEF) {
   RFMBuilder builder_(_fbb);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   return builder_.Finish();

@@ -238,7 +238,7 @@ table EOO {
   CREATED_BY: string;
 
   /// Reference frame of the observation
-  REFERENCE_FRAME: referenceFrame;
+  REFERENCE_FRAME: refFrame;
 
   /// Reference frame of the sensor
   SEN_REFERENCE_FRAME: string;

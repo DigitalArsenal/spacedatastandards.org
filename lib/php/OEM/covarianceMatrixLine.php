@@ -55,7 +55,7 @@ class covarianceMatrixLine extends Table
     public function getCOV_REFERENCE_FRAME()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
     /// Covariance matrix [1,1] km**2

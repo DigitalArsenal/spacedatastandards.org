@@ -421,8 +421,8 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATED_BY);
   }
   /// Reference frame of the observation
-  referenceFrame REFERENCE_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  refFrame REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
   /// Reference frame of the sensor
   const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
@@ -800,7 +800,7 @@ struct EOOBuilder {
   void add_CREATED_BY(::flatbuffers::Offset<::flatbuffers::String> CREATED_BY) {
     fbb_.AddOffset(EOO::VT_CREATED_BY, CREATED_BY);
   }
-  void add_REFERENCE_FRAME(referenceFrame REFERENCE_FRAME) {
+  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(EOO::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
   void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
@@ -912,7 +912,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     ::flatbuffers::Offset<::flatbuffers::String> DATA_MODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame REFERENCE_FRAME = refFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
     bool UMBRA = false,
     bool PENUMBRA = false,
@@ -1088,7 +1088,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     const char *DATA_MODE = nullptr,
     const char *CREATED_AT = nullptr,
     const char *CREATED_BY = nullptr,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame REFERENCE_FRAME = refFrame_ECEF,
     const char *SEN_REFERENCE_FRAME = nullptr,
     bool UMBRA = false,
     bool PENUMBRA = false,

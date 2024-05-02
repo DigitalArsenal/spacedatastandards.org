@@ -231,8 +231,8 @@ struct covarianceMatrixLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
   /// Reference frame for the covariance matrix
-  referenceFrame COV_REFERENCE_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_COV_REFERENCE_FRAME, 0));
+  refFrame COV_REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_COV_REFERENCE_FRAME, 0));
   }
   /// Covariance matrix [1,1] km**2
   double CX_X() const {
@@ -355,7 +355,7 @@ struct covarianceMatrixLineBuilder {
   void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
     fbb_.AddOffset(covarianceMatrixLine::VT_EPOCH, EPOCH);
   }
-  void add_COV_REFERENCE_FRAME(referenceFrame COV_REFERENCE_FRAME) {
+  void add_COV_REFERENCE_FRAME(refFrame COV_REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, static_cast<int8_t>(COV_REFERENCE_FRAME), 0);
   }
   void add_CX_X(double CX_X) {
@@ -435,7 +435,7 @@ struct covarianceMatrixLineBuilder {
 inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
-    referenceFrame COV_REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame COV_REFERENCE_FRAME = refFrame_ECEF,
     double CX_X = 0.0,
     double CY_X = 0.0,
     double CY_Y = 0.0,
@@ -487,7 +487,7 @@ inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(
 inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLineDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *EPOCH = nullptr,
-    referenceFrame COV_REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame COV_REFERENCE_FRAME = refFrame_ECEF,
     double CX_X = 0.0,
     double CY_X = 0.0,
     double CY_Y = 0.0,
@@ -574,8 +574,8 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
   }
   /// Name of the reference frame (TEME, EME2000, etc.)
-  referenceFrame REFERENCE_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  refFrame REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   const ::flatbuffers::String *REFERENCE_FRAME_EPOCH() const {
@@ -668,7 +668,7 @@ struct ephemerisDataBlockBuilder {
   void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
     fbb_.AddOffset(ephemerisDataBlock::VT_CENTER_NAME, CENTER_NAME);
   }
-  void add_REFERENCE_FRAME(referenceFrame REFERENCE_FRAME) {
+  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(ephemerisDataBlock::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
   void add_REFERENCE_FRAME_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH) {
@@ -718,7 +718,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame REFERENCE_FRAME = refFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH = 0,
     timeSystem TIME_SYSTEM = timeSystem_GMST,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
@@ -754,7 +754,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const char *OBJECT_NAME = nullptr,
     const char *OBJECT_ID = nullptr,
     const char *CENTER_NAME = nullptr,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame REFERENCE_FRAME = refFrame_ECEF,
     const char *REFERENCE_FRAME_EPOCH = nullptr,
     timeSystem TIME_SYSTEM = timeSystem_GMST,
     const char *START_TIME = nullptr,

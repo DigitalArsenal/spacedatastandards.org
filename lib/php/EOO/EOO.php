@@ -771,7 +771,7 @@ class EOO extends Table
     public function getREFERENCE_FRAME()
     {
         $o = $this->__offset(160);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
     /// Reference frame of the sensor

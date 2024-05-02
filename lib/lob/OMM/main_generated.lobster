@@ -37,8 +37,8 @@ class OMM : flatbuffers_handle
     def CENTER_NAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 14)
     /// Name of the reference frame (TEME, EME2000, etc.)
-    def REFERENCE_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 16, 2))
+    def REFERENCE_FRAME() -> refFrame:
+        return refFrame(buf_.flatbuffers_field_int8(pos_, 16, 2))
     /// REFERENCE_FRAME_EPOCH
     def REFERENCE_FRAME_EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 18)
@@ -122,8 +122,8 @@ class OMM : flatbuffers_handle
         return buf_.flatbuffers_field_float64(pos_, 68, 0.0)
     /// Position/Velocity Covariance Matrix
     /// Reference frame for the covariance matrix
-    def COV_REFERENCE_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 70, 23))
+    def COV_REFERENCE_FRAME() -> refFrame:
+        return refFrame(buf_.flatbuffers_field_int8(pos_, 70, 23))
     /// Covariance matrix [1,1] km**2
     def CX_X() -> float:
         return buf_.flatbuffers_field_float64(pos_, 72, 0.0)
@@ -228,7 +228,7 @@ struct OMMBuilder:
     def add_CENTER_NAME(CENTER_NAME:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(5, CENTER_NAME)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:referenceFrame):
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(6, REFERENCE_FRAME, 2)
         return this
     def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers_offset):
@@ -309,7 +309,7 @@ struct OMMBuilder:
     def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
         b_.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
         return this
-    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:referenceFrame):
+    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(33, COV_REFERENCE_FRAME, 23)
         return this
     def add_CX_X(CX_X:float):

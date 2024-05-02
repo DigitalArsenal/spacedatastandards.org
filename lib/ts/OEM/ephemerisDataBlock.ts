@@ -4,7 +4,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 import { timeSystem } from './timeSystem.js';
 
 
@@ -72,9 +72,9 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Name of the reference frame (TEME, EME2000, etc.)
  */
-REFERENCE_FRAME():referenceFrame {
+REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
@@ -199,8 +199,8 @@ static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.
   builder.addFieldOffset(3, CENTER_NAMEOffset, 0);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:referenceFrame) {
-  builder.addFieldInt8(4, REFERENCE_FRAME, referenceFrame.ECEF);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(4, REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addReferenceFrameEpoch(builder:flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset) {
@@ -272,7 +272,7 @@ static endephemerisDataBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createephemerisDataBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REFERENCE_FRAME:referenceFrame, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, START_TIMEOffset:flatbuffers.Offset, USEABLE_START_TIMEOffset:flatbuffers.Offset, USEABLE_STOP_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, INTERPOLATIONOffset:flatbuffers.Offset, INTERPOLATION_DEGREE:number, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createephemerisDataBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, START_TIMEOffset:flatbuffers.Offset, USEABLE_START_TIMEOffset:flatbuffers.Offset, USEABLE_STOP_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, INTERPOLATIONOffset:flatbuffers.Offset, INTERPOLATION_DEGREE:number, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
   ephemerisDataBlock.startephemerisDataBlock(builder);
   ephemerisDataBlock.addComment(builder, COMMENTOffset);
   ephemerisDataBlock.addObjectName(builder, OBJECT_NAMEOffset);
@@ -338,7 +338,7 @@ constructor(
   public OBJECT_NAME: string|Uint8Array|null = null,
   public OBJECT_ID: string|Uint8Array|null = null,
   public CENTER_NAME: string|Uint8Array|null = null,
-  public REFERENCE_FRAME: referenceFrame = referenceFrame.ECEF,
+  public REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public REFERENCE_FRAME_EPOCH: string|Uint8Array|null = null,
   public TIME_SYSTEM: timeSystem = timeSystem.GMST,
   public START_TIME: string|Uint8Array|null = null,

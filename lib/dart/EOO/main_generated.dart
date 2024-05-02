@@ -177,7 +177,7 @@ class EOO {
   ///  User who created the record
   String? get CREATED_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
   ///  Reference frame of the observation
-  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 160, 0));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 160, 0));
   ///  Reference frame of the sensor
   String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 162);
   ///  Flag for umbra (total eclipse)
@@ -526,7 +526,7 @@ class EOOBuilder {
     fbBuilder.addOffset(77, offset);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
     fbBuilder.addInt8(78, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -639,7 +639,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final String? _DATA_MODE;
   final String? _CREATED_AT;
   final String? _CREATED_BY;
-  final ReferenceFrame? _REFERENCE_FRAME;
+  final RefFrame? _REFERENCE_FRAME;
   final String? _SEN_REFERENCE_FRAME;
   final bool? _UMBRA;
   final bool? _PENUMBRA;
@@ -726,7 +726,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     String? DATA_MODE,
     String? CREATED_AT,
     String? CREATED_BY,
-    ReferenceFrame? REFERENCE_FRAME,
+    RefFrame? REFERENCE_FRAME,
     String? SEN_REFERENCE_FRAME,
     bool? UMBRA,
     bool? PENUMBRA,

@@ -37,8 +37,8 @@ class CDMObject : flatbuffers_handle
     def COVARIANCE_METHOD() -> covarianceMethod:
         return covarianceMethod(buf_.flatbuffers_field_int8(pos_, 16, 0))
     /// Reference Frame in which the object position is defined
-    def REFERENCE_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 18, 0))
+    def REFERENCE_FRAME() -> refFrame:
+        return refFrame(buf_.flatbuffers_field_int8(pos_, 18, 0))
     /// Gravity model
     def GRAVITY_MODEL() -> string:
         return buf_.flatbuffers_field_string(pos_, 20)
@@ -287,7 +287,7 @@ struct CDMObjectBuilder:
     def add_COVARIANCE_METHOD(COVARIANCE_METHOD:covarianceMethod):
         b_.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:referenceFrame):
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(7, REFERENCE_FRAME, 0)
         return this
     def add_GRAVITY_MODEL(GRAVITY_MODEL:flatbuffers_offset):
@@ -563,8 +563,8 @@ class CDM : flatbuffers_handle
     def STOP_SCREEN_PERIOD() -> string:
         return buf_.flatbuffers_field_string(pos_, 34)
     /// The reference frame for the screening volume
-    def SCREEN_VOLUME_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 36, 0))
+    def SCREEN_VOLUME_FRAME() -> refFrame:
+        return refFrame(buf_.flatbuffers_field_int8(pos_, 36, 0))
     /// The shape of the screening volume
     def SCREEN_VOLUME_SHAPE() -> screeningVolumeShape:
         return screeningVolumeShape(buf_.flatbuffers_field_int8(pos_, 38, 0))
@@ -661,7 +661,7 @@ struct CDMBuilder:
     def add_STOP_SCREEN_PERIOD(STOP_SCREEN_PERIOD:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(15, STOP_SCREEN_PERIOD)
         return this
-    def add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME:referenceFrame):
+    def add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME:refFrame):
         b_.PrependInt8Slot(16, SCREEN_VOLUME_FRAME, 0)
         return this
     def add_SCREEN_VOLUME_SHAPE(SCREEN_VOLUME_SHAPE:screeningVolumeShape):

@@ -93,7 +93,7 @@ class OMM {
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 2));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 2));
   ///  REFERENCE_FRAME_EPOCH
   String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Time system used for the orbit state and covariance matrix. (UTC)
@@ -151,7 +151,7 @@ class OMM {
   double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
   ///  Position/Velocity Covariance Matrix
   ///  Reference frame for the covariance matrix
-  ReferenceFrame get COV_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 23));
+  RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 23));
   ///  Covariance matrix [1,1] km**2
   double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
   ///  Covariance matrix [2,1] km**2
@@ -252,7 +252,7 @@ class OMMBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
     fbBuilder.addInt8(6, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -360,7 +360,7 @@ class OMMBuilder {
     fbBuilder.addFloat64(32, MEAN_MOTION_DDOT);
     return fbBuilder.offset;
   }
-  int addCovReferenceFrame(ReferenceFrame? COV_REFERENCE_FRAME) {
+  int addCovReferenceFrame(RefFrame? COV_REFERENCE_FRAME) {
     fbBuilder.addInt8(33, COV_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -481,7 +481,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
   final String? _CENTER_NAME;
-  final ReferenceFrame? _REFERENCE_FRAME;
+  final RefFrame? _REFERENCE_FRAME;
   final String? _REFERENCE_FRAME_EPOCH;
   final TimeSystem? _TIME_SYSTEM;
   final MeanElementTheory? _MEAN_ELEMENT_THEORY;
@@ -508,7 +508,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final double? _BSTAR;
   final double? _MEAN_MOTION_DOT;
   final double? _MEAN_MOTION_DDOT;
-  final ReferenceFrame? _COV_REFERENCE_FRAME;
+  final RefFrame? _COV_REFERENCE_FRAME;
   final double? _CX_X;
   final double? _CY_X;
   final double? _CY_Y;
@@ -543,7 +543,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     String? OBJECT_NAME,
     String? OBJECT_ID,
     String? CENTER_NAME,
-    ReferenceFrame? REFERENCE_FRAME,
+    RefFrame? REFERENCE_FRAME,
     String? REFERENCE_FRAME_EPOCH,
     TimeSystem? TIME_SYSTEM,
     MeanElementTheory? MEAN_ELEMENT_THEORY,
@@ -570,7 +570,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     double? BSTAR,
     double? MEAN_MOTION_DOT,
     double? MEAN_MOTION_DDOT,
-    ReferenceFrame? COV_REFERENCE_FRAME,
+    RefFrame? COV_REFERENCE_FRAME,
     double? CX_X,
     double? CY_X,
     double? CY_Y,

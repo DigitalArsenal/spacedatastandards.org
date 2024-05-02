@@ -39,9 +39,9 @@ public struct TDM : IFlatbufferObject
   /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   public double OBSERVER_VZ { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  public referenceFrame OBSERVER_POSITION_REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame OBSERVER_POSITION_REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  public referenceFrame OBS_REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame OBS_REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Epoch or observation time -  CCSDS 503.0-B-1
   public string EPOCH { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -381,8 +381,8 @@ public struct TDM : IFlatbufferObject
       double OBSERVER_VX = 0.0,
       double OBSERVER_VY = 0.0,
       double OBSERVER_VZ = 0.0,
-      referenceFrame OBSERVER_POSITION_REFERENCE_FRAME = referenceFrame.ECEF,
-      referenceFrame OBS_REFERENCE_FRAME = referenceFrame.ECEF,
+      refFrame OBSERVER_POSITION_REFERENCE_FRAME = refFrame.ECEF,
+      refFrame OBS_REFERENCE_FRAME = refFrame.ECEF,
       StringOffset EPOCHOffset = default(StringOffset),
       StringOffset CCSDS_TDM_VERSOffset = default(StringOffset),
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -504,8 +504,8 @@ public struct TDM : IFlatbufferObject
   public static void AddOBSERVER_VX(FlatBufferBuilder builder, double OBSERVER_VX) { builder.AddDouble(4, OBSERVER_VX, 0.0); }
   public static void AddOBSERVER_VY(FlatBufferBuilder builder, double OBSERVER_VY) { builder.AddDouble(5, OBSERVER_VY, 0.0); }
   public static void AddOBSERVER_VZ(FlatBufferBuilder builder, double OBSERVER_VZ) { builder.AddDouble(6, OBSERVER_VZ, 0.0); }
-  public static void AddOBSERVER_POSITION_REFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame OBSERVER_POSITION_REFERENCE_FRAME) { builder.AddSbyte(7, (sbyte)OBSERVER_POSITION_REFERENCE_FRAME, 0); }
-  public static void AddOBS_REFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame OBS_REFERENCE_FRAME) { builder.AddSbyte(8, (sbyte)OBS_REFERENCE_FRAME, 0); }
+  public static void AddOBSERVER_POSITION_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame OBSERVER_POSITION_REFERENCE_FRAME) { builder.AddSbyte(7, (sbyte)OBSERVER_POSITION_REFERENCE_FRAME, 0); }
+  public static void AddOBS_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame OBS_REFERENCE_FRAME) { builder.AddSbyte(8, (sbyte)OBS_REFERENCE_FRAME, 0); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(9, EPOCHOffset.Value, 0); }
   public static void AddCCSDS_TDM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_TDM_VERSOffset) { builder.AddOffset(10, CCSDS_TDM_VERSOffset.Value, 0); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(11, COMMENTOffset.Value, 0); }
@@ -862,8 +862,8 @@ public class TDMT
   public double OBSERVER_VX { get; set; }
   public double OBSERVER_VY { get; set; }
   public double OBSERVER_VZ { get; set; }
-  public referenceFrame OBSERVER_POSITION_REFERENCE_FRAME { get; set; }
-  public referenceFrame OBS_REFERENCE_FRAME { get; set; }
+  public refFrame OBSERVER_POSITION_REFERENCE_FRAME { get; set; }
+  public refFrame OBS_REFERENCE_FRAME { get; set; }
   public string EPOCH { get; set; }
   public string CCSDS_TDM_VERS { get; set; }
   public List<string> COMMENT { get; set; }
@@ -923,8 +923,8 @@ public class TDMT
     this.OBSERVER_VX = 0.0;
     this.OBSERVER_VY = 0.0;
     this.OBSERVER_VZ = 0.0;
-    this.OBSERVER_POSITION_REFERENCE_FRAME = referenceFrame.ECEF;
-    this.OBS_REFERENCE_FRAME = referenceFrame.ECEF;
+    this.OBSERVER_POSITION_REFERENCE_FRAME = refFrame.ECEF;
+    this.OBS_REFERENCE_FRAME = refFrame.ECEF;
     this.EPOCH = null;
     this.CCSDS_TDM_VERS = null;
     this.COMMENT = null;

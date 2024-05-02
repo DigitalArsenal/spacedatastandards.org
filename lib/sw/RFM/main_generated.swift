@@ -4,7 +4,7 @@
 
 import FlatBuffers
 
-public enum referenceFrame: Int8, Enum, Verifiable {
+public enum refFrame: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -59,8 +59,8 @@ public enum referenceFrame: Int8, Enum, Verifiable {
   ///  A local orbital coordinate frame
   case tnw = 24
 
-  public static var max: referenceFrame { return .tnw }
-  public static var min: referenceFrame { return .ecef }
+  public static var max: refFrame { return .tnw }
+  public static var min: refFrame { return .ecef }
 }
 
 
@@ -82,13 +82,13 @@ public struct RFM: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  public var REFERENCE_FRAME: referenceFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : referenceFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(REFERENCE_FRAME: referenceFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public static func add(REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func endRFM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFM(
     _ fbb: inout FlatBufferBuilder,
-    REFERENCE_FRAME: referenceFrame = .ecef
+    REFERENCE_FRAME: refFrame = .ecef
   ) -> Offset {
     let __start = RFM.startRFM(&fbb)
     RFM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
@@ -97,7 +97,7 @@ public struct RFM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: referenceFrame.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: refFrame.self)
     _v.finish()
   }
 }

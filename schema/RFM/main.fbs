@@ -1,5 +1,5 @@
 
-enum referenceFrame : byte {
+enum refFrame : byte {
   /// Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
   ECEF,
   /// International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
@@ -54,7 +54,7 @@ enum referenceFrame : byte {
 
 /// Reference Frame Message
 table RFM{
-  REFERENCE_FRAME: referenceFrame;
+  REFERENCE_FRAME: refFrame;
 }
 
 root_type RFM;

@@ -187,7 +187,7 @@ class CDM extends Table
     public function getSCREEN_VOLUME_FRAME()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::ECEF;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
     /// The shape of the screening volume

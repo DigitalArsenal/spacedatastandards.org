@@ -45,16 +45,16 @@ func (rcv *covarianceMatrixLine) EPOCH() []byte {
 
 /// Epoch
 /// Reference frame for the covariance matrix
-func (rcv *covarianceMatrixLine) COV_REFERENCE_FRAME() referenceFrame {
+func (rcv *covarianceMatrixLine) COV_REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Reference frame for the covariance matrix
-func (rcv *covarianceMatrixLine) MutateCOV_REFERENCE_FRAME(n referenceFrame) bool {
+func (rcv *covarianceMatrixLine) MutateCOV_REFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
 
@@ -358,7 +358,7 @@ func covarianceMatrixLineStart(builder *flatbuffers.Builder) {
 func covarianceMatrixLineAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
-func covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME referenceFrame) {
+func covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME refFrame) {
 	builder.PrependInt8Slot(1, int8(COV_REFERENCE_FRAME), 0)
 }
 func covarianceMatrixLineAddCX_X(builder *flatbuffers.Builder, CX_X float64) {

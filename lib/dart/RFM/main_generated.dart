@@ -5,100 +5,100 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class ReferenceFrame {
+class RefFrame {
   final int value;
-  const ReferenceFrame._(this.value);
+  const RefFrame._(this.value);
 
-  factory ReferenceFrame.fromValue(int value) {
+  factory RefFrame.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum ReferenceFrame');
+        throw StateError('Invalid value $value for bit flag enum RefFrame');
     }
     return result;
   }
 
-  static ReferenceFrame? _createOrNull(int? value) => 
-      value == null ? null : ReferenceFrame.fromValue(value);
+  static RefFrame? _createOrNull(int? value) => 
+      value == null ? null : RefFrame.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 24;
   static bool containsValue(int value) => values.containsKey(value);
 
   ///  Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
-  static const ReferenceFrame ECEF = ReferenceFrame._(0);
+  static const RefFrame ECEF = RefFrame._(0);
 
   ///  International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
-  static const ReferenceFrame ICRF = ReferenceFrame._(1);
+  static const RefFrame ICRF = RefFrame._(1);
 
   ///  True Equator Mean Equinox (TEME): Used in SGP4 model for satellite tracking. Accounts for Earth's precession and nutation. Dynamic frame useful for orbit prediction.
-  static const ReferenceFrame TEME = ReferenceFrame._(2);
+  static const RefFrame TEME = RefFrame._(2);
 
   ///  East-North-Up (ENU): Local tangent plane system for surface points. "East" eastward, "North" northward, "Up" perpendicular to Earth's surface. Suited for stationary or slow-moving objects at low altitudes.
-  static const ReferenceFrame ENU = ReferenceFrame._(3);
+  static const RefFrame ENU = RefFrame._(3);
 
   ///  North-East-Down (NED): Common in aviation and navigation. "North" northward, "East" eastward, "Down" towards Earth's center. Aligns with gravity, intuitive for aircraft and vehicles.
-  static const ReferenceFrame NED = ReferenceFrame._(4);
+  static const RefFrame NED = RefFrame._(4);
 
   ///  North-East-Up (NEU): Similar to NED but "Up" axis is opposite to gravity. Suited for applications preferring a conventional "Up" direction.
-  static const ReferenceFrame NEU = ReferenceFrame._(5);
+  static const RefFrame NEU = RefFrame._(5);
 
   ///  Radial-Intrack-Cross-track (RIC): Aligned with spacecraft's UVW system. "Radial" axis towards spacecraft, "In-track" perpendicular to radial and cross-track, "Cross-track" normal to orbit plane. Used for spacecraft orientation and tracking.
-  static const ReferenceFrame RIC = ReferenceFrame._(6);
+  static const RefFrame RIC = RefFrame._(6);
 
   ///  Earth Mean Equator and Equinox of J2000 (J2000): An Earth-Centered Inertial (ECI) frame defined by Earth's mean equator and equinox at the start of the year 2000. Fixed relative to distant stars, used for celestial mechanics and space navigation.
-  static const ReferenceFrame J2000 = ReferenceFrame._(7);
+  static const RefFrame J2000 = RefFrame._(7);
 
   ///  Geocentric Celestial Reference Frame
-  static const ReferenceFrame GCRF = ReferenceFrame._(8);
+  static const RefFrame GCRF = RefFrame._(8);
 
   ///  Greenwich Rotating Coordinates
-  static const ReferenceFrame GRC = ReferenceFrame._(9);
+  static const RefFrame GRC = RefFrame._(9);
 
   ///  International Terrestrial Reference Frame 2000
-  static const ReferenceFrame ITRF2000 = ReferenceFrame._(10);
+  static const RefFrame ITRF2000 = RefFrame._(10);
 
   ///  International Terrestrial Reference Frame 1993
-  static const ReferenceFrame ITRF93 = ReferenceFrame._(11);
+  static const RefFrame ITRF93 = RefFrame._(11);
 
   ///  International Terrestrial Reference Frame 1997
-  static const ReferenceFrame ITRF97 = ReferenceFrame._(12);
+  static const RefFrame ITRF97 = RefFrame._(12);
 
   ///  True of Date, Rotating
-  static const ReferenceFrame TDR = ReferenceFrame._(13);
+  static const RefFrame TDR = RefFrame._(13);
 
   ///  True of Date
-  static const ReferenceFrame TOD = ReferenceFrame._(14);
+  static const RefFrame TOD = RefFrame._(14);
 
   ///  Radial, Transverse, Normal
-  static const ReferenceFrame RTN = ReferenceFrame._(15);
+  static const RefFrame RTN = RefFrame._(15);
 
   ///  Transverse, Velocity, Normal
-  static const ReferenceFrame TVN = ReferenceFrame._(16);
+  static const RefFrame TVN = RefFrame._(16);
 
   ///  Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
-  static const ReferenceFrame VVLH = ReferenceFrame._(17);
+  static const RefFrame VVLH = RefFrame._(17);
 
   ///  Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
-  static const ReferenceFrame VLVH = ReferenceFrame._(18);
+  static const RefFrame VLVH = RefFrame._(18);
 
   ///  Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
-  static const ReferenceFrame LTP = ReferenceFrame._(19);
+  static const RefFrame LTP = RefFrame._(19);
 
   ///  Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
-  static const ReferenceFrame LVLH = ReferenceFrame._(20);
+  static const RefFrame LVLH = RefFrame._(20);
 
   ///  Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
-  static const ReferenceFrame PNE = ReferenceFrame._(21);
+  static const RefFrame PNE = RefFrame._(21);
 
   ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
-  static const ReferenceFrame BRF = ReferenceFrame._(22);
+  static const RefFrame BRF = RefFrame._(22);
 
   ///  Another name for 'Radial, Transverse, Normal'
-  static const ReferenceFrame RSW = ReferenceFrame._(23);
+  static const RefFrame RSW = RefFrame._(23);
 
   ///  A local orbital coordinate frame
-  static const ReferenceFrame TNW = ReferenceFrame._(24);
-  static const Map<int, ReferenceFrame> values = {
+  static const RefFrame TNW = RefFrame._(24);
+  static const Map<int, RefFrame> values = {
     0: ECEF,
     1: ICRF,
     2: TEME,
@@ -125,23 +125,23 @@ class ReferenceFrame {
     23: RSW,
     24: TNW};
 
-  static const fb.Reader<ReferenceFrame> reader = _ReferenceFrameReader();
+  static const fb.Reader<RefFrame> reader = _RefFrameReader();
 
   @override
   String toString() {
-    return 'ReferenceFrame{value: $value}';
+    return 'RefFrame{value: $value}';
   }
 }
 
-class _ReferenceFrameReader extends fb.Reader<ReferenceFrame> {
-  const _ReferenceFrameReader();
+class _RefFrameReader extends fb.Reader<RefFrame> {
+  const _RefFrameReader();
 
   @override
   int get size => 1;
 
   @override
-  ReferenceFrame read(fb.BufferContext bc, int offset) =>
-      ReferenceFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+  RefFrame read(fb.BufferContext bc, int offset) =>
+      RefFrame.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Reference Frame Message
@@ -157,7 +157,7 @@ class RFM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
 
   @override
   String toString() {
@@ -182,7 +182,7 @@ class RFMBuilder {
     fbBuilder.startTable(1);
   }
 
-  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
     fbBuilder.addInt8(0, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -193,10 +193,10 @@ class RFMBuilder {
 }
 
 class RFMObjectBuilder extends fb.ObjectBuilder {
-  final ReferenceFrame? _REFERENCE_FRAME;
+  final RefFrame? _REFERENCE_FRAME;
 
   RFMObjectBuilder({
-    ReferenceFrame? REFERENCE_FRAME,
+    RefFrame? REFERENCE_FRAME,
   })
       : _REFERENCE_FRAME = REFERENCE_FRAME;
 

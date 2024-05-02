@@ -29,7 +29,7 @@ table CDMObject {
   /// Covariance method
   COVARIANCE_METHOD:covarianceMethod;
   /// Reference Frame in which the object position is defined
-  REFERENCE_FRAME:referenceFrame;
+  REFERENCE_FRAME:refFrame;
   /// Gravity model
   GRAVITY_MODEL:string;
   /// Atmospheric model
@@ -216,7 +216,7 @@ table CDM {
   /// The end time of the screening period
   STOP_SCREEN_PERIOD:string;
   /// The reference frame for the screening volume
-  SCREEN_VOLUME_FRAME:referenceFrame;
+  SCREEN_VOLUME_FRAME:refFrame;
   /// The shape of the screening volume
   SCREEN_VOLUME_SHAPE:screeningVolumeShape;
   /// The X dimension of the screening volume

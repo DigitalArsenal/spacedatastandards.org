@@ -74,7 +74,7 @@
         "OMM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -145,7 +145,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -197,7 +197,7 @@
                             "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Name of the reference frame (TEME, EME2000, etc.)"
                         },
                         "REFERENCE_FRAME_EPOCH": {
@@ -309,7 +309,7 @@
                             "description": "Second Time Derivative of Mean Motion"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Position/Velocity Covariance Matrix\nReference frame for the covariance matrix"
                         },
                         "CX_X": {
@@ -720,7 +720,7 @@
         "RFM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -755,7 +755,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -2127,7 +2127,7 @@
         "TDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -2162,7 +2162,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -2200,11 +2200,11 @@
                             "description": "Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame"
                         },
                         "OBSERVER_POSITION_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "OBS_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "EPOCH": {
@@ -2963,7 +2963,7 @@
         "EOO": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -2998,7 +2998,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -3324,7 +3324,7 @@
                             "description": "User who created the record"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame of the observation"
                         },
                         "SEN_REFERENCE_FRAME": {
@@ -4778,7 +4778,7 @@
                         "Encryption"
                     ]
                 },
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -5326,7 +5326,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -5362,7 +5362,7 @@
                             "description": "Covariance method"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference Frame in which the object position is defined"
                         },
                         "GRAVITY_MODEL": {
@@ -5737,7 +5737,7 @@
                             "description": "The end time of the screening period"
                         },
                         "SCREEN_VOLUME_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "The reference frame for the screening volume"
                         },
                         "SCREEN_VOLUME_SHAPE": {
@@ -6218,7 +6218,7 @@
                         "USM"
                     ]
                 },
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -6562,7 +6562,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -6605,7 +6605,7 @@
                             "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Name of the reference frame (TEME, EME2000, etc.)"
                         },
                         "REFERENCE_FRAME_EPOCH": {
@@ -6717,7 +6717,7 @@
                             "description": "Second Time Derivative of Mean Motion"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Position/Velocity Covariance Matrix\nReference frame for the covariance matrix"
                         },
                         "CX_X": {
@@ -7629,11 +7629,11 @@
                             "description": "Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame"
                         },
                         "OBSERVER_POSITION_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "OBS_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "EPOCH": {
@@ -8385,7 +8385,7 @@
                             "description": "User who created the record"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame of the observation"
                         },
                         "SEN_REFERENCE_FRAME": {
@@ -9082,7 +9082,7 @@
                             "description": "Covariance method"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference Frame in which the object position is defined"
                         },
                         "GRAVITY_MODEL": {
@@ -9457,7 +9457,7 @@
                             "description": "The end time of the screening period"
                         },
                         "SCREEN_VOLUME_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "The reference frame for the screening volume"
                         },
                         "SCREEN_VOLUME_SHAPE": {
@@ -9567,7 +9567,7 @@
                             "description": "Epoch"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame for the covariance matrix"
                         },
                         "CX_X": {
@@ -9678,7 +9678,7 @@
                             "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Name of the reference frame (TEME, EME2000, etc.)"
                         },
                         "REFERENCE_FRAME_EPOCH": {
@@ -9921,7 +9921,7 @@
         "OEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "referenceFrame": {
+                "refFrame": {
                     "type": "string",
                     "enum": [
                         "ECEF",
@@ -9973,7 +9973,7 @@
                     "description": "Reference Frame Message",
                     "properties": {
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame"
+                            "$ref": "#/definitions/refFrame"
                         }
                     },
                     "additionalProperties": false
@@ -10043,7 +10043,7 @@
                             "description": "Epoch"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Reference frame for the covariance matrix"
                         },
                         "CX_X": {
@@ -10154,7 +10154,7 @@
                             "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/referenceFrame",
+                            "$ref": "#/definitions/refFrame",
                             "description": "Name of the reference frame (TEME, EME2000, etc.)"
                         },
                         "REFERENCE_FRAME_EPOCH": {

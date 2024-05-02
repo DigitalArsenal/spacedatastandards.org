@@ -26,10 +26,10 @@ table TDM {
   OBSERVER_VZ: double;
   
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame;
+  OBSERVER_POSITION_REFERENCE_FRAME: refFrame;
 
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  OBS_REFERENCE_FRAME: referenceFrame;
+  OBS_REFERENCE_FRAME: refFrame;
 
   /// Epoch or observation time -  CCSDS 503.0-B-1
   EPOCH: string;

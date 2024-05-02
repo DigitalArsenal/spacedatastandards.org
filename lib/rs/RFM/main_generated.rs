@@ -10,44 +10,44 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_REFERENCE_FRAME: i8 = 0;
+pub const ENUM_MIN_REF_FRAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REFERENCE_FRAME: i8 = 24;
+pub const ENUM_MAX_REF_FRAME: i8 = 24;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REFERENCE_FRAME: [referenceFrame; 25] = [
-  referenceFrame::ECEF,
-  referenceFrame::ICRF,
-  referenceFrame::TEME,
-  referenceFrame::ENU,
-  referenceFrame::NED,
-  referenceFrame::NEU,
-  referenceFrame::RIC,
-  referenceFrame::J2000,
-  referenceFrame::GCRF,
-  referenceFrame::GRC,
-  referenceFrame::ITRF2000,
-  referenceFrame::ITRF93,
-  referenceFrame::ITRF97,
-  referenceFrame::TDR,
-  referenceFrame::TOD,
-  referenceFrame::RTN,
-  referenceFrame::TVN,
-  referenceFrame::VVLH,
-  referenceFrame::VLVH,
-  referenceFrame::LTP,
-  referenceFrame::LVLH,
-  referenceFrame::PNE,
-  referenceFrame::BRF,
-  referenceFrame::RSW,
-  referenceFrame::TNW,
+pub const ENUM_VALUES_REF_FRAME: [refFrame; 25] = [
+  refFrame::ECEF,
+  refFrame::ICRF,
+  refFrame::TEME,
+  refFrame::ENU,
+  refFrame::NED,
+  refFrame::NEU,
+  refFrame::RIC,
+  refFrame::J2000,
+  refFrame::GCRF,
+  refFrame::GRC,
+  refFrame::ITRF2000,
+  refFrame::ITRF93,
+  refFrame::ITRF97,
+  refFrame::TDR,
+  refFrame::TOD,
+  refFrame::RTN,
+  refFrame::TVN,
+  refFrame::VVLH,
+  refFrame::VLVH,
+  refFrame::LTP,
+  refFrame::LVLH,
+  refFrame::PNE,
+  refFrame::BRF,
+  refFrame::RSW,
+  refFrame::TNW,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct referenceFrame(pub i8);
+pub struct refFrame(pub i8);
 #[allow(non_upper_case_globals)]
-impl referenceFrame {
+impl refFrame {
   /// Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
   pub const ECEF: Self = Self(0);
   /// International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
@@ -160,7 +160,7 @@ impl referenceFrame {
     }
   }
 }
-impl core::fmt::Debug for referenceFrame {
+impl core::fmt::Debug for refFrame {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -169,7 +169,7 @@ impl core::fmt::Debug for referenceFrame {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for referenceFrame {
+impl<'a> flatbuffers::Follow<'a> for refFrame {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -178,15 +178,15 @@ impl<'a> flatbuffers::Follow<'a> for referenceFrame {
   }
 }
 
-impl flatbuffers::Push for referenceFrame {
-    type Output = referenceFrame;
+impl flatbuffers::Push for refFrame {
+    type Output = refFrame;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for referenceFrame {
+impl flatbuffers::EndianScalar for refFrame {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -200,7 +200,7 @@ impl flatbuffers::EndianScalar for referenceFrame {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for referenceFrame {
+impl<'a> flatbuffers::Verifiable for refFrame {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -210,7 +210,7 @@ impl<'a> flatbuffers::Verifiable for referenceFrame {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for referenceFrame {}
+impl flatbuffers::SimpleToVerifyInSlice for refFrame {}
 pub enum RFMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -252,11 +252,11 @@ impl<'a> RFM<'a> {
   }
 
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> referenceFrame {
+  pub fn REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(RFM::VT_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<refFrame>(RFM::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
 }
 
@@ -267,19 +267,19 @@ impl flatbuffers::Verifiable for RFM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<referenceFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .finish();
     Ok(())
   }
 }
 pub struct RFMArgs {
-    pub REFERENCE_FRAME: referenceFrame,
+    pub REFERENCE_FRAME: refFrame,
 }
 impl<'a> Default for RFMArgs {
   #[inline]
   fn default() -> Self {
     RFMArgs {
-      REFERENCE_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: refFrame::ECEF,
     }
   }
 }
@@ -290,8 +290,8 @@ pub struct RFMBuilder<'a: 'b, 'b> {
 }
 impl<'a: 'b, 'b> RFMBuilder<'a, 'b> {
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME, referenceFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RFMBuilder<'a, 'b> {
@@ -318,12 +318,12 @@ impl core::fmt::Debug for RFM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct RFMT {
-  pub REFERENCE_FRAME: referenceFrame,
+  pub REFERENCE_FRAME: refFrame,
 }
 impl Default for RFMT {
   fn default() -> Self {
     Self {
-      REFERENCE_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: refFrame::ECEF,
     }
   }
 }

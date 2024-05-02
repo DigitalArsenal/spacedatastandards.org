@@ -41,7 +41,7 @@
       "type" : "string",
       "enum": ["Signing", "Encryption"]
     },
-    "referenceFrame" : {
+    "refFrame" : {
       "type" : "string",
       "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW"]
     },
@@ -537,7 +537,7 @@
       "description" : "Reference Frame Message",
       "properties" : {
         "REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame"
+                "$ref" : "#/definitions/refFrame"
               }
       },
       "additionalProperties" : false
@@ -573,7 +573,7 @@
                 "description" : "Covariance method"
               },
         "REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame",
+                "$ref" : "#/definitions/refFrame",
                 "description" : "Reference Frame in which the object position is defined"
               },
         "GRAVITY_MODEL" : {
@@ -940,7 +940,7 @@
                 "description" : "The end time of the screening period"
               },
         "SCREEN_VOLUME_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame",
+                "$ref" : "#/definitions/refFrame",
                 "description" : "The reference frame for the screening volume"
               },
         "SCREEN_VOLUME_SHAPE" : {

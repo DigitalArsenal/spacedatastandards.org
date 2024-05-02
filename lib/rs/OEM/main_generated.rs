@@ -499,11 +499,11 @@ impl<'a> covarianceMatrixLine<'a> {
   }
   /// Reference frame for the covariance matrix
   #[inline]
-  pub fn COV_REFERENCE_FRAME(&self) -> referenceFrame {
+  pub fn COV_REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<refFrame>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Covariance matrix [1,1] km**2
   #[inline]
@@ -683,7 +683,7 @@ impl flatbuffers::Verifiable for covarianceMatrixLine<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
-     .visit_field::<referenceFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
+     .visit_field::<refFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
      .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
      .visit_field::<f64>("CY_Y", Self::VT_CY_Y, false)?
@@ -711,7 +711,7 @@ impl flatbuffers::Verifiable for covarianceMatrixLine<'_> {
 }
 pub struct covarianceMatrixLineArgs<'a> {
     pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COV_REFERENCE_FRAME: referenceFrame,
+    pub COV_REFERENCE_FRAME: refFrame,
     pub CX_X: f64,
     pub CY_X: f64,
     pub CY_Y: f64,
@@ -739,7 +739,7 @@ impl<'a> Default for covarianceMatrixLineArgs<'a> {
   fn default() -> Self {
     covarianceMatrixLineArgs {
       EPOCH: None,
-      COV_REFERENCE_FRAME: referenceFrame::ECEF,
+      COV_REFERENCE_FRAME: refFrame::ECEF,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -775,8 +775,8 @@ impl<'a: 'b, 'b> covarianceMatrixLineBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(covarianceMatrixLine::VT_EPOCH, EPOCH);
   }
   #[inline]
-  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, referenceFrame::ECEF);
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn add_CX_X(&mut self, CX_X: f64) {
@@ -910,7 +910,7 @@ impl core::fmt::Debug for covarianceMatrixLine<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct covarianceMatrixLineT {
   pub EPOCH: Option<String>,
-  pub COV_REFERENCE_FRAME: referenceFrame,
+  pub COV_REFERENCE_FRAME: refFrame,
   pub CX_X: f64,
   pub CY_X: f64,
   pub CY_Y: f64,
@@ -937,7 +937,7 @@ impl Default for covarianceMatrixLineT {
   fn default() -> Self {
     Self {
       EPOCH: None,
-      COV_REFERENCE_FRAME: referenceFrame::ECEF,
+      COV_REFERENCE_FRAME: refFrame::ECEF,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -1173,11 +1173,11 @@ impl<'a> ephemerisDataBlock<'a> {
   }
   /// Name of the reference frame (TEME, EME2000, etc.)
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> referenceFrame {
+  pub fn REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(ephemerisDataBlock::VT_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<refFrame>(ephemerisDataBlock::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   #[inline]
@@ -1272,7 +1272,7 @@ impl flatbuffers::Verifiable for ephemerisDataBlock<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
-     .visit_field::<referenceFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
      .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
@@ -1292,7 +1292,7 @@ pub struct ephemerisDataBlockArgs<'a> {
     pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CENTER_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REFERENCE_FRAME: referenceFrame,
+    pub REFERENCE_FRAME: refFrame,
     pub REFERENCE_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TIME_SYSTEM: timeSystem,
     pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1312,7 +1312,7 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REFERENCE_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: refFrame::ECEF,
       REFERENCE_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,
@@ -1349,8 +1349,8 @@ impl<'a: 'b, 'b> ephemerisDataBlockBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_CENTER_NAME, CENTER_NAME);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(ephemerisDataBlock::VT_REFERENCE_FRAME, REFERENCE_FRAME, referenceFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(ephemerisDataBlock::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -1435,7 +1435,7 @@ pub struct ephemerisDataBlockT {
   pub OBJECT_NAME: Option<String>,
   pub OBJECT_ID: Option<String>,
   pub CENTER_NAME: Option<String>,
-  pub REFERENCE_FRAME: referenceFrame,
+  pub REFERENCE_FRAME: refFrame,
   pub REFERENCE_FRAME_EPOCH: Option<String>,
   pub TIME_SYSTEM: timeSystem,
   pub START_TIME: Option<String>,
@@ -1454,7 +1454,7 @@ impl Default for ephemerisDataBlockT {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REFERENCE_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: refFrame::ECEF,
       REFERENCE_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,

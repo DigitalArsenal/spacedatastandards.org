@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "referenceFrame" : {
+    "refFrame" : {
       "type" : "string",
       "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW"]
     },
@@ -10,7 +10,7 @@
       "description" : "Reference Frame Message",
       "properties" : {
         "REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame"
+                "$ref" : "#/definitions/refFrame"
               }
       },
       "additionalProperties" : false
@@ -332,7 +332,7 @@
                 "description" : "User who created the record"
               },
         "REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame",
+                "$ref" : "#/definitions/refFrame",
                 "description" : "Reference frame of the observation"
               },
         "SEN_REFERENCE_FRAME" : {

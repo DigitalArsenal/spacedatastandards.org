@@ -2,7 +2,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 
 
 /**
@@ -30,17 +30,17 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RFM');
 }
 
-REFERENCE_FRAME():referenceFrame {
+REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 static startRFM(builder:flatbuffers.Builder) {
   builder.startObject(1);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:referenceFrame) {
-  builder.addFieldInt8(0, REFERENCE_FRAME, referenceFrame.ECEF);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(0, REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static endRFM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -56,7 +56,7 @@ static finishSizePrefixedRFMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFM', true);
 }
 
-static createRFM(builder:flatbuffers.Builder, REFERENCE_FRAME:referenceFrame):flatbuffers.Offset {
+static createRFM(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame):flatbuffers.Offset {
   RFM.startRFM(builder);
   RFM.addReferenceFrame(builder, REFERENCE_FRAME);
   return RFM.endRFM(builder);
@@ -76,7 +76,7 @@ unpackTo(_o: RFMT): void {
 
 export class RFMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public REFERENCE_FRAME: referenceFrame = referenceFrame.ECEF
+  public REFERENCE_FRAME: refFrame = refFrame.ECEF
 ){}
 
 

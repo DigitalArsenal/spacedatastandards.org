@@ -289,7 +289,7 @@ public struct EOO : IFlatbufferObject
 #endif
   public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(158); }
   /// Reference frame of the observation
-  public referenceFrame REFERENCE_FRAME { get { int o = __p.__offset(160); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(160); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Reference frame of the sensor
   public string SEN_REFERENCE_FRAME { get { int o = __p.__offset(162); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -406,7 +406,7 @@ public struct EOO : IFlatbufferObject
       StringOffset DATA_MODEOffset = default(StringOffset),
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset CREATED_BYOffset = default(StringOffset),
-      referenceFrame REFERENCE_FRAME = referenceFrame.ECEF,
+      refFrame REFERENCE_FRAME = refFrame.ECEF,
       StringOffset SEN_REFERENCE_FRAMEOffset = default(StringOffset),
       bool UMBRA = false,
       bool PENUMBRA = false,
@@ -581,7 +581,7 @@ public struct EOO : IFlatbufferObject
   public static void AddDATA_MODE(FlatBufferBuilder builder, StringOffset DATA_MODEOffset) { builder.AddOffset(75, DATA_MODEOffset.Value, 0); }
   public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(76, CREATED_ATOffset.Value, 0); }
   public static void AddCREATED_BY(FlatBufferBuilder builder, StringOffset CREATED_BYOffset) { builder.AddOffset(77, CREATED_BYOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame REFERENCE_FRAME) { builder.AddSbyte(78, (sbyte)REFERENCE_FRAME, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(78, (sbyte)REFERENCE_FRAME, 0); }
   public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset SEN_REFERENCE_FRAMEOffset) { builder.AddOffset(79, SEN_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddUMBRA(FlatBufferBuilder builder, bool UMBRA) { builder.AddBool(80, UMBRA, false); }
   public static void AddPENUMBRA(FlatBufferBuilder builder, bool PENUMBRA) { builder.AddBool(81, PENUMBRA, false); }
@@ -881,7 +881,7 @@ public class EOOT
   public string DATA_MODE { get; set; }
   public string CREATED_AT { get; set; }
   public string CREATED_BY { get; set; }
-  public referenceFrame REFERENCE_FRAME { get; set; }
+  public refFrame REFERENCE_FRAME { get; set; }
   public string SEN_REFERENCE_FRAME { get; set; }
   public bool UMBRA { get; set; }
   public bool PENUMBRA { get; set; }
@@ -968,7 +968,7 @@ public class EOOT
     this.DATA_MODE = null;
     this.CREATED_AT = null;
     this.CREATED_BY = null;
-    this.REFERENCE_FRAME = referenceFrame.ECEF;
+    this.REFERENCE_FRAME = refFrame.ECEF;
     this.SEN_REFERENCE_FRAME = null;
     this.UMBRA = false;
     this.PENUMBRA = false;

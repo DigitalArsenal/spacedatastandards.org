@@ -18,17 +18,17 @@ public struct RFM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RFM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public referenceFrame REFERENCE_FRAME { get { int o = __p.__offset(4); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(4); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
 
   public static Offset<RFM> CreateRFM(FlatBufferBuilder builder,
-      referenceFrame REFERENCE_FRAME = referenceFrame.ECEF) {
+      refFrame REFERENCE_FRAME = refFrame.ECEF) {
     builder.StartTable(1);
     RFM.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
     return RFM.EndRFM(builder);
   }
 
   public static void StartRFM(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame REFERENCE_FRAME) { builder.AddSbyte(0, (sbyte)REFERENCE_FRAME, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(0, (sbyte)REFERENCE_FRAME, 0); }
   public static Offset<RFM> EndRFM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFM>(o);
@@ -53,10 +53,10 @@ public struct RFM : IFlatbufferObject
 
 public class RFMT
 {
-  public referenceFrame REFERENCE_FRAME { get; set; }
+  public refFrame REFERENCE_FRAME { get; set; }
 
   public RFMT() {
-    this.REFERENCE_FRAME = referenceFrame.ECEF;
+    this.REFERENCE_FRAME = refFrame.ECEF;
   }
   public static RFMT DeserializeFromBinary(byte[] fbBuffer) {
     return RFM.GetRootAsRFM(new ByteBuffer(fbBuffer)).UnPack();

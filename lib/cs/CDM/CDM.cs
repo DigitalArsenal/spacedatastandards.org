@@ -93,7 +93,7 @@ public struct CDM : IFlatbufferObject
 #endif
   public byte[] GetSTOP_SCREEN_PERIODArray() { return __p.__vector_as_array<byte>(34); }
   /// The reference frame for the screening volume
-  public referenceFrame SCREEN_VOLUME_FRAME { get { int o = __p.__offset(36); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame SCREEN_VOLUME_FRAME { get { int o = __p.__offset(36); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// The shape of the screening volume
   public screeningVolumeShape SCREEN_VOLUME_SHAPE { get { int o = __p.__offset(38); return o != 0 ? (screeningVolumeShape)__p.bb.GetSbyte(o + __p.bb_pos) : screeningVolumeShape.ELLIPSOID; } }
   /// The X dimension of the screening volume
@@ -154,7 +154,7 @@ public struct CDM : IFlatbufferObject
       double RELATIVE_VELOCITY_N = 0.0,
       StringOffset START_SCREEN_PERIODOffset = default(StringOffset),
       StringOffset STOP_SCREEN_PERIODOffset = default(StringOffset),
-      referenceFrame SCREEN_VOLUME_FRAME = referenceFrame.ECEF,
+      refFrame SCREEN_VOLUME_FRAME = refFrame.ECEF,
       screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape.ELLIPSOID,
       double SCREEN_VOLUME_X = 0.0,
       double SCREEN_VOLUME_Y = 0.0,
@@ -217,7 +217,7 @@ public struct CDM : IFlatbufferObject
   public static void AddRELATIVE_VELOCITY_N(FlatBufferBuilder builder, double RELATIVE_VELOCITY_N) { builder.AddDouble(13, RELATIVE_VELOCITY_N, 0.0); }
   public static void AddSTART_SCREEN_PERIOD(FlatBufferBuilder builder, StringOffset START_SCREEN_PERIODOffset) { builder.AddOffset(14, START_SCREEN_PERIODOffset.Value, 0); }
   public static void AddSTOP_SCREEN_PERIOD(FlatBufferBuilder builder, StringOffset STOP_SCREEN_PERIODOffset) { builder.AddOffset(15, STOP_SCREEN_PERIODOffset.Value, 0); }
-  public static void AddSCREEN_VOLUME_FRAME(FlatBufferBuilder builder, referenceFrame SCREEN_VOLUME_FRAME) { builder.AddSbyte(16, (sbyte)SCREEN_VOLUME_FRAME, 0); }
+  public static void AddSCREEN_VOLUME_FRAME(FlatBufferBuilder builder, refFrame SCREEN_VOLUME_FRAME) { builder.AddSbyte(16, (sbyte)SCREEN_VOLUME_FRAME, 0); }
   public static void AddSCREEN_VOLUME_SHAPE(FlatBufferBuilder builder, screeningVolumeShape SCREEN_VOLUME_SHAPE) { builder.AddSbyte(17, (sbyte)SCREEN_VOLUME_SHAPE, 0); }
   public static void AddSCREEN_VOLUME_X(FlatBufferBuilder builder, double SCREEN_VOLUME_X) { builder.AddDouble(18, SCREEN_VOLUME_X, 0.0); }
   public static void AddSCREEN_VOLUME_Y(FlatBufferBuilder builder, double SCREEN_VOLUME_Y) { builder.AddDouble(19, SCREEN_VOLUME_Y, 0.0); }
@@ -340,7 +340,7 @@ public class CDMT
   public double RELATIVE_VELOCITY_N { get; set; }
   public string START_SCREEN_PERIOD { get; set; }
   public string STOP_SCREEN_PERIOD { get; set; }
-  public referenceFrame SCREEN_VOLUME_FRAME { get; set; }
+  public refFrame SCREEN_VOLUME_FRAME { get; set; }
   public screeningVolumeShape SCREEN_VOLUME_SHAPE { get; set; }
   public double SCREEN_VOLUME_X { get; set; }
   public double SCREEN_VOLUME_Y { get; set; }
@@ -371,7 +371,7 @@ public class CDMT
     this.RELATIVE_VELOCITY_N = 0.0;
     this.START_SCREEN_PERIOD = null;
     this.STOP_SCREEN_PERIOD = null;
-    this.SCREEN_VOLUME_FRAME = referenceFrame.ECEF;
+    this.SCREEN_VOLUME_FRAME = refFrame.ECEF;
     this.SCREEN_VOLUME_SHAPE = screeningVolumeShape.ELLIPSOID;
     this.SCREEN_VOLUME_X = 0.0;
     this.SCREEN_VOLUME_Y = 0.0;

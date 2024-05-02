@@ -416,19 +416,19 @@ impl<'a> TDM<'a> {
   }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
   #[inline]
-  pub fn OBSERVER_POSITION_REFERENCE_FRAME(&self) -> referenceFrame {
+  pub fn OBSERVER_POSITION_REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<refFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
   #[inline]
-  pub fn OBS_REFERENCE_FRAME(&self) -> referenceFrame {
+  pub fn OBS_REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(TDM::VT_OBS_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<refFrame>(TDM::VT_OBS_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Epoch or observation time -  CCSDS 503.0-B-1
   #[inline]
@@ -848,8 +848,8 @@ impl flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<f64>("OBSERVER_VX", Self::VT_OBSERVER_VX, false)?
      .visit_field::<f64>("OBSERVER_VY", Self::VT_OBSERVER_VY, false)?
      .visit_field::<f64>("OBSERVER_VZ", Self::VT_OBSERVER_VZ, false)?
-     .visit_field::<referenceFrame>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
-     .visit_field::<referenceFrame>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
+     .visit_field::<refFrame>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
+     .visit_field::<refFrame>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CCSDS_TDM_VERS", Self::VT_CCSDS_TDM_VERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
@@ -912,8 +912,8 @@ pub struct TDMArgs<'a> {
     pub OBSERVER_VX: f64,
     pub OBSERVER_VY: f64,
     pub OBSERVER_VZ: f64,
-    pub OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame,
-    pub OBS_REFERENCE_FRAME: referenceFrame,
+    pub OBSERVER_POSITION_REFERENCE_FRAME: refFrame,
+    pub OBS_REFERENCE_FRAME: refFrame,
     pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CCSDS_TDM_VERS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COMMENT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
@@ -976,8 +976,8 @@ impl<'a> Default for TDMArgs<'a> {
       OBSERVER_VX: 0.0,
       OBSERVER_VY: 0.0,
       OBSERVER_VZ: 0.0,
-      OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame::ECEF,
-      OBS_REFERENCE_FRAME: referenceFrame::ECEF,
+      OBSERVER_POSITION_REFERENCE_FRAME: refFrame::ECEF,
+      OBS_REFERENCE_FRAME: refFrame::ECEF,
       EPOCH: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,
@@ -1066,12 +1066,12 @@ impl<'a: 'b, 'b> TDMBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(TDM::VT_OBSERVER_VZ, OBSERVER_VZ, 0.0);
   }
   #[inline]
-  pub fn add_OBSERVER_POSITION_REFERENCE_FRAME(&mut self, OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME, referenceFrame::ECEF);
+  pub fn add_OBSERVER_POSITION_REFERENCE_FRAME(&mut self, OBSERVER_POSITION_REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
-  pub fn add_OBS_REFERENCE_FRAME(&mut self, OBS_REFERENCE_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME, referenceFrame::ECEF);
+  pub fn add_OBS_REFERENCE_FRAME(&mut self, OBS_REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -1363,8 +1363,8 @@ pub struct TDMT {
   pub OBSERVER_VX: f64,
   pub OBSERVER_VY: f64,
   pub OBSERVER_VZ: f64,
-  pub OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame,
-  pub OBS_REFERENCE_FRAME: referenceFrame,
+  pub OBSERVER_POSITION_REFERENCE_FRAME: refFrame,
+  pub OBS_REFERENCE_FRAME: refFrame,
   pub EPOCH: Option<String>,
   pub CCSDS_TDM_VERS: Option<String>,
   pub COMMENT: Option<Vec<String>>,
@@ -1426,8 +1426,8 @@ impl Default for TDMT {
       OBSERVER_VX: 0.0,
       OBSERVER_VY: 0.0,
       OBSERVER_VZ: 0.0,
-      OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame::ECEF,
-      OBS_REFERENCE_FRAME: referenceFrame::ECEF,
+      OBSERVER_POSITION_REFERENCE_FRAME: refFrame::ECEF,
+      OBS_REFERENCE_FRAME: refFrame::ECEF,
       EPOCH: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,

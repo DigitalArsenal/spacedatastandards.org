@@ -4,6 +4,6 @@ export { TIM, TIMT } from './TIM.js';
 export { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 export { ephemerisDataBlock, ephemerisDataBlockT } from './ephemerisDataBlock.js';
 export { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
-export { referenceFrame } from './referenceFrame.js';
+export { refFrame } from './refFrame.js';
 export { timeSystem } from './timeSystem.js';
 //# sourceMappingURL=main.d.ts.map

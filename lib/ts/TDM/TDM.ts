@@ -2,7 +2,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 
 
 /**
@@ -91,17 +91,17 @@ OBSERVER_VZ():number {
 /**
  * Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
  */
-OBSERVER_POSITION_REFERENCE_FRAME():referenceFrame {
+OBSERVER_POSITION_REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
  * Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
  */
-OBS_REFERENCE_FRAME():referenceFrame {
+OBS_REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
@@ -705,12 +705,12 @@ static addObserverVz(builder:flatbuffers.Builder, OBSERVER_VZ:number) {
   builder.addFieldFloat64(6, OBSERVER_VZ, 0.0);
 }
 
-static addObserverPositionReferenceFrame(builder:flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAME:referenceFrame) {
-  builder.addFieldInt8(7, OBSERVER_POSITION_REFERENCE_FRAME, referenceFrame.ECEF);
+static addObserverPositionReferenceFrame(builder:flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(7, OBSERVER_POSITION_REFERENCE_FRAME, refFrame.ECEF);
 }
 
-static addObsReferenceFrame(builder:flatbuffers.Builder, OBS_REFERENCE_FRAME:referenceFrame) {
-  builder.addFieldInt8(8, OBS_REFERENCE_FRAME, referenceFrame.ECEF);
+static addObsReferenceFrame(builder:flatbuffers.Builder, OBS_REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(8, OBS_REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
@@ -1125,7 +1125,7 @@ static finishSizePrefixedTDMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TDM', true);
 }
 
-static createTDM(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset, OBSERVER_X:number, OBSERVER_Y:number, OBSERVER_Z:number, OBSERVER_VX:number, OBSERVER_VY:number, OBSERVER_VZ:number, OBSERVER_POSITION_REFERENCE_FRAME:referenceFrame, OBS_REFERENCE_FRAME:referenceFrame, EPOCHOffset:flatbuffers.Offset, CCSDS_TDM_VERSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, META_STARTOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, PARTICIPANT_1Offset:flatbuffers.Offset, PARTICIPANT_2Offset:flatbuffers.Offset, PARTICIPANT_3Offset:flatbuffers.Offset, PARTICIPANT_4Offset:flatbuffers.Offset, PARTICIPANT_5Offset:flatbuffers.Offset, MODEOffset:flatbuffers.Offset, PATH_1:number, PATH_2:number, TRANSMIT_BANDOffset:flatbuffers.Offset, RECEIVE_BANDOffset:flatbuffers.Offset, INTEGRATION_INTERVAL:number, INTEGRATION_REFOffset:flatbuffers.Offset, RECEIVE_DELAY_2:number, RECEIVE_DELAY_3:number, DATA_QUALITYOffset:flatbuffers.Offset, META_STOPOffset:flatbuffers.Offset, DATA_STARTOffset:flatbuffers.Offset, TRANSMIT_FREQ_1:number, RECEIVE_FREQOffset:flatbuffers.Offset, DATA_STOPOffset:flatbuffers.Offset, TIMETAG_REFOffset:flatbuffers.Offset, ANGLE_TYPEOffset:flatbuffers.Offset, ANGLE_1Offset:flatbuffers.Offset, ANGLE_2Offset:flatbuffers.Offset, ANGLE_UNCERTAINTY_1:number, ANGLE_UNCERTAINTY_2:number, RANGE_RATE:number, RANGE_UNCERTAINTY:number, RANGE_MODEOffset:flatbuffers.Offset, RANGE_MODULUS:number, CORRECTION_ANGLE_1:number, CORRECTION_ANGLE_2:number, CORRECTIONS_APPLIEDOffset:flatbuffers.Offset, TROPO_DRYOffset:flatbuffers.Offset, TROPO_WETOffset:flatbuffers.Offset, STECOffset:flatbuffers.Offset, PRESSUREOffset:flatbuffers.Offset, RHUMIDITYOffset:flatbuffers.Offset, TEMPERATUREOffset:flatbuffers.Offset, CLOCK_BIASOffset:flatbuffers.Offset, CLOCK_DRIFTOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createTDM(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset, OBSERVER_X:number, OBSERVER_Y:number, OBSERVER_Z:number, OBSERVER_VX:number, OBSERVER_VY:number, OBSERVER_VZ:number, OBSERVER_POSITION_REFERENCE_FRAME:refFrame, OBS_REFERENCE_FRAME:refFrame, EPOCHOffset:flatbuffers.Offset, CCSDS_TDM_VERSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, META_STARTOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, PARTICIPANT_1Offset:flatbuffers.Offset, PARTICIPANT_2Offset:flatbuffers.Offset, PARTICIPANT_3Offset:flatbuffers.Offset, PARTICIPANT_4Offset:flatbuffers.Offset, PARTICIPANT_5Offset:flatbuffers.Offset, MODEOffset:flatbuffers.Offset, PATH_1:number, PATH_2:number, TRANSMIT_BANDOffset:flatbuffers.Offset, RECEIVE_BANDOffset:flatbuffers.Offset, INTEGRATION_INTERVAL:number, INTEGRATION_REFOffset:flatbuffers.Offset, RECEIVE_DELAY_2:number, RECEIVE_DELAY_3:number, DATA_QUALITYOffset:flatbuffers.Offset, META_STOPOffset:flatbuffers.Offset, DATA_STARTOffset:flatbuffers.Offset, TRANSMIT_FREQ_1:number, RECEIVE_FREQOffset:flatbuffers.Offset, DATA_STOPOffset:flatbuffers.Offset, TIMETAG_REFOffset:flatbuffers.Offset, ANGLE_TYPEOffset:flatbuffers.Offset, ANGLE_1Offset:flatbuffers.Offset, ANGLE_2Offset:flatbuffers.Offset, ANGLE_UNCERTAINTY_1:number, ANGLE_UNCERTAINTY_2:number, RANGE_RATE:number, RANGE_UNCERTAINTY:number, RANGE_MODEOffset:flatbuffers.Offset, RANGE_MODULUS:number, CORRECTION_ANGLE_1:number, CORRECTION_ANGLE_2:number, CORRECTIONS_APPLIEDOffset:flatbuffers.Offset, TROPO_DRYOffset:flatbuffers.Offset, TROPO_WETOffset:flatbuffers.Offset, STECOffset:flatbuffers.Offset, PRESSUREOffset:flatbuffers.Offset, RHUMIDITYOffset:flatbuffers.Offset, TEMPERATUREOffset:flatbuffers.Offset, CLOCK_BIASOffset:flatbuffers.Offset, CLOCK_DRIFTOffset:flatbuffers.Offset):flatbuffers.Offset {
   TDM.startTDM(builder);
   TDM.addObserverId(builder, OBSERVER_IDOffset);
   TDM.addObserverX(builder, OBSERVER_X);
@@ -1326,8 +1326,8 @@ constructor(
   public OBSERVER_VX: number = 0.0,
   public OBSERVER_VY: number = 0.0,
   public OBSERVER_VZ: number = 0.0,
-  public OBSERVER_POSITION_REFERENCE_FRAME: referenceFrame = referenceFrame.ECEF,
-  public OBS_REFERENCE_FRAME: referenceFrame = referenceFrame.ECEF,
+  public OBSERVER_POSITION_REFERENCE_FRAME: refFrame = refFrame.ECEF,
+  public OBS_REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public EPOCH: string|Uint8Array|null = null,
   public CCSDS_TDM_VERS: string|Uint8Array|null = null,
   public COMMENT: (string)[] = [],

@@ -121,7 +121,7 @@ class Cdmobject {
   ///  Covariance method
   CovarianceMethod get COVARIANCE_METHOD => CovarianceMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   ///  Reference Frame in which the object position is defined
-  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
   ///  Gravity model
   String? get GRAVITY_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  Atmospheric model
@@ -320,7 +320,7 @@ class CdmobjectBuilder {
     fbBuilder.addInt8(6, COVARIANCE_METHOD?.value);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
     fbBuilder.addInt8(7, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -630,7 +630,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
   final String? _OPERATOR_ORGANIZATION;
   final String? _EPHEMERIS_NAME;
   final CovarianceMethod? _COVARIANCE_METHOD;
-  final ReferenceFrame? _REFERENCE_FRAME;
+  final RefFrame? _REFERENCE_FRAME;
   final String? _GRAVITY_MODEL;
   final String? _ATMOSPHERIC_MODEL;
   final String? _N_BODY_PERTURBATIONS;
@@ -713,7 +713,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
     String? OPERATOR_ORGANIZATION,
     String? EPHEMERIS_NAME,
     CovarianceMethod? COVARIANCE_METHOD,
-    ReferenceFrame? REFERENCE_FRAME,
+    RefFrame? REFERENCE_FRAME,
     String? GRAVITY_MODEL,
     String? ATMOSPHERIC_MODEL,
     String? N_BODY_PERTURBATIONS,
@@ -1032,7 +1032,7 @@ class CDM {
   ///  The end time of the screening period
   String? get STOP_SCREEN_PERIOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   ///  The reference frame for the screening volume
-  ReferenceFrame get SCREEN_VOLUME_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  RefFrame get SCREEN_VOLUME_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
   ///  The shape of the screening volume
   ScreeningVolumeShape get SCREEN_VOLUME_SHAPE => ScreeningVolumeShape.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
   ///  The X dimension of the screening volume
@@ -1145,7 +1145,7 @@ class CDMBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addScreenVolumeFrame(ReferenceFrame? SCREEN_VOLUME_FRAME) {
+  int addScreenVolumeFrame(RefFrame? SCREEN_VOLUME_FRAME) {
     fbBuilder.addInt8(16, SCREEN_VOLUME_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -1220,7 +1220,7 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
   final double? _RELATIVE_VELOCITY_N;
   final String? _START_SCREEN_PERIOD;
   final String? _STOP_SCREEN_PERIOD;
-  final ReferenceFrame? _SCREEN_VOLUME_FRAME;
+  final RefFrame? _SCREEN_VOLUME_FRAME;
   final ScreeningVolumeShape? _SCREEN_VOLUME_SHAPE;
   final double? _SCREEN_VOLUME_X;
   final double? _SCREEN_VOLUME_Y;
@@ -1251,7 +1251,7 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
     double? RELATIVE_VELOCITY_N,
     String? START_SCREEN_PERIOD,
     String? STOP_SCREEN_PERIOD,
-    ReferenceFrame? SCREEN_VOLUME_FRAME,
+    RefFrame? SCREEN_VOLUME_FRAME,
     ScreeningVolumeShape? SCREEN_VOLUME_SHAPE,
     double? SCREEN_VOLUME_X,
     double? SCREEN_VOLUME_Y,

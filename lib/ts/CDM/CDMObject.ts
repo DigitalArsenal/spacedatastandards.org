@@ -5,7 +5,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
 import { covarianceMethod } from './covarianceMethod.js';
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 
 
 export class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
@@ -90,9 +90,9 @@ COVARIANCE_METHOD():covarianceMethod {
 /**
  * Reference Frame in which the object position is defined
  */
-REFERENCE_FRAME():referenceFrame {
+REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
@@ -721,8 +721,8 @@ static addCovarianceMethod(builder:flatbuffers.Builder, COVARIANCE_METHOD:covari
   builder.addFieldInt8(6, COVARIANCE_METHOD, covarianceMethod.CALCULATED);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:referenceFrame) {
-  builder.addFieldInt8(7, REFERENCE_FRAME, referenceFrame.ECEF);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(7, REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addGravityModel(builder:flatbuffers.Builder, GRAVITY_MODELOffset:flatbuffers.Offset) {
@@ -1204,7 +1204,7 @@ constructor(
   public OPERATOR_ORGANIZATION: string|Uint8Array|null = null,
   public EPHEMERIS_NAME: string|Uint8Array|null = null,
   public COVARIANCE_METHOD: covarianceMethod = covarianceMethod.CALCULATED,
-  public REFERENCE_FRAME: referenceFrame = referenceFrame.ECEF,
+  public REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public GRAVITY_MODEL: string|Uint8Array|null = null,
   public ATMOSPHERIC_MODEL: string|Uint8Array|null = null,
   public N_BODY_PERTURBATIONS: string|Uint8Array|null = null,

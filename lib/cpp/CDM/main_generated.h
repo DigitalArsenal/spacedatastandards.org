@@ -197,8 +197,8 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return static_cast<covarianceMethod>(GetField<int8_t>(VT_COVARIANCE_METHOD, 0));
   }
   /// Reference Frame in which the object position is defined
-  referenceFrame REFERENCE_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  refFrame REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
   /// Gravity model
   const ::flatbuffers::String *GRAVITY_MODEL() const {
@@ -615,7 +615,7 @@ struct CDMObjectBuilder {
   void add_COVARIANCE_METHOD(covarianceMethod COVARIANCE_METHOD) {
     fbb_.AddElement<int8_t>(CDMObject::VT_COVARIANCE_METHOD, static_cast<int8_t>(COVARIANCE_METHOD), 0);
   }
-  void add_REFERENCE_FRAME(referenceFrame REFERENCE_FRAME) {
+  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(CDMObject::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
   void add_GRAVITY_MODEL(::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL) {
@@ -857,7 +857,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     ::flatbuffers::Offset<::flatbuffers::String> OPERATOR_ORGANIZATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME = 0,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame REFERENCE_FRAME = refFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> N_BODY_PERTURBATIONS = 0,
@@ -1025,7 +1025,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     const char *OPERATOR_ORGANIZATION = nullptr,
     const char *EPHEMERIS_NAME = nullptr,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    referenceFrame REFERENCE_FRAME = referenceFrame_ECEF,
+    refFrame REFERENCE_FRAME = refFrame_ECEF,
     const char *GRAVITY_MODEL = nullptr,
     const char *ATMOSPHERIC_MODEL = nullptr,
     const char *N_BODY_PERTURBATIONS = nullptr,
@@ -1292,8 +1292,8 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_STOP_SCREEN_PERIOD);
   }
   /// The reference frame for the screening volume
-  referenceFrame SCREEN_VOLUME_FRAME() const {
-    return static_cast<referenceFrame>(GetField<int8_t>(VT_SCREEN_VOLUME_FRAME, 0));
+  refFrame SCREEN_VOLUME_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_SCREEN_VOLUME_FRAME, 0));
   }
   /// The shape of the screening volume
   screeningVolumeShape SCREEN_VOLUME_SHAPE() const {
@@ -1444,7 +1444,7 @@ struct CDMBuilder {
   void add_STOP_SCREEN_PERIOD(::flatbuffers::Offset<::flatbuffers::String> STOP_SCREEN_PERIOD) {
     fbb_.AddOffset(CDM::VT_STOP_SCREEN_PERIOD, STOP_SCREEN_PERIOD);
   }
-  void add_SCREEN_VOLUME_FRAME(referenceFrame SCREEN_VOLUME_FRAME) {
+  void add_SCREEN_VOLUME_FRAME(refFrame SCREEN_VOLUME_FRAME) {
     fbb_.AddElement<int8_t>(CDM::VT_SCREEN_VOLUME_FRAME, static_cast<int8_t>(SCREEN_VOLUME_FRAME), 0);
   }
   void add_SCREEN_VOLUME_SHAPE(screeningVolumeShape SCREEN_VOLUME_SHAPE) {
@@ -1512,7 +1512,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
     double RELATIVE_VELOCITY_N = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> START_SCREEN_PERIOD = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STOP_SCREEN_PERIOD = 0,
-    referenceFrame SCREEN_VOLUME_FRAME = referenceFrame_ECEF,
+    refFrame SCREEN_VOLUME_FRAME = refFrame_ECEF,
     screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape_ELLIPSOID,
     double SCREEN_VOLUME_X = 0.0,
     double SCREEN_VOLUME_Y = 0.0,
@@ -1576,7 +1576,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
     double RELATIVE_VELOCITY_N = 0.0,
     const char *START_SCREEN_PERIOD = nullptr,
     const char *STOP_SCREEN_PERIOD = nullptr,
-    referenceFrame SCREEN_VOLUME_FRAME = referenceFrame_ECEF,
+    refFrame SCREEN_VOLUME_FRAME = refFrame_ECEF,
     screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape_ELLIPSOID,
     double SCREEN_VOLUME_X = 0.0,
     double SCREEN_VOLUME_Y = 0.0,

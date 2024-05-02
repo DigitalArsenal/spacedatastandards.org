@@ -4,7 +4,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { CDMObject, CDMObjectT } from './CDMObject.js';
 import { PNM, PNMT } from './PNM.js';
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 import { screeningVolumeShape } from './screeningVolumeShape.js';
 
 
@@ -178,9 +178,9 @@ STOP_SCREEN_PERIOD(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * The reference frame for the screening volume
  */
-SCREEN_VOLUME_FRAME():referenceFrame {
+SCREEN_VOLUME_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
@@ -353,8 +353,8 @@ static addStopScreenPeriod(builder:flatbuffers.Builder, STOP_SCREEN_PERIODOffset
   builder.addFieldOffset(15, STOP_SCREEN_PERIODOffset, 0);
 }
 
-static addScreenVolumeFrame(builder:flatbuffers.Builder, SCREEN_VOLUME_FRAME:referenceFrame) {
-  builder.addFieldInt8(16, SCREEN_VOLUME_FRAME, referenceFrame.ECEF);
+static addScreenVolumeFrame(builder:flatbuffers.Builder, SCREEN_VOLUME_FRAME:refFrame) {
+  builder.addFieldInt8(16, SCREEN_VOLUME_FRAME, refFrame.ECEF);
 }
 
 static addScreenVolumeShape(builder:flatbuffers.Builder, SCREEN_VOLUME_SHAPE:screeningVolumeShape) {
@@ -505,7 +505,7 @@ constructor(
   public RELATIVE_VELOCITY_N: number = 0.0,
   public START_SCREEN_PERIOD: string|Uint8Array|null = null,
   public STOP_SCREEN_PERIOD: string|Uint8Array|null = null,
-  public SCREEN_VOLUME_FRAME: referenceFrame = referenceFrame.ECEF,
+  public SCREEN_VOLUME_FRAME: refFrame = refFrame.ECEF,
   public SCREEN_VOLUME_SHAPE: screeningVolumeShape = screeningVolumeShape.ELLIPSOID,
   public SCREEN_VOLUME_X: number = 0.0,
   public SCREEN_VOLUME_Y: number = 0.0,

@@ -2,7 +2,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 
 
 /**
@@ -39,9 +39,9 @@ EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Reference frame for the covariance matrix
  */
-COV_REFERENCE_FRAME():referenceFrame {
+COV_REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : referenceFrame.ECEF;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
@@ -220,8 +220,8 @@ static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, EPOCHOffset, 0);
 }
 
-static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAME:referenceFrame) {
-  builder.addFieldInt8(1, COV_REFERENCE_FRAME, referenceFrame.ECEF);
+static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(1, COV_REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addCxX(builder:flatbuffers.Builder, CX_X:number) {
@@ -313,7 +313,7 @@ static endcovarianceMatrixLine(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createcovarianceMatrixLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, COV_REFERENCE_FRAME:referenceFrame, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number):flatbuffers.Offset {
+static createcovarianceMatrixLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, COV_REFERENCE_FRAME:refFrame, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number):flatbuffers.Offset {
   covarianceMatrixLine.startcovarianceMatrixLine(builder);
   covarianceMatrixLine.addEpoch(builder, EPOCHOffset);
   covarianceMatrixLine.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
@@ -400,7 +400,7 @@ unpackTo(_o: covarianceMatrixLineT): void {
 export class covarianceMatrixLineT implements flatbuffers.IGeneratedObject {
 constructor(
   public EPOCH: string|Uint8Array|null = null,
-  public COV_REFERENCE_FRAME: referenceFrame = referenceFrame.ECEF,
+  public COV_REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public CX_X: number = 0.0,
   public CY_X: number = 0.0,
   public CY_Y: number = 0.0,

@@ -1051,16 +1051,16 @@ func (rcv *EOO) CREATED_BY() []byte {
 
 /// User who created the record
 /// Reference frame of the observation
-func (rcv *EOO) REFERENCE_FRAME() referenceFrame {
+func (rcv *EOO) REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(160))
 	if o != 0 {
-		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Reference frame of the observation
-func (rcv *EOO) MutateREFERENCE_FRAME(n referenceFrame) bool {
+func (rcv *EOO) MutateREFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(160, int8(n))
 }
 
@@ -1369,7 +1369,7 @@ func EOOAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT flatbuffers.UOffs
 func EOOAddCREATED_BY(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(77, flatbuffers.UOffsetT(CREATED_BY), 0)
 }
-func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME referenceFrame) {
+func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
 	builder.PrependInt8Slot(78, int8(REFERENCE_FRAME), 0)
 }
 func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {

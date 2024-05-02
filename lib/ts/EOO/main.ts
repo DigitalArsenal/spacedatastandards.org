@@ -2,4 +2,4 @@
 
 export { EOO, EOOT } from './EOO.js';
 export { RFM, RFMT } from './RFM.js';
-export { referenceFrame } from './referenceFrame.js';
+export { refFrame } from './refFrame.js';

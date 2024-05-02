@@ -35,9 +35,9 @@ class TDM {
   ///  Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   double get OBSERVER_VZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  ReferenceFrame get OBSERVER_POSITION_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  RefFrame get OBSERVER_POSITION_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  ReferenceFrame get OBS_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  RefFrame get OBS_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
   ///  Epoch or observation time -  CCSDS 503.0-B-1
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  TDM version number -  CCSDS 503.0-B-1, Page D-9
@@ -192,11 +192,11 @@ class TDMBuilder {
     fbBuilder.addFloat64(6, OBSERVER_VZ);
     return fbBuilder.offset;
   }
-  int addObserverPositionReferenceFrame(ReferenceFrame? OBSERVER_POSITION_REFERENCE_FRAME) {
+  int addObserverPositionReferenceFrame(RefFrame? OBSERVER_POSITION_REFERENCE_FRAME) {
     fbBuilder.addInt8(7, OBSERVER_POSITION_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
-  int addObsReferenceFrame(ReferenceFrame? OBS_REFERENCE_FRAME) {
+  int addObsReferenceFrame(RefFrame? OBS_REFERENCE_FRAME) {
     fbBuilder.addInt8(8, OBS_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -414,8 +414,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
   final double? _OBSERVER_VX;
   final double? _OBSERVER_VY;
   final double? _OBSERVER_VZ;
-  final ReferenceFrame? _OBSERVER_POSITION_REFERENCE_FRAME;
-  final ReferenceFrame? _OBS_REFERENCE_FRAME;
+  final RefFrame? _OBSERVER_POSITION_REFERENCE_FRAME;
+  final RefFrame? _OBS_REFERENCE_FRAME;
   final String? _EPOCH;
   final String? _CCSDS_TDM_VERS;
   final List<String>? _COMMENT;
@@ -475,8 +475,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
     double? OBSERVER_VX,
     double? OBSERVER_VY,
     double? OBSERVER_VZ,
-    ReferenceFrame? OBSERVER_POSITION_REFERENCE_FRAME,
-    ReferenceFrame? OBS_REFERENCE_FRAME,
+    RefFrame? OBSERVER_POSITION_REFERENCE_FRAME,
+    RefFrame? OBS_REFERENCE_FRAME,
     String? EPOCH,
     String? CCSDS_TDM_VERS,
     List<String>? COMMENT,

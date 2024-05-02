@@ -188,7 +188,7 @@ class CovarianceMatrixLine {
   ///  Epoch
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Reference frame for the covariance matrix
-  ReferenceFrame get COV_REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   ///  Covariance matrix [1,1] km**2
   double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   ///  Covariance matrix [2,1] km**2
@@ -259,7 +259,7 @@ class CovarianceMatrixLineBuilder {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addCovReferenceFrame(ReferenceFrame? COV_REFERENCE_FRAME) {
+  int addCovReferenceFrame(RefFrame? COV_REFERENCE_FRAME) {
     fbBuilder.addInt8(1, COV_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -355,7 +355,7 @@ class CovarianceMatrixLineBuilder {
 
 class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
   final String? _EPOCH;
-  final ReferenceFrame? _COV_REFERENCE_FRAME;
+  final RefFrame? _COV_REFERENCE_FRAME;
   final double? _CX_X;
   final double? _CY_X;
   final double? _CY_Y;
@@ -380,7 +380,7 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
 
   CovarianceMatrixLineObjectBuilder({
     String? EPOCH,
-    ReferenceFrame? COV_REFERENCE_FRAME,
+    RefFrame? COV_REFERENCE_FRAME,
     double? CX_X,
     double? CY_X,
     double? CY_Y,
@@ -489,7 +489,7 @@ class EphemerisDataBlock {
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  ReferenceFrame get REFERENCE_FRAME => ReferenceFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
   String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Time system used for the orbit state and covariance matrix. (UTC)
@@ -550,7 +550,7 @@ class EphemerisDataBlockBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(ReferenceFrame? REFERENCE_FRAME) {
+  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
     fbBuilder.addInt8(4, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
@@ -605,7 +605,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
   final String? _CENTER_NAME;
-  final ReferenceFrame? _REFERENCE_FRAME;
+  final RefFrame? _REFERENCE_FRAME;
   final String? _REFERENCE_FRAME_EPOCH;
   final TimeSystem? _TIME_SYSTEM;
   final String? _START_TIME;
@@ -622,7 +622,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     String? OBJECT_NAME,
     String? OBJECT_ID,
     String? CENTER_NAME,
-    ReferenceFrame? REFERENCE_FRAME,
+    RefFrame? REFERENCE_FRAME,
     String? REFERENCE_FRAME_EPOCH,
     TimeSystem? TIME_SYSTEM,
     String? START_TIME,

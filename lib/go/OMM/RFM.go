@@ -34,22 +34,22 @@ func (rcv *RFM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *RFM) REFERENCE_FRAME() referenceFrame {
+func (rcv *RFM) REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *RFM) MutateREFERENCE_FRAME(n referenceFrame) bool {
+func (rcv *RFM) MutateREFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
 
 func RFMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func RFMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME referenceFrame) {
+func RFMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
 	builder.PrependInt8Slot(0, int8(REFERENCE_FRAME), 0)
 }
 func RFMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

@@ -1,7 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { ephemerisType } from './ephemerisType.js';
 import { meanElementTheory } from './meanElementTheory.js';
-import { referenceFrame } from './referenceFrame.js';
+import { refFrame } from './refFrame.js';
 import { timeSystem } from './timeSystem.js';
 /**
  * Orbit Mean Elements Message
@@ -46,7 +46,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     /**
      * Name of the reference frame (TEME, EME2000, etc.)
      */
-    REFERENCE_FRAME(): referenceFrame;
+    REFERENCE_FRAME(): refFrame;
     /**
      * REFERENCE_FRAME_EPOCH
      */
@@ -162,7 +162,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      * Position/Velocity Covariance Matrix
      * Reference frame for the covariance matrix
      */
-    COV_REFERENCE_FRAME(): referenceFrame;
+    COV_REFERENCE_FRAME(): refFrame;
     /**
      * Covariance matrix [1,1] km**2
      */
@@ -276,7 +276,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
     static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
-    static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAME: referenceFrame): void;
+    static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAME: refFrame): void;
     static addReferenceFrameEpoch(builder: flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset): void;
     static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timeSystem): void;
     static addMeanElementTheory(builder: flatbuffers.Builder, MEAN_ELEMENT_THEORY: meanElementTheory): void;
@@ -303,7 +303,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static addBstar(builder: flatbuffers.Builder, BSTAR: number): void;
     static addMeanMotionDot(builder: flatbuffers.Builder, MEAN_MOTION_DOT: number): void;
     static addMeanMotionDdot(builder: flatbuffers.Builder, MEAN_MOTION_DDOT: number): void;
-    static addCovReferenceFrame(builder: flatbuffers.Builder, COV_REFERENCE_FRAME: referenceFrame): void;
+    static addCovReferenceFrame(builder: flatbuffers.Builder, COV_REFERENCE_FRAME: refFrame): void;
     static addCxX(builder: flatbuffers.Builder, CX_X: number): void;
     static addCyX(builder: flatbuffers.Builder, CY_X: number): void;
     static addCyY(builder: flatbuffers.Builder, CY_Y: number): void;
@@ -333,7 +333,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static endOMM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createOMM(builder: flatbuffers.Builder, CCSDS_OMM_VERS: number, CREATION_DATEOffset: flatbuffers.Offset, ORIGINATOROffset: flatbuffers.Offset, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, CENTER_NAMEOffset: flatbuffers.Offset, REFERENCE_FRAME: referenceFrame, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset, TIME_SYSTEM: timeSystem, MEAN_ELEMENT_THEORY: meanElementTheory, COMMENTOffset: flatbuffers.Offset, EPOCHOffset: flatbuffers.Offset, SEMI_MAJOR_AXIS: number, MEAN_MOTION: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, MEAN_ANOMALY: number, GM: number, MASS: number, SOLAR_RAD_AREA: number, SOLAR_RAD_COEFF: number, DRAG_AREA: number, DRAG_COEFF: number, EPHEMERIS_TYPE: ephemerisType, CLASSIFICATION_TYPEOffset: flatbuffers.Offset, NORAD_CAT_ID: number, ELEMENT_SET_NO: number, REV_AT_EPOCH: number, BSTAR: number, MEAN_MOTION_DOT: number, MEAN_MOTION_DDOT: number, COV_REFERENCE_FRAME: referenceFrame, CX_X: number, CY_X: number, CY_Y: number, CZ_X: number, CZ_Y: number, CZ_Z: number, CX_DOT_X: number, CX_DOT_Y: number, CX_DOT_Z: number, CX_DOT_X_DOT: number, CY_DOT_X: number, CY_DOT_Y: number, CY_DOT_Z: number, CY_DOT_X_DOT: number, CY_DOT_Y_DOT: number, CZ_DOT_X: number, CZ_DOT_Y: number, CZ_DOT_Z: number, CZ_DOT_X_DOT: number, CZ_DOT_Y_DOT: number, CZ_DOT_Z_DOT: number, USER_DEFINED_BIP_0044_TYPE: number, USER_DEFINED_OBJECT_DESIGNATOROffset: flatbuffers.Offset, USER_DEFINED_EARTH_MODELOffset: flatbuffers.Offset, USER_DEFINED_EPOCH_TIMESTAMP: number, USER_DEFINED_MICROSECONDS: number): flatbuffers.Offset;
+    static createOMM(builder: flatbuffers.Builder, CCSDS_OMM_VERS: number, CREATION_DATEOffset: flatbuffers.Offset, ORIGINATOROffset: flatbuffers.Offset, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, CENTER_NAMEOffset: flatbuffers.Offset, REFERENCE_FRAME: refFrame, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset, TIME_SYSTEM: timeSystem, MEAN_ELEMENT_THEORY: meanElementTheory, COMMENTOffset: flatbuffers.Offset, EPOCHOffset: flatbuffers.Offset, SEMI_MAJOR_AXIS: number, MEAN_MOTION: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, MEAN_ANOMALY: number, GM: number, MASS: number, SOLAR_RAD_AREA: number, SOLAR_RAD_COEFF: number, DRAG_AREA: number, DRAG_COEFF: number, EPHEMERIS_TYPE: ephemerisType, CLASSIFICATION_TYPEOffset: flatbuffers.Offset, NORAD_CAT_ID: number, ELEMENT_SET_NO: number, REV_AT_EPOCH: number, BSTAR: number, MEAN_MOTION_DOT: number, MEAN_MOTION_DDOT: number, COV_REFERENCE_FRAME: refFrame, CX_X: number, CY_X: number, CY_Y: number, CZ_X: number, CZ_Y: number, CZ_Z: number, CX_DOT_X: number, CX_DOT_Y: number, CX_DOT_Z: number, CX_DOT_X_DOT: number, CY_DOT_X: number, CY_DOT_Y: number, CY_DOT_Z: number, CY_DOT_X_DOT: number, CY_DOT_Y_DOT: number, CZ_DOT_X: number, CZ_DOT_Y: number, CZ_DOT_Z: number, CZ_DOT_X_DOT: number, CZ_DOT_Y_DOT: number, CZ_DOT_Z_DOT: number, USER_DEFINED_BIP_0044_TYPE: number, USER_DEFINED_OBJECT_DESIGNATOROffset: flatbuffers.Offset, USER_DEFINED_EARTH_MODELOffset: flatbuffers.Offset, USER_DEFINED_EPOCH_TIMESTAMP: number, USER_DEFINED_MICROSECONDS: number): flatbuffers.Offset;
     unpack(): OMMT;
     unpackTo(_o: OMMT): void;
 }
@@ -344,7 +344,7 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     OBJECT_NAME: string | Uint8Array | null;
     OBJECT_ID: string | Uint8Array | null;
     CENTER_NAME: string | Uint8Array | null;
-    REFERENCE_FRAME: referenceFrame;
+    REFERENCE_FRAME: refFrame;
     REFERENCE_FRAME_EPOCH: string | Uint8Array | null;
     TIME_SYSTEM: timeSystem;
     MEAN_ELEMENT_THEORY: meanElementTheory;
@@ -371,7 +371,7 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     BSTAR: number;
     MEAN_MOTION_DOT: number;
     MEAN_MOTION_DDOT: number;
-    COV_REFERENCE_FRAME: referenceFrame;
+    COV_REFERENCE_FRAME: refFrame;
     CX_X: number;
     CY_X: number;
     CY_Y: number;
@@ -398,7 +398,7 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     USER_DEFINED_EARTH_MODEL: string | Uint8Array | null;
     USER_DEFINED_EPOCH_TIMESTAMP: number;
     USER_DEFINED_MICROSECONDS: number;
-    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: referenceFrame, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timeSystem, MEAN_ELEMENT_THEORY?: meanElementTheory, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisType, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: referenceFrame, CX_X?: number, CY_X?: number, CY_Y?: number, CZ_X?: number, CZ_Y?: number, CZ_Z?: number, CX_DOT_X?: number, CX_DOT_Y?: number, CX_DOT_Z?: number, CX_DOT_X_DOT?: number, CY_DOT_X?: number, CY_DOT_Y?: number, CY_DOT_Z?: number, CY_DOT_X_DOT?: number, CY_DOT_Y_DOT?: number, CZ_DOT_X?: number, CZ_DOT_Y?: number, CZ_DOT_Z?: number, CZ_DOT_X_DOT?: number, CZ_DOT_Y_DOT?: number, CZ_DOT_Z_DOT?: number, USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number);
+    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timeSystem, MEAN_ELEMENT_THEORY?: meanElementTheory, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisType, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: refFrame, CX_X?: number, CY_X?: number, CY_Y?: number, CZ_X?: number, CZ_Y?: number, CZ_Z?: number, CX_DOT_X?: number, CX_DOT_Y?: number, CX_DOT_Z?: number, CX_DOT_X_DOT?: number, CY_DOT_X?: number, CY_DOT_Y?: number, CY_DOT_Z?: number, CY_DOT_X_DOT?: number, CY_DOT_Y_DOT?: number, CZ_DOT_X?: number, CZ_DOT_Y?: number, CZ_DOT_Z?: number, CZ_DOT_X_DOT?: number, CZ_DOT_Y_DOT?: number, CZ_DOT_Z_DOT?: number, USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OMM.d.ts.map

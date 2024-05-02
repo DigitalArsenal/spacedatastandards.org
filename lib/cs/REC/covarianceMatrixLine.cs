@@ -26,7 +26,7 @@ public struct covarianceMatrixLine : IFlatbufferObject
 #endif
   public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(4); }
   /// Reference frame for the covariance matrix
-  public referenceFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(6); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(6); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Covariance matrix [1,1] km**2
   public double CX_X { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [2,1] km**2
@@ -72,7 +72,7 @@ public struct covarianceMatrixLine : IFlatbufferObject
 
   public static Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(FlatBufferBuilder builder,
       StringOffset EPOCHOffset = default(StringOffset),
-      referenceFrame COV_REFERENCE_FRAME = referenceFrame.ECEF,
+      refFrame COV_REFERENCE_FRAME = refFrame.ECEF,
       double CX_X = 0.0,
       double CY_X = 0.0,
       double CY_Y = 0.0,
@@ -123,7 +123,7 @@ public struct covarianceMatrixLine : IFlatbufferObject
 
   public static void StartcovarianceMatrixLine(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(0, EPOCHOffset.Value, 0); }
-  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame COV_REFERENCE_FRAME) { builder.AddSbyte(1, (sbyte)COV_REFERENCE_FRAME, 0); }
+  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame COV_REFERENCE_FRAME) { builder.AddSbyte(1, (sbyte)COV_REFERENCE_FRAME, 0); }
   public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(2, CX_X, 0.0); }
   public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(3, CY_X, 0.0); }
   public static void AddCY_Y(FlatBufferBuilder builder, double CY_Y) { builder.AddDouble(4, CY_Y, 0.0); }
@@ -213,7 +213,7 @@ public struct covarianceMatrixLine : IFlatbufferObject
 public class covarianceMatrixLineT
 {
   public string EPOCH { get; set; }
-  public referenceFrame COV_REFERENCE_FRAME { get; set; }
+  public refFrame COV_REFERENCE_FRAME { get; set; }
   public double CX_X { get; set; }
   public double CY_X { get; set; }
   public double CY_Y { get; set; }
@@ -238,7 +238,7 @@ public class covarianceMatrixLineT
 
   public covarianceMatrixLineT() {
     this.EPOCH = null;
-    this.COV_REFERENCE_FRAME = referenceFrame.ECEF;
+    this.COV_REFERENCE_FRAME = refFrame.ECEF;
     this.CX_X = 0.0;
     this.CY_X = 0.0;
     this.CY_Y = 0.0;

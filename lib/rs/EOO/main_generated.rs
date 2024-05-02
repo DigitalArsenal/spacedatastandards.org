@@ -1058,11 +1058,11 @@ impl<'a> EOO<'a> {
   }
   /// Reference frame of the observation
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> referenceFrame {
+  pub fn REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<referenceFrame>(EOO::VT_REFERENCE_FRAME, Some(referenceFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<refFrame>(EOO::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Reference frame of the sensor
   #[inline]
@@ -1199,7 +1199,7 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DATA_MODE", Self::VT_DATA_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_BY", Self::VT_CREATED_BY, false)?
-     .visit_field::<referenceFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
      .visit_field::<bool>("UMBRA", Self::VT_UMBRA, false)?
      .visit_field::<bool>("PENUMBRA", Self::VT_PENUMBRA, false)?
@@ -1289,7 +1289,7 @@ pub struct EOOArgs<'a> {
     pub DATA_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CREATED_AT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CREATED_BY: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REFERENCE_FRAME: referenceFrame,
+    pub REFERENCE_FRAME: refFrame,
     pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub UMBRA: bool,
     pub PENUMBRA: bool,
@@ -1379,7 +1379,7 @@ impl<'a> Default for EOOArgs<'a> {
       DATA_MODE: None,
       CREATED_AT: None,
       CREATED_BY: None,
-      REFERENCE_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: refFrame::ECEF,
       SEN_REFERENCE_FRAME: None,
       UMBRA: false,
       PENUMBRA: false,
@@ -1708,8 +1708,8 @@ impl<'a: 'b, 'b> EOOBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_CREATED_BY, CREATED_BY);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: referenceFrame) {
-    self.fbb_.push_slot::<referenceFrame>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME, referenceFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1922,7 +1922,7 @@ pub struct EOOT {
   pub DATA_MODE: Option<String>,
   pub CREATED_AT: Option<String>,
   pub CREATED_BY: Option<String>,
-  pub REFERENCE_FRAME: referenceFrame,
+  pub REFERENCE_FRAME: refFrame,
   pub SEN_REFERENCE_FRAME: Option<String>,
   pub UMBRA: bool,
   pub PENUMBRA: bool,
@@ -2011,7 +2011,7 @@ impl Default for EOOT {
       DATA_MODE: None,
       CREATED_AT: None,
       CREATED_BY: None,
-      REFERENCE_FRAME: referenceFrame::ECEF,
+      REFERENCE_FRAME: refFrame::ECEF,
       SEN_REFERENCE_FRAME: None,
       UMBRA: false,
       PENUMBRA: false,

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "referenceFrame" : {
+    "refFrame" : {
       "type" : "string",
       "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW"]
     },
@@ -10,7 +10,7 @@
       "description" : "Reference Frame Message",
       "properties" : {
         "REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame"
+                "$ref" : "#/definitions/refFrame"
               }
       },
       "additionalProperties" : false
@@ -48,11 +48,11 @@
                 "description" : "Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame"
               },
         "OBSERVER_POSITION_REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame",
+                "$ref" : "#/definitions/refFrame",
                 "description" : "Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)"
               },
         "OBS_REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/referenceFrame",
+                "$ref" : "#/definitions/refFrame",
                 "description" : "Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)"
               },
         "EPOCH" : {

@@ -50,7 +50,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(10); }
   /// Name of the reference frame (TEME, EME2000, etc.)
-  public referenceFrame REFERENCE_FRAME { get { int o = __p.__offset(12); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(12); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   public string REFERENCE_FRAME_EPOCH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -115,7 +115,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       StringOffset OBJECT_IDOffset = default(StringOffset),
       StringOffset CENTER_NAMEOffset = default(StringOffset),
-      referenceFrame REFERENCE_FRAME = referenceFrame.ECEF,
+      refFrame REFERENCE_FRAME = refFrame.ECEF,
       StringOffset REFERENCE_FRAME_EPOCHOffset = default(StringOffset),
       timeSystem TIME_SYSTEM = timeSystem.GMST,
       StringOffset START_TIMEOffset = default(StringOffset),
@@ -150,7 +150,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(1, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(2, OBJECT_IDOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(3, CENTER_NAMEOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame REFERENCE_FRAME) { builder.AddSbyte(4, (sbyte)REFERENCE_FRAME, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(4, (sbyte)REFERENCE_FRAME, 0); }
   public static void AddREFERENCE_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_FRAME_EPOCHOffset) { builder.AddOffset(5, REFERENCE_FRAME_EPOCHOffset.Value, 0); }
   public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(6, (sbyte)TIME_SYSTEM, 0); }
   public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(7, START_TIMEOffset.Value, 0); }
@@ -249,7 +249,7 @@ public class ephemerisDataBlockT
   public string OBJECT_NAME { get; set; }
   public string OBJECT_ID { get; set; }
   public string CENTER_NAME { get; set; }
-  public referenceFrame REFERENCE_FRAME { get; set; }
+  public refFrame REFERENCE_FRAME { get; set; }
   public string REFERENCE_FRAME_EPOCH { get; set; }
   public timeSystem TIME_SYSTEM { get; set; }
   public string START_TIME { get; set; }
@@ -266,7 +266,7 @@ public class ephemerisDataBlockT
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
     this.CENTER_NAME = null;
-    this.REFERENCE_FRAME = referenceFrame.ECEF;
+    this.REFERENCE_FRAME = refFrame.ECEF;
     this.REFERENCE_FRAME_EPOCH = null;
     this.TIME_SYSTEM = timeSystem.GMST;
     this.START_TIME = null;

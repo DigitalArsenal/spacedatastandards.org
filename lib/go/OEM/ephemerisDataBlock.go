@@ -75,16 +75,16 @@ func (rcv *ephemerisDataBlock) CENTER_NAME() []byte {
 
 /// Origin of reference frame (EARTH, MARS, MOON, etc.)
 /// Name of the reference frame (TEME, EME2000, etc.)
-func (rcv *ephemerisDataBlock) REFERENCE_FRAME() referenceFrame {
+func (rcv *ephemerisDataBlock) REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return referenceFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Name of the reference frame (TEME, EME2000, etc.)
-func (rcv *ephemerisDataBlock) MutateREFERENCE_FRAME(n referenceFrame) bool {
+func (rcv *ephemerisDataBlock) MutateREFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
@@ -235,7 +235,7 @@ func ephemerisDataBlockAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flat
 func ephemerisDataBlockAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CENTER_NAME), 0)
 }
-func ephemerisDataBlockAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME referenceFrame) {
+func ephemerisDataBlockAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
 	builder.PrependInt8Slot(4, int8(REFERENCE_FRAME), 0)
 }
 func ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {

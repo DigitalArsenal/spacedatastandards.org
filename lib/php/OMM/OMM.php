@@ -94,7 +94,7 @@ class OMM extends Table
     public function getREFERENCE_FRAME()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::TEME;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::TEME;
     }
 
     /// REFERENCE_FRAME_EPOCH
@@ -356,7 +356,7 @@ class OMM extends Table
     public function getCOV_REFERENCE_FRAME()
     {
         $o = $this->__offset(70);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \referenceFrame::RSW;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::RSW;
     }
 
     /// Covariance matrix [1,1] km**2

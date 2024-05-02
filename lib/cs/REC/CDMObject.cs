@@ -54,7 +54,7 @@ public struct CDMObject : IFlatbufferObject
   /// Covariance method
   public covarianceMethod COVARIANCE_METHOD { get { int o = __p.__offset(16); return o != 0 ? (covarianceMethod)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceMethod.CALCULATED; } }
   /// Reference Frame in which the object position is defined
-  public referenceFrame REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.ECEF; } }
+  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Gravity model
   public string GRAVITY_MODEL { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -240,7 +240,7 @@ public struct CDMObject : IFlatbufferObject
       StringOffset OPERATOR_ORGANIZATIONOffset = default(StringOffset),
       StringOffset EPHEMERIS_NAMEOffset = default(StringOffset),
       covarianceMethod COVARIANCE_METHOD = covarianceMethod.CALCULATED,
-      referenceFrame REFERENCE_FRAME = referenceFrame.ECEF,
+      refFrame REFERENCE_FRAME = refFrame.ECEF,
       StringOffset GRAVITY_MODELOffset = default(StringOffset),
       StringOffset ATMOSPHERIC_MODELOffset = default(StringOffset),
       StringOffset N_BODY_PERTURBATIONSOffset = default(StringOffset),
@@ -407,7 +407,7 @@ public struct CDMObject : IFlatbufferObject
   public static void AddOPERATOR_ORGANIZATION(FlatBufferBuilder builder, StringOffset OPERATOR_ORGANIZATIONOffset) { builder.AddOffset(4, OPERATOR_ORGANIZATIONOffset.Value, 0); }
   public static void AddEPHEMERIS_NAME(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAMEOffset) { builder.AddOffset(5, EPHEMERIS_NAMEOffset.Value, 0); }
   public static void AddCOVARIANCE_METHOD(FlatBufferBuilder builder, covarianceMethod COVARIANCE_METHOD) { builder.AddSbyte(6, (sbyte)COVARIANCE_METHOD, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame REFERENCE_FRAME) { builder.AddSbyte(7, (sbyte)REFERENCE_FRAME, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(7, (sbyte)REFERENCE_FRAME, 0); }
   public static void AddGRAVITY_MODEL(FlatBufferBuilder builder, StringOffset GRAVITY_MODELOffset) { builder.AddOffset(8, GRAVITY_MODELOffset.Value, 0); }
   public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODELOffset) { builder.AddOffset(9, ATMOSPHERIC_MODELOffset.Value, 0); }
   public static void AddN_BODY_PERTURBATIONS(FlatBufferBuilder builder, StringOffset N_BODY_PERTURBATIONSOffset) { builder.AddOffset(10, N_BODY_PERTURBATIONSOffset.Value, 0); }
@@ -681,7 +681,7 @@ public class CDMObjectT
   public string OPERATOR_ORGANIZATION { get; set; }
   public string EPHEMERIS_NAME { get; set; }
   public covarianceMethod COVARIANCE_METHOD { get; set; }
-  public referenceFrame REFERENCE_FRAME { get; set; }
+  public refFrame REFERENCE_FRAME { get; set; }
   public string GRAVITY_MODEL { get; set; }
   public string ATMOSPHERIC_MODEL { get; set; }
   public string N_BODY_PERTURBATIONS { get; set; }
@@ -764,7 +764,7 @@ public class CDMObjectT
     this.OPERATOR_ORGANIZATION = null;
     this.EPHEMERIS_NAME = null;
     this.COVARIANCE_METHOD = covarianceMethod.CALCULATED;
-    this.REFERENCE_FRAME = referenceFrame.ECEF;
+    this.REFERENCE_FRAME = refFrame.ECEF;
     this.GRAVITY_MODEL = null;
     this.ATMOSPHERIC_MODEL = null;
     this.N_BODY_PERTURBATIONS = null;

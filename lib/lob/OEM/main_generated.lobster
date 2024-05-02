@@ -88,8 +88,8 @@ class covarianceMatrixLine : flatbuffers_handle
     def EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 4)
     /// Reference frame for the covariance matrix
-    def COV_REFERENCE_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 6, 0))
+    def COV_REFERENCE_FRAME() -> refFrame:
+        return refFrame(buf_.flatbuffers_field_int8(pos_, 6, 0))
     /// Covariance matrix [1,1] km**2
     def CX_X() -> float:
         return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
@@ -164,7 +164,7 @@ struct covarianceMatrixLineBuilder:
     def add_EPOCH(EPOCH:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(0, EPOCH)
         return this
-    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:referenceFrame):
+    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(1, COV_REFERENCE_FRAME, 0)
         return this
     def add_CX_X(CX_X:float):
@@ -248,8 +248,8 @@ class ephemerisDataBlock : flatbuffers_handle
     def CENTER_NAME() -> string:
         return buf_.flatbuffers_field_string(pos_, 10)
     /// Name of the reference frame (TEME, EME2000, etc.)
-    def REFERENCE_FRAME() -> referenceFrame:
-        return referenceFrame(buf_.flatbuffers_field_int8(pos_, 12, 0))
+    def REFERENCE_FRAME() -> refFrame:
+        return refFrame(buf_.flatbuffers_field_int8(pos_, 12, 0))
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
     def REFERENCE_FRAME_EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 14)
@@ -304,7 +304,7 @@ struct ephemerisDataBlockBuilder:
     def add_CENTER_NAME(CENTER_NAME:flatbuffers_offset):
         b_.PrependUOffsetTRelativeSlot(3, CENTER_NAME)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:referenceFrame):
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(4, REFERENCE_FRAME, 0)
         return this
     def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers_offset):

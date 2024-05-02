@@ -62,7 +62,7 @@ public struct OMM : IFlatbufferObject
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(14); }
   /// Name of the reference frame (TEME, EME2000, etc.)
-  public referenceFrame REFERENCE_FRAME { get { int o = __p.__offset(16); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.TEME; } }
+  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(16); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.TEME; } }
   /// REFERENCE_FRAME_EPOCH
   public string REFERENCE_FRAME_EPOCH { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -144,7 +144,7 @@ public struct OMM : IFlatbufferObject
   public double MEAN_MOTION_DDOT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Position/Velocity Covariance Matrix
   /// Reference frame for the covariance matrix
-  public referenceFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(70); return o != 0 ? (referenceFrame)__p.bb.GetSbyte(o + __p.bb_pos) : referenceFrame.RSW; } }
+  public refFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(70); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.RSW; } }
   /// Covariance matrix [1,1] km**2
   public double CX_X { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [2,1] km**2
@@ -217,7 +217,7 @@ public struct OMM : IFlatbufferObject
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       StringOffset OBJECT_IDOffset = default(StringOffset),
       StringOffset CENTER_NAMEOffset = default(StringOffset),
-      referenceFrame REFERENCE_FRAME = referenceFrame.TEME,
+      refFrame REFERENCE_FRAME = refFrame.TEME,
       StringOffset REFERENCE_FRAME_EPOCHOffset = default(StringOffset),
       timeSystem TIME_SYSTEM = timeSystem.UTC,
       meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory.SGP4,
@@ -244,7 +244,7 @@ public struct OMM : IFlatbufferObject
       double BSTAR = 0.0,
       double MEAN_MOTION_DOT = 0.0,
       double MEAN_MOTION_DDOT = 0.0,
-      referenceFrame COV_REFERENCE_FRAME = referenceFrame.RSW,
+      refFrame COV_REFERENCE_FRAME = refFrame.RSW,
       double CX_X = 0.0,
       double CY_X = 0.0,
       double CY_Y = 0.0,
@@ -342,7 +342,7 @@ public struct OMM : IFlatbufferObject
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(4, OBJECT_IDOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(5, CENTER_NAMEOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame REFERENCE_FRAME) { builder.AddSbyte(6, (sbyte)REFERENCE_FRAME, 2); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(6, (sbyte)REFERENCE_FRAME, 2); }
   public static void AddREFERENCE_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_FRAME_EPOCHOffset) { builder.AddOffset(7, REFERENCE_FRAME_EPOCHOffset.Value, 0); }
   public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(8, (sbyte)TIME_SYSTEM, 11); }
   public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementTheory MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
@@ -369,7 +369,7 @@ public struct OMM : IFlatbufferObject
   public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(30, BSTAR, 0.0); }
   public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(31, MEAN_MOTION_DOT, 0.0); }
   public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(32, MEAN_MOTION_DDOT, 0.0); }
-  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, referenceFrame COV_REFERENCE_FRAME) { builder.AddSbyte(33, (sbyte)COV_REFERENCE_FRAME, 23); }
+  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame COV_REFERENCE_FRAME) { builder.AddSbyte(33, (sbyte)COV_REFERENCE_FRAME, 23); }
   public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(34, CX_X, 0.0); }
   public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(35, CY_X, 0.0); }
   public static void AddCY_Y(FlatBufferBuilder builder, double CY_Y) { builder.AddDouble(36, CY_Y, 0.0); }
@@ -555,7 +555,7 @@ public class OMMT
   public string OBJECT_NAME { get; set; }
   public string OBJECT_ID { get; set; }
   public string CENTER_NAME { get; set; }
-  public referenceFrame REFERENCE_FRAME { get; set; }
+  public refFrame REFERENCE_FRAME { get; set; }
   public string REFERENCE_FRAME_EPOCH { get; set; }
   public timeSystem TIME_SYSTEM { get; set; }
   public meanElementTheory MEAN_ELEMENT_THEORY { get; set; }
@@ -582,7 +582,7 @@ public class OMMT
   public double BSTAR { get; set; }
   public double MEAN_MOTION_DOT { get; set; }
   public double MEAN_MOTION_DDOT { get; set; }
-  public referenceFrame COV_REFERENCE_FRAME { get; set; }
+  public refFrame COV_REFERENCE_FRAME { get; set; }
   public double CX_X { get; set; }
   public double CY_X { get; set; }
   public double CY_Y { get; set; }
@@ -617,7 +617,7 @@ public class OMMT
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
     this.CENTER_NAME = null;
-    this.REFERENCE_FRAME = referenceFrame.TEME;
+    this.REFERENCE_FRAME = refFrame.TEME;
     this.REFERENCE_FRAME_EPOCH = null;
     this.TIME_SYSTEM = timeSystem.UTC;
     this.MEAN_ELEMENT_THEORY = meanElementTheory.SGP4;
@@ -644,7 +644,7 @@ public class OMMT
     this.BSTAR = 0.0;
     this.MEAN_MOTION_DOT = 0.0;
     this.MEAN_MOTION_DDOT = 0.0;
-    this.COV_REFERENCE_FRAME = referenceFrame.RSW;
+    this.COV_REFERENCE_FRAME = refFrame.RSW;
     this.CX_X = 0.0;
     this.CY_X = 0.0;
     this.CY_Y = 0.0;
