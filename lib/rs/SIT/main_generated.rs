@@ -1076,6 +1076,136 @@ impl SITT {
     })
   }
 }
+pub enum SITCOLLECTIONOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SITCOLLECTION<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for SITCOLLECTION<'a> {
+  type Inner = SITCOLLECTION<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> SITCOLLECTION<'a> {
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    SITCOLLECTION { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args SITCOLLECTIONArgs<'args>
+  ) -> flatbuffers::WIPOffset<SITCOLLECTION<'bldr>> {
+    let mut builder = SITCOLLECTIONBuilder::new(_fbb);
+    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SITCOLLECTIONT {
+    let RECORDS = self.RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    SITCOLLECTIONT {
+      RECORDS,
+    }
+  }
+
+  #[inline]
+  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SIT<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SIT>>>>(SITCOLLECTION::VT_RECORDS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for SITCOLLECTION<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<SIT>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SITCOLLECTIONArgs<'a> {
+    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SIT<'a>>>>>,
+}
+impl<'a> Default for SITCOLLECTIONArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SITCOLLECTIONArgs {
+      RECORDS: None,
+    }
+  }
+}
+
+pub struct SITCOLLECTIONBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> SITCOLLECTIONBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<SIT<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SITCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SITCOLLECTIONBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    SITCOLLECTIONBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<SITCOLLECTION<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for SITCOLLECTION<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("SITCOLLECTION");
+      ds.field("RECORDS", &self.RECORDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SITCOLLECTIONT {
+  pub RECORDS: Option<Vec<SITT>>,
+}
+impl Default for SITCOLLECTIONT {
+  fn default() -> Self {
+    Self {
+      RECORDS: None,
+    }
+  }
+}
+impl SITCOLLECTIONT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<SITCOLLECTION<'b>> {
+    let RECORDS = self.RECORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    SITCOLLECTION::create(_fbb, &SITCOLLECTIONArgs{
+      RECORDS,
+    })
+  }
+}
 #[inline]
 /// Verifies that a buffer of bytes contains a `SIT`
 /// and returns it.

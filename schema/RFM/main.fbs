@@ -57,5 +57,9 @@ table RFM{
   REFERENCE_FRAME: refFrame;
 }
 
+table RFMCOLLECTION {
+  RECORDS: [RFM];
+}
+
 root_type RFM;
 file_identifier "$RFM";

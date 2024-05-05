@@ -703,6 +703,136 @@ impl HYPT {
     })
   }
 }
+pub enum HYPCOLLECTIONOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct HYPCOLLECTION<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for HYPCOLLECTION<'a> {
+  type Inner = HYPCOLLECTION<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> HYPCOLLECTION<'a> {
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    HYPCOLLECTION { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args HYPCOLLECTIONArgs<'args>
+  ) -> flatbuffers::WIPOffset<HYPCOLLECTION<'bldr>> {
+    let mut builder = HYPCOLLECTIONBuilder::new(_fbb);
+    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> HYPCOLLECTIONT {
+    let RECORDS = self.RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    HYPCOLLECTIONT {
+      RECORDS,
+    }
+  }
+
+  #[inline]
+  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<HYP<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<HYP>>>>(HYPCOLLECTION::VT_RECORDS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for HYPCOLLECTION<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<HYP>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct HYPCOLLECTIONArgs<'a> {
+    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<HYP<'a>>>>>,
+}
+impl<'a> Default for HYPCOLLECTIONArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    HYPCOLLECTIONArgs {
+      RECORDS: None,
+    }
+  }
+}
+
+pub struct HYPCOLLECTIONBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> HYPCOLLECTIONBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<HYP<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(HYPCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> HYPCOLLECTIONBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    HYPCOLLECTIONBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<HYPCOLLECTION<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for HYPCOLLECTION<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("HYPCOLLECTION");
+      ds.field("RECORDS", &self.RECORDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct HYPCOLLECTIONT {
+  pub RECORDS: Option<Vec<HYPT>>,
+}
+impl Default for HYPCOLLECTIONT {
+  fn default() -> Self {
+    Self {
+      RECORDS: None,
+    }
+  }
+}
+impl HYPCOLLECTIONT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<HYPCOLLECTION<'b>> {
+    let RECORDS = self.RECORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    HYPCOLLECTION::create(_fbb, &HYPCOLLECTIONArgs{
+      RECORDS,
+    })
+  }
+}
 #[inline]
 /// Verifies that a buffer of bytes contains a `HYP`
 /// and returns it.

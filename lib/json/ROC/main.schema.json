@@ -96,6 +96,16 @@
               }
       },
       "additionalProperties" : false
+    },
+    "ROCCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of Rocket Configurations",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ROC"}
+              }
+      },
+      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/ROC"

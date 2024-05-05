@@ -34,6 +34,16 @@
               }
       },
       "additionalProperties" : false
+    },
+    "SCMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Declaring the root type",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCM"}
+              }
+      },
+      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/SCM"

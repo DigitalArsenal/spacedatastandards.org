@@ -28,6 +28,9 @@ struct ephemerisDataBlockBuilder;
 struct OEM;
 struct OEMBuilder;
 
+struct OEMCOLLECTION;
+struct OEMCOLLECTIONBuilder;
+
 /// A single ephemeris data line
 struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ephemerisDataLineBuilder Builder;
@@ -892,6 +895,59 @@ inline ::flatbuffers::Offset<OEM> CreateOEMDirect(
       CREATION_DATE__,
       ORIGINATOR__,
       EPHEMERIS_DATA_BLOCK__);
+}
+
+/// Collection of OEM messages
+struct OEMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OEMCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<OEM>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OEM>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct OEMCOLLECTIONBuilder {
+  typedef OEMCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OEM>>> RECORDS) {
+    fbb_.AddOffset(OEMCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit OEMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OEMCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OEMCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OEMCOLLECTION> CreateOEMCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OEM>>> RECORDS = 0) {
+  OEMCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<OEMCOLLECTION> CreateOEMCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<OEM>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<OEM>>(*RECORDS) : 0;
+  return CreateOEMCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const OEM *GetOEM(const void *buf) {

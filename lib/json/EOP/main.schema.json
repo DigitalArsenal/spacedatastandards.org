@@ -51,6 +51,15 @@
               }
       },
       "additionalProperties" : false
+    },
+    "EOPCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOP"}
+              }
+      },
+      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/EOP"

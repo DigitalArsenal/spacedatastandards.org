@@ -213,6 +213,15 @@
       },
       "additionalProperties" : false
     },
+    "IDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -237,6 +246,15 @@
               },
         "INSTRUMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLDCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
               }
       },
       "additionalProperties" : false
@@ -340,6 +358,15 @@
       },
       "additionalProperties" : false
     },
+    "CATCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "CSM" : {
       "type" : "object",
       "description" : "Conjunction Summary Message",
@@ -379,6 +406,15 @@
         "DILUTION" : {
                 "type" : "number",
                 "description" : "Standard deviation that produces the maximum probability"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CSMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CSM"}
               }
       },
       "additionalProperties" : false

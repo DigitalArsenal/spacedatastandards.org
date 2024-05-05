@@ -26,5 +26,9 @@ table CTR {
 }
 
 
+table CTRCOLLECTION {
+  RECORDS: [CTR];
+}
+
 root_type CTR;
 file_identifier "$CTR";

@@ -3,6 +3,8 @@ import flatbuffers
 
 class EME
 
+class EMECOLLECTION
+
 /// Encrypted Message Envelope
 class EME : flatbuffers_handle
     /// Encrypted data blob, containing the ciphertext of the original plaintext message.
@@ -83,5 +85,31 @@ def EMEStartENCRYPTED_BLOBVector(b_:flatbuffers_builder, n_:int):
 def EMECreateENCRYPTED_BLOBVector(b_:flatbuffers_builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+class EMECOLLECTION : flatbuffers_handle
+    def RECORDS(i:int) -> EME:
+        return EME { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+    def RECORDS_length() -> int:
+        return buf_.flatbuffers_field_vector_len(pos_, 4)
+
+def GetRootAsEMECOLLECTION(buf:string): return EMECOLLECTION { buf, buf.flatbuffers_indirect(0) }
+
+struct EMECOLLECTIONBuilder:
+    b_:flatbuffers_builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_RECORDS(RECORDS:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def EMECOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def EMECOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 

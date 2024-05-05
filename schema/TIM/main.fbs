@@ -28,5 +28,9 @@ enum timeSystem : byte {
 table TIM {
   TIME_SYSTEM: timeSystem;
 }
+table TIMCOLLECTION {
+  RECORDS: [TIM];
+}
+
 root_type TIM;
 file_identifier "$TIM";

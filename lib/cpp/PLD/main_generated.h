@@ -18,6 +18,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct PLD;
 struct PLDBuilder;
 
+struct PLDCOLLECTION;
+struct PLDCOLLECTIONBuilder;
+
 /// Payload Information
 struct PLD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PLDBuilder Builder;
@@ -149,6 +152,58 @@ inline ::flatbuffers::Offset<PLD> CreatePLDDirect(
       SOLAR_ARRAY_DIMENSIONS__,
       NOMINAL_OPERATIONAL_LIFETIME__,
       INSTRUMENTS__);
+}
+
+struct PLDCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLDCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLD>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLD>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLDCOLLECTIONBuilder {
+  typedef PLDCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> RECORDS) {
+    fbb_.AddOffset(PLDCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit PLDCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLDCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLDCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLDCOLLECTION> CreatePLDCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> RECORDS = 0) {
+  PLDCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PLDCOLLECTION> CreatePLDCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<PLD>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PLD>>(*RECORDS) : 0;
+  return CreatePLDCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const PLD *GetPLD(const void *buf) {

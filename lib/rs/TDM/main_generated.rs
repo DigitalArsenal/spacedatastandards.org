@@ -1684,6 +1684,136 @@ impl TDMT {
     })
   }
 }
+pub enum TDMCOLLECTIONOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct TDMCOLLECTION<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for TDMCOLLECTION<'a> {
+  type Inner = TDMCOLLECTION<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> TDMCOLLECTION<'a> {
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    TDMCOLLECTION { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args TDMCOLLECTIONArgs<'args>
+  ) -> flatbuffers::WIPOffset<TDMCOLLECTION<'bldr>> {
+    let mut builder = TDMCOLLECTIONBuilder::new(_fbb);
+    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TDMCOLLECTIONT {
+    let RECORDS = self.RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    TDMCOLLECTIONT {
+      RECORDS,
+    }
+  }
+
+  #[inline]
+  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<TDM<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<TDM>>>>(TDMCOLLECTION::VT_RECORDS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for TDMCOLLECTION<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<TDM>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TDMCOLLECTIONArgs<'a> {
+    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<TDM<'a>>>>>,
+}
+impl<'a> Default for TDMCOLLECTIONArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TDMCOLLECTIONArgs {
+      RECORDS: None,
+    }
+  }
+}
+
+pub struct TDMCOLLECTIONBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> TDMCOLLECTIONBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<TDM<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDMCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TDMCOLLECTIONBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    TDMCOLLECTIONBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<TDMCOLLECTION<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for TDMCOLLECTION<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("TDMCOLLECTION");
+      ds.field("RECORDS", &self.RECORDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TDMCOLLECTIONT {
+  pub RECORDS: Option<Vec<TDMT>>,
+}
+impl Default for TDMCOLLECTIONT {
+  fn default() -> Self {
+    Self {
+      RECORDS: None,
+    }
+  }
+}
+impl TDMCOLLECTIONT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<TDMCOLLECTION<'b>> {
+    let RECORDS = self.RECORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    TDMCOLLECTION::create(_fbb, &TDMCOLLECTIONArgs{
+      RECORDS,
+    })
+  }
+}
 #[inline]
 /// Verifies that a buffer of bytes contains a `TDM`
 /// and returns it.

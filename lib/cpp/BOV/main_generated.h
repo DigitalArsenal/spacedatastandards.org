@@ -16,6 +16,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct BOV;
 struct BOVBuilder;
 
+struct BOVCOLLECTION;
+struct BOVCOLLECTIONBuilder;
+
 /// Burn Out Vector Message
 struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef BOVBuilder Builder;
@@ -150,6 +153,58 @@ inline ::flatbuffers::Offset<BOV> CreateBOVDirect(
       G_DOT,
       EPOCH_TIME__,
       TIME_FROM_LAUNCH);
+}
+
+struct BOVCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef BOVCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<BOV>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<BOV>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct BOVCOLLECTIONBuilder {
+  typedef BOVCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<BOV>>> RECORDS) {
+    fbb_.AddOffset(BOVCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit BOVCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<BOVCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<BOVCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<BOVCOLLECTION> CreateBOVCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<BOV>>> RECORDS = 0) {
+  BOVCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<BOVCOLLECTION> CreateBOVCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<BOV>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<BOV>>(*RECORDS) : 0;
+  return CreateBOVCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const BOV *GetBOV(const void *buf) {

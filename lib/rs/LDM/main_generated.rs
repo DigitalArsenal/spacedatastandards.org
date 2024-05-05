@@ -872,6 +872,136 @@ impl LDMT {
     })
   }
 }
+pub enum LDMCOLLECTIONOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct LDMCOLLECTION<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for LDMCOLLECTION<'a> {
+  type Inner = LDMCOLLECTION<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> LDMCOLLECTION<'a> {
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    LDMCOLLECTION { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args LDMCOLLECTIONArgs<'args>
+  ) -> flatbuffers::WIPOffset<LDMCOLLECTION<'bldr>> {
+    let mut builder = LDMCOLLECTIONBuilder::new(_fbb);
+    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> LDMCOLLECTIONT {
+    let RECORDS = self.RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    LDMCOLLECTIONT {
+      RECORDS,
+    }
+  }
+
+  #[inline]
+  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<LDM<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<LDM>>>>(LDMCOLLECTION::VT_RECORDS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for LDMCOLLECTION<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<LDM>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct LDMCOLLECTIONArgs<'a> {
+    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<LDM<'a>>>>>,
+}
+impl<'a> Default for LDMCOLLECTIONArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    LDMCOLLECTIONArgs {
+      RECORDS: None,
+    }
+  }
+}
+
+pub struct LDMCOLLECTIONBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> LDMCOLLECTIONBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<LDM<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDMCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LDMCOLLECTIONBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    LDMCOLLECTIONBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<LDMCOLLECTION<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for LDMCOLLECTION<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("LDMCOLLECTION");
+      ds.field("RECORDS", &self.RECORDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct LDMCOLLECTIONT {
+  pub RECORDS: Option<Vec<LDMT>>,
+}
+impl Default for LDMCOLLECTIONT {
+  fn default() -> Self {
+    Self {
+      RECORDS: None,
+    }
+  }
+}
+impl LDMCOLLECTIONT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<LDMCOLLECTION<'b>> {
+    let RECORDS = self.RECORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    LDMCOLLECTION::create(_fbb, &LDMCOLLECTIONArgs{
+      RECORDS,
+    })
+  }
+}
 #[inline]
 /// Verifies that a buffer of bytes contains a `LDM`
 /// and returns it.

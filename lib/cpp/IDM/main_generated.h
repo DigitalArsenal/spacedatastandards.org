@@ -25,6 +25,9 @@ struct BandBuilder;
 struct IDM;
 struct IDMBuilder;
 
+struct IDMCOLLECTION;
+struct IDMCOLLECTIONBuilder;
+
 /// Different types of polarization in EMT
 enum PolarizationType : int8_t {
   PolarizationType_linear = 0,
@@ -967,6 +970,58 @@ inline ::flatbuffers::Offset<IDM> CreateIDMDirect(
       LEFT_GEO_BELT_LIMIT,
       MAGNITUDE_LIMIT,
       TASKABLE);
+}
+
+struct IDMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef IDMCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<IDM>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<IDM>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct IDMCOLLECTIONBuilder {
+  typedef IDMCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<IDM>>> RECORDS) {
+    fbb_.AddOffset(IDMCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit IDMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<IDMCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<IDMCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<IDMCOLLECTION> CreateIDMCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<IDM>>> RECORDS = 0) {
+  IDMCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<IDMCOLLECTION> CreateIDMCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<IDM>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<IDM>>(*RECORDS) : 0;
+  return CreateIDMCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const IDM *GetIDM(const void *buf) {

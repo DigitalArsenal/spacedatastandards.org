@@ -15,6 +15,15 @@
       },
       "additionalProperties" : false
     },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "EOO" : {
       "type" : "object",
       "description" : "Electro-Optical Observation",
@@ -358,6 +367,15 @@
         "TYPE" : {
                 "type" : "string",
                 "description" : "Type of the observation"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EOOCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOO"}
               }
       },
       "additionalProperties" : false

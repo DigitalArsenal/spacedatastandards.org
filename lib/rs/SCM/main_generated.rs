@@ -357,6 +357,137 @@ impl SCMT {
     })
   }
 }
+pub enum SCMCOLLECTIONOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Declaring the root type
+pub struct SCMCOLLECTION<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for SCMCOLLECTION<'a> {
+  type Inner = SCMCOLLECTION<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> SCMCOLLECTION<'a> {
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    SCMCOLLECTION { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+    args: &'args SCMCOLLECTIONArgs<'args>
+  ) -> flatbuffers::WIPOffset<SCMCOLLECTION<'bldr>> {
+    let mut builder = SCMCOLLECTIONBuilder::new(_fbb);
+    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCMCOLLECTIONT {
+    let RECORDS = self.RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    SCMCOLLECTIONT {
+      RECORDS,
+    }
+  }
+
+  #[inline]
+  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SCM<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SCM>>>>(SCMCOLLECTION::VT_RECORDS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for SCMCOLLECTION<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<SCM>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCMCOLLECTIONArgs<'a> {
+    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<SCM<'a>>>>>,
+}
+impl<'a> Default for SCMCOLLECTIONArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SCMCOLLECTIONArgs {
+      RECORDS: None,
+    }
+  }
+}
+
+pub struct SCMCOLLECTIONBuilder<'a: 'b, 'b> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b> SCMCOLLECTIONBuilder<'a, 'b> {
+  #[inline]
+  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<SCM<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SCMCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SCMCOLLECTIONBuilder<'a, 'b> {
+    let start = _fbb.start_table();
+    SCMCOLLECTIONBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<SCMCOLLECTION<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for SCMCOLLECTION<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("SCMCOLLECTION");
+      ds.field("RECORDS", &self.RECORDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCMCOLLECTIONT {
+  pub RECORDS: Option<Vec<SCMT>>,
+}
+impl Default for SCMCOLLECTIONT {
+  fn default() -> Self {
+    Self {
+      RECORDS: None,
+    }
+  }
+}
+impl SCMCOLLECTIONT {
+  pub fn pack<'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+  ) -> flatbuffers::WIPOffset<SCMCOLLECTION<'b>> {
+    let RECORDS = self.RECORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    SCMCOLLECTION::create(_fbb, &SCMCOLLECTIONArgs{
+      RECORDS,
+    })
+  }
+}
 #[inline]
 /// Verifies that a buffer of bytes contains a `SCM`
 /// and returns it.

@@ -27,6 +27,15 @@
       },
       "additionalProperties" : false
     },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "TIM" : {
       "type" : "object",
       "properties" : {
@@ -36,11 +45,29 @@
       },
       "additionalProperties" : false
     },
+    "TIMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "MET" : {
       "type" : "object",
       "properties" : {
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "METCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
               }
       },
       "additionalProperties" : false
@@ -288,6 +315,15 @@
         "USER_DEFINED_MICROSECONDS" : {
                 "type" : "number",
                 "description" : "User defined parameter, must be described in an ICD"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMM"}
               }
       },
       "additionalProperties" : false

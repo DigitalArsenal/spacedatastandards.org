@@ -94,6 +94,15 @@
       },
       "additionalProperties" : false
     },
+    "METCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "MPE" : {
       "type" : "object",
       "description" : "Minimum Propagatable Element Set",
@@ -141,6 +150,15 @@
       },
       "additionalProperties" : false
     },
+    "MPECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MPE"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "RFM" : {
       "type" : "object",
       "description" : "Reference Frame Message",
@@ -151,11 +169,29 @@
       },
       "additionalProperties" : false
     },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "TIM" : {
       "type" : "object",
       "properties" : {
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
               }
       },
       "additionalProperties" : false
@@ -407,6 +443,15 @@
       },
       "additionalProperties" : false
     },
+    "OMMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "FrequencyRange" : {
       "type" : "object",
       "description" : "Frequency range with lower and upper limits",
@@ -583,6 +628,15 @@
       },
       "additionalProperties" : false
     },
+    "IDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -607,6 +661,15 @@
               },
         "INSTRUMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLDCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
               }
       },
       "additionalProperties" : false
@@ -710,6 +773,15 @@
       },
       "additionalProperties" : false
     },
+    "CATCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "CSM" : {
       "type" : "object",
       "description" : "Conjunction Summary Message",
@@ -753,6 +825,15 @@
       },
       "additionalProperties" : false
     },
+    "CSMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CSM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "OSM" : {
       "type" : "object",
       "description" : "Observation Stability Message",
@@ -780,6 +861,15 @@
         "PASS_DURATION" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
                 "description" : "Duration of the observation pass in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OSMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OSM"}
               }
       },
       "additionalProperties" : false
@@ -1103,6 +1193,15 @@
       },
       "additionalProperties" : false
     },
+    "CRMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CRM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCHEMA_STANDARD" : {
       "type" : "object",
       "description" : "Schema Standard Definition",
@@ -1133,6 +1232,16 @@
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SCHEMA_STANDARD"},
                 "description" : "Standards Dictionary"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Declaring the root type",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCM"}
               }
       },
       "additionalProperties" : false
@@ -1380,6 +1489,15 @@
       },
       "additionalProperties" : false
     },
+    "TDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "ROC" : {
       "type" : "object",
       "description" : "Rocket Configuration",
@@ -1472,6 +1590,16 @@
       },
       "additionalProperties" : false
     },
+    "ROCCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of Rocket Configurations",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ROC"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "BOV" : {
       "type" : "object",
       "description" : "Burn Out Vector Message",
@@ -1499,6 +1627,15 @@
               },
         "TIME_FROM_LAUNCH" : {
                 "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BOVCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BOV"}
               }
       },
       "additionalProperties" : false
@@ -1546,6 +1683,15 @@
         "DATA_TYPE" : {
                 "$ref" : "#/definitions/DataType",
                 "description" : "Data type (O = Observed, P = Predicted)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EOPCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOP"}
               }
       },
       "additionalProperties" : false
@@ -1897,6 +2043,15 @@
       },
       "additionalProperties" : false
     },
+    "EOOCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOO"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "EME" : {
       "type" : "object",
       "description" : "Encrypted Message Envelope",
@@ -1940,6 +2095,15 @@
         "ENCRYPTION_ALGORITHM_PARAMETERS" : {
                 "type" : "string",
                 "description" : "Parameters defining specific settings for the encryption algorithm, such as block size or operation mode."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EMECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EME"}
               }
       },
       "additionalProperties" : false
@@ -2058,6 +2222,15 @@
         "INTEGRATED_DEVICES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
                 "description" : "Vector of Integrated Devices (IDM)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SITCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SIT"}
               }
       },
       "additionalProperties" : false
@@ -2195,6 +2368,15 @@
       },
       "additionalProperties" : false
     },
+    "EPMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EPM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "LDM" : {
       "type" : "object",
       "description" : "Launch Data Message",
@@ -2310,6 +2492,15 @@
       },
       "additionalProperties" : false
     },
+    "LDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PNM" : {
       "type" : "object",
       "description" : "Publish Notification Message",
@@ -2349,6 +2540,15 @@
         "TIMESTAMP_SIGNATURE_TYPE" : {
                 "type" : "string",
                 "description" : "Type of Cryptographic Signature Used for Timestamp\nSpecifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PNMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PNM"}
               }
       },
       "additionalProperties" : false
@@ -2420,6 +2620,15 @@
       },
       "additionalProperties" : false
     },
+    "HYPCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/HYP"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "CTR" : {
       "type" : "object",
       "description" : "Country Identity Message",
@@ -2455,6 +2664,15 @@
         "COMMENT" : {
                 "type" : "string",
                 "description" : "Additional comments"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CTRCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CTR"}
               }
       },
       "additionalProperties" : false
@@ -2911,6 +3129,15 @@
       },
       "additionalProperties" : false
     },
+    "CDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "ephemerisDataLine" : {
       "type" : "object",
       "description" : "A single ephemeris data line",
@@ -3147,6 +3374,16 @@
       },
       "additionalProperties" : false
     },
+    "OEMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of OEM messages",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OEM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PRG" : {
       "type" : "object",
       "description" : "Program Description Message",
@@ -3178,6 +3415,15 @@
               },
         "MESSAGE_TYPES" : {
                 "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PRGCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PRG"}
               }
       },
       "additionalProperties" : false

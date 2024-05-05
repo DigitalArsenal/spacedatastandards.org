@@ -29,6 +29,8 @@ enum timeSystem:
 
 class TIM
 
+class TIMCOLLECTION
+
 class TIM : flatbuffers_handle
     def TIME_SYSTEM() -> timeSystem:
         return timeSystem(buf_.flatbuffers_field_int8(pos_, 4, 0))
@@ -45,4 +47,30 @@ struct TIMBuilder:
         return this
     def end():
         return b_.EndObject()
+
+class TIMCOLLECTION : flatbuffers_handle
+    def RECORDS(i:int) -> TIM:
+        return TIM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+    def RECORDS_length() -> int:
+        return buf_.flatbuffers_field_vector_len(pos_, 4)
+
+def GetRootAsTIMCOLLECTION(buf:string): return TIMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+
+struct TIMCOLLECTIONBuilder:
+    b_:flatbuffers_builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_RECORDS(RECORDS:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def TIMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def TIMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 

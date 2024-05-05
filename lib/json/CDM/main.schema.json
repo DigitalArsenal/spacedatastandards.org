@@ -96,6 +96,15 @@
       },
       "additionalProperties" : false
     },
+    "PNMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PNM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "FrequencyRange" : {
       "type" : "object",
       "description" : "Frequency range with lower and upper limits",
@@ -272,6 +281,15 @@
       },
       "additionalProperties" : false
     },
+    "IDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -296,6 +314,15 @@
               },
         "INSTRUMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLDCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
               }
       },
       "additionalProperties" : false
@@ -395,6 +422,15 @@
         "PAYLOADS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PLD"},
                 "description" : "Vector of PAYLOADS"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CATCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
               }
       },
       "additionalProperties" : false
@@ -532,12 +568,30 @@
       },
       "additionalProperties" : false
     },
+    "EPMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EPM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "RFM" : {
       "type" : "object",
       "description" : "Reference Frame Message",
       "properties" : {
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/refFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
               }
       },
       "additionalProperties" : false
@@ -990,6 +1044,15 @@
         "OBJECT2_DATASOURCE" : {
                 "$ref" : "#/definitions/PNM",
                 "description" : "Data Source for the positional information for Object 2"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CDM"}
               }
       },
       "additionalProperties" : false

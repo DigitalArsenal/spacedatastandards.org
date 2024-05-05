@@ -82,5 +82,9 @@ table SIT {
   INTEGRATED_DEVICES: [IDM];
 }
 
+table SITCOLLECTION {
+  RECORDS: [SIT];
+}
+
 root_type SIT;
 file_identifier "$SIT";

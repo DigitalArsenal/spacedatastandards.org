@@ -1,11 +1,15 @@
 export { Band, BandT } from './Band.js';
 export { CAT, CATT } from './CAT.js';
+export { CATCOLLECTION, CATCOLLECTIONT } from './CATCOLLECTION.js';
 export { CSM, CSMT } from './CSM.js';
+export { CSMCOLLECTION, CSMCOLLECTIONT } from './CSMCOLLECTION.js';
 export { DataMode } from './DataMode.js';
 export { DeviceType } from './DeviceType.js';
 export { FrequencyRange, FrequencyRangeT } from './FrequencyRange.js';
 export { IDM, IDMT } from './IDM.js';
+export { IDMCOLLECTION, IDMCOLLECTIONT } from './IDMCOLLECTION.js';
 export { PLD, PLDT } from './PLD.js';
+export { PLDCOLLECTION, PLDCOLLECTIONT } from './PLDCOLLECTION.js';
 export { PolarizationType } from './PolarizationType.js';
 export { SimplePolarization } from './SimplePolarization.js';
 export { StokesParameters, StokesParametersT } from './StokesParameters.js';

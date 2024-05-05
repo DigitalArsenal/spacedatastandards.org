@@ -18,6 +18,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct EOO;
 struct EOOBuilder;
 
+struct EOOCOLLECTION;
+struct EOOCOLLECTIONBuilder;
+
 /// Electro-Optical Observation
 struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EOOBuilder Builder;
@@ -1205,6 +1208,58 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       ORIG_NETWORK__,
       SOURCE_DL__,
       TYPE__);
+}
+
+struct EOOCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef EOOCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<EOO>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EOO>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct EOOCOLLECTIONBuilder {
+  typedef EOOCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOO>>> RECORDS) {
+    fbb_.AddOffset(EOOCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit EOOCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<EOOCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<EOOCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<EOOCOLLECTION> CreateEOOCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOO>>> RECORDS = 0) {
+  EOOCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<EOOCOLLECTION> CreateEOOCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<EOO>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<EOO>>(*RECORDS) : 0;
+  return CreateEOOCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const EOO *GetEOO(const void *buf) {

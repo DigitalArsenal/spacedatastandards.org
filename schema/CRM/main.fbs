@@ -235,5 +235,9 @@ table CRM {
   DATA_MODE: string;
 }
 
+table CRMCOLLECTION {
+  RECORDS: [CRM];
+}
+
 root_type CRM;
 file_identifier "$CRM";

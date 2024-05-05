@@ -35,6 +35,15 @@
               }
       },
       "additionalProperties" : false
+    },
+    "PRGCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PRG"}
+              }
+      },
+      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/PRG"

@@ -19,11 +19,29 @@
       },
       "additionalProperties" : false
     },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "TIM" : {
       "type" : "object",
       "properties" : {
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
               }
       },
       "additionalProperties" : false
@@ -260,6 +278,16 @@
         "EPHEMERIS_DATA_BLOCK" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
                 "description" : "Array of ephemeris data blocks"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OEMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of OEM messages",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OEM"}
               }
       },
       "additionalProperties" : false

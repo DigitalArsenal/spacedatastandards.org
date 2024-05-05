@@ -213,6 +213,15 @@
       },
       "additionalProperties" : false
     },
+    "IDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -237,6 +246,15 @@
               },
         "INSTRUMENTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLDCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
               }
       },
       "additionalProperties" : false
@@ -336,6 +354,15 @@
         "PAYLOADS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PLD"},
                 "description" : "Vector of PAYLOADS"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CATCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
               }
       },
       "additionalProperties" : false

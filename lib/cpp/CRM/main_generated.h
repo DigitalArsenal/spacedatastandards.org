@@ -16,6 +16,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct CRM;
 struct CRMBuilder;
 
+struct CRMCOLLECTION;
+struct CRMCOLLECTIONBuilder;
+
 /// Collection Request Message
 struct CRM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CRMBuilder Builder;
@@ -1128,6 +1131,58 @@ inline ::flatbuffers::Offset<CRM> CreateCRMDirect(
       SOURCE__,
       ORIGIN__,
       DATA_MODE__);
+}
+
+struct CRMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CRMCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CRM>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CRM>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CRMCOLLECTIONBuilder {
+  typedef CRMCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CRM>>> RECORDS) {
+    fbb_.AddOffset(CRMCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit CRMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CRMCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CRMCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CRMCOLLECTION> CreateCRMCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CRM>>> RECORDS = 0) {
+  CRMCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CRMCOLLECTION> CreateCRMCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<CRM>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<CRM>>(*RECORDS) : 0;
+  return CreateCRMCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const CRM *GetCRM(const void *buf) {

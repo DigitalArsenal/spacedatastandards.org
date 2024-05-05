@@ -5,6 +5,8 @@ class PRG
 
 class USR
 
+class PRGCOLLECTION
+
 /// Program Description Message
 class PRG : flatbuffers_handle
     /// The name of the program
@@ -87,6 +89,32 @@ struct USRBuilder:
 def USRStartMESSAGE_TYPESVector(b_:flatbuffers_builder, n_:int):
     b_.StartVector(4, n_, 4)
 def USRCreateMESSAGE_TYPESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+class PRGCOLLECTION : flatbuffers_handle
+    def RECORDS(i:int) -> PRG:
+        return PRG { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+    def RECORDS_length() -> int:
+        return buf_.flatbuffers_field_vector_len(pos_, 4)
+
+def GetRootAsPRGCOLLECTION(buf:string): return PRGCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+
+struct PRGCOLLECTIONBuilder:
+    b_:flatbuffers_builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_RECORDS(RECORDS:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def PRGCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PRGCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -47,6 +47,15 @@
               }
       },
       "additionalProperties" : false
+    },
+    "EMECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EME"}
+              }
+      },
+      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/EME"

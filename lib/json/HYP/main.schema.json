@@ -71,6 +71,15 @@
               }
       },
       "additionalProperties" : false
+    },
+    "HYPCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/HYP"}
+              }
+      },
+      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/HYP"

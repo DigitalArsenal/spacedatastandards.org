@@ -172,3 +172,76 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class MPECOLLECTION {
+  MPECOLLECTION._(this._bc, this._bcOffset);
+  factory MPECOLLECTION(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<MPECOLLECTION> reader = _MPECOLLECTIONReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<MPE>? get RECORDS => const fb.ListReader<MPE>(MPE.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'MPECOLLECTION{RECORDS: ${RECORDS}}';
+  }
+}
+
+class _MPECOLLECTIONReader extends fb.TableReader<MPECOLLECTION> {
+  const _MPECOLLECTIONReader();
+
+  @override
+  MPECOLLECTION createObject(fb.BufferContext bc, int offset) => 
+    MPECOLLECTION._(bc, offset);
+}
+
+class MPECOLLECTIONBuilder {
+  MPECOLLECTIONBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addRecordsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class MPECOLLECTIONObjectBuilder extends fb.ObjectBuilder {
+  final List<MPEObjectBuilder>? _RECORDS;
+
+  MPECOLLECTIONObjectBuilder({
+    List<MPEObjectBuilder>? RECORDS,
+  })
+      : _RECORDS = RECORDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? RECORDSOffset = _RECORDS == null ? null
+        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, RECORDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

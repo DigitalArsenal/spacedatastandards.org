@@ -3,6 +3,8 @@ import flatbuffers
 
 class MPE
 
+class MPECOLLECTION
+
 /// Minimum Propagatable Element Set
 class MPE : flatbuffers_handle
     /// Unique ID as a String
@@ -75,4 +77,30 @@ struct MPEBuilder:
         return this
     def end():
         return b_.EndObject()
+
+class MPECOLLECTION : flatbuffers_handle
+    def RECORDS(i:int) -> MPE:
+        return MPE { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+    def RECORDS_length() -> int:
+        return buf_.flatbuffers_field_vector_len(pos_, 4)
+
+def GetRootAsMPECOLLECTION(buf:string): return MPECOLLECTION { buf, buf.flatbuffers_indirect(0) }
+
+struct MPECOLLECTIONBuilder:
+    b_:flatbuffers_builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_RECORDS(RECORDS:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def MPECOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def MPECOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 

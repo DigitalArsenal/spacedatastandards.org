@@ -18,6 +18,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct MPE;
 struct MPEBuilder;
 
+struct MPECOLLECTION;
+struct MPECOLLECTIONBuilder;
+
 /// Minimum Propagatable Element Set
 struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MPEBuilder Builder;
@@ -186,6 +189,58 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
       MEAN_ANOMALY,
       BSTAR,
       MEAN_ELEMENT_THEORY);
+}
+
+struct MPECOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef MPECOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<MPE>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MPE>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct MPECOLLECTIONBuilder {
+  typedef MPECOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MPE>>> RECORDS) {
+    fbb_.AddOffset(MPECOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit MPECOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<MPECOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<MPECOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<MPECOLLECTION> CreateMPECOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MPE>>> RECORDS = 0) {
+  MPECOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<MPECOLLECTION> CreateMPECOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<MPE>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<MPE>>(*RECORDS) : 0;
+  return CreateMPECOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const MPE *GetMPE(const void *buf) {

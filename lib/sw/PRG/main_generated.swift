@@ -116,3 +116,42 @@ public struct USR: FlatBufferObject, Verifiable {
   }
 }
 
+public struct PRGCOLLECTION: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRG" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRGCOLLECTION.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case RECORDS = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
+  public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func RECORDS(at index: Int32) -> PRG? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : PRG(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public static func startPRGCOLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
+  public static func endPRGCOLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRGCOLLECTION(
+    _ fbb: inout FlatBufferBuilder,
+    RECORDSVectorOffset RECORDS: Offset = Offset()
+  ) -> Offset {
+    let __start = PRGCOLLECTION.startPRGCOLLECTION(&fbb)
+    PRGCOLLECTION.addVectorOf(RECORDS: RECORDS, &fbb)
+    return PRGCOLLECTION.endPRGCOLLECTION(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PRG>, PRG>>.self)
+    _v.finish()
+  }
+}
+

@@ -42,5 +42,9 @@ table PNM {
   TIMESTAMP_SIGNATURE_TYPE: string;
 }
 
+table PNMCOLLECTION {
+  RECORDS: [PNM];
+}
+
 root_type PNM;
 file_identifier "$PNM";

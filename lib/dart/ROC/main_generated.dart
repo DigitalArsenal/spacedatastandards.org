@@ -488,3 +488,77 @@ class ENGINEObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Collection of Rocket Configurations
+class ROCCOLLECTION {
+  ROCCOLLECTION._(this._bc, this._bcOffset);
+  factory ROCCOLLECTION(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ROCCOLLECTION> reader = _ROCCOLLECTIONReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<ROC>? get RECORDS => const fb.ListReader<ROC>(ROC.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'ROCCOLLECTION{RECORDS: ${RECORDS}}';
+  }
+}
+
+class _ROCCOLLECTIONReader extends fb.TableReader<ROCCOLLECTION> {
+  const _ROCCOLLECTIONReader();
+
+  @override
+  ROCCOLLECTION createObject(fb.BufferContext bc, int offset) => 
+    ROCCOLLECTION._(bc, offset);
+}
+
+class ROCCOLLECTIONBuilder {
+  ROCCOLLECTIONBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addRecordsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ROCCOLLECTIONObjectBuilder extends fb.ObjectBuilder {
+  final List<ROCObjectBuilder>? _RECORDS;
+
+  ROCCOLLECTIONObjectBuilder({
+    List<ROCObjectBuilder>? RECORDS,
+  })
+      : _RECORDS = RECORDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? RECORDSOffset = _RECORDS == null ? null
+        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, RECORDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

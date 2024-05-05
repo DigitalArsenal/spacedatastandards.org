@@ -191,3 +191,77 @@ class SCMObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Declaring the root type
+class SCMCOLLECTION {
+  SCMCOLLECTION._(this._bc, this._bcOffset);
+  factory SCMCOLLECTION(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCMCOLLECTION> reader = _SCMCOLLECTIONReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<SCM>? get RECORDS => const fb.ListReader<SCM>(SCM.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'SCMCOLLECTION{RECORDS: ${RECORDS}}';
+  }
+}
+
+class _SCMCOLLECTIONReader extends fb.TableReader<SCMCOLLECTION> {
+  const _SCMCOLLECTIONReader();
+
+  @override
+  SCMCOLLECTION createObject(fb.BufferContext bc, int offset) => 
+    SCMCOLLECTION._(bc, offset);
+}
+
+class SCMCOLLECTIONBuilder {
+  SCMCOLLECTIONBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addRecordsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCMCOLLECTIONObjectBuilder extends fb.ObjectBuilder {
+  final List<SCMObjectBuilder>? _RECORDS;
+
+  SCMCOLLECTIONObjectBuilder({
+    List<SCMObjectBuilder>? RECORDS,
+  })
+      : _RECORDS = RECORDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? RECORDSOffset = _RECORDS == null ? null
+        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, RECORDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

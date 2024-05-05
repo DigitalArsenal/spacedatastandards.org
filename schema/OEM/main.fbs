@@ -135,5 +135,9 @@ table OEM {
 
 /// Collection of OEM messages
 
+table OEMCOLLECTION {
+  RECORDS: [OEM];
+}
+
 root_type OEM;
 file_identifier "$OEM";

@@ -16,6 +16,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
 struct MET;
 struct METBuilder;
 
+struct METCOLLECTION;
+struct METCOLLECTIONBuilder;
+
 enum meanElementTheory : int8_t {
   /// Simplified General Perturbation Model 4
   meanElementTheory_SGP4 = 0,
@@ -95,6 +98,58 @@ inline ::flatbuffers::Offset<MET> CreateMET(
   METBuilder builder_(_fbb);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   return builder_.Finish();
+}
+
+struct METCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef METCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<MET>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MET>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct METCOLLECTIONBuilder {
+  typedef METCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MET>>> RECORDS) {
+    fbb_.AddOffset(METCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit METCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<METCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<METCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<METCOLLECTION> CreateMETCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MET>>> RECORDS = 0) {
+  METCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<METCOLLECTION> CreateMETCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<MET>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<MET>>(*RECORDS) : 0;
+  return CreateMETCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const MET *GetMET(const void *buf) {

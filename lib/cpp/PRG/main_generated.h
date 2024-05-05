@@ -19,6 +19,9 @@ struct PRGBuilder;
 struct USR;
 struct USRBuilder;
 
+struct PRGCOLLECTION;
+struct PRGCOLLECTIONBuilder;
+
 /// Program Description Message
 struct PRG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PRGBuilder Builder;
@@ -183,6 +186,58 @@ inline ::flatbuffers::Offset<USR> CreateUSRDirect(
       _fbb,
       ID__,
       MESSAGE_TYPES__);
+}
+
+struct PRGCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PRGCOLLECTIONBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RECORDS = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PRG>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PRG>> *>(VT_RECORDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PRGCOLLECTIONBuilder {
+  typedef PRGCOLLECTION Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PRG>>> RECORDS) {
+    fbb_.AddOffset(PRGCOLLECTION::VT_RECORDS, RECORDS);
+  }
+  explicit PRGCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PRGCOLLECTION> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PRGCOLLECTION>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PRGCOLLECTION> CreatePRGCOLLECTION(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PRG>>> RECORDS = 0) {
+  PRGCOLLECTIONBuilder builder_(_fbb);
+  builder_.add_RECORDS(RECORDS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PRGCOLLECTION> CreatePRGCOLLECTIONDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<PRG>> *RECORDS = nullptr) {
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PRG>>(*RECORDS) : 0;
+  return CreatePRGCOLLECTION(
+      _fbb,
+      RECORDS__);
 }
 
 inline const PRG *GetPRG(const void *buf) {
