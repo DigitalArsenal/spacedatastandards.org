@@ -20,3 +20,4 @@ export { massType } from './massType.js';
 export { objectType } from './objectType.js';
 export { opsStatusCode } from './opsStatusCode.js';
 export { orbitType } from './orbitType.js';
+export { ownerCode } from './ownerCode.js';

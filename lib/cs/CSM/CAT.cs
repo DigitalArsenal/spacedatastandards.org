@@ -41,13 +41,7 @@ public struct CAT : IFlatbufferObject
   /// Operational Status Code
   public opsStatusCode OPS_STATUS_CODE { get { int o = __p.__offset(12); return o != 0 ? (opsStatusCode)__p.bb.GetSbyte(o + __p.bb_pos) : opsStatusCode.UNKNOWN; } }
   /// Ownership, typically country or company
-  public string OWNER { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOWNERBytes() { return __p.__vector_as_span<byte>(14, 1); }
-#else
-  public ArraySegment<byte>? GetOWNERBytes() { return __p.__vector_as_arraysegment(14); }
-#endif
-  public byte[] GetOWNERArray() { return __p.__vector_as_array<byte>(14); }
+  public ownerCode OWNER { get { int o = __p.__offset(14); return o != 0 ? (ownerCode)__p.bb.GetSbyte(o + __p.bb_pos) : ownerCode.AB; } }
   /// Launch Date [year-month-day] (ISO 8601)
   public string LAUNCH_DATE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -120,7 +114,7 @@ public struct CAT : IFlatbufferObject
       uint NORAD_CAT_ID = 0,
       objectType OBJECT_TYPE = objectType.UNKNOWN,
       opsStatusCode OPS_STATUS_CODE = opsStatusCode.UNKNOWN,
-      StringOffset OWNEROffset = default(StringOffset),
+      ownerCode OWNER = ownerCode.AB,
       StringOffset LAUNCH_DATEOffset = default(StringOffset),
       StringOffset LAUNCH_SITEOffset = default(StringOffset),
       StringOffset DECAY_DATEOffset = default(StringOffset),
@@ -152,7 +146,6 @@ public struct CAT : IFlatbufferObject
     CAT.AddDECAY_DATE(builder, DECAY_DATEOffset);
     CAT.AddLAUNCH_SITE(builder, LAUNCH_SITEOffset);
     CAT.AddLAUNCH_DATE(builder, LAUNCH_DATEOffset);
-    CAT.AddOWNER(builder, OWNEROffset);
     CAT.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     CAT.AddOBJECT_ID(builder, OBJECT_IDOffset);
     CAT.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
@@ -160,6 +153,7 @@ public struct CAT : IFlatbufferObject
     CAT.AddMANEUVERABLE(builder, MANEUVERABLE);
     CAT.AddORBIT_TYPE(builder, ORBIT_TYPE);
     CAT.AddDATA_STATUS_CODE(builder, DATA_STATUS_CODE);
+    CAT.AddOWNER(builder, OWNER);
     CAT.AddOPS_STATUS_CODE(builder, OPS_STATUS_CODE);
     CAT.AddOBJECT_TYPE(builder, OBJECT_TYPE);
     return CAT.EndCAT(builder);
@@ -171,7 +165,7 @@ public struct CAT : IFlatbufferObject
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
   public static void AddOBJECT_TYPE(FlatBufferBuilder builder, objectType OBJECT_TYPE) { builder.AddSbyte(3, (sbyte)OBJECT_TYPE, 3); }
   public static void AddOPS_STATUS_CODE(FlatBufferBuilder builder, opsStatusCode OPS_STATUS_CODE) { builder.AddSbyte(4, (sbyte)OPS_STATUS_CODE, 7); }
-  public static void AddOWNER(FlatBufferBuilder builder, StringOffset OWNEROffset) { builder.AddOffset(5, OWNEROffset.Value, 0); }
+  public static void AddOWNER(FlatBufferBuilder builder, ownerCode OWNER) { builder.AddSbyte(5, (sbyte)OWNER, 0); }
   public static void AddLAUNCH_DATE(FlatBufferBuilder builder, StringOffset LAUNCH_DATEOffset) { builder.AddOffset(6, LAUNCH_DATEOffset.Value, 0); }
   public static void AddLAUNCH_SITE(FlatBufferBuilder builder, StringOffset LAUNCH_SITEOffset) { builder.AddOffset(7, LAUNCH_SITEOffset.Value, 0); }
   public static void AddDECAY_DATE(FlatBufferBuilder builder, StringOffset DECAY_DATEOffset) { builder.AddOffset(8, DECAY_DATEOffset.Value, 0); }
@@ -235,7 +229,6 @@ public struct CAT : IFlatbufferObject
     if (_o == null) return default(Offset<CAT>);
     var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
     var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
-    var _OWNER = _o.OWNER == null ? default(StringOffset) : builder.CreateString(_o.OWNER);
     var _LAUNCH_DATE = _o.LAUNCH_DATE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_DATE);
     var _LAUNCH_SITE = _o.LAUNCH_SITE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_SITE);
     var _DECAY_DATE = _o.DECAY_DATE == null ? default(StringOffset) : builder.CreateString(_o.DECAY_DATE);
@@ -254,7 +247,7 @@ public struct CAT : IFlatbufferObject
       _o.NORAD_CAT_ID,
       _o.OBJECT_TYPE,
       _o.OPS_STATUS_CODE,
-      _OWNER,
+      _o.OWNER,
       _LAUNCH_DATE,
       _LAUNCH_SITE,
       _DECAY_DATE,
@@ -282,7 +275,7 @@ public class CATT
   public uint NORAD_CAT_ID { get; set; }
   public objectType OBJECT_TYPE { get; set; }
   public opsStatusCode OPS_STATUS_CODE { get; set; }
-  public string OWNER { get; set; }
+  public ownerCode OWNER { get; set; }
   public string LAUNCH_DATE { get; set; }
   public string LAUNCH_SITE { get; set; }
   public string DECAY_DATE { get; set; }
@@ -307,7 +300,7 @@ public class CATT
     this.NORAD_CAT_ID = 0;
     this.OBJECT_TYPE = objectType.UNKNOWN;
     this.OPS_STATUS_CODE = opsStatusCode.UNKNOWN;
-    this.OWNER = null;
+    this.OWNER = ownerCode.AB;
     this.LAUNCH_DATE = null;
     this.LAUNCH_SITE = null;
     this.DECAY_DATE = null;

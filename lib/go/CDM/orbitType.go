@@ -7,15 +7,15 @@ import "strconv"
 type orbitType int8
 
 const (
-	///0
+	/// 0
 	orbitTypeORBIT     orbitType = 0
-	///1
+	/// 1
 	orbitTypeLANDING   orbitType = 1
-	///2
+	/// 2
 	orbitTypeIMPACT    orbitType = 2
-	///3
+	/// 3
 	orbitTypeDOCKED    orbitType = 3
-	///4
+	/// 4
 	orbitTypeROUNDTRIP orbitType = 4
 )
 

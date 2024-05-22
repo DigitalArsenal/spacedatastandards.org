@@ -5,23 +5,23 @@
 class orbitType private constructor() {
     companion object {
         /**
-         *0
+         * 0
          */
         const val ORBIT: Byte = 0
         /**
-         *1
+         * 1
          */
         const val LANDING: Byte = 1
         /**
-         *2
+         * 2
          */
         const val IMPACT: Byte = 2
         /**
-         *3
+         * 3
          */
         const val DOCKED: Byte = 3
         /**
-         *4
+         * 4
          */
         const val ROUNDTRIP: Byte = 4
     }

@@ -7,13 +7,13 @@ import "strconv"
 type dataStatusCode int8
 
 const (
-	///NCE
+	/// NCE
 	dataStatusCodeNO_CURRENT_ELEMENTS   dataStatusCode = 0
-	///NIE
+	/// NIE
 	dataStatusCodeNO_INITIAL_ELEMENTS   dataStatusCode = 1
-	///NEA
+	/// NEA
 	dataStatusCodeNO_ELEMENTS_AVAILABLE dataStatusCode = 2
-	///OK
+	/// OK
 	dataStatusCodeOK                    dataStatusCode = 3
 )
 

@@ -97,15 +97,19 @@ func (rcv *CAT) MutateOPS_STATUS_CODE(n opsStatusCode) bool {
 }
 
 /// Ownership, typically country or company
-func (rcv *CAT) OWNER() []byte {
+func (rcv *CAT) OWNER() ownerCode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return ownerCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
 /// Ownership, typically country or company
+func (rcv *CAT) MutateOWNER(n ownerCode) bool {
+	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
 /// Launch Date [year-month-day] (ISO 8601)
 func (rcv *CAT) LAUNCH_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -350,8 +354,8 @@ func CATAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE objectType) {
 func CATAddOPS_STATUS_CODE(builder *flatbuffers.Builder, OPS_STATUS_CODE opsStatusCode) {
 	builder.PrependInt8Slot(4, int8(OPS_STATUS_CODE), 7)
 }
-func CATAddOWNER(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(OWNER), 0)
+func CATAddOWNER(builder *flatbuffers.Builder, OWNER ownerCode) {
+	builder.PrependInt8Slot(5, int8(OWNER), 0)
 }
 func CATAddLAUNCH_DATE(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LAUNCH_DATE), 0)

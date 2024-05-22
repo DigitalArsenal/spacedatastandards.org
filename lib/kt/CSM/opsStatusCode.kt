@@ -5,35 +5,35 @@
 class opsStatusCode private constructor() {
     companion object {
         /**
-         *+
+         * +
          */
         const val OPERATIONAL: Byte = 0
         /**
-         *-
+         * -
          */
         const val NONOPERATIONAL: Byte = 1
         /**
-         *P
+         * P
          */
         const val PARTIALLY_OPERATIONAL: Byte = 2
         /**
-         *B
+         * B
          */
         const val BACKUP_STANDBY: Byte = 3
         /**
-         *S
+         * S
          */
         const val SPARE: Byte = 4
         /**
-         *X
+         * X
          */
         const val EXTENDED_MISSION: Byte = 5
         /**
-         *D
+         * D
          */
         const val DECAYED: Byte = 6
         /**
-         *?
+         * ?
          */
         const val UNKNOWN: Byte = 7
     }

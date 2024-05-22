@@ -4,19 +4,19 @@
 public final class objectType {
   private objectType() { }
   /**
-   *0
+   * 0
    */
   public static final byte PAYLOAD = 0;
   /**
-   *1
+   * 1
    */
   public static final byte ROCKET_BODY = 1;
   /**
-   *2
+   * 2
    */
   public static final byte DEBRIS = 2;
   /**
-   *3
+   * 3
    */
   public static final byte UNKNOWN = 3;
 

@@ -7,21 +7,21 @@ import "strconv"
 type opsStatusCode int8
 
 const (
-	///+
+	/// +
 	opsStatusCodeOPERATIONAL           opsStatusCode = 0
-	///-
+	/// -
 	opsStatusCodeNONOPERATIONAL        opsStatusCode = 1
-	///P
+	/// P
 	opsStatusCodePARTIALLY_OPERATIONAL opsStatusCode = 2
-	///B
+	/// B
 	opsStatusCodeBACKUP_STANDBY        opsStatusCode = 3
-	///S
+	/// S
 	opsStatusCodeSPARE                 opsStatusCode = 4
-	///X
+	/// X
 	opsStatusCodeEXTENDED_MISSION      opsStatusCode = 5
-	///D
+	/// D
 	opsStatusCodeDECAYED               opsStatusCode = 6
-	///?
+	/// ?
 	opsStatusCodeUNKNOWN               opsStatusCode = 7
 )
 

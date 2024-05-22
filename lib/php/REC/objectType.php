@@ -3,13 +3,13 @@
 
 class objectType
 {
-    ///0
+    /// 0
     const PAYLOAD = 0;
-    ///1
+    /// 1
     const ROCKET_BODY = 1;
-    ///2
+    /// 2
     const DEBRIS = 2;
-    ///3
+    /// 3
     const UNKNOWN = 3;
 
     private static $names = array(

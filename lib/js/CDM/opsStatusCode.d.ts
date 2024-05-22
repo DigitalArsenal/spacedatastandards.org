@@ -1,34 +1,34 @@
 export declare enum opsStatusCode {
     /**
-     *+
+     * +
      */
     OPERATIONAL = 0,
     /**
-     *-
+     * -
      */
     NONOPERATIONAL = 1,
     /**
-     *P
+     * P
      */
     PARTIALLY_OPERATIONAL = 2,
     /**
-     *B
+     * B
      */
     BACKUP_STANDBY = 3,
     /**
-     *S
+     * S
      */
     SPARE = 4,
     /**
-     *X
+     * X
      */
     EXTENDED_MISSION = 5,
     /**
-     *D
+     * D
      */
     DECAYED = 6,
     /**
-     *?
+     * ?
      */
     UNKNOWN = 7
 }

@@ -5,19 +5,19 @@
 class dataStatusCode private constructor() {
     companion object {
         /**
-         *NCE
+         * NCE
          */
         const val NO_CURRENT_ELEMENTS: Byte = 0
         /**
-         *NIE
+         * NIE
          */
         const val NO_INITIAL_ELEMENTS: Byte = 1
         /**
-         *NEA
+         * NEA
          */
         const val NO_ELEMENTS_AVAILABLE: Byte = 2
         /**
-         *OK
+         * OK
          */
         const val OK: Byte = 3
     }

@@ -4,23 +4,23 @@
 public final class orbitType {
   private orbitType() { }
   /**
-   *0
+   * 0
    */
   public static final byte ORBIT = 0;
   /**
-   *1
+   * 1
    */
   public static final byte LANDING = 1;
   /**
-   *2
+   * 2
    */
   public static final byte IMPACT = 2;
   /**
-   *3
+   * 3
    */
   public static final byte DOCKED = 3;
   /**
-   *4
+   * 4
    */
   public static final byte ROUNDTRIP = 4;
 

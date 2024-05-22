@@ -2,27 +2,27 @@
 
 export enum orbitType {
   /**
-   *0
+   * 0
    */
   ORBIT = 0,
 
   /**
-   *1
+   * 1
    */
   LANDING = 1,
 
   /**
-   *2
+   * 2
    */
   IMPACT = 2,
 
   /**
-   *3
+   * 3
    */
   DOCKED = 3,
 
   /**
-   *4
+   * 4
    */
   ROUNDTRIP = 4
 }

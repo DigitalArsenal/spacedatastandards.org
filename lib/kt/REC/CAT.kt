@@ -85,17 +85,11 @@ class CAT : Table() {
     /**
      * Ownership, typically country or company
      */
-    val OWNER : String?
+    val OWNER : Byte
         get() {
             val o = __offset(14)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val OWNERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun OWNERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Launch Date [year-month-day] (ISO 8601)
      */
@@ -278,7 +272,7 @@ class CAT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAT")
-        fun createCAT(builder: FlatBufferBuilder, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, NORAD_CAT_ID: UInt, OBJECT_TYPE: Byte, OPS_STATUS_CODE: Byte, OWNEROffset: Int, LAUNCH_DATEOffset: Int, LAUNCH_SITEOffset: Int, DECAY_DATEOffset: Int, PERIOD: Double, INCLINATION: Double, APOGEE: Double, PERIGEE: Double, RCS: Double, DATA_STATUS_CODE: Byte, ORBIT_CENTEROffset: Int, ORBIT_TYPE: Byte, DEPLOYMENT_DATEOffset: Int, MANEUVERABLE: Boolean, SIZE: Double, MASS: Double, MASS_TYPE: Byte, PAYLOADSOffset: Int) : Int {
+        fun createCAT(builder: FlatBufferBuilder, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, NORAD_CAT_ID: UInt, OBJECT_TYPE: Byte, OPS_STATUS_CODE: Byte, OWNER: Byte, LAUNCH_DATEOffset: Int, LAUNCH_SITEOffset: Int, DECAY_DATEOffset: Int, PERIOD: Double, INCLINATION: Double, APOGEE: Double, PERIGEE: Double, RCS: Double, DATA_STATUS_CODE: Byte, ORBIT_CENTEROffset: Int, ORBIT_TYPE: Byte, DEPLOYMENT_DATEOffset: Int, MANEUVERABLE: Boolean, SIZE: Double, MASS: Double, MASS_TYPE: Byte, PAYLOADSOffset: Int) : Int {
             builder.startTable(23)
             addMASS(builder, MASS)
             addSIZE(builder, SIZE)
@@ -293,7 +287,6 @@ class CAT : Table() {
             addDECAY_DATE(builder, DECAY_DATEOffset)
             addLAUNCH_SITE(builder, LAUNCH_SITEOffset)
             addLAUNCH_DATE(builder, LAUNCH_DATEOffset)
-            addOWNER(builder, OWNEROffset)
             addNORAD_CAT_ID(builder, NORAD_CAT_ID)
             addOBJECT_ID(builder, OBJECT_IDOffset)
             addOBJECT_NAME(builder, OBJECT_NAMEOffset)
@@ -301,6 +294,7 @@ class CAT : Table() {
             addMANEUVERABLE(builder, MANEUVERABLE)
             addORBIT_TYPE(builder, ORBIT_TYPE)
             addDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
+            addOWNER(builder, OWNER)
             addOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
             addOBJECT_TYPE(builder, OBJECT_TYPE)
             return endCAT(builder)
@@ -311,7 +305,7 @@ class CAT : Table() {
         fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: UInt) = builder.addInt(2, NORAD_CAT_ID.toInt(), 0)
         fun addOBJECT_TYPE(builder: FlatBufferBuilder, OBJECT_TYPE: Byte) = builder.addByte(3, OBJECT_TYPE, 3)
         fun addOPS_STATUS_CODE(builder: FlatBufferBuilder, OPS_STATUS_CODE: Byte) = builder.addByte(4, OPS_STATUS_CODE, 7)
-        fun addOWNER(builder: FlatBufferBuilder, OWNER: Int) = builder.addOffset(5, OWNER, 0)
+        fun addOWNER(builder: FlatBufferBuilder, OWNER: Byte) = builder.addByte(5, OWNER, 0)
         fun addLAUNCH_DATE(builder: FlatBufferBuilder, LAUNCH_DATE: Int) = builder.addOffset(6, LAUNCH_DATE, 0)
         fun addLAUNCH_SITE(builder: FlatBufferBuilder, LAUNCH_SITE: Int) = builder.addOffset(7, LAUNCH_SITE, 0)
         fun addDECAY_DATE(builder: FlatBufferBuilder, DECAY_DATE: Int) = builder.addOffset(8, DECAY_DATE, 0)

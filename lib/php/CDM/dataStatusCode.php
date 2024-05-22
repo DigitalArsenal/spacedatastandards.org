@@ -3,13 +3,13 @@
 
 class dataStatusCode
 {
-    ///NCE
+    /// NCE
     const NO_CURRENT_ELEMENTS = 0;
-    ///NIE
+    /// NIE
     const NO_INITIAL_ELEMENTS = 1;
-    ///NEA
+    /// NEA
     const NO_ELEMENTS_AVAILABLE = 2;
-    ///OK
+    /// OK
     const OK = 3;
 
     private static $names = array(

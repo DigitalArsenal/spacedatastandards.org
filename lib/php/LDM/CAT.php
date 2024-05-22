@@ -86,10 +86,13 @@ class CAT extends Table
     }
 
     /// Ownership, typically country or company
+    /**
+     * @return sbyte
+     */
     public function getOWNER()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ownerCode::AB;
     }
 
     /// Launch Date [year-month-day] (ISO 8601)
@@ -352,12 +355,12 @@ class CAT extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addOWNER(FlatBufferBuilder $builder, $OWNER)
     {
-        $builder->addOffsetX(5, $OWNER, 0);
+        $builder->addSbyteX(5, $OWNER, 0);
     }
 
     /**

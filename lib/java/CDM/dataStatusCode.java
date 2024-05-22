@@ -4,19 +4,19 @@
 public final class dataStatusCode {
   private dataStatusCode() { }
   /**
-   *NCE
+   * NCE
    */
   public static final byte NO_CURRENT_ELEMENTS = 0;
   /**
-   *NIE
+   * NIE
    */
   public static final byte NO_INITIAL_ELEMENTS = 1;
   /**
-   *NEA
+   * NEA
    */
   public static final byte NO_ELEMENTS_AVAILABLE = 2;
   /**
-   *OK
+   * OK
    */
   public static final byte OK = 3;
 

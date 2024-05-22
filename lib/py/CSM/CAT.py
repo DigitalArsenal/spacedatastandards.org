@@ -74,8 +74,8 @@ class CAT(object):
     def OWNER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
     # Launch Date [year-month-day] (ISO 8601)
     # CAT
@@ -249,7 +249,7 @@ def AddOBJECT_TYPE(builder, OBJECT_TYPE):
 def CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE): builder.PrependInt8Slot(4, OPS_STATUS_CODE, 7)
 def AddOPS_STATUS_CODE(builder, OPS_STATUS_CODE):
     return CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
-def CATAddOWNER(builder, OWNER): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OWNER), 0)
+def CATAddOWNER(builder, OWNER): builder.PrependInt8Slot(5, OWNER, 0)
 def AddOWNER(builder, OWNER):
     return CATAddOWNER(builder, OWNER)
 def CATAddLAUNCH_DATE(builder, LAUNCH_DATE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_DATE), 0)
@@ -324,7 +324,7 @@ class CATT(object):
         self.NORAD_CAT_ID = 0  # type: int
         self.OBJECT_TYPE = 3  # type: int
         self.OPS_STATUS_CODE = 7  # type: int
-        self.OWNER = None  # type: str
+        self.OWNER = 0  # type: int
         self.LAUNCH_DATE = None  # type: str
         self.LAUNCH_SITE = None  # type: str
         self.DECAY_DATE = None  # type: str
@@ -401,8 +401,6 @@ class CATT(object):
             OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
         if self.OBJECT_ID is not None:
             OBJECT_ID = builder.CreateString(self.OBJECT_ID)
-        if self.OWNER is not None:
-            OWNER = builder.CreateString(self.OWNER)
         if self.LAUNCH_DATE is not None:
             LAUNCH_DATE = builder.CreateString(self.LAUNCH_DATE)
         if self.LAUNCH_SITE is not None:
@@ -429,8 +427,7 @@ class CATT(object):
         CATAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
         CATAddOBJECT_TYPE(builder, self.OBJECT_TYPE)
         CATAddOPS_STATUS_CODE(builder, self.OPS_STATUS_CODE)
-        if self.OWNER is not None:
-            CATAddOWNER(builder, OWNER)
+        CATAddOWNER(builder, self.OWNER)
         if self.LAUNCH_DATE is not None:
             CATAddLAUNCH_DATE(builder, LAUNCH_DATE)
         if self.LAUNCH_SITE is not None:

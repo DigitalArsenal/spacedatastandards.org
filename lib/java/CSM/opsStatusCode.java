@@ -4,35 +4,35 @@
 public final class opsStatusCode {
   private opsStatusCode() { }
   /**
-   *+
+   * +
    */
   public static final byte OPERATIONAL = 0;
   /**
-   *-
+   * -
    */
   public static final byte NONOPERATIONAL = 1;
   /**
-   *P
+   * P
    */
   public static final byte PARTIALLY_OPERATIONAL = 2;
   /**
-   *B
+   * B
    */
   public static final byte BACKUP_STANDBY = 3;
   /**
-   *S
+   * S
    */
   public static final byte SPARE = 4;
   /**
-   *X
+   * X
    */
   public static final byte EXTENDED_MISSION = 5;
   /**
-   *D
+   * D
    */
   public static final byte DECAYED = 6;
   /**
-   *?
+   * ?
    */
   public static final byte UNKNOWN = 7;
 

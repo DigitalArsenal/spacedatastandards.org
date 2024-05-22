@@ -4,13 +4,13 @@
 
 public enum dataStatusCode : sbyte
 {
-  ///NCE
+  /// NCE
   NO_CURRENT_ELEMENTS = 0,
-  ///NIE
+  /// NIE
   NO_INITIAL_ELEMENTS = 1,
-  ///NEA
+  /// NEA
   NO_ELEMENTS_AVAILABLE = 2,
-  ///OK
+  /// OK
   OK = 3,
 };
 

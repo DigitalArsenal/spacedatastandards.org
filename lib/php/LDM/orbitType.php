@@ -3,15 +3,15 @@
 
 class orbitType
 {
-    ///0
+    /// 0
     const ORBIT = 0;
-    ///1
+    /// 1
     const LANDING = 1;
-    ///2
+    /// 2
     const IMPACT = 2;
-    ///3
+    /// 3
     const DOCKED = 3;
-    ///4
+    /// 4
     const ROUNDTRIP = 4;
 
     private static $names = array(

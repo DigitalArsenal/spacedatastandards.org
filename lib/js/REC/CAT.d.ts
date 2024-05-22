@@ -5,6 +5,7 @@ import { massType } from './massType.js';
 import { objectType } from './objectType.js';
 import { opsStatusCode } from './opsStatusCode.js';
 import { orbitType } from './orbitType.js';
+import { ownerCode } from './ownerCode.js';
 /**
  * Catalog Entity Message
  */
@@ -40,8 +41,7 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     /**
      * Ownership, typically country or company
      */
-    OWNER(): string | null;
-    OWNER(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    OWNER(): ownerCode;
     /**
      * Launch Date [year-month-day] (ISO 8601)
      */
@@ -122,7 +122,7 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     static addNoradCatId(builder: flatbuffers.Builder, NORAD_CAT_ID: number): void;
     static addObjectType(builder: flatbuffers.Builder, OBJECT_TYPE: objectType): void;
     static addOpsStatusCode(builder: flatbuffers.Builder, OPS_STATUS_CODE: opsStatusCode): void;
-    static addOwner(builder: flatbuffers.Builder, OWNEROffset: flatbuffers.Offset): void;
+    static addOwner(builder: flatbuffers.Builder, OWNER: ownerCode): void;
     static addLaunchDate(builder: flatbuffers.Builder, LAUNCH_DATEOffset: flatbuffers.Offset): void;
     static addLaunchSite(builder: flatbuffers.Builder, LAUNCH_SITEOffset: flatbuffers.Offset): void;
     static addDecayDate(builder: flatbuffers.Builder, DECAY_DATEOffset: flatbuffers.Offset): void;
@@ -145,7 +145,7 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     static endCAT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: objectType, OPS_STATUS_CODE: opsStatusCode, OWNEROffset: flatbuffers.Offset, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataStatusCode, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitType, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massType, PAYLOADSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: objectType, OPS_STATUS_CODE: opsStatusCode, OWNER: ownerCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataStatusCode, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitType, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massType, PAYLOADSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CATT;
     unpackTo(_o: CATT): void;
 }
@@ -155,7 +155,7 @@ export declare class CATT implements flatbuffers.IGeneratedObject {
     NORAD_CAT_ID: number;
     OBJECT_TYPE: objectType;
     OPS_STATUS_CODE: opsStatusCode;
-    OWNER: string | Uint8Array | null;
+    OWNER: ownerCode;
     LAUNCH_DATE: string | Uint8Array | null;
     LAUNCH_SITE: string | Uint8Array | null;
     DECAY_DATE: string | Uint8Array | null;
@@ -173,7 +173,7 @@ export declare class CATT implements flatbuffers.IGeneratedObject {
     MASS: number;
     MASS_TYPE: massType;
     PAYLOADS: (PLDT)[];
-    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: objectType, OPS_STATUS_CODE?: opsStatusCode, OWNER?: string | Uint8Array | null, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataStatusCode, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitType, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massType, PAYLOADS?: (PLDT)[]);
+    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: objectType, OPS_STATUS_CODE?: opsStatusCode, OWNER?: ownerCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataStatusCode, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitType, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massType, PAYLOADS?: (PLDT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CAT.d.ts.map

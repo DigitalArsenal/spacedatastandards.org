@@ -7,13 +7,13 @@ import "strconv"
 type objectType int8
 
 const (
-	///0
+	/// 0
 	objectTypePAYLOAD     objectType = 0
-	///1
+	/// 1
 	objectTypeROCKET_BODY objectType = 1
-	///2
+	/// 2
 	objectTypeDEBRIS      objectType = 2
-	///3
+	/// 3
 	objectTypeUNKNOWN     objectType = 3
 )
 

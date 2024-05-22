@@ -29,13 +29,13 @@ pub const ENUM_VALUES_OBJECT_TYPE: [objectType; 4] = [
 pub struct objectType(pub i8);
 #[allow(non_upper_case_globals)]
 impl objectType {
-  ///0
+  /// 0
   pub const PAYLOAD: Self = Self(0);
-  ///1
+  /// 1
   pub const ROCKET_BODY: Self = Self(1);
-  ///2
+  /// 2
   pub const DEBRIS: Self = Self(2);
-  ///3
+  /// 3
   pub const UNKNOWN: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
@@ -130,21 +130,21 @@ pub const ENUM_VALUES_OPS_STATUS_CODE: [opsStatusCode; 8] = [
 pub struct opsStatusCode(pub i8);
 #[allow(non_upper_case_globals)]
 impl opsStatusCode {
-  ///+
+  /// +
   pub const OPERATIONAL: Self = Self(0);
-  ///-
+  /// -
   pub const NONOPERATIONAL: Self = Self(1);
-  ///P
+  /// P
   pub const PARTIALLY_OPERATIONAL: Self = Self(2);
-  ///B
+  /// B
   pub const BACKUP_STANDBY: Self = Self(3);
-  ///S
+  /// S
   pub const SPARE: Self = Self(4);
-  ///X
+  /// X
   pub const EXTENDED_MISSION: Self = Self(5);
-  ///D
+  /// D
   pub const DECAYED: Self = Self(6);
-  ///?
+  /// ?
   pub const UNKNOWN: Self = Self(7);
 
   pub const ENUM_MIN: i8 = 0;
@@ -243,13 +243,13 @@ pub const ENUM_VALUES_DATA_STATUS_CODE: [dataStatusCode; 4] = [
 pub struct dataStatusCode(pub i8);
 #[allow(non_upper_case_globals)]
 impl dataStatusCode {
-  ///NCE
+  /// NCE
   pub const NO_CURRENT_ELEMENTS: Self = Self(0);
-  ///NIE
+  /// NIE
   pub const NO_INITIAL_ELEMENTS: Self = Self(1);
-  ///NEA
+  /// NEA
   pub const NO_ELEMENTS_AVAILABLE: Self = Self(2);
-  ///OK
+  /// OK
   pub const OK: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
@@ -341,15 +341,15 @@ pub const ENUM_VALUES_ORBIT_TYPE: [orbitType; 5] = [
 pub struct orbitType(pub i8);
 #[allow(non_upper_case_globals)]
 impl orbitType {
-  ///0
+  /// 0
   pub const ORBIT: Self = Self(0);
-  ///1
+  /// 1
   pub const LANDING: Self = Self(1);
-  ///2
+  /// 2
   pub const IMPACT: Self = Self(2);
-  ///3
+  /// 3
   pub const DOCKED: Self = Self(3);
-  ///4
+  /// 4
   pub const ROUNDTRIP: Self = Self(4);
 
   pub const ENUM_MIN: i8 = 0;
@@ -509,6 +509,713 @@ impl<'a> flatbuffers::Verifiable for massType {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for massType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OWNER_CODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OWNER_CODE: i8 = 125;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OWNER_CODE: [ownerCode; 126] = [
+  ownerCode::AB,
+  ownerCode::ABS,
+  ownerCode::AC,
+  ownerCode::ALG,
+  ownerCode::ANG,
+  ownerCode::ARGN,
+  ownerCode::ARM,
+  ownerCode::ASRA,
+  ownerCode::AUS,
+  ownerCode::AZER,
+  ownerCode::BEL,
+  ownerCode::BELA,
+  ownerCode::BERM,
+  ownerCode::BGD,
+  ownerCode::BHUT,
+  ownerCode::BOL,
+  ownerCode::BRAZ,
+  ownerCode::BUL,
+  ownerCode::CA,
+  ownerCode::CHBZ,
+  ownerCode::CHTU,
+  ownerCode::CHLE,
+  ownerCode::CIS,
+  ownerCode::COL,
+  ownerCode::CRI,
+  ownerCode::CZCH,
+  ownerCode::DEN,
+  ownerCode::DJI,
+  ownerCode::ECU,
+  ownerCode::EGYP,
+  ownerCode::ESA,
+  ownerCode::ESRO,
+  ownerCode::EST,
+  ownerCode::ETH,
+  ownerCode::EUME,
+  ownerCode::EUTE,
+  ownerCode::FGER,
+  ownerCode::FIN,
+  ownerCode::FR,
+  ownerCode::FRIT,
+  ownerCode::GER,
+  ownerCode::GHA,
+  ownerCode::GLOB,
+  ownerCode::GREC,
+  ownerCode::GRSA,
+  ownerCode::GUAT,
+  ownerCode::HUN,
+  ownerCode::IM,
+  ownerCode::IND,
+  ownerCode::INDO,
+  ownerCode::IRAN,
+  ownerCode::IRAQ,
+  ownerCode::IRID,
+  ownerCode::IRL,
+  ownerCode::ISRA,
+  ownerCode::ISRO,
+  ownerCode::ISS,
+  ownerCode::IT,
+  ownerCode::ITSO,
+  ownerCode::JPN,
+  ownerCode::KAZ,
+  ownerCode::KEN,
+  ownerCode::LAOS,
+  ownerCode::LKA,
+  ownerCode::LTU,
+  ownerCode::LUXE,
+  ownerCode::MA,
+  ownerCode::MALA,
+  ownerCode::MCO,
+  ownerCode::MDA,
+  ownerCode::MEX,
+  ownerCode::MMR,
+  ownerCode::MNG,
+  ownerCode::MUS,
+  ownerCode::NATO,
+  ownerCode::NETH,
+  ownerCode::NICO,
+  ownerCode::NIG,
+  ownerCode::NKOR,
+  ownerCode::NOR,
+  ownerCode::NPL,
+  ownerCode::NZ,
+  ownerCode::O3B,
+  ownerCode::ORB,
+  ownerCode::PAKI,
+  ownerCode::PERU,
+  ownerCode::POL,
+  ownerCode::POR,
+  ownerCode::PRC,
+  ownerCode::PRY,
+  ownerCode::PRES,
+  ownerCode::QAT,
+  ownerCode::RASC,
+  ownerCode::ROC,
+  ownerCode::ROM,
+  ownerCode::RP,
+  ownerCode::RWA,
+  ownerCode::SAFR,
+  ownerCode::SAUD,
+  ownerCode::SDN,
+  ownerCode::SEAL,
+  ownerCode::SES,
+  ownerCode::SGJP,
+  ownerCode::SING,
+  ownerCode::SKOR,
+  ownerCode::SPN,
+  ownerCode::STCT,
+  ownerCode::SVN,
+  ownerCode::SWED,
+  ownerCode::SWTZ,
+  ownerCode::TBD,
+  ownerCode::THAI,
+  ownerCode::TMMC,
+  ownerCode::TUN,
+  ownerCode::TURK,
+  ownerCode::UAE,
+  ownerCode::UK,
+  ownerCode::UKR,
+  ownerCode::UNK,
+  ownerCode::URY,
+  ownerCode::US,
+  ownerCode::USBZ,
+  ownerCode::VAT,
+  ownerCode::VENZ,
+  ownerCode::VTNM,
+  ownerCode::ZWE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ownerCode(pub i8);
+#[allow(non_upper_case_globals)]
+impl ownerCode {
+  /// Arab Satellite Communications Organization
+  pub const AB: Self = Self(0);
+  /// Asia Broadcast Satellite
+  pub const ABS: Self = Self(1);
+  /// Asia Satellite Telecommunications Company (ASIASAT)
+  pub const AC: Self = Self(2);
+  /// Algeria
+  pub const ALG: Self = Self(3);
+  /// Angola
+  pub const ANG: Self = Self(4);
+  /// Argentina
+  pub const ARGN: Self = Self(5);
+  /// Republic of Armenia
+  pub const ARM: Self = Self(6);
+  /// Austria
+  pub const ASRA: Self = Self(7);
+  /// Australia
+  pub const AUS: Self = Self(8);
+  /// Azerbaijan
+  pub const AZER: Self = Self(9);
+  /// Belgium
+  pub const BEL: Self = Self(10);
+  /// Belarus
+  pub const BELA: Self = Self(11);
+  /// Bermuda
+  pub const BERM: Self = Self(12);
+  /// People's Republic of Bangladesh
+  pub const BGD: Self = Self(13);
+  /// Kingdom of Bhutan
+  pub const BHUT: Self = Self(14);
+  /// Bolivia
+  pub const BOL: Self = Self(15);
+  /// Brazil
+  pub const BRAZ: Self = Self(16);
+  /// Bulgaria
+  pub const BUL: Self = Self(17);
+  /// Canada
+  pub const CA: Self = Self(18);
+  /// China/Brazil
+  pub const CHBZ: Self = Self(19);
+  /// China/Turkey
+  pub const CHTU: Self = Self(20);
+  /// Chile
+  pub const CHLE: Self = Self(21);
+  /// Commonwealth of Independent States (former USSR)
+  pub const CIS: Self = Self(22);
+  /// Colombia
+  pub const COL: Self = Self(23);
+  /// Republic of Costa Rica
+  pub const CRI: Self = Self(24);
+  /// Czech Republic (former Czechoslovakia)
+  pub const CZCH: Self = Self(25);
+  /// Denmark
+  pub const DEN: Self = Self(26);
+  /// Republic of Djibouti
+  pub const DJI: Self = Self(27);
+  /// Ecuador
+  pub const ECU: Self = Self(28);
+  /// Egypt
+  pub const EGYP: Self = Self(29);
+  /// European Space Agency
+  pub const ESA: Self = Self(30);
+  /// European Space Research Organization
+  pub const ESRO: Self = Self(31);
+  /// Estonia
+  pub const EST: Self = Self(32);
+  /// Ethiopia
+  pub const ETH: Self = Self(33);
+  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
+  pub const EUME: Self = Self(34);
+  /// European Telecommunications Satellite Organization (EUTELSAT)
+  pub const EUTE: Self = Self(35);
+  /// France/Germany
+  pub const FGER: Self = Self(36);
+  /// Finland
+  pub const FIN: Self = Self(37);
+  /// France
+  pub const FR: Self = Self(38);
+  /// France/Italy
+  pub const FRIT: Self = Self(39);
+  /// Germany
+  pub const GER: Self = Self(40);
+  /// Republic of Ghana
+  pub const GHA: Self = Self(41);
+  /// Globalstar
+  pub const GLOB: Self = Self(42);
+  /// Greece
+  pub const GREC: Self = Self(43);
+  /// Greece/Saudi Arabia
+  pub const GRSA: Self = Self(44);
+  /// Guatemala
+  pub const GUAT: Self = Self(45);
+  /// Hungary
+  pub const HUN: Self = Self(46);
+  /// International Mobile Satellite Organization (INMARSAT)
+  pub const IM: Self = Self(47);
+  /// India
+  pub const IND: Self = Self(48);
+  /// Indonesia
+  pub const INDO: Self = Self(49);
+  /// Iran
+  pub const IRAN: Self = Self(50);
+  /// Iraq
+  pub const IRAQ: Self = Self(51);
+  /// Iridium
+  pub const IRID: Self = Self(52);
+  /// Ireland
+  pub const IRL: Self = Self(53);
+  /// Israel
+  pub const ISRA: Self = Self(54);
+  /// Indian Space Research Organisation
+  pub const ISRO: Self = Self(55);
+  /// International Space Station
+  pub const ISS: Self = Self(56);
+  /// Italy
+  pub const IT: Self = Self(57);
+  /// International Telecommunications Satellite Organization (INTELSAT)
+  pub const ITSO: Self = Self(58);
+  /// Japan
+  pub const JPN: Self = Self(59);
+  /// Kazakhstan
+  pub const KAZ: Self = Self(60);
+  /// Republic of Kenya
+  pub const KEN: Self = Self(61);
+  /// Laos
+  pub const LAOS: Self = Self(62);
+  /// Democratic Socialist Republic of Sri Lanka
+  pub const LKA: Self = Self(63);
+  /// Lithuania
+  pub const LTU: Self = Self(64);
+  /// Luxembourg
+  pub const LUXE: Self = Self(65);
+  /// Morocco
+  pub const MA: Self = Self(66);
+  /// Malaysia
+  pub const MALA: Self = Self(67);
+  /// Principality of Monaco
+  pub const MCO: Self = Self(68);
+  /// Republic of Moldova
+  pub const MDA: Self = Self(69);
+  /// Mexico
+  pub const MEX: Self = Self(70);
+  /// Republic of the Union of Myanmar
+  pub const MMR: Self = Self(71);
+  /// Mongolia
+  pub const MNG: Self = Self(72);
+  /// Mauritius
+  pub const MUS: Self = Self(73);
+  /// North Atlantic Treaty Organization
+  pub const NATO: Self = Self(74);
+  /// Netherlands
+  pub const NETH: Self = Self(75);
+  /// New ICO
+  pub const NICO: Self = Self(76);
+  /// Nigeria
+  pub const NIG: Self = Self(77);
+  /// Democratic People's Republic of Korea
+  pub const NKOR: Self = Self(78);
+  /// Norway
+  pub const NOR: Self = Self(79);
+  /// Federal Democratic Republic of Nepal
+  pub const NPL: Self = Self(80);
+  /// New Zealand
+  pub const NZ: Self = Self(81);
+  /// O3b Networks
+  pub const O3B: Self = Self(82);
+  /// ORBCOMM
+  pub const ORB: Self = Self(83);
+  /// Pakistan
+  pub const PAKI: Self = Self(84);
+  /// Peru
+  pub const PERU: Self = Self(85);
+  /// Poland
+  pub const POL: Self = Self(86);
+  /// Portugal
+  pub const POR: Self = Self(87);
+  /// People's Republic of China
+  pub const PRC: Self = Self(88);
+  /// Republic of Paraguay
+  pub const PRY: Self = Self(89);
+  /// People's Republic of China/European Space Agency
+  pub const PRES: Self = Self(90);
+  /// State of Qatar
+  pub const QAT: Self = Self(91);
+  /// RascomStar-QAF
+  pub const RASC: Self = Self(92);
+  /// Taiwan (Republic of China)
+  pub const ROC: Self = Self(93);
+  /// Romania
+  pub const ROM: Self = Self(94);
+  /// Philippines (Republic of the Philippines)
+  pub const RP: Self = Self(95);
+  /// Republic of Rwanda
+  pub const RWA: Self = Self(96);
+  /// South Africa
+  pub const SAFR: Self = Self(97);
+  /// Saudi Arabia
+  pub const SAUD: Self = Self(98);
+  /// Republic of Sudan
+  pub const SDN: Self = Self(99);
+  /// Sea Launch
+  pub const SEAL: Self = Self(100);
+  /// SES
+  pub const SES: Self = Self(101);
+  /// Singapore/Japan
+  pub const SGJP: Self = Self(102);
+  /// Singapore
+  pub const SING: Self = Self(103);
+  /// Republic of Korea
+  pub const SKOR: Self = Self(104);
+  /// Spain
+  pub const SPN: Self = Self(105);
+  /// Singapore/Taiwan
+  pub const STCT: Self = Self(106);
+  /// Slovenia
+  pub const SVN: Self = Self(107);
+  /// Sweden
+  pub const SWED: Self = Self(108);
+  /// Switzerland
+  pub const SWTZ: Self = Self(109);
+  /// To Be Determined
+  pub const TBD: Self = Self(110);
+  /// Thailand
+  pub const THAI: Self = Self(111);
+  /// Turkmenistan/Monaco
+  pub const TMMC: Self = Self(112);
+  /// Republic of Tunisia
+  pub const TUN: Self = Self(113);
+  /// Turkey
+  pub const TURK: Self = Self(114);
+  /// United Arab Emirates
+  pub const UAE: Self = Self(115);
+  /// United Kingdom
+  pub const UK: Self = Self(116);
+  /// Ukraine
+  pub const UKR: Self = Self(117);
+  /// Unknown
+  pub const UNK: Self = Self(118);
+  /// Uruguay
+  pub const URY: Self = Self(119);
+  /// United States
+  pub const US: Self = Self(120);
+  /// United States/Brazil
+  pub const USBZ: Self = Self(121);
+  /// Vatican City State
+  pub const VAT: Self = Self(122);
+  /// Venezuela
+  pub const VENZ: Self = Self(123);
+  /// Vietnam
+  pub const VTNM: Self = Self(124);
+  /// Republic of Zimbabwe
+  pub const ZWE: Self = Self(125);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 125;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::AB,
+    Self::ABS,
+    Self::AC,
+    Self::ALG,
+    Self::ANG,
+    Self::ARGN,
+    Self::ARM,
+    Self::ASRA,
+    Self::AUS,
+    Self::AZER,
+    Self::BEL,
+    Self::BELA,
+    Self::BERM,
+    Self::BGD,
+    Self::BHUT,
+    Self::BOL,
+    Self::BRAZ,
+    Self::BUL,
+    Self::CA,
+    Self::CHBZ,
+    Self::CHTU,
+    Self::CHLE,
+    Self::CIS,
+    Self::COL,
+    Self::CRI,
+    Self::CZCH,
+    Self::DEN,
+    Self::DJI,
+    Self::ECU,
+    Self::EGYP,
+    Self::ESA,
+    Self::ESRO,
+    Self::EST,
+    Self::ETH,
+    Self::EUME,
+    Self::EUTE,
+    Self::FGER,
+    Self::FIN,
+    Self::FR,
+    Self::FRIT,
+    Self::GER,
+    Self::GHA,
+    Self::GLOB,
+    Self::GREC,
+    Self::GRSA,
+    Self::GUAT,
+    Self::HUN,
+    Self::IM,
+    Self::IND,
+    Self::INDO,
+    Self::IRAN,
+    Self::IRAQ,
+    Self::IRID,
+    Self::IRL,
+    Self::ISRA,
+    Self::ISRO,
+    Self::ISS,
+    Self::IT,
+    Self::ITSO,
+    Self::JPN,
+    Self::KAZ,
+    Self::KEN,
+    Self::LAOS,
+    Self::LKA,
+    Self::LTU,
+    Self::LUXE,
+    Self::MA,
+    Self::MALA,
+    Self::MCO,
+    Self::MDA,
+    Self::MEX,
+    Self::MMR,
+    Self::MNG,
+    Self::MUS,
+    Self::NATO,
+    Self::NETH,
+    Self::NICO,
+    Self::NIG,
+    Self::NKOR,
+    Self::NOR,
+    Self::NPL,
+    Self::NZ,
+    Self::O3B,
+    Self::ORB,
+    Self::PAKI,
+    Self::PERU,
+    Self::POL,
+    Self::POR,
+    Self::PRC,
+    Self::PRY,
+    Self::PRES,
+    Self::QAT,
+    Self::RASC,
+    Self::ROC,
+    Self::ROM,
+    Self::RP,
+    Self::RWA,
+    Self::SAFR,
+    Self::SAUD,
+    Self::SDN,
+    Self::SEAL,
+    Self::SES,
+    Self::SGJP,
+    Self::SING,
+    Self::SKOR,
+    Self::SPN,
+    Self::STCT,
+    Self::SVN,
+    Self::SWED,
+    Self::SWTZ,
+    Self::TBD,
+    Self::THAI,
+    Self::TMMC,
+    Self::TUN,
+    Self::TURK,
+    Self::UAE,
+    Self::UK,
+    Self::UKR,
+    Self::UNK,
+    Self::URY,
+    Self::US,
+    Self::USBZ,
+    Self::VAT,
+    Self::VENZ,
+    Self::VTNM,
+    Self::ZWE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::AB => Some("AB"),
+      Self::ABS => Some("ABS"),
+      Self::AC => Some("AC"),
+      Self::ALG => Some("ALG"),
+      Self::ANG => Some("ANG"),
+      Self::ARGN => Some("ARGN"),
+      Self::ARM => Some("ARM"),
+      Self::ASRA => Some("ASRA"),
+      Self::AUS => Some("AUS"),
+      Self::AZER => Some("AZER"),
+      Self::BEL => Some("BEL"),
+      Self::BELA => Some("BELA"),
+      Self::BERM => Some("BERM"),
+      Self::BGD => Some("BGD"),
+      Self::BHUT => Some("BHUT"),
+      Self::BOL => Some("BOL"),
+      Self::BRAZ => Some("BRAZ"),
+      Self::BUL => Some("BUL"),
+      Self::CA => Some("CA"),
+      Self::CHBZ => Some("CHBZ"),
+      Self::CHTU => Some("CHTU"),
+      Self::CHLE => Some("CHLE"),
+      Self::CIS => Some("CIS"),
+      Self::COL => Some("COL"),
+      Self::CRI => Some("CRI"),
+      Self::CZCH => Some("CZCH"),
+      Self::DEN => Some("DEN"),
+      Self::DJI => Some("DJI"),
+      Self::ECU => Some("ECU"),
+      Self::EGYP => Some("EGYP"),
+      Self::ESA => Some("ESA"),
+      Self::ESRO => Some("ESRO"),
+      Self::EST => Some("EST"),
+      Self::ETH => Some("ETH"),
+      Self::EUME => Some("EUME"),
+      Self::EUTE => Some("EUTE"),
+      Self::FGER => Some("FGER"),
+      Self::FIN => Some("FIN"),
+      Self::FR => Some("FR"),
+      Self::FRIT => Some("FRIT"),
+      Self::GER => Some("GER"),
+      Self::GHA => Some("GHA"),
+      Self::GLOB => Some("GLOB"),
+      Self::GREC => Some("GREC"),
+      Self::GRSA => Some("GRSA"),
+      Self::GUAT => Some("GUAT"),
+      Self::HUN => Some("HUN"),
+      Self::IM => Some("IM"),
+      Self::IND => Some("IND"),
+      Self::INDO => Some("INDO"),
+      Self::IRAN => Some("IRAN"),
+      Self::IRAQ => Some("IRAQ"),
+      Self::IRID => Some("IRID"),
+      Self::IRL => Some("IRL"),
+      Self::ISRA => Some("ISRA"),
+      Self::ISRO => Some("ISRO"),
+      Self::ISS => Some("ISS"),
+      Self::IT => Some("IT"),
+      Self::ITSO => Some("ITSO"),
+      Self::JPN => Some("JPN"),
+      Self::KAZ => Some("KAZ"),
+      Self::KEN => Some("KEN"),
+      Self::LAOS => Some("LAOS"),
+      Self::LKA => Some("LKA"),
+      Self::LTU => Some("LTU"),
+      Self::LUXE => Some("LUXE"),
+      Self::MA => Some("MA"),
+      Self::MALA => Some("MALA"),
+      Self::MCO => Some("MCO"),
+      Self::MDA => Some("MDA"),
+      Self::MEX => Some("MEX"),
+      Self::MMR => Some("MMR"),
+      Self::MNG => Some("MNG"),
+      Self::MUS => Some("MUS"),
+      Self::NATO => Some("NATO"),
+      Self::NETH => Some("NETH"),
+      Self::NICO => Some("NICO"),
+      Self::NIG => Some("NIG"),
+      Self::NKOR => Some("NKOR"),
+      Self::NOR => Some("NOR"),
+      Self::NPL => Some("NPL"),
+      Self::NZ => Some("NZ"),
+      Self::O3B => Some("O3B"),
+      Self::ORB => Some("ORB"),
+      Self::PAKI => Some("PAKI"),
+      Self::PERU => Some("PERU"),
+      Self::POL => Some("POL"),
+      Self::POR => Some("POR"),
+      Self::PRC => Some("PRC"),
+      Self::PRY => Some("PRY"),
+      Self::PRES => Some("PRES"),
+      Self::QAT => Some("QAT"),
+      Self::RASC => Some("RASC"),
+      Self::ROC => Some("ROC"),
+      Self::ROM => Some("ROM"),
+      Self::RP => Some("RP"),
+      Self::RWA => Some("RWA"),
+      Self::SAFR => Some("SAFR"),
+      Self::SAUD => Some("SAUD"),
+      Self::SDN => Some("SDN"),
+      Self::SEAL => Some("SEAL"),
+      Self::SES => Some("SES"),
+      Self::SGJP => Some("SGJP"),
+      Self::SING => Some("SING"),
+      Self::SKOR => Some("SKOR"),
+      Self::SPN => Some("SPN"),
+      Self::STCT => Some("STCT"),
+      Self::SVN => Some("SVN"),
+      Self::SWED => Some("SWED"),
+      Self::SWTZ => Some("SWTZ"),
+      Self::TBD => Some("TBD"),
+      Self::THAI => Some("THAI"),
+      Self::TMMC => Some("TMMC"),
+      Self::TUN => Some("TUN"),
+      Self::TURK => Some("TURK"),
+      Self::UAE => Some("UAE"),
+      Self::UK => Some("UK"),
+      Self::UKR => Some("UKR"),
+      Self::UNK => Some("UNK"),
+      Self::URY => Some("URY"),
+      Self::US => Some("US"),
+      Self::USBZ => Some("USBZ"),
+      Self::VAT => Some("VAT"),
+      Self::VENZ => Some("VENZ"),
+      Self::VTNM => Some("VTNM"),
+      Self::ZWE => Some("ZWE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for ownerCode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for ownerCode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for ownerCode {
+    type Output = ownerCode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for ownerCode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for ownerCode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for ownerCode {}
 pub enum CATOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -573,7 +1280,6 @@ impl<'a> CAT<'a> {
     if let Some(x) = args.DECAY_DATE { builder.add_DECAY_DATE(x); }
     if let Some(x) = args.LAUNCH_SITE { builder.add_LAUNCH_SITE(x); }
     if let Some(x) = args.LAUNCH_DATE { builder.add_LAUNCH_DATE(x); }
-    if let Some(x) = args.OWNER { builder.add_OWNER(x); }
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
@@ -581,6 +1287,7 @@ impl<'a> CAT<'a> {
     builder.add_MANEUVERABLE(args.MANEUVERABLE);
     builder.add_ORBIT_TYPE(args.ORBIT_TYPE);
     builder.add_DATA_STATUS_CODE(args.DATA_STATUS_CODE);
+    builder.add_OWNER(args.OWNER);
     builder.add_OPS_STATUS_CODE(args.OPS_STATUS_CODE);
     builder.add_OBJECT_TYPE(args.OBJECT_TYPE);
     builder.finish()
@@ -596,9 +1303,7 @@ impl<'a> CAT<'a> {
     let NORAD_CAT_ID = self.NORAD_CAT_ID();
     let OBJECT_TYPE = self.OBJECT_TYPE();
     let OPS_STATUS_CODE = self.OPS_STATUS_CODE();
-    let OWNER = self.OWNER().map(|x| {
-      x.to_string()
-    });
+    let OWNER = self.OWNER();
     let LAUNCH_DATE = self.LAUNCH_DATE().map(|x| {
       x.to_string()
     });
@@ -697,11 +1402,11 @@ impl<'a> CAT<'a> {
   }
   /// Ownership, typically country or company
   #[inline]
-  pub fn OWNER(&self) -> Option<&'a str> {
+  pub fn OWNER(&self) -> ownerCode {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CAT::VT_OWNER, None)}
+    unsafe { self._tab.get::<ownerCode>(CAT::VT_OWNER, Some(ownerCode::AB)).unwrap()}
   }
   /// Launch Date [year-month-day] (ISO 8601)
   #[inline]
@@ -853,7 +1558,7 @@ impl flatbuffers::Verifiable for CAT<'_> {
      .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
      .visit_field::<objectType>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
      .visit_field::<opsStatusCode>("OPS_STATUS_CODE", Self::VT_OPS_STATUS_CODE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OWNER", Self::VT_OWNER, false)?
+     .visit_field::<ownerCode>("OWNER", Self::VT_OWNER, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_DATE", Self::VT_LAUNCH_DATE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_SITE", Self::VT_LAUNCH_SITE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DECAY_DATE", Self::VT_DECAY_DATE, false)?
@@ -881,7 +1586,7 @@ pub struct CATArgs<'a> {
     pub NORAD_CAT_ID: u32,
     pub OBJECT_TYPE: objectType,
     pub OPS_STATUS_CODE: opsStatusCode,
-    pub OWNER: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OWNER: ownerCode,
     pub LAUNCH_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAUNCH_SITE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DECAY_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -909,7 +1614,7 @@ impl<'a> Default for CATArgs<'a> {
       NORAD_CAT_ID: 0,
       OBJECT_TYPE: objectType::UNKNOWN,
       OPS_STATUS_CODE: opsStatusCode::UNKNOWN,
-      OWNER: None,
+      OWNER: ownerCode::AB,
       LAUNCH_DATE: None,
       LAUNCH_SITE: None,
       DECAY_DATE: None,
@@ -957,8 +1662,8 @@ impl<'a: 'b, 'b> CATBuilder<'a, 'b> {
     self.fbb_.push_slot::<opsStatusCode>(CAT::VT_OPS_STATUS_CODE, OPS_STATUS_CODE, opsStatusCode::UNKNOWN);
   }
   #[inline]
-  pub fn add_OWNER(&mut self, OWNER: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CAT::VT_OWNER, OWNER);
+  pub fn add_OWNER(&mut self, OWNER: ownerCode) {
+    self.fbb_.push_slot::<ownerCode>(CAT::VT_OWNER, OWNER, ownerCode::AB);
   }
   #[inline]
   pub fn add_LAUNCH_DATE(&mut self, LAUNCH_DATE: flatbuffers::WIPOffset<&'b  str>) {
@@ -1080,7 +1785,7 @@ pub struct CATT {
   pub NORAD_CAT_ID: u32,
   pub OBJECT_TYPE: objectType,
   pub OPS_STATUS_CODE: opsStatusCode,
-  pub OWNER: Option<String>,
+  pub OWNER: ownerCode,
   pub LAUNCH_DATE: Option<String>,
   pub LAUNCH_SITE: Option<String>,
   pub DECAY_DATE: Option<String>,
@@ -1107,7 +1812,7 @@ impl Default for CATT {
       NORAD_CAT_ID: 0,
       OBJECT_TYPE: objectType::UNKNOWN,
       OPS_STATUS_CODE: opsStatusCode::UNKNOWN,
-      OWNER: None,
+      OWNER: ownerCode::AB,
       LAUNCH_DATE: None,
       LAUNCH_SITE: None,
       DECAY_DATE: None,
@@ -1142,9 +1847,7 @@ impl CATT {
     let NORAD_CAT_ID = self.NORAD_CAT_ID;
     let OBJECT_TYPE = self.OBJECT_TYPE;
     let OPS_STATUS_CODE = self.OPS_STATUS_CODE;
-    let OWNER = self.OWNER.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let OWNER = self.OWNER;
     let LAUNCH_DATE = self.LAUNCH_DATE.as_ref().map(|x|{
       _fbb.create_string(x)
     });

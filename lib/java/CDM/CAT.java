@@ -56,9 +56,7 @@ public final class CAT extends Table {
   /**
    * Ownership, typically country or company
    */
-  public String OWNER() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OWNERAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer OWNERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public byte OWNER() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Launch Date [year-month-day] (ISO 8601)
    */
@@ -148,7 +146,7 @@ public final class CAT extends Table {
       long NORAD_CAT_ID,
       byte OBJECT_TYPE,
       byte OPS_STATUS_CODE,
-      int OWNEROffset,
+      byte OWNER,
       int LAUNCH_DATEOffset,
       int LAUNCH_SITEOffset,
       int DECAY_DATEOffset,
@@ -180,7 +178,6 @@ public final class CAT extends Table {
     CAT.addDecayDate(builder, DECAY_DATEOffset);
     CAT.addLaunchSite(builder, LAUNCH_SITEOffset);
     CAT.addLaunchDate(builder, LAUNCH_DATEOffset);
-    CAT.addOwner(builder, OWNEROffset);
     CAT.addNoradCatId(builder, NORAD_CAT_ID);
     CAT.addObjectId(builder, OBJECT_IDOffset);
     CAT.addObjectName(builder, OBJECT_NAMEOffset);
@@ -188,6 +185,7 @@ public final class CAT extends Table {
     CAT.addManeuverable(builder, MANEUVERABLE);
     CAT.addOrbitType(builder, ORBIT_TYPE);
     CAT.addDataStatusCode(builder, DATA_STATUS_CODE);
+    CAT.addOwner(builder, OWNER);
     CAT.addOpsStatusCode(builder, OPS_STATUS_CODE);
     CAT.addObjectType(builder, OBJECT_TYPE);
     return CAT.endCAT(builder);
@@ -199,7 +197,7 @@ public final class CAT extends Table {
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
   public static void addObjectType(FlatBufferBuilder builder, byte OBJECT_TYPE) { builder.addByte(3, OBJECT_TYPE, 3); }
   public static void addOpsStatusCode(FlatBufferBuilder builder, byte OPS_STATUS_CODE) { builder.addByte(4, OPS_STATUS_CODE, 7); }
-  public static void addOwner(FlatBufferBuilder builder, int OWNEROffset) { builder.addOffset(5, OWNEROffset, 0); }
+  public static void addOwner(FlatBufferBuilder builder, byte OWNER) { builder.addByte(5, OWNER, 0); }
   public static void addLaunchDate(FlatBufferBuilder builder, int LAUNCH_DATEOffset) { builder.addOffset(6, LAUNCH_DATEOffset, 0); }
   public static void addLaunchSite(FlatBufferBuilder builder, int LAUNCH_SITEOffset) { builder.addOffset(7, LAUNCH_SITEOffset, 0); }
   public static void addDecayDate(FlatBufferBuilder builder, int DECAY_DATEOffset) { builder.addOffset(8, DECAY_DATEOffset, 0); }

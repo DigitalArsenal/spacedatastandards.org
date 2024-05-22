@@ -3,21 +3,21 @@
 
 class opsStatusCode
 {
-    ///+
+    /// +
     const OPERATIONAL = 0;
-    ///-
+    /// -
     const NONOPERATIONAL = 1;
-    ///P
+    /// P
     const PARTIALLY_OPERATIONAL = 2;
-    ///B
+    /// B
     const BACKUP_STANDBY = 3;
-    ///S
+    /// S
     const SPARE = 4;
-    ///X
+    /// X
     const EXTENDED_MISSION = 5;
-    ///D
+    /// D
     const DECAYED = 6;
-    ///?
+    /// ?
     const UNKNOWN = 7;
 
     private static $names = array(

@@ -22,13 +22,13 @@ struct CATCOLLECTION;
 struct CATCOLLECTIONBuilder;
 
 enum objectType : int8_t {
-  ///0
+  /// 0
   objectType_PAYLOAD = 0,
-  ///1
+  /// 1
   objectType_ROCKET_BODY = 1,
-  ///2
+  /// 2
   objectType_DEBRIS = 2,
-  ///3
+  /// 3
   objectType_UNKNOWN = 3,
   objectType_MIN = objectType_PAYLOAD,
   objectType_MAX = objectType_UNKNOWN
@@ -62,21 +62,21 @@ inline const char *EnumNameobjectType(objectType e) {
 }
 
 enum opsStatusCode : int8_t {
-  ///+
+  /// +
   opsStatusCode_OPERATIONAL = 0,
-  ///-
+  /// -
   opsStatusCode_NONOPERATIONAL = 1,
-  ///P
+  /// P
   opsStatusCode_PARTIALLY_OPERATIONAL = 2,
-  ///B
+  /// B
   opsStatusCode_BACKUP_STANDBY = 3,
-  ///S
+  /// S
   opsStatusCode_SPARE = 4,
-  ///X
+  /// X
   opsStatusCode_EXTENDED_MISSION = 5,
-  ///D
+  /// D
   opsStatusCode_DECAYED = 6,
-  ///?
+  /// ?
   opsStatusCode_UNKNOWN = 7,
   opsStatusCode_MIN = opsStatusCode_OPERATIONAL,
   opsStatusCode_MAX = opsStatusCode_UNKNOWN
@@ -118,13 +118,13 @@ inline const char *EnumNameopsStatusCode(opsStatusCode e) {
 }
 
 enum dataStatusCode : int8_t {
-  ///NCE
+  /// NCE
   dataStatusCode_NO_CURRENT_ELEMENTS = 0,
-  ///NIE
+  /// NIE
   dataStatusCode_NO_INITIAL_ELEMENTS = 1,
-  ///NEA
+  /// NEA
   dataStatusCode_NO_ELEMENTS_AVAILABLE = 2,
-  ///OK
+  /// OK
   dataStatusCode_OK = 3,
   dataStatusCode_MIN = dataStatusCode_NO_CURRENT_ELEMENTS,
   dataStatusCode_MAX = dataStatusCode_OK
@@ -158,15 +158,15 @@ inline const char *EnumNamedataStatusCode(dataStatusCode e) {
 }
 
 enum orbitType : int8_t {
-  ///0
+  /// 0
   orbitType_ORBIT = 0,
-  ///1
+  /// 1
   orbitType_LANDING = 1,
-  ///2
+  /// 2
   orbitType_IMPACT = 2,
-  ///3
+  /// 3
   orbitType_DOCKED = 3,
-  ///4
+  /// 4
   orbitType_ROUNDTRIP = 4,
   orbitType_MIN = orbitType_ORBIT,
   orbitType_MAX = orbitType_ROUNDTRIP
@@ -231,6 +231,534 @@ inline const char *EnumNamemassType(massType e) {
   return EnumNamesmassType()[index];
 }
 
+enum ownerCode : int8_t {
+  /// Arab Satellite Communications Organization
+  ownerCode_AB = 0,
+  /// Asia Broadcast Satellite
+  ownerCode_ABS = 1,
+  /// Asia Satellite Telecommunications Company (ASIASAT)
+  ownerCode_AC = 2,
+  /// Algeria
+  ownerCode_ALG = 3,
+  /// Angola
+  ownerCode_ANG = 4,
+  /// Argentina
+  ownerCode_ARGN = 5,
+  /// Republic of Armenia
+  ownerCode_ARM = 6,
+  /// Austria
+  ownerCode_ASRA = 7,
+  /// Australia
+  ownerCode_AUS = 8,
+  /// Azerbaijan
+  ownerCode_AZER = 9,
+  /// Belgium
+  ownerCode_BEL = 10,
+  /// Belarus
+  ownerCode_BELA = 11,
+  /// Bermuda
+  ownerCode_BERM = 12,
+  /// People's Republic of Bangladesh
+  ownerCode_BGD = 13,
+  /// Kingdom of Bhutan
+  ownerCode_BHUT = 14,
+  /// Bolivia
+  ownerCode_BOL = 15,
+  /// Brazil
+  ownerCode_BRAZ = 16,
+  /// Bulgaria
+  ownerCode_BUL = 17,
+  /// Canada
+  ownerCode_CA = 18,
+  /// China/Brazil
+  ownerCode_CHBZ = 19,
+  /// China/Turkey
+  ownerCode_CHTU = 20,
+  /// Chile
+  ownerCode_CHLE = 21,
+  /// Commonwealth of Independent States (former USSR)
+  ownerCode_CIS = 22,
+  /// Colombia
+  ownerCode_COL = 23,
+  /// Republic of Costa Rica
+  ownerCode_CRI = 24,
+  /// Czech Republic (former Czechoslovakia)
+  ownerCode_CZCH = 25,
+  /// Denmark
+  ownerCode_DEN = 26,
+  /// Republic of Djibouti
+  ownerCode_DJI = 27,
+  /// Ecuador
+  ownerCode_ECU = 28,
+  /// Egypt
+  ownerCode_EGYP = 29,
+  /// European Space Agency
+  ownerCode_ESA = 30,
+  /// European Space Research Organization
+  ownerCode_ESRO = 31,
+  /// Estonia
+  ownerCode_EST = 32,
+  /// Ethiopia
+  ownerCode_ETH = 33,
+  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
+  ownerCode_EUME = 34,
+  /// European Telecommunications Satellite Organization (EUTELSAT)
+  ownerCode_EUTE = 35,
+  /// France/Germany
+  ownerCode_FGER = 36,
+  /// Finland
+  ownerCode_FIN = 37,
+  /// France
+  ownerCode_FR = 38,
+  /// France/Italy
+  ownerCode_FRIT = 39,
+  /// Germany
+  ownerCode_GER = 40,
+  /// Republic of Ghana
+  ownerCode_GHA = 41,
+  /// Globalstar
+  ownerCode_GLOB = 42,
+  /// Greece
+  ownerCode_GREC = 43,
+  /// Greece/Saudi Arabia
+  ownerCode_GRSA = 44,
+  /// Guatemala
+  ownerCode_GUAT = 45,
+  /// Hungary
+  ownerCode_HUN = 46,
+  /// International Mobile Satellite Organization (INMARSAT)
+  ownerCode_IM = 47,
+  /// India
+  ownerCode_IND = 48,
+  /// Indonesia
+  ownerCode_INDO = 49,
+  /// Iran
+  ownerCode_IRAN = 50,
+  /// Iraq
+  ownerCode_IRAQ = 51,
+  /// Iridium
+  ownerCode_IRID = 52,
+  /// Ireland
+  ownerCode_IRL = 53,
+  /// Israel
+  ownerCode_ISRA = 54,
+  /// Indian Space Research Organisation
+  ownerCode_ISRO = 55,
+  /// International Space Station
+  ownerCode_ISS = 56,
+  /// Italy
+  ownerCode_IT = 57,
+  /// International Telecommunications Satellite Organization (INTELSAT)
+  ownerCode_ITSO = 58,
+  /// Japan
+  ownerCode_JPN = 59,
+  /// Kazakhstan
+  ownerCode_KAZ = 60,
+  /// Republic of Kenya
+  ownerCode_KEN = 61,
+  /// Laos
+  ownerCode_LAOS = 62,
+  /// Democratic Socialist Republic of Sri Lanka
+  ownerCode_LKA = 63,
+  /// Lithuania
+  ownerCode_LTU = 64,
+  /// Luxembourg
+  ownerCode_LUXE = 65,
+  /// Morocco
+  ownerCode_MA = 66,
+  /// Malaysia
+  ownerCode_MALA = 67,
+  /// Principality of Monaco
+  ownerCode_MCO = 68,
+  /// Republic of Moldova
+  ownerCode_MDA = 69,
+  /// Mexico
+  ownerCode_MEX = 70,
+  /// Republic of the Union of Myanmar
+  ownerCode_MMR = 71,
+  /// Mongolia
+  ownerCode_MNG = 72,
+  /// Mauritius
+  ownerCode_MUS = 73,
+  /// North Atlantic Treaty Organization
+  ownerCode_NATO = 74,
+  /// Netherlands
+  ownerCode_NETH = 75,
+  /// New ICO
+  ownerCode_NICO = 76,
+  /// Nigeria
+  ownerCode_NIG = 77,
+  /// Democratic People's Republic of Korea
+  ownerCode_NKOR = 78,
+  /// Norway
+  ownerCode_NOR = 79,
+  /// Federal Democratic Republic of Nepal
+  ownerCode_NPL = 80,
+  /// New Zealand
+  ownerCode_NZ = 81,
+  /// O3b Networks
+  ownerCode_O3B = 82,
+  /// ORBCOMM
+  ownerCode_ORB = 83,
+  /// Pakistan
+  ownerCode_PAKI = 84,
+  /// Peru
+  ownerCode_PERU = 85,
+  /// Poland
+  ownerCode_POL = 86,
+  /// Portugal
+  ownerCode_POR = 87,
+  /// People's Republic of China
+  ownerCode_PRC = 88,
+  /// Republic of Paraguay
+  ownerCode_PRY = 89,
+  /// People's Republic of China/European Space Agency
+  ownerCode_PRES = 90,
+  /// State of Qatar
+  ownerCode_QAT = 91,
+  /// RascomStar-QAF
+  ownerCode_RASC = 92,
+  /// Taiwan (Republic of China)
+  ownerCode_ROC = 93,
+  /// Romania
+  ownerCode_ROM = 94,
+  /// Philippines (Republic of the Philippines)
+  ownerCode_RP = 95,
+  /// Republic of Rwanda
+  ownerCode_RWA = 96,
+  /// South Africa
+  ownerCode_SAFR = 97,
+  /// Saudi Arabia
+  ownerCode_SAUD = 98,
+  /// Republic of Sudan
+  ownerCode_SDN = 99,
+  /// Sea Launch
+  ownerCode_SEAL = 100,
+  /// SES
+  ownerCode_SES = 101,
+  /// Singapore/Japan
+  ownerCode_SGJP = 102,
+  /// Singapore
+  ownerCode_SING = 103,
+  /// Republic of Korea
+  ownerCode_SKOR = 104,
+  /// Spain
+  ownerCode_SPN = 105,
+  /// Singapore/Taiwan
+  ownerCode_STCT = 106,
+  /// Slovenia
+  ownerCode_SVN = 107,
+  /// Sweden
+  ownerCode_SWED = 108,
+  /// Switzerland
+  ownerCode_SWTZ = 109,
+  /// To Be Determined
+  ownerCode_TBD = 110,
+  /// Thailand
+  ownerCode_THAI = 111,
+  /// Turkmenistan/Monaco
+  ownerCode_TMMC = 112,
+  /// Republic of Tunisia
+  ownerCode_TUN = 113,
+  /// Turkey
+  ownerCode_TURK = 114,
+  /// United Arab Emirates
+  ownerCode_UAE = 115,
+  /// United Kingdom
+  ownerCode_UK = 116,
+  /// Ukraine
+  ownerCode_UKR = 117,
+  /// Unknown
+  ownerCode_UNK = 118,
+  /// Uruguay
+  ownerCode_URY = 119,
+  /// United States
+  ownerCode_US = 120,
+  /// United States/Brazil
+  ownerCode_USBZ = 121,
+  /// Vatican City State
+  ownerCode_VAT = 122,
+  /// Venezuela
+  ownerCode_VENZ = 123,
+  /// Vietnam
+  ownerCode_VTNM = 124,
+  /// Republic of Zimbabwe
+  ownerCode_ZWE = 125,
+  ownerCode_MIN = ownerCode_AB,
+  ownerCode_MAX = ownerCode_ZWE
+};
+
+inline const ownerCode (&EnumValuesownerCode())[126] {
+  static const ownerCode values[] = {
+    ownerCode_AB,
+    ownerCode_ABS,
+    ownerCode_AC,
+    ownerCode_ALG,
+    ownerCode_ANG,
+    ownerCode_ARGN,
+    ownerCode_ARM,
+    ownerCode_ASRA,
+    ownerCode_AUS,
+    ownerCode_AZER,
+    ownerCode_BEL,
+    ownerCode_BELA,
+    ownerCode_BERM,
+    ownerCode_BGD,
+    ownerCode_BHUT,
+    ownerCode_BOL,
+    ownerCode_BRAZ,
+    ownerCode_BUL,
+    ownerCode_CA,
+    ownerCode_CHBZ,
+    ownerCode_CHTU,
+    ownerCode_CHLE,
+    ownerCode_CIS,
+    ownerCode_COL,
+    ownerCode_CRI,
+    ownerCode_CZCH,
+    ownerCode_DEN,
+    ownerCode_DJI,
+    ownerCode_ECU,
+    ownerCode_EGYP,
+    ownerCode_ESA,
+    ownerCode_ESRO,
+    ownerCode_EST,
+    ownerCode_ETH,
+    ownerCode_EUME,
+    ownerCode_EUTE,
+    ownerCode_FGER,
+    ownerCode_FIN,
+    ownerCode_FR,
+    ownerCode_FRIT,
+    ownerCode_GER,
+    ownerCode_GHA,
+    ownerCode_GLOB,
+    ownerCode_GREC,
+    ownerCode_GRSA,
+    ownerCode_GUAT,
+    ownerCode_HUN,
+    ownerCode_IM,
+    ownerCode_IND,
+    ownerCode_INDO,
+    ownerCode_IRAN,
+    ownerCode_IRAQ,
+    ownerCode_IRID,
+    ownerCode_IRL,
+    ownerCode_ISRA,
+    ownerCode_ISRO,
+    ownerCode_ISS,
+    ownerCode_IT,
+    ownerCode_ITSO,
+    ownerCode_JPN,
+    ownerCode_KAZ,
+    ownerCode_KEN,
+    ownerCode_LAOS,
+    ownerCode_LKA,
+    ownerCode_LTU,
+    ownerCode_LUXE,
+    ownerCode_MA,
+    ownerCode_MALA,
+    ownerCode_MCO,
+    ownerCode_MDA,
+    ownerCode_MEX,
+    ownerCode_MMR,
+    ownerCode_MNG,
+    ownerCode_MUS,
+    ownerCode_NATO,
+    ownerCode_NETH,
+    ownerCode_NICO,
+    ownerCode_NIG,
+    ownerCode_NKOR,
+    ownerCode_NOR,
+    ownerCode_NPL,
+    ownerCode_NZ,
+    ownerCode_O3B,
+    ownerCode_ORB,
+    ownerCode_PAKI,
+    ownerCode_PERU,
+    ownerCode_POL,
+    ownerCode_POR,
+    ownerCode_PRC,
+    ownerCode_PRY,
+    ownerCode_PRES,
+    ownerCode_QAT,
+    ownerCode_RASC,
+    ownerCode_ROC,
+    ownerCode_ROM,
+    ownerCode_RP,
+    ownerCode_RWA,
+    ownerCode_SAFR,
+    ownerCode_SAUD,
+    ownerCode_SDN,
+    ownerCode_SEAL,
+    ownerCode_SES,
+    ownerCode_SGJP,
+    ownerCode_SING,
+    ownerCode_SKOR,
+    ownerCode_SPN,
+    ownerCode_STCT,
+    ownerCode_SVN,
+    ownerCode_SWED,
+    ownerCode_SWTZ,
+    ownerCode_TBD,
+    ownerCode_THAI,
+    ownerCode_TMMC,
+    ownerCode_TUN,
+    ownerCode_TURK,
+    ownerCode_UAE,
+    ownerCode_UK,
+    ownerCode_UKR,
+    ownerCode_UNK,
+    ownerCode_URY,
+    ownerCode_US,
+    ownerCode_USBZ,
+    ownerCode_VAT,
+    ownerCode_VENZ,
+    ownerCode_VTNM,
+    ownerCode_ZWE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesownerCode() {
+  static const char * const names[127] = {
+    "AB",
+    "ABS",
+    "AC",
+    "ALG",
+    "ANG",
+    "ARGN",
+    "ARM",
+    "ASRA",
+    "AUS",
+    "AZER",
+    "BEL",
+    "BELA",
+    "BERM",
+    "BGD",
+    "BHUT",
+    "BOL",
+    "BRAZ",
+    "BUL",
+    "CA",
+    "CHBZ",
+    "CHTU",
+    "CHLE",
+    "CIS",
+    "COL",
+    "CRI",
+    "CZCH",
+    "DEN",
+    "DJI",
+    "ECU",
+    "EGYP",
+    "ESA",
+    "ESRO",
+    "EST",
+    "ETH",
+    "EUME",
+    "EUTE",
+    "FGER",
+    "FIN",
+    "FR",
+    "FRIT",
+    "GER",
+    "GHA",
+    "GLOB",
+    "GREC",
+    "GRSA",
+    "GUAT",
+    "HUN",
+    "IM",
+    "IND",
+    "INDO",
+    "IRAN",
+    "IRAQ",
+    "IRID",
+    "IRL",
+    "ISRA",
+    "ISRO",
+    "ISS",
+    "IT",
+    "ITSO",
+    "JPN",
+    "KAZ",
+    "KEN",
+    "LAOS",
+    "LKA",
+    "LTU",
+    "LUXE",
+    "MA",
+    "MALA",
+    "MCO",
+    "MDA",
+    "MEX",
+    "MMR",
+    "MNG",
+    "MUS",
+    "NATO",
+    "NETH",
+    "NICO",
+    "NIG",
+    "NKOR",
+    "NOR",
+    "NPL",
+    "NZ",
+    "O3B",
+    "ORB",
+    "PAKI",
+    "PERU",
+    "POL",
+    "POR",
+    "PRC",
+    "PRY",
+    "PRES",
+    "QAT",
+    "RASC",
+    "ROC",
+    "ROM",
+    "RP",
+    "RWA",
+    "SAFR",
+    "SAUD",
+    "SDN",
+    "SEAL",
+    "SES",
+    "SGJP",
+    "SING",
+    "SKOR",
+    "SPN",
+    "STCT",
+    "SVN",
+    "SWED",
+    "SWTZ",
+    "TBD",
+    "THAI",
+    "TMMC",
+    "TUN",
+    "TURK",
+    "UAE",
+    "UK",
+    "UKR",
+    "UNK",
+    "URY",
+    "US",
+    "USBZ",
+    "VAT",
+    "VENZ",
+    "VTNM",
+    "ZWE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameownerCode(ownerCode e) {
+  if (::flatbuffers::IsOutRange(e, ownerCode_AB, ownerCode_ZWE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesownerCode()[index];
+}
+
 /// Catalog Entity Message
 struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CATBuilder Builder;
@@ -280,8 +808,8 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return static_cast<opsStatusCode>(GetField<int8_t>(VT_OPS_STATUS_CODE, 7));
   }
   /// Ownership, typically country or company
-  const ::flatbuffers::String *OWNER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OWNER);
+  ownerCode OWNER() const {
+    return static_cast<ownerCode>(GetField<int8_t>(VT_OWNER, 0));
   }
   /// Launch Date [year-month-day] (ISO 8601)
   const ::flatbuffers::String *LAUNCH_DATE() const {
@@ -360,8 +888,7 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
            VerifyField<int8_t>(verifier, VT_OBJECT_TYPE, 1) &&
            VerifyField<int8_t>(verifier, VT_OPS_STATUS_CODE, 1) &&
-           VerifyOffset(verifier, VT_OWNER) &&
-           verifier.VerifyString(OWNER()) &&
+           VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
            VerifyOffset(verifier, VT_LAUNCH_DATE) &&
            verifier.VerifyString(LAUNCH_DATE()) &&
            VerifyOffset(verifier, VT_LAUNCH_SITE) &&
@@ -409,8 +936,8 @@ struct CATBuilder {
   void add_OPS_STATUS_CODE(opsStatusCode OPS_STATUS_CODE) {
     fbb_.AddElement<int8_t>(CAT::VT_OPS_STATUS_CODE, static_cast<int8_t>(OPS_STATUS_CODE), 7);
   }
-  void add_OWNER(::flatbuffers::Offset<::flatbuffers::String> OWNER) {
-    fbb_.AddOffset(CAT::VT_OWNER, OWNER);
+  void add_OWNER(ownerCode OWNER) {
+    fbb_.AddElement<int8_t>(CAT::VT_OWNER, static_cast<int8_t>(OWNER), 0);
   }
   void add_LAUNCH_DATE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE) {
     fbb_.AddOffset(CAT::VT_LAUNCH_DATE, LAUNCH_DATE);
@@ -481,7 +1008,7 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
     uint32_t NORAD_CAT_ID = 0,
     objectType OBJECT_TYPE = objectType_UNKNOWN,
     opsStatusCode OPS_STATUS_CODE = opsStatusCode_UNKNOWN,
-    ::flatbuffers::Offset<::flatbuffers::String> OWNER = 0,
+    ownerCode OWNER = ownerCode_AB,
     ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_SITE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DECAY_DATE = 0,
@@ -513,7 +1040,6 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
   builder_.add_DECAY_DATE(DECAY_DATE);
   builder_.add_LAUNCH_SITE(LAUNCH_SITE);
   builder_.add_LAUNCH_DATE(LAUNCH_DATE);
-  builder_.add_OWNER(OWNER);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
@@ -521,6 +1047,7 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
   builder_.add_MANEUVERABLE(MANEUVERABLE);
   builder_.add_ORBIT_TYPE(ORBIT_TYPE);
   builder_.add_DATA_STATUS_CODE(DATA_STATUS_CODE);
+  builder_.add_OWNER(OWNER);
   builder_.add_OPS_STATUS_CODE(OPS_STATUS_CODE);
   builder_.add_OBJECT_TYPE(OBJECT_TYPE);
   return builder_.Finish();
@@ -533,7 +1060,7 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
     uint32_t NORAD_CAT_ID = 0,
     objectType OBJECT_TYPE = objectType_UNKNOWN,
     opsStatusCode OPS_STATUS_CODE = opsStatusCode_UNKNOWN,
-    const char *OWNER = nullptr,
+    ownerCode OWNER = ownerCode_AB,
     const char *LAUNCH_DATE = nullptr,
     const char *LAUNCH_SITE = nullptr,
     const char *DECAY_DATE = nullptr,
@@ -553,7 +1080,6 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
     const std::vector<::flatbuffers::Offset<PLD>> *PAYLOADS = nullptr) {
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
-  auto OWNER__ = OWNER ? _fbb.CreateString(OWNER) : 0;
   auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
   auto LAUNCH_SITE__ = LAUNCH_SITE ? _fbb.CreateString(LAUNCH_SITE) : 0;
   auto DECAY_DATE__ = DECAY_DATE ? _fbb.CreateString(DECAY_DATE) : 0;
@@ -567,7 +1093,7 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
       NORAD_CAT_ID,
       OBJECT_TYPE,
       OPS_STATUS_CODE,
-      OWNER__,
+      OWNER,
       LAUNCH_DATE__,
       LAUNCH_SITE__,
       DECAY_DATE__,

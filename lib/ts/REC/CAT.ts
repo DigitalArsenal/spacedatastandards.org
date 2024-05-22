@@ -8,6 +8,7 @@ import { massType } from './massType.js';
 import { objectType } from './objectType.js';
 import { opsStatusCode } from './opsStatusCode.js';
 import { orbitType } from './orbitType.js';
+import { ownerCode } from './ownerCode.js';
 
 
 /**
@@ -82,11 +83,9 @@ OPS_STATUS_CODE():opsStatusCode {
 /**
  * Ownership, typically country or company
  */
-OWNER():string|null
-OWNER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OWNER(optionalEncoding?:any):string|Uint8Array|null {
+OWNER():ownerCode {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ownerCode.AB;
 }
 
 /**
@@ -264,8 +263,8 @@ static addOpsStatusCode(builder:flatbuffers.Builder, OPS_STATUS_CODE:opsStatusCo
   builder.addFieldInt8(4, OPS_STATUS_CODE, opsStatusCode.UNKNOWN);
 }
 
-static addOwner(builder:flatbuffers.Builder, OWNEROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, OWNEROffset, 0);
+static addOwner(builder:flatbuffers.Builder, OWNER:ownerCode) {
+  builder.addFieldInt8(5, OWNER, ownerCode.AB);
 }
 
 static addLaunchDate(builder:flatbuffers.Builder, LAUNCH_DATEOffset:flatbuffers.Offset) {
@@ -361,14 +360,14 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNEROffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNER:ownerCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
   CAT.addNoradCatId(builder, NORAD_CAT_ID);
   CAT.addObjectType(builder, OBJECT_TYPE);
   CAT.addOpsStatusCode(builder, OPS_STATUS_CODE);
-  CAT.addOwner(builder, OWNEROffset);
+  CAT.addOwner(builder, OWNER);
   CAT.addLaunchDate(builder, LAUNCH_DATEOffset);
   CAT.addLaunchSite(builder, LAUNCH_SITEOffset);
   CAT.addDecayDate(builder, DECAY_DATEOffset);
@@ -452,7 +451,7 @@ constructor(
   public NORAD_CAT_ID: number = 0,
   public OBJECT_TYPE: objectType = objectType.UNKNOWN,
   public OPS_STATUS_CODE: opsStatusCode = opsStatusCode.UNKNOWN,
-  public OWNER: string|Uint8Array|null = null,
+  public OWNER: ownerCode = ownerCode.AB,
   public LAUNCH_DATE: string|Uint8Array|null = null,
   public LAUNCH_SITE: string|Uint8Array|null = null,
   public DECAY_DATE: string|Uint8Array|null = null,
@@ -476,7 +475,6 @@ constructor(
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
   const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
-  const OWNER = (this.OWNER !== null ? builder.createString(this.OWNER!) : 0);
   const LAUNCH_DATE = (this.LAUNCH_DATE !== null ? builder.createString(this.LAUNCH_DATE!) : 0);
   const LAUNCH_SITE = (this.LAUNCH_SITE !== null ? builder.createString(this.LAUNCH_SITE!) : 0);
   const DECAY_DATE = (this.DECAY_DATE !== null ? builder.createString(this.DECAY_DATE!) : 0);
@@ -490,7 +488,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.NORAD_CAT_ID,
     this.OBJECT_TYPE,
     this.OPS_STATUS_CODE,
-    OWNER,
+    this.OWNER,
     LAUNCH_DATE,
     LAUNCH_SITE,
     DECAY_DATE,
