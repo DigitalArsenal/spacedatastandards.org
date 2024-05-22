@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+///  Mean Element Theory
 class MeanElementTheory {
   final int value;
   const MeanElementTheory._(this.value);

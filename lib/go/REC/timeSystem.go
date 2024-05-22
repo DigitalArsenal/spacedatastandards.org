@@ -4,6 +4,7 @@ package REC
 
 import "strconv"
 
+/// Time System
 type timeSystem int8
 
 const (

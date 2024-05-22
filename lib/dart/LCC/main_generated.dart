@@ -6,7 +6,6 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Legacy Country Code
-///  Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 class LegacyCountryCode {
   final int value;
   const LegacyCountryCode._(this.value);

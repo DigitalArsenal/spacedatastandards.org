@@ -19,6 +19,7 @@ struct TIMBuilder;
 struct TIMCOLLECTION;
 struct TIMCOLLECTIONBuilder;
 
+/// Time System
 enum timeSystem : int8_t {
   /// Greenwich Mean Sidereal Time
   timeSystem_GMST = 0,

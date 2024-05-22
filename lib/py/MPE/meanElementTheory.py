@@ -2,6 +2,7 @@
 
 # namespace: 
 
+# Mean Element Theory
 class meanElementTheory(object):
     # Simplified General Perturbation Model 4
     SGP4 = 0

@@ -22,6 +22,7 @@ pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 4] = [
   meanElementTheory::USM,
 ];
 
+/// Mean Element Theory
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct meanElementTheory(pub i8);

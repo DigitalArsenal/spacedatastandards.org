@@ -3,7 +3,6 @@
 // </auto-generated>
 
 /// Legacy Country Code
-/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 public enum legacyCountryCode : sbyte
 {
   /// Arab Satellite Communications Organization

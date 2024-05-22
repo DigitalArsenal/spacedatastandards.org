@@ -30,6 +30,7 @@ pub const ENUM_VALUES_TIME_SYSTEM: [timeSystem; 12] = [
   timeSystem::UTC,
 ];
 
+/// Time System
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct timeSystem(pub i8);

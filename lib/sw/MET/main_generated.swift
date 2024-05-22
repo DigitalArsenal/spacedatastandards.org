@@ -4,6 +4,7 @@
 
 import FlatBuffers
 
+///  Mean Element Theory
 public enum meanElementTheory: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }

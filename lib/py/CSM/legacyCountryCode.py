@@ -3,7 +3,6 @@
 # namespace: 
 
 # Legacy Country Code
-# Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 class legacyCountryCode(object):
     # Arab Satellite Communications Organization
     AB = 0

@@ -2,7 +2,6 @@
 import flatbuffers
 
 /// Legacy Country Code
-/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 enum legacyCountryCode:
     /// Arab Satellite Communications Organization
     legacyCountryCode_AB = 0

@@ -19,6 +19,7 @@ struct METBuilder;
 struct METCOLLECTION;
 struct METCOLLECTIONBuilder;
 
+/// Mean Element Theory
 enum meanElementTheory : int8_t {
   /// Simplified General Perturbation Model 4
   meanElementTheory_SGP4 = 0,

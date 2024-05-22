@@ -1,3 +1,6 @@
+/**
+ * Time System
+ */
 export declare enum timeSystem {
     /**
      * Greenwich Mean Sidereal Time
