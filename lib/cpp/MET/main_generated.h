@@ -19,7 +19,6 @@ struct METBuilder;
 struct METCOLLECTION;
 struct METCOLLECTIONBuilder;
 
-/// Mean Element Theory
 enum meanElementTheory : int8_t {
   /// Simplified General Perturbation Model 4
   meanElementTheory_SGP4 = 0,
@@ -60,6 +59,7 @@ inline const char *EnumNamemeanElementTheory(meanElementTheory e) {
   return EnumNamesmeanElementTheory()[index];
 }
 
+/// Mean Element Theory
 struct MET FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef METBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

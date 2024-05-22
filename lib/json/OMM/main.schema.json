@@ -38,6 +38,7 @@
     },
     "TIM" : {
       "type" : "object",
+      "description" : "Time System",
       "properties" : {
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem"
@@ -56,6 +57,7 @@
     },
     "MET" : {
       "type" : "object",
+      "description" : "Mean Element Theory",
       "properties" : {
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory"

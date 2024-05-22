@@ -7,6 +7,7 @@
     },
     "MET" : {
       "type" : "object",
+      "description" : "Mean Element Theory",
       "properties" : {
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory"

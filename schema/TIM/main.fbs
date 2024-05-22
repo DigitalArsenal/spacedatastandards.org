@@ -1,5 +1,3 @@
-/// Time System
-
 enum timeSystem : byte {
   /// Greenwich Mean Sidereal Time
   GMST,
@@ -27,6 +25,7 @@ enum timeSystem : byte {
   UTC
 }
 
+/// Time System
 table TIM {
   TIME_SYSTEM: timeSystem;
 }

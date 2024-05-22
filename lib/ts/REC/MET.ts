@@ -5,6 +5,9 @@ import * as flatbuffers from 'flatbuffers';
 import { meanElementTheory } from './meanElementTheory.js';
 
 
+/**
+ * Mean Element Theory
+ */
 export class MET implements flatbuffers.IUnpackableObject<METT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

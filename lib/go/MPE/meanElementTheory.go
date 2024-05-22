@@ -4,7 +4,6 @@ package MPE
 
 import "strconv"
 
-/// Mean Element Theory
 type meanElementTheory int8
 
 const (

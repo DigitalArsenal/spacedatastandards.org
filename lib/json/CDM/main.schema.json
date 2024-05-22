@@ -333,6 +333,7 @@
     },
     "LCC" : {
       "type" : "object",
+      "description" : "Legacy Country Code",
       "properties" : {
         "OWNER" : {
                 "$ref" : "#/definitions/legacyCountryCode"

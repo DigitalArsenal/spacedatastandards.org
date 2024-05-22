@@ -2,7 +2,6 @@
 
 # namespace: 
 
-# Legacy Country Code
 class legacyCountryCode(object):
     # Arab Satellite Communications Organization
     AB = 0

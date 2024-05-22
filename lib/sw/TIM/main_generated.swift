@@ -4,7 +4,6 @@
 
 import FlatBuffers
 
-///  Time System
 public enum timeSystem: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -39,6 +38,7 @@ public enum timeSystem: Int8, Enum, Verifiable {
 }
 
 
+///  Time System
 public struct TIM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

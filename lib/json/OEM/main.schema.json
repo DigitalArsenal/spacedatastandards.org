@@ -30,6 +30,7 @@
     },
     "TIM" : {
       "type" : "object",
+      "description" : "Time System",
       "properties" : {
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem"

@@ -19,7 +19,6 @@ struct LCCBuilder;
 struct LCCCOLLECTION;
 struct LCCCOLLECTIONBuilder;
 
-/// Legacy Country Code
 enum legacyCountryCode : int8_t {
   /// Arab Satellite Communications Organization
   legacyCountryCode_AB = 0,
@@ -548,6 +547,7 @@ inline const char *EnumNamelegacyCountryCode(legacyCountryCode e) {
   return EnumNameslegacyCountryCode()[index];
 }
 
+/// Legacy Country Code
 struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LCCBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

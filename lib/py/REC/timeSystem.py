@@ -2,7 +2,6 @@
 
 # namespace: 
 
-# Time System
 class timeSystem(object):
     # Greenwich Mean Sidereal Time
     GMST = 0

@@ -5,7 +5,6 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Legacy Country Code
 class LegacyCountryCode {
   final int value;
   const LegacyCountryCode._(this.value);
@@ -549,6 +548,7 @@ class _LegacyCountryCodeReader extends fb.Reader<LegacyCountryCode> {
       LegacyCountryCode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Legacy Country Code
 class LCC {
   LCC._(this._bc, this._bcOffset);
   factory LCC(List<int> bytes) {

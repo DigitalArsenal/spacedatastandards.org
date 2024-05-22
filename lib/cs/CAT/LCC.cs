@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Legacy Country Code
 public struct LCC : IFlatbufferObject
 {
   private Table __p;

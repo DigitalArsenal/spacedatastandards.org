@@ -91,6 +91,7 @@
     },
     "LCC" : {
       "type" : "object",
+      "description" : "Legacy Country Code",
       "properties" : {
         "OWNER" : {
                 "$ref" : "#/definitions/legacyCountryCode"
@@ -109,6 +110,7 @@
     },
     "MET" : {
       "type" : "object",
+      "description" : "Mean Element Theory",
       "properties" : {
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory"
@@ -202,6 +204,7 @@
     },
     "TIM" : {
       "type" : "object",
+      "description" : "Time System",
       "properties" : {
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem"

@@ -5,7 +5,6 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Mean Element Theory
 class MeanElementTheory {
   final int value;
   const MeanElementTheory._(this.value);
@@ -61,6 +60,7 @@ class _MeanElementTheoryReader extends fb.Reader<MeanElementTheory> {
       MeanElementTheory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Mean Element Theory
 class MET {
   MET._(this._bc, this._bcOffset);
   factory MET(List<int> bytes) {

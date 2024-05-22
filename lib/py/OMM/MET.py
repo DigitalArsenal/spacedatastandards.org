@@ -6,6 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# Mean Element Theory
 class MET(object):
     __slots__ = ['_tab']
 

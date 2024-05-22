@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Mean Element Theory
 type MET struct {
 	_tab flatbuffers.Table
 }

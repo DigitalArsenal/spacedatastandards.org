@@ -5,7 +5,6 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Time System
 class TimeSystem {
   final int value;
   const TimeSystem._(this.value);
@@ -93,6 +92,7 @@ class _TimeSystemReader extends fb.Reader<TimeSystem> {
       TimeSystem.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Time System
 class TIM {
   TIM._(this._bc, this._bcOffset);
   factory TIM(List<int> bytes) {

@@ -144,7 +144,6 @@ pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
   legacyCountryCode::ZWE,
 ];
 
-/// Legacy Country Code
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct legacyCountryCode(pub i8);
@@ -720,6 +719,7 @@ impl flatbuffers::SimpleToVerifyInSlice for legacyCountryCode {}
 pub enum LCCOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Legacy Country Code
 pub struct LCC<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

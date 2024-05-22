@@ -1,5 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { timeSystem } from './timeSystem.js';
+/**
+ * Time System
+ */
 export declare class TIM implements flatbuffers.IUnpackableObject<TIMT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

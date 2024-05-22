@@ -1,5 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { legacyCountryCode } from './legacyCountryCode.js';
+/**
+ * Legacy Country Code
+ */
 export declare class LCC implements flatbuffers.IUnpackableObject<LCCT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

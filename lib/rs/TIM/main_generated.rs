@@ -30,7 +30,6 @@ pub const ENUM_VALUES_TIME_SYSTEM: [timeSystem; 12] = [
   timeSystem::UTC,
 ];
 
-/// Time System
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct timeSystem(pub i8);
@@ -150,6 +149,7 @@ impl flatbuffers::SimpleToVerifyInSlice for timeSystem {}
 pub enum TIMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Time System
 pub struct TIM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

@@ -1,4 +1,4 @@
-/// Mean Element Theory
+
 enum meanElementTheory : byte {
   /// Simplified General Perturbation Model 4
   SGP4,
@@ -10,6 +10,7 @@ enum meanElementTheory : byte {
   USM
 }
 
+/// Mean Element Theory
 table MET {
   MEAN_ELEMENT_THEORY:meanElementTheory;
 }

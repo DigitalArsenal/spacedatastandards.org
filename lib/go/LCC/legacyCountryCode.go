@@ -4,7 +4,6 @@ package LCC
 
 import "strconv"
 
-/// Legacy Country Code
 type legacyCountryCode int8
 
 const (

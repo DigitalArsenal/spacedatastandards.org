@@ -22,7 +22,6 @@ pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 4] = [
   meanElementTheory::USM,
 ];
 
-/// Mean Element Theory
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct meanElementTheory(pub i8);
@@ -110,6 +109,7 @@ impl flatbuffers::SimpleToVerifyInSlice for meanElementTheory {}
 pub enum METOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Mean Element Theory
 pub struct MET<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

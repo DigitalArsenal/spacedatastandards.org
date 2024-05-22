@@ -4,7 +4,6 @@
 
 import FlatBuffers
 
-///  Legacy Country Code
 public enum legacyCountryCode: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -267,6 +266,7 @@ public enum legacyCountryCode: Int8, Enum, Verifiable {
 }
 
 
+///  Legacy Country Code
 public struct LCC: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

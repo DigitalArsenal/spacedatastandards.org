@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Time System
 type TIM struct {
 	_tab flatbuffers.Table
 }

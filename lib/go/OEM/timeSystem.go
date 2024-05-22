@@ -4,7 +4,6 @@ package OEM
 
 import "strconv"
 
-/// Time System
 type timeSystem int8
 
 const (

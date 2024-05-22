@@ -19,7 +19,6 @@ struct TIMBuilder;
 struct TIMCOLLECTION;
 struct TIMCOLLECTIONBuilder;
 
-/// Time System
 enum timeSystem : int8_t {
   /// Greenwich Mean Sidereal Time
   timeSystem_GMST = 0,
@@ -92,6 +91,7 @@ inline const char *EnumNametimeSystem(timeSystem e) {
   return EnumNamestimeSystem()[index];
 }
 
+/// Time System
 struct TIM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TIMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

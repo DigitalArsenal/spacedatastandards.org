@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Mean Element Theory
+ */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class MET : Table() {

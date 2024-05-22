@@ -1,5 +1,3 @@
-/// Legacy Country Code
-
 enum legacyCountryCode : byte {
   /// Arab Satellite Communications Organization
   AB,
@@ -255,6 +253,7 @@ enum legacyCountryCode : byte {
   ZWE
 }
 
+/// Legacy Country Code
 table LCC {
   OWNER: legacyCountryCode;
 }

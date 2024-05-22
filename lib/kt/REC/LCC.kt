@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Legacy Country Code
+ */
 @Suppress("unused")
 @kotlin.ExperimentalUnsignedTypes
 class LCC : Table() {

@@ -4,7 +4,6 @@
 
 import FlatBuffers
 
-///  Mean Element Theory
 public enum meanElementTheory: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -23,6 +22,7 @@ public enum meanElementTheory: Int8, Enum, Verifiable {
 }
 
 
+///  Mean Element Theory
 public struct MET: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_23_3_3() }

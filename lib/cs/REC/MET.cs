@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Mean Element Theory
 public struct MET : IFlatbufferObject
 {
   private Table __p;

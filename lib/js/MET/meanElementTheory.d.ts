@@ -1,6 +1,3 @@
-/**
- * Mean Element Theory
- */
 export declare enum meanElementTheory {
     /**
      * Simplified General Perturbation Model 4

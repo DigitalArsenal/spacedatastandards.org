@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Time System
 public struct TIM : IFlatbufferObject
 {
   private Table __p;

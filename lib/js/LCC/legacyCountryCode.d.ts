@@ -1,6 +1,3 @@
-/**
- * Legacy Country Code
- */
 export declare enum legacyCountryCode {
     /**
      * Arab Satellite Communications Organization
