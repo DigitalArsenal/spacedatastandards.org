@@ -4,6 +4,7 @@
 
 import FlatBuffers
 
+///  Legacy Country Code
 ///  Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 public enum legacyCountryCode: Int8, Enum, Verifiable {
   public typealias T = Int8

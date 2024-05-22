@@ -19,6 +19,7 @@ struct LCCBuilder;
 struct LCCCOLLECTION;
 struct LCCCOLLECTIONBuilder;
 
+/// Legacy Country Code
 /// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 enum legacyCountryCode : int8_t {
   /// Arab Satellite Communications Organization

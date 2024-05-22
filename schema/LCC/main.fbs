@@ -1,4 +1,5 @@
-/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
+/// Legacy Country Code
+
 enum legacyCountryCode : byte {
   /// Arab Satellite Communications Organization
   AB,

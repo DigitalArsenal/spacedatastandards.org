@@ -144,6 +144,7 @@ pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
   legacyCountryCode::ZWE,
 ];
 
+/// Legacy Country Code
 /// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
