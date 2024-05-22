@@ -4,35 +4,36 @@
 public final class RecordType {
   private RecordType() { }
   public static final byte NONE = 0;
-  public static final byte MPE = 1;
-  public static final byte OMM = 2;
-  public static final byte PLD = 3;
-  public static final byte RFM = 4;
-  public static final byte CSM = 5;
-  public static final byte OSM = 6;
-  public static final byte CAT = 7;
-  public static final byte CRM = 8;
-  public static final byte SCM = 9;
-  public static final byte TDM = 10;
-  public static final byte IDM = 11;
-  public static final byte MET = 12;
-  public static final byte ROC = 13;
-  public static final byte BOV = 14;
-  public static final byte EOP = 15;
-  public static final byte EOO = 16;
-  public static final byte EME = 17;
-  public static final byte LDM = 18;
-  public static final byte PNM = 19;
-  public static final byte HYP = 20;
-  public static final byte CTR = 21;
-  public static final byte CDM = 22;
-  public static final byte SIT = 23;
-  public static final byte OEM = 24;
-  public static final byte TIM = 25;
-  public static final byte EPM = 26;
-  public static final byte PRG = 27;
+  public static final byte LCC = 1;
+  public static final byte MPE = 2;
+  public static final byte OMM = 3;
+  public static final byte PLD = 4;
+  public static final byte RFM = 5;
+  public static final byte CSM = 6;
+  public static final byte OSM = 7;
+  public static final byte CAT = 8;
+  public static final byte CRM = 9;
+  public static final byte SCM = 10;
+  public static final byte TDM = 11;
+  public static final byte IDM = 12;
+  public static final byte MET = 13;
+  public static final byte ROC = 14;
+  public static final byte BOV = 15;
+  public static final byte EOP = 16;
+  public static final byte EOO = 17;
+  public static final byte EME = 18;
+  public static final byte LDM = 19;
+  public static final byte PNM = 20;
+  public static final byte HYP = 21;
+  public static final byte CTR = 22;
+  public static final byte CDM = 23;
+  public static final byte SIT = 24;
+  public static final byte OEM = 25;
+  public static final byte TIM = 26;
+  public static final byte EPM = 27;
+  public static final byte PRG = 28;
 
-  public static final String[] names = { "NONE", "MPE", "OMM", "PLD", "RFM", "CSM", "OSM", "CAT", "CRM", "SCM", "TDM", "IDM", "MET", "ROC", "BOV", "EOP", "EOO", "EME", "LDM", "PNM", "HYP", "CTR", "CDM", "SIT", "OEM", "TIM", "EPM", "PRG", };
+  public static final String[] names = { "NONE", "LCC", "MPE", "OMM", "PLD", "RFM", "CSM", "OSM", "CAT", "CRM", "SCM", "TDM", "IDM", "MET", "ROC", "BOV", "EOP", "EOO", "EME", "LDM", "PNM", "HYP", "CTR", "CDM", "SIT", "OEM", "TIM", "EPM", "PRG", };
 
   public static String name(int e) { return names[e]; }
 }

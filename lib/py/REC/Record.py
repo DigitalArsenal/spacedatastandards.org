@@ -69,6 +69,7 @@ import EOP
 import EPM
 import HYP
 import IDM
+import LCC
 import LDM
 import MET
 import MPE
@@ -95,7 +96,7 @@ class RecordT(object):
     # RecordT
     def __init__(self):
         self.valueType = 0  # type: int
-        self.value = None  # type: Union[None, MPE.MPET, OMM.OMMT, PLD.PLDT, RFM.RFMT, CSM.CSMT, OSM.OSMT, CAT.CATT, CRM.CRMT, SCM.SCMT, TDM.TDMT, IDM.IDMT, MET.METT, ROC.ROCT, BOV.BOVT, EOP.EOPT, EOO.EOOT, EME.EMET, LDM.LDMT, PNM.PNMT, HYP.HYPT, CTR.CTRT, CDM.CDMT, SIT.SITT, OEM.OEMT, TIM.TIMT, EPM.EPMT, PRG.PRGT]
+        self.value = None  # type: Union[None, LCC.LCCT, MPE.MPET, OMM.OMMT, PLD.PLDT, RFM.RFMT, CSM.CSMT, OSM.OSMT, CAT.CATT, CRM.CRMT, SCM.SCMT, TDM.TDMT, IDM.IDMT, MET.METT, ROC.ROCT, BOV.BOVT, EOP.EOPT, EOO.EOOT, EME.EMET, LDM.LDMT, PNM.PNMT, HYP.HYPT, CTR.CTRT, CDM.CDMT, SIT.SITT, OEM.OEMT, TIM.TIMT, EPM.EPMT, PRG.PRGT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):

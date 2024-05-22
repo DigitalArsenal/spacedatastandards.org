@@ -92,7 +92,7 @@ class CAT extends Table
     public function getOWNER()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ownerCode::AB;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \legacyCountryCode::AB;
     }
 
     /// Launch Date [year-month-day] (ISO 8601)

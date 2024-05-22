@@ -97,16 +97,16 @@ func (rcv *CAT) MutateOPS_STATUS_CODE(n opsStatusCode) bool {
 }
 
 /// Ownership, typically country or company
-func (rcv *CAT) OWNER() ownerCode {
+func (rcv *CAT) OWNER() legacyCountryCode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return ownerCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return legacyCountryCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Ownership, typically country or company
-func (rcv *CAT) MutateOWNER(n ownerCode) bool {
+func (rcv *CAT) MutateOWNER(n legacyCountryCode) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
 }
 
@@ -354,7 +354,7 @@ func CATAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE objectType) {
 func CATAddOPS_STATUS_CODE(builder *flatbuffers.Builder, OPS_STATUS_CODE opsStatusCode) {
 	builder.PrependInt8Slot(4, int8(OPS_STATUS_CODE), 7)
 }
-func CATAddOWNER(builder *flatbuffers.Builder, OWNER ownerCode) {
+func CATAddOWNER(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
 	builder.PrependInt8Slot(5, int8(OWNER), 0)
 }
 func CATAddLAUNCH_DATE(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {

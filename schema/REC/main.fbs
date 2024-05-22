@@ -1,3 +1,4 @@
+include "../LCC/main.fbs";
 include "../MPE/main.fbs";
 include "../OMM/main.fbs";
 include "../PLD/main.fbs";
@@ -27,13 +28,13 @@ include "../EPM/main.fbs";
 include "../PRG/main.fbs";
 
 union RecordType {
-  MPE, OMM, PLD, RFM,
-  CSM, OSM, CAT, CRM,
-  SCM, TDM, IDM, MET,
-  ROC, BOV, EOP, EOO,
-  EME, LDM, PNM, HYP,
-  CTR, CDM, SIT, OEM,
-  TIM, EPM, PRG
+  LCC, MPE, OMM, PLD,
+  RFM, CSM, OSM, CAT,
+  CRM, SCM, TDM, IDM,
+  MET, ROC, BOV, EOP,
+  EOO, EME, LDM, PNM,
+  HYP, CTR, CDM, SIT,
+  OEM, TIM, EPM, PRG
 }  // Union of all record types
 
 table Record {

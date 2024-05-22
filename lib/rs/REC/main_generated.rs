@@ -30,6 +30,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -39,11 +40,12 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 27;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 28;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 28] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 29] = [
   RecordType::NONE,
+  RecordType::LCC,
   RecordType::MPE,
   RecordType::OMM,
   RecordType::PLD,
@@ -79,38 +81,40 @@ pub struct RecordType(pub u8);
 #[allow(non_upper_case_globals)]
 impl RecordType {
   pub const NONE: Self = Self(0);
-  pub const MPE: Self = Self(1);
-  pub const OMM: Self = Self(2);
-  pub const PLD: Self = Self(3);
-  pub const RFM: Self = Self(4);
-  pub const CSM: Self = Self(5);
-  pub const OSM: Self = Self(6);
-  pub const CAT: Self = Self(7);
-  pub const CRM: Self = Self(8);
-  pub const SCM: Self = Self(9);
-  pub const TDM: Self = Self(10);
-  pub const IDM: Self = Self(11);
-  pub const MET: Self = Self(12);
-  pub const ROC: Self = Self(13);
-  pub const BOV: Self = Self(14);
-  pub const EOP: Self = Self(15);
-  pub const EOO: Self = Self(16);
-  pub const EME: Self = Self(17);
-  pub const LDM: Self = Self(18);
-  pub const PNM: Self = Self(19);
-  pub const HYP: Self = Self(20);
-  pub const CTR: Self = Self(21);
-  pub const CDM: Self = Self(22);
-  pub const SIT: Self = Self(23);
-  pub const OEM: Self = Self(24);
-  pub const TIM: Self = Self(25);
-  pub const EPM: Self = Self(26);
-  pub const PRG: Self = Self(27);
+  pub const LCC: Self = Self(1);
+  pub const MPE: Self = Self(2);
+  pub const OMM: Self = Self(3);
+  pub const PLD: Self = Self(4);
+  pub const RFM: Self = Self(5);
+  pub const CSM: Self = Self(6);
+  pub const OSM: Self = Self(7);
+  pub const CAT: Self = Self(8);
+  pub const CRM: Self = Self(9);
+  pub const SCM: Self = Self(10);
+  pub const TDM: Self = Self(11);
+  pub const IDM: Self = Self(12);
+  pub const MET: Self = Self(13);
+  pub const ROC: Self = Self(14);
+  pub const BOV: Self = Self(15);
+  pub const EOP: Self = Self(16);
+  pub const EOO: Self = Self(17);
+  pub const EME: Self = Self(18);
+  pub const LDM: Self = Self(19);
+  pub const PNM: Self = Self(20);
+  pub const HYP: Self = Self(21);
+  pub const CTR: Self = Self(22);
+  pub const CDM: Self = Self(23);
+  pub const SIT: Self = Self(24);
+  pub const OEM: Self = Self(25);
+  pub const TIM: Self = Self(26);
+  pub const EPM: Self = Self(27);
+  pub const PRG: Self = Self(28);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 27;
+  pub const ENUM_MAX: u8 = 28;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
+    Self::LCC,
     Self::MPE,
     Self::OMM,
     Self::PLD,
@@ -143,6 +147,7 @@ impl RecordType {
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::NONE => Some("NONE"),
+      Self::LCC => Some("LCC"),
       Self::MPE => Some("MPE"),
       Self::OMM => Some("OMM"),
       Self::PLD => Some("PLD"),
@@ -232,6 +237,7 @@ pub struct RecordTypeUnionTableOffset {}
 #[derive(Debug, Clone, PartialEq)]
 pub enum RecordTypeT {
   NONE,
+  LCC(Box<LCCT>),
   MPE(Box<MPET>),
   OMM(Box<OMMT>),
   PLD(Box<PLDT>),
@@ -269,6 +275,7 @@ impl RecordTypeT {
   pub fn record_type_type(&self) -> RecordType {
     match self {
       Self::NONE => RecordType::NONE,
+      Self::LCC(_) => RecordType::LCC,
       Self::MPE(_) => RecordType::MPE,
       Self::OMM(_) => RecordType::OMM,
       Self::PLD(_) => RecordType::PLD,
@@ -301,6 +308,7 @@ impl RecordTypeT {
   pub fn pack(&self, fbb: &mut flatbuffers::FlatBufferBuilder) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
     match self {
       Self::NONE => None,
+      Self::LCC(v) => Some(v.pack(fbb).as_union_value()),
       Self::MPE(v) => Some(v.pack(fbb).as_union_value()),
       Self::OMM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLD(v) => Some(v.pack(fbb).as_union_value()),
@@ -329,6 +337,27 @@ impl RecordTypeT {
       Self::EPM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PRG(v) => Some(v.pack(fbb).as_union_value()),
     }
+  }
+  /// If the union variant matches, return the owned LCCT, setting the union to NONE.
+  pub fn take_LCC(&mut self) -> Option<Box<LCCT>> {
+    if let Self::LCC(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::LCC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LCCT.
+  pub fn as_LCC(&self) -> Option<&LCCT> {
+    if let Self::LCC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LCCT.
+  pub fn as_LCC_mut(&mut self) -> Option<&mut LCCT> {
+    if let Self::LCC(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned MPET, setting the union to NONE.
   pub fn take_MPE(&mut self) -> Option<Box<MPET>> {
@@ -935,6 +964,11 @@ impl<'a> Record<'a> {
   pub fn unpack(&self) -> RecordT {
     let value = match self.value_type() {
       RecordType::NONE => RecordTypeT::NONE,
+      RecordType::LCC => RecordTypeT::LCC(Box::new(
+        self.value_as_LCC()
+            .expect("Invalid union table, expected `RecordType::LCC`.")
+            .unpack()
+      )),
       RecordType::MPE => RecordTypeT::MPE(Box::new(
         self.value_as_MPE()
             .expect("Invalid union table, expected `RecordType::MPE`.")
@@ -1091,6 +1125,21 @@ impl<'a> Record<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(Record::VT_VALUE, None)}
   }
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_LCC(&self) -> Option<LCC<'a>> {
+    if self.value_type() == RecordType::LCC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LCC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
   #[inline]
   #[allow(non_snake_case)]
   pub fn value_as_MPE(&self) -> Option<MPE<'a>> {
@@ -1507,6 +1556,7 @@ impl flatbuffers::Verifiable for Record<'_> {
     v.visit_table(pos)?
      .visit_union::<RecordType, _>("value_type", Self::VT_VALUE_TYPE, "value", Self::VT_VALUE, false, |key, v, pos| {
         match key {
+          RecordType::LCC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LCC>>("RecordType::LCC", pos),
           RecordType::MPE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MPE>>("RecordType::MPE", pos),
           RecordType::OMM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OMM>>("RecordType::OMM", pos),
           RecordType::PLD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLD>>("RecordType::PLD", pos),
@@ -1588,6 +1638,13 @@ impl core::fmt::Debug for Record<'_> {
     let mut ds = f.debug_struct("Record");
       ds.field("value_type", &self.value_type());
       match self.value_type() {
+        RecordType::LCC => {
+          if let Some(x) = self.value_as_LCC() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::MPE => {
           if let Some(x) = self.value_as_MPE() {
             ds.field("value", &x)

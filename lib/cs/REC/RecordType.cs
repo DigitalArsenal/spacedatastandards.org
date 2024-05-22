@@ -5,33 +5,34 @@
 public enum RecordType : byte
 {
   NONE = 0,
-  MPE = 1,
-  OMM = 2,
-  PLD = 3,
-  RFM = 4,
-  CSM = 5,
-  OSM = 6,
-  CAT = 7,
-  CRM = 8,
-  SCM = 9,
-  TDM = 10,
-  IDM = 11,
-  MET = 12,
-  ROC = 13,
-  BOV = 14,
-  EOP = 15,
-  EOO = 16,
-  EME = 17,
-  LDM = 18,
-  PNM = 19,
-  HYP = 20,
-  CTR = 21,
-  CDM = 22,
-  SIT = 23,
-  OEM = 24,
-  TIM = 25,
-  EPM = 26,
-  PRG = 27,
+  LCC = 1,
+  MPE = 2,
+  OMM = 3,
+  PLD = 4,
+  RFM = 5,
+  CSM = 6,
+  OSM = 7,
+  CAT = 8,
+  CRM = 9,
+  SCM = 10,
+  TDM = 11,
+  IDM = 12,
+  MET = 13,
+  ROC = 14,
+  BOV = 15,
+  EOP = 16,
+  EOO = 17,
+  EME = 18,
+  LDM = 19,
+  PNM = 20,
+  HYP = 21,
+  CTR = 22,
+  CDM = 23,
+  SIT = 24,
+  OEM = 25,
+  TIM = 26,
+  EPM = 27,
+  PRG = 28,
 };
 
 public class RecordTypeUnion {
@@ -44,6 +45,8 @@ public class RecordTypeUnion {
   }
 
   public T As<T>() where T : class { return this.Value as T; }
+  public LCCT AsLCC() { return this.As<LCCT>(); }
+  public static RecordTypeUnion FromLCC(LCCT _lcc) { return new RecordTypeUnion{ Type = RecordType.LCC, Value = _lcc }; }
   public MPET AsMPE() { return this.As<MPET>(); }
   public static RecordTypeUnion FromMPE(MPET _mpe) { return new RecordTypeUnion{ Type = RecordType.MPE, Value = _mpe }; }
   public OMMT AsOMM() { return this.As<OMMT>(); }
@@ -102,6 +105,7 @@ public class RecordTypeUnion {
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
       default: return 0;
+      case RecordType.LCC: return LCC.Pack(builder, _o.AsLCC()).Value;
       case RecordType.MPE: return MPE.Pack(builder, _o.AsMPE()).Value;
       case RecordType.OMM: return OMM.Pack(builder, _o.AsOMM()).Value;
       case RecordType.PLD: return PLD.Pack(builder, _o.AsPLD()).Value;

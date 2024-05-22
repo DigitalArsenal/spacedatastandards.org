@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "legacyCountryCode" : {
+      "type" : "string",
+      "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE"]
+    },
+    "LCC" : {
+      "type" : "object",
+      "properties" : {
+        "OWNER" : {
+                "$ref" : "#/definitions/legacyCountryCode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LCCCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LCC"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LCC"
+}

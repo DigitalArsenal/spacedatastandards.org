@@ -18,6 +18,7 @@ public struct Record : IFlatbufferObject
 
   public RecordType ValueType { get { int o = __p.__offset(4); return o != 0 ? (RecordType)__p.bb.Get(o + __p.bb_pos) : RecordType.NONE; } }
   public TTable? Value<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
+  public LCC ValueAsLCC() { return Value<LCC>().Value; }
   public MPE ValueAsMPE() { return Value<MPE>().Value; }
   public OMM ValueAsOMM() { return Value<OMM>().Value; }
   public PLD ValueAsPLD() { return Value<PLD>().Value; }
@@ -72,6 +73,9 @@ public struct Record : IFlatbufferObject
     _o.Value.Type = this.ValueType;
     switch (this.ValueType) {
       default: break;
+      case RecordType.LCC:
+        _o.Value.Value = this.Value<LCC>().HasValue ? this.Value<LCC>().Value.UnPack() : null;
+        break;
       case RecordType.MPE:
         _o.Value.Value = this.Value<MPE>().HasValue ? this.Value<MPE>().Value.UnPack() : null;
         break;

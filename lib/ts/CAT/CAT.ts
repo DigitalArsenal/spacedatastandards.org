@@ -4,11 +4,11 @@ import * as flatbuffers from 'flatbuffers';
 
 import { PLD, PLDT } from './PLD.js';
 import { dataStatusCode } from './dataStatusCode.js';
+import { legacyCountryCode } from './legacyCountryCode.js';
 import { massType } from './massType.js';
 import { objectType } from './objectType.js';
 import { opsStatusCode } from './opsStatusCode.js';
 import { orbitType } from './orbitType.js';
-import { ownerCode } from './ownerCode.js';
 
 
 /**
@@ -83,9 +83,9 @@ OPS_STATUS_CODE():opsStatusCode {
 /**
  * Ownership, typically country or company
  */
-OWNER():ownerCode {
+OWNER():legacyCountryCode {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ownerCode.AB;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : legacyCountryCode.AB;
 }
 
 /**
@@ -263,8 +263,8 @@ static addOpsStatusCode(builder:flatbuffers.Builder, OPS_STATUS_CODE:opsStatusCo
   builder.addFieldInt8(4, OPS_STATUS_CODE, opsStatusCode.UNKNOWN);
 }
 
-static addOwner(builder:flatbuffers.Builder, OWNER:ownerCode) {
-  builder.addFieldInt8(5, OWNER, ownerCode.AB);
+static addOwner(builder:flatbuffers.Builder, OWNER:legacyCountryCode) {
+  builder.addFieldInt8(5, OWNER, legacyCountryCode.AB);
 }
 
 static addLaunchDate(builder:flatbuffers.Builder, LAUNCH_DATEOffset:flatbuffers.Offset) {
@@ -360,7 +360,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNER:ownerCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -451,7 +451,7 @@ constructor(
   public NORAD_CAT_ID: number = 0,
   public OBJECT_TYPE: objectType = objectType.UNKNOWN,
   public OPS_STATUS_CODE: opsStatusCode = opsStatusCode.UNKNOWN,
-  public OWNER: ownerCode = ownerCode.AB,
+  public OWNER: legacyCountryCode = legacyCountryCode.AB,
   public LAUNCH_DATE: string|Uint8Array|null = null,
   public LAUNCH_SITE: string|Uint8Array|null = null,
   public DECAY_DATE: string|Uint8Array|null = null,

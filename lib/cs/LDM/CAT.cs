@@ -41,7 +41,7 @@ public struct CAT : IFlatbufferObject
   /// Operational Status Code
   public opsStatusCode OPS_STATUS_CODE { get { int o = __p.__offset(12); return o != 0 ? (opsStatusCode)__p.bb.GetSbyte(o + __p.bb_pos) : opsStatusCode.UNKNOWN; } }
   /// Ownership, typically country or company
-  public ownerCode OWNER { get { int o = __p.__offset(14); return o != 0 ? (ownerCode)__p.bb.GetSbyte(o + __p.bb_pos) : ownerCode.AB; } }
+  public legacyCountryCode OWNER { get { int o = __p.__offset(14); return o != 0 ? (legacyCountryCode)__p.bb.GetSbyte(o + __p.bb_pos) : legacyCountryCode.AB; } }
   /// Launch Date [year-month-day] (ISO 8601)
   public string LAUNCH_DATE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -114,7 +114,7 @@ public struct CAT : IFlatbufferObject
       uint NORAD_CAT_ID = 0,
       objectType OBJECT_TYPE = objectType.UNKNOWN,
       opsStatusCode OPS_STATUS_CODE = opsStatusCode.UNKNOWN,
-      ownerCode OWNER = ownerCode.AB,
+      legacyCountryCode OWNER = legacyCountryCode.AB,
       StringOffset LAUNCH_DATEOffset = default(StringOffset),
       StringOffset LAUNCH_SITEOffset = default(StringOffset),
       StringOffset DECAY_DATEOffset = default(StringOffset),
@@ -165,7 +165,7 @@ public struct CAT : IFlatbufferObject
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
   public static void AddOBJECT_TYPE(FlatBufferBuilder builder, objectType OBJECT_TYPE) { builder.AddSbyte(3, (sbyte)OBJECT_TYPE, 3); }
   public static void AddOPS_STATUS_CODE(FlatBufferBuilder builder, opsStatusCode OPS_STATUS_CODE) { builder.AddSbyte(4, (sbyte)OPS_STATUS_CODE, 7); }
-  public static void AddOWNER(FlatBufferBuilder builder, ownerCode OWNER) { builder.AddSbyte(5, (sbyte)OWNER, 0); }
+  public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddSbyte(5, (sbyte)OWNER, 0); }
   public static void AddLAUNCH_DATE(FlatBufferBuilder builder, StringOffset LAUNCH_DATEOffset) { builder.AddOffset(6, LAUNCH_DATEOffset.Value, 0); }
   public static void AddLAUNCH_SITE(FlatBufferBuilder builder, StringOffset LAUNCH_SITEOffset) { builder.AddOffset(7, LAUNCH_SITEOffset.Value, 0); }
   public static void AddDECAY_DATE(FlatBufferBuilder builder, StringOffset DECAY_DATEOffset) { builder.AddOffset(8, DECAY_DATEOffset.Value, 0); }
@@ -275,7 +275,7 @@ public class CATT
   public uint NORAD_CAT_ID { get; set; }
   public objectType OBJECT_TYPE { get; set; }
   public opsStatusCode OPS_STATUS_CODE { get; set; }
-  public ownerCode OWNER { get; set; }
+  public legacyCountryCode OWNER { get; set; }
   public string LAUNCH_DATE { get; set; }
   public string LAUNCH_SITE { get; set; }
   public string DECAY_DATE { get; set; }
@@ -300,7 +300,7 @@ public class CATT
     this.NORAD_CAT_ID = 0;
     this.OBJECT_TYPE = objectType.UNKNOWN;
     this.OPS_STATUS_CODE = opsStatusCode.UNKNOWN;
-    this.OWNER = ownerCode.AB;
+    this.OWNER = legacyCountryCode.AB;
     this.LAUNCH_DATE = null;
     this.LAUNCH_SITE = null;
     this.DECAY_DATE = null;

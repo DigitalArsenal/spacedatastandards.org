@@ -14,33 +14,34 @@ public enum RecordType: UInt8, UnionEnum {
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case none_ = 0
-  case mpe = 1
-  case omm = 2
-  case pld = 3
-  case rfm = 4
-  case csm = 5
-  case osm = 6
-  case cat = 7
-  case crm = 8
-  case scm = 9
-  case tdm = 10
-  case idm = 11
-  case met = 12
-  case roc = 13
-  case bov = 14
-  case eop = 15
-  case eoo = 16
-  case eme = 17
-  case ldm = 18
-  case pnm = 19
-  case hyp = 20
-  case ctr = 21
-  case cdm = 22
-  case sit = 23
-  case oem = 24
-  case tim = 25
-  case epm = 26
-  case prg = 27
+  case lcc = 1
+  case mpe = 2
+  case omm = 3
+  case pld = 4
+  case rfm = 5
+  case csm = 6
+  case osm = 7
+  case cat = 8
+  case crm = 9
+  case scm = 10
+  case tdm = 11
+  case idm = 12
+  case met = 13
+  case roc = 14
+  case bov = 15
+  case eop = 16
+  case eoo = 17
+  case eme = 18
+  case ldm = 19
+  case pnm = 20
+  case hyp = 21
+  case ctr = 22
+  case cdm = 23
+  case sit = 24
+  case oem = 25
+  case tim = 26
+  case epm = 27
+  case prg = 28
 
   public static var max: RecordType { return .prg }
   public static var min: RecordType { return .none_ }
@@ -88,6 +89,8 @@ public struct Record: FlatBufferObject, Verifiable {
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
+      case .lcc:
+        try ForwardOffset<LCC>.verify(&verifier, at: pos, of: LCC.self)
       case .mpe:
         try ForwardOffset<MPE>.verify(&verifier, at: pos, of: MPE.self)
       case .omm:

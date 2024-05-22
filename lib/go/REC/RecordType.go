@@ -8,37 +8,39 @@ type RecordType byte
 
 const (
 	RecordTypeNONE RecordType = 0
-	RecordTypeMPE  RecordType = 1
-	RecordTypeOMM  RecordType = 2
-	RecordTypePLD  RecordType = 3
-	RecordTypeRFM  RecordType = 4
-	RecordTypeCSM  RecordType = 5
-	RecordTypeOSM  RecordType = 6
-	RecordTypeCAT  RecordType = 7
-	RecordTypeCRM  RecordType = 8
-	RecordTypeSCM  RecordType = 9
-	RecordTypeTDM  RecordType = 10
-	RecordTypeIDM  RecordType = 11
-	RecordTypeMET  RecordType = 12
-	RecordTypeROC  RecordType = 13
-	RecordTypeBOV  RecordType = 14
-	RecordTypeEOP  RecordType = 15
-	RecordTypeEOO  RecordType = 16
-	RecordTypeEME  RecordType = 17
-	RecordTypeLDM  RecordType = 18
-	RecordTypePNM  RecordType = 19
-	RecordTypeHYP  RecordType = 20
-	RecordTypeCTR  RecordType = 21
-	RecordTypeCDM  RecordType = 22
-	RecordTypeSIT  RecordType = 23
-	RecordTypeOEM  RecordType = 24
-	RecordTypeTIM  RecordType = 25
-	RecordTypeEPM  RecordType = 26
-	RecordTypePRG  RecordType = 27
+	RecordTypeLCC  RecordType = 1
+	RecordTypeMPE  RecordType = 2
+	RecordTypeOMM  RecordType = 3
+	RecordTypePLD  RecordType = 4
+	RecordTypeRFM  RecordType = 5
+	RecordTypeCSM  RecordType = 6
+	RecordTypeOSM  RecordType = 7
+	RecordTypeCAT  RecordType = 8
+	RecordTypeCRM  RecordType = 9
+	RecordTypeSCM  RecordType = 10
+	RecordTypeTDM  RecordType = 11
+	RecordTypeIDM  RecordType = 12
+	RecordTypeMET  RecordType = 13
+	RecordTypeROC  RecordType = 14
+	RecordTypeBOV  RecordType = 15
+	RecordTypeEOP  RecordType = 16
+	RecordTypeEOO  RecordType = 17
+	RecordTypeEME  RecordType = 18
+	RecordTypeLDM  RecordType = 19
+	RecordTypePNM  RecordType = 20
+	RecordTypeHYP  RecordType = 21
+	RecordTypeCTR  RecordType = 22
+	RecordTypeCDM  RecordType = 23
+	RecordTypeSIT  RecordType = 24
+	RecordTypeOEM  RecordType = 25
+	RecordTypeTIM  RecordType = 26
+	RecordTypeEPM  RecordType = 27
+	RecordTypePRG  RecordType = 28
 )
 
 var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeNONE: "NONE",
+	RecordTypeLCC:  "LCC",
 	RecordTypeMPE:  "MPE",
 	RecordTypeOMM:  "OMM",
 	RecordTypePLD:  "PLD",
@@ -70,6 +72,7 @@ var EnumNamesRecordType = map[RecordType]string{
 
 var EnumValuesRecordType = map[string]RecordType{
 	"NONE": RecordTypeNONE,
+	"LCC":  RecordTypeLCC,
 	"MPE":  RecordTypeMPE,
 	"OMM":  RecordTypeOMM,
 	"PLD":  RecordTypePLD,

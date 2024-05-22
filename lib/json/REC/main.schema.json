@@ -1,6 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "legacyCountryCode" : {
+      "type" : "string",
+      "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE"]
+    },
     "meanElementTheory" : {
       "type" : "string",
       "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
@@ -53,10 +57,6 @@
       "type" : "string",
       "enum": ["DRY", "WET"]
     },
-    "ownerCode" : {
-      "type" : "string",
-      "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE"]
-    },
     "ENGINE_TYPE" : {
       "type" : "string",
       "enum": ["LIQUID", "SOLID", "HYBRID", "ION", "NUCLEAR_THERMAL", "OTHER"]
@@ -87,7 +87,25 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "MPE", "OMM", "PLD", "RFM", "CSM", "OSM", "CAT", "CRM", "SCM", "TDM", "IDM", "MET", "ROC", "BOV", "EOP", "EOO", "EME", "LDM", "PNM", "HYP", "CTR", "CDM", "SIT", "OEM", "TIM", "EPM", "PRG"]
+      "enum": ["NONE", "LCC", "MPE", "OMM", "PLD", "RFM", "CSM", "OSM", "CAT", "CRM", "SCM", "TDM", "IDM", "MET", "ROC", "BOV", "EOP", "EOO", "EME", "LDM", "PNM", "HYP", "CTR", "CDM", "SIT", "OEM", "TIM", "EPM", "PRG"]
+    },
+    "LCC" : {
+      "type" : "object",
+      "properties" : {
+        "OWNER" : {
+                "$ref" : "#/definitions/legacyCountryCode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LCCCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LCC"}
+              }
+      },
+      "additionalProperties" : false
     },
     "MET" : {
       "type" : "object",
@@ -703,7 +721,7 @@
                 "description" : "Operational Status Code"
               },
         "OWNER" : {
-                "$ref" : "#/definitions/ownerCode",
+                "$ref" : "#/definitions/legacyCountryCode",
                 "description" : "Ownership, typically country or company"
               },
         "LAUNCH_DATE" : {
@@ -3439,7 +3457,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/PRG" }]
+                "anyOf": [{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/PRG" }]
               }
       },
       "additionalProperties" : false

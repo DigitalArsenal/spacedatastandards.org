@@ -14,6 +14,7 @@ import { EOP, EOPT } from './EOP.js';
 import { EPM, EPMT } from './EPM.js';
 import { HYP, HYPT } from './HYP.js';
 import { IDM, IDMT } from './IDM.js';
+import { LCC, LCCT } from './LCC.js';
 import { LDM, LDMT } from './LDM.js';
 import { MET, METT } from './MET.js';
 import { MPE, MPET } from './MPE.js';
@@ -109,7 +110,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LDMT|METT|MPET|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|null = null
+  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|null = null
 ){}
 
 

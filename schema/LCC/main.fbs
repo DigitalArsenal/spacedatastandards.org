@@ -1,0 +1,265 @@
+/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
+enum legacyCountryCode : byte {
+  /// Arab Satellite Communications Organization
+  AB,
+  /// Asia Broadcast Satellite
+  ABS,
+  /// Asia Satellite Telecommunications Company (ASIASAT)
+  AC,
+  /// Algeria
+  ALG,
+  /// Angola
+  ANG,
+  /// Argentina
+  ARGN,
+  /// Republic of Armenia
+  ARM,
+  /// Austria
+  ASRA,
+  /// Australia
+  AUS,
+  /// Azerbaijan
+  AZER,
+  /// Belgium
+  BEL,
+  /// Belarus
+  BELA,
+  /// Bermuda
+  BERM,
+  /// People's Republic of Bangladesh
+  BGD,
+  /// Kingdom of Bhutan
+  BHUT,
+  /// Bolivia
+  BOL,
+  /// Brazil
+  BRAZ,
+  /// Bulgaria
+  BUL,
+  /// Canada
+  CA,
+  /// China/Brazil
+  CHBZ,
+  /// China/Turkey
+  CHTU,
+  /// Chile
+  CHLE,
+  /// Commonwealth of Independent States (former USSR)
+  CIS,
+  /// Colombia
+  COL,
+  /// Republic of Costa Rica
+  CRI,
+  /// Czech Republic (former Czechoslovakia)
+  CZCH,
+  /// Denmark
+  DEN,
+  /// Republic of Djibouti
+  DJI,
+  /// Ecuador
+  ECU,
+  /// Egypt
+  EGYP,
+  /// European Space Agency
+  ESA,
+  /// European Space Research Organization
+  ESRO,
+  /// Estonia
+  EST,
+  /// Ethiopia
+  ETH,
+  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
+  EUME,
+  /// European Telecommunications Satellite Organization (EUTELSAT)
+  EUTE,
+  /// France/Germany
+  FGER,
+  /// Finland
+  FIN,
+  /// France
+  FR,
+  /// France/Italy
+  FRIT,
+  /// Germany
+  GER,
+  /// Republic of Ghana
+  GHA,
+  /// Globalstar
+  GLOB,
+  /// Greece
+  GREC,
+  /// Greece/Saudi Arabia
+  GRSA,
+  /// Guatemala
+  GUAT,
+  /// Hungary
+  HUN,
+  /// International Mobile Satellite Organization (INMARSAT)
+  IM,
+  /// India
+  IND,
+  /// Indonesia
+  INDO,
+  /// Iran
+  IRAN,
+  /// Iraq
+  IRAQ,
+  /// Iridium
+  IRID,
+  /// Ireland
+  IRL,
+  /// Israel
+  ISRA,
+  /// Indian Space Research Organisation
+  ISRO,
+  /// International Space Station
+  ISS,
+  /// Italy
+  IT,
+  /// International Telecommunications Satellite Organization (INTELSAT)
+  ITSO,
+  /// Japan
+  JPN,
+  /// Kazakhstan
+  KAZ,
+  /// Republic of Kenya
+  KEN,
+  /// Laos
+  LAOS,
+  /// Democratic Socialist Republic of Sri Lanka
+  LKA,
+  /// Lithuania
+  LTU,
+  /// Luxembourg
+  LUXE,
+  /// Morocco
+  MA,
+  /// Malaysia
+  MALA,
+  /// Principality of Monaco
+  MCO,
+  /// Republic of Moldova
+  MDA,
+  /// Mexico
+  MEX,
+  /// Republic of the Union of Myanmar
+  MMR,
+  /// Mongolia
+  MNG,
+  /// Mauritius
+  MUS,
+  /// North Atlantic Treaty Organization
+  NATO,
+  /// Netherlands
+  NETH,
+  /// New ICO
+  NICO,
+  /// Nigeria
+  NIG,
+  /// Democratic People's Republic of Korea
+  NKOR,
+  /// Norway
+  NOR,
+  /// Federal Democratic Republic of Nepal
+  NPL,
+  /// New Zealand
+  NZ,
+  /// O3b Networks
+  O3B,
+  /// ORBCOMM
+  ORB,
+  /// Pakistan
+  PAKI,
+  /// Peru
+  PERU,
+  /// Poland
+  POL,
+  /// Portugal
+  POR,
+  /// People's Republic of China
+  PRC,
+  /// Republic of Paraguay
+  PRY,
+  /// People's Republic of China/European Space Agency
+  PRES,
+  /// State of Qatar
+  QAT,
+  /// RascomStar-QAF
+  RASC,
+  /// Taiwan (Republic of China)
+  ROC,
+  /// Romania
+  ROM,
+  /// Philippines (Republic of the Philippines)
+  RP,
+  /// Republic of Rwanda
+  RWA,
+  /// South Africa
+  SAFR,
+  /// Saudi Arabia
+  SAUD,
+  /// Republic of Sudan
+  SDN,
+  /// Sea Launch
+  SEAL,
+  /// SES
+  SES,
+  /// Singapore/Japan
+  SGJP,
+  /// Singapore
+  SING,
+  /// Republic of Korea
+  SKOR,
+  /// Spain
+  SPN,
+  /// Singapore/Taiwan
+  STCT,
+  /// Slovenia
+  SVN,
+  /// Sweden
+  SWED,
+  /// Switzerland
+  SWTZ,
+  /// To Be Determined
+  TBD,
+  /// Thailand
+  THAI,
+  /// Turkmenistan/Monaco
+  TMMC,
+  /// Republic of Tunisia
+  TUN,
+  /// Turkey
+  TURK,
+  /// United Arab Emirates
+  UAE,
+  /// United Kingdom
+  UK,
+  /// Ukraine
+  UKR,
+  /// Unknown
+  UNK,
+  /// Uruguay
+  URY,
+  /// United States
+  US,
+  /// United States/Brazil
+  USBZ,
+  /// Vatican City State
+  VAT,
+  /// Venezuela
+  VENZ,
+  /// Vietnam
+  VTNM,
+  /// Republic of Zimbabwe
+  ZWE
+}
+
+table LCC {
+  OWNER: legacyCountryCode;
+}
+table LCCCOLLECTION {
+  RECORDS: [LCC];
+}
+
+root_type LCC;
+file_identifier "$LCC";

@@ -3,33 +3,34 @@ import flatbuffers
 
 enum RecordType:
     RecordType_NONE = 0
-    RecordType_MPE = 1
-    RecordType_OMM = 2
-    RecordType_PLD = 3
-    RecordType_RFM = 4
-    RecordType_CSM = 5
-    RecordType_OSM = 6
-    RecordType_CAT = 7
-    RecordType_CRM = 8
-    RecordType_SCM = 9
-    RecordType_TDM = 10
-    RecordType_IDM = 11
-    RecordType_MET = 12
-    RecordType_ROC = 13
-    RecordType_BOV = 14
-    RecordType_EOP = 15
-    RecordType_EOO = 16
-    RecordType_EME = 17
-    RecordType_LDM = 18
-    RecordType_PNM = 19
-    RecordType_HYP = 20
-    RecordType_CTR = 21
-    RecordType_CDM = 22
-    RecordType_SIT = 23
-    RecordType_OEM = 24
-    RecordType_TIM = 25
-    RecordType_EPM = 26
-    RecordType_PRG = 27
+    RecordType_LCC = 1
+    RecordType_MPE = 2
+    RecordType_OMM = 3
+    RecordType_PLD = 4
+    RecordType_RFM = 5
+    RecordType_CSM = 6
+    RecordType_OSM = 7
+    RecordType_CAT = 8
+    RecordType_CRM = 9
+    RecordType_SCM = 10
+    RecordType_TDM = 11
+    RecordType_IDM = 12
+    RecordType_MET = 13
+    RecordType_ROC = 14
+    RecordType_BOV = 15
+    RecordType_EOP = 16
+    RecordType_EOO = 17
+    RecordType_EME = 18
+    RecordType_LDM = 19
+    RecordType_PNM = 20
+    RecordType_HYP = 21
+    RecordType_CTR = 22
+    RecordType_CDM = 23
+    RecordType_SIT = 24
+    RecordType_OEM = 25
+    RecordType_TIM = 26
+    RecordType_EPM = 27
+    RecordType_PRG = 28
 
 class Record
 
@@ -38,6 +39,8 @@ class REC
 class Record : flatbuffers_handle
     def value_type() -> RecordType:
         return RecordType(buf_.flatbuffers_field_uint8(pos_, 4, 0))
+    def value_as_LCC():
+        return LCC { buf_, buf_.flatbuffers_field_table(pos_, 6) }
     def value_as_MPE():
         return MPE { buf_, buf_.flatbuffers_field_table(pos_, 6) }
     def value_as_OMM():

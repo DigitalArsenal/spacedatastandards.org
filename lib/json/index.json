@@ -1,5 +1,163 @@
 {
     "STANDARDS": {
+        "LCC": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "legacyCountryCode": {
+                    "type": "string",
+                    "enum": [
+                        "AB",
+                        "ABS",
+                        "AC",
+                        "ALG",
+                        "ANG",
+                        "ARGN",
+                        "ARM",
+                        "ASRA",
+                        "AUS",
+                        "AZER",
+                        "BEL",
+                        "BELA",
+                        "BERM",
+                        "BGD",
+                        "BHUT",
+                        "BOL",
+                        "BRAZ",
+                        "BUL",
+                        "CA",
+                        "CHBZ",
+                        "CHTU",
+                        "CHLE",
+                        "CIS",
+                        "COL",
+                        "CRI",
+                        "CZCH",
+                        "DEN",
+                        "DJI",
+                        "ECU",
+                        "EGYP",
+                        "ESA",
+                        "ESRO",
+                        "EST",
+                        "ETH",
+                        "EUME",
+                        "EUTE",
+                        "FGER",
+                        "FIN",
+                        "FR",
+                        "FRIT",
+                        "GER",
+                        "GHA",
+                        "GLOB",
+                        "GREC",
+                        "GRSA",
+                        "GUAT",
+                        "HUN",
+                        "IM",
+                        "IND",
+                        "INDO",
+                        "IRAN",
+                        "IRAQ",
+                        "IRID",
+                        "IRL",
+                        "ISRA",
+                        "ISRO",
+                        "ISS",
+                        "IT",
+                        "ITSO",
+                        "JPN",
+                        "KAZ",
+                        "KEN",
+                        "LAOS",
+                        "LKA",
+                        "LTU",
+                        "LUXE",
+                        "MA",
+                        "MALA",
+                        "MCO",
+                        "MDA",
+                        "MEX",
+                        "MMR",
+                        "MNG",
+                        "MUS",
+                        "NATO",
+                        "NETH",
+                        "NICO",
+                        "NIG",
+                        "NKOR",
+                        "NOR",
+                        "NPL",
+                        "NZ",
+                        "O3B",
+                        "ORB",
+                        "PAKI",
+                        "PERU",
+                        "POL",
+                        "POR",
+                        "PRC",
+                        "PRY",
+                        "PRES",
+                        "QAT",
+                        "RASC",
+                        "ROC",
+                        "ROM",
+                        "RP",
+                        "RWA",
+                        "SAFR",
+                        "SAUD",
+                        "SDN",
+                        "SEAL",
+                        "SES",
+                        "SGJP",
+                        "SING",
+                        "SKOR",
+                        "SPN",
+                        "STCT",
+                        "SVN",
+                        "SWED",
+                        "SWTZ",
+                        "TBD",
+                        "THAI",
+                        "TMMC",
+                        "TUN",
+                        "TURK",
+                        "UAE",
+                        "UK",
+                        "UKR",
+                        "UNK",
+                        "URY",
+                        "US",
+                        "USBZ",
+                        "VAT",
+                        "VENZ",
+                        "VTNM",
+                        "ZWE"
+                    ]
+                },
+                "LCC": {
+                    "type": "object",
+                    "properties": {
+                        "OWNER": {
+                            "$ref": "#/definitions/legacyCountryCode"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LCCCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LCC"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LCC"
+        },
         "MPE": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -951,55 +1109,7 @@
                         "HF_RADIO_COMMUNICATIONS"
                     ]
                 },
-                "objectType": {
-                    "type": "string",
-                    "enum": [
-                        "PAYLOAD",
-                        "ROCKET_BODY",
-                        "DEBRIS",
-                        "UNKNOWN"
-                    ]
-                },
-                "opsStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "OPERATIONAL",
-                        "NONOPERATIONAL",
-                        "PARTIALLY_OPERATIONAL",
-                        "BACKUP_STANDBY",
-                        "SPARE",
-                        "EXTENDED_MISSION",
-                        "DECAYED",
-                        "UNKNOWN"
-                    ]
-                },
-                "dataStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "NO_CURRENT_ELEMENTS",
-                        "NO_INITIAL_ELEMENTS",
-                        "NO_ELEMENTS_AVAILABLE",
-                        "OK"
-                    ]
-                },
-                "orbitType": {
-                    "type": "string",
-                    "enum": [
-                        "ORBIT",
-                        "LANDING",
-                        "IMPACT",
-                        "DOCKED",
-                        "ROUNDTRIP"
-                    ]
-                },
-                "massType": {
-                    "type": "string",
-                    "enum": [
-                        "DRY",
-                        "WET"
-                    ]
-                },
-                "ownerCode": {
+                "legacyCountryCode": {
                     "type": "string",
                     "enum": [
                         "AB",
@@ -1128,6 +1238,54 @@
                         "VENZ",
                         "VTNM",
                         "ZWE"
+                    ]
+                },
+                "objectType": {
+                    "type": "string",
+                    "enum": [
+                        "PAYLOAD",
+                        "ROCKET_BODY",
+                        "DEBRIS",
+                        "UNKNOWN"
+                    ]
+                },
+                "opsStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "OPERATIONAL",
+                        "NONOPERATIONAL",
+                        "PARTIALLY_OPERATIONAL",
+                        "BACKUP_STANDBY",
+                        "SPARE",
+                        "EXTENDED_MISSION",
+                        "DECAYED",
+                        "UNKNOWN"
+                    ]
+                },
+                "dataStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "NO_CURRENT_ELEMENTS",
+                        "NO_INITIAL_ELEMENTS",
+                        "NO_ELEMENTS_AVAILABLE",
+                        "OK"
+                    ]
+                },
+                "orbitType": {
+                    "type": "string",
+                    "enum": [
+                        "ORBIT",
+                        "LANDING",
+                        "IMPACT",
+                        "DOCKED",
+                        "ROUNDTRIP"
+                    ]
+                },
+                "massType": {
+                    "type": "string",
+                    "enum": [
+                        "DRY",
+                        "WET"
                     ]
                 },
                 "FrequencyRange": {
@@ -1364,6 +1522,27 @@
                     },
                     "additionalProperties": false
                 },
+                "LCC": {
+                    "type": "object",
+                    "properties": {
+                        "OWNER": {
+                            "$ref": "#/definitions/legacyCountryCode"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LCCCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LCC"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -1391,7 +1570,7 @@
                             "description": "Operational Status Code"
                         },
                         "OWNER": {
-                            "$ref": "#/definitions/ownerCode",
+                            "$ref": "#/definitions/legacyCountryCode",
                             "description": "Ownership, typically country or company"
                         },
                         "LAUNCH_DATE": {
@@ -1671,55 +1850,7 @@
                         "HF_RADIO_COMMUNICATIONS"
                     ]
                 },
-                "objectType": {
-                    "type": "string",
-                    "enum": [
-                        "PAYLOAD",
-                        "ROCKET_BODY",
-                        "DEBRIS",
-                        "UNKNOWN"
-                    ]
-                },
-                "opsStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "OPERATIONAL",
-                        "NONOPERATIONAL",
-                        "PARTIALLY_OPERATIONAL",
-                        "BACKUP_STANDBY",
-                        "SPARE",
-                        "EXTENDED_MISSION",
-                        "DECAYED",
-                        "UNKNOWN"
-                    ]
-                },
-                "dataStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "NO_CURRENT_ELEMENTS",
-                        "NO_INITIAL_ELEMENTS",
-                        "NO_ELEMENTS_AVAILABLE",
-                        "OK"
-                    ]
-                },
-                "orbitType": {
-                    "type": "string",
-                    "enum": [
-                        "ORBIT",
-                        "LANDING",
-                        "IMPACT",
-                        "DOCKED",
-                        "ROUNDTRIP"
-                    ]
-                },
-                "massType": {
-                    "type": "string",
-                    "enum": [
-                        "DRY",
-                        "WET"
-                    ]
-                },
-                "ownerCode": {
+                "legacyCountryCode": {
                     "type": "string",
                     "enum": [
                         "AB",
@@ -1848,6 +1979,54 @@
                         "VENZ",
                         "VTNM",
                         "ZWE"
+                    ]
+                },
+                "objectType": {
+                    "type": "string",
+                    "enum": [
+                        "PAYLOAD",
+                        "ROCKET_BODY",
+                        "DEBRIS",
+                        "UNKNOWN"
+                    ]
+                },
+                "opsStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "OPERATIONAL",
+                        "NONOPERATIONAL",
+                        "PARTIALLY_OPERATIONAL",
+                        "BACKUP_STANDBY",
+                        "SPARE",
+                        "EXTENDED_MISSION",
+                        "DECAYED",
+                        "UNKNOWN"
+                    ]
+                },
+                "dataStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "NO_CURRENT_ELEMENTS",
+                        "NO_INITIAL_ELEMENTS",
+                        "NO_ELEMENTS_AVAILABLE",
+                        "OK"
+                    ]
+                },
+                "orbitType": {
+                    "type": "string",
+                    "enum": [
+                        "ORBIT",
+                        "LANDING",
+                        "IMPACT",
+                        "DOCKED",
+                        "ROUNDTRIP"
+                    ]
+                },
+                "massType": {
+                    "type": "string",
+                    "enum": [
+                        "DRY",
+                        "WET"
                     ]
                 },
                 "FrequencyRange": {
@@ -2084,6 +2263,27 @@
                     },
                     "additionalProperties": false
                 },
+                "LCC": {
+                    "type": "object",
+                    "properties": {
+                        "OWNER": {
+                            "$ref": "#/definitions/legacyCountryCode"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LCCCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LCC"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -2111,7 +2311,7 @@
                             "description": "Operational Status Code"
                         },
                         "OWNER": {
-                            "$ref": "#/definitions/ownerCode",
+                            "$ref": "#/definitions/legacyCountryCode",
                             "description": "Ownership, typically country or company"
                         },
                         "LAUNCH_DATE": {
@@ -4137,55 +4337,7 @@
                         "Encryption"
                     ]
                 },
-                "objectType": {
-                    "type": "string",
-                    "enum": [
-                        "PAYLOAD",
-                        "ROCKET_BODY",
-                        "DEBRIS",
-                        "UNKNOWN"
-                    ]
-                },
-                "opsStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "OPERATIONAL",
-                        "NONOPERATIONAL",
-                        "PARTIALLY_OPERATIONAL",
-                        "BACKUP_STANDBY",
-                        "SPARE",
-                        "EXTENDED_MISSION",
-                        "DECAYED",
-                        "UNKNOWN"
-                    ]
-                },
-                "dataStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "NO_CURRENT_ELEMENTS",
-                        "NO_INITIAL_ELEMENTS",
-                        "NO_ELEMENTS_AVAILABLE",
-                        "OK"
-                    ]
-                },
-                "orbitType": {
-                    "type": "string",
-                    "enum": [
-                        "ORBIT",
-                        "LANDING",
-                        "IMPACT",
-                        "DOCKED",
-                        "ROUNDTRIP"
-                    ]
-                },
-                "massType": {
-                    "type": "string",
-                    "enum": [
-                        "DRY",
-                        "WET"
-                    ]
-                },
-                "ownerCode": {
+                "legacyCountryCode": {
                     "type": "string",
                     "enum": [
                         "AB",
@@ -4314,6 +4466,54 @@
                         "VENZ",
                         "VTNM",
                         "ZWE"
+                    ]
+                },
+                "objectType": {
+                    "type": "string",
+                    "enum": [
+                        "PAYLOAD",
+                        "ROCKET_BODY",
+                        "DEBRIS",
+                        "UNKNOWN"
+                    ]
+                },
+                "opsStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "OPERATIONAL",
+                        "NONOPERATIONAL",
+                        "PARTIALLY_OPERATIONAL",
+                        "BACKUP_STANDBY",
+                        "SPARE",
+                        "EXTENDED_MISSION",
+                        "DECAYED",
+                        "UNKNOWN"
+                    ]
+                },
+                "dataStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "NO_CURRENT_ELEMENTS",
+                        "NO_INITIAL_ELEMENTS",
+                        "NO_ELEMENTS_AVAILABLE",
+                        "OK"
+                    ]
+                },
+                "orbitType": {
+                    "type": "string",
+                    "enum": [
+                        "ORBIT",
+                        "LANDING",
+                        "IMPACT",
+                        "DOCKED",
+                        "ROUNDTRIP"
+                    ]
+                },
+                "massType": {
+                    "type": "string",
+                    "enum": [
+                        "DRY",
+                        "WET"
                     ]
                 },
                 "ENGINE_TYPE": {
@@ -4854,6 +5054,27 @@
                     },
                     "additionalProperties": false
                 },
+                "LCC": {
+                    "type": "object",
+                    "properties": {
+                        "OWNER": {
+                            "$ref": "#/definitions/legacyCountryCode"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LCCCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LCC"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -4881,7 +5102,7 @@
                             "description": "Operational Status Code"
                         },
                         "OWNER": {
-                            "$ref": "#/definitions/ownerCode",
+                            "$ref": "#/definitions/legacyCountryCode",
                             "description": "Ownership, typically country or company"
                         },
                         "LAUNCH_DATE": {
@@ -5599,55 +5820,7 @@
                         "HF_RADIO_COMMUNICATIONS"
                     ]
                 },
-                "objectType": {
-                    "type": "string",
-                    "enum": [
-                        "PAYLOAD",
-                        "ROCKET_BODY",
-                        "DEBRIS",
-                        "UNKNOWN"
-                    ]
-                },
-                "opsStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "OPERATIONAL",
-                        "NONOPERATIONAL",
-                        "PARTIALLY_OPERATIONAL",
-                        "BACKUP_STANDBY",
-                        "SPARE",
-                        "EXTENDED_MISSION",
-                        "DECAYED",
-                        "UNKNOWN"
-                    ]
-                },
-                "dataStatusCode": {
-                    "type": "string",
-                    "enum": [
-                        "NO_CURRENT_ELEMENTS",
-                        "NO_INITIAL_ELEMENTS",
-                        "NO_ELEMENTS_AVAILABLE",
-                        "OK"
-                    ]
-                },
-                "orbitType": {
-                    "type": "string",
-                    "enum": [
-                        "ORBIT",
-                        "LANDING",
-                        "IMPACT",
-                        "DOCKED",
-                        "ROUNDTRIP"
-                    ]
-                },
-                "massType": {
-                    "type": "string",
-                    "enum": [
-                        "DRY",
-                        "WET"
-                    ]
-                },
-                "ownerCode": {
+                "legacyCountryCode": {
                     "type": "string",
                     "enum": [
                         "AB",
@@ -5776,6 +5949,54 @@
                         "VENZ",
                         "VTNM",
                         "ZWE"
+                    ]
+                },
+                "objectType": {
+                    "type": "string",
+                    "enum": [
+                        "PAYLOAD",
+                        "ROCKET_BODY",
+                        "DEBRIS",
+                        "UNKNOWN"
+                    ]
+                },
+                "opsStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "OPERATIONAL",
+                        "NONOPERATIONAL",
+                        "PARTIALLY_OPERATIONAL",
+                        "BACKUP_STANDBY",
+                        "SPARE",
+                        "EXTENDED_MISSION",
+                        "DECAYED",
+                        "UNKNOWN"
+                    ]
+                },
+                "dataStatusCode": {
+                    "type": "string",
+                    "enum": [
+                        "NO_CURRENT_ELEMENTS",
+                        "NO_INITIAL_ELEMENTS",
+                        "NO_ELEMENTS_AVAILABLE",
+                        "OK"
+                    ]
+                },
+                "orbitType": {
+                    "type": "string",
+                    "enum": [
+                        "ORBIT",
+                        "LANDING",
+                        "IMPACT",
+                        "DOCKED",
+                        "ROUNDTRIP"
+                    ]
+                },
+                "massType": {
+                    "type": "string",
+                    "enum": [
+                        "DRY",
+                        "WET"
                     ]
                 },
                 "KeyType": {
@@ -6118,6 +6339,27 @@
                     },
                     "additionalProperties": false
                 },
+                "LCC": {
+                    "type": "object",
+                    "properties": {
+                        "OWNER": {
+                            "$ref": "#/definitions/legacyCountryCode"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LCCCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LCC"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -6145,7 +6387,7 @@
                             "description": "Operational Status Code"
                         },
                         "OWNER": {
-                            "$ref": "#/definitions/ownerCode",
+                            "$ref": "#/definitions/legacyCountryCode",
                             "description": "Ownership, typically country or company"
                         },
                         "LAUNCH_DATE": {
@@ -7324,6 +7566,137 @@
         "REC": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "legacyCountryCode": {
+                    "type": "string",
+                    "enum": [
+                        "AB",
+                        "ABS",
+                        "AC",
+                        "ALG",
+                        "ANG",
+                        "ARGN",
+                        "ARM",
+                        "ASRA",
+                        "AUS",
+                        "AZER",
+                        "BEL",
+                        "BELA",
+                        "BERM",
+                        "BGD",
+                        "BHUT",
+                        "BOL",
+                        "BRAZ",
+                        "BUL",
+                        "CA",
+                        "CHBZ",
+                        "CHTU",
+                        "CHLE",
+                        "CIS",
+                        "COL",
+                        "CRI",
+                        "CZCH",
+                        "DEN",
+                        "DJI",
+                        "ECU",
+                        "EGYP",
+                        "ESA",
+                        "ESRO",
+                        "EST",
+                        "ETH",
+                        "EUME",
+                        "EUTE",
+                        "FGER",
+                        "FIN",
+                        "FR",
+                        "FRIT",
+                        "GER",
+                        "GHA",
+                        "GLOB",
+                        "GREC",
+                        "GRSA",
+                        "GUAT",
+                        "HUN",
+                        "IM",
+                        "IND",
+                        "INDO",
+                        "IRAN",
+                        "IRAQ",
+                        "IRID",
+                        "IRL",
+                        "ISRA",
+                        "ISRO",
+                        "ISS",
+                        "IT",
+                        "ITSO",
+                        "JPN",
+                        "KAZ",
+                        "KEN",
+                        "LAOS",
+                        "LKA",
+                        "LTU",
+                        "LUXE",
+                        "MA",
+                        "MALA",
+                        "MCO",
+                        "MDA",
+                        "MEX",
+                        "MMR",
+                        "MNG",
+                        "MUS",
+                        "NATO",
+                        "NETH",
+                        "NICO",
+                        "NIG",
+                        "NKOR",
+                        "NOR",
+                        "NPL",
+                        "NZ",
+                        "O3B",
+                        "ORB",
+                        "PAKI",
+                        "PERU",
+                        "POL",
+                        "POR",
+                        "PRC",
+                        "PRY",
+                        "PRES",
+                        "QAT",
+                        "RASC",
+                        "ROC",
+                        "ROM",
+                        "RP",
+                        "RWA",
+                        "SAFR",
+                        "SAUD",
+                        "SDN",
+                        "SEAL",
+                        "SES",
+                        "SGJP",
+                        "SING",
+                        "SKOR",
+                        "SPN",
+                        "STCT",
+                        "SVN",
+                        "SWED",
+                        "SWTZ",
+                        "TBD",
+                        "THAI",
+                        "TMMC",
+                        "TUN",
+                        "TURK",
+                        "UAE",
+                        "UK",
+                        "UKR",
+                        "UNK",
+                        "URY",
+                        "US",
+                        "USBZ",
+                        "VAT",
+                        "VENZ",
+                        "VTNM",
+                        "ZWE"
+                    ]
+                },
                 "meanElementTheory": {
                     "type": "string",
                     "enum": [
@@ -7515,137 +7888,6 @@
                         "WET"
                     ]
                 },
-                "ownerCode": {
-                    "type": "string",
-                    "enum": [
-                        "AB",
-                        "ABS",
-                        "AC",
-                        "ALG",
-                        "ANG",
-                        "ARGN",
-                        "ARM",
-                        "ASRA",
-                        "AUS",
-                        "AZER",
-                        "BEL",
-                        "BELA",
-                        "BERM",
-                        "BGD",
-                        "BHUT",
-                        "BOL",
-                        "BRAZ",
-                        "BUL",
-                        "CA",
-                        "CHBZ",
-                        "CHTU",
-                        "CHLE",
-                        "CIS",
-                        "COL",
-                        "CRI",
-                        "CZCH",
-                        "DEN",
-                        "DJI",
-                        "ECU",
-                        "EGYP",
-                        "ESA",
-                        "ESRO",
-                        "EST",
-                        "ETH",
-                        "EUME",
-                        "EUTE",
-                        "FGER",
-                        "FIN",
-                        "FR",
-                        "FRIT",
-                        "GER",
-                        "GHA",
-                        "GLOB",
-                        "GREC",
-                        "GRSA",
-                        "GUAT",
-                        "HUN",
-                        "IM",
-                        "IND",
-                        "INDO",
-                        "IRAN",
-                        "IRAQ",
-                        "IRID",
-                        "IRL",
-                        "ISRA",
-                        "ISRO",
-                        "ISS",
-                        "IT",
-                        "ITSO",
-                        "JPN",
-                        "KAZ",
-                        "KEN",
-                        "LAOS",
-                        "LKA",
-                        "LTU",
-                        "LUXE",
-                        "MA",
-                        "MALA",
-                        "MCO",
-                        "MDA",
-                        "MEX",
-                        "MMR",
-                        "MNG",
-                        "MUS",
-                        "NATO",
-                        "NETH",
-                        "NICO",
-                        "NIG",
-                        "NKOR",
-                        "NOR",
-                        "NPL",
-                        "NZ",
-                        "O3B",
-                        "ORB",
-                        "PAKI",
-                        "PERU",
-                        "POL",
-                        "POR",
-                        "PRC",
-                        "PRY",
-                        "PRES",
-                        "QAT",
-                        "RASC",
-                        "ROC",
-                        "ROM",
-                        "RP",
-                        "RWA",
-                        "SAFR",
-                        "SAUD",
-                        "SDN",
-                        "SEAL",
-                        "SES",
-                        "SGJP",
-                        "SING",
-                        "SKOR",
-                        "SPN",
-                        "STCT",
-                        "SVN",
-                        "SWED",
-                        "SWTZ",
-                        "TBD",
-                        "THAI",
-                        "TMMC",
-                        "TUN",
-                        "TURK",
-                        "UAE",
-                        "UK",
-                        "UKR",
-                        "UNK",
-                        "URY",
-                        "US",
-                        "USBZ",
-                        "VAT",
-                        "VENZ",
-                        "VTNM",
-                        "ZWE"
-                    ]
-                },
                 "ENGINE_TYPE": {
                     "type": "string",
                     "enum": [
@@ -7718,6 +7960,7 @@
                     "type": "string",
                     "enum": [
                         "NONE",
+                        "LCC",
                         "MPE",
                         "OMM",
                         "PLD",
@@ -7746,6 +7989,27 @@
                         "EPM",
                         "PRG"
                     ]
+                },
+                "LCC": {
+                    "type": "object",
+                    "properties": {
+                        "OWNER": {
+                            "$ref": "#/definitions/legacyCountryCode"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LCCCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LCC"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "MET": {
                     "type": "object",
@@ -8396,7 +8660,7 @@
                             "description": "Operational Status Code"
                         },
                         "OWNER": {
-                            "$ref": "#/definitions/ownerCode",
+                            "$ref": "#/definitions/legacyCountryCode",
                             "description": "Ownership, typically country or company"
                         },
                         "LAUNCH_DATE": {
@@ -11383,6 +11647,9 @@
                         },
                         "value": {
                             "anyOf": [
+                                {
+                                    "$ref": "#/definitions/LCC"
+                                },
                                 {
                                     "$ref": "#/definitions/MPE"
                                 },

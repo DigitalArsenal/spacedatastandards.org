@@ -17,6 +17,10 @@
       "type" : "string",
       "enum": ["UNKNOWN", "OPTICAL", "INFRARED_SENSOR", "ULTRAVIOLET_SENSOR", "X_RAY_SENSOR", "GAMMA_RAY_SENSOR", "RADAR", "PHASED_ARRAY_RADAR", "SYNTHETIC_APERTURE_RADAR", "BISTATIC_RADIO_TELESCOPE", "RADIO_TELESCOPE", "ATMOSPHERIC_SENSOR", "SPACE_WEATHER_SENSOR", "ENVIRONMENTAL_SENSOR", "SEISMIC_SENSOR", "GRAVIMETRIC_SENSOR", "MAGNETIC_SENSOR", "ELECTROMAGNETIC_SENSOR", "THERMAL_SENSOR", "CHEMICAL_SENSOR", "BIOLOGICAL_SENSOR", "RADIATION_SENSOR", "PARTICLE_DETECTOR", "LIDAR", "SONAR", "TELESCOPE", "SPECTROSCOPIC_SENSOR", "PHOTOMETRIC_SENSOR", "POLARIMETRIC_SENSOR", "INTERFEROMETRIC_SENSOR", "MULTISPECTRAL_SENSOR", "HYPERSPECTRAL_SENSOR", "GPS_RECEIVER", "RADIO_COMMUNICATIONS", "LASER_COMMUNICATIONS", "SATELLITE_COMMUNICATIONS", "LASER_INSTRUMENT", "RF_ANALYZER", "IONOSPHERIC_SENSOR", "LASER_IMAGING", "OPTICAL_TELESCOPE", "HIGH_RESOLUTION_OPTICAL", "RADIO", "MICROWAVE_TRANSMITTER", "RF_MONITOR", "HF_RADIO_COMMUNICATIONS"]
     },
+    "legacyCountryCode" : {
+      "type" : "string",
+      "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE"]
+    },
     "objectType" : {
       "type" : "string",
       "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN"]
@@ -36,10 +40,6 @@
     "massType" : {
       "type" : "string",
       "enum": ["DRY", "WET"]
-    },
-    "ownerCode" : {
-      "type" : "string",
-      "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE"]
     },
     "FrequencyRange" : {
       "type" : "object",
@@ -263,6 +263,24 @@
       },
       "additionalProperties" : false
     },
+    "LCC" : {
+      "type" : "object",
+      "properties" : {
+        "OWNER" : {
+                "$ref" : "#/definitions/legacyCountryCode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LCCCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LCC"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "CAT" : {
       "type" : "object",
       "description" : "Catalog Entity Message",
@@ -288,7 +306,7 @@
                 "description" : "Operational Status Code"
               },
         "OWNER" : {
-                "$ref" : "#/definitions/ownerCode",
+                "$ref" : "#/definitions/legacyCountryCode",
                 "description" : "Ownership, typically country or company"
               },
         "LAUNCH_DATE" : {

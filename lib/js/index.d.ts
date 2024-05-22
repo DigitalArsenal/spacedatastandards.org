@@ -10,6 +10,7 @@ export * as EOP from './EOP/main.js';
 export * as EPM from './EPM/main.js';
 export * as HYP from './HYP/main.js';
 export * as IDM from './IDM/main.js';
+export * as LCC from './LCC/main.js';
 export * as LDM from './LDM/main.js';
 export * as MET from './MET/main.js';
 export * as MPE from './MPE/main.js';
