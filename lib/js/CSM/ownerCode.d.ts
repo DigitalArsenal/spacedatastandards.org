@@ -1,3 +1,6 @@
+/**
+ * Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
+ */
 export declare enum ownerCode {
     /**
      * Arab Satellite Communications Organization

@@ -55,6 +55,7 @@ enum massType:
     massType_DRY = 0
     massType_WET = 1
 
+/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 enum ownerCode:
     /// Arab Satellite Communications Organization
     ownerCode_AB = 0

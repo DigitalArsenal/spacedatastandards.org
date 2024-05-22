@@ -231,6 +231,7 @@ inline const char *EnumNamemassType(massType e) {
   return EnumNamesmassType()[index];
 }
 
+/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 enum ownerCode : int8_t {
   /// Arab Satellite Communications Organization
   ownerCode_AB = 0,

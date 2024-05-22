@@ -291,6 +291,7 @@ class _MassTypeReader extends fb.Reader<MassType> {
       MassType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 class OwnerCode {
   final int value;
   const OwnerCode._(this.value);

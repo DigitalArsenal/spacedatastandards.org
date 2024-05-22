@@ -644,6 +644,7 @@ pub const ENUM_VALUES_OWNER_CODE: [ownerCode; 126] = [
   ownerCode::ZWE,
 ];
 
+/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct ownerCode(pub i8);

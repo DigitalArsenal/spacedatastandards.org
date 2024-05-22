@@ -4,6 +4,7 @@ package REC
 
 import "strconv"
 
+/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 type ownerCode int8
 
 const (

@@ -60,6 +60,7 @@ enum massType: byte {
   WET
 }
 
+/// Note: this is for legacy compatibility; all messages requiring use of CAT should have an associated EPM
 enum ownerCode: byte {
   /// Arab Satellite Communications Organization
   AB,
