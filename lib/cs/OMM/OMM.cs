@@ -84,7 +84,7 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(24); }
-  /// Epoch of Mean Keplerian elements. (ISO 8601)
+  /// Epoch time, in ISO 8601 UTC format
   public string EPOCH { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(26, 1); }

@@ -24,12 +24,12 @@ class BOV {
   double get E_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get F_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get G_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  String? get EPOCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   double get TIME_FROM_LAUNCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
 
   @override
   String toString() {
-    return 'BOV{E_COORDINATE: ${E_COORDINATE}, F_COORDINATE: ${F_COORDINATE}, G_COORDINATE: ${G_COORDINATE}, E_DOT: ${E_DOT}, F_DOT: ${F_DOT}, G_DOT: ${G_DOT}, EPOCH_TIME: ${EPOCH_TIME}, TIME_FROM_LAUNCH: ${TIME_FROM_LAUNCH}}';
+    return 'BOV{E_COORDINATE: ${E_COORDINATE}, F_COORDINATE: ${F_COORDINATE}, G_COORDINATE: ${G_COORDINATE}, E_DOT: ${E_DOT}, F_DOT: ${F_DOT}, G_DOT: ${G_DOT}, EPOCH: ${EPOCH}, TIME_FROM_LAUNCH: ${TIME_FROM_LAUNCH}}';
   }
 }
 
@@ -74,7 +74,7 @@ class BOVBuilder {
     fbBuilder.addFloat64(5, G_DOT);
     return fbBuilder.offset;
   }
-  int addEpochTimeOffset(int? offset) {
+  int addEpochOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
@@ -95,7 +95,7 @@ class BOVObjectBuilder extends fb.ObjectBuilder {
   final double? _E_DOT;
   final double? _F_DOT;
   final double? _G_DOT;
-  final String? _EPOCH_TIME;
+  final String? _EPOCH;
   final double? _TIME_FROM_LAUNCH;
 
   BOVObjectBuilder({
@@ -105,7 +105,7 @@ class BOVObjectBuilder extends fb.ObjectBuilder {
     double? E_DOT,
     double? F_DOT,
     double? G_DOT,
-    String? EPOCH_TIME,
+    String? EPOCH,
     double? TIME_FROM_LAUNCH,
   })
       : _E_COORDINATE = E_COORDINATE,
@@ -114,14 +114,14 @@ class BOVObjectBuilder extends fb.ObjectBuilder {
         _E_DOT = E_DOT,
         _F_DOT = F_DOT,
         _G_DOT = G_DOT,
-        _EPOCH_TIME = EPOCH_TIME,
+        _EPOCH = EPOCH,
         _TIME_FROM_LAUNCH = TIME_FROM_LAUNCH;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EPOCH_TIMEOffset = _EPOCH_TIME == null ? null
-        : fbBuilder.writeString(_EPOCH_TIME!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
     fbBuilder.startTable(8);
     fbBuilder.addFloat64(0, _E_COORDINATE);
     fbBuilder.addFloat64(1, _F_COORDINATE);
@@ -129,7 +129,7 @@ class BOVObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(3, _E_DOT);
     fbBuilder.addFloat64(4, _F_DOT);
     fbBuilder.addFloat64(5, _G_DOT);
-    fbBuilder.addOffset(6, EPOCH_TIMEOffset);
+    fbBuilder.addOffset(6, EPOCHOffset);
     fbBuilder.addFloat64(7, _TIME_FROM_LAUNCH);
     return fbBuilder.endTable();
   }

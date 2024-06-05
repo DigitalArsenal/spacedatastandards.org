@@ -46,7 +46,7 @@ struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_Y_DDOT = 20,
     VT_Z_DDOT = 22
   };
-  /// Epoch of state vector (ISO 8601)
+  /// Epoch time, in ISO 8601 UTC format
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }

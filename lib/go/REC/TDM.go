@@ -156,7 +156,7 @@ func (rcv *TDM) MutateOBS_REFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
 }
 
-/// Epoch or observation time -  CCSDS 503.0-B-1
+/// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
 func (rcv *TDM) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -165,7 +165,7 @@ func (rcv *TDM) EPOCH() []byte {
 	return nil
 }
 
-/// Epoch or observation time -  CCSDS 503.0-B-1
+/// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
 /// TDM version number -  CCSDS 503.0-B-1, Page D-9
 func (rcv *TDM) CCSDS_TDM_VERS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))

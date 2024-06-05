@@ -53,7 +53,7 @@ table OMM {
   /// Mean Keplerian Elements in the Specified Reference Frame
   /// Plain-Text Comment
   COMMENT:string;
-  /// Epoch of Mean Keplerian elements. (ISO 8601)
+  /// Epoch time, in ISO 8601 UTC format
   EPOCH:string;
   /// Semi-major axis in km or mean motion in rev/day
   SEMI_MAJOR_AXIS:double;

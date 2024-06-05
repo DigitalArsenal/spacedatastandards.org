@@ -10,8 +10,8 @@ table BOV {
   F_DOT: double; // 9 significant figures
   G_DOT: double; // 9 significant figures
 
-  // Epoch Time (UTC)
-  EPOCH_TIME: string; // Formatted as "YYYY-MM-DD HH:MM:SS.SSS"
+  // Epoch time, in ISO 8601 UTC format
+  EPOCH: string;
 
   // Time from Launch in Seconds
   TIME_FROM_LAUNCH: double; // Seconds with appropriate precision

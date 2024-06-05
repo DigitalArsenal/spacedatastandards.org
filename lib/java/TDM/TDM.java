@@ -68,7 +68,7 @@ public final class TDM extends Table {
    */
   public byte OBS_REFERENCE_FRAME() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Epoch or observation time -  CCSDS 503.0-B-1
+   * Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
    */
   public String EPOCH() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }

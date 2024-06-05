@@ -132,7 +132,7 @@ class OMM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Epoch of Mean Keplerian elements. (ISO 8601)
+    /// Epoch time, in ISO 8601 UTC format
     public function getEPOCH()
     {
         $o = $this->__offset(26);

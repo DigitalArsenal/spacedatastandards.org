@@ -128,7 +128,7 @@ class TDM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
-    /// Epoch or observation time -  CCSDS 503.0-B-1
+    /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
     public function getEPOCH()
     {
         $o = $this->__offset(22);

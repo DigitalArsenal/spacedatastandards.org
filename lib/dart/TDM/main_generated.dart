@@ -38,7 +38,7 @@ class TDM {
   RefFrame get OBSERVER_POSITION_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
   RefFrame get OBS_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  ///  Epoch or observation time -  CCSDS 503.0-B-1
+  ///  Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  TDM version number -  CCSDS 503.0-B-1, Page D-9
   String? get CCSDS_TDM_VERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);

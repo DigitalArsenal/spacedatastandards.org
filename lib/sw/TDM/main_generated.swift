@@ -99,7 +99,7 @@ public struct TDM: FlatBufferObject, Verifiable {
   public var OBSERVER_POSITION_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
   public var OBS_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.OBS_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
-  ///  Epoch or observation time -  CCSDS 503.0-B-1
+  ///  Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
   ///  TDM version number -  CCSDS 503.0-B-1, Page D-9

@@ -34,7 +34,7 @@ class TDM : flatbuffers_handle
     /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
     def OBS_REFERENCE_FRAME() -> refFrame:
         return refFrame(buf_.flatbuffers_field_int8(pos_, 20, 0))
-    /// Epoch or observation time -  CCSDS 503.0-B-1
+    /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
     def EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 22)
     /// TDM version number -  CCSDS 503.0-B-1, Page D-9

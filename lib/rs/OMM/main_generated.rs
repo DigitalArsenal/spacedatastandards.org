@@ -502,7 +502,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_COMMENT, None)}
   }
-  /// Epoch of Mean Keplerian elements. (ISO 8601)
+  /// Epoch time, in ISO 8601 UTC format
   #[inline]
   pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:

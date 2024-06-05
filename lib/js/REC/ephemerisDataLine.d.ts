@@ -9,7 +9,7 @@ export declare class ephemerisDataLine implements flatbuffers.IUnpackableObject<
     static getRootAsephemerisDataLine(bb: flatbuffers.ByteBuffer, obj?: ephemerisDataLine): ephemerisDataLine;
     static getSizePrefixedRootAsephemerisDataLine(bb: flatbuffers.ByteBuffer, obj?: ephemerisDataLine): ephemerisDataLine;
     /**
-     * Epoch of state vector (ISO 8601)
+     * Epoch time, in ISO 8601 UTC format
      */
     EPOCH(): string | null;
     EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

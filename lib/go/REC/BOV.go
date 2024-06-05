@@ -106,7 +106,7 @@ func (rcv *BOV) MutateG_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
-func (rcv *BOV) EPOCH_TIME() []byte {
+func (rcv *BOV) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -147,8 +147,8 @@ func BOVAddF_DOT(builder *flatbuffers.Builder, F_DOT float64) {
 func BOVAddG_DOT(builder *flatbuffers.Builder, G_DOT float64) {
 	builder.PrependFloat64Slot(5, G_DOT, 0.0)
 }
-func BOVAddEPOCH_TIME(builder *flatbuffers.Builder, EPOCH_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EPOCH_TIME), 0)
+func BOVAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EPOCH), 0)
 }
 func BOVAddTIME_FROM_LAUNCH(builder *flatbuffers.Builder, TIME_FROM_LAUNCH float64) {
 	builder.PrependFloat64Slot(7, TIME_FROM_LAUNCH, 0.0)

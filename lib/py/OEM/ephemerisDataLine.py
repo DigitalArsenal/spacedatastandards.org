@@ -29,7 +29,7 @@ class ephemerisDataLine(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Epoch of state vector (ISO 8601)
+    # Epoch time, in ISO 8601 UTC format
     # ephemerisDataLine
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))

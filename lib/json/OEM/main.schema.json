@@ -53,7 +53,7 @@
       "properties" : {
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch of state vector (ISO 8601)"
+                "description" : "Epoch time, in ISO 8601 UTC format"
               },
         "X" : {
                 "type" : "number",

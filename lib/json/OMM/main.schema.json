@@ -124,7 +124,7 @@
               },
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch of Mean Keplerian elements. (ISO 8601)"
+                "description" : "Epoch time, in ISO 8601 UTC format"
               },
         "SEMI_MAJOR_AXIS" : {
                 "type" : "number",

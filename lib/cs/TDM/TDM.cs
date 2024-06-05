@@ -42,7 +42,7 @@ public struct TDM : IFlatbufferObject
   public refFrame OBSERVER_POSITION_REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
   public refFrame OBS_REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
-  /// Epoch or observation time -  CCSDS 503.0-B-1
+  /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   public string EPOCH { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(22, 1); }

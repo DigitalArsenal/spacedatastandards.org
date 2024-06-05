@@ -109,7 +109,7 @@ class TDM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * Epoch or observation time -  CCSDS 503.0-B-1
+     * Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
      */
     val EPOCH : String?
         get() {

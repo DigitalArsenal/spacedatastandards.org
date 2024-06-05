@@ -41,7 +41,7 @@ class ephemerisDataLine extends Table
         return $this;
     }
 
-    /// Epoch of state vector (ISO 8601)
+    /// Epoch time, in ISO 8601 UTC format
     public function getEPOCH()
     {
         $o = $this->__offset(4);

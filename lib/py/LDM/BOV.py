@@ -72,7 +72,7 @@ class BOV(object):
         return 0.0
 
     # BOV
-    def EPOCH_TIME(self):
+    def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -106,9 +106,9 @@ def AddF_DOT(builder, F_DOT):
 def BOVAddG_DOT(builder, G_DOT): builder.PrependFloat64Slot(5, G_DOT, 0.0)
 def AddG_DOT(builder, G_DOT):
     return BOVAddG_DOT(builder, G_DOT)
-def BOVAddEPOCH_TIME(builder, EPOCH_TIME): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_TIME), 0)
-def AddEPOCH_TIME(builder, EPOCH_TIME):
-    return BOVAddEPOCH_TIME(builder, EPOCH_TIME)
+def BOVAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+def AddEPOCH(builder, EPOCH):
+    return BOVAddEPOCH(builder, EPOCH)
 def BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH): builder.PrependFloat64Slot(7, TIME_FROM_LAUNCH, 0.0)
 def AddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH):
     return BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH)
@@ -126,7 +126,7 @@ class BOVT(object):
         self.E_DOT = 0.0  # type: float
         self.F_DOT = 0.0  # type: float
         self.G_DOT = 0.0  # type: float
-        self.EPOCH_TIME = None  # type: str
+        self.EPOCH = None  # type: str
         self.TIME_FROM_LAUNCH = 0.0  # type: float
 
     @classmethod
@@ -156,13 +156,13 @@ class BOVT(object):
         self.E_DOT = BOV.E_DOT()
         self.F_DOT = BOV.F_DOT()
         self.G_DOT = BOV.G_DOT()
-        self.EPOCH_TIME = BOV.EPOCH_TIME()
+        self.EPOCH = BOV.EPOCH()
         self.TIME_FROM_LAUNCH = BOV.TIME_FROM_LAUNCH()
 
     # BOVT
     def Pack(self, builder):
-        if self.EPOCH_TIME is not None:
-            EPOCH_TIME = builder.CreateString(self.EPOCH_TIME)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
         BOVStart(builder)
         BOVAddE_COORDINATE(builder, self.E_COORDINATE)
         BOVAddF_COORDINATE(builder, self.F_COORDINATE)
@@ -170,8 +170,8 @@ class BOVT(object):
         BOVAddE_DOT(builder, self.E_DOT)
         BOVAddF_DOT(builder, self.F_DOT)
         BOVAddG_DOT(builder, self.G_DOT)
-        if self.EPOCH_TIME is not None:
-            BOVAddEPOCH_TIME(builder, EPOCH_TIME)
+        if self.EPOCH is not None:
+            BOVAddEPOCH(builder, EPOCH)
         BOVAddTIME_FROM_LAUNCH(builder, self.TIME_FROM_LAUNCH)
         BOV = BOVEnd(builder)
         return BOV

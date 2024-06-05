@@ -430,7 +430,7 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<refFrame>(TDM::VT_OBS_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
-  /// Epoch or observation time -  CCSDS 503.0-B-1
+  /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   #[inline]
   pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:

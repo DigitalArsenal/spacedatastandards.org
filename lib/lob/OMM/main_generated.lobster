@@ -54,7 +54,7 @@ class OMM : flatbuffers_handle
     /// Plain-Text Comment
     def COMMENT() -> string:
         return buf_.flatbuffers_field_string(pos_, 24)
-    /// Epoch of Mean Keplerian elements. (ISO 8601)
+    /// Epoch time, in ISO 8601 UTC format
     def EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 26)
     /// Semi-major axis in km or mean motion in rev/day

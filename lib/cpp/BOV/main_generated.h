@@ -29,7 +29,7 @@ struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_E_DOT = 10,
     VT_F_DOT = 12,
     VT_G_DOT = 14,
-    VT_EPOCH_TIME = 16,
+    VT_EPOCH = 16,
     VT_TIME_FROM_LAUNCH = 18
   };
   double E_COORDINATE() const {
@@ -50,8 +50,8 @@ struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double G_DOT() const {
     return GetField<double>(VT_G_DOT, 0.0);
   }
-  const ::flatbuffers::String *EPOCH_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_TIME);
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
   double TIME_FROM_LAUNCH() const {
     return GetField<double>(VT_TIME_FROM_LAUNCH, 0.0);
@@ -64,8 +64,8 @@ struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_E_DOT, 8) &&
            VerifyField<double>(verifier, VT_F_DOT, 8) &&
            VerifyField<double>(verifier, VT_G_DOT, 8) &&
-           VerifyOffset(verifier, VT_EPOCH_TIME) &&
-           verifier.VerifyString(EPOCH_TIME()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
            VerifyField<double>(verifier, VT_TIME_FROM_LAUNCH, 8) &&
            verifier.EndTable();
   }
@@ -93,8 +93,8 @@ struct BOVBuilder {
   void add_G_DOT(double G_DOT) {
     fbb_.AddElement<double>(BOV::VT_G_DOT, G_DOT, 0.0);
   }
-  void add_EPOCH_TIME(::flatbuffers::Offset<::flatbuffers::String> EPOCH_TIME) {
-    fbb_.AddOffset(BOV::VT_EPOCH_TIME, EPOCH_TIME);
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(BOV::VT_EPOCH, EPOCH);
   }
   void add_TIME_FROM_LAUNCH(double TIME_FROM_LAUNCH) {
     fbb_.AddElement<double>(BOV::VT_TIME_FROM_LAUNCH, TIME_FROM_LAUNCH, 0.0);
@@ -118,7 +118,7 @@ inline ::flatbuffers::Offset<BOV> CreateBOV(
     double E_DOT = 0.0,
     double F_DOT = 0.0,
     double G_DOT = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
     double TIME_FROM_LAUNCH = 0.0) {
   BOVBuilder builder_(_fbb);
   builder_.add_TIME_FROM_LAUNCH(TIME_FROM_LAUNCH);
@@ -128,7 +128,7 @@ inline ::flatbuffers::Offset<BOV> CreateBOV(
   builder_.add_G_COORDINATE(G_COORDINATE);
   builder_.add_F_COORDINATE(F_COORDINATE);
   builder_.add_E_COORDINATE(E_COORDINATE);
-  builder_.add_EPOCH_TIME(EPOCH_TIME);
+  builder_.add_EPOCH(EPOCH);
   return builder_.Finish();
 }
 
@@ -140,9 +140,9 @@ inline ::flatbuffers::Offset<BOV> CreateBOVDirect(
     double E_DOT = 0.0,
     double F_DOT = 0.0,
     double G_DOT = 0.0,
-    const char *EPOCH_TIME = nullptr,
+    const char *EPOCH = nullptr,
     double TIME_FROM_LAUNCH = 0.0) {
-  auto EPOCH_TIME__ = EPOCH_TIME ? _fbb.CreateString(EPOCH_TIME) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
   return CreateBOV(
       _fbb,
       E_COORDINATE,
@@ -151,7 +151,7 @@ inline ::flatbuffers::Offset<BOV> CreateBOVDirect(
       E_DOT,
       F_DOT,
       G_DOT,
-      EPOCH_TIME__,
+      EPOCH__,
       TIME_FROM_LAUNCH);
 }
 

@@ -20,7 +20,7 @@ class EphemerisDataLine {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Epoch of state vector (ISO 8601)
+  ///  Epoch time, in ISO 8601 UTC format
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Position vector X-component km
   double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);

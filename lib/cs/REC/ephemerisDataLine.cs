@@ -17,7 +17,7 @@ public struct ephemerisDataLine : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ephemerisDataLine __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Epoch of state vector (ISO 8601)
+  /// Epoch time, in ISO 8601 UTC format
   public string EPOCH { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(4, 1); }

@@ -59,9 +59,9 @@ G_DOT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-EPOCH_TIME():string|null
-EPOCH_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EPOCH_TIME(optionalEncoding?:any):string|Uint8Array|null {
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -99,8 +99,8 @@ static addGDot(builder:flatbuffers.Builder, G_DOT:number) {
   builder.addFieldFloat64(5, G_DOT, 0.0);
 }
 
-static addEpochTime(builder:flatbuffers.Builder, EPOCH_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, EPOCH_TIMEOffset, 0);
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, EPOCHOffset, 0);
 }
 
 static addTimeFromLaunch(builder:flatbuffers.Builder, TIME_FROM_LAUNCH:number) {
@@ -120,7 +120,7 @@ static finishSizePrefixedBOVBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$BOV', true);
 }
 
-static createBOV(builder:flatbuffers.Builder, E_COORDINATE:number, F_COORDINATE:number, G_COORDINATE:number, E_DOT:number, F_DOT:number, G_DOT:number, EPOCH_TIMEOffset:flatbuffers.Offset, TIME_FROM_LAUNCH:number):flatbuffers.Offset {
+static createBOV(builder:flatbuffers.Builder, E_COORDINATE:number, F_COORDINATE:number, G_COORDINATE:number, E_DOT:number, F_DOT:number, G_DOT:number, EPOCHOffset:flatbuffers.Offset, TIME_FROM_LAUNCH:number):flatbuffers.Offset {
   BOV.startBOV(builder);
   BOV.addECoordinate(builder, E_COORDINATE);
   BOV.addFCoordinate(builder, F_COORDINATE);
@@ -128,7 +128,7 @@ static createBOV(builder:flatbuffers.Builder, E_COORDINATE:number, F_COORDINATE:
   BOV.addEDot(builder, E_DOT);
   BOV.addFDot(builder, F_DOT);
   BOV.addGDot(builder, G_DOT);
-  BOV.addEpochTime(builder, EPOCH_TIMEOffset);
+  BOV.addEpoch(builder, EPOCHOffset);
   BOV.addTimeFromLaunch(builder, TIME_FROM_LAUNCH);
   return BOV.endBOV(builder);
 }
@@ -141,7 +141,7 @@ unpack(): BOVT {
     this.E_DOT(),
     this.F_DOT(),
     this.G_DOT(),
-    this.EPOCH_TIME(),
+    this.EPOCH(),
     this.TIME_FROM_LAUNCH()
   );
 }
@@ -154,7 +154,7 @@ unpackTo(_o: BOVT): void {
   _o.E_DOT = this.E_DOT();
   _o.F_DOT = this.F_DOT();
   _o.G_DOT = this.G_DOT();
-  _o.EPOCH_TIME = this.EPOCH_TIME();
+  _o.EPOCH = this.EPOCH();
   _o.TIME_FROM_LAUNCH = this.TIME_FROM_LAUNCH();
 }
 }
@@ -167,13 +167,13 @@ constructor(
   public E_DOT: number = 0.0,
   public F_DOT: number = 0.0,
   public G_DOT: number = 0.0,
-  public EPOCH_TIME: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
   public TIME_FROM_LAUNCH: number = 0.0
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const EPOCH_TIME = (this.EPOCH_TIME !== null ? builder.createString(this.EPOCH_TIME!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
 
   return BOV.createBOV(builder,
     this.E_COORDINATE,
@@ -182,7 +182,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.E_DOT,
     this.F_DOT,
     this.G_DOT,
-    EPOCH_TIME,
+    EPOCH,
     this.TIME_FROM_LAUNCH
   );
 }

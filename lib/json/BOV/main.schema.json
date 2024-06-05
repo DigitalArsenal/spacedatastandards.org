@@ -23,7 +23,7 @@
         "G_DOT" : {
                 "type" : "number"
               },
-        "EPOCH_TIME" : {
+        "EPOCH" : {
                 "type" : "string"
               },
         "TIME_FROM_LAUNCH" : {

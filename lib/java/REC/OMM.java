@@ -90,7 +90,7 @@ public final class OMM extends Table {
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
-   * Epoch of Mean Keplerian elements. (ISO 8601)
+   * Epoch time, in ISO 8601 UTC format
    */
   public String EPOCH() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }

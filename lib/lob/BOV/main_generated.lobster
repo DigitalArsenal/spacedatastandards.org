@@ -19,7 +19,7 @@ class BOV : flatbuffers_handle
         return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
     def G_DOT() -> float:
         return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
-    def EPOCH_TIME() -> string:
+    def EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 16)
     def TIME_FROM_LAUNCH() -> float:
         return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
@@ -49,8 +49,8 @@ struct BOVBuilder:
     def add_G_DOT(G_DOT:float):
         b_.PrependFloat64Slot(5, G_DOT, 0.0)
         return this
-    def add_EPOCH_TIME(EPOCH_TIME:flatbuffers_offset):
-        b_.PrependUOffsetTRelativeSlot(6, EPOCH_TIME)
+    def add_EPOCH(EPOCH:flatbuffers_offset):
+        b_.PrependUOffsetTRelativeSlot(6, EPOCH)
         return this
     def add_TIME_FROM_LAUNCH(TIME_FROM_LAUNCH:float):
         b_.PrependFloat64Slot(7, TIME_FROM_LAUNCH, 0.0)

@@ -24,13 +24,13 @@ public struct BOV : IFlatbufferObject
   public double E_DOT { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double F_DOT { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double G_DOT { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string EPOCH_TIME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string EPOCH { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEPOCH_TIMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetEPOCH_TIMEBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetEPOCH_TIMEArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(16); }
   public double TIME_FROM_LAUNCH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<BOV> CreateBOV(FlatBufferBuilder builder,
@@ -40,7 +40,7 @@ public struct BOV : IFlatbufferObject
       double E_DOT = 0.0,
       double F_DOT = 0.0,
       double G_DOT = 0.0,
-      StringOffset EPOCH_TIMEOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
       double TIME_FROM_LAUNCH = 0.0) {
     builder.StartTable(8);
     BOV.AddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH);
@@ -50,7 +50,7 @@ public struct BOV : IFlatbufferObject
     BOV.AddG_COORDINATE(builder, G_COORDINATE);
     BOV.AddF_COORDINATE(builder, F_COORDINATE);
     BOV.AddE_COORDINATE(builder, E_COORDINATE);
-    BOV.AddEPOCH_TIME(builder, EPOCH_TIMEOffset);
+    BOV.AddEPOCH(builder, EPOCHOffset);
     return BOV.EndBOV(builder);
   }
 
@@ -61,7 +61,7 @@ public struct BOV : IFlatbufferObject
   public static void AddE_DOT(FlatBufferBuilder builder, double E_DOT) { builder.AddDouble(3, E_DOT, 0.0); }
   public static void AddF_DOT(FlatBufferBuilder builder, double F_DOT) { builder.AddDouble(4, F_DOT, 0.0); }
   public static void AddG_DOT(FlatBufferBuilder builder, double G_DOT) { builder.AddDouble(5, G_DOT, 0.0); }
-  public static void AddEPOCH_TIME(FlatBufferBuilder builder, StringOffset EPOCH_TIMEOffset) { builder.AddOffset(6, EPOCH_TIMEOffset.Value, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(6, EPOCHOffset.Value, 0); }
   public static void AddTIME_FROM_LAUNCH(FlatBufferBuilder builder, double TIME_FROM_LAUNCH) { builder.AddDouble(7, TIME_FROM_LAUNCH, 0.0); }
   public static Offset<BOV> EndBOV(FlatBufferBuilder builder) {
     int o = builder.EndTable();
@@ -81,12 +81,12 @@ public struct BOV : IFlatbufferObject
     _o.E_DOT = this.E_DOT;
     _o.F_DOT = this.F_DOT;
     _o.G_DOT = this.G_DOT;
-    _o.EPOCH_TIME = this.EPOCH_TIME;
+    _o.EPOCH = this.EPOCH;
     _o.TIME_FROM_LAUNCH = this.TIME_FROM_LAUNCH;
   }
   public static Offset<BOV> Pack(FlatBufferBuilder builder, BOVT _o) {
     if (_o == null) return default(Offset<BOV>);
-    var _EPOCH_TIME = _o.EPOCH_TIME == null ? default(StringOffset) : builder.CreateString(_o.EPOCH_TIME);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
     return CreateBOV(
       builder,
       _o.E_COORDINATE,
@@ -95,7 +95,7 @@ public struct BOV : IFlatbufferObject
       _o.E_DOT,
       _o.F_DOT,
       _o.G_DOT,
-      _EPOCH_TIME,
+      _EPOCH,
       _o.TIME_FROM_LAUNCH);
   }
 }
@@ -108,7 +108,7 @@ public class BOVT
   public double E_DOT { get; set; }
   public double F_DOT { get; set; }
   public double G_DOT { get; set; }
-  public string EPOCH_TIME { get; set; }
+  public string EPOCH { get; set; }
   public double TIME_FROM_LAUNCH { get; set; }
 
   public BOVT() {
@@ -118,7 +118,7 @@ public class BOVT
     this.E_DOT = 0.0;
     this.F_DOT = 0.0;
     this.G_DOT = 0.0;
-    this.EPOCH_TIME = null;
+    this.EPOCH = null;
     this.TIME_FROM_LAUNCH = 0.0;
   }
   public static BOVT DeserializeFromBinary(byte[] fbBuffer) {

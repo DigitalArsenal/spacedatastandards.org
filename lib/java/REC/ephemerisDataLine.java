@@ -29,7 +29,7 @@ public final class ephemerisDataLine extends Table {
   public ephemerisDataLine __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Epoch of state vector (ISO 8601)
+   * Epoch time, in ISO 8601 UTC format
    */
   public String EPOCH() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }

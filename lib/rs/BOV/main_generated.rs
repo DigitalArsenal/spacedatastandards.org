@@ -32,7 +32,7 @@ impl<'a> BOV<'a> {
   pub const VT_E_DOT: flatbuffers::VOffsetT = 10;
   pub const VT_F_DOT: flatbuffers::VOffsetT = 12;
   pub const VT_G_DOT: flatbuffers::VOffsetT = 14;
-  pub const VT_EPOCH_TIME: flatbuffers::VOffsetT = 16;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 16;
   pub const VT_TIME_FROM_LAUNCH: flatbuffers::VOffsetT = 18;
 
   #[inline]
@@ -52,7 +52,7 @@ impl<'a> BOV<'a> {
     builder.add_G_COORDINATE(args.G_COORDINATE);
     builder.add_F_COORDINATE(args.F_COORDINATE);
     builder.add_E_COORDINATE(args.E_COORDINATE);
-    if let Some(x) = args.EPOCH_TIME { builder.add_EPOCH_TIME(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     builder.finish()
   }
 
@@ -63,7 +63,7 @@ impl<'a> BOV<'a> {
     let E_DOT = self.E_DOT();
     let F_DOT = self.F_DOT();
     let G_DOT = self.G_DOT();
-    let EPOCH_TIME = self.EPOCH_TIME().map(|x| {
+    let EPOCH = self.EPOCH().map(|x| {
       x.to_string()
     });
     let TIME_FROM_LAUNCH = self.TIME_FROM_LAUNCH();
@@ -74,7 +74,7 @@ impl<'a> BOV<'a> {
       E_DOT,
       F_DOT,
       G_DOT,
-      EPOCH_TIME,
+      EPOCH,
       TIME_FROM_LAUNCH,
     }
   }
@@ -122,11 +122,11 @@ impl<'a> BOV<'a> {
     unsafe { self._tab.get::<f64>(BOV::VT_G_DOT, Some(0.0)).unwrap()}
   }
   #[inline]
-  pub fn EPOCH_TIME(&self) -> Option<&'a str> {
+  pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BOV::VT_EPOCH_TIME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BOV::VT_EPOCH, None)}
   }
   #[inline]
   pub fn TIME_FROM_LAUNCH(&self) -> f64 {
@@ -150,7 +150,7 @@ impl flatbuffers::Verifiable for BOV<'_> {
      .visit_field::<f64>("E_DOT", Self::VT_E_DOT, false)?
      .visit_field::<f64>("F_DOT", Self::VT_F_DOT, false)?
      .visit_field::<f64>("G_DOT", Self::VT_G_DOT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH_TIME", Self::VT_EPOCH_TIME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
      .visit_field::<f64>("TIME_FROM_LAUNCH", Self::VT_TIME_FROM_LAUNCH, false)?
      .finish();
     Ok(())
@@ -163,7 +163,7 @@ pub struct BOVArgs<'a> {
     pub E_DOT: f64,
     pub F_DOT: f64,
     pub G_DOT: f64,
-    pub EPOCH_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TIME_FROM_LAUNCH: f64,
 }
 impl<'a> Default for BOVArgs<'a> {
@@ -176,7 +176,7 @@ impl<'a> Default for BOVArgs<'a> {
       E_DOT: 0.0,
       F_DOT: 0.0,
       G_DOT: 0.0,
-      EPOCH_TIME: None,
+      EPOCH: None,
       TIME_FROM_LAUNCH: 0.0,
     }
   }
@@ -212,8 +212,8 @@ impl<'a: 'b, 'b> BOVBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(BOV::VT_G_DOT, G_DOT, 0.0);
   }
   #[inline]
-  pub fn add_EPOCH_TIME(&mut self, EPOCH_TIME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BOV::VT_EPOCH_TIME, EPOCH_TIME);
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BOV::VT_EPOCH, EPOCH);
   }
   #[inline]
   pub fn add_TIME_FROM_LAUNCH(&mut self, TIME_FROM_LAUNCH: f64) {
@@ -243,7 +243,7 @@ impl core::fmt::Debug for BOV<'_> {
       ds.field("E_DOT", &self.E_DOT());
       ds.field("F_DOT", &self.F_DOT());
       ds.field("G_DOT", &self.G_DOT());
-      ds.field("EPOCH_TIME", &self.EPOCH_TIME());
+      ds.field("EPOCH", &self.EPOCH());
       ds.field("TIME_FROM_LAUNCH", &self.TIME_FROM_LAUNCH());
       ds.finish()
   }
@@ -257,7 +257,7 @@ pub struct BOVT {
   pub E_DOT: f64,
   pub F_DOT: f64,
   pub G_DOT: f64,
-  pub EPOCH_TIME: Option<String>,
+  pub EPOCH: Option<String>,
   pub TIME_FROM_LAUNCH: f64,
 }
 impl Default for BOVT {
@@ -269,7 +269,7 @@ impl Default for BOVT {
       E_DOT: 0.0,
       F_DOT: 0.0,
       G_DOT: 0.0,
-      EPOCH_TIME: None,
+      EPOCH: None,
       TIME_FROM_LAUNCH: 0.0,
     }
   }
@@ -285,7 +285,7 @@ impl BOVT {
     let E_DOT = self.E_DOT;
     let F_DOT = self.F_DOT;
     let G_DOT = self.G_DOT;
-    let EPOCH_TIME = self.EPOCH_TIME.as_ref().map(|x|{
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TIME_FROM_LAUNCH = self.TIME_FROM_LAUNCH;
@@ -296,7 +296,7 @@ impl BOVT {
       E_DOT,
       F_DOT,
       G_DOT,
-      EPOCH_TIME,
+      EPOCH,
       TIME_FROM_LAUNCH,
     })
   }

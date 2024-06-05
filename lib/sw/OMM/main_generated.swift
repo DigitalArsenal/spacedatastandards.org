@@ -132,7 +132,7 @@ public struct OMM: FlatBufferObject, Verifiable {
   ///  Plain-Text Comment
   public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
-  ///  Epoch of Mean Keplerian elements. (ISO 8601)
+  ///  Epoch time, in ISO 8601 UTC format
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
   ///  Semi-major axis in km or mean motion in rev/day

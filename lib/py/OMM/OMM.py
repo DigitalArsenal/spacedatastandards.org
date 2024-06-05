@@ -119,7 +119,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Epoch of Mean Keplerian elements. (ISO 8601)
+    # Epoch time, in ISO 8601 UTC format
     # OMM
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))

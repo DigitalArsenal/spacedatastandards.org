@@ -105,7 +105,7 @@ OBS_REFERENCE_FRAME():refFrame {
 }
 
 /**
- * Epoch or observation time -  CCSDS 503.0-B-1
+ * Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
  */
 EPOCH():string|null
 EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

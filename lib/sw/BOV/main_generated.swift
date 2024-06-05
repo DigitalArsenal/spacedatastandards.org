@@ -23,7 +23,7 @@ public struct BOV: FlatBufferObject, Verifiable {
     case E_DOT = 10
     case F_DOT = 12
     case G_DOT = 14
-    case EPOCH_TIME = 16
+    case EPOCH = 16
     case TIME_FROM_LAUNCH = 18
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
@@ -35,8 +35,8 @@ public struct BOV: FlatBufferObject, Verifiable {
   public var E_DOT: Double { let o = _accessor.offset(VTOFFSET.E_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var F_DOT: Double { let o = _accessor.offset(VTOFFSET.F_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var G_DOT: Double { let o = _accessor.offset(VTOFFSET.G_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EPOCH_TIME: String? { let o = _accessor.offset(VTOFFSET.EPOCH_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH_TIME.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
   public var TIME_FROM_LAUNCH: Double { let o = _accessor.offset(VTOFFSET.TIME_FROM_LAUNCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startBOV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(E_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_COORDINATE, def: 0.0, at: VTOFFSET.E_COORDINATE.p) }
@@ -45,7 +45,7 @@ public struct BOV: FlatBufferObject, Verifiable {
   public static func add(E_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_DOT, def: 0.0, at: VTOFFSET.E_DOT.p) }
   public static func add(F_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_DOT, def: 0.0, at: VTOFFSET.F_DOT.p) }
   public static func add(G_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_DOT, def: 0.0, at: VTOFFSET.G_DOT.p) }
-  public static func add(EPOCH_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TIME, at: VTOFFSET.EPOCH_TIME.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
   public static func add(TIME_FROM_LAUNCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH, def: 0.0, at: VTOFFSET.TIME_FROM_LAUNCH.p) }
   public static func endBOV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBOV(
@@ -56,7 +56,7 @@ public struct BOV: FlatBufferObject, Verifiable {
     E_DOT: Double = 0.0,
     F_DOT: Double = 0.0,
     G_DOT: Double = 0.0,
-    EPOCH_TIMEOffset EPOCH_TIME: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
     TIME_FROM_LAUNCH: Double = 0.0
   ) -> Offset {
     let __start = BOV.startBOV(&fbb)
@@ -66,7 +66,7 @@ public struct BOV: FlatBufferObject, Verifiable {
     BOV.add(E_DOT: E_DOT, &fbb)
     BOV.add(F_DOT: F_DOT, &fbb)
     BOV.add(G_DOT: G_DOT, &fbb)
-    BOV.add(EPOCH_TIME: EPOCH_TIME, &fbb)
+    BOV.add(EPOCH: EPOCH, &fbb)
     BOV.add(TIME_FROM_LAUNCH: TIME_FROM_LAUNCH, &fbb)
     return BOV.endBOV(&fbb, start: __start)
   }
@@ -79,7 +79,7 @@ public struct BOV: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.E_DOT.p, fieldName: "E_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.F_DOT.p, fieldName: "F_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.G_DOT.p, fieldName: "G_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EPOCH_TIME.p, fieldName: "EPOCH_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TIME_FROM_LAUNCH.p, fieldName: "TIME_FROM_LAUNCH", required: false, type: Double.self)
     _v.finish()
   }

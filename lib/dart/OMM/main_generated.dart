@@ -103,7 +103,7 @@ class OMM {
   ///  Mean Keplerian Elements in the Specified Reference Frame
   ///  Plain-Text Comment
   String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  ///  Epoch of Mean Keplerian elements. (ISO 8601)
+  ///  Epoch time, in ISO 8601 UTC format
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   ///  Semi-major axis in km or mean motion in rev/day
   double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);

@@ -95,7 +95,7 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getEPOCH_TIME()
+    public function getEPOCH()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -123,7 +123,7 @@ class BOV extends Table
      * @param FlatBufferBuilder $builder
      * @return BOV
      */
-    public static function createBOV(FlatBufferBuilder $builder, $E_COORDINATE, $F_COORDINATE, $G_COORDINATE, $E_DOT, $F_DOT, $G_DOT, $EPOCH_TIME, $TIME_FROM_LAUNCH)
+    public static function createBOV(FlatBufferBuilder $builder, $E_COORDINATE, $F_COORDINATE, $G_COORDINATE, $E_DOT, $F_DOT, $G_DOT, $EPOCH, $TIME_FROM_LAUNCH)
     {
         $builder->startObject(8);
         self::addE_COORDINATE($builder, $E_COORDINATE);
@@ -132,7 +132,7 @@ class BOV extends Table
         self::addE_DOT($builder, $E_DOT);
         self::addF_DOT($builder, $F_DOT);
         self::addG_DOT($builder, $G_DOT);
-        self::addEPOCH_TIME($builder, $EPOCH_TIME);
+        self::addEPOCH($builder, $EPOCH);
         self::addTIME_FROM_LAUNCH($builder, $TIME_FROM_LAUNCH);
         $o = $builder->endObject();
         return $o;
@@ -203,9 +203,9 @@ class BOV extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addEPOCH_TIME(FlatBufferBuilder $builder, $EPOCH_TIME)
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
     {
-        $builder->addOffsetX(6, $EPOCH_TIME, 0);
+        $builder->addOffsetX(6, $EPOCH, 0);
     }
 
     /**

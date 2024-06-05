@@ -101,7 +101,7 @@ class TDM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Epoch or observation time -  CCSDS 503.0-B-1
+    # Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
     # TDM
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))

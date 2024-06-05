@@ -67,7 +67,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     COMMENT(): string | null;
     COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Epoch of Mean Keplerian elements. (ISO 8601)
+     * Epoch time, in ISO 8601 UTC format
      */
     EPOCH(): string | null;
     EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

@@ -34,7 +34,7 @@ func (rcv *ephemerisDataLine) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Epoch of state vector (ISO 8601)
+/// Epoch time, in ISO 8601 UTC format
 func (rcv *ephemerisDataLine) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -43,7 +43,7 @@ func (rcv *ephemerisDataLine) EPOCH() []byte {
 	return nil
 }
 
-/// Epoch of state vector (ISO 8601)
+/// Epoch time, in ISO 8601 UTC format
 /// Position vector X-component km
 func (rcv *ephemerisDataLine) X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))

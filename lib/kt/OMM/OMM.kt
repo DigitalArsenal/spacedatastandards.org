@@ -163,7 +163,7 @@ class OMM : Table() {
     val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
     fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Epoch of Mean Keplerian elements. (ISO 8601)
+     * Epoch time, in ISO 8601 UTC format
      */
     val EPOCH : String?
         get() {

@@ -271,7 +271,7 @@
               },
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch of Mean Keplerian elements. (ISO 8601)"
+                "description" : "Epoch time, in ISO 8601 UTC format"
               },
         "SEMI_MAJOR_AXIS" : {
                 "type" : "number",
@@ -1313,7 +1313,7 @@
               },
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch or observation time -  CCSDS 503.0-B-1"
+                "description" : "Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1"
               },
         "CCSDS_TDM_VERS" : {
                 "type" : "string",
@@ -1647,7 +1647,7 @@
         "G_DOT" : {
                 "type" : "number"
               },
-        "EPOCH_TIME" : {
+        "EPOCH" : {
                 "type" : "string"
               },
         "TIME_FROM_LAUNCH" : {
@@ -3169,7 +3169,7 @@
       "properties" : {
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch of state vector (ISO 8601)"
+                "description" : "Epoch time, in ISO 8601 UTC format"
               },
         "X" : {
                 "type" : "number",

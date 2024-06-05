@@ -26,7 +26,7 @@ static getSizePrefixedRootAsephemerisDataLine(bb:flatbuffers.ByteBuffer, obj?:ep
 }
 
 /**
- * Epoch of state vector (ISO 8601)
+ * Epoch time, in ISO 8601 UTC format
  */
 EPOCH():string|null
 EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

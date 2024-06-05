@@ -60,7 +60,7 @@ class BOV : Table() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EPOCH_TIME : String?
+    val EPOCH : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -69,8 +69,8 @@ class BOV : Table() {
                 null
             }
         }
-    val EPOCH_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun EPOCH_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
     val TIME_FROM_LAUNCH : Double
         get() {
             val o = __offset(18)
@@ -84,7 +84,7 @@ class BOV : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun BOVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BOV")
-        fun createBOV(builder: FlatBufferBuilder, E_COORDINATE: Double, F_COORDINATE: Double, G_COORDINATE: Double, E_DOT: Double, F_DOT: Double, G_DOT: Double, EPOCH_TIMEOffset: Int, TIME_FROM_LAUNCH: Double) : Int {
+        fun createBOV(builder: FlatBufferBuilder, E_COORDINATE: Double, F_COORDINATE: Double, G_COORDINATE: Double, E_DOT: Double, F_DOT: Double, G_DOT: Double, EPOCHOffset: Int, TIME_FROM_LAUNCH: Double) : Int {
             builder.startTable(8)
             addTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH)
             addG_DOT(builder, G_DOT)
@@ -93,7 +93,7 @@ class BOV : Table() {
             addG_COORDINATE(builder, G_COORDINATE)
             addF_COORDINATE(builder, F_COORDINATE)
             addE_COORDINATE(builder, E_COORDINATE)
-            addEPOCH_TIME(builder, EPOCH_TIMEOffset)
+            addEPOCH(builder, EPOCHOffset)
             return endBOV(builder)
         }
         fun startBOV(builder: FlatBufferBuilder) = builder.startTable(8)
@@ -103,7 +103,7 @@ class BOV : Table() {
         fun addE_DOT(builder: FlatBufferBuilder, E_DOT: Double) = builder.addDouble(3, E_DOT, 0.0)
         fun addF_DOT(builder: FlatBufferBuilder, F_DOT: Double) = builder.addDouble(4, F_DOT, 0.0)
         fun addG_DOT(builder: FlatBufferBuilder, G_DOT: Double) = builder.addDouble(5, G_DOT, 0.0)
-        fun addEPOCH_TIME(builder: FlatBufferBuilder, EPOCH_TIME: Int) = builder.addOffset(6, EPOCH_TIME, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(6, EPOCH, 0)
         fun addTIME_FROM_LAUNCH(builder: FlatBufferBuilder, TIME_FROM_LAUNCH: Double) = builder.addDouble(7, TIME_FROM_LAUNCH, 0.0)
         fun endBOV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()

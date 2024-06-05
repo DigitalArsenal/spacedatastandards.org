@@ -35,9 +35,9 @@ public final class BOV extends Table {
   public double E_DOT() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double F_DOT() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double G_DOT() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String EPOCH_TIME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EPOCH_TIMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer EPOCH_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public String EPOCH() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
   public double TIME_FROM_LAUNCH() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createBOV(FlatBufferBuilder builder,
@@ -47,7 +47,7 @@ public final class BOV extends Table {
       double E_DOT,
       double F_DOT,
       double G_DOT,
-      int EPOCH_TIMEOffset,
+      int EPOCHOffset,
       double TIME_FROM_LAUNCH) {
     builder.startTable(8);
     BOV.addTimeFromLaunch(builder, TIME_FROM_LAUNCH);
@@ -57,7 +57,7 @@ public final class BOV extends Table {
     BOV.addGCoordinate(builder, G_COORDINATE);
     BOV.addFCoordinate(builder, F_COORDINATE);
     BOV.addECoordinate(builder, E_COORDINATE);
-    BOV.addEpochTime(builder, EPOCH_TIMEOffset);
+    BOV.addEpoch(builder, EPOCHOffset);
     return BOV.endBOV(builder);
   }
 
@@ -68,7 +68,7 @@ public final class BOV extends Table {
   public static void addEDot(FlatBufferBuilder builder, double E_DOT) { builder.addDouble(3, E_DOT, 0.0); }
   public static void addFDot(FlatBufferBuilder builder, double F_DOT) { builder.addDouble(4, F_DOT, 0.0); }
   public static void addGDot(FlatBufferBuilder builder, double G_DOT) { builder.addDouble(5, G_DOT, 0.0); }
-  public static void addEpochTime(FlatBufferBuilder builder, int EPOCH_TIMEOffset) { builder.addOffset(6, EPOCH_TIMEOffset, 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(6, EPOCHOffset, 0); }
   public static void addTimeFromLaunch(FlatBufferBuilder builder, double TIME_FROM_LAUNCH) { builder.addDouble(7, TIME_FROM_LAUNCH, 0.0); }
   public static int endBOV(FlatBufferBuilder builder) {
     int o = builder.endTable();

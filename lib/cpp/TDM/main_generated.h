@@ -121,7 +121,7 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   refFrame OBS_REFERENCE_FRAME() const {
     return static_cast<refFrame>(GetField<int8_t>(VT_OBS_REFERENCE_FRAME, 0));
   }
-  /// Epoch or observation time -  CCSDS 503.0-B-1
+  /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }

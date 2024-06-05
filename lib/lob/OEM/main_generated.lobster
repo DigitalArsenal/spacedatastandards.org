@@ -13,7 +13,7 @@ class OEMCOLLECTION
 
 /// A single ephemeris data line
 class ephemerisDataLine : flatbuffers_handle
-    /// Epoch of state vector (ISO 8601)
+    /// Epoch time, in ISO 8601 UTC format
     def EPOCH() -> string:
         return buf_.flatbuffers_field_string(pos_, 4)
     /// Position vector X-component km

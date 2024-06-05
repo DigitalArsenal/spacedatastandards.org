@@ -164,7 +164,7 @@ func (rcv *OMM) COMMENT() []byte {
 
 /// Mean Keplerian Elements in the Specified Reference Frame
 /// Plain-Text Comment
-/// Epoch of Mean Keplerian elements. (ISO 8601)
+/// Epoch time, in ISO 8601 UTC format
 func (rcv *OMM) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -173,7 +173,7 @@ func (rcv *OMM) EPOCH() []byte {
 	return nil
 }
 
-/// Epoch of Mean Keplerian elements. (ISO 8601)
+/// Epoch time, in ISO 8601 UTC format
 /// Semi-major axis in km or mean motion in rev/day
 func (rcv *OMM) SEMI_MAJOR_AXIS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))

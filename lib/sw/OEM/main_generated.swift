@@ -31,7 +31,7 @@ public struct ephemerisDataLine: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  ///  Epoch of state vector (ISO 8601)
+  ///  Epoch time, in ISO 8601 UTC format
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
   ///  Position vector X-component km
