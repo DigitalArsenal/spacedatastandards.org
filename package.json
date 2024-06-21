@@ -1,9 +1,9 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.0.172+1717592996069",
+    "version": "1.0.175+1718979757204",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
-    "main": "index.js",
+    "main": "/lib/js/index.js",
     "files": [
         "schema/",
         "lib/js/",
@@ -13,8 +13,7 @@
         "README"
     ],
     "scripts": {
-        "postinstall": "cd website && npm i",
-        "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main",
+        "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main && npm publish",
         "start": "node index.js",
         "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateGoModule.py",
