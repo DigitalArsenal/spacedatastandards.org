@@ -42,6 +42,9 @@ def create_schema_file(schema_files, output_dir):
         "  standard: string;\n"
         "  RECORDS: [Record]; \n"
         "}\n\n"
+        "table RECCOLLECTION {\n"
+        "  RECORDS: [REC];\n"
+        "}\n\n"
         "root_type REC;\n"
         'file_identifier "$REC";\n'
     )
