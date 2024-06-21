@@ -48,5 +48,9 @@ table REC {
   RECORDS: [Record]; 
 }
 
+table RECCOLLECTION {
+  RECORDS: [REC];
+}
+
 root_type REC;
 file_identifier "$REC";
