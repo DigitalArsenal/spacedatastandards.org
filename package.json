@@ -1,9 +1,9 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.0.181+1718996158763",
+    "version": "1.0.182+1719146854260",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
-    "main": "/lib/js/index.js",
+    "main": "index.js",
     "files": [
         "schema/",
         "lib/js/",
@@ -13,6 +13,8 @@
         "README"
     ],
     "scripts": {
+        "test": "mocha",
+        "test:watch": "nodemon --exec 'npm test' --watch .",
         "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main && npm publish",
         "start": "node index.js",
         "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
@@ -30,12 +32,17 @@
     "license": "Apache-2.0",
     "dependencies": {
         "ajv": "^8.12.0",
+        "buffer": "^6.0.3",
         "esbuild": "^0.20.2",
         "flatbuffers": "23.3.3",
         "svelte-awesome": "^3.3.1",
         "svelte-spa-router": "^4.0.0"
     },
     "devDependencies": {
+        "@faker-js/faker": "^8.4.1",
+        "chai": "^5.1.1",
+        "mocha": "^10.4.0",
+        "pure-ipfs-only-hash": "^4.0.2",
         "sass": "^1.69.5",
         "smui-theme": "^7.0.0-beta.15",
         "typescript": "^5.2.2"
