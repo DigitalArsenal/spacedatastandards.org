@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.0.186+1719258051318",
+    "version": "1.0.187+1719258763485",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -23,6 +23,10 @@
         "build:website": "cd website && npm run build",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "dev": "npm run build && cd website && npm run dev"
+    },
+    "funding": {
+        "type": "corporate",
+        "url": "https://github.com/DigitalArsenal/spacedatastandards.org/Funding.md"
     },
     "author": "sds@digitalarsenal.io",
     "repository": {
