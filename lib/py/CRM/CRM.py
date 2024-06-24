@@ -653,246 +653,486 @@ class CRM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def CRMStart(builder): builder.StartObject(78)
+def CRMStart(builder):
+    builder.StartObject(78)
+
 def Start(builder):
-    return CRMStart(builder)
-def CRMAddID(builder, ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+    CRMStart(builder)
+
+def CRMAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
 def AddID(builder, ID):
-    return CRMAddID(builder, ID)
-def CRMAddCLASSIFICATION(builder, CLASSIFICATION): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+    CRMAddID(builder, ID)
+
+def CRMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
 def AddCLASSIFICATION(builder, CLASSIFICATION):
-    return CRMAddCLASSIFICATION(builder, CLASSIFICATION)
-def CRMAddTYPE(builder, TYPE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+    CRMAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def CRMAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
 def AddTYPE(builder, TYPE):
-    return CRMAddTYPE(builder, TYPE)
-def CRMAddID_PLAN(builder, ID_PLAN): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_PLAN), 0)
+    CRMAddTYPE(builder, TYPE)
+
+def CRMAddID_PLAN(builder, ID_PLAN):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_PLAN), 0)
+
 def AddID_PLAN(builder, ID_PLAN):
-    return CRMAddID_PLAN(builder, ID_PLAN)
-def CRMAddPLAN_INDEX(builder, PLAN_INDEX): builder.PrependInt32Slot(4, PLAN_INDEX, 0)
+    CRMAddID_PLAN(builder, ID_PLAN)
+
+def CRMAddPLAN_INDEX(builder, PLAN_INDEX):
+    builder.PrependInt32Slot(4, PLAN_INDEX, 0)
+
 def AddPLAN_INDEX(builder, PLAN_INDEX):
-    return CRMAddPLAN_INDEX(builder, PLAN_INDEX)
-def CRMAddTASK_ID(builder, TASK_ID): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+    CRMAddPLAN_INDEX(builder, PLAN_INDEX)
+
+def CRMAddTASK_ID(builder, TASK_ID):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+
 def AddTASK_ID(builder, TASK_ID):
-    return CRMAddTASK_ID(builder, TASK_ID)
-def CRMAddDWELL_ID(builder, DWELL_ID): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(DWELL_ID), 0)
+    CRMAddTASK_ID(builder, TASK_ID)
+
+def CRMAddDWELL_ID(builder, DWELL_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(DWELL_ID), 0)
+
 def AddDWELL_ID(builder, DWELL_ID):
-    return CRMAddDWELL_ID(builder, DWELL_ID)
-def CRMAddEXTERNAL_ID(builder, EXTERNAL_ID): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EXTERNAL_ID), 0)
+    CRMAddDWELL_ID(builder, DWELL_ID)
+
+def CRMAddEXTERNAL_ID(builder, EXTERNAL_ID):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EXTERNAL_ID), 0)
+
 def AddEXTERNAL_ID(builder, EXTERNAL_ID):
-    return CRMAddEXTERNAL_ID(builder, EXTERNAL_ID)
-def CRMAddID_SENSOR(builder, ID_SENSOR): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+    CRMAddEXTERNAL_ID(builder, EXTERNAL_ID)
+
+def CRMAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
 def AddID_SENSOR(builder, ID_SENSOR):
-    return CRMAddID_SENSOR(builder, ID_SENSOR)
-def CRMAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+    CRMAddID_SENSOR(builder, ID_SENSOR)
+
+def CRMAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
 def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
-    return CRMAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
-def CRMAddOB_TYPE(builder, OB_TYPE): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TYPE), 0)
+    CRMAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
+def CRMAddOB_TYPE(builder, OB_TYPE):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TYPE), 0)
+
 def AddOB_TYPE(builder, OB_TYPE):
-    return CRMAddOB_TYPE(builder, OB_TYPE)
-def CRMAddPRIORITY(builder, PRIORITY): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PRIORITY), 0)
+    CRMAddOB_TYPE(builder, OB_TYPE)
+
+def CRMAddPRIORITY(builder, PRIORITY):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PRIORITY), 0)
+
 def AddPRIORITY(builder, PRIORITY):
-    return CRMAddPRIORITY(builder, PRIORITY)
-def CRMAddTASK_CATEGORY(builder, TASK_CATEGORY): builder.PrependInt32Slot(12, TASK_CATEGORY, 0)
+    CRMAddPRIORITY(builder, PRIORITY)
+
+def CRMAddTASK_CATEGORY(builder, TASK_CATEGORY):
+    builder.PrependInt32Slot(12, TASK_CATEGORY, 0)
+
 def AddTASK_CATEGORY(builder, TASK_CATEGORY):
-    return CRMAddTASK_CATEGORY(builder, TASK_CATEGORY)
-def CRMAddSUFFIX(builder, SUFFIX): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SUFFIX), 0)
+    CRMAddTASK_CATEGORY(builder, TASK_CATEGORY)
+
+def CRMAddSUFFIX(builder, SUFFIX):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SUFFIX), 0)
+
 def AddSUFFIX(builder, SUFFIX):
-    return CRMAddSUFFIX(builder, SUFFIX)
-def CRMAddUCT_FOLLOW_UP(builder, UCT_FOLLOW_UP): builder.PrependBoolSlot(14, UCT_FOLLOW_UP, 0)
+    CRMAddSUFFIX(builder, SUFFIX)
+
+def CRMAddUCT_FOLLOW_UP(builder, UCT_FOLLOW_UP):
+    builder.PrependBoolSlot(14, UCT_FOLLOW_UP, 0)
+
 def AddUCT_FOLLOW_UP(builder, UCT_FOLLOW_UP):
-    return CRMAddUCT_FOLLOW_UP(builder, UCT_FOLLOW_UP)
-def CRMAddSTART_TIME(builder, START_TIME): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+    CRMAddUCT_FOLLOW_UP(builder, UCT_FOLLOW_UP)
+
+def CRMAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
 def AddSTART_TIME(builder, START_TIME):
-    return CRMAddSTART_TIME(builder, START_TIME)
-def CRMAddEND_TIME(builder, END_TIME): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
+    CRMAddSTART_TIME(builder, START_TIME)
+
+def CRMAddEND_TIME(builder, END_TIME):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
+
 def AddEND_TIME(builder, END_TIME):
-    return CRMAddEND_TIME(builder, END_TIME)
-def CRMAddNORAD_CAT_ID(builder, NORAD_CAT_ID): builder.PrependUint32Slot(17, NORAD_CAT_ID, 0)
+    CRMAddEND_TIME(builder, END_TIME)
+
+def CRMAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(17, NORAD_CAT_ID, 0)
+
 def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
-    return CRMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
-def CRMAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+    CRMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def CRMAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    return CRMAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
-def CRMAddTASK_GROUP(builder, TASK_GROUP): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_GROUP), 0)
+    CRMAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def CRMAddTASK_GROUP(builder, TASK_GROUP):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_GROUP), 0)
+
 def AddTASK_GROUP(builder, TASK_GROUP):
-    return CRMAddTASK_GROUP(builder, TASK_GROUP)
-def CRMAddIRON(builder, IRON): builder.PrependInt32Slot(20, IRON, 0)
+    CRMAddTASK_GROUP(builder, TASK_GROUP)
+
+def CRMAddIRON(builder, IRON):
+    builder.PrependInt32Slot(20, IRON, 0)
+
 def AddIRON(builder, IRON):
-    return CRMAddIRON(builder, IRON)
-def CRMAddORBIT_REGIME(builder, ORBIT_REGIME): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_REGIME), 0)
+    CRMAddIRON(builder, IRON)
+
+def CRMAddORBIT_REGIME(builder, ORBIT_REGIME):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_REGIME), 0)
+
 def AddORBIT_REGIME(builder, ORBIT_REGIME):
-    return CRMAddORBIT_REGIME(builder, ORBIT_REGIME)
-def CRMAddTARGET_SIZE(builder, TARGET_SIZE): builder.PrependFloat64Slot(22, TARGET_SIZE, 0.0)
+    CRMAddORBIT_REGIME(builder, ORBIT_REGIME)
+
+def CRMAddTARGET_SIZE(builder, TARGET_SIZE):
+    builder.PrependFloat64Slot(22, TARGET_SIZE, 0.0)
+
 def AddTARGET_SIZE(builder, TARGET_SIZE):
-    return CRMAddTARGET_SIZE(builder, TARGET_SIZE)
-def CRMAddRCS_MIN(builder, RCS_MIN): builder.PrependFloat64Slot(23, RCS_MIN, 0.0)
+    CRMAddTARGET_SIZE(builder, TARGET_SIZE)
+
+def CRMAddRCS_MIN(builder, RCS_MIN):
+    builder.PrependFloat64Slot(23, RCS_MIN, 0.0)
+
 def AddRCS_MIN(builder, RCS_MIN):
-    return CRMAddRCS_MIN(builder, RCS_MIN)
-def CRMAddRCS(builder, RCS): builder.PrependFloat64Slot(24, RCS, 0.0)
+    CRMAddRCS_MIN(builder, RCS_MIN)
+
+def CRMAddRCS(builder, RCS):
+    builder.PrependFloat64Slot(24, RCS, 0.0)
+
 def AddRCS(builder, RCS):
-    return CRMAddRCS(builder, RCS)
-def CRMAddRCS_MAX(builder, RCS_MAX): builder.PrependFloat64Slot(25, RCS_MAX, 0.0)
+    CRMAddRCS(builder, RCS)
+
+def CRMAddRCS_MAX(builder, RCS_MAX):
+    builder.PrependFloat64Slot(25, RCS_MAX, 0.0)
+
 def AddRCS_MAX(builder, RCS_MAX):
-    return CRMAddRCS_MAX(builder, RCS_MAX)
-def CRMAddFREQ_MIN(builder, FREQ_MIN): builder.PrependFloat64Slot(26, FREQ_MIN, 0.0)
+    CRMAddRCS_MAX(builder, RCS_MAX)
+
+def CRMAddFREQ_MIN(builder, FREQ_MIN):
+    builder.PrependFloat64Slot(26, FREQ_MIN, 0.0)
+
 def AddFREQ_MIN(builder, FREQ_MIN):
-    return CRMAddFREQ_MIN(builder, FREQ_MIN)
-def CRMAddFREQ(builder, FREQ): builder.PrependFloat64Slot(27, FREQ, 0.0)
+    CRMAddFREQ_MIN(builder, FREQ_MIN)
+
+def CRMAddFREQ(builder, FREQ):
+    builder.PrependFloat64Slot(27, FREQ, 0.0)
+
 def AddFREQ(builder, FREQ):
-    return CRMAddFREQ(builder, FREQ)
-def CRMAddFREQ_MAX(builder, FREQ_MAX): builder.PrependFloat64Slot(28, FREQ_MAX, 0.0)
+    CRMAddFREQ(builder, FREQ)
+
+def CRMAddFREQ_MAX(builder, FREQ_MAX):
+    builder.PrependFloat64Slot(28, FREQ_MAX, 0.0)
+
 def AddFREQ_MAX(builder, FREQ_MAX):
-    return CRMAddFREQ_MAX(builder, FREQ_MAX)
-def CRMAddPOLARIZATION(builder, POLARIZATION): builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(POLARIZATION), 0)
+    CRMAddFREQ_MAX(builder, FREQ_MAX)
+
+def CRMAddPOLARIZATION(builder, POLARIZATION):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(POLARIZATION), 0)
+
 def AddPOLARIZATION(builder, POLARIZATION):
-    return CRMAddPOLARIZATION(builder, POLARIZATION)
-def CRMAddVIS_MAG_MIN(builder, VIS_MAG_MIN): builder.PrependFloat64Slot(30, VIS_MAG_MIN, 0.0)
+    CRMAddPOLARIZATION(builder, POLARIZATION)
+
+def CRMAddVIS_MAG_MIN(builder, VIS_MAG_MIN):
+    builder.PrependFloat64Slot(30, VIS_MAG_MIN, 0.0)
+
 def AddVIS_MAG_MIN(builder, VIS_MAG_MIN):
-    return CRMAddVIS_MAG_MIN(builder, VIS_MAG_MIN)
-def CRMAddVIS_MAG(builder, VIS_MAG): builder.PrependFloat64Slot(31, VIS_MAG, 0.0)
+    CRMAddVIS_MAG_MIN(builder, VIS_MAG_MIN)
+
+def CRMAddVIS_MAG(builder, VIS_MAG):
+    builder.PrependFloat64Slot(31, VIS_MAG, 0.0)
+
 def AddVIS_MAG(builder, VIS_MAG):
-    return CRMAddVIS_MAG(builder, VIS_MAG)
-def CRMAddVIS_MAG_MAX(builder, VIS_MAG_MAX): builder.PrependFloat64Slot(32, VIS_MAG_MAX, 0.0)
+    CRMAddVIS_MAG(builder, VIS_MAG)
+
+def CRMAddVIS_MAG_MAX(builder, VIS_MAG_MAX):
+    builder.PrependFloat64Slot(32, VIS_MAG_MAX, 0.0)
+
 def AddVIS_MAG_MAX(builder, VIS_MAG_MAX):
-    return CRMAddVIS_MAG_MAX(builder, VIS_MAG_MAX)
-def CRMAddSPECTRAL_MODEL(builder, SPECTRAL_MODEL): builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_MODEL), 0)
+    CRMAddVIS_MAG_MAX(builder, VIS_MAG_MAX)
+
+def CRMAddSPECTRAL_MODEL(builder, SPECTRAL_MODEL):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_MODEL), 0)
+
 def AddSPECTRAL_MODEL(builder, SPECTRAL_MODEL):
-    return CRMAddSPECTRAL_MODEL(builder, SPECTRAL_MODEL)
-def CRMAddREFLECTANCE(builder, REFLECTANCE): builder.PrependFloat64Slot(34, REFLECTANCE, 0.0)
+    CRMAddSPECTRAL_MODEL(builder, SPECTRAL_MODEL)
+
+def CRMAddREFLECTANCE(builder, REFLECTANCE):
+    builder.PrependFloat64Slot(34, REFLECTANCE, 0.0)
+
 def AddREFLECTANCE(builder, REFLECTANCE):
-    return CRMAddREFLECTANCE(builder, REFLECTANCE)
-def CRMAddIRRADIANCE(builder, IRRADIANCE): builder.PrependFloat64Slot(35, IRRADIANCE, 0.0)
+    CRMAddREFLECTANCE(builder, REFLECTANCE)
+
+def CRMAddIRRADIANCE(builder, IRRADIANCE):
+    builder.PrependFloat64Slot(35, IRRADIANCE, 0.0)
+
 def AddIRRADIANCE(builder, IRRADIANCE):
-    return CRMAddIRRADIANCE(builder, IRRADIANCE)
-def CRMAddNUM_FRAMES(builder, NUM_FRAMES): builder.PrependInt32Slot(36, NUM_FRAMES, 0)
+    CRMAddIRRADIANCE(builder, IRRADIANCE)
+
+def CRMAddNUM_FRAMES(builder, NUM_FRAMES):
+    builder.PrependInt32Slot(36, NUM_FRAMES, 0)
+
 def AddNUM_FRAMES(builder, NUM_FRAMES):
-    return CRMAddNUM_FRAMES(builder, NUM_FRAMES)
-def CRMAddFRAME_RATE(builder, FRAME_RATE): builder.PrependFloat64Slot(37, FRAME_RATE, 0.0)
+    CRMAddNUM_FRAMES(builder, NUM_FRAMES)
+
+def CRMAddFRAME_RATE(builder, FRAME_RATE):
+    builder.PrependFloat64Slot(37, FRAME_RATE, 0.0)
+
 def AddFRAME_RATE(builder, FRAME_RATE):
-    return CRMAddFRAME_RATE(builder, FRAME_RATE)
-def CRMAddINTEGRATION_TIME(builder, INTEGRATION_TIME): builder.PrependFloat64Slot(38, INTEGRATION_TIME, 0.0)
+    CRMAddFRAME_RATE(builder, FRAME_RATE)
+
+def CRMAddINTEGRATION_TIME(builder, INTEGRATION_TIME):
+    builder.PrependFloat64Slot(38, INTEGRATION_TIME, 0.0)
+
 def AddINTEGRATION_TIME(builder, INTEGRATION_TIME):
-    return CRMAddINTEGRATION_TIME(builder, INTEGRATION_TIME)
-def CRMAddNUM_TRACKS(builder, NUM_TRACKS): builder.PrependInt32Slot(39, NUM_TRACKS, 0)
+    CRMAddINTEGRATION_TIME(builder, INTEGRATION_TIME)
+
+def CRMAddNUM_TRACKS(builder, NUM_TRACKS):
+    builder.PrependInt32Slot(39, NUM_TRACKS, 0)
+
 def AddNUM_TRACKS(builder, NUM_TRACKS):
-    return CRMAddNUM_TRACKS(builder, NUM_TRACKS)
-def CRMAddNUM_OBS(builder, NUM_OBS): builder.PrependInt32Slot(40, NUM_OBS, 0)
+    CRMAddNUM_TRACKS(builder, NUM_TRACKS)
+
+def CRMAddNUM_OBS(builder, NUM_OBS):
+    builder.PrependInt32Slot(40, NUM_OBS, 0)
+
 def AddNUM_OBS(builder, NUM_OBS):
-    return CRMAddNUM_OBS(builder, NUM_OBS)
-def CRMAddDURATION(builder, DURATION): builder.PrependInt32Slot(41, DURATION, 0)
+    CRMAddNUM_OBS(builder, NUM_OBS)
+
+def CRMAddDURATION(builder, DURATION):
+    builder.PrependInt32Slot(41, DURATION, 0)
+
 def AddDURATION(builder, DURATION):
-    return CRMAddDURATION(builder, DURATION)
-def CRMAddSRCH_PATTERN(builder, SRCH_PATTERN): builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SRCH_PATTERN), 0)
+    CRMAddDURATION(builder, DURATION)
+
+def CRMAddSRCH_PATTERN(builder, SRCH_PATTERN):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SRCH_PATTERN), 0)
+
 def AddSRCH_PATTERN(builder, SRCH_PATTERN):
-    return CRMAddSRCH_PATTERN(builder, SRCH_PATTERN)
-def CRMAddSCENARIO(builder, SCENARIO): builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SCENARIO), 0)
+    CRMAddSRCH_PATTERN(builder, SRCH_PATTERN)
+
+def CRMAddSCENARIO(builder, SCENARIO):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SCENARIO), 0)
+
 def AddSCENARIO(builder, SCENARIO):
-    return CRMAddSCENARIO(builder, SCENARIO)
-def CRMAddID_ELSET(builder, ID_ELSET): builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ELSET), 0)
+    CRMAddSCENARIO(builder, SCENARIO)
+
+def CRMAddID_ELSET(builder, ID_ELSET):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ELSET), 0)
+
 def AddID_ELSET(builder, ID_ELSET):
-    return CRMAddID_ELSET(builder, ID_ELSET)
-def CRMAddID_MANIFOLD(builder, ID_MANIFOLD): builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(ID_MANIFOLD), 0)
+    CRMAddID_ELSET(builder, ID_ELSET)
+
+def CRMAddID_MANIFOLD(builder, ID_MANIFOLD):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(ID_MANIFOLD), 0)
+
 def AddID_MANIFOLD(builder, ID_MANIFOLD):
-    return CRMAddID_MANIFOLD(builder, ID_MANIFOLD)
-def CRMAddID_STATE_VECTOR(builder, ID_STATE_VECTOR): builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(ID_STATE_VECTOR), 0)
+    CRMAddID_MANIFOLD(builder, ID_MANIFOLD)
+
+def CRMAddID_STATE_VECTOR(builder, ID_STATE_VECTOR):
+    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(ID_STATE_VECTOR), 0)
+
 def AddID_STATE_VECTOR(builder, ID_STATE_VECTOR):
-    return CRMAddID_STATE_VECTOR(builder, ID_STATE_VECTOR)
-def CRMAddES_ID(builder, ES_ID): builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(ES_ID), 0)
+    CRMAddID_STATE_VECTOR(builder, ID_STATE_VECTOR)
+
+def CRMAddES_ID(builder, ES_ID):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(ES_ID), 0)
+
 def AddES_ID(builder, ES_ID):
-    return CRMAddES_ID(builder, ES_ID)
-def CRMAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+    CRMAddES_ID(builder, ES_ID)
+
+def CRMAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
 def AddEPOCH(builder, EPOCH):
-    return CRMAddEPOCH(builder, EPOCH)
-def CRMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS): builder.PrependFloat64Slot(49, SEMI_MAJOR_AXIS, 0.0)
+    CRMAddEPOCH(builder, EPOCH)
+
+def CRMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    builder.PrependFloat64Slot(49, SEMI_MAJOR_AXIS, 0.0)
+
 def AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
-    return CRMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-def CRMAddECCENTRICITY(builder, ECCENTRICITY): builder.PrependFloat64Slot(50, ECCENTRICITY, 0.0)
+    CRMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+
+def CRMAddECCENTRICITY(builder, ECCENTRICITY):
+    builder.PrependFloat64Slot(50, ECCENTRICITY, 0.0)
+
 def AddECCENTRICITY(builder, ECCENTRICITY):
-    return CRMAddECCENTRICITY(builder, ECCENTRICITY)
-def CRMAddINCLINATION(builder, INCLINATION): builder.PrependFloat64Slot(51, INCLINATION, 0.0)
+    CRMAddECCENTRICITY(builder, ECCENTRICITY)
+
+def CRMAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(51, INCLINATION, 0.0)
+
 def AddINCLINATION(builder, INCLINATION):
-    return CRMAddINCLINATION(builder, INCLINATION)
-def CRMAddRAAN(builder, RAAN): builder.PrependFloat64Slot(52, RAAN, 0.0)
+    CRMAddINCLINATION(builder, INCLINATION)
+
+def CRMAddRAAN(builder, RAAN):
+    builder.PrependFloat64Slot(52, RAAN, 0.0)
+
 def AddRAAN(builder, RAAN):
-    return CRMAddRAAN(builder, RAAN)
-def CRMAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE): builder.PrependFloat64Slot(53, ARG_OF_PERIGEE, 0.0)
+    CRMAddRAAN(builder, RAAN)
+
+def CRMAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE):
+    builder.PrependFloat64Slot(53, ARG_OF_PERIGEE, 0.0)
+
 def AddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE):
-    return CRMAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE)
-def CRMAddMEAN_ANOMALY(builder, MEAN_ANOMALY): builder.PrependFloat64Slot(54, MEAN_ANOMALY, 0.0)
+    CRMAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE)
+
+def CRMAddMEAN_ANOMALY(builder, MEAN_ANOMALY):
+    builder.PrependFloat64Slot(54, MEAN_ANOMALY, 0.0)
+
 def AddMEAN_ANOMALY(builder, MEAN_ANOMALY):
-    return CRMAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
-def CRMAddRA(builder, RA): builder.PrependFloat64Slot(55, RA, 0.0)
+    CRMAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+
+def CRMAddRA(builder, RA):
+    builder.PrependFloat64Slot(55, RA, 0.0)
+
 def AddRA(builder, RA):
-    return CRMAddRA(builder, RA)
-def CRMAddDEC(builder, DEC): builder.PrependFloat64Slot(56, DEC, 0.0)
+    CRMAddRA(builder, RA)
+
+def CRMAddDEC(builder, DEC):
+    builder.PrependFloat64Slot(56, DEC, 0.0)
+
 def AddDEC(builder, DEC):
-    return CRMAddDEC(builder, DEC)
-def CRMAddAZ(builder, AZ): builder.PrependFloat64Slot(57, AZ, 0.0)
+    CRMAddDEC(builder, DEC)
+
+def CRMAddAZ(builder, AZ):
+    builder.PrependFloat64Slot(57, AZ, 0.0)
+
 def AddAZ(builder, AZ):
-    return CRMAddAZ(builder, AZ)
-def CRMAddEL(builder, EL): builder.PrependFloat64Slot(58, EL, 0.0)
+    CRMAddAZ(builder, AZ)
+
+def CRMAddEL(builder, EL):
+    builder.PrependFloat64Slot(58, EL, 0.0)
+
 def AddEL(builder, EL):
-    return CRMAddEL(builder, EL)
-def CRMAddRANGE(builder, RANGE): builder.PrependFloat64Slot(59, RANGE, 0.0)
+    CRMAddEL(builder, EL)
+
+def CRMAddRANGE(builder, RANGE):
+    builder.PrependFloat64Slot(59, RANGE, 0.0)
+
 def AddRANGE(builder, RANGE):
-    return CRMAddRANGE(builder, RANGE)
-def CRMAddEXTENT_AZ(builder, EXTENT_AZ): builder.PrependFloat64Slot(60, EXTENT_AZ, 0.0)
+    CRMAddRANGE(builder, RANGE)
+
+def CRMAddEXTENT_AZ(builder, EXTENT_AZ):
+    builder.PrependFloat64Slot(60, EXTENT_AZ, 0.0)
+
 def AddEXTENT_AZ(builder, EXTENT_AZ):
-    return CRMAddEXTENT_AZ(builder, EXTENT_AZ)
-def CRMAddEXTENT_EL(builder, EXTENT_EL): builder.PrependFloat64Slot(61, EXTENT_EL, 0.0)
+    CRMAddEXTENT_AZ(builder, EXTENT_AZ)
+
+def CRMAddEXTENT_EL(builder, EXTENT_EL):
+    builder.PrependFloat64Slot(61, EXTENT_EL, 0.0)
+
 def AddEXTENT_EL(builder, EXTENT_EL):
-    return CRMAddEXTENT_EL(builder, EXTENT_EL)
-def CRMAddEXTENT_RANGE(builder, EXTENT_RANGE): builder.PrependFloat64Slot(62, EXTENT_RANGE, 0.0)
+    CRMAddEXTENT_EL(builder, EXTENT_EL)
+
+def CRMAddEXTENT_RANGE(builder, EXTENT_RANGE):
+    builder.PrependFloat64Slot(62, EXTENT_RANGE, 0.0)
+
 def AddEXTENT_RANGE(builder, EXTENT_RANGE):
-    return CRMAddEXTENT_RANGE(builder, EXTENT_RANGE)
-def CRMAddLAT(builder, LAT): builder.PrependFloat64Slot(63, LAT, 0.0)
+    CRMAddEXTENT_RANGE(builder, EXTENT_RANGE)
+
+def CRMAddLAT(builder, LAT):
+    builder.PrependFloat64Slot(63, LAT, 0.0)
+
 def AddLAT(builder, LAT):
-    return CRMAddLAT(builder, LAT)
-def CRMAddLON(builder, LON): builder.PrependFloat64Slot(64, LON, 0.0)
+    CRMAddLAT(builder, LAT)
+
+def CRMAddLON(builder, LON):
+    builder.PrependFloat64Slot(64, LON, 0.0)
+
 def AddLON(builder, LON):
-    return CRMAddLON(builder, LON)
-def CRMAddALT(builder, ALT): builder.PrependFloat64Slot(65, ALT, 0.0)
+    CRMAddLON(builder, LON)
+
+def CRMAddALT(builder, ALT):
+    builder.PrependFloat64Slot(65, ALT, 0.0)
+
 def AddALT(builder, ALT):
-    return CRMAddALT(builder, ALT)
-def CRMAddSTOP_LAT(builder, STOP_LAT): builder.PrependFloat64Slot(66, STOP_LAT, 0.0)
+    CRMAddALT(builder, ALT)
+
+def CRMAddSTOP_LAT(builder, STOP_LAT):
+    builder.PrependFloat64Slot(66, STOP_LAT, 0.0)
+
 def AddSTOP_LAT(builder, STOP_LAT):
-    return CRMAddSTOP_LAT(builder, STOP_LAT)
-def CRMAddSTOP_LON(builder, STOP_LON): builder.PrependFloat64Slot(67, STOP_LON, 0.0)
+    CRMAddSTOP_LAT(builder, STOP_LAT)
+
+def CRMAddSTOP_LON(builder, STOP_LON):
+    builder.PrependFloat64Slot(67, STOP_LON, 0.0)
+
 def AddSTOP_LON(builder, STOP_LON):
-    return CRMAddSTOP_LON(builder, STOP_LON)
-def CRMAddSTOP_ALT(builder, STOP_ALT): builder.PrependFloat64Slot(68, STOP_ALT, 0.0)
+    CRMAddSTOP_LON(builder, STOP_LON)
+
+def CRMAddSTOP_ALT(builder, STOP_ALT):
+    builder.PrependFloat64Slot(68, STOP_ALT, 0.0)
+
 def AddSTOP_ALT(builder, STOP_ALT):
-    return CRMAddSTOP_ALT(builder, STOP_ALT)
-def CRMAddSRCH_INC(builder, SRCH_INC): builder.PrependFloat64Slot(69, SRCH_INC, 0.0)
+    CRMAddSTOP_ALT(builder, STOP_ALT)
+
+def CRMAddSRCH_INC(builder, SRCH_INC):
+    builder.PrependFloat64Slot(69, SRCH_INC, 0.0)
+
 def AddSRCH_INC(builder, SRCH_INC):
-    return CRMAddSRCH_INC(builder, SRCH_INC)
-def CRMAddX_ANGLE(builder, X_ANGLE): builder.PrependFloat64Slot(70, X_ANGLE, 0.0)
+    CRMAddSRCH_INC(builder, SRCH_INC)
+
+def CRMAddX_ANGLE(builder, X_ANGLE):
+    builder.PrependFloat64Slot(70, X_ANGLE, 0.0)
+
 def AddX_ANGLE(builder, X_ANGLE):
-    return CRMAddX_ANGLE(builder, X_ANGLE)
-def CRMAddY_ANGLE(builder, Y_ANGLE): builder.PrependFloat64Slot(71, Y_ANGLE, 0.0)
+    CRMAddX_ANGLE(builder, X_ANGLE)
+
+def CRMAddY_ANGLE(builder, Y_ANGLE):
+    builder.PrependFloat64Slot(71, Y_ANGLE, 0.0)
+
 def AddY_ANGLE(builder, Y_ANGLE):
-    return CRMAddY_ANGLE(builder, Y_ANGLE)
-def CRMAddORIENT_ANGLE(builder, ORIENT_ANGLE): builder.PrependFloat64Slot(72, ORIENT_ANGLE, 0.0)
+    CRMAddY_ANGLE(builder, Y_ANGLE)
+
+def CRMAddORIENT_ANGLE(builder, ORIENT_ANGLE):
+    builder.PrependFloat64Slot(72, ORIENT_ANGLE, 0.0)
+
 def AddORIENT_ANGLE(builder, ORIENT_ANGLE):
-    return CRMAddORIENT_ANGLE(builder, ORIENT_ANGLE)
-def CRMAddCUSTOMER(builder, CUSTOMER): builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(CUSTOMER), 0)
+    CRMAddORIENT_ANGLE(builder, ORIENT_ANGLE)
+
+def CRMAddCUSTOMER(builder, CUSTOMER):
+    builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(CUSTOMER), 0)
+
 def AddCUSTOMER(builder, CUSTOMER):
-    return CRMAddCUSTOMER(builder, CUSTOMER)
-def CRMAddNOTES(builder, NOTES): builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+    CRMAddCUSTOMER(builder, CUSTOMER)
+
+def CRMAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
 def AddNOTES(builder, NOTES):
-    return CRMAddNOTES(builder, NOTES)
-def CRMAddSOURCE(builder, SOURCE): builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+    CRMAddNOTES(builder, NOTES)
+
+def CRMAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
 def AddSOURCE(builder, SOURCE):
-    return CRMAddSOURCE(builder, SOURCE)
-def CRMAddORIGIN(builder, ORIGIN): builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
+    CRMAddSOURCE(builder, SOURCE)
+
+def CRMAddORIGIN(builder, ORIGIN):
+    builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
+
 def AddORIGIN(builder, ORIGIN):
-    return CRMAddORIGIN(builder, ORIGIN)
-def CRMAddDATA_MODE(builder, DATA_MODE): builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODE), 0)
+    CRMAddORIGIN(builder, ORIGIN)
+
+def CRMAddDATA_MODE(builder, DATA_MODE):
+    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODE), 0)
+
 def AddDATA_MODE(builder, DATA_MODE):
-    return CRMAddDATA_MODE(builder, DATA_MODE)
-def CRMEnd(builder): return builder.EndObject()
+    CRMAddDATA_MODE(builder, DATA_MODE)
+
+def CRMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CRMEnd(builder)
+
 
 class CRMT(object):
 

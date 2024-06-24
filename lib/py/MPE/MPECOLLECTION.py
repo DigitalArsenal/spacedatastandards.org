@@ -53,18 +53,30 @@ class MPECOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def MPECOLLECTIONStart(builder): builder.StartObject(1)
+def MPECOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return MPECOLLECTIONStart(builder)
-def MPECOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    MPECOLLECTIONStart(builder)
+
+def MPECOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return MPECOLLECTIONAddRECORDS(builder, RECORDS)
-def MPECOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    MPECOLLECTIONAddRECORDS(builder, RECORDS)
+
+def MPECOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return MPECOLLECTIONStartRECORDSVector(builder, numElems)
-def MPECOLLECTIONEnd(builder): return builder.EndObject()
+
+def MPECOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return MPECOLLECTIONEnd(builder)
+
 import MPE
 try:
     from typing import List

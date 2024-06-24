@@ -11,10 +11,11 @@ public struct CDM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static CDM GetRootAsCDM(ByteBuffer _bb) { return GetRootAsCDM(_bb, new CDM()); }
   public static CDM GetRootAsCDM(ByteBuffer _bb, CDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool CDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CDM"); }
+  public static bool VerifyCDM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$CDM", false, CDMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -395,3 +396,41 @@ public class CDMT
   }
 }
 
+
+static public class CDMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyField(tablePos, 4 /*CCSDS_CDM_VERS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 6 /*CREATION_DATE*/, false)
+      && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
+      && verifier.VerifyString(tablePos, 10 /*MESSAGE_FOR*/, false)
+      && verifier.VerifyString(tablePos, 12 /*MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 14 /*TCA*/, false)
+      && verifier.VerifyField(tablePos, 16 /*MISS_DISTANCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*RELATIVE_SPEED*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*RELATIVE_POSITION_R*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*RELATIVE_POSITION_T*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*RELATIVE_POSITION_N*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*RELATIVE_VELOCITY_R*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*RELATIVE_VELOCITY_T*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*RELATIVE_VELOCITY_N*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 32 /*START_SCREEN_PERIOD*/, false)
+      && verifier.VerifyString(tablePos, 34 /*STOP_SCREEN_PERIOD*/, false)
+      && verifier.VerifyField(tablePos, 36 /*SCREEN_VOLUME_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyField(tablePos, 38 /*SCREEN_VOLUME_SHAPE*/, 1 /*screeningVolumeShape*/, 1, false)
+      && verifier.VerifyField(tablePos, 40 /*SCREEN_VOLUME_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*SCREEN_VOLUME_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*SCREEN_VOLUME_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 46 /*SCREEN_ENTRY_TIME*/, false)
+      && verifier.VerifyString(tablePos, 48 /*SCREEN_EXIT_TIME*/, false)
+      && verifier.VerifyField(tablePos, 50 /*COLLISION_PROBABILITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 52 /*COLLISION_PROBABILITY_METHOD*/, false)
+      && verifier.VerifyTable(tablePos, 54 /*OBJECT1*/, CDMObjectVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 56 /*OBJECT2*/, CDMObjectVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 58 /*OBJECT1_DATASOURCE*/, PNMVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 60 /*OBJECT2_DATASOURCE*/, PNMVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

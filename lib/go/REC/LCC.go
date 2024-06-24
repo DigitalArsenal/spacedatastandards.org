@@ -11,6 +11,8 @@ type LCC struct {
 	_tab flatbuffers.Table
 }
 
+const LCCIdentifier = "$LCC"
+
 func GetRootAsLCC(buf []byte, offset flatbuffers.UOffsetT) *LCC {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &LCC{}
@@ -18,11 +20,29 @@ func GetRootAsLCC(buf []byte, offset flatbuffers.UOffsetT) *LCC {
 	return x
 }
 
+func FinishLCCBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(LCCIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func LCCBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, LCCIdentifier)
+}
+
 func GetSizePrefixedRootAsLCC(buf []byte, offset flatbuffers.UOffsetT) *LCC {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &LCC{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedLCCBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(LCCIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedLCCBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, LCCIdentifier)
 }
 
 func (rcv *LCC) Init(buf []byte, i flatbuffers.UOffsetT) {

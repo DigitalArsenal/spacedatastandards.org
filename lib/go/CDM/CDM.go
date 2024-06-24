@@ -11,6 +11,8 @@ type CDM struct {
 	_tab flatbuffers.Table
 }
 
+const CDMIdentifier = "$CDM"
+
 func GetRootAsCDM(buf []byte, offset flatbuffers.UOffsetT) *CDM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &CDM{}
@@ -18,11 +20,29 @@ func GetRootAsCDM(buf []byte, offset flatbuffers.UOffsetT) *CDM {
 	return x
 }
 
+func FinishCDMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CDMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func CDMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, CDMIdentifier)
+}
+
 func GetSizePrefixedRootAsCDM(buf []byte, offset flatbuffers.UOffsetT) *CDM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CDM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCDMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CDMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedCDMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, CDMIdentifier)
 }
 
 func (rcv *CDM) Init(buf []byte, i flatbuffers.UOffsetT) {

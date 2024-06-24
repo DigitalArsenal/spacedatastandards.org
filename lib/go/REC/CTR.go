@@ -11,6 +11,8 @@ type CTR struct {
 	_tab flatbuffers.Table
 }
 
+const CTRIdentifier = "$CTR"
+
 func GetRootAsCTR(buf []byte, offset flatbuffers.UOffsetT) *CTR {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &CTR{}
@@ -18,11 +20,29 @@ func GetRootAsCTR(buf []byte, offset flatbuffers.UOffsetT) *CTR {
 	return x
 }
 
+func FinishCTRBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CTRIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func CTRBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, CTRIdentifier)
+}
+
 func GetSizePrefixedRootAsCTR(buf []byte, offset flatbuffers.UOffsetT) *CTR {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CTR{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCTRBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CTRIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedCTRBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, CTRIdentifier)
 }
 
 func (rcv *CTR) Init(buf []byte, i flatbuffers.UOffsetT) {

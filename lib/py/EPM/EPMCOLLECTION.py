@@ -53,18 +53,30 @@ class EPMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def EPMCOLLECTIONStart(builder): builder.StartObject(1)
+def EPMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return EPMCOLLECTIONStart(builder)
-def EPMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    EPMCOLLECTIONStart(builder)
+
+def EPMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return EPMCOLLECTIONAddRECORDS(builder, RECORDS)
-def EPMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    EPMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def EPMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return EPMCOLLECTIONStartRECORDSVector(builder, numElems)
-def EPMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def EPMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EPMCOLLECTIONEnd(builder)
+
 import EPM
 try:
     from typing import List

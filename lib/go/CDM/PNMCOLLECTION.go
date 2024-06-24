@@ -17,11 +17,19 @@ func GetRootAsPNMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *PNMCOLLECT
 	return x
 }
 
+func FinishPNMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsPNMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *PNMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &PNMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedPNMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *PNMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

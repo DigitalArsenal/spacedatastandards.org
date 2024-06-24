@@ -17,11 +17,19 @@ func GetRootAsCRMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CRMCOLLECT
 	return x
 }
 
+func FinishCRMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsCRMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CRMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CRMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCRMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *CRMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

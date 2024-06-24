@@ -11,6 +11,8 @@ type HYP struct {
 	_tab flatbuffers.Table
 }
 
+const HYPIdentifier = "$HYP"
+
 func GetRootAsHYP(buf []byte, offset flatbuffers.UOffsetT) *HYP {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &HYP{}
@@ -18,11 +20,29 @@ func GetRootAsHYP(buf []byte, offset flatbuffers.UOffsetT) *HYP {
 	return x
 }
 
+func FinishHYPBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(HYPIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func HYPBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, HYPIdentifier)
+}
+
 func GetSizePrefixedRootAsHYP(buf []byte, offset flatbuffers.UOffsetT) *HYP {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &HYP{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedHYPBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(HYPIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedHYPBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, HYPIdentifier)
 }
 
 func (rcv *HYP) Init(buf []byte, i flatbuffers.UOffsetT) {

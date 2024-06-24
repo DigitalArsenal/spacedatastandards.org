@@ -18,11 +18,19 @@ func GetRootAsSUSTAINER(buf []byte, offset flatbuffers.UOffsetT) *SUSTAINER {
 	return x
 }
 
+func FinishSUSTAINERBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsSUSTAINER(buf []byte, offset flatbuffers.UOffsetT) *SUSTAINER {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &SUSTAINER{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSUSTAINERBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *SUSTAINER) Init(buf []byte, i flatbuffers.UOffsetT) {

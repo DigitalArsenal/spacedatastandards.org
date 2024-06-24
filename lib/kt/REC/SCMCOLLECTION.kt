@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Declaring the root type
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SCMCOLLECTION : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -44,7 +43,7 @@ class SCMCOLLECTION : Table() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsSCMCOLLECTION(_bb: ByteBuffer): SCMCOLLECTION = getRootAsSCMCOLLECTION(_bb, SCMCOLLECTION())
         fun getRootAsSCMCOLLECTION(_bb: ByteBuffer, obj: SCMCOLLECTION): SCMCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

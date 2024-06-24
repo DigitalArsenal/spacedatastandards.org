@@ -556,8 +556,8 @@ impl<'a> CAT<'a> {
     CAT { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CATArgs<'args>
   ) -> flatbuffers::WIPOffset<CAT<'bldr>> {
     let mut builder = CATBuilder::new(_fbb);
@@ -930,11 +930,11 @@ impl<'a> Default for CATArgs<'a> {
   }
 }
 
-pub struct CATBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CATBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CATBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CATBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CAT::VT_OBJECT_NAME, OBJECT_NAME);
@@ -1028,7 +1028,7 @@ impl<'a: 'b, 'b> CATBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CAT::VT_PAYLOADS, PAYLOADS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CATBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CATBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CATBuilder {
       fbb_: _fbb,
@@ -1128,9 +1128,9 @@ impl Default for CATT {
   }
 }
 impl CATT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CAT<'b>> {
     let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1221,8 +1221,8 @@ impl<'a> CATCOLLECTION<'a> {
     CATCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CATCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<CATCOLLECTION<'bldr>> {
     let mut builder = CATCOLLECTIONBuilder::new(_fbb);
@@ -1272,17 +1272,17 @@ impl<'a> Default for CATCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct CATCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CATCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CATCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CATCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CAT<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CATCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CATCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CATCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CATCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1316,9 +1316,9 @@ impl Default for CATCOLLECTIONT {
   }
 }
 impl CATCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CATCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1401,13 +1401,13 @@ pub fn CAT_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_CAT_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_CAT_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<CAT<'a>>) {
   fbb.finish(root, Some(CAT_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CAT_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CAT<'a>>) {
+pub fn finish_size_prefixed_CAT_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<CAT<'a>>) {
   fbb.finish_size_prefixed(root, Some(CAT_IDENTIFIER));
 }

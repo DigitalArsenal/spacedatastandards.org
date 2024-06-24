@@ -17,11 +17,19 @@ func GetRootAsPLDCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *PLDCOLLECT
 	return x
 }
 
+func FinishPLDCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsPLDCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *PLDCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &PLDCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedPLDCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *PLDCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Electro-Optical Observation
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class EOO : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -849,7 +848,7 @@ class EOO : Table() {
     val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(172, 1)
     fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 172, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEOO(_bb: ByteBuffer): EOO = getRootAsEOO(_bb, EOO())
         fun getRootAsEOO(_bb: ByteBuffer, obj: EOO): EOO {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

@@ -18,11 +18,19 @@ func GetRootAsENGINE(buf []byte, offset flatbuffers.UOffsetT) *ENGINE {
 	return x
 }
 
+func FinishENGINEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsENGINE(buf []byte, offset flatbuffers.UOffsetT) *ENGINE {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &ENGINE{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedENGINEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *ENGINE) Init(buf []byte, i flatbuffers.UOffsetT) {

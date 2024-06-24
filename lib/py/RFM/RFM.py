@@ -36,15 +36,24 @@ class RFM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def RFMStart(builder): builder.StartObject(1)
+def RFMStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return RFMStart(builder)
-def RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME): builder.PrependInt8Slot(0, REFERENCE_FRAME, 0)
+    RFMStart(builder)
+
+def RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependInt8Slot(0, REFERENCE_FRAME, 0)
+
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    return RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-def RFMEnd(builder): return builder.EndObject()
+    RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def RFMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return RFMEnd(builder)
+
 
 class RFMT(object):
 

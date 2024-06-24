@@ -36,7 +36,7 @@ public enum SiteType: Int8, Enum, Verifiable {
 ///  Geometry table with information about geometric properties
 public struct Geometry: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -86,7 +86,7 @@ public struct Geometry: FlatBufferObject, Verifiable {
 ///  Site Information Message
 public struct SIT: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -173,7 +173,7 @@ public struct SIT: FlatBufferObject, Verifiable {
   public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
   ///  Indicates if the site is taskable
-  public var TASKABLE: Bool { let o = _accessor.offset(VTOFFSET.TASKABLE.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var TASKABLE: Bool { let o = _accessor.offset(VTOFFSET.TASKABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Operational status of the site (e.g., active, inactive, under construction)
   public var OPERATIONAL_STATUS: String? { let o = _accessor.offset(VTOFFSET.OPERATIONAL_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPERATIONAL_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATIONAL_STATUS.v) }
@@ -307,7 +307,7 @@ public struct SIT: FlatBufferObject, Verifiable {
 
 public struct SITCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class HYP extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static HYP getRootAsHYP(ByteBuffer _bb) { return getRootAsHYP(_bb, new HYP()); }
   public static HYP getRootAsHYP(ByteBuffer _bb, HYP obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean HYPBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$HYP"); }

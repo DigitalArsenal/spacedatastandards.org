@@ -49,18 +49,30 @@ class Band(object):
             return obj
         return None
 
-def BandStart(builder): builder.StartObject(2)
+def BandStart(builder):
+    builder.StartObject(2)
+
 def Start(builder):
-    return BandStart(builder)
-def BandAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    BandStart(builder)
+
+def BandAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return BandAddNAME(builder, NAME)
-def BandAddFREQUENCY_RANGE(builder, FREQUENCY_RANGE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FREQUENCY_RANGE), 0)
+    BandAddNAME(builder, NAME)
+
+def BandAddFREQUENCY_RANGE(builder, FREQUENCY_RANGE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FREQUENCY_RANGE), 0)
+
 def AddFREQUENCY_RANGE(builder, FREQUENCY_RANGE):
-    return BandAddFREQUENCY_RANGE(builder, FREQUENCY_RANGE)
-def BandEnd(builder): return builder.EndObject()
+    BandAddFREQUENCY_RANGE(builder, FREQUENCY_RANGE)
+
+def BandEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return BandEnd(builder)
+
 import FrequencyRange
 try:
     from typing import Optional

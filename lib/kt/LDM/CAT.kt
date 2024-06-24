@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Catalog Entity Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class CAT : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -265,7 +264,7 @@ class CAT : Table() {
             val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
         fun getRootAsCAT(_bb: ByteBuffer, obj: CAT): CAT {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

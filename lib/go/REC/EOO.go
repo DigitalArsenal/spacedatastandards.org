@@ -11,6 +11,8 @@ type EOO struct {
 	_tab flatbuffers.Table
 }
 
+const EOOIdentifier = "$EOO"
+
 func GetRootAsEOO(buf []byte, offset flatbuffers.UOffsetT) *EOO {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &EOO{}
@@ -18,11 +20,29 @@ func GetRootAsEOO(buf []byte, offset flatbuffers.UOffsetT) *EOO {
 	return x
 }
 
+func FinishEOOBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(EOOIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func EOOBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, EOOIdentifier)
+}
+
 func GetSizePrefixedRootAsEOO(buf []byte, offset flatbuffers.UOffsetT) *EOO {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &EOO{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedEOOBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(EOOIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedEOOBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, EOOIdentifier)
 }
 
 func (rcv *EOO) Init(buf []byte, i flatbuffers.UOffsetT) {

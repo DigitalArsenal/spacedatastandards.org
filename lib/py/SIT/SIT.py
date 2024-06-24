@@ -263,90 +263,174 @@ class SIT(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         return o == 0
 
-def SITStart(builder): builder.StartObject(24)
+def SITStart(builder):
+    builder.StartObject(24)
+
 def Start(builder):
-    return SITStart(builder)
-def SITAddID(builder, ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+    SITStart(builder)
+
+def SITAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
 def AddID(builder, ID):
-    return SITAddID(builder, ID)
-def SITAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    SITAddID(builder, ID)
+
+def SITAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return SITAddNAME(builder, NAME)
-def SITAddABBREVIATION(builder, ABBREVIATION): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ABBREVIATION), 0)
+    SITAddNAME(builder, NAME)
+
+def SITAddABBREVIATION(builder, ABBREVIATION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ABBREVIATION), 0)
+
 def AddABBREVIATION(builder, ABBREVIATION):
-    return SITAddABBREVIATION(builder, ABBREVIATION)
-def SITAddSITE_TYPE(builder, SITE_TYPE): builder.PrependInt8Slot(3, SITE_TYPE, 0)
+    SITAddABBREVIATION(builder, ABBREVIATION)
+
+def SITAddSITE_TYPE(builder, SITE_TYPE):
+    builder.PrependInt8Slot(3, SITE_TYPE, 0)
+
 def AddSITE_TYPE(builder, SITE_TYPE):
-    return SITAddSITE_TYPE(builder, SITE_TYPE)
-def SITAddCATCODE(builder, CATCODE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CATCODE), 0)
+    SITAddSITE_TYPE(builder, SITE_TYPE)
+
+def SITAddCATCODE(builder, CATCODE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CATCODE), 0)
+
 def AddCATCODE(builder, CATCODE):
-    return SITAddCATCODE(builder, CATCODE)
-def SITAddNETWORK(builder, NETWORK): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK), 0)
+    SITAddCATCODE(builder, CATCODE)
+
+def SITAddNETWORK(builder, NETWORK):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK), 0)
+
 def AddNETWORK(builder, NETWORK):
-    return SITAddNETWORK(builder, NETWORK)
-def SITAddLATITUDE(builder, LATITUDE): builder.PrependFloat32Slot(6, LATITUDE, 0.0)
+    SITAddNETWORK(builder, NETWORK)
+
+def SITAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat32Slot(6, LATITUDE, 0.0)
+
 def AddLATITUDE(builder, LATITUDE):
-    return SITAddLATITUDE(builder, LATITUDE)
-def SITAddLONGITUDE(builder, LONGITUDE): builder.PrependFloat32Slot(7, LONGITUDE, 0.0)
+    SITAddLATITUDE(builder, LATITUDE)
+
+def SITAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat32Slot(7, LONGITUDE, 0.0)
+
 def AddLONGITUDE(builder, LONGITUDE):
-    return SITAddLONGITUDE(builder, LONGITUDE)
-def SITAddALTITUDE(builder, ALTITUDE): builder.PrependFloat32Slot(8, ALTITUDE, 0.0)
+    SITAddLONGITUDE(builder, LONGITUDE)
+
+def SITAddALTITUDE(builder, ALTITUDE):
+    builder.PrependFloat32Slot(8, ALTITUDE, 0.0)
+
 def AddALTITUDE(builder, ALTITUDE):
-    return SITAddALTITUDE(builder, ALTITUDE)
-def SITAddGEOMETRY(builder, GEOMETRY): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
+    SITAddALTITUDE(builder, ALTITUDE)
+
+def SITAddGEOMETRY(builder, GEOMETRY):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
+
 def AddGEOMETRY(builder, GEOMETRY):
-    return SITAddGEOMETRY(builder, GEOMETRY)
-def SITAddCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRY): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_POINT_GEOMETRY), 0)
+    SITAddGEOMETRY(builder, GEOMETRY)
+
+def SITAddCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRY):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_POINT_GEOMETRY), 0)
+
 def AddCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRY):
-    return SITAddCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRY)
-def SITStartCENTER_POINT_GEOMETRYVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    SITAddCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRY)
+
+def SITStartCENTER_POINT_GEOMETRYVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartCENTER_POINT_GEOMETRYVector(builder, numElems):
     return SITStartCENTER_POINT_GEOMETRYVector(builder, numElems)
-def SITAddCLASSIFICATION(builder, CLASSIFICATION): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def SITAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
 def AddCLASSIFICATION(builder, CLASSIFICATION):
-    return SITAddCLASSIFICATION(builder, CLASSIFICATION)
-def SITAddCTR_ID(builder, CTR_ID): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CTR_ID), 0)
+    SITAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def SITAddCTR_ID(builder, CTR_ID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CTR_ID), 0)
+
 def AddCTR_ID(builder, CTR_ID):
-    return SITAddCTR_ID(builder, CTR_ID)
-def SITAddCREATED_BY(builder, CREATED_BY): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
+    SITAddCTR_ID(builder, CTR_ID)
+
+def SITAddCREATED_BY(builder, CREATED_BY):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
+
 def AddCREATED_BY(builder, CREATED_BY):
-    return SITAddCREATED_BY(builder, CREATED_BY)
-def SITAddDESCRIPTION(builder, DESCRIPTION): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+    SITAddCREATED_BY(builder, CREATED_BY)
+
+def SITAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
 def AddDESCRIPTION(builder, DESCRIPTION):
-    return SITAddDESCRIPTION(builder, DESCRIPTION)
-def SITAddMODEL_URL(builder, MODEL_URL): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL_URL), 0)
+    SITAddDESCRIPTION(builder, DESCRIPTION)
+
+def SITAddMODEL_URL(builder, MODEL_URL):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL_URL), 0)
+
 def AddMODEL_URL(builder, MODEL_URL):
-    return SITAddMODEL_URL(builder, MODEL_URL)
-def SITAddSOURCE(builder, SOURCE): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+    SITAddMODEL_URL(builder, MODEL_URL)
+
+def SITAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
 def AddSOURCE(builder, SOURCE):
-    return SITAddSOURCE(builder, SOURCE)
-def SITAddTASKABLE(builder, TASKABLE): builder.PrependBoolSlot(17, TASKABLE, 0)
+    SITAddSOURCE(builder, SOURCE)
+
+def SITAddTASKABLE(builder, TASKABLE):
+    builder.PrependBoolSlot(17, TASKABLE, 0)
+
 def AddTASKABLE(builder, TASKABLE):
-    return SITAddTASKABLE(builder, TASKABLE)
-def SITAddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATIONAL_STATUS), 0)
+    SITAddTASKABLE(builder, TASKABLE)
+
+def SITAddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATIONAL_STATUS), 0)
+
 def AddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS):
-    return SITAddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS)
-def SITAddESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATE): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(ESTABLISHMENT_DATE), 0)
+    SITAddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS)
+
+def SITAddESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATE):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(ESTABLISHMENT_DATE), 0)
+
 def AddESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATE):
-    return SITAddESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATE)
-def SITAddCONTACT_INFO(builder, CONTACT_INFO): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(CONTACT_INFO), 0)
+    SITAddESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATE)
+
+def SITAddCONTACT_INFO(builder, CONTACT_INFO):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(CONTACT_INFO), 0)
+
 def AddCONTACT_INFO(builder, CONTACT_INFO):
-    return SITAddCONTACT_INFO(builder, CONTACT_INFO)
-def SITAddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACT): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ENVIRONMENTAL_IMPACT), 0)
+    SITAddCONTACT_INFO(builder, CONTACT_INFO)
+
+def SITAddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACT):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ENVIRONMENTAL_IMPACT), 0)
+
 def AddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACT):
-    return SITAddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACT)
-def SITAddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(ACCESSIBILITY_INFRA), 0)
+    SITAddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACT)
+
+def SITAddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(ACCESSIBILITY_INFRA), 0)
+
 def AddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA):
-    return SITAddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA)
-def SITAddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATED_DEVICES), 0)
+    SITAddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA)
+
+def SITAddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATED_DEVICES), 0)
+
 def AddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES):
-    return SITAddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES)
-def SITStartINTEGRATED_DEVICESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    SITAddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES)
+
+def SITStartINTEGRATED_DEVICESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartINTEGRATED_DEVICESVector(builder, numElems):
     return SITStartINTEGRATED_DEVICESVector(builder, numElems)
-def SITEnd(builder): return builder.EndObject()
+
+def SITEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return SITEnd(builder)
+
 import Geometry
 import IDM
 try:

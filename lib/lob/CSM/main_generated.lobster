@@ -6,51 +6,51 @@ class CSM
 class CSMCOLLECTION
 
 /// Conjunction Summary Message
-class CSM : flatbuffers_handle
+class CSM : flatbuffers.handle
     /// Satellite name for the first object
     def OBJECT_1() -> CAT?:
-        let o = buf_.flatbuffers_field_table(pos_, 4)
+        let o = flatbuffers.field_table(buf_, pos_, 4)
         return if o: CAT { buf_, o } else: nil
     /// Days since epoch for the first object
     def DSE_1() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Satellite name for the second object
     def OBJECT_2() -> CAT?:
-        let o = buf_.flatbuffers_field_table(pos_, 8)
+        let o = flatbuffers.field_table(buf_, pos_, 8)
         return if o: CAT { buf_, o } else: nil
     /// Days since epoch for the second object
     def DSE_2() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     /// Time of closest approach as a Unix timestamp
     def TCA() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     /// The distance or range between the two objects at TCA
     def TCA_RANGE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// The magnitude of the relative velocity at TCA
     def TCA_RELATIVE_SPEED() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Maximum probability
     def MAX_PROB() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// Standard deviation that produces the maximum probability
     def DILUTION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
 
-def GetRootAsCSM(buf:string): return CSM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCSM(buf:string): return CSM { buf, flatbuffers.indirect(buf, 0) }
 
 struct CSMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(9)
         return this
-    def add_OBJECT_1(OBJECT_1:flatbuffers_offset):
+    def add_OBJECT_1(OBJECT_1:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OBJECT_1)
         return this
     def add_DSE_1(DSE_1:float):
         b_.PrependFloat64Slot(1, DSE_1, 0.0)
         return this
-    def add_OBJECT_2(OBJECT_2:flatbuffers_offset):
+    def add_OBJECT_2(OBJECT_2:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, OBJECT_2)
         return this
     def add_DSE_2(DSE_2:float):
@@ -74,28 +74,28 @@ struct CSMBuilder:
     def end():
         return b_.EndObject()
 
-class CSMCOLLECTION : flatbuffers_handle
+class CSMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> CSM:
-        return CSM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return CSM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsCSMCOLLECTION(buf:string): return CSMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCSMCOLLECTION(buf:string): return CSMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct CSMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def CSMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def CSMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def CSMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def CSMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

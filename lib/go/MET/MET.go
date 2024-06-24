@@ -11,6 +11,8 @@ type MET struct {
 	_tab flatbuffers.Table
 }
 
+const METIdentifier = "$MET"
+
 func GetRootAsMET(buf []byte, offset flatbuffers.UOffsetT) *MET {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &MET{}
@@ -18,11 +20,29 @@ func GetRootAsMET(buf []byte, offset flatbuffers.UOffsetT) *MET {
 	return x
 }
 
+func FinishMETBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(METIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func METBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, METIdentifier)
+}
+
 func GetSizePrefixedRootAsMET(buf []byte, offset flatbuffers.UOffsetT) *MET {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &MET{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedMETBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(METIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedMETBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, METIdentifier)
 }
 
 func (rcv *MET) Init(buf []byte, i flatbuffers.UOffsetT) {

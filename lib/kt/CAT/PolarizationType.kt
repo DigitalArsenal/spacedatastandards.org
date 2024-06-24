@@ -4,7 +4,6 @@
  * Different types of polarization in EMT
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class PolarizationType private constructor() {
     companion object {
         const val linear: Byte = 0

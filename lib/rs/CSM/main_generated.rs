@@ -45,8 +45,8 @@ impl<'a> CSM<'a> {
     CSM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CSMArgs<'args>
   ) -> flatbuffers::WIPOffset<CSM<'bldr>> {
     let mut builder = CSMBuilder::new(_fbb);
@@ -211,11 +211,11 @@ impl<'a> Default for CSMArgs<'a> {
   }
 }
 
-pub struct CSMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CSMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CSMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CSMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_OBJECT_1(&mut self, OBJECT_1: flatbuffers::WIPOffset<CAT<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CAT>>(CSM::VT_OBJECT_1, OBJECT_1);
@@ -253,7 +253,7 @@ impl<'a: 'b, 'b> CSMBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(CSM::VT_DILUTION, DILUTION, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CSMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CSMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CSMBuilder {
       fbb_: _fbb,
@@ -311,9 +311,9 @@ impl Default for CSMT {
   }
 }
 impl CSMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CSM<'b>> {
     let OBJECT_1 = self.OBJECT_1.as_ref().map(|x|{
       x.pack(_fbb)
@@ -364,8 +364,8 @@ impl<'a> CSMCOLLECTION<'a> {
     CSMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CSMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<CSMCOLLECTION<'bldr>> {
     let mut builder = CSMCOLLECTIONBuilder::new(_fbb);
@@ -415,17 +415,17 @@ impl<'a> Default for CSMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct CSMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CSMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CSMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CSMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CSM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CSMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CSMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CSMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CSMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -459,9 +459,9 @@ impl Default for CSMCOLLECTIONT {
   }
 }
 impl CSMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CSMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -544,13 +544,13 @@ pub fn CSM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_CSM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_CSM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<CSM<'a>>) {
   fbb.finish(root, Some(CSM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CSM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CSM<'a>>) {
+pub fn finish_size_prefixed_CSM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<CSM<'a>>) {
   fbb.finish_size_prefixed(root, Some(CSM_IDENTIFIER));
 }

@@ -29,142 +29,142 @@ class SIT
 class SITCOLLECTION
 
 /// Geometry table with information about geometric properties
-class Geometry : flatbuffers_handle
+class Geometry : flatbuffers.handle
     /// Type of geometry
     def GEOMETRY_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Coordinates of the geometry
     def COORDINATES(i:int) -> float:
-        return buf_.read_float32_le(buf_.flatbuffers_field_vector(pos_, 6) + i * 4)
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 4)
     def COORDINATES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 6)
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
 
-def GetRootAsGeometry(buf:string): return Geometry { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsGeometry(buf:string): return Geometry { buf, flatbuffers.indirect(buf, 0) }
 
 struct GeometryBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(2)
         return this
-    def add_GEOMETRY_TYPE(GEOMETRY_TYPE:flatbuffers_offset):
+    def add_GEOMETRY_TYPE(GEOMETRY_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, GEOMETRY_TYPE)
         return this
-    def add_COORDINATES(COORDINATES:flatbuffers_offset):
+    def add_COORDINATES(COORDINATES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, COORDINATES)
         return this
     def end():
         return b_.EndObject()
 
-def GeometryStartCOORDINATESVector(b_:flatbuffers_builder, n_:int):
+def GeometryStartCOORDINATESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def GeometryCreateCOORDINATESVector(b_:flatbuffers_builder, v_:[float]):
+def GeometryCreateCOORDINATESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependFloat32(e_)
     return b_.EndVector(v_.length)
 
 /// Site Information Message
-class SIT : flatbuffers_handle
+class SIT : flatbuffers.handle
     /// Unique identifier for the site, BE_NUMBER
     def ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Name of the site
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Abbreviation
     def ABBREVIATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Site type as defined in SiteType enum
     def SITE_TYPE() -> SiteType:
-        return SiteType(buf_.flatbuffers_field_int8(pos_, 10, 0))
+        return SiteType(flatbuffers.field_int8(buf_, pos_, 10, 0))
     /// Site type CATCODE
     def CATCODE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Network identifier
     def NETWORK() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Latitude of the site
     def LATITUDE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 16, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 16, 0.0)
     /// Longitude of the site
     def LONGITUDE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 18, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 18, 0.0)
     /// Altitude of the site
     def ALTITUDE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 20, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 20, 0.0)
     /// Geometry of the site
     def GEOMETRY() -> Geometry?:
-        let o = buf_.flatbuffers_field_table(pos_, 22)
+        let o = flatbuffers.field_table(buf_, pos_, 22)
         return if o: Geometry { buf_, o } else: nil
     /// Center point geometry coordinates
     def CENTER_POINT_GEOMETRY(i:int) -> float:
-        return buf_.read_float32_le(buf_.flatbuffers_field_vector(pos_, 24) + i * 4)
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 4)
     def CENTER_POINT_GEOMETRY_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 24)
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
     /// Classification marking of the site
     def CLASSIFICATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// CTR ISO 3166 Numeric code as string
     def CTR_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 28)
     /// Identifier of the user who created the site data
     def CREATED_BY() -> string:
-        return buf_.flatbuffers_field_string(pos_, 30)
+        return flatbuffers.field_string(buf_, pos_, 30)
     /// Description of the site
     def DESCRIPTION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 32)
+        return flatbuffers.field_string(buf_, pos_, 32)
     /// URL for the 3D model of the site
     def MODEL_URL() -> string:
-        return buf_.flatbuffers_field_string(pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// Source of the site data
     def SOURCE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 36)
+        return flatbuffers.field_string(buf_, pos_, 36)
     /// Indicates if the site is taskable
     def TASKABLE() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 38, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 38, 0))
     /// Operational status of the site (e.g., active, inactive, under construction)
     def OPERATIONAL_STATUS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 40)
+        return flatbuffers.field_string(buf_, pos_, 40)
     /// Date of establishment
     def ESTABLISHMENT_DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 42)
+        return flatbuffers.field_string(buf_, pos_, 42)
     /// Contact information for the site
     def CONTACT_INFO() -> string:
-        return buf_.flatbuffers_field_string(pos_, 44)
+        return flatbuffers.field_string(buf_, pos_, 44)
     /// Environmental impact or considerations
     def ENVIRONMENTAL_IMPACT() -> string:
-        return buf_.flatbuffers_field_string(pos_, 46)
+        return flatbuffers.field_string(buf_, pos_, 46)
     /// Accessibility and infrastructure details
     def ACCESSIBILITY_INFRA() -> string:
-        return buf_.flatbuffers_field_string(pos_, 48)
+        return flatbuffers.field_string(buf_, pos_, 48)
     /// Vector of Integrated Devices (IDM)
     def INTEGRATED_DEVICES(i:int) -> IDM:
-        return IDM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 50) + i * 4) }
+        return IDM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 50) + i * 4) }
     def INTEGRATED_DEVICES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 50)
+        return flatbuffers.field_vector_len(buf_, pos_, 50)
 
-def GetRootAsSIT(buf:string): return SIT { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSIT(buf:string): return SIT { buf, flatbuffers.indirect(buf, 0) }
 
 struct SITBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(24)
         return this
-    def add_ID(ID:flatbuffers_offset):
+    def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
+    def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, NAME)
         return this
-    def add_ABBREVIATION(ABBREVIATION:flatbuffers_offset):
+    def add_ABBREVIATION(ABBREVIATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, ABBREVIATION)
         return this
     def add_SITE_TYPE(SITE_TYPE:SiteType):
         b_.PrependInt8Slot(3, SITE_TYPE, 0)
         return this
-    def add_CATCODE(CATCODE:flatbuffers_offset):
+    def add_CATCODE(CATCODE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, CATCODE)
         return this
-    def add_NETWORK(NETWORK:flatbuffers_offset):
+    def add_NETWORK(NETWORK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, NETWORK)
         return this
     def add_LATITUDE(LATITUDE:float):
@@ -176,90 +176,90 @@ struct SITBuilder:
     def add_ALTITUDE(ALTITUDE:float):
         b_.PrependFloat32Slot(8, ALTITUDE, 0.0)
         return this
-    def add_GEOMETRY(GEOMETRY:flatbuffers_offset):
+    def add_GEOMETRY(GEOMETRY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, GEOMETRY)
         return this
-    def add_CENTER_POINT_GEOMETRY(CENTER_POINT_GEOMETRY:flatbuffers_offset):
+    def add_CENTER_POINT_GEOMETRY(CENTER_POINT_GEOMETRY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, CENTER_POINT_GEOMETRY)
         return this
-    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers_offset):
+    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, CLASSIFICATION)
         return this
-    def add_CTR_ID(CTR_ID:flatbuffers_offset):
+    def add_CTR_ID(CTR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, CTR_ID)
         return this
-    def add_CREATED_BY(CREATED_BY:flatbuffers_offset):
+    def add_CREATED_BY(CREATED_BY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, CREATED_BY)
         return this
-    def add_DESCRIPTION(DESCRIPTION:flatbuffers_offset):
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, DESCRIPTION)
         return this
-    def add_MODEL_URL(MODEL_URL:flatbuffers_offset):
+    def add_MODEL_URL(MODEL_URL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, MODEL_URL)
         return this
-    def add_SOURCE(SOURCE:flatbuffers_offset):
+    def add_SOURCE(SOURCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, SOURCE)
         return this
     def add_TASKABLE(TASKABLE:bool):
         b_.PrependBoolSlot(17, TASKABLE, 0)
         return this
-    def add_OPERATIONAL_STATUS(OPERATIONAL_STATUS:flatbuffers_offset):
+    def add_OPERATIONAL_STATUS(OPERATIONAL_STATUS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(18, OPERATIONAL_STATUS)
         return this
-    def add_ESTABLISHMENT_DATE(ESTABLISHMENT_DATE:flatbuffers_offset):
+    def add_ESTABLISHMENT_DATE(ESTABLISHMENT_DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(19, ESTABLISHMENT_DATE)
         return this
-    def add_CONTACT_INFO(CONTACT_INFO:flatbuffers_offset):
+    def add_CONTACT_INFO(CONTACT_INFO:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(20, CONTACT_INFO)
         return this
-    def add_ENVIRONMENTAL_IMPACT(ENVIRONMENTAL_IMPACT:flatbuffers_offset):
+    def add_ENVIRONMENTAL_IMPACT(ENVIRONMENTAL_IMPACT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(21, ENVIRONMENTAL_IMPACT)
         return this
-    def add_ACCESSIBILITY_INFRA(ACCESSIBILITY_INFRA:flatbuffers_offset):
+    def add_ACCESSIBILITY_INFRA(ACCESSIBILITY_INFRA:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(22, ACCESSIBILITY_INFRA)
         return this
-    def add_INTEGRATED_DEVICES(INTEGRATED_DEVICES:flatbuffers_offset):
+    def add_INTEGRATED_DEVICES(INTEGRATED_DEVICES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(23, INTEGRATED_DEVICES)
         return this
     def end():
         return b_.EndObject()
 
-def SITStartCENTER_POINT_GEOMETRYVector(b_:flatbuffers_builder, n_:int):
+def SITStartCENTER_POINT_GEOMETRYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SITCreateCENTER_POINT_GEOMETRYVector(b_:flatbuffers_builder, v_:[float]):
+def SITCreateCENTER_POINT_GEOMETRYVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependFloat32(e_)
     return b_.EndVector(v_.length)
 
-def SITStartINTEGRATED_DEVICESVector(b_:flatbuffers_builder, n_:int):
+def SITStartINTEGRATED_DEVICESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SITCreateINTEGRATED_DEVICESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def SITCreateINTEGRATED_DEVICESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class SITCOLLECTION : flatbuffers_handle
+class SITCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> SIT:
-        return SIT { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return SIT { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsSITCOLLECTION(buf:string): return SITCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSITCOLLECTION(buf:string): return SITCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct SITCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def SITCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def SITCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SITCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def SITCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

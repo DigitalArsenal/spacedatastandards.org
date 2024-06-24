@@ -65,21 +65,36 @@ class Geometry(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
-def GeometryStart(builder): builder.StartObject(2)
+def GeometryStart(builder):
+    builder.StartObject(2)
+
 def Start(builder):
-    return GeometryStart(builder)
-def GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY_TYPE), 0)
+    GeometryStart(builder)
+
+def GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY_TYPE), 0)
+
 def AddGEOMETRY_TYPE(builder, GEOMETRY_TYPE):
-    return GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE)
-def GeometryAddCOORDINATES(builder, COORDINATES): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES), 0)
+    GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE)
+
+def GeometryAddCOORDINATES(builder, COORDINATES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES), 0)
+
 def AddCOORDINATES(builder, COORDINATES):
-    return GeometryAddCOORDINATES(builder, COORDINATES)
-def GeometryStartCOORDINATESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    GeometryAddCOORDINATES(builder, COORDINATES)
+
+def GeometryStartCOORDINATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartCOORDINATESVector(builder, numElems):
     return GeometryStartCOORDINATESVector(builder, numElems)
-def GeometryEnd(builder): return builder.EndObject()
+
+def GeometryEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return GeometryEnd(builder)
+
 try:
     from typing import List
 except:

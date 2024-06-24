@@ -53,21 +53,36 @@ class SUSTAINER(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def SUSTAINERStart(builder): builder.StartObject(3)
+def SUSTAINERStart(builder):
+    builder.StartObject(3)
+
 def Start(builder):
-    return SUSTAINERStart(builder)
-def SUSTAINERAddSUSTAINER_NAME(builder, SUSTAINER_NAME): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINER_NAME), 0)
+    SUSTAINERStart(builder)
+
+def SUSTAINERAddSUSTAINER_NAME(builder, SUSTAINER_NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINER_NAME), 0)
+
 def AddSUSTAINER_NAME(builder, SUSTAINER_NAME):
-    return SUSTAINERAddSUSTAINER_NAME(builder, SUSTAINER_NAME)
-def SUSTAINERAddTHRUST(builder, THRUST): builder.PrependFloat64Slot(1, THRUST, 0.0)
+    SUSTAINERAddSUSTAINER_NAME(builder, SUSTAINER_NAME)
+
+def SUSTAINERAddTHRUST(builder, THRUST):
+    builder.PrependFloat64Slot(1, THRUST, 0.0)
+
 def AddTHRUST(builder, THRUST):
-    return SUSTAINERAddTHRUST(builder, THRUST)
-def SUSTAINERAddBURN_DURATION(builder, BURN_DURATION): builder.PrependFloat64Slot(2, BURN_DURATION, 0.0)
+    SUSTAINERAddTHRUST(builder, THRUST)
+
+def SUSTAINERAddBURN_DURATION(builder, BURN_DURATION):
+    builder.PrependFloat64Slot(2, BURN_DURATION, 0.0)
+
 def AddBURN_DURATION(builder, BURN_DURATION):
-    return SUSTAINERAddBURN_DURATION(builder, BURN_DURATION)
-def SUSTAINEREnd(builder): return builder.EndObject()
+    SUSTAINERAddBURN_DURATION(builder, BURN_DURATION)
+
+def SUSTAINEREnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return SUSTAINEREnd(builder)
+
 
 class SUSTAINERT(object):
 

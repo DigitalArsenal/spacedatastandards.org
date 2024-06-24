@@ -42,8 +42,8 @@ impl<'a> EME<'a> {
     EME { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EMEArgs<'args>
   ) -> flatbuffers::WIPOffset<EME<'bldr>> {
     let mut builder = EMEBuilder::new(_fbb);
@@ -238,11 +238,11 @@ impl<'a> Default for EMEArgs<'a> {
   }
 }
 
-pub struct EMEBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EMEBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EMEBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EMEBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ENCRYPTED_BLOB(&mut self, ENCRYPTED_BLOB: flatbuffers::WIPOffset<flatbuffers::Vector<'b , u8>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_ENCRYPTED_BLOB, ENCRYPTED_BLOB);
@@ -284,7 +284,7 @@ impl<'a: 'b, 'b> EMEBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_ENCRYPTION_ALGORITHM_PARAMETERS, ENCRYPTION_ALGORITHM_PARAMETERS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EMEBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EMEBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EMEBuilder {
       fbb_: _fbb,
@@ -345,9 +345,9 @@ impl Default for EMET {
   }
 }
 impl EMET {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EME<'b>> {
     let ENCRYPTED_BLOB = self.ENCRYPTED_BLOB.as_ref().map(|x|{
       _fbb.create_vector(x)
@@ -416,8 +416,8 @@ impl<'a> EMECOLLECTION<'a> {
     EMECOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EMECOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<EMECOLLECTION<'bldr>> {
     let mut builder = EMECOLLECTIONBuilder::new(_fbb);
@@ -467,17 +467,17 @@ impl<'a> Default for EMECOLLECTIONArgs<'a> {
   }
 }
 
-pub struct EMECOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EMECOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EMECOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EMECOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EME<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EMECOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EMECOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EMECOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EMECOLLECTIONBuilder {
       fbb_: _fbb,
@@ -511,9 +511,9 @@ impl Default for EMECOLLECTIONT {
   }
 }
 impl EMECOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EMECOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -596,13 +596,13 @@ pub fn EME_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_EME_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_EME_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<EME<'a>>) {
   fbb.finish(root, Some(EME_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EME_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EME<'a>>) {
+pub fn finish_size_prefixed_EME_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<EME<'a>>) {
   fbb.finish_size_prefixed(root, Some(EME_IDENTIFIER));
 }

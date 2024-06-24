@@ -40,8 +40,8 @@ impl<'a> PLD<'a> {
     PLD { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PLDArgs<'args>
   ) -> flatbuffers::WIPOffset<PLD<'bldr>> {
     let mut builder = PLDBuilder::new(_fbb);
@@ -177,11 +177,11 @@ impl<'a> Default for PLDArgs<'a> {
   }
 }
 
-pub struct PLDBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PLDBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PLDBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PLDBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_PAYLOAD_DURATION(&mut self, PAYLOAD_DURATION: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PLD::VT_PAYLOAD_DURATION, PAYLOAD_DURATION);
@@ -211,7 +211,7 @@ impl<'a: 'b, 'b> PLDBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PLD::VT_INSTRUMENTS, INSTRUMENTS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PLDBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PLDBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PLDBuilder {
       fbb_: _fbb,
@@ -263,9 +263,9 @@ impl Default for PLDT {
   }
 }
 impl PLDT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<PLD<'b>> {
     let PAYLOAD_DURATION = self.PAYLOAD_DURATION.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -318,8 +318,8 @@ impl<'a> PLDCOLLECTION<'a> {
     PLDCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PLDCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<PLDCOLLECTION<'bldr>> {
     let mut builder = PLDCOLLECTIONBuilder::new(_fbb);
@@ -369,17 +369,17 @@ impl<'a> Default for PLDCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct PLDCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PLDCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PLDCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PLDCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<PLD<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PLDCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PLDCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PLDCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PLDCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -413,9 +413,9 @@ impl Default for PLDCOLLECTIONT {
   }
 }
 impl PLDCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<PLDCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -498,13 +498,13 @@ pub fn PLD_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_PLD_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_PLD_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<PLD<'a>>) {
   fbb.finish(root, Some(PLD_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_PLD_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PLD<'a>>) {
+pub fn finish_size_prefixed_PLD_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<PLD<'a>>) {
   fbb.finish_size_prefixed(root, Some(PLD_IDENTIFIER));
 }

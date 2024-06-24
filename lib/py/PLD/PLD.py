@@ -96,36 +96,66 @@ class PLD(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
-def PLDStart(builder): builder.StartObject(7)
+def PLDStart(builder):
+    builder.StartObject(7)
+
 def Start(builder):
-    return PLDStart(builder)
-def PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_DURATION), 0)
+    PLDStart(builder)
+
+def PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_DURATION), 0)
+
 def AddPAYLOAD_DURATION(builder, PAYLOAD_DURATION):
-    return PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION)
-def PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH): builder.PrependFloat32Slot(1, MASS_AT_LAUNCH, 0.0)
+    PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION)
+
+def PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH):
+    builder.PrependFloat32Slot(1, MASS_AT_LAUNCH, 0.0)
+
 def AddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH):
-    return PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH)
-def PLDAddDIMENSIONS(builder, DIMENSIONS): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DIMENSIONS), 0)
+    PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH)
+
+def PLDAddDIMENSIONS(builder, DIMENSIONS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DIMENSIONS), 0)
+
 def AddDIMENSIONS(builder, DIMENSIONS):
-    return PLDAddDIMENSIONS(builder, DIMENSIONS)
-def PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA): builder.PrependFloat32Slot(3, SOLAR_ARRAY_AREA, 0.0)
+    PLDAddDIMENSIONS(builder, DIMENSIONS)
+
+def PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA):
+    builder.PrependFloat32Slot(3, SOLAR_ARRAY_AREA, 0.0)
+
 def AddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA):
-    return PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
-def PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_ARRAY_DIMENSIONS), 0)
+    PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
+
+def PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_ARRAY_DIMENSIONS), 0)
+
 def AddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS):
-    return PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS)
-def PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NOMINAL_OPERATIONAL_LIFETIME), 0)
+    PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS)
+
+def PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NOMINAL_OPERATIONAL_LIFETIME), 0)
+
 def AddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME):
-    return PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME)
-def PLDAddINSTRUMENTS(builder, INSTRUMENTS): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INSTRUMENTS), 0)
+    PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME)
+
+def PLDAddINSTRUMENTS(builder, INSTRUMENTS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INSTRUMENTS), 0)
+
 def AddINSTRUMENTS(builder, INSTRUMENTS):
-    return PLDAddINSTRUMENTS(builder, INSTRUMENTS)
-def PLDStartINSTRUMENTSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    PLDAddINSTRUMENTS(builder, INSTRUMENTS)
+
+def PLDStartINSTRUMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartINSTRUMENTSVector(builder, numElems):
     return PLDStartINSTRUMENTSVector(builder, numElems)
-def PLDEnd(builder): return builder.EndObject()
+
+def PLDEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return PLDEnd(builder)
+
 import IDM
 try:
     from typing import List

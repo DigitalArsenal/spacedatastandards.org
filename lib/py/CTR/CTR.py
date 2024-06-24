@@ -93,36 +93,66 @@ class CTR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def CTRStart(builder): builder.StartObject(8)
+def CTRStart(builder):
+    builder.StartObject(8)
+
 def Start(builder):
-    return CTRStart(builder)
-def CTRAddID(builder, ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+    CTRStart(builder)
+
+def CTRAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
 def AddID(builder, ID):
-    return CTRAddID(builder, ID)
-def CTRAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    CTRAddID(builder, ID)
+
+def CTRAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return CTRAddNAME(builder, NAME)
-def CTRAddGENC_CODE(builder, GENC_CODE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(GENC_CODE), 0)
+    CTRAddNAME(builder, NAME)
+
+def CTRAddGENC_CODE(builder, GENC_CODE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(GENC_CODE), 0)
+
 def AddGENC_CODE(builder, GENC_CODE):
-    return CTRAddGENC_CODE(builder, GENC_CODE)
-def CTRAddALPHA_2_CODE(builder, ALPHA_2_CODE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ALPHA_2_CODE), 0)
+    CTRAddGENC_CODE(builder, GENC_CODE)
+
+def CTRAddALPHA_2_CODE(builder, ALPHA_2_CODE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ALPHA_2_CODE), 0)
+
 def AddALPHA_2_CODE(builder, ALPHA_2_CODE):
-    return CTRAddALPHA_2_CODE(builder, ALPHA_2_CODE)
-def CTRAddALPHA_3_CODE(builder, ALPHA_3_CODE): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ALPHA_3_CODE), 0)
+    CTRAddALPHA_2_CODE(builder, ALPHA_2_CODE)
+
+def CTRAddALPHA_3_CODE(builder, ALPHA_3_CODE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ALPHA_3_CODE), 0)
+
 def AddALPHA_3_CODE(builder, ALPHA_3_CODE):
-    return CTRAddALPHA_3_CODE(builder, ALPHA_3_CODE)
-def CTRAddSTANAG_CODE(builder, STANAG_CODE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STANAG_CODE), 0)
+    CTRAddALPHA_3_CODE(builder, ALPHA_3_CODE)
+
+def CTRAddSTANAG_CODE(builder, STANAG_CODE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STANAG_CODE), 0)
+
 def AddSTANAG_CODE(builder, STANAG_CODE):
-    return CTRAddSTANAG_CODE(builder, STANAG_CODE)
-def CTRAddINTERNET_CCTLD(builder, INTERNET_CCTLD): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INTERNET_CCTLD), 0)
+    CTRAddSTANAG_CODE(builder, STANAG_CODE)
+
+def CTRAddINTERNET_CCTLD(builder, INTERNET_CCTLD):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INTERNET_CCTLD), 0)
+
 def AddINTERNET_CCTLD(builder, INTERNET_CCTLD):
-    return CTRAddINTERNET_CCTLD(builder, INTERNET_CCTLD)
-def CTRAddCOMMENT(builder, COMMENT): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+    CTRAddINTERNET_CCTLD(builder, INTERNET_CCTLD)
+
+def CTRAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
 def AddCOMMENT(builder, COMMENT):
-    return CTRAddCOMMENT(builder, COMMENT)
-def CTREnd(builder): return builder.EndObject()
+    CTRAddCOMMENT(builder, COMMENT)
+
+def CTREnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CTREnd(builder)
+
 
 class CTRT(object):
 

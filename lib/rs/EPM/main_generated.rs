@@ -124,8 +124,8 @@ impl<'a> CryptoKey<'a> {
     CryptoKey { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CryptoKeyArgs<'args>
   ) -> flatbuffers::WIPOffset<CryptoKey<'bldr>> {
     let mut builder = CryptoKeyBuilder::new(_fbb);
@@ -270,11 +270,11 @@ impl<'a> Default for CryptoKeyArgs<'a> {
   }
 }
 
-pub struct CryptoKeyBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CryptoKeyBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CryptoKeyBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CryptoKeyBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_PUBLIC_KEY(&mut self, PUBLIC_KEY: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CryptoKey::VT_PUBLIC_KEY, PUBLIC_KEY);
@@ -304,7 +304,7 @@ impl<'a: 'b, 'b> CryptoKeyBuilder<'a, 'b> {
     self.fbb_.push_slot::<KeyType>(CryptoKey::VT_KEY_TYPE, KEY_TYPE, KeyType::Signing);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CryptoKeyBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CryptoKeyBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CryptoKeyBuilder {
       fbb_: _fbb,
@@ -356,9 +356,9 @@ impl Default for CryptoKeyT {
   }
 }
 impl CryptoKeyT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CryptoKey<'b>> {
     let PUBLIC_KEY = self.PUBLIC_KEY.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -419,8 +419,8 @@ impl<'a> Address<'a> {
     Address { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args AddressArgs<'args>
   ) -> flatbuffers::WIPOffset<Address<'bldr>> {
     let mut builder = AddressBuilder::new(_fbb);
@@ -551,11 +551,11 @@ impl<'a> Default for AddressArgs<'a> {
   }
 }
 
-pub struct AddressBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct AddressBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> AddressBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> AddressBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_COUNTRY(&mut self, COUNTRY: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_COUNTRY, COUNTRY);
@@ -581,7 +581,7 @@ impl<'a: 'b, 'b> AddressBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Address::VT_POST_OFFICE_BOX_NUMBER, POST_OFFICE_BOX_NUMBER);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> AddressBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> AddressBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     AddressBuilder {
       fbb_: _fbb,
@@ -630,9 +630,9 @@ impl Default for AddressT {
   }
 }
 impl AddressT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<Address<'b>> {
     let COUNTRY = self.COUNTRY.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -700,8 +700,8 @@ impl<'a> EPM<'a> {
     EPM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EPMArgs<'args>
   ) -> flatbuffers::WIPOffset<EPM<'bldr>> {
     let mut builder = EPMBuilder::new(_fbb);
@@ -976,11 +976,11 @@ impl<'a> Default for EPMArgs<'a> {
   }
 }
 
-pub struct EPMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EPMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EPMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_DN(&mut self, DN: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_DN, DN);
@@ -1042,7 +1042,7 @@ impl<'a: 'b, 'b> EPMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EPMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EPMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EPMBuilder {
       fbb_: _fbb,
@@ -1118,9 +1118,9 @@ impl Default for EPMT {
   }
 }
 impl EPMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EPM<'b>> {
     let DN = self.DN.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1209,8 +1209,8 @@ impl<'a> EPMCOLLECTION<'a> {
     EPMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EPMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<EPMCOLLECTION<'bldr>> {
     let mut builder = EPMCOLLECTIONBuilder::new(_fbb);
@@ -1260,17 +1260,17 @@ impl<'a> Default for EPMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct EPMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EPMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EPMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EPMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EPM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EPMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EPMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EPMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1304,9 +1304,9 @@ impl Default for EPMCOLLECTIONT {
   }
 }
 impl EPMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EPMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1389,13 +1389,13 @@ pub fn EPM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_EPM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_EPM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<EPM<'a>>) {
   fbb.finish(root, Some(EPM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EPM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EPM<'a>>) {
+pub fn finish_size_prefixed_EPM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<EPM<'a>>) {
   fbb.finish_size_prefixed(root, Some(EPM_IDENTIFIER));
 }

@@ -92,8 +92,8 @@ impl<'a> TDM<'a> {
     TDM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args TDMArgs<'args>
   ) -> flatbuffers::WIPOffset<TDM<'bldr>> {
     let mut builder = TDMBuilder::new(_fbb);
@@ -1032,11 +1032,11 @@ impl<'a> Default for TDMArgs<'a> {
   }
 }
 
-pub struct TDMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TDMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TDMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TDMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_OBSERVER_ID(&mut self, OBSERVER_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_OBSERVER_ID, OBSERVER_ID);
@@ -1274,7 +1274,7 @@ impl<'a: 'b, 'b> TDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_CLOCK_DRIFT, CLOCK_DRIFT);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TDMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> TDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TDMBuilder {
       fbb_: _fbb,
@@ -1482,9 +1482,9 @@ impl Default for TDMT {
   }
 }
 impl TDMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<TDM<'b>> {
     let OBSERVER_ID = self.OBSERVER_ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1707,8 +1707,8 @@ impl<'a> TDMCOLLECTION<'a> {
     TDMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args TDMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<TDMCOLLECTION<'bldr>> {
     let mut builder = TDMCOLLECTIONBuilder::new(_fbb);
@@ -1758,17 +1758,17 @@ impl<'a> Default for TDMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct TDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TDMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TDMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TDMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<TDM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TDMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> TDMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TDMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1802,9 +1802,9 @@ impl Default for TDMCOLLECTIONT {
   }
 }
 impl TDMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<TDMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1887,13 +1887,13 @@ pub fn TDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_TDM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_TDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<TDM<'a>>) {
   fbb.finish(root, Some(TDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_TDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<TDM<'a>>) {
+pub fn finish_size_prefixed_TDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<TDM<'a>>) {
   fbb.finish_size_prefixed(root, Some(TDM_IDENTIFIER));
 }

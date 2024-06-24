@@ -130,8 +130,8 @@ impl<'a> MET<'a> {
     MET { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args METArgs
   ) -> flatbuffers::WIPOffset<MET<'bldr>> {
     let mut builder = METBuilder::new(_fbb);
@@ -179,17 +179,17 @@ impl<'a> Default for METArgs {
   }
 }
 
-pub struct METBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct METBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> METBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> METBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementTheory) {
     self.fbb_.push_slot::<meanElementTheory>(MET::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementTheory::SGP4);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> METBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> METBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     METBuilder {
       fbb_: _fbb,
@@ -223,9 +223,9 @@ impl Default for METT {
   }
 }
 impl METT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<MET<'b>> {
     let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
     MET::create(_fbb, &METArgs{
@@ -256,8 +256,8 @@ impl<'a> METCOLLECTION<'a> {
     METCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args METCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<METCOLLECTION<'bldr>> {
     let mut builder = METCOLLECTIONBuilder::new(_fbb);
@@ -307,17 +307,17 @@ impl<'a> Default for METCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct METCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct METCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> METCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> METCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<MET<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(METCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> METCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> METCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     METCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -351,9 +351,9 @@ impl Default for METCOLLECTIONT {
   }
 }
 impl METCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<METCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -436,13 +436,13 @@ pub fn MET_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_MET_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_MET_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<MET<'a>>) {
   fbb.finish(root, Some(MET_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_MET_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<MET<'a>>) {
+pub fn finish_size_prefixed_MET_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<MET<'a>>) {
   fbb.finish_size_prefixed(root, Some(MET_IDENTIFIER));
 }

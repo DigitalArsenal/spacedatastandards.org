@@ -2,6 +2,4 @@
 
 # namespace: 
 
-class KeyType(object):
-    Signing = 0
-    Encryption = 1
+# NOTE KeyType.py does not declare any structs or enums

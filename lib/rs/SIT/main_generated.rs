@@ -185,8 +185,8 @@ impl<'a> Geometry<'a> {
     Geometry { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args GeometryArgs<'args>
   ) -> flatbuffers::WIPOffset<Geometry<'bldr>> {
     let mut builder = GeometryBuilder::new(_fbb);
@@ -253,11 +253,11 @@ impl<'a> Default for GeometryArgs<'a> {
   }
 }
 
-pub struct GeometryBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct GeometryBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> GeometryBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GeometryBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_GEOMETRY_TYPE(&mut self, GEOMETRY_TYPE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Geometry::VT_GEOMETRY_TYPE, GEOMETRY_TYPE);
@@ -267,7 +267,7 @@ impl<'a: 'b, 'b> GeometryBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Geometry::VT_COORDINATES, COORDINATES);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> GeometryBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GeometryBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GeometryBuilder {
       fbb_: _fbb,
@@ -304,9 +304,9 @@ impl Default for GeometryT {
   }
 }
 impl GeometryT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<Geometry<'b>> {
     let GEOMETRY_TYPE = self.GEOMETRY_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -367,8 +367,8 @@ impl<'a> SIT<'a> {
     SIT { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args SITArgs<'args>
   ) -> flatbuffers::WIPOffset<SIT<'bldr>> {
     let mut builder = SITBuilder::new(_fbb);
@@ -777,11 +777,11 @@ impl<'a> Default for SITArgs<'a> {
   }
 }
 
-pub struct SITBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SITBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SITBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SITBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SIT::VT_ID, ID);
@@ -879,7 +879,7 @@ impl<'a: 'b, 'b> SITBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SIT::VT_INTEGRATED_DEVICES, INTEGRATED_DEVICES);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SITBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SITBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SITBuilder {
       fbb_: _fbb,
@@ -982,9 +982,9 @@ impl Default for SITT {
   }
 }
 impl SITT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<SIT<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1099,8 +1099,8 @@ impl<'a> SITCOLLECTION<'a> {
     SITCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args SITCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<SITCOLLECTION<'bldr>> {
     let mut builder = SITCOLLECTIONBuilder::new(_fbb);
@@ -1150,17 +1150,17 @@ impl<'a> Default for SITCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct SITCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SITCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SITCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SITCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<SIT<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SITCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SITCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SITCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SITCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1194,9 +1194,9 @@ impl Default for SITCOLLECTIONT {
   }
 }
 impl SITCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<SITCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1279,13 +1279,13 @@ pub fn SIT_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_SIT_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_SIT_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<SIT<'a>>) {
   fbb.finish(root, Some(SIT_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_SIT_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<SIT<'a>>) {
+pub fn finish_size_prefixed_SIT_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<SIT<'a>>) {
   fbb.finish_size_prefixed(root, Some(SIT_IDENTIFIER));
 }

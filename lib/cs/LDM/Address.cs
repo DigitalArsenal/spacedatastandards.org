@@ -11,7 +11,7 @@ public struct Address : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static Address GetRootAsAddress(ByteBuffer _bb) { return GetRootAsAddress(_bb, new Address()); }
   public static Address GetRootAsAddress(ByteBuffer _bb, Address obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -145,3 +145,18 @@ public class AddressT
   }
 }
 
+
+static public class AddressVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*COUNTRY*/, false)
+      && verifier.VerifyString(tablePos, 6 /*REGION*/, false)
+      && verifier.VerifyString(tablePos, 8 /*LOCALITY*/, false)
+      && verifier.VerifyString(tablePos, 10 /*POSTAL_CODE*/, false)
+      && verifier.VerifyString(tablePos, 12 /*STREET*/, false)
+      && verifier.VerifyString(tablePos, 14 /*POST_OFFICE_BOX_NUMBER*/, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

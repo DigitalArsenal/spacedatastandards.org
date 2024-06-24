@@ -53,18 +53,30 @@ class PRGCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def PRGCOLLECTIONStart(builder): builder.StartObject(1)
+def PRGCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return PRGCOLLECTIONStart(builder)
-def PRGCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    PRGCOLLECTIONStart(builder)
+
+def PRGCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return PRGCOLLECTIONAddRECORDS(builder, RECORDS)
-def PRGCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    PRGCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def PRGCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return PRGCOLLECTIONStartRECORDSVector(builder, numElems)
-def PRGCOLLECTIONEnd(builder): return builder.EndObject()
+
+def PRGCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return PRGCOLLECTIONEnd(builder)
+
 import PRG
 try:
     from typing import List

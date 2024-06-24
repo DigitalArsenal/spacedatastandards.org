@@ -19,7 +19,7 @@ import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class OSMCOLLECTION extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static OSMCOLLECTION getRootAsOSMCOLLECTION(ByteBuffer _bb) { return getRootAsOSMCOLLECTION(_bb, new OSMCOLLECTION()); }
   public static OSMCOLLECTION getRootAsOSMCOLLECTION(ByteBuffer _bb, OSMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

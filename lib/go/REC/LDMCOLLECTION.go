@@ -17,11 +17,19 @@ func GetRootAsLDMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *LDMCOLLECT
 	return x
 }
 
+func FinishLDMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsLDMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *LDMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &LDMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedLDMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *LDMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

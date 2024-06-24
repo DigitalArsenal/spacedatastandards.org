@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Program Description Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class PRG : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -90,7 +89,7 @@ class PRG : Table() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsPRG(_bb: ByteBuffer): PRG = getRootAsPRG(_bb, PRG())
         fun getRootAsPRG(_bb: ByteBuffer, obj: PRG): PRG {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

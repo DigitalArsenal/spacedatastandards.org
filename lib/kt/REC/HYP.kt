@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Hypothesis Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class HYP : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -188,7 +187,7 @@ class HYP : Table() {
     val EVENT_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
     fun EVENT_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsHYP(_bb: ByteBuffer): HYP = getRootAsHYP(_bb, HYP())
         fun getRootAsHYP(_bb: ByteBuffer, obj: HYP): HYP {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

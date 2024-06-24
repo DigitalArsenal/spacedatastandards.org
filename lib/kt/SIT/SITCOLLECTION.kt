@@ -17,7 +17,6 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SITCOLLECTION : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -41,7 +40,7 @@ class SITCOLLECTION : Table() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsSITCOLLECTION(_bb: ByteBuffer): SITCOLLECTION = getRootAsSITCOLLECTION(_bb, SITCOLLECTION())
         fun getRootAsSITCOLLECTION(_bb: ByteBuffer, obj: SITCOLLECTION): SITCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

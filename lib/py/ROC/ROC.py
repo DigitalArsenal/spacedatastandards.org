@@ -105,33 +105,60 @@ class ROC(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
-def ROCStart(builder): builder.StartObject(5)
+def ROCStart(builder):
+    builder.StartObject(5)
+
 def Start(builder):
-    return ROCStart(builder)
-def ROCAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    ROCStart(builder)
+
+def ROCAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return ROCAddNAME(builder, NAME)
-def ROCAddFAMILY(builder, FAMILY): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FAMILY), 0)
+    ROCAddNAME(builder, NAME)
+
+def ROCAddFAMILY(builder, FAMILY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FAMILY), 0)
+
 def AddFAMILY(builder, FAMILY):
-    return ROCAddFAMILY(builder, FAMILY)
-def ROCAddVARIANT(builder, VARIANT): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VARIANT), 0)
+    ROCAddFAMILY(builder, FAMILY)
+
+def ROCAddVARIANT(builder, VARIANT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VARIANT), 0)
+
 def AddVARIANT(builder, VARIANT):
-    return ROCAddVARIANT(builder, VARIANT)
-def ROCAddSTAGES(builder, STAGES): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STAGES), 0)
+    ROCAddVARIANT(builder, VARIANT)
+
+def ROCAddSTAGES(builder, STAGES):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STAGES), 0)
+
 def AddSTAGES(builder, STAGES):
-    return ROCAddSTAGES(builder, STAGES)
-def ROCStartSTAGESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    ROCAddSTAGES(builder, STAGES)
+
+def ROCStartSTAGESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartSTAGESVector(builder, numElems):
     return ROCStartSTAGESVector(builder, numElems)
-def ROCAddSUSTAINERS(builder, SUSTAINERS): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINERS), 0)
+
+def ROCAddSUSTAINERS(builder, SUSTAINERS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINERS), 0)
+
 def AddSUSTAINERS(builder, SUSTAINERS):
-    return ROCAddSUSTAINERS(builder, SUSTAINERS)
-def ROCStartSUSTAINERSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    ROCAddSUSTAINERS(builder, SUSTAINERS)
+
+def ROCStartSUSTAINERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartSUSTAINERSVector(builder, numElems):
     return ROCStartSUSTAINERSVector(builder, numElems)
-def ROCEnd(builder): return builder.EndObject()
+
+def ROCEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return ROCEnd(builder)
+
 import STAGE
 import SUSTAINER
 try:

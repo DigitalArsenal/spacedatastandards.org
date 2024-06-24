@@ -110,8 +110,8 @@ impl<'a> CRM<'a> {
     CRM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CRMArgs<'args>
   ) -> flatbuffers::WIPOffset<CRM<'bldr>> {
     let mut builder = CRMBuilder::new(_fbb);
@@ -1300,11 +1300,11 @@ impl<'a> Default for CRMArgs<'a> {
   }
 }
 
-pub struct CRMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CRMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CRMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CRMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CRM::VT_ID, ID);
@@ -1618,7 +1618,7 @@ impl<'a: 'b, 'b> CRMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CRM::VT_DATA_MODE, DATA_MODE);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CRMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CRMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CRMBuilder {
       fbb_: _fbb,
@@ -1883,9 +1883,9 @@ impl Default for CRMT {
   }
 }
 impl CRMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CRM<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2132,8 +2132,8 @@ impl<'a> CRMCOLLECTION<'a> {
     CRMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CRMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<CRMCOLLECTION<'bldr>> {
     let mut builder = CRMCOLLECTIONBuilder::new(_fbb);
@@ -2183,17 +2183,17 @@ impl<'a> Default for CRMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct CRMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CRMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CRMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CRMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CRM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CRMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CRMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CRMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CRMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -2227,9 +2227,9 @@ impl Default for CRMCOLLECTIONT {
   }
 }
 impl CRMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CRMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -2312,13 +2312,13 @@ pub fn CRM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_CRM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_CRM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<CRM<'a>>) {
   fbb.finish(root, Some(CRM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CRM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CRM<'a>>) {
+pub fn finish_size_prefixed_CRM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<CRM<'a>>) {
   fbb.finish_size_prefixed(root, Some(CRM_IDENTIFIER));
 }

@@ -41,8 +41,8 @@ impl<'a> PNM<'a> {
     PNM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PNMArgs<'args>
   ) -> flatbuffers::WIPOffset<PNM<'bldr>> {
     let mut builder = PNMBuilder::new(_fbb);
@@ -235,11 +235,11 @@ impl<'a> Default for PNMArgs<'a> {
   }
 }
 
-pub struct PNMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PNMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PNMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_MULTIFORMAT_ADDRESS(&mut self, MULTIFORMAT_ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
@@ -277,7 +277,7 @@ impl<'a: 'b, 'b> PNMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNM::VT_TIMESTAMP_SIGNATURE_TYPE, TIMESTAMP_SIGNATURE_TYPE);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PNMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PNMBuilder {
       fbb_: _fbb,
@@ -335,9 +335,9 @@ impl Default for PNMT {
   }
 }
 impl PNMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<PNM<'b>> {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -402,8 +402,8 @@ impl<'a> PNMCOLLECTION<'a> {
     PNMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PNMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<PNMCOLLECTION<'bldr>> {
     let mut builder = PNMCOLLECTIONBuilder::new(_fbb);
@@ -453,17 +453,17 @@ impl<'a> Default for PNMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct PNMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PNMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PNMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PNMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<PNM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PNMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PNMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PNMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PNMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -497,9 +497,9 @@ impl Default for PNMCOLLECTIONT {
   }
 }
 impl PNMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<PNMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -582,13 +582,13 @@ pub fn PNM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_PNM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_PNM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<PNM<'a>>) {
   fbb.finish(root, Some(PNM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_PNM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PNM<'a>>) {
+pub fn finish_size_prefixed_PNM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<PNM<'a>>) {
   fbb.finish_size_prefixed(root, Some(PNM_IDENTIFIER));
 }

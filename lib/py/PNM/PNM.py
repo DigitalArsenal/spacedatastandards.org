@@ -115,39 +115,72 @@ class PNM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def PNMStart(builder): builder.StartObject(9)
+def PNMStart(builder):
+    builder.StartObject(9)
+
 def Start(builder):
-    return PNMStart(builder)
-def PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
+    PNMStart(builder)
+
+def PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
+
 def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
-    return PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
-def PNMAddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLISH_TIMESTAMP), 0)
+    PNMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
+
+def PNMAddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLISH_TIMESTAMP), 0)
+
 def AddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP):
-    return PNMAddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP)
-def PNMAddCID(builder, CID): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
+    PNMAddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP)
+
+def PNMAddCID(builder, CID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)
+
 def AddCID(builder, CID):
-    return PNMAddCID(builder, CID)
-def PNMAddFILE_NAME(builder, FILE_NAME): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_NAME), 0)
+    PNMAddCID(builder, CID)
+
+def PNMAddFILE_NAME(builder, FILE_NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_NAME), 0)
+
 def AddFILE_NAME(builder, FILE_NAME):
-    return PNMAddFILE_NAME(builder, FILE_NAME)
-def PNMAddFILE_ID(builder, FILE_ID): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_ID), 0)
+    PNMAddFILE_NAME(builder, FILE_NAME)
+
+def PNMAddFILE_ID(builder, FILE_ID):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_ID), 0)
+
 def AddFILE_ID(builder, FILE_ID):
-    return PNMAddFILE_ID(builder, FILE_ID)
-def PNMAddSIGNATURE(builder, SIGNATURE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+    PNMAddFILE_ID(builder, FILE_ID)
+
+def PNMAddSIGNATURE(builder, SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+
 def AddSIGNATURE(builder, SIGNATURE):
-    return PNMAddSIGNATURE(builder, SIGNATURE)
-def PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE), 0)
+    PNMAddSIGNATURE(builder, SIGNATURE)
+
+def PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE), 0)
+
 def AddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE):
-    return PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE)
-def PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
+    PNMAddTIMESTAMP_SIGNATURE(builder, TIMESTAMP_SIGNATURE)
+
+def PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
+
 def AddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
-    return PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE)
-def PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE_TYPE), 0)
+    PNMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE)
+
+def PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TIMESTAMP_SIGNATURE_TYPE), 0)
+
 def AddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE):
-    return PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE)
-def PNMEnd(builder): return builder.EndObject()
+    PNMAddTIMESTAMP_SIGNATURE_TYPE(builder, TIMESTAMP_SIGNATURE_TYPE)
+
+def PNMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return PNMEnd(builder)
+
 
 class PNMT(object):
 

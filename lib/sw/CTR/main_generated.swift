@@ -7,7 +7,7 @@ import FlatBuffers
 ///  Country Identity Message
 public struct CTR: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -102,7 +102,7 @@ public struct CTR: FlatBufferObject, Verifiable {
 
 public struct CTRCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

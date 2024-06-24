@@ -683,255 +683,504 @@ class CDMObject(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def CDMObjectStart(builder): builder.StartObject(81)
+def CDMObjectStart(builder):
+    builder.StartObject(81)
+
 def Start(builder):
-    return CDMObjectStart(builder)
-def CDMObjectAddCOMMENT(builder, COMMENT): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+    CDMObjectStart(builder)
+
+def CDMObjectAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
 def AddCOMMENT(builder, COMMENT):
-    return CDMObjectAddCOMMENT(builder, COMMENT)
-def CDMObjectAddOBJECT(builder, OBJECT): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
+    CDMObjectAddCOMMENT(builder, COMMENT)
+
+def CDMObjectAddOBJECT(builder, OBJECT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
+
 def AddOBJECT(builder, OBJECT):
-    return CDMObjectAddOBJECT(builder, OBJECT)
-def CDMObjectAddPOC(builder, POC): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POC), 0)
+    CDMObjectAddOBJECT(builder, OBJECT)
+
+def CDMObjectAddPOC(builder, POC):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POC), 0)
+
 def AddPOC(builder, POC):
-    return CDMObjectAddPOC(builder, POC)
-def CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_CONTACT_POSITION), 0)
+    CDMObjectAddPOC(builder, POC)
+
+def CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_CONTACT_POSITION), 0)
+
 def AddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION):
-    return CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
-def CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ORGANIZATION), 0)
+    CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
+
+def CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ORGANIZATION), 0)
+
 def AddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION):
-    return CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION)
-def CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME), 0)
+    CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION)
+
+def CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME), 0)
+
 def AddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
-    return CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
-def CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD): builder.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
+    CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
+
+def CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD):
+    builder.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
+
 def AddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD):
-    return CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
-def CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME): builder.PrependInt8Slot(7, REFERENCE_FRAME, 0)
+    CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
+
+def CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependInt8Slot(7, REFERENCE_FRAME, 0)
+
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    return CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-def CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
+    CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
+
 def AddGRAVITY_MODEL(builder, GRAVITY_MODEL):
-    return CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
-def CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
+    CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+
+def CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
+
 def AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
-    return CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
-def CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
+    CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+
+def CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
+
 def AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
-    return CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
-def CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE): builder.PrependBoolSlot(11, SOLAR_RAD_PRESSURE, 0)
+    CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+
+def CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    builder.PrependBoolSlot(11, SOLAR_RAD_PRESSURE, 0)
+
 def AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
-    return CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
-def CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES): builder.PrependBoolSlot(12, EARTH_TIDES, 0)
+    CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+
+def CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES):
+    builder.PrependBoolSlot(12, EARTH_TIDES, 0)
+
 def AddEARTH_TIDES(builder, EARTH_TIDES):
-    return CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES)
-def CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST): builder.PrependBoolSlot(13, INTRACK_THRUST, 0)
+    CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES)
+
+def CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST):
+    builder.PrependBoolSlot(13, INTRACK_THRUST, 0)
+
 def AddINTRACK_THRUST(builder, INTRACK_THRUST):
-    return CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST)
-def CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_START), 0)
+    CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST)
+
+def CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_START), 0)
+
 def AddTIME_LASTOB_START(builder, TIME_LASTOB_START):
-    return CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
-def CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_END), 0)
+    CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
+
+def CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_END), 0)
+
 def AddTIME_LASTOB_END(builder, TIME_LASTOB_END):
-    return CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
-def CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN): builder.PrependFloat64Slot(16, RECOMMENDED_OD_SPAN, 0.0)
+    CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
+
+def CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    builder.PrependFloat64Slot(16, RECOMMENDED_OD_SPAN, 0.0)
+
 def AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
-    return CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
-def CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN): builder.PrependFloat64Slot(17, ACTUAL_OD_SPAN, 0.0)
+    CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+
+def CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    builder.PrependFloat64Slot(17, ACTUAL_OD_SPAN, 0.0)
+
 def AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
-    return CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
-def CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE): builder.PrependUint32Slot(18, OBS_AVAILABLE, 0)
+    CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
+
+def CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    builder.PrependUint32Slot(18, OBS_AVAILABLE, 0)
+
 def AddOBS_AVAILABLE(builder, OBS_AVAILABLE):
-    return CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
-def CDMObjectAddOBS_USED(builder, OBS_USED): builder.PrependUint32Slot(19, OBS_USED, 0)
+    CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
+
+def CDMObjectAddOBS_USED(builder, OBS_USED):
+    builder.PrependUint32Slot(19, OBS_USED, 0)
+
 def AddOBS_USED(builder, OBS_USED):
-    return CDMObjectAddOBS_USED(builder, OBS_USED)
-def CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE): builder.PrependUint32Slot(20, TRACKS_AVAILABLE, 0)
+    CDMObjectAddOBS_USED(builder, OBS_USED)
+
+def CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    builder.PrependUint32Slot(20, TRACKS_AVAILABLE, 0)
+
 def AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
-    return CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
-def CDMObjectAddTRACKS_USED(builder, TRACKS_USED): builder.PrependUint32Slot(21, TRACKS_USED, 0)
+    CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
+
+def CDMObjectAddTRACKS_USED(builder, TRACKS_USED):
+    builder.PrependUint32Slot(21, TRACKS_USED, 0)
+
 def AddTRACKS_USED(builder, TRACKS_USED):
-    return CDMObjectAddTRACKS_USED(builder, TRACKS_USED)
-def CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED): builder.PrependFloat64Slot(22, RESIDUALS_ACCEPTED, 0.0)
+    CDMObjectAddTRACKS_USED(builder, TRACKS_USED)
+
+def CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
+    builder.PrependFloat64Slot(22, RESIDUALS_ACCEPTED, 0.0)
+
 def AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
-    return CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
-def CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS): builder.PrependFloat64Slot(23, WEIGHTED_RMS, 0.0)
+    CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
+
+def CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    builder.PrependFloat64Slot(23, WEIGHTED_RMS, 0.0)
+
 def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
-    return CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
-def CDMObjectAddAREA_PC(builder, AREA_PC): builder.PrependFloat64Slot(24, AREA_PC, 0.0)
+    CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
+
+def CDMObjectAddAREA_PC(builder, AREA_PC):
+    builder.PrependFloat64Slot(24, AREA_PC, 0.0)
+
 def AddAREA_PC(builder, AREA_PC):
-    return CDMObjectAddAREA_PC(builder, AREA_PC)
-def CDMObjectAddAREA_DRG(builder, AREA_DRG): builder.PrependFloat64Slot(25, AREA_DRG, 0.0)
+    CDMObjectAddAREA_PC(builder, AREA_PC)
+
+def CDMObjectAddAREA_DRG(builder, AREA_DRG):
+    builder.PrependFloat64Slot(25, AREA_DRG, 0.0)
+
 def AddAREA_DRG(builder, AREA_DRG):
-    return CDMObjectAddAREA_DRG(builder, AREA_DRG)
-def CDMObjectAddAREA_SRP(builder, AREA_SRP): builder.PrependFloat64Slot(26, AREA_SRP, 0.0)
+    CDMObjectAddAREA_DRG(builder, AREA_DRG)
+
+def CDMObjectAddAREA_SRP(builder, AREA_SRP):
+    builder.PrependFloat64Slot(26, AREA_SRP, 0.0)
+
 def AddAREA_SRP(builder, AREA_SRP):
-    return CDMObjectAddAREA_SRP(builder, AREA_SRP)
-def CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS): builder.PrependFloat64Slot(27, CR_AREA_OVER_MASS, 0.0)
+    CDMObjectAddAREA_SRP(builder, AREA_SRP)
+
+def CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS):
+    builder.PrependFloat64Slot(27, CR_AREA_OVER_MASS, 0.0)
+
 def AddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS):
-    return CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS)
-def CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION): builder.PrependFloat64Slot(28, THRUST_ACCELERATION, 0.0)
+    CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS)
+
+def CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
+    builder.PrependFloat64Slot(28, THRUST_ACCELERATION, 0.0)
+
 def AddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
-    return CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
-def CDMObjectAddSEDR(builder, SEDR): builder.PrependFloat64Slot(29, SEDR, 0.0)
+    CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
+
+def CDMObjectAddSEDR(builder, SEDR):
+    builder.PrependFloat64Slot(29, SEDR, 0.0)
+
 def AddSEDR(builder, SEDR):
-    return CDMObjectAddSEDR(builder, SEDR)
-def CDMObjectAddX(builder, X): builder.PrependFloat64Slot(30, X, 0.0)
+    CDMObjectAddSEDR(builder, SEDR)
+
+def CDMObjectAddX(builder, X):
+    builder.PrependFloat64Slot(30, X, 0.0)
+
 def AddX(builder, X):
-    return CDMObjectAddX(builder, X)
-def CDMObjectAddY(builder, Y): builder.PrependFloat64Slot(31, Y, 0.0)
+    CDMObjectAddX(builder, X)
+
+def CDMObjectAddY(builder, Y):
+    builder.PrependFloat64Slot(31, Y, 0.0)
+
 def AddY(builder, Y):
-    return CDMObjectAddY(builder, Y)
-def CDMObjectAddZ(builder, Z): builder.PrependFloat64Slot(32, Z, 0.0)
+    CDMObjectAddY(builder, Y)
+
+def CDMObjectAddZ(builder, Z):
+    builder.PrependFloat64Slot(32, Z, 0.0)
+
 def AddZ(builder, Z):
-    return CDMObjectAddZ(builder, Z)
-def CDMObjectAddX_DOT(builder, X_DOT): builder.PrependFloat64Slot(33, X_DOT, 0.0)
+    CDMObjectAddZ(builder, Z)
+
+def CDMObjectAddX_DOT(builder, X_DOT):
+    builder.PrependFloat64Slot(33, X_DOT, 0.0)
+
 def AddX_DOT(builder, X_DOT):
-    return CDMObjectAddX_DOT(builder, X_DOT)
-def CDMObjectAddY_DOT(builder, Y_DOT): builder.PrependFloat64Slot(34, Y_DOT, 0.0)
+    CDMObjectAddX_DOT(builder, X_DOT)
+
+def CDMObjectAddY_DOT(builder, Y_DOT):
+    builder.PrependFloat64Slot(34, Y_DOT, 0.0)
+
 def AddY_DOT(builder, Y_DOT):
-    return CDMObjectAddY_DOT(builder, Y_DOT)
-def CDMObjectAddZ_DOT(builder, Z_DOT): builder.PrependFloat64Slot(35, Z_DOT, 0.0)
+    CDMObjectAddY_DOT(builder, Y_DOT)
+
+def CDMObjectAddZ_DOT(builder, Z_DOT):
+    builder.PrependFloat64Slot(35, Z_DOT, 0.0)
+
 def AddZ_DOT(builder, Z_DOT):
-    return CDMObjectAddZ_DOT(builder, Z_DOT)
-def CDMObjectAddCR_R(builder, CR_R): builder.PrependFloat64Slot(36, CR_R, 0.0)
+    CDMObjectAddZ_DOT(builder, Z_DOT)
+
+def CDMObjectAddCR_R(builder, CR_R):
+    builder.PrependFloat64Slot(36, CR_R, 0.0)
+
 def AddCR_R(builder, CR_R):
-    return CDMObjectAddCR_R(builder, CR_R)
-def CDMObjectAddCT_R(builder, CT_R): builder.PrependFloat64Slot(37, CT_R, 0.0)
+    CDMObjectAddCR_R(builder, CR_R)
+
+def CDMObjectAddCT_R(builder, CT_R):
+    builder.PrependFloat64Slot(37, CT_R, 0.0)
+
 def AddCT_R(builder, CT_R):
-    return CDMObjectAddCT_R(builder, CT_R)
-def CDMObjectAddCT_T(builder, CT_T): builder.PrependFloat64Slot(38, CT_T, 0.0)
+    CDMObjectAddCT_R(builder, CT_R)
+
+def CDMObjectAddCT_T(builder, CT_T):
+    builder.PrependFloat64Slot(38, CT_T, 0.0)
+
 def AddCT_T(builder, CT_T):
-    return CDMObjectAddCT_T(builder, CT_T)
-def CDMObjectAddCN_R(builder, CN_R): builder.PrependFloat64Slot(39, CN_R, 0.0)
+    CDMObjectAddCT_T(builder, CT_T)
+
+def CDMObjectAddCN_R(builder, CN_R):
+    builder.PrependFloat64Slot(39, CN_R, 0.0)
+
 def AddCN_R(builder, CN_R):
-    return CDMObjectAddCN_R(builder, CN_R)
-def CDMObjectAddCN_T(builder, CN_T): builder.PrependFloat64Slot(40, CN_T, 0.0)
+    CDMObjectAddCN_R(builder, CN_R)
+
+def CDMObjectAddCN_T(builder, CN_T):
+    builder.PrependFloat64Slot(40, CN_T, 0.0)
+
 def AddCN_T(builder, CN_T):
-    return CDMObjectAddCN_T(builder, CN_T)
-def CDMObjectAddCN_N(builder, CN_N): builder.PrependFloat64Slot(41, CN_N, 0.0)
+    CDMObjectAddCN_T(builder, CN_T)
+
+def CDMObjectAddCN_N(builder, CN_N):
+    builder.PrependFloat64Slot(41, CN_N, 0.0)
+
 def AddCN_N(builder, CN_N):
-    return CDMObjectAddCN_N(builder, CN_N)
-def CDMObjectAddCRDOT_R(builder, CRDOT_R): builder.PrependFloat64Slot(42, CRDOT_R, 0.0)
+    CDMObjectAddCN_N(builder, CN_N)
+
+def CDMObjectAddCRDOT_R(builder, CRDOT_R):
+    builder.PrependFloat64Slot(42, CRDOT_R, 0.0)
+
 def AddCRDOT_R(builder, CRDOT_R):
-    return CDMObjectAddCRDOT_R(builder, CRDOT_R)
-def CDMObjectAddCRDOT_T(builder, CRDOT_T): builder.PrependFloat64Slot(43, CRDOT_T, 0.0)
+    CDMObjectAddCRDOT_R(builder, CRDOT_R)
+
+def CDMObjectAddCRDOT_T(builder, CRDOT_T):
+    builder.PrependFloat64Slot(43, CRDOT_T, 0.0)
+
 def AddCRDOT_T(builder, CRDOT_T):
-    return CDMObjectAddCRDOT_T(builder, CRDOT_T)
-def CDMObjectAddCRDOT_N(builder, CRDOT_N): builder.PrependFloat64Slot(44, CRDOT_N, 0.0)
+    CDMObjectAddCRDOT_T(builder, CRDOT_T)
+
+def CDMObjectAddCRDOT_N(builder, CRDOT_N):
+    builder.PrependFloat64Slot(44, CRDOT_N, 0.0)
+
 def AddCRDOT_N(builder, CRDOT_N):
-    return CDMObjectAddCRDOT_N(builder, CRDOT_N)
-def CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT): builder.PrependFloat64Slot(45, CRDOT_RDOT, 0.0)
+    CDMObjectAddCRDOT_N(builder, CRDOT_N)
+
+def CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT):
+    builder.PrependFloat64Slot(45, CRDOT_RDOT, 0.0)
+
 def AddCRDOT_RDOT(builder, CRDOT_RDOT):
-    return CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT)
-def CDMObjectAddCTDOT_R(builder, CTDOT_R): builder.PrependFloat64Slot(46, CTDOT_R, 0.0)
+    CDMObjectAddCRDOT_RDOT(builder, CRDOT_RDOT)
+
+def CDMObjectAddCTDOT_R(builder, CTDOT_R):
+    builder.PrependFloat64Slot(46, CTDOT_R, 0.0)
+
 def AddCTDOT_R(builder, CTDOT_R):
-    return CDMObjectAddCTDOT_R(builder, CTDOT_R)
-def CDMObjectAddCTDOT_T(builder, CTDOT_T): builder.PrependFloat64Slot(47, CTDOT_T, 0.0)
+    CDMObjectAddCTDOT_R(builder, CTDOT_R)
+
+def CDMObjectAddCTDOT_T(builder, CTDOT_T):
+    builder.PrependFloat64Slot(47, CTDOT_T, 0.0)
+
 def AddCTDOT_T(builder, CTDOT_T):
-    return CDMObjectAddCTDOT_T(builder, CTDOT_T)
-def CDMObjectAddCTDOT_N(builder, CTDOT_N): builder.PrependFloat64Slot(48, CTDOT_N, 0.0)
+    CDMObjectAddCTDOT_T(builder, CTDOT_T)
+
+def CDMObjectAddCTDOT_N(builder, CTDOT_N):
+    builder.PrependFloat64Slot(48, CTDOT_N, 0.0)
+
 def AddCTDOT_N(builder, CTDOT_N):
-    return CDMObjectAddCTDOT_N(builder, CTDOT_N)
-def CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT): builder.PrependFloat64Slot(49, CTDOT_RDOT, 0.0)
+    CDMObjectAddCTDOT_N(builder, CTDOT_N)
+
+def CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT):
+    builder.PrependFloat64Slot(49, CTDOT_RDOT, 0.0)
+
 def AddCTDOT_RDOT(builder, CTDOT_RDOT):
-    return CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT)
-def CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT): builder.PrependFloat64Slot(50, CTDOT_TDOT, 0.0)
+    CDMObjectAddCTDOT_RDOT(builder, CTDOT_RDOT)
+
+def CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT):
+    builder.PrependFloat64Slot(50, CTDOT_TDOT, 0.0)
+
 def AddCTDOT_TDOT(builder, CTDOT_TDOT):
-    return CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT)
-def CDMObjectAddCNDOT_R(builder, CNDOT_R): builder.PrependFloat64Slot(51, CNDOT_R, 0.0)
+    CDMObjectAddCTDOT_TDOT(builder, CTDOT_TDOT)
+
+def CDMObjectAddCNDOT_R(builder, CNDOT_R):
+    builder.PrependFloat64Slot(51, CNDOT_R, 0.0)
+
 def AddCNDOT_R(builder, CNDOT_R):
-    return CDMObjectAddCNDOT_R(builder, CNDOT_R)
-def CDMObjectAddCNDOT_T(builder, CNDOT_T): builder.PrependFloat64Slot(52, CNDOT_T, 0.0)
+    CDMObjectAddCNDOT_R(builder, CNDOT_R)
+
+def CDMObjectAddCNDOT_T(builder, CNDOT_T):
+    builder.PrependFloat64Slot(52, CNDOT_T, 0.0)
+
 def AddCNDOT_T(builder, CNDOT_T):
-    return CDMObjectAddCNDOT_T(builder, CNDOT_T)
-def CDMObjectAddCNDOT_N(builder, CNDOT_N): builder.PrependFloat64Slot(53, CNDOT_N, 0.0)
+    CDMObjectAddCNDOT_T(builder, CNDOT_T)
+
+def CDMObjectAddCNDOT_N(builder, CNDOT_N):
+    builder.PrependFloat64Slot(53, CNDOT_N, 0.0)
+
 def AddCNDOT_N(builder, CNDOT_N):
-    return CDMObjectAddCNDOT_N(builder, CNDOT_N)
-def CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT): builder.PrependFloat64Slot(54, CNDOT_RDOT, 0.0)
+    CDMObjectAddCNDOT_N(builder, CNDOT_N)
+
+def CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT):
+    builder.PrependFloat64Slot(54, CNDOT_RDOT, 0.0)
+
 def AddCNDOT_RDOT(builder, CNDOT_RDOT):
-    return CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT)
-def CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT): builder.PrependFloat64Slot(55, CNDOT_TDOT, 0.0)
+    CDMObjectAddCNDOT_RDOT(builder, CNDOT_RDOT)
+
+def CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT):
+    builder.PrependFloat64Slot(55, CNDOT_TDOT, 0.0)
+
 def AddCNDOT_TDOT(builder, CNDOT_TDOT):
-    return CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT)
-def CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT): builder.PrependFloat64Slot(56, CNDOT_NDOT, 0.0)
+    CDMObjectAddCNDOT_TDOT(builder, CNDOT_TDOT)
+
+def CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT):
+    builder.PrependFloat64Slot(56, CNDOT_NDOT, 0.0)
+
 def AddCNDOT_NDOT(builder, CNDOT_NDOT):
-    return CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT)
-def CDMObjectAddCDRG_R(builder, CDRG_R): builder.PrependFloat64Slot(57, CDRG_R, 0.0)
+    CDMObjectAddCNDOT_NDOT(builder, CNDOT_NDOT)
+
+def CDMObjectAddCDRG_R(builder, CDRG_R):
+    builder.PrependFloat64Slot(57, CDRG_R, 0.0)
+
 def AddCDRG_R(builder, CDRG_R):
-    return CDMObjectAddCDRG_R(builder, CDRG_R)
-def CDMObjectAddCDRG_T(builder, CDRG_T): builder.PrependFloat64Slot(58, CDRG_T, 0.0)
+    CDMObjectAddCDRG_R(builder, CDRG_R)
+
+def CDMObjectAddCDRG_T(builder, CDRG_T):
+    builder.PrependFloat64Slot(58, CDRG_T, 0.0)
+
 def AddCDRG_T(builder, CDRG_T):
-    return CDMObjectAddCDRG_T(builder, CDRG_T)
-def CDMObjectAddCDRG_N(builder, CDRG_N): builder.PrependFloat64Slot(59, CDRG_N, 0.0)
+    CDMObjectAddCDRG_T(builder, CDRG_T)
+
+def CDMObjectAddCDRG_N(builder, CDRG_N):
+    builder.PrependFloat64Slot(59, CDRG_N, 0.0)
+
 def AddCDRG_N(builder, CDRG_N):
-    return CDMObjectAddCDRG_N(builder, CDRG_N)
-def CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT): builder.PrependFloat64Slot(60, CDRG_RDOT, 0.0)
+    CDMObjectAddCDRG_N(builder, CDRG_N)
+
+def CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT):
+    builder.PrependFloat64Slot(60, CDRG_RDOT, 0.0)
+
 def AddCDRG_RDOT(builder, CDRG_RDOT):
-    return CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT)
-def CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT): builder.PrependFloat64Slot(61, CDRG_TDOT, 0.0)
+    CDMObjectAddCDRG_RDOT(builder, CDRG_RDOT)
+
+def CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT):
+    builder.PrependFloat64Slot(61, CDRG_TDOT, 0.0)
+
 def AddCDRG_TDOT(builder, CDRG_TDOT):
-    return CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT)
-def CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT): builder.PrependFloat64Slot(62, CDRG_NDOT, 0.0)
+    CDMObjectAddCDRG_TDOT(builder, CDRG_TDOT)
+
+def CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT):
+    builder.PrependFloat64Slot(62, CDRG_NDOT, 0.0)
+
 def AddCDRG_NDOT(builder, CDRG_NDOT):
-    return CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT)
-def CDMObjectAddCDRG_DRG(builder, CDRG_DRG): builder.PrependFloat64Slot(63, CDRG_DRG, 0.0)
+    CDMObjectAddCDRG_NDOT(builder, CDRG_NDOT)
+
+def CDMObjectAddCDRG_DRG(builder, CDRG_DRG):
+    builder.PrependFloat64Slot(63, CDRG_DRG, 0.0)
+
 def AddCDRG_DRG(builder, CDRG_DRG):
-    return CDMObjectAddCDRG_DRG(builder, CDRG_DRG)
-def CDMObjectAddCSRP_R(builder, CSRP_R): builder.PrependFloat64Slot(64, CSRP_R, 0.0)
+    CDMObjectAddCDRG_DRG(builder, CDRG_DRG)
+
+def CDMObjectAddCSRP_R(builder, CSRP_R):
+    builder.PrependFloat64Slot(64, CSRP_R, 0.0)
+
 def AddCSRP_R(builder, CSRP_R):
-    return CDMObjectAddCSRP_R(builder, CSRP_R)
-def CDMObjectAddCSRP_T(builder, CSRP_T): builder.PrependFloat64Slot(65, CSRP_T, 0.0)
+    CDMObjectAddCSRP_R(builder, CSRP_R)
+
+def CDMObjectAddCSRP_T(builder, CSRP_T):
+    builder.PrependFloat64Slot(65, CSRP_T, 0.0)
+
 def AddCSRP_T(builder, CSRP_T):
-    return CDMObjectAddCSRP_T(builder, CSRP_T)
-def CDMObjectAddCSRP_N(builder, CSRP_N): builder.PrependFloat64Slot(66, CSRP_N, 0.0)
+    CDMObjectAddCSRP_T(builder, CSRP_T)
+
+def CDMObjectAddCSRP_N(builder, CSRP_N):
+    builder.PrependFloat64Slot(66, CSRP_N, 0.0)
+
 def AddCSRP_N(builder, CSRP_N):
-    return CDMObjectAddCSRP_N(builder, CSRP_N)
-def CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT): builder.PrependFloat64Slot(67, CSRP_RDOT, 0.0)
+    CDMObjectAddCSRP_N(builder, CSRP_N)
+
+def CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT):
+    builder.PrependFloat64Slot(67, CSRP_RDOT, 0.0)
+
 def AddCSRP_RDOT(builder, CSRP_RDOT):
-    return CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT)
-def CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT): builder.PrependFloat64Slot(68, CSRP_TDOT, 0.0)
+    CDMObjectAddCSRP_RDOT(builder, CSRP_RDOT)
+
+def CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT):
+    builder.PrependFloat64Slot(68, CSRP_TDOT, 0.0)
+
 def AddCSRP_TDOT(builder, CSRP_TDOT):
-    return CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT)
-def CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT): builder.PrependFloat64Slot(69, CSRP_NDOT, 0.0)
+    CDMObjectAddCSRP_TDOT(builder, CSRP_TDOT)
+
+def CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT):
+    builder.PrependFloat64Slot(69, CSRP_NDOT, 0.0)
+
 def AddCSRP_NDOT(builder, CSRP_NDOT):
-    return CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT)
-def CDMObjectAddCSRP_DRG(builder, CSRP_DRG): builder.PrependFloat64Slot(70, CSRP_DRG, 0.0)
+    CDMObjectAddCSRP_NDOT(builder, CSRP_NDOT)
+
+def CDMObjectAddCSRP_DRG(builder, CSRP_DRG):
+    builder.PrependFloat64Slot(70, CSRP_DRG, 0.0)
+
 def AddCSRP_DRG(builder, CSRP_DRG):
-    return CDMObjectAddCSRP_DRG(builder, CSRP_DRG)
-def CDMObjectAddCSRP_SRP(builder, CSRP_SRP): builder.PrependFloat64Slot(71, CSRP_SRP, 0.0)
+    CDMObjectAddCSRP_DRG(builder, CSRP_DRG)
+
+def CDMObjectAddCSRP_SRP(builder, CSRP_SRP):
+    builder.PrependFloat64Slot(71, CSRP_SRP, 0.0)
+
 def AddCSRP_SRP(builder, CSRP_SRP):
-    return CDMObjectAddCSRP_SRP(builder, CSRP_SRP)
-def CDMObjectAddCTHR_R(builder, CTHR_R): builder.PrependFloat64Slot(72, CTHR_R, 0.0)
+    CDMObjectAddCSRP_SRP(builder, CSRP_SRP)
+
+def CDMObjectAddCTHR_R(builder, CTHR_R):
+    builder.PrependFloat64Slot(72, CTHR_R, 0.0)
+
 def AddCTHR_R(builder, CTHR_R):
-    return CDMObjectAddCTHR_R(builder, CTHR_R)
-def CDMObjectAddCTHR_T(builder, CTHR_T): builder.PrependFloat64Slot(73, CTHR_T, 0.0)
+    CDMObjectAddCTHR_R(builder, CTHR_R)
+
+def CDMObjectAddCTHR_T(builder, CTHR_T):
+    builder.PrependFloat64Slot(73, CTHR_T, 0.0)
+
 def AddCTHR_T(builder, CTHR_T):
-    return CDMObjectAddCTHR_T(builder, CTHR_T)
-def CDMObjectAddCTHR_N(builder, CTHR_N): builder.PrependFloat64Slot(74, CTHR_N, 0.0)
+    CDMObjectAddCTHR_T(builder, CTHR_T)
+
+def CDMObjectAddCTHR_N(builder, CTHR_N):
+    builder.PrependFloat64Slot(74, CTHR_N, 0.0)
+
 def AddCTHR_N(builder, CTHR_N):
-    return CDMObjectAddCTHR_N(builder, CTHR_N)
-def CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT): builder.PrependFloat64Slot(75, CTHR_RDOT, 0.0)
+    CDMObjectAddCTHR_N(builder, CTHR_N)
+
+def CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT):
+    builder.PrependFloat64Slot(75, CTHR_RDOT, 0.0)
+
 def AddCTHR_RDOT(builder, CTHR_RDOT):
-    return CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT)
-def CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT): builder.PrependFloat64Slot(76, CTHR_TDOT, 0.0)
+    CDMObjectAddCTHR_RDOT(builder, CTHR_RDOT)
+
+def CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT):
+    builder.PrependFloat64Slot(76, CTHR_TDOT, 0.0)
+
 def AddCTHR_TDOT(builder, CTHR_TDOT):
-    return CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT)
-def CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT): builder.PrependFloat64Slot(77, CTHR_NDOT, 0.0)
+    CDMObjectAddCTHR_TDOT(builder, CTHR_TDOT)
+
+def CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT):
+    builder.PrependFloat64Slot(77, CTHR_NDOT, 0.0)
+
 def AddCTHR_NDOT(builder, CTHR_NDOT):
-    return CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT)
-def CDMObjectAddCTHR_DRG(builder, CTHR_DRG): builder.PrependFloat64Slot(78, CTHR_DRG, 0.0)
+    CDMObjectAddCTHR_NDOT(builder, CTHR_NDOT)
+
+def CDMObjectAddCTHR_DRG(builder, CTHR_DRG):
+    builder.PrependFloat64Slot(78, CTHR_DRG, 0.0)
+
 def AddCTHR_DRG(builder, CTHR_DRG):
-    return CDMObjectAddCTHR_DRG(builder, CTHR_DRG)
-def CDMObjectAddCTHR_SRP(builder, CTHR_SRP): builder.PrependFloat64Slot(79, CTHR_SRP, 0.0)
+    CDMObjectAddCTHR_DRG(builder, CTHR_DRG)
+
+def CDMObjectAddCTHR_SRP(builder, CTHR_SRP):
+    builder.PrependFloat64Slot(79, CTHR_SRP, 0.0)
+
 def AddCTHR_SRP(builder, CTHR_SRP):
-    return CDMObjectAddCTHR_SRP(builder, CTHR_SRP)
-def CDMObjectAddCTHR_THR(builder, CTHR_THR): builder.PrependFloat64Slot(80, CTHR_THR, 0.0)
+    CDMObjectAddCTHR_SRP(builder, CTHR_SRP)
+
+def CDMObjectAddCTHR_THR(builder, CTHR_THR):
+    builder.PrependFloat64Slot(80, CTHR_THR, 0.0)
+
 def AddCTHR_THR(builder, CTHR_THR):
-    return CDMObjectAddCTHR_THR(builder, CTHR_THR)
-def CDMObjectEnd(builder): return builder.EndObject()
+    CDMObjectAddCTHR_THR(builder, CTHR_THR)
+
+def CDMObjectEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CDMObjectEnd(builder)
+
 import CAT
 import EPM
 try:

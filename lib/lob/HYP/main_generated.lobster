@@ -10,30 +10,30 @@ class HYP
 
 class HYPCOLLECTION
 
-class Score : flatbuffers_handle
+class Score : flatbuffers.handle
     def NORAD_CAT_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     def TYPE() -> ScoreType:
-        return ScoreType(buf_.flatbuffers_field_int8(pos_, 6, 0))
+        return ScoreType(flatbuffers.field_int8(buf_, pos_, 6, 0))
     def TAG() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     def SCORE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 10, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 10, 0.0)
 
-def GetRootAsScore(buf:string): return Score { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsScore(buf:string): return Score { buf, flatbuffers.indirect(buf, 0) }
 
 struct ScoreBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(4)
         return this
-    def add_NORAD_CAT_ID(NORAD_CAT_ID:flatbuffers_offset):
+    def add_NORAD_CAT_ID(NORAD_CAT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NORAD_CAT_ID)
         return this
     def add_TYPE(TYPE:ScoreType):
         b_.PrependInt8Slot(1, TYPE, 0)
         return this
-    def add_TAG(TAG:flatbuffers_offset):
+    def add_TAG(TAG:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, TAG)
         return this
     def add_SCORE(SCORE:float):
@@ -43,158 +43,158 @@ struct ScoreBuilder:
         return b_.EndObject()
 
 /// Hypothesis Message
-class HYP : flatbuffers_handle
+class HYP : flatbuffers.handle
     /// Space Objects Involved
     def CAT_IDS(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 4) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 4)
     def CAT_IDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
     /// Space Objects Involved
     def SIT_IDS(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 6) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 4)
     def SIT_IDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 6)
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
     /// Name of the hypothesis
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Category of the hypothesis
     def CATEGORY() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Row indicators for the hypothesis matrix
     def ROW_INDICATORS(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 12) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 4)
     def ROW_INDICATORS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 12)
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
     /// Column indicators for the hypothesis matrix
     def COL_INDICATORS(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 14) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
     def COL_INDICATORS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 14)
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
     /// Matrix data as a boolean array in row major format; if overflow, adds additional rows
     def MATRIX(i:int) -> bool:
-        return buf_.read_int8_le(buf_.flatbuffers_field_vector(pos_, 16) + i * 1)
+        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
     def MATRIX_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
     /// Scores for objects
     def SCORE(i:int) -> Score:
-        return Score { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 18) + i * 4) }
+        return Score { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
     def SCORE_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 18)
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
     /// Analysis methodology used to form the hypothesis
     def ANALYSIS_METHOD() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
     def EVENT_START_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 22)
     def EVENT_END_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 24)
 
-def GetRootAsHYP(buf:string): return HYP { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsHYP(buf:string): return HYP { buf, flatbuffers.indirect(buf, 0) }
 
 struct HYPBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(11)
         return this
-    def add_CAT_IDS(CAT_IDS:flatbuffers_offset):
+    def add_CAT_IDS(CAT_IDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CAT_IDS)
         return this
-    def add_SIT_IDS(SIT_IDS:flatbuffers_offset):
+    def add_SIT_IDS(SIT_IDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, SIT_IDS)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
+    def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, NAME)
         return this
-    def add_CATEGORY(CATEGORY:flatbuffers_offset):
+    def add_CATEGORY(CATEGORY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, CATEGORY)
         return this
-    def add_ROW_INDICATORS(ROW_INDICATORS:flatbuffers_offset):
+    def add_ROW_INDICATORS(ROW_INDICATORS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, ROW_INDICATORS)
         return this
-    def add_COL_INDICATORS(COL_INDICATORS:flatbuffers_offset):
+    def add_COL_INDICATORS(COL_INDICATORS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, COL_INDICATORS)
         return this
-    def add_MATRIX(MATRIX:flatbuffers_offset):
+    def add_MATRIX(MATRIX:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, MATRIX)
         return this
-    def add_SCORE(SCORE:flatbuffers_offset):
+    def add_SCORE(SCORE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, SCORE)
         return this
-    def add_ANALYSIS_METHOD(ANALYSIS_METHOD:flatbuffers_offset):
+    def add_ANALYSIS_METHOD(ANALYSIS_METHOD:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, ANALYSIS_METHOD)
         return this
-    def add_EVENT_START_TIME(EVENT_START_TIME:flatbuffers_offset):
+    def add_EVENT_START_TIME(EVENT_START_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, EVENT_START_TIME)
         return this
-    def add_EVENT_END_TIME(EVENT_END_TIME:flatbuffers_offset):
+    def add_EVENT_END_TIME(EVENT_END_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, EVENT_END_TIME)
         return this
     def end():
         return b_.EndObject()
 
-def HYPStartCAT_IDSVector(b_:flatbuffers_builder, n_:int):
+def HYPStartCAT_IDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateCAT_IDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def HYPCreateCAT_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartSIT_IDSVector(b_:flatbuffers_builder, n_:int):
+def HYPStartSIT_IDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateSIT_IDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def HYPCreateSIT_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartROW_INDICATORSVector(b_:flatbuffers_builder, n_:int):
+def HYPStartROW_INDICATORSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateROW_INDICATORSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def HYPCreateROW_INDICATORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartCOL_INDICATORSVector(b_:flatbuffers_builder, n_:int):
+def HYPStartCOL_INDICATORSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateCOL_INDICATORSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def HYPCreateCOL_INDICATORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartMATRIXVector(b_:flatbuffers_builder, n_:int):
+def HYPStartMATRIXVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def HYPCreateMATRIXVector(b_:flatbuffers_builder, v_:[bool]):
+def HYPCreateMATRIXVector(b_:flatbuffers.builder, v_:[bool]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependBool(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartSCOREVector(b_:flatbuffers_builder, n_:int):
+def HYPStartSCOREVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateSCOREVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def HYPCreateSCOREVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class HYPCOLLECTION : flatbuffers_handle
+class HYPCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> HYP:
-        return HYP { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return HYP { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsHYPCOLLECTION(buf:string): return HYPCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsHYPCOLLECTION(buf:string): return HYPCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct HYPCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def HYPCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def HYPCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def HYPCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

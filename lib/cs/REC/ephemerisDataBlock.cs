@@ -11,7 +11,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static ephemerisDataBlock GetRootAsephemerisDataBlock(ByteBuffer _bb) { return GetRootAsephemerisDataBlock(_bb, new ephemerisDataBlock()); }
   public static ephemerisDataBlock GetRootAsephemerisDataBlock(ByteBuffer _bb, ephemerisDataBlock obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -280,3 +280,27 @@ public class ephemerisDataBlockT
   }
 }
 
+
+static public class ephemerisDataBlockVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 6 /*OBJECT_NAME*/, false)
+      && verifier.VerifyString(tablePos, 8 /*OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*CENTER_NAME*/, false)
+      && verifier.VerifyField(tablePos, 12 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyString(tablePos, 14 /*REFERENCE_FRAME_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 16 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 20 /*USEABLE_START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 22 /*USEABLE_STOP_TIME*/, false)
+      && verifier.VerifyString(tablePos, 24 /*STOP_TIME*/, false)
+      && verifier.VerifyString(tablePos, 26 /*INTERPOLATION*/, false)
+      && verifier.VerifyField(tablePos, 28 /*INTERPOLATION_DEGREE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*EPHEMERIS_DATA_LINES*/, ephemerisDataLineVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 32 /*COVARIANCE_MATRIX_LINES*/, covarianceMatrixLineVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

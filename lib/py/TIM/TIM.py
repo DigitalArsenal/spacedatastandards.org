@@ -36,15 +36,24 @@ class TIM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def TIMStart(builder): builder.StartObject(1)
+def TIMStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return TIMStart(builder)
-def TIMAddTIME_SYSTEM(builder, TIME_SYSTEM): builder.PrependInt8Slot(0, TIME_SYSTEM, 0)
+    TIMStart(builder)
+
+def TIMAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependInt8Slot(0, TIME_SYSTEM, 0)
+
 def AddTIME_SYSTEM(builder, TIME_SYSTEM):
-    return TIMAddTIME_SYSTEM(builder, TIME_SYSTEM)
-def TIMEnd(builder): return builder.EndObject()
+    TIMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def TIMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return TIMEnd(builder)
+
 
 class TIMT(object):
 

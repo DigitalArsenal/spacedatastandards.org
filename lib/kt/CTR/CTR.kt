@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Country Identity Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class CTR : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -143,7 +142,7 @@ class CTR : Table() {
     val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
     fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCTR(_bb: ByteBuffer): CTR = getRootAsCTR(_bb, CTR())
         fun getRootAsCTR(_bb: ByteBuffer, obj: CTR): CTR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

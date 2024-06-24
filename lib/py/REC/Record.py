@@ -45,18 +45,30 @@ class Record(object):
             return obj
         return None
 
-def RecordStart(builder): builder.StartObject(2)
+def RecordStart(builder):
+    builder.StartObject(2)
+
 def Start(builder):
-    return RecordStart(builder)
-def RecordAddValueType(builder, valueType): builder.PrependUint8Slot(0, valueType, 0)
+    RecordStart(builder)
+
+def RecordAddValueType(builder, valueType):
+    builder.PrependUint8Slot(0, valueType, 0)
+
 def AddValueType(builder, valueType):
-    return RecordAddValueType(builder, valueType)
-def RecordAddValue(builder, value): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(value), 0)
+    RecordAddValueType(builder, valueType)
+
+def RecordAddValue(builder, value):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(value), 0)
+
 def AddValue(builder, value):
-    return RecordAddValue(builder, value)
-def RecordEnd(builder): return builder.EndObject()
+    RecordAddValue(builder, value)
+
+def RecordEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return RecordEnd(builder)
+
 import BOV
 import CAT
 import CDM

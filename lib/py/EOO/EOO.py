@@ -709,267 +709,528 @@ class EOO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def EOOStart(builder): builder.StartObject(85)
+def EOOStart(builder):
+    builder.StartObject(85)
+
 def Start(builder):
-    return EOOStart(builder)
-def EOOAddEOBSERVATION_ID(builder, EOBSERVATION_ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EOBSERVATION_ID), 0)
+    EOOStart(builder)
+
+def EOOAddEOBSERVATION_ID(builder, EOBSERVATION_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EOBSERVATION_ID), 0)
+
 def AddEOBSERVATION_ID(builder, EOBSERVATION_ID):
-    return EOOAddEOBSERVATION_ID(builder, EOBSERVATION_ID)
-def EOOAddCLASSIFICATION(builder, CLASSIFICATION): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+    EOOAddEOBSERVATION_ID(builder, EOBSERVATION_ID)
+
+def EOOAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
 def AddCLASSIFICATION(builder, CLASSIFICATION):
-    return EOOAddCLASSIFICATION(builder, CLASSIFICATION)
-def EOOAddOB_TIME(builder, OB_TIME): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
+    EOOAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def EOOAddOB_TIME(builder, OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
+
 def AddOB_TIME(builder, OB_TIME):
-    return EOOAddOB_TIME(builder, OB_TIME)
-def EOOAddCORR_QUALITY(builder, CORR_QUALITY): builder.PrependFloat32Slot(3, CORR_QUALITY, 0.0)
+    EOOAddOB_TIME(builder, OB_TIME)
+
+def EOOAddCORR_QUALITY(builder, CORR_QUALITY):
+    builder.PrependFloat32Slot(3, CORR_QUALITY, 0.0)
+
 def AddCORR_QUALITY(builder, CORR_QUALITY):
-    return EOOAddCORR_QUALITY(builder, CORR_QUALITY)
-def EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ON_ORBIT), 0)
+    EOOAddCORR_QUALITY(builder, CORR_QUALITY)
+
+def EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ON_ORBIT), 0)
+
 def AddID_ON_ORBIT(builder, ID_ON_ORBIT):
-    return EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT)
-def EOOAddSENSOR_ID(builder, SENSOR_ID): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+    EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT)
+
+def EOOAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
 def AddSENSOR_ID(builder, SENSOR_ID):
-    return EOOAddSENSOR_ID(builder, SENSOR_ID)
-def EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECT_METHOD), 0)
+    EOOAddSENSOR_ID(builder, SENSOR_ID)
+
+def EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECT_METHOD), 0)
+
 def AddCOLLECT_METHOD(builder, COLLECT_METHOD):
-    return EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD)
-def EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID): builder.PrependInt32Slot(7, NORAD_CAT_ID, 0)
+    EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD)
+
+def EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependInt32Slot(7, NORAD_CAT_ID, 0)
+
 def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
-    return EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
-def EOOAddTASK_ID(builder, TASK_ID): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+    EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def EOOAddTASK_ID(builder, TASK_ID):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+
 def AddTASK_ID(builder, TASK_ID):
-    return EOOAddTASK_ID(builder, TASK_ID)
-def EOOAddTRANSACTION_ID(builder, TRANSACTION_ID): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+    EOOAddTASK_ID(builder, TASK_ID)
+
+def EOOAddTRANSACTION_ID(builder, TRANSACTION_ID):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+
 def AddTRANSACTION_ID(builder, TRANSACTION_ID):
-    return EOOAddTRANSACTION_ID(builder, TRANSACTION_ID)
-def EOOAddTRACK_ID(builder, TRACK_ID): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
+    EOOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+
+def EOOAddTRACK_ID(builder, TRACK_ID):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
+
 def AddTRACK_ID(builder, TRACK_ID):
-    return EOOAddTRACK_ID(builder, TRACK_ID)
-def EOOAddOB_POSITION(builder, OB_POSITION): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OB_POSITION), 0)
+    EOOAddTRACK_ID(builder, TRACK_ID)
+
+def EOOAddOB_POSITION(builder, OB_POSITION):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OB_POSITION), 0)
+
 def AddOB_POSITION(builder, OB_POSITION):
-    return EOOAddOB_POSITION(builder, OB_POSITION)
-def EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+    EOOAddOB_POSITION(builder, OB_POSITION)
+
+def EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    return EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
-def EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+    EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
 def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
-    return EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
-def EOOAddUCT(builder, UCT): builder.PrependBoolSlot(14, UCT, 0)
+    EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
+def EOOAddUCT(builder, UCT):
+    builder.PrependBoolSlot(14, UCT, 0)
+
 def AddUCT(builder, UCT):
-    return EOOAddUCT(builder, UCT)
-def EOOAddAZIMUTH(builder, AZIMUTH): builder.PrependFloat32Slot(15, AZIMUTH, 0.0)
+    EOOAddUCT(builder, UCT)
+
+def EOOAddAZIMUTH(builder, AZIMUTH):
+    builder.PrependFloat32Slot(15, AZIMUTH, 0.0)
+
 def AddAZIMUTH(builder, AZIMUTH):
-    return EOOAddAZIMUTH(builder, AZIMUTH)
-def EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC): builder.PrependFloat32Slot(16, AZIMUTH_UNC, 0.0)
+    EOOAddAZIMUTH(builder, AZIMUTH)
+
+def EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    builder.PrependFloat32Slot(16, AZIMUTH_UNC, 0.0)
+
 def AddAZIMUTH_UNC(builder, AZIMUTH_UNC):
-    return EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
-def EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS): builder.PrependFloat32Slot(17, AZIMUTH_BIAS, 0.0)
+    EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
+
+def EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS):
+    builder.PrependFloat32Slot(17, AZIMUTH_BIAS, 0.0)
+
 def AddAZIMUTH_BIAS(builder, AZIMUTH_BIAS):
-    return EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
-def EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE): builder.PrependFloat32Slot(18, AZIMUTH_RATE, 0.0)
+    EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
+
+def EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    builder.PrependFloat32Slot(18, AZIMUTH_RATE, 0.0)
+
 def AddAZIMUTH_RATE(builder, AZIMUTH_RATE):
-    return EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
-def EOOAddELEVATION(builder, ELEVATION): builder.PrependFloat32Slot(19, ELEVATION, 0.0)
+    EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
+
+def EOOAddELEVATION(builder, ELEVATION):
+    builder.PrependFloat32Slot(19, ELEVATION, 0.0)
+
 def AddELEVATION(builder, ELEVATION):
-    return EOOAddELEVATION(builder, ELEVATION)
-def EOOAddELEVATION_UNC(builder, ELEVATION_UNC): builder.PrependFloat32Slot(20, ELEVATION_UNC, 0.0)
+    EOOAddELEVATION(builder, ELEVATION)
+
+def EOOAddELEVATION_UNC(builder, ELEVATION_UNC):
+    builder.PrependFloat32Slot(20, ELEVATION_UNC, 0.0)
+
 def AddELEVATION_UNC(builder, ELEVATION_UNC):
-    return EOOAddELEVATION_UNC(builder, ELEVATION_UNC)
-def EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS): builder.PrependFloat32Slot(21, ELEVATION_BIAS, 0.0)
+    EOOAddELEVATION_UNC(builder, ELEVATION_UNC)
+
+def EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS):
+    builder.PrependFloat32Slot(21, ELEVATION_BIAS, 0.0)
+
 def AddELEVATION_BIAS(builder, ELEVATION_BIAS):
-    return EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS)
-def EOOAddELEVATION_RATE(builder, ELEVATION_RATE): builder.PrependFloat32Slot(22, ELEVATION_RATE, 0.0)
+    EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS)
+
+def EOOAddELEVATION_RATE(builder, ELEVATION_RATE):
+    builder.PrependFloat32Slot(22, ELEVATION_RATE, 0.0)
+
 def AddELEVATION_RATE(builder, ELEVATION_RATE):
-    return EOOAddELEVATION_RATE(builder, ELEVATION_RATE)
-def EOOAddRANGE(builder, RANGE): builder.PrependFloat32Slot(23, RANGE, 0.0)
+    EOOAddELEVATION_RATE(builder, ELEVATION_RATE)
+
+def EOOAddRANGE(builder, RANGE):
+    builder.PrependFloat32Slot(23, RANGE, 0.0)
+
 def AddRANGE(builder, RANGE):
-    return EOOAddRANGE(builder, RANGE)
-def EOOAddRANGE_UNC(builder, RANGE_UNC): builder.PrependFloat32Slot(24, RANGE_UNC, 0.0)
+    EOOAddRANGE(builder, RANGE)
+
+def EOOAddRANGE_UNC(builder, RANGE_UNC):
+    builder.PrependFloat32Slot(24, RANGE_UNC, 0.0)
+
 def AddRANGE_UNC(builder, RANGE_UNC):
-    return EOOAddRANGE_UNC(builder, RANGE_UNC)
-def EOOAddRANGE_BIAS(builder, RANGE_BIAS): builder.PrependFloat32Slot(25, RANGE_BIAS, 0.0)
+    EOOAddRANGE_UNC(builder, RANGE_UNC)
+
+def EOOAddRANGE_BIAS(builder, RANGE_BIAS):
+    builder.PrependFloat32Slot(25, RANGE_BIAS, 0.0)
+
 def AddRANGE_BIAS(builder, RANGE_BIAS):
-    return EOOAddRANGE_BIAS(builder, RANGE_BIAS)
-def EOOAddRANGE_RATE(builder, RANGE_RATE): builder.PrependFloat32Slot(26, RANGE_RATE, 0.0)
+    EOOAddRANGE_BIAS(builder, RANGE_BIAS)
+
+def EOOAddRANGE_RATE(builder, RANGE_RATE):
+    builder.PrependFloat32Slot(26, RANGE_RATE, 0.0)
+
 def AddRANGE_RATE(builder, RANGE_RATE):
-    return EOOAddRANGE_RATE(builder, RANGE_RATE)
-def EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC): builder.PrependFloat32Slot(27, RANGE_RATE_UNC, 0.0)
+    EOOAddRANGE_RATE(builder, RANGE_RATE)
+
+def EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    builder.PrependFloat32Slot(27, RANGE_RATE_UNC, 0.0)
+
 def AddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
-    return EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
-def EOOAddRA(builder, RA): builder.PrependFloat32Slot(28, RA, 0.0)
+    EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
+
+def EOOAddRA(builder, RA):
+    builder.PrependFloat32Slot(28, RA, 0.0)
+
 def AddRA(builder, RA):
-    return EOOAddRA(builder, RA)
-def EOOAddRA_RATE(builder, RA_RATE): builder.PrependFloat32Slot(29, RA_RATE, 0.0)
+    EOOAddRA(builder, RA)
+
+def EOOAddRA_RATE(builder, RA_RATE):
+    builder.PrependFloat32Slot(29, RA_RATE, 0.0)
+
 def AddRA_RATE(builder, RA_RATE):
-    return EOOAddRA_RATE(builder, RA_RATE)
-def EOOAddRA_UNC(builder, RA_UNC): builder.PrependFloat32Slot(30, RA_UNC, 0.0)
+    EOOAddRA_RATE(builder, RA_RATE)
+
+def EOOAddRA_UNC(builder, RA_UNC):
+    builder.PrependFloat32Slot(30, RA_UNC, 0.0)
+
 def AddRA_UNC(builder, RA_UNC):
-    return EOOAddRA_UNC(builder, RA_UNC)
-def EOOAddRA_BIAS(builder, RA_BIAS): builder.PrependFloat32Slot(31, RA_BIAS, 0.0)
+    EOOAddRA_UNC(builder, RA_UNC)
+
+def EOOAddRA_BIAS(builder, RA_BIAS):
+    builder.PrependFloat32Slot(31, RA_BIAS, 0.0)
+
 def AddRA_BIAS(builder, RA_BIAS):
-    return EOOAddRA_BIAS(builder, RA_BIAS)
-def EOOAddDECLINATION(builder, DECLINATION): builder.PrependFloat32Slot(32, DECLINATION, 0.0)
+    EOOAddRA_BIAS(builder, RA_BIAS)
+
+def EOOAddDECLINATION(builder, DECLINATION):
+    builder.PrependFloat32Slot(32, DECLINATION, 0.0)
+
 def AddDECLINATION(builder, DECLINATION):
-    return EOOAddDECLINATION(builder, DECLINATION)
-def EOOAddDECLINATION_RATE(builder, DECLINATION_RATE): builder.PrependFloat32Slot(33, DECLINATION_RATE, 0.0)
+    EOOAddDECLINATION(builder, DECLINATION)
+
+def EOOAddDECLINATION_RATE(builder, DECLINATION_RATE):
+    builder.PrependFloat32Slot(33, DECLINATION_RATE, 0.0)
+
 def AddDECLINATION_RATE(builder, DECLINATION_RATE):
-    return EOOAddDECLINATION_RATE(builder, DECLINATION_RATE)
-def EOOAddDECLINATION_UNC(builder, DECLINATION_UNC): builder.PrependFloat32Slot(34, DECLINATION_UNC, 0.0)
+    EOOAddDECLINATION_RATE(builder, DECLINATION_RATE)
+
+def EOOAddDECLINATION_UNC(builder, DECLINATION_UNC):
+    builder.PrependFloat32Slot(34, DECLINATION_UNC, 0.0)
+
 def AddDECLINATION_UNC(builder, DECLINATION_UNC):
-    return EOOAddDECLINATION_UNC(builder, DECLINATION_UNC)
-def EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS): builder.PrependFloat32Slot(35, DECLINATION_BIAS, 0.0)
+    EOOAddDECLINATION_UNC(builder, DECLINATION_UNC)
+
+def EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS):
+    builder.PrependFloat32Slot(35, DECLINATION_BIAS, 0.0)
+
 def AddDECLINATION_BIAS(builder, DECLINATION_BIAS):
-    return EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS)
-def EOOAddLOSX(builder, LOSX): builder.PrependFloat32Slot(36, LOSX, 0.0)
+    EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS)
+
+def EOOAddLOSX(builder, LOSX):
+    builder.PrependFloat32Slot(36, LOSX, 0.0)
+
 def AddLOSX(builder, LOSX):
-    return EOOAddLOSX(builder, LOSX)
-def EOOAddLOSY(builder, LOSY): builder.PrependFloat32Slot(37, LOSY, 0.0)
+    EOOAddLOSX(builder, LOSX)
+
+def EOOAddLOSY(builder, LOSY):
+    builder.PrependFloat32Slot(37, LOSY, 0.0)
+
 def AddLOSY(builder, LOSY):
-    return EOOAddLOSY(builder, LOSY)
-def EOOAddLOSZ(builder, LOSZ): builder.PrependFloat32Slot(38, LOSZ, 0.0)
+    EOOAddLOSY(builder, LOSY)
+
+def EOOAddLOSZ(builder, LOSZ):
+    builder.PrependFloat32Slot(38, LOSZ, 0.0)
+
 def AddLOSZ(builder, LOSZ):
-    return EOOAddLOSZ(builder, LOSZ)
-def EOOAddLOS_UNC(builder, LOS_UNC): builder.PrependFloat32Slot(39, LOS_UNC, 0.0)
+    EOOAddLOSZ(builder, LOSZ)
+
+def EOOAddLOS_UNC(builder, LOS_UNC):
+    builder.PrependFloat32Slot(39, LOS_UNC, 0.0)
+
 def AddLOS_UNC(builder, LOS_UNC):
-    return EOOAddLOS_UNC(builder, LOS_UNC)
-def EOOAddLOSXVEL(builder, LOSXVEL): builder.PrependFloat32Slot(40, LOSXVEL, 0.0)
+    EOOAddLOS_UNC(builder, LOS_UNC)
+
+def EOOAddLOSXVEL(builder, LOSXVEL):
+    builder.PrependFloat32Slot(40, LOSXVEL, 0.0)
+
 def AddLOSXVEL(builder, LOSXVEL):
-    return EOOAddLOSXVEL(builder, LOSXVEL)
-def EOOAddLOSYVEL(builder, LOSYVEL): builder.PrependFloat32Slot(41, LOSYVEL, 0.0)
+    EOOAddLOSXVEL(builder, LOSXVEL)
+
+def EOOAddLOSYVEL(builder, LOSYVEL):
+    builder.PrependFloat32Slot(41, LOSYVEL, 0.0)
+
 def AddLOSYVEL(builder, LOSYVEL):
-    return EOOAddLOSYVEL(builder, LOSYVEL)
-def EOOAddLOSZVEL(builder, LOSZVEL): builder.PrependFloat32Slot(42, LOSZVEL, 0.0)
+    EOOAddLOSYVEL(builder, LOSYVEL)
+
+def EOOAddLOSZVEL(builder, LOSZVEL):
+    builder.PrependFloat32Slot(42, LOSZVEL, 0.0)
+
 def AddLOSZVEL(builder, LOSZVEL):
-    return EOOAddLOSZVEL(builder, LOSZVEL)
-def EOOAddSENLAT(builder, SENLAT): builder.PrependFloat32Slot(43, SENLAT, 0.0)
+    EOOAddLOSZVEL(builder, LOSZVEL)
+
+def EOOAddSENLAT(builder, SENLAT):
+    builder.PrependFloat32Slot(43, SENLAT, 0.0)
+
 def AddSENLAT(builder, SENLAT):
-    return EOOAddSENLAT(builder, SENLAT)
-def EOOAddSENLON(builder, SENLON): builder.PrependFloat32Slot(44, SENLON, 0.0)
+    EOOAddSENLAT(builder, SENLAT)
+
+def EOOAddSENLON(builder, SENLON):
+    builder.PrependFloat32Slot(44, SENLON, 0.0)
+
 def AddSENLON(builder, SENLON):
-    return EOOAddSENLON(builder, SENLON)
-def EOOAddSENALT(builder, SENALT): builder.PrependFloat32Slot(45, SENALT, 0.0)
+    EOOAddSENLON(builder, SENLON)
+
+def EOOAddSENALT(builder, SENALT):
+    builder.PrependFloat32Slot(45, SENALT, 0.0)
+
 def AddSENALT(builder, SENALT):
-    return EOOAddSENALT(builder, SENALT)
-def EOOAddSENX(builder, SENX): builder.PrependFloat32Slot(46, SENX, 0.0)
+    EOOAddSENALT(builder, SENALT)
+
+def EOOAddSENX(builder, SENX):
+    builder.PrependFloat32Slot(46, SENX, 0.0)
+
 def AddSENX(builder, SENX):
-    return EOOAddSENX(builder, SENX)
-def EOOAddSENY(builder, SENY): builder.PrependFloat32Slot(47, SENY, 0.0)
+    EOOAddSENX(builder, SENX)
+
+def EOOAddSENY(builder, SENY):
+    builder.PrependFloat32Slot(47, SENY, 0.0)
+
 def AddSENY(builder, SENY):
-    return EOOAddSENY(builder, SENY)
-def EOOAddSENZ(builder, SENZ): builder.PrependFloat32Slot(48, SENZ, 0.0)
+    EOOAddSENY(builder, SENY)
+
+def EOOAddSENZ(builder, SENZ):
+    builder.PrependFloat32Slot(48, SENZ, 0.0)
+
 def AddSENZ(builder, SENZ):
-    return EOOAddSENZ(builder, SENZ)
-def EOOAddFOV_COUNT(builder, FOV_COUNT): builder.PrependInt32Slot(49, FOV_COUNT, 0)
+    EOOAddSENZ(builder, SENZ)
+
+def EOOAddFOV_COUNT(builder, FOV_COUNT):
+    builder.PrependInt32Slot(49, FOV_COUNT, 0)
+
 def AddFOV_COUNT(builder, FOV_COUNT):
-    return EOOAddFOV_COUNT(builder, FOV_COUNT)
-def EOOAddEXP_DURATION(builder, EXP_DURATION): builder.PrependFloat32Slot(50, EXP_DURATION, 0.0)
+    EOOAddFOV_COUNT(builder, FOV_COUNT)
+
+def EOOAddEXP_DURATION(builder, EXP_DURATION):
+    builder.PrependFloat32Slot(50, EXP_DURATION, 0.0)
+
 def AddEXP_DURATION(builder, EXP_DURATION):
-    return EOOAddEXP_DURATION(builder, EXP_DURATION)
-def EOOAddZEROPTD(builder, ZEROPTD): builder.PrependFloat32Slot(51, ZEROPTD, 0.0)
+    EOOAddEXP_DURATION(builder, EXP_DURATION)
+
+def EOOAddZEROPTD(builder, ZEROPTD):
+    builder.PrependFloat32Slot(51, ZEROPTD, 0.0)
+
 def AddZEROPTD(builder, ZEROPTD):
-    return EOOAddZEROPTD(builder, ZEROPTD)
-def EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG): builder.PrependFloat32Slot(52, NET_OBJ_SIG, 0.0)
+    EOOAddZEROPTD(builder, ZEROPTD)
+
+def EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG):
+    builder.PrependFloat32Slot(52, NET_OBJ_SIG, 0.0)
+
 def AddNET_OBJ_SIG(builder, NET_OBJ_SIG):
-    return EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG)
-def EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC): builder.PrependFloat32Slot(53, NET_OBJ_SIG_UNC, 0.0)
+    EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG)
+
+def EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC):
+    builder.PrependFloat32Slot(53, NET_OBJ_SIG_UNC, 0.0)
+
 def AddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC):
-    return EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC)
-def EOOAddMAG(builder, MAG): builder.PrependFloat32Slot(54, MAG, 0.0)
+    EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC)
+
+def EOOAddMAG(builder, MAG):
+    builder.PrependFloat32Slot(54, MAG, 0.0)
+
 def AddMAG(builder, MAG):
-    return EOOAddMAG(builder, MAG)
-def EOOAddMAG_UNC(builder, MAG_UNC): builder.PrependFloat32Slot(55, MAG_UNC, 0.0)
+    EOOAddMAG(builder, MAG)
+
+def EOOAddMAG_UNC(builder, MAG_UNC):
+    builder.PrependFloat32Slot(55, MAG_UNC, 0.0)
+
 def AddMAG_UNC(builder, MAG_UNC):
-    return EOOAddMAG_UNC(builder, MAG_UNC)
-def EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE): builder.PrependFloat32Slot(56, MAG_NORM_RANGE, 0.0)
+    EOOAddMAG_UNC(builder, MAG_UNC)
+
+def EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE):
+    builder.PrependFloat32Slot(56, MAG_NORM_RANGE, 0.0)
+
 def AddMAG_NORM_RANGE(builder, MAG_NORM_RANGE):
-    return EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE)
-def EOOAddGEOLAT(builder, GEOLAT): builder.PrependFloat32Slot(57, GEOLAT, 0.0)
+    EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE)
+
+def EOOAddGEOLAT(builder, GEOLAT):
+    builder.PrependFloat32Slot(57, GEOLAT, 0.0)
+
 def AddGEOLAT(builder, GEOLAT):
-    return EOOAddGEOLAT(builder, GEOLAT)
-def EOOAddGEOLON(builder, GEOLON): builder.PrependFloat32Slot(58, GEOLON, 0.0)
+    EOOAddGEOLAT(builder, GEOLAT)
+
+def EOOAddGEOLON(builder, GEOLON):
+    builder.PrependFloat32Slot(58, GEOLON, 0.0)
+
 def AddGEOLON(builder, GEOLON):
-    return EOOAddGEOLON(builder, GEOLON)
-def EOOAddGEOALT(builder, GEOALT): builder.PrependFloat32Slot(59, GEOALT, 0.0)
+    EOOAddGEOLON(builder, GEOLON)
+
+def EOOAddGEOALT(builder, GEOALT):
+    builder.PrependFloat32Slot(59, GEOALT, 0.0)
+
 def AddGEOALT(builder, GEOALT):
-    return EOOAddGEOALT(builder, GEOALT)
-def EOOAddGEORANGE(builder, GEORANGE): builder.PrependFloat32Slot(60, GEORANGE, 0.0)
+    EOOAddGEOALT(builder, GEOALT)
+
+def EOOAddGEORANGE(builder, GEORANGE):
+    builder.PrependFloat32Slot(60, GEORANGE, 0.0)
+
 def AddGEORANGE(builder, GEORANGE):
-    return EOOAddGEORANGE(builder, GEORANGE)
-def EOOAddSKY_BKGRND(builder, SKY_BKGRND): builder.PrependFloat32Slot(61, SKY_BKGRND, 0.0)
+    EOOAddGEORANGE(builder, GEORANGE)
+
+def EOOAddSKY_BKGRND(builder, SKY_BKGRND):
+    builder.PrependFloat32Slot(61, SKY_BKGRND, 0.0)
+
 def AddSKY_BKGRND(builder, SKY_BKGRND):
-    return EOOAddSKY_BKGRND(builder, SKY_BKGRND)
-def EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION): builder.PrependFloat32Slot(62, PRIMARY_EXTINCTION, 0.0)
+    EOOAddSKY_BKGRND(builder, SKY_BKGRND)
+
+def EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION):
+    builder.PrependFloat32Slot(62, PRIMARY_EXTINCTION, 0.0)
+
 def AddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION):
-    return EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION)
-def EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC): builder.PrependFloat32Slot(63, PRIMARY_EXTINCTION_UNC, 0.0)
+    EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION)
+
+def EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC):
+    builder.PrependFloat32Slot(63, PRIMARY_EXTINCTION_UNC, 0.0)
+
 def AddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC):
-    return EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC)
-def EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE): builder.PrependFloat32Slot(64, SOLAR_PHASE_ANGLE, 0.0)
+    EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC)
+
+def EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
+    builder.PrependFloat32Slot(64, SOLAR_PHASE_ANGLE, 0.0)
+
 def AddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
-    return EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
-def EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE): builder.PrependFloat32Slot(65, SOLAR_EQ_PHASE_ANGLE, 0.0)
+    EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
+
+def EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE):
+    builder.PrependFloat32Slot(65, SOLAR_EQ_PHASE_ANGLE, 0.0)
+
 def AddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE):
-    return EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE)
-def EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE): builder.PrependFloat32Slot(66, SOLAR_DEC_ANGLE, 0.0)
+    EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE)
+
+def EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE):
+    builder.PrependFloat32Slot(66, SOLAR_DEC_ANGLE, 0.0)
+
 def AddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE):
-    return EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE)
-def EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY): builder.PrependFloat32Slot(67, SHUTTER_DELAY, 0.0)
+    EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE)
+
+def EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY):
+    builder.PrependFloat32Slot(67, SHUTTER_DELAY, 0.0)
+
 def AddSHUTTER_DELAY(builder, SHUTTER_DELAY):
-    return EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY)
-def EOOAddTIMING_BIAS(builder, TIMING_BIAS): builder.PrependFloat32Slot(68, TIMING_BIAS, 0.0)
+    EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY)
+
+def EOOAddTIMING_BIAS(builder, TIMING_BIAS):
+    builder.PrependFloat32Slot(68, TIMING_BIAS, 0.0)
+
 def AddTIMING_BIAS(builder, TIMING_BIAS):
-    return EOOAddTIMING_BIAS(builder, TIMING_BIAS)
-def EOOAddRAW_FILE_URI(builder, RAW_FILE_URI): builder.PrependUOffsetTRelativeSlot(69, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+    EOOAddTIMING_BIAS(builder, TIMING_BIAS)
+
+def EOOAddRAW_FILE_URI(builder, RAW_FILE_URI):
+    builder.PrependUOffsetTRelativeSlot(69, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+
 def AddRAW_FILE_URI(builder, RAW_FILE_URI):
-    return EOOAddRAW_FILE_URI(builder, RAW_FILE_URI)
-def EOOAddINTENSITY(builder, INTENSITY): builder.PrependFloat32Slot(70, INTENSITY, 0.0)
+    EOOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+
+def EOOAddINTENSITY(builder, INTENSITY):
+    builder.PrependFloat32Slot(70, INTENSITY, 0.0)
+
 def AddINTENSITY(builder, INTENSITY):
-    return EOOAddINTENSITY(builder, INTENSITY)
-def EOOAddBG_INTENSITY(builder, BG_INTENSITY): builder.PrependFloat32Slot(71, BG_INTENSITY, 0.0)
+    EOOAddINTENSITY(builder, INTENSITY)
+
+def EOOAddBG_INTENSITY(builder, BG_INTENSITY):
+    builder.PrependFloat32Slot(71, BG_INTENSITY, 0.0)
+
 def AddBG_INTENSITY(builder, BG_INTENSITY):
-    return EOOAddBG_INTENSITY(builder, BG_INTENSITY)
-def EOOAddDESCRIPTOR(builder, DESCRIPTOR): builder.PrependUOffsetTRelativeSlot(72, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+    EOOAddBG_INTENSITY(builder, BG_INTENSITY)
+
+def EOOAddDESCRIPTOR(builder, DESCRIPTOR):
+    builder.PrependUOffsetTRelativeSlot(72, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+
 def AddDESCRIPTOR(builder, DESCRIPTOR):
-    return EOOAddDESCRIPTOR(builder, DESCRIPTOR)
-def EOOAddSOURCE(builder, SOURCE): builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+    EOOAddDESCRIPTOR(builder, DESCRIPTOR)
+
+def EOOAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
 def AddSOURCE(builder, SOURCE):
-    return EOOAddSOURCE(builder, SOURCE)
-def EOOAddORIGIN(builder, ORIGIN): builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
+    EOOAddSOURCE(builder, SOURCE)
+
+def EOOAddORIGIN(builder, ORIGIN):
+    builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
+
 def AddORIGIN(builder, ORIGIN):
-    return EOOAddORIGIN(builder, ORIGIN)
-def EOOAddDATA_MODE(builder, DATA_MODE): builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODE), 0)
+    EOOAddORIGIN(builder, ORIGIN)
+
+def EOOAddDATA_MODE(builder, DATA_MODE):
+    builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODE), 0)
+
 def AddDATA_MODE(builder, DATA_MODE):
-    return EOOAddDATA_MODE(builder, DATA_MODE)
-def EOOAddCREATED_AT(builder, CREATED_AT): builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)
+    EOOAddDATA_MODE(builder, DATA_MODE)
+
+def EOOAddCREATED_AT(builder, CREATED_AT):
+    builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)
+
 def AddCREATED_AT(builder, CREATED_AT):
-    return EOOAddCREATED_AT(builder, CREATED_AT)
-def EOOAddCREATED_BY(builder, CREATED_BY): builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
+    EOOAddCREATED_AT(builder, CREATED_AT)
+
+def EOOAddCREATED_BY(builder, CREATED_BY):
+    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
+
 def AddCREATED_BY(builder, CREATED_BY):
-    return EOOAddCREATED_BY(builder, CREATED_BY)
-def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME): builder.PrependInt8Slot(78, REFERENCE_FRAME, 0)
+    EOOAddCREATED_BY(builder, CREATED_BY)
+
+def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependInt8Slot(78, REFERENCE_FRAME, 0)
+
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    return EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME): builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+    EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+
 def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
-    return EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
-def EOOAddUMBRA(builder, UMBRA): builder.PrependBoolSlot(80, UMBRA, 0)
+    EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+
+def EOOAddUMBRA(builder, UMBRA):
+    builder.PrependBoolSlot(80, UMBRA, 0)
+
 def AddUMBRA(builder, UMBRA):
-    return EOOAddUMBRA(builder, UMBRA)
-def EOOAddPENUMBRA(builder, PENUMBRA): builder.PrependBoolSlot(81, PENUMBRA, 0)
+    EOOAddUMBRA(builder, UMBRA)
+
+def EOOAddPENUMBRA(builder, PENUMBRA):
+    builder.PrependBoolSlot(81, PENUMBRA, 0)
+
 def AddPENUMBRA(builder, PENUMBRA):
-    return EOOAddPENUMBRA(builder, PENUMBRA)
-def EOOAddORIG_NETWORK(builder, ORIG_NETWORK): builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_NETWORK), 0)
+    EOOAddPENUMBRA(builder, PENUMBRA)
+
+def EOOAddORIG_NETWORK(builder, ORIG_NETWORK):
+    builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_NETWORK), 0)
+
 def AddORIG_NETWORK(builder, ORIG_NETWORK):
-    return EOOAddORIG_NETWORK(builder, ORIG_NETWORK)
-def EOOAddSOURCE_DL(builder, SOURCE_DL): builder.PrependUOffsetTRelativeSlot(83, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_DL), 0)
+    EOOAddORIG_NETWORK(builder, ORIG_NETWORK)
+
+def EOOAddSOURCE_DL(builder, SOURCE_DL):
+    builder.PrependUOffsetTRelativeSlot(83, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_DL), 0)
+
 def AddSOURCE_DL(builder, SOURCE_DL):
-    return EOOAddSOURCE_DL(builder, SOURCE_DL)
-def EOOAddTYPE(builder, TYPE): builder.PrependUOffsetTRelativeSlot(84, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+    EOOAddSOURCE_DL(builder, SOURCE_DL)
+
+def EOOAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(84, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
 def AddTYPE(builder, TYPE):
-    return EOOAddTYPE(builder, TYPE)
-def EOOEnd(builder): return builder.EndObject()
+    EOOAddTYPE(builder, TYPE)
+
+def EOOEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EOOEnd(builder)
+
 
 class EOOT(object):
 

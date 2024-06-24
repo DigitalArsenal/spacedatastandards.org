@@ -53,18 +53,30 @@ class TDMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def TDMCOLLECTIONStart(builder): builder.StartObject(1)
+def TDMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return TDMCOLLECTIONStart(builder)
-def TDMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    TDMCOLLECTIONStart(builder)
+
+def TDMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return TDMCOLLECTIONAddRECORDS(builder, RECORDS)
-def TDMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    TDMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def TDMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return TDMCOLLECTIONStartRECORDSVector(builder, numElems)
-def TDMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def TDMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return TDMCOLLECTIONEnd(builder)
+
 import TDM
 try:
     from typing import List

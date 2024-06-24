@@ -27,7 +27,7 @@ public enum ephemerisType: Int8, Enum, Verifiable {
 ///  Orbit Mean Elements Message
 public struct OMM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -494,7 +494,7 @@ public struct OMM: FlatBufferObject, Verifiable {
 
 public struct OMMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

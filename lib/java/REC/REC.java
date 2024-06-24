@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class REC extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static REC getRootAsREC(ByteBuffer _bb) { return getRootAsREC(_bb, new REC()); }
   public static REC getRootAsREC(ByteBuffer _bb, REC obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean RECBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$REC"); }

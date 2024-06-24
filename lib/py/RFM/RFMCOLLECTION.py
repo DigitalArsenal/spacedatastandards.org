@@ -53,18 +53,30 @@ class RFMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def RFMCOLLECTIONStart(builder): builder.StartObject(1)
+def RFMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return RFMCOLLECTIONStart(builder)
-def RFMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    RFMCOLLECTIONStart(builder)
+
+def RFMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return RFMCOLLECTIONAddRECORDS(builder, RECORDS)
-def RFMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    RFMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def RFMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return RFMCOLLECTIONStartRECORDSVector(builder, numElems)
-def RFMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def RFMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return RFMCOLLECTIONEnd(builder)
+
 import RFM
 try:
     from typing import List

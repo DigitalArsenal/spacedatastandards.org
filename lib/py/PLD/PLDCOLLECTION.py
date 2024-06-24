@@ -53,18 +53,30 @@ class PLDCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def PLDCOLLECTIONStart(builder): builder.StartObject(1)
+def PLDCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return PLDCOLLECTIONStart(builder)
-def PLDCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    PLDCOLLECTIONStart(builder)
+
+def PLDCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return PLDCOLLECTIONAddRECORDS(builder, RECORDS)
-def PLDCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    PLDCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def PLDCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return PLDCOLLECTIONStartRECORDSVector(builder, numElems)
-def PLDCOLLECTIONEnd(builder): return builder.EndObject()
+
+def PLDCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return PLDCOLLECTIONEnd(builder)
+
 import PLD
 try:
     from typing import List

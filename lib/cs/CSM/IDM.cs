@@ -11,10 +11,11 @@ public struct IDM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static IDM GetRootAsIDM(ByteBuffer _bb) { return GetRootAsIDM(_bb, new IDM()); }
   public static IDM GetRootAsIDM(ByteBuffer _bb, IDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool IDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$IDM"); }
+  public static bool VerifyIDM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$IDM", false, IDMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public IDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -373,3 +374,41 @@ public class IDMT
   }
 }
 
+
+static public class IDMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*ID*/, false)
+      && verifier.VerifyString(tablePos, 6 /*NAME*/, false)
+      && verifier.VerifyField(tablePos, 8 /*DATA_MODE*/, 1 /*DataMode*/, 1, false)
+      && verifier.VerifyTable(tablePos, 10 /*UPLINK*/, FrequencyRangeVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 12 /*DOWNLINK*/, FrequencyRangeVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 14 /*BEACON*/, FrequencyRangeVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 16 /*BAND*/, BandVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 18 /*POLARIZATION_TYPE*/, 1 /*PolarizationType*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*SIMPLE_POLARIZATION*/, 1 /*SimplePolarization*/, 1, false)
+      && verifier.VerifyTable(tablePos, 22 /*STOKES_PARAMETERS*/, StokesParametersVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 24 /*POWER_REQUIRED*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 26 /*POWER_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 28 /*TRANSMIT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*RECEIVE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 32 /*SENSOR_TYPE*/, 1 /*DeviceType*/, 1, false)
+      && verifier.VerifyString(tablePos, 34 /*SOURCE*/, false)
+      && verifier.VerifyString(tablePos, 36 /*LAST_OB_TIME*/, false)
+      && verifier.VerifyField(tablePos, 38 /*LOWER_LEFT_ELEVATION_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*UPPER_LEFT_AZIMUTH_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*LOWER_RIGHT_ELEVATION_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*LOWER_LEFT_AZIMUTH_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*UPPER_RIGHT_ELEVATION_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*UPPER_RIGHT_AZIMUTH_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*LOWER_RIGHT_AZIMUTH_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*UPPER_LEFT_ELEVATION_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*RIGHT_GEO_BELT_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*LEFT_GEO_BELT_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*MAGNITUDE_LIMIT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*TASKABLE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

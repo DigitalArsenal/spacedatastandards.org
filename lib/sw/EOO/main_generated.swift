@@ -7,7 +7,7 @@ import FlatBuffers
 ///  Electro-Optical Observation
 public struct EOO: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -147,7 +147,7 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
   ///  Universal Coordinated Time flag
-  public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Azimuth angle
   public var AZIMUTH: Float32 { let o = _accessor.offset(VTOFFSET.AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Uncertainty in azimuth angle
@@ -287,9 +287,9 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
   ///  Flag for umbra (total eclipse)
-  public var UMBRA: Bool { let o = _accessor.offset(VTOFFSET.UMBRA.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var UMBRA: Bool { let o = _accessor.offset(VTOFFSET.UMBRA.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Flag for penumbra (partial eclipse)
-  public var PENUMBRA: Bool { let o = _accessor.offset(VTOFFSET.PENUMBRA.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var PENUMBRA: Bool { let o = _accessor.offset(VTOFFSET.PENUMBRA.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Original network identifier
   public var ORIG_NETWORK: String? { let o = _accessor.offset(VTOFFSET.ORIG_NETWORK.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_NETWORKSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_NETWORK.v) }
@@ -659,7 +659,7 @@ public struct EOO: FlatBufferObject, Verifiable {
 
 public struct EOOCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

@@ -36,8 +36,8 @@ impl<'a> PRG<'a> {
     PRG { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PRGArgs<'args>
   ) -> flatbuffers::WIPOffset<PRG<'bldr>> {
     let mut builder = PRGBuilder::new(_fbb);
@@ -136,11 +136,11 @@ impl<'a> Default for PRGArgs<'a> {
   }
 }
 
-pub struct PRGBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PRGBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PRGBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PRGBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PRG::VT_NAME, NAME);
@@ -158,7 +158,7 @@ impl<'a: 'b, 'b> PRGBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PRG::VT_USERS, USERS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PRGBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PRGBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PRGBuilder {
       fbb_: _fbb,
@@ -201,9 +201,9 @@ impl Default for PRGT {
   }
 }
 impl PRGT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<PRG<'b>> {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -249,8 +249,8 @@ impl<'a> USR<'a> {
     USR { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args USRArgs<'args>
   ) -> flatbuffers::WIPOffset<USR<'bldr>> {
     let mut builder = USRBuilder::new(_fbb);
@@ -315,11 +315,11 @@ impl<'a> Default for USRArgs<'a> {
   }
 }
 
-pub struct USRBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct USRBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> USRBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> USRBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(USR::VT_ID, ID);
@@ -329,7 +329,7 @@ impl<'a: 'b, 'b> USRBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(USR::VT_MESSAGE_TYPES, MESSAGE_TYPES);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> USRBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> USRBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     USRBuilder {
       fbb_: _fbb,
@@ -366,9 +366,9 @@ impl Default for USRT {
   }
 }
 impl USRT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<USR<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -405,8 +405,8 @@ impl<'a> PRGCOLLECTION<'a> {
     PRGCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args PRGCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<PRGCOLLECTION<'bldr>> {
     let mut builder = PRGCOLLECTIONBuilder::new(_fbb);
@@ -456,17 +456,17 @@ impl<'a> Default for PRGCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct PRGCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct PRGCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> PRGCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PRGCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<PRG<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(PRGCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> PRGCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> PRGCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PRGCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -500,9 +500,9 @@ impl Default for PRGCOLLECTIONT {
   }
 }
 impl PRGCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<PRGCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -585,13 +585,13 @@ pub fn PRG_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_PRG_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_PRG_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<PRG<'a>>) {
   fbb.finish(root, Some(PRG_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_PRG_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<PRG<'a>>) {
+pub fn finish_size_prefixed_PRG_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<PRG<'a>>) {
   fbb.finish_size_prefixed(root, Some(PRG_IDENTIFIER));
 }

@@ -11,6 +11,8 @@ type TDM struct {
 	_tab flatbuffers.Table
 }
 
+const TDMIdentifier = "$TDM"
+
 func GetRootAsTDM(buf []byte, offset flatbuffers.UOffsetT) *TDM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &TDM{}
@@ -18,11 +20,29 @@ func GetRootAsTDM(buf []byte, offset flatbuffers.UOffsetT) *TDM {
 	return x
 }
 
+func FinishTDMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(TDMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func TDMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, TDMIdentifier)
+}
+
 func GetSizePrefixedRootAsTDM(buf []byte, offset flatbuffers.UOffsetT) *TDM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &TDM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedTDMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(TDMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedTDMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, TDMIdentifier)
 }
 
 func (rcv *TDM) Init(buf []byte, i flatbuffers.UOffsetT) {

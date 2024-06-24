@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Represents a geographic address
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class Address : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -115,7 +114,7 @@ class Address : Table() {
     val POST_OFFICE_BOX_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun POST_OFFICE_BOX_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsAddress(_bb: ByteBuffer): Address = getRootAsAddress(_bb, Address())
         fun getRootAsAddress(_bb: ByteBuffer, obj: Address): Address {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

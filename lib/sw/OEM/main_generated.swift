@@ -7,7 +7,7 @@ import FlatBuffers
 ///  A single ephemeris data line
 public struct ephemerisDataLine: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -110,7 +110,7 @@ public struct ephemerisDataLine: FlatBufferObject, Verifiable {
 ///  Position/Velocity Covariance Matrix Line
 public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -304,7 +304,7 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
 ///  OEM Ephemeris Data Block
 public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -455,7 +455,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
 ///  Orbit Ephemeris Message
 public struct OEM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -520,7 +520,7 @@ public struct OEM: FlatBufferObject, Verifiable {
 ///  Collection of OEM messages
 public struct OEMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

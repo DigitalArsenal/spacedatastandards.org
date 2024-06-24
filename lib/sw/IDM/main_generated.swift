@@ -152,7 +152,7 @@ public enum DeviceType: Int8, Enum, Verifiable {
 ///  Frequency range with lower and upper limits
 public struct FrequencyRange: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -198,7 +198,7 @@ public struct FrequencyRange: FlatBufferObject, Verifiable {
 ///  Stokes parameters, representing different aspects of polarization
 public struct StokesParameters: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -258,7 +258,7 @@ public struct StokesParameters: FlatBufferObject, Verifiable {
 ///  Table representing a frequency band with a name and frequency range
 public struct Band: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -305,7 +305,7 @@ public struct Band: FlatBufferObject, Verifiable {
 ///  Integrated Device Message
 public struct IDM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -378,9 +378,9 @@ public struct IDM: FlatBufferObject, Verifiable {
   public var POWER_TYPE: String? { let o = _accessor.offset(VTOFFSET.POWER_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var POWER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POWER_TYPE.v) }
   ///  Indicates if the EMT can transmit
-  public var TRANSMIT: Bool { let o = _accessor.offset(VTOFFSET.TRANSMIT.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var TRANSMIT: Bool { let o = _accessor.offset(VTOFFSET.TRANSMIT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Indicates if the EMT can receive
-  public var RECEIVE: Bool { let o = _accessor.offset(VTOFFSET.RECEIVE.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var RECEIVE: Bool { let o = _accessor.offset(VTOFFSET.RECEIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Type of the sensor
   public var SENSOR_TYPE: DeviceType { let o = _accessor.offset(VTOFFSET.SENSOR_TYPE.v); return o == 0 ? .unknown : DeviceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Source of the data
@@ -412,7 +412,7 @@ public struct IDM: FlatBufferObject, Verifiable {
   ///  Magnitude limit of the sensor
   public var MAGNITUDE_LIMIT: Double { let o = _accessor.offset(VTOFFSET.MAGNITUDE_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Indicates if the site is taskable
-  public var TASKABLE: Bool { let o = _accessor.offset(VTOFFSET.TASKABLE.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var TASKABLE: Bool { let o = _accessor.offset(VTOFFSET.TASKABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startIDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
@@ -549,7 +549,7 @@ public struct IDM: FlatBufferObject, Verifiable {
 
 public struct IDMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

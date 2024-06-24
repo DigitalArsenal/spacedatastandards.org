@@ -2,6 +2,4 @@
 
 # namespace: 
 
-class DataType(object):
-    OBSERVED = 0
-    PREDICTED = 1
+# NOTE DataType.py does not declare any structs or enums

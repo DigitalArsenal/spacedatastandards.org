@@ -53,18 +53,30 @@ class LDMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def LDMCOLLECTIONStart(builder): builder.StartObject(1)
+def LDMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return LDMCOLLECTIONStart(builder)
-def LDMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    LDMCOLLECTIONStart(builder)
+
+def LDMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return LDMCOLLECTIONAddRECORDS(builder, RECORDS)
-def LDMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    LDMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def LDMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return LDMCOLLECTIONStartRECORDSVector(builder, numElems)
-def LDMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def LDMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return LDMCOLLECTIONEnd(builder)
+
 import LDM
 try:
     from typing import List

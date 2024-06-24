@@ -63,21 +63,36 @@ class SCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
-def SCMStart(builder): builder.StartObject(2)
+def SCMStart(builder):
+    builder.StartObject(2)
+
 def Start(builder):
-    return SCMStart(builder)
-def SCMAddVersion(builder, version): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(version), 0)
+    SCMStart(builder)
+
+def SCMAddVersion(builder, version):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(version), 0)
+
 def AddVersion(builder, version):
-    return SCMAddVersion(builder, version)
-def SCMAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    SCMAddVersion(builder, version)
+
+def SCMAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return SCMAddRECORDS(builder, RECORDS)
-def SCMStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    SCMAddRECORDS(builder, RECORDS)
+
+def SCMStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return SCMStartRECORDSVector(builder, numElems)
-def SCMEnd(builder): return builder.EndObject()
+
+def SCMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return SCMEnd(builder)
+
 import SCHEMA_STANDARD
 try:
     from typing import List

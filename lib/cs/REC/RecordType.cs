@@ -137,3 +137,103 @@ public class RecordTypeUnion {
   }
 }
 
+
+
+static public class RecordTypeVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, byte typeId, uint tablePos)
+  {
+    bool result = true;
+    switch((RecordType)typeId)
+    {
+      case RecordType.LCC:
+        result = LCCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MPE:
+        result = MPEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OMM:
+        result = OMMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PLD:
+        result = PLDVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RFM:
+        result = RFMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CSM:
+        result = CSMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OSM:
+        result = OSMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CAT:
+        result = CATVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CRM:
+        result = CRMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SCM:
+        result = SCMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TDM:
+        result = TDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.IDM:
+        result = IDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MET:
+        result = METVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ROC:
+        result = ROCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.BOV:
+        result = BOVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EOP:
+        result = EOPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EOO:
+        result = EOOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EME:
+        result = EMEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.LDM:
+        result = LDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PNM:
+        result = PNMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.HYP:
+        result = HYPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CTR:
+        result = CTRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CDM:
+        result = CDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SIT:
+        result = SITVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OEM:
+        result = OEMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TIM:
+        result = TIMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.EPM:
+        result = EPMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PRG:
+        result = PRGVerify.Verify(verifier, tablePos);
+        break;
+      default: result = true;
+        break;
+    }
+    return result;
+  }
+}
+

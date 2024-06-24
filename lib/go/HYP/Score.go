@@ -17,11 +17,19 @@ func GetRootAsScore(buf []byte, offset flatbuffers.UOffsetT) *Score {
 	return x
 }
 
+func FinishScoreBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsScore(buf []byte, offset flatbuffers.UOffsetT) *Score {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &Score{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedScoreBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *Score) Init(buf []byte, i flatbuffers.UOffsetT) {

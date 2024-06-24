@@ -11,6 +11,8 @@ type MPE struct {
 	_tab flatbuffers.Table
 }
 
+const MPEIdentifier = "$MPE"
+
 func GetRootAsMPE(buf []byte, offset flatbuffers.UOffsetT) *MPE {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &MPE{}
@@ -18,11 +20,29 @@ func GetRootAsMPE(buf []byte, offset flatbuffers.UOffsetT) *MPE {
 	return x
 }
 
+func FinishMPEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(MPEIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func MPEBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, MPEIdentifier)
+}
+
 func GetSizePrefixedRootAsMPE(buf []byte, offset flatbuffers.UOffsetT) *MPE {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &MPE{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedMPEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(MPEIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedMPEBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, MPEIdentifier)
 }
 
 func (rcv *MPE) Init(buf []byte, i flatbuffers.UOffsetT) {

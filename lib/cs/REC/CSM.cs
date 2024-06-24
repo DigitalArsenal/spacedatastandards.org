@@ -11,10 +11,11 @@ public struct CSM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static CSM GetRootAsCSM(ByteBuffer _bb) { return GetRootAsCSM(_bb, new CSM()); }
   public static CSM GetRootAsCSM(ByteBuffer _bb, CSM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool CSMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CSM"); }
+  public static bool VerifyCSM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$CSM", false, CSMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CSM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -143,3 +144,21 @@ public class CSMT
   }
 }
 
+
+static public class CSMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyTable(tablePos, 4 /*OBJECT_1*/, CATVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 6 /*DSE_1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 8 /*OBJECT_2*/, CATVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 10 /*DSE_2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*TCA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*TCA_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*TCA_RELATIVE_SPEED*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*MAX_PROB*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*DILUTION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

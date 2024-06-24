@@ -85,33 +85,60 @@ class CryptoKey(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def CryptoKeyStart(builder): builder.StartObject(7)
+def CryptoKeyStart(builder):
+    builder.StartObject(7)
+
 def Start(builder):
-    return CryptoKeyStart(builder)
-def CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY), 0)
+    CryptoKeyStart(builder)
+
+def CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY), 0)
+
 def AddPUBLIC_KEY(builder, PUBLIC_KEY):
-    return CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY)
-def CryptoKeyAddXPUB(builder, XPUB): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(XPUB), 0)
+    CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY)
+
+def CryptoKeyAddXPUB(builder, XPUB):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(XPUB), 0)
+
 def AddXPUB(builder, XPUB):
-    return CryptoKeyAddXPUB(builder, XPUB)
-def CryptoKeyAddPRIVATE_KEY(builder, PRIVATE_KEY): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PRIVATE_KEY), 0)
+    CryptoKeyAddXPUB(builder, XPUB)
+
+def CryptoKeyAddPRIVATE_KEY(builder, PRIVATE_KEY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PRIVATE_KEY), 0)
+
 def AddPRIVATE_KEY(builder, PRIVATE_KEY):
-    return CryptoKeyAddPRIVATE_KEY(builder, PRIVATE_KEY)
-def CryptoKeyAddXPRIV(builder, XPRIV): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(XPRIV), 0)
+    CryptoKeyAddPRIVATE_KEY(builder, PRIVATE_KEY)
+
+def CryptoKeyAddXPRIV(builder, XPRIV):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(XPRIV), 0)
+
 def AddXPRIV(builder, XPRIV):
-    return CryptoKeyAddXPRIV(builder, XPRIV)
-def CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ADDRESS), 0)
+    CryptoKeyAddXPRIV(builder, XPRIV)
+
+def CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ADDRESS), 0)
+
 def AddKEY_ADDRESS(builder, KEY_ADDRESS):
-    return CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
-def CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS_TYPE), 0)
+    CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
+
+def CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS_TYPE), 0)
+
 def AddADDRESS_TYPE(builder, ADDRESS_TYPE):
-    return CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
-def CryptoKeyAddKEY_TYPE(builder, KEY_TYPE): builder.PrependInt8Slot(6, KEY_TYPE, 0)
+    CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
+
+def CryptoKeyAddKEY_TYPE(builder, KEY_TYPE):
+    builder.PrependInt8Slot(6, KEY_TYPE, 0)
+
 def AddKEY_TYPE(builder, KEY_TYPE):
-    return CryptoKeyAddKEY_TYPE(builder, KEY_TYPE)
-def CryptoKeyEnd(builder): return builder.EndObject()
+    CryptoKeyAddKEY_TYPE(builder, KEY_TYPE)
+
+def CryptoKeyEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CryptoKeyEnd(builder)
+
 
 class CryptoKeyT(object):
 

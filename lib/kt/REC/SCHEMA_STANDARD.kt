@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Schema Standard Definition
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SCHEMA_STANDARD : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -74,7 +73,7 @@ class SCHEMA_STANDARD : Table() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsSCHEMA_STANDARD(_bb: ByteBuffer): SCHEMA_STANDARD = getRootAsSCHEMA_STANDARD(_bb, SCHEMA_STANDARD())
         fun getRootAsSCHEMA_STANDARD(_bb: ByteBuffer, obj: SCHEMA_STANDARD): SCHEMA_STANDARD {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

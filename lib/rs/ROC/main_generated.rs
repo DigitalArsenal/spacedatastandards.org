@@ -139,8 +139,8 @@ impl<'a> ROC<'a> {
     ROC { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ROCArgs<'args>
   ) -> flatbuffers::WIPOffset<ROC<'bldr>> {
     let mut builder = ROCBuilder::new(_fbb);
@@ -255,11 +255,11 @@ impl<'a> Default for ROCArgs<'a> {
   }
 }
 
-pub struct ROCBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ROCBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ROCBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ROCBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ROC::VT_NAME, NAME);
@@ -281,7 +281,7 @@ impl<'a: 'b, 'b> ROCBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ROC::VT_SUSTAINERS, SUSTAINERS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ROCBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ROCBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ROCBuilder {
       fbb_: _fbb,
@@ -327,9 +327,9 @@ impl Default for ROCT {
   }
 }
 impl ROCT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<ROC<'b>> {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -383,8 +383,8 @@ impl<'a> STAGE<'a> {
     STAGE { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args STAGEArgs<'args>
   ) -> flatbuffers::WIPOffset<STAGE<'bldr>> {
     let mut builder = STAGEBuilder::new(_fbb);
@@ -493,11 +493,11 @@ impl<'a> Default for STAGEArgs<'a> {
   }
 }
 
-pub struct STAGEBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct STAGEBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> STAGEBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> STAGEBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_STAGE_NUMBER(&mut self, STAGE_NUMBER: i32) {
     self.fbb_.push_slot::<i32>(STAGE::VT_STAGE_NUMBER, STAGE_NUMBER, 0);
@@ -519,7 +519,7 @@ impl<'a: 'b, 'b> STAGEBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(STAGE::VT_BURN_DURATION, BURN_DURATION, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> STAGEBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> STAGEBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     STAGEBuilder {
       fbb_: _fbb,
@@ -565,9 +565,9 @@ impl Default for STAGET {
   }
 }
 impl STAGET {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<STAGE<'b>> {
     let STAGE_NUMBER = self.STAGE_NUMBER;
     let ENGINES = self.ENGINES.as_ref().map(|x|{
@@ -613,8 +613,8 @@ impl<'a> SUSTAINER<'a> {
     SUSTAINER { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args SUSTAINERArgs<'args>
   ) -> flatbuffers::WIPOffset<SUSTAINER<'bldr>> {
     let mut builder = SUSTAINERBuilder::new(_fbb);
@@ -693,11 +693,11 @@ impl<'a> Default for SUSTAINERArgs<'a> {
   }
 }
 
-pub struct SUSTAINERBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SUSTAINERBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SUSTAINERBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SUSTAINERBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_SUSTAINER_NAME(&mut self, SUSTAINER_NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SUSTAINER::VT_SUSTAINER_NAME, SUSTAINER_NAME);
@@ -711,7 +711,7 @@ impl<'a: 'b, 'b> SUSTAINERBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(SUSTAINER::VT_BURN_DURATION, BURN_DURATION, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SUSTAINERBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SUSTAINERBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SUSTAINERBuilder {
       fbb_: _fbb,
@@ -751,9 +751,9 @@ impl Default for SUSTAINERT {
   }
 }
 impl SUSTAINERT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<SUSTAINER<'b>> {
     let SUSTAINER_NAME = self.SUSTAINER_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -793,8 +793,8 @@ impl<'a> ENGINE<'a> {
     ENGINE { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ENGINEArgs<'args>
   ) -> flatbuffers::WIPOffset<ENGINE<'bldr>> {
     let mut builder = ENGINEBuilder::new(_fbb);
@@ -873,11 +873,11 @@ impl<'a> Default for ENGINEArgs<'a> {
   }
 }
 
-pub struct ENGINEBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ENGINEBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ENGINEBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ENGINEBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ENGINE_NAME(&mut self, ENGINE_NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ENGINE::VT_ENGINE_NAME, ENGINE_NAME);
@@ -891,7 +891,7 @@ impl<'a: 'b, 'b> ENGINEBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(ENGINE::VT_THRUST, THRUST, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ENGINEBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ENGINEBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ENGINEBuilder {
       fbb_: _fbb,
@@ -931,9 +931,9 @@ impl Default for ENGINET {
   }
 }
 impl ENGINET {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<ENGINE<'b>> {
     let ENGINE_NAME = self.ENGINE_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -971,8 +971,8 @@ impl<'a> ROCCOLLECTION<'a> {
     ROCCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ROCCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<ROCCOLLECTION<'bldr>> {
     let mut builder = ROCCOLLECTIONBuilder::new(_fbb);
@@ -1022,17 +1022,17 @@ impl<'a> Default for ROCCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct ROCCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ROCCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ROCCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ROCCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<ROC<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ROCCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ROCCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ROCCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ROCCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1066,9 +1066,9 @@ impl Default for ROCCOLLECTIONT {
   }
 }
 impl ROCCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<ROCCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1151,13 +1151,13 @@ pub fn ROC_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_ROC_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_ROC_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<ROC<'a>>) {
   fbb.finish(root, Some(ROC_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_ROC_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<ROC<'a>>) {
+pub fn finish_size_prefixed_ROC_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<ROC<'a>>) {
   fbb.finish_size_prefixed(root, Some(ROC_IDENTIFIER));
 }

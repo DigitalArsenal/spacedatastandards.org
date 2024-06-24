@@ -101,7 +101,7 @@ public enum massType: Int8, Enum, Verifiable {
 ///  Catalog Entity Message
 public struct CAT: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -182,7 +182,7 @@ public struct CAT: FlatBufferObject, Verifiable {
   public var DEPLOYMENT_DATE: String? { let o = _accessor.offset(VTOFFSET.DEPLOYMENT_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DEPLOYMENT_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DEPLOYMENT_DATE.v) }
   ///  Indicates if the object is maneuverable
-  public var MANEUVERABLE: Bool { let o = _accessor.offset(VTOFFSET.MANEUVERABLE.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var MANEUVERABLE: Bool { let o = _accessor.offset(VTOFFSET.MANEUVERABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Size [meters]; blank if no data available
   public var SIZE: Double { let o = _accessor.offset(VTOFFSET.SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Mass [kilograms]; blank if no data available
@@ -303,7 +303,7 @@ public struct CAT: FlatBufferObject, Verifiable {
 
 public struct CATCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

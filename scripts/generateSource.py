@@ -66,6 +66,6 @@ for subdir in os.listdir(SRC_DIR):
             os.makedirs(OUTPUT_PATH, exist_ok=True)
 
             # Prepare the command
-            command = ["flatc", *args, "-o", OUTPUT_PATH] + referenced_files
+            command = ["flatc", "--preserve-case", *args, "-o", OUTPUT_PATH] + referenced_files
             subprocess.run(command)
 print("Code Generation Complete.")

@@ -170,8 +170,8 @@ impl<'a> TIM<'a> {
     TIM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args TIMArgs
   ) -> flatbuffers::WIPOffset<TIM<'bldr>> {
     let mut builder = TIMBuilder::new(_fbb);
@@ -219,17 +219,17 @@ impl<'a> Default for TIMArgs {
   }
 }
 
-pub struct TIMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TIMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TIMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TIMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
     self.fbb_.push_slot::<timeSystem>(TIM::VT_TIME_SYSTEM, TIME_SYSTEM, timeSystem::GMST);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TIMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> TIMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TIMBuilder {
       fbb_: _fbb,
@@ -263,9 +263,9 @@ impl Default for TIMT {
   }
 }
 impl TIMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<TIM<'b>> {
     let TIME_SYSTEM = self.TIME_SYSTEM;
     TIM::create(_fbb, &TIMArgs{
@@ -296,8 +296,8 @@ impl<'a> TIMCOLLECTION<'a> {
     TIMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args TIMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<TIMCOLLECTION<'bldr>> {
     let mut builder = TIMCOLLECTIONBuilder::new(_fbb);
@@ -347,17 +347,17 @@ impl<'a> Default for TIMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct TIMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct TIMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> TIMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TIMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<TIM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TIMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> TIMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> TIMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TIMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -391,9 +391,9 @@ impl Default for TIMCOLLECTIONT {
   }
 }
 impl TIMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<TIMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -476,13 +476,13 @@ pub fn TIM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_TIM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_TIM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<TIM<'a>>) {
   fbb.finish(root, Some(TIM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_TIM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<TIM<'a>>) {
+pub fn finish_size_prefixed_TIM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<TIM<'a>>) {
   fbb.finish_size_prefixed(root, Some(TIM_IDENTIFIER));
 }

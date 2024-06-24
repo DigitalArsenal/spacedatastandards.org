@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Collection Request Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class CRM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -841,7 +840,7 @@ class CRM : Table() {
     val DATA_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(158, 1)
     fun DATA_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 158, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCRM(_bb: ByteBuffer): CRM = getRootAsCRM(_bb, CRM())
         fun getRootAsCRM(_bb: ByteBuffer, obj: CRM): CRM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

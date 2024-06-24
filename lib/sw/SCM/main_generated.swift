@@ -7,7 +7,7 @@ import FlatBuffers
 ///  Schema Standard Definition
 public struct SCHEMA_STANDARD: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -64,7 +64,7 @@ public struct SCHEMA_STANDARD: FlatBufferObject, Verifiable {
 ///  Schema Manifest
 public struct SCM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -113,7 +113,7 @@ public struct SCM: FlatBufferObject, Verifiable {
 ///  Declaring the root type
 public struct SCMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

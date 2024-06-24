@@ -109,42 +109,78 @@ class EOP(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def EOPStart(builder): builder.StartObject(10)
+def EOPStart(builder):
+    builder.StartObject(10)
+
 def Start(builder):
-    return EOPStart(builder)
-def EOPAddDATE(builder, DATE): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DATE), 0)
+    EOPStart(builder)
+
+def EOPAddDATE(builder, DATE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DATE), 0)
+
 def AddDATE(builder, DATE):
-    return EOPAddDATE(builder, DATE)
-def EOPAddMJD(builder, MJD): builder.PrependUint32Slot(1, MJD, 0)
+    EOPAddDATE(builder, DATE)
+
+def EOPAddMJD(builder, MJD):
+    builder.PrependUint32Slot(1, MJD, 0)
+
 def AddMJD(builder, MJD):
-    return EOPAddMJD(builder, MJD)
-def EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS): builder.PrependFloat32Slot(2, X_POLE_WANDER_RADIANS, 0.0)
+    EOPAddMJD(builder, MJD)
+
+def EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS):
+    builder.PrependFloat32Slot(2, X_POLE_WANDER_RADIANS, 0.0)
+
 def AddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS):
-    return EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS)
-def EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS): builder.PrependFloat32Slot(3, Y_POLE_WANDER_RADIANS, 0.0)
+    EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS)
+
+def EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS):
+    builder.PrependFloat32Slot(3, Y_POLE_WANDER_RADIANS, 0.0)
+
 def AddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS):
-    return EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS)
-def EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS): builder.PrependFloat32Slot(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+    EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS)
+
+def EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS):
+    builder.PrependFloat32Slot(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+
 def AddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS):
-    return EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS)
-def EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS): builder.PrependFloat32Slot(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+    EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS)
+
+def EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS):
+    builder.PrependFloat32Slot(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+
 def AddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS):
-    return EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS)
-def EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS): builder.PrependFloat32Slot(6, UT1_MINUS_UTC_SECONDS, 0.0)
+    EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS)
+
+def EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS):
+    builder.PrependFloat32Slot(6, UT1_MINUS_UTC_SECONDS, 0.0)
+
 def AddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS):
-    return EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS)
-def EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS): builder.PrependUint16Slot(7, TAI_MINUS_UTC_SECONDS, 0)
+    EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS)
+
+def EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS):
+    builder.PrependUint16Slot(7, TAI_MINUS_UTC_SECONDS, 0)
+
 def AddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS):
-    return EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS)
-def EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS): builder.PrependFloat32Slot(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0)
+    EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS)
+
+def EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS):
+    builder.PrependFloat32Slot(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0)
+
 def AddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS):
-    return EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS)
-def EOPAddDATA_TYPE(builder, DATA_TYPE): builder.PrependInt8Slot(9, DATA_TYPE, 0)
+    EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS)
+
+def EOPAddDATA_TYPE(builder, DATA_TYPE):
+    builder.PrependInt8Slot(9, DATA_TYPE, 0)
+
 def AddDATA_TYPE(builder, DATA_TYPE):
-    return EOPAddDATA_TYPE(builder, DATA_TYPE)
-def EOPEnd(builder): return builder.EndObject()
+    EOPAddDATA_TYPE(builder, DATA_TYPE)
+
+def EOPEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EOPEnd(builder)
+
 
 class EOPT(object):
 

@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Tracking Data Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class TDM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -767,7 +766,7 @@ class TDM : Table() {
     val CLOCK_DRIFTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(120, 8)
     fun CLOCK_DRIFTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 120, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsTDM(_bb: ByteBuffer): TDM = getRootAsTDM(_bb, TDM())
         fun getRootAsTDM(_bb: ByteBuffer, obj: TDM): TDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

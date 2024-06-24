@@ -4,7 +4,6 @@
  * Enum for the mode of data (real, simulated, synthetic)
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class DataMode private constructor() {
     companion object {
         const val REAL: Byte = 0

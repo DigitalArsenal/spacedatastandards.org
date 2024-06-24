@@ -85,36 +85,66 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def BOVStart(builder): builder.StartObject(8)
+def BOVStart(builder):
+    builder.StartObject(8)
+
 def Start(builder):
-    return BOVStart(builder)
-def BOVAddE_COORDINATE(builder, E_COORDINATE): builder.PrependFloat64Slot(0, E_COORDINATE, 0.0)
+    BOVStart(builder)
+
+def BOVAddE_COORDINATE(builder, E_COORDINATE):
+    builder.PrependFloat64Slot(0, E_COORDINATE, 0.0)
+
 def AddE_COORDINATE(builder, E_COORDINATE):
-    return BOVAddE_COORDINATE(builder, E_COORDINATE)
-def BOVAddF_COORDINATE(builder, F_COORDINATE): builder.PrependFloat64Slot(1, F_COORDINATE, 0.0)
+    BOVAddE_COORDINATE(builder, E_COORDINATE)
+
+def BOVAddF_COORDINATE(builder, F_COORDINATE):
+    builder.PrependFloat64Slot(1, F_COORDINATE, 0.0)
+
 def AddF_COORDINATE(builder, F_COORDINATE):
-    return BOVAddF_COORDINATE(builder, F_COORDINATE)
-def BOVAddG_COORDINATE(builder, G_COORDINATE): builder.PrependFloat64Slot(2, G_COORDINATE, 0.0)
+    BOVAddF_COORDINATE(builder, F_COORDINATE)
+
+def BOVAddG_COORDINATE(builder, G_COORDINATE):
+    builder.PrependFloat64Slot(2, G_COORDINATE, 0.0)
+
 def AddG_COORDINATE(builder, G_COORDINATE):
-    return BOVAddG_COORDINATE(builder, G_COORDINATE)
-def BOVAddE_DOT(builder, E_DOT): builder.PrependFloat64Slot(3, E_DOT, 0.0)
+    BOVAddG_COORDINATE(builder, G_COORDINATE)
+
+def BOVAddE_DOT(builder, E_DOT):
+    builder.PrependFloat64Slot(3, E_DOT, 0.0)
+
 def AddE_DOT(builder, E_DOT):
-    return BOVAddE_DOT(builder, E_DOT)
-def BOVAddF_DOT(builder, F_DOT): builder.PrependFloat64Slot(4, F_DOT, 0.0)
+    BOVAddE_DOT(builder, E_DOT)
+
+def BOVAddF_DOT(builder, F_DOT):
+    builder.PrependFloat64Slot(4, F_DOT, 0.0)
+
 def AddF_DOT(builder, F_DOT):
-    return BOVAddF_DOT(builder, F_DOT)
-def BOVAddG_DOT(builder, G_DOT): builder.PrependFloat64Slot(5, G_DOT, 0.0)
+    BOVAddF_DOT(builder, F_DOT)
+
+def BOVAddG_DOT(builder, G_DOT):
+    builder.PrependFloat64Slot(5, G_DOT, 0.0)
+
 def AddG_DOT(builder, G_DOT):
-    return BOVAddG_DOT(builder, G_DOT)
-def BOVAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+    BOVAddG_DOT(builder, G_DOT)
+
+def BOVAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
 def AddEPOCH(builder, EPOCH):
-    return BOVAddEPOCH(builder, EPOCH)
-def BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH): builder.PrependFloat64Slot(7, TIME_FROM_LAUNCH, 0.0)
+    BOVAddEPOCH(builder, EPOCH)
+
+def BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH):
+    builder.PrependFloat64Slot(7, TIME_FROM_LAUNCH, 0.0)
+
 def AddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH):
-    return BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH)
-def BOVEnd(builder): return builder.EndObject()
+    BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH)
+
+def BOVEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return BOVEnd(builder)
+
 
 class BOVT(object):
 

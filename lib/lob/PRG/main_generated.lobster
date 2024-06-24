@@ -8,113 +8,113 @@ class USR
 class PRGCOLLECTION
 
 /// Program Description Message
-class PRG : flatbuffers_handle
+class PRG : flatbuffers.handle
     /// The name of the program
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
     def HD_KEY_PATH() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Vector of standard message types used by the program
     def MESSAGE_TYPES(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 8) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 4)
     def MESSAGE_TYPES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 8)
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
     /// Vector of users associated with the program, each user can have assigned message types
     def USERS(i:int) -> USR:
-        return USR { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 10) + i * 4) }
+        return USR { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
     def USERS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 10)
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
 
-def GetRootAsPRG(buf:string): return PRG { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPRG(buf:string): return PRG { buf, flatbuffers.indirect(buf, 0) }
 
 struct PRGBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(4)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
+    def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
         return this
-    def add_HD_KEY_PATH(HD_KEY_PATH:flatbuffers_offset):
+    def add_HD_KEY_PATH(HD_KEY_PATH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, HD_KEY_PATH)
         return this
-    def add_MESSAGE_TYPES(MESSAGE_TYPES:flatbuffers_offset):
+    def add_MESSAGE_TYPES(MESSAGE_TYPES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, MESSAGE_TYPES)
         return this
-    def add_USERS(USERS:flatbuffers_offset):
+    def add_USERS(USERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, USERS)
         return this
     def end():
         return b_.EndObject()
 
-def PRGStartMESSAGE_TYPESVector(b_:flatbuffers_builder, n_:int):
+def PRGStartMESSAGE_TYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PRGCreateMESSAGE_TYPESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PRGCreateMESSAGE_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def PRGStartUSERSVector(b_:flatbuffers_builder, n_:int):
+def PRGStartUSERSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PRGCreateUSERSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PRGCreateUSERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class USR : flatbuffers_handle
+class USR : flatbuffers.handle
     def ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     def MESSAGE_TYPES(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 6) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 4)
     def MESSAGE_TYPES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 6)
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
 
-def GetRootAsUSR(buf:string): return USR { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsUSR(buf:string): return USR { buf, flatbuffers.indirect(buf, 0) }
 
 struct USRBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(2)
         return this
-    def add_ID(ID:flatbuffers_offset):
+    def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
         return this
-    def add_MESSAGE_TYPES(MESSAGE_TYPES:flatbuffers_offset):
+    def add_MESSAGE_TYPES(MESSAGE_TYPES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, MESSAGE_TYPES)
         return this
     def end():
         return b_.EndObject()
 
-def USRStartMESSAGE_TYPESVector(b_:flatbuffers_builder, n_:int):
+def USRStartMESSAGE_TYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def USRCreateMESSAGE_TYPESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def USRCreateMESSAGE_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class PRGCOLLECTION : flatbuffers_handle
+class PRGCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> PRG:
-        return PRG { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return PRG { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsPRGCOLLECTION(buf:string): return PRGCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPRGCOLLECTION(buf:string): return PRGCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct PRGCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def PRGCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def PRGCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PRGCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PRGCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

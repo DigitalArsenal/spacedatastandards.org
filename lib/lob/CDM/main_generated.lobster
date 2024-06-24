@@ -15,275 +15,275 @@ class CDM
 
 class CDMCOLLECTION
 
-class CDMObject : flatbuffers_handle
+class CDMObject : flatbuffers.handle
     /// A comment
     def COMMENT() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     def OBJECT() -> CAT?:
-        let o = buf_.flatbuffers_field_table(pos_, 6)
+        let o = flatbuffers.field_table(buf_, pos_, 6)
         return if o: CAT { buf_, o } else: nil
     /// Point of Contact
     def POC() -> EPM?:
-        let o = buf_.flatbuffers_field_table(pos_, 8)
+        let o = flatbuffers.field_table(buf_, pos_, 8)
         return if o: EPM { buf_, o } else: nil
     /// Operator contact position
     def OPERATOR_CONTACT_POSITION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Operator organization
     def OPERATOR_ORGANIZATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Ephemeris name
     def EPHEMERIS_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Covariance method
     def COVARIANCE_METHOD() -> covarianceMethod:
-        return covarianceMethod(buf_.flatbuffers_field_int8(pos_, 16, 0))
+        return covarianceMethod(flatbuffers.field_int8(buf_, pos_, 16, 0))
     /// Reference Frame in which the object position is defined
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(buf_.flatbuffers_field_int8(pos_, 18, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 18, 0))
     /// Gravity model
     def GRAVITY_MODEL() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Atmospheric model
     def ATMOSPHERIC_MODEL() -> string:
-        return buf_.flatbuffers_field_string(pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// N-body perturbations
     def N_BODY_PERTURBATIONS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 24)
     /// Solar radiation pressure
     def SOLAR_RAD_PRESSURE() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 26, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
     /// Earth tides
     def EARTH_TIDES() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 28, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
     /// Intrack thrust
     def INTRACK_THRUST() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 30, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
     /// Time of last observation start
     def TIME_LASTOB_START() -> string:
-        return buf_.flatbuffers_field_string(pos_, 32)
+        return flatbuffers.field_string(buf_, pos_, 32)
     /// Time of last observation end
     def TIME_LASTOB_END() -> string:
-        return buf_.flatbuffers_field_string(pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// Recommended observation data span
     def RECOMMENDED_OD_SPAN() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 36, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
     /// Actual observation data span
     def ACTUAL_OD_SPAN() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 38, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     /// Number of observations available
     def OBS_AVAILABLE() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 40, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 40, 0)
     /// Number of observations used
     def OBS_USED() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 42, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 42, 0)
     /// Number of tracks available
     def TRACKS_AVAILABLE() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 44, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 44, 0)
     /// Number of tracks used
     def TRACKS_USED() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 46, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 46, 0)
     /// Residuals accepted
     def RESIDUALS_ACCEPTED() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 48, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
     /// Weighted root mean square
     def WEIGHTED_RMS() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 50, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
     /// Area of the object
     def AREA_PC() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 52, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
     /// Area of the object drag
     def AREA_DRG() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 54, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
     /// Area of the object solar radiation pressure
     def AREA_SRP() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 56, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
     /// Object's area-to-mass ratio
     def CR_AREA_OVER_MASS() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 58, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
     /// Object's thrust acceleration
     def THRUST_ACCELERATION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 60, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
     /// Object's solar flux
     def SEDR() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 62, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
     /// X-coordinate of the object's position in RTN coordinates
     def X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 64, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
     /// Y-coordinate of the object's position in RTN
     def Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 66, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
     /// Z-coordinate of the object's position in RTN
     def Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 68, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     /// X-coordinate of the object's position in RTN coordinates
     def X_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 70, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
     /// Y-coordinate of the object's position in RTN
     def Y_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 72, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
     /// Z-coordinate of the object's position in RTN
     def Z_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 74, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
     /// Covariance Matrix component
     def CR_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 76, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
     /// Covariance Matrix component
     def CT_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 78, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
     /// Covariance Matrix component
     def CT_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 80, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
     /// Covariance Matrix component
     def CN_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 82, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
     /// Covariance Matrix component
     def CN_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 84, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
     /// Covariance Matrix component
     def CN_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 86, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 86, 0.0)
     /// Covariance Matrix component
     def CRDOT_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 88, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 88, 0.0)
     /// Covariance Matrix component
     def CRDOT_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 90, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 90, 0.0)
     /// Covariance Matrix component
     def CRDOT_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 92, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
     /// Covariance Matrix component
     def CRDOT_RDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 94, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
     /// Covariance Matrix component
     def CTDOT_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 96, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
     /// Covariance Matrix component
     def CTDOT_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 98, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
     /// Covariance Matrix component
     def CTDOT_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 100, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 100, 0.0)
     /// Covariance Matrix component
     def CTDOT_RDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 102, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 102, 0.0)
     /// Covariance Matrix component
     def CTDOT_TDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 104, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 104, 0.0)
     /// Covariance Matrix component
     def CNDOT_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 106, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 106, 0.0)
     /// Covariance Matrix component
     def CNDOT_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 108, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 108, 0.0)
     /// Covariance Matrix component
     def CNDOT_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 110, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 110, 0.0)
     /// Covariance Matrix component
     def CNDOT_RDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 112, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 112, 0.0)
     /// Covariance Matrix component
     def CNDOT_TDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 114, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 114, 0.0)
     /// Covariance Matrix component
     def CNDOT_NDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 116, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 116, 0.0)
     /// Covariance Matrix component
     def CDRG_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 118, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 118, 0.0)
     /// Covariance Matrix component
     def CDRG_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 120, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 120, 0.0)
     /// Covariance Matrix component
     def CDRG_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 122, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 122, 0.0)
     /// Covariance Matrix component
     def CDRG_RDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 124, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 124, 0.0)
     /// Covariance Matrix component
     def CDRG_TDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 126, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 126, 0.0)
     /// Covariance Matrix component
     def CDRG_NDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 128, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 128, 0.0)
     /// Covariance Matrix component
     def CDRG_DRG() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 130, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 130, 0.0)
     /// Covariance Matrix component
     def CSRP_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 132, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 132, 0.0)
     /// Covariance Matrix component
     def CSRP_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 134, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 134, 0.0)
     /// Covariance Matrix component
     def CSRP_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 136, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 136, 0.0)
     /// Covariance Matrix component
     def CSRP_RDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 138, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 138, 0.0)
     /// Covariance Matrix component
     def CSRP_TDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 140, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 140, 0.0)
     /// Covariance Matrix component
     def CSRP_NDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 142, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 142, 0.0)
     /// Covariance Matrix component
     def CSRP_DRG() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 144, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 144, 0.0)
     /// Covariance Matrix component
     def CSRP_SRP() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 146, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 146, 0.0)
     /// Covariance Matrix component
     def CTHR_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 148, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 148, 0.0)
     /// Covariance Matrix component
     def CTHR_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 150, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 150, 0.0)
     /// Covariance Matrix component
     def CTHR_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 152, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 152, 0.0)
     /// Covariance Matrix component
     def CTHR_RDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 154, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 154, 0.0)
     /// Covariance Matrix component
     def CTHR_TDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 156, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 156, 0.0)
     /// Covariance Matrix component
     def CTHR_NDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 158, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 158, 0.0)
     /// Covariance Matrix component
     def CTHR_DRG() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 160, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 160, 0.0)
     /// Covariance Matrix component
     def CTHR_SRP() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 162, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 162, 0.0)
     /// Covariance Matrix component
     def CTHR_THR() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 164, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 164, 0.0)
 
-def GetRootAsCDMObject(buf:string): return CDMObject { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCDMObject(buf:string): return CDMObject { buf, flatbuffers.indirect(buf, 0) }
 
 struct CDMObjectBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(81)
         return this
-    def add_COMMENT(COMMENT:flatbuffers_offset):
+    def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
         return this
-    def add_OBJECT(OBJECT:flatbuffers_offset):
+    def add_OBJECT(OBJECT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, OBJECT)
         return this
-    def add_POC(POC:flatbuffers_offset):
+    def add_POC(POC:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, POC)
         return this
-    def add_OPERATOR_CONTACT_POSITION(OPERATOR_CONTACT_POSITION:flatbuffers_offset):
+    def add_OPERATOR_CONTACT_POSITION(OPERATOR_CONTACT_POSITION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, OPERATOR_CONTACT_POSITION)
         return this
-    def add_OPERATOR_ORGANIZATION(OPERATOR_ORGANIZATION:flatbuffers_offset):
+    def add_OPERATOR_ORGANIZATION(OPERATOR_ORGANIZATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, OPERATOR_ORGANIZATION)
         return this
-    def add_EPHEMERIS_NAME(EPHEMERIS_NAME:flatbuffers_offset):
+    def add_EPHEMERIS_NAME(EPHEMERIS_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, EPHEMERIS_NAME)
         return this
     def add_COVARIANCE_METHOD(COVARIANCE_METHOD:covarianceMethod):
@@ -292,13 +292,13 @@ struct CDMObjectBuilder:
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(7, REFERENCE_FRAME, 0)
         return this
-    def add_GRAVITY_MODEL(GRAVITY_MODEL:flatbuffers_offset):
+    def add_GRAVITY_MODEL(GRAVITY_MODEL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, GRAVITY_MODEL)
         return this
-    def add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL:flatbuffers_offset):
+    def add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, ATMOSPHERIC_MODEL)
         return this
-    def add_N_BODY_PERTURBATIONS(N_BODY_PERTURBATIONS:flatbuffers_offset):
+    def add_N_BODY_PERTURBATIONS(N_BODY_PERTURBATIONS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, N_BODY_PERTURBATIONS)
         return this
     def add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE:bool):
@@ -310,10 +310,10 @@ struct CDMObjectBuilder:
     def add_INTRACK_THRUST(INTRACK_THRUST:bool):
         b_.PrependBoolSlot(13, INTRACK_THRUST, 0)
         return this
-    def add_TIME_LASTOB_START(TIME_LASTOB_START:flatbuffers_offset):
+    def add_TIME_LASTOB_START(TIME_LASTOB_START:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, TIME_LASTOB_START)
         return this
-    def add_TIME_LASTOB_END(TIME_LASTOB_END:flatbuffers_offset):
+    def add_TIME_LASTOB_END(TIME_LASTOB_END:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, TIME_LASTOB_END)
         return this
     def add_RECOMMENDED_OD_SPAN(RECOMMENDED_OD_SPAN:float):
@@ -515,122 +515,122 @@ struct CDMObjectBuilder:
         return b_.EndObject()
 
 /// Conjunction Data Message
-class CDM : flatbuffers_handle
+class CDM : flatbuffers.handle
     /// The version of the CCSDS CDM standard used
     def CCSDS_CDM_VERS() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 4, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
     /// The date the CDM message was created
     def CREATION_DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// The originator of the CDM message
     def ORIGINATOR() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// The intended recipient of the CDM message
     def MESSAGE_FOR() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// A unique identifier for the CDM message
     def MESSAGE_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Time of closest approach
     def TCA() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// The miss distance between the two objects
     def MISS_DISTANCE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// The relative speed between the two objects
     def RELATIVE_SPEED() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// The relative position R component
     def RELATIVE_POSITION_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
     /// The relative position T component
     def RELATIVE_POSITION_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 22, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
     /// The relative position N component
     def RELATIVE_POSITION_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// The relative velocity R component
     def RELATIVE_VELOCITY_R() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// The relative velocity T component
     def RELATIVE_VELOCITY_T() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 28, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
     /// The relative velocity N component
     def RELATIVE_VELOCITY_N() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 30, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
     /// The start time of the screening period
     def START_SCREEN_PERIOD() -> string:
-        return buf_.flatbuffers_field_string(pos_, 32)
+        return flatbuffers.field_string(buf_, pos_, 32)
     /// The end time of the screening period
     def STOP_SCREEN_PERIOD() -> string:
-        return buf_.flatbuffers_field_string(pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// The reference frame for the screening volume
     def SCREEN_VOLUME_FRAME() -> refFrame:
-        return refFrame(buf_.flatbuffers_field_int8(pos_, 36, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 36, 0))
     /// The shape of the screening volume
     def SCREEN_VOLUME_SHAPE() -> screeningVolumeShape:
-        return screeningVolumeShape(buf_.flatbuffers_field_int8(pos_, 38, 0))
+        return screeningVolumeShape(flatbuffers.field_int8(buf_, pos_, 38, 0))
     /// The X dimension of the screening volume
     def SCREEN_VOLUME_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 40, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
     /// The Y dimension of the screening volume
     def SCREEN_VOLUME_Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     /// The Z dimension of the screening volume
     def SCREEN_VOLUME_Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 44, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
     /// The time the objects entered the screening volume
     def SCREEN_ENTRY_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 46)
+        return flatbuffers.field_string(buf_, pos_, 46)
     /// The time the objects exited the screening volume
     def SCREEN_EXIT_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 48)
+        return flatbuffers.field_string(buf_, pos_, 48)
     /// The probability of collision between the two objects
     def COLLISION_PROBABILITY() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 50, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
     /// The method used to calculate the collision probability
     def COLLISION_PROBABILITY_METHOD() -> string:
-        return buf_.flatbuffers_field_string(pos_, 52)
+        return flatbuffers.field_string(buf_, pos_, 52)
     /// The first object in the CDM message
     def OBJECT1() -> CDMObject?:
-        let o = buf_.flatbuffers_field_table(pos_, 54)
+        let o = flatbuffers.field_table(buf_, pos_, 54)
         return if o: CDMObject { buf_, o } else: nil
     /// The second object in the CDM message
     def OBJECT2() -> CDMObject?:
-        let o = buf_.flatbuffers_field_table(pos_, 56)
+        let o = flatbuffers.field_table(buf_, pos_, 56)
         return if o: CDMObject { buf_, o } else: nil
     /// Data Source for the positional information for Object 1
     def OBJECT1_DATASOURCE() -> PNM?:
-        let o = buf_.flatbuffers_field_table(pos_, 58)
+        let o = flatbuffers.field_table(buf_, pos_, 58)
         return if o: PNM { buf_, o } else: nil
     /// Data Source for the positional information for Object 2
     def OBJECT2_DATASOURCE() -> PNM?:
-        let o = buf_.flatbuffers_field_table(pos_, 60)
+        let o = flatbuffers.field_table(buf_, pos_, 60)
         return if o: PNM { buf_, o } else: nil
 
-def GetRootAsCDM(buf:string): return CDM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCDM(buf:string): return CDM { buf, flatbuffers.indirect(buf, 0) }
 
 struct CDMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(29)
         return this
     def add_CCSDS_CDM_VERS(CCSDS_CDM_VERS:float):
         b_.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
         return this
-    def add_CREATION_DATE(CREATION_DATE:flatbuffers_offset):
+    def add_CREATION_DATE(CREATION_DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, CREATION_DATE)
         return this
-    def add_ORIGINATOR(ORIGINATOR:flatbuffers_offset):
+    def add_ORIGINATOR(ORIGINATOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, ORIGINATOR)
         return this
-    def add_MESSAGE_FOR(MESSAGE_FOR:flatbuffers_offset):
+    def add_MESSAGE_FOR(MESSAGE_FOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, MESSAGE_FOR)
         return this
-    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers_offset):
+    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, MESSAGE_ID)
         return this
-    def add_TCA(TCA:flatbuffers_offset):
+    def add_TCA(TCA:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, TCA)
         return this
     def add_MISS_DISTANCE(MISS_DISTANCE:float):
@@ -657,10 +657,10 @@ struct CDMBuilder:
     def add_RELATIVE_VELOCITY_N(RELATIVE_VELOCITY_N:float):
         b_.PrependFloat64Slot(13, RELATIVE_VELOCITY_N, 0.0)
         return this
-    def add_START_SCREEN_PERIOD(START_SCREEN_PERIOD:flatbuffers_offset):
+    def add_START_SCREEN_PERIOD(START_SCREEN_PERIOD:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, START_SCREEN_PERIOD)
         return this
-    def add_STOP_SCREEN_PERIOD(STOP_SCREEN_PERIOD:flatbuffers_offset):
+    def add_STOP_SCREEN_PERIOD(STOP_SCREEN_PERIOD:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, STOP_SCREEN_PERIOD)
         return this
     def add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME:refFrame):
@@ -678,55 +678,55 @@ struct CDMBuilder:
     def add_SCREEN_VOLUME_Z(SCREEN_VOLUME_Z:float):
         b_.PrependFloat64Slot(20, SCREEN_VOLUME_Z, 0.0)
         return this
-    def add_SCREEN_ENTRY_TIME(SCREEN_ENTRY_TIME:flatbuffers_offset):
+    def add_SCREEN_ENTRY_TIME(SCREEN_ENTRY_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(21, SCREEN_ENTRY_TIME)
         return this
-    def add_SCREEN_EXIT_TIME(SCREEN_EXIT_TIME:flatbuffers_offset):
+    def add_SCREEN_EXIT_TIME(SCREEN_EXIT_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(22, SCREEN_EXIT_TIME)
         return this
     def add_COLLISION_PROBABILITY(COLLISION_PROBABILITY:float):
         b_.PrependFloat64Slot(23, COLLISION_PROBABILITY, 0.0)
         return this
-    def add_COLLISION_PROBABILITY_METHOD(COLLISION_PROBABILITY_METHOD:flatbuffers_offset):
+    def add_COLLISION_PROBABILITY_METHOD(COLLISION_PROBABILITY_METHOD:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(24, COLLISION_PROBABILITY_METHOD)
         return this
-    def add_OBJECT1(OBJECT1:flatbuffers_offset):
+    def add_OBJECT1(OBJECT1:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(25, OBJECT1)
         return this
-    def add_OBJECT2(OBJECT2:flatbuffers_offset):
+    def add_OBJECT2(OBJECT2:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(26, OBJECT2)
         return this
-    def add_OBJECT1_DATASOURCE(OBJECT1_DATASOURCE:flatbuffers_offset):
+    def add_OBJECT1_DATASOURCE(OBJECT1_DATASOURCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(27, OBJECT1_DATASOURCE)
         return this
-    def add_OBJECT2_DATASOURCE(OBJECT2_DATASOURCE:flatbuffers_offset):
+    def add_OBJECT2_DATASOURCE(OBJECT2_DATASOURCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(28, OBJECT2_DATASOURCE)
         return this
     def end():
         return b_.EndObject()
 
-class CDMCOLLECTION : flatbuffers_handle
+class CDMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> CDM:
-        return CDM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return CDM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsCDMCOLLECTION(buf:string): return CDMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCDMCOLLECTION(buf:string): return CDMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct CDMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def CDMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def CDMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def CDMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def CDMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

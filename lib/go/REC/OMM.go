@@ -11,6 +11,8 @@ type OMM struct {
 	_tab flatbuffers.Table
 }
 
+const OMMIdentifier = "$OMM"
+
 func GetRootAsOMM(buf []byte, offset flatbuffers.UOffsetT) *OMM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &OMM{}
@@ -18,11 +20,29 @@ func GetRootAsOMM(buf []byte, offset flatbuffers.UOffsetT) *OMM {
 	return x
 }
 
+func FinishOMMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(OMMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func OMMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, OMMIdentifier)
+}
+
 func GetSizePrefixedRootAsOMM(buf []byte, offset flatbuffers.UOffsetT) *OMM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &OMM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedOMMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(OMMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedOMMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, OMMIdentifier)
 }
 
 func (rcv *OMM) Init(buf []byte, i flatbuffers.UOffsetT) {

@@ -109,42 +109,78 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def MPEStart(builder): builder.StartObject(10)
+def MPEStart(builder):
+    builder.StartObject(10)
+
 def Start(builder):
-    return MPEStart(builder)
-def MPEAddENTITY_ID(builder, ENTITY_ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_ID), 0)
+    MPEStart(builder)
+
+def MPEAddENTITY_ID(builder, ENTITY_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_ID), 0)
+
 def AddENTITY_ID(builder, ENTITY_ID):
-    return MPEAddENTITY_ID(builder, ENTITY_ID)
-def MPEAddEPOCH(builder, EPOCH): builder.PrependFloat64Slot(1, EPOCH, 0.0)
+    MPEAddENTITY_ID(builder, ENTITY_ID)
+
+def MPEAddEPOCH(builder, EPOCH):
+    builder.PrependFloat64Slot(1, EPOCH, 0.0)
+
 def AddEPOCH(builder, EPOCH):
-    return MPEAddEPOCH(builder, EPOCH)
-def MPEAddMEAN_MOTION(builder, MEAN_MOTION): builder.PrependFloat64Slot(2, MEAN_MOTION, 0.0)
+    MPEAddEPOCH(builder, EPOCH)
+
+def MPEAddMEAN_MOTION(builder, MEAN_MOTION):
+    builder.PrependFloat64Slot(2, MEAN_MOTION, 0.0)
+
 def AddMEAN_MOTION(builder, MEAN_MOTION):
-    return MPEAddMEAN_MOTION(builder, MEAN_MOTION)
-def MPEAddECCENTRICITY(builder, ECCENTRICITY): builder.PrependFloat64Slot(3, ECCENTRICITY, 0.0)
+    MPEAddMEAN_MOTION(builder, MEAN_MOTION)
+
+def MPEAddECCENTRICITY(builder, ECCENTRICITY):
+    builder.PrependFloat64Slot(3, ECCENTRICITY, 0.0)
+
 def AddECCENTRICITY(builder, ECCENTRICITY):
-    return MPEAddECCENTRICITY(builder, ECCENTRICITY)
-def MPEAddINCLINATION(builder, INCLINATION): builder.PrependFloat64Slot(4, INCLINATION, 0.0)
+    MPEAddECCENTRICITY(builder, ECCENTRICITY)
+
+def MPEAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(4, INCLINATION, 0.0)
+
 def AddINCLINATION(builder, INCLINATION):
-    return MPEAddINCLINATION(builder, INCLINATION)
-def MPEAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE): builder.PrependFloat64Slot(5, RA_OF_ASC_NODE, 0.0)
+    MPEAddINCLINATION(builder, INCLINATION)
+
+def MPEAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE):
+    builder.PrependFloat64Slot(5, RA_OF_ASC_NODE, 0.0)
+
 def AddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE):
-    return MPEAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
-def MPEAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER): builder.PrependFloat64Slot(6, ARG_OF_PERICENTER, 0.0)
+    MPEAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
+
+def MPEAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER):
+    builder.PrependFloat64Slot(6, ARG_OF_PERICENTER, 0.0)
+
 def AddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER):
-    return MPEAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
-def MPEAddMEAN_ANOMALY(builder, MEAN_ANOMALY): builder.PrependFloat64Slot(7, MEAN_ANOMALY, 0.0)
+    MPEAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
+
+def MPEAddMEAN_ANOMALY(builder, MEAN_ANOMALY):
+    builder.PrependFloat64Slot(7, MEAN_ANOMALY, 0.0)
+
 def AddMEAN_ANOMALY(builder, MEAN_ANOMALY):
-    return MPEAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
-def MPEAddBSTAR(builder, BSTAR): builder.PrependFloat64Slot(8, BSTAR, 0.0)
+    MPEAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+
+def MPEAddBSTAR(builder, BSTAR):
+    builder.PrependFloat64Slot(8, BSTAR, 0.0)
+
 def AddBSTAR(builder, BSTAR):
-    return MPEAddBSTAR(builder, BSTAR)
-def MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY): builder.PrependInt8Slot(9, MEAN_ELEMENT_THEORY, 0)
+    MPEAddBSTAR(builder, BSTAR)
+
+def MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
+    builder.PrependInt8Slot(9, MEAN_ELEMENT_THEORY, 0)
+
 def AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
-    return MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
-def MPEEnd(builder): return builder.EndObject()
+    MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
+
+def MPEEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return MPEEnd(builder)
+
 
 class MPET(object):
 

@@ -18,11 +18,19 @@ func GetRootAsSCHEMA_STANDARD(buf []byte, offset flatbuffers.UOffsetT) *SCHEMA_S
 	return x
 }
 
+func FinishSCHEMA_STANDARDBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsSCHEMA_STANDARD(buf []byte, offset flatbuffers.UOffsetT) *SCHEMA_STANDARD {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &SCHEMA_STANDARD{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSCHEMA_STANDARDBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *SCHEMA_STANDARD) Init(buf []byte, i flatbuffers.UOffsetT) {

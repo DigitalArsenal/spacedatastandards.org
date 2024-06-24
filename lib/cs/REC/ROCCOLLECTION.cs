@@ -11,7 +11,7 @@ public struct ROCCOLLECTION : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static ROCCOLLECTION GetRootAsROCCOLLECTION(ByteBuffer _bb) { return GetRootAsROCCOLLECTION(_bb, new ROCCOLLECTION()); }
   public static ROCCOLLECTION GetRootAsROCCOLLECTION(ByteBuffer _bb, ROCCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -70,3 +70,13 @@ public class ROCCOLLECTIONT
   }
 }
 
+
+static public class ROCCOLLECTIONVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyVectorOfTables(tablePos, 4 /*RECORDS*/, ROCVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

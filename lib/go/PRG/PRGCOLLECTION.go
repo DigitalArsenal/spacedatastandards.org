@@ -17,11 +17,19 @@ func GetRootAsPRGCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *PRGCOLLECT
 	return x
 }
 
+func FinishPRGCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsPRGCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *PRGCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &PRGCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedPRGCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *PRGCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

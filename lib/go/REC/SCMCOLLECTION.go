@@ -18,11 +18,19 @@ func GetRootAsSCMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *SCMCOLLECT
 	return x
 }
 
+func FinishSCMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsSCMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *SCMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &SCMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSCMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *SCMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

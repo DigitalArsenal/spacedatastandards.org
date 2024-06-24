@@ -11,6 +11,8 @@ type TIM struct {
 	_tab flatbuffers.Table
 }
 
+const TIMIdentifier = "$TIM"
+
 func GetRootAsTIM(buf []byte, offset flatbuffers.UOffsetT) *TIM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &TIM{}
@@ -18,11 +20,29 @@ func GetRootAsTIM(buf []byte, offset flatbuffers.UOffsetT) *TIM {
 	return x
 }
 
+func FinishTIMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(TIMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func TIMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, TIMIdentifier)
+}
+
 func GetSizePrefixedRootAsTIM(buf []byte, offset flatbuffers.UOffsetT) *TIM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &TIM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedTIMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(TIMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedTIMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, TIMIdentifier)
 }
 
 func (rcv *TIM) Init(buf []byte, i flatbuffers.UOffsetT) {

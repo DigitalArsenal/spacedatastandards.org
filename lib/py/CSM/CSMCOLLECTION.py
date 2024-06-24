@@ -53,18 +53,30 @@ class CSMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def CSMCOLLECTIONStart(builder): builder.StartObject(1)
+def CSMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return CSMCOLLECTIONStart(builder)
-def CSMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    CSMCOLLECTIONStart(builder)
+
+def CSMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return CSMCOLLECTIONAddRECORDS(builder, RECORDS)
-def CSMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    CSMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def CSMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return CSMCOLLECTIONStartRECORDSVector(builder, numElems)
-def CSMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def CSMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CSMCOLLECTIONEnd(builder)
+
 import CSM
 try:
     from typing import List

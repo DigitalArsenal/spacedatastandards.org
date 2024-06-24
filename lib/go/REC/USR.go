@@ -17,11 +17,19 @@ func GetRootAsUSR(buf []byte, offset flatbuffers.UOffsetT) *USR {
 	return x
 }
 
+func FinishUSRBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsUSR(buf []byte, offset flatbuffers.UOffsetT) *USR {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &USR{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedUSRBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *USR) Init(buf []byte, i flatbuffers.UOffsetT) {

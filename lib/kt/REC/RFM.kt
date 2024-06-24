@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Reference Frame Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class RFM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -36,7 +35,7 @@ class RFM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRFM(_bb: ByteBuffer): RFM = getRootAsRFM(_bb, RFM())
         fun getRootAsRFM(_bb: ByteBuffer, obj: RFM): RFM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

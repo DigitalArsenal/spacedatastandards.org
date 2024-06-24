@@ -11,10 +11,11 @@ public struct TDM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static TDM GetRootAsTDM(ByteBuffer _bb) { return GetRootAsTDM(_bb, new TDM()); }
   public static TDM GetRootAsTDM(ByteBuffer _bb, TDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool TDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$TDM"); }
+  public static bool VerifyTDM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$TDM", false, TDMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -986,3 +987,71 @@ public class TDMT
   }
 }
 
+
+static public class TDMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*OBSERVER_ID*/, false)
+      && verifier.VerifyField(tablePos, 6 /*OBSERVER_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*OBSERVER_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*OBSERVER_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*OBSERVER_VX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*OBSERVER_VY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*OBSERVER_VZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*OBSERVER_POSITION_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*OBS_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 24 /*CCSDS_TDM_VERS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 26 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 28 /*CREATION_DATE*/, false)
+      && verifier.VerifyString(tablePos, 30 /*ORIGINATOR*/, false)
+      && verifier.VerifyString(tablePos, 32 /*META_START*/, false)
+      && verifier.VerifyString(tablePos, 34 /*TIME_SYSTEM*/, false)
+      && verifier.VerifyString(tablePos, 36 /*START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 38 /*STOP_TIME*/, false)
+      && verifier.VerifyString(tablePos, 40 /*PARTICIPANT_1*/, false)
+      && verifier.VerifyString(tablePos, 42 /*PARTICIPANT_2*/, false)
+      && verifier.VerifyString(tablePos, 44 /*PARTICIPANT_3*/, false)
+      && verifier.VerifyString(tablePos, 46 /*PARTICIPANT_4*/, false)
+      && verifier.VerifyString(tablePos, 48 /*PARTICIPANT_5*/, false)
+      && verifier.VerifyString(tablePos, 50 /*MODE*/, false)
+      && verifier.VerifyField(tablePos, 52 /*PATH_1*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 54 /*PATH_2*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyString(tablePos, 56 /*TRANSMIT_BAND*/, false)
+      && verifier.VerifyString(tablePos, 58 /*RECEIVE_BAND*/, false)
+      && verifier.VerifyField(tablePos, 60 /*INTEGRATION_INTERVAL*/, 4 /*float*/, 4, false)
+      && verifier.VerifyString(tablePos, 62 /*INTEGRATION_REF*/, false)
+      && verifier.VerifyField(tablePos, 64 /*RECEIVE_DELAY_2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*RECEIVE_DELAY_3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 68 /*DATA_QUALITY*/, false)
+      && verifier.VerifyString(tablePos, 70 /*META_STOP*/, false)
+      && verifier.VerifyString(tablePos, 72 /*DATA_START*/, false)
+      && verifier.VerifyField(tablePos, 74 /*TRANSMIT_FREQ_1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 76 /*RECEIVE_FREQ*/, 8 /*double*/, false)
+      && verifier.VerifyString(tablePos, 78 /*DATA_STOP*/, false)
+      && verifier.VerifyString(tablePos, 80 /*TIMETAG_REF*/, false)
+      && verifier.VerifyString(tablePos, 82 /*ANGLE_TYPE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 84 /*ANGLE_1*/, 4 /*float*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 86 /*ANGLE_2*/, 4 /*float*/, false)
+      && verifier.VerifyField(tablePos, 88 /*ANGLE_UNCERTAINTY_1*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 90 /*ANGLE_UNCERTAINTY_2*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 92 /*RANGE_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*RANGE_UNCERTAINTY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 96 /*RANGE_MODE*/, false)
+      && verifier.VerifyField(tablePos, 98 /*RANGE_MODULUS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*CORRECTION_ANGLE_1*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 102 /*CORRECTION_ANGLE_2*/, 4 /*float*/, 4, false)
+      && verifier.VerifyString(tablePos, 104 /*CORRECTIONS_APPLIED*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 106 /*TROPO_DRY*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 108 /*TROPO_WET*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 110 /*STEC*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 112 /*PRESSURE*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 114 /*RHUMIDITY*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 116 /*TEMPERATURE*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 118 /*CLOCK_BIAS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 120 /*CLOCK_DRIFT*/, 8 /*double*/, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

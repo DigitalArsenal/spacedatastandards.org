@@ -17,7 +17,6 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class HYPCOLLECTION : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -41,7 +40,7 @@ class HYPCOLLECTION : Table() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsHYPCOLLECTION(_bb: ByteBuffer): HYPCOLLECTION = getRootAsHYPCOLLECTION(_bb, HYPCOLLECTION())
         fun getRootAsHYPCOLLECTION(_bb: ByteBuffer, obj: HYPCOLLECTION): HYPCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

@@ -2,9 +2,4 @@
 
 # namespace: 
 
-# Different types of polarization in EMT
-class PolarizationType(object):
-    linear = 0
-    circular = 1
-    elliptical = 2
-    unpolarized = 3
+# NOTE PolarizationType.py does not declare any structs or enums

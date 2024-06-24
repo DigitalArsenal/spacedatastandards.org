@@ -7,7 +7,7 @@ import FlatBuffers
 ///  Collection Request Message
 public struct CRM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -140,7 +140,7 @@ public struct CRM: FlatBufferObject, Verifiable {
   public var SUFFIX: String? { let o = _accessor.offset(VTOFFSET.SUFFIX.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUFFIX.v) }
   ///  Boolean indicating that this collect request is UCT follow-up.
-  public var UCT_FOLLOW_UP: Bool { let o = _accessor.offset(VTOFFSET.UCT_FOLLOW_UP.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var UCT_FOLLOW_UP: Bool { let o = _accessor.offset(VTOFFSET.UCT_FOLLOW_UP.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  The start time of the collect or contact request window, in ISO 8601 UTC format.
   public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
@@ -616,7 +616,7 @@ public struct CRM: FlatBufferObject, Verifiable {
 
 public struct CRMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

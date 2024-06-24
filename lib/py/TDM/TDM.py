@@ -736,225 +736,444 @@ class TDM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         return o == 0
 
-def TDMStart(builder): builder.StartObject(59)
+def TDMStart(builder):
+    builder.StartObject(59)
+
 def Start(builder):
-    return TDMStart(builder)
-def TDMAddOBSERVER_ID(builder, OBSERVER_ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVER_ID), 0)
+    TDMStart(builder)
+
+def TDMAddOBSERVER_ID(builder, OBSERVER_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVER_ID), 0)
+
 def AddOBSERVER_ID(builder, OBSERVER_ID):
-    return TDMAddOBSERVER_ID(builder, OBSERVER_ID)
-def TDMAddOBSERVER_X(builder, OBSERVER_X): builder.PrependFloat64Slot(1, OBSERVER_X, 0.0)
+    TDMAddOBSERVER_ID(builder, OBSERVER_ID)
+
+def TDMAddOBSERVER_X(builder, OBSERVER_X):
+    builder.PrependFloat64Slot(1, OBSERVER_X, 0.0)
+
 def AddOBSERVER_X(builder, OBSERVER_X):
-    return TDMAddOBSERVER_X(builder, OBSERVER_X)
-def TDMAddOBSERVER_Y(builder, OBSERVER_Y): builder.PrependFloat64Slot(2, OBSERVER_Y, 0.0)
+    TDMAddOBSERVER_X(builder, OBSERVER_X)
+
+def TDMAddOBSERVER_Y(builder, OBSERVER_Y):
+    builder.PrependFloat64Slot(2, OBSERVER_Y, 0.0)
+
 def AddOBSERVER_Y(builder, OBSERVER_Y):
-    return TDMAddOBSERVER_Y(builder, OBSERVER_Y)
-def TDMAddOBSERVER_Z(builder, OBSERVER_Z): builder.PrependFloat64Slot(3, OBSERVER_Z, 0.0)
+    TDMAddOBSERVER_Y(builder, OBSERVER_Y)
+
+def TDMAddOBSERVER_Z(builder, OBSERVER_Z):
+    builder.PrependFloat64Slot(3, OBSERVER_Z, 0.0)
+
 def AddOBSERVER_Z(builder, OBSERVER_Z):
-    return TDMAddOBSERVER_Z(builder, OBSERVER_Z)
-def TDMAddOBSERVER_VX(builder, OBSERVER_VX): builder.PrependFloat64Slot(4, OBSERVER_VX, 0.0)
+    TDMAddOBSERVER_Z(builder, OBSERVER_Z)
+
+def TDMAddOBSERVER_VX(builder, OBSERVER_VX):
+    builder.PrependFloat64Slot(4, OBSERVER_VX, 0.0)
+
 def AddOBSERVER_VX(builder, OBSERVER_VX):
-    return TDMAddOBSERVER_VX(builder, OBSERVER_VX)
-def TDMAddOBSERVER_VY(builder, OBSERVER_VY): builder.PrependFloat64Slot(5, OBSERVER_VY, 0.0)
+    TDMAddOBSERVER_VX(builder, OBSERVER_VX)
+
+def TDMAddOBSERVER_VY(builder, OBSERVER_VY):
+    builder.PrependFloat64Slot(5, OBSERVER_VY, 0.0)
+
 def AddOBSERVER_VY(builder, OBSERVER_VY):
-    return TDMAddOBSERVER_VY(builder, OBSERVER_VY)
-def TDMAddOBSERVER_VZ(builder, OBSERVER_VZ): builder.PrependFloat64Slot(6, OBSERVER_VZ, 0.0)
+    TDMAddOBSERVER_VY(builder, OBSERVER_VY)
+
+def TDMAddOBSERVER_VZ(builder, OBSERVER_VZ):
+    builder.PrependFloat64Slot(6, OBSERVER_VZ, 0.0)
+
 def AddOBSERVER_VZ(builder, OBSERVER_VZ):
-    return TDMAddOBSERVER_VZ(builder, OBSERVER_VZ)
-def TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME): builder.PrependInt8Slot(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
+    TDMAddOBSERVER_VZ(builder, OBSERVER_VZ)
+
+def TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME):
+    builder.PrependInt8Slot(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
+
 def AddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME):
-    return TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME)
-def TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME): builder.PrependInt8Slot(8, OBS_REFERENCE_FRAME, 0)
+    TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME)
+
+def TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME):
+    builder.PrependInt8Slot(8, OBS_REFERENCE_FRAME, 0)
+
 def AddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME):
-    return TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME)
-def TDMAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+    TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME)
+
+def TDMAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
 def AddEPOCH(builder, EPOCH):
-    return TDMAddEPOCH(builder, EPOCH)
-def TDMAddCCSDS_TDM_VERS(builder, CCSDS_TDM_VERS): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CCSDS_TDM_VERS), 0)
+    TDMAddEPOCH(builder, EPOCH)
+
+def TDMAddCCSDS_TDM_VERS(builder, CCSDS_TDM_VERS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CCSDS_TDM_VERS), 0)
+
 def AddCCSDS_TDM_VERS(builder, CCSDS_TDM_VERS):
-    return TDMAddCCSDS_TDM_VERS(builder, CCSDS_TDM_VERS)
-def TDMAddCOMMENT(builder, COMMENT): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+    TDMAddCCSDS_TDM_VERS(builder, CCSDS_TDM_VERS)
+
+def TDMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
 def AddCOMMENT(builder, COMMENT):
-    return TDMAddCOMMENT(builder, COMMENT)
-def TDMStartCOMMENTVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    TDMAddCOMMENT(builder, COMMENT)
+
+def TDMStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartCOMMENTVector(builder, numElems):
     return TDMStartCOMMENTVector(builder, numElems)
-def TDMAddCREATION_DATE(builder, CREATION_DATE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+
+def TDMAddCREATION_DATE(builder, CREATION_DATE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+
 def AddCREATION_DATE(builder, CREATION_DATE):
-    return TDMAddCREATION_DATE(builder, CREATION_DATE)
-def TDMAddORIGINATOR(builder, ORIGINATOR): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+    TDMAddCREATION_DATE(builder, CREATION_DATE)
+
+def TDMAddORIGINATOR(builder, ORIGINATOR):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+
 def AddORIGINATOR(builder, ORIGINATOR):
-    return TDMAddORIGINATOR(builder, ORIGINATOR)
-def TDMAddMETA_START(builder, META_START): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(META_START), 0)
+    TDMAddORIGINATOR(builder, ORIGINATOR)
+
+def TDMAddMETA_START(builder, META_START):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(META_START), 0)
+
 def AddMETA_START(builder, META_START):
-    return TDMAddMETA_START(builder, META_START)
-def TDMAddTIME_SYSTEM(builder, TIME_SYSTEM): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+    TDMAddMETA_START(builder, META_START)
+
+def TDMAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
 def AddTIME_SYSTEM(builder, TIME_SYSTEM):
-    return TDMAddTIME_SYSTEM(builder, TIME_SYSTEM)
-def TDMAddSTART_TIME(builder, START_TIME): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+    TDMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def TDMAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
 def AddSTART_TIME(builder, START_TIME):
-    return TDMAddSTART_TIME(builder, START_TIME)
-def TDMAddSTOP_TIME(builder, STOP_TIME): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+    TDMAddSTART_TIME(builder, START_TIME)
+
+def TDMAddSTOP_TIME(builder, STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+
 def AddSTOP_TIME(builder, STOP_TIME):
-    return TDMAddSTOP_TIME(builder, STOP_TIME)
-def TDMAddPARTICIPANT_1(builder, PARTICIPANT_1): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_1), 0)
+    TDMAddSTOP_TIME(builder, STOP_TIME)
+
+def TDMAddPARTICIPANT_1(builder, PARTICIPANT_1):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_1), 0)
+
 def AddPARTICIPANT_1(builder, PARTICIPANT_1):
-    return TDMAddPARTICIPANT_1(builder, PARTICIPANT_1)
-def TDMAddPARTICIPANT_2(builder, PARTICIPANT_2): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_2), 0)
+    TDMAddPARTICIPANT_1(builder, PARTICIPANT_1)
+
+def TDMAddPARTICIPANT_2(builder, PARTICIPANT_2):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_2), 0)
+
 def AddPARTICIPANT_2(builder, PARTICIPANT_2):
-    return TDMAddPARTICIPANT_2(builder, PARTICIPANT_2)
-def TDMAddPARTICIPANT_3(builder, PARTICIPANT_3): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_3), 0)
+    TDMAddPARTICIPANT_2(builder, PARTICIPANT_2)
+
+def TDMAddPARTICIPANT_3(builder, PARTICIPANT_3):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_3), 0)
+
 def AddPARTICIPANT_3(builder, PARTICIPANT_3):
-    return TDMAddPARTICIPANT_3(builder, PARTICIPANT_3)
-def TDMAddPARTICIPANT_4(builder, PARTICIPANT_4): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_4), 0)
+    TDMAddPARTICIPANT_3(builder, PARTICIPANT_3)
+
+def TDMAddPARTICIPANT_4(builder, PARTICIPANT_4):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_4), 0)
+
 def AddPARTICIPANT_4(builder, PARTICIPANT_4):
-    return TDMAddPARTICIPANT_4(builder, PARTICIPANT_4)
-def TDMAddPARTICIPANT_5(builder, PARTICIPANT_5): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_5), 0)
+    TDMAddPARTICIPANT_4(builder, PARTICIPANT_4)
+
+def TDMAddPARTICIPANT_5(builder, PARTICIPANT_5):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICIPANT_5), 0)
+
 def AddPARTICIPANT_5(builder, PARTICIPANT_5):
-    return TDMAddPARTICIPANT_5(builder, PARTICIPANT_5)
-def TDMAddMODE(builder, MODE): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(MODE), 0)
+    TDMAddPARTICIPANT_5(builder, PARTICIPANT_5)
+
+def TDMAddMODE(builder, MODE):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(MODE), 0)
+
 def AddMODE(builder, MODE):
-    return TDMAddMODE(builder, MODE)
-def TDMAddPATH_1(builder, PATH_1): builder.PrependUint16Slot(24, PATH_1, 0)
+    TDMAddMODE(builder, MODE)
+
+def TDMAddPATH_1(builder, PATH_1):
+    builder.PrependUint16Slot(24, PATH_1, 0)
+
 def AddPATH_1(builder, PATH_1):
-    return TDMAddPATH_1(builder, PATH_1)
-def TDMAddPATH_2(builder, PATH_2): builder.PrependUint16Slot(25, PATH_2, 0)
+    TDMAddPATH_1(builder, PATH_1)
+
+def TDMAddPATH_2(builder, PATH_2):
+    builder.PrependUint16Slot(25, PATH_2, 0)
+
 def AddPATH_2(builder, PATH_2):
-    return TDMAddPATH_2(builder, PATH_2)
-def TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_BAND), 0)
+    TDMAddPATH_2(builder, PATH_2)
+
+def TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_BAND), 0)
+
 def AddTRANSMIT_BAND(builder, TRANSMIT_BAND):
-    return TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND)
-def TDMAddRECEIVE_BAND(builder, RECEIVE_BAND): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_BAND), 0)
+    TDMAddTRANSMIT_BAND(builder, TRANSMIT_BAND)
+
+def TDMAddRECEIVE_BAND(builder, RECEIVE_BAND):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_BAND), 0)
+
 def AddRECEIVE_BAND(builder, RECEIVE_BAND):
-    return TDMAddRECEIVE_BAND(builder, RECEIVE_BAND)
-def TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL): builder.PrependFloat32Slot(28, INTEGRATION_INTERVAL, 0.0)
+    TDMAddRECEIVE_BAND(builder, RECEIVE_BAND)
+
+def TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL):
+    builder.PrependFloat32Slot(28, INTEGRATION_INTERVAL, 0.0)
+
 def AddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL):
-    return TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL)
-def TDMAddINTEGRATION_REF(builder, INTEGRATION_REF): builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATION_REF), 0)
+    TDMAddINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL)
+
+def TDMAddINTEGRATION_REF(builder, INTEGRATION_REF):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATION_REF), 0)
+
 def AddINTEGRATION_REF(builder, INTEGRATION_REF):
-    return TDMAddINTEGRATION_REF(builder, INTEGRATION_REF)
-def TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2): builder.PrependFloat64Slot(30, RECEIVE_DELAY_2, 0.0)
+    TDMAddINTEGRATION_REF(builder, INTEGRATION_REF)
+
+def TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2):
+    builder.PrependFloat64Slot(30, RECEIVE_DELAY_2, 0.0)
+
 def AddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2):
-    return TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2)
-def TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3): builder.PrependFloat64Slot(31, RECEIVE_DELAY_3, 0.0)
+    TDMAddRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2)
+
+def TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3):
+    builder.PrependFloat64Slot(31, RECEIVE_DELAY_3, 0.0)
+
 def AddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3):
-    return TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3)
-def TDMAddDATA_QUALITY(builder, DATA_QUALITY): builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_QUALITY), 0)
+    TDMAddRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3)
+
+def TDMAddDATA_QUALITY(builder, DATA_QUALITY):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_QUALITY), 0)
+
 def AddDATA_QUALITY(builder, DATA_QUALITY):
-    return TDMAddDATA_QUALITY(builder, DATA_QUALITY)
-def TDMAddMETA_STOP(builder, META_STOP): builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(META_STOP), 0)
+    TDMAddDATA_QUALITY(builder, DATA_QUALITY)
+
+def TDMAddMETA_STOP(builder, META_STOP):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(META_STOP), 0)
+
 def AddMETA_STOP(builder, META_STOP):
-    return TDMAddMETA_STOP(builder, META_STOP)
-def TDMAddDATA_START(builder, DATA_START): builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_START), 0)
+    TDMAddMETA_STOP(builder, META_STOP)
+
+def TDMAddDATA_START(builder, DATA_START):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_START), 0)
+
 def AddDATA_START(builder, DATA_START):
-    return TDMAddDATA_START(builder, DATA_START)
-def TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1): builder.PrependFloat64Slot(35, TRANSMIT_FREQ_1, 0.0)
+    TDMAddDATA_START(builder, DATA_START)
+
+def TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1):
+    builder.PrependFloat64Slot(35, TRANSMIT_FREQ_1, 0.0)
+
 def AddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1):
-    return TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1)
-def TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ): builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_FREQ), 0)
+    TDMAddTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1)
+
+def TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_FREQ), 0)
+
 def AddRECEIVE_FREQ(builder, RECEIVE_FREQ):
-    return TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ)
-def TDMStartRECEIVE_FREQVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddRECEIVE_FREQ(builder, RECEIVE_FREQ)
+
+def TDMStartRECEIVE_FREQVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartRECEIVE_FREQVector(builder, numElems):
     return TDMStartRECEIVE_FREQVector(builder, numElems)
-def TDMAddDATA_STOP(builder, DATA_STOP): builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
+
+def TDMAddDATA_STOP(builder, DATA_STOP):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
+
 def AddDATA_STOP(builder, DATA_STOP):
-    return TDMAddDATA_STOP(builder, DATA_STOP)
-def TDMAddTIMETAG_REF(builder, TIMETAG_REF): builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(TIMETAG_REF), 0)
+    TDMAddDATA_STOP(builder, DATA_STOP)
+
+def TDMAddTIMETAG_REF(builder, TIMETAG_REF):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(TIMETAG_REF), 0)
+
 def AddTIMETAG_REF(builder, TIMETAG_REF):
-    return TDMAddTIMETAG_REF(builder, TIMETAG_REF)
-def TDMAddANGLE_TYPE(builder, ANGLE_TYPE): builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_TYPE), 0)
+    TDMAddTIMETAG_REF(builder, TIMETAG_REF)
+
+def TDMAddANGLE_TYPE(builder, ANGLE_TYPE):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_TYPE), 0)
+
 def AddANGLE_TYPE(builder, ANGLE_TYPE):
-    return TDMAddANGLE_TYPE(builder, ANGLE_TYPE)
-def TDMAddANGLE_1(builder, ANGLE_1): builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_1), 0)
+    TDMAddANGLE_TYPE(builder, ANGLE_TYPE)
+
+def TDMAddANGLE_1(builder, ANGLE_1):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_1), 0)
+
 def AddANGLE_1(builder, ANGLE_1):
-    return TDMAddANGLE_1(builder, ANGLE_1)
-def TDMStartANGLE_1Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    TDMAddANGLE_1(builder, ANGLE_1)
+
+def TDMStartANGLE_1Vector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartANGLE_1Vector(builder, numElems):
     return TDMStartANGLE_1Vector(builder, numElems)
-def TDMAddANGLE_2(builder, ANGLE_2): builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_2), 0)
+
+def TDMAddANGLE_2(builder, ANGLE_2):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_2), 0)
+
 def AddANGLE_2(builder, ANGLE_2):
-    return TDMAddANGLE_2(builder, ANGLE_2)
-def TDMStartANGLE_2Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    TDMAddANGLE_2(builder, ANGLE_2)
+
+def TDMStartANGLE_2Vector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartANGLE_2Vector(builder, numElems):
     return TDMStartANGLE_2Vector(builder, numElems)
-def TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1): builder.PrependFloat32Slot(42, ANGLE_UNCERTAINTY_1, 0.0)
+
+def TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1):
+    builder.PrependFloat32Slot(42, ANGLE_UNCERTAINTY_1, 0.0)
+
 def AddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1):
-    return TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1)
-def TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2): builder.PrependFloat32Slot(43, ANGLE_UNCERTAINTY_2, 0.0)
+    TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1)
+
+def TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2):
+    builder.PrependFloat32Slot(43, ANGLE_UNCERTAINTY_2, 0.0)
+
 def AddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2):
-    return TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2)
-def TDMAddRANGE_RATE(builder, RANGE_RATE): builder.PrependFloat64Slot(44, RANGE_RATE, 0.0)
+    TDMAddANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2)
+
+def TDMAddRANGE_RATE(builder, RANGE_RATE):
+    builder.PrependFloat64Slot(44, RANGE_RATE, 0.0)
+
 def AddRANGE_RATE(builder, RANGE_RATE):
-    return TDMAddRANGE_RATE(builder, RANGE_RATE)
-def TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY): builder.PrependFloat64Slot(45, RANGE_UNCERTAINTY, 0.0)
+    TDMAddRANGE_RATE(builder, RANGE_RATE)
+
+def TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY):
+    builder.PrependFloat64Slot(45, RANGE_UNCERTAINTY, 0.0)
+
 def AddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY):
-    return TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY)
-def TDMAddRANGE_MODE(builder, RANGE_MODE): builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_MODE), 0)
+    TDMAddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY)
+
+def TDMAddRANGE_MODE(builder, RANGE_MODE):
+    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(RANGE_MODE), 0)
+
 def AddRANGE_MODE(builder, RANGE_MODE):
-    return TDMAddRANGE_MODE(builder, RANGE_MODE)
-def TDMAddRANGE_MODULUS(builder, RANGE_MODULUS): builder.PrependFloat64Slot(47, RANGE_MODULUS, 0.0)
+    TDMAddRANGE_MODE(builder, RANGE_MODE)
+
+def TDMAddRANGE_MODULUS(builder, RANGE_MODULUS):
+    builder.PrependFloat64Slot(47, RANGE_MODULUS, 0.0)
+
 def AddRANGE_MODULUS(builder, RANGE_MODULUS):
-    return TDMAddRANGE_MODULUS(builder, RANGE_MODULUS)
-def TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1): builder.PrependFloat32Slot(48, CORRECTION_ANGLE_1, 0.0)
+    TDMAddRANGE_MODULUS(builder, RANGE_MODULUS)
+
+def TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1):
+    builder.PrependFloat32Slot(48, CORRECTION_ANGLE_1, 0.0)
+
 def AddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1):
-    return TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1)
-def TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2): builder.PrependFloat32Slot(49, CORRECTION_ANGLE_2, 0.0)
+    TDMAddCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1)
+
+def TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2):
+    builder.PrependFloat32Slot(49, CORRECTION_ANGLE_2, 0.0)
+
 def AddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2):
-    return TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2)
-def TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED): builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(CORRECTIONS_APPLIED), 0)
+    TDMAddCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2)
+
+def TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED):
+    builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(CORRECTIONS_APPLIED), 0)
+
 def AddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED):
-    return TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED)
-def TDMAddTROPO_DRY(builder, TROPO_DRY): builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_DRY), 0)
+    TDMAddCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIED)
+
+def TDMAddTROPO_DRY(builder, TROPO_DRY):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_DRY), 0)
+
 def AddTROPO_DRY(builder, TROPO_DRY):
-    return TDMAddTROPO_DRY(builder, TROPO_DRY)
-def TDMStartTROPO_DRYVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddTROPO_DRY(builder, TROPO_DRY)
+
+def TDMStartTROPO_DRYVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartTROPO_DRYVector(builder, numElems):
     return TDMStartTROPO_DRYVector(builder, numElems)
-def TDMAddTROPO_WET(builder, TROPO_WET): builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_WET), 0)
+
+def TDMAddTROPO_WET(builder, TROPO_WET):
+    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_WET), 0)
+
 def AddTROPO_WET(builder, TROPO_WET):
-    return TDMAddTROPO_WET(builder, TROPO_WET)
-def TDMStartTROPO_WETVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddTROPO_WET(builder, TROPO_WET)
+
+def TDMStartTROPO_WETVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartTROPO_WETVector(builder, numElems):
     return TDMStartTROPO_WETVector(builder, numElems)
-def TDMAddSTEC(builder, STEC): builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(STEC), 0)
+
+def TDMAddSTEC(builder, STEC):
+    builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(STEC), 0)
+
 def AddSTEC(builder, STEC):
-    return TDMAddSTEC(builder, STEC)
-def TDMStartSTECVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddSTEC(builder, STEC)
+
+def TDMStartSTECVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartSTECVector(builder, numElems):
     return TDMStartSTECVector(builder, numElems)
-def TDMAddPRESSURE(builder, PRESSURE): builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(PRESSURE), 0)
+
+def TDMAddPRESSURE(builder, PRESSURE):
+    builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(PRESSURE), 0)
+
 def AddPRESSURE(builder, PRESSURE):
-    return TDMAddPRESSURE(builder, PRESSURE)
-def TDMStartPRESSUREVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddPRESSURE(builder, PRESSURE)
+
+def TDMStartPRESSUREVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartPRESSUREVector(builder, numElems):
     return TDMStartPRESSUREVector(builder, numElems)
-def TDMAddRHUMIDITY(builder, RHUMIDITY): builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(RHUMIDITY), 0)
+
+def TDMAddRHUMIDITY(builder, RHUMIDITY):
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(RHUMIDITY), 0)
+
 def AddRHUMIDITY(builder, RHUMIDITY):
-    return TDMAddRHUMIDITY(builder, RHUMIDITY)
-def TDMStartRHUMIDITYVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddRHUMIDITY(builder, RHUMIDITY)
+
+def TDMStartRHUMIDITYVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartRHUMIDITYVector(builder, numElems):
     return TDMStartRHUMIDITYVector(builder, numElems)
-def TDMAddTEMPERATURE(builder, TEMPERATURE): builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(TEMPERATURE), 0)
+
+def TDMAddTEMPERATURE(builder, TEMPERATURE):
+    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(TEMPERATURE), 0)
+
 def AddTEMPERATURE(builder, TEMPERATURE):
-    return TDMAddTEMPERATURE(builder, TEMPERATURE)
-def TDMStartTEMPERATUREVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddTEMPERATURE(builder, TEMPERATURE)
+
+def TDMStartTEMPERATUREVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartTEMPERATUREVector(builder, numElems):
     return TDMStartTEMPERATUREVector(builder, numElems)
-def TDMAddCLOCK_BIAS(builder, CLOCK_BIAS): builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_BIAS), 0)
+
+def TDMAddCLOCK_BIAS(builder, CLOCK_BIAS):
+    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_BIAS), 0)
+
 def AddCLOCK_BIAS(builder, CLOCK_BIAS):
-    return TDMAddCLOCK_BIAS(builder, CLOCK_BIAS)
-def TDMStartCLOCK_BIASVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddCLOCK_BIAS(builder, CLOCK_BIAS)
+
+def TDMStartCLOCK_BIASVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartCLOCK_BIASVector(builder, numElems):
     return TDMStartCLOCK_BIASVector(builder, numElems)
-def TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT): builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_DRIFT), 0)
+
+def TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT):
+    builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_DRIFT), 0)
+
 def AddCLOCK_DRIFT(builder, CLOCK_DRIFT):
-    return TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
-def TDMStartCLOCK_DRIFTVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+    TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
+
+def TDMStartCLOCK_DRIFTVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
 def StartCLOCK_DRIFTVector(builder, numElems):
     return TDMStartCLOCK_DRIFTVector(builder, numElems)
-def TDMEnd(builder): return builder.EndObject()
+
+def TDMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return TDMEnd(builder)
+
 try:
     from typing import List
 except:

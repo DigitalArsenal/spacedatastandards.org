@@ -53,18 +53,30 @@ class EOPCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def EOPCOLLECTIONStart(builder): builder.StartObject(1)
+def EOPCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return EOPCOLLECTIONStart(builder)
-def EOPCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    EOPCOLLECTIONStart(builder)
+
+def EOPCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return EOPCOLLECTIONAddRECORDS(builder, RECORDS)
-def EOPCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    EOPCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def EOPCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return EOPCOLLECTIONStartRECORDSVector(builder, numElems)
-def EOPCOLLECTIONEnd(builder): return builder.EndObject()
+
+def EOPCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EOPCOLLECTIONEnd(builder)
+
 import EOP
 try:
     from typing import List

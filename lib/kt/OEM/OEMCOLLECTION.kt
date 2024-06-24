@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Collection of OEM messages
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class OEMCOLLECTION : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -44,7 +43,7 @@ class OEMCOLLECTION : Table() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsOEMCOLLECTION(_bb: ByteBuffer): OEMCOLLECTION = getRootAsOEMCOLLECTION(_bb, OEMCOLLECTION())
         fun getRootAsOEMCOLLECTION(_bb: ByteBuffer, obj: OEMCOLLECTION): OEMCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

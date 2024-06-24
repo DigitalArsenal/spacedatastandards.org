@@ -11,7 +11,7 @@ public struct CryptoKey : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static CryptoKey GetRootAsCryptoKey(ByteBuffer _bb) { return GetRootAsCryptoKey(_bb, new CryptoKey()); }
   public static CryptoKey GetRootAsCryptoKey(ByteBuffer _bb, CryptoKey obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -154,3 +154,19 @@ public class CryptoKeyT
   }
 }
 
+
+static public class CryptoKeyVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*PUBLIC_KEY*/, false)
+      && verifier.VerifyString(tablePos, 6 /*XPUB*/, false)
+      && verifier.VerifyString(tablePos, 8 /*PRIVATE_KEY*/, false)
+      && verifier.VerifyString(tablePos, 10 /*XPRIV*/, false)
+      && verifier.VerifyString(tablePos, 12 /*KEY_ADDRESS*/, false)
+      && verifier.VerifyString(tablePos, 14 /*ADDRESS_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 16 /*KEY_TYPE*/, 1 /*KeyType*/, 1, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

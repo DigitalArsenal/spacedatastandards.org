@@ -931,7 +931,7 @@ class CDMObject extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT(FlatBufferBuilder $builder, $OBJECT)
@@ -941,7 +941,7 @@ class CDMObject extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addPOC(FlatBufferBuilder $builder, $POC)

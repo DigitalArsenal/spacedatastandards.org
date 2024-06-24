@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Represents cryptographic key information
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class CryptoKey : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -123,7 +122,7 @@ class CryptoKey : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCryptoKey(_bb: ByteBuffer): CryptoKey = getRootAsCryptoKey(_bb, CryptoKey())
         fun getRootAsCryptoKey(_bb: ByteBuffer, obj: CryptoKey): CryptoKey {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

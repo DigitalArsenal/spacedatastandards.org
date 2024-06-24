@@ -11,10 +11,11 @@ public struct CAT : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static CAT GetRootAsCAT(ByteBuffer _bb) { return GetRootAsCAT(_bb, new CAT()); }
   public static CAT GetRootAsCAT(ByteBuffer _bb, CAT obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool CATBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CAT"); }
+  public static bool VerifyCAT(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$CAT", false, CATVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CAT __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -329,3 +330,35 @@ public class CATT
   }
 }
 
+
+static public class CATVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*OBJECT_NAME*/, false)
+      && verifier.VerifyString(tablePos, 6 /*OBJECT_ID*/, false)
+      && verifier.VerifyField(tablePos, 8 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 10 /*OBJECT_TYPE*/, 1 /*objectType*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*OPS_STATUS_CODE*/, 1 /*opsStatusCode*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*OWNER*/, 1 /*legacyCountryCode*/, 1, false)
+      && verifier.VerifyString(tablePos, 16 /*LAUNCH_DATE*/, false)
+      && verifier.VerifyString(tablePos, 18 /*LAUNCH_SITE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*DECAY_DATE*/, false)
+      && verifier.VerifyField(tablePos, 22 /*PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*APOGEE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*PERIGEE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*RCS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*DATA_STATUS_CODE*/, 1 /*dataStatusCode*/, 1, false)
+      && verifier.VerifyString(tablePos, 34 /*ORBIT_CENTER*/, false)
+      && verifier.VerifyField(tablePos, 36 /*ORBIT_TYPE*/, 1 /*orbitType*/, 1, false)
+      && verifier.VerifyString(tablePos, 38 /*DEPLOYMENT_DATE*/, false)
+      && verifier.VerifyField(tablePos, 40 /*MANEUVERABLE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 42 /*SIZE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*MASS_TYPE*/, 1 /*massType*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 48 /*PAYLOADS*/, PLDVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

@@ -2,8 +2,4 @@
 
 # namespace: 
 
-# Enum for the mode of data (real, simulated, synthetic)
-class DataMode(object):
-    REAL = 0
-    SIMULATED = 1
-    SYNTHETIC = 2
+# NOTE DataMode.py does not declare any structs or enums

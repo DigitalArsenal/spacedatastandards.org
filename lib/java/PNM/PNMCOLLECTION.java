@@ -19,7 +19,7 @@ import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class PNMCOLLECTION extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static PNMCOLLECTION getRootAsPNMCOLLECTION(ByteBuffer _bb) { return getRootAsPNMCOLLECTION(_bb, new PNMCOLLECTION()); }
   public static PNMCOLLECTION getRootAsPNMCOLLECTION(ByteBuffer _bb, PNMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

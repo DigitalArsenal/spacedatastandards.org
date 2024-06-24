@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Earth Orientation Parameters
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class EOP : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -117,7 +116,7 @@ class EOP : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEOP(_bb: ByteBuffer): EOP = getRootAsEOP(_bb, EOP())
         fun getRootAsEOP(_bb: ByteBuffer, obj: EOP): EOP {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

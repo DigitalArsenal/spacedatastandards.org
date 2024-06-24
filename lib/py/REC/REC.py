@@ -68,24 +68,42 @@ class REC(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
-def RECStart(builder): builder.StartObject(3)
+def RECStart(builder):
+    builder.StartObject(3)
+
 def Start(builder):
-    return RECStart(builder)
-def RECAddVersion(builder, version): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(version), 0)
+    RECStart(builder)
+
+def RECAddVersion(builder, version):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(version), 0)
+
 def AddVersion(builder, version):
-    return RECAddVersion(builder, version)
-def RECAddStandard(builder, standard): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(standard), 0)
+    RECAddVersion(builder, version)
+
+def RECAddStandard(builder, standard):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(standard), 0)
+
 def AddStandard(builder, standard):
-    return RECAddStandard(builder, standard)
-def RECAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    RECAddStandard(builder, standard)
+
+def RECAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return RECAddRECORDS(builder, RECORDS)
-def RECStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    RECAddRECORDS(builder, RECORDS)
+
+def RECStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return RECStartRECORDSVector(builder, numElems)
-def RECEnd(builder): return builder.EndObject()
+
+def RECEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return RECEnd(builder)
+
 import Record
 try:
     from typing import List

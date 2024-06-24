@@ -56,24 +56,42 @@ class Score(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def ScoreStart(builder): builder.StartObject(4)
+def ScoreStart(builder):
+    builder.StartObject(4)
+
 def Start(builder):
-    return ScoreStart(builder)
-def ScoreAddNORAD_CAT_ID(builder, NORAD_CAT_ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NORAD_CAT_ID), 0)
+    ScoreStart(builder)
+
+def ScoreAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NORAD_CAT_ID), 0)
+
 def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
-    return ScoreAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
-def ScoreAddTYPE(builder, TYPE): builder.PrependInt8Slot(1, TYPE, 0)
+    ScoreAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def ScoreAddTYPE(builder, TYPE):
+    builder.PrependInt8Slot(1, TYPE, 0)
+
 def AddTYPE(builder, TYPE):
-    return ScoreAddTYPE(builder, TYPE)
-def ScoreAddTAG(builder, TAG): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
+    ScoreAddTYPE(builder, TYPE)
+
+def ScoreAddTAG(builder, TAG):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
+
 def AddTAG(builder, TAG):
-    return ScoreAddTAG(builder, TAG)
-def ScoreAddSCORE(builder, SCORE): builder.PrependFloat32Slot(3, SCORE, 0.0)
+    ScoreAddTAG(builder, TAG)
+
+def ScoreAddSCORE(builder, SCORE):
+    builder.PrependFloat32Slot(3, SCORE, 0.0)
+
 def AddSCORE(builder, SCORE):
-    return ScoreAddSCORE(builder, SCORE)
-def ScoreEnd(builder): return builder.EndObject()
+    ScoreAddSCORE(builder, SCORE)
+
+def ScoreEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return ScoreEnd(builder)
+
 
 class ScoreT(object):
 

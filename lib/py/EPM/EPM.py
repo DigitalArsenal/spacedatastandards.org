@@ -197,66 +197,126 @@ class EPM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
-def EPMStart(builder): builder.StartObject(15)
+def EPMStart(builder):
+    builder.StartObject(15)
+
 def Start(builder):
-    return EPMStart(builder)
-def EPMAddDN(builder, DN): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DN), 0)
+    EPMStart(builder)
+
+def EPMAddDN(builder, DN):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DN), 0)
+
 def AddDN(builder, DN):
-    return EPMAddDN(builder, DN)
-def EPMAddLEGAL_NAME(builder, LEGAL_NAME): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LEGAL_NAME), 0)
+    EPMAddDN(builder, DN)
+
+def EPMAddLEGAL_NAME(builder, LEGAL_NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LEGAL_NAME), 0)
+
 def AddLEGAL_NAME(builder, LEGAL_NAME):
-    return EPMAddLEGAL_NAME(builder, LEGAL_NAME)
-def EPMAddFAMILY_NAME(builder, FAMILY_NAME): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FAMILY_NAME), 0)
+    EPMAddLEGAL_NAME(builder, LEGAL_NAME)
+
+def EPMAddFAMILY_NAME(builder, FAMILY_NAME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FAMILY_NAME), 0)
+
 def AddFAMILY_NAME(builder, FAMILY_NAME):
-    return EPMAddFAMILY_NAME(builder, FAMILY_NAME)
-def EPMAddGIVEN_NAME(builder, GIVEN_NAME): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(GIVEN_NAME), 0)
+    EPMAddFAMILY_NAME(builder, FAMILY_NAME)
+
+def EPMAddGIVEN_NAME(builder, GIVEN_NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(GIVEN_NAME), 0)
+
 def AddGIVEN_NAME(builder, GIVEN_NAME):
-    return EPMAddGIVEN_NAME(builder, GIVEN_NAME)
-def EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ADDITIONAL_NAME), 0)
+    EPMAddGIVEN_NAME(builder, GIVEN_NAME)
+
+def EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ADDITIONAL_NAME), 0)
+
 def AddADDITIONAL_NAME(builder, ADDITIONAL_NAME):
-    return EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME)
-def EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(HONORIFIC_PREFIX), 0)
+    EPMAddADDITIONAL_NAME(builder, ADDITIONAL_NAME)
+
+def EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(HONORIFIC_PREFIX), 0)
+
 def AddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX):
-    return EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX)
-def EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(HONORIFIC_SUFFIX), 0)
+    EPMAddHONORIFIC_PREFIX(builder, HONORIFIC_PREFIX)
+
+def EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(HONORIFIC_SUFFIX), 0)
+
 def AddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX):
-    return EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX)
-def EPMAddJOB_TITLE(builder, JOB_TITLE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_TITLE), 0)
+    EPMAddHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIX)
+
+def EPMAddJOB_TITLE(builder, JOB_TITLE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_TITLE), 0)
+
 def AddJOB_TITLE(builder, JOB_TITLE):
-    return EPMAddJOB_TITLE(builder, JOB_TITLE)
-def EPMAddOCCUPATION(builder, OCCUPATION): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OCCUPATION), 0)
+    EPMAddJOB_TITLE(builder, JOB_TITLE)
+
+def EPMAddOCCUPATION(builder, OCCUPATION):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OCCUPATION), 0)
+
 def AddOCCUPATION(builder, OCCUPATION):
-    return EPMAddOCCUPATION(builder, OCCUPATION)
-def EPMAddADDRESS(builder, ADDRESS): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS), 0)
+    EPMAddOCCUPATION(builder, OCCUPATION)
+
+def EPMAddADDRESS(builder, ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS), 0)
+
 def AddADDRESS(builder, ADDRESS):
-    return EPMAddADDRESS(builder, ADDRESS)
-def EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ALTERNATE_NAMES), 0)
+    EPMAddADDRESS(builder, ADDRESS)
+
+def EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ALTERNATE_NAMES), 0)
+
 def AddALTERNATE_NAMES(builder, ALTERNATE_NAMES):
-    return EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
-def EPMStartALTERNATE_NAMESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    EPMAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
+
+def EPMStartALTERNATE_NAMESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartALTERNATE_NAMESVector(builder, numElems):
     return EPMStartALTERNATE_NAMESVector(builder, numElems)
-def EPMAddEMAIL(builder, EMAIL): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EMAIL), 0)
+
+def EPMAddEMAIL(builder, EMAIL):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EMAIL), 0)
+
 def AddEMAIL(builder, EMAIL):
-    return EPMAddEMAIL(builder, EMAIL)
-def EPMAddTELEPHONE(builder, TELEPHONE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TELEPHONE), 0)
+    EPMAddEMAIL(builder, EMAIL)
+
+def EPMAddTELEPHONE(builder, TELEPHONE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TELEPHONE), 0)
+
 def AddTELEPHONE(builder, TELEPHONE):
-    return EPMAddTELEPHONE(builder, TELEPHONE)
-def EPMAddKEYS(builder, KEYS): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(KEYS), 0)
+    EPMAddTELEPHONE(builder, TELEPHONE)
+
+def EPMAddKEYS(builder, KEYS):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(KEYS), 0)
+
 def AddKEYS(builder, KEYS):
-    return EPMAddKEYS(builder, KEYS)
-def EPMStartKEYSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    EPMAddKEYS(builder, KEYS)
+
+def EPMStartKEYSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartKEYSVector(builder, numElems):
     return EPMStartKEYSVector(builder, numElems)
-def EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
+
+def EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
+
 def AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
-    return EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
-def EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
+
+def EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartMULTIFORMAT_ADDRESSVector(builder, numElems):
     return EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems)
-def EPMEnd(builder): return builder.EndObject()
+
+def EPMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EPMEnd(builder)
+
 import Address
 import CryptoKey
 try:

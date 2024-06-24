@@ -8,102 +8,102 @@ class SCM
 class SCMCOLLECTION
 
 /// Schema Standard Definition
-class SCHEMA_STANDARD : flatbuffers_handle
+class SCHEMA_STANDARD : flatbuffers.handle
     /// Unique identifier for the standard
     def key() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// IDL
     def idl() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// List Of File Paths
     def files(i:int) -> string:
-        return buf_.flatbuffers_string(buf_.flatbuffers_field_vector(pos_, 8) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 4)
     def files_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 8)
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
 
-def GetRootAsSCHEMA_STANDARD(buf:string): return SCHEMA_STANDARD { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSCHEMA_STANDARD(buf:string): return SCHEMA_STANDARD { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCHEMA_STANDARDBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(3)
         return this
-    def add_key(key:flatbuffers_offset):
+    def add_key(key:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, key)
         return this
-    def add_idl(idl:flatbuffers_offset):
+    def add_idl(idl:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, idl)
         return this
-    def add_files(files:flatbuffers_offset):
+    def add_files(files:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, files)
         return this
     def end():
         return b_.EndObject()
 
-def SCHEMA_STANDARDStartFilesVector(b_:flatbuffers_builder, n_:int):
+def SCHEMA_STANDARDStartFilesVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SCHEMA_STANDARDCreateFilesVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def SCHEMA_STANDARDCreateFilesVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Schema Manifest
-class SCM : flatbuffers_handle
+class SCM : flatbuffers.handle
     /// Version of Space Data Standards
     def version() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Standards Dictionary
     def RECORDS(i:int) -> SCHEMA_STANDARD:
-        return SCHEMA_STANDARD { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 6) + i * 4) }
+        return SCHEMA_STANDARD { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 6)
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
 
-def GetRootAsSCM(buf:string): return SCM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSCM(buf:string): return SCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(2)
         return this
-    def add_version(version:flatbuffers_offset):
+    def add_version(version:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, version)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def SCMStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def SCMStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SCMCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def SCMCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Declaring the root type
-class SCMCOLLECTION : flatbuffers_handle
+class SCMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> SCM:
-        return SCM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return SCM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsSCMCOLLECTION(buf:string): return SCMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSCMCOLLECTION(buf:string): return SCMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def SCMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def SCMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SCMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def SCMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

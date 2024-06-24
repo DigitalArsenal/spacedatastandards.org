@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Conjunction Data Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class CDM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -339,7 +338,7 @@ class CDM : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCDM(_bb: ByteBuffer): CDM = getRootAsCDM(_bb, CDM())
         fun getRootAsCDM(_bb: ByteBuffer, obj: CDM): CDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

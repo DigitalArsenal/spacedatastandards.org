@@ -60,90 +60,90 @@ class CAT
 class CATCOLLECTION
 
 /// Catalog Entity Message
-class CAT : flatbuffers_handle
+class CAT : flatbuffers.handle
     /// Satellite Name(s)
     def OBJECT_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// International Designator (YYYY-NNNAAA)
     def OBJECT_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// NORAD Catalog Number
     def NORAD_CAT_ID() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 8, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
     /// Object type (Payload, Rocket body, Debris, Unknown)
     def OBJECT_TYPE() -> objectType:
-        return objectType(buf_.flatbuffers_field_int8(pos_, 10, 3))
+        return objectType(flatbuffers.field_int8(buf_, pos_, 10, 3))
     /// Operational Status Code
     def OPS_STATUS_CODE() -> opsStatusCode:
-        return opsStatusCode(buf_.flatbuffers_field_int8(pos_, 12, 7))
+        return opsStatusCode(flatbuffers.field_int8(buf_, pos_, 12, 7))
     /// Ownership, typically country or company
     def OWNER() -> legacyCountryCode:
-        return legacyCountryCode(buf_.flatbuffers_field_int8(pos_, 14, 0))
+        return legacyCountryCode(flatbuffers.field_int8(buf_, pos_, 14, 0))
     /// Launch Date [year-month-day] (ISO 8601)
     def LAUNCH_DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Launch Site
     def LAUNCH_SITE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Decay Date, if applicable [year-month-day] (ISO 8601)
     def DECAY_DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Orbital period [minutes]
     def PERIOD() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 22, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
     /// Inclination [degrees]
     def INCLINATION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Apogee Altitude [kilometers]
     def APOGEE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Perigee Altitude [kilometers]
     def PERIGEE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 28, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
     /// Radar Cross Section [meters2]; blank if no data available
     def RCS() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 30, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
     /// Data status code; blank otherwise
     def DATA_STATUS_CODE() -> dataStatusCode:
-        return dataStatusCode(buf_.flatbuffers_field_int8(pos_, 32, 0))
+        return dataStatusCode(flatbuffers.field_int8(buf_, pos_, 32, 0))
     /// Orbit center
     def ORBIT_CENTER() -> string:
-        return buf_.flatbuffers_field_string(pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
     def ORBIT_TYPE() -> orbitType:
-        return orbitType(buf_.flatbuffers_field_int8(pos_, 36, 0))
+        return orbitType(flatbuffers.field_int8(buf_, pos_, 36, 0))
     /// Deployment Date [year-month-day] (ISO 8601)
     def DEPLOYMENT_DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 38)
+        return flatbuffers.field_string(buf_, pos_, 38)
     /// Indicates if the object is maneuverable
     def MANEUVERABLE() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 40, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 40, 0))
     /// Size [meters]; blank if no data available
     def SIZE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     /// Mass [kilograms]; blank if no data available
     def MASS() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 44, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
     /// Mass type (Dry, Wet)
     def MASS_TYPE() -> massType:
-        return massType(buf_.flatbuffers_field_int8(pos_, 46, 0))
+        return massType(flatbuffers.field_int8(buf_, pos_, 46, 0))
     /// Vector of PAYLOADS
     def PAYLOADS(i:int) -> PLD:
-        return PLD { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 48) + i * 4) }
+        return PLD { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 48) + i * 4) }
     def PAYLOADS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 48)
+        return flatbuffers.field_vector_len(buf_, pos_, 48)
 
-def GetRootAsCAT(buf:string): return CAT { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCAT(buf:string): return CAT { buf, flatbuffers.indirect(buf, 0) }
 
 struct CATBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(23)
         return this
-    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers_offset):
+    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OBJECT_NAME)
         return this
-    def add_OBJECT_ID(OBJECT_ID:flatbuffers_offset):
+    def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, OBJECT_ID)
         return this
     def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
@@ -158,13 +158,13 @@ struct CATBuilder:
     def add_OWNER(OWNER:legacyCountryCode):
         b_.PrependInt8Slot(5, OWNER, 0)
         return this
-    def add_LAUNCH_DATE(LAUNCH_DATE:flatbuffers_offset):
+    def add_LAUNCH_DATE(LAUNCH_DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, LAUNCH_DATE)
         return this
-    def add_LAUNCH_SITE(LAUNCH_SITE:flatbuffers_offset):
+    def add_LAUNCH_SITE(LAUNCH_SITE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, LAUNCH_SITE)
         return this
-    def add_DECAY_DATE(DECAY_DATE:flatbuffers_offset):
+    def add_DECAY_DATE(DECAY_DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, DECAY_DATE)
         return this
     def add_PERIOD(PERIOD:float):
@@ -185,13 +185,13 @@ struct CATBuilder:
     def add_DATA_STATUS_CODE(DATA_STATUS_CODE:dataStatusCode):
         b_.PrependInt8Slot(14, DATA_STATUS_CODE, 0)
         return this
-    def add_ORBIT_CENTER(ORBIT_CENTER:flatbuffers_offset):
+    def add_ORBIT_CENTER(ORBIT_CENTER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, ORBIT_CENTER)
         return this
     def add_ORBIT_TYPE(ORBIT_TYPE:orbitType):
         b_.PrependInt8Slot(16, ORBIT_TYPE, 0)
         return this
-    def add_DEPLOYMENT_DATE(DEPLOYMENT_DATE:flatbuffers_offset):
+    def add_DEPLOYMENT_DATE(DEPLOYMENT_DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(17, DEPLOYMENT_DATE)
         return this
     def add_MANEUVERABLE(MANEUVERABLE:bool):
@@ -206,41 +206,41 @@ struct CATBuilder:
     def add_MASS_TYPE(MASS_TYPE:massType):
         b_.PrependInt8Slot(21, MASS_TYPE, 0)
         return this
-    def add_PAYLOADS(PAYLOADS:flatbuffers_offset):
+    def add_PAYLOADS(PAYLOADS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(22, PAYLOADS)
         return this
     def end():
         return b_.EndObject()
 
-def CATStartPAYLOADSVector(b_:flatbuffers_builder, n_:int):
+def CATStartPAYLOADSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def CATCreatePAYLOADSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def CATCreatePAYLOADSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class CATCOLLECTION : flatbuffers_handle
+class CATCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> CAT:
-        return CAT { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return CAT { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsCATCOLLECTION(buf:string): return CATCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsCATCOLLECTION(buf:string): return CATCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct CATCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def CATCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def CATCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def CATCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def CATCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

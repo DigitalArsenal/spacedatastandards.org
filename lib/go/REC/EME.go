@@ -11,6 +11,8 @@ type EME struct {
 	_tab flatbuffers.Table
 }
 
+const EMEIdentifier = "$EME"
+
 func GetRootAsEME(buf []byte, offset flatbuffers.UOffsetT) *EME {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &EME{}
@@ -18,11 +20,29 @@ func GetRootAsEME(buf []byte, offset flatbuffers.UOffsetT) *EME {
 	return x
 }
 
+func FinishEMEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(EMEIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func EMEBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, EMEIdentifier)
+}
+
 func GetSizePrefixedRootAsEME(buf []byte, offset flatbuffers.UOffsetT) *EME {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &EME{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedEMEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(EMEIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedEMEBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, EMEIdentifier)
 }
 
 func (rcv *EME) Init(buf []byte, i flatbuffers.UOffsetT) {

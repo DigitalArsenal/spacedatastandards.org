@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class EME extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static EME getRootAsEME(ByteBuffer _bb) { return getRootAsEME(_bb, new EME()); }
   public static EME getRootAsEME(ByteBuffer _bb, EME obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean EMEBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$EME"); }

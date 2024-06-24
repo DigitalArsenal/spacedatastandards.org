@@ -11,6 +11,8 @@ type SCM struct {
 	_tab flatbuffers.Table
 }
 
+const SCMIdentifier = "$SCM"
+
 func GetRootAsSCM(buf []byte, offset flatbuffers.UOffsetT) *SCM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &SCM{}
@@ -18,11 +20,29 @@ func GetRootAsSCM(buf []byte, offset flatbuffers.UOffsetT) *SCM {
 	return x
 }
 
+func FinishSCMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(SCMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func SCMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, SCMIdentifier)
+}
+
 func GetSizePrefixedRootAsSCM(buf []byte, offset flatbuffers.UOffsetT) *SCM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &SCM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSCMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(SCMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedSCMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, SCMIdentifier)
 }
 
 func (rcv *SCM) Init(buf []byte, i flatbuffers.UOffsetT) {

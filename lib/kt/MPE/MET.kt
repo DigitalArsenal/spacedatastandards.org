@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Mean Element Theory
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class MET : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -36,7 +35,7 @@ class MET : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsMET(_bb: ByteBuffer): MET = getRootAsMET(_bb, MET())
         fun getRootAsMET(_bb: ByteBuffer, obj: MET): MET {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

@@ -11,6 +11,8 @@ type CRM struct {
 	_tab flatbuffers.Table
 }
 
+const CRMIdentifier = "$CRM"
+
 func GetRootAsCRM(buf []byte, offset flatbuffers.UOffsetT) *CRM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &CRM{}
@@ -18,11 +20,29 @@ func GetRootAsCRM(buf []byte, offset flatbuffers.UOffsetT) *CRM {
 	return x
 }
 
+func FinishCRMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CRMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func CRMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, CRMIdentifier)
+}
+
 func GetSizePrefixedRootAsCRM(buf []byte, offset flatbuffers.UOffsetT) *CRM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CRM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCRMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CRMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedCRMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, CRMIdentifier)
 }
 
 func (rcv *CRM) Init(buf []byte, i flatbuffers.UOffsetT) {

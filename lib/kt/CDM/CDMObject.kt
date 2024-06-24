@@ -17,7 +17,6 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class CDMObject : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -735,7 +734,7 @@ class CDMObject : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCDMObject(_bb: ByteBuffer): CDMObject = getRootAsCDMObject(_bb, CDMObject())
         fun getRootAsCDMObject(_bb: ByteBuffer, obj: CDMObject): CDMObject {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

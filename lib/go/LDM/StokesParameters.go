@@ -18,11 +18,19 @@ func GetRootAsStokesParameters(buf []byte, offset flatbuffers.UOffsetT) *StokesP
 	return x
 }
 
+func FinishStokesParametersBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsStokesParameters(buf []byte, offset flatbuffers.UOffsetT) *StokesParameters {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &StokesParameters{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedStokesParametersBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *StokesParameters) Init(buf []byte, i flatbuffers.UOffsetT) {

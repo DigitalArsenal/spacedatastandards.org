@@ -17,11 +17,19 @@ func GetRootAsCDMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CDMCOLLECT
 	return x
 }
 
+func FinishCDMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsCDMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CDMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CDMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCDMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *CDMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

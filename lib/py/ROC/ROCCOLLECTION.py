@@ -54,18 +54,30 @@ class ROCCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def ROCCOLLECTIONStart(builder): builder.StartObject(1)
+def ROCCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return ROCCOLLECTIONStart(builder)
-def ROCCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    ROCCOLLECTIONStart(builder)
+
+def ROCCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return ROCCOLLECTIONAddRECORDS(builder, RECORDS)
-def ROCCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    ROCCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def ROCCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return ROCCOLLECTIONStartRECORDSVector(builder, numElems)
-def ROCCOLLECTIONEnd(builder): return builder.EndObject()
+
+def ROCCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return ROCCOLLECTIONEnd(builder)
+
 import ROC
 try:
     from typing import List

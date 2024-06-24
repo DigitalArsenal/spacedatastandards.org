@@ -18,11 +18,19 @@ func GetRootAsOEMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *OEMCOLLECT
 	return x
 }
 
+func FinishOEMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsOEMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *OEMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &OEMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedOEMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *OEMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

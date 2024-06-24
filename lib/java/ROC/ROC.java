@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class ROC extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static ROC getRootAsROC(ByteBuffer _bb) { return getRootAsROC(_bb, new ROC()); }
   public static ROC getRootAsROC(ByteBuffer _bb, ROC obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean ROCBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$ROC"); }

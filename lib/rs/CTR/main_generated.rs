@@ -40,8 +40,8 @@ impl<'a> CTR<'a> {
     CTR { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CTRArgs<'args>
   ) -> flatbuffers::WIPOffset<CTR<'bldr>> {
     let mut builder = CTRBuilder::new(_fbb);
@@ -204,11 +204,11 @@ impl<'a> Default for CTRArgs<'a> {
   }
 }
 
-pub struct CTRBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CTRBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CTRBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CTRBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CTR::VT_ID, ID);
@@ -242,7 +242,7 @@ impl<'a: 'b, 'b> CTRBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CTR::VT_COMMENT, COMMENT);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CTRBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CTRBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CTRBuilder {
       fbb_: _fbb,
@@ -297,9 +297,9 @@ impl Default for CTRT {
   }
 }
 impl CTRT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CTR<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -360,8 +360,8 @@ impl<'a> CTRCOLLECTION<'a> {
     CTRCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CTRCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<CTRCOLLECTION<'bldr>> {
     let mut builder = CTRCOLLECTIONBuilder::new(_fbb);
@@ -411,17 +411,17 @@ impl<'a> Default for CTRCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct CTRCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CTRCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CTRCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CTRCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CTR<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CTRCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CTRCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CTRCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CTRCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -455,9 +455,9 @@ impl Default for CTRCOLLECTIONT {
   }
 }
 impl CTRCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CTRCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -540,13 +540,13 @@ pub fn CTR_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_CTR_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_CTR_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<CTR<'a>>) {
   fbb.finish(root, Some(CTR_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CTR_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CTR<'a>>) {
+pub fn finish_size_prefixed_CTR_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<CTR<'a>>) {
   fbb.finish_size_prefixed(root, Some(CTR_IDENTIFIER));
 }

@@ -11,10 +11,11 @@ public struct PNM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static PNM GetRootAsPNM(ByteBuffer _bb) { return GetRootAsPNM(_bb, new PNM()); }
   public static PNM GetRootAsPNM(ByteBuffer _bb, PNM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool PNMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PNM"); }
+  public static bool VerifyPNM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$PNM", false, PNMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PNM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -218,3 +219,21 @@ public class PNMT
   }
 }
 
+
+static public class PNMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*MULTIFORMAT_ADDRESS*/, false)
+      && verifier.VerifyString(tablePos, 6 /*PUBLISH_TIMESTAMP*/, false)
+      && verifier.VerifyString(tablePos, 8 /*CID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*FILE_NAME*/, false)
+      && verifier.VerifyString(tablePos, 12 /*FILE_ID*/, false)
+      && verifier.VerifyString(tablePos, 14 /*SIGNATURE*/, false)
+      && verifier.VerifyString(tablePos, 16 /*TIMESTAMP_SIGNATURE*/, false)
+      && verifier.VerifyString(tablePos, 18 /*SIGNATURE_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*TIMESTAMP_SIGNATURE_TYPE*/, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

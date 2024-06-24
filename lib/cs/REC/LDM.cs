@@ -11,10 +11,11 @@ public struct LDM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static LDM GetRootAsLDM(ByteBuffer _bb) { return GetRootAsLDM(_bb, new LDM()); }
   public static LDM GetRootAsLDM(ByteBuffer _bb, LDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool LDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$LDM"); }
+  public static bool VerifyLDM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$LDM", false, LDMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -539,3 +540,39 @@ public class LDMT
   }
 }
 
+
+static public class LDMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyTable(tablePos, 4 /*SITE*/, SITVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 6 /*AZIMUTH*/, 4 /*float*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*REFERENCES*/, false)
+      && verifier.VerifyString(tablePos, 10 /*AGENCY_NAME*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 12 /*POINTS_OF_CONTACT*/, EPMVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 14 /*OPERATIONS_POINTS_OF_CONTACT*/, EPMVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 16 /*NET*/, false)
+      && verifier.VerifyTable(tablePos, 18 /*ROCKET_CONFIGURATION*/, ROCVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 20 /*MISSION_NAME*/, false)
+      && verifier.VerifyString(tablePos, 22 /*MISSION_DESCRIPTION*/, false)
+      && verifier.VerifyString(tablePos, 24 /*MISSION_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 26 /*ORBIT_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 28 /*WEATHER_CONDITIONS*/, false)
+      && verifier.VerifyString(tablePos, 30 /*LAUNCH_STATUS*/, false)
+      && verifier.VerifyString(tablePos, 32 /*WEBCAST_URL*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 34 /*MEDIA_LINKS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 36 /*EARLIEST_LAUNCH_TIMES*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 38 /*LATEST_LAUNCH_TIMES*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 40 /*LCOLA_WINDOW_CLOSURES*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 42 /*OBJECTS*/, CATVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 44 /*TRACKING_REQUIREMENTS*/, false)
+      && verifier.VerifyString(tablePos, 46 /*COLA_SCREEN_DURATION*/, false)
+      && verifier.VerifyString(tablePos, 48 /*PROBABILITY_OF_COLLISION_THRESHOLD*/, false)
+      && verifier.VerifyString(tablePos, 50 /*COLA_RUNS_REQUIRED*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 52 /*COLA_POINTS_OF_CONTACT*/, EPMVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 54 /*ORBITAL_PARAMETERS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 56 /*BURN_OUT_VECTORS*/, BOVVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

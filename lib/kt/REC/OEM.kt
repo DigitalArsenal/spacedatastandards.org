@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Orbit Ephemeris Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class OEM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -84,7 +83,7 @@ class OEM : Table() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsOEM(_bb: ByteBuffer): OEM = getRootAsOEM(_bb, OEM())
         fun getRootAsOEM(_bb: ByteBuffer, obj: OEM): OEM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

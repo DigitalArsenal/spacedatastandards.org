@@ -17,11 +17,19 @@ func GetRootAsCDMObject(buf []byte, offset flatbuffers.UOffsetT) *CDMObject {
 	return x
 }
 
+func FinishCDMObjectBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsCDMObject(buf []byte, offset flatbuffers.UOffsetT) *CDMObject {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CDMObject{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCDMObjectBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *CDMObject) Init(buf []byte, i flatbuffers.UOffsetT) {

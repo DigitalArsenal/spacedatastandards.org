@@ -11,6 +11,8 @@ type EPM struct {
 	_tab flatbuffers.Table
 }
 
+const EPMIdentifier = "$EPM"
+
 func GetRootAsEPM(buf []byte, offset flatbuffers.UOffsetT) *EPM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &EPM{}
@@ -18,11 +20,29 @@ func GetRootAsEPM(buf []byte, offset flatbuffers.UOffsetT) *EPM {
 	return x
 }
 
+func FinishEPMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(EPMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func EPMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, EPMIdentifier)
+}
+
 func GetSizePrefixedRootAsEPM(buf []byte, offset flatbuffers.UOffsetT) *EPM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &EPM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedEPMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(EPMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedEPMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, EPMIdentifier)
 }
 
 func (rcv *EPM) Init(buf []byte, i flatbuffers.UOffsetT) {

@@ -53,18 +53,30 @@ class EOOCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def EOOCOLLECTIONStart(builder): builder.StartObject(1)
+def EOOCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return EOOCOLLECTIONStart(builder)
-def EOOCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    EOOCOLLECTIONStart(builder)
+
+def EOOCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return EOOCOLLECTIONAddRECORDS(builder, RECORDS)
-def EOOCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    EOOCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def EOOCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return EOOCOLLECTIONStartRECORDSVector(builder, numElems)
-def EOOCOLLECTIONEnd(builder): return builder.EndObject()
+
+def EOOCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EOOCOLLECTIONEnd(builder)
+
 import EOO
 try:
     from typing import List

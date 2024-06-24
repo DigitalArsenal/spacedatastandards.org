@@ -53,18 +53,30 @@ class CATCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def CATCOLLECTIONStart(builder): builder.StartObject(1)
+def CATCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return CATCOLLECTIONStart(builder)
-def CATCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    CATCOLLECTIONStart(builder)
+
+def CATCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return CATCOLLECTIONAddRECORDS(builder, RECORDS)
-def CATCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    CATCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def CATCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return CATCOLLECTIONStartRECORDSVector(builder, numElems)
-def CATCOLLECTIONEnd(builder): return builder.EndObject()
+
+def CATCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CATCOLLECTIONEnd(builder)
+
 import CAT
 try:
     from typing import List

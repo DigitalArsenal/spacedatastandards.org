@@ -2,11 +2,4 @@
 
 # namespace: 
 
-# Enumeration of Engine Types
-class ENGINE_TYPE(object):
-    LIQUID = 0
-    SOLID = 1
-    HYBRID = 2
-    ION = 3
-    NUCLEAR_THERMAL = 4
-    OTHER = 5
+# NOTE ENGINE_TYPE.py does not declare any structs or enums

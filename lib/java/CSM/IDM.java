@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class IDM extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static IDM getRootAsIDM(ByteBuffer _bb) { return getRootAsIDM(_bb, new IDM()); }
   public static IDM getRootAsIDM(ByteBuffer _bb, IDM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean IDMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$IDM"); }

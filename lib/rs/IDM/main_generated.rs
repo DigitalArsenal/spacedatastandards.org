@@ -618,8 +618,8 @@ impl<'a> FrequencyRange<'a> {
     FrequencyRange { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args FrequencyRangeArgs
   ) -> flatbuffers::WIPOffset<FrequencyRange<'bldr>> {
     let mut builder = FrequencyRangeBuilder::new(_fbb);
@@ -682,11 +682,11 @@ impl<'a> Default for FrequencyRangeArgs {
   }
 }
 
-pub struct FrequencyRangeBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct FrequencyRangeBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> FrequencyRangeBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> FrequencyRangeBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_LOWER(&mut self, LOWER: f64) {
     self.fbb_.push_slot::<f64>(FrequencyRange::VT_LOWER, LOWER, 0.0);
@@ -696,7 +696,7 @@ impl<'a: 'b, 'b> FrequencyRangeBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(FrequencyRange::VT_UPPER, UPPER, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> FrequencyRangeBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> FrequencyRangeBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     FrequencyRangeBuilder {
       fbb_: _fbb,
@@ -733,9 +733,9 @@ impl Default for FrequencyRangeT {
   }
 }
 impl FrequencyRangeT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<FrequencyRange<'b>> {
     let LOWER = self.LOWER;
     let UPPER = self.UPPER;
@@ -772,8 +772,8 @@ impl<'a> StokesParameters<'a> {
     StokesParameters { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args StokesParametersArgs
   ) -> flatbuffers::WIPOffset<StokesParameters<'bldr>> {
     let mut builder = StokesParametersBuilder::new(_fbb);
@@ -864,11 +864,11 @@ impl<'a> Default for StokesParametersArgs {
   }
 }
 
-pub struct StokesParametersBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct StokesParametersBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> StokesParametersBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> StokesParametersBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_I(&mut self, I: f64) {
     self.fbb_.push_slot::<f64>(StokesParameters::VT_I, I, 0.0);
@@ -886,7 +886,7 @@ impl<'a: 'b, 'b> StokesParametersBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(StokesParameters::VT_V, V, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> StokesParametersBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> StokesParametersBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     StokesParametersBuilder {
       fbb_: _fbb,
@@ -929,9 +929,9 @@ impl Default for StokesParametersT {
   }
 }
 impl StokesParametersT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<StokesParameters<'b>> {
     let I = self.I;
     let Q = self.Q;
@@ -970,8 +970,8 @@ impl<'a> Band<'a> {
     Band { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args BandArgs<'args>
   ) -> flatbuffers::WIPOffset<Band<'bldr>> {
     let mut builder = BandBuilder::new(_fbb);
@@ -1038,11 +1038,11 @@ impl<'a> Default for BandArgs<'a> {
   }
 }
 
-pub struct BandBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct BandBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> BandBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> BandBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Band::VT_NAME, NAME);
@@ -1052,7 +1052,7 @@ impl<'a: 'b, 'b> BandBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<FrequencyRange>>(Band::VT_FREQUENCY_RANGE, FREQUENCY_RANGE);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> BandBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> BandBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     BandBuilder {
       fbb_: _fbb,
@@ -1089,9 +1089,9 @@ impl Default for BandT {
   }
 }
 impl BandT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<Band<'b>> {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1157,8 +1157,8 @@ impl<'a> IDM<'a> {
     IDM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args IDMArgs<'args>
   ) -> flatbuffers::WIPOffset<IDM<'bldr>> {
     let mut builder = IDMBuilder::new(_fbb);
@@ -1619,11 +1619,11 @@ impl<'a> Default for IDMArgs<'a> {
   }
 }
 
-pub struct IDMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct IDMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> IDMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> IDMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IDM::VT_ID, ID);
@@ -1741,7 +1741,7 @@ impl<'a: 'b, 'b> IDMBuilder<'a, 'b> {
     self.fbb_.push_slot::<bool>(IDM::VT_TASKABLE, TASKABLE, false);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> IDMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> IDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     IDMBuilder {
       fbb_: _fbb,
@@ -1859,9 +1859,9 @@ impl Default for IDMT {
   }
 }
 impl IDMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<IDM<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1968,8 +1968,8 @@ impl<'a> IDMCOLLECTION<'a> {
     IDMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args IDMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<IDMCOLLECTION<'bldr>> {
     let mut builder = IDMCOLLECTIONBuilder::new(_fbb);
@@ -2019,17 +2019,17 @@ impl<'a> Default for IDMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct IDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct IDMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> IDMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> IDMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<IDM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IDMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> IDMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> IDMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     IDMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -2063,9 +2063,9 @@ impl Default for IDMCOLLECTIONT {
   }
 }
 impl IDMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<IDMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -2148,13 +2148,13 @@ pub fn IDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_IDM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_IDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<IDM<'a>>) {
   fbb.finish(root, Some(IDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_IDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<IDM<'a>>) {
+pub fn finish_size_prefixed_IDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<IDM<'a>>) {
   fbb.finish_size_prefixed(root, Some(IDM_IDENTIFIER));
 }

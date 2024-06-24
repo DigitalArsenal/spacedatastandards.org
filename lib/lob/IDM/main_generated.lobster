@@ -125,18 +125,18 @@ class IDM
 class IDMCOLLECTION
 
 /// Frequency range with lower and upper limits
-class FrequencyRange : flatbuffers_handle
+class FrequencyRange : flatbuffers.handle
     /// Lower frequency in MHz
     def LOWER() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 4, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
     /// Upper frequency in MHz
     def UPPER() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
 
-def GetRootAsFrequencyRange(buf:string): return FrequencyRange { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsFrequencyRange(buf:string): return FrequencyRange { buf, flatbuffers.indirect(buf, 0) }
 
 struct FrequencyRangeBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(2)
         return this
@@ -150,24 +150,24 @@ struct FrequencyRangeBuilder:
         return b_.EndObject()
 
 /// Stokes parameters, representing different aspects of polarization
-class StokesParameters : flatbuffers_handle
+class StokesParameters : flatbuffers.handle
     /// Intensity
     def I() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 4, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
     /// Linear polarization
     def Q() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Another linear polarization, orthogonal to Q
     def U() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Circular polarization
     def V() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
 
-def GetRootAsStokesParameters(buf:string): return StokesParameters { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsStokesParameters(buf:string): return StokesParameters { buf, flatbuffers.indirect(buf, 0) }
 
 struct StokesParametersBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(4)
         return this
@@ -187,153 +187,153 @@ struct StokesParametersBuilder:
         return b_.EndObject()
 
 /// Table representing a frequency band with a name and frequency range
-class Band : flatbuffers_handle
+class Band : flatbuffers.handle
     /// Name of the band
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Frequency range of the band
     def FREQUENCY_RANGE() -> FrequencyRange?:
-        let o = buf_.flatbuffers_field_table(pos_, 6)
+        let o = flatbuffers.field_table(buf_, pos_, 6)
         return if o: FrequencyRange { buf_, o } else: nil
 
-def GetRootAsBand(buf:string): return Band { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsBand(buf:string): return Band { buf, flatbuffers.indirect(buf, 0) }
 
 struct BandBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(2)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
+    def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
         return this
-    def add_FREQUENCY_RANGE(FREQUENCY_RANGE:flatbuffers_offset):
+    def add_FREQUENCY_RANGE(FREQUENCY_RANGE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, FREQUENCY_RANGE)
         return this
     def end():
         return b_.EndObject()
 
 /// Integrated Device Message
-class IDM : flatbuffers_handle
+class IDM : flatbuffers.handle
     /// Unique identifier for the EMT
     def ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Name of the EMT
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Mode of the data (real, simulated, synthetic)
     def DATA_MODE() -> DataMode:
-        return DataMode(buf_.flatbuffers_field_int8(pos_, 8, 0))
+        return DataMode(flatbuffers.field_int8(buf_, pos_, 8, 0))
     /// Uplink frequency range
     def UPLINK() -> FrequencyRange?:
-        let o = buf_.flatbuffers_field_table(pos_, 10)
+        let o = flatbuffers.field_table(buf_, pos_, 10)
         return if o: FrequencyRange { buf_, o } else: nil
     /// Downlink frequency range
     def DOWNLINK() -> FrequencyRange?:
-        let o = buf_.flatbuffers_field_table(pos_, 12)
+        let o = flatbuffers.field_table(buf_, pos_, 12)
         return if o: FrequencyRange { buf_, o } else: nil
     /// Beacon frequency range
     def BEACON() -> FrequencyRange?:
-        let o = buf_.flatbuffers_field_table(pos_, 14)
+        let o = flatbuffers.field_table(buf_, pos_, 14)
         return if o: FrequencyRange { buf_, o } else: nil
     /// Bands associated with the EMT
     def BAND(i:int) -> Band:
-        return Band { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 16) + i * 4) }
+        return Band { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
     def BAND_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
     /// Type of polarization used
     def POLARIZATION_TYPE() -> PolarizationType:
-        return PolarizationType(buf_.flatbuffers_field_int8(pos_, 18, 0))
+        return PolarizationType(flatbuffers.field_int8(buf_, pos_, 18, 0))
     /// Simple polarization configuration
     def SIMPLE_POLARIZATION() -> SimplePolarization:
-        return SimplePolarization(buf_.flatbuffers_field_int8(pos_, 20, 0))
+        return SimplePolarization(flatbuffers.field_int8(buf_, pos_, 20, 0))
     /// Stokes parameters for polarization characterization
     def STOKES_PARAMETERS() -> StokesParameters?:
-        let o = buf_.flatbuffers_field_table(pos_, 22)
+        let o = flatbuffers.field_table(buf_, pos_, 22)
         return if o: StokesParameters { buf_, o } else: nil
     /// Power required in Watts
     def POWER_REQUIRED() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Type of power (eg. AC or DC)
     def POWER_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Indicates if the EMT can transmit
     def TRANSMIT() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 28, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
     /// Indicates if the EMT can receive
     def RECEIVE() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 30, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
     /// Type of the sensor
     def SENSOR_TYPE() -> DeviceType:
-        return DeviceType(buf_.flatbuffers_field_int8(pos_, 32, 0))
+        return DeviceType(flatbuffers.field_int8(buf_, pos_, 32, 0))
     /// Source of the data
     def SOURCE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// Timestamp of the last observation
     def LAST_OB_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 36)
+        return flatbuffers.field_string(buf_, pos_, 36)
     /// Lower left elevation limit
     def LOWER_LEFT_ELEVATION_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 38, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     /// Upper left azimuth limit
     def UPPER_LEFT_AZIMUTH_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 40, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
     /// Lower right elevation limit
     def LOWER_RIGHT_ELEVATION_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     /// Lower left azimuth limit
     def LOWER_LEFT_AZIMUTH_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 44, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
     /// Upper right elevation limit
     def UPPER_RIGHT_ELEVATION_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 46, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
     /// Upper right azimuth limit
     def UPPER_RIGHT_AZIMUTH_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 48, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
     /// Lower right azimuth limit
     def LOWER_RIGHT_AZIMUTH_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 50, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
     /// Upper left elevation limit
     def UPPER_LEFT_ELEVATION_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 52, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
     /// Right geostationary belt limit
     def RIGHT_GEO_BELT_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 54, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
     /// Left geostationary belt limit
     def LEFT_GEO_BELT_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 56, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
     /// Magnitude limit of the sensor
     def MAGNITUDE_LIMIT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 58, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
     /// Indicates if the site is taskable
     def TASKABLE() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 60, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 60, 0))
 
-def GetRootAsIDM(buf:string): return IDM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsIDM(buf:string): return IDM { buf, flatbuffers.indirect(buf, 0) }
 
 struct IDMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(29)
         return this
-    def add_ID(ID:flatbuffers_offset):
+    def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
+    def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, NAME)
         return this
     def add_DATA_MODE(DATA_MODE:DataMode):
         b_.PrependInt8Slot(2, DATA_MODE, 0)
         return this
-    def add_UPLINK(UPLINK:flatbuffers_offset):
+    def add_UPLINK(UPLINK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, UPLINK)
         return this
-    def add_DOWNLINK(DOWNLINK:flatbuffers_offset):
+    def add_DOWNLINK(DOWNLINK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, DOWNLINK)
         return this
-    def add_BEACON(BEACON:flatbuffers_offset):
+    def add_BEACON(BEACON:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, BEACON)
         return this
-    def add_BAND(BAND:flatbuffers_offset):
+    def add_BAND(BAND:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, BAND)
         return this
     def add_POLARIZATION_TYPE(POLARIZATION_TYPE:PolarizationType):
@@ -342,13 +342,13 @@ struct IDMBuilder:
     def add_SIMPLE_POLARIZATION(SIMPLE_POLARIZATION:SimplePolarization):
         b_.PrependInt8Slot(8, SIMPLE_POLARIZATION, 0)
         return this
-    def add_STOKES_PARAMETERS(STOKES_PARAMETERS:flatbuffers_offset):
+    def add_STOKES_PARAMETERS(STOKES_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, STOKES_PARAMETERS)
         return this
     def add_POWER_REQUIRED(POWER_REQUIRED:float):
         b_.PrependFloat64Slot(10, POWER_REQUIRED, 0.0)
         return this
-    def add_POWER_TYPE(POWER_TYPE:flatbuffers_offset):
+    def add_POWER_TYPE(POWER_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, POWER_TYPE)
         return this
     def add_TRANSMIT(TRANSMIT:bool):
@@ -360,10 +360,10 @@ struct IDMBuilder:
     def add_SENSOR_TYPE(SENSOR_TYPE:DeviceType):
         b_.PrependInt8Slot(14, SENSOR_TYPE, 0)
         return this
-    def add_SOURCE(SOURCE:flatbuffers_offset):
+    def add_SOURCE(SOURCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, SOURCE)
         return this
-    def add_LAST_OB_TIME(LAST_OB_TIME:flatbuffers_offset):
+    def add_LAST_OB_TIME(LAST_OB_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, LAST_OB_TIME)
         return this
     def add_LOWER_LEFT_ELEVATION_LIMIT(LOWER_LEFT_ELEVATION_LIMIT:float):
@@ -405,35 +405,35 @@ struct IDMBuilder:
     def end():
         return b_.EndObject()
 
-def IDMStartBANDVector(b_:flatbuffers_builder, n_:int):
+def IDMStartBANDVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def IDMCreateBANDVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def IDMCreateBANDVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class IDMCOLLECTION : flatbuffers_handle
+class IDMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> IDM:
-        return IDM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return IDM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsIDMCOLLECTION(buf:string): return IDMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsIDMCOLLECTION(buf:string): return IDMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct IDMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def IDMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def IDMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def IDMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def IDMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

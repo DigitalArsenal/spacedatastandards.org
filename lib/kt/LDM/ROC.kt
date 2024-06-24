@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Rocket Configuration
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class ROC : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -105,7 +104,7 @@ class ROC : Table() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsROC(_bb: ByteBuffer): ROC = getRootAsROC(_bb, ROC())
         fun getRootAsROC(_bb: ByteBuffer, obj: ROC): ROC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

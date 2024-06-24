@@ -17,11 +17,19 @@ func GetRootAsMPECOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *MPECOLLECT
 	return x
 }
 
+func FinishMPECOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsMPECOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *MPECOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &MPECOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedMPECOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *MPECOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

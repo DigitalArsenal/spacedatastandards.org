@@ -17,11 +17,19 @@ func GetRootAsCATCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CATCOLLECT
 	return x
 }
 
+func FinishCATCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsCATCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CATCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CATCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCATCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *CATCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

@@ -305,7 +305,7 @@ impl RecordTypeT {
       Self::PRG(_) => RecordType::PRG,
     }
   }
-  pub fn pack(&self, fbb: &mut flatbuffers::FlatBufferBuilder) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(&self, fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
     match self {
       Self::NONE => None,
       Self::LCC(v) => Some(v.pack(fbb).as_union_value()),
@@ -951,8 +951,8 @@ impl<'a> Record<'a> {
     Record { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args RecordArgs
   ) -> flatbuffers::WIPOffset<Record<'bldr>> {
     let mut builder = RecordBuilder::new(_fbb);
@@ -1605,11 +1605,11 @@ impl<'a> Default for RecordArgs {
   }
 }
 
-pub struct RecordBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct RecordBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> RecordBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RecordBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_value_type(&mut self, value_type: RecordType) {
     self.fbb_.push_slot::<RecordType>(Record::VT_VALUE_TYPE, value_type, RecordType::NONE);
@@ -1619,7 +1619,7 @@ impl<'a: 'b, 'b> RecordBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_VALUE, value);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RecordBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RecordBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RecordBuilder {
       fbb_: _fbb,
@@ -1855,9 +1855,9 @@ impl Default for RecordT {
   }
 }
 impl RecordT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<Record<'b>> {
     let value_type = self.value.record_type_type();
     let value = self.value.pack(_fbb);
@@ -1893,8 +1893,8 @@ impl<'a> REC<'a> {
     REC { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args RECArgs<'args>
   ) -> flatbuffers::WIPOffset<REC<'bldr>> {
     let mut builder = RECBuilder::new(_fbb);
@@ -1974,11 +1974,11 @@ impl<'a> Default for RECArgs<'a> {
   }
 }
 
-pub struct RECBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct RECBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> RECBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RECBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_version(&mut self, version: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(REC::VT_VERSION, version);
@@ -1992,7 +1992,7 @@ impl<'a: 'b, 'b> RECBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(REC::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RECBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RECBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RECBuilder {
       fbb_: _fbb,
@@ -2032,9 +2032,9 @@ impl Default for RECT {
   }
 }
 impl RECT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<REC<'b>> {
     let version = self.version.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2075,8 +2075,8 @@ impl<'a> RECCOLLECTION<'a> {
     RECCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args RECCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<RECCOLLECTION<'bldr>> {
     let mut builder = RECCOLLECTIONBuilder::new(_fbb);
@@ -2126,17 +2126,17 @@ impl<'a> Default for RECCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct RECCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct RECCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> RECCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RECCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<REC<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RECCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RECCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RECCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RECCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -2170,9 +2170,9 @@ impl Default for RECCOLLECTIONT {
   }
 }
 impl RECCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<RECCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -2255,13 +2255,13 @@ pub fn REC_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_REC_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_REC_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<REC<'a>>) {
   fbb.finish(root, Some(REC_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_REC_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<REC<'a>>) {
+pub fn finish_size_prefixed_REC_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<REC<'a>>) {
   fbb.finish_size_prefixed(root, Some(REC_IDENTIFIER));
 }

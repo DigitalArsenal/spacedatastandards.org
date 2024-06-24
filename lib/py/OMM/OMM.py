@@ -514,192 +514,378 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def OMMStart(builder): builder.StartObject(60)
+def OMMStart(builder):
+    builder.StartObject(60)
+
 def Start(builder):
-    return OMMStart(builder)
-def OMMAddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS): builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
+    OMMStart(builder)
+
+def OMMAddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS):
+    builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
+
 def AddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS):
-    return OMMAddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS)
-def OMMAddCREATION_DATE(builder, CREATION_DATE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+    OMMAddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS)
+
+def OMMAddCREATION_DATE(builder, CREATION_DATE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+
 def AddCREATION_DATE(builder, CREATION_DATE):
-    return OMMAddCREATION_DATE(builder, CREATION_DATE)
-def OMMAddORIGINATOR(builder, ORIGINATOR): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+    OMMAddCREATION_DATE(builder, CREATION_DATE)
+
+def OMMAddORIGINATOR(builder, ORIGINATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+
 def AddORIGINATOR(builder, ORIGINATOR):
-    return OMMAddORIGINATOR(builder, ORIGINATOR)
-def OMMAddOBJECT_NAME(builder, OBJECT_NAME): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+    OMMAddORIGINATOR(builder, ORIGINATOR)
+
+def OMMAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
 def AddOBJECT_NAME(builder, OBJECT_NAME):
-    return OMMAddOBJECT_NAME(builder, OBJECT_NAME)
-def OMMAddOBJECT_ID(builder, OBJECT_ID): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+    OMMAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def OMMAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
 def AddOBJECT_ID(builder, OBJECT_ID):
-    return OMMAddOBJECT_ID(builder, OBJECT_ID)
-def OMMAddCENTER_NAME(builder, CENTER_NAME): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+    OMMAddOBJECT_ID(builder, OBJECT_ID)
+
+def OMMAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
 def AddCENTER_NAME(builder, CENTER_NAME):
-    return OMMAddCENTER_NAME(builder, CENTER_NAME)
-def OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME): builder.PrependInt8Slot(6, REFERENCE_FRAME, 2)
+    OMMAddCENTER_NAME(builder, CENTER_NAME)
+
+def OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependInt8Slot(6, REFERENCE_FRAME, 2)
+
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    return OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-def OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME_EPOCH), 0)
+    OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME_EPOCH), 0)
+
 def AddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH):
-    return OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
-def OMMAddTIME_SYSTEM(builder, TIME_SYSTEM): builder.PrependInt8Slot(8, TIME_SYSTEM, 11)
+    OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
+
+def OMMAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependInt8Slot(8, TIME_SYSTEM, 11)
+
 def AddTIME_SYSTEM(builder, TIME_SYSTEM):
-    return OMMAddTIME_SYSTEM(builder, TIME_SYSTEM)
-def OMMAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY): builder.PrependInt8Slot(9, MEAN_ELEMENT_THEORY, 0)
+    OMMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def OMMAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
+    builder.PrependInt8Slot(9, MEAN_ELEMENT_THEORY, 0)
+
 def AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
-    return OMMAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
-def OMMAddCOMMENT(builder, COMMENT): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+    OMMAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
+
+def OMMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
 def AddCOMMENT(builder, COMMENT):
-    return OMMAddCOMMENT(builder, COMMENT)
-def OMMAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+    OMMAddCOMMENT(builder, COMMENT)
+
+def OMMAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
 def AddEPOCH(builder, EPOCH):
-    return OMMAddEPOCH(builder, EPOCH)
-def OMMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS): builder.PrependFloat64Slot(12, SEMI_MAJOR_AXIS, 0.0)
+    OMMAddEPOCH(builder, EPOCH)
+
+def OMMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    builder.PrependFloat64Slot(12, SEMI_MAJOR_AXIS, 0.0)
+
 def AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
-    return OMMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-def OMMAddMEAN_MOTION(builder, MEAN_MOTION): builder.PrependFloat64Slot(13, MEAN_MOTION, 0.0)
+    OMMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+
+def OMMAddMEAN_MOTION(builder, MEAN_MOTION):
+    builder.PrependFloat64Slot(13, MEAN_MOTION, 0.0)
+
 def AddMEAN_MOTION(builder, MEAN_MOTION):
-    return OMMAddMEAN_MOTION(builder, MEAN_MOTION)
-def OMMAddECCENTRICITY(builder, ECCENTRICITY): builder.PrependFloat64Slot(14, ECCENTRICITY, 0.0)
+    OMMAddMEAN_MOTION(builder, MEAN_MOTION)
+
+def OMMAddECCENTRICITY(builder, ECCENTRICITY):
+    builder.PrependFloat64Slot(14, ECCENTRICITY, 0.0)
+
 def AddECCENTRICITY(builder, ECCENTRICITY):
-    return OMMAddECCENTRICITY(builder, ECCENTRICITY)
-def OMMAddINCLINATION(builder, INCLINATION): builder.PrependFloat64Slot(15, INCLINATION, 0.0)
+    OMMAddECCENTRICITY(builder, ECCENTRICITY)
+
+def OMMAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(15, INCLINATION, 0.0)
+
 def AddINCLINATION(builder, INCLINATION):
-    return OMMAddINCLINATION(builder, INCLINATION)
-def OMMAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE): builder.PrependFloat64Slot(16, RA_OF_ASC_NODE, 0.0)
+    OMMAddINCLINATION(builder, INCLINATION)
+
+def OMMAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE):
+    builder.PrependFloat64Slot(16, RA_OF_ASC_NODE, 0.0)
+
 def AddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE):
-    return OMMAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
-def OMMAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER): builder.PrependFloat64Slot(17, ARG_OF_PERICENTER, 0.0)
+    OMMAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
+
+def OMMAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER):
+    builder.PrependFloat64Slot(17, ARG_OF_PERICENTER, 0.0)
+
 def AddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER):
-    return OMMAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
-def OMMAddMEAN_ANOMALY(builder, MEAN_ANOMALY): builder.PrependFloat64Slot(18, MEAN_ANOMALY, 0.0)
+    OMMAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
+
+def OMMAddMEAN_ANOMALY(builder, MEAN_ANOMALY):
+    builder.PrependFloat64Slot(18, MEAN_ANOMALY, 0.0)
+
 def AddMEAN_ANOMALY(builder, MEAN_ANOMALY):
-    return OMMAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
-def OMMAddGM(builder, GM): builder.PrependFloat64Slot(19, GM, 0.0)
+    OMMAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+
+def OMMAddGM(builder, GM):
+    builder.PrependFloat64Slot(19, GM, 0.0)
+
 def AddGM(builder, GM):
-    return OMMAddGM(builder, GM)
-def OMMAddMASS(builder, MASS): builder.PrependFloat64Slot(20, MASS, 0.0)
+    OMMAddGM(builder, GM)
+
+def OMMAddMASS(builder, MASS):
+    builder.PrependFloat64Slot(20, MASS, 0.0)
+
 def AddMASS(builder, MASS):
-    return OMMAddMASS(builder, MASS)
-def OMMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA): builder.PrependFloat64Slot(21, SOLAR_RAD_AREA, 0.0)
+    OMMAddMASS(builder, MASS)
+
+def OMMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA):
+    builder.PrependFloat64Slot(21, SOLAR_RAD_AREA, 0.0)
+
 def AddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA):
-    return OMMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
-def OMMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF): builder.PrependFloat64Slot(22, SOLAR_RAD_COEFF, 0.0)
+    OMMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
+
+def OMMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
+    builder.PrependFloat64Slot(22, SOLAR_RAD_COEFF, 0.0)
+
 def AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
-    return OMMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
-def OMMAddDRAG_AREA(builder, DRAG_AREA): builder.PrependFloat64Slot(23, DRAG_AREA, 0.0)
+    OMMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
+
+def OMMAddDRAG_AREA(builder, DRAG_AREA):
+    builder.PrependFloat64Slot(23, DRAG_AREA, 0.0)
+
 def AddDRAG_AREA(builder, DRAG_AREA):
-    return OMMAddDRAG_AREA(builder, DRAG_AREA)
-def OMMAddDRAG_COEFF(builder, DRAG_COEFF): builder.PrependFloat64Slot(24, DRAG_COEFF, 0.0)
+    OMMAddDRAG_AREA(builder, DRAG_AREA)
+
+def OMMAddDRAG_COEFF(builder, DRAG_COEFF):
+    builder.PrependFloat64Slot(24, DRAG_COEFF, 0.0)
+
 def AddDRAG_COEFF(builder, DRAG_COEFF):
-    return OMMAddDRAG_COEFF(builder, DRAG_COEFF)
-def OMMAddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE): builder.PrependInt8Slot(25, EPHEMERIS_TYPE, 1)
+    OMMAddDRAG_COEFF(builder, DRAG_COEFF)
+
+def OMMAddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE):
+    builder.PrependInt8Slot(25, EPHEMERIS_TYPE, 1)
+
 def AddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE):
-    return OMMAddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE)
-def OMMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+    OMMAddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE)
+
+def OMMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+
 def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
-    return OMMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
-def OMMAddNORAD_CAT_ID(builder, NORAD_CAT_ID): builder.PrependUint32Slot(27, NORAD_CAT_ID, 0)
+    OMMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def OMMAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(27, NORAD_CAT_ID, 0)
+
 def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
-    return OMMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
-def OMMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO): builder.PrependUint32Slot(28, ELEMENT_SET_NO, 0)
+    OMMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def OMMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO):
+    builder.PrependUint32Slot(28, ELEMENT_SET_NO, 0)
+
 def AddELEMENT_SET_NO(builder, ELEMENT_SET_NO):
-    return OMMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO)
-def OMMAddREV_AT_EPOCH(builder, REV_AT_EPOCH): builder.PrependFloat64Slot(29, REV_AT_EPOCH, 0.0)
+    OMMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO)
+
+def OMMAddREV_AT_EPOCH(builder, REV_AT_EPOCH):
+    builder.PrependFloat64Slot(29, REV_AT_EPOCH, 0.0)
+
 def AddREV_AT_EPOCH(builder, REV_AT_EPOCH):
-    return OMMAddREV_AT_EPOCH(builder, REV_AT_EPOCH)
-def OMMAddBSTAR(builder, BSTAR): builder.PrependFloat64Slot(30, BSTAR, 0.0)
+    OMMAddREV_AT_EPOCH(builder, REV_AT_EPOCH)
+
+def OMMAddBSTAR(builder, BSTAR):
+    builder.PrependFloat64Slot(30, BSTAR, 0.0)
+
 def AddBSTAR(builder, BSTAR):
-    return OMMAddBSTAR(builder, BSTAR)
-def OMMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT): builder.PrependFloat64Slot(31, MEAN_MOTION_DOT, 0.0)
+    OMMAddBSTAR(builder, BSTAR)
+
+def OMMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT):
+    builder.PrependFloat64Slot(31, MEAN_MOTION_DOT, 0.0)
+
 def AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT):
-    return OMMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
-def OMMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT): builder.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
+    OMMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
+
+def OMMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
+    builder.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
+
 def AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
-    return OMMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
-def OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME): builder.PrependInt8Slot(33, COV_REFERENCE_FRAME, 23)
+    OMMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
+
+def OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
+    builder.PrependInt8Slot(33, COV_REFERENCE_FRAME, 23)
+
 def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    return OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
-def OMMAddCX_X(builder, CX_X): builder.PrependFloat64Slot(34, CX_X, 0.0)
+    OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
+
+def OMMAddCX_X(builder, CX_X):
+    builder.PrependFloat64Slot(34, CX_X, 0.0)
+
 def AddCX_X(builder, CX_X):
-    return OMMAddCX_X(builder, CX_X)
-def OMMAddCY_X(builder, CY_X): builder.PrependFloat64Slot(35, CY_X, 0.0)
+    OMMAddCX_X(builder, CX_X)
+
+def OMMAddCY_X(builder, CY_X):
+    builder.PrependFloat64Slot(35, CY_X, 0.0)
+
 def AddCY_X(builder, CY_X):
-    return OMMAddCY_X(builder, CY_X)
-def OMMAddCY_Y(builder, CY_Y): builder.PrependFloat64Slot(36, CY_Y, 0.0)
+    OMMAddCY_X(builder, CY_X)
+
+def OMMAddCY_Y(builder, CY_Y):
+    builder.PrependFloat64Slot(36, CY_Y, 0.0)
+
 def AddCY_Y(builder, CY_Y):
-    return OMMAddCY_Y(builder, CY_Y)
-def OMMAddCZ_X(builder, CZ_X): builder.PrependFloat64Slot(37, CZ_X, 0.0)
+    OMMAddCY_Y(builder, CY_Y)
+
+def OMMAddCZ_X(builder, CZ_X):
+    builder.PrependFloat64Slot(37, CZ_X, 0.0)
+
 def AddCZ_X(builder, CZ_X):
-    return OMMAddCZ_X(builder, CZ_X)
-def OMMAddCZ_Y(builder, CZ_Y): builder.PrependFloat64Slot(38, CZ_Y, 0.0)
+    OMMAddCZ_X(builder, CZ_X)
+
+def OMMAddCZ_Y(builder, CZ_Y):
+    builder.PrependFloat64Slot(38, CZ_Y, 0.0)
+
 def AddCZ_Y(builder, CZ_Y):
-    return OMMAddCZ_Y(builder, CZ_Y)
-def OMMAddCZ_Z(builder, CZ_Z): builder.PrependFloat64Slot(39, CZ_Z, 0.0)
+    OMMAddCZ_Y(builder, CZ_Y)
+
+def OMMAddCZ_Z(builder, CZ_Z):
+    builder.PrependFloat64Slot(39, CZ_Z, 0.0)
+
 def AddCZ_Z(builder, CZ_Z):
-    return OMMAddCZ_Z(builder, CZ_Z)
-def OMMAddCX_DOT_X(builder, CX_DOT_X): builder.PrependFloat64Slot(40, CX_DOT_X, 0.0)
+    OMMAddCZ_Z(builder, CZ_Z)
+
+def OMMAddCX_DOT_X(builder, CX_DOT_X):
+    builder.PrependFloat64Slot(40, CX_DOT_X, 0.0)
+
 def AddCX_DOT_X(builder, CX_DOT_X):
-    return OMMAddCX_DOT_X(builder, CX_DOT_X)
-def OMMAddCX_DOT_Y(builder, CX_DOT_Y): builder.PrependFloat64Slot(41, CX_DOT_Y, 0.0)
+    OMMAddCX_DOT_X(builder, CX_DOT_X)
+
+def OMMAddCX_DOT_Y(builder, CX_DOT_Y):
+    builder.PrependFloat64Slot(41, CX_DOT_Y, 0.0)
+
 def AddCX_DOT_Y(builder, CX_DOT_Y):
-    return OMMAddCX_DOT_Y(builder, CX_DOT_Y)
-def OMMAddCX_DOT_Z(builder, CX_DOT_Z): builder.PrependFloat64Slot(42, CX_DOT_Z, 0.0)
+    OMMAddCX_DOT_Y(builder, CX_DOT_Y)
+
+def OMMAddCX_DOT_Z(builder, CX_DOT_Z):
+    builder.PrependFloat64Slot(42, CX_DOT_Z, 0.0)
+
 def AddCX_DOT_Z(builder, CX_DOT_Z):
-    return OMMAddCX_DOT_Z(builder, CX_DOT_Z)
-def OMMAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT): builder.PrependFloat64Slot(43, CX_DOT_X_DOT, 0.0)
+    OMMAddCX_DOT_Z(builder, CX_DOT_Z)
+
+def OMMAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
+    builder.PrependFloat64Slot(43, CX_DOT_X_DOT, 0.0)
+
 def AddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
-    return OMMAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
-def OMMAddCY_DOT_X(builder, CY_DOT_X): builder.PrependFloat64Slot(44, CY_DOT_X, 0.0)
+    OMMAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
+
+def OMMAddCY_DOT_X(builder, CY_DOT_X):
+    builder.PrependFloat64Slot(44, CY_DOT_X, 0.0)
+
 def AddCY_DOT_X(builder, CY_DOT_X):
-    return OMMAddCY_DOT_X(builder, CY_DOT_X)
-def OMMAddCY_DOT_Y(builder, CY_DOT_Y): builder.PrependFloat64Slot(45, CY_DOT_Y, 0.0)
+    OMMAddCY_DOT_X(builder, CY_DOT_X)
+
+def OMMAddCY_DOT_Y(builder, CY_DOT_Y):
+    builder.PrependFloat64Slot(45, CY_DOT_Y, 0.0)
+
 def AddCY_DOT_Y(builder, CY_DOT_Y):
-    return OMMAddCY_DOT_Y(builder, CY_DOT_Y)
-def OMMAddCY_DOT_Z(builder, CY_DOT_Z): builder.PrependFloat64Slot(46, CY_DOT_Z, 0.0)
+    OMMAddCY_DOT_Y(builder, CY_DOT_Y)
+
+def OMMAddCY_DOT_Z(builder, CY_DOT_Z):
+    builder.PrependFloat64Slot(46, CY_DOT_Z, 0.0)
+
 def AddCY_DOT_Z(builder, CY_DOT_Z):
-    return OMMAddCY_DOT_Z(builder, CY_DOT_Z)
-def OMMAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT): builder.PrependFloat64Slot(47, CY_DOT_X_DOT, 0.0)
+    OMMAddCY_DOT_Z(builder, CY_DOT_Z)
+
+def OMMAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
+    builder.PrependFloat64Slot(47, CY_DOT_X_DOT, 0.0)
+
 def AddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
-    return OMMAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
-def OMMAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT): builder.PrependFloat64Slot(48, CY_DOT_Y_DOT, 0.0)
+    OMMAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
+
+def OMMAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
+    builder.PrependFloat64Slot(48, CY_DOT_Y_DOT, 0.0)
+
 def AddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
-    return OMMAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
-def OMMAddCZ_DOT_X(builder, CZ_DOT_X): builder.PrependFloat64Slot(49, CZ_DOT_X, 0.0)
+    OMMAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
+
+def OMMAddCZ_DOT_X(builder, CZ_DOT_X):
+    builder.PrependFloat64Slot(49, CZ_DOT_X, 0.0)
+
 def AddCZ_DOT_X(builder, CZ_DOT_X):
-    return OMMAddCZ_DOT_X(builder, CZ_DOT_X)
-def OMMAddCZ_DOT_Y(builder, CZ_DOT_Y): builder.PrependFloat64Slot(50, CZ_DOT_Y, 0.0)
+    OMMAddCZ_DOT_X(builder, CZ_DOT_X)
+
+def OMMAddCZ_DOT_Y(builder, CZ_DOT_Y):
+    builder.PrependFloat64Slot(50, CZ_DOT_Y, 0.0)
+
 def AddCZ_DOT_Y(builder, CZ_DOT_Y):
-    return OMMAddCZ_DOT_Y(builder, CZ_DOT_Y)
-def OMMAddCZ_DOT_Z(builder, CZ_DOT_Z): builder.PrependFloat64Slot(51, CZ_DOT_Z, 0.0)
+    OMMAddCZ_DOT_Y(builder, CZ_DOT_Y)
+
+def OMMAddCZ_DOT_Z(builder, CZ_DOT_Z):
+    builder.PrependFloat64Slot(51, CZ_DOT_Z, 0.0)
+
 def AddCZ_DOT_Z(builder, CZ_DOT_Z):
-    return OMMAddCZ_DOT_Z(builder, CZ_DOT_Z)
-def OMMAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT): builder.PrependFloat64Slot(52, CZ_DOT_X_DOT, 0.0)
+    OMMAddCZ_DOT_Z(builder, CZ_DOT_Z)
+
+def OMMAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
+    builder.PrependFloat64Slot(52, CZ_DOT_X_DOT, 0.0)
+
 def AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
-    return OMMAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
-def OMMAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT): builder.PrependFloat64Slot(53, CZ_DOT_Y_DOT, 0.0)
+    OMMAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
+
+def OMMAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
+    builder.PrependFloat64Slot(53, CZ_DOT_Y_DOT, 0.0)
+
 def AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
-    return OMMAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
-def OMMAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT): builder.PrependFloat64Slot(54, CZ_DOT_Z_DOT, 0.0)
+    OMMAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
+
+def OMMAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
+    builder.PrependFloat64Slot(54, CZ_DOT_Z_DOT, 0.0)
+
 def AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
-    return OMMAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
-def OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE): builder.PrependUint32Slot(55, USER_DEFINED_BIP_0044_TYPE, 0)
+    OMMAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
+
+def OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
+    builder.PrependUint32Slot(55, USER_DEFINED_BIP_0044_TYPE, 0)
+
 def AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
-    return OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
-def OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR): builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+    OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
+
+def OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+
 def AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR):
-    return OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)
-def OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL): builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_EARTH_MODEL), 0)
+    OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)
+
+def OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL):
+    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_EARTH_MODEL), 0)
+
 def AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL):
-    return OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL)
-def OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP): builder.PrependFloat64Slot(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+    OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL)
+
+def OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP):
+    builder.PrependFloat64Slot(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+
 def AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP):
-    return OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
-def OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS): builder.PrependFloat64Slot(59, USER_DEFINED_MICROSECONDS, 0.0)
+    OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
+
+def OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
+    builder.PrependFloat64Slot(59, USER_DEFINED_MICROSECONDS, 0.0)
+
 def AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
-    return OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
-def OMMEnd(builder): return builder.EndObject()
+    OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
+
+def OMMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return OMMEnd(builder)
+
 
 class OMMT(object):
 

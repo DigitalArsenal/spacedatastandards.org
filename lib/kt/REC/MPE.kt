@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Minimum Propagatable Element Set
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class MPE : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -117,7 +116,7 @@ class MPE : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsMPE(_bb: ByteBuffer): MPE = getRootAsMPE(_bb, MPE())
         fun getRootAsMPE(_bb: ByteBuffer, obj: MPE): MPE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

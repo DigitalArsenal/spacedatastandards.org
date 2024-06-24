@@ -11,6 +11,8 @@ type IDM struct {
 	_tab flatbuffers.Table
 }
 
+const IDMIdentifier = "$IDM"
+
 func GetRootAsIDM(buf []byte, offset flatbuffers.UOffsetT) *IDM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &IDM{}
@@ -18,11 +20,29 @@ func GetRootAsIDM(buf []byte, offset flatbuffers.UOffsetT) *IDM {
 	return x
 }
 
+func FinishIDMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(IDMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func IDMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, IDMIdentifier)
+}
+
 func GetSizePrefixedRootAsIDM(buf []byte, offset flatbuffers.UOffsetT) *IDM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &IDM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedIDMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(IDMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedIDMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, IDMIdentifier)
 }
 
 func (rcv *IDM) Init(buf []byte, i flatbuffers.UOffsetT) {

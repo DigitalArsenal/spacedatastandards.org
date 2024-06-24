@@ -53,18 +53,30 @@ class TIMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def TIMCOLLECTIONStart(builder): builder.StartObject(1)
+def TIMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return TIMCOLLECTIONStart(builder)
-def TIMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    TIMCOLLECTIONStart(builder)
+
+def TIMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return TIMCOLLECTIONAddRECORDS(builder, RECORDS)
-def TIMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    TIMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def TIMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return TIMCOLLECTIONStartRECORDSVector(builder, numElems)
-def TIMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def TIMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return TIMCOLLECTIONEnd(builder)
+
 import TIM
 try:
     from typing import List

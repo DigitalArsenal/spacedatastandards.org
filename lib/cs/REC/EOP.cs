@@ -11,10 +11,11 @@ public struct EOP : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static EOP GetRootAsEOP(ByteBuffer _bb) { return GetRootAsEOP(_bb, new EOP()); }
   public static EOP GetRootAsEOP(ByteBuffer _bb, EOP obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool EOPBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EOP"); }
+  public static bool VerifyEOP(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$EOP", false, EOPVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EOP __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -157,3 +158,22 @@ public class EOPT
   }
 }
 
+
+static public class EOPVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*DATE*/, false)
+      && verifier.VerifyField(tablePos, 6 /*MJD*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*X_POLE_WANDER_RADIANS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 10 /*Y_POLE_WANDER_RADIANS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 12 /*X_CELESTIAL_POLE_OFFSET_RADIANS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 14 /*Y_CELESTIAL_POLE_OFFSET_RADIANS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 16 /*UT1_MINUS_UTC_SECONDS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 18 /*TAI_MINUS_UTC_SECONDS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 20 /*LENGTH_OF_DAY_CORRECTION_SECONDS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 22 /*DATA_TYPE*/, 1 /*DataType*/, 1, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

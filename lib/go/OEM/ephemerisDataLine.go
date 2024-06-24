@@ -18,11 +18,19 @@ func GetRootAsephemerisDataLine(buf []byte, offset flatbuffers.UOffsetT) *epheme
 	return x
 }
 
+func FinishephemerisDataLineBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsephemerisDataLine(buf []byte, offset flatbuffers.UOffsetT) *ephemerisDataLine {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &ephemerisDataLine{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedephemerisDataLineBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *ephemerisDataLine) Init(buf []byte, i flatbuffers.UOffsetT) {

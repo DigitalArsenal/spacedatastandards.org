@@ -58,14 +58,14 @@ class RFM
 class RFMCOLLECTION
 
 /// Reference Frame Message
-class RFM : flatbuffers_handle
+class RFM : flatbuffers.handle
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(buf_.flatbuffers_field_int8(pos_, 4, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 4, 0))
 
-def GetRootAsRFM(buf:string): return RFM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsRFM(buf:string): return RFM { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
@@ -75,28 +75,28 @@ struct RFMBuilder:
     def end():
         return b_.EndObject()
 
-class RFMCOLLECTION : flatbuffers_handle
+class RFMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> RFM:
-        return RFM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return RFM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsRFMCOLLECTION(buf:string): return RFMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsRFMCOLLECTION(buf:string): return RFMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def RFMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def RFMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def RFMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def RFMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

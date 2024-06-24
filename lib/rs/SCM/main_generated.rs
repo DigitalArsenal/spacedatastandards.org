@@ -35,8 +35,8 @@ impl<'a> SCHEMA_STANDARD<'a> {
     SCHEMA_STANDARD { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args SCHEMA_STANDARDArgs<'args>
   ) -> flatbuffers::WIPOffset<SCHEMA_STANDARD<'bldr>> {
     let mut builder = SCHEMA_STANDARDBuilder::new(_fbb);
@@ -119,11 +119,11 @@ impl<'a> Default for SCHEMA_STANDARDArgs<'a> {
   }
 }
 
-pub struct SCHEMA_STANDARDBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SCHEMA_STANDARDBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SCHEMA_STANDARDBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SCHEMA_STANDARDBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_key(&mut self, key: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_KEY, key);
@@ -137,7 +137,7 @@ impl<'a: 'b, 'b> SCHEMA_STANDARDBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SCHEMA_STANDARD::VT_FILES, files);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SCHEMA_STANDARDBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SCHEMA_STANDARDBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCHEMA_STANDARDBuilder {
       fbb_: _fbb,
@@ -177,9 +177,9 @@ impl Default for SCHEMA_STANDARDT {
   }
 }
 impl SCHEMA_STANDARDT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<SCHEMA_STANDARD<'b>> {
     let key = self.key.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -222,8 +222,8 @@ impl<'a> SCM<'a> {
     SCM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args SCMArgs<'args>
   ) -> flatbuffers::WIPOffset<SCM<'bldr>> {
     let mut builder = SCMBuilder::new(_fbb);
@@ -290,11 +290,11 @@ impl<'a> Default for SCMArgs<'a> {
   }
 }
 
-pub struct SCMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SCMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SCMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SCMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_version(&mut self, version: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SCM::VT_VERSION, version);
@@ -304,7 +304,7 @@ impl<'a: 'b, 'b> SCMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SCM::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SCMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SCMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCMBuilder {
       fbb_: _fbb,
@@ -341,9 +341,9 @@ impl Default for SCMT {
   }
 }
 impl SCMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<SCM<'b>> {
     let version = self.version.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -381,8 +381,8 @@ impl<'a> SCMCOLLECTION<'a> {
     SCMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args SCMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<SCMCOLLECTION<'bldr>> {
     let mut builder = SCMCOLLECTIONBuilder::new(_fbb);
@@ -432,17 +432,17 @@ impl<'a> Default for SCMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct SCMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct SCMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> SCMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SCMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<SCM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SCMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> SCMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SCMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -476,9 +476,9 @@ impl Default for SCMCOLLECTIONT {
   }
 }
 impl SCMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<SCMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -561,13 +561,13 @@ pub fn SCM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_SCM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_SCM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<SCM<'a>>) {
   fbb.finish(root, Some(SCM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_SCM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<SCM<'a>>) {
+pub fn finish_size_prefixed_SCM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<SCM<'a>>) {
   fbb.finish_size_prefixed(root, Some(SCM_IDENTIFIER));
 }

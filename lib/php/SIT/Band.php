@@ -90,7 +90,7 @@ class Band extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addFREQUENCY_RANGE(FlatBufferBuilder $builder, $FREQUENCY_RANGE)

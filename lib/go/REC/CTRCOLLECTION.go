@@ -17,11 +17,19 @@ func GetRootAsCTRCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CTRCOLLECT
 	return x
 }
 
+func FinishCTRCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsCTRCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *CTRCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CTRCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCTRCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *CTRCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

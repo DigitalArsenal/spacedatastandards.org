@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Entity Profile Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class EPM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -243,7 +242,7 @@ class EPM : Table() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
         fun getRootAsEPM(_bb: ByteBuffer, obj: EPM): EPM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

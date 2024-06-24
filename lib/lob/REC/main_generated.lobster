@@ -38,141 +38,141 @@ class REC
 
 class RECCOLLECTION
 
-class Record : flatbuffers_handle
+class Record : flatbuffers.handle
     def value_type() -> RecordType:
-        return RecordType(buf_.flatbuffers_field_uint8(pos_, 4, 0))
+        return RecordType(flatbuffers.field_uint8(buf_, pos_, 4, 0))
     def value_as_LCC():
-        return LCC { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return LCC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_MPE():
-        return MPE { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return MPE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OMM():
-        return OMM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return OMM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PLD():
-        return PLD { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return PLD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_RFM():
-        return RFM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return RFM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CSM():
-        return CSM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return CSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OSM():
-        return OSM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return OSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CAT():
-        return CAT { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return CAT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CRM():
-        return CRM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return CRM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_SCM():
-        return SCM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return SCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TDM():
-        return TDM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return TDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_IDM():
-        return IDM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return IDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_MET():
-        return MET { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return MET { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_ROC():
-        return ROC { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return ROC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_BOV():
-        return BOV { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return BOV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EOP():
-        return EOP { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return EOP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EOO():
-        return EOO { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return EOO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EME():
-        return EME { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return EME { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_LDM():
-        return LDM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return LDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PNM():
-        return PNM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return PNM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_HYP():
-        return HYP { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return HYP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CTR():
-        return CTR { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return CTR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CDM():
-        return CDM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return CDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_SIT():
-        return SIT { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return SIT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OEM():
-        return OEM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return OEM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TIM():
-        return TIM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EPM():
-        return EPM { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return EPM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PRG():
-        return PRG { buf_, buf_.flatbuffers_field_table(pos_, 6) }
+        return PRG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
 
-def GetRootAsRecord(buf:string): return Record { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsRecord(buf:string): return Record { buf, flatbuffers.indirect(buf, 0) }
 
 struct RecordBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(2)
         return this
     def add_value_type(value_type:RecordType):
         b_.PrependUint8Slot(0, value_type, 0)
         return this
-    def add_value(value:flatbuffers_offset):
+    def add_value(value:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, value)
         return this
     def end():
         return b_.EndObject()
 
 /// Collection of Standard Records
-class REC : flatbuffers_handle
+class REC : flatbuffers.handle
     def version() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     def standard() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     def RECORDS(i:int) -> Record:
-        return Record { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 8) + i * 4) }
+        return Record { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 8)
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
 
-def GetRootAsREC(buf:string): return REC { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsREC(buf:string): return REC { buf, flatbuffers.indirect(buf, 0) }
 
 struct RECBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(3)
         return this
-    def add_version(version:flatbuffers_offset):
+    def add_version(version:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, version)
         return this
-    def add_standard(standard:flatbuffers_offset):
+    def add_standard(standard:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, standard)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def RECStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def RECStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def RECCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def RECCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class RECCOLLECTION : flatbuffers_handle
+class RECCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> REC:
-        return REC { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return REC { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsRECCOLLECTION(buf:string): return RECCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsRECCOLLECTION(buf:string): return RECCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct RECCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def RECCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def RECCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def RECCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def RECCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

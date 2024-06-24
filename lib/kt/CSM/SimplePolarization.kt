@@ -4,7 +4,6 @@
  * Simple polarization types
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SimplePolarization private constructor() {
     companion object {
         const val vertical: Byte = 0

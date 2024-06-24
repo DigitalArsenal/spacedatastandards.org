@@ -67,8 +67,8 @@ impl<'a> LDM<'a> {
     LDM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args LDMArgs<'args>
   ) -> flatbuffers::WIPOffset<LDM<'bldr>> {
     let mut builder = LDMBuilder::new(_fbb);
@@ -533,11 +533,11 @@ impl<'a> Default for LDMArgs<'a> {
   }
 }
 
-pub struct LDMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct LDMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> LDMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LDMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_SITE(&mut self, SITE: flatbuffers::WIPOffset<SIT<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<SIT>>(LDM::VT_SITE, SITE);
@@ -647,7 +647,7 @@ impl<'a: 'b, 'b> LDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDM::VT_BURN_OUT_VECTORS, BURN_OUT_VECTORS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LDMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LDMBuilder {
       fbb_: _fbb,
@@ -759,9 +759,9 @@ impl Default for LDMT {
   }
 }
 impl LDMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<LDM<'b>> {
     let SITE = self.SITE.as_ref().map(|x|{
       x.pack(_fbb)
@@ -896,8 +896,8 @@ impl<'a> LDMCOLLECTION<'a> {
     LDMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args LDMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<LDMCOLLECTION<'bldr>> {
     let mut builder = LDMCOLLECTIONBuilder::new(_fbb);
@@ -947,17 +947,17 @@ impl<'a> Default for LDMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct LDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct LDMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> LDMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LDMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<LDM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LDMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LDMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LDMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LDMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -991,9 +991,9 @@ impl Default for LDMCOLLECTIONT {
   }
 }
 impl LDMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<LDMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1076,13 +1076,13 @@ pub fn LDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_LDM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_LDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<LDM<'a>>) {
   fbb.finish(root, Some(LDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_LDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<LDM<'a>>) {
+pub fn finish_size_prefixed_LDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<LDM<'a>>) {
   fbb.finish_size_prefixed(root, Some(LDM_IDENTIFIER));
 }

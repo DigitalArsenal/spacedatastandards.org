@@ -11,10 +11,11 @@ public struct PRG : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static PRG GetRootAsPRG(ByteBuffer _bb) { return GetRootAsPRG(_bb, new PRG()); }
   public static PRG GetRootAsPRG(ByteBuffer _bb, PRG obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool PRGBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PRG"); }
+  public static bool VerifyPRG(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$PRG", false, PRGVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PRG __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -136,3 +137,16 @@ public class PRGT
   }
 }
 
+
+static public class PRGVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*NAME*/, false)
+      && verifier.VerifyString(tablePos, 6 /*HD_KEY_PATH*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 8 /*MESSAGE_TYPES*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 10 /*USERS*/, USRVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

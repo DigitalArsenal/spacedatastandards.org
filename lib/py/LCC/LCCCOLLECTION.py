@@ -53,18 +53,30 @@ class LCCCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def LCCCOLLECTIONStart(builder): builder.StartObject(1)
+def LCCCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return LCCCOLLECTIONStart(builder)
-def LCCCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    LCCCOLLECTIONStart(builder)
+
+def LCCCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return LCCCOLLECTIONAddRECORDS(builder, RECORDS)
-def LCCCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    LCCCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def LCCCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return LCCCOLLECTIONStartRECORDSVector(builder, numElems)
-def LCCCOLLECTIONEnd(builder): return builder.EndObject()
+
+def LCCCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return LCCCOLLECTIONEnd(builder)
+
 import LCC
 try:
     from typing import List

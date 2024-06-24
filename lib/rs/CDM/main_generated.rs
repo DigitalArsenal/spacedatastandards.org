@@ -289,8 +289,8 @@ impl<'a> CDMObject<'a> {
     CDMObject { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CDMObjectArgs<'args>
   ) -> flatbuffers::WIPOffset<CDMObject<'bldr>> {
     let mut builder = CDMObjectBuilder::new(_fbb);
@@ -1480,11 +1480,11 @@ impl<'a> Default for CDMObjectArgs<'a> {
   }
 }
 
-pub struct CDMObjectBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CDMObjectBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CDMObjectBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CDMObjectBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_COMMENT(&mut self, COMMENT: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_COMMENT, COMMENT);
@@ -1810,7 +1810,7 @@ impl<'a: 'b, 'b> CDMObjectBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_THR, CTHR_THR, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CDMObjectBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CDMObjectBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CDMObjectBuilder {
       fbb_: _fbb,
@@ -2084,9 +2084,9 @@ impl Default for CDMObjectT {
   }
 }
 impl CDMObjectT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CDMObject<'b>> {
     let COMMENT = self.COMMENT.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2328,8 +2328,8 @@ impl<'a> CDM<'a> {
     CDM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CDMArgs<'args>
   ) -> flatbuffers::WIPOffset<CDM<'bldr>> {
     let mut builder = CDMBuilder::new(_fbb);
@@ -2798,11 +2798,11 @@ impl<'a> Default for CDMArgs<'a> {
   }
 }
 
-pub struct CDMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CDMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CDMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CDMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_CCSDS_CDM_VERS(&mut self, CCSDS_CDM_VERS: f64) {
     self.fbb_.push_slot::<f64>(CDM::VT_CCSDS_CDM_VERS, CCSDS_CDM_VERS, 0.0);
@@ -2920,7 +2920,7 @@ impl<'a: 'b, 'b> CDMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<PNM>>(CDM::VT_OBJECT2_DATASOURCE, OBJECT2_DATASOURCE);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CDMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CDMBuilder {
       fbb_: _fbb,
@@ -3038,9 +3038,9 @@ impl Default for CDMT {
   }
 }
 impl CDMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CDM<'b>> {
     let CCSDS_CDM_VERS = self.CCSDS_CDM_VERS;
     let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
@@ -3155,8 +3155,8 @@ impl<'a> CDMCOLLECTION<'a> {
     CDMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args CDMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<CDMCOLLECTION<'bldr>> {
     let mut builder = CDMCOLLECTIONBuilder::new(_fbb);
@@ -3206,17 +3206,17 @@ impl<'a> Default for CDMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct CDMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct CDMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> CDMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CDMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CDM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> CDMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CDMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CDMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -3250,9 +3250,9 @@ impl Default for CDMCOLLECTIONT {
   }
 }
 impl CDMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<CDMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -3335,13 +3335,13 @@ pub fn CDM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_CDM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_CDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<CDM<'a>>) {
   fbb.finish(root, Some(CDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_CDM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<CDM<'a>>) {
+pub fn finish_size_prefixed_CDM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<CDM<'a>>) {
   fbb.finish_size_prefixed(root, Some(CDM_IDENTIFIER));
 }

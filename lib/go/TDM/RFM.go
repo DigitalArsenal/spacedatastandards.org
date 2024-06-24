@@ -11,6 +11,8 @@ type RFM struct {
 	_tab flatbuffers.Table
 }
 
+const RFMIdentifier = "$RFM"
+
 func GetRootAsRFM(buf []byte, offset flatbuffers.UOffsetT) *RFM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &RFM{}
@@ -18,11 +20,29 @@ func GetRootAsRFM(buf []byte, offset flatbuffers.UOffsetT) *RFM {
 	return x
 }
 
+func FinishRFMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(RFMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func RFMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, RFMIdentifier)
+}
+
 func GetSizePrefixedRootAsRFM(buf []byte, offset flatbuffers.UOffsetT) *RFM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &RFM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedRFMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(RFMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedRFMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, RFMIdentifier)
 }
 
 func (rcv *RFM) Init(buf []byte, i flatbuffers.UOffsetT) {

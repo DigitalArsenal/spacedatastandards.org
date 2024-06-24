@@ -740,8 +740,8 @@ impl<'a> LCC<'a> {
     LCC { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args LCCArgs
   ) -> flatbuffers::WIPOffset<LCC<'bldr>> {
     let mut builder = LCCBuilder::new(_fbb);
@@ -789,17 +789,17 @@ impl<'a> Default for LCCArgs {
   }
 }
 
-pub struct LCCBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct LCCBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> LCCBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LCCBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_OWNER(&mut self, OWNER: legacyCountryCode) {
     self.fbb_.push_slot::<legacyCountryCode>(LCC::VT_OWNER, OWNER, legacyCountryCode::AB);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LCCBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LCCBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LCCBuilder {
       fbb_: _fbb,
@@ -833,9 +833,9 @@ impl Default for LCCT {
   }
 }
 impl LCCT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<LCC<'b>> {
     let OWNER = self.OWNER;
     LCC::create(_fbb, &LCCArgs{
@@ -866,8 +866,8 @@ impl<'a> LCCCOLLECTION<'a> {
     LCCCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args LCCCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<LCCCOLLECTION<'bldr>> {
     let mut builder = LCCCOLLECTIONBuilder::new(_fbb);
@@ -917,17 +917,17 @@ impl<'a> Default for LCCCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct LCCCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct LCCCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> LCCCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LCCCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<LCC<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LCCCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> LCCCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LCCCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LCCCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -961,9 +961,9 @@ impl Default for LCCCOLLECTIONT {
   }
 }
 impl LCCCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<LCCCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1046,13 +1046,13 @@ pub fn LCC_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_LCC_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_LCC_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<LCC<'a>>) {
   fbb.finish(root, Some(LCC_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_LCC_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<LCC<'a>>) {
+pub fn finish_size_prefixed_LCC_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<LCC<'a>>) {
   fbb.finish_size_prefixed(root, Some(LCC_IDENTIFIER));
 }

@@ -36,15 +36,24 @@ class LCC(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def LCCStart(builder): builder.StartObject(1)
+def LCCStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return LCCStart(builder)
-def LCCAddOWNER(builder, OWNER): builder.PrependInt8Slot(0, OWNER, 0)
+    LCCStart(builder)
+
+def LCCAddOWNER(builder, OWNER):
+    builder.PrependInt8Slot(0, OWNER, 0)
+
 def AddOWNER(builder, OWNER):
-    return LCCAddOWNER(builder, OWNER)
-def LCCEnd(builder): return builder.EndObject()
+    LCCAddOWNER(builder, OWNER)
+
+def LCCEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return LCCEnd(builder)
+
 
 class LCCT(object):
 

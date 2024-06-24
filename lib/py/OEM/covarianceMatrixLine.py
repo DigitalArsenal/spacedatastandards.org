@@ -213,81 +213,156 @@ class covarianceMatrixLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def covarianceMatrixLineStart(builder): builder.StartObject(23)
+def covarianceMatrixLineStart(builder):
+    builder.StartObject(23)
+
 def Start(builder):
-    return covarianceMatrixLineStart(builder)
-def covarianceMatrixLineAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+    covarianceMatrixLineStart(builder)
+
+def covarianceMatrixLineAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
 def AddEPOCH(builder, EPOCH):
-    return covarianceMatrixLineAddEPOCH(builder, EPOCH)
-def covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME): builder.PrependInt8Slot(1, COV_REFERENCE_FRAME, 0)
+    covarianceMatrixLineAddEPOCH(builder, EPOCH)
+
+def covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
+    builder.PrependInt8Slot(1, COV_REFERENCE_FRAME, 0)
+
 def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    return covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
-def covarianceMatrixLineAddCX_X(builder, CX_X): builder.PrependFloat64Slot(2, CX_X, 0.0)
+    covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
+
+def covarianceMatrixLineAddCX_X(builder, CX_X):
+    builder.PrependFloat64Slot(2, CX_X, 0.0)
+
 def AddCX_X(builder, CX_X):
-    return covarianceMatrixLineAddCX_X(builder, CX_X)
-def covarianceMatrixLineAddCY_X(builder, CY_X): builder.PrependFloat64Slot(3, CY_X, 0.0)
+    covarianceMatrixLineAddCX_X(builder, CX_X)
+
+def covarianceMatrixLineAddCY_X(builder, CY_X):
+    builder.PrependFloat64Slot(3, CY_X, 0.0)
+
 def AddCY_X(builder, CY_X):
-    return covarianceMatrixLineAddCY_X(builder, CY_X)
-def covarianceMatrixLineAddCY_Y(builder, CY_Y): builder.PrependFloat64Slot(4, CY_Y, 0.0)
+    covarianceMatrixLineAddCY_X(builder, CY_X)
+
+def covarianceMatrixLineAddCY_Y(builder, CY_Y):
+    builder.PrependFloat64Slot(4, CY_Y, 0.0)
+
 def AddCY_Y(builder, CY_Y):
-    return covarianceMatrixLineAddCY_Y(builder, CY_Y)
-def covarianceMatrixLineAddCZ_X(builder, CZ_X): builder.PrependFloat64Slot(5, CZ_X, 0.0)
+    covarianceMatrixLineAddCY_Y(builder, CY_Y)
+
+def covarianceMatrixLineAddCZ_X(builder, CZ_X):
+    builder.PrependFloat64Slot(5, CZ_X, 0.0)
+
 def AddCZ_X(builder, CZ_X):
-    return covarianceMatrixLineAddCZ_X(builder, CZ_X)
-def covarianceMatrixLineAddCZ_Y(builder, CZ_Y): builder.PrependFloat64Slot(6, CZ_Y, 0.0)
+    covarianceMatrixLineAddCZ_X(builder, CZ_X)
+
+def covarianceMatrixLineAddCZ_Y(builder, CZ_Y):
+    builder.PrependFloat64Slot(6, CZ_Y, 0.0)
+
 def AddCZ_Y(builder, CZ_Y):
-    return covarianceMatrixLineAddCZ_Y(builder, CZ_Y)
-def covarianceMatrixLineAddCZ_Z(builder, CZ_Z): builder.PrependFloat64Slot(7, CZ_Z, 0.0)
+    covarianceMatrixLineAddCZ_Y(builder, CZ_Y)
+
+def covarianceMatrixLineAddCZ_Z(builder, CZ_Z):
+    builder.PrependFloat64Slot(7, CZ_Z, 0.0)
+
 def AddCZ_Z(builder, CZ_Z):
-    return covarianceMatrixLineAddCZ_Z(builder, CZ_Z)
-def covarianceMatrixLineAddCX_DOT_X(builder, CX_DOT_X): builder.PrependFloat64Slot(8, CX_DOT_X, 0.0)
+    covarianceMatrixLineAddCZ_Z(builder, CZ_Z)
+
+def covarianceMatrixLineAddCX_DOT_X(builder, CX_DOT_X):
+    builder.PrependFloat64Slot(8, CX_DOT_X, 0.0)
+
 def AddCX_DOT_X(builder, CX_DOT_X):
-    return covarianceMatrixLineAddCX_DOT_X(builder, CX_DOT_X)
-def covarianceMatrixLineAddCX_DOT_Y(builder, CX_DOT_Y): builder.PrependFloat64Slot(9, CX_DOT_Y, 0.0)
+    covarianceMatrixLineAddCX_DOT_X(builder, CX_DOT_X)
+
+def covarianceMatrixLineAddCX_DOT_Y(builder, CX_DOT_Y):
+    builder.PrependFloat64Slot(9, CX_DOT_Y, 0.0)
+
 def AddCX_DOT_Y(builder, CX_DOT_Y):
-    return covarianceMatrixLineAddCX_DOT_Y(builder, CX_DOT_Y)
-def covarianceMatrixLineAddCX_DOT_Z(builder, CX_DOT_Z): builder.PrependFloat64Slot(10, CX_DOT_Z, 0.0)
+    covarianceMatrixLineAddCX_DOT_Y(builder, CX_DOT_Y)
+
+def covarianceMatrixLineAddCX_DOT_Z(builder, CX_DOT_Z):
+    builder.PrependFloat64Slot(10, CX_DOT_Z, 0.0)
+
 def AddCX_DOT_Z(builder, CX_DOT_Z):
-    return covarianceMatrixLineAddCX_DOT_Z(builder, CX_DOT_Z)
-def covarianceMatrixLineAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT): builder.PrependFloat64Slot(11, CX_DOT_X_DOT, 0.0)
+    covarianceMatrixLineAddCX_DOT_Z(builder, CX_DOT_Z)
+
+def covarianceMatrixLineAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
+    builder.PrependFloat64Slot(11, CX_DOT_X_DOT, 0.0)
+
 def AddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
-    return covarianceMatrixLineAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
-def covarianceMatrixLineAddCY_DOT_X(builder, CY_DOT_X): builder.PrependFloat64Slot(12, CY_DOT_X, 0.0)
+    covarianceMatrixLineAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
+
+def covarianceMatrixLineAddCY_DOT_X(builder, CY_DOT_X):
+    builder.PrependFloat64Slot(12, CY_DOT_X, 0.0)
+
 def AddCY_DOT_X(builder, CY_DOT_X):
-    return covarianceMatrixLineAddCY_DOT_X(builder, CY_DOT_X)
-def covarianceMatrixLineAddCY_DOT_Y(builder, CY_DOT_Y): builder.PrependFloat64Slot(13, CY_DOT_Y, 0.0)
+    covarianceMatrixLineAddCY_DOT_X(builder, CY_DOT_X)
+
+def covarianceMatrixLineAddCY_DOT_Y(builder, CY_DOT_Y):
+    builder.PrependFloat64Slot(13, CY_DOT_Y, 0.0)
+
 def AddCY_DOT_Y(builder, CY_DOT_Y):
-    return covarianceMatrixLineAddCY_DOT_Y(builder, CY_DOT_Y)
-def covarianceMatrixLineAddCY_DOT_Z(builder, CY_DOT_Z): builder.PrependFloat64Slot(14, CY_DOT_Z, 0.0)
+    covarianceMatrixLineAddCY_DOT_Y(builder, CY_DOT_Y)
+
+def covarianceMatrixLineAddCY_DOT_Z(builder, CY_DOT_Z):
+    builder.PrependFloat64Slot(14, CY_DOT_Z, 0.0)
+
 def AddCY_DOT_Z(builder, CY_DOT_Z):
-    return covarianceMatrixLineAddCY_DOT_Z(builder, CY_DOT_Z)
-def covarianceMatrixLineAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT): builder.PrependFloat64Slot(15, CY_DOT_X_DOT, 0.0)
+    covarianceMatrixLineAddCY_DOT_Z(builder, CY_DOT_Z)
+
+def covarianceMatrixLineAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
+    builder.PrependFloat64Slot(15, CY_DOT_X_DOT, 0.0)
+
 def AddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
-    return covarianceMatrixLineAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
-def covarianceMatrixLineAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT): builder.PrependFloat64Slot(16, CY_DOT_Y_DOT, 0.0)
+    covarianceMatrixLineAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
+
+def covarianceMatrixLineAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
+    builder.PrependFloat64Slot(16, CY_DOT_Y_DOT, 0.0)
+
 def AddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
-    return covarianceMatrixLineAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
-def covarianceMatrixLineAddCZ_DOT_X(builder, CZ_DOT_X): builder.PrependFloat64Slot(17, CZ_DOT_X, 0.0)
+    covarianceMatrixLineAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
+
+def covarianceMatrixLineAddCZ_DOT_X(builder, CZ_DOT_X):
+    builder.PrependFloat64Slot(17, CZ_DOT_X, 0.0)
+
 def AddCZ_DOT_X(builder, CZ_DOT_X):
-    return covarianceMatrixLineAddCZ_DOT_X(builder, CZ_DOT_X)
-def covarianceMatrixLineAddCZ_DOT_Y(builder, CZ_DOT_Y): builder.PrependFloat64Slot(18, CZ_DOT_Y, 0.0)
+    covarianceMatrixLineAddCZ_DOT_X(builder, CZ_DOT_X)
+
+def covarianceMatrixLineAddCZ_DOT_Y(builder, CZ_DOT_Y):
+    builder.PrependFloat64Slot(18, CZ_DOT_Y, 0.0)
+
 def AddCZ_DOT_Y(builder, CZ_DOT_Y):
-    return covarianceMatrixLineAddCZ_DOT_Y(builder, CZ_DOT_Y)
-def covarianceMatrixLineAddCZ_DOT_Z(builder, CZ_DOT_Z): builder.PrependFloat64Slot(19, CZ_DOT_Z, 0.0)
+    covarianceMatrixLineAddCZ_DOT_Y(builder, CZ_DOT_Y)
+
+def covarianceMatrixLineAddCZ_DOT_Z(builder, CZ_DOT_Z):
+    builder.PrependFloat64Slot(19, CZ_DOT_Z, 0.0)
+
 def AddCZ_DOT_Z(builder, CZ_DOT_Z):
-    return covarianceMatrixLineAddCZ_DOT_Z(builder, CZ_DOT_Z)
-def covarianceMatrixLineAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT): builder.PrependFloat64Slot(20, CZ_DOT_X_DOT, 0.0)
+    covarianceMatrixLineAddCZ_DOT_Z(builder, CZ_DOT_Z)
+
+def covarianceMatrixLineAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
+    builder.PrependFloat64Slot(20, CZ_DOT_X_DOT, 0.0)
+
 def AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
-    return covarianceMatrixLineAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
-def covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT): builder.PrependFloat64Slot(21, CZ_DOT_Y_DOT, 0.0)
+    covarianceMatrixLineAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
+
+def covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
+    builder.PrependFloat64Slot(21, CZ_DOT_Y_DOT, 0.0)
+
 def AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
-    return covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
-def covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT): builder.PrependFloat64Slot(22, CZ_DOT_Z_DOT, 0.0)
+    covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
+
+def covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
+    builder.PrependFloat64Slot(22, CZ_DOT_Z_DOT, 0.0)
+
 def AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
-    return covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
-def covarianceMatrixLineEnd(builder): return builder.EndObject()
+    covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
+
+def covarianceMatrixLineEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return covarianceMatrixLineEnd(builder)
+
 
 class covarianceMatrixLineT(object):
 

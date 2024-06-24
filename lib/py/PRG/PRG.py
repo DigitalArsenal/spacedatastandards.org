@@ -92,30 +92,54 @@ class PRG(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
-def PRGStart(builder): builder.StartObject(4)
+def PRGStart(builder):
+    builder.StartObject(4)
+
 def Start(builder):
-    return PRGStart(builder)
-def PRGAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    PRGStart(builder)
+
+def PRGAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return PRGAddNAME(builder, NAME)
-def PRGAddHD_KEY_PATH(builder, HD_KEY_PATH): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(HD_KEY_PATH), 0)
+    PRGAddNAME(builder, NAME)
+
+def PRGAddHD_KEY_PATH(builder, HD_KEY_PATH):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(HD_KEY_PATH), 0)
+
 def AddHD_KEY_PATH(builder, HD_KEY_PATH):
-    return PRGAddHD_KEY_PATH(builder, HD_KEY_PATH)
-def PRGAddMESSAGE_TYPES(builder, MESSAGE_TYPES): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_TYPES), 0)
+    PRGAddHD_KEY_PATH(builder, HD_KEY_PATH)
+
+def PRGAddMESSAGE_TYPES(builder, MESSAGE_TYPES):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_TYPES), 0)
+
 def AddMESSAGE_TYPES(builder, MESSAGE_TYPES):
-    return PRGAddMESSAGE_TYPES(builder, MESSAGE_TYPES)
-def PRGStartMESSAGE_TYPESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    PRGAddMESSAGE_TYPES(builder, MESSAGE_TYPES)
+
+def PRGStartMESSAGE_TYPESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartMESSAGE_TYPESVector(builder, numElems):
     return PRGStartMESSAGE_TYPESVector(builder, numElems)
-def PRGAddUSERS(builder, USERS): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(USERS), 0)
+
+def PRGAddUSERS(builder, USERS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(USERS), 0)
+
 def AddUSERS(builder, USERS):
-    return PRGAddUSERS(builder, USERS)
-def PRGStartUSERSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    PRGAddUSERS(builder, USERS)
+
+def PRGStartUSERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartUSERSVector(builder, numElems):
     return PRGStartUSERSVector(builder, numElems)
-def PRGEnd(builder): return builder.EndObject()
+
+def PRGEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return PRGEnd(builder)
+
 import USR
 try:
     from typing import List

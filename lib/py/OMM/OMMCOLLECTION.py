@@ -53,18 +53,30 @@ class OMMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def OMMCOLLECTIONStart(builder): builder.StartObject(1)
+def OMMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return OMMCOLLECTIONStart(builder)
-def OMMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    OMMCOLLECTIONStart(builder)
+
+def OMMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return OMMCOLLECTIONAddRECORDS(builder, RECORDS)
-def OMMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    OMMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def OMMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return OMMCOLLECTIONStartRECORDSVector(builder, numElems)
-def OMMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def OMMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return OMMCOLLECTIONEnd(builder)
+
 import OMM
 try:
     from typing import List

@@ -17,11 +17,19 @@ func GetRootAsBOVCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *BOVCOLLECT
 	return x
 }
 
+func FinishBOVCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsBOVCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *BOVCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &BOVCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedBOVCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *BOVCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

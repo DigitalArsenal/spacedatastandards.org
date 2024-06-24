@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Burn Out Vector Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class BOV : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -77,7 +76,7 @@ class BOV : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsBOV(_bb: ByteBuffer): BOV = getRootAsBOV(_bb, BOV())
         fun getRootAsBOV(_bb: ByteBuffer, obj: BOV): BOV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

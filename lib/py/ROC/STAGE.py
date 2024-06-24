@@ -87,30 +87,54 @@ class STAGE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def STAGEStart(builder): builder.StartObject(5)
+def STAGEStart(builder):
+    builder.StartObject(5)
+
 def Start(builder):
-    return STAGEStart(builder)
-def STAGEAddSTAGE_NUMBER(builder, STAGE_NUMBER): builder.PrependInt32Slot(0, STAGE_NUMBER, 0)
+    STAGEStart(builder)
+
+def STAGEAddSTAGE_NUMBER(builder, STAGE_NUMBER):
+    builder.PrependInt32Slot(0, STAGE_NUMBER, 0)
+
 def AddSTAGE_NUMBER(builder, STAGE_NUMBER):
-    return STAGEAddSTAGE_NUMBER(builder, STAGE_NUMBER)
-def STAGEAddENGINES(builder, ENGINES): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ENGINES), 0)
+    STAGEAddSTAGE_NUMBER(builder, STAGE_NUMBER)
+
+def STAGEAddENGINES(builder, ENGINES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ENGINES), 0)
+
 def AddENGINES(builder, ENGINES):
-    return STAGEAddENGINES(builder, ENGINES)
-def STAGEStartENGINESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    STAGEAddENGINES(builder, ENGINES)
+
+def STAGEStartENGINESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartENGINESVector(builder, numElems):
     return STAGEStartENGINESVector(builder, numElems)
-def STAGEAddFUEL_TYPE(builder, FUEL_TYPE): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FUEL_TYPE), 0)
+
+def STAGEAddFUEL_TYPE(builder, FUEL_TYPE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FUEL_TYPE), 0)
+
 def AddFUEL_TYPE(builder, FUEL_TYPE):
-    return STAGEAddFUEL_TYPE(builder, FUEL_TYPE)
-def STAGEAddTHRUST(builder, THRUST): builder.PrependFloat64Slot(3, THRUST, 0.0)
+    STAGEAddFUEL_TYPE(builder, FUEL_TYPE)
+
+def STAGEAddTHRUST(builder, THRUST):
+    builder.PrependFloat64Slot(3, THRUST, 0.0)
+
 def AddTHRUST(builder, THRUST):
-    return STAGEAddTHRUST(builder, THRUST)
-def STAGEAddBURN_DURATION(builder, BURN_DURATION): builder.PrependFloat64Slot(4, BURN_DURATION, 0.0)
+    STAGEAddTHRUST(builder, THRUST)
+
+def STAGEAddBURN_DURATION(builder, BURN_DURATION):
+    builder.PrependFloat64Slot(4, BURN_DURATION, 0.0)
+
 def AddBURN_DURATION(builder, BURN_DURATION):
-    return STAGEAddBURN_DURATION(builder, BURN_DURATION)
-def STAGEEnd(builder): return builder.EndObject()
+    STAGEAddBURN_DURATION(builder, BURN_DURATION)
+
+def STAGEEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return STAGEEnd(builder)
+
 import ENGINE
 try:
     from typing import List

@@ -4,7 +4,6 @@
  * Enumeration of Engine Types
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class ENGINE_TYPE private constructor() {
     companion object {
         const val LIQUID: Byte = 0

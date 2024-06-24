@@ -61,24 +61,42 @@ class StokesParameters(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def StokesParametersStart(builder): builder.StartObject(4)
+def StokesParametersStart(builder):
+    builder.StartObject(4)
+
 def Start(builder):
-    return StokesParametersStart(builder)
-def StokesParametersAddI(builder, I): builder.PrependFloat64Slot(0, I, 0.0)
+    StokesParametersStart(builder)
+
+def StokesParametersAddI(builder, I):
+    builder.PrependFloat64Slot(0, I, 0.0)
+
 def AddI(builder, I):
-    return StokesParametersAddI(builder, I)
-def StokesParametersAddQ(builder, Q): builder.PrependFloat64Slot(1, Q, 0.0)
+    StokesParametersAddI(builder, I)
+
+def StokesParametersAddQ(builder, Q):
+    builder.PrependFloat64Slot(1, Q, 0.0)
+
 def AddQ(builder, Q):
-    return StokesParametersAddQ(builder, Q)
-def StokesParametersAddU(builder, U): builder.PrependFloat64Slot(2, U, 0.0)
+    StokesParametersAddQ(builder, Q)
+
+def StokesParametersAddU(builder, U):
+    builder.PrependFloat64Slot(2, U, 0.0)
+
 def AddU(builder, U):
-    return StokesParametersAddU(builder, U)
-def StokesParametersAddV(builder, V): builder.PrependFloat64Slot(3, V, 0.0)
+    StokesParametersAddU(builder, U)
+
+def StokesParametersAddV(builder, V):
+    builder.PrependFloat64Slot(3, V, 0.0)
+
 def AddV(builder, V):
-    return StokesParametersAddV(builder, V)
-def StokesParametersEnd(builder): return builder.EndObject()
+    StokesParametersAddV(builder, V)
+
+def StokesParametersEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return StokesParametersEnd(builder)
+
 
 class StokesParametersT(object):
 

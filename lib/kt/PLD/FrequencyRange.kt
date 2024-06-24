@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Frequency range with lower and upper limits
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class FrequencyRange : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -47,7 +46,7 @@ class FrequencyRange : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsFrequencyRange(_bb: ByteBuffer): FrequencyRange = getRootAsFrequencyRange(_bb, FrequencyRange())
         fun getRootAsFrequencyRange(_bb: ByteBuffer, obj: FrequencyRange): FrequencyRange {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

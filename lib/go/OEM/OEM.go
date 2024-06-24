@@ -11,6 +11,8 @@ type OEM struct {
 	_tab flatbuffers.Table
 }
 
+const OEMIdentifier = "$OEM"
+
 func GetRootAsOEM(buf []byte, offset flatbuffers.UOffsetT) *OEM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &OEM{}
@@ -18,11 +20,29 @@ func GetRootAsOEM(buf []byte, offset flatbuffers.UOffsetT) *OEM {
 	return x
 }
 
+func FinishOEMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(OEMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func OEMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, OEMIdentifier)
+}
+
 func GetSizePrefixedRootAsOEM(buf []byte, offset flatbuffers.UOffsetT) *OEM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &OEM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedOEMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(OEMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedOEMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, OEMIdentifier)
 }
 
 func (rcv *OEM) Init(buf []byte, i flatbuffers.UOffsetT) {

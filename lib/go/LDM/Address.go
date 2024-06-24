@@ -18,11 +18,19 @@ func GetRootAsAddress(buf []byte, offset flatbuffers.UOffsetT) *Address {
 	return x
 }
 
+func FinishAddressBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsAddress(buf []byte, offset flatbuffers.UOffsetT) *Address {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &Address{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedAddressBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *Address) Init(buf []byte, i flatbuffers.UOffsetT) {

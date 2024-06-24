@@ -53,18 +53,30 @@ class METCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def METCOLLECTIONStart(builder): builder.StartObject(1)
+def METCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return METCOLLECTIONStart(builder)
-def METCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    METCOLLECTIONStart(builder)
+
+def METCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return METCOLLECTIONAddRECORDS(builder, RECORDS)
-def METCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    METCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def METCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return METCOLLECTIONStartRECORDSVector(builder, numElems)
-def METCOLLECTIONEnd(builder): return builder.EndObject()
+
+def METCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return METCOLLECTIONEnd(builder)
+
 import MET
 try:
     from typing import List

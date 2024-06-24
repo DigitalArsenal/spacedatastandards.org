@@ -17,11 +17,19 @@ func GetRootAsHYPCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *HYPCOLLECT
 	return x
 }
 
+func FinishHYPCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsHYPCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *HYPCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &HYPCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedHYPCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *HYPCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

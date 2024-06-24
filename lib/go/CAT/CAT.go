@@ -11,6 +11,8 @@ type CAT struct {
 	_tab flatbuffers.Table
 }
 
+const CATIdentifier = "$CAT"
+
 func GetRootAsCAT(buf []byte, offset flatbuffers.UOffsetT) *CAT {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &CAT{}
@@ -18,11 +20,29 @@ func GetRootAsCAT(buf []byte, offset flatbuffers.UOffsetT) *CAT {
 	return x
 }
 
+func FinishCATBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CATIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func CATBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, CATIdentifier)
+}
+
 func GetSizePrefixedRootAsCAT(buf []byte, offset flatbuffers.UOffsetT) *CAT {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CAT{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCATBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(CATIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedCATBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, CATIdentifier)
 }
 
 func (rcv *CAT) Init(buf []byte, i flatbuffers.UOffsetT) {

@@ -11,10 +11,11 @@ public struct REC : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static REC GetRootAsREC(ByteBuffer _bb) { return GetRootAsREC(_bb, new REC()); }
   public static REC GetRootAsREC(ByteBuffer _bb, REC obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool RECBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$REC"); }
+  public static bool VerifyREC(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$REC", false, RECVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public REC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -111,3 +112,15 @@ public class RECT
   }
 }
 
+
+static public class RECVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*Version*/, false)
+      && verifier.VerifyString(tablePos, 6 /*Standard*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 8 /*RECORDS*/, RecordVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

@@ -11,10 +11,11 @@ public struct CTR : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static CTR GetRootAsCTR(ByteBuffer _bb) { return GetRootAsCTR(_bb, new CTR()); }
   public static CTR GetRootAsCTR(ByteBuffer _bb, CTR obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool CTRBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CTR"); }
+  public static bool VerifyCTR(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$CTR", false, CTRVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CTR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -188,3 +189,20 @@ public class CTRT
   }
 }
 
+
+static public class CTRVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*ID*/, false)
+      && verifier.VerifyString(tablePos, 6 /*NAME*/, false)
+      && verifier.VerifyString(tablePos, 8 /*GENC_CODE*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ALPHA_2_CODE*/, false)
+      && verifier.VerifyString(tablePos, 12 /*ALPHA_3_CODE*/, false)
+      && verifier.VerifyString(tablePos, 14 /*STANAG_CODE*/, false)
+      && verifier.VerifyString(tablePos, 16 /*INTERNET_CCTLD*/, false)
+      && verifier.VerifyString(tablePos, 18 /*COMMENT*/, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

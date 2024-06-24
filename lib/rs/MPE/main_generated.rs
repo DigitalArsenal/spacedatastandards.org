@@ -43,8 +43,8 @@ impl<'a> MPE<'a> {
     MPE { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args MPEArgs<'args>
   ) -> flatbuffers::WIPOffset<MPE<'bldr>> {
     let mut builder = MPEBuilder::new(_fbb);
@@ -221,11 +221,11 @@ impl<'a> Default for MPEArgs<'a> {
   }
 }
 
-pub struct MPEBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct MPEBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> MPEBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MPEBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ENTITY_ID(&mut self, ENTITY_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MPE::VT_ENTITY_ID, ENTITY_ID);
@@ -267,7 +267,7 @@ impl<'a: 'b, 'b> MPEBuilder<'a, 'b> {
     self.fbb_.push_slot::<meanElementTheory>(MPE::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementTheory::SGP4);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> MPEBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> MPEBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     MPEBuilder {
       fbb_: _fbb,
@@ -328,9 +328,9 @@ impl Default for MPET {
   }
 }
 impl MPET {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<MPE<'b>> {
     let ENTITY_ID = self.ENTITY_ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -381,8 +381,8 @@ impl<'a> MPECOLLECTION<'a> {
     MPECOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args MPECOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<MPECOLLECTION<'bldr>> {
     let mut builder = MPECOLLECTIONBuilder::new(_fbb);
@@ -432,17 +432,17 @@ impl<'a> Default for MPECOLLECTIONArgs<'a> {
   }
 }
 
-pub struct MPECOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct MPECOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> MPECOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MPECOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<MPE<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MPECOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> MPECOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> MPECOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     MPECOLLECTIONBuilder {
       fbb_: _fbb,
@@ -476,9 +476,9 @@ impl Default for MPECOLLECTIONT {
   }
 }
 impl MPECOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<MPECOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -561,13 +561,13 @@ pub fn MPE_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_MPE_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_MPE_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<MPE<'a>>) {
   fbb.finish(root, Some(MPE_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_MPE_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<MPE<'a>>) {
+pub fn finish_size_prefixed_MPE_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<MPE<'a>>) {
   fbb.finish_size_prefixed(root, Some(MPE_IDENTIFIER));
 }

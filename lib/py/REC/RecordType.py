@@ -37,88 +37,88 @@ def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
     if not isinstance(table, Table):
         return None
-    if unionType == RecordType().LCC:
+    if unionType == RecordType.LCC:
         import LCC
         return LCC.LCCT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().MPE:
+    if unionType == RecordType.MPE:
         import MPE
         return MPE.MPET.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().OMM:
+    if unionType == RecordType.OMM:
         import OMM
         return OMM.OMMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().PLD:
+    if unionType == RecordType.PLD:
         import PLD
         return PLD.PLDT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().RFM:
+    if unionType == RecordType.RFM:
         import RFM
         return RFM.RFMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().CSM:
+    if unionType == RecordType.CSM:
         import CSM
         return CSM.CSMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().OSM:
+    if unionType == RecordType.OSM:
         import OSM
         return OSM.OSMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().CAT:
+    if unionType == RecordType.CAT:
         import CAT
         return CAT.CATT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().CRM:
+    if unionType == RecordType.CRM:
         import CRM
         return CRM.CRMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().SCM:
+    if unionType == RecordType.SCM:
         import SCM
         return SCM.SCMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().TDM:
+    if unionType == RecordType.TDM:
         import TDM
         return TDM.TDMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().IDM:
+    if unionType == RecordType.IDM:
         import IDM
         return IDM.IDMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().MET:
+    if unionType == RecordType.MET:
         import MET
         return MET.METT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().ROC:
+    if unionType == RecordType.ROC:
         import ROC
         return ROC.ROCT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().BOV:
+    if unionType == RecordType.BOV:
         import BOV
         return BOV.BOVT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().EOP:
+    if unionType == RecordType.EOP:
         import EOP
         return EOP.EOPT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().EOO:
+    if unionType == RecordType.EOO:
         import EOO
         return EOO.EOOT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().EME:
+    if unionType == RecordType.EME:
         import EME
         return EME.EMET.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().LDM:
+    if unionType == RecordType.LDM:
         import LDM
         return LDM.LDMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().PNM:
+    if unionType == RecordType.PNM:
         import PNM
         return PNM.PNMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().HYP:
+    if unionType == RecordType.HYP:
         import HYP
         return HYP.HYPT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().CTR:
+    if unionType == RecordType.CTR:
         import CTR
         return CTR.CTRT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().CDM:
+    if unionType == RecordType.CDM:
         import CDM
         return CDM.CDMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().SIT:
+    if unionType == RecordType.SIT:
         import SIT
         return SIT.SITT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().OEM:
+    if unionType == RecordType.OEM:
         import OEM
         return OEM.OEMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().TIM:
+    if unionType == RecordType.TIM:
         import TIM
         return TIM.TIMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().EPM:
+    if unionType == RecordType.EPM:
         import EPM
         return EPM.EPMT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType().PRG:
+    if unionType == RecordType.PRG:
         import PRG
         return PRG.PRGT.InitFromBuf(table.Bytes, table.Pos)
     return None

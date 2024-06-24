@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class RFM extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static RFM getRootAsRFM(ByteBuffer _bb) { return getRootAsRFM(_bb, new RFM()); }
   public static RFM getRootAsRFM(ByteBuffer _bb, RFM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean RFMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$RFM"); }

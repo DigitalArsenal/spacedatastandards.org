@@ -40,8 +40,8 @@ impl<'a> BOV<'a> {
     BOV { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args BOVArgs<'args>
   ) -> flatbuffers::WIPOffset<BOV<'bldr>> {
     let mut builder = BOVBuilder::new(_fbb);
@@ -182,11 +182,11 @@ impl<'a> Default for BOVArgs<'a> {
   }
 }
 
-pub struct BOVBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct BOVBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> BOVBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> BOVBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_E_COORDINATE(&mut self, E_COORDINATE: f64) {
     self.fbb_.push_slot::<f64>(BOV::VT_E_COORDINATE, E_COORDINATE, 0.0);
@@ -220,7 +220,7 @@ impl<'a: 'b, 'b> BOVBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(BOV::VT_TIME_FROM_LAUNCH, TIME_FROM_LAUNCH, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> BOVBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> BOVBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     BOVBuilder {
       fbb_: _fbb,
@@ -275,9 +275,9 @@ impl Default for BOVT {
   }
 }
 impl BOVT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<BOV<'b>> {
     let E_COORDINATE = self.E_COORDINATE;
     let F_COORDINATE = self.F_COORDINATE;
@@ -324,8 +324,8 @@ impl<'a> BOVCOLLECTION<'a> {
     BOVCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args BOVCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<BOVCOLLECTION<'bldr>> {
     let mut builder = BOVCOLLECTIONBuilder::new(_fbb);
@@ -375,17 +375,17 @@ impl<'a> Default for BOVCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct BOVCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct BOVCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> BOVCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> BOVCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<BOV<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BOVCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> BOVCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> BOVCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     BOVCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -419,9 +419,9 @@ impl Default for BOVCOLLECTIONT {
   }
 }
 impl BOVCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<BOVCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -504,13 +504,13 @@ pub fn BOV_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_BOV_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_BOV_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<BOV<'a>>) {
   fbb.finish(root, Some(BOV_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_BOV_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<BOV<'a>>) {
+pub fn finish_size_prefixed_BOV_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<BOV<'a>>) {
   fbb.finish_size_prefixed(root, Some(BOV_IDENTIFIER));
 }

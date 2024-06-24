@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Integrated Device Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class IDM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -317,7 +316,7 @@ class IDM : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsIDM(_bb: ByteBuffer): IDM = getRootAsIDM(_bb, IDM())
         fun getRootAsIDM(_bb: ByteBuffer, obj: IDM): IDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

@@ -18,11 +18,19 @@ func GetRootAsFrequencyRange(buf []byte, offset flatbuffers.UOffsetT) *Frequency
 	return x
 }
 
+func FinishFrequencyRangeBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsFrequencyRange(buf []byte, offset flatbuffers.UOffsetT) *FrequencyRange {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &FrequencyRange{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedFrequencyRangeBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *FrequencyRange) Init(buf []byte, i flatbuffers.UOffsetT) {

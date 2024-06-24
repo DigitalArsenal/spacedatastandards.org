@@ -1,1 +1,1 @@
-{"version":3,"file":"ephemerisType.d.ts","sourceRoot":"","sources":["../../../ts/OMM/ephemerisType.ts"],"names":[],"mappings":"AAEA,oBAAY,aAAa;IACvB;;OAEG;IACH,GAAG,IAAI;IAEP;;OAEG;IACH,IAAI,IAAI;IAER;;OAEG;IACH,IAAI,IAAI;IAER;;OAEG;IACH,IAAI,IAAI;IAER;;OAEG;IACH,IAAI,IAAI;CACT"}
+{"version":3,"file":"ephemerisType.d.ts","sourceRoot":"","sources":["../../../ts/OMM/ephemerisType.ts"],"names":[],"mappings":"AAIA,oBAAY,aAAa;IACvB;;OAEG;IACH,GAAG,IAAI;IAEP;;OAEG;IACH,IAAI,IAAI;IAER;;OAEG;IACH,IAAI,IAAI;IAER;;OAEG;IACH,IAAI,IAAI;IAER;;OAEG;IACH,IAAI,IAAI;CACT"}

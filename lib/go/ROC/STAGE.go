@@ -18,11 +18,19 @@ func GetRootAsSTAGE(buf []byte, offset flatbuffers.UOffsetT) *STAGE {
 	return x
 }
 
+func FinishSTAGEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsSTAGE(buf []byte, offset flatbuffers.UOffsetT) *STAGE {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &STAGE{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSTAGEBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *STAGE) Init(buf []byte, i flatbuffers.UOffsetT) {

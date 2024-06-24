@@ -594,7 +594,7 @@ class CDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT1(FlatBufferBuilder $builder, $OBJECT1)
@@ -604,7 +604,7 @@ class CDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT2(FlatBufferBuilder $builder, $OBJECT2)
@@ -614,7 +614,7 @@ class CDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT1_DATASOURCE(FlatBufferBuilder $builder, $OBJECT1_DATASOURCE)
@@ -624,7 +624,7 @@ class CDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT2_DATASOURCE(FlatBufferBuilder $builder, $OBJECT2_DATASOURCE)

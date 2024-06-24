@@ -77,30 +77,54 @@ class OSM(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def OSMStart(builder): builder.StartObject(6)
+def OSMStart(builder):
+    builder.StartObject(6)
+
 def Start(builder):
-    return OSMStart(builder)
-def OSMAddIS_STABLE(builder, IS_STABLE): builder.PrependBoolSlot(0, IS_STABLE, 0)
+    OSMStart(builder)
+
+def OSMAddIS_STABLE(builder, IS_STABLE):
+    builder.PrependBoolSlot(0, IS_STABLE, 0)
+
 def AddIS_STABLE(builder, IS_STABLE):
-    return OSMAddIS_STABLE(builder, IS_STABLE)
-def OSMAddNUM_OBS(builder, NUM_OBS): builder.PrependInt32Slot(1, NUM_OBS, 0)
+    OSMAddIS_STABLE(builder, IS_STABLE)
+
+def OSMAddNUM_OBS(builder, NUM_OBS):
+    builder.PrependInt32Slot(1, NUM_OBS, 0)
+
 def AddNUM_OBS(builder, NUM_OBS):
-    return OSMAddNUM_OBS(builder, NUM_OBS)
-def OSMAddOBJECT_ID(builder, OBJECT_ID): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+    OSMAddNUM_OBS(builder, NUM_OBS)
+
+def OSMAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
 def AddOBJECT_ID(builder, OBJECT_ID):
-    return OSMAddOBJECT_ID(builder, OBJECT_ID)
-def OSMAddID_SENSOR(builder, ID_SENSOR): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+    OSMAddOBJECT_ID(builder, OBJECT_ID)
+
+def OSMAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
 def AddID_SENSOR(builder, ID_SENSOR):
-    return OSMAddID_SENSOR(builder, ID_SENSOR)
-def OSMAddPASS_START(builder, PASS_START): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PASS_START), 0)
+    OSMAddID_SENSOR(builder, ID_SENSOR)
+
+def OSMAddPASS_START(builder, PASS_START):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PASS_START), 0)
+
 def AddPASS_START(builder, PASS_START):
-    return OSMAddPASS_START(builder, PASS_START)
-def OSMAddPASS_DURATION(builder, PASS_DURATION): builder.PrependInt32Slot(5, PASS_DURATION, 0)
+    OSMAddPASS_START(builder, PASS_START)
+
+def OSMAddPASS_DURATION(builder, PASS_DURATION):
+    builder.PrependInt32Slot(5, PASS_DURATION, 0)
+
 def AddPASS_DURATION(builder, PASS_DURATION):
-    return OSMAddPASS_DURATION(builder, PASS_DURATION)
-def OSMEnd(builder): return builder.EndObject()
+    OSMAddPASS_DURATION(builder, PASS_DURATION)
+
+def OSMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return OSMEnd(builder)
+
 
 class OSMT(object):
 

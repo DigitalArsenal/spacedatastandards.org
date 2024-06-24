@@ -66,24 +66,42 @@ class SCHEMA_STANDARD(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
-def SCHEMA_STANDARDStart(builder): builder.StartObject(3)
+def SCHEMA_STANDARDStart(builder):
+    builder.StartObject(3)
+
 def Start(builder):
-    return SCHEMA_STANDARDStart(builder)
-def SCHEMA_STANDARDAddKey(builder, key): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(key), 0)
+    SCHEMA_STANDARDStart(builder)
+
+def SCHEMA_STANDARDAddKey(builder, key):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(key), 0)
+
 def AddKey(builder, key):
-    return SCHEMA_STANDARDAddKey(builder, key)
-def SCHEMA_STANDARDAddIdl(builder, idl): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(idl), 0)
+    SCHEMA_STANDARDAddKey(builder, key)
+
+def SCHEMA_STANDARDAddIdl(builder, idl):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(idl), 0)
+
 def AddIdl(builder, idl):
-    return SCHEMA_STANDARDAddIdl(builder, idl)
-def SCHEMA_STANDARDAddFiles(builder, files): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(files), 0)
+    SCHEMA_STANDARDAddIdl(builder, idl)
+
+def SCHEMA_STANDARDAddFiles(builder, files):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(files), 0)
+
 def AddFiles(builder, files):
-    return SCHEMA_STANDARDAddFiles(builder, files)
-def SCHEMA_STANDARDStartFilesVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    SCHEMA_STANDARDAddFiles(builder, files)
+
+def SCHEMA_STANDARDStartFilesVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartFilesVector(builder, numElems):
     return SCHEMA_STANDARDStartFilesVector(builder, numElems)
-def SCHEMA_STANDARDEnd(builder): return builder.EndObject()
+
+def SCHEMA_STANDARDEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return SCHEMA_STANDARDEnd(builder)
+
 try:
     from typing import List
 except:

@@ -11,6 +11,8 @@ type SIT struct {
 	_tab flatbuffers.Table
 }
 
+const SITIdentifier = "$SIT"
+
 func GetRootAsSIT(buf []byte, offset flatbuffers.UOffsetT) *SIT {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &SIT{}
@@ -18,11 +20,29 @@ func GetRootAsSIT(buf []byte, offset flatbuffers.UOffsetT) *SIT {
 	return x
 }
 
+func FinishSITBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(SITIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func SITBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, SITIdentifier)
+}
+
 func GetSizePrefixedRootAsSIT(buf []byte, offset flatbuffers.UOffsetT) *SIT {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &SIT{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSITBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(SITIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedSITBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, SITIdentifier)
 }
 
 func (rcv *SIT) Init(buf []byte, i flatbuffers.UOffsetT) {

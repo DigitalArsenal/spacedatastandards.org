@@ -127,8 +127,8 @@ impl<'a> EOP<'a> {
     EOP { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EOPArgs<'args>
   ) -> flatbuffers::WIPOffset<EOP<'bldr>> {
     let mut builder = EOPBuilder::new(_fbb);
@@ -305,11 +305,11 @@ impl<'a> Default for EOPArgs<'a> {
   }
 }
 
-pub struct EOPBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EOPBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EOPBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOPBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_DATE(&mut self, DATE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOP::VT_DATE, DATE);
@@ -351,7 +351,7 @@ impl<'a: 'b, 'b> EOPBuilder<'a, 'b> {
     self.fbb_.push_slot::<DataType>(EOP::VT_DATA_TYPE, DATA_TYPE, DataType::OBSERVED);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EOPBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOPBuilder {
       fbb_: _fbb,
@@ -412,9 +412,9 @@ impl Default for EOPT {
   }
 }
 impl EOPT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EOP<'b>> {
     let DATE = self.DATE.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -465,8 +465,8 @@ impl<'a> EOPCOLLECTION<'a> {
     EOPCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EOPCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<EOPCOLLECTION<'bldr>> {
     let mut builder = EOPCOLLECTIONBuilder::new(_fbb);
@@ -516,17 +516,17 @@ impl<'a> Default for EOPCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct EOPCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EOPCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EOPCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOPCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EOP<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOPCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EOPCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOPCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOPCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -560,9 +560,9 @@ impl Default for EOPCOLLECTIONT {
   }
 }
 impl EOPCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EOPCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -645,13 +645,13 @@ pub fn EOP_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_EOP_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_EOP_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<EOP<'a>>) {
   fbb.finish(root, Some(EOP_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EOP_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EOP<'a>>) {
+pub fn finish_size_prefixed_EOP_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<EOP<'a>>) {
   fbb.finish_size_prefixed(root, Some(EOP_IDENTIFIER));
 }

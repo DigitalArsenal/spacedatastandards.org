@@ -116,8 +116,8 @@ impl<'a> Score<'a> {
     Score { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ScoreArgs<'args>
   ) -> flatbuffers::WIPOffset<Score<'bldr>> {
     let mut builder = ScoreBuilder::new(_fbb);
@@ -208,11 +208,11 @@ impl<'a> Default for ScoreArgs<'a> {
   }
 }
 
-pub struct ScoreBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ScoreBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ScoreBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ScoreBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Score::VT_NORAD_CAT_ID, NORAD_CAT_ID);
@@ -230,7 +230,7 @@ impl<'a: 'b, 'b> ScoreBuilder<'a, 'b> {
     self.fbb_.push_slot::<f32>(Score::VT_SCORE, SCORE, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ScoreBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ScoreBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ScoreBuilder {
       fbb_: _fbb,
@@ -273,9 +273,9 @@ impl Default for ScoreT {
   }
 }
 impl ScoreT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<Score<'b>> {
     let NORAD_CAT_ID = self.NORAD_CAT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -327,8 +327,8 @@ impl<'a> HYP<'a> {
     HYP { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args HYPArgs<'args>
   ) -> flatbuffers::WIPOffset<HYP<'bldr>> {
     let mut builder = HYPBuilder::new(_fbb);
@@ -537,11 +537,11 @@ impl<'a> Default for HYPArgs<'a> {
   }
 }
 
-pub struct HYPBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct HYPBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> HYPBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> HYPBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_CAT_IDS(&mut self, CAT_IDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(HYP::VT_CAT_IDS, CAT_IDS);
@@ -587,7 +587,7 @@ impl<'a: 'b, 'b> HYPBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(HYP::VT_EVENT_END_TIME, EVENT_END_TIME);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> HYPBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> HYPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     HYPBuilder {
       fbb_: _fbb,
@@ -651,9 +651,9 @@ impl Default for HYPT {
   }
 }
 impl HYPT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<HYP<'b>> {
     let CAT_IDS = self.CAT_IDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
@@ -726,8 +726,8 @@ impl<'a> HYPCOLLECTION<'a> {
     HYPCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args HYPCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<HYPCOLLECTION<'bldr>> {
     let mut builder = HYPCOLLECTIONBuilder::new(_fbb);
@@ -777,17 +777,17 @@ impl<'a> Default for HYPCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct HYPCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct HYPCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> HYPCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> HYPCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<HYP<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(HYPCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> HYPCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> HYPCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     HYPCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -821,9 +821,9 @@ impl Default for HYPCOLLECTIONT {
   }
 }
 impl HYPCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<HYPCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -906,13 +906,13 @@ pub fn HYP_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_HYP_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_HYP_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<HYP<'a>>) {
   fbb.finish(root, Some(HYP_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_HYP_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<HYP<'a>>) {
+pub fn finish_size_prefixed_HYP_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<HYP<'a>>) {
   fbb.finish_size_prefixed(root, Some(HYP_IDENTIFIER));
 }

@@ -158,7 +158,7 @@ class CSM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT_1(FlatBufferBuilder $builder, $OBJECT_1)
@@ -178,7 +178,7 @@ class CSM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addOBJECT_2(FlatBufferBuilder $builder, $OBJECT_2)

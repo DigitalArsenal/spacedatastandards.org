@@ -6,84 +6,84 @@ class PLD
 class PLDCOLLECTION
 
 /// Payload Information
-class PLD : flatbuffers_handle
+class PLD : flatbuffers.handle
     def PAYLOAD_DURATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     def MASS_AT_LAUNCH() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 6, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 6, 0.0)
     def DIMENSIONS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     def SOLAR_ARRAY_AREA() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 10, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 10, 0.0)
     def SOLAR_ARRAY_DIMENSIONS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     def NOMINAL_OPERATIONAL_LIFETIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     def INSTRUMENTS(i:int) -> IDM:
-        return IDM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 16) + i * 4) }
+        return IDM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
     def INSTRUMENTS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
 
-def GetRootAsPLD(buf:string): return PLD { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPLD(buf:string): return PLD { buf, flatbuffers.indirect(buf, 0) }
 
 struct PLDBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(7)
         return this
-    def add_PAYLOAD_DURATION(PAYLOAD_DURATION:flatbuffers_offset):
+    def add_PAYLOAD_DURATION(PAYLOAD_DURATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PAYLOAD_DURATION)
         return this
     def add_MASS_AT_LAUNCH(MASS_AT_LAUNCH:float):
         b_.PrependFloat32Slot(1, MASS_AT_LAUNCH, 0.0)
         return this
-    def add_DIMENSIONS(DIMENSIONS:flatbuffers_offset):
+    def add_DIMENSIONS(DIMENSIONS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, DIMENSIONS)
         return this
     def add_SOLAR_ARRAY_AREA(SOLAR_ARRAY_AREA:float):
         b_.PrependFloat32Slot(3, SOLAR_ARRAY_AREA, 0.0)
         return this
-    def add_SOLAR_ARRAY_DIMENSIONS(SOLAR_ARRAY_DIMENSIONS:flatbuffers_offset):
+    def add_SOLAR_ARRAY_DIMENSIONS(SOLAR_ARRAY_DIMENSIONS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, SOLAR_ARRAY_DIMENSIONS)
         return this
-    def add_NOMINAL_OPERATIONAL_LIFETIME(NOMINAL_OPERATIONAL_LIFETIME:flatbuffers_offset):
+    def add_NOMINAL_OPERATIONAL_LIFETIME(NOMINAL_OPERATIONAL_LIFETIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, NOMINAL_OPERATIONAL_LIFETIME)
         return this
-    def add_INSTRUMENTS(INSTRUMENTS:flatbuffers_offset):
+    def add_INSTRUMENTS(INSTRUMENTS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, INSTRUMENTS)
         return this
     def end():
         return b_.EndObject()
 
-def PLDStartINSTRUMENTSVector(b_:flatbuffers_builder, n_:int):
+def PLDStartINSTRUMENTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLDCreateINSTRUMENTSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PLDCreateINSTRUMENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-class PLDCOLLECTION : flatbuffers_handle
+class PLDCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> PLD:
-        return PLD { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return PLD { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsPLDCOLLECTION(buf:string): return PLDCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPLDCOLLECTION(buf:string): return PLDCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct PLDCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def PLDCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def PLDCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLDCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PLDCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

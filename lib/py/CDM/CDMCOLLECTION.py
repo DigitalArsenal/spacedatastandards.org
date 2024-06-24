@@ -53,18 +53,30 @@ class CDMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def CDMCOLLECTIONStart(builder): builder.StartObject(1)
+def CDMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return CDMCOLLECTIONStart(builder)
-def CDMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    CDMCOLLECTIONStart(builder)
+
+def CDMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return CDMCOLLECTIONAddRECORDS(builder, RECORDS)
-def CDMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    CDMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def CDMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return CDMCOLLECTIONStartRECORDSVector(builder, numElems)
-def CDMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def CDMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CDMCOLLECTIONEnd(builder)
+
 import CDM
 try:
     from typing import List

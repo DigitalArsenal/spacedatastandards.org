@@ -17,7 +17,6 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class IDMCOLLECTION : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -41,7 +40,7 @@ class IDMCOLLECTION : Table() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsIDMCOLLECTION(_bb: ByteBuffer): IDMCOLLECTION = getRootAsIDMCOLLECTION(_bb, IDMCOLLECTION())
         fun getRootAsIDMCOLLECTION(_bb: ByteBuffer, obj: IDMCOLLECTION): IDMCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

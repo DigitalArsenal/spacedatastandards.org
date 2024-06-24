@@ -17,11 +17,19 @@ func GetRootAsSITCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *SITCOLLECT
 	return x
 }
 
+func FinishSITCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsSITCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *SITCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &SITCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedSITCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *SITCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

@@ -17,7 +17,6 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class Record : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -36,7 +35,7 @@ class Record : Table() {
         val o = __offset(6); return if (o != 0) __union(obj, o + bb_pos) else null
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRecord(_bb: ByteBuffer): Record = getRootAsRecord(_bb, Record())
         fun getRootAsRecord(_bb: ByteBuffer, obj: Record): Record {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

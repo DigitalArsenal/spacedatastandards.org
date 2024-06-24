@@ -11,6 +11,8 @@ type BOV struct {
 	_tab flatbuffers.Table
 }
 
+const BOVIdentifier = "$BOV"
+
 func GetRootAsBOV(buf []byte, offset flatbuffers.UOffsetT) *BOV {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &BOV{}
@@ -18,11 +20,29 @@ func GetRootAsBOV(buf []byte, offset flatbuffers.UOffsetT) *BOV {
 	return x
 }
 
+func FinishBOVBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(BOVIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func BOVBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, BOVIdentifier)
+}
+
 func GetSizePrefixedRootAsBOV(buf []byte, offset flatbuffers.UOffsetT) *BOV {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &BOV{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedBOVBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(BOVIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedBOVBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, BOVIdentifier)
 }
 
 func (rcv *BOV) Init(buf []byte, i flatbuffers.UOffsetT) {

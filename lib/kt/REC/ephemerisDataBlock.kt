@@ -20,7 +20,6 @@ import kotlin.math.sign
  * OEM Ephemeris Data Block
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class ephemerisDataBlock : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -227,7 +226,7 @@ class ephemerisDataBlock : Table() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsephemerisDataBlock(_bb: ByteBuffer): ephemerisDataBlock = getRootAsephemerisDataBlock(_bb, ephemerisDataBlock())
         fun getRootAsephemerisDataBlock(_bb: ByteBuffer, obj: ephemerisDataBlock): ephemerisDataBlock {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

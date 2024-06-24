@@ -53,21 +53,36 @@ class ENGINE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def ENGINEStart(builder): builder.StartObject(3)
+def ENGINEStart(builder):
+    builder.StartObject(3)
+
 def Start(builder):
-    return ENGINEStart(builder)
-def ENGINEAddENGINE_NAME(builder, ENGINE_NAME): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENGINE_NAME), 0)
+    ENGINEStart(builder)
+
+def ENGINEAddENGINE_NAME(builder, ENGINE_NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENGINE_NAME), 0)
+
 def AddENGINE_NAME(builder, ENGINE_NAME):
-    return ENGINEAddENGINE_NAME(builder, ENGINE_NAME)
-def ENGINEAddTYPE(builder, TYPE): builder.PrependInt8Slot(1, TYPE, 0)
+    ENGINEAddENGINE_NAME(builder, ENGINE_NAME)
+
+def ENGINEAddTYPE(builder, TYPE):
+    builder.PrependInt8Slot(1, TYPE, 0)
+
 def AddTYPE(builder, TYPE):
-    return ENGINEAddTYPE(builder, TYPE)
-def ENGINEAddTHRUST(builder, THRUST): builder.PrependFloat64Slot(2, THRUST, 0.0)
+    ENGINEAddTYPE(builder, TYPE)
+
+def ENGINEAddTHRUST(builder, THRUST):
+    builder.PrependFloat64Slot(2, THRUST, 0.0)
+
 def AddTHRUST(builder, THRUST):
-    return ENGINEAddTHRUST(builder, THRUST)
-def ENGINEEnd(builder): return builder.EndObject()
+    ENGINEAddTHRUST(builder, THRUST)
+
+def ENGINEEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return ENGINEEnd(builder)
+
 
 class ENGINET(object):
 

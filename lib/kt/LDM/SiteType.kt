@@ -4,7 +4,6 @@
  * Enum for the type of site
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SiteType private constructor() {
     companion object {
         const val LAUNCH_SITE: Byte = 0

@@ -53,18 +53,30 @@ class SITCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def SITCOLLECTIONStart(builder): builder.StartObject(1)
+def SITCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return SITCOLLECTIONStart(builder)
-def SITCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    SITCOLLECTIONStart(builder)
+
+def SITCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return SITCOLLECTIONAddRECORDS(builder, RECORDS)
-def SITCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    SITCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def SITCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return SITCOLLECTIONStartRECORDSVector(builder, numElems)
-def SITCOLLECTIONEnd(builder): return builder.EndObject()
+
+def SITCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return SITCOLLECTIONEnd(builder)
+
 import SIT
 try:
     from typing import List

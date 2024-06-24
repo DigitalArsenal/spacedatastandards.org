@@ -11,6 +11,8 @@ type PLD struct {
 	_tab flatbuffers.Table
 }
 
+const PLDIdentifier = "$PLD"
+
 func GetRootAsPLD(buf []byte, offset flatbuffers.UOffsetT) *PLD {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &PLD{}
@@ -18,11 +20,29 @@ func GetRootAsPLD(buf []byte, offset flatbuffers.UOffsetT) *PLD {
 	return x
 }
 
+func FinishPLDBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(PLDIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func PLDBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, PLDIdentifier)
+}
+
 func GetSizePrefixedRootAsPLD(buf []byte, offset flatbuffers.UOffsetT) *PLD {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &PLD{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedPLDBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(PLDIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedPLDBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, PLDIdentifier)
 }
 
 func (rcv *PLD) Init(buf []byte, i flatbuffers.UOffsetT) {

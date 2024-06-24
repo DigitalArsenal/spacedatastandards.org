@@ -399,7 +399,7 @@ class IDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addUPLINK(FlatBufferBuilder $builder, $UPLINK)
@@ -409,7 +409,7 @@ class IDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addDOWNLINK(FlatBufferBuilder $builder, $DOWNLINK)
@@ -419,7 +419,7 @@ class IDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addBEACON(FlatBufferBuilder $builder, $BEACON)
@@ -483,7 +483,7 @@ class IDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addSTOKES_PARAMETERS(FlatBufferBuilder $builder, $STOKES_PARAMETERS)

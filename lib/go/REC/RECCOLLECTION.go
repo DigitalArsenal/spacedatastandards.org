@@ -17,11 +17,19 @@ func GetRootAsRECCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *RECCOLLECT
 	return x
 }
 
+func FinishRECCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsRECCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *RECCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &RECCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedRECCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *RECCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

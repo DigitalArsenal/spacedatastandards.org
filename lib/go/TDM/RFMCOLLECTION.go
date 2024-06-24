@@ -17,11 +17,19 @@ func GetRootAsRFMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *RFMCOLLECT
 	return x
 }
 
+func FinishRFMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsRFMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *RFMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &RFMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedRFMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *RFMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

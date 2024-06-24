@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Encrypted Message Envelope
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class EME : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -174,7 +173,7 @@ class EME : Table() {
     val ENCRYPTION_ALGORITHM_PARAMETERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
     fun ENCRYPTION_ALGORITHM_PARAMETERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEME(_bb: ByteBuffer): EME = getRootAsEME(_bb, EME())
         fun getRootAsEME(_bb: ByteBuffer, obj: EME): EME {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
@@ -197,6 +196,7 @@ class EME : Table() {
         }
         fun startEME(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addENCRYPTED_BLOB(builder: FlatBufferBuilder, ENCRYPTED_BLOB: Int) = builder.addOffset(0, ENCRYPTED_BLOB, 0)
+        @kotlin.ExperimentalUnsignedTypes
         fun createEncryptedBlobVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {

@@ -6,7 +6,7 @@ class PNM
 class PNMCOLLECTION
 
 /// Publish Notification Message
-class PNM : flatbuffers_handle
+class PNM : flatbuffers.handle
     /// Multiformat Address
     /// https://multiformats.io/multiaddr/
     /// A universal address format for representing multiple network protocols. Examples include:
@@ -15,99 +15,99 @@ class PNM : flatbuffers_handle
     /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses
     /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
     def MULTIFORMAT_ADDRESS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Publish Time OF THE Publish Notification Message
     def PUBLISH_TIMESTAMP() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Concatenated Content Identifier (CID)
     /// This field is a unique ID for distributed systems (CID).
     /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
     def CID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// File ID
     /// This field is the Name
     def FILE_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// File ID
     /// This field is the file ID / Standard Type
     def FILE_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Digital Signature of the CID
     /// This is the digital signature of the CID, signed using the specified cryptographic method.
     def SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Timestamp Signature
     /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
     def TIMESTAMP_SIGNATURE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Type of Cryptographic Signature Used
     /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     def SIGNATURE_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Type of Cryptographic Signature Used for Timestamp
     /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
     def TIMESTAMP_SIGNATURE_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
 
-def GetRootAsPNM(buf:string): return PNM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPNM(buf:string): return PNM { buf, flatbuffers.indirect(buf, 0) }
 
 struct PNMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(9)
         return this
-    def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers_offset):
+    def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, MULTIFORMAT_ADDRESS)
         return this
-    def add_PUBLISH_TIMESTAMP(PUBLISH_TIMESTAMP:flatbuffers_offset):
+    def add_PUBLISH_TIMESTAMP(PUBLISH_TIMESTAMP:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, PUBLISH_TIMESTAMP)
         return this
-    def add_CID(CID:flatbuffers_offset):
+    def add_CID(CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, CID)
         return this
-    def add_FILE_NAME(FILE_NAME:flatbuffers_offset):
+    def add_FILE_NAME(FILE_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, FILE_NAME)
         return this
-    def add_FILE_ID(FILE_ID:flatbuffers_offset):
+    def add_FILE_ID(FILE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, FILE_ID)
         return this
-    def add_SIGNATURE(SIGNATURE:flatbuffers_offset):
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, SIGNATURE)
         return this
-    def add_TIMESTAMP_SIGNATURE(TIMESTAMP_SIGNATURE:flatbuffers_offset):
+    def add_TIMESTAMP_SIGNATURE(TIMESTAMP_SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, TIMESTAMP_SIGNATURE)
         return this
-    def add_SIGNATURE_TYPE(SIGNATURE_TYPE:flatbuffers_offset):
+    def add_SIGNATURE_TYPE(SIGNATURE_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, SIGNATURE_TYPE)
         return this
-    def add_TIMESTAMP_SIGNATURE_TYPE(TIMESTAMP_SIGNATURE_TYPE:flatbuffers_offset):
+    def add_TIMESTAMP_SIGNATURE_TYPE(TIMESTAMP_SIGNATURE_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, TIMESTAMP_SIGNATURE_TYPE)
         return this
     def end():
         return b_.EndObject()
 
-class PNMCOLLECTION : flatbuffers_handle
+class PNMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> PNM:
-        return PNM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return PNM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsPNMCOLLECTION(buf:string): return PNMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsPNMCOLLECTION(buf:string): return PNMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct PNMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def PNMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def PNMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PNMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def PNMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

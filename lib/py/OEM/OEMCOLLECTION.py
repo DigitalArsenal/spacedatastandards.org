@@ -54,18 +54,30 @@ class OEMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def OEMCOLLECTIONStart(builder): builder.StartObject(1)
+def OEMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return OEMCOLLECTIONStart(builder)
-def OEMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    OEMCOLLECTIONStart(builder)
+
+def OEMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return OEMCOLLECTIONAddRECORDS(builder, RECORDS)
-def OEMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    OEMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def OEMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return OEMCOLLECTIONStartRECORDSVector(builder, numElems)
-def OEMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def OEMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return OEMCOLLECTIONEnd(builder)
+
 import OEM
 try:
     from typing import List

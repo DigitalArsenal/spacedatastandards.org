@@ -12,46 +12,46 @@ class OEM
 class OEMCOLLECTION
 
 /// A single ephemeris data line
-class ephemerisDataLine : flatbuffers_handle
+class ephemerisDataLine : flatbuffers.handle
     /// Epoch time, in ISO 8601 UTC format
     def EPOCH() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Position vector X-component km
     def X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Position vector Y-component km
     def Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Position vector Z-component km
     def Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     /// Velocity vector X-component km/s
     def X_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     /// Velocity vector Y-component km/s
     def Y_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Velocity vector Z-component km/s
     def Z_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Optional: Acceleration vector X-component km/s/s
     def X_DDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// Optional: Acceleration vector Y-component km/s/s
     def Y_DDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
     /// Optional: Acceleration vector Z-component km/s/s
     def Z_DDOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 22, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
 
-def GetRootAsephemerisDataLine(buf:string): return ephemerisDataLine { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsephemerisDataLine(buf:string): return ephemerisDataLine { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataLineBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(10)
         return this
-    def add_EPOCH(EPOCH:flatbuffers_offset):
+    def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EPOCH)
         return this
     def add_X(X:float):
@@ -85,85 +85,85 @@ struct ephemerisDataLineBuilder:
         return b_.EndObject()
 
 /// Position/Velocity Covariance Matrix Line
-class covarianceMatrixLine : flatbuffers_handle
+class covarianceMatrixLine : flatbuffers.handle
     /// Epoch
     def EPOCH() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Reference frame for the covariance matrix
     def COV_REFERENCE_FRAME() -> refFrame:
-        return refFrame(buf_.flatbuffers_field_int8(pos_, 6, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 6, 0))
     /// Covariance matrix [1,1] km**2
     def CX_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Covariance matrix [2,1] km**2
     def CY_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     /// Covariance matrix [2,2] km**2
     def CY_Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     /// Covariance matrix [3,1] km**2
     def CZ_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Covariance matrix [3,2] km**2
     def CZ_Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Covariance matrix [3,3] km**2
     def CZ_Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// Covariance matrix [4,1] km**2/s
     def CX_DOT_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
     /// Covariance matrix [4,2] km**2/s
     def CX_DOT_Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 22, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
     /// Covariance matrix [4,3] km**2/s
     def CX_DOT_Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Covariance matrix [4,4] km**2/s**2
     def CX_DOT_X_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Covariance matrix [5,1] km**2/s
     def CY_DOT_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 28, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
     /// Covariance matrix [5,2] km**2/s
     def CY_DOT_Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 30, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
     /// Covariance matrix [5,3] km**2/s
     def CY_DOT_Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 32, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
     /// Covariance matrix [5,4] km**2/s**2
     def CY_DOT_X_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 34, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
     /// Covariance matrix [5,5] km**2/s**2
     def CY_DOT_Y_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 36, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
     /// Covariance matrix [6,1] km**2/s
     def CZ_DOT_X() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 38, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     /// Covariance matrix [6,2] km**2/s
     def CZ_DOT_Y() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 40, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
     /// Covariance matrix [6,3] km**2/s
     def CZ_DOT_Z() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     /// Covariance matrix [6,4] km**2/s**2
     def CZ_DOT_X_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 44, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
     /// Covariance matrix [6,5] km**2/s**2
     def CZ_DOT_Y_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 46, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
     /// Covariance matrix [6,6] km**2/s**2
     def CZ_DOT_Z_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 48, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
 
-def GetRootAscovarianceMatrixLine(buf:string): return covarianceMatrixLine { buf, buf.flatbuffers_indirect(0) }
+def GetRootAscovarianceMatrixLine(buf:string): return covarianceMatrixLine { buf, flatbuffers.indirect(buf, 0) }
 
 struct covarianceMatrixLineBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(23)
         return this
-    def add_EPOCH(EPOCH:flatbuffers_offset):
+    def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EPOCH)
         return this
     def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
@@ -236,196 +236,196 @@ struct covarianceMatrixLineBuilder:
         return b_.EndObject()
 
 /// OEM Ephemeris Data Block
-class ephemerisDataBlock : flatbuffers_handle
+class ephemerisDataBlock : flatbuffers.handle
     /// Plain-Text Comment
     def COMMENT() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Satellite Name(s)
     def OBJECT_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// International Designator (YYYY-NNNAAA)
     def OBJECT_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Origin of reference frame (EARTH, MARS, MOON, etc.)
     def CENTER_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Name of the reference frame (TEME, EME2000, etc.)
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(buf_.flatbuffers_field_int8(pos_, 12, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 12, 0))
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
     def REFERENCE_FRAME_EPOCH() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Time system used for the orbit state and covariance matrix. (UTC)
     def TIME_SYSTEM() -> timeSystem:
-        return timeSystem(buf_.flatbuffers_field_int8(pos_, 16, 0))
+        return timeSystem(flatbuffers.field_int8(buf_, pos_, 16, 0))
     /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def START_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
     def USEABLE_START_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
     def USEABLE_STOP_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def STOP_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 24)
     /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     def INTERPOLATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Recommended interpolation degree for ephemeris data
     def INTERPOLATION_DEGREE() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 28, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 28, 0)
     /// Array of ephemeris data lines
     def EPHEMERIS_DATA_LINES(i:int) -> ephemerisDataLine:
-        return ephemerisDataLine { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 30) + i * 4) }
+        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
     def EPHEMERIS_DATA_LINES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 30)
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
     /// Array of covariance matrix lines
     def COVARIANCE_MATRIX_LINES(i:int) -> covarianceMatrixLine:
-        return covarianceMatrixLine { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 32) + i * 4) }
+        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def COVARIANCE_MATRIX_LINES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 32)
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
 
-def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataBlockBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(15)
         return this
-    def add_COMMENT(COMMENT:flatbuffers_offset):
+    def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
         return this
-    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers_offset):
+    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, OBJECT_NAME)
         return this
-    def add_OBJECT_ID(OBJECT_ID:flatbuffers_offset):
+    def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, OBJECT_ID)
         return this
-    def add_CENTER_NAME(CENTER_NAME:flatbuffers_offset):
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, CENTER_NAME)
         return this
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(4, REFERENCE_FRAME, 0)
         return this
-    def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers_offset):
+    def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, REFERENCE_FRAME_EPOCH)
         return this
     def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
         b_.PrependInt8Slot(6, TIME_SYSTEM, 0)
         return this
-    def add_START_TIME(START_TIME:flatbuffers_offset):
+    def add_START_TIME(START_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, START_TIME)
         return this
-    def add_USEABLE_START_TIME(USEABLE_START_TIME:flatbuffers_offset):
+    def add_USEABLE_START_TIME(USEABLE_START_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, USEABLE_START_TIME)
         return this
-    def add_USEABLE_STOP_TIME(USEABLE_STOP_TIME:flatbuffers_offset):
+    def add_USEABLE_STOP_TIME(USEABLE_STOP_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, USEABLE_STOP_TIME)
         return this
-    def add_STOP_TIME(STOP_TIME:flatbuffers_offset):
+    def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, STOP_TIME)
         return this
-    def add_INTERPOLATION(INTERPOLATION:flatbuffers_offset):
+    def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, INTERPOLATION)
         return this
     def add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE:int):
         b_.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
         return this
-    def add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES:flatbuffers_offset):
+    def add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, EPHEMERIS_DATA_LINES)
         return this
-    def add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES:flatbuffers_offset):
+    def add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, COVARIANCE_MATRIX_LINES)
         return this
     def end():
         return b_.EndObject()
 
-def ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(b_:flatbuffers_builder, n_:int):
+def ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(b_:flatbuffers_builder, n_:int):
+def ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Orbit Ephemeris Message
-class OEM : flatbuffers_handle
+class OEM : flatbuffers.handle
     /// OEM Header
     /// OEM Version
     def CCSDS_OEM_VERS() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 4, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
     /// Creation Date
     def CREATION_DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Originator
     def ORIGINATOR() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Array of ephemeris data blocks
     def EPHEMERIS_DATA_BLOCK(i:int) -> ephemerisDataBlock:
-        return ephemerisDataBlock { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 10) + i * 4) }
+        return ephemerisDataBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
     def EPHEMERIS_DATA_BLOCK_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 10)
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
 
-def GetRootAsOEM(buf:string): return OEM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsOEM(buf:string): return OEM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OEMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(4)
         return this
     def add_CCSDS_OEM_VERS(CCSDS_OEM_VERS:float):
         b_.PrependFloat64Slot(0, CCSDS_OEM_VERS, 0.0)
         return this
-    def add_CREATION_DATE(CREATION_DATE:flatbuffers_offset):
+    def add_CREATION_DATE(CREATION_DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, CREATION_DATE)
         return this
-    def add_ORIGINATOR(ORIGINATOR:flatbuffers_offset):
+    def add_ORIGINATOR(ORIGINATOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, ORIGINATOR)
         return this
-    def add_EPHEMERIS_DATA_BLOCK(EPHEMERIS_DATA_BLOCK:flatbuffers_offset):
+    def add_EPHEMERIS_DATA_BLOCK(EPHEMERIS_DATA_BLOCK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, EPHEMERIS_DATA_BLOCK)
         return this
     def end():
         return b_.EndObject()
 
-def OEMStartEPHEMERIS_DATA_BLOCKVector(b_:flatbuffers_builder, n_:int):
+def OEMStartEPHEMERIS_DATA_BLOCKVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OEMCreateEPHEMERIS_DATA_BLOCKVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def OEMCreateEPHEMERIS_DATA_BLOCKVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Collection of OEM messages
-class OEMCOLLECTION : flatbuffers_handle
+class OEMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> OEM:
-        return OEM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return OEM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsOEMCOLLECTION(buf:string): return OEMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsOEMCOLLECTION(buf:string): return OEMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct OEMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def OEMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def OEMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OEMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def OEMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

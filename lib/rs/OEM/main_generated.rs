@@ -44,8 +44,8 @@ impl<'a> ephemerisDataLine<'a> {
     ephemerisDataLine { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ephemerisDataLineArgs<'args>
   ) -> flatbuffers::WIPOffset<ephemerisDataLine<'bldr>> {
     let mut builder = ephemerisDataLineBuilder::new(_fbb);
@@ -222,11 +222,11 @@ impl<'a> Default for ephemerisDataLineArgs<'a> {
   }
 }
 
-pub struct ephemerisDataLineBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ephemerisDataLineBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ephemerisDataLineBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ephemerisDataLineBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataLine::VT_EPOCH, EPOCH);
@@ -268,7 +268,7 @@ impl<'a: 'b, 'b> ephemerisDataLineBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Z_DDOT, Z_DDOT, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ephemerisDataLineBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataLineBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ephemerisDataLineBuilder {
       fbb_: _fbb,
@@ -329,9 +329,9 @@ impl Default for ephemerisDataLineT {
   }
 }
 impl ephemerisDataLineT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<ephemerisDataLine<'b>> {
     let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -405,8 +405,8 @@ impl<'a> covarianceMatrixLine<'a> {
     covarianceMatrixLine { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args covarianceMatrixLineArgs<'args>
   ) -> flatbuffers::WIPOffset<covarianceMatrixLine<'bldr>> {
     let mut builder = covarianceMatrixLineBuilder::new(_fbb);
@@ -765,11 +765,11 @@ impl<'a> Default for covarianceMatrixLineArgs<'a> {
   }
 }
 
-pub struct covarianceMatrixLineBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct covarianceMatrixLineBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> covarianceMatrixLineBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> covarianceMatrixLineBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(covarianceMatrixLine::VT_EPOCH, EPOCH);
@@ -863,7 +863,7 @@ impl<'a: 'b, 'b> covarianceMatrixLineBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_Z_DOT, CZ_DOT_Z_DOT, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> covarianceMatrixLineBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> covarianceMatrixLineBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     covarianceMatrixLineBuilder {
       fbb_: _fbb,
@@ -963,9 +963,9 @@ impl Default for covarianceMatrixLineT {
   }
 }
 impl covarianceMatrixLineT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<covarianceMatrixLine<'b>> {
     let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1057,8 +1057,8 @@ impl<'a> ephemerisDataBlock<'a> {
     ephemerisDataBlock { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args ephemerisDataBlockArgs<'args>
   ) -> flatbuffers::WIPOffset<ephemerisDataBlock<'bldr>> {
     let mut builder = ephemerisDataBlockBuilder::new(_fbb);
@@ -1327,11 +1327,11 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
   }
 }
 
-pub struct ephemerisDataBlockBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct ephemerisDataBlockBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> ephemerisDataBlockBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_COMMENT(&mut self, COMMENT: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_COMMENT, COMMENT);
@@ -1393,7 +1393,7 @@ impl<'a: 'b, 'b> ephemerisDataBlockBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_COVARIANCE_MATRIX_LINES, COVARIANCE_MATRIX_LINES);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> ephemerisDataBlockBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataBlockBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ephemerisDataBlockBuilder {
       fbb_: _fbb,
@@ -1469,9 +1469,9 @@ impl Default for ephemerisDataBlockT {
   }
 }
 impl ephemerisDataBlockT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<ephemerisDataBlock<'b>> {
     let COMMENT = self.COMMENT.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1558,8 +1558,8 @@ impl<'a> OEM<'a> {
     OEM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args OEMArgs<'args>
   ) -> flatbuffers::WIPOffset<OEM<'bldr>> {
     let mut builder = OEMBuilder::new(_fbb);
@@ -1657,11 +1657,11 @@ impl<'a> Default for OEMArgs<'a> {
   }
 }
 
-pub struct OEMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct OEMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> OEMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OEMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_CCSDS_OEM_VERS(&mut self, CCSDS_OEM_VERS: f64) {
     self.fbb_.push_slot::<f64>(OEM::VT_CCSDS_OEM_VERS, CCSDS_OEM_VERS, 0.0);
@@ -1679,7 +1679,7 @@ impl<'a: 'b, 'b> OEMBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OEM::VT_EPHEMERIS_DATA_BLOCK, EPHEMERIS_DATA_BLOCK);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OEMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OEMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OEMBuilder {
       fbb_: _fbb,
@@ -1722,9 +1722,9 @@ impl Default for OEMT {
   }
 }
 impl OEMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OEM<'b>> {
     let CCSDS_OEM_VERS = self.CCSDS_OEM_VERS;
     let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
@@ -1768,8 +1768,8 @@ impl<'a> OEMCOLLECTION<'a> {
     OEMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args OEMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<OEMCOLLECTION<'bldr>> {
     let mut builder = OEMCOLLECTIONBuilder::new(_fbb);
@@ -1819,17 +1819,17 @@ impl<'a> Default for OEMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct OEMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct OEMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> OEMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OEMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<OEM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OEMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OEMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OEMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OEMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1863,9 +1863,9 @@ impl Default for OEMCOLLECTIONT {
   }
 }
 impl OEMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OEMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1948,13 +1948,13 @@ pub fn OEM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_OEM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_OEM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<OEM<'a>>) {
   fbb.finish(root, Some(OEM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_OEM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OEM<'a>>) {
+pub fn finish_size_prefixed_OEM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<OEM<'a>>) {
   fbb.finish_size_prefixed(root, Some(OEM_IDENTIFIER));
 }

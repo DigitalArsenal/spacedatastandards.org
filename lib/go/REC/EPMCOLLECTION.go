@@ -17,11 +17,19 @@ func GetRootAsEPMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *EPMCOLLECT
 	return x
 }
 
+func FinishEPMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsEPMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *EPMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &EPMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedEPMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *EPMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

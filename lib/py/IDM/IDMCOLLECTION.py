@@ -53,18 +53,30 @@ class IDMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def IDMCOLLECTIONStart(builder): builder.StartObject(1)
+def IDMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return IDMCOLLECTIONStart(builder)
-def IDMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    IDMCOLLECTIONStart(builder)
+
+def IDMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return IDMCOLLECTIONAddRECORDS(builder, RECORDS)
-def IDMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    IDMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def IDMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return IDMCOLLECTIONStartRECORDSVector(builder, numElems)
-def IDMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def IDMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return IDMCOLLECTIONEnd(builder)
+
 import IDM
 try:
     from typing import List

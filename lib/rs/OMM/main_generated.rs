@@ -197,8 +197,8 @@ impl<'a> OMM<'a> {
     OMM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args OMMArgs<'args>
   ) -> flatbuffers::WIPOffset<OMM<'bldr>> {
     let mut builder = OMMBuilder::new(_fbb);
@@ -1100,11 +1100,11 @@ impl<'a> Default for OMMArgs<'a> {
   }
 }
 
-pub struct OMMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct OMMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> OMMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_CCSDS_OMM_VERS(&mut self, CCSDS_OMM_VERS: f64) {
     self.fbb_.push_slot::<f64>(OMM::VT_CCSDS_OMM_VERS, CCSDS_OMM_VERS, 0.0);
@@ -1346,7 +1346,7 @@ impl<'a: 'b, 'b> OMMBuilder<'a, 'b> {
     self.fbb_.push_slot::<f64>(OMM::VT_USER_DEFINED_MICROSECONDS, USER_DEFINED_MICROSECONDS, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OMMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OMMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OMMBuilder {
       fbb_: _fbb,
@@ -1557,9 +1557,9 @@ impl Default for OMMT {
   }
 }
 impl OMMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OMM<'b>> {
     let CCSDS_OMM_VERS = self.CCSDS_OMM_VERS;
     let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
@@ -1730,8 +1730,8 @@ impl<'a> OMMCOLLECTION<'a> {
     OMMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args OMMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<OMMCOLLECTION<'bldr>> {
     let mut builder = OMMCOLLECTIONBuilder::new(_fbb);
@@ -1781,17 +1781,17 @@ impl<'a> Default for OMMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct OMMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct OMMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> OMMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OMMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<OMM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OMMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OMMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OMMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OMMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -1825,9 +1825,9 @@ impl Default for OMMCOLLECTIONT {
   }
 }
 impl OMMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OMMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -1910,13 +1910,13 @@ pub fn OMM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_OMM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_OMM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<OMM<'a>>) {
   fbb.finish(root, Some(OMM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_OMM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OMM<'a>>) {
+pub fn finish_size_prefixed_OMM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<OMM<'a>>) {
   fbb.finish_size_prefixed(root, Some(OMM_IDENTIFIER));
 }

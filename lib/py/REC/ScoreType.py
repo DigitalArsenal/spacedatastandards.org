@@ -2,5 +2,4 @@
 
 # namespace: 
 
-class ScoreType(object):
-    OUTLIER = 0
+# NOTE ScoreType.py does not declare any structs or enums

@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Publish Notification Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class PNM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -171,7 +170,7 @@ class PNM : Table() {
     val TIMESTAMP_SIGNATURE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
     fun TIMESTAMP_SIGNATURE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsPNM(_bb: ByteBuffer): PNM = getRootAsPNM(_bb, PNM())
         fun getRootAsPNM(_bb: ByteBuffer, obj: PNM): PNM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

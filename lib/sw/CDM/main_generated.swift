@@ -30,7 +30,7 @@ public enum covarianceMethod: Int8, Enum, Verifiable {
 
 public struct CDMObject: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -154,11 +154,11 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public var N_BODY_PERTURBATIONS: String? { let o = _accessor.offset(VTOFFSET.N_BODY_PERTURBATIONS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var N_BODY_PERTURBATIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.N_BODY_PERTURBATIONS.v) }
   ///  Solar radiation pressure
-  public var SOLAR_RAD_PRESSURE: Bool { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_PRESSURE.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var SOLAR_RAD_PRESSURE: Bool { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_PRESSURE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Earth tides
-  public var EARTH_TIDES: Bool { let o = _accessor.offset(VTOFFSET.EARTH_TIDES.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var EARTH_TIDES: Bool { let o = _accessor.offset(VTOFFSET.EARTH_TIDES.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Intrack thrust
-  public var INTRACK_THRUST: Bool { let o = _accessor.offset(VTOFFSET.INTRACK_THRUST.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var INTRACK_THRUST: Bool { let o = _accessor.offset(VTOFFSET.INTRACK_THRUST.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Time of last observation start
   public var TIME_LASTOB_START: String? { let o = _accessor.offset(VTOFFSET.TIME_LASTOB_START.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TIME_LASTOB_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME_LASTOB_START.v) }
@@ -640,7 +640,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
 ///  Conjunction Data Message
 public struct CDM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -884,7 +884,7 @@ public struct CDM: FlatBufferObject, Verifiable {
 
 public struct CDMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

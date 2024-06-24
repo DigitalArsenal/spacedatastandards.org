@@ -53,18 +53,30 @@ class RECCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def RECCOLLECTIONStart(builder): builder.StartObject(1)
+def RECCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return RECCOLLECTIONStart(builder)
-def RECCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    RECCOLLECTIONStart(builder)
+
+def RECCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return RECCOLLECTIONAddRECORDS(builder, RECORDS)
-def RECCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    RECCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def RECCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return RECCOLLECTIONStartRECORDSVector(builder, numElems)
-def RECCOLLECTIONEnd(builder): return builder.EndObject()
+
+def RECCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return RECCOLLECTIONEnd(builder)
+
 import REC
 try:
     from typing import List

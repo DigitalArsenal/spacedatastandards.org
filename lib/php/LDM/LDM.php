@@ -427,7 +427,7 @@ class LDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addSITE(FlatBufferBuilder $builder, $SITE)
@@ -545,7 +545,7 @@ class LDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param VectorOffset
      * @return void
      */
     public static function addROCKET_CONFIGURATION(FlatBufferBuilder $builder, $ROCKET_CONFIGURATION)

@@ -235,8 +235,8 @@ impl<'a> RFM<'a> {
     RFM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args RFMArgs
   ) -> flatbuffers::WIPOffset<RFM<'bldr>> {
     let mut builder = RFMBuilder::new(_fbb);
@@ -284,17 +284,17 @@ impl<'a> Default for RFMArgs {
   }
 }
 
-pub struct RFMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct RFMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> RFMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
     self.fbb_.push_slot::<refFrame>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RFMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RFMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RFMBuilder {
       fbb_: _fbb,
@@ -328,9 +328,9 @@ impl Default for RFMT {
   }
 }
 impl RFMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<RFM<'b>> {
     let REFERENCE_FRAME = self.REFERENCE_FRAME;
     RFM::create(_fbb, &RFMArgs{
@@ -361,8 +361,8 @@ impl<'a> RFMCOLLECTION<'a> {
     RFMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args RFMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<RFMCOLLECTION<'bldr>> {
     let mut builder = RFMCOLLECTIONBuilder::new(_fbb);
@@ -412,17 +412,17 @@ impl<'a> Default for RFMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct RFMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct RFMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> RFMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<RFM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> RFMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RFMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     RFMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -456,9 +456,9 @@ impl Default for RFMCOLLECTIONT {
   }
 }
 impl RFMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<RFMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -541,13 +541,13 @@ pub fn RFM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_RFM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_RFM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<RFM<'a>>) {
   fbb.finish(root, Some(RFM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_RFM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<RFM<'a>>) {
+pub fn finish_size_prefixed_RFM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<RFM<'a>>) {
   fbb.finish_size_prefixed(root, Some(RFM_IDENTIFIER));
 }

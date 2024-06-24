@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Geometry table with information about geometric properties
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class Geometry : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -62,7 +61,7 @@ class Geometry : Table() {
     val COORDINATESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 4)
     fun COORDINATESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 4)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsGeometry(_bb: ByteBuffer): Geometry = getRootAsGeometry(_bb, Geometry())
         fun getRootAsGeometry(_bb: ByteBuffer, obj: Geometry): Geometry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

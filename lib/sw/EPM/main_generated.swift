@@ -19,7 +19,7 @@ public enum KeyType: Int8, Enum, Verifiable {
 ///  Represents cryptographic key information
 public struct CryptoKey: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -106,7 +106,7 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
 ///  Represents a geographic address
 public struct Address: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -186,7 +186,7 @@ public struct Address: FlatBufferObject, Verifiable {
 ///  Entity Profile Message
 public struct EPM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -339,7 +339,7 @@ public struct EPM: FlatBufferObject, Verifiable {
 
 public struct EPMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

@@ -19,7 +19,7 @@ import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class PRGCOLLECTION extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static PRGCOLLECTION getRootAsPRGCOLLECTION(ByteBuffer _bb) { return getRootAsPRGCOLLECTION(_bb, new PRGCOLLECTION()); }
   public static PRGCOLLECTION getRootAsPRGCOLLECTION(ByteBuffer _bb, PRGCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

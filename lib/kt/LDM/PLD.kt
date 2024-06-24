@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Payload Information
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class PLD : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -98,7 +97,7 @@ class PLD : Table() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsPLD(_bb: ByteBuffer): PLD = getRootAsPLD(_bb, PLD())
         fun getRootAsPLD(_bb: ByteBuffer, obj: PLD): PLD {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

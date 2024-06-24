@@ -10,7 +10,7 @@ public struct Score : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static Score GetRootAsScore(ByteBuffer _bb) { return GetRootAsScore(_bb, new Score()); }
   public static Score GetRootAsScore(ByteBuffer _bb, Score obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -94,3 +94,16 @@ public class ScoreT
   }
 }
 
+
+static public class ScoreVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*NORAD_CAT_ID*/, false)
+      && verifier.VerifyField(tablePos, 6 /*TYPE*/, 1 /*ScoreType*/, 1, false)
+      && verifier.VerifyString(tablePos, 8 /*TAG*/, false)
+      && verifier.VerifyField(tablePos, 10 /*SCORE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

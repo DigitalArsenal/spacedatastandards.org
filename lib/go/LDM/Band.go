@@ -18,11 +18,19 @@ func GetRootAsBand(buf []byte, offset flatbuffers.UOffsetT) *Band {
 	return x
 }
 
+func FinishBandBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsBand(buf []byte, offset flatbuffers.UOffsetT) *Band {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &Band{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedBandBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *Band) Init(buf []byte, i flatbuffers.UOffsetT) {

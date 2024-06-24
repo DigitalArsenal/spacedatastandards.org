@@ -55,21 +55,36 @@ class USR(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
-def USRStart(builder): builder.StartObject(2)
+def USRStart(builder):
+    builder.StartObject(2)
+
 def Start(builder):
-    return USRStart(builder)
-def USRAddID(builder, ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+    USRStart(builder)
+
+def USRAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
 def AddID(builder, ID):
-    return USRAddID(builder, ID)
-def USRAddMESSAGE_TYPES(builder, MESSAGE_TYPES): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_TYPES), 0)
+    USRAddID(builder, ID)
+
+def USRAddMESSAGE_TYPES(builder, MESSAGE_TYPES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_TYPES), 0)
+
 def AddMESSAGE_TYPES(builder, MESSAGE_TYPES):
-    return USRAddMESSAGE_TYPES(builder, MESSAGE_TYPES)
-def USRStartMESSAGE_TYPESVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    USRAddMESSAGE_TYPES(builder, MESSAGE_TYPES)
+
+def USRStartMESSAGE_TYPESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartMESSAGE_TYPESVector(builder, numElems):
     return USRStartMESSAGE_TYPESVector(builder, numElems)
-def USREnd(builder): return builder.EndObject()
+
+def USREnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return USREnd(builder)
+
 try:
     from typing import List
 except:

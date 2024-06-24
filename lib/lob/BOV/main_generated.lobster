@@ -6,28 +6,28 @@ class BOV
 class BOVCOLLECTION
 
 /// Burn Out Vector Message
-class BOV : flatbuffers_handle
+class BOV : flatbuffers.handle
     def E_COORDINATE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 4, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
     def F_COORDINATE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     def G_COORDINATE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     def E_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     def F_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     def G_DOT() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     def EPOCH() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 16)
     def TIME_FROM_LAUNCH() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
 
-def GetRootAsBOV(buf:string): return BOV { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsBOV(buf:string): return BOV { buf, flatbuffers.indirect(buf, 0) }
 
 struct BOVBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(8)
         return this
@@ -49,7 +49,7 @@ struct BOVBuilder:
     def add_G_DOT(G_DOT:float):
         b_.PrependFloat64Slot(5, G_DOT, 0.0)
         return this
-    def add_EPOCH(EPOCH:flatbuffers_offset):
+    def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, EPOCH)
         return this
     def add_TIME_FROM_LAUNCH(TIME_FROM_LAUNCH:float):
@@ -58,28 +58,28 @@ struct BOVBuilder:
     def end():
         return b_.EndObject()
 
-class BOVCOLLECTION : flatbuffers_handle
+class BOVCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> BOV:
-        return BOV { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return BOV { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsBOVCOLLECTION(buf:string): return BOVCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsBOVCOLLECTION(buf:string): return BOVCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct BOVCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def BOVCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def BOVCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def BOVCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def BOVCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

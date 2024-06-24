@@ -17,11 +17,19 @@ func GetRootAsTIMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *TIMCOLLECT
 	return x
 }
 
+func FinishTIMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsTIMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *TIMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &TIMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedTIMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *TIMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

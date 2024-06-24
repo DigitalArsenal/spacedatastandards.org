@@ -277,99 +277,192 @@ class CDM(object):
             return obj
         return None
 
-def CDMStart(builder): builder.StartObject(29)
+def CDMStart(builder):
+    builder.StartObject(29)
+
 def Start(builder):
-    return CDMStart(builder)
-def CDMAddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS): builder.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
+    CDMStart(builder)
+
+def CDMAddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS):
+    builder.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
+
 def AddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS):
-    return CDMAddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS)
-def CDMAddCREATION_DATE(builder, CREATION_DATE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+    CDMAddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS)
+
+def CDMAddCREATION_DATE(builder, CREATION_DATE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+
 def AddCREATION_DATE(builder, CREATION_DATE):
-    return CDMAddCREATION_DATE(builder, CREATION_DATE)
-def CDMAddORIGINATOR(builder, ORIGINATOR): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+    CDMAddCREATION_DATE(builder, CREATION_DATE)
+
+def CDMAddORIGINATOR(builder, ORIGINATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+
 def AddORIGINATOR(builder, ORIGINATOR):
-    return CDMAddORIGINATOR(builder, ORIGINATOR)
-def CDMAddMESSAGE_FOR(builder, MESSAGE_FOR): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_FOR), 0)
+    CDMAddORIGINATOR(builder, ORIGINATOR)
+
+def CDMAddMESSAGE_FOR(builder, MESSAGE_FOR):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_FOR), 0)
+
 def AddMESSAGE_FOR(builder, MESSAGE_FOR):
-    return CDMAddMESSAGE_FOR(builder, MESSAGE_FOR)
-def CDMAddMESSAGE_ID(builder, MESSAGE_ID): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+    CDMAddMESSAGE_FOR(builder, MESSAGE_FOR)
+
+def CDMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
 def AddMESSAGE_ID(builder, MESSAGE_ID):
-    return CDMAddMESSAGE_ID(builder, MESSAGE_ID)
-def CDMAddTCA(builder, TCA): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TCA), 0)
+    CDMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def CDMAddTCA(builder, TCA):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TCA), 0)
+
 def AddTCA(builder, TCA):
-    return CDMAddTCA(builder, TCA)
-def CDMAddMISS_DISTANCE(builder, MISS_DISTANCE): builder.PrependFloat64Slot(6, MISS_DISTANCE, 0.0)
+    CDMAddTCA(builder, TCA)
+
+def CDMAddMISS_DISTANCE(builder, MISS_DISTANCE):
+    builder.PrependFloat64Slot(6, MISS_DISTANCE, 0.0)
+
 def AddMISS_DISTANCE(builder, MISS_DISTANCE):
-    return CDMAddMISS_DISTANCE(builder, MISS_DISTANCE)
-def CDMAddRELATIVE_SPEED(builder, RELATIVE_SPEED): builder.PrependFloat64Slot(7, RELATIVE_SPEED, 0.0)
+    CDMAddMISS_DISTANCE(builder, MISS_DISTANCE)
+
+def CDMAddRELATIVE_SPEED(builder, RELATIVE_SPEED):
+    builder.PrependFloat64Slot(7, RELATIVE_SPEED, 0.0)
+
 def AddRELATIVE_SPEED(builder, RELATIVE_SPEED):
-    return CDMAddRELATIVE_SPEED(builder, RELATIVE_SPEED)
-def CDMAddRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R): builder.PrependFloat64Slot(8, RELATIVE_POSITION_R, 0.0)
+    CDMAddRELATIVE_SPEED(builder, RELATIVE_SPEED)
+
+def CDMAddRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R):
+    builder.PrependFloat64Slot(8, RELATIVE_POSITION_R, 0.0)
+
 def AddRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R):
-    return CDMAddRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R)
-def CDMAddRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T): builder.PrependFloat64Slot(9, RELATIVE_POSITION_T, 0.0)
+    CDMAddRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R)
+
+def CDMAddRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T):
+    builder.PrependFloat64Slot(9, RELATIVE_POSITION_T, 0.0)
+
 def AddRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T):
-    return CDMAddRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T)
-def CDMAddRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N): builder.PrependFloat64Slot(10, RELATIVE_POSITION_N, 0.0)
+    CDMAddRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T)
+
+def CDMAddRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N):
+    builder.PrependFloat64Slot(10, RELATIVE_POSITION_N, 0.0)
+
 def AddRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N):
-    return CDMAddRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N)
-def CDMAddRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R): builder.PrependFloat64Slot(11, RELATIVE_VELOCITY_R, 0.0)
+    CDMAddRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N)
+
+def CDMAddRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R):
+    builder.PrependFloat64Slot(11, RELATIVE_VELOCITY_R, 0.0)
+
 def AddRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R):
-    return CDMAddRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R)
-def CDMAddRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T): builder.PrependFloat64Slot(12, RELATIVE_VELOCITY_T, 0.0)
+    CDMAddRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R)
+
+def CDMAddRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T):
+    builder.PrependFloat64Slot(12, RELATIVE_VELOCITY_T, 0.0)
+
 def AddRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T):
-    return CDMAddRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T)
-def CDMAddRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N): builder.PrependFloat64Slot(13, RELATIVE_VELOCITY_N, 0.0)
+    CDMAddRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T)
+
+def CDMAddRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N):
+    builder.PrependFloat64Slot(13, RELATIVE_VELOCITY_N, 0.0)
+
 def AddRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N):
-    return CDMAddRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N)
-def CDMAddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(START_SCREEN_PERIOD), 0)
+    CDMAddRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N)
+
+def CDMAddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(START_SCREEN_PERIOD), 0)
+
 def AddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD):
-    return CDMAddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD)
-def CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_SCREEN_PERIOD), 0)
+    CDMAddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD)
+
+def CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_SCREEN_PERIOD), 0)
+
 def AddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD):
-    return CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD)
-def CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME): builder.PrependInt8Slot(16, SCREEN_VOLUME_FRAME, 0)
+    CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD)
+
+def CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME):
+    builder.PrependInt8Slot(16, SCREEN_VOLUME_FRAME, 0)
+
 def AddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME):
-    return CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
-def CDMAddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE): builder.PrependInt8Slot(17, SCREEN_VOLUME_SHAPE, 0)
+    CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
+
+def CDMAddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE):
+    builder.PrependInt8Slot(17, SCREEN_VOLUME_SHAPE, 0)
+
 def AddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE):
-    return CDMAddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE)
-def CDMAddSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X): builder.PrependFloat64Slot(18, SCREEN_VOLUME_X, 0.0)
+    CDMAddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE)
+
+def CDMAddSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X):
+    builder.PrependFloat64Slot(18, SCREEN_VOLUME_X, 0.0)
+
 def AddSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X):
-    return CDMAddSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X)
-def CDMAddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y): builder.PrependFloat64Slot(19, SCREEN_VOLUME_Y, 0.0)
+    CDMAddSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X)
+
+def CDMAddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y):
+    builder.PrependFloat64Slot(19, SCREEN_VOLUME_Y, 0.0)
+
 def AddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y):
-    return CDMAddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y)
-def CDMAddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z): builder.PrependFloat64Slot(20, SCREEN_VOLUME_Z, 0.0)
+    CDMAddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y)
+
+def CDMAddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z):
+    builder.PrependFloat64Slot(20, SCREEN_VOLUME_Z, 0.0)
+
 def AddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z):
-    return CDMAddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z)
-def CDMAddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIME): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_ENTRY_TIME), 0)
+    CDMAddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z)
+
+def CDMAddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIME):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_ENTRY_TIME), 0)
+
 def AddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIME):
-    return CDMAddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIME)
-def CDMAddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIME): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_EXIT_TIME), 0)
+    CDMAddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIME)
+
+def CDMAddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIME):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_EXIT_TIME), 0)
+
 def AddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIME):
-    return CDMAddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIME)
-def CDMAddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY): builder.PrependFloat64Slot(23, COLLISION_PROBABILITY, 0.0)
+    CDMAddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIME)
+
+def CDMAddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY):
+    builder.PrependFloat64Slot(23, COLLISION_PROBABILITY, 0.0)
+
 def AddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY):
-    return CDMAddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
-def CDMAddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHOD): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(COLLISION_PROBABILITY_METHOD), 0)
+    CDMAddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
+
+def CDMAddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHOD):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(COLLISION_PROBABILITY_METHOD), 0)
+
 def AddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHOD):
-    return CDMAddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHOD)
-def CDMAddOBJECT1(builder, OBJECT1): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT1), 0)
+    CDMAddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHOD)
+
+def CDMAddOBJECT1(builder, OBJECT1):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT1), 0)
+
 def AddOBJECT1(builder, OBJECT1):
-    return CDMAddOBJECT1(builder, OBJECT1)
-def CDMAddOBJECT2(builder, OBJECT2): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT2), 0)
+    CDMAddOBJECT1(builder, OBJECT1)
+
+def CDMAddOBJECT2(builder, OBJECT2):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT2), 0)
+
 def AddOBJECT2(builder, OBJECT2):
-    return CDMAddOBJECT2(builder, OBJECT2)
-def CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT1_DATASOURCE), 0)
+    CDMAddOBJECT2(builder, OBJECT2)
+
+def CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT1_DATASOURCE), 0)
+
 def AddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE):
-    return CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE)
-def CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT2_DATASOURCE), 0)
+    CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE)
+
+def CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT2_DATASOURCE), 0)
+
 def AddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE):
-    return CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
-def CDMEnd(builder): return builder.EndObject()
+    CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
+
+def CDMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CDMEnd(builder)
+
 import CDMObject
 import PNM
 try:

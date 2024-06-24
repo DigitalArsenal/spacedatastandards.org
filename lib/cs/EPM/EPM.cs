@@ -11,10 +11,11 @@ public struct EPM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static EPM GetRootAsEPM(ByteBuffer _bb) { return GetRootAsEPM(_bb, new EPM()); }
   public static EPM GetRootAsEPM(ByteBuffer _bb, EPM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool EPMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EPM"); }
+  public static bool VerifyEPM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$EPM", false, EPMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EPM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -312,3 +313,27 @@ public class EPMT
   }
 }
 
+
+static public class EPMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*DN*/, false)
+      && verifier.VerifyString(tablePos, 6 /*LEGAL_NAME*/, false)
+      && verifier.VerifyString(tablePos, 8 /*FAMILY_NAME*/, false)
+      && verifier.VerifyString(tablePos, 10 /*GIVEN_NAME*/, false)
+      && verifier.VerifyString(tablePos, 12 /*ADDITIONAL_NAME*/, false)
+      && verifier.VerifyString(tablePos, 14 /*HONORIFIC_PREFIX*/, false)
+      && verifier.VerifyString(tablePos, 16 /*HONORIFIC_SUFFIX*/, false)
+      && verifier.VerifyString(tablePos, 18 /*JOB_TITLE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*OCCUPATION*/, false)
+      && verifier.VerifyTable(tablePos, 22 /*ADDRESS*/, AddressVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 24 /*ALTERNATE_NAMES*/, false)
+      && verifier.VerifyString(tablePos, 26 /*EMAIL*/, false)
+      && verifier.VerifyString(tablePos, 28 /*TELEPHONE*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*KEYS*/, CryptoKeyVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 32 /*MULTIFORMAT_ADDRESS*/, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

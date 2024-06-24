@@ -231,84 +231,162 @@ class CAT(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
-def CATStart(builder): builder.StartObject(23)
+def CATStart(builder):
+    builder.StartObject(23)
+
 def Start(builder):
-    return CATStart(builder)
-def CATAddOBJECT_NAME(builder, OBJECT_NAME): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+    CATStart(builder)
+
+def CATAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
 def AddOBJECT_NAME(builder, OBJECT_NAME):
-    return CATAddOBJECT_NAME(builder, OBJECT_NAME)
-def CATAddOBJECT_ID(builder, OBJECT_ID): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+    CATAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def CATAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
 def AddOBJECT_ID(builder, OBJECT_ID):
-    return CATAddOBJECT_ID(builder, OBJECT_ID)
-def CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID): builder.PrependUint32Slot(2, NORAD_CAT_ID, 0)
+    CATAddOBJECT_ID(builder, OBJECT_ID)
+
+def CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(2, NORAD_CAT_ID, 0)
+
 def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
-    return CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
-def CATAddOBJECT_TYPE(builder, OBJECT_TYPE): builder.PrependInt8Slot(3, OBJECT_TYPE, 3)
+    CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def CATAddOBJECT_TYPE(builder, OBJECT_TYPE):
+    builder.PrependInt8Slot(3, OBJECT_TYPE, 3)
+
 def AddOBJECT_TYPE(builder, OBJECT_TYPE):
-    return CATAddOBJECT_TYPE(builder, OBJECT_TYPE)
-def CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE): builder.PrependInt8Slot(4, OPS_STATUS_CODE, 7)
+    CATAddOBJECT_TYPE(builder, OBJECT_TYPE)
+
+def CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE):
+    builder.PrependInt8Slot(4, OPS_STATUS_CODE, 7)
+
 def AddOPS_STATUS_CODE(builder, OPS_STATUS_CODE):
-    return CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
-def CATAddOWNER(builder, OWNER): builder.PrependInt8Slot(5, OWNER, 0)
+    CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
+
+def CATAddOWNER(builder, OWNER):
+    builder.PrependInt8Slot(5, OWNER, 0)
+
 def AddOWNER(builder, OWNER):
-    return CATAddOWNER(builder, OWNER)
-def CATAddLAUNCH_DATE(builder, LAUNCH_DATE): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_DATE), 0)
+    CATAddOWNER(builder, OWNER)
+
+def CATAddLAUNCH_DATE(builder, LAUNCH_DATE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_DATE), 0)
+
 def AddLAUNCH_DATE(builder, LAUNCH_DATE):
-    return CATAddLAUNCH_DATE(builder, LAUNCH_DATE)
-def CATAddLAUNCH_SITE(builder, LAUNCH_SITE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_SITE), 0)
+    CATAddLAUNCH_DATE(builder, LAUNCH_DATE)
+
+def CATAddLAUNCH_SITE(builder, LAUNCH_SITE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_SITE), 0)
+
 def AddLAUNCH_SITE(builder, LAUNCH_SITE):
-    return CATAddLAUNCH_SITE(builder, LAUNCH_SITE)
-def CATAddDECAY_DATE(builder, DECAY_DATE): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DECAY_DATE), 0)
+    CATAddLAUNCH_SITE(builder, LAUNCH_SITE)
+
+def CATAddDECAY_DATE(builder, DECAY_DATE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DECAY_DATE), 0)
+
 def AddDECAY_DATE(builder, DECAY_DATE):
-    return CATAddDECAY_DATE(builder, DECAY_DATE)
-def CATAddPERIOD(builder, PERIOD): builder.PrependFloat64Slot(9, PERIOD, 0.0)
+    CATAddDECAY_DATE(builder, DECAY_DATE)
+
+def CATAddPERIOD(builder, PERIOD):
+    builder.PrependFloat64Slot(9, PERIOD, 0.0)
+
 def AddPERIOD(builder, PERIOD):
-    return CATAddPERIOD(builder, PERIOD)
-def CATAddINCLINATION(builder, INCLINATION): builder.PrependFloat64Slot(10, INCLINATION, 0.0)
+    CATAddPERIOD(builder, PERIOD)
+
+def CATAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(10, INCLINATION, 0.0)
+
 def AddINCLINATION(builder, INCLINATION):
-    return CATAddINCLINATION(builder, INCLINATION)
-def CATAddAPOGEE(builder, APOGEE): builder.PrependFloat64Slot(11, APOGEE, 0.0)
+    CATAddINCLINATION(builder, INCLINATION)
+
+def CATAddAPOGEE(builder, APOGEE):
+    builder.PrependFloat64Slot(11, APOGEE, 0.0)
+
 def AddAPOGEE(builder, APOGEE):
-    return CATAddAPOGEE(builder, APOGEE)
-def CATAddPERIGEE(builder, PERIGEE): builder.PrependFloat64Slot(12, PERIGEE, 0.0)
+    CATAddAPOGEE(builder, APOGEE)
+
+def CATAddPERIGEE(builder, PERIGEE):
+    builder.PrependFloat64Slot(12, PERIGEE, 0.0)
+
 def AddPERIGEE(builder, PERIGEE):
-    return CATAddPERIGEE(builder, PERIGEE)
-def CATAddRCS(builder, RCS): builder.PrependFloat64Slot(13, RCS, 0.0)
+    CATAddPERIGEE(builder, PERIGEE)
+
+def CATAddRCS(builder, RCS):
+    builder.PrependFloat64Slot(13, RCS, 0.0)
+
 def AddRCS(builder, RCS):
-    return CATAddRCS(builder, RCS)
-def CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE): builder.PrependInt8Slot(14, DATA_STATUS_CODE, 0)
+    CATAddRCS(builder, RCS)
+
+def CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE):
+    builder.PrependInt8Slot(14, DATA_STATUS_CODE, 0)
+
 def AddDATA_STATUS_CODE(builder, DATA_STATUS_CODE):
-    return CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
-def CATAddORBIT_CENTER(builder, ORBIT_CENTER): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_CENTER), 0)
+    CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
+
+def CATAddORBIT_CENTER(builder, ORBIT_CENTER):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_CENTER), 0)
+
 def AddORBIT_CENTER(builder, ORBIT_CENTER):
-    return CATAddORBIT_CENTER(builder, ORBIT_CENTER)
-def CATAddORBIT_TYPE(builder, ORBIT_TYPE): builder.PrependInt8Slot(16, ORBIT_TYPE, 0)
+    CATAddORBIT_CENTER(builder, ORBIT_CENTER)
+
+def CATAddORBIT_TYPE(builder, ORBIT_TYPE):
+    builder.PrependInt8Slot(16, ORBIT_TYPE, 0)
+
 def AddORBIT_TYPE(builder, ORBIT_TYPE):
-    return CATAddORBIT_TYPE(builder, ORBIT_TYPE)
-def CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(DEPLOYMENT_DATE), 0)
+    CATAddORBIT_TYPE(builder, ORBIT_TYPE)
+
+def CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(DEPLOYMENT_DATE), 0)
+
 def AddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE):
-    return CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE)
-def CATAddMANEUVERABLE(builder, MANEUVERABLE): builder.PrependBoolSlot(18, MANEUVERABLE, 0)
+    CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE)
+
+def CATAddMANEUVERABLE(builder, MANEUVERABLE):
+    builder.PrependBoolSlot(18, MANEUVERABLE, 0)
+
 def AddMANEUVERABLE(builder, MANEUVERABLE):
-    return CATAddMANEUVERABLE(builder, MANEUVERABLE)
-def CATAddSIZE(builder, SIZE): builder.PrependFloat64Slot(19, SIZE, 0.0)
+    CATAddMANEUVERABLE(builder, MANEUVERABLE)
+
+def CATAddSIZE(builder, SIZE):
+    builder.PrependFloat64Slot(19, SIZE, 0.0)
+
 def AddSIZE(builder, SIZE):
-    return CATAddSIZE(builder, SIZE)
-def CATAddMASS(builder, MASS): builder.PrependFloat64Slot(20, MASS, 0.0)
+    CATAddSIZE(builder, SIZE)
+
+def CATAddMASS(builder, MASS):
+    builder.PrependFloat64Slot(20, MASS, 0.0)
+
 def AddMASS(builder, MASS):
-    return CATAddMASS(builder, MASS)
-def CATAddMASS_TYPE(builder, MASS_TYPE): builder.PrependInt8Slot(21, MASS_TYPE, 0)
+    CATAddMASS(builder, MASS)
+
+def CATAddMASS_TYPE(builder, MASS_TYPE):
+    builder.PrependInt8Slot(21, MASS_TYPE, 0)
+
 def AddMASS_TYPE(builder, MASS_TYPE):
-    return CATAddMASS_TYPE(builder, MASS_TYPE)
-def CATAddPAYLOADS(builder, PAYLOADS): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOADS), 0)
+    CATAddMASS_TYPE(builder, MASS_TYPE)
+
+def CATAddPAYLOADS(builder, PAYLOADS):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOADS), 0)
+
 def AddPAYLOADS(builder, PAYLOADS):
-    return CATAddPAYLOADS(builder, PAYLOADS)
-def CATStartPAYLOADSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    CATAddPAYLOADS(builder, PAYLOADS)
+
+def CATStartPAYLOADSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartPAYLOADSVector(builder, numElems):
     return CATStartPAYLOADSVector(builder, numElems)
-def CATEnd(builder): return builder.EndObject()
+
+def CATEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CATEnd(builder)
+
 import PLD
 try:
     from typing import List

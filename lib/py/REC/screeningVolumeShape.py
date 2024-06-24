@@ -2,6 +2,4 @@
 
 # namespace: 
 
-class screeningVolumeShape(object):
-    ELLIPSOID = 0
-    BOX = 1
+# NOTE screeningVolumeShape.py does not declare any structs or enums

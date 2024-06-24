@@ -77,30 +77,54 @@ class Address(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def AddressStart(builder): builder.StartObject(6)
+def AddressStart(builder):
+    builder.StartObject(6)
+
 def Start(builder):
-    return AddressStart(builder)
-def AddressAddCOUNTRY(builder, COUNTRY): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY), 0)
+    AddressStart(builder)
+
+def AddressAddCOUNTRY(builder, COUNTRY):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY), 0)
+
 def AddCOUNTRY(builder, COUNTRY):
-    return AddressAddCOUNTRY(builder, COUNTRY)
-def AddressAddREGION(builder, REGION): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+    AddressAddCOUNTRY(builder, COUNTRY)
+
+def AddressAddREGION(builder, REGION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+
 def AddREGION(builder, REGION):
-    return AddressAddREGION(builder, REGION)
-def AddressAddLOCALITY(builder, LOCALITY): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LOCALITY), 0)
+    AddressAddREGION(builder, REGION)
+
+def AddressAddLOCALITY(builder, LOCALITY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LOCALITY), 0)
+
 def AddLOCALITY(builder, LOCALITY):
-    return AddressAddLOCALITY(builder, LOCALITY)
-def AddressAddPOSTAL_CODE(builder, POSTAL_CODE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(POSTAL_CODE), 0)
+    AddressAddLOCALITY(builder, LOCALITY)
+
+def AddressAddPOSTAL_CODE(builder, POSTAL_CODE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(POSTAL_CODE), 0)
+
 def AddPOSTAL_CODE(builder, POSTAL_CODE):
-    return AddressAddPOSTAL_CODE(builder, POSTAL_CODE)
-def AddressAddSTREET(builder, STREET): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STREET), 0)
+    AddressAddPOSTAL_CODE(builder, POSTAL_CODE)
+
+def AddressAddSTREET(builder, STREET):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STREET), 0)
+
 def AddSTREET(builder, STREET):
-    return AddressAddSTREET(builder, STREET)
-def AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(POST_OFFICE_BOX_NUMBER), 0)
+    AddressAddSTREET(builder, STREET)
+
+def AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(POST_OFFICE_BOX_NUMBER), 0)
+
 def AddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER):
-    return AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER)
-def AddressEnd(builder): return builder.EndObject()
+    AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER)
+
+def AddressEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return AddressEnd(builder)
+
 
 class AddressT(object):
 

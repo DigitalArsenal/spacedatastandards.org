@@ -53,18 +53,30 @@ class CRMCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def CRMCOLLECTIONStart(builder): builder.StartObject(1)
+def CRMCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return CRMCOLLECTIONStart(builder)
-def CRMCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    CRMCOLLECTIONStart(builder)
+
+def CRMCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return CRMCOLLECTIONAddRECORDS(builder, RECORDS)
-def CRMCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    CRMCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def CRMCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return CRMCOLLECTIONStartRECORDSVector(builder, numElems)
-def CRMCOLLECTIONEnd(builder): return builder.EndObject()
+
+def CRMCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CRMCOLLECTIONEnd(builder)
+
 import CRM
 try:
     from typing import List

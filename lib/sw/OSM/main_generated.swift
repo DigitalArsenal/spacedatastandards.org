@@ -7,7 +7,7 @@ import FlatBuffers
 ///  Observation Stability Message
 public struct OSM: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -28,7 +28,7 @@ public struct OSM: FlatBufferObject, Verifiable {
   }
 
   ///  Indicates whether the observation is stable or not
-  public var IS_STABLE: Bool { let o = _accessor.offset(VTOFFSET.IS_STABLE.v); return o == 0 ? false : 0 != _accessor.readBuffer(of: Byte.self, at: o) }
+  public var IS_STABLE: Bool { let o = _accessor.offset(VTOFFSET.IS_STABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  The number of observations
   public var NUM_OBS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Unique identifier for the object being observed
@@ -84,7 +84,7 @@ public struct OSM: FlatBufferObject, Verifiable {
 
 public struct OSMCOLLECTION: FlatBufferObject, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_23_3_3() }
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

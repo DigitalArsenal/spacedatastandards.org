@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Site Information Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SIT : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -340,7 +339,7 @@ class SIT : Table() {
             val o = __offset(50); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsSIT(_bb: ByteBuffer): SIT = getRootAsSIT(_bb, SIT())
         fun getRootAsSIT(_bb: ByteBuffer, obj: SIT): SIT {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

@@ -11,10 +11,11 @@ public struct MPE : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static MPE GetRootAsMPE(ByteBuffer _bb) { return GetRootAsMPE(_bb, new MPE()); }
   public static MPE GetRootAsMPE(ByteBuffer _bb, MPE obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool MPEBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$MPE"); }
+  public static bool VerifyMPE(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$MPE", false, MPEVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MPE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -157,3 +158,22 @@ public class MPET
   }
 }
 
+
+static public class MPEVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*ENTITY_ID*/, false)
+      && verifier.VerifyField(tablePos, 6 /*EPOCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*MEAN_MOTION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*ECCENTRICITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*RA_OF_ASC_NODE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*ARG_OF_PERICENTER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*MEAN_ANOMALY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*BSTAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementTheory*/, 1, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

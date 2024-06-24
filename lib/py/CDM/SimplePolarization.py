@@ -2,9 +2,4 @@
 
 # namespace: 
 
-# Simple polarization types
-class SimplePolarization(object):
-    vertical = 0
-    horizontal = 1
-    leftHandCircular = 2
-    rightHandCircular = 3
+# NOTE SimplePolarization.py does not declare any structs or enums

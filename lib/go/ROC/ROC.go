@@ -11,6 +11,8 @@ type ROC struct {
 	_tab flatbuffers.Table
 }
 
+const ROCIdentifier = "$ROC"
+
 func GetRootAsROC(buf []byte, offset flatbuffers.UOffsetT) *ROC {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &ROC{}
@@ -18,11 +20,29 @@ func GetRootAsROC(buf []byte, offset flatbuffers.UOffsetT) *ROC {
 	return x
 }
 
+func FinishROCBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(ROCIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func ROCBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, ROCIdentifier)
+}
+
 func GetSizePrefixedRootAsROC(buf []byte, offset flatbuffers.UOffsetT) *ROC {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &ROC{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedROCBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(ROCIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedROCBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, ROCIdentifier)
 }
 
 func (rcv *ROC) Init(buf []byte, i flatbuffers.UOffsetT) {

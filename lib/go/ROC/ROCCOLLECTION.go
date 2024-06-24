@@ -18,11 +18,19 @@ func GetRootAsROCCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *ROCCOLLECT
 	return x
 }
 
+func FinishROCCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsROCCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *ROCCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &ROCCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedROCCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *ROCCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

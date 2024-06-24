@@ -17,11 +17,19 @@ func GetRootAsLCCCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *LCCCOLLECT
 	return x
 }
 
+func FinishLCCCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsLCCCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *LCCCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &LCCCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedLCCCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *LCCCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

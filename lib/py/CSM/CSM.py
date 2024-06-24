@@ -109,39 +109,72 @@ class CSM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def CSMStart(builder): builder.StartObject(9)
+def CSMStart(builder):
+    builder.StartObject(9)
+
 def Start(builder):
-    return CSMStart(builder)
-def CSMAddOBJECT_1(builder, OBJECT_1): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_1), 0)
+    CSMStart(builder)
+
+def CSMAddOBJECT_1(builder, OBJECT_1):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_1), 0)
+
 def AddOBJECT_1(builder, OBJECT_1):
-    return CSMAddOBJECT_1(builder, OBJECT_1)
-def CSMAddDSE_1(builder, DSE_1): builder.PrependFloat64Slot(1, DSE_1, 0.0)
+    CSMAddOBJECT_1(builder, OBJECT_1)
+
+def CSMAddDSE_1(builder, DSE_1):
+    builder.PrependFloat64Slot(1, DSE_1, 0.0)
+
 def AddDSE_1(builder, DSE_1):
-    return CSMAddDSE_1(builder, DSE_1)
-def CSMAddOBJECT_2(builder, OBJECT_2): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_2), 0)
+    CSMAddDSE_1(builder, DSE_1)
+
+def CSMAddOBJECT_2(builder, OBJECT_2):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_2), 0)
+
 def AddOBJECT_2(builder, OBJECT_2):
-    return CSMAddOBJECT_2(builder, OBJECT_2)
-def CSMAddDSE_2(builder, DSE_2): builder.PrependFloat64Slot(3, DSE_2, 0.0)
+    CSMAddOBJECT_2(builder, OBJECT_2)
+
+def CSMAddDSE_2(builder, DSE_2):
+    builder.PrependFloat64Slot(3, DSE_2, 0.0)
+
 def AddDSE_2(builder, DSE_2):
-    return CSMAddDSE_2(builder, DSE_2)
-def CSMAddTCA(builder, TCA): builder.PrependFloat64Slot(4, TCA, 0.0)
+    CSMAddDSE_2(builder, DSE_2)
+
+def CSMAddTCA(builder, TCA):
+    builder.PrependFloat64Slot(4, TCA, 0.0)
+
 def AddTCA(builder, TCA):
-    return CSMAddTCA(builder, TCA)
-def CSMAddTCA_RANGE(builder, TCA_RANGE): builder.PrependFloat64Slot(5, TCA_RANGE, 0.0)
+    CSMAddTCA(builder, TCA)
+
+def CSMAddTCA_RANGE(builder, TCA_RANGE):
+    builder.PrependFloat64Slot(5, TCA_RANGE, 0.0)
+
 def AddTCA_RANGE(builder, TCA_RANGE):
-    return CSMAddTCA_RANGE(builder, TCA_RANGE)
-def CSMAddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED): builder.PrependFloat64Slot(6, TCA_RELATIVE_SPEED, 0.0)
+    CSMAddTCA_RANGE(builder, TCA_RANGE)
+
+def CSMAddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED):
+    builder.PrependFloat64Slot(6, TCA_RELATIVE_SPEED, 0.0)
+
 def AddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED):
-    return CSMAddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED)
-def CSMAddMAX_PROB(builder, MAX_PROB): builder.PrependFloat64Slot(7, MAX_PROB, 0.0)
+    CSMAddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED)
+
+def CSMAddMAX_PROB(builder, MAX_PROB):
+    builder.PrependFloat64Slot(7, MAX_PROB, 0.0)
+
 def AddMAX_PROB(builder, MAX_PROB):
-    return CSMAddMAX_PROB(builder, MAX_PROB)
-def CSMAddDILUTION(builder, DILUTION): builder.PrependFloat64Slot(8, DILUTION, 0.0)
+    CSMAddMAX_PROB(builder, MAX_PROB)
+
+def CSMAddDILUTION(builder, DILUTION):
+    builder.PrependFloat64Slot(8, DILUTION, 0.0)
+
 def AddDILUTION(builder, DILUTION):
-    return CSMAddDILUTION(builder, DILUTION)
-def CSMEnd(builder): return builder.EndObject()
+    CSMAddDILUTION(builder, DILUTION)
+
+def CSMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CSMEnd(builder)
+
 import CAT
 try:
     from typing import Optional

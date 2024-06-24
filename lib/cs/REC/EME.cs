@@ -11,10 +11,11 @@ public struct EME : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static EME GetRootAsEME(ByteBuffer _bb) { return GetRootAsEME(_bb, new EME()); }
   public static EME GetRootAsEME(ByteBuffer _bb, EME obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool EMEBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EME"); }
+  public static bool VerifyEME(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$EME", false, EMEVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EME __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -231,3 +232,22 @@ public class EMET
   }
 }
 
+
+static public class EMEVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyVectorOfData(tablePos, 4 /*ENCRYPTED_BLOB*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 6 /*EPHEMERAL_PUBLIC_KEY*/, false)
+      && verifier.VerifyString(tablePos, 8 /*MAC*/, false)
+      && verifier.VerifyString(tablePos, 10 /*NONCE*/, false)
+      && verifier.VerifyString(tablePos, 12 /*TAG*/, false)
+      && verifier.VerifyString(tablePos, 14 /*IV*/, false)
+      && verifier.VerifyString(tablePos, 16 /*PUBLIC_KEY_IDENTIFIER*/, false)
+      && verifier.VerifyString(tablePos, 18 /*CIPHER_SUITE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*KDF_PARAMETERS*/, false)
+      && verifier.VerifyString(tablePos, 22 /*ENCRYPTION_ALGORITHM_PARAMETERS*/, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

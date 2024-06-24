@@ -80,27 +80,48 @@ class OEM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
-def OEMStart(builder): builder.StartObject(4)
+def OEMStart(builder):
+    builder.StartObject(4)
+
 def Start(builder):
-    return OEMStart(builder)
-def OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS): builder.PrependFloat64Slot(0, CCSDS_OEM_VERS, 0.0)
+    OEMStart(builder)
+
+def OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS):
+    builder.PrependFloat64Slot(0, CCSDS_OEM_VERS, 0.0)
+
 def AddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS):
-    return OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS)
-def OEMAddCREATION_DATE(builder, CREATION_DATE): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+    OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS)
+
+def OEMAddCREATION_DATE(builder, CREATION_DATE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+
 def AddCREATION_DATE(builder, CREATION_DATE):
-    return OEMAddCREATION_DATE(builder, CREATION_DATE)
-def OEMAddORIGINATOR(builder, ORIGINATOR): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+    OEMAddCREATION_DATE(builder, CREATION_DATE)
+
+def OEMAddORIGINATOR(builder, ORIGINATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+
 def AddORIGINATOR(builder, ORIGINATOR):
-    return OEMAddORIGINATOR(builder, ORIGINATOR)
-def OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_BLOCK), 0)
+    OEMAddORIGINATOR(builder, ORIGINATOR)
+
+def OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_BLOCK), 0)
+
 def AddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK):
-    return OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK)
-def OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK)
+
+def OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartEPHEMERIS_DATA_BLOCKVector(builder, numElems):
     return OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems)
-def OEMEnd(builder): return builder.EndObject()
+
+def OEMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return OEMEnd(builder)
+
 import ephemerisDataBlock
 try:
     from typing import List

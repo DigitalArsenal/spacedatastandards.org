@@ -6,46 +6,46 @@ class MPE
 class MPECOLLECTION
 
 /// Minimum Propagatable Element Set
-class MPE : flatbuffers_handle
+class MPE : flatbuffers.handle
     /// Unique ID as a String
     def ENTITY_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
     def EPOCH() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Semi-major axis in km or mean motion in rev/day
     def MEAN_MOTION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Eccentricity
     def ECCENTRICITY() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     /// Inclination
     def INCLINATION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     /// Right ascension of ascending node
     def RA_OF_ASC_NODE() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 14, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Argument of pericenter
     def ARG_OF_PERICENTER() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Mean anomaly
     def MEAN_ANOMALY() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
     def BSTAR() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
     /// Description of the Mean Element Theory. (SGP4,DSST,USM)
     def MEAN_ELEMENT_THEORY() -> meanElementTheory:
-        return meanElementTheory(buf_.flatbuffers_field_int8(pos_, 22, 0))
+        return meanElementTheory(flatbuffers.field_int8(buf_, pos_, 22, 0))
 
-def GetRootAsMPE(buf:string): return MPE { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsMPE(buf:string): return MPE { buf, flatbuffers.indirect(buf, 0) }
 
 struct MPEBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(10)
         return this
-    def add_ENTITY_ID(ENTITY_ID:flatbuffers_offset):
+    def add_ENTITY_ID(ENTITY_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ENTITY_ID)
         return this
     def add_EPOCH(EPOCH:float):
@@ -78,28 +78,28 @@ struct MPEBuilder:
     def end():
         return b_.EndObject()
 
-class MPECOLLECTION : flatbuffers_handle
+class MPECOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> MPE:
-        return MPE { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return MPE { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsMPECOLLECTION(buf:string): return MPECOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsMPECOLLECTION(buf:string): return MPECOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct MPECOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def MPECOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def MPECOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MPECOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def MPECOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

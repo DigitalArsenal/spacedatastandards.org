@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class PRG extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static PRG getRootAsPRG(ByteBuffer _bb) { return getRootAsPRG(_bb, new PRG()); }
   public static PRG getRootAsPRG(ByteBuffer _bb, PRG obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean PRGBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$PRG"); }

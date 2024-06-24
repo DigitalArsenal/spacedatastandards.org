@@ -205,63 +205,120 @@ class HYP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def HYPStart(builder): builder.StartObject(11)
+def HYPStart(builder):
+    builder.StartObject(11)
+
 def Start(builder):
-    return HYPStart(builder)
-def HYPAddCAT_IDS(builder, CAT_IDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CAT_IDS), 0)
+    HYPStart(builder)
+
+def HYPAddCAT_IDS(builder, CAT_IDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CAT_IDS), 0)
+
 def AddCAT_IDS(builder, CAT_IDS):
-    return HYPAddCAT_IDS(builder, CAT_IDS)
-def HYPStartCAT_IDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    HYPAddCAT_IDS(builder, CAT_IDS)
+
+def HYPStartCAT_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartCAT_IDSVector(builder, numElems):
     return HYPStartCAT_IDSVector(builder, numElems)
-def HYPAddSIT_IDS(builder, SIT_IDS): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SIT_IDS), 0)
+
+def HYPAddSIT_IDS(builder, SIT_IDS):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SIT_IDS), 0)
+
 def AddSIT_IDS(builder, SIT_IDS):
-    return HYPAddSIT_IDS(builder, SIT_IDS)
-def HYPStartSIT_IDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    HYPAddSIT_IDS(builder, SIT_IDS)
+
+def HYPStartSIT_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartSIT_IDSVector(builder, numElems):
     return HYPStartSIT_IDSVector(builder, numElems)
-def HYPAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def HYPAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return HYPAddNAME(builder, NAME)
-def HYPAddCATEGORY(builder, CATEGORY): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CATEGORY), 0)
+    HYPAddNAME(builder, NAME)
+
+def HYPAddCATEGORY(builder, CATEGORY):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CATEGORY), 0)
+
 def AddCATEGORY(builder, CATEGORY):
-    return HYPAddCATEGORY(builder, CATEGORY)
-def HYPAddROW_INDICATORS(builder, ROW_INDICATORS): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ROW_INDICATORS), 0)
+    HYPAddCATEGORY(builder, CATEGORY)
+
+def HYPAddROW_INDICATORS(builder, ROW_INDICATORS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ROW_INDICATORS), 0)
+
 def AddROW_INDICATORS(builder, ROW_INDICATORS):
-    return HYPAddROW_INDICATORS(builder, ROW_INDICATORS)
-def HYPStartROW_INDICATORSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    HYPAddROW_INDICATORS(builder, ROW_INDICATORS)
+
+def HYPStartROW_INDICATORSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartROW_INDICATORSVector(builder, numElems):
     return HYPStartROW_INDICATORSVector(builder, numElems)
-def HYPAddCOL_INDICATORS(builder, COL_INDICATORS): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COL_INDICATORS), 0)
+
+def HYPAddCOL_INDICATORS(builder, COL_INDICATORS):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COL_INDICATORS), 0)
+
 def AddCOL_INDICATORS(builder, COL_INDICATORS):
-    return HYPAddCOL_INDICATORS(builder, COL_INDICATORS)
-def HYPStartCOL_INDICATORSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    HYPAddCOL_INDICATORS(builder, COL_INDICATORS)
+
+def HYPStartCOL_INDICATORSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartCOL_INDICATORSVector(builder, numElems):
     return HYPStartCOL_INDICATORSVector(builder, numElems)
-def HYPAddMATRIX(builder, MATRIX): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATRIX), 0)
+
+def HYPAddMATRIX(builder, MATRIX):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATRIX), 0)
+
 def AddMATRIX(builder, MATRIX):
-    return HYPAddMATRIX(builder, MATRIX)
-def HYPStartMATRIXVector(builder, numElems): return builder.StartVector(1, numElems, 1)
+    HYPAddMATRIX(builder, MATRIX)
+
+def HYPStartMATRIXVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
 def StartMATRIXVector(builder, numElems):
     return HYPStartMATRIXVector(builder, numElems)
-def HYPAddSCORE(builder, SCORE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SCORE), 0)
+
+def HYPAddSCORE(builder, SCORE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SCORE), 0)
+
 def AddSCORE(builder, SCORE):
-    return HYPAddSCORE(builder, SCORE)
-def HYPStartSCOREVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    HYPAddSCORE(builder, SCORE)
+
+def HYPStartSCOREVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartSCOREVector(builder, numElems):
     return HYPStartSCOREVector(builder, numElems)
-def HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ANALYSIS_METHOD), 0)
+
+def HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ANALYSIS_METHOD), 0)
+
 def AddANALYSIS_METHOD(builder, ANALYSIS_METHOD):
-    return HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD)
-def HYPAddEVENT_START_TIME(builder, EVENT_START_TIME): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_START_TIME), 0)
+    HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD)
+
+def HYPAddEVENT_START_TIME(builder, EVENT_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_START_TIME), 0)
+
 def AddEVENT_START_TIME(builder, EVENT_START_TIME):
-    return HYPAddEVENT_START_TIME(builder, EVENT_START_TIME)
-def HYPAddEVENT_END_TIME(builder, EVENT_END_TIME): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_END_TIME), 0)
+    HYPAddEVENT_START_TIME(builder, EVENT_START_TIME)
+
+def HYPAddEVENT_END_TIME(builder, EVENT_END_TIME):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_END_TIME), 0)
+
 def AddEVENT_END_TIME(builder, EVENT_END_TIME):
-    return HYPAddEVENT_END_TIME(builder, EVENT_END_TIME)
-def HYPEnd(builder): return builder.EndObject()
+    HYPAddEVENT_END_TIME(builder, EVENT_END_TIME)
+
+def HYPEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return HYPEnd(builder)
+
 import Score
 try:
     from typing import List

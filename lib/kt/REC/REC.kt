@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Collection of Standard Records
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class REC : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -66,7 +65,7 @@ class REC : Table() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsREC(_bb: ByteBuffer): REC = getRootAsREC(_bb, REC())
         fun getRootAsREC(_bb: ByteBuffer, obj: REC): REC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

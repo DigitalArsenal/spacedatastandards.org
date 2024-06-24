@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class PNM extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static PNM getRootAsPNM(ByteBuffer _bb) { return getRootAsPNM(_bb, new PNM()); }
   public static PNM getRootAsPNM(ByteBuffer _bb, PNM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean PNMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$PNM"); }

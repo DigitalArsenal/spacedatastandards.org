@@ -11,6 +11,8 @@ type PRG struct {
 	_tab flatbuffers.Table
 }
 
+const PRGIdentifier = "$PRG"
+
 func GetRootAsPRG(buf []byte, offset flatbuffers.UOffsetT) *PRG {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &PRG{}
@@ -18,11 +20,29 @@ func GetRootAsPRG(buf []byte, offset flatbuffers.UOffsetT) *PRG {
 	return x
 }
 
+func FinishPRGBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(PRGIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func PRGBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, PRGIdentifier)
+}
+
 func GetSizePrefixedRootAsPRG(buf []byte, offset flatbuffers.UOffsetT) *PRG {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &PRG{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedPRGBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(PRGIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedPRGBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, PRGIdentifier)
 }
 
 func (rcv *PRG) Init(buf []byte, i flatbuffers.UOffsetT) {

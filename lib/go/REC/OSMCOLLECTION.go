@@ -17,11 +17,19 @@ func GetRootAsOSMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *OSMCOLLECT
 	return x
 }
 
+func FinishOSMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsOSMCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *OSMCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &OSMCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedOSMCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *OSMCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

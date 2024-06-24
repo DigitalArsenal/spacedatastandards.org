@@ -36,15 +36,24 @@ class MET(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-def METStart(builder): builder.StartObject(1)
+def METStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return METStart(builder)
-def METAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY): builder.PrependInt8Slot(0, MEAN_ELEMENT_THEORY, 0)
+    METStart(builder)
+
+def METAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
+    builder.PrependInt8Slot(0, MEAN_ELEMENT_THEORY, 0)
+
 def AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
-    return METAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
-def METEnd(builder): return builder.EndObject()
+    METAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
+
+def METEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return METEnd(builder)
+
 
 class METT(object):
 

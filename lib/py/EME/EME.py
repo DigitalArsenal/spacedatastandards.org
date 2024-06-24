@@ -129,45 +129,84 @@ class EME(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def EMEStart(builder): builder.StartObject(10)
+def EMEStart(builder):
+    builder.StartObject(10)
+
 def Start(builder):
-    return EMEStart(builder)
-def EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTED_BLOB), 0)
+    EMEStart(builder)
+
+def EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTED_BLOB), 0)
+
 def AddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB):
-    return EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB)
-def EMEStartENCRYPTED_BLOBVector(builder, numElems): return builder.StartVector(1, numElems, 1)
+    EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB)
+
+def EMEStartENCRYPTED_BLOBVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
 def StartENCRYPTED_BLOBVector(builder, numElems):
     return EMEStartENCRYPTED_BLOBVector(builder, numElems)
-def EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERAL_PUBLIC_KEY), 0)
+
+def EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERAL_PUBLIC_KEY), 0)
+
 def AddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY):
-    return EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
-def EMEAddMAC(builder, MAC): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MAC), 0)
+    EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
+
+def EMEAddMAC(builder, MAC):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MAC), 0)
+
 def AddMAC(builder, MAC):
-    return EMEAddMAC(builder, MAC)
-def EMEAddNONCE(builder, NONCE): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE), 0)
+    EMEAddMAC(builder, MAC)
+
+def EMEAddNONCE(builder, NONCE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE), 0)
+
 def AddNONCE(builder, NONCE):
-    return EMEAddNONCE(builder, NONCE)
-def EMEAddTAG(builder, TAG): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
+    EMEAddNONCE(builder, NONCE)
+
+def EMEAddTAG(builder, TAG):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
+
 def AddTAG(builder, TAG):
-    return EMEAddTAG(builder, TAG)
-def EMEAddIV(builder, IV): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(IV), 0)
+    EMEAddTAG(builder, TAG)
+
+def EMEAddIV(builder, IV):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(IV), 0)
+
 def AddIV(builder, IV):
-    return EMEAddIV(builder, IV)
-def EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY_IDENTIFIER), 0)
+    EMEAddIV(builder, IV)
+
+def EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY_IDENTIFIER), 0)
+
 def AddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER):
-    return EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
-def EMEAddCIPHER_SUITE(builder, CIPHER_SUITE): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHER_SUITE), 0)
+    EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
+
+def EMEAddCIPHER_SUITE(builder, CIPHER_SUITE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHER_SUITE), 0)
+
 def AddCIPHER_SUITE(builder, CIPHER_SUITE):
-    return EMEAddCIPHER_SUITE(builder, CIPHER_SUITE)
-def EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(KDF_PARAMETERS), 0)
+    EMEAddCIPHER_SUITE(builder, CIPHER_SUITE)
+
+def EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(KDF_PARAMETERS), 0)
+
 def AddKDF_PARAMETERS(builder, KDF_PARAMETERS):
-    return EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS)
-def EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
+    EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS)
+
+def EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
+
 def AddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS):
-    return EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS)
-def EMEEnd(builder): return builder.EndObject()
+    EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS)
+
+def EMEEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return EMEEnd(builder)
+
 try:
     from typing import List
 except:

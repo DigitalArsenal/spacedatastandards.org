@@ -17,11 +17,19 @@ func GetRootAsEOPCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *EOPCOLLECT
 	return x
 }
 
+func FinishEOPCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsEOPCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *EOPCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &EOPCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedEOPCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *EOPCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

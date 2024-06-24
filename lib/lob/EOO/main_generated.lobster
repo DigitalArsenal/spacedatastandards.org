@@ -6,310 +6,310 @@ class EOO
 class EOOCOLLECTION
 
 /// Electro-Optical Observation
-class EOO : flatbuffers_handle
+class EOO : flatbuffers.handle
     /// Unique identifier for Earth Observation Observation
     def EOBSERVATION_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Classification marking of the data
     def CLASSIFICATION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Observation time in UTC
     def OB_TIME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Quality of the correlation
     def CORR_QUALITY() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 10, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 10, 0.0)
     /// Identifier for the satellite on orbit
     def ID_ON_ORBIT() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Identifier for the sensor
     def SENSOR_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Method of data collection
     def COLLECT_METHOD() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// NORAD catalog identifier for the satellite
     def NORAD_CAT_ID() -> int:
-        return buf_.flatbuffers_field_int32(pos_, 18, 0)
+        return flatbuffers.field_int32(buf_, pos_, 18, 0)
     /// Identifier for the task
     def TASK_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Identifier for the transaction
     def TRANSACTION_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// Identifier for the track
     def TRACK_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 24)
     /// Position of the observation
     def OB_POSITION() -> string:
-        return buf_.flatbuffers_field_string(pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Original object identifier
     def ORIG_OBJECT_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 28)
     /// Original sensor identifier
     def ORIG_SENSOR_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 30)
+        return flatbuffers.field_string(buf_, pos_, 30)
     /// Universal Coordinated Time flag
     def UCT() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 32, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
     /// Azimuth angle
     def AZIMUTH() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 34, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 34, 0.0)
     /// Uncertainty in azimuth angle
     def AZIMUTH_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 36, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 36, 0.0)
     /// Bias in azimuth angle
     def AZIMUTH_BIAS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 38, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 38, 0.0)
     /// Rate of change in azimuth
     def AZIMUTH_RATE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 40, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 40, 0.0)
     /// Elevation angle
     def ELEVATION() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 42, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 42, 0.0)
     /// Uncertainty in elevation angle
     def ELEVATION_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 44, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 44, 0.0)
     /// Bias in elevation angle
     def ELEVATION_BIAS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 46, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 46, 0.0)
     /// Rate of change in elevation
     def ELEVATION_RATE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 48, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 48, 0.0)
     /// Range to the target
     def RANGE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 50, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 50, 0.0)
     /// Uncertainty in range
     def RANGE_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 52, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 52, 0.0)
     /// Bias in range measurement
     def RANGE_BIAS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 54, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 54, 0.0)
     /// Rate of change in range
     def RANGE_RATE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 56, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 56, 0.0)
     /// Uncertainty in range rate
     def RANGE_RATE_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 58, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 58, 0.0)
     /// Right ascension
     def RA() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 60, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 60, 0.0)
     /// Rate of change in right ascension
     def RA_RATE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 62, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 62, 0.0)
     /// Uncertainty in right ascension
     def RA_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 64, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 64, 0.0)
     /// Bias in right ascension
     def RA_BIAS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 66, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 66, 0.0)
     /// Declination angle
     def DECLINATION() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 68, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 68, 0.0)
     /// Rate of change in declination
     def DECLINATION_RATE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 70, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 70, 0.0)
     /// Uncertainty in declination
     def DECLINATION_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 72, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 72, 0.0)
     /// Bias in declination
     def DECLINATION_BIAS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 74, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 74, 0.0)
     /// X-component of line-of-sight vector
     def LOSX() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 76, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 76, 0.0)
     /// Y-component of line-of-sight vector
     def LOSY() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 78, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 78, 0.0)
     /// Z-component of line-of-sight vector
     def LOSZ() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 80, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 80, 0.0)
     /// Uncertainty in line-of-sight vector
     def LOS_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 82, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 82, 0.0)
     /// X-component of line-of-sight velocity
     def LOSXVEL() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 84, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 84, 0.0)
     /// Y-component of line-of-sight velocity
     def LOSYVEL() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 86, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 86, 0.0)
     /// Z-component of line-of-sight velocity
     def LOSZVEL() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 88, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 88, 0.0)
     /// Latitude of sensor
     def SENLAT() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 90, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 90, 0.0)
     /// Longitude of sensor
     def SENLON() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 92, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 92, 0.0)
     /// Altitude of sensor
     def SENALT() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 94, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 94, 0.0)
     /// X-coordinate of sensor position
     def SENX() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 96, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 96, 0.0)
     /// Y-coordinate of sensor position
     def SENY() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 98, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 98, 0.0)
     /// Z-coordinate of sensor position
     def SENZ() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 100, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 100, 0.0)
     /// Number of fields of view
     def FOV_COUNT() -> int:
-        return buf_.flatbuffers_field_int32(pos_, 102, 0)
+        return flatbuffers.field_int32(buf_, pos_, 102, 0)
     /// Duration of the exposure
     def EXP_DURATION() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 104, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 104, 0.0)
     /// Zero-point displacement
     def ZEROPTD() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 106, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 106, 0.0)
     /// Net object signal
     def NET_OBJ_SIG() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 108, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 108, 0.0)
     /// Uncertainty in net object signal
     def NET_OBJ_SIG_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 110, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 110, 0.0)
     /// Magnitude of the observation
     def MAG() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 112, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 112, 0.0)
     /// Uncertainty in magnitude
     def MAG_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 114, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 114, 0.0)
     /// Normalized range for magnitude
     def MAG_NORM_RANGE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 116, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 116, 0.0)
     /// Geocentric latitude
     def GEOLAT() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 118, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 118, 0.0)
     /// Geocentric longitude
     def GEOLON() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 120, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 120, 0.0)
     /// Geocentric altitude
     def GEOALT() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 122, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 122, 0.0)
     /// Geocentric range
     def GEORANGE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 124, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 124, 0.0)
     /// Sky background level
     def SKY_BKGRND() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 126, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 126, 0.0)
     /// Primary extinction
     def PRIMARY_EXTINCTION() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 128, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 128, 0.0)
     /// Uncertainty in primary extinction
     def PRIMARY_EXTINCTION_UNC() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 130, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 130, 0.0)
     /// Solar phase angle
     def SOLAR_PHASE_ANGLE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 132, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 132, 0.0)
     /// Solar equatorial phase angle
     def SOLAR_EQ_PHASE_ANGLE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 134, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 134, 0.0)
     /// Solar declination angle
     def SOLAR_DEC_ANGLE() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 136, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 136, 0.0)
     /// Shutter delay
     def SHUTTER_DELAY() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 138, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 138, 0.0)
     /// Timing bias
     def TIMING_BIAS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 140, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 140, 0.0)
     /// URI of the raw data file
     def RAW_FILE_URI() -> string:
-        return buf_.flatbuffers_field_string(pos_, 142)
+        return flatbuffers.field_string(buf_, pos_, 142)
     /// Intensity of the observation
     def INTENSITY() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 144, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 144, 0.0)
     /// Background intensity
     def BG_INTENSITY() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 146, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 146, 0.0)
     /// Descriptor of the provided data
     def DESCRIPTOR() -> string:
-        return buf_.flatbuffers_field_string(pos_, 148)
+        return flatbuffers.field_string(buf_, pos_, 148)
     /// Source of the data
     def SOURCE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 150)
+        return flatbuffers.field_string(buf_, pos_, 150)
     /// Origin of the data
     def ORIGIN() -> string:
-        return buf_.flatbuffers_field_string(pos_, 152)
+        return flatbuffers.field_string(buf_, pos_, 152)
     /// Mode of the data
     def DATA_MODE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 154)
+        return flatbuffers.field_string(buf_, pos_, 154)
     /// Creation time of the record
     def CREATED_AT() -> string:
-        return buf_.flatbuffers_field_string(pos_, 156)
+        return flatbuffers.field_string(buf_, pos_, 156)
     /// User who created the record
     def CREATED_BY() -> string:
-        return buf_.flatbuffers_field_string(pos_, 158)
+        return flatbuffers.field_string(buf_, pos_, 158)
     /// Reference frame of the observation
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(buf_.flatbuffers_field_int8(pos_, 160, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 160, 0))
     /// Reference frame of the sensor
     def SEN_REFERENCE_FRAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 162)
+        return flatbuffers.field_string(buf_, pos_, 162)
     /// Flag for umbra (total eclipse)
     def UMBRA() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 164, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 164, 0))
     /// Flag for penumbra (partial eclipse)
     def PENUMBRA() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 166, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 166, 0))
     /// Original network identifier
     def ORIG_NETWORK() -> string:
-        return buf_.flatbuffers_field_string(pos_, 168)
+        return flatbuffers.field_string(buf_, pos_, 168)
     /// Data link source
     def SOURCE_DL() -> string:
-        return buf_.flatbuffers_field_string(pos_, 170)
+        return flatbuffers.field_string(buf_, pos_, 170)
     /// Type of the observation
     def TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 172)
+        return flatbuffers.field_string(buf_, pos_, 172)
 
-def GetRootAsEOO(buf:string): return EOO { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsEOO(buf:string): return EOO { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOOBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(85)
         return this
-    def add_EOBSERVATION_ID(EOBSERVATION_ID:flatbuffers_offset):
+    def add_EOBSERVATION_ID(EOBSERVATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EOBSERVATION_ID)
         return this
-    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers_offset):
+    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, CLASSIFICATION)
         return this
-    def add_OB_TIME(OB_TIME:flatbuffers_offset):
+    def add_OB_TIME(OB_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, OB_TIME)
         return this
     def add_CORR_QUALITY(CORR_QUALITY:float):
         b_.PrependFloat32Slot(3, CORR_QUALITY, 0.0)
         return this
-    def add_ID_ON_ORBIT(ID_ON_ORBIT:flatbuffers_offset):
+    def add_ID_ON_ORBIT(ID_ON_ORBIT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, ID_ON_ORBIT)
         return this
-    def add_SENSOR_ID(SENSOR_ID:flatbuffers_offset):
+    def add_SENSOR_ID(SENSOR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, SENSOR_ID)
         return this
-    def add_COLLECT_METHOD(COLLECT_METHOD:flatbuffers_offset):
+    def add_COLLECT_METHOD(COLLECT_METHOD:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, COLLECT_METHOD)
         return this
     def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
         b_.PrependInt32Slot(7, NORAD_CAT_ID, 0)
         return this
-    def add_TASK_ID(TASK_ID:flatbuffers_offset):
+    def add_TASK_ID(TASK_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, TASK_ID)
         return this
-    def add_TRANSACTION_ID(TRANSACTION_ID:flatbuffers_offset):
+    def add_TRANSACTION_ID(TRANSACTION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, TRANSACTION_ID)
         return this
-    def add_TRACK_ID(TRACK_ID:flatbuffers_offset):
+    def add_TRACK_ID(TRACK_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, TRACK_ID)
         return this
-    def add_OB_POSITION(OB_POSITION:flatbuffers_offset):
+    def add_OB_POSITION(OB_POSITION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, OB_POSITION)
         return this
-    def add_ORIG_OBJECT_ID(ORIG_OBJECT_ID:flatbuffers_offset):
+    def add_ORIG_OBJECT_ID(ORIG_OBJECT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, ORIG_OBJECT_ID)
         return this
-    def add_ORIG_SENSOR_ID(ORIG_SENSOR_ID:flatbuffers_offset):
+    def add_ORIG_SENSOR_ID(ORIG_SENSOR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, ORIG_SENSOR_ID)
         return this
     def add_UCT(UCT:bool):
@@ -477,7 +477,7 @@ struct EOOBuilder:
     def add_TIMING_BIAS(TIMING_BIAS:float):
         b_.PrependFloat32Slot(68, TIMING_BIAS, 0.0)
         return this
-    def add_RAW_FILE_URI(RAW_FILE_URI:flatbuffers_offset):
+    def add_RAW_FILE_URI(RAW_FILE_URI:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(69, RAW_FILE_URI)
         return this
     def add_INTENSITY(INTENSITY:float):
@@ -486,28 +486,28 @@ struct EOOBuilder:
     def add_BG_INTENSITY(BG_INTENSITY:float):
         b_.PrependFloat32Slot(71, BG_INTENSITY, 0.0)
         return this
-    def add_DESCRIPTOR(DESCRIPTOR:flatbuffers_offset):
+    def add_DESCRIPTOR(DESCRIPTOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(72, DESCRIPTOR)
         return this
-    def add_SOURCE(SOURCE:flatbuffers_offset):
+    def add_SOURCE(SOURCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(73, SOURCE)
         return this
-    def add_ORIGIN(ORIGIN:flatbuffers_offset):
+    def add_ORIGIN(ORIGIN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(74, ORIGIN)
         return this
-    def add_DATA_MODE(DATA_MODE:flatbuffers_offset):
+    def add_DATA_MODE(DATA_MODE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(75, DATA_MODE)
         return this
-    def add_CREATED_AT(CREATED_AT:flatbuffers_offset):
+    def add_CREATED_AT(CREATED_AT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(76, CREATED_AT)
         return this
-    def add_CREATED_BY(CREATED_BY:flatbuffers_offset):
+    def add_CREATED_BY(CREATED_BY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(77, CREATED_BY)
         return this
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(78, REFERENCE_FRAME, 0)
         return this
-    def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:flatbuffers_offset):
+    def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(79, SEN_REFERENCE_FRAME)
         return this
     def add_UMBRA(UMBRA:bool):
@@ -516,40 +516,40 @@ struct EOOBuilder:
     def add_PENUMBRA(PENUMBRA:bool):
         b_.PrependBoolSlot(81, PENUMBRA, 0)
         return this
-    def add_ORIG_NETWORK(ORIG_NETWORK:flatbuffers_offset):
+    def add_ORIG_NETWORK(ORIG_NETWORK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(82, ORIG_NETWORK)
         return this
-    def add_SOURCE_DL(SOURCE_DL:flatbuffers_offset):
+    def add_SOURCE_DL(SOURCE_DL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(83, SOURCE_DL)
         return this
-    def add_TYPE(TYPE:flatbuffers_offset):
+    def add_TYPE(TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(84, TYPE)
         return this
     def end():
         return b_.EndObject()
 
-class EOOCOLLECTION : flatbuffers_handle
+class EOOCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> EOO:
-        return EOO { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return EOO { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsEOOCOLLECTION(buf:string): return EOOCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsEOOCOLLECTION(buf:string): return EOOCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOOCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def EOOCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def EOOCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EOOCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def EOOCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -10,46 +10,46 @@ class EOP
 class EOPCOLLECTION
 
 /// Earth Orientation Parameters
-class EOP : flatbuffers_handle
+class EOP : flatbuffers.handle
     ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
     def DATE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     ///  Modified Julian Date in UTC, e.g., 58119
     def MJD() -> int:
-        return buf_.flatbuffers_field_uint32(pos_, 6, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
     ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
     def X_POLE_WANDER_RADIANS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 8, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 8, 0.0)
     ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
     def Y_POLE_WANDER_RADIANS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 10, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 10, 0.0)
     ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
     def X_CELESTIAL_POLE_OFFSET_RADIANS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 12, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 12, 0.0)
     ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
     def Y_CELESTIAL_POLE_OFFSET_RADIANS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 14, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 14, 0.0)
     ///  UT1 minus UTC in seconds, e.g., 0.2163567
     def UT1_MINUS_UTC_SECONDS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 16, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 16, 0.0)
     ///  TAI minus UTC in seconds, e.g., 37
     def TAI_MINUS_UTC_SECONDS() -> int:
-        return buf_.flatbuffers_field_uint16(pos_, 18, 0)
+        return flatbuffers.field_uint16(buf_, pos_, 18, 0)
     ///  Correction to Length of Day in seconds, e.g., 8.094E-4
     def LENGTH_OF_DAY_CORRECTION_SECONDS() -> float:
-        return buf_.flatbuffers_field_float32(pos_, 20, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 20, 0.0)
     ///  Data type (O = Observed, P = Predicted)
     def DATA_TYPE() -> DataType:
-        return DataType(buf_.flatbuffers_field_int8(pos_, 22, 0))
+        return DataType(flatbuffers.field_int8(buf_, pos_, 22, 0))
 
-def GetRootAsEOP(buf:string): return EOP { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsEOP(buf:string): return EOP { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOPBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(10)
         return this
-    def add_DATE(DATE:flatbuffers_offset):
+    def add_DATE(DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DATE)
         return this
     def add_MJD(MJD:int):
@@ -82,28 +82,28 @@ struct EOPBuilder:
     def end():
         return b_.EndObject()
 
-class EOPCOLLECTION : flatbuffers_handle
+class EOPCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> EOP:
-        return EOP { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return EOP { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsEOPCOLLECTION(buf:string): return EOPCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsEOPCOLLECTION(buf:string): return EOPCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOPCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def EOPCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def EOPCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EOPCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def EOPCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

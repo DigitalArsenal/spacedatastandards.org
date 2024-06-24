@@ -10,7 +10,7 @@ public struct HYPCOLLECTION : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static HYPCOLLECTION GetRootAsHYPCOLLECTION(ByteBuffer _bb) { return GetRootAsHYPCOLLECTION(_bb, new HYPCOLLECTION()); }
   public static HYPCOLLECTION GetRootAsHYPCOLLECTION(ByteBuffer _bb, HYPCOLLECTION obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -69,3 +69,13 @@ public class HYPCOLLECTIONT
   }
 }
 
+
+static public class HYPCOLLECTIONVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyVectorOfTables(tablePos, 4 /*RECORDS*/, HYPVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

@@ -6,109 +6,109 @@ class EME
 class EMECOLLECTION
 
 /// Encrypted Message Envelope
-class EME : flatbuffers_handle
+class EME : flatbuffers.handle
     /// Encrypted data blob, containing the ciphertext of the original plaintext message.
     def ENCRYPTED_BLOB(i:int) -> int:
-        return buf_.read_uint8_le(buf_.flatbuffers_field_vector(pos_, 4) + i * 1)
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1)
     def ENCRYPTED_BLOB_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
     /// Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
     def EPHEMERAL_PUBLIC_KEY() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Message Authentication Code to verify the integrity and authenticity of the encrypted message.
     def MAC() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
     def NONCE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
     def TAG() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
     def IV() -> string:
-        return buf_.flatbuffers_field_string(pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Identifier for the public key used, aiding in recipient key management and message decryption.
     def PUBLIC_KEY_IDENTIFIER() -> string:
-        return buf_.flatbuffers_field_string(pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Specifies the set of cryptographic algorithms used in the encryption process.
     def CIPHER_SUITE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
     def KDF_PARAMETERS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
     def ENCRYPTION_ALGORITHM_PARAMETERS() -> string:
-        return buf_.flatbuffers_field_string(pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 22)
 
-def GetRootAsEME(buf:string): return EME { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsEME(buf:string): return EME { buf, flatbuffers.indirect(buf, 0) }
 
 struct EMEBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(10)
         return this
-    def add_ENCRYPTED_BLOB(ENCRYPTED_BLOB:flatbuffers_offset):
+    def add_ENCRYPTED_BLOB(ENCRYPTED_BLOB:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ENCRYPTED_BLOB)
         return this
-    def add_EPHEMERAL_PUBLIC_KEY(EPHEMERAL_PUBLIC_KEY:flatbuffers_offset):
+    def add_EPHEMERAL_PUBLIC_KEY(EPHEMERAL_PUBLIC_KEY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, EPHEMERAL_PUBLIC_KEY)
         return this
-    def add_MAC(MAC:flatbuffers_offset):
+    def add_MAC(MAC:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, MAC)
         return this
-    def add_NONCE(NONCE:flatbuffers_offset):
+    def add_NONCE(NONCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, NONCE)
         return this
-    def add_TAG(TAG:flatbuffers_offset):
+    def add_TAG(TAG:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, TAG)
         return this
-    def add_IV(IV:flatbuffers_offset):
+    def add_IV(IV:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, IV)
         return this
-    def add_PUBLIC_KEY_IDENTIFIER(PUBLIC_KEY_IDENTIFIER:flatbuffers_offset):
+    def add_PUBLIC_KEY_IDENTIFIER(PUBLIC_KEY_IDENTIFIER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, PUBLIC_KEY_IDENTIFIER)
         return this
-    def add_CIPHER_SUITE(CIPHER_SUITE:flatbuffers_offset):
+    def add_CIPHER_SUITE(CIPHER_SUITE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, CIPHER_SUITE)
         return this
-    def add_KDF_PARAMETERS(KDF_PARAMETERS:flatbuffers_offset):
+    def add_KDF_PARAMETERS(KDF_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, KDF_PARAMETERS)
         return this
-    def add_ENCRYPTION_ALGORITHM_PARAMETERS(ENCRYPTION_ALGORITHM_PARAMETERS:flatbuffers_offset):
+    def add_ENCRYPTION_ALGORITHM_PARAMETERS(ENCRYPTION_ALGORITHM_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, ENCRYPTION_ALGORITHM_PARAMETERS)
         return this
     def end():
         return b_.EndObject()
 
-def EMEStartENCRYPTED_BLOBVector(b_:flatbuffers_builder, n_:int):
+def EMEStartENCRYPTED_BLOBVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def EMECreateENCRYPTED_BLOBVector(b_:flatbuffers_builder, v_:[int]):
+def EMECreateENCRYPTED_BLOBVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-class EMECOLLECTION : flatbuffers_handle
+class EMECOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> EME:
-        return EME { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return EME { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsEMECOLLECTION(buf:string): return EMECOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsEMECOLLECTION(buf:string): return EMECOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct EMECOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def EMECOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def EMECOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EMECOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def EMECOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

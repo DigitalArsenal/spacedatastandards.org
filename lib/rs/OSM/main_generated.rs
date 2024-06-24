@@ -38,8 +38,8 @@ impl<'a> OSM<'a> {
     OSM { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args OSMArgs<'args>
   ) -> flatbuffers::WIPOffset<OSM<'bldr>> {
     let mut builder = OSMBuilder::new(_fbb);
@@ -164,11 +164,11 @@ impl<'a> Default for OSMArgs<'a> {
   }
 }
 
-pub struct OSMBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct OSMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> OSMBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OSMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_IS_STABLE(&mut self, IS_STABLE: bool) {
     self.fbb_.push_slot::<bool>(OSM::VT_IS_STABLE, IS_STABLE, false);
@@ -194,7 +194,7 @@ impl<'a: 'b, 'b> OSMBuilder<'a, 'b> {
     self.fbb_.push_slot::<i32>(OSM::VT_PASS_DURATION, PASS_DURATION, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OSMBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OSMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OSMBuilder {
       fbb_: _fbb,
@@ -243,9 +243,9 @@ impl Default for OSMT {
   }
 }
 impl OSMT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OSM<'b>> {
     let IS_STABLE = self.IS_STABLE;
     let NUM_OBS = self.NUM_OBS;
@@ -292,8 +292,8 @@ impl<'a> OSMCOLLECTION<'a> {
     OSMCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args OSMCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<OSMCOLLECTION<'bldr>> {
     let mut builder = OSMCOLLECTIONBuilder::new(_fbb);
@@ -343,17 +343,17 @@ impl<'a> Default for OSMCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct OSMCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct OSMCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> OSMCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OSMCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<OSM<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OSMCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> OSMCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OSMCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OSMCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -387,9 +387,9 @@ impl Default for OSMCOLLECTIONT {
   }
 }
 impl OSMCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OSMCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -472,13 +472,13 @@ pub fn OSM_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_OSM_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_OSM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<OSM<'a>>) {
   fbb.finish(root, Some(OSM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_OSM_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<OSM<'a>>) {
+pub fn finish_size_prefixed_OSM_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<OSM<'a>>) {
   fbb.finish_size_prefixed(root, Some(OSM_IDENTIFIER));
 }

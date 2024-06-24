@@ -20,7 +20,6 @@ import kotlin.math.sign
  * A single ephemeris data line
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class ephemerisDataLine : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -117,7 +116,7 @@ class ephemerisDataLine : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsephemerisDataLine(_bb: ByteBuffer): ephemerisDataLine = getRootAsephemerisDataLine(_bb, ephemerisDataLine())
         fun getRootAsephemerisDataLine(_bb: ByteBuffer, obj: ephemerisDataLine): ephemerisDataLine {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

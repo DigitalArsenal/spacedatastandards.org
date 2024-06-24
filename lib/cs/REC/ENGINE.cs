@@ -11,7 +11,7 @@ public struct ENGINE : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static ENGINE GetRootAsENGINE(ByteBuffer _bb) { return GetRootAsENGINE(_bb, new ENGINE()); }
   public static ENGINE GetRootAsENGINE(ByteBuffer _bb, ENGINE obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -83,3 +83,15 @@ public class ENGINET
   }
 }
 
+
+static public class ENGINEVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*ENGINE_NAME*/, false)
+      && verifier.VerifyField(tablePos, 6 /*TYPE*/, 1 /*ENGINE_TYPE*/, 1, false)
+      && verifier.VerifyField(tablePos, 8 /*THRUST*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

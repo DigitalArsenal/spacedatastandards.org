@@ -6,30 +6,30 @@ class OSM
 class OSMCOLLECTION
 
 /// Observation Stability Message
-class OSM : flatbuffers_handle
+class OSM : flatbuffers.handle
     /// Indicates whether the observation is stable or not
     def IS_STABLE() -> bool:
-        return bool(buf_.flatbuffers_field_int8(pos_, 4, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
     /// The number of observations
     def NUM_OBS() -> int:
-        return buf_.flatbuffers_field_int32(pos_, 6, 0)
+        return flatbuffers.field_int32(buf_, pos_, 6, 0)
     /// Unique identifier for the object being observed
     def OBJECT_ID() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Identifier of the sensor
     def ID_SENSOR() -> string:
-        return buf_.flatbuffers_field_string(pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Timestamp of data creation
     def PASS_START() -> string:
-        return buf_.flatbuffers_field_string(pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Duration of the observation pass in seconds
     def PASS_DURATION() -> int:
-        return buf_.flatbuffers_field_int32(pos_, 14, 0)
+        return flatbuffers.field_int32(buf_, pos_, 14, 0)
 
-def GetRootAsOSM(buf:string): return OSM { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsOSM(buf:string): return OSM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OSMBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(6)
         return this
@@ -39,13 +39,13 @@ struct OSMBuilder:
     def add_NUM_OBS(NUM_OBS:int):
         b_.PrependInt32Slot(1, NUM_OBS, 0)
         return this
-    def add_OBJECT_ID(OBJECT_ID:flatbuffers_offset):
+    def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, OBJECT_ID)
         return this
-    def add_ID_SENSOR(ID_SENSOR:flatbuffers_offset):
+    def add_ID_SENSOR(ID_SENSOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, ID_SENSOR)
         return this
-    def add_PASS_START(PASS_START:flatbuffers_offset):
+    def add_PASS_START(PASS_START:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, PASS_START)
         return this
     def add_PASS_DURATION(PASS_DURATION:int):
@@ -54,28 +54,28 @@ struct OSMBuilder:
     def end():
         return b_.EndObject()
 
-class OSMCOLLECTION : flatbuffers_handle
+class OSMCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> OSM:
-        return OSM { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return OSM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsOSMCOLLECTION(buf:string): return OSMCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsOSMCOLLECTION(buf:string): return OSMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct OSMCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def OSMCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def OSMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OSMCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def OSMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

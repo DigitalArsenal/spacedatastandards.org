@@ -118,8 +118,8 @@ impl<'a> EOO<'a> {
     EOO { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EOOArgs<'args>
   ) -> flatbuffers::WIPOffset<EOO<'bldr>> {
     let mut builder = EOOBuilder::new(_fbb);
@@ -1390,11 +1390,11 @@ impl<'a> Default for EOOArgs<'a> {
   }
 }
 
-pub struct EOOBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EOOBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EOOBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_EOBSERVATION_ID(&mut self, EOBSERVATION_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_EOBSERVATION_ID, EOBSERVATION_ID);
@@ -1736,7 +1736,7 @@ impl<'a: 'b, 'b> EOOBuilder<'a, 'b> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_TYPE, TYPE);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EOOBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOOBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOOBuilder {
       fbb_: _fbb,
@@ -2022,9 +2022,9 @@ impl Default for EOOT {
   }
 }
 impl EOOT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EOO<'b>> {
     let EOBSERVATION_ID = self.EOBSERVATION_ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2269,8 +2269,8 @@ impl<'a> EOOCOLLECTION<'a> {
     EOOCOLLECTION { _tab: table }
   }
   #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr>,
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
     args: &'args EOOCOLLECTIONArgs<'args>
   ) -> flatbuffers::WIPOffset<EOOCOLLECTION<'bldr>> {
     let mut builder = EOOCOLLECTIONBuilder::new(_fbb);
@@ -2320,17 +2320,17 @@ impl<'a> Default for EOOCOLLECTIONArgs<'a> {
   }
 }
 
-pub struct EOOCOLLECTIONBuilder<'a: 'b, 'b> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub struct EOOCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b> EOOCOLLECTIONBuilder<'a, 'b> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOCOLLECTIONBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EOO<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOOCOLLECTION::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>) -> EOOCOLLECTIONBuilder<'a, 'b> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOOCOLLECTIONBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOOCOLLECTIONBuilder {
       fbb_: _fbb,
@@ -2364,9 +2364,9 @@ impl Default for EOOCOLLECTIONT {
   }
 }
 impl EOOCOLLECTIONT {
-  pub fn pack<'b>(
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b>
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EOOCOLLECTION<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -2449,13 +2449,13 @@ pub fn EOO_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
 }
 
 #[inline]
-pub fn finish_EOO_buffer<'a, 'b>(
-    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>,
+pub fn finish_EOO_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(
+    fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
     root: flatbuffers::WIPOffset<EOO<'a>>) {
   fbb.finish(root, Some(EOO_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_EOO_buffer<'a, 'b>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a>, root: flatbuffers::WIPOffset<EOO<'a>>) {
+pub fn finish_size_prefixed_EOO_buffer<'a, 'b, A: flatbuffers::Allocator + 'a>(fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>, root: flatbuffers::WIPOffset<EOO<'a>>) {
   fbb.finish_size_prefixed(root, Some(EOO_IDENTIFIER));
 }

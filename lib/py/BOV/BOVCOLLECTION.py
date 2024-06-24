@@ -53,18 +53,30 @@ class BOVCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def BOVCOLLECTIONStart(builder): builder.StartObject(1)
+def BOVCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return BOVCOLLECTIONStart(builder)
-def BOVCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    BOVCOLLECTIONStart(builder)
+
+def BOVCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return BOVCOLLECTIONAddRECORDS(builder, RECORDS)
-def BOVCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    BOVCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def BOVCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return BOVCOLLECTIONStartRECORDSVector(builder, numElems)
-def BOVCOLLECTIONEnd(builder): return builder.EndObject()
+
+def BOVCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return BOVCOLLECTIONEnd(builder)
+
 import BOV
 try:
     from typing import List

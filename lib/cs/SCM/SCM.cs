@@ -11,10 +11,11 @@ public struct SCM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static SCM GetRootAsSCM(ByteBuffer _bb) { return GetRootAsSCM(_bb, new SCM()); }
   public static SCM GetRootAsSCM(ByteBuffer _bb, SCM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool SCMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$SCM"); }
+  public static bool VerifySCM(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$SCM", false, SCMVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -98,3 +99,14 @@ public class SCMT
   }
 }
 
+
+static public class SCMVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyString(tablePos, 4 /*Version*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 6 /*RECORDS*/, SCHEMA_STANDARDVerify.Verify, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

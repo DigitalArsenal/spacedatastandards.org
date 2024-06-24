@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class CTR extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static CTR getRootAsCTR(ByteBuffer _bb) { return getRootAsCTR(_bb, new CTR()); }
   public static CTR getRootAsCTR(ByteBuffer _bb, CTR obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean CTRBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CTR"); }

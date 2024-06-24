@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Engine Details
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class ENGINE : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -61,7 +60,7 @@ class ENGINE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsENGINE(_bb: ByteBuffer): ENGINE = getRootAsENGINE(_bb, ENGINE())
         fun getRootAsENGINE(_bb: ByteBuffer, obj: ENGINE): ENGINE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

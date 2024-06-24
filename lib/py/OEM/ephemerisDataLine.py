@@ -109,42 +109,78 @@ class ephemerisDataLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def ephemerisDataLineStart(builder): builder.StartObject(10)
+def ephemerisDataLineStart(builder):
+    builder.StartObject(10)
+
 def Start(builder):
-    return ephemerisDataLineStart(builder)
-def ephemerisDataLineAddEPOCH(builder, EPOCH): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+    ephemerisDataLineStart(builder)
+
+def ephemerisDataLineAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
 def AddEPOCH(builder, EPOCH):
-    return ephemerisDataLineAddEPOCH(builder, EPOCH)
-def ephemerisDataLineAddX(builder, X): builder.PrependFloat64Slot(1, X, 0.0)
+    ephemerisDataLineAddEPOCH(builder, EPOCH)
+
+def ephemerisDataLineAddX(builder, X):
+    builder.PrependFloat64Slot(1, X, 0.0)
+
 def AddX(builder, X):
-    return ephemerisDataLineAddX(builder, X)
-def ephemerisDataLineAddY(builder, Y): builder.PrependFloat64Slot(2, Y, 0.0)
+    ephemerisDataLineAddX(builder, X)
+
+def ephemerisDataLineAddY(builder, Y):
+    builder.PrependFloat64Slot(2, Y, 0.0)
+
 def AddY(builder, Y):
-    return ephemerisDataLineAddY(builder, Y)
-def ephemerisDataLineAddZ(builder, Z): builder.PrependFloat64Slot(3, Z, 0.0)
+    ephemerisDataLineAddY(builder, Y)
+
+def ephemerisDataLineAddZ(builder, Z):
+    builder.PrependFloat64Slot(3, Z, 0.0)
+
 def AddZ(builder, Z):
-    return ephemerisDataLineAddZ(builder, Z)
-def ephemerisDataLineAddX_DOT(builder, X_DOT): builder.PrependFloat64Slot(4, X_DOT, 0.0)
+    ephemerisDataLineAddZ(builder, Z)
+
+def ephemerisDataLineAddX_DOT(builder, X_DOT):
+    builder.PrependFloat64Slot(4, X_DOT, 0.0)
+
 def AddX_DOT(builder, X_DOT):
-    return ephemerisDataLineAddX_DOT(builder, X_DOT)
-def ephemerisDataLineAddY_DOT(builder, Y_DOT): builder.PrependFloat64Slot(5, Y_DOT, 0.0)
+    ephemerisDataLineAddX_DOT(builder, X_DOT)
+
+def ephemerisDataLineAddY_DOT(builder, Y_DOT):
+    builder.PrependFloat64Slot(5, Y_DOT, 0.0)
+
 def AddY_DOT(builder, Y_DOT):
-    return ephemerisDataLineAddY_DOT(builder, Y_DOT)
-def ephemerisDataLineAddZ_DOT(builder, Z_DOT): builder.PrependFloat64Slot(6, Z_DOT, 0.0)
+    ephemerisDataLineAddY_DOT(builder, Y_DOT)
+
+def ephemerisDataLineAddZ_DOT(builder, Z_DOT):
+    builder.PrependFloat64Slot(6, Z_DOT, 0.0)
+
 def AddZ_DOT(builder, Z_DOT):
-    return ephemerisDataLineAddZ_DOT(builder, Z_DOT)
-def ephemerisDataLineAddX_DDOT(builder, X_DDOT): builder.PrependFloat64Slot(7, X_DDOT, 0.0)
+    ephemerisDataLineAddZ_DOT(builder, Z_DOT)
+
+def ephemerisDataLineAddX_DDOT(builder, X_DDOT):
+    builder.PrependFloat64Slot(7, X_DDOT, 0.0)
+
 def AddX_DDOT(builder, X_DDOT):
-    return ephemerisDataLineAddX_DDOT(builder, X_DDOT)
-def ephemerisDataLineAddY_DDOT(builder, Y_DDOT): builder.PrependFloat64Slot(8, Y_DDOT, 0.0)
+    ephemerisDataLineAddX_DDOT(builder, X_DDOT)
+
+def ephemerisDataLineAddY_DDOT(builder, Y_DDOT):
+    builder.PrependFloat64Slot(8, Y_DDOT, 0.0)
+
 def AddY_DDOT(builder, Y_DDOT):
-    return ephemerisDataLineAddY_DDOT(builder, Y_DDOT)
-def ephemerisDataLineAddZ_DDOT(builder, Z_DDOT): builder.PrependFloat64Slot(9, Z_DDOT, 0.0)
+    ephemerisDataLineAddY_DDOT(builder, Y_DDOT)
+
+def ephemerisDataLineAddZ_DDOT(builder, Z_DDOT):
+    builder.PrependFloat64Slot(9, Z_DDOT, 0.0)
+
 def AddZ_DDOT(builder, Z_DDOT):
-    return ephemerisDataLineAddZ_DDOT(builder, Z_DDOT)
-def ephemerisDataLineEnd(builder): return builder.EndObject()
+    ephemerisDataLineAddZ_DDOT(builder, Z_DDOT)
+
+def ephemerisDataLineEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return ephemerisDataLineEnd(builder)
+
 
 class ephemerisDataLineT(object):
 

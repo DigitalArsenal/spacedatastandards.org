@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class OMM extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static OMM getRootAsOMM(ByteBuffer _bb) { return getRootAsOMM(_bb, new OMM()); }
   public static OMM getRootAsOMM(ByteBuffer _bb, OMM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean OMMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$OMM"); }

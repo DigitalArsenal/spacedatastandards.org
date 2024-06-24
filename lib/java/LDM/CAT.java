@@ -22,7 +22,7 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class CAT extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static CAT getRootAsCAT(ByteBuffer _bb) { return getRootAsCAT(_bb, new CAT()); }
   public static CAT getRootAsCAT(ByteBuffer _bb, CAT obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean CATBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CAT"); }

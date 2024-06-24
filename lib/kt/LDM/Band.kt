@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Table representing a frequency band with a name and frequency range
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class Band : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -57,7 +56,7 @@ class Band : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsBand(_bb: ByteBuffer): Band = getRootAsBand(_bb, Band())
         fun getRootAsBand(_bb: ByteBuffer, obj: Band): Band {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

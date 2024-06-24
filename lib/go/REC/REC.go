@@ -11,6 +11,8 @@ type REC struct {
 	_tab flatbuffers.Table
 }
 
+const RECIdentifier = "$REC"
+
 func GetRootAsREC(buf []byte, offset flatbuffers.UOffsetT) *REC {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &REC{}
@@ -18,11 +20,29 @@ func GetRootAsREC(buf []byte, offset flatbuffers.UOffsetT) *REC {
 	return x
 }
 
+func FinishRECBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(RECIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func RECBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, RECIdentifier)
+}
+
 func GetSizePrefixedRootAsREC(buf []byte, offset flatbuffers.UOffsetT) *REC {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &REC{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedRECBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(RECIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedRECBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, RECIdentifier)
 }
 
 func (rcv *REC) Init(buf []byte, i flatbuffers.UOffsetT) {

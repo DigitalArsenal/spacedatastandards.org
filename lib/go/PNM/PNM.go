@@ -11,6 +11,8 @@ type PNM struct {
 	_tab flatbuffers.Table
 }
 
+const PNMIdentifier = "$PNM"
+
 func GetRootAsPNM(buf []byte, offset flatbuffers.UOffsetT) *PNM {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &PNM{}
@@ -18,11 +20,29 @@ func GetRootAsPNM(buf []byte, offset flatbuffers.UOffsetT) *PNM {
 	return x
 }
 
+func FinishPNMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(PNMIdentifier)
+	builder.FinishWithFileIdentifier(offset, identifierBytes)
+}
+
+func PNMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.BufferHasIdentifier(buf, PNMIdentifier)
+}
+
 func GetSizePrefixedRootAsPNM(buf []byte, offset flatbuffers.UOffsetT) *PNM {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &PNM{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedPNMBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	identifierBytes := []byte(PNMIdentifier)
+	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
+}
+
+func SizePrefixedPNMBufferHasIdentifier(buf []byte) bool {
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, PNMIdentifier)
 }
 
 func (rcv *PNM) Init(buf []byte, i flatbuffers.UOffsetT) {

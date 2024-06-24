@@ -17,11 +17,19 @@ func GetRootAsMETCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *METCOLLECT
 	return x
 }
 
+func FinishMETCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsMETCOLLECTION(buf []byte, offset flatbuffers.UOffsetT) *METCOLLECTION {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &METCOLLECTION{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedMETCOLLECTIONBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *METCOLLECTION) Init(buf []byte, i flatbuffers.UOffsetT) {

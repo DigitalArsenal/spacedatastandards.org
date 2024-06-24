@@ -53,18 +53,30 @@ class CTRCOLLECTION(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
-def CTRCOLLECTIONStart(builder): builder.StartObject(1)
+def CTRCOLLECTIONStart(builder):
+    builder.StartObject(1)
+
 def Start(builder):
-    return CTRCOLLECTIONStart(builder)
-def CTRCOLLECTIONAddRECORDS(builder, RECORDS): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    CTRCOLLECTIONStart(builder)
+
+def CTRCOLLECTIONAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
 def AddRECORDS(builder, RECORDS):
-    return CTRCOLLECTIONAddRECORDS(builder, RECORDS)
-def CTRCOLLECTIONStartRECORDSVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    CTRCOLLECTIONAddRECORDS(builder, RECORDS)
+
+def CTRCOLLECTIONStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartRECORDSVector(builder, numElems):
     return CTRCOLLECTIONStartRECORDSVector(builder, numElems)
-def CTRCOLLECTIONEnd(builder): return builder.EndObject()
+
+def CTRCOLLECTIONEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return CTRCOLLECTIONEnd(builder)
+
 import CTR
 try:
     from typing import List

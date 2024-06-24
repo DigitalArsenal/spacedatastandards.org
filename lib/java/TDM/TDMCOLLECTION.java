@@ -19,7 +19,7 @@ import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
 public final class TDMCOLLECTION extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
   public static TDMCOLLECTION getRootAsTDMCOLLECTION(ByteBuffer _bb) { return getRootAsTDMCOLLECTION(_bb, new TDMCOLLECTION()); }
   public static TDMCOLLECTION getRootAsTDMCOLLECTION(ByteBuffer _bb, TDMCOLLECTION obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

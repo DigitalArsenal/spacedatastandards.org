@@ -18,11 +18,19 @@ func GetRootAsCryptoKey(buf []byte, offset flatbuffers.UOffsetT) *CryptoKey {
 	return x
 }
 
+func FinishCryptoKeyBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.Finish(offset)
+}
+
 func GetSizePrefixedRootAsCryptoKey(buf []byte, offset flatbuffers.UOffsetT) *CryptoKey {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &CryptoKey{}
 	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
+}
+
+func FinishSizePrefixedCryptoKeyBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
+	builder.FinishSizePrefixed(offset)
 }
 
 func (rcv *CryptoKey) Init(buf []byte, i flatbuffers.UOffsetT) {

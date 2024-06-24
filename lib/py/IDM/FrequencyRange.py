@@ -45,18 +45,30 @@ class FrequencyRange(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-def FrequencyRangeStart(builder): builder.StartObject(2)
+def FrequencyRangeStart(builder):
+    builder.StartObject(2)
+
 def Start(builder):
-    return FrequencyRangeStart(builder)
-def FrequencyRangeAddLOWER(builder, LOWER): builder.PrependFloat64Slot(0, LOWER, 0.0)
+    FrequencyRangeStart(builder)
+
+def FrequencyRangeAddLOWER(builder, LOWER):
+    builder.PrependFloat64Slot(0, LOWER, 0.0)
+
 def AddLOWER(builder, LOWER):
-    return FrequencyRangeAddLOWER(builder, LOWER)
-def FrequencyRangeAddUPPER(builder, UPPER): builder.PrependFloat64Slot(1, UPPER, 0.0)
+    FrequencyRangeAddLOWER(builder, LOWER)
+
+def FrequencyRangeAddUPPER(builder, UPPER):
+    builder.PrependFloat64Slot(1, UPPER, 0.0)
+
 def AddUPPER(builder, UPPER):
-    return FrequencyRangeAddUPPER(builder, UPPER)
-def FrequencyRangeEnd(builder): return builder.EndObject()
+    FrequencyRangeAddUPPER(builder, UPPER)
+
+def FrequencyRangeEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return FrequencyRangeEnd(builder)
+
 
 class FrequencyRangeT(object):
 

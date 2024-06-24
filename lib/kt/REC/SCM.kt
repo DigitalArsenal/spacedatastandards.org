@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Schema Manifest
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class SCM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -61,7 +60,7 @@ class SCM : Table() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsSCM(_bb: ByteBuffer): SCM = getRootAsSCM(_bb, SCM())
         fun getRootAsSCM(_bb: ByteBuffer, obj: SCM): SCM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

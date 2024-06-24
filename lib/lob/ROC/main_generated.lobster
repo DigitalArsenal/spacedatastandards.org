@@ -21,100 +21,100 @@ class ENGINE
 class ROCCOLLECTION
 
 /// Rocket Configuration
-class ROC : flatbuffers_handle
+class ROC : flatbuffers.handle
     /// Rocket Name
     def NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Rocket Family
     def FAMILY() -> string:
-        return buf_.flatbuffers_field_string(pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Rocket Variant
     def VARIANT() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Stages in the Rocket
     def STAGES(i:int) -> STAGE:
-        return STAGE { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 10) + i * 4) }
+        return STAGE { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
     def STAGES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 10)
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
     /// Sustainers in the Rocket
     def SUSTAINERS(i:int) -> SUSTAINER:
-        return SUSTAINER { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 12) + i * 4) }
+        return SUSTAINER { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
     def SUSTAINERS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 12)
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
 
-def GetRootAsROC(buf:string): return ROC { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsROC(buf:string): return ROC { buf, flatbuffers.indirect(buf, 0) }
 
 struct ROCBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(5)
         return this
-    def add_NAME(NAME:flatbuffers_offset):
+    def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
         return this
-    def add_FAMILY(FAMILY:flatbuffers_offset):
+    def add_FAMILY(FAMILY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, FAMILY)
         return this
-    def add_VARIANT(VARIANT:flatbuffers_offset):
+    def add_VARIANT(VARIANT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, VARIANT)
         return this
-    def add_STAGES(STAGES:flatbuffers_offset):
+    def add_STAGES(STAGES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, STAGES)
         return this
-    def add_SUSTAINERS(SUSTAINERS:flatbuffers_offset):
+    def add_SUSTAINERS(SUSTAINERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, SUSTAINERS)
         return this
     def end():
         return b_.EndObject()
 
-def ROCStartSTAGESVector(b_:flatbuffers_builder, n_:int):
+def ROCStartSTAGESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ROCCreateSTAGESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def ROCCreateSTAGESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ROCStartSUSTAINERSVector(b_:flatbuffers_builder, n_:int):
+def ROCStartSUSTAINERSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ROCCreateSUSTAINERSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def ROCCreateSUSTAINERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Stage Details
-class STAGE : flatbuffers_handle
+class STAGE : flatbuffers.handle
     /// Stage Number
     def STAGE_NUMBER() -> int:
-        return buf_.flatbuffers_field_int32(pos_, 4, 0)
+        return flatbuffers.field_int32(buf_, pos_, 4, 0)
     /// Engines Used in This Stage
     def ENGINES(i:int) -> ENGINE:
-        return ENGINE { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 6) + i * 4) }
+        return ENGINE { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
     def ENGINES_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 6)
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
     /// Fuel Type Used in This Stage
     def FUEL_TYPE() -> string:
-        return buf_.flatbuffers_field_string(pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Thrust Produced by This Stage (in Newtons)
     def THRUST() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     /// Duration of the Burn (in Seconds)
     def BURN_DURATION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
 
-def GetRootAsSTAGE(buf:string): return STAGE { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSTAGE(buf:string): return STAGE { buf, flatbuffers.indirect(buf, 0) }
 
 struct STAGEBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(5)
         return this
     def add_STAGE_NUMBER(STAGE_NUMBER:int):
         b_.PrependInt32Slot(0, STAGE_NUMBER, 0)
         return this
-    def add_ENGINES(ENGINES:flatbuffers_offset):
+    def add_ENGINES(ENGINES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, ENGINES)
         return this
-    def add_FUEL_TYPE(FUEL_TYPE:flatbuffers_offset):
+    def add_FUEL_TYPE(FUEL_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, FUEL_TYPE)
         return this
     def add_THRUST(THRUST:float):
@@ -126,33 +126,33 @@ struct STAGEBuilder:
     def end():
         return b_.EndObject()
 
-def STAGEStartENGINESVector(b_:flatbuffers_builder, n_:int):
+def STAGEStartENGINESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def STAGECreateENGINESVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def STAGECreateENGINESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Sustainer Details
-class SUSTAINER : flatbuffers_handle
+class SUSTAINER : flatbuffers.handle
     /// Name of the Sustainer
     def SUSTAINER_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Thrust Produced by the Sustainer (in Newtons)
     def THRUST() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 6, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Duration of the Burn (in Seconds)
     def BURN_DURATION() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
 
-def GetRootAsSUSTAINER(buf:string): return SUSTAINER { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsSUSTAINER(buf:string): return SUSTAINER { buf, flatbuffers.indirect(buf, 0) }
 
 struct SUSTAINERBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(3)
         return this
-    def add_SUSTAINER_NAME(SUSTAINER_NAME:flatbuffers_offset):
+    def add_SUSTAINER_NAME(SUSTAINER_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SUSTAINER_NAME)
         return this
     def add_THRUST(THRUST:float):
@@ -165,25 +165,25 @@ struct SUSTAINERBuilder:
         return b_.EndObject()
 
 /// Engine Details
-class ENGINE : flatbuffers_handle
+class ENGINE : flatbuffers.handle
     /// Engine Name
     def ENGINE_NAME() -> string:
-        return buf_.flatbuffers_field_string(pos_, 4)
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// Type of Engine
     def TYPE() -> ENGINE_TYPE:
-        return ENGINE_TYPE(buf_.flatbuffers_field_int8(pos_, 6, 0))
+        return ENGINE_TYPE(flatbuffers.field_int8(buf_, pos_, 6, 0))
     /// Thrust Produced by the Engine (in Newtons)
     def THRUST() -> float:
-        return buf_.flatbuffers_field_float64(pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
 
-def GetRootAsENGINE(buf:string): return ENGINE { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsENGINE(buf:string): return ENGINE { buf, flatbuffers.indirect(buf, 0) }
 
 struct ENGINEBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(3)
         return this
-    def add_ENGINE_NAME(ENGINE_NAME:flatbuffers_offset):
+    def add_ENGINE_NAME(ENGINE_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ENGINE_NAME)
         return this
     def add_TYPE(TYPE:ENGINE_TYPE):
@@ -196,28 +196,28 @@ struct ENGINEBuilder:
         return b_.EndObject()
 
 /// Collection of Rocket Configurations
-class ROCCOLLECTION : flatbuffers_handle
+class ROCCOLLECTION : flatbuffers.handle
     def RECORDS(i:int) -> ROC:
-        return ROC { buf_, buf_.flatbuffers_indirect(buf_.flatbuffers_field_vector(pos_, 4) + i * 4) }
+        return ROC { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def RECORDS_length() -> int:
-        return buf_.flatbuffers_field_vector_len(pos_, 4)
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
 
-def GetRootAsROCCOLLECTION(buf:string): return ROCCOLLECTION { buf, buf.flatbuffers_indirect(0) }
+def GetRootAsROCCOLLECTION(buf:string): return ROCCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
 
 struct ROCCOLLECTIONBuilder:
-    b_:flatbuffers_builder
+    b_:flatbuffers.builder
     def start():
         b_.StartObject(1)
         return this
-    def add_RECORDS(RECORDS:flatbuffers_offset):
+    def add_RECORDS(RECORDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RECORDS)
         return this
     def end():
         return b_.EndObject()
 
-def ROCCOLLECTIONStartRECORDSVector(b_:flatbuffers_builder, n_:int):
+def ROCCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ROCCOLLECTIONCreateRECORDSVector(b_:flatbuffers_builder, v_:[flatbuffers_offset]):
+def ROCCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

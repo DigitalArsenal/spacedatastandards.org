@@ -20,7 +20,6 @@ import kotlin.math.sign
  * Launch Data Message
  */
 @Suppress("unused")
-@kotlin.ExperimentalUnsignedTypes
 class LDM : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
@@ -415,7 +414,7 @@ class LDM : Table() {
             val o = __offset(56); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_23_3_3()
+        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsLDM(_bb: ByteBuffer): LDM = getRootAsLDM(_bb, LDM())
         fun getRootAsLDM(_bb: ByteBuffer, obj: LDM): LDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

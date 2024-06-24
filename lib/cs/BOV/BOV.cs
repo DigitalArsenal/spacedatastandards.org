@@ -11,10 +11,11 @@ public struct BOV : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_3_3(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
   public static BOV GetRootAsBOV(ByteBuffer _bb) { return GetRootAsBOV(_bb, new BOV()); }
   public static BOV GetRootAsBOV(ByteBuffer _bb, BOV obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool BOVBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$BOV"); }
+  public static bool VerifyBOV(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$BOV", false, BOVVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public BOV __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -131,3 +132,20 @@ public class BOVT
   }
 }
 
+
+static public class BOVVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyField(tablePos, 4 /*E_COORDINATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*F_COORDINATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*G_COORDINATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*E_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*F_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*G_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 16 /*EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 18 /*TIME_FROM_LAUNCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}

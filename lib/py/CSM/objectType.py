@@ -2,12 +2,4 @@
 
 # namespace: 
 
-class objectType(object):
-    # 0
-    PAYLOAD = 0
-    # 1
-    ROCKET_BODY = 1
-    # 2
-    DEBRIS = 2
-    # 3
-    UNKNOWN = 3
+# NOTE objectType.py does not declare any structs or enums

@@ -295,102 +295,198 @@ class IDM(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def IDMStart(builder): builder.StartObject(29)
+def IDMStart(builder):
+    builder.StartObject(29)
+
 def Start(builder):
-    return IDMStart(builder)
-def IDMAddID(builder, ID): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+    IDMStart(builder)
+
+def IDMAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
 def AddID(builder, ID):
-    return IDMAddID(builder, ID)
-def IDMAddNAME(builder, NAME): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    IDMAddID(builder, ID)
+
+def IDMAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
 def AddNAME(builder, NAME):
-    return IDMAddNAME(builder, NAME)
-def IDMAddDATA_MODE(builder, DATA_MODE): builder.PrependInt8Slot(2, DATA_MODE, 0)
+    IDMAddNAME(builder, NAME)
+
+def IDMAddDATA_MODE(builder, DATA_MODE):
+    builder.PrependInt8Slot(2, DATA_MODE, 0)
+
 def AddDATA_MODE(builder, DATA_MODE):
-    return IDMAddDATA_MODE(builder, DATA_MODE)
-def IDMAddUPLINK(builder, UPLINK): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UPLINK), 0)
+    IDMAddDATA_MODE(builder, DATA_MODE)
+
+def IDMAddUPLINK(builder, UPLINK):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UPLINK), 0)
+
 def AddUPLINK(builder, UPLINK):
-    return IDMAddUPLINK(builder, UPLINK)
-def IDMAddDOWNLINK(builder, DOWNLINK): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DOWNLINK), 0)
+    IDMAddUPLINK(builder, UPLINK)
+
+def IDMAddDOWNLINK(builder, DOWNLINK):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DOWNLINK), 0)
+
 def AddDOWNLINK(builder, DOWNLINK):
-    return IDMAddDOWNLINK(builder, DOWNLINK)
-def IDMAddBEACON(builder, BEACON): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BEACON), 0)
+    IDMAddDOWNLINK(builder, DOWNLINK)
+
+def IDMAddBEACON(builder, BEACON):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BEACON), 0)
+
 def AddBEACON(builder, BEACON):
-    return IDMAddBEACON(builder, BEACON)
-def IDMAddBAND(builder, BAND): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BAND), 0)
+    IDMAddBEACON(builder, BEACON)
+
+def IDMAddBAND(builder, BAND):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BAND), 0)
+
 def AddBAND(builder, BAND):
-    return IDMAddBAND(builder, BAND)
-def IDMStartBANDVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+    IDMAddBAND(builder, BAND)
+
+def IDMStartBANDVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
 def StartBANDVector(builder, numElems):
     return IDMStartBANDVector(builder, numElems)
-def IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE): builder.PrependInt8Slot(7, POLARIZATION_TYPE, 0)
+
+def IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE):
+    builder.PrependInt8Slot(7, POLARIZATION_TYPE, 0)
+
 def AddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE):
-    return IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE)
-def IDMAddSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION): builder.PrependInt8Slot(8, SIMPLE_POLARIZATION, 0)
+    IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE)
+
+def IDMAddSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION):
+    builder.PrependInt8Slot(8, SIMPLE_POLARIZATION, 0)
+
 def AddSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION):
-    return IDMAddSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION)
-def IDMAddSTOKES_PARAMETERS(builder, STOKES_PARAMETERS): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(STOKES_PARAMETERS), 0)
+    IDMAddSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION)
+
+def IDMAddSTOKES_PARAMETERS(builder, STOKES_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(STOKES_PARAMETERS), 0)
+
 def AddSTOKES_PARAMETERS(builder, STOKES_PARAMETERS):
-    return IDMAddSTOKES_PARAMETERS(builder, STOKES_PARAMETERS)
-def IDMAddPOWER_REQUIRED(builder, POWER_REQUIRED): builder.PrependFloat64Slot(10, POWER_REQUIRED, 0.0)
+    IDMAddSTOKES_PARAMETERS(builder, STOKES_PARAMETERS)
+
+def IDMAddPOWER_REQUIRED(builder, POWER_REQUIRED):
+    builder.PrependFloat64Slot(10, POWER_REQUIRED, 0.0)
+
 def AddPOWER_REQUIRED(builder, POWER_REQUIRED):
-    return IDMAddPOWER_REQUIRED(builder, POWER_REQUIRED)
-def IDMAddPOWER_TYPE(builder, POWER_TYPE): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(POWER_TYPE), 0)
+    IDMAddPOWER_REQUIRED(builder, POWER_REQUIRED)
+
+def IDMAddPOWER_TYPE(builder, POWER_TYPE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(POWER_TYPE), 0)
+
 def AddPOWER_TYPE(builder, POWER_TYPE):
-    return IDMAddPOWER_TYPE(builder, POWER_TYPE)
-def IDMAddTRANSMIT(builder, TRANSMIT): builder.PrependBoolSlot(12, TRANSMIT, 0)
+    IDMAddPOWER_TYPE(builder, POWER_TYPE)
+
+def IDMAddTRANSMIT(builder, TRANSMIT):
+    builder.PrependBoolSlot(12, TRANSMIT, 0)
+
 def AddTRANSMIT(builder, TRANSMIT):
-    return IDMAddTRANSMIT(builder, TRANSMIT)
-def IDMAddRECEIVE(builder, RECEIVE): builder.PrependBoolSlot(13, RECEIVE, 0)
+    IDMAddTRANSMIT(builder, TRANSMIT)
+
+def IDMAddRECEIVE(builder, RECEIVE):
+    builder.PrependBoolSlot(13, RECEIVE, 0)
+
 def AddRECEIVE(builder, RECEIVE):
-    return IDMAddRECEIVE(builder, RECEIVE)
-def IDMAddSENSOR_TYPE(builder, SENSOR_TYPE): builder.PrependInt8Slot(14, SENSOR_TYPE, 0)
+    IDMAddRECEIVE(builder, RECEIVE)
+
+def IDMAddSENSOR_TYPE(builder, SENSOR_TYPE):
+    builder.PrependInt8Slot(14, SENSOR_TYPE, 0)
+
 def AddSENSOR_TYPE(builder, SENSOR_TYPE):
-    return IDMAddSENSOR_TYPE(builder, SENSOR_TYPE)
-def IDMAddSOURCE(builder, SOURCE): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+    IDMAddSENSOR_TYPE(builder, SENSOR_TYPE)
+
+def IDMAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
 def AddSOURCE(builder, SOURCE):
-    return IDMAddSOURCE(builder, SOURCE)
-def IDMAddLAST_OB_TIME(builder, LAST_OB_TIME): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_TIME), 0)
+    IDMAddSOURCE(builder, SOURCE)
+
+def IDMAddLAST_OB_TIME(builder, LAST_OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_TIME), 0)
+
 def AddLAST_OB_TIME(builder, LAST_OB_TIME):
-    return IDMAddLAST_OB_TIME(builder, LAST_OB_TIME)
-def IDMAddLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT): builder.PrependFloat64Slot(17, LOWER_LEFT_ELEVATION_LIMIT, 0.0)
+    IDMAddLAST_OB_TIME(builder, LAST_OB_TIME)
+
+def IDMAddLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT):
+    builder.PrependFloat64Slot(17, LOWER_LEFT_ELEVATION_LIMIT, 0.0)
+
 def AddLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT):
-    return IDMAddLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT)
-def IDMAddUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT): builder.PrependFloat64Slot(18, UPPER_LEFT_AZIMUTH_LIMIT, 0.0)
+    IDMAddLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT)
+
+def IDMAddUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT):
+    builder.PrependFloat64Slot(18, UPPER_LEFT_AZIMUTH_LIMIT, 0.0)
+
 def AddUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT):
-    return IDMAddUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT)
-def IDMAddLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT): builder.PrependFloat64Slot(19, LOWER_RIGHT_ELEVATION_LIMIT, 0.0)
+    IDMAddUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT)
+
+def IDMAddLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT):
+    builder.PrependFloat64Slot(19, LOWER_RIGHT_ELEVATION_LIMIT, 0.0)
+
 def AddLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT):
-    return IDMAddLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT)
-def IDMAddLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT): builder.PrependFloat64Slot(20, LOWER_LEFT_AZIMUTH_LIMIT, 0.0)
+    IDMAddLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT)
+
+def IDMAddLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT):
+    builder.PrependFloat64Slot(20, LOWER_LEFT_AZIMUTH_LIMIT, 0.0)
+
 def AddLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT):
-    return IDMAddLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT)
-def IDMAddUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT): builder.PrependFloat64Slot(21, UPPER_RIGHT_ELEVATION_LIMIT, 0.0)
+    IDMAddLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT)
+
+def IDMAddUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT):
+    builder.PrependFloat64Slot(21, UPPER_RIGHT_ELEVATION_LIMIT, 0.0)
+
 def AddUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT):
-    return IDMAddUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT)
-def IDMAddUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT): builder.PrependFloat64Slot(22, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0)
+    IDMAddUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT)
+
+def IDMAddUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT):
+    builder.PrependFloat64Slot(22, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0)
+
 def AddUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT):
-    return IDMAddUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT)
-def IDMAddLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT): builder.PrependFloat64Slot(23, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0)
+    IDMAddUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT)
+
+def IDMAddLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT):
+    builder.PrependFloat64Slot(23, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0)
+
 def AddLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT):
-    return IDMAddLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT)
-def IDMAddUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT): builder.PrependFloat64Slot(24, UPPER_LEFT_ELEVATION_LIMIT, 0.0)
+    IDMAddLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT)
+
+def IDMAddUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT):
+    builder.PrependFloat64Slot(24, UPPER_LEFT_ELEVATION_LIMIT, 0.0)
+
 def AddUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT):
-    return IDMAddUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT)
-def IDMAddRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT): builder.PrependFloat64Slot(25, RIGHT_GEO_BELT_LIMIT, 0.0)
+    IDMAddUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT)
+
+def IDMAddRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT):
+    builder.PrependFloat64Slot(25, RIGHT_GEO_BELT_LIMIT, 0.0)
+
 def AddRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT):
-    return IDMAddRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT)
-def IDMAddLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT): builder.PrependFloat64Slot(26, LEFT_GEO_BELT_LIMIT, 0.0)
+    IDMAddRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT)
+
+def IDMAddLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT):
+    builder.PrependFloat64Slot(26, LEFT_GEO_BELT_LIMIT, 0.0)
+
 def AddLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT):
-    return IDMAddLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT)
-def IDMAddMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT): builder.PrependFloat64Slot(27, MAGNITUDE_LIMIT, 0.0)
+    IDMAddLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT)
+
+def IDMAddMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT):
+    builder.PrependFloat64Slot(27, MAGNITUDE_LIMIT, 0.0)
+
 def AddMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT):
-    return IDMAddMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT)
-def IDMAddTASKABLE(builder, TASKABLE): builder.PrependBoolSlot(28, TASKABLE, 0)
+    IDMAddMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT)
+
+def IDMAddTASKABLE(builder, TASKABLE):
+    builder.PrependBoolSlot(28, TASKABLE, 0)
+
 def AddTASKABLE(builder, TASKABLE):
-    return IDMAddTASKABLE(builder, TASKABLE)
-def IDMEnd(builder): return builder.EndObject()
+    IDMAddTASKABLE(builder, TASKABLE)
+
+def IDMEnd(builder):
+    return builder.EndObject()
+
 def End(builder):
     return IDMEnd(builder)
+
 import Band
 import FrequencyRange
 import StokesParameters
