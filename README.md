@@ -1,8 +1,57 @@
-# Space Data Standards Repository
+# SpaceDataStandards.org
 
 This repository is dedicated to the development and dissemination of space data standards, employing Flatbuffer Interface Definition Language (IDL) schemas as a modern alternative to legacy space data message formats. By embracing Flatbuffers, we aim to provide an efficient, cross-platform serialization solution that is critical for space operations.
 
 Flatbuffers offer several advantages over traditional data serialization methods, particularly in terms of performance and memory efficiency. This makes them highly suitable for space applications where resources are at a premium.
+
+## Example usage in JavaScript using Flatbuffer Serialization
+
+```
+import { writeFileSync, readFileSync } from 'fs';
+import { join } from 'path';
+import { writeFB, readFB } from 'spacedatastandards.org';
+import ipfsHash from 'pure-ipfs-only-hash';
+import { standards } from 'spacedatastandards.org';
+
+const { OMMT } = standards.OMM;
+
+const generateOMMData = async () => {
+    const dataPath = 'test/output/data';
+
+    const ommDataArray = [
+        new OMMT({
+            OBJECT_NAME: "VANGUARD 1",
+            OBJECT_ID: "1958-002B",
+            EPOCH: "2024-06-22T16:56:20.014080",
+            // other fields as required
+        }),
+        new OMMT({
+            OBJECT_NAME: "VANGUARD 2",
+            OBJECT_ID: "1959-001A",
+            EPOCH: "2024-06-23T17:58:04.409760",
+            // other fields as required
+        })
+    ];
+
+    const resultBuffer = writeFB(ommDataArray);
+    const CID = await ipfsHash.of(resultBuffer);
+    writeFileSync(join(dataPath, `${CID}.omm.fbs`), resultBuffer);
+
+    // Reading the flatbuffer
+    const buffer = readFileSync(join(dataPath, `${CID}.omm.fbs`));
+    const flatbuffers = readFB(buffer);
+
+    flatbuffers.forEach(obj => {
+        console.log({
+            OBJECT_NAME: obj.OBJECT_NAME,
+            OBJECT_ID: obj.OBJECT_ID,
+            EPOCH: obj.EPOCH
+        });
+    });
+}
+
+generateOMMData();
+```
 
 Website Link:
 
@@ -45,3 +94,7 @@ This project is licensed under the Apache License, Version 2.0 (the "License"); 
 <http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+## Funding
+
+[Interested in supporting this project? Click here.](./FUNDING.md)
