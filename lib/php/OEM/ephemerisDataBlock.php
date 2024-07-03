@@ -124,10 +124,20 @@ class ephemerisDataBlock extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Step size in seconds separating the epochs of each ephemeris data row
+    /**
+     * @return double
+     */
+    public function getSTEP_SIZE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     public function getINTERPOLATION()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -137,7 +147,7 @@ class ephemerisDataBlock extends Table
      */
     public function getINTERPOLATION_DEGREE()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -147,7 +157,7 @@ class ephemerisDataBlock extends Table
      */
     public function getEPHEMERIS_DATA_LINES($j)
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         $obj = new EphemerisDataLine();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -157,7 +167,7 @@ class ephemerisDataBlock extends Table
      */
     public function getEPHEMERIS_DATA_LINESLength()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -167,7 +177,7 @@ class ephemerisDataBlock extends Table
      */
     public function getCOVARIANCE_MATRIX_LINES($j)
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(34);
         $obj = new CovarianceMatrixLine();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -177,7 +187,7 @@ class ephemerisDataBlock extends Table
      */
     public function getCOVARIANCE_MATRIX_LINESLength()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -187,16 +197,16 @@ class ephemerisDataBlock extends Table
      */
     public static function startephemerisDataBlock(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(16);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ephemerisDataBlock
      */
-    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES)
+    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $STEP_SIZE, $INTERPOLATION, $INTERPOLATION_DEGREE, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES)
     {
-        $builder->startObject(15);
+        $builder->startObject(16);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
@@ -208,6 +218,7 @@ class ephemerisDataBlock extends Table
         self::addUSEABLE_START_TIME($builder, $USEABLE_START_TIME);
         self::addUSEABLE_STOP_TIME($builder, $USEABLE_STOP_TIME);
         self::addSTOP_TIME($builder, $STOP_TIME);
+        self::addSTEP_SIZE($builder, $STEP_SIZE);
         self::addINTERPOLATION($builder, $INTERPOLATION);
         self::addINTERPOLATION_DEGREE($builder, $INTERPOLATION_DEGREE);
         self::addEPHEMERIS_DATA_LINES($builder, $EPHEMERIS_DATA_LINES);
@@ -328,12 +339,22 @@ class ephemerisDataBlock extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSTEP_SIZE(FlatBufferBuilder $builder, $STEP_SIZE)
+    {
+        $builder->addDoubleX(11, $STEP_SIZE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addINTERPOLATION(FlatBufferBuilder $builder, $INTERPOLATION)
     {
-        $builder->addOffsetX(11, $INTERPOLATION, 0);
+        $builder->addOffsetX(12, $INTERPOLATION, 0);
     }
 
     /**
@@ -343,7 +364,7 @@ class ephemerisDataBlock extends Table
      */
     public static function addINTERPOLATION_DEGREE(FlatBufferBuilder $builder, $INTERPOLATION_DEGREE)
     {
-        $builder->addUintX(12, $INTERPOLATION_DEGREE, 0);
+        $builder->addUintX(13, $INTERPOLATION_DEGREE, 0);
     }
 
     /**
@@ -353,7 +374,7 @@ class ephemerisDataBlock extends Table
      */
     public static function addEPHEMERIS_DATA_LINES(FlatBufferBuilder $builder, $EPHEMERIS_DATA_LINES)
     {
-        $builder->addOffsetX(13, $EPHEMERIS_DATA_LINES, 0);
+        $builder->addOffsetX(14, $EPHEMERIS_DATA_LINES, 0);
     }
 
     /**
@@ -387,7 +408,7 @@ class ephemerisDataBlock extends Table
      */
     public static function addCOVARIANCE_MATRIX_LINES(FlatBufferBuilder $builder, $COVARIANCE_MATRIX_LINES)
     {
-        $builder->addOffsetX(14, $COVARIANCE_MATRIX_LINES, 0);
+        $builder->addOffsetX(15, $COVARIANCE_MATRIX_LINES, 0);
     }
 
     /**

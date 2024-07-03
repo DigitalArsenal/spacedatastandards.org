@@ -108,6 +108,8 @@ table ephemerisDataBlock {
   USEABLE_STOP_TIME:string;
   /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   STOP_TIME:string;
+  /// Step size in seconds separating the epochs of each ephemeris data row
+  STEP_SIZE:double;
   /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
   INTERPOLATION:string;
   /// Recommended interpolation degree for ephemeris data

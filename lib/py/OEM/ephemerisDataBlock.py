@@ -117,10 +117,18 @@ class ephemerisDataBlock(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Step size in seconds separating the epochs of each ephemeris data row
+    # ephemerisDataBlock
+    def STEP_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
     # Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     # ephemerisDataBlock
     def INTERPOLATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -128,7 +136,7 @@ class ephemerisDataBlock(object):
     # Recommended interpolation degree for ephemeris data
     # ephemerisDataBlock
     def INTERPOLATION_DEGREE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -136,7 +144,7 @@ class ephemerisDataBlock(object):
     # Array of ephemeris data lines
     # ephemerisDataBlock
     def EPHEMERIS_DATA_LINES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -149,20 +157,20 @@ class ephemerisDataBlock(object):
 
     # ephemerisDataBlock
     def EPHEMERIS_DATA_LINESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ephemerisDataBlock
     def EPHEMERIS_DATA_LINESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
     # Array of covariance matrix lines
     # ephemerisDataBlock
     def COVARIANCE_MATRIX_LINES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -175,18 +183,18 @@ class ephemerisDataBlock(object):
 
     # ephemerisDataBlock
     def COVARIANCE_MATRIX_LINESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ephemerisDataBlock
     def COVARIANCE_MATRIX_LINESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
 def ephemerisDataBlockStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(16)
 
 def Start(builder):
     ephemerisDataBlockStart(builder)
@@ -257,20 +265,26 @@ def ephemerisDataBlockAddSTOP_TIME(builder, STOP_TIME):
 def AddSTOP_TIME(builder, STOP_TIME):
     ephemerisDataBlockAddSTOP_TIME(builder, STOP_TIME)
 
+def ephemerisDataBlockAddSTEP_SIZE(builder, STEP_SIZE):
+    builder.PrependFloat64Slot(11, STEP_SIZE, 0.0)
+
+def AddSTEP_SIZE(builder, STEP_SIZE):
+    ephemerisDataBlockAddSTEP_SIZE(builder, STEP_SIZE)
+
 def ephemerisDataBlockAddINTERPOLATION(builder, INTERPOLATION):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
 
 def AddINTERPOLATION(builder, INTERPOLATION):
     ephemerisDataBlockAddINTERPOLATION(builder, INTERPOLATION)
 
 def ephemerisDataBlockAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
-    builder.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
+    builder.PrependUint32Slot(13, INTERPOLATION_DEGREE, 0)
 
 def AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
     ephemerisDataBlockAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
 
 def ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_LINES), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_LINES), 0)
 
 def AddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES):
     ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES)
@@ -282,7 +296,7 @@ def StartEPHEMERIS_DATA_LINESVector(builder, numElems):
     return ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(builder, numElems)
 
 def ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX_LINES), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX_LINES), 0)
 
 def AddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES):
     ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES)
@@ -321,6 +335,7 @@ class ephemerisDataBlockT(object):
         self.USEABLE_START_TIME = None  # type: str
         self.USEABLE_STOP_TIME = None  # type: str
         self.STOP_TIME = None  # type: str
+        self.STEP_SIZE = 0.0  # type: float
         self.INTERPOLATION = None  # type: str
         self.INTERPOLATION_DEGREE = 0  # type: int
         self.EPHEMERIS_DATA_LINES = None  # type: List[ephemerisDataLine.ephemerisDataLineT]
@@ -358,6 +373,7 @@ class ephemerisDataBlockT(object):
         self.USEABLE_START_TIME = ephemerisDataBlock.USEABLE_START_TIME()
         self.USEABLE_STOP_TIME = ephemerisDataBlock.USEABLE_STOP_TIME()
         self.STOP_TIME = ephemerisDataBlock.STOP_TIME()
+        self.STEP_SIZE = ephemerisDataBlock.STEP_SIZE()
         self.INTERPOLATION = ephemerisDataBlock.INTERPOLATION()
         self.INTERPOLATION_DEGREE = ephemerisDataBlock.INTERPOLATION_DEGREE()
         if not ephemerisDataBlock.EPHEMERIS_DATA_LINESIsNone():
@@ -436,6 +452,7 @@ class ephemerisDataBlockT(object):
             ephemerisDataBlockAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME)
         if self.STOP_TIME is not None:
             ephemerisDataBlockAddSTOP_TIME(builder, STOP_TIME)
+        ephemerisDataBlockAddSTEP_SIZE(builder, self.STEP_SIZE)
         if self.INTERPOLATION is not None:
             ephemerisDataBlockAddINTERPOLATION(builder, INTERPOLATION)
         ephemerisDataBlockAddINTERPOLATION_DEGREE(builder, self.INTERPOLATION_DEGREE)

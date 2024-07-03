@@ -138,12 +138,20 @@ STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Step size in seconds separating the epochs of each ephemeris data row
+ */
+STEP_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
  * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
  */
 INTERPOLATION():string|null
 INTERPOLATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 INTERPOLATION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -151,7 +159,7 @@ INTERPOLATION(optionalEncoding?:any):string|Uint8Array|null {
  * Recommended interpolation degree for ephemeris data
  */
 INTERPOLATION_DEGREE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
@@ -159,12 +167,12 @@ INTERPOLATION_DEGREE():number {
  * Array of ephemeris data lines
  */
 EPHEMERIS_DATA_LINES(index: number, obj?:ephemerisDataLine):ephemerisDataLine|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? (obj || new ephemerisDataLine()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 ephemerisDataLinesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -172,17 +180,17 @@ ephemerisDataLinesLength():number {
  * Array of covariance matrix lines
  */
 COVARIANCE_MATRIX_LINES(index: number, obj?:covarianceMatrixLine):covarianceMatrixLine|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? (obj || new covarianceMatrixLine()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 covarianceMatrixLinesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startephemerisDataBlock(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(16);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -229,16 +237,20 @@ static addStopTime(builder:flatbuffers.Builder, STOP_TIMEOffset:flatbuffers.Offs
   builder.addFieldOffset(10, STOP_TIMEOffset, 0);
 }
 
+static addStepSize(builder:flatbuffers.Builder, STEP_SIZE:number) {
+  builder.addFieldFloat64(11, STEP_SIZE, 0.0);
+}
+
 static addInterpolation(builder:flatbuffers.Builder, INTERPOLATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, INTERPOLATIONOffset, 0);
+  builder.addFieldOffset(12, INTERPOLATIONOffset, 0);
 }
 
 static addInterpolationDegree(builder:flatbuffers.Builder, INTERPOLATION_DEGREE:number) {
-  builder.addFieldInt32(12, INTERPOLATION_DEGREE, 0);
+  builder.addFieldInt32(13, INTERPOLATION_DEGREE, 0);
 }
 
 static addEphemerisDataLines(builder:flatbuffers.Builder, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, EPHEMERIS_DATA_LINESOffset, 0);
+  builder.addFieldOffset(14, EPHEMERIS_DATA_LINESOffset, 0);
 }
 
 static createEphemerisDataLinesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -254,7 +266,7 @@ static startEphemerisDataLinesVector(builder:flatbuffers.Builder, numElems:numbe
 }
 
 static addCovarianceMatrixLines(builder:flatbuffers.Builder, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, COVARIANCE_MATRIX_LINESOffset, 0);
+  builder.addFieldOffset(15, COVARIANCE_MATRIX_LINESOffset, 0);
 }
 
 static createCovarianceMatrixLinesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -274,7 +286,7 @@ static endephemerisDataBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createephemerisDataBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, START_TIMEOffset:flatbuffers.Offset, USEABLE_START_TIMEOffset:flatbuffers.Offset, USEABLE_STOP_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, INTERPOLATIONOffset:flatbuffers.Offset, INTERPOLATION_DEGREE:number, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createephemerisDataBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, START_TIMEOffset:flatbuffers.Offset, USEABLE_START_TIMEOffset:flatbuffers.Offset, USEABLE_STOP_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, STEP_SIZE:number, INTERPOLATIONOffset:flatbuffers.Offset, INTERPOLATION_DEGREE:number, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
   ephemerisDataBlock.startephemerisDataBlock(builder);
   ephemerisDataBlock.addComment(builder, COMMENTOffset);
   ephemerisDataBlock.addObjectName(builder, OBJECT_NAMEOffset);
@@ -287,6 +299,7 @@ static createephemerisDataBlock(builder:flatbuffers.Builder, COMMENTOffset:flatb
   ephemerisDataBlock.addUseableStartTime(builder, USEABLE_START_TIMEOffset);
   ephemerisDataBlock.addUseableStopTime(builder, USEABLE_STOP_TIMEOffset);
   ephemerisDataBlock.addStopTime(builder, STOP_TIMEOffset);
+  ephemerisDataBlock.addStepSize(builder, STEP_SIZE);
   ephemerisDataBlock.addInterpolation(builder, INTERPOLATIONOffset);
   ephemerisDataBlock.addInterpolationDegree(builder, INTERPOLATION_DEGREE);
   ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINESOffset);
@@ -307,6 +320,7 @@ unpack(): ephemerisDataBlockT {
     this.USEABLE_START_TIME(),
     this.USEABLE_STOP_TIME(),
     this.STOP_TIME(),
+    this.STEP_SIZE(),
     this.INTERPOLATION(),
     this.INTERPOLATION_DEGREE(),
     this.bb!.createObjList<ephemerisDataLine, ephemerisDataLineT>(this.EPHEMERIS_DATA_LINES.bind(this), this.ephemerisDataLinesLength()),
@@ -327,6 +341,7 @@ unpackTo(_o: ephemerisDataBlockT): void {
   _o.USEABLE_START_TIME = this.USEABLE_START_TIME();
   _o.USEABLE_STOP_TIME = this.USEABLE_STOP_TIME();
   _o.STOP_TIME = this.STOP_TIME();
+  _o.STEP_SIZE = this.STEP_SIZE();
   _o.INTERPOLATION = this.INTERPOLATION();
   _o.INTERPOLATION_DEGREE = this.INTERPOLATION_DEGREE();
   _o.EPHEMERIS_DATA_LINES = this.bb!.createObjList<ephemerisDataLine, ephemerisDataLineT>(this.EPHEMERIS_DATA_LINES.bind(this), this.ephemerisDataLinesLength());
@@ -347,6 +362,7 @@ constructor(
   public USEABLE_START_TIME: string|Uint8Array|null = null,
   public USEABLE_STOP_TIME: string|Uint8Array|null = null,
   public STOP_TIME: string|Uint8Array|null = null,
+  public STEP_SIZE: number = 0.0,
   public INTERPOLATION: string|Uint8Array|null = null,
   public INTERPOLATION_DEGREE: number = 0,
   public EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[] = [],
@@ -380,6 +396,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     USEABLE_START_TIME,
     USEABLE_STOP_TIME,
     STOP_TIME,
+    this.STEP_SIZE,
     INTERPOLATION,
     this.INTERPOLATION_DEGREE,
     EPHEMERIS_DATA_LINES,

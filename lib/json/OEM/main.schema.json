@@ -241,6 +241,10 @@
                 "type" : "string",
                 "description" : "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
               },
+        "STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Step size in seconds separating the epochs of each ephemeris data row"
+              },
         "INTERPOLATION" : {
                 "type" : "string",
                 "description" : "Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)"

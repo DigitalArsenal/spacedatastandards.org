@@ -270,29 +270,32 @@ class ephemerisDataBlock : flatbuffers.handle
     /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def STOP_TIME() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
+    /// Step size in seconds separating the epochs of each ephemeris data row
+    def STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     def INTERPOLATION() -> string:
-        return flatbuffers.field_string(buf_, pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 28)
     /// Recommended interpolation degree for ephemeris data
     def INTERPOLATION_DEGREE() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 28, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 30, 0)
     /// Array of ephemeris data lines
     def EPHEMERIS_DATA_LINES(i:int) -> ephemerisDataLine:
-        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def EPHEMERIS_DATA_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 30)
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
     /// Array of covariance matrix lines
     def COVARIANCE_MATRIX_LINES(i:int) -> covarianceMatrixLine:
-        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
     def COVARIANCE_MATRIX_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
 
 def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataBlockBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(16)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -327,17 +330,20 @@ struct ephemerisDataBlockBuilder:
     def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, STOP_TIME)
         return this
+    def add_STEP_SIZE(STEP_SIZE:float):
+        b_.PrependFloat64Slot(11, STEP_SIZE, 0.0)
+        return this
     def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, INTERPOLATION)
+        b_.PrependUOffsetTRelativeSlot(12, INTERPOLATION)
         return this
     def add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE:int):
-        b_.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
+        b_.PrependUint32Slot(13, INTERPOLATION_DEGREE, 0)
         return this
     def add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, EPHEMERIS_DATA_LINES)
+        b_.PrependUOffsetTRelativeSlot(14, EPHEMERIS_DATA_LINES)
         return this
     def add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, COVARIANCE_MATRIX_LINES)
+        b_.PrependUOffsetTRelativeSlot(15, COVARIANCE_MATRIX_LINES)
         return this
     def end():
         return b_.EndObject()

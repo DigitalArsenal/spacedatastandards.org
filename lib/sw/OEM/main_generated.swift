@@ -325,10 +325,11 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     case USEABLE_START_TIME = 20
     case USEABLE_STOP_TIME = 22
     case STOP_TIME = 24
-    case INTERPOLATION = 26
-    case INTERPOLATION_DEGREE = 28
-    case EPHEMERIS_DATA_LINES = 30
-    case COVARIANCE_MATRIX_LINES = 32
+    case STEP_SIZE = 26
+    case INTERPOLATION = 28
+    case INTERPOLATION_DEGREE = 30
+    case EPHEMERIS_DATA_LINES = 32
+    case COVARIANCE_MATRIX_LINES = 34
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -364,6 +365,8 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   ///  End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   public var STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_TIME.v) }
+  ///  Step size in seconds separating the epochs of each ephemeris data row
+  public var STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
   public var INTERPOLATION: String? { let o = _accessor.offset(VTOFFSET.INTERPOLATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INTERPOLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERPOLATION.v) }
@@ -377,7 +380,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public var hasCovarianceMatrixLines: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? false : true }
   public var COVARIANCE_MATRIX_LINESCount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func COVARIANCE_MATRIX_LINES(at index: Int32) -> covarianceMatrixLine? { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? nil : covarianceMatrixLine(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
@@ -389,6 +392,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public static func add(USEABLE_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_START_TIME, at: VTOFFSET.USEABLE_START_TIME.p) }
   public static func add(USEABLE_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_STOP_TIME, at: VTOFFSET.USEABLE_STOP_TIME.p) }
   public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
+  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VTOFFSET.STEP_SIZE.p) }
   public static func add(INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION, at: VTOFFSET.INTERPOLATION.p) }
   public static func add(INTERPOLATION_DEGREE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION_DEGREE, def: 0, at: VTOFFSET.INTERPOLATION_DEGREE.p) }
   public static func addVectorOf(EPHEMERIS_DATA_LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_DATA_LINES, at: VTOFFSET.EPHEMERIS_DATA_LINES.p) }
@@ -407,6 +411,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     USEABLE_START_TIMEOffset USEABLE_START_TIME: Offset = Offset(),
     USEABLE_STOP_TIMEOffset USEABLE_STOP_TIME: Offset = Offset(),
     STOP_TIMEOffset STOP_TIME: Offset = Offset(),
+    STEP_SIZE: Double = 0.0,
     INTERPOLATIONOffset INTERPOLATION: Offset = Offset(),
     INTERPOLATION_DEGREE: UInt32 = 0,
     EPHEMERIS_DATA_LINESVectorOffset EPHEMERIS_DATA_LINES: Offset = Offset(),
@@ -424,6 +429,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     ephemerisDataBlock.add(USEABLE_START_TIME: USEABLE_START_TIME, &fbb)
     ephemerisDataBlock.add(USEABLE_STOP_TIME: USEABLE_STOP_TIME, &fbb)
     ephemerisDataBlock.add(STOP_TIME: STOP_TIME, &fbb)
+    ephemerisDataBlock.add(STEP_SIZE: STEP_SIZE, &fbb)
     ephemerisDataBlock.add(INTERPOLATION: INTERPOLATION, &fbb)
     ephemerisDataBlock.add(INTERPOLATION_DEGREE: INTERPOLATION_DEGREE, &fbb)
     ephemerisDataBlock.addVectorOf(EPHEMERIS_DATA_LINES: EPHEMERIS_DATA_LINES, &fbb)
@@ -444,6 +450,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.USEABLE_START_TIME.p, fieldName: "USEABLE_START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.USEABLE_STOP_TIME.p, fieldName: "USEABLE_STOP_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.STEP_SIZE.p, fieldName: "STEP_SIZE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.INTERPOLATION.p, fieldName: "INTERPOLATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.INTERPOLATION_DEGREE.p, fieldName: "INTERPOLATION_DEGREE", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.EPHEMERIS_DATA_LINES.p, fieldName: "EPHEMERIS_DATA_LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<ephemerisDataLine>, ephemerisDataLine>>.self)

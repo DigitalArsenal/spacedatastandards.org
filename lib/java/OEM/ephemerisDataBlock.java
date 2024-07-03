@@ -91,31 +91,35 @@ public final class ephemerisDataBlock extends Table {
   public ByteBuffer STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
+   * Step size in seconds separating the epochs of each ephemeris data row
+   */
+  public double STEP_SIZE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
    * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
    */
-  public String INTERPOLATION() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INTERPOLATIONAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer INTERPOLATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  public String INTERPOLATION() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INTERPOLATIONAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer INTERPOLATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
   /**
    * Recommended interpolation degree for ephemeris data
    */
-  public long INTERPOLATION_DEGREE() { int o = __offset(28); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long INTERPOLATION_DEGREE() { int o = __offset(30); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Array of ephemeris data lines
    */
   public ephemerisDataLine EPHEMERIS_DATA_LINES(int j) { return EPHEMERIS_DATA_LINES(new ephemerisDataLine(), j); }
-  public ephemerisDataLine EPHEMERIS_DATA_LINES(ephemerisDataLine obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int EPHEMERIS_DATA_LINESLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public ephemerisDataLine EPHEMERIS_DATA_LINES(ephemerisDataLine obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EPHEMERIS_DATA_LINESLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
   public ephemerisDataLine.Vector ephemerisDataLinesVector() { return ephemerisDataLinesVector(new ephemerisDataLine.Vector()); }
-  public ephemerisDataLine.Vector ephemerisDataLinesVector(ephemerisDataLine.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public ephemerisDataLine.Vector ephemerisDataLinesVector(ephemerisDataLine.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Array of covariance matrix lines
    */
   public covarianceMatrixLine COVARIANCE_MATRIX_LINES(int j) { return COVARIANCE_MATRIX_LINES(new covarianceMatrixLine(), j); }
-  public covarianceMatrixLine COVARIANCE_MATRIX_LINES(covarianceMatrixLine obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int COVARIANCE_MATRIX_LINESLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  public covarianceMatrixLine COVARIANCE_MATRIX_LINES(covarianceMatrixLine obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int COVARIANCE_MATRIX_LINESLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
   public covarianceMatrixLine.Vector covarianceMatrixLinesVector() { return covarianceMatrixLinesVector(new covarianceMatrixLine.Vector()); }
-  public covarianceMatrixLine.Vector covarianceMatrixLinesVector(covarianceMatrixLine.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public covarianceMatrixLine.Vector covarianceMatrixLinesVector(covarianceMatrixLine.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createephemerisDataBlock(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -129,11 +133,13 @@ public final class ephemerisDataBlock extends Table {
       int USEABLE_START_TIMEOffset,
       int USEABLE_STOP_TIMEOffset,
       int STOP_TIMEOffset,
+      double STEP_SIZE,
       int INTERPOLATIONOffset,
       long INTERPOLATION_DEGREE,
       int EPHEMERIS_DATA_LINESOffset,
       int COVARIANCE_MATRIX_LINESOffset) {
-    builder.startTable(15);
+    builder.startTable(16);
+    ephemerisDataBlock.addStepSize(builder, STEP_SIZE);
     ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINESOffset);
     ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINESOffset);
     ephemerisDataBlock.addInterpolationDegree(builder, INTERPOLATION_DEGREE);
@@ -152,7 +158,7 @@ public final class ephemerisDataBlock extends Table {
     return ephemerisDataBlock.endephemerisDataBlock(builder);
   }
 
-  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(16); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(1, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(2, OBJECT_IDOffset, 0); }
@@ -164,12 +170,13 @@ public final class ephemerisDataBlock extends Table {
   public static void addUseableStartTime(FlatBufferBuilder builder, int USEABLE_START_TIMEOffset) { builder.addOffset(8, USEABLE_START_TIMEOffset, 0); }
   public static void addUseableStopTime(FlatBufferBuilder builder, int USEABLE_STOP_TIMEOffset) { builder.addOffset(9, USEABLE_STOP_TIMEOffset, 0); }
   public static void addStopTime(FlatBufferBuilder builder, int STOP_TIMEOffset) { builder.addOffset(10, STOP_TIMEOffset, 0); }
-  public static void addInterpolation(FlatBufferBuilder builder, int INTERPOLATIONOffset) { builder.addOffset(11, INTERPOLATIONOffset, 0); }
-  public static void addInterpolationDegree(FlatBufferBuilder builder, long INTERPOLATION_DEGREE) { builder.addInt(12, (int) INTERPOLATION_DEGREE, (int) 0L); }
-  public static void addEphemerisDataLines(FlatBufferBuilder builder, int EPHEMERIS_DATA_LINESOffset) { builder.addOffset(13, EPHEMERIS_DATA_LINESOffset, 0); }
+  public static void addStepSize(FlatBufferBuilder builder, double STEP_SIZE) { builder.addDouble(11, STEP_SIZE, 0.0); }
+  public static void addInterpolation(FlatBufferBuilder builder, int INTERPOLATIONOffset) { builder.addOffset(12, INTERPOLATIONOffset, 0); }
+  public static void addInterpolationDegree(FlatBufferBuilder builder, long INTERPOLATION_DEGREE) { builder.addInt(13, (int) INTERPOLATION_DEGREE, (int) 0L); }
+  public static void addEphemerisDataLines(FlatBufferBuilder builder, int EPHEMERIS_DATA_LINESOffset) { builder.addOffset(14, EPHEMERIS_DATA_LINESOffset, 0); }
   public static int createEphemerisDataLinesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startEphemerisDataLinesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCovarianceMatrixLines(FlatBufferBuilder builder, int COVARIANCE_MATRIX_LINESOffset) { builder.addOffset(14, COVARIANCE_MATRIX_LINESOffset, 0); }
+  public static void addCovarianceMatrixLines(FlatBufferBuilder builder, int COVARIANCE_MATRIX_LINESOffset) { builder.addOffset(15, COVARIANCE_MATRIX_LINESOffset, 0); }
   public static int createCovarianceMatrixLinesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCovarianceMatrixLinesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endephemerisDataBlock(FlatBufferBuilder builder) {

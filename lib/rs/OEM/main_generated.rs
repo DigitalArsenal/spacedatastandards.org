@@ -1047,10 +1047,11 @@ impl<'a> ephemerisDataBlock<'a> {
   pub const VT_USEABLE_START_TIME: flatbuffers::VOffsetT = 20;
   pub const VT_USEABLE_STOP_TIME: flatbuffers::VOffsetT = 22;
   pub const VT_STOP_TIME: flatbuffers::VOffsetT = 24;
-  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 26;
-  pub const VT_INTERPOLATION_DEGREE: flatbuffers::VOffsetT = 28;
-  pub const VT_EPHEMERIS_DATA_LINES: flatbuffers::VOffsetT = 30;
-  pub const VT_COVARIANCE_MATRIX_LINES: flatbuffers::VOffsetT = 32;
+  pub const VT_STEP_SIZE: flatbuffers::VOffsetT = 26;
+  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 28;
+  pub const VT_INTERPOLATION_DEGREE: flatbuffers::VOffsetT = 30;
+  pub const VT_EPHEMERIS_DATA_LINES: flatbuffers::VOffsetT = 32;
+  pub const VT_COVARIANCE_MATRIX_LINES: flatbuffers::VOffsetT = 34;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1062,6 +1063,7 @@ impl<'a> ephemerisDataBlock<'a> {
     args: &'args ephemerisDataBlockArgs<'args>
   ) -> flatbuffers::WIPOffset<ephemerisDataBlock<'bldr>> {
     let mut builder = ephemerisDataBlockBuilder::new(_fbb);
+    builder.add_STEP_SIZE(args.STEP_SIZE);
     if let Some(x) = args.COVARIANCE_MATRIX_LINES { builder.add_COVARIANCE_MATRIX_LINES(x); }
     if let Some(x) = args.EPHEMERIS_DATA_LINES { builder.add_EPHEMERIS_DATA_LINES(x); }
     builder.add_INTERPOLATION_DEGREE(args.INTERPOLATION_DEGREE);
@@ -1110,6 +1112,7 @@ impl<'a> ephemerisDataBlock<'a> {
     let STOP_TIME = self.STOP_TIME().map(|x| {
       x.to_string()
     });
+    let STEP_SIZE = self.STEP_SIZE();
     let INTERPOLATION = self.INTERPOLATION().map(|x| {
       x.to_string()
     });
@@ -1132,6 +1135,7 @@ impl<'a> ephemerisDataBlock<'a> {
       USEABLE_START_TIME,
       USEABLE_STOP_TIME,
       STOP_TIME,
+      STEP_SIZE,
       INTERPOLATION,
       INTERPOLATION_DEGREE,
       EPHEMERIS_DATA_LINES,
@@ -1227,6 +1231,14 @@ impl<'a> ephemerisDataBlock<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_STOP_TIME, None)}
   }
+  /// Step size in seconds separating the epochs of each ephemeris data row
+  #[inline]
+  pub fn STEP_SIZE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ephemerisDataBlock::VT_STEP_SIZE, Some(0.0)).unwrap()}
+  }
   /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
   #[inline]
   pub fn INTERPOLATION(&self) -> Option<&'a str> {
@@ -1279,6 +1291,7 @@ impl flatbuffers::Verifiable for ephemerisDataBlock<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USEABLE_START_TIME", Self::VT_USEABLE_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USEABLE_STOP_TIME", Self::VT_USEABLE_STOP_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
+     .visit_field::<f64>("STEP_SIZE", Self::VT_STEP_SIZE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INTERPOLATION", Self::VT_INTERPOLATION, false)?
      .visit_field::<u32>("INTERPOLATION_DEGREE", Self::VT_INTERPOLATION_DEGREE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<ephemerisDataLine>>>>("EPHEMERIS_DATA_LINES", Self::VT_EPHEMERIS_DATA_LINES, false)?
@@ -1299,6 +1312,7 @@ pub struct ephemerisDataBlockArgs<'a> {
     pub USEABLE_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub USEABLE_STOP_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STOP_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STEP_SIZE: f64,
     pub INTERPOLATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub INTERPOLATION_DEGREE: u32,
     pub EPHEMERIS_DATA_LINES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ephemerisDataLine<'a>>>>>,
@@ -1319,6 +1333,7 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
       USEABLE_START_TIME: None,
       USEABLE_STOP_TIME: None,
       STOP_TIME: None,
+      STEP_SIZE: 0.0,
       INTERPOLATION: None,
       INTERPOLATION_DEGREE: 0,
       EPHEMERIS_DATA_LINES: None,
@@ -1377,6 +1392,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a, '
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_STOP_TIME, STOP_TIME);
   }
   #[inline]
+  pub fn add_STEP_SIZE(&mut self, STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataBlock::VT_STEP_SIZE, STEP_SIZE, 0.0);
+  }
+  #[inline]
   pub fn add_INTERPOLATION(&mut self, INTERPOLATION: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_INTERPOLATION, INTERPOLATION);
   }
@@ -1421,6 +1440,7 @@ impl core::fmt::Debug for ephemerisDataBlock<'_> {
       ds.field("USEABLE_START_TIME", &self.USEABLE_START_TIME());
       ds.field("USEABLE_STOP_TIME", &self.USEABLE_STOP_TIME());
       ds.field("STOP_TIME", &self.STOP_TIME());
+      ds.field("STEP_SIZE", &self.STEP_SIZE());
       ds.field("INTERPOLATION", &self.INTERPOLATION());
       ds.field("INTERPOLATION_DEGREE", &self.INTERPOLATION_DEGREE());
       ds.field("EPHEMERIS_DATA_LINES", &self.EPHEMERIS_DATA_LINES());
@@ -1442,6 +1462,7 @@ pub struct ephemerisDataBlockT {
   pub USEABLE_START_TIME: Option<String>,
   pub USEABLE_STOP_TIME: Option<String>,
   pub STOP_TIME: Option<String>,
+  pub STEP_SIZE: f64,
   pub INTERPOLATION: Option<String>,
   pub INTERPOLATION_DEGREE: u32,
   pub EPHEMERIS_DATA_LINES: Option<Vec<ephemerisDataLineT>>,
@@ -1461,6 +1482,7 @@ impl Default for ephemerisDataBlockT {
       USEABLE_START_TIME: None,
       USEABLE_STOP_TIME: None,
       STOP_TIME: None,
+      STEP_SIZE: 0.0,
       INTERPOLATION: None,
       INTERPOLATION_DEGREE: 0,
       EPHEMERIS_DATA_LINES: None,
@@ -1502,6 +1524,7 @@ impl ephemerisDataBlockT {
     let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let STEP_SIZE = self.STEP_SIZE;
     let INTERPOLATION = self.INTERPOLATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1524,6 +1547,7 @@ impl ephemerisDataBlockT {
       USEABLE_START_TIME,
       USEABLE_STOP_TIME,
       STOP_TIME,
+      STEP_SIZE,
       INTERPOLATION,
       INTERPOLATION_DEGREE,
       EPHEMERIS_DATA_LINES,
