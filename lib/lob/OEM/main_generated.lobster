@@ -240,110 +240,105 @@ class ephemerisDataBlock : flatbuffers.handle
     /// Plain-Text Comment
     def COMMENT() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Satellite Name(s)
-    def OBJECT_NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 6)
-    /// International Designator (YYYY-NNNAAA)
-    def OBJECT_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Satellite name for the first object
+    def OBJECT() -> CAT?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CAT { buf_, o } else: nil
     /// Origin of reference frame (EARTH, MARS, MOON, etc.)
     def CENTER_NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Name of the reference frame (TEME, EME2000, etc.)
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 12, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 10, 0))
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
     def REFERENCE_FRAME_EPOCH() -> string:
-        return flatbuffers.field_string(buf_, pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Time system used for the orbit state and covariance matrix. (UTC)
     def TIME_SYSTEM() -> timeSystem:
-        return timeSystem(flatbuffers.field_int8(buf_, pos_, 16, 0))
+        return timeSystem(flatbuffers.field_int8(buf_, pos_, 14, 0))
     /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def START_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
     def USEABLE_START_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
     def USEABLE_STOP_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def STOP_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// Step size in seconds separating the epochs of each ephemeris data row
     def STEP_SIZE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     def INTERPOLATION() -> string:
-        return flatbuffers.field_string(buf_, pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Recommended interpolation degree for ephemeris data
     def INTERPOLATION_DEGREE() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 30, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 28, 0)
     /// Array of ephemeris data lines
     def EPHEMERIS_DATA_LINES(i:int) -> ephemerisDataLine:
-        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
     def EPHEMERIS_DATA_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
     /// Array of covariance matrix lines
     def COVARIANCE_MATRIX_LINES(i:int) -> covarianceMatrixLine:
-        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
+        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def COVARIANCE_MATRIX_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 34)
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
 
 def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataBlockBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(15)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
         return this
-    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(1, OBJECT_NAME)
-        return this
-    def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, OBJECT_ID)
+    def add_OBJECT(OBJECT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, OBJECT)
         return this
     def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, CENTER_NAME)
+        b_.PrependUOffsetTRelativeSlot(2, CENTER_NAME)
         return this
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(4, REFERENCE_FRAME, 0)
+        b_.PrependInt8Slot(3, REFERENCE_FRAME, 0)
         return this
     def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, REFERENCE_FRAME_EPOCH)
+        b_.PrependUOffsetTRelativeSlot(4, REFERENCE_FRAME_EPOCH)
         return this
     def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
-        b_.PrependInt8Slot(6, TIME_SYSTEM, 0)
+        b_.PrependInt8Slot(5, TIME_SYSTEM, 0)
         return this
     def add_START_TIME(START_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, START_TIME)
+        b_.PrependUOffsetTRelativeSlot(6, START_TIME)
         return this
     def add_USEABLE_START_TIME(USEABLE_START_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, USEABLE_START_TIME)
+        b_.PrependUOffsetTRelativeSlot(7, USEABLE_START_TIME)
         return this
     def add_USEABLE_STOP_TIME(USEABLE_STOP_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, USEABLE_STOP_TIME)
+        b_.PrependUOffsetTRelativeSlot(8, USEABLE_STOP_TIME)
         return this
     def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, STOP_TIME)
+        b_.PrependUOffsetTRelativeSlot(9, STOP_TIME)
         return this
     def add_STEP_SIZE(STEP_SIZE:float):
-        b_.PrependFloat64Slot(11, STEP_SIZE, 0.0)
+        b_.PrependFloat64Slot(10, STEP_SIZE, 0.0)
         return this
     def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, INTERPOLATION)
+        b_.PrependUOffsetTRelativeSlot(11, INTERPOLATION)
         return this
     def add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE:int):
-        b_.PrependUint32Slot(13, INTERPOLATION_DEGREE, 0)
+        b_.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
         return this
     def add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, EPHEMERIS_DATA_LINES)
+        b_.PrependUOffsetTRelativeSlot(13, EPHEMERIS_DATA_LINES)
         return this
     def add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(15, COVARIANCE_MATRIX_LINES)
+        b_.PrependUOffsetTRelativeSlot(14, COVARIANCE_MATRIX_LINES)
         return this
     def end():
         return b_.EndObject()

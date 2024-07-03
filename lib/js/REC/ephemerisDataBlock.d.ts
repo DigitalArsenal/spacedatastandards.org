@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { CAT, CATT } from './CAT.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
 import { refFrame } from './refFrame.js';
@@ -18,15 +19,9 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     COMMENT(): string | null;
     COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Satellite Name(s)
+     * Satellite name for the first object
      */
-    OBJECT_NAME(): string | null;
-    OBJECT_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    /**
-     * International Designator (YYYY-NNNAAA)
-     */
-    OBJECT_ID(): string | null;
-    OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    OBJECT(obj?: CAT): CAT | null;
     /**
      * Origin of reference frame (EARTH, MARS, MOON, etc.)
      */
@@ -90,8 +85,7 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     covarianceMatrixLinesLength(): number;
     static startephemerisDataBlock(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
-    static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
-    static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
+    static addObject(builder: flatbuffers.Builder, OBJECTOffset: flatbuffers.Offset): void;
     static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAME: refFrame): void;
     static addReferenceFrameEpoch(builder: flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset): void;
@@ -110,14 +104,12 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     static createCovarianceMatrixLinesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startCovarianceMatrixLinesVector(builder: flatbuffers.Builder, numElems: number): void;
     static endephemerisDataBlock(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createephemerisDataBlock(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, CENTER_NAMEOffset: flatbuffers.Offset, REFERENCE_FRAME: refFrame, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset, TIME_SYSTEM: timeSystem, START_TIMEOffset: flatbuffers.Offset, USEABLE_START_TIMEOffset: flatbuffers.Offset, USEABLE_STOP_TIMEOffset: flatbuffers.Offset, STOP_TIMEOffset: flatbuffers.Offset, STEP_SIZE: number, INTERPOLATIONOffset: flatbuffers.Offset, INTERPOLATION_DEGREE: number, EPHEMERIS_DATA_LINESOffset: flatbuffers.Offset, COVARIANCE_MATRIX_LINESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): ephemerisDataBlockT;
     unpackTo(_o: ephemerisDataBlockT): void;
 }
 export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject {
     COMMENT: string | Uint8Array | null;
-    OBJECT_NAME: string | Uint8Array | null;
-    OBJECT_ID: string | Uint8Array | null;
+    OBJECT: CATT | null;
     CENTER_NAME: string | Uint8Array | null;
     REFERENCE_FRAME: refFrame;
     REFERENCE_FRAME_EPOCH: string | Uint8Array | null;
@@ -131,7 +123,7 @@ export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject
     INTERPOLATION_DEGREE: number;
     EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[];
     COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[];
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[]);
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ephemerisDataBlock.d.ts.map

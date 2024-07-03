@@ -37,26 +37,22 @@ class ephemerisDataBlock(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Satellite Name(s)
+    # Satellite name for the first object
     # ephemerisDataBlock
-    def OBJECT_NAME(self):
+    def OBJECT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # International Designator (YYYY-NNNAAA)
-    # ephemerisDataBlock
-    def OBJECT_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CAT import CAT
+            obj = CAT()
+            obj.Init(self._tab.Bytes, x)
+            return obj
         return None
 
     # Origin of reference frame (EARTH, MARS, MOON, etc.)
     # ephemerisDataBlock
     def CENTER_NAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -64,7 +60,7 @@ class ephemerisDataBlock(object):
     # Name of the reference frame (TEME, EME2000, etc.)
     # ephemerisDataBlock
     def REFERENCE_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
@@ -72,7 +68,7 @@ class ephemerisDataBlock(object):
     # Epoch of reference frame, if not intrinsic to the definition of the reference frame
     # ephemerisDataBlock
     def REFERENCE_FRAME_EPOCH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -80,7 +76,7 @@ class ephemerisDataBlock(object):
     # Time system used for the orbit state and covariance matrix. (UTC)
     # ephemerisDataBlock
     def TIME_SYSTEM(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
@@ -88,7 +84,7 @@ class ephemerisDataBlock(object):
     # Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     # ephemerisDataBlock
     def START_TIME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -96,7 +92,7 @@ class ephemerisDataBlock(object):
     # Optional start USEABLE time span covered by ephemeris data (ISO 8601)
     # ephemerisDataBlock
     def USEABLE_START_TIME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -104,7 +100,7 @@ class ephemerisDataBlock(object):
     # Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
     # ephemerisDataBlock
     def USEABLE_STOP_TIME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -112,7 +108,7 @@ class ephemerisDataBlock(object):
     # End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     # ephemerisDataBlock
     def STOP_TIME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -120,7 +116,7 @@ class ephemerisDataBlock(object):
     # Step size in seconds separating the epochs of each ephemeris data row
     # ephemerisDataBlock
     def STEP_SIZE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -128,7 +124,7 @@ class ephemerisDataBlock(object):
     # Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     # ephemerisDataBlock
     def INTERPOLATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -136,7 +132,7 @@ class ephemerisDataBlock(object):
     # Recommended interpolation degree for ephemeris data
     # ephemerisDataBlock
     def INTERPOLATION_DEGREE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -144,7 +140,7 @@ class ephemerisDataBlock(object):
     # Array of ephemeris data lines
     # ephemerisDataBlock
     def EPHEMERIS_DATA_LINES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -157,20 +153,20 @@ class ephemerisDataBlock(object):
 
     # ephemerisDataBlock
     def EPHEMERIS_DATA_LINESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ephemerisDataBlock
     def EPHEMERIS_DATA_LINESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
     # Array of covariance matrix lines
     # ephemerisDataBlock
     def COVARIANCE_MATRIX_LINES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -183,18 +179,18 @@ class ephemerisDataBlock(object):
 
     # ephemerisDataBlock
     def COVARIANCE_MATRIX_LINESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ephemerisDataBlock
     def COVARIANCE_MATRIX_LINESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
 def ephemerisDataBlockStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(15)
 
 def Start(builder):
     ephemerisDataBlockStart(builder)
@@ -205,86 +201,80 @@ def ephemerisDataBlockAddCOMMENT(builder, COMMENT):
 def AddCOMMENT(builder, COMMENT):
     ephemerisDataBlockAddCOMMENT(builder, COMMENT)
 
-def ephemerisDataBlockAddOBJECT_NAME(builder, OBJECT_NAME):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+def ephemerisDataBlockAddOBJECT(builder, OBJECT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
 
-def AddOBJECT_NAME(builder, OBJECT_NAME):
-    ephemerisDataBlockAddOBJECT_NAME(builder, OBJECT_NAME)
-
-def ephemerisDataBlockAddOBJECT_ID(builder, OBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
-
-def AddOBJECT_ID(builder, OBJECT_ID):
-    ephemerisDataBlockAddOBJECT_ID(builder, OBJECT_ID)
+def AddOBJECT(builder, OBJECT):
+    ephemerisDataBlockAddOBJECT(builder, OBJECT)
 
 def ephemerisDataBlockAddCENTER_NAME(builder, CENTER_NAME):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
 
 def AddCENTER_NAME(builder, CENTER_NAME):
     ephemerisDataBlockAddCENTER_NAME(builder, CENTER_NAME)
 
 def ephemerisDataBlockAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependInt8Slot(4, REFERENCE_FRAME, 0)
+    builder.PrependInt8Slot(3, REFERENCE_FRAME, 0)
 
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     ephemerisDataBlockAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 
 def ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME_EPOCH), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME_EPOCH), 0)
 
 def AddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH):
     ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
 
 def ephemerisDataBlockAddTIME_SYSTEM(builder, TIME_SYSTEM):
-    builder.PrependInt8Slot(6, TIME_SYSTEM, 0)
+    builder.PrependInt8Slot(5, TIME_SYSTEM, 0)
 
 def AddTIME_SYSTEM(builder, TIME_SYSTEM):
     ephemerisDataBlockAddTIME_SYSTEM(builder, TIME_SYSTEM)
 
 def ephemerisDataBlockAddSTART_TIME(builder, START_TIME):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
 
 def AddSTART_TIME(builder, START_TIME):
     ephemerisDataBlockAddSTART_TIME(builder, START_TIME)
 
 def ephemerisDataBlockAddUSEABLE_START_TIME(builder, USEABLE_START_TIME):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(USEABLE_START_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(USEABLE_START_TIME), 0)
 
 def AddUSEABLE_START_TIME(builder, USEABLE_START_TIME):
     ephemerisDataBlockAddUSEABLE_START_TIME(builder, USEABLE_START_TIME)
 
 def ephemerisDataBlockAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(USEABLE_STOP_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(USEABLE_STOP_TIME), 0)
 
 def AddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME):
     ephemerisDataBlockAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME)
 
 def ephemerisDataBlockAddSTOP_TIME(builder, STOP_TIME):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
 
 def AddSTOP_TIME(builder, STOP_TIME):
     ephemerisDataBlockAddSTOP_TIME(builder, STOP_TIME)
 
 def ephemerisDataBlockAddSTEP_SIZE(builder, STEP_SIZE):
-    builder.PrependFloat64Slot(11, STEP_SIZE, 0.0)
+    builder.PrependFloat64Slot(10, STEP_SIZE, 0.0)
 
 def AddSTEP_SIZE(builder, STEP_SIZE):
     ephemerisDataBlockAddSTEP_SIZE(builder, STEP_SIZE)
 
 def ephemerisDataBlockAddINTERPOLATION(builder, INTERPOLATION):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
 
 def AddINTERPOLATION(builder, INTERPOLATION):
     ephemerisDataBlockAddINTERPOLATION(builder, INTERPOLATION)
 
 def ephemerisDataBlockAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
-    builder.PrependUint32Slot(13, INTERPOLATION_DEGREE, 0)
+    builder.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
 
 def AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
     ephemerisDataBlockAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
 
 def ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_LINES), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_LINES), 0)
 
 def AddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES):
     ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES)
@@ -296,7 +286,7 @@ def StartEPHEMERIS_DATA_LINESVector(builder, numElems):
     return ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(builder, numElems)
 
 def ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX_LINES), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX_LINES), 0)
 
 def AddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES):
     ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES)
@@ -313,10 +303,11 @@ def ephemerisDataBlockEnd(builder):
 def End(builder):
     return ephemerisDataBlockEnd(builder)
 
+import CAT
 import covarianceMatrixLine
 import ephemerisDataLine
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -325,8 +316,7 @@ class ephemerisDataBlockT(object):
     # ephemerisDataBlockT
     def __init__(self):
         self.COMMENT = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
+        self.OBJECT = None  # type: Optional[CAT.CATT]
         self.CENTER_NAME = None  # type: str
         self.REFERENCE_FRAME = 0  # type: int
         self.REFERENCE_FRAME_EPOCH = None  # type: str
@@ -363,8 +353,8 @@ class ephemerisDataBlockT(object):
         if ephemerisDataBlock is None:
             return
         self.COMMENT = ephemerisDataBlock.COMMENT()
-        self.OBJECT_NAME = ephemerisDataBlock.OBJECT_NAME()
-        self.OBJECT_ID = ephemerisDataBlock.OBJECT_ID()
+        if ephemerisDataBlock.OBJECT() is not None:
+            self.OBJECT = CAT.CATT.InitFromObj(ephemerisDataBlock.OBJECT())
         self.CENTER_NAME = ephemerisDataBlock.CENTER_NAME()
         self.REFERENCE_FRAME = ephemerisDataBlock.REFERENCE_FRAME()
         self.REFERENCE_FRAME_EPOCH = ephemerisDataBlock.REFERENCE_FRAME_EPOCH()
@@ -397,10 +387,8 @@ class ephemerisDataBlockT(object):
     def Pack(self, builder):
         if self.COMMENT is not None:
             COMMENT = builder.CreateString(self.COMMENT)
-        if self.OBJECT_NAME is not None:
-            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
-        if self.OBJECT_ID is not None:
-            OBJECT_ID = builder.CreateString(self.OBJECT_ID)
+        if self.OBJECT is not None:
+            OBJECT = self.OBJECT.Pack(builder)
         if self.CENTER_NAME is not None:
             CENTER_NAME = builder.CreateString(self.CENTER_NAME)
         if self.REFERENCE_FRAME_EPOCH is not None:
@@ -434,10 +422,8 @@ class ephemerisDataBlockT(object):
         ephemerisDataBlockStart(builder)
         if self.COMMENT is not None:
             ephemerisDataBlockAddCOMMENT(builder, COMMENT)
-        if self.OBJECT_NAME is not None:
-            ephemerisDataBlockAddOBJECT_NAME(builder, OBJECT_NAME)
-        if self.OBJECT_ID is not None:
-            ephemerisDataBlockAddOBJECT_ID(builder, OBJECT_ID)
+        if self.OBJECT is not None:
+            ephemerisDataBlockAddOBJECT(builder, OBJECT)
         if self.CENTER_NAME is not None:
             ephemerisDataBlockAddCENTER_NAME(builder, CENTER_NAME)
         ephemerisDataBlockAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)

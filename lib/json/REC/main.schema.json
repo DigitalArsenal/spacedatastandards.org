@@ -3317,13 +3317,9 @@
                 "type" : "string",
                 "description" : "Plain-Text Comment"
               },
-        "OBJECT_NAME" : {
-                "type" : "string",
-                "description" : "Satellite Name(s)"
-              },
-        "OBJECT_ID" : {
-                "type" : "string",
-                "description" : "International Designator (YYYY-NNNAAA)"
+        "OBJECT" : {
+                "$ref" : "#/definitions/CAT",
+                "description" : "Satellite name for the first object"
               },
         "CENTER_NAME" : {
                 "type" : "string",

@@ -15,6 +15,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct ephemerisDataLine;
 struct ephemerisDataLineBuilder;
@@ -545,33 +546,28 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   typedef ephemerisDataBlockBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_COMMENT = 4,
-    VT_OBJECT_NAME = 6,
-    VT_OBJECT_ID = 8,
-    VT_CENTER_NAME = 10,
-    VT_REFERENCE_FRAME = 12,
-    VT_REFERENCE_FRAME_EPOCH = 14,
-    VT_TIME_SYSTEM = 16,
-    VT_START_TIME = 18,
-    VT_USEABLE_START_TIME = 20,
-    VT_USEABLE_STOP_TIME = 22,
-    VT_STOP_TIME = 24,
-    VT_STEP_SIZE = 26,
-    VT_INTERPOLATION = 28,
-    VT_INTERPOLATION_DEGREE = 30,
-    VT_EPHEMERIS_DATA_LINES = 32,
-    VT_COVARIANCE_MATRIX_LINES = 34
+    VT_OBJECT = 6,
+    VT_CENTER_NAME = 8,
+    VT_REFERENCE_FRAME = 10,
+    VT_REFERENCE_FRAME_EPOCH = 12,
+    VT_TIME_SYSTEM = 14,
+    VT_START_TIME = 16,
+    VT_USEABLE_START_TIME = 18,
+    VT_USEABLE_STOP_TIME = 20,
+    VT_STOP_TIME = 22,
+    VT_STEP_SIZE = 24,
+    VT_INTERPOLATION = 26,
+    VT_INTERPOLATION_DEGREE = 28,
+    VT_EPHEMERIS_DATA_LINES = 30,
+    VT_COVARIANCE_MATRIX_LINES = 32
   };
   /// Plain-Text Comment
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
-  /// Satellite Name(s)
-  const ::flatbuffers::String *OBJECT_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
-  }
-  /// International Designator (YYYY-NNNAAA)
-  const ::flatbuffers::String *OBJECT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
+  /// Satellite name for the first object
+  const CAT *OBJECT() const {
+    return GetPointer<const CAT *>(VT_OBJECT);
   }
   /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   const ::flatbuffers::String *CENTER_NAME() const {
@@ -629,10 +625,8 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COMMENT) &&
            verifier.VerifyString(COMMENT()) &&
-           VerifyOffset(verifier, VT_OBJECT_NAME) &&
-           verifier.VerifyString(OBJECT_NAME()) &&
-           VerifyOffset(verifier, VT_OBJECT_ID) &&
-           verifier.VerifyString(OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_OBJECT) &&
+           verifier.VerifyTable(OBJECT()) &&
            VerifyOffset(verifier, VT_CENTER_NAME) &&
            verifier.VerifyString(CENTER_NAME()) &&
            VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
@@ -668,11 +662,8 @@ struct ephemerisDataBlockBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
     fbb_.AddOffset(ephemerisDataBlock::VT_COMMENT, COMMENT);
   }
-  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
-    fbb_.AddOffset(ephemerisDataBlock::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
-    fbb_.AddOffset(ephemerisDataBlock::VT_OBJECT_ID, OBJECT_ID);
+  void add_OBJECT(::flatbuffers::Offset<CAT> OBJECT) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_OBJECT, OBJECT);
   }
   void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
     fbb_.AddOffset(ephemerisDataBlock::VT_CENTER_NAME, CENTER_NAME);
@@ -727,8 +718,7 @@ struct ephemerisDataBlockBuilder {
 inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
+    ::flatbuffers::Offset<CAT> OBJECT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH = 0,
@@ -754,8 +744,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
   builder_.add_START_TIME(START_TIME);
   builder_.add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH);
   builder_.add_CENTER_NAME(CENTER_NAME);
-  builder_.add_OBJECT_ID(OBJECT_ID);
-  builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_OBJECT(OBJECT);
   builder_.add_COMMENT(COMMENT);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
@@ -765,8 +754,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
 inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *COMMENT = nullptr,
-    const char *OBJECT_NAME = nullptr,
-    const char *OBJECT_ID = nullptr,
+    ::flatbuffers::Offset<CAT> OBJECT = 0,
     const char *CENTER_NAME = nullptr,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
     const char *REFERENCE_FRAME_EPOCH = nullptr,
@@ -781,8 +769,6 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const std::vector<::flatbuffers::Offset<ephemerisDataLine>> *EPHEMERIS_DATA_LINES = nullptr,
     const std::vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES = nullptr) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
-  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
-  auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto REFERENCE_FRAME_EPOCH__ = REFERENCE_FRAME_EPOCH ? _fbb.CreateString(REFERENCE_FRAME_EPOCH) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
@@ -795,8 +781,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
   return CreateephemerisDataBlock(
       _fbb,
       COMMENT__,
-      OBJECT_NAME__,
-      OBJECT_ID__,
+      OBJECT,
       CENTER_NAME__,
       REFERENCE_FRAME,
       REFERENCE_FRAME_EPOCH__,

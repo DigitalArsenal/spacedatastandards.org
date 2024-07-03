@@ -482,40 +482,38 @@ class EphemerisDataBlock {
 
   ///  Plain-Text Comment
   String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Satellite Name(s)
-  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  International Designator (YYYY-NNNAAA)
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Satellite name for the first object
+  CAT? get OBJECT => CAT.reader.vTableGetNullable(_bc, _bcOffset, 6);
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
-  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
-  String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Time system used for the orbit state and covariance matrix. (UTC)
-  TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
-  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   ///  Optional start USEABLE time span covered by ephemeris data (ISO 8601)
-  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
-  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
-  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  Step size in seconds separating the epochs of each ephemeris data row
-  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
   ///  Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
-  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   ///  Recommended interpolation degree for ephemeris data
-  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
   ///  Array of ephemeris data lines
-  List<EphemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<EphemerisDataLine>(EphemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  List<EphemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<EphemerisDataLine>(EphemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 30);
   ///  Array of covariance matrix lines
-  List<CovarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<CovarianceMatrixLine>(CovarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  List<CovarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<CovarianceMatrixLine>(CovarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 32);
 
   @override
   String toString() {
-    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, STEP_SIZE: ${STEP_SIZE}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
+    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, STEP_SIZE: ${STEP_SIZE}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
   }
 }
 
@@ -533,71 +531,67 @@ class EphemerisDataBlockBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(15);
   }
 
   int addCommentOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addObjectNameOffset(int? offset) {
+  int addObjectOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addObjectIdOffset(int? offset) {
+  int addCenterNameOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addCenterNameOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
   int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
-    fbBuilder.addInt8(4, REFERENCE_FRAME?.value);
+    fbBuilder.addInt8(3, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
   int addReferenceFrameEpochOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
   int addTimeSystem(TimeSystem? TIME_SYSTEM) {
-    fbBuilder.addInt8(6, TIME_SYSTEM?.value);
+    fbBuilder.addInt8(5, TIME_SYSTEM?.value);
     return fbBuilder.offset;
   }
   int addStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
   int addUseableStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
   int addUseableStopTimeOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
   int addStopTimeOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
   int addStepSize(double? STEP_SIZE) {
-    fbBuilder.addFloat64(11, STEP_SIZE);
+    fbBuilder.addFloat64(10, STEP_SIZE);
     return fbBuilder.offset;
   }
   int addInterpolationOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
   int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
-    fbBuilder.addUint32(13, INTERPOLATION_DEGREE);
+    fbBuilder.addUint32(12, INTERPOLATION_DEGREE);
     return fbBuilder.offset;
   }
   int addEphemerisDataLinesOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
   int addCovarianceMatrixLinesOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
 
@@ -608,8 +602,7 @@ class EphemerisDataBlockBuilder {
 
 class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _COMMENT;
-  final String? _OBJECT_NAME;
-  final String? _OBJECT_ID;
+  final CATObjectBuilder? _OBJECT;
   final String? _CENTER_NAME;
   final RefFrame? _REFERENCE_FRAME;
   final String? _REFERENCE_FRAME_EPOCH;
@@ -626,8 +619,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
 
   EphemerisDataBlockObjectBuilder({
     String? COMMENT,
-    String? OBJECT_NAME,
-    String? OBJECT_ID,
+    CATObjectBuilder? OBJECT,
     String? CENTER_NAME,
     RefFrame? REFERENCE_FRAME,
     String? REFERENCE_FRAME_EPOCH,
@@ -643,8 +635,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     List<CovarianceMatrixLineObjectBuilder>? COVARIANCE_MATRIX_LINES,
   })
       : _COMMENT = COMMENT,
-        _OBJECT_NAME = OBJECT_NAME,
-        _OBJECT_ID = OBJECT_ID,
+        _OBJECT = OBJECT,
         _CENTER_NAME = CENTER_NAME,
         _REFERENCE_FRAME = REFERENCE_FRAME,
         _REFERENCE_FRAME_EPOCH = REFERENCE_FRAME_EPOCH,
@@ -664,10 +655,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? COMMENTOffset = _COMMENT == null ? null
         : fbBuilder.writeString(_COMMENT!);
-    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
-        : fbBuilder.writeString(_OBJECT_NAME!);
-    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
-        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? OBJECTOffset = _OBJECT?.getOrCreateOffset(fbBuilder);
     final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
         : fbBuilder.writeString(_CENTER_NAME!);
     final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
@@ -686,23 +674,22 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_EPHEMERIS_DATA_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? COVARIANCE_MATRIX_LINESOffset = _COVARIANCE_MATRIX_LINES == null ? null
         : fbBuilder.writeList(_COVARIANCE_MATRIX_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, COMMENTOffset);
-    fbBuilder.addOffset(1, OBJECT_NAMEOffset);
-    fbBuilder.addOffset(2, OBJECT_IDOffset);
-    fbBuilder.addOffset(3, CENTER_NAMEOffset);
-    fbBuilder.addInt8(4, _REFERENCE_FRAME?.value);
-    fbBuilder.addOffset(5, REFERENCE_FRAME_EPOCHOffset);
-    fbBuilder.addInt8(6, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(7, START_TIMEOffset);
-    fbBuilder.addOffset(8, USEABLE_START_TIMEOffset);
-    fbBuilder.addOffset(9, USEABLE_STOP_TIMEOffset);
-    fbBuilder.addOffset(10, STOP_TIMEOffset);
-    fbBuilder.addFloat64(11, _STEP_SIZE);
-    fbBuilder.addOffset(12, INTERPOLATIONOffset);
-    fbBuilder.addUint32(13, _INTERPOLATION_DEGREE);
-    fbBuilder.addOffset(14, EPHEMERIS_DATA_LINESOffset);
-    fbBuilder.addOffset(15, COVARIANCE_MATRIX_LINESOffset);
+    fbBuilder.addOffset(1, OBJECTOffset);
+    fbBuilder.addOffset(2, CENTER_NAMEOffset);
+    fbBuilder.addInt8(3, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(4, REFERENCE_FRAME_EPOCHOffset);
+    fbBuilder.addInt8(5, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(6, START_TIMEOffset);
+    fbBuilder.addOffset(7, USEABLE_START_TIMEOffset);
+    fbBuilder.addOffset(8, USEABLE_STOP_TIMEOffset);
+    fbBuilder.addOffset(9, STOP_TIMEOffset);
+    fbBuilder.addFloat64(10, _STEP_SIZE);
+    fbBuilder.addOffset(11, INTERPOLATIONOffset);
+    fbBuilder.addUint32(12, _INTERPOLATION_DEGREE);
+    fbBuilder.addOffset(13, EPHEMERIS_DATA_LINESOffset);
+    fbBuilder.addOffset(14, COVARIANCE_MATRIX_LINESOffset);
     return fbBuilder.endTable();
   }
 

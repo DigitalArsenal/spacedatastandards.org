@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CAT, CATT } from './CAT.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
 import { refFrame } from './refFrame.js';
@@ -42,23 +43,11 @@ COMMENT(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Satellite Name(s)
+ * Satellite name for the first object
  */
-OBJECT_NAME():string|null
-OBJECT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
+OBJECT(obj?:CAT):CAT|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-/**
- * International Designator (YYYY-NNNAAA)
- */
-OBJECT_ID():string|null
-OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? (obj || new CAT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -67,7 +56,7 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
 CENTER_NAME():string|null
 CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -75,7 +64,7 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
  * Name of the reference frame (TEME, EME2000, etc.)
  */
 REFERENCE_FRAME():refFrame {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
@@ -85,7 +74,7 @@ REFERENCE_FRAME():refFrame {
 REFERENCE_FRAME_EPOCH():string|null
 REFERENCE_FRAME_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 REFERENCE_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -93,7 +82,7 @@ REFERENCE_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
  * Time system used for the orbit state and covariance matrix. (UTC)
  */
 TIME_SYSTEM():timeSystem {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : timeSystem.GMST;
 }
 
@@ -103,7 +92,7 @@ TIME_SYSTEM():timeSystem {
 START_TIME():string|null
 START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 START_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -113,7 +102,7 @@ START_TIME(optionalEncoding?:any):string|Uint8Array|null {
 USEABLE_START_TIME():string|null
 USEABLE_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 USEABLE_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -123,7 +112,7 @@ USEABLE_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
 USEABLE_STOP_TIME():string|null
 USEABLE_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 USEABLE_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -133,7 +122,7 @@ USEABLE_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
 STOP_TIME():string|null
 STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -141,7 +130,7 @@ STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
  * Step size in seconds separating the epochs of each ephemeris data row
  */
 STEP_SIZE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -151,7 +140,7 @@ STEP_SIZE():number {
 INTERPOLATION():string|null
 INTERPOLATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 INTERPOLATION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -159,7 +148,7 @@ INTERPOLATION(optionalEncoding?:any):string|Uint8Array|null {
  * Recommended interpolation degree for ephemeris data
  */
 INTERPOLATION_DEGREE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
@@ -167,12 +156,12 @@ INTERPOLATION_DEGREE():number {
  * Array of ephemeris data lines
  */
 EPHEMERIS_DATA_LINES(index: number, obj?:ephemerisDataLine):ephemerisDataLine|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? (obj || new ephemerisDataLine()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 ephemerisDataLinesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -180,77 +169,73 @@ ephemerisDataLinesLength():number {
  * Array of covariance matrix lines
  */
 COVARIANCE_MATRIX_LINES(index: number, obj?:covarianceMatrixLine):covarianceMatrixLine|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? (obj || new covarianceMatrixLine()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 covarianceMatrixLinesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startephemerisDataBlock(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(15);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, COMMENTOffset, 0);
 }
 
-static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, OBJECT_NAMEOffset, 0);
-}
-
-static addObjectId(builder:flatbuffers.Builder, OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, OBJECT_IDOffset, 0);
+static addObject(builder:flatbuffers.Builder, OBJECTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, OBJECTOffset, 0);
 }
 
 static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, CENTER_NAMEOffset, 0);
+  builder.addFieldOffset(2, CENTER_NAMEOffset, 0);
 }
 
 static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(4, REFERENCE_FRAME, refFrame.ECEF);
+  builder.addFieldInt8(3, REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addReferenceFrameEpoch(builder:flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, REFERENCE_FRAME_EPOCHOffset, 0);
+  builder.addFieldOffset(4, REFERENCE_FRAME_EPOCHOffset, 0);
 }
 
 static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem) {
-  builder.addFieldInt8(6, TIME_SYSTEM, timeSystem.GMST);
+  builder.addFieldInt8(5, TIME_SYSTEM, timeSystem.GMST);
 }
 
 static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, START_TIMEOffset, 0);
+  builder.addFieldOffset(6, START_TIMEOffset, 0);
 }
 
 static addUseableStartTime(builder:flatbuffers.Builder, USEABLE_START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, USEABLE_START_TIMEOffset, 0);
+  builder.addFieldOffset(7, USEABLE_START_TIMEOffset, 0);
 }
 
 static addUseableStopTime(builder:flatbuffers.Builder, USEABLE_STOP_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, USEABLE_STOP_TIMEOffset, 0);
+  builder.addFieldOffset(8, USEABLE_STOP_TIMEOffset, 0);
 }
 
 static addStopTime(builder:flatbuffers.Builder, STOP_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, STOP_TIMEOffset, 0);
+  builder.addFieldOffset(9, STOP_TIMEOffset, 0);
 }
 
 static addStepSize(builder:flatbuffers.Builder, STEP_SIZE:number) {
-  builder.addFieldFloat64(11, STEP_SIZE, 0.0);
+  builder.addFieldFloat64(10, STEP_SIZE, 0.0);
 }
 
 static addInterpolation(builder:flatbuffers.Builder, INTERPOLATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, INTERPOLATIONOffset, 0);
+  builder.addFieldOffset(11, INTERPOLATIONOffset, 0);
 }
 
 static addInterpolationDegree(builder:flatbuffers.Builder, INTERPOLATION_DEGREE:number) {
-  builder.addFieldInt32(13, INTERPOLATION_DEGREE, 0);
+  builder.addFieldInt32(12, INTERPOLATION_DEGREE, 0);
 }
 
 static addEphemerisDataLines(builder:flatbuffers.Builder, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, EPHEMERIS_DATA_LINESOffset, 0);
+  builder.addFieldOffset(13, EPHEMERIS_DATA_LINESOffset, 0);
 }
 
 static createEphemerisDataLinesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -266,7 +251,7 @@ static startEphemerisDataLinesVector(builder:flatbuffers.Builder, numElems:numbe
 }
 
 static addCovarianceMatrixLines(builder:flatbuffers.Builder, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, COVARIANCE_MATRIX_LINESOffset, 0);
+  builder.addFieldOffset(14, COVARIANCE_MATRIX_LINESOffset, 0);
 }
 
 static createCovarianceMatrixLinesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -286,32 +271,11 @@ static endephemerisDataBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createephemerisDataBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, START_TIMEOffset:flatbuffers.Offset, USEABLE_START_TIMEOffset:flatbuffers.Offset, USEABLE_STOP_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, STEP_SIZE:number, INTERPOLATIONOffset:flatbuffers.Offset, INTERPOLATION_DEGREE:number, EPHEMERIS_DATA_LINESOffset:flatbuffers.Offset, COVARIANCE_MATRIX_LINESOffset:flatbuffers.Offset):flatbuffers.Offset {
-  ephemerisDataBlock.startephemerisDataBlock(builder);
-  ephemerisDataBlock.addComment(builder, COMMENTOffset);
-  ephemerisDataBlock.addObjectName(builder, OBJECT_NAMEOffset);
-  ephemerisDataBlock.addObjectId(builder, OBJECT_IDOffset);
-  ephemerisDataBlock.addCenterName(builder, CENTER_NAMEOffset);
-  ephemerisDataBlock.addReferenceFrame(builder, REFERENCE_FRAME);
-  ephemerisDataBlock.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCHOffset);
-  ephemerisDataBlock.addTimeSystem(builder, TIME_SYSTEM);
-  ephemerisDataBlock.addStartTime(builder, START_TIMEOffset);
-  ephemerisDataBlock.addUseableStartTime(builder, USEABLE_START_TIMEOffset);
-  ephemerisDataBlock.addUseableStopTime(builder, USEABLE_STOP_TIMEOffset);
-  ephemerisDataBlock.addStopTime(builder, STOP_TIMEOffset);
-  ephemerisDataBlock.addStepSize(builder, STEP_SIZE);
-  ephemerisDataBlock.addInterpolation(builder, INTERPOLATIONOffset);
-  ephemerisDataBlock.addInterpolationDegree(builder, INTERPOLATION_DEGREE);
-  ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINESOffset);
-  ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINESOffset);
-  return ephemerisDataBlock.endephemerisDataBlock(builder);
-}
 
 unpack(): ephemerisDataBlockT {
   return new ephemerisDataBlockT(
     this.COMMENT(),
-    this.OBJECT_NAME(),
-    this.OBJECT_ID(),
+    (this.OBJECT() !== null ? this.OBJECT()!.unpack() : null),
     this.CENTER_NAME(),
     this.REFERENCE_FRAME(),
     this.REFERENCE_FRAME_EPOCH(),
@@ -331,8 +295,7 @@ unpack(): ephemerisDataBlockT {
 
 unpackTo(_o: ephemerisDataBlockT): void {
   _o.COMMENT = this.COMMENT();
-  _o.OBJECT_NAME = this.OBJECT_NAME();
-  _o.OBJECT_ID = this.OBJECT_ID();
+  _o.OBJECT = (this.OBJECT() !== null ? this.OBJECT()!.unpack() : null);
   _o.CENTER_NAME = this.CENTER_NAME();
   _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
   _o.REFERENCE_FRAME_EPOCH = this.REFERENCE_FRAME_EPOCH();
@@ -352,8 +315,7 @@ unpackTo(_o: ephemerisDataBlockT): void {
 export class ephemerisDataBlockT implements flatbuffers.IGeneratedObject {
 constructor(
   public COMMENT: string|Uint8Array|null = null,
-  public OBJECT_NAME: string|Uint8Array|null = null,
-  public OBJECT_ID: string|Uint8Array|null = null,
+  public OBJECT: CATT|null = null,
   public CENTER_NAME: string|Uint8Array|null = null,
   public REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public REFERENCE_FRAME_EPOCH: string|Uint8Array|null = null,
@@ -372,8 +334,7 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
-  const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
-  const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
+  const OBJECT = (this.OBJECT !== null ? this.OBJECT!.pack(builder) : 0);
   const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
   const REFERENCE_FRAME_EPOCH = (this.REFERENCE_FRAME_EPOCH !== null ? builder.createString(this.REFERENCE_FRAME_EPOCH!) : 0);
   const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
@@ -384,23 +345,23 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EPHEMERIS_DATA_LINES = ephemerisDataBlock.createEphemerisDataLinesVector(builder, builder.createObjectOffsetList(this.EPHEMERIS_DATA_LINES));
   const COVARIANCE_MATRIX_LINES = ephemerisDataBlock.createCovarianceMatrixLinesVector(builder, builder.createObjectOffsetList(this.COVARIANCE_MATRIX_LINES));
 
-  return ephemerisDataBlock.createephemerisDataBlock(builder,
-    COMMENT,
-    OBJECT_NAME,
-    OBJECT_ID,
-    CENTER_NAME,
-    this.REFERENCE_FRAME,
-    REFERENCE_FRAME_EPOCH,
-    this.TIME_SYSTEM,
-    START_TIME,
-    USEABLE_START_TIME,
-    USEABLE_STOP_TIME,
-    STOP_TIME,
-    this.STEP_SIZE,
-    INTERPOLATION,
-    this.INTERPOLATION_DEGREE,
-    EPHEMERIS_DATA_LINES,
-    COVARIANCE_MATRIX_LINES
-  );
+  ephemerisDataBlock.startephemerisDataBlock(builder);
+  ephemerisDataBlock.addComment(builder, COMMENT);
+  ephemerisDataBlock.addObject(builder, OBJECT);
+  ephemerisDataBlock.addCenterName(builder, CENTER_NAME);
+  ephemerisDataBlock.addReferenceFrame(builder, this.REFERENCE_FRAME);
+  ephemerisDataBlock.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCH);
+  ephemerisDataBlock.addTimeSystem(builder, this.TIME_SYSTEM);
+  ephemerisDataBlock.addStartTime(builder, START_TIME);
+  ephemerisDataBlock.addUseableStartTime(builder, USEABLE_START_TIME);
+  ephemerisDataBlock.addUseableStopTime(builder, USEABLE_STOP_TIME);
+  ephemerisDataBlock.addStopTime(builder, STOP_TIME);
+  ephemerisDataBlock.addStepSize(builder, this.STEP_SIZE);
+  ephemerisDataBlock.addInterpolation(builder, INTERPOLATION);
+  ephemerisDataBlock.addInterpolationDegree(builder, this.INTERPOLATION_DEGREE);
+  ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINES);
+  ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINES);
+
+  return ephemerisDataBlock.endephemerisDataBlock(builder);
 }
 }

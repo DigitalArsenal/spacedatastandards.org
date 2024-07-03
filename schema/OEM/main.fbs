@@ -1,5 +1,6 @@
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
+include "../CAT/main.fbs";
 
 // Space Data Standard - 5 - Orbit Ephemeris Message (OEM)
 // Description
@@ -88,10 +89,8 @@ table covarianceMatrixLine {
 table ephemerisDataBlock {
   /// Plain-Text Comment
   COMMENT:string;
-  /// Satellite Name(s)
-  OBJECT_NAME:string;
-  /// International Designator (YYYY-NNNAAA)
-  OBJECT_ID:string;
+  /// Satellite name for the first object
+  OBJECT: CAT;
   /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   CENTER_NAME:string;
   /// Name of the reference frame (TEME, EME2000, etc.)

@@ -5,6 +5,10 @@
 
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -1037,21 +1041,20 @@ impl<'a> flatbuffers::Follow<'a> for ephemerisDataBlock<'a> {
 
 impl<'a> ephemerisDataBlock<'a> {
   pub const VT_COMMENT: flatbuffers::VOffsetT = 4;
-  pub const VT_OBJECT_NAME: flatbuffers::VOffsetT = 6;
-  pub const VT_OBJECT_ID: flatbuffers::VOffsetT = 8;
-  pub const VT_CENTER_NAME: flatbuffers::VOffsetT = 10;
-  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 12;
-  pub const VT_REFERENCE_FRAME_EPOCH: flatbuffers::VOffsetT = 14;
-  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 16;
-  pub const VT_START_TIME: flatbuffers::VOffsetT = 18;
-  pub const VT_USEABLE_START_TIME: flatbuffers::VOffsetT = 20;
-  pub const VT_USEABLE_STOP_TIME: flatbuffers::VOffsetT = 22;
-  pub const VT_STOP_TIME: flatbuffers::VOffsetT = 24;
-  pub const VT_STEP_SIZE: flatbuffers::VOffsetT = 26;
-  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 28;
-  pub const VT_INTERPOLATION_DEGREE: flatbuffers::VOffsetT = 30;
-  pub const VT_EPHEMERIS_DATA_LINES: flatbuffers::VOffsetT = 32;
-  pub const VT_COVARIANCE_MATRIX_LINES: flatbuffers::VOffsetT = 34;
+  pub const VT_OBJECT: flatbuffers::VOffsetT = 6;
+  pub const VT_CENTER_NAME: flatbuffers::VOffsetT = 8;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 10;
+  pub const VT_REFERENCE_FRAME_EPOCH: flatbuffers::VOffsetT = 12;
+  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 14;
+  pub const VT_START_TIME: flatbuffers::VOffsetT = 16;
+  pub const VT_USEABLE_START_TIME: flatbuffers::VOffsetT = 18;
+  pub const VT_USEABLE_STOP_TIME: flatbuffers::VOffsetT = 20;
+  pub const VT_STOP_TIME: flatbuffers::VOffsetT = 22;
+  pub const VT_STEP_SIZE: flatbuffers::VOffsetT = 24;
+  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 26;
+  pub const VT_INTERPOLATION_DEGREE: flatbuffers::VOffsetT = 28;
+  pub const VT_EPHEMERIS_DATA_LINES: flatbuffers::VOffsetT = 30;
+  pub const VT_COVARIANCE_MATRIX_LINES: flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1074,8 +1077,7 @@ impl<'a> ephemerisDataBlock<'a> {
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
     if let Some(x) = args.REFERENCE_FRAME_EPOCH { builder.add_REFERENCE_FRAME_EPOCH(x); }
     if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
-    if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
-    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+    if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
     builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
@@ -1086,11 +1088,8 @@ impl<'a> ephemerisDataBlock<'a> {
     let COMMENT = self.COMMENT().map(|x| {
       x.to_string()
     });
-    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
-      x.to_string()
-    });
-    let OBJECT_ID = self.OBJECT_ID().map(|x| {
-      x.to_string()
+    let OBJECT = self.OBJECT().map(|x| {
+      Box::new(x.unpack())
     });
     let CENTER_NAME = self.CENTER_NAME().map(|x| {
       x.to_string()
@@ -1125,8 +1124,7 @@ impl<'a> ephemerisDataBlock<'a> {
     });
     ephemerisDataBlockT {
       COMMENT,
-      OBJECT_NAME,
-      OBJECT_ID,
+      OBJECT,
       CENTER_NAME,
       REFERENCE_FRAME,
       REFERENCE_FRAME_EPOCH,
@@ -1151,21 +1149,13 @@ impl<'a> ephemerisDataBlock<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_COMMENT, None)}
   }
-  /// Satellite Name(s)
+  /// Satellite name for the first object
   #[inline]
-  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+  pub fn OBJECT(&self) -> Option<CAT<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_OBJECT_NAME, None)}
-  }
-  /// International Designator (YYYY-NNNAAA)
-  #[inline]
-  pub fn OBJECT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_OBJECT_ID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CAT>>(ephemerisDataBlock::VT_OBJECT, None)}
   }
   /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   #[inline]
@@ -1281,8 +1271,7 @@ impl flatbuffers::Verifiable for ephemerisDataBlock<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
      .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
@@ -1302,8 +1291,7 @@ impl flatbuffers::Verifiable for ephemerisDataBlock<'_> {
 }
 pub struct ephemerisDataBlockArgs<'a> {
     pub COMMENT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT: Option<flatbuffers::WIPOffset<CAT<'a>>>,
     pub CENTER_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REFERENCE_FRAME: refFrame,
     pub REFERENCE_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1323,8 +1311,7 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
   fn default() -> Self {
     ephemerisDataBlockArgs {
       COMMENT: None,
-      OBJECT_NAME: None,
-      OBJECT_ID: None,
+      OBJECT: None,
       CENTER_NAME: None,
       REFERENCE_FRAME: refFrame::ECEF,
       REFERENCE_FRAME_EPOCH: None,
@@ -1352,12 +1339,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a, '
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_COMMENT, COMMENT);
   }
   #[inline]
-  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  #[inline]
-  pub fn add_OBJECT_ID(&mut self, OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_OBJECT_ID, OBJECT_ID);
+  pub fn add_OBJECT(&mut self, OBJECT: flatbuffers::WIPOffset<CAT<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CAT>>(ephemerisDataBlock::VT_OBJECT, OBJECT);
   }
   #[inline]
   pub fn add_CENTER_NAME(&mut self, CENTER_NAME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1430,8 +1413,7 @@ impl core::fmt::Debug for ephemerisDataBlock<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("ephemerisDataBlock");
       ds.field("COMMENT", &self.COMMENT());
-      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
-      ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("OBJECT", &self.OBJECT());
       ds.field("CENTER_NAME", &self.CENTER_NAME());
       ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
       ds.field("REFERENCE_FRAME_EPOCH", &self.REFERENCE_FRAME_EPOCH());
@@ -1452,8 +1434,7 @@ impl core::fmt::Debug for ephemerisDataBlock<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct ephemerisDataBlockT {
   pub COMMENT: Option<String>,
-  pub OBJECT_NAME: Option<String>,
-  pub OBJECT_ID: Option<String>,
+  pub OBJECT: Option<Box<CATT>>,
   pub CENTER_NAME: Option<String>,
   pub REFERENCE_FRAME: refFrame,
   pub REFERENCE_FRAME_EPOCH: Option<String>,
@@ -1472,8 +1453,7 @@ impl Default for ephemerisDataBlockT {
   fn default() -> Self {
     Self {
       COMMENT: None,
-      OBJECT_NAME: None,
-      OBJECT_ID: None,
+      OBJECT: None,
       CENTER_NAME: None,
       REFERENCE_FRAME: refFrame::ECEF,
       REFERENCE_FRAME_EPOCH: None,
@@ -1498,11 +1478,8 @@ impl ephemerisDataBlockT {
     let COMMENT = self.COMMENT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let OBJECT = self.OBJECT.as_ref().map(|x|{
+      x.pack(_fbb)
     });
     let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1537,8 +1514,7 @@ impl ephemerisDataBlockT {
     });
     ephemerisDataBlock::create(_fbb, &ephemerisDataBlockArgs{
       COMMENT,
-      OBJECT_NAME,
-      OBJECT_ID,
+      OBJECT,
       CENTER_NAME,
       REFERENCE_FRAME,
       REFERENCE_FRAME_EPOCH,

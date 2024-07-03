@@ -315,21 +315,20 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case COMMENT = 4
-    case OBJECT_NAME = 6
-    case OBJECT_ID = 8
-    case CENTER_NAME = 10
-    case REFERENCE_FRAME = 12
-    case REFERENCE_FRAME_EPOCH = 14
-    case TIME_SYSTEM = 16
-    case START_TIME = 18
-    case USEABLE_START_TIME = 20
-    case USEABLE_STOP_TIME = 22
-    case STOP_TIME = 24
-    case STEP_SIZE = 26
-    case INTERPOLATION = 28
-    case INTERPOLATION_DEGREE = 30
-    case EPHEMERIS_DATA_LINES = 32
-    case COVARIANCE_MATRIX_LINES = 34
+    case OBJECT = 6
+    case CENTER_NAME = 8
+    case REFERENCE_FRAME = 10
+    case REFERENCE_FRAME_EPOCH = 12
+    case TIME_SYSTEM = 14
+    case START_TIME = 16
+    case USEABLE_START_TIME = 18
+    case USEABLE_STOP_TIME = 20
+    case STOP_TIME = 22
+    case STEP_SIZE = 24
+    case INTERPOLATION = 26
+    case INTERPOLATION_DEGREE = 28
+    case EPHEMERIS_DATA_LINES = 30
+    case COVARIANCE_MATRIX_LINES = 32
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -337,12 +336,8 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   ///  Plain-Text Comment
   public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
-  ///  Satellite Name(s)
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
-  ///  International Designator (YYYY-NNNAAA)
-  public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
+  ///  Satellite name for the first object
+  public var OBJECT: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
@@ -380,10 +375,9 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public var hasCovarianceMatrixLines: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? false : true }
   public var COVARIANCE_MATRIX_LINESCount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func COVARIANCE_MATRIX_LINES(at index: Int32) -> covarianceMatrixLine? { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? nil : covarianceMatrixLine(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
+  public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
   public static func add(REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(REFERENCE_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME_EPOCH, at: VTOFFSET.REFERENCE_FRAME_EPOCH.p) }
@@ -401,8 +395,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public static func createephemerisDataBlock(
     _ fbb: inout FlatBufferBuilder,
     COMMENTOffset COMMENT: Offset = Offset(),
-    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
-    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    OBJECTOffset OBJECT: Offset = Offset(),
     CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
     REFERENCE_FRAME: refFrame = .ecef,
     REFERENCE_FRAME_EPOCHOffset REFERENCE_FRAME_EPOCH: Offset = Offset(),
@@ -419,8 +412,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   ) -> Offset {
     let __start = ephemerisDataBlock.startephemerisDataBlock(&fbb)
     ephemerisDataBlock.add(COMMENT: COMMENT, &fbb)
-    ephemerisDataBlock.add(OBJECT_NAME: OBJECT_NAME, &fbb)
-    ephemerisDataBlock.add(OBJECT_ID: OBJECT_ID, &fbb)
+    ephemerisDataBlock.add(OBJECT: OBJECT, &fbb)
     ephemerisDataBlock.add(CENTER_NAME: CENTER_NAME, &fbb)
     ephemerisDataBlock.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
     ephemerisDataBlock.add(REFERENCE_FRAME_EPOCH: REFERENCE_FRAME_EPOCH, &fbb)
@@ -440,8 +432,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OBJECT.p, fieldName: "OBJECT", required: false, type: ForwardOffset<CAT>.self)
     try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: refFrame.self)
     try _v.visit(field: VTOFFSET.REFERENCE_FRAME_EPOCH.p, fieldName: "REFERENCE_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
