@@ -103,5 +103,9 @@ class refFrame private constructor() {
          * A local orbital coordinate frame
          */
         const val TNW: Byte = 24
+        /**
+         * Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+         */
+        const val UVW: Byte = 25
     }
 }

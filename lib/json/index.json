@@ -285,7 +285,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "timeSystem": {
@@ -1005,7 +1006,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "RFM": {
@@ -2851,7 +2853,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "RFM": {
@@ -3773,7 +3776,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "RFM": {
@@ -6041,7 +6045,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "screeningVolumeShape": {
@@ -7742,7 +7747,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "timeSystem": {
@@ -11812,7 +11818,8 @@
                         "PNE",
                         "BRF",
                         "RSW",
-                        "TNW"
+                        "TNW",
+                        "UVW"
                     ]
                 },
                 "timeSystem": {

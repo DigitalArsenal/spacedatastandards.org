@@ -58,8 +58,10 @@ public enum refFrame: Int8, Enum, Verifiable {
   case rsw = 23
   ///  A local orbital coordinate frame
   case tnw = 24
+  ///  Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  case uvw = 25
 
-  public static var max: refFrame { return .tnw }
+  public static var max: refFrame { return .uvw }
   public static var min: refFrame { return .ecef }
 }
 

@@ -53,6 +53,8 @@ class refFrame
     const RSW = 23;
     /// A local orbital coordinate frame
     const TNW = 24;
+    /// Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+    const UVW = 25;
 
     private static $names = array(
         refFrame::ECEF=>"ECEF",
@@ -80,6 +82,7 @@ class refFrame
         refFrame::BRF=>"BRF",
         refFrame::RSW=>"RSW",
         refFrame::TNW=>"TNW",
+        refFrame::UVW=>"UVW",
     );
 
     public static function Name($e)

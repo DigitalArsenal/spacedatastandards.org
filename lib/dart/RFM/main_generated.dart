@@ -21,7 +21,7 @@ class RefFrame {
       value == null ? null : RefFrame.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 24;
+  static const int maxValue = 25;
   static bool containsValue(int value) => values.containsKey(value);
 
   ///  Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
@@ -98,6 +98,9 @@ class RefFrame {
 
   ///  A local orbital coordinate frame
   static const RefFrame TNW = RefFrame._(24);
+
+  ///  Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  static const RefFrame UVW = RefFrame._(25);
   static const Map<int, RefFrame> values = {
     0: ECEF,
     1: ICRF,
@@ -123,7 +126,8 @@ class RefFrame {
     21: PNE,
     22: BRF,
     23: RSW,
-    24: TNW};
+    24: TNW,
+    25: UVW};
 
   static const fb.Reader<RefFrame> reader = _RefFrameReader();
 

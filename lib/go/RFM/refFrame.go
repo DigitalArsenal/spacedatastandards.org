@@ -57,6 +57,8 @@ const (
 	refFrameRSW      refFrame = 23
 	/// A local orbital coordinate frame
 	refFrameTNW      refFrame = 24
+	/// Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+	refFrameUVW      refFrame = 25
 )
 
 var EnumNamesrefFrame = map[refFrame]string{
@@ -85,6 +87,7 @@ var EnumNamesrefFrame = map[refFrame]string{
 	refFrameBRF:      "BRF",
 	refFrameRSW:      "RSW",
 	refFrameTNW:      "TNW",
+	refFrameUVW:      "UVW",
 }
 
 var EnumValuesrefFrame = map[string]refFrame{
@@ -113,6 +116,7 @@ var EnumValuesrefFrame = map[string]refFrame{
 	"BRF":      refFrameBRF,
 	"RSW":      refFrameRSW,
 	"TNW":      refFrameTNW,
+	"UVW":      refFrameUVW,
 }
 
 func (v refFrame) String() string {

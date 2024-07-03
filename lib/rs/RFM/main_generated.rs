@@ -12,10 +12,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_REF_FRAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REF_FRAME: i8 = 24;
+pub const ENUM_MAX_REF_FRAME: i8 = 25;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REF_FRAME: [refFrame; 25] = [
+pub const ENUM_VALUES_REF_FRAME: [refFrame; 26] = [
   refFrame::ECEF,
   refFrame::ICRF,
   refFrame::TEME,
@@ -41,6 +41,7 @@ pub const ENUM_VALUES_REF_FRAME: [refFrame; 25] = [
   refFrame::BRF,
   refFrame::RSW,
   refFrame::TNW,
+  refFrame::UVW,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -98,9 +99,11 @@ impl refFrame {
   pub const RSW: Self = Self(23);
   /// A local orbital coordinate frame
   pub const TNW: Self = Self(24);
+  /// Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  pub const UVW: Self = Self(25);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 24;
+  pub const ENUM_MAX: i8 = 25;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::ECEF,
     Self::ICRF,
@@ -127,6 +130,7 @@ impl refFrame {
     Self::BRF,
     Self::RSW,
     Self::TNW,
+    Self::UVW,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -156,6 +160,7 @@ impl refFrame {
       Self::BRF => Some("BRF"),
       Self::RSW => Some("RSW"),
       Self::TNW => Some("TNW"),
+      Self::UVW => Some("UVW"),
       _ => None,
     }
   }

@@ -70,11 +70,13 @@ enum refFrame : int8_t {
   refFrame_RSW = 23,
   /// A local orbital coordinate frame
   refFrame_TNW = 24,
+  /// Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  refFrame_UVW = 25,
   refFrame_MIN = refFrame_ECEF,
-  refFrame_MAX = refFrame_TNW
+  refFrame_MAX = refFrame_UVW
 };
 
-inline const refFrame (&EnumValuesrefFrame())[25] {
+inline const refFrame (&EnumValuesrefFrame())[26] {
   static const refFrame values[] = {
     refFrame_ECEF,
     refFrame_ICRF,
@@ -100,13 +102,14 @@ inline const refFrame (&EnumValuesrefFrame())[25] {
     refFrame_PNE,
     refFrame_BRF,
     refFrame_RSW,
-    refFrame_TNW
+    refFrame_TNW,
+    refFrame_UVW
   };
   return values;
 }
 
 inline const char * const *EnumNamesrefFrame() {
-  static const char * const names[26] = {
+  static const char * const names[27] = {
     "ECEF",
     "ICRF",
     "TEME",
@@ -132,13 +135,14 @@ inline const char * const *EnumNamesrefFrame() {
     "BRF",
     "RSW",
     "TNW",
+    "UVW",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamerefFrame(refFrame e) {
-  if (::flatbuffers::IsOutRange(e, refFrame_ECEF, refFrame_TNW)) return "";
+  if (::flatbuffers::IsOutRange(e, refFrame_ECEF, refFrame_UVW)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesrefFrame()[index];
 }
