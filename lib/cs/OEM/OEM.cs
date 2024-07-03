@@ -20,46 +20,57 @@ public struct OEM : IFlatbufferObject
   public OEM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  public string CLASSIFICATION { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(4); }
   /// OEM Version
-  public double CCSDS_OEM_VERS { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CCSDS_OEM_VERS { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Creation Date
-  public string CREATION_DATE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CREATION_DATE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCREATION_DATEBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetCREATION_DATEBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetCREATION_DATEBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetCREATION_DATEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetCREATION_DATEArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetCREATION_DATEArray() { return __p.__vector_as_array<byte>(8); }
   /// Originator
-  public string ORIGINATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ORIGINATOR { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIGINATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetORIGINATORBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetORIGINATORBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetORIGINATORBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(10); }
   /// Array of ephemeris data blocks
-  public ephemerisDataBlock? EPHEMERIS_DATA_BLOCK(int j) { int o = __p.__offset(10); return o != 0 ? (ephemerisDataBlock?)(new ephemerisDataBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int EPHEMERIS_DATA_BLOCKLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public ephemerisDataBlock? EPHEMERIS_DATA_BLOCK(int j) { int o = __p.__offset(12); return o != 0 ? (ephemerisDataBlock?)(new ephemerisDataBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EPHEMERIS_DATA_BLOCKLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OEM> CreateOEM(FlatBufferBuilder builder,
+      StringOffset CLASSIFICATIONOffset = default(StringOffset),
       double CCSDS_OEM_VERS = 0.0,
       StringOffset CREATION_DATEOffset = default(StringOffset),
       StringOffset ORIGINATOROffset = default(StringOffset),
       VectorOffset EPHEMERIS_DATA_BLOCKOffset = default(VectorOffset)) {
-    builder.StartTable(4);
+    builder.StartTable(5);
     OEM.AddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS);
     OEM.AddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCKOffset);
     OEM.AddORIGINATOR(builder, ORIGINATOROffset);
     OEM.AddCREATION_DATE(builder, CREATION_DATEOffset);
+    OEM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
     return OEM.EndOEM(builder);
   }
 
-  public static void StartOEM(FlatBufferBuilder builder) { builder.StartTable(4); }
-  public static void AddCCSDS_OEM_VERS(FlatBufferBuilder builder, double CCSDS_OEM_VERS) { builder.AddDouble(0, CCSDS_OEM_VERS, 0.0); }
-  public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
-  public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
-  public static void AddEPHEMERIS_DATA_BLOCK(FlatBufferBuilder builder, VectorOffset EPHEMERIS_DATA_BLOCKOffset) { builder.AddOffset(3, EPHEMERIS_DATA_BLOCKOffset.Value, 0); }
+  public static void StartOEM(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(0, CLASSIFICATIONOffset.Value, 0); }
+  public static void AddCCSDS_OEM_VERS(FlatBufferBuilder builder, double CCSDS_OEM_VERS) { builder.AddDouble(1, CCSDS_OEM_VERS, 0.0); }
+  public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(2, CREATION_DATEOffset.Value, 0); }
+  public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(3, ORIGINATOROffset.Value, 0); }
+  public static void AddEPHEMERIS_DATA_BLOCK(FlatBufferBuilder builder, VectorOffset EPHEMERIS_DATA_BLOCKOffset) { builder.AddOffset(4, EPHEMERIS_DATA_BLOCKOffset.Value, 0); }
   public static VectorOffset CreateEPHEMERIS_DATA_BLOCKVector(FlatBufferBuilder builder, Offset<ephemerisDataBlock>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateEPHEMERIS_DATA_BLOCKVectorBlock(FlatBufferBuilder builder, Offset<ephemerisDataBlock>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEPHEMERIS_DATA_BLOCKVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ephemerisDataBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -77,6 +88,7 @@ public struct OEM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(OEMT _o) {
+    _o.CLASSIFICATION = this.CLASSIFICATION;
     _o.CCSDS_OEM_VERS = this.CCSDS_OEM_VERS;
     _o.CREATION_DATE = this.CREATION_DATE;
     _o.ORIGINATOR = this.ORIGINATOR;
@@ -85,6 +97,7 @@ public struct OEM : IFlatbufferObject
   }
   public static Offset<OEM> Pack(FlatBufferBuilder builder, OEMT _o) {
     if (_o == null) return default(Offset<OEM>);
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
     var _CREATION_DATE = _o.CREATION_DATE == null ? default(StringOffset) : builder.CreateString(_o.CREATION_DATE);
     var _ORIGINATOR = _o.ORIGINATOR == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR);
     var _EPHEMERIS_DATA_BLOCK = default(VectorOffset);
@@ -95,6 +108,7 @@ public struct OEM : IFlatbufferObject
     }
     return CreateOEM(
       builder,
+      _CLASSIFICATION,
       _o.CCSDS_OEM_VERS,
       _CREATION_DATE,
       _ORIGINATOR,
@@ -104,12 +118,14 @@ public struct OEM : IFlatbufferObject
 
 public class OEMT
 {
+  public string CLASSIFICATION { get; set; }
   public double CCSDS_OEM_VERS { get; set; }
   public string CREATION_DATE { get; set; }
   public string ORIGINATOR { get; set; }
   public List<ephemerisDataBlockT> EPHEMERIS_DATA_BLOCK { get; set; }
 
   public OEMT() {
+    this.CLASSIFICATION = null;
     this.CCSDS_OEM_VERS = 0.0;
     this.CREATION_DATE = null;
     this.ORIGINATOR = null;
@@ -131,10 +147,11 @@ static public class OEMVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*CCSDS_OEM_VERS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 6 /*CREATION_DATE*/, false)
-      && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 10 /*EPHEMERIS_DATA_BLOCK*/, ephemerisDataBlockVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 4 /*CLASSIFICATION*/, false)
+      && verifier.VerifyField(tablePos, 6 /*CCSDS_OEM_VERS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 8 /*CREATION_DATE*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ORIGINATOR*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 12 /*EPHEMERIS_DATA_BLOCK*/, ephemerisDataBlockVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

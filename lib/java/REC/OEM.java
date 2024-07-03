@@ -31,48 +31,57 @@ public final class OEM extends Table {
 
   /**
    * OEM Header
+   * Classification marking of the data in IC/CAPCO Portion-marked format.
+   */
+  public String CLASSIFICATION() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
    * OEM Version
    */
-  public double CCSDS_OEM_VERS() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CCSDS_OEM_VERS() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Creation Date
    */
-  public String CREATION_DATE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CREATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer CREATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public String CREATION_DATE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CREATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer CREATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
    * Originator
    */
-  public String ORIGINATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIGINATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer ORIGINATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String ORIGINATOR() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINATORAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ORIGINATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * Array of ephemeris data blocks
    */
   public ephemerisDataBlock EPHEMERIS_DATA_BLOCK(int j) { return EPHEMERIS_DATA_BLOCK(new ephemerisDataBlock(), j); }
-  public ephemerisDataBlock EPHEMERIS_DATA_BLOCK(ephemerisDataBlock obj, int j) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int EPHEMERIS_DATA_BLOCKLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
+  public ephemerisDataBlock EPHEMERIS_DATA_BLOCK(ephemerisDataBlock obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EPHEMERIS_DATA_BLOCKLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
   public ephemerisDataBlock.Vector ephemerisDataBlockVector() { return ephemerisDataBlockVector(new ephemerisDataBlock.Vector()); }
-  public ephemerisDataBlock.Vector ephemerisDataBlockVector(ephemerisDataBlock.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public ephemerisDataBlock.Vector ephemerisDataBlockVector(ephemerisDataBlock.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOEM(FlatBufferBuilder builder,
+      int CLASSIFICATIONOffset,
       double CCSDS_OEM_VERS,
       int CREATION_DATEOffset,
       int ORIGINATOROffset,
       int EPHEMERIS_DATA_BLOCKOffset) {
-    builder.startTable(4);
+    builder.startTable(5);
     OEM.addCcsdsOemVers(builder, CCSDS_OEM_VERS);
     OEM.addEphemerisDataBlock(builder, EPHEMERIS_DATA_BLOCKOffset);
     OEM.addOriginator(builder, ORIGINATOROffset);
     OEM.addCreationDate(builder, CREATION_DATEOffset);
+    OEM.addClassification(builder, CLASSIFICATIONOffset);
     return OEM.endOEM(builder);
   }
 
-  public static void startOEM(FlatBufferBuilder builder) { builder.startTable(4); }
-  public static void addCcsdsOemVers(FlatBufferBuilder builder, double CCSDS_OEM_VERS) { builder.addDouble(0, CCSDS_OEM_VERS, 0.0); }
-  public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
-  public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
-  public static void addEphemerisDataBlock(FlatBufferBuilder builder, int EPHEMERIS_DATA_BLOCKOffset) { builder.addOffset(3, EPHEMERIS_DATA_BLOCKOffset, 0); }
+  public static void startOEM(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(0, CLASSIFICATIONOffset, 0); }
+  public static void addCcsdsOemVers(FlatBufferBuilder builder, double CCSDS_OEM_VERS) { builder.addDouble(1, CCSDS_OEM_VERS, 0.0); }
+  public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(2, CREATION_DATEOffset, 0); }
+  public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(3, ORIGINATOROffset, 0); }
+  public static void addEphemerisDataBlock(FlatBufferBuilder builder, int EPHEMERIS_DATA_BLOCKOffset) { builder.addOffset(4, EPHEMERIS_DATA_BLOCKOffset, 0); }
   public static int createEphemerisDataBlockVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startEphemerisDataBlockVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOEM(FlatBufferBuilder builder) {

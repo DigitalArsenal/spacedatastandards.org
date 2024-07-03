@@ -30,10 +30,18 @@ class OEM(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # OEM Header
+    # Classification marking of the data in IC/CAPCO Portion-marked format.
+    # OEM
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
     # OEM Version
     # OEM
     def CCSDS_OEM_VERS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -41,7 +49,7 @@ class OEM(object):
     # Creation Date
     # OEM
     def CREATION_DATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -49,7 +57,7 @@ class OEM(object):
     # Originator
     # OEM
     def ORIGINATOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -57,7 +65,7 @@ class OEM(object):
     # Array of ephemeris data blocks
     # OEM
     def EPHEMERIS_DATA_BLOCK(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -70,42 +78,48 @@ class OEM(object):
 
     # OEM
     def EPHEMERIS_DATA_BLOCKLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OEM
     def EPHEMERIS_DATA_BLOCKIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
 def OEMStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(5)
 
 def Start(builder):
     OEMStart(builder)
 
+def OEMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    OEMAddCLASSIFICATION(builder, CLASSIFICATION)
+
 def OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS):
-    builder.PrependFloat64Slot(0, CCSDS_OEM_VERS, 0.0)
+    builder.PrependFloat64Slot(1, CCSDS_OEM_VERS, 0.0)
 
 def AddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS):
     OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS)
 
 def OEMAddCREATION_DATE(builder, CREATION_DATE):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
 
 def AddCREATION_DATE(builder, CREATION_DATE):
     OEMAddCREATION_DATE(builder, CREATION_DATE)
 
 def OEMAddORIGINATOR(builder, ORIGINATOR):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
 
 def AddORIGINATOR(builder, ORIGINATOR):
     OEMAddORIGINATOR(builder, ORIGINATOR)
 
 def OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_BLOCK), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_BLOCK), 0)
 
 def AddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK):
     OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK)
@@ -132,6 +146,7 @@ class OEMT(object):
 
     # OEMT
     def __init__(self):
+        self.CLASSIFICATION = None  # type: str
         self.CCSDS_OEM_VERS = 0.0  # type: float
         self.CREATION_DATE = None  # type: str
         self.ORIGINATOR = None  # type: str
@@ -158,6 +173,7 @@ class OEMT(object):
     def _UnPack(self, OEM):
         if OEM is None:
             return
+        self.CLASSIFICATION = OEM.CLASSIFICATION()
         self.CCSDS_OEM_VERS = OEM.CCSDS_OEM_VERS()
         self.CREATION_DATE = OEM.CREATION_DATE()
         self.ORIGINATOR = OEM.ORIGINATOR()
@@ -172,6 +188,8 @@ class OEMT(object):
 
     # OEMT
     def Pack(self, builder):
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
         if self.CREATION_DATE is not None:
             CREATION_DATE = builder.CreateString(self.CREATION_DATE)
         if self.ORIGINATOR is not None:
@@ -185,6 +203,8 @@ class OEMT(object):
                 builder.PrependUOffsetTRelative(EPHEMERIS_DATA_BLOCKlist[i])
             EPHEMERIS_DATA_BLOCK = builder.EndVector()
         OEMStart(builder)
+        if self.CLASSIFICATION is not None:
+            OEMAddCLASSIFICATION(builder, CLASSIFICATION)
         OEMAddCCSDS_OEM_VERS(builder, self.CCSDS_OEM_VERS)
         if self.CREATION_DATE is not None:
             OEMAddCREATION_DATE(builder, CREATION_DATE)

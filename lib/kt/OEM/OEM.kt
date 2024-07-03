@@ -31,31 +31,31 @@ class OEM : Table() {
     }
     /**
      * OEM Header
-     * OEM Version
+     * Classification marking of the data in IC/CAPCO Portion-marked format.
      */
-    val CCSDS_OEM_VERS : Double
+    val CLASSIFICATION : String?
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Creation Date
-     */
-    val CREATION_DATE : String?
-        get() {
-            val o = __offset(6)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val CLASSIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun CLASSIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Originator
+     * OEM Version
      */
-    val ORIGINATOR : String?
+    val CCSDS_OEM_VERS : Double
+        get() {
+            val o = __offset(6)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Creation Date
+     */
+    val CREATION_DATE : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -64,14 +64,28 @@ class OEM : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Originator
+     */
+    val ORIGINATOR : String?
+        get() {
+            val o = __offset(10)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Array of ephemeris data blocks
      */
     fun EPHEMERIS_DATA_BLOCK(j: Int) : ephemerisDataBlock? = EPHEMERIS_DATA_BLOCK(ephemerisDataBlock(), j)
     fun EPHEMERIS_DATA_BLOCK(obj: ephemerisDataBlock, j: Int) : ephemerisDataBlock? {
-        val o = __offset(10)
+        val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -80,7 +94,7 @@ class OEM : Table() {
     }
     val EPHEMERIS_DATA_BLOCKLength : Int
         get() {
-            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -90,19 +104,21 @@ class OEM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OEM")
-        fun createOEM(builder: FlatBufferBuilder, CCSDS_OEM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, EPHEMERIS_DATA_BLOCKOffset: Int) : Int {
-            builder.startTable(4)
+        fun createOEM(builder: FlatBufferBuilder, CLASSIFICATIONOffset: Int, CCSDS_OEM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, EPHEMERIS_DATA_BLOCKOffset: Int) : Int {
+            builder.startTable(5)
             addCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS)
             addEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCKOffset)
             addORIGINATOR(builder, ORIGINATOROffset)
             addCREATION_DATE(builder, CREATION_DATEOffset)
+            addCLASSIFICATION(builder, CLASSIFICATIONOffset)
             return endOEM(builder)
         }
-        fun startOEM(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCCSDS_OEM_VERS(builder: FlatBufferBuilder, CCSDS_OEM_VERS: Double) = builder.addDouble(0, CCSDS_OEM_VERS, 0.0)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
-        fun addEPHEMERIS_DATA_BLOCK(builder: FlatBufferBuilder, EPHEMERIS_DATA_BLOCK: Int) = builder.addOffset(3, EPHEMERIS_DATA_BLOCK, 0)
+        fun startOEM(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(0, CLASSIFICATION, 0)
+        fun addCCSDS_OEM_VERS(builder: FlatBufferBuilder, CCSDS_OEM_VERS: Double) = builder.addDouble(1, CCSDS_OEM_VERS, 0.0)
+        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(2, CREATION_DATE, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(3, ORIGINATOR, 0)
+        fun addEPHEMERIS_DATA_BLOCK(builder: FlatBufferBuilder, EPHEMERIS_DATA_BLOCK: Int) = builder.addOffset(4, EPHEMERIS_DATA_BLOCK, 0)
         fun createEphemerisDataBlockVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

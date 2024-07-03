@@ -360,39 +360,45 @@ def ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(b_:flatbuffers.builder
 /// Orbit Ephemeris Message
 class OEM : flatbuffers.handle
     /// OEM Header
+    /// Classification marking of the data in IC/CAPCO Portion-marked format.
+    def CLASSIFICATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
     /// OEM Version
     def CCSDS_OEM_VERS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Creation Date
     def CREATION_DATE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 6)
+        return flatbuffers.field_string(buf_, pos_, 8)
     /// Originator
     def ORIGINATOR() -> string:
-        return flatbuffers.field_string(buf_, pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Array of ephemeris data blocks
     def EPHEMERIS_DATA_BLOCK(i:int) -> ephemerisDataBlock:
-        return ephemerisDataBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
+        return ephemerisDataBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
     def EPHEMERIS_DATA_BLOCK_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 10)
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
 
 def GetRootAsOEM(buf:string): return OEM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OEMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(5)
+        return this
+    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, CLASSIFICATION)
         return this
     def add_CCSDS_OEM_VERS(CCSDS_OEM_VERS:float):
-        b_.PrependFloat64Slot(0, CCSDS_OEM_VERS, 0.0)
+        b_.PrependFloat64Slot(1, CCSDS_OEM_VERS, 0.0)
         return this
     def add_CREATION_DATE(CREATION_DATE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(1, CREATION_DATE)
+        b_.PrependUOffsetTRelativeSlot(2, CREATION_DATE)
         return this
     def add_ORIGINATOR(ORIGINATOR:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, ORIGINATOR)
+        b_.PrependUOffsetTRelativeSlot(3, ORIGINATOR)
         return this
     def add_EPHEMERIS_DATA_BLOCK(EPHEMERIS_DATA_BLOCK:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, EPHEMERIS_DATA_BLOCK)
+        b_.PrependUOffsetTRelativeSlot(4, EPHEMERIS_DATA_BLOCK)
         return this
     def end():
         return b_.EndObject()

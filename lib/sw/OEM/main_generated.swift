@@ -463,15 +463,19 @@ public struct OEM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case CCSDS_OEM_VERS = 4
-    case CREATION_DATE = 6
-    case ORIGINATOR = 8
-    case EPHEMERIS_DATA_BLOCK = 10
+    case CLASSIFICATION = 4
+    case CCSDS_OEM_VERS = 6
+    case CREATION_DATE = 8
+    case ORIGINATOR = 10
+    case EPHEMERIS_DATA_BLOCK = 12
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
   ///  OEM Header
+  ///  Classification marking of the data in IC/CAPCO Portion-marked format.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION.v) }
   ///  OEM Version
   public var CCSDS_OEM_VERS: Double { let o = _accessor.offset(VTOFFSET.CCSDS_OEM_VERS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Creation Date
@@ -484,7 +488,8 @@ public struct OEM: FlatBufferObject, Verifiable {
   public var hasEphemerisDataBlock: Bool { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_BLOCK.v); return o == 0 ? false : true }
   public var EPHEMERIS_DATA_BLOCKCount: Int32 { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_BLOCK.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func EPHEMERIS_DATA_BLOCK(at index: Int32) -> ephemerisDataBlock? { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_BLOCK.v); return o == 0 ? nil : ephemerisDataBlock(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startOEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func startOEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
   public static func add(CCSDS_OEM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OEM_VERS, def: 0.0, at: VTOFFSET.CCSDS_OEM_VERS.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
@@ -492,12 +497,14 @@ public struct OEM: FlatBufferObject, Verifiable {
   public static func endOEM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOEM(
     _ fbb: inout FlatBufferBuilder,
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
     CCSDS_OEM_VERS: Double = 0.0,
     CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
     ORIGINATOROffset ORIGINATOR: Offset = Offset(),
     EPHEMERIS_DATA_BLOCKVectorOffset EPHEMERIS_DATA_BLOCK: Offset = Offset()
   ) -> Offset {
     let __start = OEM.startOEM(&fbb)
+    OEM.add(CLASSIFICATION: CLASSIFICATION, &fbb)
     OEM.add(CCSDS_OEM_VERS: CCSDS_OEM_VERS, &fbb)
     OEM.add(CREATION_DATE: CREATION_DATE, &fbb)
     OEM.add(ORIGINATOR: ORIGINATOR, &fbb)
@@ -507,6 +514,7 @@ public struct OEM: FlatBufferObject, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.CLASSIFICATION.p, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CCSDS_OEM_VERS.p, fieldName: "CCSDS_OEM_VERS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CREATION_DATE.p, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ORIGINATOR.p, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)

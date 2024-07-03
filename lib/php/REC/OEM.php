@@ -42,27 +42,34 @@ class OEM extends Table
     }
 
     /// OEM Header
+    /// Classification marking of the data in IC/CAPCO Portion-marked format.
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(4);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// OEM Version
     /**
      * @return double
      */
     public function getCCSDS_OEM_VERS()
     {
-        $o = $this->__offset(4);
+        $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     /// Creation Date
     public function getCREATION_DATE()
     {
-        $o = $this->__offset(6);
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Originator
     public function getORIGINATOR()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -72,7 +79,7 @@ class OEM extends Table
      */
     public function getEPHEMERIS_DATA_BLOCK($j)
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         $obj = new EphemerisDataBlock();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -82,7 +89,7 @@ class OEM extends Table
      */
     public function getEPHEMERIS_DATA_BLOCKLength()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -92,16 +99,17 @@ class OEM extends Table
      */
     public static function startOEM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OEM
      */
-    public static function createOEM(FlatBufferBuilder $builder, $CCSDS_OEM_VERS, $CREATION_DATE, $ORIGINATOR, $EPHEMERIS_DATA_BLOCK)
+    public static function createOEM(FlatBufferBuilder $builder, $CLASSIFICATION, $CCSDS_OEM_VERS, $CREATION_DATE, $ORIGINATOR, $EPHEMERIS_DATA_BLOCK)
     {
-        $builder->startObject(4);
+        $builder->startObject(5);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addCCSDS_OEM_VERS($builder, $CCSDS_OEM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -112,12 +120,22 @@ class OEM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(0, $CLASSIFICATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param double
      * @return void
      */
     public static function addCCSDS_OEM_VERS(FlatBufferBuilder $builder, $CCSDS_OEM_VERS)
     {
-        $builder->addDoubleX(0, $CCSDS_OEM_VERS, 0.0);
+        $builder->addDoubleX(1, $CCSDS_OEM_VERS, 0.0);
     }
 
     /**
@@ -127,7 +145,7 @@ class OEM extends Table
      */
     public static function addCREATION_DATE(FlatBufferBuilder $builder, $CREATION_DATE)
     {
-        $builder->addOffsetX(1, $CREATION_DATE, 0);
+        $builder->addOffsetX(2, $CREATION_DATE, 0);
     }
 
     /**
@@ -137,7 +155,7 @@ class OEM extends Table
      */
     public static function addORIGINATOR(FlatBufferBuilder $builder, $ORIGINATOR)
     {
-        $builder->addOffsetX(2, $ORIGINATOR, 0);
+        $builder->addOffsetX(3, $ORIGINATOR, 0);
     }
 
     /**
@@ -147,7 +165,7 @@ class OEM extends Table
      */
     public static function addEPHEMERIS_DATA_BLOCK(FlatBufferBuilder $builder, $EPHEMERIS_DATA_BLOCK)
     {
-        $builder->addOffsetX(3, $EPHEMERIS_DATA_BLOCK, 0);
+        $builder->addOffsetX(4, $EPHEMERIS_DATA_BLOCK, 0);
     }
 
     /**

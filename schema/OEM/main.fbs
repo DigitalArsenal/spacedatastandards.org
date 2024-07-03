@@ -123,6 +123,8 @@ table ephemerisDataBlock {
 /// Orbit Ephemeris Message
 table OEM {
   /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  CLASSIFICATION: string;
   /// OEM Version
   CCSDS_OEM_VERS:double;
   /// Creation Date

@@ -801,12 +801,17 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
 struct OEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OEMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_CCSDS_OEM_VERS = 4,
-    VT_CREATION_DATE = 6,
-    VT_ORIGINATOR = 8,
-    VT_EPHEMERIS_DATA_BLOCK = 10
+    VT_CLASSIFICATION = 4,
+    VT_CCSDS_OEM_VERS = 6,
+    VT_CREATION_DATE = 8,
+    VT_ORIGINATOR = 10,
+    VT_EPHEMERIS_DATA_BLOCK = 12
   };
   /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
+  }
   /// OEM Version
   double CCSDS_OEM_VERS() const {
     return GetField<double>(VT_CCSDS_OEM_VERS, 0.0);
@@ -825,6 +830,8 @@ struct OEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
            VerifyField<double>(verifier, VT_CCSDS_OEM_VERS, 8) &&
            VerifyOffset(verifier, VT_CREATION_DATE) &&
            verifier.VerifyString(CREATION_DATE()) &&
@@ -841,6 +848,9 @@ struct OEMBuilder {
   typedef OEM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(OEM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
   void add_CCSDS_OEM_VERS(double CCSDS_OEM_VERS) {
     fbb_.AddElement<double>(OEM::VT_CCSDS_OEM_VERS, CCSDS_OEM_VERS, 0.0);
   }
@@ -866,6 +876,7 @@ struct OEMBuilder {
 
 inline ::flatbuffers::Offset<OEM> CreateOEM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
     double CCSDS_OEM_VERS = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
@@ -875,20 +886,24 @@ inline ::flatbuffers::Offset<OEM> CreateOEM(
   builder_.add_EPHEMERIS_DATA_BLOCK(EPHEMERIS_DATA_BLOCK);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<OEM> CreateOEMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *CLASSIFICATION = nullptr,
     double CCSDS_OEM_VERS = 0.0,
     const char *CREATION_DATE = nullptr,
     const char *ORIGINATOR = nullptr,
     const std::vector<::flatbuffers::Offset<ephemerisDataBlock>> *EPHEMERIS_DATA_BLOCK = nullptr) {
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto EPHEMERIS_DATA_BLOCK__ = EPHEMERIS_DATA_BLOCK ? _fbb.CreateVector<::flatbuffers::Offset<ephemerisDataBlock>>(*EPHEMERIS_DATA_BLOCK) : 0;
   return CreateOEM(
       _fbb,
+      CLASSIFICATION__,
       CCSDS_OEM_VERS,
       CREATION_DATE__,
       ORIGINATOR__,

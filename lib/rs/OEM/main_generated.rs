@@ -1548,10 +1548,11 @@ impl<'a> flatbuffers::Follow<'a> for OEM<'a> {
 }
 
 impl<'a> OEM<'a> {
-  pub const VT_CCSDS_OEM_VERS: flatbuffers::VOffsetT = 4;
-  pub const VT_CREATION_DATE: flatbuffers::VOffsetT = 6;
-  pub const VT_ORIGINATOR: flatbuffers::VOffsetT = 8;
-  pub const VT_EPHEMERIS_DATA_BLOCK: flatbuffers::VOffsetT = 10;
+  pub const VT_CLASSIFICATION: flatbuffers::VOffsetT = 4;
+  pub const VT_CCSDS_OEM_VERS: flatbuffers::VOffsetT = 6;
+  pub const VT_CREATION_DATE: flatbuffers::VOffsetT = 8;
+  pub const VT_ORIGINATOR: flatbuffers::VOffsetT = 10;
+  pub const VT_EPHEMERIS_DATA_BLOCK: flatbuffers::VOffsetT = 12;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1567,10 +1568,14 @@ impl<'a> OEM<'a> {
     if let Some(x) = args.EPHEMERIS_DATA_BLOCK { builder.add_EPHEMERIS_DATA_BLOCK(x); }
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> OEMT {
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+      x.to_string()
+    });
     let CCSDS_OEM_VERS = self.CCSDS_OEM_VERS();
     let CREATION_DATE = self.CREATION_DATE().map(|x| {
       x.to_string()
@@ -1582,6 +1587,7 @@ impl<'a> OEM<'a> {
       x.iter().map(|t| t.unpack()).collect()
     });
     OEMT {
+      CLASSIFICATION,
       CCSDS_OEM_VERS,
       CREATION_DATE,
       ORIGINATOR,
@@ -1590,6 +1596,14 @@ impl<'a> OEM<'a> {
   }
 
   /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  #[inline]
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OEM::VT_CLASSIFICATION, None)}
+  }
   /// OEM Version
   #[inline]
   pub fn CCSDS_OEM_VERS(&self) -> f64 {
@@ -1631,6 +1645,7 @@ impl flatbuffers::Verifiable for OEM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
      .visit_field::<f64>("CCSDS_OEM_VERS", Self::VT_CCSDS_OEM_VERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
@@ -1640,6 +1655,7 @@ impl flatbuffers::Verifiable for OEM<'_> {
   }
 }
 pub struct OEMArgs<'a> {
+    pub CLASSIFICATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CCSDS_OEM_VERS: f64,
     pub CREATION_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIGINATOR: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1649,6 +1665,7 @@ impl<'a> Default for OEMArgs<'a> {
   #[inline]
   fn default() -> Self {
     OEMArgs {
+      CLASSIFICATION: None,
       CCSDS_OEM_VERS: 0.0,
       CREATION_DATE: None,
       ORIGINATOR: None,
@@ -1662,6 +1679,10 @@ pub struct OEMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
 impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OEMBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OEM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
   #[inline]
   pub fn add_CCSDS_OEM_VERS(&mut self, CCSDS_OEM_VERS: f64) {
     self.fbb_.push_slot::<f64>(OEM::VT_CCSDS_OEM_VERS, CCSDS_OEM_VERS, 0.0);
@@ -1696,6 +1717,7 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OEMBuilder<'a, 'b, A> {
 impl core::fmt::Debug for OEM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("OEM");
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
       ds.field("CCSDS_OEM_VERS", &self.CCSDS_OEM_VERS());
       ds.field("CREATION_DATE", &self.CREATION_DATE());
       ds.field("ORIGINATOR", &self.ORIGINATOR());
@@ -1706,6 +1728,7 @@ impl core::fmt::Debug for OEM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct OEMT {
+  pub CLASSIFICATION: Option<String>,
   pub CCSDS_OEM_VERS: f64,
   pub CREATION_DATE: Option<String>,
   pub ORIGINATOR: Option<String>,
@@ -1714,6 +1737,7 @@ pub struct OEMT {
 impl Default for OEMT {
   fn default() -> Self {
     Self {
+      CLASSIFICATION: None,
       CCSDS_OEM_VERS: 0.0,
       CREATION_DATE: None,
       ORIGINATOR: None,
@@ -1726,6 +1750,9 @@ impl OEMT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<OEM<'b>> {
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let CCSDS_OEM_VERS = self.CCSDS_OEM_VERS;
     let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1737,6 +1764,7 @@ impl OEMT {
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     OEM::create(_fbb, &OEMArgs{
+      CLASSIFICATION,
       CCSDS_OEM_VERS,
       CREATION_DATE,
       ORIGINATOR,

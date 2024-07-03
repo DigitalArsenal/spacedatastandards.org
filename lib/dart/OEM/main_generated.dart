@@ -715,18 +715,20 @@ class OEM {
   final int _bcOffset;
 
   ///  OEM Header
+  ///  Classification marking of the data in IC/CAPCO Portion-marked format.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  OEM Version
-  double get CCSDS_OEM_VERS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get CCSDS_OEM_VERS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   ///  Creation Date
-  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Originator
-  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Array of ephemeris data blocks
-  List<EphemerisDataBlock>? get EPHEMERIS_DATA_BLOCK => const fb.ListReader<EphemerisDataBlock>(EphemerisDataBlock.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  List<EphemerisDataBlock>? get EPHEMERIS_DATA_BLOCK => const fb.ListReader<EphemerisDataBlock>(EphemerisDataBlock.reader).vTableGetNullable(_bc, _bcOffset, 12);
 
   @override
   String toString() {
-    return 'OEM{CCSDS_OEM_VERS: ${CCSDS_OEM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, EPHEMERIS_DATA_BLOCK: ${EPHEMERIS_DATA_BLOCK}}';
+    return 'OEM{CLASSIFICATION: ${CLASSIFICATION}, CCSDS_OEM_VERS: ${CCSDS_OEM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, EPHEMERIS_DATA_BLOCK: ${EPHEMERIS_DATA_BLOCK}}';
   }
 }
 
@@ -744,23 +746,27 @@ class OEMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
   int addCcsdsOemVers(double? CCSDS_OEM_VERS) {
-    fbBuilder.addFloat64(0, CCSDS_OEM_VERS);
+    fbBuilder.addFloat64(1, CCSDS_OEM_VERS);
     return fbBuilder.offset;
   }
   int addCreationDateOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addOriginatorOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addEphemerisDataBlockOffset(int? offset) {
+  int addOriginatorOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisDataBlockOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
 
@@ -770,18 +776,21 @@ class OEMBuilder {
 }
 
 class OEMObjectBuilder extends fb.ObjectBuilder {
+  final String? _CLASSIFICATION;
   final double? _CCSDS_OEM_VERS;
   final String? _CREATION_DATE;
   final String? _ORIGINATOR;
   final List<EphemerisDataBlockObjectBuilder>? _EPHEMERIS_DATA_BLOCK;
 
   OEMObjectBuilder({
+    String? CLASSIFICATION,
     double? CCSDS_OEM_VERS,
     String? CREATION_DATE,
     String? ORIGINATOR,
     List<EphemerisDataBlockObjectBuilder>? EPHEMERIS_DATA_BLOCK,
   })
-      : _CCSDS_OEM_VERS = CCSDS_OEM_VERS,
+      : _CLASSIFICATION = CLASSIFICATION,
+        _CCSDS_OEM_VERS = CCSDS_OEM_VERS,
         _CREATION_DATE = CREATION_DATE,
         _ORIGINATOR = ORIGINATOR,
         _EPHEMERIS_DATA_BLOCK = EPHEMERIS_DATA_BLOCK;
@@ -789,17 +798,20 @@ class OEMObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
     final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
         : fbBuilder.writeString(_CREATION_DATE!);
     final int? ORIGINATOROffset = _ORIGINATOR == null ? null
         : fbBuilder.writeString(_ORIGINATOR!);
     final int? EPHEMERIS_DATA_BLOCKOffset = _EPHEMERIS_DATA_BLOCK == null ? null
         : fbBuilder.writeList(_EPHEMERIS_DATA_BLOCK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
-    fbBuilder.addFloat64(0, _CCSDS_OEM_VERS);
-    fbBuilder.addOffset(1, CREATION_DATEOffset);
-    fbBuilder.addOffset(2, ORIGINATOROffset);
-    fbBuilder.addOffset(3, EPHEMERIS_DATA_BLOCKOffset);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, CLASSIFICATIONOffset);
+    fbBuilder.addFloat64(1, _CCSDS_OEM_VERS);
+    fbBuilder.addOffset(2, CREATION_DATEOffset);
+    fbBuilder.addOffset(3, ORIGINATOROffset);
+    fbBuilder.addOffset(4, EPHEMERIS_DATA_BLOCKOffset);
     return fbBuilder.endTable();
   }
 

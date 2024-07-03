@@ -3380,9 +3380,13 @@
       "type" : "object",
       "description" : "Orbit Ephemeris Message",
       "properties" : {
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "OEM Header\nClassification marking of the data in IC/CAPCO Portion-marked format."
+              },
         "CCSDS_OEM_VERS" : {
                 "type" : "number",
-                "description" : "OEM Header\nOEM Version"
+                "description" : "OEM Version"
               },
         "CREATION_DATE" : {
                 "type" : "string",
