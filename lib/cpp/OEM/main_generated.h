@@ -207,36 +207,31 @@ struct covarianceMatrixLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   typedef covarianceMatrixLineBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_EPOCH = 4,
-    VT_COV_REFERENCE_FRAME = 6,
-    VT_CX_X = 8,
-    VT_CY_X = 10,
-    VT_CY_Y = 12,
-    VT_CZ_X = 14,
-    VT_CZ_Y = 16,
-    VT_CZ_Z = 18,
-    VT_CX_DOT_X = 20,
-    VT_CX_DOT_Y = 22,
-    VT_CX_DOT_Z = 24,
-    VT_CX_DOT_X_DOT = 26,
-    VT_CY_DOT_X = 28,
-    VT_CY_DOT_Y = 30,
-    VT_CY_DOT_Z = 32,
-    VT_CY_DOT_X_DOT = 34,
-    VT_CY_DOT_Y_DOT = 36,
-    VT_CZ_DOT_X = 38,
-    VT_CZ_DOT_Y = 40,
-    VT_CZ_DOT_Z = 42,
-    VT_CZ_DOT_X_DOT = 44,
-    VT_CZ_DOT_Y_DOT = 46,
-    VT_CZ_DOT_Z_DOT = 48
+    VT_CX_X = 6,
+    VT_CY_X = 8,
+    VT_CY_Y = 10,
+    VT_CZ_X = 12,
+    VT_CZ_Y = 14,
+    VT_CZ_Z = 16,
+    VT_CX_DOT_X = 18,
+    VT_CX_DOT_Y = 20,
+    VT_CX_DOT_Z = 22,
+    VT_CX_DOT_X_DOT = 24,
+    VT_CY_DOT_X = 26,
+    VT_CY_DOT_Y = 28,
+    VT_CY_DOT_Z = 30,
+    VT_CY_DOT_X_DOT = 32,
+    VT_CY_DOT_Y_DOT = 34,
+    VT_CZ_DOT_X = 36,
+    VT_CZ_DOT_Y = 38,
+    VT_CZ_DOT_Z = 40,
+    VT_CZ_DOT_X_DOT = 42,
+    VT_CZ_DOT_Y_DOT = 44,
+    VT_CZ_DOT_Z_DOT = 46
   };
   /// Epoch
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
-  }
-  /// Reference frame for the covariance matrix
-  refFrame COV_REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_COV_REFERENCE_FRAME, 0));
   }
   /// Covariance matrix [1,1] km**2
   double CX_X() const {
@@ -326,7 +321,6 @@ struct covarianceMatrixLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
-           VerifyField<int8_t>(verifier, VT_COV_REFERENCE_FRAME, 1) &&
            VerifyField<double>(verifier, VT_CX_X, 8) &&
            VerifyField<double>(verifier, VT_CY_X, 8) &&
            VerifyField<double>(verifier, VT_CY_Y, 8) &&
@@ -358,9 +352,6 @@ struct covarianceMatrixLineBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
     fbb_.AddOffset(covarianceMatrixLine::VT_EPOCH, EPOCH);
-  }
-  void add_COV_REFERENCE_FRAME(refFrame COV_REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, static_cast<int8_t>(COV_REFERENCE_FRAME), 0);
   }
   void add_CX_X(double CX_X) {
     fbb_.AddElement<double>(covarianceMatrixLine::VT_CX_X, CX_X, 0.0);
@@ -439,7 +430,6 @@ struct covarianceMatrixLineBuilder {
 inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
-    refFrame COV_REFERENCE_FRAME = refFrame_ECEF,
     double CX_X = 0.0,
     double CY_X = 0.0,
     double CY_Y = 0.0,
@@ -484,14 +474,12 @@ inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(
   builder_.add_CY_X(CY_X);
   builder_.add_CX_X(CX_X);
   builder_.add_EPOCH(EPOCH);
-  builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLineDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *EPOCH = nullptr,
-    refFrame COV_REFERENCE_FRAME = refFrame_ECEF,
     double CX_X = 0.0,
     double CY_X = 0.0,
     double CY_Y = 0.0,
@@ -517,7 +505,6 @@ inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLineDir
   return CreatecovarianceMatrixLine(
       _fbb,
       EPOCH__,
-      COV_REFERENCE_FRAME,
       CX_X,
       CY_X,
       CY_Y,
@@ -550,16 +537,17 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_CENTER_NAME = 8,
     VT_REFERENCE_FRAME = 10,
     VT_REFERENCE_FRAME_EPOCH = 12,
-    VT_TIME_SYSTEM = 14,
-    VT_START_TIME = 16,
-    VT_USEABLE_START_TIME = 18,
-    VT_USEABLE_STOP_TIME = 20,
-    VT_STOP_TIME = 22,
-    VT_STEP_SIZE = 24,
-    VT_INTERPOLATION = 26,
-    VT_INTERPOLATION_DEGREE = 28,
-    VT_EPHEMERIS_DATA_LINES = 30,
-    VT_COVARIANCE_MATRIX_LINES = 32
+    VT_COV_REFERENCE_FRAME = 14,
+    VT_TIME_SYSTEM = 16,
+    VT_START_TIME = 18,
+    VT_USEABLE_START_TIME = 20,
+    VT_USEABLE_STOP_TIME = 22,
+    VT_STOP_TIME = 24,
+    VT_STEP_SIZE = 26,
+    VT_INTERPOLATION = 28,
+    VT_INTERPOLATION_DEGREE = 30,
+    VT_EPHEMERIS_DATA_LINES = 32,
+    VT_COVARIANCE_MATRIX_LINES = 34
   };
   /// Plain-Text Comment
   const ::flatbuffers::String *COMMENT() const {
@@ -580,6 +568,10 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   const ::flatbuffers::String *REFERENCE_FRAME_EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME_EPOCH);
+  }
+  /// Reference frame for the covariance matrix
+  refFrame COV_REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_COV_REFERENCE_FRAME, 0));
   }
   /// Time system used for the orbit state and covariance matrix. (UTC)
   timeSystem TIME_SYSTEM() const {
@@ -632,6 +624,7 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME_EPOCH) &&
            verifier.VerifyString(REFERENCE_FRAME_EPOCH()) &&
+           VerifyField<int8_t>(verifier, VT_COV_REFERENCE_FRAME, 1) &&
            VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
            VerifyOffset(verifier, VT_START_TIME) &&
            verifier.VerifyString(START_TIME()) &&
@@ -673,6 +666,9 @@ struct ephemerisDataBlockBuilder {
   }
   void add_REFERENCE_FRAME_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH) {
     fbb_.AddOffset(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
+  }
+  void add_COV_REFERENCE_FRAME(refFrame COV_REFERENCE_FRAME) {
+    fbb_.AddElement<int8_t>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, static_cast<int8_t>(COV_REFERENCE_FRAME), 0);
   }
   void add_TIME_SYSTEM(timeSystem TIME_SYSTEM) {
     fbb_.AddElement<int8_t>(ephemerisDataBlock::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
@@ -722,6 +718,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH = 0,
+    refFrame COV_REFERENCE_FRAME = refFrame_ECEF,
     timeSystem TIME_SYSTEM = timeSystem_GMST,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> USEABLE_START_TIME = 0,
@@ -747,6 +744,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
   builder_.add_OBJECT(OBJECT);
   builder_.add_COMMENT(COMMENT);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
+  builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   return builder_.Finish();
 }
@@ -758,6 +756,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const char *CENTER_NAME = nullptr,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
     const char *REFERENCE_FRAME_EPOCH = nullptr,
+    refFrame COV_REFERENCE_FRAME = refFrame_ECEF,
     timeSystem TIME_SYSTEM = timeSystem_GMST,
     const char *START_TIME = nullptr,
     const char *USEABLE_START_TIME = nullptr,
@@ -785,6 +784,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
       CENTER_NAME__,
       REFERENCE_FRAME,
       REFERENCE_FRAME_EPOCH__,
+      COV_REFERENCE_FRAME,
       TIME_SYSTEM,
       START_TIME__,
       USEABLE_START_TIME__,

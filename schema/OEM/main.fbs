@@ -39,8 +39,6 @@ table ephemerisDataLine {
 table covarianceMatrixLine {
   /// Epoch
   EPOCH:string;
-  /// Reference frame for the covariance matrix
-  COV_REFERENCE_FRAME:refFrame;
   /// Covariance matrix [1,1] km**2
   CX_X:double;
   /// Covariance matrix [2,1] km**2
@@ -97,6 +95,8 @@ table ephemerisDataBlock {
   REFERENCE_FRAME:refFrame;
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   REFERENCE_FRAME_EPOCH:string;
+  /// Reference frame for the covariance matrix
+  COV_REFERENCE_FRAME:refFrame;
   /// Time system used for the orbit state and covariance matrix. (UTC)
   TIME_SYSTEM:timeSystem;
   /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)

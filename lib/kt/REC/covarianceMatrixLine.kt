@@ -44,19 +44,11 @@ class covarianceMatrixLine : Table() {
     val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Reference frame for the covariance matrix
-     */
-    val COV_REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(6)
-            return if(o != 0) bb.get(o + bb_pos) else 0
-        }
-    /**
      * Covariance matrix [1,1] km**2
      */
     val CX_X : Double
         get() {
-            val o = __offset(8)
+            val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -64,7 +56,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_X : Double
         get() {
-            val o = __offset(10)
+            val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -72,7 +64,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_Y : Double
         get() {
-            val o = __offset(12)
+            val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -80,7 +72,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_X : Double
         get() {
-            val o = __offset(14)
+            val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -88,7 +80,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_Y : Double
         get() {
-            val o = __offset(16)
+            val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -96,7 +88,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_Z : Double
         get() {
-            val o = __offset(18)
+            val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -104,7 +96,7 @@ class covarianceMatrixLine : Table() {
      */
     val CX_DOT_X : Double
         get() {
-            val o = __offset(20)
+            val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -112,7 +104,7 @@ class covarianceMatrixLine : Table() {
      */
     val CX_DOT_Y : Double
         get() {
-            val o = __offset(22)
+            val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -120,7 +112,7 @@ class covarianceMatrixLine : Table() {
      */
     val CX_DOT_Z : Double
         get() {
-            val o = __offset(24)
+            val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -128,7 +120,7 @@ class covarianceMatrixLine : Table() {
      */
     val CX_DOT_X_DOT : Double
         get() {
-            val o = __offset(26)
+            val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -136,7 +128,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_DOT_X : Double
         get() {
-            val o = __offset(28)
+            val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -144,7 +136,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_DOT_Y : Double
         get() {
-            val o = __offset(30)
+            val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -152,7 +144,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_DOT_Z : Double
         get() {
-            val o = __offset(32)
+            val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -160,7 +152,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_DOT_X_DOT : Double
         get() {
-            val o = __offset(34)
+            val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -168,7 +160,7 @@ class covarianceMatrixLine : Table() {
      */
     val CY_DOT_Y_DOT : Double
         get() {
-            val o = __offset(36)
+            val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -176,7 +168,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_DOT_X : Double
         get() {
-            val o = __offset(38)
+            val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -184,7 +176,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_DOT_Y : Double
         get() {
-            val o = __offset(40)
+            val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -192,7 +184,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_DOT_Z : Double
         get() {
-            val o = __offset(42)
+            val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -200,7 +192,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_DOT_X_DOT : Double
         get() {
-            val o = __offset(44)
+            val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -208,7 +200,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_DOT_Y_DOT : Double
         get() {
-            val o = __offset(46)
+            val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -216,7 +208,7 @@ class covarianceMatrixLine : Table() {
      */
     val CZ_DOT_Z_DOT : Double
         get() {
-            val o = __offset(48)
+            val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
@@ -226,8 +218,8 @@ class covarianceMatrixLine : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createcovarianceMatrixLine(builder: FlatBufferBuilder, EPOCHOffset: Int, COV_REFERENCE_FRAME: Byte, CX_X: Double, CY_X: Double, CY_Y: Double, CZ_X: Double, CZ_Y: Double, CZ_Z: Double, CX_DOT_X: Double, CX_DOT_Y: Double, CX_DOT_Z: Double, CX_DOT_X_DOT: Double, CY_DOT_X: Double, CY_DOT_Y: Double, CY_DOT_Z: Double, CY_DOT_X_DOT: Double, CY_DOT_Y_DOT: Double, CZ_DOT_X: Double, CZ_DOT_Y: Double, CZ_DOT_Z: Double, CZ_DOT_X_DOT: Double, CZ_DOT_Y_DOT: Double, CZ_DOT_Z_DOT: Double) : Int {
-            builder.startTable(23)
+        fun createcovarianceMatrixLine(builder: FlatBufferBuilder, EPOCHOffset: Int, CX_X: Double, CY_X: Double, CY_Y: Double, CZ_X: Double, CZ_Y: Double, CZ_Z: Double, CX_DOT_X: Double, CX_DOT_Y: Double, CX_DOT_Z: Double, CX_DOT_X_DOT: Double, CY_DOT_X: Double, CY_DOT_Y: Double, CY_DOT_Z: Double, CY_DOT_X_DOT: Double, CY_DOT_Y_DOT: Double, CZ_DOT_X: Double, CZ_DOT_Y: Double, CZ_DOT_Z: Double, CZ_DOT_X_DOT: Double, CZ_DOT_Y_DOT: Double, CZ_DOT_Z_DOT: Double) : Int {
+            builder.startTable(22)
             addCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
             addCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
             addCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
@@ -250,33 +242,31 @@ class covarianceMatrixLine : Table() {
             addCY_X(builder, CY_X)
             addCX_X(builder, CX_X)
             addEPOCH(builder, EPOCHOffset)
-            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
             return endcovarianceMatrixLine(builder)
         }
-        fun startcovarianceMatrixLine(builder: FlatBufferBuilder) = builder.startTable(23)
+        fun startcovarianceMatrixLine(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Byte) = builder.addByte(1, COV_REFERENCE_FRAME, 0)
-        fun addCX_X(builder: FlatBufferBuilder, CX_X: Double) = builder.addDouble(2, CX_X, 0.0)
-        fun addCY_X(builder: FlatBufferBuilder, CY_X: Double) = builder.addDouble(3, CY_X, 0.0)
-        fun addCY_Y(builder: FlatBufferBuilder, CY_Y: Double) = builder.addDouble(4, CY_Y, 0.0)
-        fun addCZ_X(builder: FlatBufferBuilder, CZ_X: Double) = builder.addDouble(5, CZ_X, 0.0)
-        fun addCZ_Y(builder: FlatBufferBuilder, CZ_Y: Double) = builder.addDouble(6, CZ_Y, 0.0)
-        fun addCZ_Z(builder: FlatBufferBuilder, CZ_Z: Double) = builder.addDouble(7, CZ_Z, 0.0)
-        fun addCX_DOT_X(builder: FlatBufferBuilder, CX_DOT_X: Double) = builder.addDouble(8, CX_DOT_X, 0.0)
-        fun addCX_DOT_Y(builder: FlatBufferBuilder, CX_DOT_Y: Double) = builder.addDouble(9, CX_DOT_Y, 0.0)
-        fun addCX_DOT_Z(builder: FlatBufferBuilder, CX_DOT_Z: Double) = builder.addDouble(10, CX_DOT_Z, 0.0)
-        fun addCX_DOT_X_DOT(builder: FlatBufferBuilder, CX_DOT_X_DOT: Double) = builder.addDouble(11, CX_DOT_X_DOT, 0.0)
-        fun addCY_DOT_X(builder: FlatBufferBuilder, CY_DOT_X: Double) = builder.addDouble(12, CY_DOT_X, 0.0)
-        fun addCY_DOT_Y(builder: FlatBufferBuilder, CY_DOT_Y: Double) = builder.addDouble(13, CY_DOT_Y, 0.0)
-        fun addCY_DOT_Z(builder: FlatBufferBuilder, CY_DOT_Z: Double) = builder.addDouble(14, CY_DOT_Z, 0.0)
-        fun addCY_DOT_X_DOT(builder: FlatBufferBuilder, CY_DOT_X_DOT: Double) = builder.addDouble(15, CY_DOT_X_DOT, 0.0)
-        fun addCY_DOT_Y_DOT(builder: FlatBufferBuilder, CY_DOT_Y_DOT: Double) = builder.addDouble(16, CY_DOT_Y_DOT, 0.0)
-        fun addCZ_DOT_X(builder: FlatBufferBuilder, CZ_DOT_X: Double) = builder.addDouble(17, CZ_DOT_X, 0.0)
-        fun addCZ_DOT_Y(builder: FlatBufferBuilder, CZ_DOT_Y: Double) = builder.addDouble(18, CZ_DOT_Y, 0.0)
-        fun addCZ_DOT_Z(builder: FlatBufferBuilder, CZ_DOT_Z: Double) = builder.addDouble(19, CZ_DOT_Z, 0.0)
-        fun addCZ_DOT_X_DOT(builder: FlatBufferBuilder, CZ_DOT_X_DOT: Double) = builder.addDouble(20, CZ_DOT_X_DOT, 0.0)
-        fun addCZ_DOT_Y_DOT(builder: FlatBufferBuilder, CZ_DOT_Y_DOT: Double) = builder.addDouble(21, CZ_DOT_Y_DOT, 0.0)
-        fun addCZ_DOT_Z_DOT(builder: FlatBufferBuilder, CZ_DOT_Z_DOT: Double) = builder.addDouble(22, CZ_DOT_Z_DOT, 0.0)
+        fun addCX_X(builder: FlatBufferBuilder, CX_X: Double) = builder.addDouble(1, CX_X, 0.0)
+        fun addCY_X(builder: FlatBufferBuilder, CY_X: Double) = builder.addDouble(2, CY_X, 0.0)
+        fun addCY_Y(builder: FlatBufferBuilder, CY_Y: Double) = builder.addDouble(3, CY_Y, 0.0)
+        fun addCZ_X(builder: FlatBufferBuilder, CZ_X: Double) = builder.addDouble(4, CZ_X, 0.0)
+        fun addCZ_Y(builder: FlatBufferBuilder, CZ_Y: Double) = builder.addDouble(5, CZ_Y, 0.0)
+        fun addCZ_Z(builder: FlatBufferBuilder, CZ_Z: Double) = builder.addDouble(6, CZ_Z, 0.0)
+        fun addCX_DOT_X(builder: FlatBufferBuilder, CX_DOT_X: Double) = builder.addDouble(7, CX_DOT_X, 0.0)
+        fun addCX_DOT_Y(builder: FlatBufferBuilder, CX_DOT_Y: Double) = builder.addDouble(8, CX_DOT_Y, 0.0)
+        fun addCX_DOT_Z(builder: FlatBufferBuilder, CX_DOT_Z: Double) = builder.addDouble(9, CX_DOT_Z, 0.0)
+        fun addCX_DOT_X_DOT(builder: FlatBufferBuilder, CX_DOT_X_DOT: Double) = builder.addDouble(10, CX_DOT_X_DOT, 0.0)
+        fun addCY_DOT_X(builder: FlatBufferBuilder, CY_DOT_X: Double) = builder.addDouble(11, CY_DOT_X, 0.0)
+        fun addCY_DOT_Y(builder: FlatBufferBuilder, CY_DOT_Y: Double) = builder.addDouble(12, CY_DOT_Y, 0.0)
+        fun addCY_DOT_Z(builder: FlatBufferBuilder, CY_DOT_Z: Double) = builder.addDouble(13, CY_DOT_Z, 0.0)
+        fun addCY_DOT_X_DOT(builder: FlatBufferBuilder, CY_DOT_X_DOT: Double) = builder.addDouble(14, CY_DOT_X_DOT, 0.0)
+        fun addCY_DOT_Y_DOT(builder: FlatBufferBuilder, CY_DOT_Y_DOT: Double) = builder.addDouble(15, CY_DOT_Y_DOT, 0.0)
+        fun addCZ_DOT_X(builder: FlatBufferBuilder, CZ_DOT_X: Double) = builder.addDouble(16, CZ_DOT_X, 0.0)
+        fun addCZ_DOT_Y(builder: FlatBufferBuilder, CZ_DOT_Y: Double) = builder.addDouble(17, CZ_DOT_Y, 0.0)
+        fun addCZ_DOT_Z(builder: FlatBufferBuilder, CZ_DOT_Z: Double) = builder.addDouble(18, CZ_DOT_Z, 0.0)
+        fun addCZ_DOT_X_DOT(builder: FlatBufferBuilder, CZ_DOT_X_DOT: Double) = builder.addDouble(19, CZ_DOT_X_DOT, 0.0)
+        fun addCZ_DOT_Y_DOT(builder: FlatBufferBuilder, CZ_DOT_Y_DOT: Double) = builder.addDouble(20, CZ_DOT_Y_DOT, 0.0)
+        fun addCZ_DOT_Z_DOT(builder: FlatBufferBuilder, CZ_DOT_Z_DOT: Double) = builder.addDouble(21, CZ_DOT_Z_DOT, 0.0)
         fun endcovarianceMatrixLine(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

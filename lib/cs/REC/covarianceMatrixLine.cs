@@ -25,54 +25,51 @@ public struct covarianceMatrixLine : IFlatbufferObject
   public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(4); }
-  /// Reference frame for the covariance matrix
-  public refFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(6); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Covariance matrix [1,1] km**2
-  public double CX_X { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CX_X { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [2,1] km**2
-  public double CY_X { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_X { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [2,2] km**2
-  public double CY_Y { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_Y { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [3,1] km**2
-  public double CZ_X { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_X { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [3,2] km**2
-  public double CZ_Y { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_Y { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [3,3] km**2
-  public double CZ_Z { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_Z { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [4,1] km**2/s
-  public double CX_DOT_X { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CX_DOT_X { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [4,2] km**2/s
-  public double CX_DOT_Y { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CX_DOT_Y { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [4,3] km**2/s
-  public double CX_DOT_Z { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CX_DOT_Z { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [4,4] km**2/s**2
-  public double CX_DOT_X_DOT { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CX_DOT_X_DOT { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [5,1] km**2/s
-  public double CY_DOT_X { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_DOT_X { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [5,2] km**2/s
-  public double CY_DOT_Y { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_DOT_Y { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [5,3] km**2/s
-  public double CY_DOT_Z { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_DOT_Z { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [5,4] km**2/s**2
-  public double CY_DOT_X_DOT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_DOT_X_DOT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [5,5] km**2/s**2
-  public double CY_DOT_Y_DOT { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CY_DOT_Y_DOT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,1] km**2/s
-  public double CZ_DOT_X { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_DOT_X { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,2] km**2/s
-  public double CZ_DOT_Y { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_DOT_Y { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,3] km**2/s
-  public double CZ_DOT_Z { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_DOT_Z { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,4] km**2/s**2
-  public double CZ_DOT_X_DOT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_DOT_X_DOT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,5] km**2/s**2
-  public double CZ_DOT_Y_DOT { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_DOT_Y_DOT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,6] km**2/s**2
-  public double CZ_DOT_Z_DOT { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CZ_DOT_Z_DOT { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(FlatBufferBuilder builder,
       StringOffset EPOCHOffset = default(StringOffset),
-      refFrame COV_REFERENCE_FRAME = refFrame.ECEF,
       double CX_X = 0.0,
       double CY_X = 0.0,
       double CY_Y = 0.0,
@@ -94,7 +91,7 @@ public struct covarianceMatrixLine : IFlatbufferObject
       double CZ_DOT_X_DOT = 0.0,
       double CZ_DOT_Y_DOT = 0.0,
       double CZ_DOT_Z_DOT = 0.0) {
-    builder.StartTable(23);
+    builder.StartTable(22);
     covarianceMatrixLine.AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT);
     covarianceMatrixLine.AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT);
     covarianceMatrixLine.AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT);
@@ -117,34 +114,32 @@ public struct covarianceMatrixLine : IFlatbufferObject
     covarianceMatrixLine.AddCY_X(builder, CY_X);
     covarianceMatrixLine.AddCX_X(builder, CX_X);
     covarianceMatrixLine.AddEPOCH(builder, EPOCHOffset);
-    covarianceMatrixLine.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME);
     return covarianceMatrixLine.EndcovarianceMatrixLine(builder);
   }
 
-  public static void StartcovarianceMatrixLine(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartcovarianceMatrixLine(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(0, EPOCHOffset.Value, 0); }
-  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame COV_REFERENCE_FRAME) { builder.AddSbyte(1, (sbyte)COV_REFERENCE_FRAME, 0); }
-  public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(2, CX_X, 0.0); }
-  public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(3, CY_X, 0.0); }
-  public static void AddCY_Y(FlatBufferBuilder builder, double CY_Y) { builder.AddDouble(4, CY_Y, 0.0); }
-  public static void AddCZ_X(FlatBufferBuilder builder, double CZ_X) { builder.AddDouble(5, CZ_X, 0.0); }
-  public static void AddCZ_Y(FlatBufferBuilder builder, double CZ_Y) { builder.AddDouble(6, CZ_Y, 0.0); }
-  public static void AddCZ_Z(FlatBufferBuilder builder, double CZ_Z) { builder.AddDouble(7, CZ_Z, 0.0); }
-  public static void AddCX_DOT_X(FlatBufferBuilder builder, double CX_DOT_X) { builder.AddDouble(8, CX_DOT_X, 0.0); }
-  public static void AddCX_DOT_Y(FlatBufferBuilder builder, double CX_DOT_Y) { builder.AddDouble(9, CX_DOT_Y, 0.0); }
-  public static void AddCX_DOT_Z(FlatBufferBuilder builder, double CX_DOT_Z) { builder.AddDouble(10, CX_DOT_Z, 0.0); }
-  public static void AddCX_DOT_X_DOT(FlatBufferBuilder builder, double CX_DOT_X_DOT) { builder.AddDouble(11, CX_DOT_X_DOT, 0.0); }
-  public static void AddCY_DOT_X(FlatBufferBuilder builder, double CY_DOT_X) { builder.AddDouble(12, CY_DOT_X, 0.0); }
-  public static void AddCY_DOT_Y(FlatBufferBuilder builder, double CY_DOT_Y) { builder.AddDouble(13, CY_DOT_Y, 0.0); }
-  public static void AddCY_DOT_Z(FlatBufferBuilder builder, double CY_DOT_Z) { builder.AddDouble(14, CY_DOT_Z, 0.0); }
-  public static void AddCY_DOT_X_DOT(FlatBufferBuilder builder, double CY_DOT_X_DOT) { builder.AddDouble(15, CY_DOT_X_DOT, 0.0); }
-  public static void AddCY_DOT_Y_DOT(FlatBufferBuilder builder, double CY_DOT_Y_DOT) { builder.AddDouble(16, CY_DOT_Y_DOT, 0.0); }
-  public static void AddCZ_DOT_X(FlatBufferBuilder builder, double CZ_DOT_X) { builder.AddDouble(17, CZ_DOT_X, 0.0); }
-  public static void AddCZ_DOT_Y(FlatBufferBuilder builder, double CZ_DOT_Y) { builder.AddDouble(18, CZ_DOT_Y, 0.0); }
-  public static void AddCZ_DOT_Z(FlatBufferBuilder builder, double CZ_DOT_Z) { builder.AddDouble(19, CZ_DOT_Z, 0.0); }
-  public static void AddCZ_DOT_X_DOT(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.AddDouble(20, CZ_DOT_X_DOT, 0.0); }
-  public static void AddCZ_DOT_Y_DOT(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.AddDouble(21, CZ_DOT_Y_DOT, 0.0); }
-  public static void AddCZ_DOT_Z_DOT(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.AddDouble(22, CZ_DOT_Z_DOT, 0.0); }
+  public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(1, CX_X, 0.0); }
+  public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(2, CY_X, 0.0); }
+  public static void AddCY_Y(FlatBufferBuilder builder, double CY_Y) { builder.AddDouble(3, CY_Y, 0.0); }
+  public static void AddCZ_X(FlatBufferBuilder builder, double CZ_X) { builder.AddDouble(4, CZ_X, 0.0); }
+  public static void AddCZ_Y(FlatBufferBuilder builder, double CZ_Y) { builder.AddDouble(5, CZ_Y, 0.0); }
+  public static void AddCZ_Z(FlatBufferBuilder builder, double CZ_Z) { builder.AddDouble(6, CZ_Z, 0.0); }
+  public static void AddCX_DOT_X(FlatBufferBuilder builder, double CX_DOT_X) { builder.AddDouble(7, CX_DOT_X, 0.0); }
+  public static void AddCX_DOT_Y(FlatBufferBuilder builder, double CX_DOT_Y) { builder.AddDouble(8, CX_DOT_Y, 0.0); }
+  public static void AddCX_DOT_Z(FlatBufferBuilder builder, double CX_DOT_Z) { builder.AddDouble(9, CX_DOT_Z, 0.0); }
+  public static void AddCX_DOT_X_DOT(FlatBufferBuilder builder, double CX_DOT_X_DOT) { builder.AddDouble(10, CX_DOT_X_DOT, 0.0); }
+  public static void AddCY_DOT_X(FlatBufferBuilder builder, double CY_DOT_X) { builder.AddDouble(11, CY_DOT_X, 0.0); }
+  public static void AddCY_DOT_Y(FlatBufferBuilder builder, double CY_DOT_Y) { builder.AddDouble(12, CY_DOT_Y, 0.0); }
+  public static void AddCY_DOT_Z(FlatBufferBuilder builder, double CY_DOT_Z) { builder.AddDouble(13, CY_DOT_Z, 0.0); }
+  public static void AddCY_DOT_X_DOT(FlatBufferBuilder builder, double CY_DOT_X_DOT) { builder.AddDouble(14, CY_DOT_X_DOT, 0.0); }
+  public static void AddCY_DOT_Y_DOT(FlatBufferBuilder builder, double CY_DOT_Y_DOT) { builder.AddDouble(15, CY_DOT_Y_DOT, 0.0); }
+  public static void AddCZ_DOT_X(FlatBufferBuilder builder, double CZ_DOT_X) { builder.AddDouble(16, CZ_DOT_X, 0.0); }
+  public static void AddCZ_DOT_Y(FlatBufferBuilder builder, double CZ_DOT_Y) { builder.AddDouble(17, CZ_DOT_Y, 0.0); }
+  public static void AddCZ_DOT_Z(FlatBufferBuilder builder, double CZ_DOT_Z) { builder.AddDouble(18, CZ_DOT_Z, 0.0); }
+  public static void AddCZ_DOT_X_DOT(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.AddDouble(19, CZ_DOT_X_DOT, 0.0); }
+  public static void AddCZ_DOT_Y_DOT(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.AddDouble(20, CZ_DOT_Y_DOT, 0.0); }
+  public static void AddCZ_DOT_Z_DOT(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.AddDouble(21, CZ_DOT_Z_DOT, 0.0); }
   public static Offset<covarianceMatrixLine> EndcovarianceMatrixLine(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<covarianceMatrixLine>(o);
@@ -156,7 +151,6 @@ public struct covarianceMatrixLine : IFlatbufferObject
   }
   public void UnPackTo(covarianceMatrixLineT _o) {
     _o.EPOCH = this.EPOCH;
-    _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME;
     _o.CX_X = this.CX_X;
     _o.CY_X = this.CY_X;
     _o.CY_Y = this.CY_Y;
@@ -185,7 +179,6 @@ public struct covarianceMatrixLine : IFlatbufferObject
     return CreatecovarianceMatrixLine(
       builder,
       _EPOCH,
-      _o.COV_REFERENCE_FRAME,
       _o.CX_X,
       _o.CY_X,
       _o.CY_Y,
@@ -213,7 +206,6 @@ public struct covarianceMatrixLine : IFlatbufferObject
 public class covarianceMatrixLineT
 {
   public string EPOCH { get; set; }
-  public refFrame COV_REFERENCE_FRAME { get; set; }
   public double CX_X { get; set; }
   public double CY_X { get; set; }
   public double CY_Y { get; set; }
@@ -238,7 +230,6 @@ public class covarianceMatrixLineT
 
   public covarianceMatrixLineT() {
     this.EPOCH = null;
-    this.COV_REFERENCE_FRAME = refFrame.ECEF;
     this.CX_X = 0.0;
     this.CY_X = 0.0;
     this.CY_Y = 0.0;
@@ -270,28 +261,27 @@ static public class covarianceMatrixLineVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 6 /*COV_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
-      && verifier.VerifyField(tablePos, 8 /*CX_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 10 /*CY_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*CY_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*CZ_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 16 /*CZ_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*CZ_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 20 /*CX_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*CX_DOT_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*CX_DOT_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*CX_DOT_X_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*CY_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*CY_DOT_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 32 /*CY_DOT_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 34 /*CY_DOT_X_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*CY_DOT_Y_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*CZ_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*CZ_DOT_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 42 /*CZ_DOT_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 44 /*CZ_DOT_X_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*CZ_DOT_Y_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*CZ_DOT_Z_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*CX_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*CY_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*CY_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*CZ_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*CZ_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*CZ_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*CX_DOT_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*CX_DOT_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*CX_DOT_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*CX_DOT_X_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*CY_DOT_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*CY_DOT_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*CY_DOT_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*CY_DOT_X_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*CY_DOT_Y_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*CZ_DOT_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*CZ_DOT_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*CZ_DOT_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*CZ_DOT_X_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*CZ_DOT_Y_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*CZ_DOT_Z_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

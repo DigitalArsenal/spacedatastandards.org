@@ -121,28 +121,27 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case EPOCH = 4
-    case COV_REFERENCE_FRAME = 6
-    case CX_X = 8
-    case CY_X = 10
-    case CY_Y = 12
-    case CZ_X = 14
-    case CZ_Y = 16
-    case CZ_Z = 18
-    case CX_DOT_X = 20
-    case CX_DOT_Y = 22
-    case CX_DOT_Z = 24
-    case CX_DOT_X_DOT = 26
-    case CY_DOT_X = 28
-    case CY_DOT_Y = 30
-    case CY_DOT_Z = 32
-    case CY_DOT_X_DOT = 34
-    case CY_DOT_Y_DOT = 36
-    case CZ_DOT_X = 38
-    case CZ_DOT_Y = 40
-    case CZ_DOT_Z = 42
-    case CZ_DOT_X_DOT = 44
-    case CZ_DOT_Y_DOT = 46
-    case CZ_DOT_Z_DOT = 48
+    case CX_X = 6
+    case CY_X = 8
+    case CY_Y = 10
+    case CZ_X = 12
+    case CZ_Y = 14
+    case CZ_Z = 16
+    case CX_DOT_X = 18
+    case CX_DOT_Y = 20
+    case CX_DOT_Z = 22
+    case CX_DOT_X_DOT = 24
+    case CY_DOT_X = 26
+    case CY_DOT_Y = 28
+    case CY_DOT_Z = 30
+    case CY_DOT_X_DOT = 32
+    case CY_DOT_Y_DOT = 34
+    case CZ_DOT_X = 36
+    case CZ_DOT_Y = 38
+    case CZ_DOT_Z = 40
+    case CZ_DOT_X_DOT = 42
+    case CZ_DOT_Y_DOT = 44
+    case CZ_DOT_Z_DOT = 46
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -150,8 +149,6 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
   ///  Epoch
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  ///  Reference frame for the covariance matrix
-  public var COV_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Covariance matrix [1,1] km**2
   public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Covariance matrix [2,1] km**2
@@ -194,9 +191,8 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
   public var CZ_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Covariance matrix [6,6] km**2/s**2
   public var CZ_DOT_Z_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startcovarianceMatrixLine(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  public static func startcovarianceMatrixLine(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(COV_REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.COV_REFERENCE_FRAME.p) }
   public static func add(CX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_X, def: 0.0, at: VTOFFSET.CX_X.p) }
   public static func add(CY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_X, def: 0.0, at: VTOFFSET.CY_X.p) }
   public static func add(CY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_Y, def: 0.0, at: VTOFFSET.CY_Y.p) }
@@ -222,7 +218,6 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
   public static func createcovarianceMatrixLine(
     _ fbb: inout FlatBufferBuilder,
     EPOCHOffset EPOCH: Offset = Offset(),
-    COV_REFERENCE_FRAME: refFrame = .ecef,
     CX_X: Double = 0.0,
     CY_X: Double = 0.0,
     CY_Y: Double = 0.0,
@@ -247,7 +242,6 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
   ) -> Offset {
     let __start = covarianceMatrixLine.startcovarianceMatrixLine(&fbb)
     covarianceMatrixLine.add(EPOCH: EPOCH, &fbb)
-    covarianceMatrixLine.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
     covarianceMatrixLine.add(CX_X: CX_X, &fbb)
     covarianceMatrixLine.add(CY_X: CY_X, &fbb)
     covarianceMatrixLine.add(CY_Y: CY_Y, &fbb)
@@ -275,7 +269,6 @@ public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COV_REFERENCE_FRAME.p, fieldName: "COV_REFERENCE_FRAME", required: false, type: refFrame.self)
     try _v.visit(field: VTOFFSET.CX_X.p, fieldName: "CX_X", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CY_X.p, fieldName: "CY_X", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CY_Y.p, fieldName: "CY_Y", required: false, type: Double.self)
@@ -319,16 +312,17 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     case CENTER_NAME = 8
     case REFERENCE_FRAME = 10
     case REFERENCE_FRAME_EPOCH = 12
-    case TIME_SYSTEM = 14
-    case START_TIME = 16
-    case USEABLE_START_TIME = 18
-    case USEABLE_STOP_TIME = 20
-    case STOP_TIME = 22
-    case STEP_SIZE = 24
-    case INTERPOLATION = 26
-    case INTERPOLATION_DEGREE = 28
-    case EPHEMERIS_DATA_LINES = 30
-    case COVARIANCE_MATRIX_LINES = 32
+    case COV_REFERENCE_FRAME = 14
+    case TIME_SYSTEM = 16
+    case START_TIME = 18
+    case USEABLE_START_TIME = 20
+    case USEABLE_STOP_TIME = 22
+    case STOP_TIME = 24
+    case STEP_SIZE = 26
+    case INTERPOLATION = 28
+    case INTERPOLATION_DEGREE = 30
+    case EPHEMERIS_DATA_LINES = 32
+    case COVARIANCE_MATRIX_LINES = 34
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -346,6 +340,8 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
   public var REFERENCE_FRAME_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var REFERENCE_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME_EPOCH.v) }
+  ///  Reference frame for the covariance matrix
+  public var COV_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   ///  Time system used for the orbit state and covariance matrix. (UTC)
   public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
   ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -375,12 +371,13 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
   public var hasCovarianceMatrixLines: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? false : true }
   public var COVARIANCE_MATRIX_LINESCount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func COVARIANCE_MATRIX_LINES(at index: Int32) -> covarianceMatrixLine? { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? nil : covarianceMatrixLine(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
   public static func add(REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(REFERENCE_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME_EPOCH, at: VTOFFSET.REFERENCE_FRAME_EPOCH.p) }
+  public static func add(COV_REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.COV_REFERENCE_FRAME.p) }
   public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
   public static func add(USEABLE_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_START_TIME, at: VTOFFSET.USEABLE_START_TIME.p) }
@@ -399,6 +396,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
     REFERENCE_FRAME: refFrame = .ecef,
     REFERENCE_FRAME_EPOCHOffset REFERENCE_FRAME_EPOCH: Offset = Offset(),
+    COV_REFERENCE_FRAME: refFrame = .ecef,
     TIME_SYSTEM: timeSystem = .gmst,
     START_TIMEOffset START_TIME: Offset = Offset(),
     USEABLE_START_TIMEOffset USEABLE_START_TIME: Offset = Offset(),
@@ -416,6 +414,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     ephemerisDataBlock.add(CENTER_NAME: CENTER_NAME, &fbb)
     ephemerisDataBlock.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
     ephemerisDataBlock.add(REFERENCE_FRAME_EPOCH: REFERENCE_FRAME_EPOCH, &fbb)
+    ephemerisDataBlock.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
     ephemerisDataBlock.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
     ephemerisDataBlock.add(START_TIME: START_TIME, &fbb)
     ephemerisDataBlock.add(USEABLE_START_TIME: USEABLE_START_TIME, &fbb)
@@ -436,6 +435,7 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: refFrame.self)
     try _v.visit(field: VTOFFSET.REFERENCE_FRAME_EPOCH.p, fieldName: "REFERENCE_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.COV_REFERENCE_FRAME.p, fieldName: "COV_REFERENCE_FRAME", required: false, type: refFrame.self)
     try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timeSystem.self)
     try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.USEABLE_START_TIME.p, fieldName: "USEABLE_START_TIME", required: false, type: ForwardOffset<String>.self)

@@ -89,148 +89,142 @@ class covarianceMatrixLine : flatbuffers.handle
     /// Epoch
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Reference frame for the covariance matrix
-    def COV_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 6, 0))
     /// Covariance matrix [1,1] km**2
     def CX_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Covariance matrix [2,1] km**2
     def CY_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Covariance matrix [2,2] km**2
     def CY_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     /// Covariance matrix [3,1] km**2
     def CZ_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     /// Covariance matrix [3,2] km**2
     def CZ_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Covariance matrix [3,3] km**2
     def CZ_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Covariance matrix [4,1] km**2/s
     def CX_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// Covariance matrix [4,2] km**2/s
     def CX_DOT_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
     /// Covariance matrix [4,3] km**2/s
     def CX_DOT_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
     /// Covariance matrix [4,4] km**2/s**2
     def CX_DOT_X_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Covariance matrix [5,1] km**2/s
     def CY_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Covariance matrix [5,2] km**2/s
     def CY_DOT_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
     /// Covariance matrix [5,3] km**2/s
     def CY_DOT_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
     /// Covariance matrix [5,4] km**2/s**2
     def CY_DOT_X_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
     /// Covariance matrix [5,5] km**2/s**2
     def CY_DOT_Y_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
     /// Covariance matrix [6,1] km**2/s
     def CZ_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
     /// Covariance matrix [6,2] km**2/s
     def CZ_DOT_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     /// Covariance matrix [6,3] km**2/s
     def CZ_DOT_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
     /// Covariance matrix [6,4] km**2/s**2
     def CZ_DOT_X_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     /// Covariance matrix [6,5] km**2/s**2
     def CZ_DOT_Y_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
     /// Covariance matrix [6,6] km**2/s**2
     def CZ_DOT_Z_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
 
 def GetRootAscovarianceMatrixLine(buf:string): return covarianceMatrixLine { buf, flatbuffers.indirect(buf, 0) }
 
 struct covarianceMatrixLineBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(23)
+        b_.StartObject(22)
         return this
     def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EPOCH)
         return this
-    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(1, COV_REFERENCE_FRAME, 0)
-        return this
     def add_CX_X(CX_X:float):
-        b_.PrependFloat64Slot(2, CX_X, 0.0)
+        b_.PrependFloat64Slot(1, CX_X, 0.0)
         return this
     def add_CY_X(CY_X:float):
-        b_.PrependFloat64Slot(3, CY_X, 0.0)
+        b_.PrependFloat64Slot(2, CY_X, 0.0)
         return this
     def add_CY_Y(CY_Y:float):
-        b_.PrependFloat64Slot(4, CY_Y, 0.0)
+        b_.PrependFloat64Slot(3, CY_Y, 0.0)
         return this
     def add_CZ_X(CZ_X:float):
-        b_.PrependFloat64Slot(5, CZ_X, 0.0)
+        b_.PrependFloat64Slot(4, CZ_X, 0.0)
         return this
     def add_CZ_Y(CZ_Y:float):
-        b_.PrependFloat64Slot(6, CZ_Y, 0.0)
+        b_.PrependFloat64Slot(5, CZ_Y, 0.0)
         return this
     def add_CZ_Z(CZ_Z:float):
-        b_.PrependFloat64Slot(7, CZ_Z, 0.0)
+        b_.PrependFloat64Slot(6, CZ_Z, 0.0)
         return this
     def add_CX_DOT_X(CX_DOT_X:float):
-        b_.PrependFloat64Slot(8, CX_DOT_X, 0.0)
+        b_.PrependFloat64Slot(7, CX_DOT_X, 0.0)
         return this
     def add_CX_DOT_Y(CX_DOT_Y:float):
-        b_.PrependFloat64Slot(9, CX_DOT_Y, 0.0)
+        b_.PrependFloat64Slot(8, CX_DOT_Y, 0.0)
         return this
     def add_CX_DOT_Z(CX_DOT_Z:float):
-        b_.PrependFloat64Slot(10, CX_DOT_Z, 0.0)
+        b_.PrependFloat64Slot(9, CX_DOT_Z, 0.0)
         return this
     def add_CX_DOT_X_DOT(CX_DOT_X_DOT:float):
-        b_.PrependFloat64Slot(11, CX_DOT_X_DOT, 0.0)
+        b_.PrependFloat64Slot(10, CX_DOT_X_DOT, 0.0)
         return this
     def add_CY_DOT_X(CY_DOT_X:float):
-        b_.PrependFloat64Slot(12, CY_DOT_X, 0.0)
+        b_.PrependFloat64Slot(11, CY_DOT_X, 0.0)
         return this
     def add_CY_DOT_Y(CY_DOT_Y:float):
-        b_.PrependFloat64Slot(13, CY_DOT_Y, 0.0)
+        b_.PrependFloat64Slot(12, CY_DOT_Y, 0.0)
         return this
     def add_CY_DOT_Z(CY_DOT_Z:float):
-        b_.PrependFloat64Slot(14, CY_DOT_Z, 0.0)
+        b_.PrependFloat64Slot(13, CY_DOT_Z, 0.0)
         return this
     def add_CY_DOT_X_DOT(CY_DOT_X_DOT:float):
-        b_.PrependFloat64Slot(15, CY_DOT_X_DOT, 0.0)
+        b_.PrependFloat64Slot(14, CY_DOT_X_DOT, 0.0)
         return this
     def add_CY_DOT_Y_DOT(CY_DOT_Y_DOT:float):
-        b_.PrependFloat64Slot(16, CY_DOT_Y_DOT, 0.0)
+        b_.PrependFloat64Slot(15, CY_DOT_Y_DOT, 0.0)
         return this
     def add_CZ_DOT_X(CZ_DOT_X:float):
-        b_.PrependFloat64Slot(17, CZ_DOT_X, 0.0)
+        b_.PrependFloat64Slot(16, CZ_DOT_X, 0.0)
         return this
     def add_CZ_DOT_Y(CZ_DOT_Y:float):
-        b_.PrependFloat64Slot(18, CZ_DOT_Y, 0.0)
+        b_.PrependFloat64Slot(17, CZ_DOT_Y, 0.0)
         return this
     def add_CZ_DOT_Z(CZ_DOT_Z:float):
-        b_.PrependFloat64Slot(19, CZ_DOT_Z, 0.0)
+        b_.PrependFloat64Slot(18, CZ_DOT_Z, 0.0)
         return this
     def add_CZ_DOT_X_DOT(CZ_DOT_X_DOT:float):
-        b_.PrependFloat64Slot(20, CZ_DOT_X_DOT, 0.0)
+        b_.PrependFloat64Slot(19, CZ_DOT_X_DOT, 0.0)
         return this
     def add_CZ_DOT_Y_DOT(CZ_DOT_Y_DOT:float):
-        b_.PrependFloat64Slot(21, CZ_DOT_Y_DOT, 0.0)
+        b_.PrependFloat64Slot(20, CZ_DOT_Y_DOT, 0.0)
         return this
     def add_CZ_DOT_Z_DOT(CZ_DOT_Z_DOT:float):
-        b_.PrependFloat64Slot(22, CZ_DOT_Z_DOT, 0.0)
+        b_.PrependFloat64Slot(21, CZ_DOT_Z_DOT, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -253,47 +247,50 @@ class ephemerisDataBlock : flatbuffers.handle
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
     def REFERENCE_FRAME_EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
+    /// Reference frame for the covariance matrix
+    def COV_REFERENCE_FRAME() -> refFrame:
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 14, 0))
     /// Time system used for the orbit state and covariance matrix. (UTC)
     def TIME_SYSTEM() -> timeSystem:
-        return timeSystem(flatbuffers.field_int8(buf_, pos_, 14, 0))
+        return timeSystem(flatbuffers.field_int8(buf_, pos_, 16, 0))
     /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def START_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
     def USEABLE_START_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
     def USEABLE_STOP_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def STOP_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 24)
     /// Step size in seconds separating the epochs of each ephemeris data row
     def STEP_SIZE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     def INTERPOLATION() -> string:
-        return flatbuffers.field_string(buf_, pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 28)
     /// Recommended interpolation degree for ephemeris data
     def INTERPOLATION_DEGREE() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 28, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 30, 0)
     /// Array of ephemeris data lines
     def EPHEMERIS_DATA_LINES(i:int) -> ephemerisDataLine:
-        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def EPHEMERIS_DATA_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 30)
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
     /// Array of covariance matrix lines
     def COVARIANCE_MATRIX_LINES(i:int) -> covarianceMatrixLine:
-        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
     def COVARIANCE_MATRIX_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
 
 def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataBlockBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(16)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -310,35 +307,38 @@ struct ephemerisDataBlockBuilder:
     def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, REFERENCE_FRAME_EPOCH)
         return this
+    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
+        b_.PrependInt8Slot(5, COV_REFERENCE_FRAME, 0)
+        return this
     def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
-        b_.PrependInt8Slot(5, TIME_SYSTEM, 0)
+        b_.PrependInt8Slot(6, TIME_SYSTEM, 0)
         return this
     def add_START_TIME(START_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, START_TIME)
+        b_.PrependUOffsetTRelativeSlot(7, START_TIME)
         return this
     def add_USEABLE_START_TIME(USEABLE_START_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, USEABLE_START_TIME)
+        b_.PrependUOffsetTRelativeSlot(8, USEABLE_START_TIME)
         return this
     def add_USEABLE_STOP_TIME(USEABLE_STOP_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, USEABLE_STOP_TIME)
+        b_.PrependUOffsetTRelativeSlot(9, USEABLE_STOP_TIME)
         return this
     def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, STOP_TIME)
+        b_.PrependUOffsetTRelativeSlot(10, STOP_TIME)
         return this
     def add_STEP_SIZE(STEP_SIZE:float):
-        b_.PrependFloat64Slot(10, STEP_SIZE, 0.0)
+        b_.PrependFloat64Slot(11, STEP_SIZE, 0.0)
         return this
     def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, INTERPOLATION)
+        b_.PrependUOffsetTRelativeSlot(12, INTERPOLATION)
         return this
     def add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE:int):
-        b_.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
+        b_.PrependUint32Slot(13, INTERPOLATION_DEGREE, 0)
         return this
     def add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, EPHEMERIS_DATA_LINES)
+        b_.PrependUOffsetTRelativeSlot(14, EPHEMERIS_DATA_LINES)
         return this
     def add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, COVARIANCE_MATRIX_LINES)
+        b_.PrependUOffsetTRelativeSlot(15, COVARIANCE_MATRIX_LINES)
         return this
     def end():
         return b_.EndObject()

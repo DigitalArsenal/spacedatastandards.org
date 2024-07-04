@@ -37,18 +37,10 @@ class covarianceMatrixLine(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Reference frame for the covariance matrix
-    # covarianceMatrixLine
-    def COV_REFERENCE_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
-
     # Covariance matrix [1,1] km**2
     # covarianceMatrixLine
     def CX_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -56,7 +48,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [2,1] km**2
     # covarianceMatrixLine
     def CY_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -64,7 +56,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [2,2] km**2
     # covarianceMatrixLine
     def CY_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -72,7 +64,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [3,1] km**2
     # covarianceMatrixLine
     def CZ_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -80,7 +72,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [3,2] km**2
     # covarianceMatrixLine
     def CZ_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -88,7 +80,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [3,3] km**2
     # covarianceMatrixLine
     def CZ_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -96,7 +88,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [4,1] km**2/s
     # covarianceMatrixLine
     def CX_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -104,7 +96,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [4,2] km**2/s
     # covarianceMatrixLine
     def CX_DOT_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -112,7 +104,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [4,3] km**2/s
     # covarianceMatrixLine
     def CX_DOT_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -120,7 +112,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [4,4] km**2/s**2
     # covarianceMatrixLine
     def CX_DOT_X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -128,7 +120,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [5,1] km**2/s
     # covarianceMatrixLine
     def CY_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -136,7 +128,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [5,2] km**2/s
     # covarianceMatrixLine
     def CY_DOT_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -144,7 +136,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [5,3] km**2/s
     # covarianceMatrixLine
     def CY_DOT_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -152,7 +144,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [5,4] km**2/s**2
     # covarianceMatrixLine
     def CY_DOT_X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -160,7 +152,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [5,5] km**2/s**2
     # covarianceMatrixLine
     def CY_DOT_Y_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -168,7 +160,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [6,1] km**2/s
     # covarianceMatrixLine
     def CZ_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -176,7 +168,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [6,2] km**2/s
     # covarianceMatrixLine
     def CZ_DOT_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -184,7 +176,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [6,3] km**2/s
     # covarianceMatrixLine
     def CZ_DOT_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -192,7 +184,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [6,4] km**2/s**2
     # covarianceMatrixLine
     def CZ_DOT_X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -200,7 +192,7 @@ class covarianceMatrixLine(object):
     # Covariance matrix [6,5] km**2/s**2
     # covarianceMatrixLine
     def CZ_DOT_Y_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -208,13 +200,13 @@ class covarianceMatrixLine(object):
     # Covariance matrix [6,6] km**2/s**2
     # covarianceMatrixLine
     def CZ_DOT_Z_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
 def covarianceMatrixLineStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(22)
 
 def Start(builder):
     covarianceMatrixLineStart(builder)
@@ -225,134 +217,128 @@ def covarianceMatrixLineAddEPOCH(builder, EPOCH):
 def AddEPOCH(builder, EPOCH):
     covarianceMatrixLineAddEPOCH(builder, EPOCH)
 
-def covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    builder.PrependInt8Slot(1, COV_REFERENCE_FRAME, 0)
-
-def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
-
 def covarianceMatrixLineAddCX_X(builder, CX_X):
-    builder.PrependFloat64Slot(2, CX_X, 0.0)
+    builder.PrependFloat64Slot(1, CX_X, 0.0)
 
 def AddCX_X(builder, CX_X):
     covarianceMatrixLineAddCX_X(builder, CX_X)
 
 def covarianceMatrixLineAddCY_X(builder, CY_X):
-    builder.PrependFloat64Slot(3, CY_X, 0.0)
+    builder.PrependFloat64Slot(2, CY_X, 0.0)
 
 def AddCY_X(builder, CY_X):
     covarianceMatrixLineAddCY_X(builder, CY_X)
 
 def covarianceMatrixLineAddCY_Y(builder, CY_Y):
-    builder.PrependFloat64Slot(4, CY_Y, 0.0)
+    builder.PrependFloat64Slot(3, CY_Y, 0.0)
 
 def AddCY_Y(builder, CY_Y):
     covarianceMatrixLineAddCY_Y(builder, CY_Y)
 
 def covarianceMatrixLineAddCZ_X(builder, CZ_X):
-    builder.PrependFloat64Slot(5, CZ_X, 0.0)
+    builder.PrependFloat64Slot(4, CZ_X, 0.0)
 
 def AddCZ_X(builder, CZ_X):
     covarianceMatrixLineAddCZ_X(builder, CZ_X)
 
 def covarianceMatrixLineAddCZ_Y(builder, CZ_Y):
-    builder.PrependFloat64Slot(6, CZ_Y, 0.0)
+    builder.PrependFloat64Slot(5, CZ_Y, 0.0)
 
 def AddCZ_Y(builder, CZ_Y):
     covarianceMatrixLineAddCZ_Y(builder, CZ_Y)
 
 def covarianceMatrixLineAddCZ_Z(builder, CZ_Z):
-    builder.PrependFloat64Slot(7, CZ_Z, 0.0)
+    builder.PrependFloat64Slot(6, CZ_Z, 0.0)
 
 def AddCZ_Z(builder, CZ_Z):
     covarianceMatrixLineAddCZ_Z(builder, CZ_Z)
 
 def covarianceMatrixLineAddCX_DOT_X(builder, CX_DOT_X):
-    builder.PrependFloat64Slot(8, CX_DOT_X, 0.0)
+    builder.PrependFloat64Slot(7, CX_DOT_X, 0.0)
 
 def AddCX_DOT_X(builder, CX_DOT_X):
     covarianceMatrixLineAddCX_DOT_X(builder, CX_DOT_X)
 
 def covarianceMatrixLineAddCX_DOT_Y(builder, CX_DOT_Y):
-    builder.PrependFloat64Slot(9, CX_DOT_Y, 0.0)
+    builder.PrependFloat64Slot(8, CX_DOT_Y, 0.0)
 
 def AddCX_DOT_Y(builder, CX_DOT_Y):
     covarianceMatrixLineAddCX_DOT_Y(builder, CX_DOT_Y)
 
 def covarianceMatrixLineAddCX_DOT_Z(builder, CX_DOT_Z):
-    builder.PrependFloat64Slot(10, CX_DOT_Z, 0.0)
+    builder.PrependFloat64Slot(9, CX_DOT_Z, 0.0)
 
 def AddCX_DOT_Z(builder, CX_DOT_Z):
     covarianceMatrixLineAddCX_DOT_Z(builder, CX_DOT_Z)
 
 def covarianceMatrixLineAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
-    builder.PrependFloat64Slot(11, CX_DOT_X_DOT, 0.0)
+    builder.PrependFloat64Slot(10, CX_DOT_X_DOT, 0.0)
 
 def AddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
     covarianceMatrixLineAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
 
 def covarianceMatrixLineAddCY_DOT_X(builder, CY_DOT_X):
-    builder.PrependFloat64Slot(12, CY_DOT_X, 0.0)
+    builder.PrependFloat64Slot(11, CY_DOT_X, 0.0)
 
 def AddCY_DOT_X(builder, CY_DOT_X):
     covarianceMatrixLineAddCY_DOT_X(builder, CY_DOT_X)
 
 def covarianceMatrixLineAddCY_DOT_Y(builder, CY_DOT_Y):
-    builder.PrependFloat64Slot(13, CY_DOT_Y, 0.0)
+    builder.PrependFloat64Slot(12, CY_DOT_Y, 0.0)
 
 def AddCY_DOT_Y(builder, CY_DOT_Y):
     covarianceMatrixLineAddCY_DOT_Y(builder, CY_DOT_Y)
 
 def covarianceMatrixLineAddCY_DOT_Z(builder, CY_DOT_Z):
-    builder.PrependFloat64Slot(14, CY_DOT_Z, 0.0)
+    builder.PrependFloat64Slot(13, CY_DOT_Z, 0.0)
 
 def AddCY_DOT_Z(builder, CY_DOT_Z):
     covarianceMatrixLineAddCY_DOT_Z(builder, CY_DOT_Z)
 
 def covarianceMatrixLineAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
-    builder.PrependFloat64Slot(15, CY_DOT_X_DOT, 0.0)
+    builder.PrependFloat64Slot(14, CY_DOT_X_DOT, 0.0)
 
 def AddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
     covarianceMatrixLineAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
 
 def covarianceMatrixLineAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
-    builder.PrependFloat64Slot(16, CY_DOT_Y_DOT, 0.0)
+    builder.PrependFloat64Slot(15, CY_DOT_Y_DOT, 0.0)
 
 def AddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
     covarianceMatrixLineAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
 
 def covarianceMatrixLineAddCZ_DOT_X(builder, CZ_DOT_X):
-    builder.PrependFloat64Slot(17, CZ_DOT_X, 0.0)
+    builder.PrependFloat64Slot(16, CZ_DOT_X, 0.0)
 
 def AddCZ_DOT_X(builder, CZ_DOT_X):
     covarianceMatrixLineAddCZ_DOT_X(builder, CZ_DOT_X)
 
 def covarianceMatrixLineAddCZ_DOT_Y(builder, CZ_DOT_Y):
-    builder.PrependFloat64Slot(18, CZ_DOT_Y, 0.0)
+    builder.PrependFloat64Slot(17, CZ_DOT_Y, 0.0)
 
 def AddCZ_DOT_Y(builder, CZ_DOT_Y):
     covarianceMatrixLineAddCZ_DOT_Y(builder, CZ_DOT_Y)
 
 def covarianceMatrixLineAddCZ_DOT_Z(builder, CZ_DOT_Z):
-    builder.PrependFloat64Slot(19, CZ_DOT_Z, 0.0)
+    builder.PrependFloat64Slot(18, CZ_DOT_Z, 0.0)
 
 def AddCZ_DOT_Z(builder, CZ_DOT_Z):
     covarianceMatrixLineAddCZ_DOT_Z(builder, CZ_DOT_Z)
 
 def covarianceMatrixLineAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
-    builder.PrependFloat64Slot(20, CZ_DOT_X_DOT, 0.0)
+    builder.PrependFloat64Slot(19, CZ_DOT_X_DOT, 0.0)
 
 def AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
     covarianceMatrixLineAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
 
 def covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
-    builder.PrependFloat64Slot(21, CZ_DOT_Y_DOT, 0.0)
+    builder.PrependFloat64Slot(20, CZ_DOT_Y_DOT, 0.0)
 
 def AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
     covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
 
 def covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
-    builder.PrependFloat64Slot(22, CZ_DOT_Z_DOT, 0.0)
+    builder.PrependFloat64Slot(21, CZ_DOT_Z_DOT, 0.0)
 
 def AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
     covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
@@ -369,7 +355,6 @@ class covarianceMatrixLineT(object):
     # covarianceMatrixLineT
     def __init__(self):
         self.EPOCH = None  # type: str
-        self.COV_REFERENCE_FRAME = 0  # type: int
         self.CX_X = 0.0  # type: float
         self.CY_X = 0.0  # type: float
         self.CY_Y = 0.0  # type: float
@@ -414,7 +399,6 @@ class covarianceMatrixLineT(object):
         if covarianceMatrixLine is None:
             return
         self.EPOCH = covarianceMatrixLine.EPOCH()
-        self.COV_REFERENCE_FRAME = covarianceMatrixLine.COV_REFERENCE_FRAME()
         self.CX_X = covarianceMatrixLine.CX_X()
         self.CY_X = covarianceMatrixLine.CY_X()
         self.CY_Y = covarianceMatrixLine.CY_Y()
@@ -444,7 +428,6 @@ class covarianceMatrixLineT(object):
         covarianceMatrixLineStart(builder)
         if self.EPOCH is not None:
             covarianceMatrixLineAddEPOCH(builder, EPOCH)
-        covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, self.COV_REFERENCE_FRAME)
         covarianceMatrixLineAddCX_X(builder, self.CX_X)
         covarianceMatrixLineAddCY_X(builder, self.CY_X)
         covarianceMatrixLineAddCY_Y(builder, self.CY_Y)

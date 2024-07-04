@@ -4,7 +4,6 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { refFrame } from './refFrame.js';
 
 
 /**
@@ -39,18 +38,10 @@ EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Reference frame for the covariance matrix
- */
-COV_REFERENCE_FRAME():refFrame {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
-}
-
-/**
  * Covariance matrix [1,1] km**2
  */
 CX_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -58,7 +49,7 @@ CX_X():number {
  * Covariance matrix [2,1] km**2
  */
 CY_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -66,7 +57,7 @@ CY_X():number {
  * Covariance matrix [2,2] km**2
  */
 CY_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -74,7 +65,7 @@ CY_Y():number {
  * Covariance matrix [3,1] km**2
  */
 CZ_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -82,7 +73,7 @@ CZ_X():number {
  * Covariance matrix [3,2] km**2
  */
 CZ_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -90,7 +81,7 @@ CZ_Y():number {
  * Covariance matrix [3,3] km**2
  */
 CZ_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -98,7 +89,7 @@ CZ_Z():number {
  * Covariance matrix [4,1] km**2/s
  */
 CX_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -106,7 +97,7 @@ CX_DOT_X():number {
  * Covariance matrix [4,2] km**2/s
  */
 CX_DOT_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -114,7 +105,7 @@ CX_DOT_Y():number {
  * Covariance matrix [4,3] km**2/s
  */
 CX_DOT_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -122,7 +113,7 @@ CX_DOT_Z():number {
  * Covariance matrix [4,4] km**2/s**2
  */
 CX_DOT_X_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -130,7 +121,7 @@ CX_DOT_X_DOT():number {
  * Covariance matrix [5,1] km**2/s
  */
 CY_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -138,7 +129,7 @@ CY_DOT_X():number {
  * Covariance matrix [5,2] km**2/s
  */
 CY_DOT_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -146,7 +137,7 @@ CY_DOT_Y():number {
  * Covariance matrix [5,3] km**2/s
  */
 CY_DOT_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -154,7 +145,7 @@ CY_DOT_Z():number {
  * Covariance matrix [5,4] km**2/s**2
  */
 CY_DOT_X_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -162,7 +153,7 @@ CY_DOT_X_DOT():number {
  * Covariance matrix [5,5] km**2/s**2
  */
 CY_DOT_Y_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -170,7 +161,7 @@ CY_DOT_Y_DOT():number {
  * Covariance matrix [6,1] km**2/s
  */
 CZ_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -178,7 +169,7 @@ CZ_DOT_X():number {
  * Covariance matrix [6,2] km**2/s
  */
 CZ_DOT_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -186,7 +177,7 @@ CZ_DOT_Y():number {
  * Covariance matrix [6,3] km**2/s
  */
 CZ_DOT_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -194,7 +185,7 @@ CZ_DOT_Z():number {
  * Covariance matrix [6,4] km**2/s**2
  */
 CZ_DOT_X_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -202,7 +193,7 @@ CZ_DOT_X_DOT():number {
  * Covariance matrix [6,5] km**2/s**2
  */
 CZ_DOT_Y_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -210,104 +201,100 @@ CZ_DOT_Y_DOT():number {
  * Covariance matrix [6,6] km**2/s**2
  */
 CZ_DOT_Z_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 static startcovarianceMatrixLine(builder:flatbuffers.Builder) {
-  builder.startObject(23);
+  builder.startObject(22);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, EPOCHOffset, 0);
 }
 
-static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(1, COV_REFERENCE_FRAME, refFrame.ECEF);
-}
-
 static addCxX(builder:flatbuffers.Builder, CX_X:number) {
-  builder.addFieldFloat64(2, CX_X, 0.0);
+  builder.addFieldFloat64(1, CX_X, 0.0);
 }
 
 static addCyX(builder:flatbuffers.Builder, CY_X:number) {
-  builder.addFieldFloat64(3, CY_X, 0.0);
+  builder.addFieldFloat64(2, CY_X, 0.0);
 }
 
 static addCyY(builder:flatbuffers.Builder, CY_Y:number) {
-  builder.addFieldFloat64(4, CY_Y, 0.0);
+  builder.addFieldFloat64(3, CY_Y, 0.0);
 }
 
 static addCzX(builder:flatbuffers.Builder, CZ_X:number) {
-  builder.addFieldFloat64(5, CZ_X, 0.0);
+  builder.addFieldFloat64(4, CZ_X, 0.0);
 }
 
 static addCzY(builder:flatbuffers.Builder, CZ_Y:number) {
-  builder.addFieldFloat64(6, CZ_Y, 0.0);
+  builder.addFieldFloat64(5, CZ_Y, 0.0);
 }
 
 static addCzZ(builder:flatbuffers.Builder, CZ_Z:number) {
-  builder.addFieldFloat64(7, CZ_Z, 0.0);
+  builder.addFieldFloat64(6, CZ_Z, 0.0);
 }
 
 static addCxDotX(builder:flatbuffers.Builder, CX_DOT_X:number) {
-  builder.addFieldFloat64(8, CX_DOT_X, 0.0);
+  builder.addFieldFloat64(7, CX_DOT_X, 0.0);
 }
 
 static addCxDotY(builder:flatbuffers.Builder, CX_DOT_Y:number) {
-  builder.addFieldFloat64(9, CX_DOT_Y, 0.0);
+  builder.addFieldFloat64(8, CX_DOT_Y, 0.0);
 }
 
 static addCxDotZ(builder:flatbuffers.Builder, CX_DOT_Z:number) {
-  builder.addFieldFloat64(10, CX_DOT_Z, 0.0);
+  builder.addFieldFloat64(9, CX_DOT_Z, 0.0);
 }
 
 static addCxDotXDot(builder:flatbuffers.Builder, CX_DOT_X_DOT:number) {
-  builder.addFieldFloat64(11, CX_DOT_X_DOT, 0.0);
+  builder.addFieldFloat64(10, CX_DOT_X_DOT, 0.0);
 }
 
 static addCyDotX(builder:flatbuffers.Builder, CY_DOT_X:number) {
-  builder.addFieldFloat64(12, CY_DOT_X, 0.0);
+  builder.addFieldFloat64(11, CY_DOT_X, 0.0);
 }
 
 static addCyDotY(builder:flatbuffers.Builder, CY_DOT_Y:number) {
-  builder.addFieldFloat64(13, CY_DOT_Y, 0.0);
+  builder.addFieldFloat64(12, CY_DOT_Y, 0.0);
 }
 
 static addCyDotZ(builder:flatbuffers.Builder, CY_DOT_Z:number) {
-  builder.addFieldFloat64(14, CY_DOT_Z, 0.0);
+  builder.addFieldFloat64(13, CY_DOT_Z, 0.0);
 }
 
 static addCyDotXDot(builder:flatbuffers.Builder, CY_DOT_X_DOT:number) {
-  builder.addFieldFloat64(15, CY_DOT_X_DOT, 0.0);
+  builder.addFieldFloat64(14, CY_DOT_X_DOT, 0.0);
 }
 
 static addCyDotYDot(builder:flatbuffers.Builder, CY_DOT_Y_DOT:number) {
-  builder.addFieldFloat64(16, CY_DOT_Y_DOT, 0.0);
+  builder.addFieldFloat64(15, CY_DOT_Y_DOT, 0.0);
 }
 
 static addCzDotX(builder:flatbuffers.Builder, CZ_DOT_X:number) {
-  builder.addFieldFloat64(17, CZ_DOT_X, 0.0);
+  builder.addFieldFloat64(16, CZ_DOT_X, 0.0);
 }
 
 static addCzDotY(builder:flatbuffers.Builder, CZ_DOT_Y:number) {
-  builder.addFieldFloat64(18, CZ_DOT_Y, 0.0);
+  builder.addFieldFloat64(17, CZ_DOT_Y, 0.0);
 }
 
 static addCzDotZ(builder:flatbuffers.Builder, CZ_DOT_Z:number) {
-  builder.addFieldFloat64(19, CZ_DOT_Z, 0.0);
+  builder.addFieldFloat64(18, CZ_DOT_Z, 0.0);
 }
 
 static addCzDotXDot(builder:flatbuffers.Builder, CZ_DOT_X_DOT:number) {
-  builder.addFieldFloat64(20, CZ_DOT_X_DOT, 0.0);
+  builder.addFieldFloat64(19, CZ_DOT_X_DOT, 0.0);
 }
 
 static addCzDotYDot(builder:flatbuffers.Builder, CZ_DOT_Y_DOT:number) {
-  builder.addFieldFloat64(21, CZ_DOT_Y_DOT, 0.0);
+  builder.addFieldFloat64(20, CZ_DOT_Y_DOT, 0.0);
 }
 
 static addCzDotZDot(builder:flatbuffers.Builder, CZ_DOT_Z_DOT:number) {
-  builder.addFieldFloat64(22, CZ_DOT_Z_DOT, 0.0);
+  builder.addFieldFloat64(21, CZ_DOT_Z_DOT, 0.0);
 }
 
 static endcovarianceMatrixLine(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -315,10 +302,9 @@ static endcovarianceMatrixLine(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createcovarianceMatrixLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, COV_REFERENCE_FRAME:refFrame, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number):flatbuffers.Offset {
+static createcovarianceMatrixLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number):flatbuffers.Offset {
   covarianceMatrixLine.startcovarianceMatrixLine(builder);
   covarianceMatrixLine.addEpoch(builder, EPOCHOffset);
-  covarianceMatrixLine.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
   covarianceMatrixLine.addCxX(builder, CX_X);
   covarianceMatrixLine.addCyX(builder, CY_X);
   covarianceMatrixLine.addCyY(builder, CY_Y);
@@ -346,7 +332,6 @@ static createcovarianceMatrixLine(builder:flatbuffers.Builder, EPOCHOffset:flatb
 unpack(): covarianceMatrixLineT {
   return new covarianceMatrixLineT(
     this.EPOCH(),
-    this.COV_REFERENCE_FRAME(),
     this.CX_X(),
     this.CY_X(),
     this.CY_Y(),
@@ -374,7 +359,6 @@ unpack(): covarianceMatrixLineT {
 
 unpackTo(_o: covarianceMatrixLineT): void {
   _o.EPOCH = this.EPOCH();
-  _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME();
   _o.CX_X = this.CX_X();
   _o.CY_X = this.CY_X();
   _o.CY_Y = this.CY_Y();
@@ -402,7 +386,6 @@ unpackTo(_o: covarianceMatrixLineT): void {
 export class covarianceMatrixLineT implements flatbuffers.IGeneratedObject {
 constructor(
   public EPOCH: string|Uint8Array|null = null,
-  public COV_REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public CX_X: number = 0.0,
   public CY_X: number = 0.0,
   public CY_Y: number = 0.0,
@@ -432,7 +415,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
 
   return covarianceMatrixLine.createcovarianceMatrixLine(builder,
     EPOCH,
-    this.COV_REFERENCE_FRAME,
     this.CX_X,
     this.CY_X,
     this.CY_Y,

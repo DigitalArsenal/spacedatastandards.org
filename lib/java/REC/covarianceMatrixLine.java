@@ -35,97 +35,92 @@ public final class covarianceMatrixLine extends Table {
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Reference frame for the covariance matrix
-   */
-  public byte COV_REFERENCE_FRAME() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  /**
    * Covariance matrix [1,1] km**2
    */
-  public double CX_X() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CX_X() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [2,1] km**2
    */
-  public double CY_X() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_X() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [2,2] km**2
    */
-  public double CY_Y() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_Y() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [3,1] km**2
    */
-  public double CZ_X() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_X() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [3,2] km**2
    */
-  public double CZ_Y() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_Y() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [3,3] km**2
    */
-  public double CZ_Z() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_Z() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [4,1] km**2/s
    */
-  public double CX_DOT_X() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CX_DOT_X() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [4,2] km**2/s
    */
-  public double CX_DOT_Y() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CX_DOT_Y() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [4,3] km**2/s
    */
-  public double CX_DOT_Z() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CX_DOT_Z() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [4,4] km**2/s**2
    */
-  public double CX_DOT_X_DOT() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CX_DOT_X_DOT() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [5,1] km**2/s
    */
-  public double CY_DOT_X() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_DOT_X() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [5,2] km**2/s
    */
-  public double CY_DOT_Y() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_DOT_Y() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [5,3] km**2/s
    */
-  public double CY_DOT_Z() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_DOT_Z() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [5,4] km**2/s**2
    */
-  public double CY_DOT_X_DOT() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_DOT_X_DOT() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [5,5] km**2/s**2
    */
-  public double CY_DOT_Y_DOT() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CY_DOT_Y_DOT() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [6,1] km**2/s
    */
-  public double CZ_DOT_X() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_DOT_X() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [6,2] km**2/s
    */
-  public double CZ_DOT_Y() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_DOT_Y() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [6,3] km**2/s
    */
-  public double CZ_DOT_Z() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_DOT_Z() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [6,4] km**2/s**2
    */
-  public double CZ_DOT_X_DOT() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_DOT_X_DOT() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [6,5] km**2/s**2
    */
-  public double CZ_DOT_Y_DOT() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_DOT_Y_DOT() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Covariance matrix [6,6] km**2/s**2
    */
-  public double CZ_DOT_Z_DOT() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CZ_DOT_Z_DOT() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createcovarianceMatrixLine(FlatBufferBuilder builder,
       int EPOCHOffset,
-      byte COV_REFERENCE_FRAME,
       double CX_X,
       double CY_X,
       double CY_Y,
@@ -147,7 +142,7 @@ public final class covarianceMatrixLine extends Table {
       double CZ_DOT_X_DOT,
       double CZ_DOT_Y_DOT,
       double CZ_DOT_Z_DOT) {
-    builder.startTable(23);
+    builder.startTable(22);
     covarianceMatrixLine.addCzDotZDot(builder, CZ_DOT_Z_DOT);
     covarianceMatrixLine.addCzDotYDot(builder, CZ_DOT_Y_DOT);
     covarianceMatrixLine.addCzDotXDot(builder, CZ_DOT_X_DOT);
@@ -170,34 +165,32 @@ public final class covarianceMatrixLine extends Table {
     covarianceMatrixLine.addCyX(builder, CY_X);
     covarianceMatrixLine.addCxX(builder, CX_X);
     covarianceMatrixLine.addEpoch(builder, EPOCHOffset);
-    covarianceMatrixLine.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
     return covarianceMatrixLine.endcovarianceMatrixLine(builder);
   }
 
-  public static void startcovarianceMatrixLine(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startcovarianceMatrixLine(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(0, EPOCHOffset, 0); }
-  public static void addCovReferenceFrame(FlatBufferBuilder builder, byte COV_REFERENCE_FRAME) { builder.addByte(1, COV_REFERENCE_FRAME, 0); }
-  public static void addCxX(FlatBufferBuilder builder, double CX_X) { builder.addDouble(2, CX_X, 0.0); }
-  public static void addCyX(FlatBufferBuilder builder, double CY_X) { builder.addDouble(3, CY_X, 0.0); }
-  public static void addCyY(FlatBufferBuilder builder, double CY_Y) { builder.addDouble(4, CY_Y, 0.0); }
-  public static void addCzX(FlatBufferBuilder builder, double CZ_X) { builder.addDouble(5, CZ_X, 0.0); }
-  public static void addCzY(FlatBufferBuilder builder, double CZ_Y) { builder.addDouble(6, CZ_Y, 0.0); }
-  public static void addCzZ(FlatBufferBuilder builder, double CZ_Z) { builder.addDouble(7, CZ_Z, 0.0); }
-  public static void addCxDotX(FlatBufferBuilder builder, double CX_DOT_X) { builder.addDouble(8, CX_DOT_X, 0.0); }
-  public static void addCxDotY(FlatBufferBuilder builder, double CX_DOT_Y) { builder.addDouble(9, CX_DOT_Y, 0.0); }
-  public static void addCxDotZ(FlatBufferBuilder builder, double CX_DOT_Z) { builder.addDouble(10, CX_DOT_Z, 0.0); }
-  public static void addCxDotXDot(FlatBufferBuilder builder, double CX_DOT_X_DOT) { builder.addDouble(11, CX_DOT_X_DOT, 0.0); }
-  public static void addCyDotX(FlatBufferBuilder builder, double CY_DOT_X) { builder.addDouble(12, CY_DOT_X, 0.0); }
-  public static void addCyDotY(FlatBufferBuilder builder, double CY_DOT_Y) { builder.addDouble(13, CY_DOT_Y, 0.0); }
-  public static void addCyDotZ(FlatBufferBuilder builder, double CY_DOT_Z) { builder.addDouble(14, CY_DOT_Z, 0.0); }
-  public static void addCyDotXDot(FlatBufferBuilder builder, double CY_DOT_X_DOT) { builder.addDouble(15, CY_DOT_X_DOT, 0.0); }
-  public static void addCyDotYDot(FlatBufferBuilder builder, double CY_DOT_Y_DOT) { builder.addDouble(16, CY_DOT_Y_DOT, 0.0); }
-  public static void addCzDotX(FlatBufferBuilder builder, double CZ_DOT_X) { builder.addDouble(17, CZ_DOT_X, 0.0); }
-  public static void addCzDotY(FlatBufferBuilder builder, double CZ_DOT_Y) { builder.addDouble(18, CZ_DOT_Y, 0.0); }
-  public static void addCzDotZ(FlatBufferBuilder builder, double CZ_DOT_Z) { builder.addDouble(19, CZ_DOT_Z, 0.0); }
-  public static void addCzDotXDot(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.addDouble(20, CZ_DOT_X_DOT, 0.0); }
-  public static void addCzDotYDot(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.addDouble(21, CZ_DOT_Y_DOT, 0.0); }
-  public static void addCzDotZDot(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.addDouble(22, CZ_DOT_Z_DOT, 0.0); }
+  public static void addCxX(FlatBufferBuilder builder, double CX_X) { builder.addDouble(1, CX_X, 0.0); }
+  public static void addCyX(FlatBufferBuilder builder, double CY_X) { builder.addDouble(2, CY_X, 0.0); }
+  public static void addCyY(FlatBufferBuilder builder, double CY_Y) { builder.addDouble(3, CY_Y, 0.0); }
+  public static void addCzX(FlatBufferBuilder builder, double CZ_X) { builder.addDouble(4, CZ_X, 0.0); }
+  public static void addCzY(FlatBufferBuilder builder, double CZ_Y) { builder.addDouble(5, CZ_Y, 0.0); }
+  public static void addCzZ(FlatBufferBuilder builder, double CZ_Z) { builder.addDouble(6, CZ_Z, 0.0); }
+  public static void addCxDotX(FlatBufferBuilder builder, double CX_DOT_X) { builder.addDouble(7, CX_DOT_X, 0.0); }
+  public static void addCxDotY(FlatBufferBuilder builder, double CX_DOT_Y) { builder.addDouble(8, CX_DOT_Y, 0.0); }
+  public static void addCxDotZ(FlatBufferBuilder builder, double CX_DOT_Z) { builder.addDouble(9, CX_DOT_Z, 0.0); }
+  public static void addCxDotXDot(FlatBufferBuilder builder, double CX_DOT_X_DOT) { builder.addDouble(10, CX_DOT_X_DOT, 0.0); }
+  public static void addCyDotX(FlatBufferBuilder builder, double CY_DOT_X) { builder.addDouble(11, CY_DOT_X, 0.0); }
+  public static void addCyDotY(FlatBufferBuilder builder, double CY_DOT_Y) { builder.addDouble(12, CY_DOT_Y, 0.0); }
+  public static void addCyDotZ(FlatBufferBuilder builder, double CY_DOT_Z) { builder.addDouble(13, CY_DOT_Z, 0.0); }
+  public static void addCyDotXDot(FlatBufferBuilder builder, double CY_DOT_X_DOT) { builder.addDouble(14, CY_DOT_X_DOT, 0.0); }
+  public static void addCyDotYDot(FlatBufferBuilder builder, double CY_DOT_Y_DOT) { builder.addDouble(15, CY_DOT_Y_DOT, 0.0); }
+  public static void addCzDotX(FlatBufferBuilder builder, double CZ_DOT_X) { builder.addDouble(16, CZ_DOT_X, 0.0); }
+  public static void addCzDotY(FlatBufferBuilder builder, double CZ_DOT_Y) { builder.addDouble(17, CZ_DOT_Y, 0.0); }
+  public static void addCzDotZ(FlatBufferBuilder builder, double CZ_DOT_Z) { builder.addDouble(18, CZ_DOT_Z, 0.0); }
+  public static void addCzDotXDot(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.addDouble(19, CZ_DOT_X_DOT, 0.0); }
+  public static void addCzDotYDot(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.addDouble(20, CZ_DOT_Y_DOT, 0.0); }
+  public static void addCzDotZDot(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.addDouble(21, CZ_DOT_Z_DOT, 0.0); }
   public static int endcovarianceMatrixLine(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

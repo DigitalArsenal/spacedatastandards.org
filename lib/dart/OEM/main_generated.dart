@@ -187,54 +187,52 @@ class CovarianceMatrixLine {
 
   ///  Epoch
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Reference frame for the covariance matrix
-  RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   ///  Covariance matrix [1,1] km**2
-  double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   ///  Covariance matrix [2,1] km**2
-  double get CY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get CY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   ///  Covariance matrix [2,2] km**2
-  double get CY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get CY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   ///  Covariance matrix [3,1] km**2
-  double get CZ_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get CZ_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   ///  Covariance matrix [3,2] km**2
-  double get CZ_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get CZ_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   ///  Covariance matrix [3,3] km**2
-  double get CZ_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get CZ_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  Covariance matrix [4,1] km**2/s
-  double get CX_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get CX_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   ///  Covariance matrix [4,2] km**2/s
-  double get CX_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get CX_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   ///  Covariance matrix [4,3] km**2/s
-  double get CX_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get CX_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
   ///  Covariance matrix [4,4] km**2/s**2
-  double get CX_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get CX_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
   ///  Covariance matrix [5,1] km**2/s
-  double get CY_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get CY_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   ///  Covariance matrix [5,2] km**2/s
-  double get CY_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get CY_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
   ///  Covariance matrix [5,3] km**2/s
-  double get CY_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get CY_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
   ///  Covariance matrix [5,4] km**2/s**2
-  double get CY_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get CY_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
   ///  Covariance matrix [5,5] km**2/s**2
-  double get CY_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get CY_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
   ///  Covariance matrix [6,1] km**2/s
-  double get CZ_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get CZ_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
   ///  Covariance matrix [6,2] km**2/s
-  double get CZ_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get CZ_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
   ///  Covariance matrix [6,3] km**2/s
-  double get CZ_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get CZ_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
   ///  Covariance matrix [6,4] km**2/s**2
-  double get CZ_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get CZ_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
   ///  Covariance matrix [6,5] km**2/s**2
-  double get CZ_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get CZ_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
   ///  Covariance matrix [6,6] km**2/s**2
-  double get CZ_DOT_Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get CZ_DOT_Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
 
   @override
   String toString() {
-    return 'CovarianceMatrixLine{EPOCH: ${EPOCH}, COV_REFERENCE_FRAME: ${COV_REFERENCE_FRAME}, CX_X: ${CX_X}, CY_X: ${CY_X}, CY_Y: ${CY_Y}, CZ_X: ${CZ_X}, CZ_Y: ${CZ_Y}, CZ_Z: ${CZ_Z}, CX_DOT_X: ${CX_DOT_X}, CX_DOT_Y: ${CX_DOT_Y}, CX_DOT_Z: ${CX_DOT_Z}, CX_DOT_X_DOT: ${CX_DOT_X_DOT}, CY_DOT_X: ${CY_DOT_X}, CY_DOT_Y: ${CY_DOT_Y}, CY_DOT_Z: ${CY_DOT_Z}, CY_DOT_X_DOT: ${CY_DOT_X_DOT}, CY_DOT_Y_DOT: ${CY_DOT_Y_DOT}, CZ_DOT_X: ${CZ_DOT_X}, CZ_DOT_Y: ${CZ_DOT_Y}, CZ_DOT_Z: ${CZ_DOT_Z}, CZ_DOT_X_DOT: ${CZ_DOT_X_DOT}, CZ_DOT_Y_DOT: ${CZ_DOT_Y_DOT}, CZ_DOT_Z_DOT: ${CZ_DOT_Z_DOT}}';
+    return 'CovarianceMatrixLine{EPOCH: ${EPOCH}, CX_X: ${CX_X}, CY_X: ${CY_X}, CY_Y: ${CY_Y}, CZ_X: ${CZ_X}, CZ_Y: ${CZ_Y}, CZ_Z: ${CZ_Z}, CX_DOT_X: ${CX_DOT_X}, CX_DOT_Y: ${CX_DOT_Y}, CX_DOT_Z: ${CX_DOT_Z}, CX_DOT_X_DOT: ${CX_DOT_X_DOT}, CY_DOT_X: ${CY_DOT_X}, CY_DOT_Y: ${CY_DOT_Y}, CY_DOT_Z: ${CY_DOT_Z}, CY_DOT_X_DOT: ${CY_DOT_X_DOT}, CY_DOT_Y_DOT: ${CY_DOT_Y_DOT}, CZ_DOT_X: ${CZ_DOT_X}, CZ_DOT_Y: ${CZ_DOT_Y}, CZ_DOT_Z: ${CZ_DOT_Z}, CZ_DOT_X_DOT: ${CZ_DOT_X_DOT}, CZ_DOT_Y_DOT: ${CZ_DOT_Y_DOT}, CZ_DOT_Z_DOT: ${CZ_DOT_Z_DOT}}';
   }
 }
 
@@ -252,99 +250,95 @@ class CovarianceMatrixLineBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(22);
   }
 
   int addEpochOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addCovReferenceFrame(RefFrame? COV_REFERENCE_FRAME) {
-    fbBuilder.addInt8(1, COV_REFERENCE_FRAME?.value);
-    return fbBuilder.offset;
-  }
   int addCxX(double? CX_X) {
-    fbBuilder.addFloat64(2, CX_X);
+    fbBuilder.addFloat64(1, CX_X);
     return fbBuilder.offset;
   }
   int addCyX(double? CY_X) {
-    fbBuilder.addFloat64(3, CY_X);
+    fbBuilder.addFloat64(2, CY_X);
     return fbBuilder.offset;
   }
   int addCyY(double? CY_Y) {
-    fbBuilder.addFloat64(4, CY_Y);
+    fbBuilder.addFloat64(3, CY_Y);
     return fbBuilder.offset;
   }
   int addCzX(double? CZ_X) {
-    fbBuilder.addFloat64(5, CZ_X);
+    fbBuilder.addFloat64(4, CZ_X);
     return fbBuilder.offset;
   }
   int addCzY(double? CZ_Y) {
-    fbBuilder.addFloat64(6, CZ_Y);
+    fbBuilder.addFloat64(5, CZ_Y);
     return fbBuilder.offset;
   }
   int addCzZ(double? CZ_Z) {
-    fbBuilder.addFloat64(7, CZ_Z);
+    fbBuilder.addFloat64(6, CZ_Z);
     return fbBuilder.offset;
   }
   int addCxDotX(double? CX_DOT_X) {
-    fbBuilder.addFloat64(8, CX_DOT_X);
+    fbBuilder.addFloat64(7, CX_DOT_X);
     return fbBuilder.offset;
   }
   int addCxDotY(double? CX_DOT_Y) {
-    fbBuilder.addFloat64(9, CX_DOT_Y);
+    fbBuilder.addFloat64(8, CX_DOT_Y);
     return fbBuilder.offset;
   }
   int addCxDotZ(double? CX_DOT_Z) {
-    fbBuilder.addFloat64(10, CX_DOT_Z);
+    fbBuilder.addFloat64(9, CX_DOT_Z);
     return fbBuilder.offset;
   }
   int addCxDotXDot(double? CX_DOT_X_DOT) {
-    fbBuilder.addFloat64(11, CX_DOT_X_DOT);
+    fbBuilder.addFloat64(10, CX_DOT_X_DOT);
     return fbBuilder.offset;
   }
   int addCyDotX(double? CY_DOT_X) {
-    fbBuilder.addFloat64(12, CY_DOT_X);
+    fbBuilder.addFloat64(11, CY_DOT_X);
     return fbBuilder.offset;
   }
   int addCyDotY(double? CY_DOT_Y) {
-    fbBuilder.addFloat64(13, CY_DOT_Y);
+    fbBuilder.addFloat64(12, CY_DOT_Y);
     return fbBuilder.offset;
   }
   int addCyDotZ(double? CY_DOT_Z) {
-    fbBuilder.addFloat64(14, CY_DOT_Z);
+    fbBuilder.addFloat64(13, CY_DOT_Z);
     return fbBuilder.offset;
   }
   int addCyDotXDot(double? CY_DOT_X_DOT) {
-    fbBuilder.addFloat64(15, CY_DOT_X_DOT);
+    fbBuilder.addFloat64(14, CY_DOT_X_DOT);
     return fbBuilder.offset;
   }
   int addCyDotYDot(double? CY_DOT_Y_DOT) {
-    fbBuilder.addFloat64(16, CY_DOT_Y_DOT);
+    fbBuilder.addFloat64(15, CY_DOT_Y_DOT);
     return fbBuilder.offset;
   }
   int addCzDotX(double? CZ_DOT_X) {
-    fbBuilder.addFloat64(17, CZ_DOT_X);
+    fbBuilder.addFloat64(16, CZ_DOT_X);
     return fbBuilder.offset;
   }
   int addCzDotY(double? CZ_DOT_Y) {
-    fbBuilder.addFloat64(18, CZ_DOT_Y);
+    fbBuilder.addFloat64(17, CZ_DOT_Y);
     return fbBuilder.offset;
   }
   int addCzDotZ(double? CZ_DOT_Z) {
-    fbBuilder.addFloat64(19, CZ_DOT_Z);
+    fbBuilder.addFloat64(18, CZ_DOT_Z);
     return fbBuilder.offset;
   }
   int addCzDotXDot(double? CZ_DOT_X_DOT) {
-    fbBuilder.addFloat64(20, CZ_DOT_X_DOT);
+    fbBuilder.addFloat64(19, CZ_DOT_X_DOT);
     return fbBuilder.offset;
   }
   int addCzDotYDot(double? CZ_DOT_Y_DOT) {
-    fbBuilder.addFloat64(21, CZ_DOT_Y_DOT);
+    fbBuilder.addFloat64(20, CZ_DOT_Y_DOT);
     return fbBuilder.offset;
   }
   int addCzDotZDot(double? CZ_DOT_Z_DOT) {
-    fbBuilder.addFloat64(22, CZ_DOT_Z_DOT);
+    fbBuilder.addFloat64(21, CZ_DOT_Z_DOT);
     return fbBuilder.offset;
   }
 
@@ -355,7 +349,6 @@ class CovarianceMatrixLineBuilder {
 
 class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
   final String? _EPOCH;
-  final RefFrame? _COV_REFERENCE_FRAME;
   final double? _CX_X;
   final double? _CY_X;
   final double? _CY_Y;
@@ -380,7 +373,6 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
 
   CovarianceMatrixLineObjectBuilder({
     String? EPOCH,
-    RefFrame? COV_REFERENCE_FRAME,
     double? CX_X,
     double? CY_X,
     double? CY_Y,
@@ -404,7 +396,6 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
     double? CZ_DOT_Z_DOT,
   })
       : _EPOCH = EPOCH,
-        _COV_REFERENCE_FRAME = COV_REFERENCE_FRAME,
         _CX_X = CX_X,
         _CY_X = CY_X,
         _CY_Y = CY_Y,
@@ -432,30 +423,29 @@ class CovarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? EPOCHOffset = _EPOCH == null ? null
         : fbBuilder.writeString(_EPOCH!);
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(22);
     fbBuilder.addOffset(0, EPOCHOffset);
-    fbBuilder.addInt8(1, _COV_REFERENCE_FRAME?.value);
-    fbBuilder.addFloat64(2, _CX_X);
-    fbBuilder.addFloat64(3, _CY_X);
-    fbBuilder.addFloat64(4, _CY_Y);
-    fbBuilder.addFloat64(5, _CZ_X);
-    fbBuilder.addFloat64(6, _CZ_Y);
-    fbBuilder.addFloat64(7, _CZ_Z);
-    fbBuilder.addFloat64(8, _CX_DOT_X);
-    fbBuilder.addFloat64(9, _CX_DOT_Y);
-    fbBuilder.addFloat64(10, _CX_DOT_Z);
-    fbBuilder.addFloat64(11, _CX_DOT_X_DOT);
-    fbBuilder.addFloat64(12, _CY_DOT_X);
-    fbBuilder.addFloat64(13, _CY_DOT_Y);
-    fbBuilder.addFloat64(14, _CY_DOT_Z);
-    fbBuilder.addFloat64(15, _CY_DOT_X_DOT);
-    fbBuilder.addFloat64(16, _CY_DOT_Y_DOT);
-    fbBuilder.addFloat64(17, _CZ_DOT_X);
-    fbBuilder.addFloat64(18, _CZ_DOT_Y);
-    fbBuilder.addFloat64(19, _CZ_DOT_Z);
-    fbBuilder.addFloat64(20, _CZ_DOT_X_DOT);
-    fbBuilder.addFloat64(21, _CZ_DOT_Y_DOT);
-    fbBuilder.addFloat64(22, _CZ_DOT_Z_DOT);
+    fbBuilder.addFloat64(1, _CX_X);
+    fbBuilder.addFloat64(2, _CY_X);
+    fbBuilder.addFloat64(3, _CY_Y);
+    fbBuilder.addFloat64(4, _CZ_X);
+    fbBuilder.addFloat64(5, _CZ_Y);
+    fbBuilder.addFloat64(6, _CZ_Z);
+    fbBuilder.addFloat64(7, _CX_DOT_X);
+    fbBuilder.addFloat64(8, _CX_DOT_Y);
+    fbBuilder.addFloat64(9, _CX_DOT_Z);
+    fbBuilder.addFloat64(10, _CX_DOT_X_DOT);
+    fbBuilder.addFloat64(11, _CY_DOT_X);
+    fbBuilder.addFloat64(12, _CY_DOT_Y);
+    fbBuilder.addFloat64(13, _CY_DOT_Z);
+    fbBuilder.addFloat64(14, _CY_DOT_X_DOT);
+    fbBuilder.addFloat64(15, _CY_DOT_Y_DOT);
+    fbBuilder.addFloat64(16, _CZ_DOT_X);
+    fbBuilder.addFloat64(17, _CZ_DOT_Y);
+    fbBuilder.addFloat64(18, _CZ_DOT_Z);
+    fbBuilder.addFloat64(19, _CZ_DOT_X_DOT);
+    fbBuilder.addFloat64(20, _CZ_DOT_Y_DOT);
+    fbBuilder.addFloat64(21, _CZ_DOT_Z_DOT);
     return fbBuilder.endTable();
   }
 
@@ -490,30 +480,32 @@ class EphemerisDataBlock {
   RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
   String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Reference frame for the covariance matrix
+  RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   ///  Time system used for the orbit state and covariance matrix. (UTC)
-  TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
-  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Optional start USEABLE time span covered by ephemeris data (ISO 8601)
-  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get USEABLE_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
-  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
-  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   ///  Step size in seconds separating the epochs of each ephemeris data row
-  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   ///  Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
-  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   ///  Recommended interpolation degree for ephemeris data
-  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
   ///  Array of ephemeris data lines
-  List<EphemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<EphemerisDataLine>(EphemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  List<EphemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<EphemerisDataLine>(EphemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 32);
   ///  Array of covariance matrix lines
-  List<CovarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<CovarianceMatrixLine>(CovarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  List<CovarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<CovarianceMatrixLine>(CovarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 34);
 
   @override
   String toString() {
-    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, STEP_SIZE: ${STEP_SIZE}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
+    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, COV_REFERENCE_FRAME: ${COV_REFERENCE_FRAME}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, STEP_SIZE: ${STEP_SIZE}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
   }
 }
 
@@ -531,7 +523,7 @@ class EphemerisDataBlockBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(16);
   }
 
   int addCommentOffset(int? offset) {
@@ -554,44 +546,48 @@ class EphemerisDataBlockBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addCovReferenceFrame(RefFrame? COV_REFERENCE_FRAME) {
+    fbBuilder.addInt8(5, COV_REFERENCE_FRAME?.value);
+    return fbBuilder.offset;
+  }
   int addTimeSystem(TimeSystem? TIME_SYSTEM) {
-    fbBuilder.addInt8(5, TIME_SYSTEM?.value);
+    fbBuilder.addInt8(6, TIME_SYSTEM?.value);
     return fbBuilder.offset;
   }
   int addStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addUseableStartTimeOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addUseableStopTimeOffset(int? offset) {
+  int addUseableStartTimeOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addStopTimeOffset(int? offset) {
+  int addUseableStopTimeOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
   int addStepSize(double? STEP_SIZE) {
-    fbBuilder.addFloat64(10, STEP_SIZE);
+    fbBuilder.addFloat64(11, STEP_SIZE);
     return fbBuilder.offset;
   }
   int addInterpolationOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
   int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
-    fbBuilder.addUint32(12, INTERPOLATION_DEGREE);
+    fbBuilder.addUint32(13, INTERPOLATION_DEGREE);
     return fbBuilder.offset;
   }
   int addEphemerisDataLinesOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
   int addCovarianceMatrixLinesOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+    fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
 
@@ -606,6 +602,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _CENTER_NAME;
   final RefFrame? _REFERENCE_FRAME;
   final String? _REFERENCE_FRAME_EPOCH;
+  final RefFrame? _COV_REFERENCE_FRAME;
   final TimeSystem? _TIME_SYSTEM;
   final String? _START_TIME;
   final String? _USEABLE_START_TIME;
@@ -623,6 +620,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     String? CENTER_NAME,
     RefFrame? REFERENCE_FRAME,
     String? REFERENCE_FRAME_EPOCH,
+    RefFrame? COV_REFERENCE_FRAME,
     TimeSystem? TIME_SYSTEM,
     String? START_TIME,
     String? USEABLE_START_TIME,
@@ -639,6 +637,7 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         _CENTER_NAME = CENTER_NAME,
         _REFERENCE_FRAME = REFERENCE_FRAME,
         _REFERENCE_FRAME_EPOCH = REFERENCE_FRAME_EPOCH,
+        _COV_REFERENCE_FRAME = COV_REFERENCE_FRAME,
         _TIME_SYSTEM = TIME_SYSTEM,
         _START_TIME = START_TIME,
         _USEABLE_START_TIME = USEABLE_START_TIME,
@@ -674,22 +673,23 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_EPHEMERIS_DATA_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? COVARIANCE_MATRIX_LINESOffset = _COVARIANCE_MATRIX_LINES == null ? null
         : fbBuilder.writeList(_COVARIANCE_MATRIX_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(16);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
     fbBuilder.addInt8(3, _REFERENCE_FRAME?.value);
     fbBuilder.addOffset(4, REFERENCE_FRAME_EPOCHOffset);
-    fbBuilder.addInt8(5, _TIME_SYSTEM?.value);
-    fbBuilder.addOffset(6, START_TIMEOffset);
-    fbBuilder.addOffset(7, USEABLE_START_TIMEOffset);
-    fbBuilder.addOffset(8, USEABLE_STOP_TIMEOffset);
-    fbBuilder.addOffset(9, STOP_TIMEOffset);
-    fbBuilder.addFloat64(10, _STEP_SIZE);
-    fbBuilder.addOffset(11, INTERPOLATIONOffset);
-    fbBuilder.addUint32(12, _INTERPOLATION_DEGREE);
-    fbBuilder.addOffset(13, EPHEMERIS_DATA_LINESOffset);
-    fbBuilder.addOffset(14, COVARIANCE_MATRIX_LINESOffset);
+    fbBuilder.addInt8(5, _COV_REFERENCE_FRAME?.value);
+    fbBuilder.addInt8(6, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(7, START_TIMEOffset);
+    fbBuilder.addOffset(8, USEABLE_START_TIMEOffset);
+    fbBuilder.addOffset(9, USEABLE_STOP_TIMEOffset);
+    fbBuilder.addOffset(10, STOP_TIMEOffset);
+    fbBuilder.addFloat64(11, _STEP_SIZE);
+    fbBuilder.addOffset(12, INTERPOLATIONOffset);
+    fbBuilder.addUint32(13, _INTERPOLATION_DEGREE);
+    fbBuilder.addOffset(14, EPHEMERIS_DATA_LINESOffset);
+    fbBuilder.addOffset(15, COVARIANCE_MATRIX_LINESOffset);
     return fbBuilder.endTable();
   }
 

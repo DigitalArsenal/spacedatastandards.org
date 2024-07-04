@@ -52,23 +52,9 @@ func (rcv *covarianceMatrixLine) EPOCH() []byte {
 }
 
 /// Epoch
-/// Reference frame for the covariance matrix
-func (rcv *covarianceMatrixLine) COV_REFERENCE_FRAME() refFrame {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-/// Reference frame for the covariance matrix
-func (rcv *covarianceMatrixLine) MutateCOV_REFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(6, int8(n))
-}
-
 /// Covariance matrix [1,1] km**2
 func (rcv *covarianceMatrixLine) CX_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -77,12 +63,12 @@ func (rcv *covarianceMatrixLine) CX_X() float64 {
 
 /// Covariance matrix [1,1] km**2
 func (rcv *covarianceMatrixLine) MutateCX_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(8, n)
+	return rcv._tab.MutateFloat64Slot(6, n)
 }
 
 /// Covariance matrix [2,1] km**2
 func (rcv *covarianceMatrixLine) CY_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -91,12 +77,12 @@ func (rcv *covarianceMatrixLine) CY_X() float64 {
 
 /// Covariance matrix [2,1] km**2
 func (rcv *covarianceMatrixLine) MutateCY_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(10, n)
+	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
 /// Covariance matrix [2,2] km**2
 func (rcv *covarianceMatrixLine) CY_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -105,12 +91,12 @@ func (rcv *covarianceMatrixLine) CY_Y() float64 {
 
 /// Covariance matrix [2,2] km**2
 func (rcv *covarianceMatrixLine) MutateCY_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(12, n)
+	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
 /// Covariance matrix [3,1] km**2
 func (rcv *covarianceMatrixLine) CZ_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -119,12 +105,12 @@ func (rcv *covarianceMatrixLine) CZ_X() float64 {
 
 /// Covariance matrix [3,1] km**2
 func (rcv *covarianceMatrixLine) MutateCZ_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(14, n)
+	return rcv._tab.MutateFloat64Slot(12, n)
 }
 
 /// Covariance matrix [3,2] km**2
 func (rcv *covarianceMatrixLine) CZ_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -133,12 +119,12 @@ func (rcv *covarianceMatrixLine) CZ_Y() float64 {
 
 /// Covariance matrix [3,2] km**2
 func (rcv *covarianceMatrixLine) MutateCZ_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(16, n)
+	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
 /// Covariance matrix [3,3] km**2
 func (rcv *covarianceMatrixLine) CZ_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -147,12 +133,12 @@ func (rcv *covarianceMatrixLine) CZ_Z() float64 {
 
 /// Covariance matrix [3,3] km**2
 func (rcv *covarianceMatrixLine) MutateCZ_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(18, n)
+	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
 /// Covariance matrix [4,1] km**2/s
 func (rcv *covarianceMatrixLine) CX_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -161,12 +147,12 @@ func (rcv *covarianceMatrixLine) CX_DOT_X() float64 {
 
 /// Covariance matrix [4,1] km**2/s
 func (rcv *covarianceMatrixLine) MutateCX_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(20, n)
+	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
 /// Covariance matrix [4,2] km**2/s
 func (rcv *covarianceMatrixLine) CX_DOT_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -175,12 +161,12 @@ func (rcv *covarianceMatrixLine) CX_DOT_Y() float64 {
 
 /// Covariance matrix [4,2] km**2/s
 func (rcv *covarianceMatrixLine) MutateCX_DOT_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(22, n)
+	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
 /// Covariance matrix [4,3] km**2/s
 func (rcv *covarianceMatrixLine) CX_DOT_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -189,12 +175,12 @@ func (rcv *covarianceMatrixLine) CX_DOT_Z() float64 {
 
 /// Covariance matrix [4,3] km**2/s
 func (rcv *covarianceMatrixLine) MutateCX_DOT_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
+	return rcv._tab.MutateFloat64Slot(22, n)
 }
 
 /// Covariance matrix [4,4] km**2/s**2
 func (rcv *covarianceMatrixLine) CX_DOT_X_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -203,12 +189,12 @@ func (rcv *covarianceMatrixLine) CX_DOT_X_DOT() float64 {
 
 /// Covariance matrix [4,4] km**2/s**2
 func (rcv *covarianceMatrixLine) MutateCX_DOT_X_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(26, n)
+	return rcv._tab.MutateFloat64Slot(24, n)
 }
 
 /// Covariance matrix [5,1] km**2/s
 func (rcv *covarianceMatrixLine) CY_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -217,12 +203,12 @@ func (rcv *covarianceMatrixLine) CY_DOT_X() float64 {
 
 /// Covariance matrix [5,1] km**2/s
 func (rcv *covarianceMatrixLine) MutateCY_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(28, n)
+	return rcv._tab.MutateFloat64Slot(26, n)
 }
 
 /// Covariance matrix [5,2] km**2/s
 func (rcv *covarianceMatrixLine) CY_DOT_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -231,12 +217,12 @@ func (rcv *covarianceMatrixLine) CY_DOT_Y() float64 {
 
 /// Covariance matrix [5,2] km**2/s
 func (rcv *covarianceMatrixLine) MutateCY_DOT_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(30, n)
+	return rcv._tab.MutateFloat64Slot(28, n)
 }
 
 /// Covariance matrix [5,3] km**2/s
 func (rcv *covarianceMatrixLine) CY_DOT_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -245,12 +231,12 @@ func (rcv *covarianceMatrixLine) CY_DOT_Z() float64 {
 
 /// Covariance matrix [5,3] km**2/s
 func (rcv *covarianceMatrixLine) MutateCY_DOT_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(32, n)
+	return rcv._tab.MutateFloat64Slot(30, n)
 }
 
 /// Covariance matrix [5,4] km**2/s**2
 func (rcv *covarianceMatrixLine) CY_DOT_X_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -259,12 +245,12 @@ func (rcv *covarianceMatrixLine) CY_DOT_X_DOT() float64 {
 
 /// Covariance matrix [5,4] km**2/s**2
 func (rcv *covarianceMatrixLine) MutateCY_DOT_X_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(34, n)
+	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
 /// Covariance matrix [5,5] km**2/s**2
 func (rcv *covarianceMatrixLine) CY_DOT_Y_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -273,12 +259,12 @@ func (rcv *covarianceMatrixLine) CY_DOT_Y_DOT() float64 {
 
 /// Covariance matrix [5,5] km**2/s**2
 func (rcv *covarianceMatrixLine) MutateCY_DOT_Y_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(36, n)
+	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
 /// Covariance matrix [6,1] km**2/s
 func (rcv *covarianceMatrixLine) CZ_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -287,12 +273,12 @@ func (rcv *covarianceMatrixLine) CZ_DOT_X() float64 {
 
 /// Covariance matrix [6,1] km**2/s
 func (rcv *covarianceMatrixLine) MutateCZ_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(38, n)
+	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
 /// Covariance matrix [6,2] km**2/s
 func (rcv *covarianceMatrixLine) CZ_DOT_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -301,12 +287,12 @@ func (rcv *covarianceMatrixLine) CZ_DOT_Y() float64 {
 
 /// Covariance matrix [6,2] km**2/s
 func (rcv *covarianceMatrixLine) MutateCZ_DOT_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(40, n)
+	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
 /// Covariance matrix [6,3] km**2/s
 func (rcv *covarianceMatrixLine) CZ_DOT_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -315,12 +301,12 @@ func (rcv *covarianceMatrixLine) CZ_DOT_Z() float64 {
 
 /// Covariance matrix [6,3] km**2/s
 func (rcv *covarianceMatrixLine) MutateCZ_DOT_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(42, n)
+	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
 /// Covariance matrix [6,4] km**2/s**2
 func (rcv *covarianceMatrixLine) CZ_DOT_X_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -329,12 +315,12 @@ func (rcv *covarianceMatrixLine) CZ_DOT_X_DOT() float64 {
 
 /// Covariance matrix [6,4] km**2/s**2
 func (rcv *covarianceMatrixLine) MutateCZ_DOT_X_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(44, n)
+	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
 /// Covariance matrix [6,5] km**2/s**2
 func (rcv *covarianceMatrixLine) CZ_DOT_Y_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -343,12 +329,12 @@ func (rcv *covarianceMatrixLine) CZ_DOT_Y_DOT() float64 {
 
 /// Covariance matrix [6,5] km**2/s**2
 func (rcv *covarianceMatrixLine) MutateCZ_DOT_Y_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(46, n)
+	return rcv._tab.MutateFloat64Slot(44, n)
 }
 
 /// Covariance matrix [6,6] km**2/s**2
 func (rcv *covarianceMatrixLine) CZ_DOT_Z_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -357,80 +343,77 @@ func (rcv *covarianceMatrixLine) CZ_DOT_Z_DOT() float64 {
 
 /// Covariance matrix [6,6] km**2/s**2
 func (rcv *covarianceMatrixLine) MutateCZ_DOT_Z_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(48, n)
+	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
 func covarianceMatrixLineStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(22)
 }
 func covarianceMatrixLineAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
-func covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(1, int8(COV_REFERENCE_FRAME), 0)
-}
 func covarianceMatrixLineAddCX_X(builder *flatbuffers.Builder, CX_X float64) {
-	builder.PrependFloat64Slot(2, CX_X, 0.0)
+	builder.PrependFloat64Slot(1, CX_X, 0.0)
 }
 func covarianceMatrixLineAddCY_X(builder *flatbuffers.Builder, CY_X float64) {
-	builder.PrependFloat64Slot(3, CY_X, 0.0)
+	builder.PrependFloat64Slot(2, CY_X, 0.0)
 }
 func covarianceMatrixLineAddCY_Y(builder *flatbuffers.Builder, CY_Y float64) {
-	builder.PrependFloat64Slot(4, CY_Y, 0.0)
+	builder.PrependFloat64Slot(3, CY_Y, 0.0)
 }
 func covarianceMatrixLineAddCZ_X(builder *flatbuffers.Builder, CZ_X float64) {
-	builder.PrependFloat64Slot(5, CZ_X, 0.0)
+	builder.PrependFloat64Slot(4, CZ_X, 0.0)
 }
 func covarianceMatrixLineAddCZ_Y(builder *flatbuffers.Builder, CZ_Y float64) {
-	builder.PrependFloat64Slot(6, CZ_Y, 0.0)
+	builder.PrependFloat64Slot(5, CZ_Y, 0.0)
 }
 func covarianceMatrixLineAddCZ_Z(builder *flatbuffers.Builder, CZ_Z float64) {
-	builder.PrependFloat64Slot(7, CZ_Z, 0.0)
+	builder.PrependFloat64Slot(6, CZ_Z, 0.0)
 }
 func covarianceMatrixLineAddCX_DOT_X(builder *flatbuffers.Builder, CX_DOT_X float64) {
-	builder.PrependFloat64Slot(8, CX_DOT_X, 0.0)
+	builder.PrependFloat64Slot(7, CX_DOT_X, 0.0)
 }
 func covarianceMatrixLineAddCX_DOT_Y(builder *flatbuffers.Builder, CX_DOT_Y float64) {
-	builder.PrependFloat64Slot(9, CX_DOT_Y, 0.0)
+	builder.PrependFloat64Slot(8, CX_DOT_Y, 0.0)
 }
 func covarianceMatrixLineAddCX_DOT_Z(builder *flatbuffers.Builder, CX_DOT_Z float64) {
-	builder.PrependFloat64Slot(10, CX_DOT_Z, 0.0)
+	builder.PrependFloat64Slot(9, CX_DOT_Z, 0.0)
 }
 func covarianceMatrixLineAddCX_DOT_X_DOT(builder *flatbuffers.Builder, CX_DOT_X_DOT float64) {
-	builder.PrependFloat64Slot(11, CX_DOT_X_DOT, 0.0)
+	builder.PrependFloat64Slot(10, CX_DOT_X_DOT, 0.0)
 }
 func covarianceMatrixLineAddCY_DOT_X(builder *flatbuffers.Builder, CY_DOT_X float64) {
-	builder.PrependFloat64Slot(12, CY_DOT_X, 0.0)
+	builder.PrependFloat64Slot(11, CY_DOT_X, 0.0)
 }
 func covarianceMatrixLineAddCY_DOT_Y(builder *flatbuffers.Builder, CY_DOT_Y float64) {
-	builder.PrependFloat64Slot(13, CY_DOT_Y, 0.0)
+	builder.PrependFloat64Slot(12, CY_DOT_Y, 0.0)
 }
 func covarianceMatrixLineAddCY_DOT_Z(builder *flatbuffers.Builder, CY_DOT_Z float64) {
-	builder.PrependFloat64Slot(14, CY_DOT_Z, 0.0)
+	builder.PrependFloat64Slot(13, CY_DOT_Z, 0.0)
 }
 func covarianceMatrixLineAddCY_DOT_X_DOT(builder *flatbuffers.Builder, CY_DOT_X_DOT float64) {
-	builder.PrependFloat64Slot(15, CY_DOT_X_DOT, 0.0)
+	builder.PrependFloat64Slot(14, CY_DOT_X_DOT, 0.0)
 }
 func covarianceMatrixLineAddCY_DOT_Y_DOT(builder *flatbuffers.Builder, CY_DOT_Y_DOT float64) {
-	builder.PrependFloat64Slot(16, CY_DOT_Y_DOT, 0.0)
+	builder.PrependFloat64Slot(15, CY_DOT_Y_DOT, 0.0)
 }
 func covarianceMatrixLineAddCZ_DOT_X(builder *flatbuffers.Builder, CZ_DOT_X float64) {
-	builder.PrependFloat64Slot(17, CZ_DOT_X, 0.0)
+	builder.PrependFloat64Slot(16, CZ_DOT_X, 0.0)
 }
 func covarianceMatrixLineAddCZ_DOT_Y(builder *flatbuffers.Builder, CZ_DOT_Y float64) {
-	builder.PrependFloat64Slot(18, CZ_DOT_Y, 0.0)
+	builder.PrependFloat64Slot(17, CZ_DOT_Y, 0.0)
 }
 func covarianceMatrixLineAddCZ_DOT_Z(builder *flatbuffers.Builder, CZ_DOT_Z float64) {
-	builder.PrependFloat64Slot(19, CZ_DOT_Z, 0.0)
+	builder.PrependFloat64Slot(18, CZ_DOT_Z, 0.0)
 }
 func covarianceMatrixLineAddCZ_DOT_X_DOT(builder *flatbuffers.Builder, CZ_DOT_X_DOT float64) {
-	builder.PrependFloat64Slot(20, CZ_DOT_X_DOT, 0.0)
+	builder.PrependFloat64Slot(19, CZ_DOT_X_DOT, 0.0)
 }
 func covarianceMatrixLineAddCZ_DOT_Y_DOT(builder *flatbuffers.Builder, CZ_DOT_Y_DOT float64) {
-	builder.PrependFloat64Slot(21, CZ_DOT_Y_DOT, 0.0)
+	builder.PrependFloat64Slot(20, CZ_DOT_Y_DOT, 0.0)
 }
 func covarianceMatrixLineAddCZ_DOT_Z_DOT(builder *flatbuffers.Builder, CZ_DOT_Z_DOT float64) {
-	builder.PrependFloat64Slot(22, CZ_DOT_Z_DOT, 0.0)
+	builder.PrependFloat64Slot(21, CZ_DOT_Z_DOT, 0.0)
 }
 func covarianceMatrixLineEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

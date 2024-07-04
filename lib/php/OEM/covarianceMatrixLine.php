@@ -48,23 +48,13 @@ class covarianceMatrixLine extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Reference frame for the covariance matrix
-    /**
-     * @return sbyte
-     */
-    public function getCOV_REFERENCE_FRAME()
-    {
-        $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
-    }
-
     /// Covariance matrix [1,1] km**2
     /**
      * @return double
      */
     public function getCX_X()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -74,7 +64,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_X()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -84,7 +74,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_Y()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -94,7 +84,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_X()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -104,7 +94,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_Y()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -114,7 +104,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_Z()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -124,7 +114,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCX_DOT_X()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -134,7 +124,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCX_DOT_Y()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -144,7 +134,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCX_DOT_Z()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -154,7 +144,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCX_DOT_X_DOT()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -164,7 +154,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_DOT_X()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -174,7 +164,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_DOT_Y()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -184,7 +174,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_DOT_Z()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -194,7 +184,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_DOT_X_DOT()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -204,7 +194,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCY_DOT_Y_DOT()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -214,7 +204,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_DOT_X()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -224,7 +214,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_DOT_Y()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -234,7 +224,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_DOT_Z()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -244,7 +234,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_DOT_X_DOT()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -254,7 +244,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_DOT_Y_DOT()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -264,7 +254,7 @@ class covarianceMatrixLine extends Table
      */
     public function getCZ_DOT_Z_DOT()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -274,18 +264,17 @@ class covarianceMatrixLine extends Table
      */
     public static function startcovarianceMatrixLine(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return covarianceMatrixLine
      */
-    public static function createcovarianceMatrixLine(FlatBufferBuilder $builder, $EPOCH, $COV_REFERENCE_FRAME, $CX_X, $CY_X, $CY_Y, $CZ_X, $CZ_Y, $CZ_Z, $CX_DOT_X, $CX_DOT_Y, $CX_DOT_Z, $CX_DOT_X_DOT, $CY_DOT_X, $CY_DOT_Y, $CY_DOT_Z, $CY_DOT_X_DOT, $CY_DOT_Y_DOT, $CZ_DOT_X, $CZ_DOT_Y, $CZ_DOT_Z, $CZ_DOT_X_DOT, $CZ_DOT_Y_DOT, $CZ_DOT_Z_DOT)
+    public static function createcovarianceMatrixLine(FlatBufferBuilder $builder, $EPOCH, $CX_X, $CY_X, $CY_Y, $CZ_X, $CZ_Y, $CZ_Z, $CX_DOT_X, $CX_DOT_Y, $CX_DOT_Z, $CX_DOT_X_DOT, $CY_DOT_X, $CY_DOT_Y, $CY_DOT_Z, $CY_DOT_X_DOT, $CY_DOT_Y_DOT, $CZ_DOT_X, $CZ_DOT_Y, $CZ_DOT_Z, $CZ_DOT_X_DOT, $CZ_DOT_Y_DOT, $CZ_DOT_Z_DOT)
     {
-        $builder->startObject(23);
+        $builder->startObject(22);
         self::addEPOCH($builder, $EPOCH);
-        self::addCOV_REFERENCE_FRAME($builder, $COV_REFERENCE_FRAME);
         self::addCX_X($builder, $CX_X);
         self::addCY_X($builder, $CY_X);
         self::addCY_Y($builder, $CY_Y);
@@ -323,22 +312,12 @@ class covarianceMatrixLine extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
-     * @return void
-     */
-    public static function addCOV_REFERENCE_FRAME(FlatBufferBuilder $builder, $COV_REFERENCE_FRAME)
-    {
-        $builder->addSbyteX(1, $COV_REFERENCE_FRAME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param double
      * @return void
      */
     public static function addCX_X(FlatBufferBuilder $builder, $CX_X)
     {
-        $builder->addDoubleX(2, $CX_X, 0.0);
+        $builder->addDoubleX(1, $CX_X, 0.0);
     }
 
     /**
@@ -348,7 +327,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_X(FlatBufferBuilder $builder, $CY_X)
     {
-        $builder->addDoubleX(3, $CY_X, 0.0);
+        $builder->addDoubleX(2, $CY_X, 0.0);
     }
 
     /**
@@ -358,7 +337,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_Y(FlatBufferBuilder $builder, $CY_Y)
     {
-        $builder->addDoubleX(4, $CY_Y, 0.0);
+        $builder->addDoubleX(3, $CY_Y, 0.0);
     }
 
     /**
@@ -368,7 +347,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_X(FlatBufferBuilder $builder, $CZ_X)
     {
-        $builder->addDoubleX(5, $CZ_X, 0.0);
+        $builder->addDoubleX(4, $CZ_X, 0.0);
     }
 
     /**
@@ -378,7 +357,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_Y(FlatBufferBuilder $builder, $CZ_Y)
     {
-        $builder->addDoubleX(6, $CZ_Y, 0.0);
+        $builder->addDoubleX(5, $CZ_Y, 0.0);
     }
 
     /**
@@ -388,7 +367,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_Z(FlatBufferBuilder $builder, $CZ_Z)
     {
-        $builder->addDoubleX(7, $CZ_Z, 0.0);
+        $builder->addDoubleX(6, $CZ_Z, 0.0);
     }
 
     /**
@@ -398,7 +377,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCX_DOT_X(FlatBufferBuilder $builder, $CX_DOT_X)
     {
-        $builder->addDoubleX(8, $CX_DOT_X, 0.0);
+        $builder->addDoubleX(7, $CX_DOT_X, 0.0);
     }
 
     /**
@@ -408,7 +387,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCX_DOT_Y(FlatBufferBuilder $builder, $CX_DOT_Y)
     {
-        $builder->addDoubleX(9, $CX_DOT_Y, 0.0);
+        $builder->addDoubleX(8, $CX_DOT_Y, 0.0);
     }
 
     /**
@@ -418,7 +397,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCX_DOT_Z(FlatBufferBuilder $builder, $CX_DOT_Z)
     {
-        $builder->addDoubleX(10, $CX_DOT_Z, 0.0);
+        $builder->addDoubleX(9, $CX_DOT_Z, 0.0);
     }
 
     /**
@@ -428,7 +407,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCX_DOT_X_DOT(FlatBufferBuilder $builder, $CX_DOT_X_DOT)
     {
-        $builder->addDoubleX(11, $CX_DOT_X_DOT, 0.0);
+        $builder->addDoubleX(10, $CX_DOT_X_DOT, 0.0);
     }
 
     /**
@@ -438,7 +417,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_DOT_X(FlatBufferBuilder $builder, $CY_DOT_X)
     {
-        $builder->addDoubleX(12, $CY_DOT_X, 0.0);
+        $builder->addDoubleX(11, $CY_DOT_X, 0.0);
     }
 
     /**
@@ -448,7 +427,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_DOT_Y(FlatBufferBuilder $builder, $CY_DOT_Y)
     {
-        $builder->addDoubleX(13, $CY_DOT_Y, 0.0);
+        $builder->addDoubleX(12, $CY_DOT_Y, 0.0);
     }
 
     /**
@@ -458,7 +437,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_DOT_Z(FlatBufferBuilder $builder, $CY_DOT_Z)
     {
-        $builder->addDoubleX(14, $CY_DOT_Z, 0.0);
+        $builder->addDoubleX(13, $CY_DOT_Z, 0.0);
     }
 
     /**
@@ -468,7 +447,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_DOT_X_DOT(FlatBufferBuilder $builder, $CY_DOT_X_DOT)
     {
-        $builder->addDoubleX(15, $CY_DOT_X_DOT, 0.0);
+        $builder->addDoubleX(14, $CY_DOT_X_DOT, 0.0);
     }
 
     /**
@@ -478,7 +457,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCY_DOT_Y_DOT(FlatBufferBuilder $builder, $CY_DOT_Y_DOT)
     {
-        $builder->addDoubleX(16, $CY_DOT_Y_DOT, 0.0);
+        $builder->addDoubleX(15, $CY_DOT_Y_DOT, 0.0);
     }
 
     /**
@@ -488,7 +467,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_DOT_X(FlatBufferBuilder $builder, $CZ_DOT_X)
     {
-        $builder->addDoubleX(17, $CZ_DOT_X, 0.0);
+        $builder->addDoubleX(16, $CZ_DOT_X, 0.0);
     }
 
     /**
@@ -498,7 +477,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_DOT_Y(FlatBufferBuilder $builder, $CZ_DOT_Y)
     {
-        $builder->addDoubleX(18, $CZ_DOT_Y, 0.0);
+        $builder->addDoubleX(17, $CZ_DOT_Y, 0.0);
     }
 
     /**
@@ -508,7 +487,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_DOT_Z(FlatBufferBuilder $builder, $CZ_DOT_Z)
     {
-        $builder->addDoubleX(19, $CZ_DOT_Z, 0.0);
+        $builder->addDoubleX(18, $CZ_DOT_Z, 0.0);
     }
 
     /**
@@ -518,7 +497,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_DOT_X_DOT(FlatBufferBuilder $builder, $CZ_DOT_X_DOT)
     {
-        $builder->addDoubleX(20, $CZ_DOT_X_DOT, 0.0);
+        $builder->addDoubleX(19, $CZ_DOT_X_DOT, 0.0);
     }
 
     /**
@@ -528,7 +507,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_DOT_Y_DOT(FlatBufferBuilder $builder, $CZ_DOT_Y_DOT)
     {
-        $builder->addDoubleX(21, $CZ_DOT_Y_DOT, 0.0);
+        $builder->addDoubleX(20, $CZ_DOT_Y_DOT, 0.0);
     }
 
     /**
@@ -538,7 +517,7 @@ class covarianceMatrixLine extends Table
      */
     public static function addCZ_DOT_Z_DOT(FlatBufferBuilder $builder, $CZ_DOT_Z_DOT)
     {
-        $builder->addDoubleX(22, $CZ_DOT_Z_DOT, 0.0);
+        $builder->addDoubleX(21, $CZ_DOT_Z_DOT, 0.0);
     }
 
     /**

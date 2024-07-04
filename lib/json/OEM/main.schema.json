@@ -491,10 +491,6 @@
                 "type" : "string",
                 "description" : "Epoch"
               },
-        "COV_REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/refFrame",
-                "description" : "Reference frame for the covariance matrix"
-              },
         "CX_X" : {
                 "type" : "number",
                 "description" : "Covariance matrix [1,1] km**2"
@@ -605,6 +601,10 @@
         "REFERENCE_FRAME_EPOCH" : {
                 "type" : "string",
                 "description" : "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/refFrame",
+                "description" : "Reference frame for the covariance matrix"
               },
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem",

@@ -381,28 +381,27 @@ impl<'a> flatbuffers::Follow<'a> for covarianceMatrixLine<'a> {
 
 impl<'a> covarianceMatrixLine<'a> {
   pub const VT_EPOCH: flatbuffers::VOffsetT = 4;
-  pub const VT_COV_REFERENCE_FRAME: flatbuffers::VOffsetT = 6;
-  pub const VT_CX_X: flatbuffers::VOffsetT = 8;
-  pub const VT_CY_X: flatbuffers::VOffsetT = 10;
-  pub const VT_CY_Y: flatbuffers::VOffsetT = 12;
-  pub const VT_CZ_X: flatbuffers::VOffsetT = 14;
-  pub const VT_CZ_Y: flatbuffers::VOffsetT = 16;
-  pub const VT_CZ_Z: flatbuffers::VOffsetT = 18;
-  pub const VT_CX_DOT_X: flatbuffers::VOffsetT = 20;
-  pub const VT_CX_DOT_Y: flatbuffers::VOffsetT = 22;
-  pub const VT_CX_DOT_Z: flatbuffers::VOffsetT = 24;
-  pub const VT_CX_DOT_X_DOT: flatbuffers::VOffsetT = 26;
-  pub const VT_CY_DOT_X: flatbuffers::VOffsetT = 28;
-  pub const VT_CY_DOT_Y: flatbuffers::VOffsetT = 30;
-  pub const VT_CY_DOT_Z: flatbuffers::VOffsetT = 32;
-  pub const VT_CY_DOT_X_DOT: flatbuffers::VOffsetT = 34;
-  pub const VT_CY_DOT_Y_DOT: flatbuffers::VOffsetT = 36;
-  pub const VT_CZ_DOT_X: flatbuffers::VOffsetT = 38;
-  pub const VT_CZ_DOT_Y: flatbuffers::VOffsetT = 40;
-  pub const VT_CZ_DOT_Z: flatbuffers::VOffsetT = 42;
-  pub const VT_CZ_DOT_X_DOT: flatbuffers::VOffsetT = 44;
-  pub const VT_CZ_DOT_Y_DOT: flatbuffers::VOffsetT = 46;
-  pub const VT_CZ_DOT_Z_DOT: flatbuffers::VOffsetT = 48;
+  pub const VT_CX_X: flatbuffers::VOffsetT = 6;
+  pub const VT_CY_X: flatbuffers::VOffsetT = 8;
+  pub const VT_CY_Y: flatbuffers::VOffsetT = 10;
+  pub const VT_CZ_X: flatbuffers::VOffsetT = 12;
+  pub const VT_CZ_Y: flatbuffers::VOffsetT = 14;
+  pub const VT_CZ_Z: flatbuffers::VOffsetT = 16;
+  pub const VT_CX_DOT_X: flatbuffers::VOffsetT = 18;
+  pub const VT_CX_DOT_Y: flatbuffers::VOffsetT = 20;
+  pub const VT_CX_DOT_Z: flatbuffers::VOffsetT = 22;
+  pub const VT_CX_DOT_X_DOT: flatbuffers::VOffsetT = 24;
+  pub const VT_CY_DOT_X: flatbuffers::VOffsetT = 26;
+  pub const VT_CY_DOT_Y: flatbuffers::VOffsetT = 28;
+  pub const VT_CY_DOT_Z: flatbuffers::VOffsetT = 30;
+  pub const VT_CY_DOT_X_DOT: flatbuffers::VOffsetT = 32;
+  pub const VT_CY_DOT_Y_DOT: flatbuffers::VOffsetT = 34;
+  pub const VT_CZ_DOT_X: flatbuffers::VOffsetT = 36;
+  pub const VT_CZ_DOT_Y: flatbuffers::VOffsetT = 38;
+  pub const VT_CZ_DOT_Z: flatbuffers::VOffsetT = 40;
+  pub const VT_CZ_DOT_X_DOT: flatbuffers::VOffsetT = 42;
+  pub const VT_CZ_DOT_Y_DOT: flatbuffers::VOffsetT = 44;
+  pub const VT_CZ_DOT_Z_DOT: flatbuffers::VOffsetT = 46;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -436,7 +435,6 @@ impl<'a> covarianceMatrixLine<'a> {
     builder.add_CY_X(args.CY_X);
     builder.add_CX_X(args.CX_X);
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
-    builder.add_COV_REFERENCE_FRAME(args.COV_REFERENCE_FRAME);
     builder.finish()
   }
 
@@ -444,7 +442,6 @@ impl<'a> covarianceMatrixLine<'a> {
     let EPOCH = self.EPOCH().map(|x| {
       x.to_string()
     });
-    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME();
     let CX_X = self.CX_X();
     let CY_X = self.CY_X();
     let CY_Y = self.CY_Y();
@@ -468,7 +465,6 @@ impl<'a> covarianceMatrixLine<'a> {
     let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT();
     covarianceMatrixLineT {
       EPOCH,
-      COV_REFERENCE_FRAME,
       CX_X,
       CY_X,
       CY_Y,
@@ -500,14 +496,6 @@ impl<'a> covarianceMatrixLine<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(covarianceMatrixLine::VT_EPOCH, None)}
-  }
-  /// Reference frame for the covariance matrix
-  #[inline]
-  pub fn COV_REFERENCE_FRAME(&self) -> refFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Covariance matrix [1,1] km**2
   #[inline]
@@ -687,7 +675,6 @@ impl flatbuffers::Verifiable for covarianceMatrixLine<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
-     .visit_field::<refFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
      .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
      .visit_field::<f64>("CY_Y", Self::VT_CY_Y, false)?
@@ -715,7 +702,6 @@ impl flatbuffers::Verifiable for covarianceMatrixLine<'_> {
 }
 pub struct covarianceMatrixLineArgs<'a> {
     pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COV_REFERENCE_FRAME: refFrame,
     pub CX_X: f64,
     pub CY_X: f64,
     pub CY_Y: f64,
@@ -743,7 +729,6 @@ impl<'a> Default for covarianceMatrixLineArgs<'a> {
   fn default() -> Self {
     covarianceMatrixLineArgs {
       EPOCH: None,
-      COV_REFERENCE_FRAME: refFrame::ECEF,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -777,10 +762,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> covarianceMatrixLineBuilder<'a,
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(covarianceMatrixLine::VT_EPOCH, EPOCH);
-  }
-  #[inline]
-  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn add_CX_X(&mut self, CX_X: f64) {
@@ -885,7 +866,6 @@ impl core::fmt::Debug for covarianceMatrixLine<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("covarianceMatrixLine");
       ds.field("EPOCH", &self.EPOCH());
-      ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
       ds.field("CX_X", &self.CX_X());
       ds.field("CY_X", &self.CY_X());
       ds.field("CY_Y", &self.CY_Y());
@@ -914,7 +894,6 @@ impl core::fmt::Debug for covarianceMatrixLine<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct covarianceMatrixLineT {
   pub EPOCH: Option<String>,
-  pub COV_REFERENCE_FRAME: refFrame,
   pub CX_X: f64,
   pub CY_X: f64,
   pub CY_Y: f64,
@@ -941,7 +920,6 @@ impl Default for covarianceMatrixLineT {
   fn default() -> Self {
     Self {
       EPOCH: None,
-      COV_REFERENCE_FRAME: refFrame::ECEF,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -974,7 +952,6 @@ impl covarianceMatrixLineT {
     let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME;
     let CX_X = self.CX_X;
     let CY_X = self.CY_X;
     let CY_Y = self.CY_Y;
@@ -998,7 +975,6 @@ impl covarianceMatrixLineT {
     let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT;
     covarianceMatrixLine::create(_fbb, &covarianceMatrixLineArgs{
       EPOCH,
-      COV_REFERENCE_FRAME,
       CX_X,
       CY_X,
       CY_Y,
@@ -1045,16 +1021,17 @@ impl<'a> ephemerisDataBlock<'a> {
   pub const VT_CENTER_NAME: flatbuffers::VOffsetT = 8;
   pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 10;
   pub const VT_REFERENCE_FRAME_EPOCH: flatbuffers::VOffsetT = 12;
-  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 14;
-  pub const VT_START_TIME: flatbuffers::VOffsetT = 16;
-  pub const VT_USEABLE_START_TIME: flatbuffers::VOffsetT = 18;
-  pub const VT_USEABLE_STOP_TIME: flatbuffers::VOffsetT = 20;
-  pub const VT_STOP_TIME: flatbuffers::VOffsetT = 22;
-  pub const VT_STEP_SIZE: flatbuffers::VOffsetT = 24;
-  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 26;
-  pub const VT_INTERPOLATION_DEGREE: flatbuffers::VOffsetT = 28;
-  pub const VT_EPHEMERIS_DATA_LINES: flatbuffers::VOffsetT = 30;
-  pub const VT_COVARIANCE_MATRIX_LINES: flatbuffers::VOffsetT = 32;
+  pub const VT_COV_REFERENCE_FRAME: flatbuffers::VOffsetT = 14;
+  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 16;
+  pub const VT_START_TIME: flatbuffers::VOffsetT = 18;
+  pub const VT_USEABLE_START_TIME: flatbuffers::VOffsetT = 20;
+  pub const VT_USEABLE_STOP_TIME: flatbuffers::VOffsetT = 22;
+  pub const VT_STOP_TIME: flatbuffers::VOffsetT = 24;
+  pub const VT_STEP_SIZE: flatbuffers::VOffsetT = 26;
+  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 28;
+  pub const VT_INTERPOLATION_DEGREE: flatbuffers::VOffsetT = 30;
+  pub const VT_EPHEMERIS_DATA_LINES: flatbuffers::VOffsetT = 32;
+  pub const VT_COVARIANCE_MATRIX_LINES: flatbuffers::VOffsetT = 34;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1080,6 +1057,7 @@ impl<'a> ephemerisDataBlock<'a> {
     if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
+    builder.add_COV_REFERENCE_FRAME(args.COV_REFERENCE_FRAME);
     builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.finish()
   }
@@ -1098,6 +1076,7 @@ impl<'a> ephemerisDataBlock<'a> {
     let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH().map(|x| {
       x.to_string()
     });
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME();
     let TIME_SYSTEM = self.TIME_SYSTEM();
     let START_TIME = self.START_TIME().map(|x| {
       x.to_string()
@@ -1128,6 +1107,7 @@ impl<'a> ephemerisDataBlock<'a> {
       CENTER_NAME,
       REFERENCE_FRAME,
       REFERENCE_FRAME_EPOCH,
+      COV_REFERENCE_FRAME,
       TIME_SYSTEM,
       START_TIME,
       USEABLE_START_TIME,
@@ -1180,6 +1160,14 @@ impl<'a> ephemerisDataBlock<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, None)}
+  }
+  /// Reference frame for the covariance matrix
+  #[inline]
+  pub fn COV_REFERENCE_FRAME(&self) -> refFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<refFrame>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
   /// Time system used for the orbit state and covariance matrix. (UTC)
   #[inline]
@@ -1275,6 +1263,7 @@ impl flatbuffers::Verifiable for ephemerisDataBlock<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
      .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
+     .visit_field::<refFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USEABLE_START_TIME", Self::VT_USEABLE_START_TIME, false)?
@@ -1295,6 +1284,7 @@ pub struct ephemerisDataBlockArgs<'a> {
     pub CENTER_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REFERENCE_FRAME: refFrame,
     pub REFERENCE_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REFERENCE_FRAME: refFrame,
     pub TIME_SYSTEM: timeSystem,
     pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub USEABLE_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1315,6 +1305,7 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
       CENTER_NAME: None,
       REFERENCE_FRAME: refFrame::ECEF,
       REFERENCE_FRAME_EPOCH: None,
+      COV_REFERENCE_FRAME: refFrame::ECEF,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,
       USEABLE_START_TIME: None,
@@ -1353,6 +1344,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a, '
   #[inline]
   pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
+  }
+  #[inline]
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: refFrame) {
+    self.fbb_.push_slot::<refFrame>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, refFrame::ECEF);
   }
   #[inline]
   pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
@@ -1417,6 +1412,7 @@ impl core::fmt::Debug for ephemerisDataBlock<'_> {
       ds.field("CENTER_NAME", &self.CENTER_NAME());
       ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
       ds.field("REFERENCE_FRAME_EPOCH", &self.REFERENCE_FRAME_EPOCH());
+      ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
       ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
       ds.field("START_TIME", &self.START_TIME());
       ds.field("USEABLE_START_TIME", &self.USEABLE_START_TIME());
@@ -1438,6 +1434,7 @@ pub struct ephemerisDataBlockT {
   pub CENTER_NAME: Option<String>,
   pub REFERENCE_FRAME: refFrame,
   pub REFERENCE_FRAME_EPOCH: Option<String>,
+  pub COV_REFERENCE_FRAME: refFrame,
   pub TIME_SYSTEM: timeSystem,
   pub START_TIME: Option<String>,
   pub USEABLE_START_TIME: Option<String>,
@@ -1457,6 +1454,7 @@ impl Default for ephemerisDataBlockT {
       CENTER_NAME: None,
       REFERENCE_FRAME: refFrame::ECEF,
       REFERENCE_FRAME_EPOCH: None,
+      COV_REFERENCE_FRAME: refFrame::ECEF,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,
       USEABLE_START_TIME: None,
@@ -1488,6 +1486,7 @@ impl ephemerisDataBlockT {
     let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME;
     let TIME_SYSTEM = self.TIME_SYSTEM;
     let START_TIME = self.START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1518,6 +1517,7 @@ impl ephemerisDataBlockT {
       CENTER_NAME,
       REFERENCE_FRAME,
       REFERENCE_FRAME_EPOCH,
+      COV_REFERENCE_FRAME,
       TIME_SYSTEM,
       START_TIME,
       USEABLE_START_TIME,
