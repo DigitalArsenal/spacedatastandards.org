@@ -1,3 +1,6 @@
+// Hash: 65077a5b79b653b4a1fb81ef2ee5086247063d211d274c44709772beb9370fe9
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../LCC/main.fbs";
 include "../MPE/main.fbs";
 include "../OMM/main.fbs";

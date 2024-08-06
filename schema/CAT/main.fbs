@@ -1,3 +1,6 @@
+// Hash: 6eb619e170a43c9cfdd28ed9cf00c9ea22ed0b317105bfa4e9afa74152876d85
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
 

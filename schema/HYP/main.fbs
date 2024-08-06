@@ -1,3 +1,6 @@
+// Hash: e66f2fb594ef4ceec85c2929203812c9c201a5e58067c635b2b5d96b149329ec
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 enum ScoreType: byte {
   OUTLIER = 0
 }

@@ -1,3 +1,6 @@
+// Hash: 70e0886ed022a87e3442083cfa70c8944369cd8adb5c5ef4bd23695081f55dde
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../PNM/main.fbs";
 include "../CAT/main.fbs";
 include "../EPM/main.fbs";

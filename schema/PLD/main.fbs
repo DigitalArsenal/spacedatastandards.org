@@ -1,3 +1,6 @@
+// Hash: 174456eb6575a8a5bec95b126e67e0ab15867e06590276af79221bd4e3aa496c
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../IDM/main.fbs";
 
 /// Payload Information

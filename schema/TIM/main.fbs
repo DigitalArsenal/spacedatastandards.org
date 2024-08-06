@@ -1,3 +1,6 @@
+// Hash: 9b49eeadeda2e798029da5ad9dcf90f80669d1d10335835e5f685f19bbfb788e
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 enum timeSystem : byte {
   /// Greenwich Mean Sidereal Time
   GMST,

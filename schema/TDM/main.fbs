@@ -1,3 +1,6 @@
+// Hash: 9de39f0e1dd29996c0ce0d6b1e164269eab444086122f3bd8222cf93f55f1f83
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
 // Based on CCSDS 503.0-B-1 standard, November 2007

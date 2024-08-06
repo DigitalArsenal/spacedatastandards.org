@@ -1,3 +1,6 @@
+// Hash: 0e20bff4c6e63db0eb6dca3831d14878f96b7e90ceae59df2c51c0d0dc677a92
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 /// Schema Standard Definition
 table SCHEMA_STANDARD {
   /// Unique identifier for the standard

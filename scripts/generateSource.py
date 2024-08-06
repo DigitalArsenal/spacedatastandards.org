@@ -16,6 +16,7 @@ with open(data_json_path, "r") as file:
 # Define the source and output directories using absolute paths
 SRC_DIR = os.path.abspath(os.path.join(script_dir, "..", "schema"))
 OUTPUT_DIR = os.path.abspath(os.path.join(script_dir, "..", "lib"))
+FLATC_DIR = os.path.abspath(os.path.join(script_dir, "..", "bin"))
 
 # Clear the directory
 shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
@@ -66,6 +67,13 @@ for subdir in os.listdir(SRC_DIR):
             os.makedirs(OUTPUT_PATH, exist_ok=True)
 
             # Prepare the command
-            command = ["flatc", "--preserve-case", *args, "-o", OUTPUT_PATH] + referenced_files
+            flatc_command = os.path.join(FLATC_DIR, "flatc")
+            command = [
+                flatc_command,
+                "--preserve-case",
+                *args,
+                "-o",
+                OUTPUT_PATH,
+            ] + referenced_files
             subprocess.run(command)
 print("Code Generation Complete.")

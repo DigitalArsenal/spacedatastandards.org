@@ -1,3 +1,6 @@
+// Hash: e1506386e329962a9167ca6a5951cc5b5e8516dbf21d832f7ca2ed7ec2a3d57a
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 /// Observation Stability Message
 table OSM {
   /// Indicates whether the observation is stable or not

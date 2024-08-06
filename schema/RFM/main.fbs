@@ -1,4 +1,6 @@
-
+// Hash: 370935912ea2e4edf09b5836ef4b609cdf56ba64ed4c3f38dc5f289db493caa7
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 enum refFrame : byte {
   /// Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
   ECEF,

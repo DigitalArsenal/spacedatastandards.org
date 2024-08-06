@@ -1,3 +1,6 @@
+// Hash: b97150160493cfe122cafdc1e454435b3ac091cc8f1ff741d9cbb65cf4069e32
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../SIT/main.fbs";
 include "../EPM/main.fbs";
 include "../CAT/main.fbs";

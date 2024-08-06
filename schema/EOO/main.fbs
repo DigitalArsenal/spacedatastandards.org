@@ -1,3 +1,6 @@
+// Hash: 37a060275afbaf2f0cfd2091121ee7690bc37620efaa9073451a9b8edc660572
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
 /// Electro-Optical Observation

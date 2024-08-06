@@ -1,3 +1,6 @@
+// Hash: 0180addf2894fa5b115f742c540aca03695582a852e38c78ad76e89c39299f5a
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../CAT/main.fbs";

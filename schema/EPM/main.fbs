@@ -1,5 +1,6 @@
-
-
+// Hash: 838a24a1db1deb0a32aff0f432faddcad1beff3f4d681fff6a9f322512690f68
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
   Encryption

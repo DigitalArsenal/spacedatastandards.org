@@ -1,4 +1,6 @@
-
+// Hash: 027e35da6c490db3f94cf91e72c526dfbb0c3b4a343739eceb7ca1214558934f
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 enum meanElementTheory : byte {
   /// Simplified General Perturbation Model 4
   SGP4,

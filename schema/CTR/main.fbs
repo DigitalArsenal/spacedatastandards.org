@@ -1,3 +1,6 @@
+// Hash: 8b1fc48aad299d90324ad29bc23d5c3c44851aa8e223750faaa4133ccc4786e4
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 /// Country Identity Message
 table CTR {
   /// ISO 3166 Numeric code

@@ -1,3 +1,6 @@
+// Hash: a8ed7a259ea1efcd621a8a364a0367cf2dfff5cae9cd08fa81988b3e9d8606cd
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 /// Publish Notification Message
 table PNM {
   /// Multiformat Address

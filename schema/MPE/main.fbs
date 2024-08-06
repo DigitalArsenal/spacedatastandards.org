@@ -1,3 +1,6 @@
+// Hash: 43c333e7436c07390e922583ed741b3f3ec1e550ab8356c6cd5930d6dfdf0955
+// Version: 1.0.0
+// -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
 // Space Data Standard - 6 - Minimum-Propagatable-Element-Set (MPE)
