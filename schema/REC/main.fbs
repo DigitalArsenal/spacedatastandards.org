@@ -1,5 +1,5 @@
-// Hash: 65077a5b79b653b4a1fb81ef2ee5086247063d211d274c44709772beb9370fe9
-// Version: 1.0.0
+// Hash: 5bbd4f4a2b237a49f8fff2689fc4a3db5e3747a26ad115642735e64b380deafb
+// Version: 1.4.0
 // -----------------------------------END_HEADER
 include "../LCC/main.fbs";
 include "../MPE/main.fbs";
@@ -9,6 +9,7 @@ include "../RFM/main.fbs";
 include "../CSM/main.fbs";
 include "../OSM/main.fbs";
 include "../CAT/main.fbs";
+include "../OPM/main.fbs";
 include "../CRM/main.fbs";
 include "../SCM/main.fbs";
 include "../TDM/main.fbs";
@@ -33,11 +34,12 @@ include "../PRG/main.fbs";
 union RecordType {
   LCC, MPE, OMM, PLD,
   RFM, CSM, OSM, CAT,
-  CRM, SCM, TDM, IDM,
-  MET, ROC, BOV, EOP,
-  EOO, EME, LDM, PNM,
-  HYP, CTR, CDM, SIT,
-  OEM, TIM, EPM, PRG
+  OPM, CRM, SCM, TDM,
+  IDM, MET, ROC, BOV,
+  EOP, EOO, EME, LDM,
+  PNM, HYP, CTR, CDM,
+  SIT, OEM, TIM, EPM,
+  PRG
 }  // Union of all record types
 
 table Record {

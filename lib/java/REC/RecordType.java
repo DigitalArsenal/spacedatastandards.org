@@ -12,28 +12,29 @@ public final class RecordType {
   public static final byte CSM = 6;
   public static final byte OSM = 7;
   public static final byte CAT = 8;
-  public static final byte CRM = 9;
-  public static final byte SCM = 10;
-  public static final byte TDM = 11;
-  public static final byte IDM = 12;
-  public static final byte MET = 13;
-  public static final byte ROC = 14;
-  public static final byte BOV = 15;
-  public static final byte EOP = 16;
-  public static final byte EOO = 17;
-  public static final byte EME = 18;
-  public static final byte LDM = 19;
-  public static final byte PNM = 20;
-  public static final byte HYP = 21;
-  public static final byte CTR = 22;
-  public static final byte CDM = 23;
-  public static final byte SIT = 24;
-  public static final byte OEM = 25;
-  public static final byte TIM = 26;
-  public static final byte EPM = 27;
-  public static final byte PRG = 28;
+  public static final byte OPM = 9;
+  public static final byte CRM = 10;
+  public static final byte SCM = 11;
+  public static final byte TDM = 12;
+  public static final byte IDM = 13;
+  public static final byte MET = 14;
+  public static final byte ROC = 15;
+  public static final byte BOV = 16;
+  public static final byte EOP = 17;
+  public static final byte EOO = 18;
+  public static final byte EME = 19;
+  public static final byte LDM = 20;
+  public static final byte PNM = 21;
+  public static final byte HYP = 22;
+  public static final byte CTR = 23;
+  public static final byte CDM = 24;
+  public static final byte SIT = 25;
+  public static final byte OEM = 26;
+  public static final byte TIM = 27;
+  public static final byte EPM = 28;
+  public static final byte PRG = 29;
 
-  public static final String[] names = { "NONE", "LCC", "MPE", "OMM", "PLD", "RFM", "CSM", "OSM", "CAT", "CRM", "SCM", "TDM", "IDM", "MET", "ROC", "BOV", "EOP", "EOO", "EME", "LDM", "PNM", "HYP", "CTR", "CDM", "SIT", "OEM", "TIM", "EPM", "PRG", };
+  public static final String[] names = { "NONE", "LCC", "MPE", "OMM", "PLD", "RFM", "CSM", "OSM", "CAT", "OPM", "CRM", "SCM", "TDM", "IDM", "MET", "ROC", "BOV", "EOP", "EOO", "EME", "LDM", "PNM", "HYP", "CTR", "CDM", "SIT", "OEM", "TIM", "EPM", "PRG", };
 
   public static String name(int e) { return names[e]; }
 }

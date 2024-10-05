@@ -12,26 +12,27 @@ class RecordType(object):
     CSM = 6
     OSM = 7
     CAT = 8
-    CRM = 9
-    SCM = 10
-    TDM = 11
-    IDM = 12
-    MET = 13
-    ROC = 14
-    BOV = 15
-    EOP = 16
-    EOO = 17
-    EME = 18
-    LDM = 19
-    PNM = 20
-    HYP = 21
-    CTR = 22
-    CDM = 23
-    SIT = 24
-    OEM = 25
-    TIM = 26
-    EPM = 27
-    PRG = 28
+    OPM = 9
+    CRM = 10
+    SCM = 11
+    TDM = 12
+    IDM = 13
+    MET = 14
+    ROC = 15
+    BOV = 16
+    EOP = 17
+    EOO = 18
+    EME = 19
+    LDM = 20
+    PNM = 21
+    HYP = 22
+    CTR = 23
+    CDM = 24
+    SIT = 25
+    OEM = 26
+    TIM = 27
+    EPM = 28
+    PRG = 29
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -61,6 +62,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CAT:
         import CAT
         return CAT.CATT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OPM:
+        import OPM
+        return OPM.OPMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.CRM:
         import CRM
         return CRM.CRMT.InitFromBuf(table.Bytes, table.Pos)

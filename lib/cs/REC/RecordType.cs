@@ -13,26 +13,27 @@ public enum RecordType : byte
   CSM = 6,
   OSM = 7,
   CAT = 8,
-  CRM = 9,
-  SCM = 10,
-  TDM = 11,
-  IDM = 12,
-  MET = 13,
-  ROC = 14,
-  BOV = 15,
-  EOP = 16,
-  EOO = 17,
-  EME = 18,
-  LDM = 19,
-  PNM = 20,
-  HYP = 21,
-  CTR = 22,
-  CDM = 23,
-  SIT = 24,
-  OEM = 25,
-  TIM = 26,
-  EPM = 27,
-  PRG = 28,
+  OPM = 9,
+  CRM = 10,
+  SCM = 11,
+  TDM = 12,
+  IDM = 13,
+  MET = 14,
+  ROC = 15,
+  BOV = 16,
+  EOP = 17,
+  EOO = 18,
+  EME = 19,
+  LDM = 20,
+  PNM = 21,
+  HYP = 22,
+  CTR = 23,
+  CDM = 24,
+  SIT = 25,
+  OEM = 26,
+  TIM = 27,
+  EPM = 28,
+  PRG = 29,
 };
 
 public class RecordTypeUnion {
@@ -61,6 +62,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromOSM(OSMT _osm) { return new RecordTypeUnion{ Type = RecordType.OSM, Value = _osm }; }
   public CATT AsCAT() { return this.As<CATT>(); }
   public static RecordTypeUnion FromCAT(CATT _cat) { return new RecordTypeUnion{ Type = RecordType.CAT, Value = _cat }; }
+  public OPMT AsOPM() { return this.As<OPMT>(); }
+  public static RecordTypeUnion FromOPM(OPMT _opm) { return new RecordTypeUnion{ Type = RecordType.OPM, Value = _opm }; }
   public CRMT AsCRM() { return this.As<CRMT>(); }
   public static RecordTypeUnion FromCRM(CRMT _crm) { return new RecordTypeUnion{ Type = RecordType.CRM, Value = _crm }; }
   public SCMT AsSCM() { return this.As<SCMT>(); }
@@ -113,6 +116,7 @@ public class RecordTypeUnion {
       case RecordType.CSM: return CSM.Pack(builder, _o.AsCSM()).Value;
       case RecordType.OSM: return OSM.Pack(builder, _o.AsOSM()).Value;
       case RecordType.CAT: return CAT.Pack(builder, _o.AsCAT()).Value;
+      case RecordType.OPM: return OPM.Pack(builder, _o.AsOPM()).Value;
       case RecordType.CRM: return CRM.Pack(builder, _o.AsCRM()).Value;
       case RecordType.SCM: return SCM.Pack(builder, _o.AsSCM()).Value;
       case RecordType.TDM: return TDM.Pack(builder, _o.AsTDM()).Value;
@@ -169,6 +173,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.CAT:
         result = CATVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OPM:
+        result = OPMVerify.Verify(verifier, tablePos);
         break;
       case RecordType.CRM:
         result = CRMVerify.Verify(verifier, tablePos);

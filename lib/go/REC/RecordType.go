@@ -16,26 +16,27 @@ const (
 	RecordTypeCSM  RecordType = 6
 	RecordTypeOSM  RecordType = 7
 	RecordTypeCAT  RecordType = 8
-	RecordTypeCRM  RecordType = 9
-	RecordTypeSCM  RecordType = 10
-	RecordTypeTDM  RecordType = 11
-	RecordTypeIDM  RecordType = 12
-	RecordTypeMET  RecordType = 13
-	RecordTypeROC  RecordType = 14
-	RecordTypeBOV  RecordType = 15
-	RecordTypeEOP  RecordType = 16
-	RecordTypeEOO  RecordType = 17
-	RecordTypeEME  RecordType = 18
-	RecordTypeLDM  RecordType = 19
-	RecordTypePNM  RecordType = 20
-	RecordTypeHYP  RecordType = 21
-	RecordTypeCTR  RecordType = 22
-	RecordTypeCDM  RecordType = 23
-	RecordTypeSIT  RecordType = 24
-	RecordTypeOEM  RecordType = 25
-	RecordTypeTIM  RecordType = 26
-	RecordTypeEPM  RecordType = 27
-	RecordTypePRG  RecordType = 28
+	RecordTypeOPM  RecordType = 9
+	RecordTypeCRM  RecordType = 10
+	RecordTypeSCM  RecordType = 11
+	RecordTypeTDM  RecordType = 12
+	RecordTypeIDM  RecordType = 13
+	RecordTypeMET  RecordType = 14
+	RecordTypeROC  RecordType = 15
+	RecordTypeBOV  RecordType = 16
+	RecordTypeEOP  RecordType = 17
+	RecordTypeEOO  RecordType = 18
+	RecordTypeEME  RecordType = 19
+	RecordTypeLDM  RecordType = 20
+	RecordTypePNM  RecordType = 21
+	RecordTypeHYP  RecordType = 22
+	RecordTypeCTR  RecordType = 23
+	RecordTypeCDM  RecordType = 24
+	RecordTypeSIT  RecordType = 25
+	RecordTypeOEM  RecordType = 26
+	RecordTypeTIM  RecordType = 27
+	RecordTypeEPM  RecordType = 28
+	RecordTypePRG  RecordType = 29
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -48,6 +49,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeCSM:  "CSM",
 	RecordTypeOSM:  "OSM",
 	RecordTypeCAT:  "CAT",
+	RecordTypeOPM:  "OPM",
 	RecordTypeCRM:  "CRM",
 	RecordTypeSCM:  "SCM",
 	RecordTypeTDM:  "TDM",
@@ -80,6 +82,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"CSM":  RecordTypeCSM,
 	"OSM":  RecordTypeOSM,
 	"CAT":  RecordTypeCAT,
+	"OPM":  RecordTypeOPM,
 	"CRM":  RecordTypeCRM,
 	"SCM":  RecordTypeSCM,
 	"TDM":  RecordTypeTDM,

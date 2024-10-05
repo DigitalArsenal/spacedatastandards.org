@@ -20,6 +20,7 @@ import { MET, METT } from './MET.js';
 import { MPE, MPET } from './MPE.js';
 import { OEM, OEMT } from './OEM.js';
 import { OMM, OMMT } from './OMM.js';
+import { OPM, OPMT } from './OPM.js';
 import { OSM, OSMT } from './OSM.js';
 import { PLD, PLDT } from './PLD.js';
 import { PNM, PNMT } from './PNM.js';
@@ -42,32 +43,33 @@ export enum RecordType {
   CSM = 6,
   OSM = 7,
   CAT = 8,
-  CRM = 9,
-  SCM = 10,
-  TDM = 11,
-  IDM = 12,
-  MET = 13,
-  ROC = 14,
-  BOV = 15,
-  EOP = 16,
-  EOO = 17,
-  EME = 18,
-  LDM = 19,
-  PNM = 20,
-  HYP = 21,
-  CTR = 22,
-  CDM = 23,
-  SIT = 24,
-  OEM = 25,
-  TIM = 26,
-  EPM = 27,
-  PRG = 28
+  OPM = 9,
+  CRM = 10,
+  SCM = 11,
+  TDM = 12,
+  IDM = 13,
+  MET = 14,
+  ROC = 15,
+  BOV = 16,
+  EOP = 17,
+  EOO = 18,
+  EME = 19,
+  LDM = 20,
+  PNM = 21,
+  HYP = 22,
+  CTR = 23,
+  CDM = 24,
+  SIT = 25,
+  OEM = 26,
+  TIM = 27,
+  EPM = 28,
+  PRG = 29
 }
 
 export function unionToRecordType(
   type: RecordType,
-  accessor: (obj:BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM) => BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null
-): BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null {
+  accessor: (obj:BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OPM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM) => BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OPM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null
+): BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OPM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
     case 'LCC': return accessor(new LCC())! as LCC;
@@ -78,6 +80,7 @@ export function unionToRecordType(
     case 'CSM': return accessor(new CSM())! as CSM;
     case 'OSM': return accessor(new OSM())! as OSM;
     case 'CAT': return accessor(new CAT())! as CAT;
+    case 'OPM': return accessor(new OPM())! as OPM;
     case 'CRM': return accessor(new CRM())! as CRM;
     case 'SCM': return accessor(new SCM())! as SCM;
     case 'TDM': return accessor(new TDM())! as TDM;
@@ -104,9 +107,9 @@ export function unionToRecordType(
 
 export function unionListToRecordType(
   type: RecordType, 
-  accessor: (index: number, obj:BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM) => BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null, 
+  accessor: (index: number, obj:BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OPM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM) => BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OPM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null, 
   index: number
-): BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null {
+): BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OEM|OMM|OPM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
     case 'LCC': return accessor(index, new LCC())! as LCC;
@@ -117,6 +120,7 @@ export function unionListToRecordType(
     case 'CSM': return accessor(index, new CSM())! as CSM;
     case 'OSM': return accessor(index, new OSM())! as OSM;
     case 'CAT': return accessor(index, new CAT())! as CAT;
+    case 'OPM': return accessor(index, new OPM())! as OPM;
     case 'CRM': return accessor(index, new CRM())! as CRM;
     case 'SCM': return accessor(index, new SCM())! as SCM;
     case 'TDM': return accessor(index, new TDM())! as TDM;

@@ -31,6 +31,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -40,10 +41,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 28;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 29;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 29] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 30] = [
   RecordType::NONE,
   RecordType::LCC,
   RecordType::MPE,
@@ -53,6 +54,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 29] = [
   RecordType::CSM,
   RecordType::OSM,
   RecordType::CAT,
+  RecordType::OPM,
   RecordType::CRM,
   RecordType::SCM,
   RecordType::TDM,
@@ -89,29 +91,30 @@ impl RecordType {
   pub const CSM: Self = Self(6);
   pub const OSM: Self = Self(7);
   pub const CAT: Self = Self(8);
-  pub const CRM: Self = Self(9);
-  pub const SCM: Self = Self(10);
-  pub const TDM: Self = Self(11);
-  pub const IDM: Self = Self(12);
-  pub const MET: Self = Self(13);
-  pub const ROC: Self = Self(14);
-  pub const BOV: Self = Self(15);
-  pub const EOP: Self = Self(16);
-  pub const EOO: Self = Self(17);
-  pub const EME: Self = Self(18);
-  pub const LDM: Self = Self(19);
-  pub const PNM: Self = Self(20);
-  pub const HYP: Self = Self(21);
-  pub const CTR: Self = Self(22);
-  pub const CDM: Self = Self(23);
-  pub const SIT: Self = Self(24);
-  pub const OEM: Self = Self(25);
-  pub const TIM: Self = Self(26);
-  pub const EPM: Self = Self(27);
-  pub const PRG: Self = Self(28);
+  pub const OPM: Self = Self(9);
+  pub const CRM: Self = Self(10);
+  pub const SCM: Self = Self(11);
+  pub const TDM: Self = Self(12);
+  pub const IDM: Self = Self(13);
+  pub const MET: Self = Self(14);
+  pub const ROC: Self = Self(15);
+  pub const BOV: Self = Self(16);
+  pub const EOP: Self = Self(17);
+  pub const EOO: Self = Self(18);
+  pub const EME: Self = Self(19);
+  pub const LDM: Self = Self(20);
+  pub const PNM: Self = Self(21);
+  pub const HYP: Self = Self(22);
+  pub const CTR: Self = Self(23);
+  pub const CDM: Self = Self(24);
+  pub const SIT: Self = Self(25);
+  pub const OEM: Self = Self(26);
+  pub const TIM: Self = Self(27);
+  pub const EPM: Self = Self(28);
+  pub const PRG: Self = Self(29);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 28;
+  pub const ENUM_MAX: u8 = 29;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::LCC,
@@ -122,6 +125,7 @@ impl RecordType {
     Self::CSM,
     Self::OSM,
     Self::CAT,
+    Self::OPM,
     Self::CRM,
     Self::SCM,
     Self::TDM,
@@ -155,6 +159,7 @@ impl RecordType {
       Self::CSM => Some("CSM"),
       Self::OSM => Some("OSM"),
       Self::CAT => Some("CAT"),
+      Self::OPM => Some("OPM"),
       Self::CRM => Some("CRM"),
       Self::SCM => Some("SCM"),
       Self::TDM => Some("TDM"),
@@ -245,6 +250,7 @@ pub enum RecordTypeT {
   CSM(Box<CSMT>),
   OSM(Box<OSMT>),
   CAT(Box<CATT>),
+  OPM(Box<OPMT>),
   CRM(Box<CRMT>),
   SCM(Box<SCMT>),
   TDM(Box<TDMT>),
@@ -283,6 +289,7 @@ impl RecordTypeT {
       Self::CSM(_) => RecordType::CSM,
       Self::OSM(_) => RecordType::OSM,
       Self::CAT(_) => RecordType::CAT,
+      Self::OPM(_) => RecordType::OPM,
       Self::CRM(_) => RecordType::CRM,
       Self::SCM(_) => RecordType::SCM,
       Self::TDM(_) => RecordType::TDM,
@@ -316,6 +323,7 @@ impl RecordTypeT {
       Self::CSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CAT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OPM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CRM(v) => Some(v.pack(fbb).as_union_value()),
       Self::SCM(v) => Some(v.pack(fbb).as_union_value()),
       Self::TDM(v) => Some(v.pack(fbb).as_union_value()),
@@ -505,6 +513,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the CATT.
   pub fn as_CAT_mut(&mut self) -> Option<&mut CATT> {
     if let Self::CAT(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OPMT, setting the union to NONE.
+  pub fn take_OPM(&mut self) -> Option<Box<OPMT>> {
+    if let Self::OPM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OPM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OPMT.
+  pub fn as_OPM(&self) -> Option<&OPMT> {
+    if let Self::OPM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OPMT.
+  pub fn as_OPM_mut(&mut self) -> Option<&mut OPMT> {
+    if let Self::OPM(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned CRMT, setting the union to NONE.
   pub fn take_CRM(&mut self) -> Option<Box<CRMT>> {
@@ -1004,6 +1033,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::CAT`.")
             .unpack()
       )),
+      RecordType::OPM => RecordTypeT::OPM(Box::new(
+        self.value_as_OPM()
+            .expect("Invalid union table, expected `RecordType::OPM`.")
+            .unpack()
+      )),
       RecordType::CRM => RecordTypeT::CRM(Box::new(
         self.value_as_CRM()
             .expect("Invalid union table, expected `RecordType::CRM`.")
@@ -1239,6 +1273,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { CAT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OPM(&self) -> Option<OPM<'a>> {
+    if self.value_type() == RecordType::OPM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OPM::init_from_table(t) }
      })
     } else {
       None
@@ -1564,6 +1613,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::CSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CSM>>("RecordType::CSM", pos),
           RecordType::OSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OSM>>("RecordType::OSM", pos),
           RecordType::CAT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CAT>>("RecordType::CAT", pos),
+          RecordType::OPM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OPM>>("RecordType::OPM", pos),
           RecordType::CRM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CRM>>("RecordType::CRM", pos),
           RecordType::SCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SCM>>("RecordType::SCM", pos),
           RecordType::TDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TDM>>("RecordType::TDM", pos),
@@ -1689,6 +1739,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::CAT => {
           if let Some(x) = self.value_as_CAT() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OPM => {
+          if let Some(x) = self.value_as_OPM() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

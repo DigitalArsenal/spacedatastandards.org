@@ -1,0 +1,242 @@
+// Hash: 1699dd5e768ea5cae58e1de78f57c156c77bbee85ac07fda3eee434d58cd0f18
+// Version: 1.2.1
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../TIM/main.fbs";
+include "../MET/main.fbs";
+
+enum elementType : byte {
+  OSCULATING = 0,
+  MEAN = 1
+}
+
+enum anomalyType : byte {
+  TRUE_ANOMALY = 0,
+  MEAN_ANOMALY = 1
+}
+
+/// Enum to represent common atmospheric models
+enum atmosphericModel : byte {
+  NONE = 0,
+  JACCHIA_70 = 1,
+  JB2008 = 2,
+  NRLMSISE_00 = 3,
+  DTM_2000 = 4,
+  HWM14 = 5,
+  HASDM = 6
+}
+
+/// Enum to represent common geopotential models
+enum geopotentialModel : byte {
+  NONE = 0,
+  EGM96 = 1,
+  WGS84 = 2,
+  JGM2 = 3,
+  GEMT3 = 4,
+  EGM96_J5 = 5
+}
+
+/// Enum to represent zonal harmonics
+enum zonalHarmonic : byte {
+  NONE = 0,
+  J2 = 1,
+  J3 = 2,
+  J4 = 3,
+  J5 = 4,
+  J6 = 5,
+  J7 = 6,
+  J8 = 7,
+  J9 = 8,
+  J10 = 9,
+  J11 = 10,
+  J12 = 11
+}
+
+/// Enum to represent solar radiation pressure models
+enum solarRadiationPressureModel : byte {
+  NONE = 0,
+  SPHERICAL_MODEL = 1,
+  FLAT_PLATE_MODEL = 2
+}
+
+/// Enum to represent common lunar perturbation models
+enum lunarPerturbationModel : byte {
+  NONE = 0,
+  DE430 = 1,
+  DE431 = 2,
+  LP150Q = 3
+}
+
+/// Enum to represent various solar perturbation models
+enum solarPerturbationModel : byte {
+  NONE = 0,
+  DE430 = 1,
+  DE431 = 2
+}
+
+/// Enum to represent resonance models
+enum resonanceModel : byte {
+  NONE = 0,
+  HIGH_ALTITUDE_RESONANCE = 1,
+  LOW_ALTITUDE_RESONANCE = 2,
+  LUNAR_RESONANCE = 3,
+  SOLAR_RESONANCE = 4
+}
+
+/// Enum to represent the status of various perturbations (ON/OFF)
+enum perturbationStatus : byte {
+  OFF = 0,
+  ON = 1
+}
+
+/// Enum to represent propagator types
+enum propagatorType : byte {
+  NONE = 0,
+  SEMI_ANALYTICAL = 1,
+  VINTI = 2,
+  SGP4 = 3,
+  COWELL = 4,
+  RK4 = 5,
+  NYX = 6,
+  GMAT = 7,
+  SPICE = 8,
+  SGP = 9,
+  SDP4 = 10,
+  SGP8 = 11,
+  SDP8 = 12
+}
+
+/// Propagator configuration structure to describe propagation settings
+table propagatorConfig {
+  PROPAGATOR_NAME: string;
+  PROPAGATOR_TYPE: propagatorType;
+  FORCE_MODELS: [string];
+  EPOCH: string;
+  TIME_STEP: double;
+  ZONAL_HARMONIC_TERMS: [zonalHarmonic];  // Full list of zonal harmonic terms (J2 through J12)
+}
+
+/// OPM State Vector (position and velocity)
+table opmStateVector {
+  EPOCH: string;
+  X: double;
+  Y: double;
+  Z: double;
+  X_DOT: double;
+  Y_DOT: double;
+  Z_DOT: double;
+}
+
+/// OPM Covariance Matrix Line
+table opmCovarianceMatrixLine {
+  CX_X: double;
+  CY_X: double;
+  CZ_X: double;
+  CX_DOT_X: double;
+}
+
+/// Keplerian Elements
+table keplerianElements {
+  SEMI_MAJOR_AXIS: double; // km
+  ECCENTRICITY: double;
+  INCLINATION: double;     // degrees
+  RA_OF_ASC_NODE: double;  // degrees
+  ARG_OF_PERICENTER: double; // degrees
+  ANOMALY_TYPE: anomalyType;
+  ANOMALY: double;         // degrees
+}
+
+/// Equinoctial Elements
+table equinoctialElements {
+  AF: double;           // e cos(ω + frΩ)
+  AG: double;           // e sin(ω + frΩ)
+  L: double;            // True longitude
+  N: double;            // Semi-major axis (a)
+  CHI: double;          // TAN(i/2) SIN(Ω)
+  PSI: double;          // TAN(i/2) COS(Ω)
+}
+
+/// UVW Sigmas (Covariance matrix in UVW frame)
+table uvwSigmas {
+  U_SIGMA: double;        // Standard deviation in U direction
+  V_SIGMA: double;        // Standard deviation in V direction
+  W_SIGMA: double;        // Standard deviation in W direction
+  UD_SIGMA: double;       // Standard deviation in U direction for velocity
+  VD_SIGMA: double;       // Standard deviation in V direction for velocity
+  WD_SIGMA: double;       // Standard deviation in W direction for velocity
+}
+
+/// OPM Atmospheric and Perturbation Model Data
+table opmAtmosphericModelData {
+  ATMOSPHERIC_MODEL: atmosphericModel;
+  GEOPOTENTIAL_MODEL: geopotentialModel;
+  LUNAR_SOLAR_PERTURBATION: perturbationStatus;
+  LUNAR_PERTURBATION_MODEL: lunarPerturbationModel;
+  SOLAR_PERTURBATION_MODEL: solarPerturbationModel;
+  SOLAR_RADIATION_PRESSURE: perturbationStatus;
+  SRP_MODEL: solarRadiationPressureModel;
+  RESONANCE_MODEL: resonanceModel;
+}
+
+/// Orbit Parameter Message (OPM)
+table OPM {
+  CCSDS_OMM_VERS: double;
+  CREATION_DATE: string;
+  ORIGINATOR: string;
+
+  OBJECT_NAME: string;
+  OBJECT_ID: string;      // International Designator (YYYY-NNNAAA)
+  CENTER_NAME: string;
+  REF_FRAME: string;
+  TIME_SYSTEM: string;
+
+  STATE_VECTOR: opmStateVector;
+  KEPLERIAN_ELEMENTS: keplerianElements;
+  EQUINOCTIAL_ELEMENTS: equinoctialElements;
+
+  GM: double;              // Gravitational Coefficient
+
+  ATMOSPHERIC_MODEL_DATA: opmAtmosphericModelData;
+  PROPAGATOR_SETTINGS: propagatorConfig;
+
+  COVARIANCE_MATRIX: [opmCovarianceMatrixLine];
+  UVW_SIGMAS: uvwSigmas;
+
+  // Spacecraft Parameters from OMM and OCM
+  MASS: double;
+  SOLAR_RAD_AREA: double;
+  SOLAR_RAD_COEFF: double; // Solar Radiation Pressure Coefficient
+  DRAG_AREA: double;
+  DRAG_COEFF: double;
+  SRP: perturbationStatus; // Solar Radiation Pressure
+
+  // TLE Related Parameters
+  CLASSIFICATION_TYPE: string;
+  NORAD_CAT_ID: uint32;
+  ELEMENT_SET_NO: uint32;
+  REV_AT_EPOCH: double;
+  BSTAR: double;
+  MEAN_MOTION_DOT: double;
+  MEAN_MOTION_DDOT: double;
+
+  // Covariance Matrix for position/velocity
+  COV_REFERENCE_FRAME: string;
+  CX_X: double;
+  CY_X: double;
+  CZ_X: double;
+  CX_DOT_X: double;
+
+  // User-defined fields
+  USER_DEFINED_BIP_0044_TYPE: uint;
+  USER_DEFINED_OBJECT_DESIGNATOR: string;
+  USER_DEFINED_EARTH_MODEL: string;
+  USER_DEFINED_EPOCH_TIMESTAMP: double;
+  USER_DEFINED_MICROSECONDS: double;
+}
+
+/// Collection of OPM records
+table OPM_COLLECTION {
+  RECORDS: [OPM];
+}
+
+root_type OPM;

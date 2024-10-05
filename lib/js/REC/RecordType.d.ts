@@ -16,6 +16,7 @@ import { MET } from './MET.js';
 import { MPE } from './MPE.js';
 import { OEM } from './OEM.js';
 import { OMM } from './OMM.js';
+import { OPM } from './OPM.js';
 import { OSM } from './OSM.js';
 import { PLD } from './PLD.js';
 import { PNM } from './PNM.js';
@@ -36,27 +37,28 @@ export declare enum RecordType {
     CSM = 6,
     OSM = 7,
     CAT = 8,
-    CRM = 9,
-    SCM = 10,
-    TDM = 11,
-    IDM = 12,
-    MET = 13,
-    ROC = 14,
-    BOV = 15,
-    EOP = 16,
-    EOO = 17,
-    EME = 18,
-    LDM = 19,
-    PNM = 20,
-    HYP = 21,
-    CTR = 22,
-    CDM = 23,
-    SIT = 24,
-    OEM = 25,
-    TIM = 26,
-    EPM = 27,
-    PRG = 28
+    OPM = 9,
+    CRM = 10,
+    SCM = 11,
+    TDM = 12,
+    IDM = 13,
+    MET = 14,
+    ROC = 15,
+    BOV = 16,
+    EOP = 17,
+    EOO = 18,
+    EME = 19,
+    LDM = 20,
+    PNM = 21,
+    HYP = 22,
+    CTR = 23,
+    CDM = 24,
+    SIT = 25,
+    OEM = 26,
+    TIM = 27,
+    EPM = 28,
+    PRG = 29
 }
-export declare function unionToRecordType(type: RecordType, accessor: (obj: BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM) => BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null): BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null;
-export declare function unionListToRecordType(type: RecordType, accessor: (index: number, obj: BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM) => BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null, index: number): BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null;
+export declare function unionToRecordType(type: RecordType, accessor: (obj: BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OPM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM) => BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OPM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null): BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OPM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null;
+export declare function unionListToRecordType(type: RecordType, accessor: (index: number, obj: BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OPM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM) => BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OPM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null, index: number): BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OEM | OMM | OPM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | null;
 //# sourceMappingURL=RecordType.d.ts.map

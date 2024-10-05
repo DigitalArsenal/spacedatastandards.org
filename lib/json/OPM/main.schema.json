@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "refFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "meanElementTheory" : {
+      "type" : "string",
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "elementType" : {
+      "type" : "string",
+      "enum": ["OSCULATING", "MEAN"]
+    },
+    "anomalyType" : {
+      "type" : "string",
+      "enum": ["TRUE_ANOMALY", "MEAN_ANOMALY"]
+    },
+    "atmosphericModel" : {
+      "type" : "string",
+      "enum": ["NONE", "JACCHIA_70", "JB2008", "NRLMSISE_00", "DTM_2000", "HWM14", "HASDM"]
+    },
+    "geopotentialModel" : {
+      "type" : "string",
+      "enum": ["NONE", "EGM96", "WGS84", "JGM2", "GEMT3", "EGM96_J5"]
+    },
+    "zonalHarmonic" : {
+      "type" : "string",
+      "enum": ["NONE", "J2", "J3", "J4", "J5", "J6", "J7", "J8", "J9", "J10", "J11", "J12"]
+    },
+    "solarRadiationPressureModel" : {
+      "type" : "string",
+      "enum": ["NONE", "SPHERICAL_MODEL", "FLAT_PLATE_MODEL"]
+    },
+    "lunarPerturbationModel" : {
+      "type" : "string",
+      "enum": ["NONE", "DE430", "DE431", "LP150Q"]
+    },
+    "solarPerturbationModel" : {
+      "type" : "string",
+      "enum": ["NONE", "DE430", "DE431"]
+    },
+    "resonanceModel" : {
+      "type" : "string",
+      "enum": ["NONE", "HIGH_ALTITUDE_RESONANCE", "LOW_ALTITUDE_RESONANCE", "LUNAR_RESONANCE", "SOLAR_RESONANCE"]
+    },
+    "perturbationStatus" : {
+      "type" : "string",
+      "enum": ["OFF", "ON"]
+    },
+    "propagatorType" : {
+      "type" : "string",
+      "enum": ["NONE", "SEMI_ANALYTICAL", "VINTI", "SGP4", "COWELL", "RK4", "NYX", "GMAT", "SPICE", "SGP", "SDP4", "SGP8", "SDP8"]
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/refFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "description" : "Time System",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MET" : {
+      "type" : "object",
+      "description" : "Mean Element Theory",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "METCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "propagatorConfig" : {
+      "type" : "object",
+      "description" : "Propagator configuration structure to describe propagation settings",
+      "properties" : {
+        "PROPAGATOR_NAME" : {
+                "type" : "string"
+              },
+        "PROPAGATOR_TYPE" : {
+                "$ref" : "#/definitions/propagatorType"
+              },
+        "FORCE_MODELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "TIME_STEP" : {
+                "type" : "number"
+              },
+        "ZONAL_HARMONIC_TERMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/zonalHarmonic"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "opmStateVector" : {
+      "type" : "object",
+      "description" : "OPM State Vector (position and velocity)",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "X_DOT" : {
+                "type" : "number"
+              },
+        "Y_DOT" : {
+                "type" : "number"
+              },
+        "Z_DOT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "opmCovarianceMatrixLine" : {
+      "type" : "object",
+      "description" : "OPM Covariance Matrix Line",
+      "properties" : {
+        "CX_X" : {
+                "type" : "number"
+              },
+        "CY_X" : {
+                "type" : "number"
+              },
+        "CZ_X" : {
+                "type" : "number"
+              },
+        "CX_DOT_X" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "keplerianElements" : {
+      "type" : "object",
+      "description" : "Keplerian Elements",
+      "properties" : {
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "ANOMALY_TYPE" : {
+                "$ref" : "#/definitions/anomalyType"
+              },
+        "ANOMALY" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "equinoctialElements" : {
+      "type" : "object",
+      "description" : "Equinoctial Elements",
+      "properties" : {
+        "AF" : {
+                "type" : "number"
+              },
+        "AG" : {
+                "type" : "number"
+              },
+        "L" : {
+                "type" : "number"
+              },
+        "N" : {
+                "type" : "number"
+              },
+        "CHI" : {
+                "type" : "number"
+              },
+        "PSI" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "uvwSigmas" : {
+      "type" : "object",
+      "description" : "UVW Sigmas (Covariance matrix in UVW frame)",
+      "properties" : {
+        "U_SIGMA" : {
+                "type" : "number"
+              },
+        "V_SIGMA" : {
+                "type" : "number"
+              },
+        "W_SIGMA" : {
+                "type" : "number"
+              },
+        "UD_SIGMA" : {
+                "type" : "number"
+              },
+        "VD_SIGMA" : {
+                "type" : "number"
+              },
+        "WD_SIGMA" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "opmAtmosphericModelData" : {
+      "type" : "object",
+      "description" : "OPM Atmospheric and Perturbation Model Data",
+      "properties" : {
+        "ATMOSPHERIC_MODEL" : {
+                "$ref" : "#/definitions/atmosphericModel"
+              },
+        "GEOPOTENTIAL_MODEL" : {
+                "$ref" : "#/definitions/geopotentialModel"
+              },
+        "LUNAR_SOLAR_PERTURBATION" : {
+                "$ref" : "#/definitions/perturbationStatus"
+              },
+        "LUNAR_PERTURBATION_MODEL" : {
+                "$ref" : "#/definitions/lunarPerturbationModel"
+              },
+        "SOLAR_PERTURBATION_MODEL" : {
+                "$ref" : "#/definitions/solarPerturbationModel"
+              },
+        "SOLAR_RADIATION_PRESSURE" : {
+                "$ref" : "#/definitions/perturbationStatus"
+              },
+        "SRP_MODEL" : {
+                "$ref" : "#/definitions/solarRadiationPressureModel"
+              },
+        "RESONANCE_MODEL" : {
+                "$ref" : "#/definitions/resonanceModel"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OPM" : {
+      "type" : "object",
+      "description" : "Orbit Parameter Message (OPM)",
+      "properties" : {
+        "CCSDS_OMM_VERS" : {
+                "type" : "number"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "CENTER_NAME" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "STATE_VECTOR" : {
+                "$ref" : "#/definitions/opmStateVector"
+              },
+        "KEPLERIAN_ELEMENTS" : {
+                "$ref" : "#/definitions/keplerianElements"
+              },
+        "EQUINOCTIAL_ELEMENTS" : {
+                "$ref" : "#/definitions/equinoctialElements"
+              },
+        "GM" : {
+                "type" : "number"
+              },
+        "ATMOSPHERIC_MODEL_DATA" : {
+                "$ref" : "#/definitions/opmAtmosphericModelData"
+              },
+        "PROPAGATOR_SETTINGS" : {
+                "$ref" : "#/definitions/propagatorConfig"
+              },
+        "COVARIANCE_MATRIX" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/opmCovarianceMatrixLine"}
+              },
+        "UVW_SIGMAS" : {
+                "$ref" : "#/definitions/uvwSigmas"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number"
+              },
+        "DRAG_AREA" : {
+                "type" : "number"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number"
+              },
+        "SRP" : {
+                "$ref" : "#/definitions/perturbationStatus"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ELEMENT_SET_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REV_AT_EPOCH" : {
+                "type" : "number"
+              },
+        "BSTAR" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "CX_X" : {
+                "type" : "number"
+              },
+        "CY_X" : {
+                "type" : "number"
+              },
+        "CZ_X" : {
+                "type" : "number"
+              },
+        "CX_DOT_X" : {
+                "type" : "number"
+              },
+        "USER_DEFINED_BIP_0044_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "USER_DEFINED_OBJECT_DESIGNATOR" : {
+                "type" : "string"
+              },
+        "USER_DEFINED_EARTH_MODEL" : {
+                "type" : "string"
+              },
+        "USER_DEFINED_EPOCH_TIMESTAMP" : {
+                "type" : "number"
+              },
+        "USER_DEFINED_MICROSECONDS" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OPM_COLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of OPM records",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OPM"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OPM"
+}
