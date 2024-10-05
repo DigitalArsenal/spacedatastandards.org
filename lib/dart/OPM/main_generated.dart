@@ -1421,7 +1421,7 @@ class OpmAtmosphericModelDataObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Orbit Parameter Message (OPM)
+///  Orbit Parameter Message
 class OPM {
   OPM._(this._bc, this._bcOffset);
   factory OPM(List<int> bytes) {

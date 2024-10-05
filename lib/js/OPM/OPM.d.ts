@@ -8,7 +8,7 @@ import { perturbationStatus } from './perturbationStatus.js';
 import { propagatorConfig, propagatorConfigT } from './propagatorConfig.js';
 import { uvwSigmas, uvwSigmasT } from './uvwSigmas.js';
 /**
- * Orbit Parameter Message (OPM)
+ * Orbit Parameter Message
  */
 export declare class OPM implements flatbuffers.IUnpackableObject<OPMT> {
     bb: flatbuffers.ByteBuffer | null;

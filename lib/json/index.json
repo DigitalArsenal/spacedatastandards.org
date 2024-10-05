@@ -2840,7 +2840,7 @@
                 },
                 "OPM": {
                     "type": "object",
-                    "description": "Orbit Parameter Message (OPM)",
+                    "description": "Orbit Parameter Message",
                     "properties": {
                         "CCSDS_OMM_VERS": {
                             "type": "number"
@@ -9749,7 +9749,7 @@
                 },
                 "OPM": {
                     "type": "object",
-                    "description": "Orbit Parameter Message (OPM)",
+                    "description": "Orbit Parameter Message",
                     "properties": {
                         "CCSDS_OMM_VERS": {
                             "type": "number"

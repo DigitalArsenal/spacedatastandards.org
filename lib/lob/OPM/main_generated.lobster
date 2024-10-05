@@ -438,7 +438,7 @@ struct opmAtmosphericModelDataBuilder:
     def end():
         return b_.EndObject()
 
-/// Orbit Parameter Message (OPM)
+/// Orbit Parameter Message
 class OPM : flatbuffers.handle
     def CCSDS_OMM_VERS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)

@@ -663,7 +663,7 @@ public struct opmAtmosphericModelData: FlatBufferObject, Verifiable {
   }
 }
 
-///  Orbit Parameter Message (OPM)
+///  Orbit Parameter Message
 public struct OPM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }

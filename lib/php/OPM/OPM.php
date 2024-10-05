@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Orbit Parameter Message (OPM)
+/// Orbit Parameter Message
 class OPM extends Table
 {
     /**

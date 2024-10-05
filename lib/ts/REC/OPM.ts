@@ -15,7 +15,7 @@ import { uvwSigmas, uvwSigmasT } from './uvwSigmas.js';
 
 
 /**
- * Orbit Parameter Message (OPM)
+ * Orbit Parameter Message
  */
 export class OPM implements flatbuffers.IUnpackableObject<OPMT> {
   bb: flatbuffers.ByteBuffer|null = null;

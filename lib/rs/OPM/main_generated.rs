@@ -2867,7 +2867,7 @@ impl opmAtmosphericModelDataT {
 pub enum OPMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Orbit Parameter Message (OPM)
+/// Orbit Parameter Message
 pub struct OPM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

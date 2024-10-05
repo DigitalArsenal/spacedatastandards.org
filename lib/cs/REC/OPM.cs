@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Orbit Parameter Message (OPM)
+/// Orbit Parameter Message
 public struct OPM : IFlatbufferObject
 {
   private Table __p;

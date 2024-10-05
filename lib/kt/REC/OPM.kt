@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Orbit Parameter Message (OPM)
+ * Orbit Parameter Message
  */
 @Suppress("unused")
 class OPM : Table() {

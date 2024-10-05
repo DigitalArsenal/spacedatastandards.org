@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Orbit Parameter Message (OPM)
+ * Orbit Parameter Message
  */
 @SuppressWarnings("unused")
 public final class OPM extends Table {

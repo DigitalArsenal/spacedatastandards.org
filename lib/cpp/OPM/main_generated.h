@@ -1207,7 +1207,7 @@ inline ::flatbuffers::Offset<opmAtmosphericModelData> CreateopmAtmosphericModelD
   return builder_.Finish();
 }
 
-/// Orbit Parameter Message (OPM)
+/// Orbit Parameter Message
 struct OPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OPMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

@@ -1,5 +1,5 @@
-// Hash: 51ab88b8328c8eecfc48d3489bb68a586c2ebf24e377a5be0afa60a25207d152
-// Version: 1.2.2
+// Hash: 119960f8bd38a3a1f0544131708a92d03de0359e57b787a2fa4f8382c43a1205
+// Version: 1.2.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -196,7 +196,7 @@ table opmAtmosphericModelData {
   RESONANCE_MODEL: resonanceModel;
 }
 
-/// Orbit Parameter Message (OPM)
+/// Orbit Parameter Message
 table OPM {
   CCSDS_OMM_VERS: double;
   CREATION_DATE: string;

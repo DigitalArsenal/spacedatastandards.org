@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Orbit Parameter Message (OPM)
+# Orbit Parameter Message
 class OPM(object):
     __slots__ = ['_tab']
 
