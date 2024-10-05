@@ -1,9 +1,27 @@
-// Hash: 1699dd5e768ea5cae58e1de78f57c156c77bbee85ac07fda3eee434d58cd0f18
-// Version: 1.2.1
+// Hash: 51ab88b8328c8eecfc48d3489bb68a586c2ebf24e377a5be0afa60a25207d152
+// Version: 1.2.2
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../MET/main.fbs";
+
+// Orbit Parameter Message (OPM)
+//
+// The Orbit Parameter Message (OPM) is used to exchange detailed orbit information, which
+// includes the spacecraft state vector, Keplerian elements, equinoctial elements, and relevant
+// physical parameters. The OPM provides a versatile format that can support a variety of
+// propagators, models, and perturbations, allowing users to fully describe the orbital state
+// and the conditions influencing its propagation.
+//
+// OPM supports both mean and osculating element sets, along with additional perturbative models
+// like geopotential, atmospheric drag, solar radiation pressure, and resonance effects. Covariance
+// matrices and custom user-defined fields can also be included to enhance precision and flexibility.
+//
+// The message recipient must use the appropriate orbit propagation algorithms and models to correctly
+// propagate the orbit based on the provided data. The message is compatible with both classical
+// and modern perturbation models, making it ideal for high-precision orbit prediction and analysis.
+//
+// CCSDS Reference documentation: 502.0-B-3.
 
 enum elementType : byte {
   OSCULATING = 0,

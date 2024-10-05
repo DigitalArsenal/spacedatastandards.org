@@ -1,27 +1,19 @@
-// Hash: 9028dfaa71411a22006701ca633e908ea414fcbf155dfb4fa8e13c2ba03a8ed7
-// Version: 1.0.1
+// Hash: 5cc26919c8c58f5b0585044ca7ded3e5f12c8ed06239ce3f30e57e426a130ce9
+// Version: 1.0.0
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../MET/main.fbs";
 
-// Orbit Parameter Message (OPM)
+// Orbit Mean Elements Message (OMM)
 //
-// The Orbit Parameter Message (OPM) is used to exchange detailed orbit information, which
-// includes the spacecraft state vector, Keplerian elements, equinoctial elements, and relevant
-// physical parameters. The OPM provides a versatile format that can support a variety of
-// propagators, models, and perturbations, allowing users to fully describe the orbital state
-// and the conditions influencing its propagation.
-//
-// OPM supports both mean and osculating element sets, along with additional perturbative models
-// like geopotential, atmospheric drag, solar radiation pressure, and resonance effects. Covariance
-// matrices and custom user-defined fields can also be included to enhance precision and flexibility.
-//
-// The message recipient must use the appropriate orbit propagation algorithms and models to correctly
-// propagate the orbit based on the provided data. The message is compatible with both classical
-// and modern perturbation models, making it ideal for high-precision orbit prediction and analysis.
-//
-// CCSDS Reference documentation: 502.0-B-3.
+// Orbit information may be exchanged between two participants by sending an orbital
+// state based on mean Keplerian elements for a specified epoch using an
+// Orbit Mean-Elements Message (OMM). The message recipient must use appropriate orbit
+// propagator algorithms in order to correctly propagate the OMM state to compute the orbit at
+// other desired epochs. 
+// Legacy format description can be found here.
+// CCSDS Reference documentation: 502x0b2c1e2.
 
 enum ephemerisType : byte {
   /// Simplified General Perturbation Model
