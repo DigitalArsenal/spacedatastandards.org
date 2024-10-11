@@ -16,7 +16,6 @@ export * as MET from './MET/main.js';
 export * as MPE from './MPE/main.js';
 export * as OEM from './OEM/main.js';
 export * as OMM from './OMM/main.js';
-export * as OPM from './OPM/main.js';
 export * as OSM from './OSM/main.js';
 export * as PLD from './PLD/main.js';
 export * as PNM from './PNM/main.js';
@@ -28,4 +27,5 @@ export * as SCM from './SCM/main.js';
 export * as SIT from './SIT/main.js';
 export * as TDM from './TDM/main.js';
 export * as TIM from './TIM/main.js';
+export * as VCM from './VCM/main.js';
 //# sourceMappingURL=index.d.ts.map

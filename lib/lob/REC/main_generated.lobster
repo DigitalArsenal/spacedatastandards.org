@@ -11,19 +11,19 @@ enum RecordType:
     RecordType_CSM = 6
     RecordType_OSM = 7
     RecordType_CAT = 8
-    RecordType_OPM = 9
-    RecordType_CRM = 10
-    RecordType_SCM = 11
-    RecordType_TDM = 12
-    RecordType_IDM = 13
-    RecordType_MET = 14
-    RecordType_ROC = 15
-    RecordType_BOV = 16
-    RecordType_EOP = 17
-    RecordType_EOO = 18
-    RecordType_EME = 19
-    RecordType_LDM = 20
-    RecordType_PNM = 21
+    RecordType_CRM = 9
+    RecordType_SCM = 10
+    RecordType_TDM = 11
+    RecordType_IDM = 12
+    RecordType_MET = 13
+    RecordType_ROC = 14
+    RecordType_BOV = 15
+    RecordType_EOP = 16
+    RecordType_EOO = 17
+    RecordType_EME = 18
+    RecordType_LDM = 19
+    RecordType_PNM = 20
+    RecordType_VCM = 21
     RecordType_HYP = 22
     RecordType_CTR = 23
     RecordType_CDM = 24
@@ -58,8 +58,6 @@ class Record : flatbuffers.handle
         return OSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CAT():
         return CAT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_OPM():
-        return OPM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CRM():
         return CRM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_SCM():
@@ -84,6 +82,8 @@ class Record : flatbuffers.handle
         return LDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PNM():
         return PNM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_VCM():
+        return VCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_HYP():
         return HYP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CTR():

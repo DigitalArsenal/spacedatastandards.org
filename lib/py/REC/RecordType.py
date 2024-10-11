@@ -12,19 +12,19 @@ class RecordType(object):
     CSM = 6
     OSM = 7
     CAT = 8
-    OPM = 9
-    CRM = 10
-    SCM = 11
-    TDM = 12
-    IDM = 13
-    MET = 14
-    ROC = 15
-    BOV = 16
-    EOP = 17
-    EOO = 18
-    EME = 19
-    LDM = 20
-    PNM = 21
+    CRM = 9
+    SCM = 10
+    TDM = 11
+    IDM = 12
+    MET = 13
+    ROC = 14
+    BOV = 15
+    EOP = 16
+    EOO = 17
+    EME = 18
+    LDM = 19
+    PNM = 20
+    VCM = 21
     HYP = 22
     CTR = 23
     CDM = 24
@@ -62,9 +62,6 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CAT:
         import CAT
         return CAT.CATT.InitFromBuf(table.Bytes, table.Pos)
-    if unionType == RecordType.OPM:
-        import OPM
-        return OPM.OPMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.CRM:
         import CRM
         return CRM.CRMT.InitFromBuf(table.Bytes, table.Pos)
@@ -101,6 +98,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PNM:
         import PNM
         return PNM.PNMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.VCM:
+        import VCM
+        return VCM.VCMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.HYP:
         import HYP
         return HYP.HYPT.InitFromBuf(table.Bytes, table.Pos)

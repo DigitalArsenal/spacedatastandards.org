@@ -62,19 +62,19 @@ enum RecordType : uint8_t {
   RecordType_CSM = 6,
   RecordType_OSM = 7,
   RecordType_CAT = 8,
-  RecordType_OPM = 9,
-  RecordType_CRM = 10,
-  RecordType_SCM = 11,
-  RecordType_TDM = 12,
-  RecordType_IDM = 13,
-  RecordType_MET = 14,
-  RecordType_ROC = 15,
-  RecordType_BOV = 16,
-  RecordType_EOP = 17,
-  RecordType_EOO = 18,
-  RecordType_EME = 19,
-  RecordType_LDM = 20,
-  RecordType_PNM = 21,
+  RecordType_CRM = 9,
+  RecordType_SCM = 10,
+  RecordType_TDM = 11,
+  RecordType_IDM = 12,
+  RecordType_MET = 13,
+  RecordType_ROC = 14,
+  RecordType_BOV = 15,
+  RecordType_EOP = 16,
+  RecordType_EOO = 17,
+  RecordType_EME = 18,
+  RecordType_LDM = 19,
+  RecordType_PNM = 20,
+  RecordType_VCM = 21,
   RecordType_HYP = 22,
   RecordType_CTR = 23,
   RecordType_CDM = 24,
@@ -98,7 +98,6 @@ inline const RecordType (&EnumValuesRecordType())[30] {
     RecordType_CSM,
     RecordType_OSM,
     RecordType_CAT,
-    RecordType_OPM,
     RecordType_CRM,
     RecordType_SCM,
     RecordType_TDM,
@@ -111,6 +110,7 @@ inline const RecordType (&EnumValuesRecordType())[30] {
     RecordType_EME,
     RecordType_LDM,
     RecordType_PNM,
+    RecordType_VCM,
     RecordType_HYP,
     RecordType_CTR,
     RecordType_CDM,
@@ -134,7 +134,6 @@ inline const char * const *EnumNamesRecordType() {
     "CSM",
     "OSM",
     "CAT",
-    "OPM",
     "CRM",
     "SCM",
     "TDM",
@@ -147,6 +146,7 @@ inline const char * const *EnumNamesRecordType() {
     "EME",
     "LDM",
     "PNM",
+    "VCM",
     "HYP",
     "CTR",
     "CDM",
@@ -202,10 +202,6 @@ template<> struct RecordTypeTraits<CAT> {
   static const RecordType enum_value = RecordType_CAT;
 };
 
-template<> struct RecordTypeTraits<OPM> {
-  static const RecordType enum_value = RecordType_OPM;
-};
-
 template<> struct RecordTypeTraits<CRM> {
   static const RecordType enum_value = RecordType_CRM;
 };
@@ -252,6 +248,10 @@ template<> struct RecordTypeTraits<LDM> {
 
 template<> struct RecordTypeTraits<PNM> {
   static const RecordType enum_value = RecordType_PNM;
+};
+
+template<> struct RecordTypeTraits<VCM> {
+  static const RecordType enum_value = RecordType_VCM;
 };
 
 template<> struct RecordTypeTraits<HYP> {
@@ -326,9 +326,6 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CAT *value_as_CAT() const {
     return value_type() == RecordType_CAT ? static_cast<const CAT *>(value()) : nullptr;
   }
-  const OPM *value_as_OPM() const {
-    return value_type() == RecordType_OPM ? static_cast<const OPM *>(value()) : nullptr;
-  }
   const CRM *value_as_CRM() const {
     return value_type() == RecordType_CRM ? static_cast<const CRM *>(value()) : nullptr;
   }
@@ -364,6 +361,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const PNM *value_as_PNM() const {
     return value_type() == RecordType_PNM ? static_cast<const PNM *>(value()) : nullptr;
+  }
+  const VCM *value_as_VCM() const {
+    return value_type() == RecordType_VCM ? static_cast<const VCM *>(value()) : nullptr;
   }
   const HYP *value_as_HYP() const {
     return value_type() == RecordType_HYP ? static_cast<const HYP *>(value()) : nullptr;
@@ -430,10 +430,6 @@ template<> inline const CAT *Record::value_as<CAT>() const {
   return value_as_CAT();
 }
 
-template<> inline const OPM *Record::value_as<OPM>() const {
-  return value_as_OPM();
-}
-
 template<> inline const CRM *Record::value_as<CRM>() const {
   return value_as_CRM();
 }
@@ -480,6 +476,10 @@ template<> inline const LDM *Record::value_as<LDM>() const {
 
 template<> inline const PNM *Record::value_as<PNM>() const {
   return value_as_PNM();
+}
+
+template<> inline const VCM *Record::value_as<VCM>() const {
+  return value_as_VCM();
 }
 
 template<> inline const HYP *Record::value_as<HYP>() const {
@@ -715,10 +715,6 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
       auto ptr = reinterpret_cast<const CAT *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case RecordType_OPM: {
-      auto ptr = reinterpret_cast<const OPM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
     case RecordType_CRM: {
       auto ptr = reinterpret_cast<const CRM *>(obj);
       return verifier.VerifyTable(ptr);
@@ -765,6 +761,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     }
     case RecordType_PNM: {
       auto ptr = reinterpret_cast<const PNM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_VCM: {
+      auto ptr = reinterpret_cast<const VCM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_HYP: {

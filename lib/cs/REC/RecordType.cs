@@ -13,19 +13,19 @@ public enum RecordType : byte
   CSM = 6,
   OSM = 7,
   CAT = 8,
-  OPM = 9,
-  CRM = 10,
-  SCM = 11,
-  TDM = 12,
-  IDM = 13,
-  MET = 14,
-  ROC = 15,
-  BOV = 16,
-  EOP = 17,
-  EOO = 18,
-  EME = 19,
-  LDM = 20,
-  PNM = 21,
+  CRM = 9,
+  SCM = 10,
+  TDM = 11,
+  IDM = 12,
+  MET = 13,
+  ROC = 14,
+  BOV = 15,
+  EOP = 16,
+  EOO = 17,
+  EME = 18,
+  LDM = 19,
+  PNM = 20,
+  VCM = 21,
   HYP = 22,
   CTR = 23,
   CDM = 24,
@@ -62,8 +62,6 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromOSM(OSMT _osm) { return new RecordTypeUnion{ Type = RecordType.OSM, Value = _osm }; }
   public CATT AsCAT() { return this.As<CATT>(); }
   public static RecordTypeUnion FromCAT(CATT _cat) { return new RecordTypeUnion{ Type = RecordType.CAT, Value = _cat }; }
-  public OPMT AsOPM() { return this.As<OPMT>(); }
-  public static RecordTypeUnion FromOPM(OPMT _opm) { return new RecordTypeUnion{ Type = RecordType.OPM, Value = _opm }; }
   public CRMT AsCRM() { return this.As<CRMT>(); }
   public static RecordTypeUnion FromCRM(CRMT _crm) { return new RecordTypeUnion{ Type = RecordType.CRM, Value = _crm }; }
   public SCMT AsSCM() { return this.As<SCMT>(); }
@@ -88,6 +86,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromLDM(LDMT _ldm) { return new RecordTypeUnion{ Type = RecordType.LDM, Value = _ldm }; }
   public PNMT AsPNM() { return this.As<PNMT>(); }
   public static RecordTypeUnion FromPNM(PNMT _pnm) { return new RecordTypeUnion{ Type = RecordType.PNM, Value = _pnm }; }
+  public VCMT AsVCM() { return this.As<VCMT>(); }
+  public static RecordTypeUnion FromVCM(VCMT _vcm) { return new RecordTypeUnion{ Type = RecordType.VCM, Value = _vcm }; }
   public HYPT AsHYP() { return this.As<HYPT>(); }
   public static RecordTypeUnion FromHYP(HYPT _hyp) { return new RecordTypeUnion{ Type = RecordType.HYP, Value = _hyp }; }
   public CTRT AsCTR() { return this.As<CTRT>(); }
@@ -116,7 +116,6 @@ public class RecordTypeUnion {
       case RecordType.CSM: return CSM.Pack(builder, _o.AsCSM()).Value;
       case RecordType.OSM: return OSM.Pack(builder, _o.AsOSM()).Value;
       case RecordType.CAT: return CAT.Pack(builder, _o.AsCAT()).Value;
-      case RecordType.OPM: return OPM.Pack(builder, _o.AsOPM()).Value;
       case RecordType.CRM: return CRM.Pack(builder, _o.AsCRM()).Value;
       case RecordType.SCM: return SCM.Pack(builder, _o.AsSCM()).Value;
       case RecordType.TDM: return TDM.Pack(builder, _o.AsTDM()).Value;
@@ -129,6 +128,7 @@ public class RecordTypeUnion {
       case RecordType.EME: return EME.Pack(builder, _o.AsEME()).Value;
       case RecordType.LDM: return LDM.Pack(builder, _o.AsLDM()).Value;
       case RecordType.PNM: return PNM.Pack(builder, _o.AsPNM()).Value;
+      case RecordType.VCM: return VCM.Pack(builder, _o.AsVCM()).Value;
       case RecordType.HYP: return HYP.Pack(builder, _o.AsHYP()).Value;
       case RecordType.CTR: return CTR.Pack(builder, _o.AsCTR()).Value;
       case RecordType.CDM: return CDM.Pack(builder, _o.AsCDM()).Value;
@@ -174,9 +174,6 @@ static public class RecordTypeVerify
       case RecordType.CAT:
         result = CATVerify.Verify(verifier, tablePos);
         break;
-      case RecordType.OPM:
-        result = OPMVerify.Verify(verifier, tablePos);
-        break;
       case RecordType.CRM:
         result = CRMVerify.Verify(verifier, tablePos);
         break;
@@ -212,6 +209,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.PNM:
         result = PNMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.VCM:
+        result = VCMVerify.Verify(verifier, tablePos);
         break;
       case RecordType.HYP:
         result = HYPVerify.Verify(verifier, tablePos);

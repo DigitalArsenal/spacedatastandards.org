@@ -87,7 +87,6 @@ import MET
 import MPE
 import OEM
 import OMM
-import OPM
 import OSM
 import PLD
 import PNM
@@ -99,6 +98,7 @@ import SCM
 import SIT
 import TDM
 import TIM
+import VCM
 try:
     from typing import Union
 except:
@@ -109,7 +109,7 @@ class RecordT(object):
     # RecordT
     def __init__(self):
         self.valueType = 0  # type: int
-        self.value = None  # type: Union[None, LCC.LCCT, MPE.MPET, OMM.OMMT, PLD.PLDT, RFM.RFMT, CSM.CSMT, OSM.OSMT, CAT.CATT, OPM.OPMT, CRM.CRMT, SCM.SCMT, TDM.TDMT, IDM.IDMT, MET.METT, ROC.ROCT, BOV.BOVT, EOP.EOPT, EOO.EOOT, EME.EMET, LDM.LDMT, PNM.PNMT, HYP.HYPT, CTR.CTRT, CDM.CDMT, SIT.SITT, OEM.OEMT, TIM.TIMT, EPM.EPMT, PRG.PRGT]
+        self.value = None  # type: Union[None, LCC.LCCT, MPE.MPET, OMM.OMMT, PLD.PLDT, RFM.RFMT, CSM.CSMT, OSM.OSMT, CAT.CATT, CRM.CRMT, SCM.SCMT, TDM.TDMT, IDM.IDMT, MET.METT, ROC.ROCT, BOV.BOVT, EOP.EOPT, EOO.EOOT, EME.EMET, LDM.LDMT, PNM.PNMT, VCM.VCMT, HYP.HYPT, CTR.CTRT, CDM.CDMT, SIT.SITT, OEM.OEMT, TIM.TIMT, EPM.EPMT, PRG.PRGT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):

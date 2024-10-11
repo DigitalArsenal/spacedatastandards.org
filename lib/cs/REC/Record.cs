@@ -26,7 +26,6 @@ public struct Record : IFlatbufferObject
   public CSM ValueAsCSM() { return Value<CSM>().Value; }
   public OSM ValueAsOSM() { return Value<OSM>().Value; }
   public CAT ValueAsCAT() { return Value<CAT>().Value; }
-  public OPM ValueAsOPM() { return Value<OPM>().Value; }
   public CRM ValueAsCRM() { return Value<CRM>().Value; }
   public SCM ValueAsSCM() { return Value<SCM>().Value; }
   public TDM ValueAsTDM() { return Value<TDM>().Value; }
@@ -39,6 +38,7 @@ public struct Record : IFlatbufferObject
   public EME ValueAsEME() { return Value<EME>().Value; }
   public LDM ValueAsLDM() { return Value<LDM>().Value; }
   public PNM ValueAsPNM() { return Value<PNM>().Value; }
+  public VCM ValueAsVCM() { return Value<VCM>().Value; }
   public HYP ValueAsHYP() { return Value<HYP>().Value; }
   public CTR ValueAsCTR() { return Value<CTR>().Value; }
   public CDM ValueAsCDM() { return Value<CDM>().Value; }
@@ -98,9 +98,6 @@ public struct Record : IFlatbufferObject
       case RecordType.CAT:
         _o.Value.Value = this.Value<CAT>().HasValue ? this.Value<CAT>().Value.UnPack() : null;
         break;
-      case RecordType.OPM:
-        _o.Value.Value = this.Value<OPM>().HasValue ? this.Value<OPM>().Value.UnPack() : null;
-        break;
       case RecordType.CRM:
         _o.Value.Value = this.Value<CRM>().HasValue ? this.Value<CRM>().Value.UnPack() : null;
         break;
@@ -136,6 +133,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.PNM:
         _o.Value.Value = this.Value<PNM>().HasValue ? this.Value<PNM>().Value.UnPack() : null;
+        break;
+      case RecordType.VCM:
+        _o.Value.Value = this.Value<VCM>().HasValue ? this.Value<VCM>().Value.UnPack() : null;
         break;
       case RecordType.HYP:
         _o.Value.Value = this.Value<HYP>().HasValue ? this.Value<HYP>().Value.UnPack() : null;

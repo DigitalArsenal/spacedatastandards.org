@@ -22,7 +22,6 @@ import { MET, METT } from './MET.js';
 import { MPE, MPET } from './MPE.js';
 import { OEM, OEMT } from './OEM.js';
 import { OMM, OMMT } from './OMM.js';
-import { OPM, OPMT } from './OPM.js';
 import { OSM, OSMT } from './OSM.js';
 import { PLD, PLDT } from './PLD.js';
 import { PNM, PNMT } from './PNM.js';
@@ -34,6 +33,7 @@ import { SCM, SCMT } from './SCM.js';
 import { SIT, SITT } from './SIT.js';
 import { TDM, TDMT } from './TDM.js';
 import { TIM, TIMT } from './TIM.js';
+import { VCM, VCMT } from './VCM.js';
 
 
 export class Record implements flatbuffers.IUnpackableObject<RecordT> {
@@ -113,7 +113,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OEMT|OMMT|OPMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|null = null
+  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null
 ){}
 
 

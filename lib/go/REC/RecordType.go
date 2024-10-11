@@ -16,19 +16,19 @@ const (
 	RecordTypeCSM  RecordType = 6
 	RecordTypeOSM  RecordType = 7
 	RecordTypeCAT  RecordType = 8
-	RecordTypeOPM  RecordType = 9
-	RecordTypeCRM  RecordType = 10
-	RecordTypeSCM  RecordType = 11
-	RecordTypeTDM  RecordType = 12
-	RecordTypeIDM  RecordType = 13
-	RecordTypeMET  RecordType = 14
-	RecordTypeROC  RecordType = 15
-	RecordTypeBOV  RecordType = 16
-	RecordTypeEOP  RecordType = 17
-	RecordTypeEOO  RecordType = 18
-	RecordTypeEME  RecordType = 19
-	RecordTypeLDM  RecordType = 20
-	RecordTypePNM  RecordType = 21
+	RecordTypeCRM  RecordType = 9
+	RecordTypeSCM  RecordType = 10
+	RecordTypeTDM  RecordType = 11
+	RecordTypeIDM  RecordType = 12
+	RecordTypeMET  RecordType = 13
+	RecordTypeROC  RecordType = 14
+	RecordTypeBOV  RecordType = 15
+	RecordTypeEOP  RecordType = 16
+	RecordTypeEOO  RecordType = 17
+	RecordTypeEME  RecordType = 18
+	RecordTypeLDM  RecordType = 19
+	RecordTypePNM  RecordType = 20
+	RecordTypeVCM  RecordType = 21
 	RecordTypeHYP  RecordType = 22
 	RecordTypeCTR  RecordType = 23
 	RecordTypeCDM  RecordType = 24
@@ -49,7 +49,6 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeCSM:  "CSM",
 	RecordTypeOSM:  "OSM",
 	RecordTypeCAT:  "CAT",
-	RecordTypeOPM:  "OPM",
 	RecordTypeCRM:  "CRM",
 	RecordTypeSCM:  "SCM",
 	RecordTypeTDM:  "TDM",
@@ -62,6 +61,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeEME:  "EME",
 	RecordTypeLDM:  "LDM",
 	RecordTypePNM:  "PNM",
+	RecordTypeVCM:  "VCM",
 	RecordTypeHYP:  "HYP",
 	RecordTypeCTR:  "CTR",
 	RecordTypeCDM:  "CDM",
@@ -82,7 +82,6 @@ var EnumValuesRecordType = map[string]RecordType{
 	"CSM":  RecordTypeCSM,
 	"OSM":  RecordTypeOSM,
 	"CAT":  RecordTypeCAT,
-	"OPM":  RecordTypeOPM,
 	"CRM":  RecordTypeCRM,
 	"SCM":  RecordTypeSCM,
 	"TDM":  RecordTypeTDM,
@@ -95,6 +94,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"EME":  RecordTypeEME,
 	"LDM":  RecordTypeLDM,
 	"PNM":  RecordTypePNM,
+	"VCM":  RecordTypeVCM,
 	"HYP":  RecordTypeHYP,
 	"CTR":  RecordTypeCTR,
 	"CDM":  RecordTypeCDM,
