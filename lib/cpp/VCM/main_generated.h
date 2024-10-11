@@ -1207,7 +1207,7 @@ inline ::flatbuffers::Offset<VCMAtmosphericModelData> CreateVCMAtmosphericModelD
   return builder_.Finish();
 }
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VCMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

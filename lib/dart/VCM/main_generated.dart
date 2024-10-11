@@ -1421,7 +1421,7 @@ class VcmatmosphericModelDataObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Orbit Parameter Message
+///  Vector Covariance Message
 class VCM {
   VCM._(this._bc, this._bcOffset);
   factory VCM(List<int> bytes) {

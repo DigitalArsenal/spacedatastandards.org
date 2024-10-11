@@ -438,7 +438,7 @@ struct VCMAtmosphericModelDataBuilder:
     def end():
         return b_.EndObject()
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 class VCM : flatbuffers.handle
     def CCSDS_OMM_VERS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)

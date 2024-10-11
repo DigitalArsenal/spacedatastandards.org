@@ -663,7 +663,7 @@ public struct VCMAtmosphericModelData: FlatBufferObject, Verifiable {
   }
 }
 
-///  Orbit Parameter Message
+///  Vector Covariance Message
 public struct VCM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }

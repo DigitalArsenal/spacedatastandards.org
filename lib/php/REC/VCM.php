@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 class VCM extends Table
 {
     /**

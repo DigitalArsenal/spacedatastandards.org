@@ -1,5 +1,5 @@
-// Hash: e106e5353dbe666aad23a5321651508dcff8a46098ba7f3dc17c97954b669cd9
-// Version: 1.2.4
+// Hash: 2819806c947e6207faf7679e7f2a98d39da28b36be744de6c5e9d009dcd91778
+// Version: 1.2.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -197,7 +197,7 @@ table VCMAtmosphericModelData {
   RESONANCE_MODEL: resonanceModel;
 }
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 table VCM {
   CCSDS_OMM_VERS: double;
   CREATION_DATE: string;

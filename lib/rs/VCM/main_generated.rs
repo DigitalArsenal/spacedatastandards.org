@@ -2867,7 +2867,7 @@ impl VCMAtmosphericModelDataT {
 pub enum VCMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 pub struct VCM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

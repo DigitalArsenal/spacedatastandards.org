@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Orbit Parameter Message
+# Vector Covariance Message
 class VCM(object):
     __slots__ = ['_tab']
 

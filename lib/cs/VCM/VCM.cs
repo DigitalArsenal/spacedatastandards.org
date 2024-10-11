@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 public struct VCM : IFlatbufferObject
 {
   private Table __p;

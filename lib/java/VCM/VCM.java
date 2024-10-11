@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Orbit Parameter Message
+ * Vector Covariance Message
  */
 @SuppressWarnings("unused")
 public final class VCM extends Table {

@@ -8,7 +8,7 @@ import { perturbationStatus } from './perturbationStatus.js';
 import { propagatorConfig, propagatorConfigT } from './propagatorConfig.js';
 import { uvwSigmas, uvwSigmasT } from './uvwSigmas.js';
 /**
- * Orbit Parameter Message
+ * Vector Covariance Message
  */
 export declare class VCM implements flatbuffers.IUnpackableObject<VCMT> {
     bb: flatbuffers.ByteBuffer | null;

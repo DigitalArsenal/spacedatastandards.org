@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Orbit Parameter Message
+/// Vector Covariance Message
 type VCM struct {
 	_tab flatbuffers.Table
 }

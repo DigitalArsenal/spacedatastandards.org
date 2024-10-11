@@ -1,5 +1,5 @@
 // Hash: e088f95327caf22140c495ce12d162693c37ea3491683b5232a7dffc7e9149e0
-// Version: 1.10.0
+// Version: 1.11.0
 // -----------------------------------END_HEADER
 include "../LCC/main.fbs";
 include "../MPE/main.fbs";

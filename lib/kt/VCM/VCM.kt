@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Orbit Parameter Message
+ * Vector Covariance Message
  */
 @Suppress("unused")
 class VCM : Table() {
