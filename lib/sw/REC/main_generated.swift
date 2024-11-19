@@ -14,37 +14,38 @@ public enum RecordType: UInt8, UnionEnum {
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case none_ = 0
-  case lcc = 1
-  case mpe = 2
-  case omm = 3
-  case pld = 4
-  case rfm = 5
-  case csm = 6
-  case osm = 7
-  case cat = 8
-  case crm = 9
-  case scm = 10
-  case tdm = 11
-  case idm = 12
-  case met = 13
-  case roc = 14
-  case bov = 15
-  case eop = 16
-  case eoo = 17
-  case eme = 18
-  case ldm = 19
-  case pnm = 20
-  case vcm = 21
-  case hyp = 22
-  case ctr = 23
-  case cdm = 24
-  case sit = 25
-  case oem = 26
-  case tim = 27
-  case epm = 28
-  case prg = 29
+  case crm = 1
+  case omm = 2
+  case prg = 3
+  case osm = 4
+  case epm = 5
+  case mpe = 6
+  case eme = 7
+  case oem = 8
+  case vcm = 9
+  case cdm = 10
+  case idm = 11
+  case scm = 12
+  case pnm = 13
+  case csm = 14
+  case hyp = 15
+  case lcc = 16
+  case roc = 17
+  case eop = 18
+  case cat = 19
+  case ocm = 20
+  case ctr = 21
+  case tim = 22
+  case met = 23
+  case pld = 24
+  case eoo = 25
+  case sit = 26
+  case rfm = 27
+  case bov = 28
+  case ldm = 29
+  case tdm = 30
 
-  public static var max: RecordType { return .prg }
+  public static var max: RecordType { return .tdm }
   public static var min: RecordType { return .none_ }
 }
 
@@ -90,64 +91,66 @@ public struct Record: FlatBufferObject, Verifiable {
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
-      case .lcc:
-        try ForwardOffset<LCC>.verify(&verifier, at: pos, of: LCC.self)
-      case .mpe:
-        try ForwardOffset<MPE>.verify(&verifier, at: pos, of: MPE.self)
-      case .omm:
-        try ForwardOffset<OMM>.verify(&verifier, at: pos, of: OMM.self)
-      case .pld:
-        try ForwardOffset<PLD>.verify(&verifier, at: pos, of: PLD.self)
-      case .rfm:
-        try ForwardOffset<RFM>.verify(&verifier, at: pos, of: RFM.self)
-      case .csm:
-        try ForwardOffset<CSM>.verify(&verifier, at: pos, of: CSM.self)
-      case .osm:
-        try ForwardOffset<OSM>.verify(&verifier, at: pos, of: OSM.self)
-      case .cat:
-        try ForwardOffset<CAT>.verify(&verifier, at: pos, of: CAT.self)
       case .crm:
         try ForwardOffset<CRM>.verify(&verifier, at: pos, of: CRM.self)
-      case .scm:
-        try ForwardOffset<SCM>.verify(&verifier, at: pos, of: SCM.self)
-      case .tdm:
-        try ForwardOffset<TDM>.verify(&verifier, at: pos, of: TDM.self)
-      case .idm:
-        try ForwardOffset<IDM>.verify(&verifier, at: pos, of: IDM.self)
-      case .met:
-        try ForwardOffset<MET>.verify(&verifier, at: pos, of: MET.self)
-      case .roc:
-        try ForwardOffset<ROC>.verify(&verifier, at: pos, of: ROC.self)
-      case .bov:
-        try ForwardOffset<BOV>.verify(&verifier, at: pos, of: BOV.self)
-      case .eop:
-        try ForwardOffset<EOP>.verify(&verifier, at: pos, of: EOP.self)
-      case .eoo:
-        try ForwardOffset<EOO>.verify(&verifier, at: pos, of: EOO.self)
-      case .eme:
-        try ForwardOffset<EME>.verify(&verifier, at: pos, of: EME.self)
-      case .ldm:
-        try ForwardOffset<LDM>.verify(&verifier, at: pos, of: LDM.self)
-      case .pnm:
-        try ForwardOffset<PNM>.verify(&verifier, at: pos, of: PNM.self)
-      case .vcm:
-        try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
-      case .hyp:
-        try ForwardOffset<HYP>.verify(&verifier, at: pos, of: HYP.self)
-      case .ctr:
-        try ForwardOffset<CTR>.verify(&verifier, at: pos, of: CTR.self)
-      case .cdm:
-        try ForwardOffset<CDM>.verify(&verifier, at: pos, of: CDM.self)
-      case .sit:
-        try ForwardOffset<SIT>.verify(&verifier, at: pos, of: SIT.self)
-      case .oem:
-        try ForwardOffset<OEM>.verify(&verifier, at: pos, of: OEM.self)
-      case .tim:
-        try ForwardOffset<TIM>.verify(&verifier, at: pos, of: TIM.self)
-      case .epm:
-        try ForwardOffset<EPM>.verify(&verifier, at: pos, of: EPM.self)
+      case .omm:
+        try ForwardOffset<OMM>.verify(&verifier, at: pos, of: OMM.self)
       case .prg:
         try ForwardOffset<PRG>.verify(&verifier, at: pos, of: PRG.self)
+      case .osm:
+        try ForwardOffset<OSM>.verify(&verifier, at: pos, of: OSM.self)
+      case .epm:
+        try ForwardOffset<EPM>.verify(&verifier, at: pos, of: EPM.self)
+      case .mpe:
+        try ForwardOffset<MPE>.verify(&verifier, at: pos, of: MPE.self)
+      case .eme:
+        try ForwardOffset<EME>.verify(&verifier, at: pos, of: EME.self)
+      case .oem:
+        try ForwardOffset<OEM>.verify(&verifier, at: pos, of: OEM.self)
+      case .vcm:
+        try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
+      case .cdm:
+        try ForwardOffset<CDM>.verify(&verifier, at: pos, of: CDM.self)
+      case .idm:
+        try ForwardOffset<IDM>.verify(&verifier, at: pos, of: IDM.self)
+      case .scm:
+        try ForwardOffset<SCM>.verify(&verifier, at: pos, of: SCM.self)
+      case .pnm:
+        try ForwardOffset<PNM>.verify(&verifier, at: pos, of: PNM.self)
+      case .csm:
+        try ForwardOffset<CSM>.verify(&verifier, at: pos, of: CSM.self)
+      case .hyp:
+        try ForwardOffset<HYP>.verify(&verifier, at: pos, of: HYP.self)
+      case .lcc:
+        try ForwardOffset<LCC>.verify(&verifier, at: pos, of: LCC.self)
+      case .roc:
+        try ForwardOffset<ROC>.verify(&verifier, at: pos, of: ROC.self)
+      case .eop:
+        try ForwardOffset<EOP>.verify(&verifier, at: pos, of: EOP.self)
+      case .cat:
+        try ForwardOffset<CAT>.verify(&verifier, at: pos, of: CAT.self)
+      case .ocm:
+        try ForwardOffset<OCM>.verify(&verifier, at: pos, of: OCM.self)
+      case .ctr:
+        try ForwardOffset<CTR>.verify(&verifier, at: pos, of: CTR.self)
+      case .tim:
+        try ForwardOffset<TIM>.verify(&verifier, at: pos, of: TIM.self)
+      case .met:
+        try ForwardOffset<MET>.verify(&verifier, at: pos, of: MET.self)
+      case .pld:
+        try ForwardOffset<PLD>.verify(&verifier, at: pos, of: PLD.self)
+      case .eoo:
+        try ForwardOffset<EOO>.verify(&verifier, at: pos, of: EOO.self)
+      case .sit:
+        try ForwardOffset<SIT>.verify(&verifier, at: pos, of: SIT.self)
+      case .rfm:
+        try ForwardOffset<RFM>.verify(&verifier, at: pos, of: RFM.self)
+      case .bov:
+        try ForwardOffset<BOV>.verify(&verifier, at: pos, of: BOV.self)
+      case .ldm:
+        try ForwardOffset<LDM>.verify(&verifier, at: pos, of: LDM.self)
+      case .tdm:
+        try ForwardOffset<TDM>.verify(&verifier, at: pos, of: TDM.self)
       }
     })
     _v.finish()

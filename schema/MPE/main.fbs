@@ -1,9 +1,9 @@
-// Hash: 43c333e7436c07390e922583ed741b3f3ec1e550ab8356c6cd5930d6dfdf0955
-// Version: 1.0.0
+// Hash: cf436f14b2820bd7a7613de4f4f7123737fda820309ff6f110860fdaf3d1d515
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
-// Space Data Standard - 6 - Minimum-Propagatable-Element-Set (MPE)
+// Minimum-Propagatable-Element-Set (MPE)
 // Description
 // Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit.
 // Legacy format description can be found here.

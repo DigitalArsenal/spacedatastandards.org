@@ -8,16 +8,42 @@ This project depends on a custom version of the FlatBuffers binary. You can find
 
 [DigitalArsenal/flatbuffers - da_version](https://github.com/DigitalArsenal/flatbuffers/tree/da_version)
 
+## Install Dependencies
+
+To set up the development environment for this project, you'll need to install the following dependencies:
+
+### Prerequisites
+
+1. **Node.js 20**: Install the latest stable version of Node.js 20 from [Node.js Downloads](https://nodejs.org/).
+   - Verify installation by running:
+     ```bash
+     node -v
+     ```
+   - Ensure the version is 20.x.x.
+
+2. **Python 3 or greater**: Install Python 3 from [Python.org](https://www.python.org/).
+   - Verify installation by running:
+     ```bash
+     python3 --version
+     ```
+   - Ensure the version is 3.x.x or higher.
+3. Install Node.JS dependencies
+   ```bash
+   npm install
+   ```
+4. Install Python dependencies
+   ```bash
+   pip install flatbuffers
+   ```
+
 ### Building FlatBuffers
 
 1. Clone the repository:
-
    ```bash
    git clone https://github.com/DigitalArsenal/flatbuffers.git
    cd flatbuffers
    git checkout da_version
    ```
-
 2. Build the binary:
 
    ```bash
@@ -25,7 +51,7 @@ This project depends on a custom version of the FlatBuffers binary. You can find
    make
    ```
 
-3. Once built, assign the `flatc` binary to your system path.
+5. Once built, assign the `flatc` binary to your system path.
 
 ### Assigning `flatc` to System Path
 
