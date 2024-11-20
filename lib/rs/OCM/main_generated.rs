@@ -4476,6 +4476,7 @@ impl UserDefinedParametersT {
 pub enum OCMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Orbit Comprehensive Message
 pub struct OCM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

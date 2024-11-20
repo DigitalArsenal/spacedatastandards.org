@@ -1311,6 +1311,7 @@ public struct UserDefinedParameters: FlatBufferObject, Verifiable {
   }
 }
 
+///  Orbit Comprehensive Message
 public struct OCM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }

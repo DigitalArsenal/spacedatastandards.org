@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Orbit Comprehensive Message
+ */
 @Suppress("unused")
 class OCM : Table() {
 

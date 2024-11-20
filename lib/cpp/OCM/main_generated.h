@@ -2308,6 +2308,7 @@ inline ::flatbuffers::Offset<UserDefinedParameters> CreateUserDefinedParametersD
       PARAM_VALUE__);
 }
 
+/// Orbit Comprehensive Message
 struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OCMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

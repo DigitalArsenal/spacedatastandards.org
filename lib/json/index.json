@@ -10477,6 +10477,7 @@
                 },
                 "OCM": {
                     "type": "object",
+                    "description": "Orbit Comprehensive Message",
                     "properties": {
                         "HEADER": {
                             "$ref": "#/definitions/Header",
@@ -12378,6 +12379,7 @@
                 },
                 "OCM": {
                     "type": "object",
+                    "description": "Orbit Comprehensive Message",
                     "properties": {
                         "HEADER": {
                             "$ref": "#/definitions/Header",

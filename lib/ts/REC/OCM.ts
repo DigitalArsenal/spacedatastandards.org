@@ -14,6 +14,9 @@ import { StateVector, StateVectorT } from './StateVector.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 
 
+/**
+ * Orbit Comprehensive Message
+ */
 export class OCM implements flatbuffers.IUnpackableObject<OCMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

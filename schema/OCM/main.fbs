@@ -1,5 +1,5 @@
-// Hash: 31062f8e7f975544127522379a7cc67e066f474b1b1025bf74afb96f276e3eb4
-// Version: 1.0.1
+// Hash: 1a0d01b52ccaa38fa64cdc59ab3d6bf01d2be55861713eaf03b2179bc7533bbc
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 // Orbit Comprehensive Message (OCM)
 // Description
@@ -306,6 +306,7 @@ table UserDefinedParameters {
   PARAM_VALUE: string;
 }
 
+/// Orbit Comprehensive Message
 table OCM {
   /// Header section of the OCM.
   HEADER: Header;

@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Orbit Comprehensive Message
 public struct OCM : IFlatbufferObject
 {
   private Table __p;

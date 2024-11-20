@@ -1050,6 +1050,7 @@ struct UserDefinedParametersBuilder:
     def end():
         return b_.EndObject()
 
+/// Orbit Comprehensive Message
 class OCM : flatbuffers.handle
     /// Header section of the OCM.
     def HEADER() -> Header?:

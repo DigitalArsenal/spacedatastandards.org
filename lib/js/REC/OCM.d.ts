@@ -7,6 +7,9 @@ import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
 import { StateVector, StateVectorT } from './StateVector.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
+/**
+ * Orbit Comprehensive Message
+ */
 export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

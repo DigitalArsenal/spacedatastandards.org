@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Orbit Comprehensive Message
 type OCM struct {
 	_tab flatbuffers.Table
 }
