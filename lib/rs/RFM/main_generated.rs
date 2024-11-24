@@ -12,10 +12,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_REF_FRAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REF_FRAME: i8 = 25;
+pub const ENUM_MAX_REF_FRAME: i8 = 88;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REF_FRAME: [refFrame; 26] = [
+pub const ENUM_VALUES_REF_FRAME: [refFrame; 89] = [
   refFrame::ECEF,
   refFrame::ICRF,
   refFrame::TEME,
@@ -42,6 +42,69 @@ pub const ENUM_VALUES_REF_FRAME: [refFrame; 26] = [
   refFrame::RSW,
   refFrame::TNW,
   refFrame::UVW,
+  refFrame::EQW_INERTIAL,
+  refFrame::LVLH_INERTIAL,
+  refFrame::LVLH_ROTATING,
+  refFrame::NSW_INERTIAL,
+  refFrame::NSW_ROTATING,
+  refFrame::NTW_INERTIAL,
+  refFrame::NTW_ROTATING,
+  refFrame::PQW_INERTIAL,
+  refFrame::RSW_INERTIAL,
+  refFrame::RSW_ROTATING,
+  refFrame::SEZ_INERTIAL,
+  refFrame::SEZ_ROTATING,
+  refFrame::TNW_INERTIAL,
+  refFrame::TNW_ROTATING,
+  refFrame::VNC_INERTIAL,
+  refFrame::VNC_ROTATING,
+  refFrame::ALIGN_CB,
+  refFrame::ALIGN_EARTH,
+  refFrame::B1950,
+  refFrame::CIRS,
+  refFrame::DTRFyyyy,
+  refFrame::EFG,
+  refFrame::EME2000,
+  refFrame::FIXED_CB,
+  refFrame::FIXED_EARTH,
+  refFrame::GCRFn,
+  refFrame::GTOD,
+  refFrame::MOD_CB,
+  refFrame::MOD_EARTH,
+  refFrame::MOD_MOON,
+  refFrame::MOE_CB,
+  refFrame::MOE_EARTH,
+  refFrame::MOON_ME,
+  refFrame::MOON_MEIAUE,
+  refFrame::MOON_PAxxx,
+  refFrame::TEMEOFDATE,
+  refFrame::TEMEOFEPOCH,
+  refFrame::TIRS,
+  refFrame::TOD_CB,
+  refFrame::TOD_EARTH,
+  refFrame::TOD_MOON,
+  refFrame::TOE_CB,
+  refFrame::TOE_EARTH,
+  refFrame::TOE_MOON,
+  refFrame::TRUE_ECLIPTIC,
+  refFrame::UVW_GO_INERTIAL,
+  refFrame::WGS84,
+  refFrame::ACC_i,
+  refFrame::ACTUATOR_i,
+  refFrame::AST_i,
+  refFrame::CSS_i,
+  refFrame::DSS_i,
+  refFrame::ESA_i,
+  refFrame::GYRO_FRAME_i,
+  refFrame::IMU_FRAME_i,
+  refFrame::INSTRUMENT_i,
+  refFrame::MTA_i,
+  refFrame::RW_i,
+  refFrame::SA_i,
+  refFrame::SC_BODY_i,
+  refFrame::SENSOR_i,
+  refFrame::STARTRACKER_i,
+  refFrame::TAM_i,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -49,61 +112,187 @@ pub const ENUM_VALUES_REF_FRAME: [refFrame; 26] = [
 pub struct refFrame(pub i8);
 #[allow(non_upper_case_globals)]
 impl refFrame {
-  /// Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
+  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
   pub const ECEF: Self = Self(0);
-  /// International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
+  /// International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
   pub const ICRF: Self = Self(1);
-  /// True Equator Mean Equinox (TEME): Used in SGP4 model for satellite tracking. Accounts for Earth's precession and nutation. Dynamic frame useful for orbit prediction.
+  /// True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
   pub const TEME: Self = Self(2);
-  /// East-North-Up (ENU): Local tangent plane system for surface points. "East" eastward, "North" northward, "Up" perpendicular to Earth's surface. Suited for stationary or slow-moving objects at low altitudes.
+  /// East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
   pub const ENU: Self = Self(3);
-  /// North-East-Down (NED): Common in aviation and navigation. "North" northward, "East" eastward, "Down" towards Earth's center. Aligns with gravity, intuitive for aircraft and vehicles.
+  /// North-East-Down: Aviation/navigation frame aligned with gravity.
   pub const NED: Self = Self(4);
-  /// North-East-Up (NEU): Similar to NED but "Up" axis is opposite to gravity. Suited for applications preferring a conventional "Up" direction.
+  /// North-East-Up: Similar to NED, with "Up" opposite gravity.
   pub const NEU: Self = Self(5);
-  /// Radial-Intrack-Cross-track (RIC): Aligned with spacecraft's UVW system. "Radial" axis towards spacecraft, "In-track" perpendicular to radial and cross-track, "Cross-track" normal to orbit plane. Used for spacecraft orientation and tracking.
+  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
   pub const RIC: Self = Self(6);
-  /// Earth Mean Equator and Equinox of J2000 (J2000): An Earth-Centered Inertial (ECI) frame defined by Earth's mean equator and equinox at the start of the year 2000. Fixed relative to distant stars, used for celestial mechanics and space navigation.
+  /// Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
   pub const J2000: Self = Self(7);
-  /// Geocentric Celestial Reference Frame
+  /// Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
   pub const GCRF: Self = Self(8);
-  /// Greenwich Rotating Coordinates
+  /// Greenwich Rotating Coordinates: Rotates with Earth's true equator.
   pub const GRC: Self = Self(9);
-  /// International Terrestrial Reference Frame 2000
+  /// International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
   pub const ITRF2000: Self = Self(10);
-  /// International Terrestrial Reference Frame 1993
+  /// International Terrestrial Reference Frame 1993: Older ITRF realization.
   pub const ITRF93: Self = Self(11);
-  /// International Terrestrial Reference Frame 1997
+  /// International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
   pub const ITRF97: Self = Self(12);
-  /// True of Date, Rotating
+  /// True of Date, Rotating: Rotates with Earth's true equator.
   pub const TDR: Self = Self(13);
-  /// True of Date
+  /// True of Date: Similar to TDR, without rotation.
   pub const TOD: Self = Self(14);
-  /// Radial, Transverse, Normal
+  /// Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
   pub const RTN: Self = Self(15);
-  /// Transverse, Velocity, Normal
+  /// Transverse, Velocity, Normal: Alternative orbit frame.
   pub const TVN: Self = Self(16);
-  /// Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
+  /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   pub const VVLH: Self = Self(17);
-  /// Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
+  /// Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
   pub const VLVH: Self = Self(18);
-  /// Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
+  /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   pub const LTP: Self = Self(19);
-  /// Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
+  /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
   pub const LVLH: Self = Self(20);
-  /// Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
+  /// Polar-North-East: Polar coordinate frame.
   pub const PNE: Self = Self(21);
-  /// Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
+  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
   pub const BRF: Self = Self(22);
-  /// Another name for 'Radial, Transverse, Normal'
+  /// Radial, Down-track, Cross-track: Alternate name for RTN.
   pub const RSW: Self = Self(23);
-  /// A local orbital coordinate frame
+  /// Tangential, Normal, Cross-track: Local orbit frame.
   pub const TNW: Self = Self(24);
-  /// Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  /// Radial, Along-track, Cross-track: Satellite motion frame.
   pub const UVW: Self = Self(25);
+  /// Equinoctial Inertial: Frame with axes aligned to orbital properties.
+  pub const EQW_INERTIAL: Self = Self(26);
+  /// Inertial version of LVLH.
+  pub const LVLH_INERTIAL: Self = Self(27);
+  /// Rotating LVLH frame.
+  pub const LVLH_ROTATING: Self = Self(28);
+  /// Inertial Nadir-Sun-Normal frame.
+  pub const NSW_INERTIAL: Self = Self(29);
+  /// Rotating Nadir-Sun-Normal frame.
+  pub const NSW_ROTATING: Self = Self(30);
+  /// Inertial Transverse-Velocity-Normal frame.
+  pub const NTW_INERTIAL: Self = Self(31);
+  /// Rotating Transverse-Velocity-Normal frame.
+  pub const NTW_ROTATING: Self = Self(32);
+  /// Perifocal Coordinate System: Inertial frame aligned to periapsis.
+  pub const PQW_INERTIAL: Self = Self(33);
+  /// Inertial Radial, Transverse, Normal frame.
+  pub const RSW_INERTIAL: Self = Self(34);
+  /// Rotating RSW frame: Aligned with orbit angular momentum.
+  pub const RSW_ROTATING: Self = Self(35);
+  /// South/East/Zenith inertial frame.
+  pub const SEZ_INERTIAL: Self = Self(36);
+  /// Rotating South/East/Zenith frame.
+  pub const SEZ_ROTATING: Self = Self(37);
+  /// Inertial Tangential, Normal, Cross-track frame.
+  pub const TNW_INERTIAL: Self = Self(38);
+  /// Rotating Tangential, Normal, Cross-track frame.
+  pub const TNW_ROTATING: Self = Self(39);
+  /// Velocity, Normal, Co-normal inertial frame.
+  pub const VNC_INERTIAL: Self = Self(40);
+  /// Rotating Velocity, Normal, Co-normal frame.
+  pub const VNC_ROTATING: Self = Self(41);
+  /// Central Body alignment inertial frame.
+  pub const ALIGN_CB: Self = Self(42);
+  /// Earth alignment inertial frame.
+  pub const ALIGN_EARTH: Self = Self(43);
+  /// Inertial realization of B1950 epoch.
+  pub const B1950: Self = Self(44);
+  /// Celestial Intermediate Reference System.
+  pub const CIRS: Self = Self(45);
+  /// DTRF Inertial frame with corrections.
+  pub const DTRFyyyy: Self = Self(46);
+  /// Earth-Fixed Greenwich rotating frame.
+  pub const EFG: Self = Self(47);
+  /// Earth Mean Equator and Equinox of 2000 epoch.
+  pub const EME2000: Self = Self(48);
+  /// Central Body fixed rotating frame.
+  pub const FIXED_CB: Self = Self(49);
+  /// Earth-fixed rotating frame.
+  pub const FIXED_EARTH: Self = Self(50);
+  /// Geocentric Celestial Reference Frame with versioning.
+  pub const GCRFn: Self = Self(51);
+  /// Greenwich True-of-Date rotating frame.
+  pub const GTOD: Self = Self(52);
+  /// Mean of Date for all central bodies except Earth and Moon.
+  pub const MOD_CB: Self = Self(53);
+  /// Mean of Date for Earth.
+  pub const MOD_EARTH: Self = Self(54);
+  /// Mean of Date for Moon.
+  pub const MOD_MOON: Self = Self(55);
+  /// Mean of Epoch for central bodies.
+  pub const MOE_CB: Self = Self(56);
+  /// Mean of Epoch for Earth.
+  pub const MOE_EARTH: Self = Self(57);
+  /// Lunar Moon Mean Earth reference frame.
+  pub const MOON_ME: Self = Self(58);
+  /// Lunar Mean Equator and IAU Node reference frame.
+  pub const MOON_MEIAUE: Self = Self(59);
+  /// Lunar Principal Axis rotating frame.
+  pub const MOON_PAxxx: Self = Self(60);
+  /// True Equator Mean Equinox of Date.
+  pub const TEMEOFDATE: Self = Self(61);
+  /// True Equator Mean Equinox of Epoch.
+  pub const TEMEOFEPOCH: Self = Self(62);
+  /// Terrestrial Intermediate Reference System.
+  pub const TIRS: Self = Self(63);
+  /// True of Date for central bodies.
+  pub const TOD_CB: Self = Self(64);
+  /// True of Date for Earth.
+  pub const TOD_EARTH: Self = Self(65);
+  /// True of Date for Moon.
+  pub const TOD_MOON: Self = Self(66);
+  /// True of Epoch for central bodies.
+  pub const TOE_CB: Self = Self(67);
+  /// True of Epoch for Earth.
+  pub const TOE_EARTH: Self = Self(68);
+  /// True of Epoch for Moon.
+  pub const TOE_MOON: Self = Self(69);
+  /// True Ecliptic reference frame.
+  pub const TRUE_ECLIPTIC: Self = Self(70);
+  /// Launch go-inertial reference frame.
+  pub const UVW_GO_INERTIAL: Self = Self(71);
+  /// WGS 84 Earth-fixed terrestrial system.
+  pub const WGS84: Self = Self(72);
+  /// Accelerometer reference frame.
+  pub const ACC_i: Self = Self(73);
+  /// Actuator reference frame.
+  pub const ACTUATOR_i: Self = Self(74);
+  /// Autonomous Star Tracker reference frame.
+  pub const AST_i: Self = Self(75);
+  /// Coarse Sun Sensor reference frame.
+  pub const CSS_i: Self = Self(76);
+  /// Digital Sun Sensor reference frame.
+  pub const DSS_i: Self = Self(77);
+  /// Earth Sensor Assembly reference frame.
+  pub const ESA_i: Self = Self(78);
+  /// Gyro reference frame.
+  pub const GYRO_FRAME_i: Self = Self(79);
+  /// Inertial Measurement Unit reference frame.
+  pub const IMU_FRAME_i: Self = Self(80);
+  /// Instrument reference frame.
+  pub const INSTRUMENT_i: Self = Self(81);
+  /// Magnetic Torque Assembly reference frame.
+  pub const MTA_i: Self = Self(82);
+  /// Reaction Wheel reference frame.
+  pub const RW_i: Self = Self(83);
+  /// Solar Array reference frame.
+  pub const SA_i: Self = Self(84);
+  /// Spacecraft Body reference frame.
+  pub const SC_BODY_i: Self = Self(85);
+  /// Sensor reference frame.
+  pub const SENSOR_i: Self = Self(86);
+  /// Star Tracker reference frame.
+  pub const STARTRACKER_i: Self = Self(87);
+  /// Three Axis Magnetometer reference frame.
+  pub const TAM_i: Self = Self(88);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 25;
+  pub const ENUM_MAX: i8 = 88;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::ECEF,
     Self::ICRF,
@@ -131,6 +320,69 @@ impl refFrame {
     Self::RSW,
     Self::TNW,
     Self::UVW,
+    Self::EQW_INERTIAL,
+    Self::LVLH_INERTIAL,
+    Self::LVLH_ROTATING,
+    Self::NSW_INERTIAL,
+    Self::NSW_ROTATING,
+    Self::NTW_INERTIAL,
+    Self::NTW_ROTATING,
+    Self::PQW_INERTIAL,
+    Self::RSW_INERTIAL,
+    Self::RSW_ROTATING,
+    Self::SEZ_INERTIAL,
+    Self::SEZ_ROTATING,
+    Self::TNW_INERTIAL,
+    Self::TNW_ROTATING,
+    Self::VNC_INERTIAL,
+    Self::VNC_ROTATING,
+    Self::ALIGN_CB,
+    Self::ALIGN_EARTH,
+    Self::B1950,
+    Self::CIRS,
+    Self::DTRFyyyy,
+    Self::EFG,
+    Self::EME2000,
+    Self::FIXED_CB,
+    Self::FIXED_EARTH,
+    Self::GCRFn,
+    Self::GTOD,
+    Self::MOD_CB,
+    Self::MOD_EARTH,
+    Self::MOD_MOON,
+    Self::MOE_CB,
+    Self::MOE_EARTH,
+    Self::MOON_ME,
+    Self::MOON_MEIAUE,
+    Self::MOON_PAxxx,
+    Self::TEMEOFDATE,
+    Self::TEMEOFEPOCH,
+    Self::TIRS,
+    Self::TOD_CB,
+    Self::TOD_EARTH,
+    Self::TOD_MOON,
+    Self::TOE_CB,
+    Self::TOE_EARTH,
+    Self::TOE_MOON,
+    Self::TRUE_ECLIPTIC,
+    Self::UVW_GO_INERTIAL,
+    Self::WGS84,
+    Self::ACC_i,
+    Self::ACTUATOR_i,
+    Self::AST_i,
+    Self::CSS_i,
+    Self::DSS_i,
+    Self::ESA_i,
+    Self::GYRO_FRAME_i,
+    Self::IMU_FRAME_i,
+    Self::INSTRUMENT_i,
+    Self::MTA_i,
+    Self::RW_i,
+    Self::SA_i,
+    Self::SC_BODY_i,
+    Self::SENSOR_i,
+    Self::STARTRACKER_i,
+    Self::TAM_i,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -161,6 +413,69 @@ impl refFrame {
       Self::RSW => Some("RSW"),
       Self::TNW => Some("TNW"),
       Self::UVW => Some("UVW"),
+      Self::EQW_INERTIAL => Some("EQW_INERTIAL"),
+      Self::LVLH_INERTIAL => Some("LVLH_INERTIAL"),
+      Self::LVLH_ROTATING => Some("LVLH_ROTATING"),
+      Self::NSW_INERTIAL => Some("NSW_INERTIAL"),
+      Self::NSW_ROTATING => Some("NSW_ROTATING"),
+      Self::NTW_INERTIAL => Some("NTW_INERTIAL"),
+      Self::NTW_ROTATING => Some("NTW_ROTATING"),
+      Self::PQW_INERTIAL => Some("PQW_INERTIAL"),
+      Self::RSW_INERTIAL => Some("RSW_INERTIAL"),
+      Self::RSW_ROTATING => Some("RSW_ROTATING"),
+      Self::SEZ_INERTIAL => Some("SEZ_INERTIAL"),
+      Self::SEZ_ROTATING => Some("SEZ_ROTATING"),
+      Self::TNW_INERTIAL => Some("TNW_INERTIAL"),
+      Self::TNW_ROTATING => Some("TNW_ROTATING"),
+      Self::VNC_INERTIAL => Some("VNC_INERTIAL"),
+      Self::VNC_ROTATING => Some("VNC_ROTATING"),
+      Self::ALIGN_CB => Some("ALIGN_CB"),
+      Self::ALIGN_EARTH => Some("ALIGN_EARTH"),
+      Self::B1950 => Some("B1950"),
+      Self::CIRS => Some("CIRS"),
+      Self::DTRFyyyy => Some("DTRFyyyy"),
+      Self::EFG => Some("EFG"),
+      Self::EME2000 => Some("EME2000"),
+      Self::FIXED_CB => Some("FIXED_CB"),
+      Self::FIXED_EARTH => Some("FIXED_EARTH"),
+      Self::GCRFn => Some("GCRFn"),
+      Self::GTOD => Some("GTOD"),
+      Self::MOD_CB => Some("MOD_CB"),
+      Self::MOD_EARTH => Some("MOD_EARTH"),
+      Self::MOD_MOON => Some("MOD_MOON"),
+      Self::MOE_CB => Some("MOE_CB"),
+      Self::MOE_EARTH => Some("MOE_EARTH"),
+      Self::MOON_ME => Some("MOON_ME"),
+      Self::MOON_MEIAUE => Some("MOON_MEIAUE"),
+      Self::MOON_PAxxx => Some("MOON_PAxxx"),
+      Self::TEMEOFDATE => Some("TEMEOFDATE"),
+      Self::TEMEOFEPOCH => Some("TEMEOFEPOCH"),
+      Self::TIRS => Some("TIRS"),
+      Self::TOD_CB => Some("TOD_CB"),
+      Self::TOD_EARTH => Some("TOD_EARTH"),
+      Self::TOD_MOON => Some("TOD_MOON"),
+      Self::TOE_CB => Some("TOE_CB"),
+      Self::TOE_EARTH => Some("TOE_EARTH"),
+      Self::TOE_MOON => Some("TOE_MOON"),
+      Self::TRUE_ECLIPTIC => Some("TRUE_ECLIPTIC"),
+      Self::UVW_GO_INERTIAL => Some("UVW_GO_INERTIAL"),
+      Self::WGS84 => Some("WGS84"),
+      Self::ACC_i => Some("ACC_i"),
+      Self::ACTUATOR_i => Some("ACTUATOR_i"),
+      Self::AST_i => Some("AST_i"),
+      Self::CSS_i => Some("CSS_i"),
+      Self::DSS_i => Some("DSS_i"),
+      Self::ESA_i => Some("ESA_i"),
+      Self::GYRO_FRAME_i => Some("GYRO_FRAME_i"),
+      Self::IMU_FRAME_i => Some("IMU_FRAME_i"),
+      Self::INSTRUMENT_i => Some("INSTRUMENT_i"),
+      Self::MTA_i => Some("MTA_i"),
+      Self::RW_i => Some("RW_i"),
+      Self::SA_i => Some("SA_i"),
+      Self::SC_BODY_i => Some("SC_BODY_i"),
+      Self::SENSOR_i => Some("SENSOR_i"),
+      Self::STARTRACKER_i => Some("STARTRACKER_i"),
+      Self::TAM_i => Some("TAM_i"),
       _ => None,
     }
   }
@@ -346,6 +661,7 @@ impl RFMT {
 pub enum RFMCOLLECTIONOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Collection of Reference Frame Messages
 pub struct RFMCOLLECTION<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

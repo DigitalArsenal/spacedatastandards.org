@@ -7,6 +7,9 @@ import * as flatbuffers from 'flatbuffers';
 import { RFM, RFMT } from './RFM.js';
 
 
+/**
+ * Collection of Reference Frame Messages
+ */
 export class RFMCOLLECTION implements flatbuffers.IUnpackableObject<RFMCOLLECTIONT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

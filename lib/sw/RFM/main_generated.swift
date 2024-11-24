@@ -8,60 +8,186 @@ public enum refFrame: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
+  ///  Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
   case ecef = 0
-  ///  International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
+  ///  International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
   case icrf = 1
-  ///  True Equator Mean Equinox (TEME): Used in SGP4 model for satellite tracking. Accounts for Earth's precession and nutation. Dynamic frame useful for orbit prediction.
+  ///  True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
   case teme = 2
-  ///  East-North-Up (ENU): Local tangent plane system for surface points. "East" eastward, "North" northward, "Up" perpendicular to Earth's surface. Suited for stationary or slow-moving objects at low altitudes.
+  ///  East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
   case enu = 3
-  ///  North-East-Down (NED): Common in aviation and navigation. "North" northward, "East" eastward, "Down" towards Earth's center. Aligns with gravity, intuitive for aircraft and vehicles.
+  ///  North-East-Down: Aviation/navigation frame aligned with gravity.
   case ned = 4
-  ///  North-East-Up (NEU): Similar to NED but "Up" axis is opposite to gravity. Suited for applications preferring a conventional "Up" direction.
+  ///  North-East-Up: Similar to NED, with "Up" opposite gravity.
   case neu = 5
-  ///  Radial-Intrack-Cross-track (RIC): Aligned with spacecraft's UVW system. "Radial" axis towards spacecraft, "In-track" perpendicular to radial and cross-track, "Cross-track" normal to orbit plane. Used for spacecraft orientation and tracking.
+  ///  Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
   case ric = 6
-  ///  Earth Mean Equator and Equinox of J2000 (J2000): An Earth-Centered Inertial (ECI) frame defined by Earth's mean equator and equinox at the start of the year 2000. Fixed relative to distant stars, used for celestial mechanics and space navigation.
+  ///  Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
   case j2000 = 7
-  ///  Geocentric Celestial Reference Frame
+  ///  Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
   case gcrf = 8
-  ///  Greenwich Rotating Coordinates
+  ///  Greenwich Rotating Coordinates: Rotates with Earth's true equator.
   case grc = 9
-  ///  International Terrestrial Reference Frame 2000
+  ///  International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
   case itrf2000 = 10
-  ///  International Terrestrial Reference Frame 1993
+  ///  International Terrestrial Reference Frame 1993: Older ITRF realization.
   case itrf93 = 11
-  ///  International Terrestrial Reference Frame 1997
+  ///  International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
   case itrf97 = 12
-  ///  True of Date, Rotating
+  ///  True of Date, Rotating: Rotates with Earth's true equator.
   case tdr = 13
-  ///  True of Date
+  ///  True of Date: Similar to TDR, without rotation.
   case tod = 14
-  ///  Radial, Transverse, Normal
+  ///  Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
   case rtn = 15
-  ///  Transverse, Velocity, Normal
+  ///  Transverse, Velocity, Normal: Alternative orbit frame.
   case tvn = 16
-  ///  Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
+  ///  Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   case vvlh = 17
-  ///  Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
+  ///  Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
   case vlvh = 18
-  ///  Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
+  ///  Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   case ltp = 19
-  ///  Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
+  ///  Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
   case lvlh = 20
-  ///  Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
+  ///  Polar-North-East: Polar coordinate frame.
   case pne = 21
-  ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
+  ///  Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
   case brf = 22
-  ///  Another name for 'Radial, Transverse, Normal'
+  ///  Radial, Down-track, Cross-track: Alternate name for RTN.
   case rsw = 23
-  ///  A local orbital coordinate frame
+  ///  Tangential, Normal, Cross-track: Local orbit frame.
   case tnw = 24
-  ///  Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  ///  Radial, Along-track, Cross-track: Satellite motion frame.
   case uvw = 25
+  ///  Equinoctial Inertial: Frame with axes aligned to orbital properties.
+  case eqwInertial = 26
+  ///  Inertial version of LVLH.
+  case lvlhInertial = 27
+  ///  Rotating LVLH frame.
+  case lvlhRotating = 28
+  ///  Inertial Nadir-Sun-Normal frame.
+  case nswInertial = 29
+  ///  Rotating Nadir-Sun-Normal frame.
+  case nswRotating = 30
+  ///  Inertial Transverse-Velocity-Normal frame.
+  case ntwInertial = 31
+  ///  Rotating Transverse-Velocity-Normal frame.
+  case ntwRotating = 32
+  ///  Perifocal Coordinate System: Inertial frame aligned to periapsis.
+  case pqwInertial = 33
+  ///  Inertial Radial, Transverse, Normal frame.
+  case rswInertial = 34
+  ///  Rotating RSW frame: Aligned with orbit angular momentum.
+  case rswRotating = 35
+  ///  South/East/Zenith inertial frame.
+  case sezInertial = 36
+  ///  Rotating South/East/Zenith frame.
+  case sezRotating = 37
+  ///  Inertial Tangential, Normal, Cross-track frame.
+  case tnwInertial = 38
+  ///  Rotating Tangential, Normal, Cross-track frame.
+  case tnwRotating = 39
+  ///  Velocity, Normal, Co-normal inertial frame.
+  case vncInertial = 40
+  ///  Rotating Velocity, Normal, Co-normal frame.
+  case vncRotating = 41
+  ///  Central Body alignment inertial frame.
+  case alignCb = 42
+  ///  Earth alignment inertial frame.
+  case alignEarth = 43
+  ///  Inertial realization of B1950 epoch.
+  case b1950 = 44
+  ///  Celestial Intermediate Reference System.
+  case cirs = 45
+  ///  DTRF Inertial frame with corrections.
+  case dtrfyyyy = 46
+  ///  Earth-Fixed Greenwich rotating frame.
+  case efg = 47
+  ///  Earth Mean Equator and Equinox of 2000 epoch.
+  case eme2000 = 48
+  ///  Central Body fixed rotating frame.
+  case fixedCb = 49
+  ///  Earth-fixed rotating frame.
+  case fixedEarth = 50
+  ///  Geocentric Celestial Reference Frame with versioning.
+  case gcrfn = 51
+  ///  Greenwich True-of-Date rotating frame.
+  case gtod = 52
+  ///  Mean of Date for all central bodies except Earth and Moon.
+  case modCb = 53
+  ///  Mean of Date for Earth.
+  case modEarth = 54
+  ///  Mean of Date for Moon.
+  case modMoon = 55
+  ///  Mean of Epoch for central bodies.
+  case moeCb = 56
+  ///  Mean of Epoch for Earth.
+  case moeEarth = 57
+  ///  Lunar Moon Mean Earth reference frame.
+  case moonMe = 58
+  ///  Lunar Mean Equator and IAU Node reference frame.
+  case moonMeiaue = 59
+  ///  Lunar Principal Axis rotating frame.
+  case moonPaxxx = 60
+  ///  True Equator Mean Equinox of Date.
+  case temeofdate = 61
+  ///  True Equator Mean Equinox of Epoch.
+  case temeofepoch = 62
+  ///  Terrestrial Intermediate Reference System.
+  case tirs = 63
+  ///  True of Date for central bodies.
+  case todCb = 64
+  ///  True of Date for Earth.
+  case todEarth = 65
+  ///  True of Date for Moon.
+  case todMoon = 66
+  ///  True of Epoch for central bodies.
+  case toeCb = 67
+  ///  True of Epoch for Earth.
+  case toeEarth = 68
+  ///  True of Epoch for Moon.
+  case toeMoon = 69
+  ///  True Ecliptic reference frame.
+  case trueEcliptic = 70
+  ///  Launch go-inertial reference frame.
+  case uvwGoInertial = 71
+  ///  WGS 84 Earth-fixed terrestrial system.
+  case wgs84 = 72
+  ///  Accelerometer reference frame.
+  case accI = 73
+  ///  Actuator reference frame.
+  case actuatorI = 74
+  ///  Autonomous Star Tracker reference frame.
+  case astI = 75
+  ///  Coarse Sun Sensor reference frame.
+  case cssI = 76
+  ///  Digital Sun Sensor reference frame.
+  case dssI = 77
+  ///  Earth Sensor Assembly reference frame.
+  case esaI = 78
+  ///  Gyro reference frame.
+  case gyroFrameI = 79
+  ///  Inertial Measurement Unit reference frame.
+  case imuFrameI = 80
+  ///  Instrument reference frame.
+  case instrumentI = 81
+  ///  Magnetic Torque Assembly reference frame.
+  case mtaI = 82
+  ///  Reaction Wheel reference frame.
+  case rwI = 83
+  ///  Solar Array reference frame.
+  case saI = 84
+  ///  Spacecraft Body reference frame.
+  case scBodyI = 85
+  ///  Sensor reference frame.
+  case sensorI = 86
+  ///  Star Tracker reference frame.
+  case startrackerI = 87
+  ///  Three Axis Magnetometer reference frame.
+  case tamI = 88
 
-  public static var max: refFrame { return .uvw }
+  public static var max: refFrame { return .tamI }
   public static var min: refFrame { return .ecef }
 }
 
@@ -104,6 +230,7 @@ public struct RFM: FlatBufferObject, Verifiable {
   }
 }
 
+///  Collection of Reference Frame Messages
 public struct RFMCOLLECTION: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }

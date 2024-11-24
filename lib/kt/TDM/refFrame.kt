@@ -4,108 +4,360 @@
 class refFrame private constructor() {
     companion object {
         /**
-         * Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
+         * Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
          */
         const val ECEF: Byte = 0
         /**
-         * International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
+         * International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
          */
         const val ICRF: Byte = 1
         /**
-         * True Equator Mean Equinox (TEME): Used in SGP4 model for satellite tracking. Accounts for Earth's precession and nutation. Dynamic frame useful for orbit prediction.
+         * True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
          */
         const val TEME: Byte = 2
         /**
-         * East-North-Up (ENU): Local tangent plane system for surface points. "East" eastward, "North" northward, "Up" perpendicular to Earth's surface. Suited for stationary or slow-moving objects at low altitudes.
+         * East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
          */
         const val ENU: Byte = 3
         /**
-         * North-East-Down (NED): Common in aviation and navigation. "North" northward, "East" eastward, "Down" towards Earth's center. Aligns with gravity, intuitive for aircraft and vehicles.
+         * North-East-Down: Aviation/navigation frame aligned with gravity.
          */
         const val NED: Byte = 4
         /**
-         * North-East-Up (NEU): Similar to NED but "Up" axis is opposite to gravity. Suited for applications preferring a conventional "Up" direction.
+         * North-East-Up: Similar to NED, with "Up" opposite gravity.
          */
         const val NEU: Byte = 5
         /**
-         * Radial-Intrack-Cross-track (RIC): Aligned with spacecraft's UVW system. "Radial" axis towards spacecraft, "In-track" perpendicular to radial and cross-track, "Cross-track" normal to orbit plane. Used for spacecraft orientation and tracking.
+         * Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
          */
         const val RIC: Byte = 6
         /**
-         * Earth Mean Equator and Equinox of J2000 (J2000): An Earth-Centered Inertial (ECI) frame defined by Earth's mean equator and equinox at the start of the year 2000. Fixed relative to distant stars, used for celestial mechanics and space navigation.
+         * Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
          */
         const val J2000: Byte = 7
         /**
-         * Geocentric Celestial Reference Frame
+         * Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
          */
         const val GCRF: Byte = 8
         /**
-         * Greenwich Rotating Coordinates
+         * Greenwich Rotating Coordinates: Rotates with Earth's true equator.
          */
         const val GRC: Byte = 9
         /**
-         * International Terrestrial Reference Frame 2000
+         * International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
          */
         const val ITRF2000: Byte = 10
         /**
-         * International Terrestrial Reference Frame 1993
+         * International Terrestrial Reference Frame 1993: Older ITRF realization.
          */
         const val ITRF93: Byte = 11
         /**
-         * International Terrestrial Reference Frame 1997
+         * International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
          */
         const val ITRF97: Byte = 12
         /**
-         * True of Date, Rotating
+         * True of Date, Rotating: Rotates with Earth's true equator.
          */
         const val TDR: Byte = 13
         /**
-         * True of Date
+         * True of Date: Similar to TDR, without rotation.
          */
         const val TOD: Byte = 14
         /**
-         * Radial, Transverse, Normal
+         * Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
          */
         const val RTN: Byte = 15
         /**
-         * Transverse, Velocity, Normal
+         * Transverse, Velocity, Normal: Alternative orbit frame.
          */
         const val TVN: Byte = 16
         /**
-         * Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
+         * Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
          */
         const val VVLH: Byte = 17
         /**
-         * Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
+         * Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
          */
         const val VLVH: Byte = 18
         /**
-         * Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
+         * Local Tangent Plane: Surface-fixed frame for terrestrial uses.
          */
         const val LTP: Byte = 19
         /**
-         * Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
+         * Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
          */
         const val LVLH: Byte = 20
         /**
-         * Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
+         * Polar-North-East: Polar coordinate frame.
          */
         const val PNE: Byte = 21
         /**
-         * Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
+         * Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
          */
         const val BRF: Byte = 22
         /**
-         * Another name for 'Radial, Transverse, Normal'
+         * Radial, Down-track, Cross-track: Alternate name for RTN.
          */
         const val RSW: Byte = 23
         /**
-         * A local orbital coordinate frame
+         * Tangential, Normal, Cross-track: Local orbit frame.
          */
         const val TNW: Byte = 24
         /**
-         * Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+         * Radial, Along-track, Cross-track: Satellite motion frame.
          */
         const val UVW: Byte = 25
+        /**
+         * Equinoctial Inertial: Frame with axes aligned to orbital properties.
+         */
+        const val EQW_INERTIAL: Byte = 26
+        /**
+         * Inertial version of LVLH.
+         */
+        const val LVLH_INERTIAL: Byte = 27
+        /**
+         * Rotating LVLH frame.
+         */
+        const val LVLH_ROTATING: Byte = 28
+        /**
+         * Inertial Nadir-Sun-Normal frame.
+         */
+        const val NSW_INERTIAL: Byte = 29
+        /**
+         * Rotating Nadir-Sun-Normal frame.
+         */
+        const val NSW_ROTATING: Byte = 30
+        /**
+         * Inertial Transverse-Velocity-Normal frame.
+         */
+        const val NTW_INERTIAL: Byte = 31
+        /**
+         * Rotating Transverse-Velocity-Normal frame.
+         */
+        const val NTW_ROTATING: Byte = 32
+        /**
+         * Perifocal Coordinate System: Inertial frame aligned to periapsis.
+         */
+        const val PQW_INERTIAL: Byte = 33
+        /**
+         * Inertial Radial, Transverse, Normal frame.
+         */
+        const val RSW_INERTIAL: Byte = 34
+        /**
+         * Rotating RSW frame: Aligned with orbit angular momentum.
+         */
+        const val RSW_ROTATING: Byte = 35
+        /**
+         * South/East/Zenith inertial frame.
+         */
+        const val SEZ_INERTIAL: Byte = 36
+        /**
+         * Rotating South/East/Zenith frame.
+         */
+        const val SEZ_ROTATING: Byte = 37
+        /**
+         * Inertial Tangential, Normal, Cross-track frame.
+         */
+        const val TNW_INERTIAL: Byte = 38
+        /**
+         * Rotating Tangential, Normal, Cross-track frame.
+         */
+        const val TNW_ROTATING: Byte = 39
+        /**
+         * Velocity, Normal, Co-normal inertial frame.
+         */
+        const val VNC_INERTIAL: Byte = 40
+        /**
+         * Rotating Velocity, Normal, Co-normal frame.
+         */
+        const val VNC_ROTATING: Byte = 41
+        /**
+         * Central Body alignment inertial frame.
+         */
+        const val ALIGN_CB: Byte = 42
+        /**
+         * Earth alignment inertial frame.
+         */
+        const val ALIGN_EARTH: Byte = 43
+        /**
+         * Inertial realization of B1950 epoch.
+         */
+        const val B1950: Byte = 44
+        /**
+         * Celestial Intermediate Reference System.
+         */
+        const val CIRS: Byte = 45
+        /**
+         * DTRF Inertial frame with corrections.
+         */
+        const val DTRFyyyy: Byte = 46
+        /**
+         * Earth-Fixed Greenwich rotating frame.
+         */
+        const val EFG: Byte = 47
+        /**
+         * Earth Mean Equator and Equinox of 2000 epoch.
+         */
+        const val EME2000: Byte = 48
+        /**
+         * Central Body fixed rotating frame.
+         */
+        const val FIXED_CB: Byte = 49
+        /**
+         * Earth-fixed rotating frame.
+         */
+        const val FIXED_EARTH: Byte = 50
+        /**
+         * Geocentric Celestial Reference Frame with versioning.
+         */
+        const val GCRFn: Byte = 51
+        /**
+         * Greenwich True-of-Date rotating frame.
+         */
+        const val GTOD: Byte = 52
+        /**
+         * Mean of Date for all central bodies except Earth and Moon.
+         */
+        const val MOD_CB: Byte = 53
+        /**
+         * Mean of Date for Earth.
+         */
+        const val MOD_EARTH: Byte = 54
+        /**
+         * Mean of Date for Moon.
+         */
+        const val MOD_MOON: Byte = 55
+        /**
+         * Mean of Epoch for central bodies.
+         */
+        const val MOE_CB: Byte = 56
+        /**
+         * Mean of Epoch for Earth.
+         */
+        const val MOE_EARTH: Byte = 57
+        /**
+         * Lunar Moon Mean Earth reference frame.
+         */
+        const val MOON_ME: Byte = 58
+        /**
+         * Lunar Mean Equator and IAU Node reference frame.
+         */
+        const val MOON_MEIAUE: Byte = 59
+        /**
+         * Lunar Principal Axis rotating frame.
+         */
+        const val MOON_PAxxx: Byte = 60
+        /**
+         * True Equator Mean Equinox of Date.
+         */
+        const val TEMEOFDATE: Byte = 61
+        /**
+         * True Equator Mean Equinox of Epoch.
+         */
+        const val TEMEOFEPOCH: Byte = 62
+        /**
+         * Terrestrial Intermediate Reference System.
+         */
+        const val TIRS: Byte = 63
+        /**
+         * True of Date for central bodies.
+         */
+        const val TOD_CB: Byte = 64
+        /**
+         * True of Date for Earth.
+         */
+        const val TOD_EARTH: Byte = 65
+        /**
+         * True of Date for Moon.
+         */
+        const val TOD_MOON: Byte = 66
+        /**
+         * True of Epoch for central bodies.
+         */
+        const val TOE_CB: Byte = 67
+        /**
+         * True of Epoch for Earth.
+         */
+        const val TOE_EARTH: Byte = 68
+        /**
+         * True of Epoch for Moon.
+         */
+        const val TOE_MOON: Byte = 69
+        /**
+         * True Ecliptic reference frame.
+         */
+        const val TRUE_ECLIPTIC: Byte = 70
+        /**
+         * Launch go-inertial reference frame.
+         */
+        const val UVW_GO_INERTIAL: Byte = 71
+        /**
+         * WGS 84 Earth-fixed terrestrial system.
+         */
+        const val WGS84: Byte = 72
+        /**
+         * Accelerometer reference frame.
+         */
+        const val ACC_i: Byte = 73
+        /**
+         * Actuator reference frame.
+         */
+        const val ACTUATOR_i: Byte = 74
+        /**
+         * Autonomous Star Tracker reference frame.
+         */
+        const val AST_i: Byte = 75
+        /**
+         * Coarse Sun Sensor reference frame.
+         */
+        const val CSS_i: Byte = 76
+        /**
+         * Digital Sun Sensor reference frame.
+         */
+        const val DSS_i: Byte = 77
+        /**
+         * Earth Sensor Assembly reference frame.
+         */
+        const val ESA_i: Byte = 78
+        /**
+         * Gyro reference frame.
+         */
+        const val GYRO_FRAME_i: Byte = 79
+        /**
+         * Inertial Measurement Unit reference frame.
+         */
+        const val IMU_FRAME_i: Byte = 80
+        /**
+         * Instrument reference frame.
+         */
+        const val INSTRUMENT_i: Byte = 81
+        /**
+         * Magnetic Torque Assembly reference frame.
+         */
+        const val MTA_i: Byte = 82
+        /**
+         * Reaction Wheel reference frame.
+         */
+        const val RW_i: Byte = 83
+        /**
+         * Solar Array reference frame.
+         */
+        const val SA_i: Byte = 84
+        /**
+         * Spacecraft Body reference frame.
+         */
+        const val SC_BODY_i: Byte = 85
+        /**
+         * Sensor reference frame.
+         */
+        const val SENSOR_i: Byte = 86
+        /**
+         * Star Tracker reference frame.
+         */
+        const val STARTRACKER_i: Byte = 87
+        /**
+         * Three Axis Magnetometer reference frame.
+         */
+        const val TAM_i: Byte = 88
     }
 }

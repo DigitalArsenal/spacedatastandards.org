@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Collection of Reference Frame Messages
 type RFMCOLLECTION struct {
 	_tab flatbuffers.Table
 }

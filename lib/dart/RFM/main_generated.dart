@@ -21,86 +21,275 @@ class RefFrame {
       value == null ? null : RefFrame.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 25;
+  static const int maxValue = 88;
   static bool containsValue(int value) => values.containsKey(value);
 
-  ///  Earth-Centered-Earth-Fixed (ECEF) frame: Rotates with Earth. Origin at Earth's center. X-axis towards prime meridian, Y-axis eastward, Z-axis towards North Pole. Ideal for terrestrial points.
+  ///  Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
   static const RefFrame ECEF = RefFrame._(0);
 
-  ///  International Celestial Reference Frame (ICRF): An inertial frame fixed relative to distant stars. Based on quasars. Used for precision astronomy and unaffected by Earth's rotation.
+  ///  International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
   static const RefFrame ICRF = RefFrame._(1);
 
-  ///  True Equator Mean Equinox (TEME): Used in SGP4 model for satellite tracking. Accounts for Earth's precession and nutation. Dynamic frame useful for orbit prediction.
+  ///  True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
   static const RefFrame TEME = RefFrame._(2);
 
-  ///  East-North-Up (ENU): Local tangent plane system for surface points. "East" eastward, "North" northward, "Up" perpendicular to Earth's surface. Suited for stationary or slow-moving objects at low altitudes.
+  ///  East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
   static const RefFrame ENU = RefFrame._(3);
 
-  ///  North-East-Down (NED): Common in aviation and navigation. "North" northward, "East" eastward, "Down" towards Earth's center. Aligns with gravity, intuitive for aircraft and vehicles.
+  ///  North-East-Down: Aviation/navigation frame aligned with gravity.
   static const RefFrame NED = RefFrame._(4);
 
-  ///  North-East-Up (NEU): Similar to NED but "Up" axis is opposite to gravity. Suited for applications preferring a conventional "Up" direction.
+  ///  North-East-Up: Similar to NED, with "Up" opposite gravity.
   static const RefFrame NEU = RefFrame._(5);
 
-  ///  Radial-Intrack-Cross-track (RIC): Aligned with spacecraft's UVW system. "Radial" axis towards spacecraft, "In-track" perpendicular to radial and cross-track, "Cross-track" normal to orbit plane. Used for spacecraft orientation and tracking.
+  ///  Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
   static const RefFrame RIC = RefFrame._(6);
 
-  ///  Earth Mean Equator and Equinox of J2000 (J2000): An Earth-Centered Inertial (ECI) frame defined by Earth's mean equator and equinox at the start of the year 2000. Fixed relative to distant stars, used for celestial mechanics and space navigation.
+  ///  Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
   static const RefFrame J2000 = RefFrame._(7);
 
-  ///  Geocentric Celestial Reference Frame
+  ///  Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
   static const RefFrame GCRF = RefFrame._(8);
 
-  ///  Greenwich Rotating Coordinates
+  ///  Greenwich Rotating Coordinates: Rotates with Earth's true equator.
   static const RefFrame GRC = RefFrame._(9);
 
-  ///  International Terrestrial Reference Frame 2000
+  ///  International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
   static const RefFrame ITRF2000 = RefFrame._(10);
 
-  ///  International Terrestrial Reference Frame 1993
+  ///  International Terrestrial Reference Frame 1993: Older ITRF realization.
   static const RefFrame ITRF93 = RefFrame._(11);
 
-  ///  International Terrestrial Reference Frame 1997
+  ///  International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
   static const RefFrame ITRF97 = RefFrame._(12);
 
-  ///  True of Date, Rotating
+  ///  True of Date, Rotating: Rotates with Earth's true equator.
   static const RefFrame TDR = RefFrame._(13);
 
-  ///  True of Date
+  ///  True of Date: Similar to TDR, without rotation.
   static const RefFrame TOD = RefFrame._(14);
 
-  ///  Radial, Transverse, Normal
+  ///  Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
   static const RefFrame RTN = RefFrame._(15);
 
-  ///  Transverse, Velocity, Normal
+  ///  Transverse, Velocity, Normal: Alternative orbit frame.
   static const RefFrame TVN = RefFrame._(16);
 
-  ///  Vehicle-Body-Local-Horizontal (VVLH): An orbit reference frame with X-axis pointing from the center of the central body to the vehicle, Z-axis oppoOBSERVER to the orbital angular momentum vector, and Y-axis completing the right-handed system.
+  ///  Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   static const RefFrame VVLH = RefFrame._(17);
 
-  ///  Vehicle-Local-Vertical-Local-Horizontal (VLVH): An orbit reference frame similar to VVLH, often used in close proximity operations or surface-oriented missions.
+  ///  Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
   static const RefFrame VLVH = RefFrame._(18);
 
-  ///  Local Tangent Plane (LTP): A local, surface-fixed reference frame often used for terrestrial applications, aligned with the local horizon.
+  ///  Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   static const RefFrame LTP = RefFrame._(19);
 
-  ///  Local Vertical-Local Horizontal (LVLH): An orbit reference frame with the Z-axis pointing towards the center of the central body (oppoOBSERVER to local vertical), the X-axis in the velocity direction (local horizontal), and the Y-axis completing the right-hand system.
+  ///  Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
   static const RefFrame LVLH = RefFrame._(20);
 
-  ///  Polar-North-East (PNE): A variation of local coordinate systems typically used in polar regions, with axes aligned toward the geographic North Pole, Eastward, and perpendicular to the Earth's surface.
+  ///  Polar-North-East: Polar coordinate frame.
   static const RefFrame PNE = RefFrame._(21);
 
-  ///  Body-Fixed Reference Frame (BRF): A reference frame fixed to the body of a spacecraft or celestial object, oriented according to the body's principal axes.
+  ///  Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
   static const RefFrame BRF = RefFrame._(22);
 
-  ///  Another name for 'Radial, Transverse, Normal'
+  ///  Radial, Down-track, Cross-track: Alternate name for RTN.
   static const RefFrame RSW = RefFrame._(23);
 
-  ///  A local orbital coordinate frame
+  ///  Tangential, Normal, Cross-track: Local orbit frame.
   static const RefFrame TNW = RefFrame._(24);
 
-  ///  Radial, Intrack, Cross-track (UVW): An orbital frame used to describe the motion of a satellite relative to its orbit, with axes aligned radially, along-track, and cross-track.
+  ///  Radial, Along-track, Cross-track: Satellite motion frame.
   static const RefFrame UVW = RefFrame._(25);
+
+  ///  Equinoctial Inertial: Frame with axes aligned to orbital properties.
+  static const RefFrame EQW_INERTIAL = RefFrame._(26);
+
+  ///  Inertial version of LVLH.
+  static const RefFrame LVLH_INERTIAL = RefFrame._(27);
+
+  ///  Rotating LVLH frame.
+  static const RefFrame LVLH_ROTATING = RefFrame._(28);
+
+  ///  Inertial Nadir-Sun-Normal frame.
+  static const RefFrame NSW_INERTIAL = RefFrame._(29);
+
+  ///  Rotating Nadir-Sun-Normal frame.
+  static const RefFrame NSW_ROTATING = RefFrame._(30);
+
+  ///  Inertial Transverse-Velocity-Normal frame.
+  static const RefFrame NTW_INERTIAL = RefFrame._(31);
+
+  ///  Rotating Transverse-Velocity-Normal frame.
+  static const RefFrame NTW_ROTATING = RefFrame._(32);
+
+  ///  Perifocal Coordinate System: Inertial frame aligned to periapsis.
+  static const RefFrame PQW_INERTIAL = RefFrame._(33);
+
+  ///  Inertial Radial, Transverse, Normal frame.
+  static const RefFrame RSW_INERTIAL = RefFrame._(34);
+
+  ///  Rotating RSW frame: Aligned with orbit angular momentum.
+  static const RefFrame RSW_ROTATING = RefFrame._(35);
+
+  ///  South/East/Zenith inertial frame.
+  static const RefFrame SEZ_INERTIAL = RefFrame._(36);
+
+  ///  Rotating South/East/Zenith frame.
+  static const RefFrame SEZ_ROTATING = RefFrame._(37);
+
+  ///  Inertial Tangential, Normal, Cross-track frame.
+  static const RefFrame TNW_INERTIAL = RefFrame._(38);
+
+  ///  Rotating Tangential, Normal, Cross-track frame.
+  static const RefFrame TNW_ROTATING = RefFrame._(39);
+
+  ///  Velocity, Normal, Co-normal inertial frame.
+  static const RefFrame VNC_INERTIAL = RefFrame._(40);
+
+  ///  Rotating Velocity, Normal, Co-normal frame.
+  static const RefFrame VNC_ROTATING = RefFrame._(41);
+
+  ///  Central Body alignment inertial frame.
+  static const RefFrame ALIGN_CB = RefFrame._(42);
+
+  ///  Earth alignment inertial frame.
+  static const RefFrame ALIGN_EARTH = RefFrame._(43);
+
+  ///  Inertial realization of B1950 epoch.
+  static const RefFrame B1950 = RefFrame._(44);
+
+  ///  Celestial Intermediate Reference System.
+  static const RefFrame CIRS = RefFrame._(45);
+
+  ///  DTRF Inertial frame with corrections.
+  static const RefFrame DTRFyyyy = RefFrame._(46);
+
+  ///  Earth-Fixed Greenwich rotating frame.
+  static const RefFrame EFG = RefFrame._(47);
+
+  ///  Earth Mean Equator and Equinox of 2000 epoch.
+  static const RefFrame EME2000 = RefFrame._(48);
+
+  ///  Central Body fixed rotating frame.
+  static const RefFrame FIXED_CB = RefFrame._(49);
+
+  ///  Earth-fixed rotating frame.
+  static const RefFrame FIXED_EARTH = RefFrame._(50);
+
+  ///  Geocentric Celestial Reference Frame with versioning.
+  static const RefFrame GCRFn = RefFrame._(51);
+
+  ///  Greenwich True-of-Date rotating frame.
+  static const RefFrame GTOD = RefFrame._(52);
+
+  ///  Mean of Date for all central bodies except Earth and Moon.
+  static const RefFrame MOD_CB = RefFrame._(53);
+
+  ///  Mean of Date for Earth.
+  static const RefFrame MOD_EARTH = RefFrame._(54);
+
+  ///  Mean of Date for Moon.
+  static const RefFrame MOD_MOON = RefFrame._(55);
+
+  ///  Mean of Epoch for central bodies.
+  static const RefFrame MOE_CB = RefFrame._(56);
+
+  ///  Mean of Epoch for Earth.
+  static const RefFrame MOE_EARTH = RefFrame._(57);
+
+  ///  Lunar Moon Mean Earth reference frame.
+  static const RefFrame MOON_ME = RefFrame._(58);
+
+  ///  Lunar Mean Equator and IAU Node reference frame.
+  static const RefFrame MOON_MEIAUE = RefFrame._(59);
+
+  ///  Lunar Principal Axis rotating frame.
+  static const RefFrame MOON_PAxxx = RefFrame._(60);
+
+  ///  True Equator Mean Equinox of Date.
+  static const RefFrame TEMEOFDATE = RefFrame._(61);
+
+  ///  True Equator Mean Equinox of Epoch.
+  static const RefFrame TEMEOFEPOCH = RefFrame._(62);
+
+  ///  Terrestrial Intermediate Reference System.
+  static const RefFrame TIRS = RefFrame._(63);
+
+  ///  True of Date for central bodies.
+  static const RefFrame TOD_CB = RefFrame._(64);
+
+  ///  True of Date for Earth.
+  static const RefFrame TOD_EARTH = RefFrame._(65);
+
+  ///  True of Date for Moon.
+  static const RefFrame TOD_MOON = RefFrame._(66);
+
+  ///  True of Epoch for central bodies.
+  static const RefFrame TOE_CB = RefFrame._(67);
+
+  ///  True of Epoch for Earth.
+  static const RefFrame TOE_EARTH = RefFrame._(68);
+
+  ///  True of Epoch for Moon.
+  static const RefFrame TOE_MOON = RefFrame._(69);
+
+  ///  True Ecliptic reference frame.
+  static const RefFrame TRUE_ECLIPTIC = RefFrame._(70);
+
+  ///  Launch go-inertial reference frame.
+  static const RefFrame UVW_GO_INERTIAL = RefFrame._(71);
+
+  ///  WGS 84 Earth-fixed terrestrial system.
+  static const RefFrame WGS84 = RefFrame._(72);
+
+  ///  Accelerometer reference frame.
+  static const RefFrame ACC_i = RefFrame._(73);
+
+  ///  Actuator reference frame.
+  static const RefFrame ACTUATOR_i = RefFrame._(74);
+
+  ///  Autonomous Star Tracker reference frame.
+  static const RefFrame AST_i = RefFrame._(75);
+
+  ///  Coarse Sun Sensor reference frame.
+  static const RefFrame CSS_i = RefFrame._(76);
+
+  ///  Digital Sun Sensor reference frame.
+  static const RefFrame DSS_i = RefFrame._(77);
+
+  ///  Earth Sensor Assembly reference frame.
+  static const RefFrame ESA_i = RefFrame._(78);
+
+  ///  Gyro reference frame.
+  static const RefFrame GYRO_FRAME_i = RefFrame._(79);
+
+  ///  Inertial Measurement Unit reference frame.
+  static const RefFrame IMU_FRAME_i = RefFrame._(80);
+
+  ///  Instrument reference frame.
+  static const RefFrame INSTRUMENT_i = RefFrame._(81);
+
+  ///  Magnetic Torque Assembly reference frame.
+  static const RefFrame MTA_i = RefFrame._(82);
+
+  ///  Reaction Wheel reference frame.
+  static const RefFrame RW_i = RefFrame._(83);
+
+  ///  Solar Array reference frame.
+  static const RefFrame SA_i = RefFrame._(84);
+
+  ///  Spacecraft Body reference frame.
+  static const RefFrame SC_BODY_i = RefFrame._(85);
+
+  ///  Sensor reference frame.
+  static const RefFrame SENSOR_i = RefFrame._(86);
+
+  ///  Star Tracker reference frame.
+  static const RefFrame STARTRACKER_i = RefFrame._(87);
+
+  ///  Three Axis Magnetometer reference frame.
+  static const RefFrame TAM_i = RefFrame._(88);
   static const Map<int, RefFrame> values = {
     0: ECEF,
     1: ICRF,
@@ -127,7 +316,70 @@ class RefFrame {
     22: BRF,
     23: RSW,
     24: TNW,
-    25: UVW};
+    25: UVW,
+    26: EQW_INERTIAL,
+    27: LVLH_INERTIAL,
+    28: LVLH_ROTATING,
+    29: NSW_INERTIAL,
+    30: NSW_ROTATING,
+    31: NTW_INERTIAL,
+    32: NTW_ROTATING,
+    33: PQW_INERTIAL,
+    34: RSW_INERTIAL,
+    35: RSW_ROTATING,
+    36: SEZ_INERTIAL,
+    37: SEZ_ROTATING,
+    38: TNW_INERTIAL,
+    39: TNW_ROTATING,
+    40: VNC_INERTIAL,
+    41: VNC_ROTATING,
+    42: ALIGN_CB,
+    43: ALIGN_EARTH,
+    44: B1950,
+    45: CIRS,
+    46: DTRFyyyy,
+    47: EFG,
+    48: EME2000,
+    49: FIXED_CB,
+    50: FIXED_EARTH,
+    51: GCRFn,
+    52: GTOD,
+    53: MOD_CB,
+    54: MOD_EARTH,
+    55: MOD_MOON,
+    56: MOE_CB,
+    57: MOE_EARTH,
+    58: MOON_ME,
+    59: MOON_MEIAUE,
+    60: MOON_PAxxx,
+    61: TEMEOFDATE,
+    62: TEMEOFEPOCH,
+    63: TIRS,
+    64: TOD_CB,
+    65: TOD_EARTH,
+    66: TOD_MOON,
+    67: TOE_CB,
+    68: TOE_EARTH,
+    69: TOE_MOON,
+    70: TRUE_ECLIPTIC,
+    71: UVW_GO_INERTIAL,
+    72: WGS84,
+    73: ACC_i,
+    74: ACTUATOR_i,
+    75: AST_i,
+    76: CSS_i,
+    77: DSS_i,
+    78: ESA_i,
+    79: GYRO_FRAME_i,
+    80: IMU_FRAME_i,
+    81: INSTRUMENT_i,
+    82: MTA_i,
+    83: RW_i,
+    84: SA_i,
+    85: SC_BODY_i,
+    86: SENSOR_i,
+    87: STARTRACKER_i,
+    88: TAM_i};
 
   static const fb.Reader<RefFrame> reader = _RefFrameReader();
 
@@ -220,6 +472,7 @@ class RFMObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Collection of Reference Frame Messages
 class RFMCOLLECTION {
   RFMCOLLECTION._(this._bc, this._bcOffset);
   factory RFMCOLLECTION(List<int> bytes) {

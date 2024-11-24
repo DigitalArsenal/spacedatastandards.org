@@ -17,6 +17,9 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * Collection of Reference Frame Messages
+ */
 @SuppressWarnings("unused")
 public final class RFMCOLLECTION extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }

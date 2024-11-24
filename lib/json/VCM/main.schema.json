@@ -3,7 +3,7 @@
   "definitions": {
     "refFrame" : {
       "type" : "string",
-      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW", "EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING", "ALIGN_CB", "ALIGN_EARTH", "B1950", "CIRS", "DTRFyyyy", "EFG", "EME2000", "FIXED_CB", "FIXED_EARTH", "GCRFn", "GTOD", "MOD_CB", "MOD_EARTH", "MOD_MOON", "MOE_CB", "MOE_EARTH", "MOON_ME", "MOON_MEIAUE", "MOON_PAxxx", "TEMEOFDATE", "TEMEOFEPOCH", "TIRS", "TOD_CB", "TOD_EARTH", "TOD_MOON", "TOE_CB", "TOE_EARTH", "TOE_MOON", "TRUE_ECLIPTIC", "UVW_GO_INERTIAL", "WGS84", "ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
     },
     "timeSystem" : {
       "type" : "string",
@@ -69,6 +69,7 @@
     },
     "RFMCOLLECTION" : {
       "type" : "object",
+      "description" : "Collection of Reference Frame Messages",
       "properties" : {
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}

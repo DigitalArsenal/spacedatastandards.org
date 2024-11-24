@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Collection of Reference Frame Messages
+ */
 @Suppress("unused")
 class RFMCOLLECTION : Table() {
 
