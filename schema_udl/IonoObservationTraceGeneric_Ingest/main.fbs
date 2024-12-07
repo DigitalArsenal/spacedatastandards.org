@@ -1,0 +1,15 @@
+/// Multi dimensional array of trace generic data.
+table IonoObservationTraceGeneric_Ingest {
+    /// Multi-dimensional Array. The 1st dimension spans points along the trace while the 2nd dimension spans frequency-range pairs.
+    /// Example: [[[1.23, 1.0903]]]
+    /// Constraints: No constraints specified.
+    data: [string];
+    /// Array of dimension names for trace generic data.
+    /// Example: ['NAME1', 'NAME2']
+    /// Constraints: No constraints specified.
+    dimensionName: [string];
+    /// Notes for the trace generic data.
+    /// Example: NOTES
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    notes: string;
+}

@@ -1,0 +1,107 @@
+/// Transportation plans associated with this LogisticsSupport record, used to coordinate maintenance efforts.
+table LogisticsTransportationPlans_Ingest {
+    /// System generated reference id for the transportation plan.  Format: TXXXXXNNNN  T - Transportation, Sequence Number, Node Id.
+    /// Example: T89002
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    plansNumber: string;
+    /// Indicates whether there have been changes to changes to ICAOs, estArrTime, or estDepTime since this Transportation Plan was last edited.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    missionChange: bool;
+    /// Defines the transporation plan as either a deployment or redeployment.
+    /// Example: DEPLOY
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    planDefinition: string;
+    /// Transporation Coordination status code. Cancel, Send to APCC, working, agree, disapprove or blank.
+    /// Example: N
+    /// Constraints: Minimum length = 1, Maximum length = 1
+    statusCode: string;
+    /// The AMS username of the operator who alters the coordination status.  Automatically captured by the system.
+    /// Example: SMITH, JOHN
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    coordinator: string;
+    /// The AMS user unit_id of the operator who alters the coordination status.  Automatically captured by the system from table AMS_USER.
+    /// Example: TACC
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    coordinatorUnit: string;
+    /// The origin location.
+    /// Example: KATL
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    originICAO: string;
+    /// ETD of the first segment, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-15T14:25:00.123Z
+    /// Constraints: No constraints specified.
+    estDepTime: string;
+    /// ETA of the final segment, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-15T14:25:00.123Z
+    /// Constraints: No constraints specified.
+    estArrTime: string;
+    /// Destination location ICAO.
+    /// Example: YBCS
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    destinationICAO: string;
+    /// The identifier that represents a Logistics Master Record.
+    /// Example: L62126
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    logisticMasterRecordId: string;
+    /// Contains the tail number displayed by GDSS2.
+    /// Example: 99209
+    /// Constraints: Minimum length = 0, Maximum length = 7
+    tpTailNumber: string;
+    /// The aircraft Model Design Series (MDS) designation (e.g. E-2C HAWKEYE, F-15 EAGLE, KC-130 HERCULES, etc.) of this aircraft. Intended as, but not constrained to, MIL-STD-6016 environment dependent specific type designations.
+    /// Example: C17A
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    tpAircraftMDS: string;
+    /// The major command for the current unit.
+    /// Example: HQAMC
+    /// Constraints: Minimum length = 0, Maximum length = 250
+    majcom: string;
+    /// Approximate time of arrival of final segement, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-14T20:37:00.123Z
+    /// Constraints: No constraints specified.
+    approxArrTime: string;
+    /// Transportation plan duration, expressed in the format MMM:SS.
+    /// Example: 086:20
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    duration: string;
+    /// Actual time of departure of first segment, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-14T19:37:00.123Z
+    /// Constraints: No constraints specified.
+    actDepTime: string;
+    /// GC. LGTP_CLSD_DT.  GD2:  Date when the transportation plan was closed, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-14T20:37:00.123Z
+    /// Constraints: No constraints specified.
+    closedDate: string;
+    /// GC. LGTP_CANX_DT.  GD2: Date when the transportation plan was cancelled, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-14T20:37:00.123Z
+    /// Constraints: No constraints specified.
+    cancelledDate: string;
+    /// These are the initial maintenance values entered based on the pilot descriptions or the official maintenance evaluation code.
+    /// Example: NMCMU
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    aircraftStatus: string;
+    /// Transportation plan enroute stops.
+    /// Example: 4
+    /// Constraints: No constraints specified.
+    numEnrouteStops: int32;
+    /// GDSS2 uses an 8 character serial number to uniquely identify the aircraft and MDS combination. This is a portion of the full manufacturer serial number.
+    /// Example: 9009209
+    /// Constraints: Minimum length = 0, Maximum length = 30
+    serialNumber: string;
+    /// The number of transloads for this Transportation Plan.
+    /// Example: 3
+    /// Constraints: No constraints specified.
+    numTransLoads: int32;
+    /// Last time transportation plan was updated, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-14T20:37:00.123Z
+    /// Constraints: No constraints specified.
+    lastChangedDate: string;
+    /// The transportation segments associated with this transportation plan.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    logisticsSegments: [string];
+    /// Remarks associated with this transportation plan.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    logisticsTransportationPlansRemarks: [string];
+}

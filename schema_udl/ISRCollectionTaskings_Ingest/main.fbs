@@ -1,0 +1,137 @@
+/// Individual taskings to complete the mission.
+table ISRCollectionTaskings_Ingest {
+    /// Tasking Unique Identifier.
+    /// Example: ISRCOLLECTIONTASKINGS-ID
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    id: string;
+    /// Type of tasking.
+    /// Example: Deliberate
+    /// Constraints: Minimum length = 1, Maximum length = 16
+    type: ISRCollectionTaskings_Ingest_type_Enum;
+    /// Type of collection tasked.
+    /// Example: Simultaneous
+    /// Constraints: Minimum length = 1, Maximum length = 16
+    collectionType: ISRCollectionTaskings_Ingest_collectionType_Enum;
+    /// Human readable definition of this taskings Area Of Responsibility.
+    /// Example: Kandahar
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingAOR: string;
+    /// Eight line.
+    /// Example: No example provided.
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    eightLine: string;
+    /// Primary type of intelligence to be collected during the mission.
+    /// Example: Sig
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingPrimaryIntelDiscipline: string;
+    /// Sub category of primary intelligence to be collected.
+    /// Example: FMV
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingPrimarySubCategory: string;
+    /// Type of tasking intelligence to be collected second.
+    /// Example: Intelligence_2
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingSecondaryIntelDiscipline: string;
+    /// Mission sub category for secondary intelligence discipline to be collected.
+    /// Example: Convoy
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingSecondarySubCategory: string;
+    /// What is the primary objective(Role) of this task.
+    /// Example: Provide Targeting of Lead Vehicle
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingRole: string;
+    /// Tasking operation name.
+    /// Example: OP-HONEY-BADGER
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingOperation: string;
+    /// Tasking Priority (1-n).
+    /// Example: 10.23
+    /// Constraints: No constraints specified.
+    taskingPriority: double;
+    /// Military Base to transmit the dissemination of this data.
+    /// Example: ENVOYS
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingSupportedUnit: string;
+    /// Tasking emphasis.
+    /// Example: EMPHASIS
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingEmphasis: string;
+    /// Time of retasking, in ISO 8601 UTC format.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    taskingRetaskTime: string;
+    /// WGS-84 latitude of the start position, in degrees. -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.23
+    /// Constraints: No constraints specified.
+    taskingStartPointLat: double;
+    /// WGS-84 longitude of the start position, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).
+    /// Example: 45.23
+    /// Constraints: No constraints specified.
+    taskingStartPointLong: double;
+    /// Tasking geographical collection area.
+    /// Example: AREA
+    /// Constraints: No constraints specified.
+    taskingCollectionArea: string;
+    /// Joint Operations Area.
+    /// Example: AREA
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingJoa: string;
+    /// A synchronization matrix is used to organize the logistics synchronization process during a mission.
+    /// Example: MATRIX
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingSyncMatrixBin: string;
+    /// Country code of the tasking.  A Country may represent countries, multi-national consortiums, and international organizations.
+    /// Example: CODE
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    taskingCountry: string;
+    /// Region of the tasking.
+    /// Example: REGION
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingRegion: string;
+    /// Subregion of the tasking.
+    /// Example: SUBREGION
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    taskingSubRegion: string;
+    /// Value of the Sensitive Reconnaissance Operations Track.
+    /// Example: SRO
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    sroTrack: string;
+    /// Free text field for the user to specify special instructions needed for this collection.
+    /// Example: TEXT
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    specialComGuidance: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    collectionPeriods: string;
+    /// Tasking desired collection requirements.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    taskingCollectionRequirements: [string];
+}
+enum ISRCollectionTaskings_Ingest_type_Enum : byte {
+    /// No description available.
+    Deliberate,
+    /// No description available.
+    Dynamic,
+    /// No description available.
+    Training,
+    /// No description available.
+    Transit
+}
+
+enum ISRCollectionTaskings_Ingest_collectionType_Enum : byte {
+    /// No description available.
+    Simultaneous,
+    /// No description available.
+    Sequential,
+    /// No description available.
+    Operationally,
+    /// No description available.
+    Driven,
+    /// No description available.
+    Priority,
+    /// No description available.
+    Order
+}
+

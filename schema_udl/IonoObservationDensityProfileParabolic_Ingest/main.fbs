@@ -1,0 +1,11 @@
+/// Coefficients to describe the E, F1, and F2 layers as parabolic-shape segments.
+table IonoObservationDensityProfileParabolic_Ingest {
+    /// General description of the QP computation algorithm.
+    /// Example: Best-fit algorithm in NHPC software.
+    /// Constraints: No constraints specified.
+    description: string;
+    /// Describes the E, F1, and F2 layers as parabolic-shape segments.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    parabolicItems: [string];
+}

@@ -1,0 +1,15 @@
+/// Minimum and maximum altitude bounds for the track.
+table AltitudeBlocks_Abridged {
+    /// Sequencing field for the altitude block.
+    /// Example: A1
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    altitudeSequenceId: string;
+    /// Lowest altitude of the track route altitude block above mean sea level in feet.
+    /// Example: 27000.1
+    /// Constraints: No constraints specified.
+    lowerAltitude: double;
+    /// Highest altitude of the track route altitude block above mean sea level in feet.
+    /// Example: 27200.5
+    /// Constraints: No constraints specified.
+    upperAltitude: double;
+}

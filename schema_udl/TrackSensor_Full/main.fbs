@@ -1,0 +1,44 @@
+/// Schema for Track Sensor data.
+table TrackSensor_Full {
+    /// The track object range from the observing sensor, in kilometers.
+    /// Example: 4023.95
+    /// Constraints: No constraints specified.
+    range: double;
+    /// The observing sensor azimuth angle, in degrees and topocentric frame.
+    /// Example: 90
+    /// Constraints: No constraints specified.
+    az: double;
+    /// Number assigned to this sensor. Since there is no authoritative numbering scheme, these numbers sometimes collide across sensors (especially commercial sensors). It is therefore not a unique identifier.
+    /// Example: 1234
+    /// Constraints: No constraints specified.
+    sensorNumber: int32;
+    /// Unique name of this sensor.
+    /// Example: SENSOR_NAME
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    sensorName: string;
+    /// The mission number which produced this track observation.
+    /// Example: Example Mission
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    missionNumber: string;
+    /// Minimum range measurement capability of the sensor, in kilometers.
+    /// Example: 20.23
+    /// Constraints: No constraints specified.
+    minRangeLimit: double;
+    /// The field of view (FOV) type (Butterfly, Cone Angular, Cone Distance, Horizon to Horizon, Unknown) employed by the sensor observing this object.
+    /// Example: UNKNOWN
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    sensorFOVType: TrackSensor_Full_sensorFOVType_Enum;
+}
+enum TrackSensor_Full_sensorFOVType_Enum : byte {
+    /// No description available.
+    BUTTERFLY,
+    /// No description available.
+    CONE ANGULAR,
+    /// No description available.
+    CONE DISTANCE,
+    /// No description available.
+    HORIZON TO HORIZON,
+    /// No description available.
+    UNKNOWN
+}
+

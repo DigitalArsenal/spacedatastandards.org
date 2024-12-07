@@ -1,0 +1,26 @@
+/// Multidimensional array of enums that identifies either classic/basic polarization discrimination “O” or “X” corresponding to ordinary or extraordinary polarizations, respectively. Exclude this enumeration if no classic/basic polarization discrimination is implemented. May accommodate other modes in addition to “O” and “X” with proper documentation in notes field.
+table IonoObservationPolarization_Full {
+    /// Notes for the polarization data.
+    /// Example: NOTES
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    notes: string;
+    /// Array of integers for polarization dimensions.
+    /// Example: [1, 2]
+    /// Constraints: No constraints specified.
+    dimensions: [string];
+    /// Array of names for dimensions.
+    /// Example: ['NAME1', 'NAME2']
+    /// Constraints: No constraints specified.
+    dimensionName: [string];
+    /// Array of polarization data.
+    /// Example: [[[[[[['X', 'O']]]]]]]
+    /// Constraints: No constraints specified.
+    data: IonoObservationPolarization_Full_data_Enum;
+}
+enum IonoObservationPolarization_Full_data_Enum : byte {
+    /// No description available.
+    X,
+    /// No description available.
+    O
+}
+

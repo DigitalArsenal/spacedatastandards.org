@@ -1,0 +1,23 @@
+/// The timePeriod set describes the effective datetime for a given airspace control means.
+table AirspaceTimePeriod_Ingest {
+    /// The airspace time code associated with the ACO. Can be DISCRETE, a fixed time block, or INTERVAL, a repeating time block.
+    /// Example: DISCRETE
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    timeMode: string;
+    /// The start time designating that the airspace control order is active.
+    /// Example: 141325ZFEB2002
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    timeStart: string;
+    /// The end time designating that the airspace control order is no longer active. Can contain datetime information or a stop time qualifier code, such as AFTER, NET, UFN, etc.
+    /// Example: 141325ZFEB2002
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    timeEnd: string;
+    /// Mandatory if timeMode is INTERVAL. Can be on of the interval frequency codes, such as BIWEEKLY, DAILY, YEARLY, etc.
+    /// Example: ['WEEKLY']
+    /// Constraints: No constraints specified.
+    intFreq: [string];
+    /// Mandatory if timeMode is INTERVAL. Can be a numerical multiplier on an interval frequency code, a stop time qualifier code such as AFTER, NET, UFN, etc, or a datetime like string.
+    /// Example: ['65WK']
+    /// Constraints: No constraints specified.
+    intDur: [string];
+}

@@ -1,0 +1,71 @@
+/// An Optical SOI record contains observation information taken from a sensor about a Space Object.
+table OpticalSOIObservation_Full {
+    /// Observation detection start time in ISO 8601 UTC with microsecond precision.
+    /// Example: 2018-01-01T16:00:00.888456Z
+    /// Constraints: No constraints specified.
+    obStartTime: string;
+    /// Array of start times for each intensity measurement. The 1st value in the array will match obStartTime.
+    /// Example: ['2018-01-01T16:00:00.888456Z', '2018-01-01T16:00:00.898456Z', '2018-01-01T16:00:00.998456Z']
+    /// Constraints: No constraints specified.
+    intensityTimes: [string];
+    /// The reference number, x, where x ranges from 1 to n, where n is the number specified in spectralFilters that corresponds to the spectral filter used.
+    /// Example: 0
+    /// Constraints: No constraints specified.
+    currentSpectralFilterNum: int32;
+    /// Image exposure duration in seconds.
+    /// Example: 0.455
+    /// Constraints: No constraints specified.
+    expDuration: double;
+    /// Array of intensities of the Space Object for observations, in kilowatts per steradian per micrometer.
+    /// Example: [1.1, 1.1, 1.1]
+    /// Constraints: No constraints specified.
+    intensities: [string];
+    /// Array of coefficients for how much signal would be lost to atmospheric attenuation for a star at zenith for each element in intensities, in magnitudes per air mass.
+    /// Example: [0.32, 0.32, 0.32]
+    /// Constraints: No constraints specified.
+    extinctionCoeffs: [string];
+    /// Array of extinction coefficient uncertainties for each element in intensities. Each value represents the difference between the measured brightness and predicted brightness of the star with the extinction removed, making it exo-atmospheric (e.g. -5.0 to 30.0).
+    /// Example: [0.06, 0.06, 0.06]
+    /// Constraints: No constraints specified.
+    extinctionCoeffsUnc: [string];
+    /// Array of average Sky Background signals, in magnitudes, with a value corresponding to the time of each intensity measurement. Sky Background refers to the incoming light from an apparently empty part of the night sky.
+    /// Example: [100625.375, 100625.375, 100625.375]
+    /// Constraints: No constraints specified.
+    skyBgs: [string];
+    /// Array of local average Sky Background signals, in magnitudes, with a value corresponding to the time of each intensity measurement. Sky Background refers to the incoming light from an apparently empty part of the night sky.
+    /// Example: [100625.375, 100625.375, 100625.375]
+    /// Constraints: No constraints specified.
+    localSkyBgs: [string];
+    /// Array of uncertainty of the local average Sky Background signal, in magnitudes, with a value corresponding to the time of each intensity measurement.
+    /// Example: [0.065, 0.065, 0.065]
+    /// Constraints: No constraints specified.
+    localSkyBgsUnc: [string];
+    /// Array of the number of detected stars in the FOV with a value for each element in the intensities field.
+    /// Example: [6, 6, 6]
+    /// Constraints: No constraints specified.
+    numDetectedStars: [string];
+    /// Array of the number of correlated stars in the FOV with a value for each element in the intensities field.
+    /// Example: [3, 3, 3]
+    /// Constraints: No constraints specified.
+    numCorrelatedStars: [string];
+    /// Array of values for the zero-point in magnitudes, calculated at the time of each intensity measurement. It is the difference between the catalog mag and instrumental mag for a set of standard stars (e.g. -5.0 to 30.0).
+    /// Example: [24.711, 24.711, 24.711]
+    /// Constraints: No constraints specified.
+    zeroPoints: [string];
+    /// Array of right ascension values, in degrees, of the Target object from the frame of reference of the sensor. A value is provided for each element in the intensities field.
+    /// Example: [107.4, 107.4, 107.4]
+    /// Constraints: No constraints specified.
+    ras: [string];
+    /// Array of declination values, in degrees, of the Target object from the frame of reference of the sensor. A value is provided for each element in the intensities field, at the middle of the frame’s exposure time.
+    /// Example: [-0.45, -0.45, -0.45]
+    /// Constraints: No constraints specified.
+    declinations: [string];
+    /// Array of right ascension rate values, in degrees per second, measuring the rate the telescope is moving to track the Target object from the frame of reference of the sensor, for each element in the intensities field, at the middle of the frame’s exposure time.
+    /// Example: [0, 0, 0]
+    /// Constraints: No constraints specified.
+    raRates: [string];
+    /// Array of values giving the percent of pixels that make up the object signal that are beyond the saturation point for the sensor, with a value for each element in the intensities field.
+    /// Example: [0.1, 0.2, 1]
+    /// Constraints: No constraints specified.
+    percentSats: [string];
+}

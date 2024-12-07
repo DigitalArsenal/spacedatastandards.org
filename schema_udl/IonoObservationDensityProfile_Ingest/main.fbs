@@ -1,0 +1,35 @@
+/// Profile of electron densities in the ionosphere associated with an IonoObservation.
+table IonoObservationDensityProfile_Ingest {
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    parabolic: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    quasiParabolic: string;
+    /// Description of the valley model and parameters.
+    /// Example: 2-parameter UMLCAR model with width W in km and depth D in MHz, no fitting.
+    /// Constraints: No constraints specified.
+    valleyModelDescription: string;
+    /// Array of valley model coefficients.
+    /// Example: [39.597, 0.1777]
+    /// Constraints: No constraints specified.
+    valleyModelCoeffs: [string];
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    shiftedChebyshev: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    topsideExtensionChapmanConst: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    topsideExtensionVaryChap: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    iri: string;
+}

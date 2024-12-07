@@ -1,0 +1,15 @@
+/// Provides a means of sending Basic Character Set alphanumeric text messages.
+table MtiFreeText_Ingest {
+    /// The originator of the Free Text message.
+    /// Example: ORIGINATOR
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    f1: string;
+    /// The recipient for which the Free Text message is intended.
+    /// Example: RECIPIENT
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    f2: string;
+    /// Free text data message.
+    /// Example: TEXT
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    f3: string;
+}

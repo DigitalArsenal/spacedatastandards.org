@@ -1,0 +1,43 @@
+/// Collection of aircraft mission location information for this aircraft mission tasking.
+table AircraftMissionLocationTasking_Abridged {
+    /// The start time of this mission in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2021-10-25T12:00:00.123Z
+    /// Constraints: No constraints specified.
+    startTime: string;
+    /// The end time of this mission in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2021-10-25T12:00:00.123Z
+    /// Constraints: No constraints specified.
+    endTime: string;
+    /// The name that identifies the location at which this mission is to be performed. This can be the name of a general target area, orbit, cap point, station, etc.
+    /// Example: KLSV
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    msnLocName: string;
+    /// The altitude for this mission represented as hundreds of feet above MSL.
+    /// Example: 210
+    /// Constraints: No constraints specified.
+    alt: int32;
+    /// The code for the priority assigned to this mission.
+    /// Example: 1A
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    airMsnPri: string;
+    /// The radius of the circle around the location being reported in feet.
+    /// Example: 1000
+    /// Constraints: No constraints specified.
+    areaGeoRad: int32;
+    /// The location name for this mission.
+    /// Example: PT ALFA
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    msnLocPtName: string;
+    /// WGS-84 latitude of the mission location, in degrees. -90 to 90 degrees (negative values south of equator) for this tasked air mission.
+    /// Example: 35.123
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    msnLocPtLat: double;
+    /// WGS-84 longitude of the mission location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian) for this tasked air mission.
+    /// Example: 79.01
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    msnLocPtLon: double;
+    /// The alpha-numeric specified location for this mission specified as a bearing angle in degrees relative to true north and a range in nautical miles (NM).
+    /// Example: 330T-PT ALFA-50NM
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    msnLocPtBarT: string;
+}

@@ -1,0 +1,19 @@
+/// Medical condition causation information.
+table EvacEtiology_Abridged {
+    /// The cause or manner of causation of the medical condition.  Intended as, but not constrained to, K07.1 EtiologyType Enumeration (e.g. ASSAULT, BUILDING COLLAPSE, BURN CHEMICAL, BURN ELECTRICAL, BURN, BURN HOT LIQUID, BURN RADIATION, BURN THERMAL, etc.).
+    /// Example: BURN
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    type: string;
+    /// The body part or location affected from the etiology.  Intended as, but not constrained to, K07.1 Body Location Enumeration (e.g. ANKLE LEFT BACK, ANKLE LEFT FRONT, ANKLE RIGHT BACK, ANKLE RIGHT FRONT, ARM LEFT BACK, ARM LEFT ELBOW BACK, ARM LEFT ELBOW FRONT, ARM LEFT FRONT, ARM LEFT LOWER BACK, etc.).
+    /// Example: ARM LEFT FRONT
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    bodyPart: string;
+    /// Datetime of the discovery of the etiology state in ISO 8601 UTC format.
+    /// Example: 2021-10-16T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    time: string;
+    /// Additional comments on the patient's etiology information.
+    /// Example: Comments on the etiology info.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    comments: string;
+}

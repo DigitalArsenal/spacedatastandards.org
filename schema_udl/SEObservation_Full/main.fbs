@@ -1,0 +1,35 @@
+/// A single space environment observation.
+table SEObservation_Full {
+    /// The type of observation associated with this record.
+    /// Example: INTEGRAL FLUX
+    /// Constraints: Minimum length = 1, Maximum length = 24
+    obType: string;
+    /// The Unit of Measure associated with this observation. If there are no physical units associated with the measurement, a value of NONE should be specified.
+    /// Example: particles/cm^2/s/sr
+    /// Constraints: Minimum length = 1, Maximum length = 32
+    obUoM: string;
+    /// A single observation value expressed in the specified unit of measure (obUoM). Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.
+    /// Example: 0.487687826
+    /// Constraints: No constraints specified.
+    obValue: double;
+    /// A single observation string expressed in the specified unit of measure (obUoM). Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.
+    /// Example: C1.3
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    obString: string;
+    /// An array of observation values expressed in the specified unit of measure (obUoM). Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.
+    /// Example: [1.7, 35.6, 21.2, 19.01]
+    /// Constraints: No constraints specified.
+    obArray: [string];
+    /// A Boolean observation. Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    obBool: bool;
+    /// The quality of this individual observation. The observation quality indicator value may vary among providers and may be a generalized statement (BAD, GOOD, UNCERTAIN, UNKNOWN) or a numeric value. Users should consult the data provider to verify the usage of the observation.
+    /// Example: GOOD
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    obQuality: string;
+    /// Descriptive or additional information associated with this individual observation.
+    /// Example: Observation Description Text
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    obDescription: string;
+}

@@ -1,0 +1,31 @@
+/// The specialties required to implement this support item.
+table LogisticsSpecialties_Full {
+    /// Indicates where the repairs will be performed, or which shop specialty has been assigned responsibility for correcting the discrepancy. Shop specialties are normally listed in abbreviated format.
+    /// Example: ELEN
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    specialty: string;
+    /// Skill level of the mission response team member.
+    /// Example: 3
+    /// Constraints: No constraints specified.
+    skillLevel: int32;
+    /// The first name of the specialist.
+    /// Example: JOHN
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    firstName: string;
+    /// The last name of the specialist.
+    /// Example: SMITH
+    /// Constraints: Minimum length = 0, Maximum length = 30
+    lastName: string;
+    /// Military service rank designation.
+    /// Example: MAJ
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    rankCode: string;
+    /// The last four digits of the specialist's social security number.
+    /// Example: 9999
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    last4Ssn: string;
+    /// Type code that determines role of the mission response team member. TC - Team Chief, TM - Team Member.
+    /// Example: TC
+    /// Constraints: Minimum length = 0, Maximum length = 2
+    roleTypeCode: string;
+}

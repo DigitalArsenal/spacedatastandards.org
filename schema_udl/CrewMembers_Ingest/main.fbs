@@ -1,0 +1,71 @@
+/// Schema for Crew Member data.
+table CrewMembers_Ingest {
+    /// The last name of the crew member.
+    /// Example: Smith
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    lastName: string;
+    /// The first name of the crew member.
+    /// Example: Freddie
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    firstName: string;
+    /// The middle initial of the crew member.
+    /// Example: G
+    /// Constraints: Minimum length = 0, Maximum length = 1
+    middleInitial: string;
+    /// Unique identifier of the crew member assigned by the originating source.
+    /// Example: 12345678abc
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    memberId: string;
+    /// Flag indicating this crew member is a civilian or non-military person.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    civilian: bool;
+    /// Flag indicating this person is the aircraft commander.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    commander: bool;
+    /// Last four digits of the crew member's social security number.
+    /// Example: 1234
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    last4SSN: string;
+    /// The crew member's 10-digit DoD ID number.
+    /// Example: 0123456789
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    dodID: string;
+    /// The duty position of the crew member.
+    /// Example: IP
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    dutyPosition: string;
+    /// The crew position of the crew member.
+    /// Example: EP A
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    crewPosition: string;
+    /// Amplifying details about the crew member type (e.g. RAVEN, FCC, COMCAM, AIRCREW, MEP, OTHER, etc.).
+    /// Example: AIRCREW
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    memberType: string;
+    /// The military branch assignment of the crew member.
+    /// Example: Air Force
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    branch: string;
+    /// The rank of the crew member.
+    /// Example: Capt
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    rank: string;
+    /// The wing the crew member serves.
+    /// Example: 60AMW
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    wing: string;
+    /// The squadron the crew member serves.
+    /// Example: 21AS
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    squadron: string;
+    /// Remarks concerning the crew member.
+    /// Example: Crew member remark
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    memberRemarks: string;
+    /// The Mattermost username of this crew member.
+    /// Example: fgsmith
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    username: string;
+}

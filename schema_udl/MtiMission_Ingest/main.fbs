@@ -1,0 +1,23 @@
+/// Information on the mission and flight plans, the type and configuration of the platform, and the reference time.
+table MtiMission_Ingest {
+    /// The mission plan id.
+    /// Example: M1-ID
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    m1: string;
+    /// Unique identification of the flight plan.
+    /// Example: M2-ID
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    m2: string;
+    /// Platform type that originated the data.
+    /// Example: PLATFORM
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    m3: string;
+    /// Identification of the platform variant, modifications, etc.
+    /// Example: IDENT
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    m4: string;
+    /// Mission origination date.
+    /// Example: 2018-01-01
+    /// Constraints: No constraints specified.
+    msnRefTs: string;
+}

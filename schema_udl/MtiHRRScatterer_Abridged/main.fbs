@@ -1,0 +1,19 @@
+/// HRR Scatterer record for a target pixel that exceeds the target detection threshold.
+table MtiHRRScatterer_Abridged {
+    /// Scatterer’s power magnitude.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h32_1: int32;
+    /// Scatterer’s complex phase, in degrees.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h32_2: int32;
+    /// Scatterer’s Range index relative to Range-Doppler chip, where increasing index equates to increasing range.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h32_3: int32;
+    /// Scatterer’s Doppler index relative to Range-Doppler chip, where increasing index equates to increasing Doppler.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h32_4: int32;
+}

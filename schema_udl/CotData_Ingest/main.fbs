@@ -1,0 +1,63 @@
+/// Schema for the CotData to post.
+table CotData_Ingest {
+    /// Identifier of the sender of the cot message which should remain the same on subsequent POI records of the same point of interest.
+    /// Example: POI-ID
+    /// Constraints: No constraints specified.
+    senderUid: string;
+    /// How the event point was generated, in CoT object heirarchy notation (optional, CoT).
+    /// Example: h-e
+    /// Constraints: No constraints specified.
+    how: string;
+    /// Radius of circular area about lat/lon point, in meters (1-sigma, if representing error).
+    /// Example: 10.23
+    /// Constraints: No constraints specified.
+    ce: double;
+    /// Height above lat/lon point, in meters (1-sigma, if representing linear error).
+    /// Example: 10.23
+    /// Constraints: No constraints specified.
+    le: double;
+    /// Stale timestamp (optional), in ISO8601 UTC format.
+    /// Example: 2020-01-01T16:00:00.123456Z
+    /// Constraints: No constraints specified.
+    stale: string;
+    /// Start time of event validity (optional), in ISO8601 UTC format.
+    /// Example: 2020-01-01T16:00:00.123456Z
+    /// Constraints: No constraints specified.
+    start: string;
+    /// WGS-84 latitude of the POI, in degrees (+N, -S), -90 to 90.
+    /// Example: 45.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    lat: double;
+    /// WGS-84 longitude of the POI, in degrees (+E, -W), -180 to 180.
+    /// Example: 45.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    lon: double;
+    /// Event type, in CoT object heirarchy notation (optional, CoT).
+    /// Example: a-h-G
+    /// Constraints: No constraints specified.
+    type: string;
+    /// Point height above ellipsoid (WGS-84), in meters.
+    /// Example: 5.23
+    /// Constraints: No constraints specified.
+    alt: double;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    cotPositionData: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    cotChatData: string;
+    /// Optional list of call signs to send message to directly.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    callSigns: [string];
+    /// Optional list of TAK user ids to send message to directly.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    uids: [string];
+    /// Optional set of groups to send message to specifically.  If not specified, the message will be sent to the default _ANON_ group.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    groups: [string];
+}

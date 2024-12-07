@@ -1,0 +1,11 @@
+/// Coefficients to describe either the E, F1, and bottomside F2 profile shapes or the height uncertainty boundaries.
+table IonoObservationDensityProfileShiftedChebyshev_Ingest {
+    /// Description of the computation technique.
+    /// Example: Best-fit Huang-Reinisch formalism based on shifted Chebyshev expansion.
+    /// Constraints: No constraints specified.
+    description: string;
+    /// Up to 3 groups of coefficients, using “shiftedChebyshev” sub-field, to describe E, F1, and bottomside F2 profile shapes, or up to 6 groups of coefficients to describe height uncertainty boundaries (upper and lower).
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    shiftedChebyshevs: [string];
+}

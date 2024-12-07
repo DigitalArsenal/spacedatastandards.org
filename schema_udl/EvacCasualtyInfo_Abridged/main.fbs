@@ -1,0 +1,144 @@
+/// Identity and medical information on the patient to be evacuated.
+table EvacCasualtyInfo_Abridged {
+    /// The priority of the medevac mission for this patient (URGENT, PRIORITY, ROUTINE, URGENT SURGERY, CONVENIENCE).
+    /// Example: ROUTINE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    priority: string;
+    /// The required evacuation method for this patient (AIR, GROUND, NOT EVACUATED).
+    /// Example: GROUND
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    evacType: string;
+    /// The type of medical issue resulting in the need to evacuate the patient (NON BATTLE, CUT, BURN, SICK, FRACTURE, AMPUTATION, PERFORATION, NUCLEAR, EXHAUSTION, BIOLOGICAL, CHEMICAL, SHOCK, PUNCTURE WOUND, OTHER CUT, WOUNDED IN ACTION, DENIAL, COMBAT STRESS).
+    /// Example: DENTAL
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    casualtyType: string;
+    /// The body part involved for the patient (HEAD, NECK, ABDOMEN, UPPER EXTREMITIES, BACK, FACE, LOWER EXTREMITIES, FRONT, OBSTETRICAL GYNECOLOGICAL, OTHER BODY PART).
+    /// Example: FACE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    bodyPart: string;
+    /// The contamination specified for the patient (NONE, RADIATION, BIOLOGICAL, CHEMICAL).
+    /// Example: NONE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    contamType: string;
+    /// Array specifying if any special equipment is need for each of the evacuation of this patient  (EXTRACTION EQUIPMENT, SEMI RIGID LITTER, BACKBOARD, CERVICAL COLLAR ,JUNGLE PENETRATOR, OXYGEN, WHOLE BLOOD, VENTILATOR, HOIST, NONE).
+
+    /// Example: ['OXYGEN', 'HOIST']
+    /// Constraints: No constraints specified.
+    specMedEquip: [string];
+    /// Optional casualty key.
+    /// Example: casualty-007
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    casualtyKey: string;
+    /// The patient service status (US MILITARY, US CIVILIAN, NON US MILITARY, NON US CIVILIAN, ENEMY POW).
+    /// Example: US CIVILIAN
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    patientStatus: string;
+    /// The patient service identity (UNKNOWN MILITARY, UNKNOWN CIVILIAN, FRIEND MILITARY, FRIEND CIVILIAN, NEUTRAL MILITARY, NEUTRAL CIVILIAN, HOSTILE MILITARY, HOSTILE CIVILIAN).
+    /// Example: FRIEND CIVILIAN
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    patientIdentity: string;
+    /// The country code indicating the citizenship of the patient.
+    /// Example: US
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    nationality: string;
+    /// The patient pay grade or rank designation (O-10, O-9, O-8, O-7, O-6, O-5, O-4, O-3, O-2, O-1, CWO-5, CWO-4, CWO-2, CWO-1, E -9, E-8, E-7, E-6, E-5, E-4, E-3, E-2, E-1, NONE, CIVILIAN).
+    /// Example: CIVILIAN
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    payGrade: string;
+    /// The patient common or legal name.
+    /// Example: John Smith
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    name: string;
+    /// The patient age, in years.
+    /// Example: 35
+    /// Constraints: Minimum value = 0
+    age: int32;
+    /// The patient sex (MALE, FEMALE).
+    /// Example: MALE
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    gender: string;
+    /// Last 4 characters of the patient social security code, or equivalent.
+    /// Example: 1234
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    last4SSN: string;
+    /// The patient blood type (A POS, B POS, AB POS, O POS, A NEG, B NEG, AB NEG, O NEG).
+    /// Example: O NEG
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    bloodType: string;
+    /// The patient branch of service (AIR FORCE, ARMY, NAVY, MARINES, CIV, CONTR, UNKNOWN SERVICE).
+    /// Example: CIV
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    service: string;
+    /// The call sign of this patient.
+    /// Example: SHARK
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    callSign: string;
+    /// The career field of this patient.
+    /// Example: Healthcare
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    occSpeciality: string;
+    /// Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the burial location.  This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).
+    /// Example: [-33.123, 150.33, 0.24]
+    /// Constraints: No constraints specified.
+    burialLocation: [string];
+    /// Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the collection point.  This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).
+    /// Example: [12.44, 122.55, 0.98]
+    /// Constraints: No constraints specified.
+    collectionPoint: [string];
+    /// Unique identifier for the patient care provider.
+    /// Example: CARE_PROVIDER-1
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    careProviderUrn: string;
+    /// The expected disposition of this patient (R T D, EVACUATE, EVACUATE TO FORWARD SURGICAL TEAM, EVACUATE TO COMBAT SUPPORT HOSPITAL, EVACUATE TO AERO MEDICAL STAGING FACILITY, EVACUATE TO SUSTAINING BASE MEDICAL TREATMENT FACILITY).
+    /// Example: EVACUATE
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    dispositionType: string;
+    /// The patient's general medical state (SICK IN QUARTERS, RETURN TO DUTY, EVACUATE WOUNDED, EVACUATE DECEASED, INTERRED).
+    /// Example: EVACUATE WOUNDED
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    disposition: string;
+    /// The method used to generate this medevac report (DEVICE, GROUND COMBAT PERSONNEL, EVACUATION PERSONNEL, ECHELON1 PERSONNEL, ECHELON2 PERSONNEL).
+    /// Example: DEVICE
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    reportGen: string;
+    /// Datetime of the compiling of the patients casualty report, in ISO 8601 UTC format.
+    /// Example: 2021-10-15T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    reportTime: string;
+    /// Additional comments on the  patient's casualty information.
+    /// Example: Comments relating to this casualty info.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    comments: string;
+    /// Medical condition causation information.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    etiology: [string];
+    /// Treatment information.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    treatment: [string];
+    /// Information obtained for vital signs.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    vitalSignData: [string];
+    /// Health state information.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    healthState: [string];
+    /// Health condition information.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    condition: [string];
+    /// Medication specifics.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    medication: [string];
+    /// Injury specifics.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    injury: [string];
+    /// Allergy information.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    allergy: [string];
+}

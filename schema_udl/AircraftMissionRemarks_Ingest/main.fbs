@@ -1,0 +1,27 @@
+/// Collection of Remarks associated with this Air Transport Mission.
+table AircraftMissionRemarks_Ingest {
+    /// Global Decision Support System (GDSS) remark identifier.
+    /// Example: GDSSREMARK-ID
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    gdssRemarkId: string;
+    /// Remark type.
+    /// Example: MP
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    type: string;
+    /// Text of the remark.
+    /// Example: Example mission remarks.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    text: string;
+    /// Date the remark was published, in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2022-01-01T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    date: string;
+    /// User who published the remark.
+    /// Example: John Doe
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    user: string;
+    /// If the remark is sortie specific, this is the number of the sortie it applies to.
+    /// Example: 825
+    /// Constraints: No constraints specified.
+    itineraryNum: int32;
+}

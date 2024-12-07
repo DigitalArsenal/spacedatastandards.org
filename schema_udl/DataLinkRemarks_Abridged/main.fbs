@@ -1,0 +1,11 @@
+/// Collection of remarks associated with this data link message.
+table DataLinkRemarks_Abridged {
+    /// Indicates the subject matter of the remark.
+    /// Example: CONTINGENCY PROCEDURES
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    type: string;
+    /// Text of the remark.
+    /// Example: Example data link remarks
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    text: string;
+}

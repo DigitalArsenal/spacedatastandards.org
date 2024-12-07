@@ -1,0 +1,63 @@
+/// Remarks associated with this LogisticsSupport record.
+table LogisticsSegments_Full {
+    /// Used to sequence the segments in the transportation plan.
+    /// Example: 3
+    /// Constraints: No constraints specified.
+    segmentNumber: int32;
+    /// Transportation mode.  AMC airlift, Commercial airlift, Other, or surface transportation.
+    /// Example: A
+    /// Constraints: Minimum length = 1, Maximum length = 1
+    modeCode: string;
+    /// The type of mission (e.g. SAAM, CHNL, etc.).
+    /// Example: SAAM
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    missionType: string;
+    /// The unique identifier of the mission to which this logistics record is assigned.
+    /// Example: EXAMPLE-UUID
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    idMission: string;
+    /// The GDSS mission ID for this segment.
+    /// Example: 2001101RF01202307062205
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    extMissionId: string;
+    /// The user generated identifier for an air mission subgroup.
+    /// Example: TAM308901196
+    /// Constraints: Minimum length = 0, Maximum length = 12
+    missionNumber: string;
+    /// Start air mission itinerary point identifier.
+    /// Example: 200
+    /// Constraints: No constraints specified.
+    itin: int32;
+    /// The identifier that represents a specific aircraft within an aircraft type.
+    /// Example: N819AX
+    /// Constraints: Minimum length = 0, Maximum length = 7
+    segTailNumber: string;
+    /// The aircraft Model Design Series (MDS) designation (e.g. E-2C HAWKEYE, F-15 EAGLE, KC-130 HERCULES, etc.) of this aircraft. Intended as, but not constrained to, MIL-STD-6016 environment dependent specific type designations.
+    /// Example: B7772E
+    /// Constraints: Minimum length = 0, Maximum length = 30
+    segAircraftMDS: string;
+    /// Airport ICAO departure code.
+    /// Example: PHIK
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    departureICAO: string;
+    /// Actual departure time to the segment destination, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:20:00.123Z
+    /// Constraints: No constraints specified.
+    segActDepTime: string;
+    /// Airport ICAO arrival code.
+    /// Example: YBCS
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    arrivalICAO: string;
+    /// Actual arrival time to segment destination, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:20:00.123Z
+    /// Constraints: No constraints specified.
+    segActArrTime: string;
+    /// GC. LGTPS_C_DT_EST_DEP.  GD2: Estimated departure time from the segment origin. Only supplied when the segment is not attached to a Mission, otherwise the ETD is derived from the Mission segment origin point. This datetime should be in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:20:00.123Z
+    /// Constraints: No constraints specified.
+    segEstDepTime: string;
+    /// GC. LGTPS_C_DT_EST_ARR.  GD2: Estimated arrival time to the segment destination. Only supplied when the segment is not attached to a Mission, otherwise the ETA is derived from the Mission segment destination point. This datetime should be in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:20:00.123Z
+    /// Constraints: No constraints specified.
+    segEstArrTime: string;
+}

@@ -1,0 +1,19 @@
+/// The supply stocks for this support item.
+table LogisticsStocks_Full {
+    /// The ICAO code for the primary location with available parts.
+    /// Example: PHIK
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    sourceICAO: string;
+    /// The quantity of available parts needed from sourceICAO.
+    /// Example: 4
+    /// Constraints: No constraints specified.
+    quantity: int32;
+    /// The datetime when the parts were sourced, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-13T13:47:00.123Z
+    /// Constraints: No constraints specified.
+    stockCheckTime: string;
+    /// The point of contact at the sourced location.
+    /// Example: SMITH, JOHN J
+    /// Constraints: Minimum length = 0, Maximum length = 68
+    stockPOC: string;
+}

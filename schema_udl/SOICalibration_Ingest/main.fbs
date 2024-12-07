@@ -1,0 +1,47 @@
+/// Schema for SOI Calibration data.
+table SOICalibration_Ingest {
+    /// Coefficient value for how much signal would be lost to atmospheric attenuation for a star at zenith, in magnitudes per air mass.
+    /// Example: 0.2
+    /// Constraints: No constraints specified.
+    calExtinctionCoeff: double;
+    /// Average Sky Background signals in magnitudes, at calibration. Sky Background refers to the incoming light from an apparently empty part of the night sky.
+    /// Example: 30086.25
+    /// Constraints: No constraints specified.
+    calSkyBg: double;
+    /// Background intensity, at calibration, specified in kilowatts per steradian per micrometer.
+    /// Example: 1.1
+    /// Constraints: No constraints specified.
+    calBgIntensity: double;
+    /// In-band solar magnitudes at 1 A.U, at calibration (e.g. -5.0 to 30.0).
+    /// Example: 19.23664587
+    /// Constraints: No constraints specified.
+    calSpectralFilterSolarMag: double;
+    /// Value representing the difference between the catalog magnitude and instrumental magnitude for a set of standard stars, at calibration (e.g. -5.0 to 30.0).
+    /// Example: 25.15682157
+    /// Constraints: No constraints specified.
+    calZeroPoint: double;
+    /// Number of detected stars in the FOV with the target object, at calibration. Helps identify frames with clouds.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    calNumDetectedStars: int32;
+    /// Number of correlated stars in the FOV with the target object, at calibration. Can be 0 for narrow FOV sensors.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    calNumCorrelatedStars: int32;
+    /// Extinction coefficient uncertainty in magnitudes, at calibration, which represents the difference between the measured brightness and predicted brightness of the star with the extinction removed, making it exo-atmospheric (e.g. -5.0 to 30.0).
+    /// Example: 0.06474939
+    /// Constraints: No constraints specified.
+    calExtinctionCoeffUnc: double;
+    /// Maximum extinction coefficient uncertainty in magnitudes, at calibration (e.g. -5.0 to 30.0).
+    /// Example: 0.19708838
+    /// Constraints: No constraints specified.
+    calExtinctionCoeffMaxUnc: double;
+    /// Start time of calibration in ISO 8601 UTC time, with millisecond precision.
+    /// Example: 2023-01-02T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    calTime: string;
+    /// Type of calibration (e.g. PRE, MID, POST).
+    /// Example: PRE
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    calType: string;
+}

@@ -1,0 +1,27 @@
+/// Medication specifics.
+table EvacMedication_Ingest {
+    /// The type of medication administered.   Intended as, but not constrained to, K07.1 Medication Enumeration (CEFOTETAN, ABRASION, ABX, AMOXILOXACIN, ANALGESIC, COLLOID, CRYOPECIPITATES, CRYSTALLOID, EPINEPHRINE, ERTAPENEM, FENTANYL, HEXTEND, LACTATED RINGERS, MOBIC, MORPHINE, NARCOTIC, NS, PENICILLIN, PLASMA, PLATELETS, PRBC, TYLENOL, WHOLE BLOOD MT).
+    /// Example: TYLENOL
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    type: string;
+    /// Body part location or body part referenced for medication. Intended as, but not constrained to, K07.1 Body Location Enumeration (e.g. ANKLE LEFT BACK, ANKLE LEFT FRONT, ANKLE RIGHT BACK, ANKLE RIGHT FRONT, ARM LEFT BACK, ARM LEFT ELBOW BACK, ARM LEFT ELBOW FRONT, ARM LEFT FRONT, ARM LEFT LOWER BACK, etc.).
+    /// Example: ARM LEFT BACK
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    bodyPart: string;
+    /// Quantity of medicine or drug administered or recommended to be taken at a particular time.
+    /// Example: 800mg
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    dose: string;
+    /// Route of medication delivery (e.g. INJECTION, ORAL, etc.).
+    /// Example: ORAL
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    adminRoute: string;
+    /// The time that the medication was administered in ISO 8601 UTC format.
+    /// Example: 2021-10-15T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    time: string;
+    /// Additional comments on the patient's medication information.
+    /// Example: Comments on the patient's medication information.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    comments: string;
+}

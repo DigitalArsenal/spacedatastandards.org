@@ -1,0 +1,47 @@
+/// The parts associated with this support item.
+table LogisticsParts_Full {
+    /// Requested or supplied part number.
+    /// Example: MS35338-42
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    partNumber: string;
+    /// The National Stock Number of the part being requested or supplied.
+    /// Example: 5310-00-045-3299
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    nationalStockNumber: string;
+    /// Code for a unit of measurement.
+    /// Example: EA
+    /// Constraints: Minimum length = 0, Maximum length = 2
+    measurementUnitCode: string;
+    /// Work Unit Code (WUC), or for some aircraft types, the Reference Designator.
+    /// Example: 5611UU001
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    workUnitCode: string;
+    /// Indicates the specified Technical Order manual holding the aircraft information for use in diagnosing a problem or condition.
+    /// Example: 1C-17A-4
+    /// Constraints: Minimum length = 0, Maximum length = 15
+    technicalOrderText: string;
+    /// Technical order manual figure number for the requested / supplied part.
+    /// Example: 3
+    /// Constraints: Minimum length = 0, Maximum length = 7
+    figureNumber: string;
+    /// Technical order manual index number for the requested part.
+    /// Example: 4
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    indexNumber: string;
+    /// The person who validated the request for parts.
+    /// Example: JOHN SMITH
+    /// Constraints: Minimum length = 0, Maximum length = 25
+    requestVerifier: string;
+    /// The person who validated that the sourced location has, and can supply, the requested parts.
+    /// Example: JANE DOE
+    /// Constraints: Minimum length = 0, Maximum length = 25
+    locationVerifier: string;
+    /// The supply document number.
+    /// Example: J223FU31908300
+    /// Constraints: Minimum length = 0, Maximum length = 17
+    supplyDocumentNumber: string;
+    /// The supply stocks for this support item.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    logisticsStocks: [string];
+}

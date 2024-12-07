@@ -1,0 +1,15 @@
+/// Schema for the CotPositionData to post.
+table CotPositionData_Ingest {
+    /// Name of the POI target Object.
+    /// Example: POI_NAME
+    /// Constraints: Minimum length = 1, Maximum length = 2147483647
+    callSign: string;
+    /// Team role  (Team Member| Team Lead | HQ | Sniper | Medic | Forward Observer | RTO | K9).
+    /// Example: Team Member
+    /// Constraints: Minimum length = 1, Maximum length = 2147483647
+    teamRole: string;
+    /// Description of the POI target Object.
+    /// Example: Description of the object
+    /// Constraints: Minimum length = 1, Maximum length = 2147483647
+    team: string;
+}

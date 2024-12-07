@@ -1,0 +1,99 @@
+/// Collection of point groups generated for this flight plan. Groups include point sets for Extended Operations (ETOPS), Critical Fuel Point, and Equal Time Point (ETP).
+table FlightPlanPointGroups_Ingest {
+    /// Name of the point group, usually Extended Operations (ETOPS), Critical Fuel Point, and Equal Time Point (ETP) sections.
+    /// Example: ETOPS_CF_POINT_1
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    pointGroupName: string;
+    /// Specifies which Point Group case requires the most fuel.
+    /// Example: DEPRESSURIZED ENGINE OUT ETP
+    /// Constraints: Minimum length = 0, Maximum length = 48
+    worstFuelCase: string;
+    /// Name of the last suitable airfield, International Civil Aviation Organization (ICAO) code preferred.
+    /// Example: LPPD
+    /// Constraints: Minimum length = 0, Maximum length = 5
+    lsafName: string;
+    /// Distance from the Equal Time Point (ETP) to the last suitable airfield in nautical miles.
+    /// Example: 684.1
+    /// Constraints: No constraints specified.
+    lsafDistance: double;
+    /// Distance from the Equal Time Point (ETP) to the first suitable airfield in nautical miles.
+    /// Example: 684.1
+    /// Constraints: No constraints specified.
+    fsafDistance: double;
+    /// Distance from the Extended Operations (ETOPS) point to the recovery airfield in nautical miles.
+    /// Example: 684.1
+    /// Constraints: No constraints specified.
+    etopsDistance: double;
+    /// Time to fly from the Equal Time Point (ETP) to the last suitable airfield expressed in HH:MM format.
+    /// Example: 01:23
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    lsafTime: string;
+    /// Time to fly from the Equal Time Point (ETP) to the first suitable airfield expressed in HH:MM format.
+    /// Example: 01:23
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    fsafTime: string;
+    /// Time to fly from the Extended Operations (ETOPS) point to the recovery airfield expressed in HH:MM format.
+    /// Example: 01:23
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    etopsTime: string;
+    /// Average wind factor from the Equal Time Point (ETP) to the last suitable airfield in knots.
+    /// Example: 13.1
+    /// Constraints: No constraints specified.
+    lsafAvgWindFactor: double;
+    /// Average wind factor from the Equal Time Point (ETP) to the first suitable airfield in knots.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    fsafAvgWindFactor: double;
+    /// Average wind factor from the Extended Operations (ETOPS) point to the recovery airfield in knots.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    etopsAvgWindFactor: double;
+    /// Temperature deviation from the Equal Time Point (ETP) to the last suitable airfield in degrees Celsius.
+    /// Example: 9.1
+    /// Constraints: No constraints specified.
+    lsafTempDev: double;
+    /// Temperature deviation from the Equal Time Point (ETP) to the first suitable airfield in degrees Celsius.
+    /// Example: 9.1
+    /// Constraints: No constraints specified.
+    fsafTempDev: double;
+    /// Temperature deviation from the Extended Operations (ETOPS) point to the recovery airfield in degrees Celsius.
+    /// Example: 9.1
+    /// Constraints: No constraints specified.
+    etopsTempDev: double;
+    /// Fuel required to fly from the Equal Time Point (ETP) to the last suitable airfield in pounds.
+    /// Example: 50787.1
+    /// Constraints: No constraints specified.
+    lsafReqFuel: double;
+    /// Fuel required to fly from the Equal Time Point (ETP) to the first suitable airfield in pounds.
+    /// Example: 50380.1
+    /// Constraints: No constraints specified.
+    fsafReqFuel: double;
+    /// Fuel required to fly from the Extended Operations (ETOPS) point to the recovery airfield in pounds.
+    /// Example: 4412.1
+    /// Constraints: No constraints specified.
+    etopsReqFuel: double;
+    /// Total time from takeoff when the point is reached expressed in HH:MM format.
+    /// Example: 07:29
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    fromTakeoffTime: string;
+    /// Amount of planned fuel on board when the point is reached in pounds.
+    /// Example: 190319.1
+    /// Constraints: No constraints specified.
+    plannedFuel: double;
+    /// Flight level of the point at which the fuel was calculated in feet.
+    /// Example: 100.1
+    /// Constraints: No constraints specified.
+    fuelCalcAlt: double;
+    /// True airspeed at which the fuel was calculated in knots.
+    /// Example: 365.1
+    /// Constraints: No constraints specified.
+    fuelCalcSpd: double;
+    /// Average fuel flow at which the fuel was calculated in pounds per hour.
+    /// Example: 19693.1
+    /// Constraints: No constraints specified.
+    avgFuelFlow: double;
+    /// Array of point data for this Point Group.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    flightPlanPoints: [string];
+}

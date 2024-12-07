@@ -1,0 +1,15 @@
+/// Contains a list of common information across both Radar and EO observations.
+table OnorbitSignature_Abridged {
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    eoObservation: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    radarObservation: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    rfObservation: string;
+}

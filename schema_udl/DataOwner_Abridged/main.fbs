@@ -1,0 +1,51 @@
+/// Information pertaining to UDL data owners.
+table DataOwner_Abridged {
+    /// The name of the data owner.
+    /// Example: Data owner name
+    /// Constraints: Minimum length = 1, Maximum length = 64
+    doName: string;
+    /// Classification marking of the data in IC/CAPCO Portion-marked format.
+    /// Example: U
+    /// Constraints: Minimum length = 1, Maximum length = 128
+    classificationMarking: string;
+    /// Type of organization which this data owner belongs to (e.g. Commercial, Government, Academic, Consortium, etc.).
+    /// Example: Commercial
+    /// Constraints: Minimum length = 1, Maximum length = 32
+    ownerType: string;
+    /// Type of data this data owner owns (e.g. EPHEMERIS, IMAGERY, MANEUVER, etc.).
+    /// Example: ELSET
+    /// Constraints: Minimum length = 1, Maximum length = 64
+    dataType: string;
+    /// Organization name for the data provider.
+    /// Example: ACME
+    /// Constraints: Minimum length = 1, Maximum length = 64
+    provider: string;
+    /// The country code. This value is typically the ISO 3166 Alpha-2 two-character country code, however it can also represent various consortiums that do not appear in the ISO document. The code must correspond to an existing country in the UDL’s country API. Call udl/country/{code} to get any associated FIPS code, ISO Alpha-3 code, or alternate code values that exist for the specified country code.
+    /// Example: US
+    /// Constraints: Minimum length = 1, Maximum length = 4
+    countryCode: string;
+    /// Unique identifier of the contact for this data owner.
+    /// Example: 026dd511-8ba5-47d3-9909-836149f87686
+    /// Constraints: Minimum length = 1, Maximum length = 36
+    idContact: string;
+    /// Description of this data owner.
+    /// Example: Description of this data owner.
+    /// Constraints: No constraints specified.
+    description: string;
+    /// Optional control required to access this data type from this owner.
+    /// Example: PR-ACME-ELSETS
+    /// Constraints: Minimum length = 1, Maximum length = 128
+    control: string;
+    /// Boolean indicating if the data owner is enabled (if not enabled, they should not appear on the data products screen on the storefront).
+    /// Example: False
+    /// Constraints: No constraints specified.
+    enabled: bool;
+    /// Boolean indicating if the data owner is coming soon or not yet available.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    comingSoon: bool;
+    /// Source of the data.
+    /// Example: some.user
+    /// Constraints: Minimum length = 1, Maximum length = 64
+    source: string;
+}

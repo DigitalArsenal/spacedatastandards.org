@@ -1,0 +1,43 @@
+/// Characteristic attributes of a IonoObservation.
+table IonoObservationCharAtts_Ingest {
+    /// Characteristic's URSI ID. See the characteristic's description for its corresponding URSI ID.
+    /// Example: 04
+    /// Constraints: Minimum length = 0, Maximum length = 3
+    ursiID: string;
+    /// Characteristic name. This value should reflect the UDL field name for the corresponding characteristic.
+    /// Example: hprimeF2
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    charName: string;
+    /// Specified characteristic's lower bound. Should be less than or equal to the characteristic's current value as set in this record.
+    /// Example: 1.26
+    /// Constraints: No constraints specified.
+    lowerBound: double;
+    /// Specified characteristic's upper bound. Should be greater than or equal to the characteristic's current value as set in this record.
+    /// Example: 2.57
+    /// Constraints: No constraints specified.
+    upperBound: double;
+    /// Qualifying letter (Q) for the characteristic specified by URSI ID. Describes specific ionospheric conditions, beyond numerical values.
+    /// Example: T
+    /// Constraints: No constraints specified.
+    q: string;
+    /// Descriptive letter (D) for the characteristic specified by URSI ID. Describes specific ionospheric conditions, beyond numerical values.
+    /// Example: K
+    /// Constraints: No constraints specified.
+    d: string;
+    /// Name of the climate model.
+    /// Example: IRI
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    climateModelName: string;
+    /// List of options for the climate model.
+    /// Example: ['URSI-88', 'No storm']
+    /// Constraints: No constraints specified.
+    climateModelOptions: [string];
+    /// Input parameters for the climate model.
+    /// Example: ['ISSN1 88.1', 'Option 2']
+    /// Constraints: No constraints specified.
+    climateModelInputParams: [string];
+    /// Uncertainty Bounds (lower and upper) define an interval around reported value that contains true value at the specified probability level. Probability levels are specified in terms of percentile (from 1 to 100) or the standard deviation, sigma (e.g. 1sigma, 2sigma, 3sigma, 5percentile, 10percentile, 25percentile).
+    /// Example: 1sigma
+    /// Constraints: No constraints specified.
+    uncertaintyBoundType: string;
+}

@@ -1,0 +1,15 @@
+/// Coefficients to describe profile shape as quasi-parabolic segments.
+table IonoObservationDensityProfileQuasiParabolic_Ingest {
+    /// General description of the quasi-parabolic computation algorithm.
+    /// Example: Array of the best-fit 3-parameter quasi-parabolas defined via A, B, C coefficients, f^2=A/r^2+B/r+C
+    /// Constraints: No constraints specified.
+    description: string;
+    /// Value of the Earth's radius, in kilometers, used for computations.
+    /// Example: 6370.1
+    /// Constraints: No constraints specified.
+    earthRadius: double;
+    /// Array of quasi-parabolic segments. Each segment is the best-fit 3-parameter quasi-parabolas defined via A, B, C coefficients, f^2=A/r^2+B/r+C”. Usually 3 groups for E, F1, and F2 layers, but additional segments may be used to improve accuracy.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    quasiParabolicSegments: [string];
+}

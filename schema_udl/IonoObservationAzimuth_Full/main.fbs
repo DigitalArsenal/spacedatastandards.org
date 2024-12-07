@@ -1,0 +1,19 @@
+/// Multidimensional array of incoming azimuth at the receiver. Has the same dimensions as power. Antenna type, configuration, and method of determination to be documented in the azimuthNotes field.
+table IonoObservationAzimuth_Full {
+    /// Notes for the azimuth data.
+    /// Example: NOTES
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    notes: string;
+    /// Array of integers of the azimuth array dimensions.
+    /// Example: [1, 2]
+    /// Constraints: No constraints specified.
+    dimensions: [string];
+    /// Array of names for dimensions.
+    /// Example: ['NAME1', 'NAME2']
+    /// Constraints: No constraints specified.
+    dimensionName: [string];
+    /// Array of incoming azimuth at the receiver.
+    /// Example: [[[[[[[0.02, 0.034]]]]]]]
+    /// Constraints: No constraints specified.
+    data: [string];
+}

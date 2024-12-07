@@ -1,0 +1,19 @@
+/// Collection of remarks associated with this Air Event.
+table AirEventRemarks_Ingest {
+    /// Optional remark ID from external systems. This field has no meaning within UDL and is provided as a convenience for systems that require tracking of an internal system generated ID.
+    /// Example: 23ea2877a6f74d7d8f309567a5896441
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    externalRemarkId: string;
+    /// Text of the remark.
+    /// Example: Example air event remarks.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    text: string;
+    /// Date the remark was published, in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2024-01-01T01:01:01.123Z
+    /// Constraints: No constraints specified.
+    date: string;
+    /// User who published the remark.
+    /// Example: John Doe
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    user: string;
+}

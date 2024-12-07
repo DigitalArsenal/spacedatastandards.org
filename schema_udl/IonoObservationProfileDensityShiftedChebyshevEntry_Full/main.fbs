@@ -1,0 +1,35 @@
+/// Coefficients, using ‘shiftedChebyshev’ sub-field, to describe E, F1, and bottomside F2 profile shapes, or height uncertainty boundaries (upper and lower).
+table IonoObservationProfileDensityShiftedChebyshevEntry_Full {
+    /// The ionospheric plasma layer.
+    /// Example: F2
+    /// Constraints: No constraints specified.
+    layer: string;
+    /// Start frequency of the layer, in MHz.
+    /// Example: 0.2
+    /// Constraints: No constraints specified.
+    fstart: double;
+    /// Stop frequency of the layer, in MHz.
+    /// Example: 1.39
+    /// Constraints: No constraints specified.
+    fstop: double;
+    /// Peak height of the layer, in kilometers.
+    /// Example: 110.1
+    /// Constraints: No constraints specified.
+    peakheight: double;
+    /// Height at which density is half of the peak Nm, in kilometers.
+    /// Example: 210.1
+    /// Constraints: No constraints specified.
+    zhalfNm: double;
+    /// Number of coefficients in the expansion.
+    /// Example: 5
+    /// Constraints: No constraints specified.
+    n: int32;
+    /// Array of coefficients.
+    /// Example: [-11.2, -10.536, 3.357, -0.888, 0.155]
+    /// Constraints: No constraints specified.
+    coeffs: [string];
+    /// Best fit error.
+    /// Example: 0.02
+    /// Constraints: No constraints specified.
+    error: double;
+}

@@ -1,0 +1,98 @@
+/// Schema for Missile Track Vector data.
+table MissileTrackVector_Full {
+    /// Type of vector represented (e.g. LOS, PREDICTED, STATE).
+    /// Example: STATE
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    type: string;
+    /// Object to which this vector applies.
+    /// Example: TARGET
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    object: string;
+    /// Vector timestamp in ISO8601 UTC format, with microsecond precision.
+    /// Example: 2024-03-30T15:02:39.346768Z
+    /// Constraints: No constraints specified.
+    epoch: string;
+    /// Unique identifier of the reporting sensor of the object.
+    /// Example: a7e99418-b6d6-29ab-e767-440a989cce26
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    idSensor: string;
+    /// Optional identifier provided by the source to indicate the reporting sensor of the object. This may be an internal identifier and not necessarily a valid sensor ID.
+    /// Example: ORIGSENSOR-ID
+    /// Constraints: Minimum length = 0, Maximum length = 46
+    origSensorId: string;
+    /// Three element array, expressing the cartesian position vector of the target object, in kilometers, in the specified referenceFrame. If referenceFrame is null then ECEF should be assumed. The array element order is [x, y, z].
+    /// Example: [-1456.91592, -2883.54041, 6165.55186]
+    /// Constraints: No constraints specified.
+    pos: [string];
+    /// Three element array, expressing the cartesian velocity vector of the target object, in kilometers/second, in the specified referenceFrame. If referenceFrame is null then ECEF should be assumed. The array element order is [x', y', z'].
+    /// Example: [-1.21981, -6.60208, -3.36515]
+    /// Constraints: No constraints specified.
+    vel: [string];
+    /// Three element array, expressing the cartesian acceleration vector of the target object, in kilometers/second^2, in the specified referenceFrame. If referenceFrame is null then ECEF should be assumed. The array element order is [x'', y'', z''].
+    /// Example: [0.59236, -0.03537, 0.35675]
+    /// Constraints: No constraints specified.
+    accel: [string];
+    /// Track object course, in degrees clockwise from true north.
+    /// Example: 7.3580153
+    /// Constraints: No constraints specified.
+    course: double;
+    /// Track object speed, in kilometers/sec.
+    /// Example: 15.03443
+    /// Constraints: No constraints specified.
+    spd: double;
+    /// The reference frame of the cartesian vector (ECEF, J2000). If the referenceFrame is null it is assumed to be ECEF.
+    /// Example: ECEF
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    referenceFrame: string;
+    /// Covariance matrix, in kilometer and second based units, in the specified covReferenceFrame. 
+If the covReferenceFrame is null it is assumed to be UVW. The array values (1-45) represent the upper triangular half of the position-velocity-acceleration covariance matrix. 
+The covariance elements are position dependent within the array with values ordered as follows:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y'&nbsp;&nbsp;&nbsp;&nbsp;z'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x"&nbsp;&nbsp;&nbsp;&nbsp;y"&nbsp;&nbsp;&nbsp;&nbsp;z" 
+x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9 
+y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;11&nbsp;&nbsp;&nbsp;12&nbsp;&nbsp;&nbsp;13&nbsp;&nbsp;&nbsp;14&nbsp;&nbsp;&nbsp;15&nbsp;&nbsp;&nbsp;16&nbsp;&nbsp;&nbsp;17 
+z&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18&nbsp;&nbsp;&nbsp;19&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;21&nbsp;&nbsp;&nbsp;22&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;24 
+x'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25&nbsp;&nbsp;&nbsp;26&nbsp;&nbsp;&nbsp;27&nbsp;&nbsp;&nbsp;28&nbsp;&nbsp;&nbsp;29&nbsp;&nbsp;&nbsp;30 
+y'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31&nbsp;&nbsp;&nbsp;32&nbsp;&nbsp;&nbsp;33&nbsp;&nbsp;&nbsp;34&nbsp;&nbsp;&nbsp;35 
+z'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;37&nbsp;&nbsp;&nbsp;38&nbsp;&nbsp;&nbsp;39 
+x"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40&nbsp;&nbsp;&nbsp;41&nbsp;&nbsp;&nbsp;42 
+y"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;43&nbsp;&nbsp;&nbsp;44 
+z"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45   The cov array should contain only the upper right triangle values from top left down to bottom right, in order.
+    /// Example: [1.1, 2.2, 3.3]
+    /// Constraints: No constraints specified.
+    cov: [string];
+    /// The reference frame of the covariance elements (ECEF, J2000, UVW). If the referenceFrame is null it is assumed to be UVW.
+    /// Example: ECEF
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    covReferenceFrame: string;
+    /// WGS-84 object latitude subpoint at epoch, represented as -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.0
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    vectorLat: double;
+    /// WGS-84 object longitude subpoint at epoch, represented as -180 to 180 degrees (negative values west of Prime Meridian).
+    /// Example: 150.0
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    vectorLon: double;
+    /// Object altitude at epoch, expressed in kilometers above WGS-84 ellipsoid.
+    /// Example: 25.0
+    /// Constraints: No constraints specified.
+    vectorAlt: double;
+    /// Confidence of the vector, 0-100.
+    /// Example: 100
+    /// Constraints: Minimum value = 0, Maximum value = 100
+    confidence: int32;
+    /// Status of the vector (e.g. INITIAL, UPDATE).
+    /// Example: INITIAL
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    status: string;
+    /// Source of the time value.
+    /// Example: Sensor 1
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    timeSource: string;
+    /// The quaternion describing the attitude of the spacecraft with respect to the reference frame listed in the 'referenceFrame' field. The array element order convention is the three vector components, followed by the scalar component.
+    /// Example: [0.03, 0.02, 0.01, 0.012]
+    /// Constraints: No constraints specified.
+    quat: [string];
+    /// The flight azimuth associated with the current state vector (0-360 degrees).
+    /// Example: 45.23
+    /// Constraints: Minimum value = 0, Maximum value = 360
+    flightAz: double;
+}

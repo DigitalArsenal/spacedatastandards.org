@@ -1,0 +1,87 @@
+/// A grouping of zero or more target reports for which the sensor provides a single time, sensor position, reference position on the ground with simple estimates for the observed area at the reported time, and other pertinent data.
+table MtiJobRequest_Ingest {
+    /// The requestor of the sensor service.
+    /// Example: REQUESTER
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    r1: string;
+    /// Identifier for the tasking message sent by the requesting station.
+    /// Example: IDENTIFIER
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    r2: string;
+    /// The priority of the request relative to other requests originated by the requesting station.
+    /// Example: 15
+    /// Constraints: Minimum value = -128, Maximum value = 255
+    r3: int32;
+    /// North-South position of the first corner (Point A) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    r4: double;
+    /// East-West position of the first corner (Point A) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    r5: double;
+    /// North-South position of the second corner (Point B) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    r6: double;
+    /// East-West position of the second corner (Point B) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    r7: double;
+    /// North-South position of the third corner (Point C) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    r8: double;
+    /// East-West position of the third corner (Point C) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    r9: double;
+    /// North-South position of the fourth corner (Point D) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    r10: double;
+    /// East-West position of the fourth corner (Point D) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    r11: double;
+    /// Identifies the radar mode requested by the requestor.
+    /// Example: MODE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    r12: string;
+    /// Specifies the radar range resolution requested by the requestor, expressed in centimeters.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    r13: int32;
+    /// Specifies the radar cross-range resolution requested by the requestor, expressed in decimeters.
+    /// Example: 100
+    /// Constraints: No constraints specified.
+    r14: int32;
+    /// Specifies the Earliest Start Time for which the service is requested.  Composite of fields R15-R20.
+    /// Example: 2018-01-01T16:00:00.123456Z
+    /// Constraints: No constraints specified.
+    jobReqEst: string;
+    /// Specifies the maximum time from the requested start time after which the request is to be abandoned, expressed in seconds.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    r21: int32;
+    /// Specifies the time duration for the radar job, measured from the actual start of the job, expressed in seconds.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    r22: int32;
+    /// Specifies the revisit interval for the radar job, expressed in deciseconds.
+    /// Example: 100
+    /// Constraints: No constraints specified.
+    r23: int32;
+    /// the type of sensor or the platform.
+    /// Example: TYPE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    r24: string;
+    /// The particular variant of the sensor type.
+    /// Example: VARIANT
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    r25: string;
+    /// Flag field indicating that it is an initial request (flag = 0) or the desire of the requestor to cancel (flag = 1) the requested job.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    r26: bool;
+}

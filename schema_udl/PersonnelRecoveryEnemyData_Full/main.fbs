@@ -1,0 +1,19 @@
+/// Information detailing knowledge of enemies in the area.
+table PersonnelRecoveryEnemyData_Full {
+    /// Directions to known enemies in the operation area (NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, SURROUNDED).
+    /// Example: NORTHWEST
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    dirToEnemy: string;
+    /// The type of hostile fire received (SMALL ARMS, MORTAR, ARTILLERY, ROCKETS).
+    /// Example: SMALL ARMS
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    hostileFireType: string;
+    /// Comments provided by friendlies about the evac zone.
+    /// Example: Comments from friendlies.
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    friendliesRemarks: string;
+    /// Hot Landing Zone remarks.
+    /// Example: Hot Landing Zone remarks.
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    hlzRemarks: string;
+}

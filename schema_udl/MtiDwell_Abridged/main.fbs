@@ -1,0 +1,131 @@
+/// A grouping of zero or more target reports for which the sensor provides a single time, sensor position, reference position on the ground with simple estimates for the observed area at the reported time, and other pertinent data.
+table MtiDwell_Abridged {
+    /// Sequential count of a revisit of the bounding area in the last sent Job Definition Segment, where a Revisit Index of '0' indicates the first revisit.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d2: int32;
+    /// Temporally sequential count of a dwell within the revisit of a particular bounding area for a given job ID.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d3: int32;
+    /// Flag indicating the last dwell of the revisit.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    d4: bool;
+    /// Count of the total number of targets reported during this dwell and sent in this Dwell Segment.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d5: int32;
+    /// Elapsed time, expressed in milliseconds, from midnight at the beginning of the day specified in the Reference Time fields (missionRefTime) of the Mission Segment.
+    /// Example: 1234567890
+    /// Constraints: No constraints specified.
+    d6: int64;
+    /// North-South position of the sensor at the temporal center of the dwell, in degrees.
+    /// Example: 1.2
+    /// Constraints: No constraints specified.
+    d7: double;
+    /// The East-West position of the sensor at the temporal center of the dwell, in degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d8: double;
+    /// The altitude of the sensor at temporal center of the dwell, above the WGS 84 ellipsoid, expressed in centimeters.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d9: int32;
+    /// Factor which modifies the value of the reported target latitude (Delta Latitude, field D32.4).
+    /// Example: 1.2
+    /// Constraints: No constraints specified.
+    d10: double;
+    /// Factor which modifies the value of the reported target longitude (Delta Longitude, field D32.5).
+    /// Example: 1.2
+    /// Constraints: No constraints specified.
+    d11: double;
+    /// Standard deviation in the estimated horizontal sensor location at the time of the dwell, measured along the sensor track direction (field D15), in centimeters.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d12: int32;
+    /// Standard deviation in the estimated horizontal sensor location at the time of the dwell, measured orthogonal to the sensor track direction (field D15), in centimeters.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d13: int32;
+    /// Standard deviation of the sensor altitude estimate (field D9), in centimeters.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d14: int32;
+    /// Ground track of the sensor at the time of the dwell, as the angle in degrees (clockwise) from True North.
+    /// Example: 1.2
+    /// Constraints: No constraints specified.
+    d15: double;
+    /// Ground speed of the sensor at the time of the dwell, in millimeters per second.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d16: int32;
+    /// Velocity of the sensor in the vertical direction, in decimeters per second.
+    /// Example: 2
+    /// Constraints: Minimum value = -128, Maximum value = 127
+    d17: int32;
+    /// Standard deviation of the estimate of the sensor track, in degrees.
+    /// Example: 2
+    /// Constraints: Minimum value = 0, Maximum value = 45
+    d18: int32;
+    /// Standard deviation of estimate of the sensor speed, in millimeters per second.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d19: int32;
+    /// Standard deviation of estimate of the sensor vertical velocity, expressed in centimeters per second.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    d20: int32;
+    /// Heading of the platform at the time of the dwell, as the angle in degrees (clockwise) from True North to the roll axis of the platform.
+    /// Example: 1.2
+    /// Constraints: No constraints specified.
+    d21: double;
+    /// Pitch angle of the platform at the time of the dwell, in degrees.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d22: double;
+    /// Roll angle of the platform at the time of the dwell, in degrees.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d23: double;
+    /// The North-South position of the center of the dwell area, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d24: double;
+    /// The East-West position of the center of the dwell area, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d25: double;
+    /// Distance on the earth surface, expressed in kilometers, from the near edge to the center of the dwell area.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d26: double;
+    /// For dwell based radars, one-half of the 3-dB beamwidth.  For non-dwell based radars, the angle between the beginning of the dwell to the center of the dwell.  Measured in degrees.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d27: double;
+    /// Rotation of the sensor broadside face about the local vertical axis of the platform, in degrees.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d28: double;
+    /// Rotation angle of the sensor about the transverse axis of the sensor broadside, in degrees.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d29: double;
+    /// Rotation angle of the sensor about the transverse axis of the sensor broadside, in degrees.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    d30: double;
+    /// Minimum velocity component, along the line of sight, which can be detected by the sensor, in decimeters per second.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    d31: int32;
+    /// Minimum velocity component, along the line of sight, which can be detected by the sensor, in decimeters per second.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    d32: [string];
+    /// Dwell timestamp in ISO8601 UTC format.
+    /// Example: 2018-01-01T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    dwellts: string;
+}

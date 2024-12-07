@@ -1,0 +1,27 @@
+/// Collection that identifies points of reference used in the establishment of the data links. There can be 1 to many DataLinkRefPoints collections within the datalink service.
+table DataLinkRefPoints_Abridged {
+    /// Type of data link reference point or grid origin.
+    /// Example: DLRP
+    /// Constraints: Minimum length = 0, Maximum length = 7
+    refPointType: string;
+    /// Identifier to designate a reference point.
+    /// Example: L5
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    refDes: string;
+    /// The location name of the point of reference for this data link message.
+    /// Example: FORT BRAGG
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    refLocName: string;
+    /// WGS84 latitude of the reference point for this data link message, in degrees. -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.23
+    /// Constraints: No constraints specified.
+    refLat: double;
+    /// WGS84 longitude of the reference point for this data link message, in degrees. -90 to 90 degrees (negative values south of equator).
+    /// Example: 179.1
+    /// Constraints: No constraints specified.
+    refLon: double;
+    /// Indicates when a particular event or nickname becomes effective or the old event or nickname is deleted, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2024-01-08T13:55:43.123Z
+    /// Constraints: No constraints specified.
+    effEventTime: string;
+}

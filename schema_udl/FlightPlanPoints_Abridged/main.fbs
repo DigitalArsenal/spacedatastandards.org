@@ -1,0 +1,23 @@
+/// Array of point data for this Point Group.
+table FlightPlanPoints_Abridged {
+    /// Name of this point.
+    /// Example: CRUISE ALTITUDE ETP
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    pointName: string;
+    /// WGS84 latitude of the point location, in degrees. -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    fppLat: double;
+    /// WGS84 longitude of the point location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).
+    /// Example: 179.1
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    fppLon: double;
+    /// Estimated Time of Arrival (ETA) at this point in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2023-09-09T01:00:00.123Z
+    /// Constraints: No constraints specified.
+    fppEta: string;
+    /// Fuel required at this point to execute an Equal Time Point (ETP) or Extended Operations (ETOPS) plan in pounds.
+    /// Example: 4250.1
+    /// Constraints: No constraints specified.
+    fppReqFuel: double;
+}

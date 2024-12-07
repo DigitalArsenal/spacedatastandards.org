@@ -1,0 +1,15 @@
+/// Schema for the CotChatData to post.
+table CotChatData_Ingest {
+    /// Chat room name to send chat message to.
+    /// Example: All Chat Rooms
+    /// Constraints: No constraints specified.
+    chatRoom: string;
+    /// Callsign of chat sender.
+    /// Example: Pebble
+    /// Constraints: No constraints specified.
+    chatSenderCallSign: string;
+    /// Contents of a chat message.
+    /// Example: Mission is go
+    /// Constraints: No constraints specified.
+    chatMsg: string;
+}

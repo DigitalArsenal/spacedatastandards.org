@@ -1,0 +1,79 @@
+/// Support items associated with this LogisticsSupport record.
+table LogisticsSupportItems_Abridged {
+    /// The type of recovery request needed. Contact the source provider for details.
+    /// Example: E
+    /// Constraints: Minimum length = 1, Maximum length = 1
+    recoveryRequestTypeCode: string;
+    /// The request or record number for this item type (Equipent, Part, or MRT).
+    /// Example: 89208
+    /// Constraints: Minimum length = 0, Maximum length = 5
+    requestNumber: string;
+    /// Military aircraft discrepancy logistics requisition ordered quantity. The quantity of equipment ordered that is required to fix the aircraft.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    quantity: int32;
+    /// The technical order name of the part ordered.
+    /// Example: HOIST ADAPTER KIT
+    /// Constraints: Minimum length = 0, Maximum length = 150
+    description: string;
+    /// Shipment Unit Identifier is the Transportation Control Number (TCN) for shipping that piece of equipment being requested.
+    /// Example: FB44273196X501XXX
+    /// Constraints: Minimum length = 0, Maximum length = 17
+    shipmentUnitId: string;
+    /// This is the Redeploy (return) Transportation Control Number/Tracking Reference Number for the selected item.
+    /// Example: X400LA31949108
+    /// Constraints: Minimum length = 0, Maximum length = 17
+    redeployShipmentUnitId: string;
+    /// A number assigned by Job Control to monitor and record maintenance actions required to correct the associated aircraft maintenance discrepancy.  It is seven, nine or twelve characters, depending on the base-specific numbering scheme.  If seven characters: characters 1-3 are Julian date, 4-7 are sequence numbers.  If nine characters: characters 1-2 are last two digits of the year, characters 3-5 are Julian date, 6-9 are sequence numbers.  If twelve characters: characters 1-2 are last two digits of the year, 3-5 are Julian date, 6-9 are sequence numbers, and 10-12 are a three-digit supplemental number.
+    /// Example: 231942400
+    /// Constraints: Minimum length = 0, Maximum length = 12
+    jobControlNumber: string;
+    /// The code that represents the International Civil Aviation Organization (ICAO) designations of an airport.
+    /// Example: PHIK
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    sourceICAO: string;
+    /// System generated reference id for the transportation plan.  Format: TXXXXXNNNN  T - Transportation, Sequence Number, Node Id.
+    /// Example: T89003
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    deployPlanNumber: string;
+    /// System generated reference id for the transportation plan.  Format: TXXXXXNNNN  T - Transportation, Sequence Number, Node Id.
+    /// Example: T89003
+    /// Constraints: Minimum length = 0, Maximum length = 10
+    redeployPlanNumber: string;
+    /// This element indicates whether or not the supplied item is contained within another item.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    cannibalized: bool;
+    /// The point of contact is a free text field to add information about the individual(s) with knowledge of the referenced requested or supplied item(s). The default value for this field is the last name, first name, and middle initial of the operator who created the records and/or generated the transaction.
+    /// Example: SMITH, JOHN J
+    /// Constraints: Minimum length = 0, Maximum length = 68
+    siPOC: string;
+    /// The time the item is ready, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:04:00.123Z
+    /// Constraints: No constraints specified.
+    readyTime: string;
+    /// The time the item is received, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:04:00.123Z
+    /// Constraints: No constraints specified.
+    receivedTime: string;
+    /// This element indicates if the supplied item is characterized as additional support.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    resupportFlag: bool;
+    /// The last time this supported item was updated, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T19:04:00.123Z
+    /// Constraints: No constraints specified.
+    itemLastChangedDate: string;
+    /// The parts associated with this support item.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    logisticsParts: [string];
+    /// The specialties required to implement this support item.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    logisticsSpecialties: [string];
+    /// Remarks associated with this support item.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    logisticsRemarks: [string];
+}

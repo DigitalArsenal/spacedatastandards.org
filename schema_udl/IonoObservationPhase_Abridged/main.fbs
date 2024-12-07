@@ -1,0 +1,19 @@
+/// Multi-dimensional array with the same dimensions as power plus one additional dimension for antenna_element (where each array element corresponds to a single antenna element). This variable is enabled for post-process polarization and/or antenna array determination. Note: this phase_array can be combined with power_array or amplitude_array to create a phasor.
+table IonoObservationPhase_Abridged {
+    /// Notes for the phase data. Orientation and position for each antenna element across the antenna_element dimension.
+    /// Example: NOTES
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    notes: string;
+    /// Array of integers of the phase array dimensions.
+    /// Example: [1, 2]
+    /// Constraints: No constraints specified.
+    dimensions: [string];
+    /// Array of names for phase dimensions.
+    /// Example: ['NAME1', 'NAME2']
+    /// Constraints: No constraints specified.
+    dimensionName: [string];
+    /// Array of phase data.
+    /// Example: [[[[[[[0.02, 0.034]]]]]]]
+    /// Constraints: No constraints specified.
+    data: [string];
+}

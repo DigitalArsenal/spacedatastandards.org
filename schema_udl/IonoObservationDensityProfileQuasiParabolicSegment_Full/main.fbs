@@ -1,0 +1,31 @@
+/// A quasi-parabolic segment is the best-fit 3-parameter quasi-parabolas defined via A, B, C coefficients, f^2=A/r^2+B/r+C”. Usually 3 groups for E, F1, and F2 layers, but additional segments may be used to improve accuracy.
+table IonoObservationDensityProfileQuasiParabolicSegment_Full {
+    /// The index of this segment in the list, from 1 to NumSegments.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    index: int32;
+    /// Starting range of the segment, in kilometers from the Earth's center.
+    /// Example: 6460.1
+    /// Constraints: No constraints specified.
+    rb: double;
+    /// Ending range of the segment, in kilometers from the Earth's center.
+    /// Example: 6480.001
+    /// Constraints: No constraints specified.
+    re: double;
+    /// Coefficient A.
+    /// Example: -550273940000
+    /// Constraints: No constraints specified.
+    a: double;
+    /// Coefficient B.
+    /// Example: 169837632
+    /// Constraints: No constraints specified.
+    b: double;
+    /// Coefficient C.
+    /// Example: 13104.63
+    /// Constraints: No constraints specified.
+    c: double;
+    /// Best-fit error.
+    /// Example: 0.0016
+    /// Constraints: No constraints specified.
+    error: double;
+}

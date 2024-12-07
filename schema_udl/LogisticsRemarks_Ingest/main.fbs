@@ -1,0 +1,15 @@
+/// Remarks associated with this LogisticsSupport record.
+table LogisticsRemarks_Ingest {
+    /// User who published the remark.
+    /// Example: JSMITH
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    username: string;
+    /// Text of the remark.
+    /// Example: EXAMPLE REMARK
+    /// Constraints: Minimum length = 0, Maximum length = 4000
+    remark: string;
+    /// Date the remark was published or updated, in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2023-07-17T10:30:00.123Z
+    /// Constraints: No constraints specified.
+    lastChanged: string;
+}

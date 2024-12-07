@@ -1,0 +1,19 @@
+/// Collection of diplomatic clearance remarks.
+table DiplomaticClearanceRemarks_Ingest {
+    /// Global Decision Support System (GDSS) remark identifier.
+    /// Example: GDSSREMARK-ID
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    gdssRemarkId: string;
+    /// Text of the remark.
+    /// Example: Example mission remarks.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    text: string;
+    /// Date the remark was published, in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2024-01-01T01:01:01.123Z
+    /// Constraints: No constraints specified.
+    date: string;
+    /// User who published the remark.
+    /// Example: John Doe
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    user: string;
+}

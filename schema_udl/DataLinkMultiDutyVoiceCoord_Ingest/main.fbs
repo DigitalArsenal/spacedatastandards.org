@@ -1,0 +1,19 @@
+/// Collection of information regarding the function, frequency, and priority of interface control and coordination nets for multilink coordination. There can be 0 to many DataLinkMultiVoiceCoord collections within a DataLinkMultiDuty collection.
+table DataLinkMultiDutyVoiceCoord_Ingest {
+    /// Designator assigned to a voice interface control and coordination net for multilink coordination (e.g. ADCCN, DCN, VPN, etc.).
+    /// Example: VPN
+    /// Constraints: Minimum length = 0, Maximum length = 5
+    multiVoiceNetDes: string;
+    /// Designator used in nonsecure communications to refer to a radio frequency for multilink coordination.
+    /// Example: ST300A
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    multiFreqDes: string;
+    /// Priority of a communication circuit, channel or frequency for multilink coordination (e.g. P - Primary, M - Monitor).
+    /// Example: P
+    /// Constraints: Minimum length = 0, Maximum length = 1
+    multiCommPri: string;
+    /// Array of telephone numbers or contact frequencies used for interface control for multilink coordination.
+    /// Example: ['TEL:804-555-4142', 'TEL:804-867-5309']
+    /// Constraints: No constraints specified.
+    multiTeleFreqNums: [string];
+}

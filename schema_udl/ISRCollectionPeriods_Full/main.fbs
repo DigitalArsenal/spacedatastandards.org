@@ -1,0 +1,11 @@
+/// Tasking collection periods.
+table ISRCollectionPeriods_Full {
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    planned: string;
+    /// Actual start and stop for the collection.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    actual: [string];
+}

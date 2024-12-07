@@ -1,0 +1,115 @@
+/// The means for the platform to pass information pertaining to the sensor job that will be performed and details of the location parameters (terrain elevation model and geoid model) used in the measurement.
+table MtiJobDefinition_Full {
+    /// A platform assigned number identifying the specific request or task to which the specific dwell pertains.
+    /// Example: 1234567890
+    /// Constraints: No constraints specified.
+    j1: int64;
+    /// The type of sensor or the platform.
+    /// Example: TYPE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    j2: string;
+    /// Identifier of the particular variant of the sensor type.
+    /// Example: J3-ID
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    j3: string;
+    /// Flag field indicating whether filtering has been applied to the targets detected within the dwell area.
+    /// Example: 3
+    /// Constraints: Minimum value = -128, Maximum value = 127
+    j4: int32;
+    /// Priority of this tasking request relative to all other active tasking requests scheduled for execution on the specified platform.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    j5: int32;
+    /// North-South position of the first corner (Point A) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    j6: double;
+    ///  East-West position of the first corner (Point A) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    j7: double;
+    ///  North-South position of the second corner (Point B) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    j8: double;
+    /// East-West position of the second corner (Point B) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    j9: double;
+    /// North-South position of the third corner (Point C) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    j10: double;
+    /// East-West position of the third corner (Point C) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    j11: double;
+    /// North-South position of the fourth corner (Point D) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    j12: double;
+    /// East-West position of the fourth corner (Point D) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.
+    /// Example: 10.23
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    j13: double;
+    /// Mode in which the radar will operate for the given job ID.
+    /// Example: MODE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    j14: string;
+    /// The nominal revisit interval for the job ID, expressed in deciseconds.  Value of zero, indicates that the sensor is not revisiting the previous area.
+    /// Example: 100
+    /// Constraints: No constraints specified.
+    j15: int32;
+    /// Nominal estimate of the standard deviation in the estimated horizontal (along track) sensor location, expressed in decimeters.   measured along the sensor track direction defined in the Dwell segment.
+    /// Example: 100
+    /// Constraints: No constraints specified.
+    j16: int32;
+    /// Nominal estimate of the standard deviation in the estimated horizontal sensor location, measured orthogonal to the track direction, expressed in decimeters.
+    /// Example: 100
+    /// Constraints: No constraints specified.
+    j17: int32;
+    /// Nominal estimate of the standard deviation of the measured sensor altitude, expressed in decimeters.
+    /// Example: 100
+    /// Constraints: No constraints specified.
+    j18: int32;
+    /// Standard deviation of the estimate of sensor track heading, expressed in degrees.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j19: int32;
+    /// Nominal standard deviation of the estimate of sensor speed, expressed in millimeters per second.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j20: int32;
+    /// Nominal standard deviation of the slant range of the reported detection, expressed in centimeters.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j21: int32;
+    /// Nominal standard deviation of the measured cross angle to the reported detection, expressed in degrees.
+    /// Example: 10.23
+    /// Constraints: No constraints specified.
+    j22: double;
+    /// Nominal standard deviation of the velocity line-of-sight component, expressed in centimeters per second.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j23: int32;
+    /// Nominal minimum velocity component along the line of sight, which can be detected by the sensor, expressed in decimeters per second.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j24: int32;
+    /// Nominal probability that an unobscured ten square-meter target will be detected within the given area of surveillance.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j25: int32;
+    /// The expected density of False Alarms (FA), expressed as the negative of the decibel value.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    j26: int32;
+    /// The terrain elevation model used for developing the target reports.
+    /// Example: MODEL
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    j27: string;
+    /// The geoid model used for developing the target reports.
+    /// Example: MODEL
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    j28: string;
+}

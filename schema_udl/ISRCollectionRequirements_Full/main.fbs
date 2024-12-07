@@ -1,0 +1,91 @@
+/// Tasking desired collection requirements.
+table ISRCollectionRequirements_Full {
+    /// Collection Requirement Unique Identifier.
+    /// Example: ISCRCOLLECTIONREQUIREMENTS
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    id: string;
+    /// Encryption hashing algorithm.
+    /// Example: HASH
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    hash: string;
+    /// Type collection this requirement applies to.
+    /// Example: COLLECTION_TYPE
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    type: string;
+    /// Collection Requirement Unique Identifier.
+    /// Example: CRID
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    cridNumbers: string;
+    /// 1-n priority for this collection requirement.
+    /// Example: 20.23
+    /// Constraints: No constraints specified.
+    priority: double;
+    /// Record id.
+    /// Example: RECORD-ID
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    recordId: string;
+    /// Reconnaissance Survey information the operator needs.
+    /// Example: SURVEY_INFO
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    reconSurvey: string;
+    /// Primary type of intelligence to be collected for this requirement.
+    /// Example: Sig
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    intelDiscipline: string;
+    /// Sub category of primary intelligence to be collected for this requirement.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    secondary: bool;
+    /// Is this collection requirement an emphasized/critical requirement.
+    /// Example: False
+    /// Constraints: No constraints specified.
+    emphasized: bool;
+    /// Is this collection request for the Prism system?.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    isPrismCr: bool;
+    /// Start time for this requirement, should be within the mission time window.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    start: string;
+    /// Stop time for this requirement, should be within the mission time window.
+    /// Example: 2021-01-19T01:20:01.001Z
+    /// Constraints: No constraints specified.
+    stop: string;
+    /// Human readable name for this operation.
+    /// Example: NAME
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    operation: string;
+    /// The name of the military unit that this assigned collection requirement will support.
+    /// Example: UNIT
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    supportedUnit: string;
+    /// Country code of the collection requirement. A Country may represent countries, multi-national consortiums, and international organizations.
+    /// Example: COUNTRY_CODE
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    country: string;
+    /// Region of the collection requirement.
+    /// Example: REGION
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    region: string;
+    /// Subregion of the collection requirement.
+    /// Example: SUBREGION
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    subregion: string;
+    /// Free text field for the user to specify special instructions needed for this collection.
+    /// Example: TEXT
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    specialComGuidance: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    criticalTimes: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    exploitationRequirement: string;
+    /// Array of POI Id's for the targets being tasked.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    targetList: [string];
+}

@@ -1,0 +1,15 @@
+/// Planned start and stop for the collection.
+table ISRCollectionPlanned_Ingest {
+    /// Start time of collection, in ISO 8601 UTC format.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    start: string;
+    /// Stop time of collection, in ISO 8601 UTC format.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    stop: string;
+    /// Additional start and stop for the collection.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    additional: [string];
+}

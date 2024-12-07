@@ -1,0 +1,27 @@
+/// The ScalerInfo record describes the person or system who interpreted the ionogram in IonoObservation.
+table IonoObservationScalerInfo_Abridged {
+    /// Scaler type (MANUAL, AUTOMATIC or UNKNOWN).
+    /// Example: MANUAL
+    /// Constraints: Minimum length = 0, Maximum length = 9
+    type: string;
+    /// Scaler name.
+    /// Example: ARTIST-4
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    name: string;
+    /// Scaler organization.
+    /// Example: UML
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    organization: string;
+    /// Scaler version.
+    /// Example: 500200.1
+    /// Constraints: No constraints specified.
+    version: double;
+    /// Scaler confidence score.
+    /// Example: 75
+    /// Constraints: No constraints specified.
+    confidenceScore: int32;
+    /// Scaler confidence level.
+    /// Example: 11
+    /// Constraints: No constraints specified.
+    confidenceLevel: int32;
+}

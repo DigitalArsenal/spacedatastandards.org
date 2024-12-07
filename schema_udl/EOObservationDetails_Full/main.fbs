@@ -1,0 +1,346 @@
+/// Model representation of additional detailed observation data for electro-optical based sensor phenomenologies.
+table EOObservationDetails_Full {
+    /// Unique identifier of the parent EOObservation.
+    /// Example: EOOBSERVATION-ID
+    /// Constraints: Minimum length = 1, Maximum length = 36
+    idEOObservation: string;
+    /// Classification marking of the data in IC/CAPCO Portion-marked format, will be set to EOObservation classificationMarking if blank.
+    /// Example: U
+    /// Constraints: Minimum length = 1, Maximum length = 128
+    classificationMarking: string;
+    /// Ob detection time in ISO 8601 UTC with microsecond precision, will be set to EOObservation obTime if blank.
+    /// Example: 2018-01-01T16:00:00.123456Z
+    /// Constraints: No constraints specified.
+    obTime: string;
+    /// Predicted Right Ascension of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    predictedRa: double;
+    /// Predicted Declination of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    predictedDeclination: double;
+    /// Predicted Azimuth angle of the target object from a ground -based sensor (no atmospheric refraction correction required). AZ_EL implies apparent topocentric place in true of date reference frame as seen from the observer with aberration due to the observer velocity and light travel time applied.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    predictedAzimuth: double;
+    /// Predicted elevation angle of the target object from a ground -based sensor (no atmospheric refraction correction required). AZ_EL implies apparent topocentric place in true of date reference frame as seen from the observer with aberration due to the observer velocity and light travel time applied.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    predictedElevation: double;
+    /// Azimuth angle of the sun from a ground-based telescope (no atmospheric refraction correction required) the observer with aberration due to the observer velocity and light travel time applied.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    sunAzimuth: double;
+    /// Elevation angle of the sun from a ground-based telescope (no atmospheric refraction correction required).
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    sunElevation: double;
+    /// The value is the number of spectral filters used.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    numSpectralFilters: int32;
+    /// Array of the SpectralFilters keywords, must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.
+    /// Example: ['Keyword1', 'Keyword2']
+    /// Constraints: No constraints specified.
+    spectralFilters: [string];
+    /// This is the in-band average irradiance of a 0th mag source. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.  Units = W/m2/nm.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    spectralZMFL: [string];
+    /// This is the in-band solar magnitude at 1 A.U. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.  Units = mag.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    spectralFilterSolarMag: [string];
+    /// This is the value for the zero-point calculated for each filter denoted in spectralFilters. It is the difference between the catalog mag and instrumental mag for a set of standard stars. For use with All Sky photometry. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    zeroPoints: [string];
+    /// This is the uncertainty in the zero point for the filter denoted in spectralFilters. For use with All Sky photometry. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    zeroPointsUnc: [string];
+    /// The extinction coefficient computed for the nth filter. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n. Units = mag/airmass.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    extinctionCoeffs: [string];
+    /// This is the uncertainty in the extinction coefficient for the nth filter. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n. -9999 for space-based sensors. Units = mag/airmass.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    extinctionCoeffsUnc: [string];
+    /// Color coefficient for filter n for a space-based sensor where there is no atmospheric extinction. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    colorCoeffs: [string];
+    /// The value is the number of neutral density filters used.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    numNeutralDensityFilters: int32;
+    /// Must be present for all values n=1 to numNeutralDensityFilters, in incrementing order of n, and for no other values of n.
+    /// Example: ['numNeutralDensityFilters1', 'numNeutralDensityFilters2']
+    /// Constraints: No constraints specified.
+    neutralDensityFilterNames: [string];
+    /// The transmission of the nth neutral density filter. Must be present for all values n=1 to numNeutralDensityFilters, in incrementing order of n, and for no other values of n.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    neutralDensityFilterTransmissions: [string];
+    /// This is the uncertainty in the transmission for the nth filter. Must be present for all values n=1 to numNeutralDensityFilters, in incrementing order of n, and for no other values of n.
+    /// Example: [1.1, 2.1, 3.1]
+    /// Constraints: No constraints specified.
+    neutralDensityFilterTransmissionsUnc: [string];
+    /// Some sensors have gain settings. This value is the gain used during the observation in units e-/ADU. If no gain is used, the value = 1.
+    /// Example: 234.2
+    /// Constraints: No constraints specified.
+    gain: double;
+    /// Sensor instantaneous field of view (ratio of pixel pitch to focal length).
+    /// Example: 0.2
+    /// Constraints: No constraints specified.
+    ifov: double;
+    /// Pixel array size (width) in pixels.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    pixelArrayWidth: int32;
+    /// Pixel array size (height) in pixels.
+    /// Example: 23
+    /// Constraints: No constraints specified.
+    pixelArrayHeight: int32;
+    /// Minimum valid pixel value, this is typically 0.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    pixelMin: int32;
+    /// Maximum valid pixel value, this is defined as 2^(number of bits per pixel). For example, a CCD with 8-bitpixels, would have a maximum valid pixel value of 2^8 = 256. This can represent the saturation value of the detector, but some sensors will saturate at a value significantly lower than full well depth. This is the analog-to-digital conversion (ADC) saturation value.
+    /// Example: 256
+    /// Constraints: No constraints specified.
+    pixelMax: int32;
+    /// Observed centroid row number on the focal plane in pixels (0 is top edge, 0.5 is center of pixels along top of image).
+    /// Example: 0.1
+    /// Constraints: No constraints specified.
+    centroidRow: double;
+    /// Observed centroid column number on the focal plane in pixels (0 is left edge, 0.5 is center of pixels along left of image).
+    /// Example: 0.5
+    /// Constraints: No constraints specified.
+    centroidColumn: double;
+    /// Spatial variance of image distribution in vertical direction measured in pixels squared.
+    /// Example: 0.1
+    /// Constraints: No constraints specified.
+    rowVariance: double;
+    /// Spatial variance of image distribution in horizontal direction measured in pixels squared.
+    /// Example: 0.1
+    /// Constraints: No constraints specified.
+    columnVariance: double;
+    /// Spatial covariance of image distribution across horizontal and vertical directions measured in pixels squared.
+    /// Example: 0.01
+    /// Constraints: No constraints specified.
+    rowColCov: double;
+    /// An array of measurements that correspond to the distance from the streak center measured from the optical image in pixels that show change over an interval of time. The array length is dependent on the length of the streak. The distFromStreakCenter, surfBrightness, and surfBrightnessUnc arrays will match in size.
+    /// Example: [-127.153, -126.153, -125.153]
+    /// Constraints: No constraints specified.
+    distFromStreakCenter: [string];
+    /// An array of surface brightness measurements in magnitudes per square arcsecond from the optical image that show change over an interval of time. The array length is dependent on the length of the streak. The distFromStreakCenter, surfBrightness, and surfBrightnessUnc arrays will match in size.
+    /// Example: [21.01, 21.382, 21.725]
+    /// Constraints: No constraints specified.
+    surfBrightness: [string];
+    /// An array of surface brightness uncertainty measurements in magnitudes per square arcsecond from the optical image that show change over an interval of time. The array length is dependent on the length of the streak. The distFromStreakCenter, surfBrightness, and surfBrightnessUnc arrays will match in size.
+    /// Example: [0.165, 0.165, 0.165]
+    /// Constraints: No constraints specified.
+    surfBrightnessUnc: [string];
+    /// Uncertainty in the times reported in UTC in seconds.
+    /// Example: 13.1
+    /// Constraints: No constraints specified.
+    timesUnc: double;
+    /// Operating temperature of CCD recorded during exposure or measured during calibrations in K.
+    /// Example: 123.4
+    /// Constraints: No constraints specified.
+    ccdTemp: double;
+    /// The reference number, x, where x ranges from 1 to n, where n is the number specified in spectralFilters that corresponds to the spectral filter given in the corresponding spectralFilterNames.
+    /// Example: 23
+    /// Constraints: No constraints specified.
+    currentSpectralFilterNum: int32;
+    /// The reference number n, in neutralDensityFilters for the currently used neutral density filter.
+    /// Example: 3
+    /// Constraints: No constraints specified.
+    currentNeutralDensityFilterNum: int32;
+    /// The number of pixels binned horizontally.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    binningHoriz: int32;
+    /// The number of pixels binned vertically.
+    /// Example: 14
+    /// Constraints: No constraints specified.
+    binningVert: int32;
+    /// Number of stars used in photometric fit count.
+    /// Example: 23
+    /// Constraints: No constraints specified.
+    pcalNumStars: int32;
+    /// The x centroid position on the CCD of the target object in pixels.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    ccdObjPosX: double;
+    /// The y centroid position on the CCD of the target object in pixels.
+    /// Example: 321.4
+    /// Constraints: No constraints specified.
+    ccdObjPosY: double;
+    /// This is the pixel width of the target. This is either a frame-by-frame measurement or a constant point spread function or synthetic aperture used in the extraction.
+    /// Example: 133.2
+    /// Constraints: No constraints specified.
+    ccdObjWidth: double;
+    /// This is the background signal at or in the vicinity of the radiometric source position. Specifically, this is the average background count level (DN/pixel) divided by the exposure time in seconds of the background pixels used in the photometric extraction. DN/pixel/sec.
+    /// Example: 4134.1
+    /// Constraints: No constraints specified.
+    backgroundSignal: double;
+    /// Estimated 1-sigma uncertainty in the background signal at or in the vicinity of the radiometric source position. DN/pixel/sec.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    backgroundSignalUnc: double;
+    /// Peak Aperture Raw Counts is the value of the peak pixel in the real or synthetic aperture containing the target signal.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    peakApertureCount: double;
+    /// Peak Background Raw Counts is the largest pixel value used in background signal.
+    /// Example: 321
+    /// Constraints: No constraints specified.
+    peakBackgroundCount: int32;
+    /// Estimated signal-to-noise ratio (SNR) for the total radiometric signal. Under some algorithms, this can be a constant per target (not per observation). Note: this SNR applies to the total signal of the radiometric source (i.e., Net_Obj_Sig with units DN/sec), not to be confused with the SNR of the signal in the peak pixel (i.e., DN/pixel/sec).
+    /// Example: 13.4
+    /// Constraints: No constraints specified.
+    snrEst: double;
+    /// Instrumental magnitude of a sensor before corrections are applied for atmosphere or to transform to standard magnitude scale.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    magInstrumental: double;
+    /// Uncertainty in the instrumental magnitude.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    magInstrumentalUnc: double;
+    /// Optical Cross Section computed in units m(2)/ster.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    opticalCrossSection: double;
+    /// Uncertainty in Optical Cross Section computed in units m(2)/ster.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    opticalCrossSectionUnc: double;
+    /// Sun state vector in ECI J2000 coordinate frame in km.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    sunStatePosX: double;
+    /// Sun state vector in ECI J2000 coordinate frame in km.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    sunStatePosY: double;
+    /// Sun state vector in ECI J2000 coordinate frame in km.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    sunStatePosZ: double;
+    /// Sun state vector in ECI J2000 coordinate frame in km/sec.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    sunStateVelX: double;
+    /// Sun state vector in ECI J2000 coordinate frame in km/sec.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    sunStateVelY: double;
+    /// Sun state vector in ECI J2000 coordinate frame in km/sec.
+    /// Example: 123.3
+    /// Constraints: No constraints specified.
+    sunStateVelZ: double;
+    /// Number of catalog stars in the detector field of view (FOV) with the target object. Can be 0 for narrow FOV sensors.
+    /// Example: 123
+    /// Constraints: No constraints specified.
+    numCatalogStars: int32;
+    /// Number of detected stars in the FOV with the target object. Helps identify frames with clouds.
+    /// Example: 123
+    /// Constraints: No constraints specified.
+    numDetectedStars: int32;
+    /// Number of correlated stars in the FOV with the target object. Can be 0 for narrow FOV sensors.
+    /// Example: 123
+    /// Constraints: No constraints specified.
+    numCorrelatedStars: int32;
+    /// Uncertainty of predicted Right Ascension of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    predictedRaUnc: double;
+    /// Uncertainty of Predicted Declination of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    predictedDeclinationUnc: double;
+    /// Covariance (x^2) in measured Right Ascension (X) in deg^2.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    raCov: double;
+    /// Covariance (Y^2) in measured declination (Y) in deg^2.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    declinationCov: double;
+    /// Covariance (XY) in measured ra/declination (XY) in deg^2.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    raDeclinationCov: double;
+    /// World Coordinate System (WCS) X pixel origin in astrometric fit.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    acalCrPixX: double;
+    /// World Coordinate System (WCS) Y pixel origin in astrometric fit.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    acalCrPixY: double;
+    /// World Coordinate System (WCS) equatorial coordinate X origin corresponding to CRPIX in astrometric fit in degrees.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    acalCrValX: double;
+    /// World Coordinate System (WCS) equatorial coordinate Y origin corresponding to CRPIX in astrometric fit in degrees.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    acalCrValY: double;
+    /// Number of stars used in astrometric fit.
+    /// Example: 123
+    /// Constraints: No constraints specified.
+    acalNumStars: int32;
+    /// Distance from the target object to the sun during the observation in meters.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    objSunRange: double;
+    /// Solar phase angle bisector vector. The vector that bisects the solar phase angle. The phase angle bisector is the angle that is << of the value in #48. Then calculate the point on the RA/DEC (ECI J2000.0) sphere that a vector at this angle would intersect.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    phaseAngBisect: double;
+    /// Fraction of the sun that is illuminating the target object. This indicates if the target is in the Earth’s penumbra or umbra. (It is 0 when object is in umbra and 1 when object is fully illuminated.).
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    solarDiskFrac: double;
+    /// Time off element set.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    toes: double;
+    /// Degrees Off Element Set.
+    /// Example: 123.2
+    /// Constraints: No constraints specified.
+    does: double;
+    /// Source of the data, will be set to EOObservation source if blank.
+    /// Example: Bluestaq
+    /// Constraints: Minimum length = 1, Maximum length = 64
+    source: string;
+    /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST data: EXERCISE:&nbsp;Data pertaining to a government or military exercise. The data may include both real and simulated data. REAL:&nbsp;Data collected or produced that pertains to real-world objects, events, and analysis. SIMULATED:&nbsp;Synthetic data generated by a model to mimic real-world datasets. TEST:&nbsp;Specific datasets used to evaluate compliance with specifications and requirements, and for validating technical, functional, and performance characteristics. , will be set to EOObservation dataMode if blank.
+    /// Example: TEST
+    /// Constraints: Minimum length = 1, Maximum length = 32
+    dataMode: EOObservationDetails_Full_dataMode_Enum;
+    /// Time the row was created in the database, auto-populated by the system.
+    /// Example: 2018-01-01T16:00:00.123Z
+    /// Constraints: No constraints specified.
+    createdAt: string;
+    /// Application user who created the row in the database, auto-populated by the system.
+    /// Example: some.user
+    /// Constraints: Minimum length = 1, Maximum length = 64
+    createdBy: string;
+}
+enum EOObservationDetails_Full_dataMode_Enum : byte {
+    /// Data collected or produced that pertains to real-world objects, events, and analysis.
+    REAL,
+    /// Specific datasets used to evaluate compliance with specifications and requirements, and for validating technical, functional, and performance characteristics.
+    TEST,
+    /// Synthetic data generated by a model to mimic real-world datasets.
+    SIMULATED,
+    /// Data pertaining to a government or military exercise. The data may include both real and simulated data.
+    EXERCISE
+}
+

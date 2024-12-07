@@ -1,0 +1,63 @@
+/// Collection of Hazardous Material information associated with this Air Transport Mission.
+table AirTransportMissionHazMat_Abridged {
+    /// The hazMat identifier provided by the originating source.
+    /// Example: cb6289e0f38534e01291ab6421d42724
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    extHazMatId: string;
+    /// United Nations proper shipping name of the hazardous material according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.
+    /// Example: LITHIUM METAL BATTERIES
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    itemName: string;
+    /// United Nations number or North America number that identifies hazardous materials according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.
+    /// Example: 0181
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    unNum: string;
+    /// Number of pieces of hazardous cargo.
+    /// Example: 29
+    /// Constraints: No constraints specified.
+    pieces: int32;
+    /// Total weight of hazardous cargo, including non-explosive parts, in kilograms.
+    /// Example: 22.1
+    /// Constraints: No constraints specified.
+    weight: double;
+    /// Net explosive weight of the hazardous material, in kilograms.
+    /// Example: 12.1
+    /// Constraints: No constraints specified.
+    netExpWt: double;
+    /// Class and division of the hazardous material according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.
+    /// Example: 1.1
+    /// Constraints: No constraints specified.
+    classDiv: double;
+    /// Compatibility group code used to specify the controls for the transportation and storage of hazardous materials according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.
+    /// Example: A
+    /// Constraints: Minimum length = 0, Maximum length = 2
+    cgc: string;
+    /// Comma delimited list of Note IDs for compatibility groups, specific to GDSS systems.
+    /// Example: 4,5,7,8
+    /// Constraints: Minimum length = 0, Maximum length = 100
+    cgn: string;
+    /// Comma delimited list of Note IDs for Item Class Segregation groups, specific to GDSS systems.
+    /// Example: 11,12
+    /// Constraints: Minimum length = 0, Maximum length = 100
+    applicableNotes: string;
+    /// Itinerary number that identifies where the hazardous material is loaded.
+    /// Example: 50
+    /// Constraints: No constraints specified.
+    onItin: int32;
+    /// The International Civil Aviation Organization (ICAO) code of the site where the hazardous material is loaded.
+    /// Example: LIRQ
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    onICAO: string;
+    /// Itinerary number that identifies where the hazardous material is unloaded.
+    /// Example: 300
+    /// Constraints: No constraints specified.
+    offItin: int32;
+    /// The International Civil Aviation Organization (ICAO) code of the site where the hazardous material is unloaded.
+    /// Example: MBPV
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    offICAO: string;
+    /// Flag indicating if hazardous material is associated with this air transport mission. Possible values are P (planned to be associated with the mission) or A (actually associated with the mission). Enum: [P, A].
+    /// Example: P
+    /// Constraints: Minimum length = 0, Maximum length = 1
+    planned: string;
+}

@@ -1,0 +1,11 @@
+/// Collection that details special instructions, important information, guidance, and amplifying information regarding this ATO.
+table GenText_Ingest {
+    /// The indicator for the general text block. Examples include "OPENING REMARKS" and "GENERAL SPINS INFORMATION".
+    /// Example: OPENING REMARKS
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    textInd: string;
+    /// The free text that describes the information specific to the text indicator.
+    /// Example: FREE-TEXT
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    text: string;
+}

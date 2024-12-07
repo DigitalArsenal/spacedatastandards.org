@@ -1,0 +1,19 @@
+/// Collection that specifies the naval flight operations for this ATO.
+table NavalFlightOperations_Ingest {
+    /// The name of a ship or maritime vessel. Specify UNKNOWN if name is not known.
+    /// Example: USS WASP
+    /// Constraints: Minimum length = 1, Maximum length = 48
+    shipName: string;
+    /// The time when flight operations begin in ISO8601 UTC format with millisecond precision.
+    /// Example: 2021-02-25T12:00:00.123Z
+    /// Constraints: No constraints specified.
+    fltOpStart: string;
+    /// The time when flight operations end in ISO8601 UTC format with millisecond precision.
+    /// Example: 2021-02-25T12:00:00.123Z
+    /// Constraints: No constraints specified.
+    fltOpStop: string;
+    /// An array of times at which an aircraft will be launched and/or recovered in ISO8601 UTC format with millisecond precision.
+    /// Example: ['2021-02-25T12:00:00.123Z']
+    /// Constraints: No constraints specified.
+    schdLaunchRcvyTime: [string];
+}

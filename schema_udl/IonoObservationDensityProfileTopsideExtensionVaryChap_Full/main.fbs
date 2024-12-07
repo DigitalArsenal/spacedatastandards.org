@@ -1,0 +1,35 @@
+/// Varying scale height Chapman topside layer.
+table IonoObservationDensityProfileTopsideExtensionVaryChap_Full {
+    /// Description of the Chapman computation technique.
+    /// Example: Constant scale height Chapman topside layer determined using bottomside peak density parameters and placed chi km above the ionosonde-determined peak height.
+    /// Constraints: No constraints specified.
+    description: string;
+    /// Peak density of F2 layer, in grams per cubic centimeter.
+    /// Example: 313283.1
+    /// Constraints: No constraints specified.
+    nmF2: double;
+    /// Peak height of F2 layer, in kilometers.
+    /// Example: 265.42
+    /// Constraints: No constraints specified.
+    hmF2: double;
+    /// Scale height if F2 layer at the peak, in kilometers.
+    /// Example: 45.191
+    /// Constraints: No constraints specified.
+    scaleF2: double;
+    /// Alpha parameter of the profile shape.
+    /// Example: 30.1
+    /// Constraints: No constraints specified.
+    alpha: double;
+    /// Beta parameter of the profile shape.
+    /// Example: 30.1
+    /// Constraints: No constraints specified.
+    beta: double;
+    /// Transition height, in  kilometers.
+    /// Example: 30.1
+    /// Constraints: No constraints specified.
+    ht: double;
+    /// Peak Density Thickness (PDT) for description of the flat-nose shape, in kilometers.
+    /// Example: 30.1
+    /// Constraints: No constraints specified.
+    chi: double;
+}

@@ -1,0 +1,19 @@
+/// Discrepancy information associated with this LogisticsSupport record.
+table LogisticsDiscrepancyInfos_Full {
+    /// Job Control Number of the discrepancy.
+    /// Example: 231942400
+    /// Constraints: Minimum length = 0, Maximum length = 12
+    jcn: string;
+    /// The aircraft discrepancy description.
+    /// Example: PILOT WINDSHIELD PANEL ASSY CRACKED, AND ARCING REQ R2 IAW 56.11.10
+    /// Constraints: Minimum length = 0, Maximum length = 680
+    discrepancyInfo: string;
+    /// The job start time, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T10:30:00.123Z
+    /// Constraints: No constraints specified.
+    jobStTime: string;
+    /// The discrepancy closure time, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2023-07-17T10:30:00.123Z
+    /// Constraints: No constraints specified.
+    closureTime: string;
+}

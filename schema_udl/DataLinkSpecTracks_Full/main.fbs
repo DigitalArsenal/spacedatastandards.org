@@ -1,0 +1,11 @@
+/// Collection of special track numbers used on the data links. There can be 0 to many DataLinkSpecTracks collections within the datalink service.
+table DataLinkSpecTracks_Full {
+    /// The special track number used on the data link entered as an octal reference number. Used to identify a particular type of platform (e.g. MPA, KRESTA) or platform name (e.g. TROMP, MOUNT WHITNEY) which is not included in assigned track blocks.
+    /// Example: 12345
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    specTrackNum: string;
+    /// Description of the special track number.
+    /// Example: SAM SITE CHARLIE
+    /// Constraints: Minimum length = 0, Maximum length = 40
+    specTrackNumDesc: string;
+}

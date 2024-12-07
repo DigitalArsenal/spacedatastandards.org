@@ -1,0 +1,23 @@
+/// Collection of air refueling events occurring on this flight.
+table FlightPlanAirRefuelEvents_Ingest {
+    /// Additional degrade for air refueling, cumulative with fuelDegrade field percent.
+    /// Example: 3.1
+    /// Constraints: Minimum value = 0, Maximum value = 100
+    arDegrade: double;
+    /// The number of this air refueling event within the flight plan.
+    /// Example: 2
+    /// Constraints: No constraints specified.
+    arNum: int32;
+    /// Fuel onloaded (use positive numbers) or fuel offloaded (use negative numbers) in pounds.
+    /// Example: 1500.1
+    /// Constraints: No constraints specified.
+    arExchangedFuel: double;
+    /// Fuel required to fly from air refueling exit point to air refueling divert alternate airfield in pounds.
+    /// Example: 143000.1
+    /// Constraints: No constraints specified.
+    divertFuel: double;
+    /// Fuel remaining at the air refueling exit in pounds.
+    /// Example: 160000.1
+    /// Constraints: No constraints specified.
+    exitFuel: double;
+}

@@ -1,0 +1,31 @@
+/// Information pertaining to the details of executing the recovery.
+table PersonnelRecoveryExecutionInfo_Ingest {
+    /// Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the initial location. This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).
+    /// Example: [103.23, 30.445]
+    /// Constraints: No constraints specified.
+    initialPoint: [string];
+    /// The heading, in degrees clockwise from North, of entering the recovery zone.
+    /// Example: 35.66
+    /// Constraints: No constraints specified.
+    ingress: double;
+    /// Description of the objective strategy plan.
+    /// Example: Description of strategy plan.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    objStrategy: string;
+    /// Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the egress location. This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).
+    /// Example: [107.23, 30.455]
+    /// Constraints: No constraints specified.
+    egressPoint: [string];
+    /// The heading, in degrees, of leaving the recovery zone.
+    /// Example: 66.53
+    /// Constraints: No constraints specified.
+    egress: double;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    recoveryVehicle: string;
+    /// No description provided.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    escortVehicle: string;
+}

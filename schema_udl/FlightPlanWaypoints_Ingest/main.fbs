@@ -1,0 +1,227 @@
+/// Collection of waypoints associated with this flight plan.
+table FlightPlanWaypoints_Ingest {
+    /// Points are designated by type as either a comment point or a waypoint. A comment point conveys important information about the point for pilots but is not entered into a flight management system. A waypoint is a point that is entered into a flight management system and/or filed with Air Traffic Control.
+    /// Example: COMMENT
+    /// Constraints: Minimum length = 1, Maximum length = 16
+    type: string;
+    /// Name of the point. The name of a comment point identifies important information about that point, e.g. Top of Climb. The name of a waypoint identifies the location of that point.
+    /// Example: KCHS
+    /// Constraints: Minimum length = 1, Maximum length = 32
+    waypointName: string;
+    /// The waypoint number on the route. Comment points do not get a waypoint number.
+    /// Example: 20
+    /// Constraints: No constraints specified.
+    waypointNum: int32;
+    /// The flight path flown for this leg.
+    /// Example: W15
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    airway: string;
+    /// Point identifying an air refueling track/anchor or fixed track.
+    /// Example: ARIP
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    arpt: string;
+    /// WGS84 latitude of the point location, in degrees. -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.23
+    /// Constraints: Minimum value = -90, Maximum value = 90
+    lat: double;
+    /// WGS84 longitude of the point location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).
+    /// Example: 179.1
+    /// Constraints: Minimum value = -180, Maximum value = 180
+    lon: double;
+    /// The ID of the air refueling track/anchor or fixed track.
+    /// Example: AR202
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    arId: string;
+    /// Navigational Aid (NAVAID) identification code.
+    /// Example: HTO
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    navaid: string;
+    /// Tactical Air Navigation (TACAN) channel for the Navigational Aid (NAVAID).
+    /// Example: 83X
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    tacanChannel: string;
+    /// VHF Omni-directional Range (VOR) frequency for the Navigational Aid (NAVAID) in megahertz.
+    /// Example: 113.6
+    /// Constraints: No constraints specified.
+    vorFreq: double;
+    /// The turbulence intensity classification for this flight (LIGHT, MODERATE, etc).
+    /// Example: EXTREME
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    turbCat: string;
+    /// The icing intensity classification for this flight (LIGHT, MODERATE, etc).
+    /// Example: MODERATE
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    iceCat: string;
+    /// The thunderstorm intensity classification for this flight (LIGHT, MODERATE, etc).
+    /// Example: MODERATE
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    thunderCat: string;
+    /// Altitude of a level, point, or object measured in feet above mean sea level.
+    /// Example: 27000.1
+    /// Constraints: No constraints specified.
+    alt: double;
+    /// Average temperature deviation from standard day profile for this leg in degrees Celsius.
+    /// Example: 12.1
+    /// Constraints: No constraints specified.
+    tempDev: double;
+    /// The fuel degrade percentage used for this leg.
+    /// Example: 10.1
+    /// Constraints: Minimum value = 0, Maximum value = 100
+    legFuelDegrade: double;
+    /// The average Mach speed for this leg.
+    /// Example: 0.74
+    /// Constraints: No constraints specified.
+    legMach: double;
+    /// The mission index value for this leg. The mission index is the ratio of time-related cost of aircraft operation to the cost of fuel.
+    /// Example: 65
+    /// Constraints: No constraints specified.
+    legMsnIndex: double;
+    /// The percent degrade due to drag for this aircraft for this leg.
+    /// Example: 1.2
+    /// Constraints: Minimum value = 0, Maximum value = 100
+    legDragIndex: double;
+    /// The average calibrated airspeed (CAS) for this leg in knots.
+    /// Example: 200.1
+    /// Constraints: No constraints specified.
+    avgCalAirspeed: double;
+    /// The average true airspeed (TAS) for this leg in knots.
+    /// Example: 210.1
+    /// Constraints: No constraints specified.
+    avgTrueAirspeed: double;
+    /// The average ground speed for this leg in knots.
+    /// Example: 300.1
+    /// Constraints: No constraints specified.
+    avgGroundSpeed: double;
+    /// The primary UHF radio frequency used for the air refueling track or anchor in megahertz.
+    /// Example: 357.5
+    /// Constraints: No constraints specified.
+    priFreq: double;
+    /// The wind direction at this specific point in degrees from true north.
+    /// Example: 165.5
+    /// Constraints: No constraints specified.
+    pointWindDir: double;
+    /// The wind velocity at this specific point in knots.
+    /// Example: 14.4
+    /// Constraints: No constraints specified.
+    pointWindSpeed: double;
+    /// The average wind direction for this leg in degrees from true north.
+    /// Example: 165.5
+    /// Constraints: No constraints specified.
+    avgWindDir: double;
+    /// The average wind speed for this leg in knots.
+    /// Example: 14.4
+    /// Constraints: No constraints specified.
+    avgWindSpeed: double;
+    /// The wind factor for this leg in knots. A positive value indicates a headwind, while a negative value indicates a tailwind.
+    /// Example: -32.1
+    /// Constraints: No constraints specified.
+    legWindFac: double;
+    /// The average drift angle for this leg in degrees from true north.
+    /// Example: -3.2
+    /// Constraints: No constraints specified.
+    avgDriftAng: double;
+    /// The secondary UHF radio frequency used for the air refueling track or anchor in megahertz.
+    /// Example: 357.5
+    /// Constraints: No constraints specified.
+    secFreq: double;
+    /// The magnetic course at leg midpoint in degrees from true north.
+    /// Example: 338.1
+    /// Constraints: No constraints specified.
+    magCourse: double;
+    /// The true course at leg midpoint in degrees from true north.
+    /// Example: 328.1
+    /// Constraints: No constraints specified.
+    trueCourse: double;
+    /// The magnetic heading at leg midpoint in degrees from true north.
+    /// Example: 212.1
+    /// Constraints: No constraints specified.
+    magHeading: double;
+    /// The air-to-air Tactical Air Navigation (TACAN) channels used by the receiver/tanker during air refueling.
+    /// Example: 31/94
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    aaTacanChannel: string;
+    /// The zone/leg distance flown in nautical miles.
+    /// Example: 212.1
+    /// Constraints: No constraints specified.
+    zoneDistance: double;
+    /// The total distance flown to this waypoint calculated from point of departure in nautical miles.
+    /// Example: 688.1
+    /// Constraints: No constraints specified.
+    totalFlownDistance: double;
+    /// The total distance remaining from this waypoint to the point of arrival in nautical miles.
+    /// Example: 1288.1
+    /// Constraints: No constraints specified.
+    totalRemDistance: double;
+    /// The time to fly this zone/leg in minutes.
+    /// Example: 36.1
+    /// Constraints: No constraints specified.
+    zoneTime: double;
+    /// The total time accumulated from takeoff to this waypoint expressed as HH:MM.
+    /// Example: 08:45
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    totalTime: string;
+    /// The total time remaining from this waypoint to the point of arrival expressed as HH:MM.
+    /// Example: 01:43
+    /// Constraints: Minimum length = 0, Maximum length = 6
+    totalTimeRem: string;
+    /// The amount of fuel used on this zone/leg in pounds.
+    /// Example: 1120.1
+    /// Constraints: No constraints specified.
+    zoneFuel: double;
+    /// The total fuel used to this waypoint from point of departure in pounds.
+    /// Example: 70431.1
+    /// Constraints: No constraints specified.
+    totalUsedFuel: double;
+    /// The total fuel remaining at this waypoint in pounds.
+    /// Example: 30453.1
+    /// Constraints: No constraints specified.
+    totalRemFuel: double;
+    /// The amount of fuel onloaded or offloaded at this waypoint in pounds (negative value for offload).
+    /// Example: -30400.1
+    /// Constraints: No constraints specified.
+    exchangedFuel: double;
+    /// The air distance of this leg in nautical miles.
+    /// Example: 321.1
+    /// Constraints: No constraints specified.
+    airDistance: double;
+    /// The total air distance to this waypoint in nautical miles.
+    /// Example: 3251.1
+    /// Constraints: No constraints specified.
+    totalAirDistance: double;
+    /// The total weight of the aircraft at this waypoint in pounds.
+    /// Example: 207123.1
+    /// Constraints: No constraints specified.
+    totalWeight: double;
+    /// Estimated Time of Arrival (ETA) at this waypoint in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2023-09-09T01:00:00.123Z
+    /// Constraints: No constraints specified.
+    eta: string;
+    /// Actual Time of Arrival (ATA) at this waypoint in ISO 8601 UTC format, with millisecond precision.
+    /// Example: 2023-09-09T01:00:00.123Z
+    /// Constraints: No constraints specified.
+    ata: string;
+    /// The leg fuel flow in pounds per hour.
+    /// Example: 17654.1
+    /// Constraints: No constraints specified.
+    fuelFlow: double;
+    /// The planned alternate leg based on user-defined constraints, International Civil Aviation Organization (ICAO) code preferred.
+    /// Example: KCHS
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    legAlternate: string;
+    /// The magnetic variation for this leg in degrees.
+    /// Example: -13.2
+    /// Constraints: No constraints specified.
+    magVar: double;
+    /// The day low level altitude in feet above sea level for the leg ending at this waypoint.
+    /// Example: 1500.1
+    /// Constraints: No constraints specified.
+    dayLowAlt: double;
+    /// The night low level altitude in feet above sea level for the leg ending at this waypoint.
+    /// Example: 2300.1
+    /// Constraints: No constraints specified.
+    nightLowAlt: double;
+    /// The night vision goggle low level altitude in feet above sea level for the leg ending at this waypoint.
+    /// Example: 2450.1
+    /// Constraints: No constraints specified.
+    nvgLowAlt: double;
+}

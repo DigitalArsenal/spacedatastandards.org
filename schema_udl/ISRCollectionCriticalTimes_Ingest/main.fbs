@@ -1,0 +1,11 @@
+/// High priority time windows.
+table ISRCollectionCriticalTimes_Ingest {
+    /// Critical start time to collect an image for this requirement.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    earliestImagingTime: string;
+    /// Critical stop time to collect an image for this requirement.
+    /// Example: 2021-01-19T01:11:15.001Z
+    /// Constraints: No constraints specified.
+    latestImagingTime: string;
+}

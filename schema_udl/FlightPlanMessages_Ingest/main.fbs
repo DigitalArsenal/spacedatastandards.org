@@ -1,0 +1,19 @@
+/// Collection of messages associated with this flight plan indicating the severity, the point where the message was generated, the path (Primary, Alternate, etc.), and the text of the message.
+table FlightPlanMessages_Ingest {
+    /// The severity of the message.
+    /// Example: SEVERE
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    severity: string;
+    /// The waypoint number for which the message was generated, or enter "PLAN" for a message impacting the entire route.
+    /// Example: 20
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    wpNum: string;
+    /// The flight path that generated the message (PRIMARY, ALTERNATE, etc.).
+    /// Example: PRIMARY
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    routePath: string;
+    /// The text of the message.
+    /// Example: Message text
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    msgText: string;
+}

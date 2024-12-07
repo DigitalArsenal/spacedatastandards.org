@@ -1,0 +1,75 @@
+/// List of actions associated with this effect response.
+table EffectResponseActionsList_Abridged {
+    /// A summary string describing different aspects of the action.
+    /// Example: Example summary
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    summary: string;
+    /// Identifier of this action.
+    /// Example: ACTION-ID
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    actionId: string;
+    /// The desired start time of this task, in ISO8601 UTC format.
+    /// Example: 2021-01-01T00:00:00.123456Z
+    /// Constraints: No constraints specified.
+    actionStartTime: string;
+    /// The desired end time of this task, in ISO8601 UTC format.
+    /// Example: 2021-01-01T00:00:00.123456Z
+    /// Constraints: No constraints specified.
+    actionEndTime: string;
+    /// The start time of the asset TOT (time over target), in ISO8601 UTC format.
+    /// Example: 2021-01-01T00:00:00.123456Z
+    /// Constraints: No constraints specified.
+    totStartTime: string;
+    /// The end time of the asset TOT (time over target), in ISO8601 UTC format.
+    /// Example: 2021-01-01T00:00:00.123456Z
+    /// Constraints: No constraints specified.
+    totEndTime: string;
+    /// The source type of the asset/actor identifier (AIRCRAFT, LANDCRAFT, SEACRAFT, TRACK).
+    /// Example: AIRCRAFT
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    actionActorSrcType: string;
+    /// The record ID, depending on the type identified in actorSrcType, of the requested asset/actor.
+    /// Example: ACTIONACTORSRC-ID
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    actionActorSrcId: string;
+    /// The type of munition or sensor used by this asset/actor.
+    /// Example: SENSOR1
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    effector: string;
+    /// The source type of the targetId identifier (POI, TRACK).
+    /// Example: POI
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    targetSrcType: string;
+    /// The POI or TRACK ID, depending on the type identified in targetSrcType, of the requested target. This identifier corresponds to either poi.poiid or track.trkId from their respective schemas.
+    /// Example: TARGETSRC-ID
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    targetSrcId: string;
+    /// The WGS-84 latitude of the asset/actor location at weapon launch, in degrees.  -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.1
+    /// Constraints: No constraints specified.
+    actorInterceptLat: double;
+    /// The WGS-84 longitude of the asset/actor location at weapon launch, in degrees.  -180 to 180 degrees (negative values west of Prime Meridian).
+    /// Example: 180.1
+    /// Constraints: No constraints specified.
+    actorInterceptLon: double;
+    /// The WGS-84 altitude of the asset/actor location at weapon launch, in meters.
+    /// Example: 1.1
+    /// Constraints: No constraints specified.
+    actorInterceptAlt: double;
+    /// The WGS-84 latitude of the weapon destination location, in degrees.  -90 to 90 degrees (negative values south of equator).
+    /// Example: 45.1
+    /// Constraints: No constraints specified.
+    weaponInterceptLat: double;
+    /// The WGS-84 longitude of the weapon destination location, in degrees.  -180 to 180 degrees (negative values west of Prime Meridian).
+    /// Example: 180.1
+    /// Constraints: No constraints specified.
+    weaponInterceptLon: double;
+    /// The WGS-84 altitude of the weapon destination location, in meters.
+    /// Example: 1.1
+    /// Constraints: No constraints specified.
+    weaponInterceptAlt: double;
+    /// List of metrics associated with this action.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    actionMetrics: [string];
+}

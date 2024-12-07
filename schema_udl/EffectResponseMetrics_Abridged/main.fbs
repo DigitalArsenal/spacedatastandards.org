@@ -1,0 +1,19 @@
+/// List of COA metrics associated with this effect response.
+table EffectResponseMetrics_Abridged {
+    /// The type of the metric (e.g. CollateralDamage, GoalAchievement, OpportunityCost, Timeliness, Unavailable, etc.).
+    /// Example: GoalAchievement
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    metricType: string;
+    /// The metric score specific to its domain.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    domainValue: double;
+    /// The metric score adjusted to be relative and comparable to other domains.
+    /// Example: 10.1
+    /// Constraints: No constraints specified.
+    relativeValue: double;
+    /// The metric that was used to score this task.
+    /// Example: Example metric
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    provenance: string;
+}

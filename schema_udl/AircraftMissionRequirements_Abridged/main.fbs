@@ -1,0 +1,75 @@
+/// Collection of Requirements associated with this Air Transport Mission.
+table AircraftMissionRequirements_Abridged {
+    /// Global Decision Support System (GDSS) mission requirement identifier.
+    /// Example: 23a1fb67-cc2d-5ebe-6b99-68130cb1aa6c
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    gdssReqId: string;
+    /// Identifier of the onload itinerary location.
+    /// Example: 200
+    /// Constraints: No constraints specified.
+    onloadId: int32;
+    /// Onload location code.
+    /// Example: KCHS
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    onloadLOCode: string;
+    /// Identifier of the offload itinerary location.
+    /// Example: 300
+    /// Constraints: No constraints specified.
+    offloadId: int32;
+    /// Offload location code.
+    /// Example: KHOP
+    /// Constraints: Minimum length = 0, Maximum length = 20
+    offloadLOCode: string;
+    /// Unit line number.
+    /// Example: T01ME01
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    uln: string;
+    /// Transportation requirement number.
+    /// Example: T01ME01
+    /// Constraints: Minimum length = 0, Maximum length = 50
+    transReqNum: string;
+    /// Project name.
+    /// Example: CENTINTRA21
+    /// Constraints: Minimum length = 0, Maximum length = 50
+    projName: string;
+    /// Identification number of the Operation Plan (OPLAN) associated with this mission.
+    /// Example: 5027
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    oplan: string;
+    /// Number of passengers associated with the mission.
+    /// Example: 44
+    /// Constraints: No constraints specified.
+    numPax: int32;
+    /// Number of litter patients tasked for the mission.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    numLitter: int32;
+    /// Number of ambulatory patients tasked for the mission.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    numAmbulatory: int32;
+    /// Number of attendants tasked for the mission.
+    /// Example: 10
+    /// Constraints: No constraints specified.
+    numAttendant: int32;
+    /// Total weight of the bulk cargo, in kilograms.
+    /// Example: 1.3
+    /// Constraints: No constraints specified.
+    bulkWeight: double;
+    /// Total weight of the oversized cargo, in kilograms.
+    /// Example: 1.3
+    /// Constraints: No constraints specified.
+    oversizeWeight: double;
+    /// Total weight of the outsize cargo, in kilograms.
+    /// Example: 1.3
+    /// Constraints: No constraints specified.
+    outsizeWeight: double;
+    /// Earliest available date the cargo can be picked up.
+    /// Example: 2024-01-01T16:00:00Z
+    /// Constraints: No constraints specified.
+    ead: string;
+    /// Latest available date the cargo may be delivered.
+    /// Example: 2024-01-01T16:00:00Z
+    /// Constraints: No constraints specified.
+    lad: string;
+}

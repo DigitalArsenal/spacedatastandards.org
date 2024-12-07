@@ -1,0 +1,23 @@
+/// List of data sources related to this document.
+table SofDataSourceRef_Ingest {
+    /// Data source id.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    dataSourceId: string;
+    /// start position.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    startPosition: string;
+    /// end position.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    endPosition: string;
+    /// paragraph number.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    paragraphNumber: string;
+    /// sentence number.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    sentenceNumber: string;
+}

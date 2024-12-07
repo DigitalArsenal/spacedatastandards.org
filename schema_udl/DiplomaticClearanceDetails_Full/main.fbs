@@ -1,0 +1,99 @@
+/// Collection of diplomatic clearance details.
+table DiplomaticClearanceDetails_Full {
+    /// Unique identifier of the Aircraft Sortie associated with this diplomatic clearance record.
+    /// Example: 207010e0-f97d-431c-8c00-7e46acfef0f5
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    idSortie: string;
+    /// Identifies the Itinerary point of a sortie where an air event occurs.
+    /// Example: 825
+    /// Constraints: No constraints specified.
+    legNum: int32;
+    /// The 1801 fileable route of flight string associated with this diplomatic clearance. The route of flight string contains route designators, significant points, change of speed/altitude, change of flight rules, and cruise climbs.
+    /// Example: DCT DOH P430 BAYAN/M062F150 P430 RAMKI
+    /// Constraints: Minimum length = 0, Maximum length = 4000
+    routeString: string;
+    /// The start time of the validity of this diplomatic clearance, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2024-01-01T01:01:01.123Z
+    /// Constraints: No constraints specified.
+    validStartTime: string;
+    /// The end time of the validity of this diplomatic clearance, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2024-01-01T01:01:01.123Z
+    /// Constraints: No constraints specified.
+    validEndTime: string;
+    /// Identifier of this diplomatic clearance issued by the host country.
+    /// Example: MFMW225662GHQ
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    clearanceId: string;
+    /// Optional clearance ID from external systems. This field has no meaning within UDL and is provided as a convenience for systems that require tracking of an internal system generated ID.
+    /// Example: aa714f4d52a37ab1a00b21af9566e379
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    externalClearanceId: string;
+    /// The call sign of the sortie cleared with this diplomatic clearance.
+    /// Example: FALCN09
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    clearedCallSign: string;
+    /// The placement of this diplomatic clearance within a sequence of clearances used on a sortie. For example, a sequence value of 3 means that it is the third diplomatic clearance the aircraft will use.
+    /// Example: 3
+    /// Constraints: No constraints specified.
+    sequenceNum: int32;
+    /// The DoD Standard Country Code designator for the country issuing the diplomatic clearance. This field will be set to "OTHR" if the source value does not match a UDL Country code value (ISO-3166-ALPHA-2).
+    /// Example: NL
+    /// Constraints: Minimum length = 0, Maximum length = 4
+    countryCode: string;
+    /// Specifies an alternate country code if the data provider code is not part of an official Country Code standard such as ISO-3166 or FIPS. This field will be set to the value provided by the source and should be used for all Queries specifying a Country Code.
+    /// Example: IZ
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    altCountryCode: string;
+    /// Name of the country issuing this diplomatic clearance.
+    /// Example: NETHERLANDS
+    /// Constraints: Minimum length = 0, Maximum length = 50
+    countryName: string;
+    /// Description of when this diplomatic clearance is valid.
+    /// Example: CY2023
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    validDesc: string;
+    /// Remarks concerning the valid diplomatic clearance window.
+    /// Example: Period remarks
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    windowRemark: string;
+    /// The navigation point name where the aircraft must enter the country.
+    /// Example: LOMOS
+    /// Constraints: Minimum length = 0, Maximum length = 38
+    entryPoint: string;
+    /// Earliest time the aircraft may enter the country, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2024-01-01T01:01:01.123Z
+    /// Constraints: No constraints specified.
+    entryNET: string;
+    /// The navigation point name where the aircraft must exit the country.
+    /// Example: BUDOP
+    /// Constraints: Minimum length = 0, Maximum length = 38
+    exitPoint: string;
+    /// Latest time the aircraft may exit the country, in ISO 8601 UTC format with millisecond precision.
+    /// Example: 2024-01-01T01:01:01.123Z
+    /// Constraints: No constraints specified.
+    exitNLT: string;
+    /// Flag indicating whether the clearance request requires ICAO specific information.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    reqICAO: bool;
+    /// The type of action the aircraft can take with this diplomatic clearance (e.g. O for Overfly, L for Land, etc.).
+    /// Example: O
+    /// Constraints: Minimum length = 0, Maximum length = 1
+    action: string;
+    /// Indicates the current status of the diplomatic clearance request.
+    /// Example: IN WORK
+    /// Constraints: Minimum length = 0, Maximum length = 16
+    status: string;
+    /// The diplomatic clearance profile name used within clearance management systems.
+    /// Example: T LAND/OFLY IATA COMPLIANT CARGO 23
+    /// Constraints: Minimum length = 0, Maximum length = 100
+    profile: string;
+    /// Flag indicating whether entry/exit points are required for clearances.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    reqPoint: bool;
+    /// Remarks concerning this diplomatic clearance.
+    /// Example: Clearance remarks
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    clearanceRemark: string;
+}

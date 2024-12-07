@@ -1,0 +1,19 @@
+/// Multi-dimensional array with the same dimensions as power plus one additional dimension antenna_element. This variable is enabled for post-process polarization or antenna array determination. Can be combined with phase to create a phasors and subsequently enable post-processing of polarization and/or antenna array determination.
+table IonoObservationAmplitude_Ingest {
+    /// Notes for the amplitude data.
+    /// Example: NOTES
+    /// Constraints: Minimum length = 0, Maximum length = 512
+    notes: string;
+    /// Array of integers for amplitude dimensions.
+    /// Example: [4, 5]
+    /// Constraints: No constraints specified.
+    dimensions: [string];
+    /// Array of names for dimensions.
+    /// Example: ['NAME1', 'NAME2']
+    /// Constraints: No constraints specified.
+    dimensionName: [string];
+    /// Array of amplitude data.
+    /// Example: [[[[[[[0.02, 0.034]]]]]]]
+    /// Constraints: No constraints specified.
+    data: [string];
+}

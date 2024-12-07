@@ -1,0 +1,119 @@
+/// Data on High-Range Resolution (HRR) targets or High Range Resolution Range Doppler Maps (RDM) for a specified area.
+table MtiHRR_Full {
+    /// Sequential count of a revisit of the bounding area for a given job ID.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    h2: int32;
+    /// Sequential count of a dwell within the revisit of a particular bounding area for a given job ID.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    h3: int32;
+    /// Flag to indicate the last dwell of the revisit.
+    /// Example: True
+    /// Constraints: No constraints specified.
+    h4: bool;
+    /// Sequential index of the associated MTI Report.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    h5: int32;
+    /// Number of Range Doppler pixels that exceed target scatterer threshold and are reported in this segment.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    h6: int32;
+    /// Number of Range Bins/Samples in a Range Doppler Chip.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    h7: int32;
+    /// Number of Doppler bins in a Range-Doppler chip.
+    /// Example: 12
+    /// Constraints: No constraints specified.
+    h8: int32;
+    /// The Peak Scatter returns the maximum power level (e.g. in milliwatts, or dBm) registered by the sensor.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h9: int32;
+    /// Detection threshold used to isolate significant target scatterer pixels, expressed as power relative to clutter mean in negative quarter-decibels.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h10: int32;
+    /// 3dB range impulse response of the radar, expressed in centimeters.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    h11: double;
+    /// Slant Range pixel spacing after over sampling, expressed in centimeters.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    h12: double;
+    /// 3dB Doppler resolution of the radar, expressed in Hertz.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    h13: double;
+    /// Doppler pixel spacing after over sampling, expressed in Hertz.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    h14: double;
+    /// Center Frequency of the radar in GHz.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    h15: double;
+    /// Enumeration table denoting the compression technique used.
+    /// Example: TABLE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    h16: string;
+    /// Enumeration table indicating the spectral weighting used in the range compression process.
+    /// Example: TABLE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    h17: string;
+    /// Enumeration table indicating the spectral weighting used in the cross-range or Doppler compression process.
+    /// Example: TABLE
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    h18: string;
+    /// Initial power of the peak scatterer, expressed in dB.
+    /// Example: 12.23
+    /// Constraints: No constraints specified.
+    h19: double;
+    /// RCS of the peak scatterer, expressed in half-decibels (dB/2).
+    /// Example: 117
+    /// Constraints: Minimum value = -128, Maximum value = 127
+    h20: int32;
+    /// When the RDM does not correlate to a single MTI report index or when the center range bin does not correlate to the center of the dwell; provide the range sample offset in meters from Dwell Center (positive is away from the sensor) of the first scatterer record.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h21: int32;
+    /// When the RDM does not correlate to a single MTI report index or the center doppler bin does not correlate to the doppler centroid of the dwell; Doppler sample value in Hz of the first scatterer record.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h22: int32;
+    /// Enumeration field which designates the type of data being delivered.
+    /// Example: FIELD
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    h23: string;
+    /// Flag field to indicate the additional signal processing techniques applied to the data.
+    /// Example: FLAG
+    /// Constraints: Minimum length = 0, Maximum length = 64
+    h24: string;
+    /// Number of pixels in the range dimension of the chip.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h27: int32;
+    /// Distance from Range Bin to closest edge in the entire chip, expressed in centimeters.
+    /// Example: 1234567890
+    /// Constraints: No constraints specified.
+    h28: int64;
+    /// Relative velocity to skin line.
+    /// Example: 1
+    /// Constraints: No constraints specified.
+    h29: int32;
+    /// Computed object length based upon HRR profile, in meters.
+    /// Example: 22
+    /// Constraints: Minimum value = 0, Maximum value = 100
+    h30: int32;
+    /// Standard deviation of estimate of the object length, expressed in meters.
+    /// Example: 55
+    /// Constraints: Minimum value = 0, Maximum value = 100
+    h31: int32;
+    /// Standard deviation of estimate of the object length, expressed in meters.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    h32: [string];
+}

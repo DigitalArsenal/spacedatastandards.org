@@ -1,0 +1,15 @@
+/// For phased arrays, a 2D array. 1st dimension spans the dimension antenna_element (see phase or amplitude). 2nd dimension spans 3 (x, y, z) Cartesian coordinates.
+table IonoObservationAntennaElementPosition_Ingest {
+    /// Array of integers of the antenna_element dimensions.
+    /// Example: [3, 4]
+    /// Constraints: No constraints specified.
+    dimensions: [string];
+    /// Array of names for dimensions.
+    /// Example: ['NAME1', 'NAME2']
+    /// Constraints: No constraints specified.
+    dimensionName: [string];
+    /// Array of 3-element tuples (x,y,z) in km.
+    /// Example: [[1.23, 0.123]]
+    /// Constraints: No constraints specified.
+    data: [string];
+}

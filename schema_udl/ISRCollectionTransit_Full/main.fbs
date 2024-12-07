@@ -1,0 +1,15 @@
+/// Object for data dissemination.
+table ISRCollectionTransit_Full {
+    /// Transit Unique Identifier.
+    /// Example: ISRCOLLECTIONTRANSIT-ID
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    id: string;
+    /// Military Base to transmit the dissemination of this data.
+    /// Example: ENVOYS
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    base: string;
+    /// Length of mission in milliseconds.
+    /// Example: 200.23
+    /// Constraints: No constraints specified.
+    duration: double;
+}

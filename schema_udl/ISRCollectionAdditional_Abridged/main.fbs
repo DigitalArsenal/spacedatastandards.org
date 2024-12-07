@@ -1,0 +1,15 @@
+/// Additional start and stop for the collection.
+table ISRCollectionAdditional_Abridged {
+    /// Unique Identifier of additional collection period.
+    /// Example: ISRCOLLECTIONADDITIONAL
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    id: string;
+    /// Start time of collection, in ISO 8601 UTC format.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    start: string;
+    /// Stop time of collection, in ISO 8601 UTC format.
+    /// Example: 2021-01-19T01:01:15.001Z
+    /// Constraints: No constraints specified.
+    stop: string;
+}

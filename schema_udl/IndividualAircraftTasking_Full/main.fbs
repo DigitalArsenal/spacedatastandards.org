@@ -1,0 +1,47 @@
+/// Collection that specifies the naval flight operations for this ATO.
+table IndividualAircraftTasking_Full {
+    /// The number of aircraft participating in this mission.
+    /// Example: 2
+    /// Constraints: No constraints specified.
+    numAcft: int32;
+    /// The type and model number for the aircraft. The field may specify a value of an aircraft not yet assigned an aircraft code contained in the aircraft codes list.
+    /// Example: F35A
+    /// Constraints: Minimum length = 1, Maximum length = 36
+    acftType: string;
+    /// The call sign assigned to this mission aircraft.
+    /// Example: EAGLE47
+    /// Constraints: Minimum length = 0, Maximum length = 24
+    callSign: string;
+    /// The code that indicates the ordinance mix carried on this mission aircraft.
+    /// Example: 6A2W3
+    /// Constraints: Minimum length = 0, Maximum length = 48
+    priConfigCode: string;
+    /// The code for the secondary ordinance mix carried on this mission aircraft.
+    /// Example: 2S2WG
+    /// Constraints: Minimum length = 0, Maximum length = 48
+    secConfigCode: string;
+    /// The Link 16 abbreviated call sign assigned to the ACA. This is normally the first and last letter and the last two numbers of the call sign.
+    /// Example: EE47
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    link16CallSign: string;
+    /// The TACAN channel assigned to this mission aircraft.
+    /// Example: 123
+    /// Constraints: No constraints specified.
+    tacanChan: int32;
+    /// An optional array of link 16 octal track numbers assigned as the primary JTIDS Unit (JU) address for the mission aircraft.
+    /// Example: 12345
+    /// Constraints: No constraints specified.
+    juAddress: [string];
+    /// The mode 1 and code of the Identification Friend or FOE (IFF) or Selective Identification Feature (SIF).
+    /// Example: 111
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    iffSifMode1Code: string;
+    /// The mode 2 and code of the Identification Friend or FOE (IFF) or Selective Identification Feature (SIF).
+    /// Example: 20147
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    iffSifMode2Code: string;
+    /// The mode 3 and code of the Identification Friend or FOE (IFF) or Selective Identification Feature (SIF).
+    /// Example: 30147
+    /// Constraints: Minimum length = 0, Maximum length = 8
+    iffSifMode3Code: string;
+}

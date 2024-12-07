@@ -1,0 +1,11 @@
+/// Related document ids.
+table RelatedDocument_Ingest {
+    /// The document id of the related document.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    documentId: string;
+    /// List of data sources related to this document.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    dataSourceRefs: [string];
+}

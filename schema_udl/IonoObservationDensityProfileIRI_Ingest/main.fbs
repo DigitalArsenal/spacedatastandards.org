@@ -1,0 +1,91 @@
+/// Full set of the IRI formalism coefficients.
+table IonoObservationDensityProfileIRI_Ingest {
+    /// Description of IRI implementation.
+    /// Example: Full altitude range of 1D vertical plasma density profile for D, E, and F regions of the ionosphere provided by IRI, in which model parameters are replaced with observed ionogram-derived data where available.
+    /// Constraints: No constraints specified.
+    description: string;
+    /// Peak density of F2 layer, in grams per cubic centimeter.
+    /// Example: 313283.1
+    /// Constraints: No constraints specified.
+    nmF2: double;
+    /// Peak height of F2 layer, in kilometers.
+    /// Example: 265.42
+    /// Constraints: No constraints specified.
+    hmF2: double;
+    /// B0 parameter of the F2 layer shape.
+    /// Example: 245.1
+    /// Constraints: No constraints specified.
+    b0: double;
+    /// B1 parameter of the F2 layer shape.
+    /// Example: 3.45
+    /// Constraints: No constraints specified.
+    b1: double;
+    /// Peak density of the F1 layer, in grams per cubic centimeter.
+    /// Example: 210486
+    /// Constraints: No constraints specified.
+    nmF1: double;
+    /// Peak height of the F1 layer, in kilometers.
+    /// Example: 210.3
+    /// Constraints: No constraints specified.
+    hmF1: double;
+    /// D1 parameter of the F1 layer shape.
+    /// Example: 0
+    /// Constraints: No constraints specified.
+    d1: double;
+    /// Height HZ of the interim layer, in kilometers.
+    /// Example: 142.7
+    /// Constraints: No constraints specified.
+    hz: double;
+    /// The valley height, in kilometers.
+    /// Example: 116.2
+    /// Constraints: No constraints specified.
+    hValTop: double;
+    /// The valley depth, in grams per cubic centimeter.
+    /// Example: 147025.1
+    /// Constraints: No constraints specified.
+    nValB: double;
+    /// Peak density of the E layer, in per cubic centimeter.
+    /// Example: 154164.1
+    /// Constraints: No constraints specified.
+    nmE: double;
+    /// Peak height of the F2 layer, in kilometers.
+    /// Example: 99.8
+    /// Constraints: No constraints specified.
+    hmE: double;
+    /// Height of the intermediate region at the top of D region, in kilometers.
+    /// Example: 85.6
+    /// Constraints: No constraints specified.
+    hdx: double;
+    /// Peak density of the D layer, in per cubic centimeter.
+    /// Example: 937543116.1
+    /// Constraints: No constraints specified.
+    nmD: double;
+    /// Peak height of the D layer, in kilometers.
+    /// Example: 81.1
+    /// Constraints: No constraints specified.
+    hmD: double;
+    /// Starting height of the D layer, in kilometers.
+    /// Example: 50.1
+    /// Constraints: No constraints specified.
+    ha: double;
+    /// TBD.
+    /// Example: 0.0474732023322638
+    /// Constraints: No constraints specified.
+    fp1: double;
+    /// TBD.
+    /// Example: -0.00112685246984002
+    /// Constraints: No constraints specified.
+    fp2: double;
+    /// TBD.
+    /// Example: 0.00827559450035957
+    /// Constraints: No constraints specified.
+    fp30: double;
+    /// TBD.
+    /// Example: 0.000201178475411428
+    /// Constraints: No constraints specified.
+    fp3U: double;
+    /// Peak Density Thickness (PDT) for description of the flat-nose shape, in kilometers.
+    /// Example: 35.1
+    /// Constraints: No constraints specified.
+    chi: double;
+}

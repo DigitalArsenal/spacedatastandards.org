@@ -1,0 +1,19 @@
+/// Describes the E, F1, and F2 layers as parabolic-shape segments.
+table IonoObservationDensityProfileParabolicItem_Abridged {
+    /// Ionospheric plasma layer (E, F1, or F2).
+    /// Example: E
+    /// Constraints: No constraints specified.
+    layer: string;
+    /// Plasma frequency at the layer peak, in MHz.
+    /// Example: 3.621
+    /// Constraints: No constraints specified.
+    f: double;
+    /// Height of the layer peak, in kilometers.
+    /// Example: 110.2
+    /// Constraints: No constraints specified.
+    z: double;
+    /// Half-thickness of the layer, in kilometers.
+    /// Example: 11.1
+    /// Constraints: No constraints specified.
+    y: double;
+}

@@ -1,0 +1,23 @@
+/// Objective Area Information.
+table PersonnelRecoveryObjectiveAreaInfo_Ingest {
+    /// Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the pz location.  This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).
+    /// Example: [103.23, 30.445]
+    /// Constraints: No constraints specified.
+    pzLocation: [string];
+    /// Description of the pickup zone location.
+    /// Example: Near the lake.
+    /// Constraints: Minimum length = 0, Maximum length = 1024
+    pzDesc: string;
+    /// The call sign of the on-scene commander.
+    /// Example: STARFOX
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    oscCallSign: string;
+    /// The radio frequency of the on-scene commander.
+    /// Example: 12.55
+    /// Constraints: No constraints specified.
+    oscFreq: double;
+    /// Information detailing knowledge of enemies in the area.
+    /// Example: No example provided.
+    /// Constraints: No constraints specified.
+    enemyData: [string];
+}

@@ -1,0 +1,43 @@
+/// Information about the Point of Contact (POC) for this ISR Collection.
+table ISRCollectionPOC_Abridged {
+    /// Unique identifier of the collection requirement POC.
+    /// Example: ISRCOLLECTIONPOC-ID
+    /// Constraints: Minimum length = 0, Maximum length = 36
+    id: string;
+    /// Name of the POC.
+    /// Example: NAME
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    name: string;
+    /// Callsign of the POC.
+    /// Example: CALLSIGN
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    callsign: string;
+    /// Unit the POC belongs to.
+    /// Example: UNIT
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    unit: string;
+    /// Email address of the POC.
+    /// Example: EMAIL
+    /// Constraints: Minimum length = 0, Maximum length = 128
+    email: string;
+    /// Phone number of the POC.
+    /// Example: PHONE
+    /// Constraints: Minimum length = 0, Maximum length = 45
+    phone: string;
+    /// Radio Frequency the POC is on.
+    /// Example: 123.23
+    /// Constraints: No constraints specified.
+    radioFrequency: double;
+    /// Chat system the POC is accessing.
+    /// Example: CHAT
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    chatSystem: string;
+    /// Chat name of the POC.
+    /// Example: CHAT_NAME
+    /// Constraints: Minimum length = 0, Maximum length = 32
+    chatName: string;
+    /// Amplifying notes about the POC.
+    /// Example: NOTES
+    /// Constraints: Minimum length = 0, Maximum length = 256
+    notes: string;
+}
