@@ -30,45 +30,45 @@ public final class MPE extends Table {
   public MPE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Unique ID as a String
+   * Unique ID as a String [no units]
    */
   public String ENTITY_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ENTITY_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer ENTITY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+   * Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
    */
   public double EPOCH() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Semi-major axis in km or mean motion in rev/day
+   * Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
    */
   public double MEAN_MOTION() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Eccentricity
+   * Eccentricity (unitless)
    */
   public double ECCENTRICITY() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Inclination
+   * Inclination in degrees
    */
   public double INCLINATION() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Right ascension of ascending node
+   * Right ascension of ascending node in degrees
    */
   public double RA_OF_ASC_NODE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Argument of pericenter
+   * Argument of pericenter in degrees
    */
   public double ARG_OF_PERICENTER() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Mean anomaly
+   * Mean anomaly in degrees
    */
   public double MEAN_ANOMALY() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+   * SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
    */
   public double BSTAR() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Description of the Mean Element Theory. (SGP4,DSST,USM)
+   * Description of the Mean Element Theory (SGP4, DSST, USM)
    */
   public byte MEAN_ELEMENT_THEORY() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
 

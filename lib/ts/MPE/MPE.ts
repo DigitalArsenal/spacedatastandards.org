@@ -33,7 +33,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * Unique ID as a String
+ * Unique ID as a String [no units]
  */
 ENTITY_ID():string|null
 ENTITY_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -43,7 +43,7 @@ ENTITY_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+ * Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
  */
 EPOCH():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
@@ -51,7 +51,7 @@ EPOCH():number {
 }
 
 /**
- * Semi-major axis in km or mean motion in rev/day
+ * Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
  */
 MEAN_MOTION():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
@@ -59,7 +59,7 @@ MEAN_MOTION():number {
 }
 
 /**
- * Eccentricity
+ * Eccentricity (unitless)
  */
 ECCENTRICITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -67,7 +67,7 @@ ECCENTRICITY():number {
 }
 
 /**
- * Inclination
+ * Inclination in degrees
  */
 INCLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -75,7 +75,7 @@ INCLINATION():number {
 }
 
 /**
- * Right ascension of ascending node
+ * Right ascension of ascending node in degrees
  */
 RA_OF_ASC_NODE():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -83,7 +83,7 @@ RA_OF_ASC_NODE():number {
 }
 
 /**
- * Argument of pericenter
+ * Argument of pericenter in degrees
  */
 ARG_OF_PERICENTER():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -91,7 +91,7 @@ ARG_OF_PERICENTER():number {
 }
 
 /**
- * Mean anomaly
+ * Mean anomaly in degrees
  */
 MEAN_ANOMALY():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -99,7 +99,7 @@ MEAN_ANOMALY():number {
 }
 
 /**
- * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+ * SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
  */
 BSTAR():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
@@ -107,7 +107,7 @@ BSTAR():number {
 }
 
 /**
- * Description of the Mean Element Theory. (SGP4,DSST,USM)
+ * Description of the Mean Element Theory (SGP4, DSST, USM)
  */
 MEAN_ELEMENT_THEORY():meanElementTheory {
   const offset = this.bb!.__offset(this.bb_pos, 22);

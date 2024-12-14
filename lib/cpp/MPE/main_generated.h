@@ -36,43 +36,43 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_BSTAR = 20,
     VT_MEAN_ELEMENT_THEORY = 22
   };
-  /// Unique ID as a String
+  /// Unique ID as a String [no units]
   const ::flatbuffers::String *ENTITY_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ENTITY_ID);
   }
-  /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
   double EPOCH() const {
     return GetField<double>(VT_EPOCH, 0.0);
   }
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
   double MEAN_MOTION() const {
     return GetField<double>(VT_MEAN_MOTION, 0.0);
   }
-  /// Eccentricity
+  /// Eccentricity (unitless)
   double ECCENTRICITY() const {
     return GetField<double>(VT_ECCENTRICITY, 0.0);
   }
-  /// Inclination
+  /// Inclination in degrees
   double INCLINATION() const {
     return GetField<double>(VT_INCLINATION, 0.0);
   }
-  /// Right ascension of ascending node
+  /// Right ascension of ascending node in degrees
   double RA_OF_ASC_NODE() const {
     return GetField<double>(VT_RA_OF_ASC_NODE, 0.0);
   }
-  /// Argument of pericenter
+  /// Argument of pericenter in degrees
   double ARG_OF_PERICENTER() const {
     return GetField<double>(VT_ARG_OF_PERICENTER, 0.0);
   }
-  /// Mean anomaly
+  /// Mean anomaly in degrees
   double MEAN_ANOMALY() const {
     return GetField<double>(VT_MEAN_ANOMALY, 0.0);
   }
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   double BSTAR() const {
     return GetField<double>(VT_BSTAR, 0.0);
   }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Description of the Mean Element Theory (SGP4, DSST, USM)
   meanElementTheory MEAN_ELEMENT_THEORY() const {
     return static_cast<meanElementTheory>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
   }

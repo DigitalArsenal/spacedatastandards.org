@@ -1,5 +1,5 @@
-// Hash: cf436f14b2820bd7a7613de4f4f7123737fda820309ff6f110860fdaf3d1d515
-// Version: 1.0.1
+// Hash: 7b964b18c670bf7bdc31972b7279a93582c1d77a7fe135ed764dfae45fbc3073
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
@@ -11,25 +11,25 @@ include "../MET/main.fbs";
 
 /// Minimum Propagatable Element Set
 table MPE {  
-  /// Unique ID as a String
+  /// Unique ID as a String [no units]
   ENTITY_ID: string;
-  /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
   EPOCH: double;
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
   MEAN_MOTION: double;
-  /// Eccentricity
+  /// Eccentricity (unitless)
   ECCENTRICITY: double;
-  /// Inclination
+  /// Inclination in degrees
   INCLINATION: double;
-  /// Right ascension of ascending node
+  /// Right ascension of ascending node in degrees
   RA_OF_ASC_NODE: double;
-  /// Argument of pericenter
+  /// Argument of pericenter in degrees
   ARG_OF_PERICENTER: double;
-  /// Mean anomaly
+  /// Mean anomaly in degrees
   MEAN_ANOMALY: double;
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   BSTAR: double;
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Description of the Mean Element Theory (SGP4, DSST, USM)
   MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
 }
 

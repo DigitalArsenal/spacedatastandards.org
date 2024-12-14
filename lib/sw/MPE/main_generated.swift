@@ -31,26 +31,26 @@ public struct MPE: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  ///  Unique ID as a String
+  ///  Unique ID as a String [no units]
   public var ENTITY_ID: String? { let o = _accessor.offset(VTOFFSET.ENTITY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENTITY_ID.v) }
-  ///  Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+  ///  Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
   public var EPOCH: Double { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Semi-major axis in km or mean motion in rev/day
+  ///  Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
   public var MEAN_MOTION: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentricity
+  ///  Eccentricity (unitless)
   public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Inclination
+  ///  Inclination in degrees
   public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Right ascension of ascending node
+  ///  Right ascension of ascending node in degrees
   public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VTOFFSET.RA_OF_ASC_NODE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Argument of pericenter
+  ///  Argument of pericenter in degrees
   public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VTOFFSET.ARG_OF_PERICENTER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Mean anomaly
+  ///  Mean anomaly in degrees
   public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  ///  SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   public var BSTAR: Double { let o = _accessor.offset(VTOFFSET.BSTAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
+  ///  Description of the Mean Element Theory (SGP4, DSST, USM)
   public var MEAN_ELEMENT_THEORY: meanElementTheory { let o = _accessor.offset(VTOFFSET.MEAN_ELEMENT_THEORY.v); return o == 0 ? .sgp4 : meanElementTheory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
   public static func startMPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VTOFFSET.ENTITY_ID.p) }

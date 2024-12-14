@@ -29,7 +29,7 @@ class MPE(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Unique ID as a String
+    # Unique ID as a String [no units]
     # MPE
     def ENTITY_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,7 +37,7 @@ class MPE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+    # Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
     # MPE
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,7 +45,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Semi-major axis in km or mean motion in rev/day
+    # Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
     # MPE
     def MEAN_MOTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -53,7 +53,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Eccentricity
+    # Eccentricity (unitless)
     # MPE
     def ECCENTRICITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -61,7 +61,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Inclination
+    # Inclination in degrees
     # MPE
     def INCLINATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -69,7 +69,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Right ascension of ascending node
+    # Right ascension of ascending node in degrees
     # MPE
     def RA_OF_ASC_NODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -77,7 +77,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Argument of pericenter
+    # Argument of pericenter in degrees
     # MPE
     def ARG_OF_PERICENTER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -85,7 +85,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Mean anomaly
+    # Mean anomaly in degrees
     # MPE
     def MEAN_ANOMALY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -93,7 +93,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+    # SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
     # MPE
     def BSTAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -101,7 +101,7 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Description of the Mean Element Theory. (SGP4,DSST,USM)
+    # Description of the Mean Element Theory (SGP4, DSST, USM)
     # MPE
     def MEAN_ELEMENT_THEORY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))

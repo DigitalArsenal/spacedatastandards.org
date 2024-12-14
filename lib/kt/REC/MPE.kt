@@ -30,7 +30,7 @@ class MPE : Table() {
         return this
     }
     /**
-     * Unique ID as a String
+     * Unique ID as a String [no units]
      */
     val ENTITY_ID : String?
         get() {
@@ -44,7 +44,7 @@ class MPE : Table() {
     val ENTITY_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun ENTITY_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+     * Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
      */
     val EPOCH : Double
         get() {
@@ -52,7 +52,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Semi-major axis in km or mean motion in rev/day
+     * Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
      */
     val MEAN_MOTION : Double
         get() {
@@ -60,7 +60,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Eccentricity
+     * Eccentricity (unitless)
      */
     val ECCENTRICITY : Double
         get() {
@@ -68,7 +68,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Inclination
+     * Inclination in degrees
      */
     val INCLINATION : Double
         get() {
@@ -76,7 +76,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Right ascension of ascending node
+     * Right ascension of ascending node in degrees
      */
     val RA_OF_ASC_NODE : Double
         get() {
@@ -84,7 +84,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Argument of pericenter
+     * Argument of pericenter in degrees
      */
     val ARG_OF_PERICENTER : Double
         get() {
@@ -92,7 +92,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Mean anomaly
+     * Mean anomaly in degrees
      */
     val MEAN_ANOMALY : Double
         get() {
@@ -100,7 +100,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+     * SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
      */
     val BSTAR : Double
         get() {
@@ -108,7 +108,7 @@ class MPE : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Description of the Mean Element Theory. (SGP4,DSST,USM)
+     * Description of the Mean Element Theory (SGP4, DSST, USM)
      */
     val MEAN_ELEMENT_THEORY : Byte
         get() {

@@ -412,7 +412,7 @@ impl<'a> OMM<'a> {
     }
   }
 
-  /// OMM Header
+  /// CCSDS OMM Version 
   #[inline]
   pub fn CCSDS_OMM_VERS(&self) -> f64 {
     // Safety:
@@ -420,7 +420,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CCSDS_OMM_VERS, Some(0.0)).unwrap()}
   }
-  /// Creation Date
+  /// Creation Date (ISO 8601 UTC format) 
   #[inline]
   pub fn CREATION_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -428,7 +428,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CREATION_DATE, None)}
   }
-  /// Originator
+  /// Originator 
   #[inline]
   pub fn ORIGINATOR(&self) -> Option<&'a str> {
     // Safety:
@@ -436,7 +436,6 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_ORIGINATOR, None)}
   }
-  /// OMM Metadata
   /// Satellite Name(s)
   #[inline]
   pub fn OBJECT_NAME(&self) -> Option<&'a str> {
@@ -453,7 +452,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_OBJECT_ID, None)}
   }
-  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+  /// Center Name (e.g. EARTH, MARS)
   #[inline]
   pub fn CENTER_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -461,7 +460,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CENTER_NAME, None)}
   }
-  /// Name of the reference frame (TEME, EME2000, etc.)
+  /// Reference Frame
   #[inline]
   pub fn REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
@@ -469,7 +468,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<refFrame>(OMM::VT_REFERENCE_FRAME, Some(refFrame::TEME)).unwrap()}
   }
-  /// REFERENCE_FRAME_EPOCH
+  /// Reference Frame Epoch (ISO 8601 UTC format)
   #[inline]
   pub fn REFERENCE_FRAME_EPOCH(&self) -> Option<&'a str> {
     // Safety:
@@ -477,7 +476,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_REFERENCE_FRAME_EPOCH, None)}
   }
-  /// Time system used for the orbit state and covariance matrix. (UTC)
+  /// Time System [M, UTC]
   #[inline]
   pub fn TIME_SYSTEM(&self) -> timeSystem {
     // Safety:
@@ -485,7 +484,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<timeSystem>(OMM::VT_TIME_SYSTEM, Some(timeSystem::UTC)).unwrap()}
   }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Mean Element Theory
   #[inline]
   pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementTheory {
     // Safety:
@@ -493,8 +492,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<meanElementTheory>(OMM::VT_MEAN_ELEMENT_THEORY, Some(meanElementTheory::SGP4)).unwrap()}
   }
-  /// Mean Keplerian Elements in the Specified Reference Frame
-  /// Plain-Text Comment
+  /// COMMENT (O)
   #[inline]
   pub fn COMMENT(&self) -> Option<&'a str> {
     // Safety:
@@ -502,7 +500,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_COMMENT, None)}
   }
-  /// Epoch time, in ISO 8601 UTC format
+  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   #[inline]
   pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
@@ -510,7 +508,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_EPOCH, None)}
   }
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Semi-major axis in km or Mean Motion in rev/day
   #[inline]
   pub fn SEMI_MAJOR_AXIS(&self) -> f64 {
     // Safety:
@@ -518,7 +516,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
   }
-  /// Mean motion
+  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
   #[inline]
   pub fn MEAN_MOTION(&self) -> f64 {
     // Safety:
@@ -526,7 +524,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION, Some(0.0)).unwrap()}
   }
-  /// Eccentricity
+  /// Eccentricity (unitless)
   #[inline]
   pub fn ECCENTRICITY(&self) -> f64 {
     // Safety:
@@ -534,7 +532,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_ECCENTRICITY, Some(0.0)).unwrap()}
   }
-  /// Inclination
+  /// Inclination in degrees
   #[inline]
   pub fn INCLINATION(&self) -> f64 {
     // Safety:
@@ -542,7 +540,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_INCLINATION, Some(0.0)).unwrap()}
   }
-  /// Right ascension of ascending node
+  /// RA_OF_ASC_NODE in degrees
   #[inline]
   pub fn RA_OF_ASC_NODE(&self) -> f64 {
     // Safety:
@@ -550,7 +548,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_RA_OF_ASC_NODE, Some(0.0)).unwrap()}
   }
-  /// Argument of pericenter
+  /// ARG_OF_PERICENTER in degrees
   #[inline]
   pub fn ARG_OF_PERICENTER(&self) -> f64 {
     // Safety:
@@ -558,7 +556,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_ARG_OF_PERICENTER, Some(0.0)).unwrap()}
   }
-  /// Mean anomaly
+  /// MEAN_ANOMALY in degrees
   #[inline]
   pub fn MEAN_ANOMALY(&self) -> f64 {
     // Safety:
@@ -566,7 +564,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
   }
-  /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+  /// GM in km**3/s**2
   #[inline]
   pub fn GM(&self) -> f64 {
     // Safety:
@@ -574,8 +572,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_GM, Some(0.0)).unwrap()}
   }
-  /// Spacecraft Parameters
-  /// S/C Mass
+  /// MASS in kg
   #[inline]
   pub fn MASS(&self) -> f64 {
     // Safety:
@@ -583,7 +580,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_MASS, Some(0.0)).unwrap()}
   }
-  /// Solar Radiation Pressure Area (AR) m**2
+  /// SOLAR_RAD_AREA in m**2
   #[inline]
   pub fn SOLAR_RAD_AREA(&self) -> f64 {
     // Safety:
@@ -591,7 +588,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_SOLAR_RAD_AREA, Some(0.0)).unwrap()}
   }
-  /// Solar Radiation Pressure Coefficient (CR)
+  /// SOLAR_RAD_COEFF (unitless)
   #[inline]
   pub fn SOLAR_RAD_COEFF(&self) -> f64 {
     // Safety:
@@ -599,7 +596,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_SOLAR_RAD_COEFF, Some(0.0)).unwrap()}
   }
-  /// Drag Area (AD) m**2
+  /// DRAG_AREA in m**2
   #[inline]
   pub fn DRAG_AREA(&self) -> f64 {
     // Safety:
@@ -607,7 +604,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_DRAG_AREA, Some(0.0)).unwrap()}
   }
-  /// Drag Coefficient (CD)
+  /// DRAG_COEFF (unitless)
   #[inline]
   pub fn DRAG_COEFF(&self) -> f64 {
     // Safety:
@@ -615,8 +612,8 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_DRAG_COEFF, Some(0.0)).unwrap()}
   }
-  /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  /// Default value = 0
+  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// EPHEMERIS_TYPE Default=0
   #[inline]
   pub fn EPHEMERIS_TYPE(&self) -> ephemerisType {
     // Safety:
@@ -624,7 +621,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<ephemerisType>(OMM::VT_EPHEMERIS_TYPE, Some(ephemerisType::SGP4)).unwrap()}
   }
-  /// Default value = U
+  /// CLASSIFICATION_TYPE Default=U
   #[inline]
   pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -632,7 +629,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CLASSIFICATION_TYPE, None)}
   }
-  /// NORAD Catalog Number (Satellite Number) an integer
+  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
   #[inline]
   pub fn NORAD_CAT_ID(&self) -> u32 {
     // Safety:
@@ -640,7 +637,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(OMM::VT_NORAD_CAT_ID, Some(0)).unwrap()}
   }
-  /// Element set number for this satellite
+  /// ELEMENT_SET_NO [O if SGP/SGP4]
   #[inline]
   pub fn ELEMENT_SET_NO(&self) -> u32 {
     // Safety:
@@ -648,7 +645,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(OMM::VT_ELEMENT_SET_NO, Some(0)).unwrap()}
   }
-  /// Revolution Number
+  /// REV_AT_EPOCH [O if SGP/SGP4]
   #[inline]
   pub fn REV_AT_EPOCH(&self) -> f64 {
     // Safety:
@@ -656,7 +653,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_REV_AT_EPOCH, Some(0.0)).unwrap()}
   }
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
   #[inline]
   pub fn BSTAR(&self) -> f64 {
     // Safety:
@@ -664,7 +661,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_BSTAR, Some(0.0)).unwrap()}
   }
-  /// First Time Derivative of the Mean Motion
+  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
   #[inline]
   pub fn MEAN_MOTION_DOT(&self) -> f64 {
     // Safety:
@@ -672,7 +669,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
   }
-  /// Second Time Derivative of Mean Motion
+  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
   #[inline]
   pub fn MEAN_MOTION_DDOT(&self) -> f64 {
     // Safety:
@@ -680,8 +677,8 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
   }
-  /// Position/Velocity Covariance Matrix
-  /// Reference frame for the covariance matrix
+  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  /// COV_REF_FRAME reference frame for covariance [C if covariance given]
   #[inline]
   pub fn COV_REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
@@ -689,7 +686,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<refFrame>(OMM::VT_COV_REFERENCE_FRAME, Some(refFrame::RSW)).unwrap()}
   }
-  /// Covariance matrix [1,1] km**2
+  /// CX_X [km**2]
   #[inline]
   pub fn CX_X(&self) -> f64 {
     // Safety:
@@ -697,7 +694,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CX_X, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [2,1] km**2
+  /// CY_X [km**2]
   #[inline]
   pub fn CY_X(&self) -> f64 {
     // Safety:
@@ -705,7 +702,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_X, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [2,2] km**2
+  /// CY_Y [km**2]
   #[inline]
   pub fn CY_Y(&self) -> f64 {
     // Safety:
@@ -713,7 +710,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_Y, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [3,1] km**2
+  /// CZ_X [km**2]
   #[inline]
   pub fn CZ_X(&self) -> f64 {
     // Safety:
@@ -721,7 +718,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_X, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [3,2] km**2
+  /// CZ_Y [km**2]
   #[inline]
   pub fn CZ_Y(&self) -> f64 {
     // Safety:
@@ -729,7 +726,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_Y, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [3,3] km**2
+  /// CZ_Z [km**2]
   #[inline]
   pub fn CZ_Z(&self) -> f64 {
     // Safety:
@@ -737,7 +734,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_Z, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [4,1] km**2/s
+  /// CX_DOT_X [km**2/s]
   #[inline]
   pub fn CX_DOT_X(&self) -> f64 {
     // Safety:
@@ -745,7 +742,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_X, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [4,2] km**2/s
+  /// CX_DOT_Y [km**2/s]
   #[inline]
   pub fn CX_DOT_Y(&self) -> f64 {
     // Safety:
@@ -753,7 +750,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_Y, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [4,3] km**2/s
+  /// CX_DOT_Z [km**2/s]
   #[inline]
   pub fn CX_DOT_Z(&self) -> f64 {
     // Safety:
@@ -761,7 +758,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_Z, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [4,4] km**2/s**2
+  /// CX_DOT_X_DOT [km**2/s**2]
   #[inline]
   pub fn CX_DOT_X_DOT(&self) -> f64 {
     // Safety:
@@ -769,7 +766,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_X_DOT, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [5,1] km**2/s
+  /// CY_DOT_X [km**2/s]
   #[inline]
   pub fn CY_DOT_X(&self) -> f64 {
     // Safety:
@@ -777,7 +774,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_X, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [5,2] km**2/s
+  /// CY_DOT_Y [km**2/s]
   #[inline]
   pub fn CY_DOT_Y(&self) -> f64 {
     // Safety:
@@ -785,7 +782,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_Y, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [5,3] km**2/s
+  /// CY_DOT_Z [km**2/s]
   #[inline]
   pub fn CY_DOT_Z(&self) -> f64 {
     // Safety:
@@ -793,7 +790,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_Z, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [5,4] km**2/s**2
+  /// CY_DOT_X_DOT [km**2/s**2]
   #[inline]
   pub fn CY_DOT_X_DOT(&self) -> f64 {
     // Safety:
@@ -801,7 +798,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_X_DOT, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [5,5] km**2/s**2
+  /// CY_DOT_Y_DOT [km**2/s**2]
   #[inline]
   pub fn CY_DOT_Y_DOT(&self) -> f64 {
     // Safety:
@@ -809,7 +806,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_Y_DOT, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [6,1] km**2/s
+  /// CZ_DOT_X [km**2/s]
   #[inline]
   pub fn CZ_DOT_X(&self) -> f64 {
     // Safety:
@@ -817,7 +814,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_X, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [6,2] km**2/s
+  /// CZ_DOT_Y [km**2/s]
   #[inline]
   pub fn CZ_DOT_Y(&self) -> f64 {
     // Safety:
@@ -825,7 +822,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Y, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [6,3] km**2/s
+  /// CZ_DOT_Z [km**2/s]
   #[inline]
   pub fn CZ_DOT_Z(&self) -> f64 {
     // Safety:
@@ -833,7 +830,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Z, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [6,4] km**2/s**2
+  /// CZ_DOT_X_DOT [km**2/s**2]
   #[inline]
   pub fn CZ_DOT_X_DOT(&self) -> f64 {
     // Safety:
@@ -841,7 +838,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_X_DOT, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [6,5] km**2/s**2
+  /// CZ_DOT_Y_DOT [km**2/s**2]
   #[inline]
   pub fn CZ_DOT_Y_DOT(&self) -> f64 {
     // Safety:
@@ -849,7 +846,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Y_DOT, Some(0.0)).unwrap()}
   }
-  /// Covariance matrix [6,6] km**2/s**2
+  /// CZ_DOT_Z_DOT [km**2/s**2]
   #[inline]
   pub fn CZ_DOT_Z_DOT(&self) -> f64 {
     // Safety:
@@ -857,7 +854,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Z_DOT, Some(0.0)).unwrap()}
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   #[inline]
   pub fn USER_DEFINED_BIP_0044_TYPE(&self) -> u32 {
     // Safety:
@@ -865,7 +862,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(OMM::VT_USER_DEFINED_BIP_0044_TYPE, Some(0)).unwrap()}
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
   #[inline]
   pub fn USER_DEFINED_OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
     // Safety:
@@ -873,7 +870,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_USER_DEFINED_OBJECT_DESIGNATOR, None)}
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
   #[inline]
   pub fn USER_DEFINED_EARTH_MODEL(&self) -> Option<&'a str> {
     // Safety:
@@ -881,7 +878,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_USER_DEFINED_EARTH_MODEL, None)}
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
   #[inline]
   pub fn USER_DEFINED_EPOCH_TIMESTAMP(&self) -> f64 {
     // Safety:
@@ -889,7 +886,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_USER_DEFINED_EPOCH_TIMESTAMP, Some(0.0)).unwrap()}
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_MICROSECONDS [O, units per ICD]
   #[inline]
   pub fn USER_DEFINED_MICROSECONDS(&self) -> f64 {
     // Safety:

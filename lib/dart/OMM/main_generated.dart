@@ -79,130 +79,127 @@ class OMM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  OMM Header
+  ///  CCSDS OMM Version 
   double get CCSDS_OMM_VERS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Creation Date
+  ///  Creation Date (ISO 8601 UTC format) 
   String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Originator
+  ///  Originator 
   String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  OMM Metadata
   ///  Satellite Name(s)
   String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  International Designator (YYYY-NNNAAA)
   String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
+  ///  Center Name (e.g. EARTH, MARS)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Name of the reference frame (TEME, EME2000, etc.)
+  ///  Reference Frame
   RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 2));
-  ///  REFERENCE_FRAME_EPOCH
+  ///  Reference Frame Epoch (ISO 8601 UTC format)
   String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  ///  Time system used for the orbit state and covariance matrix. (UTC)
+  ///  Time System [M, UTC]
   TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 11));
-  ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
+  ///  Mean Element Theory
   MeanElementTheory get MEAN_ELEMENT_THEORY => MeanElementTheory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
-  ///  Mean Keplerian Elements in the Specified Reference Frame
-  ///  Plain-Text Comment
+  ///  COMMENT (O)
   String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  ///  Epoch time, in ISO 8601 UTC format
+  ///  EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  ///  Semi-major axis in km or mean motion in rev/day
+  ///  Semi-major axis in km or Mean Motion in rev/day
   double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  ///  Mean motion
+  ///  Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
   double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  ///  Eccentricity
+  ///  Eccentricity (unitless)
   double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  ///  Inclination
+  ///  Inclination in degrees
   double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  ///  Right ascension of ascending node
+  ///  RA_OF_ASC_NODE in degrees
   double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  ///  Argument of pericenter
+  ///  ARG_OF_PERICENTER in degrees
   double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  ///  Mean anomaly
+  ///  MEAN_ANOMALY in degrees
   double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  ///  Gravitational Coefficient (Gravitational Constant x Central Mass)
+  ///  GM in km**3/s**2
   double get GM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  ///  Spacecraft Parameters
-  ///  S/C Mass
+  ///  MASS in kg
   double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  ///  Solar Radiation Pressure Area (AR) m**2
+  ///  SOLAR_RAD_AREA in m**2
   double get SOLAR_RAD_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  ///  Solar Radiation Pressure Coefficient (CR)
+  ///  SOLAR_RAD_COEFF (unitless)
   double get SOLAR_RAD_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  ///  Drag Area (AD) m**2
+  ///  DRAG_AREA in m**2
   double get DRAG_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  ///  Drag Coefficient (CD)
+  ///  DRAG_COEFF (unitless)
   double get DRAG_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  ///  TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  ///  Default value = 0
+  ///  TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  ///  EPHEMERIS_TYPE Default=0
   EphemerisType get EPHEMERIS_TYPE => EphemerisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 54, 1));
-  ///  Default value = U
+  ///  CLASSIFICATION_TYPE Default=U
   String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
-  ///  NORAD Catalog Number (Satellite Number) an integer
+  ///  NORAD_CAT_ID (integer) [O if SGP/SGP4]
   int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 58, 0);
-  ///  Element set number for this satellite
+  ///  ELEMENT_SET_NO [O if SGP/SGP4]
   int get ELEMENT_SET_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 60, 0);
-  ///  Revolution Number
+  ///  REV_AT_EPOCH [O if SGP/SGP4]
   double get REV_AT_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  ///  SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  ///  BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
   double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  ///  First Time Derivative of the Mean Motion
+  ///  MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
   double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  ///  Second Time Derivative of Mean Motion
+  ///  MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
   double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  ///  Position/Velocity Covariance Matrix
-  ///  Reference frame for the covariance matrix
+  ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
   RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 23));
-  ///  Covariance matrix [1,1] km**2
+  ///  CX_X [km**2]
   double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  ///  Covariance matrix [2,1] km**2
+  ///  CY_X [km**2]
   double get CY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  ///  Covariance matrix [2,2] km**2
+  ///  CY_Y [km**2]
   double get CY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  ///  Covariance matrix [3,1] km**2
+  ///  CZ_X [km**2]
   double get CZ_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  ///  Covariance matrix [3,2] km**2
+  ///  CZ_Y [km**2]
   double get CZ_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  ///  Covariance matrix [3,3] km**2
+  ///  CZ_Z [km**2]
   double get CZ_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  ///  Covariance matrix [4,1] km**2/s
+  ///  CX_DOT_X [km**2/s]
   double get CX_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  ///  Covariance matrix [4,2] km**2/s
+  ///  CX_DOT_Y [km**2/s]
   double get CX_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  ///  Covariance matrix [4,3] km**2/s
+  ///  CX_DOT_Z [km**2/s]
   double get CX_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  ///  Covariance matrix [4,4] km**2/s**2
+  ///  CX_DOT_X_DOT [km**2/s**2]
   double get CX_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
-  ///  Covariance matrix [5,1] km**2/s
+  ///  CY_DOT_X [km**2/s]
   double get CY_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  ///  Covariance matrix [5,2] km**2/s
+  ///  CY_DOT_Y [km**2/s]
   double get CY_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  ///  Covariance matrix [5,3] km**2/s
+  ///  CY_DOT_Z [km**2/s]
   double get CY_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  ///  Covariance matrix [5,4] km**2/s**2
+  ///  CY_DOT_X_DOT [km**2/s**2]
   double get CY_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  ///  Covariance matrix [5,5] km**2/s**2
+  ///  CY_DOT_Y_DOT [km**2/s**2]
   double get CY_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
-  ///  Covariance matrix [6,1] km**2/s
+  ///  CZ_DOT_X [km**2/s]
   double get CZ_DOT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
-  ///  Covariance matrix [6,2] km**2/s
+  ///  CZ_DOT_Y [km**2/s]
   double get CZ_DOT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
-  ///  Covariance matrix [6,3] km**2/s
+  ///  CZ_DOT_Z [km**2/s]
   double get CZ_DOT_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
-  ///  Covariance matrix [6,4] km**2/s**2
+  ///  CZ_DOT_X_DOT [km**2/s**2]
   double get CZ_DOT_X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
-  ///  Covariance matrix [6,5] km**2/s**2
+  ///  CZ_DOT_Y_DOT [km**2/s**2]
   double get CZ_DOT_Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
-  ///  Covariance matrix [6,6] km**2/s**2
+  ///  CZ_DOT_Z_DOT [km**2/s**2]
   double get CZ_DOT_Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   int get USER_DEFINED_BIP_0044_TYPE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 114, 0);
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
   String? get USER_DEFINED_OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 116);
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_EARTH_MODEL [O, units per ICD]
   String? get USER_DEFINED_EARTH_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 118);
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
   double get USER_DEFINED_EPOCH_TIMESTAMP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_MICROSECONDS [O, units per ICD]
   double get USER_DEFINED_MICROSECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
 
   @override

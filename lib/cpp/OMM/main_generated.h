@@ -132,19 +132,18 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_USER_DEFINED_EPOCH_TIMESTAMP = 120,
     VT_USER_DEFINED_MICROSECONDS = 122
   };
-  /// OMM Header
+  /// CCSDS OMM Version 
   double CCSDS_OMM_VERS() const {
     return GetField<double>(VT_CCSDS_OMM_VERS, 0.0);
   }
-  /// Creation Date
+  /// Creation Date (ISO 8601 UTC format) 
   const ::flatbuffers::String *CREATION_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
   }
-  /// Originator
+  /// Originator 
   const ::flatbuffers::String *ORIGINATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
   }
-  /// OMM Metadata
   /// Satellite Name(s)
   const ::flatbuffers::String *OBJECT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
@@ -153,227 +152,225 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
   }
-  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+  /// Center Name (e.g. EARTH, MARS)
   const ::flatbuffers::String *CENTER_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
   }
-  /// Name of the reference frame (TEME, EME2000, etc.)
+  /// Reference Frame
   refFrame REFERENCE_FRAME() const {
     return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 2));
   }
-  /// REFERENCE_FRAME_EPOCH
+  /// Reference Frame Epoch (ISO 8601 UTC format)
   const ::flatbuffers::String *REFERENCE_FRAME_EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME_EPOCH);
   }
-  /// Time system used for the orbit state and covariance matrix. (UTC)
+  /// Time System [M, UTC]
   timeSystem TIME_SYSTEM() const {
     return static_cast<timeSystem>(GetField<int8_t>(VT_TIME_SYSTEM, 11));
   }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Mean Element Theory
   meanElementTheory MEAN_ELEMENT_THEORY() const {
     return static_cast<meanElementTheory>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
   }
-  /// Mean Keplerian Elements in the Specified Reference Frame
-  /// Plain-Text Comment
+  /// COMMENT (O)
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
-  /// Epoch time, in ISO 8601 UTC format
+  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Semi-major axis in km or Mean Motion in rev/day
   double SEMI_MAJOR_AXIS() const {
     return GetField<double>(VT_SEMI_MAJOR_AXIS, 0.0);
   }
-  /// Mean motion
+  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
   double MEAN_MOTION() const {
     return GetField<double>(VT_MEAN_MOTION, 0.0);
   }
-  /// Eccentricity
+  /// Eccentricity (unitless)
   double ECCENTRICITY() const {
     return GetField<double>(VT_ECCENTRICITY, 0.0);
   }
-  /// Inclination
+  /// Inclination in degrees
   double INCLINATION() const {
     return GetField<double>(VT_INCLINATION, 0.0);
   }
-  /// Right ascension of ascending node
+  /// RA_OF_ASC_NODE in degrees
   double RA_OF_ASC_NODE() const {
     return GetField<double>(VT_RA_OF_ASC_NODE, 0.0);
   }
-  /// Argument of pericenter
+  /// ARG_OF_PERICENTER in degrees
   double ARG_OF_PERICENTER() const {
     return GetField<double>(VT_ARG_OF_PERICENTER, 0.0);
   }
-  /// Mean anomaly
+  /// MEAN_ANOMALY in degrees
   double MEAN_ANOMALY() const {
     return GetField<double>(VT_MEAN_ANOMALY, 0.0);
   }
-  /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+  /// GM in km**3/s**2
   double GM() const {
     return GetField<double>(VT_GM, 0.0);
   }
-  /// Spacecraft Parameters
-  /// S/C Mass
+  /// MASS in kg
   double MASS() const {
     return GetField<double>(VT_MASS, 0.0);
   }
-  /// Solar Radiation Pressure Area (AR) m**2
+  /// SOLAR_RAD_AREA in m**2
   double SOLAR_RAD_AREA() const {
     return GetField<double>(VT_SOLAR_RAD_AREA, 0.0);
   }
-  /// Solar Radiation Pressure Coefficient (CR)
+  /// SOLAR_RAD_COEFF (unitless)
   double SOLAR_RAD_COEFF() const {
     return GetField<double>(VT_SOLAR_RAD_COEFF, 0.0);
   }
-  /// Drag Area (AD) m**2
+  /// DRAG_AREA in m**2
   double DRAG_AREA() const {
     return GetField<double>(VT_DRAG_AREA, 0.0);
   }
-  /// Drag Coefficient (CD)
+  /// DRAG_COEFF (unitless)
   double DRAG_COEFF() const {
     return GetField<double>(VT_DRAG_COEFF, 0.0);
   }
-  /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  /// Default value = 0
+  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// EPHEMERIS_TYPE Default=0
   ephemerisType EPHEMERIS_TYPE() const {
     return static_cast<ephemerisType>(GetField<int8_t>(VT_EPHEMERIS_TYPE, 1));
   }
-  /// Default value = U
+  /// CLASSIFICATION_TYPE Default=U
   const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
   }
-  /// NORAD Catalog Number (Satellite Number) an integer
+  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
   uint32_t NORAD_CAT_ID() const {
     return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
   }
-  /// Element set number for this satellite
+  /// ELEMENT_SET_NO [O if SGP/SGP4]
   uint32_t ELEMENT_SET_NO() const {
     return GetField<uint32_t>(VT_ELEMENT_SET_NO, 0);
   }
-  /// Revolution Number
+  /// REV_AT_EPOCH [O if SGP/SGP4]
   double REV_AT_EPOCH() const {
     return GetField<double>(VT_REV_AT_EPOCH, 0.0);
   }
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
   double BSTAR() const {
     return GetField<double>(VT_BSTAR, 0.0);
   }
-  /// First Time Derivative of the Mean Motion
+  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
   double MEAN_MOTION_DOT() const {
     return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
   }
-  /// Second Time Derivative of Mean Motion
+  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
   double MEAN_MOTION_DDOT() const {
     return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
   }
-  /// Position/Velocity Covariance Matrix
-  /// Reference frame for the covariance matrix
+  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  /// COV_REF_FRAME reference frame for covariance [C if covariance given]
   refFrame COV_REFERENCE_FRAME() const {
     return static_cast<refFrame>(GetField<int8_t>(VT_COV_REFERENCE_FRAME, 23));
   }
-  /// Covariance matrix [1,1] km**2
+  /// CX_X [km**2]
   double CX_X() const {
     return GetField<double>(VT_CX_X, 0.0);
   }
-  /// Covariance matrix [2,1] km**2
+  /// CY_X [km**2]
   double CY_X() const {
     return GetField<double>(VT_CY_X, 0.0);
   }
-  /// Covariance matrix [2,2] km**2
+  /// CY_Y [km**2]
   double CY_Y() const {
     return GetField<double>(VT_CY_Y, 0.0);
   }
-  /// Covariance matrix [3,1] km**2
+  /// CZ_X [km**2]
   double CZ_X() const {
     return GetField<double>(VT_CZ_X, 0.0);
   }
-  /// Covariance matrix [3,2] km**2
+  /// CZ_Y [km**2]
   double CZ_Y() const {
     return GetField<double>(VT_CZ_Y, 0.0);
   }
-  /// Covariance matrix [3,3] km**2
+  /// CZ_Z [km**2]
   double CZ_Z() const {
     return GetField<double>(VT_CZ_Z, 0.0);
   }
-  /// Covariance matrix [4,1] km**2/s
+  /// CX_DOT_X [km**2/s]
   double CX_DOT_X() const {
     return GetField<double>(VT_CX_DOT_X, 0.0);
   }
-  /// Covariance matrix [4,2] km**2/s
+  /// CX_DOT_Y [km**2/s]
   double CX_DOT_Y() const {
     return GetField<double>(VT_CX_DOT_Y, 0.0);
   }
-  /// Covariance matrix [4,3] km**2/s
+  /// CX_DOT_Z [km**2/s]
   double CX_DOT_Z() const {
     return GetField<double>(VT_CX_DOT_Z, 0.0);
   }
-  /// Covariance matrix [4,4] km**2/s**2
+  /// CX_DOT_X_DOT [km**2/s**2]
   double CX_DOT_X_DOT() const {
     return GetField<double>(VT_CX_DOT_X_DOT, 0.0);
   }
-  /// Covariance matrix [5,1] km**2/s
+  /// CY_DOT_X [km**2/s]
   double CY_DOT_X() const {
     return GetField<double>(VT_CY_DOT_X, 0.0);
   }
-  /// Covariance matrix [5,2] km**2/s
+  /// CY_DOT_Y [km**2/s]
   double CY_DOT_Y() const {
     return GetField<double>(VT_CY_DOT_Y, 0.0);
   }
-  /// Covariance matrix [5,3] km**2/s
+  /// CY_DOT_Z [km**2/s]
   double CY_DOT_Z() const {
     return GetField<double>(VT_CY_DOT_Z, 0.0);
   }
-  /// Covariance matrix [5,4] km**2/s**2
+  /// CY_DOT_X_DOT [km**2/s**2]
   double CY_DOT_X_DOT() const {
     return GetField<double>(VT_CY_DOT_X_DOT, 0.0);
   }
-  /// Covariance matrix [5,5] km**2/s**2
+  /// CY_DOT_Y_DOT [km**2/s**2]
   double CY_DOT_Y_DOT() const {
     return GetField<double>(VT_CY_DOT_Y_DOT, 0.0);
   }
-  /// Covariance matrix [6,1] km**2/s
+  /// CZ_DOT_X [km**2/s]
   double CZ_DOT_X() const {
     return GetField<double>(VT_CZ_DOT_X, 0.0);
   }
-  /// Covariance matrix [6,2] km**2/s
+  /// CZ_DOT_Y [km**2/s]
   double CZ_DOT_Y() const {
     return GetField<double>(VT_CZ_DOT_Y, 0.0);
   }
-  /// Covariance matrix [6,3] km**2/s
+  /// CZ_DOT_Z [km**2/s]
   double CZ_DOT_Z() const {
     return GetField<double>(VT_CZ_DOT_Z, 0.0);
   }
-  /// Covariance matrix [6,4] km**2/s**2
+  /// CZ_DOT_X_DOT [km**2/s**2]
   double CZ_DOT_X_DOT() const {
     return GetField<double>(VT_CZ_DOT_X_DOT, 0.0);
   }
-  /// Covariance matrix [6,5] km**2/s**2
+  /// CZ_DOT_Y_DOT [km**2/s**2]
   double CZ_DOT_Y_DOT() const {
     return GetField<double>(VT_CZ_DOT_Y_DOT, 0.0);
   }
-  /// Covariance matrix [6,6] km**2/s**2
+  /// CZ_DOT_Z_DOT [km**2/s**2]
   double CZ_DOT_Z_DOT() const {
     return GetField<double>(VT_CZ_DOT_Z_DOT, 0.0);
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   uint32_t USER_DEFINED_BIP_0044_TYPE() const {
     return GetField<uint32_t>(VT_USER_DEFINED_BIP_0044_TYPE, 0);
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
   const ::flatbuffers::String *USER_DEFINED_OBJECT_DESIGNATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_USER_DEFINED_OBJECT_DESIGNATOR);
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
   const ::flatbuffers::String *USER_DEFINED_EARTH_MODEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_USER_DEFINED_EARTH_MODEL);
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
   double USER_DEFINED_EPOCH_TIMESTAMP() const {
     return GetField<double>(VT_USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
   }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_MICROSECONDS [O, units per ICD]
   double USER_DEFINED_MICROSECONDS() const {
     return GetField<double>(VT_USER_DEFINED_MICROSECONDS, 0.0);
   }

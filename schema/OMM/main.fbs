@@ -1,5 +1,5 @@
-// Hash: 5cc26919c8c58f5b0585044ca7ded3e5f12c8ed06239ce3f30e57e426a130ce9
-// Version: 1.0.0
+// Hash: b7730bcb5850a50e24f3cc501aac79cd29cd5e7b1b11aa76db26a22e8a2d18c6
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -30,139 +30,135 @@ enum ephemerisType : byte {
 
 /// Orbit Mean Elements Message
 table OMM {
-  /// OMM Header
+  /// CCSDS OMM Version 
   CCSDS_OMM_VERS:double;
-  /// Creation Date
+  /// Creation Date (ISO 8601 UTC format) 
   CREATION_DATE:string;
-  /// Originator
+  /// Originator 
   ORIGINATOR:string;
 
-  /// OMM Metadata
   /// Satellite Name(s)
   OBJECT_NAME:string;
   /// International Designator (YYYY-NNNAAA)
   OBJECT_ID:string;
-  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+  /// Center Name (e.g. EARTH, MARS)
   CENTER_NAME:string;
-  /// Name of the reference frame (TEME, EME2000, etc.)
+  /// Reference Frame
   REFERENCE_FRAME:refFrame = TEME;
-  /// REFERENCE_FRAME_EPOCH
+  /// Reference Frame Epoch (ISO 8601 UTC format)
   REFERENCE_FRAME_EPOCH:string;
-  /// Time system used for the orbit state and covariance matrix. (UTC)
+  /// Time System [M, UTC]
   TIME_SYSTEM:timeSystem = UTC;
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Mean Element Theory
   MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
 
-  /// Mean Keplerian Elements in the Specified Reference Frame
-  /// Plain-Text Comment
+  /// COMMENT (O)
   COMMENT:string;
-  /// Epoch time, in ISO 8601 UTC format
+  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   EPOCH:string;
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Semi-major axis in km or Mean Motion in rev/day
   SEMI_MAJOR_AXIS:double;
-  /// Mean motion
+  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
   MEAN_MOTION:double;
-  /// Eccentricity
+  /// Eccentricity (unitless)
   ECCENTRICITY:double;
-  /// Inclination
+  /// Inclination in degrees
   INCLINATION:double;
-  /// Right ascension of ascending node
+  /// RA_OF_ASC_NODE in degrees
   RA_OF_ASC_NODE:double;
-  /// Argument of pericenter
+  /// ARG_OF_PERICENTER in degrees
   ARG_OF_PERICENTER:double;
-  /// Mean anomaly
+  /// MEAN_ANOMALY in degrees
   MEAN_ANOMALY:double;
-  /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+  /// GM in km**3/s**2
   GM:double;
   
-  /// Spacecraft Parameters
-  /// S/C Mass
+  /// MASS in kg
   MASS:double;
-  /// Solar Radiation Pressure Area (AR) m**2
+  /// SOLAR_RAD_AREA in m**2
   SOLAR_RAD_AREA:double;
-  /// Solar Radiation Pressure Coefficient (CR)
+  /// SOLAR_RAD_COEFF (unitless)
   SOLAR_RAD_COEFF:double;
-  /// Drag Area (AD) m**2
+  /// DRAG_AREA in m**2
   DRAG_AREA:double;
-  /// Drag Coefficient (CD)
+  /// DRAG_COEFF (unitless)
   DRAG_COEFF:double;
 
-  /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  /// Default value = 0
+  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// EPHEMERIS_TYPE Default=0
   EPHEMERIS_TYPE:ephemerisType = SGP4;
-  /// Default value = U
+  /// CLASSIFICATION_TYPE Default=U
   CLASSIFICATION_TYPE:string;
-  /// NORAD Catalog Number (Satellite Number) an integer
+  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
   NORAD_CAT_ID:uint32;
-  /// Element set number for this satellite
+  /// ELEMENT_SET_NO [O if SGP/SGP4]
   ELEMENT_SET_NO:uint32;
-  /// Revolution Number
+  /// REV_AT_EPOCH [O if SGP/SGP4]
   REV_AT_EPOCH:double;
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
   BSTAR:double;
-  /// First Time Derivative of the Mean Motion
+  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
   MEAN_MOTION_DOT:double;
-  /// Second Time Derivative of Mean Motion
+  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
   MEAN_MOTION_DDOT:double;
-  
-  /// Position/Velocity Covariance Matrix
-  /// Reference frame for the covariance matrix
+
+  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  /// COV_REF_FRAME reference frame for covariance [C if covariance given]
   COV_REFERENCE_FRAME:refFrame = RSW;
-  /// Covariance matrix [1,1] km**2
+  /// CX_X [km**2]
   CX_X:double;
-  /// Covariance matrix [2,1] km**2
+  /// CY_X [km**2]
   CY_X:double;
-  /// Covariance matrix [2,2] km**2
+  /// CY_Y [km**2]
   CY_Y:double;
-  /// Covariance matrix [3,1] km**2
+  /// CZ_X [km**2]
   CZ_X:double;
-  /// Covariance matrix [3,2] km**2
+  /// CZ_Y [km**2]
   CZ_Y:double;
-  /// Covariance matrix [3,3] km**2
+  /// CZ_Z [km**2]
   CZ_Z:double;
-  /// Covariance matrix [4,1] km**2/s
+  /// CX_DOT_X [km**2/s]
   CX_DOT_X:double;
-  /// Covariance matrix [4,2] km**2/s
+  /// CX_DOT_Y [km**2/s]
   CX_DOT_Y:double;
-  /// Covariance matrix [4,3] km**2/s
+  /// CX_DOT_Z [km**2/s]
   CX_DOT_Z:double;
-  /// Covariance matrix [4,4] km**2/s**2
+  /// CX_DOT_X_DOT [km**2/s**2]
   CX_DOT_X_DOT:double;
-  /// Covariance matrix [5,1] km**2/s
+  /// CY_DOT_X [km**2/s]
   CY_DOT_X:double;
-  /// Covariance matrix [5,2] km**2/s
+  /// CY_DOT_Y [km**2/s]
   CY_DOT_Y:double;
-  /// Covariance matrix [5,3] km**2/s
+  /// CY_DOT_Z [km**2/s]
   CY_DOT_Z:double;
-  /// Covariance matrix [5,4] km**2/s**2
+  /// CY_DOT_X_DOT [km**2/s**2]
   CY_DOT_X_DOT:double;
-  /// Covariance matrix [5,5] km**2/s**2
+  /// CY_DOT_Y_DOT [km**2/s**2]
   CY_DOT_Y_DOT:double;
-  /// Covariance matrix [6,1] km**2/s
+  /// CZ_DOT_X [km**2/s]
   CZ_DOT_X:double;
-  /// Covariance matrix [6,2] km**2/s
+  /// CZ_DOT_Y [km**2/s]
   CZ_DOT_Y:double;
-  /// Covariance matrix [6,3] km**2/s
+  /// CZ_DOT_Z [km**2/s]
   CZ_DOT_Z:double;
-  /// Covariance matrix [6,4] km**2/s**2
+  /// CZ_DOT_X_DOT [km**2/s**2]
   CZ_DOT_X_DOT:double;
-  /// Covariance matrix [6,5] km**2/s**2
+  /// CZ_DOT_Y_DOT [km**2/s**2]
   CZ_DOT_Y_DOT:double;
-  /// Covariance matrix [6,6] km**2/s**2
+  /// CZ_DOT_Z_DOT [km**2/s**2]
   CZ_DOT_Z_DOT:double;
 
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   USER_DEFINED_BIP_0044_TYPE:uint;
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
   USER_DEFINED_OBJECT_DESIGNATOR:string;
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
   USER_DEFINED_EARTH_MODEL:string;
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
   USER_DEFINED_EPOCH_TIMESTAMP: double;
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_MICROSECONDS [O, units per ICD]
   USER_DEFINED_MICROSECONDS: double;
 }
-
 
 table OMMCOLLECTION {
   RECORDS: [OMM];

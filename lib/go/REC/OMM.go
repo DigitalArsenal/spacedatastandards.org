@@ -54,7 +54,7 @@ func (rcv *OMM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// OMM Header
+/// CCSDS OMM Version 
 func (rcv *OMM) CCSDS_OMM_VERS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -63,12 +63,12 @@ func (rcv *OMM) CCSDS_OMM_VERS() float64 {
 	return 0.0
 }
 
-/// OMM Header
+/// CCSDS OMM Version 
 func (rcv *OMM) MutateCCSDS_OMM_VERS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
 
-/// Creation Date
+/// Creation Date (ISO 8601 UTC format) 
 func (rcv *OMM) CREATION_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -77,8 +77,8 @@ func (rcv *OMM) CREATION_DATE() []byte {
 	return nil
 }
 
-/// Creation Date
-/// Originator
+/// Creation Date (ISO 8601 UTC format) 
+/// Originator 
 func (rcv *OMM) ORIGINATOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -87,8 +87,7 @@ func (rcv *OMM) ORIGINATOR() []byte {
 	return nil
 }
 
-/// Originator
-/// OMM Metadata
+/// Originator 
 /// Satellite Name(s)
 func (rcv *OMM) OBJECT_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -98,7 +97,6 @@ func (rcv *OMM) OBJECT_NAME() []byte {
 	return nil
 }
 
-/// OMM Metadata
 /// Satellite Name(s)
 /// International Designator (YYYY-NNNAAA)
 func (rcv *OMM) OBJECT_ID() []byte {
@@ -110,7 +108,7 @@ func (rcv *OMM) OBJECT_ID() []byte {
 }
 
 /// International Designator (YYYY-NNNAAA)
-/// Origin of reference frame (EARTH, MARS, MOON, etc.)
+/// Center Name (e.g. EARTH, MARS)
 func (rcv *OMM) CENTER_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -119,8 +117,8 @@ func (rcv *OMM) CENTER_NAME() []byte {
 	return nil
 }
 
-/// Origin of reference frame (EARTH, MARS, MOON, etc.)
-/// Name of the reference frame (TEME, EME2000, etc.)
+/// Center Name (e.g. EARTH, MARS)
+/// Reference Frame
 func (rcv *OMM) REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -129,12 +127,12 @@ func (rcv *OMM) REFERENCE_FRAME() refFrame {
 	return 2
 }
 
-/// Name of the reference frame (TEME, EME2000, etc.)
+/// Reference Frame
 func (rcv *OMM) MutateREFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
 }
 
-/// REFERENCE_FRAME_EPOCH
+/// Reference Frame Epoch (ISO 8601 UTC format)
 func (rcv *OMM) REFERENCE_FRAME_EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -143,8 +141,8 @@ func (rcv *OMM) REFERENCE_FRAME_EPOCH() []byte {
 	return nil
 }
 
-/// REFERENCE_FRAME_EPOCH
-/// Time system used for the orbit state and covariance matrix. (UTC)
+/// Reference Frame Epoch (ISO 8601 UTC format)
+/// Time System [M, UTC]
 func (rcv *OMM) TIME_SYSTEM() timeSystem {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -153,12 +151,12 @@ func (rcv *OMM) TIME_SYSTEM() timeSystem {
 	return 11
 }
 
-/// Time system used for the orbit state and covariance matrix. (UTC)
+/// Time System [M, UTC]
 func (rcv *OMM) MutateTIME_SYSTEM(n timeSystem) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
 }
 
-/// Description of the Mean Element Theory. (SGP4,DSST,USM)
+/// Mean Element Theory
 func (rcv *OMM) MEAN_ELEMENT_THEORY() meanElementTheory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -167,13 +165,12 @@ func (rcv *OMM) MEAN_ELEMENT_THEORY() meanElementTheory {
 	return 0
 }
 
-/// Description of the Mean Element Theory. (SGP4,DSST,USM)
+/// Mean Element Theory
 func (rcv *OMM) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
 }
 
-/// Mean Keplerian Elements in the Specified Reference Frame
-/// Plain-Text Comment
+/// COMMENT (O)
 func (rcv *OMM) COMMENT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -182,9 +179,8 @@ func (rcv *OMM) COMMENT() []byte {
 	return nil
 }
 
-/// Mean Keplerian Elements in the Specified Reference Frame
-/// Plain-Text Comment
-/// Epoch time, in ISO 8601 UTC format
+/// COMMENT (O)
+/// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
 func (rcv *OMM) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -193,8 +189,8 @@ func (rcv *OMM) EPOCH() []byte {
 	return nil
 }
 
-/// Epoch time, in ISO 8601 UTC format
-/// Semi-major axis in km or mean motion in rev/day
+/// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
+/// Semi-major axis in km or Mean Motion in rev/day
 func (rcv *OMM) SEMI_MAJOR_AXIS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -203,12 +199,12 @@ func (rcv *OMM) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
-/// Semi-major axis in km or mean motion in rev/day
+/// Semi-major axis in km or Mean Motion in rev/day
 func (rcv *OMM) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
 }
 
-/// Mean motion
+/// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
 func (rcv *OMM) MEAN_MOTION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -217,12 +213,12 @@ func (rcv *OMM) MEAN_MOTION() float64 {
 	return 0.0
 }
 
-/// Mean motion
+/// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
 func (rcv *OMM) MutateMEAN_MOTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
 }
 
-/// Eccentricity
+/// Eccentricity (unitless)
 func (rcv *OMM) ECCENTRICITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -231,12 +227,12 @@ func (rcv *OMM) ECCENTRICITY() float64 {
 	return 0.0
 }
 
-/// Eccentricity
+/// Eccentricity (unitless)
 func (rcv *OMM) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
-/// Inclination
+/// Inclination in degrees
 func (rcv *OMM) INCLINATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -245,12 +241,12 @@ func (rcv *OMM) INCLINATION() float64 {
 	return 0.0
 }
 
-/// Inclination
+/// Inclination in degrees
 func (rcv *OMM) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
-/// Right ascension of ascending node
+/// RA_OF_ASC_NODE in degrees
 func (rcv *OMM) RA_OF_ASC_NODE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -259,12 +255,12 @@ func (rcv *OMM) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
-/// Right ascension of ascending node
+/// RA_OF_ASC_NODE in degrees
 func (rcv *OMM) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
-/// Argument of pericenter
+/// ARG_OF_PERICENTER in degrees
 func (rcv *OMM) ARG_OF_PERICENTER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -273,12 +269,12 @@ func (rcv *OMM) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
-/// Argument of pericenter
+/// ARG_OF_PERICENTER in degrees
 func (rcv *OMM) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
-/// Mean anomaly
+/// MEAN_ANOMALY in degrees
 func (rcv *OMM) MEAN_ANOMALY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -287,12 +283,12 @@ func (rcv *OMM) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
-/// Mean anomaly
+/// MEAN_ANOMALY in degrees
 func (rcv *OMM) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
-/// Gravitational Coefficient (Gravitational Constant x Central Mass)
+/// GM in km**3/s**2
 func (rcv *OMM) GM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -301,13 +297,12 @@ func (rcv *OMM) GM() float64 {
 	return 0.0
 }
 
-/// Gravitational Coefficient (Gravitational Constant x Central Mass)
+/// GM in km**3/s**2
 func (rcv *OMM) MutateGM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
-/// Spacecraft Parameters
-/// S/C Mass
+/// MASS in kg
 func (rcv *OMM) MASS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -316,13 +311,12 @@ func (rcv *OMM) MASS() float64 {
 	return 0.0
 }
 
-/// Spacecraft Parameters
-/// S/C Mass
+/// MASS in kg
 func (rcv *OMM) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
 
-/// Solar Radiation Pressure Area (AR) m**2
+/// SOLAR_RAD_AREA in m**2
 func (rcv *OMM) SOLAR_RAD_AREA() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -331,12 +325,12 @@ func (rcv *OMM) SOLAR_RAD_AREA() float64 {
 	return 0.0
 }
 
-/// Solar Radiation Pressure Area (AR) m**2
+/// SOLAR_RAD_AREA in m**2
 func (rcv *OMM) MutateSOLAR_RAD_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
-/// Solar Radiation Pressure Coefficient (CR)
+/// SOLAR_RAD_COEFF (unitless)
 func (rcv *OMM) SOLAR_RAD_COEFF() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -345,12 +339,12 @@ func (rcv *OMM) SOLAR_RAD_COEFF() float64 {
 	return 0.0
 }
 
-/// Solar Radiation Pressure Coefficient (CR)
+/// SOLAR_RAD_COEFF (unitless)
 func (rcv *OMM) MutateSOLAR_RAD_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
 
-/// Drag Area (AD) m**2
+/// DRAG_AREA in m**2
 func (rcv *OMM) DRAG_AREA() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -359,12 +353,12 @@ func (rcv *OMM) DRAG_AREA() float64 {
 	return 0.0
 }
 
-/// Drag Area (AD) m**2
+/// DRAG_AREA in m**2
 func (rcv *OMM) MutateDRAG_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
-/// Drag Coefficient (CD)
+/// DRAG_COEFF (unitless)
 func (rcv *OMM) DRAG_COEFF() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
@@ -373,13 +367,13 @@ func (rcv *OMM) DRAG_COEFF() float64 {
 	return 0.0
 }
 
-/// Drag Coefficient (CD)
+/// DRAG_COEFF (unitless)
 func (rcv *OMM) MutateDRAG_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
-/// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-/// Default value = 0
+/// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+/// EPHEMERIS_TYPE Default=0
 func (rcv *OMM) EPHEMERIS_TYPE() ephemerisType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -388,13 +382,13 @@ func (rcv *OMM) EPHEMERIS_TYPE() ephemerisType {
 	return 1
 }
 
-/// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-/// Default value = 0
+/// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+/// EPHEMERIS_TYPE Default=0
 func (rcv *OMM) MutateEPHEMERIS_TYPE(n ephemerisType) bool {
 	return rcv._tab.MutateInt8Slot(54, int8(n))
 }
 
-/// Default value = U
+/// CLASSIFICATION_TYPE Default=U
 func (rcv *OMM) CLASSIFICATION_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -403,8 +397,8 @@ func (rcv *OMM) CLASSIFICATION_TYPE() []byte {
 	return nil
 }
 
-/// Default value = U
-/// NORAD Catalog Number (Satellite Number) an integer
+/// CLASSIFICATION_TYPE Default=U
+/// NORAD_CAT_ID (integer) [O if SGP/SGP4]
 func (rcv *OMM) NORAD_CAT_ID() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
@@ -413,12 +407,12 @@ func (rcv *OMM) NORAD_CAT_ID() uint32 {
 	return 0
 }
 
-/// NORAD Catalog Number (Satellite Number) an integer
+/// NORAD_CAT_ID (integer) [O if SGP/SGP4]
 func (rcv *OMM) MutateNORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(58, n)
 }
 
-/// Element set number for this satellite
+/// ELEMENT_SET_NO [O if SGP/SGP4]
 func (rcv *OMM) ELEMENT_SET_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -427,12 +421,12 @@ func (rcv *OMM) ELEMENT_SET_NO() uint32 {
 	return 0
 }
 
-/// Element set number for this satellite
+/// ELEMENT_SET_NO [O if SGP/SGP4]
 func (rcv *OMM) MutateELEMENT_SET_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(60, n)
 }
 
-/// Revolution Number
+/// REV_AT_EPOCH [O if SGP/SGP4]
 func (rcv *OMM) REV_AT_EPOCH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -441,12 +435,12 @@ func (rcv *OMM) REV_AT_EPOCH() float64 {
 	return 0.0
 }
 
-/// Revolution Number
+/// REV_AT_EPOCH [O if SGP/SGP4]
 func (rcv *OMM) MutateREV_AT_EPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
-/// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+/// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
 func (rcv *OMM) BSTAR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -455,12 +449,12 @@ func (rcv *OMM) BSTAR() float64 {
 	return 0.0
 }
 
-/// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+/// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
 func (rcv *OMM) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
-/// First Time Derivative of the Mean Motion
+/// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
 func (rcv *OMM) MEAN_MOTION_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -469,12 +463,12 @@ func (rcv *OMM) MEAN_MOTION_DOT() float64 {
 	return 0.0
 }
 
-/// First Time Derivative of the Mean Motion
+/// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
 func (rcv *OMM) MutateMEAN_MOTION_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
-/// Second Time Derivative of Mean Motion
+/// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
 func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -483,13 +477,13 @@ func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	return 0.0
 }
 
-/// Second Time Derivative of Mean Motion
+/// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
 func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
-/// Position/Velocity Covariance Matrix
-/// Reference frame for the covariance matrix
+/// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+/// COV_REF_FRAME reference frame for covariance [C if covariance given]
 func (rcv *OMM) COV_REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
@@ -498,13 +492,13 @@ func (rcv *OMM) COV_REFERENCE_FRAME() refFrame {
 	return 23
 }
 
-/// Position/Velocity Covariance Matrix
-/// Reference frame for the covariance matrix
+/// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+/// COV_REF_FRAME reference frame for covariance [C if covariance given]
 func (rcv *OMM) MutateCOV_REFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(70, int8(n))
 }
 
-/// Covariance matrix [1,1] km**2
+/// CX_X [km**2]
 func (rcv *OMM) CX_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -513,12 +507,12 @@ func (rcv *OMM) CX_X() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [1,1] km**2
+/// CX_X [km**2]
 func (rcv *OMM) MutateCX_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
 }
 
-/// Covariance matrix [2,1] km**2
+/// CY_X [km**2]
 func (rcv *OMM) CY_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
@@ -527,12 +521,12 @@ func (rcv *OMM) CY_X() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [2,1] km**2
+/// CY_X [km**2]
 func (rcv *OMM) MutateCY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(74, n)
 }
 
-/// Covariance matrix [2,2] km**2
+/// CY_Y [km**2]
 func (rcv *OMM) CY_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -541,12 +535,12 @@ func (rcv *OMM) CY_Y() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [2,2] km**2
+/// CY_Y [km**2]
 func (rcv *OMM) MutateCY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(76, n)
 }
 
-/// Covariance matrix [3,1] km**2
+/// CZ_X [km**2]
 func (rcv *OMM) CZ_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
@@ -555,12 +549,12 @@ func (rcv *OMM) CZ_X() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [3,1] km**2
+/// CZ_X [km**2]
 func (rcv *OMM) MutateCZ_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
 }
 
-/// Covariance matrix [3,2] km**2
+/// CZ_Y [km**2]
 func (rcv *OMM) CZ_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
@@ -569,12 +563,12 @@ func (rcv *OMM) CZ_Y() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [3,2] km**2
+/// CZ_Y [km**2]
 func (rcv *OMM) MutateCZ_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(80, n)
 }
 
-/// Covariance matrix [3,3] km**2
+/// CZ_Z [km**2]
 func (rcv *OMM) CZ_Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
@@ -583,12 +577,12 @@ func (rcv *OMM) CZ_Z() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [3,3] km**2
+/// CZ_Z [km**2]
 func (rcv *OMM) MutateCZ_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(82, n)
 }
 
-/// Covariance matrix [4,1] km**2/s
+/// CX_DOT_X [km**2/s]
 func (rcv *OMM) CX_DOT_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
@@ -597,12 +591,12 @@ func (rcv *OMM) CX_DOT_X() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [4,1] km**2/s
+/// CX_DOT_X [km**2/s]
 func (rcv *OMM) MutateCX_DOT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
 }
 
-/// Covariance matrix [4,2] km**2/s
+/// CX_DOT_Y [km**2/s]
 func (rcv *OMM) CX_DOT_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
@@ -611,12 +605,12 @@ func (rcv *OMM) CX_DOT_Y() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [4,2] km**2/s
+/// CX_DOT_Y [km**2/s]
 func (rcv *OMM) MutateCX_DOT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
 }
 
-/// Covariance matrix [4,3] km**2/s
+/// CX_DOT_Z [km**2/s]
 func (rcv *OMM) CX_DOT_Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
@@ -625,12 +619,12 @@ func (rcv *OMM) CX_DOT_Z() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [4,3] km**2/s
+/// CX_DOT_Z [km**2/s]
 func (rcv *OMM) MutateCX_DOT_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(88, n)
 }
 
-/// Covariance matrix [4,4] km**2/s**2
+/// CX_DOT_X_DOT [km**2/s**2]
 func (rcv *OMM) CX_DOT_X_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
@@ -639,12 +633,12 @@ func (rcv *OMM) CX_DOT_X_DOT() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [4,4] km**2/s**2
+/// CX_DOT_X_DOT [km**2/s**2]
 func (rcv *OMM) MutateCX_DOT_X_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(90, n)
 }
 
-/// Covariance matrix [5,1] km**2/s
+/// CY_DOT_X [km**2/s]
 func (rcv *OMM) CY_DOT_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
@@ -653,12 +647,12 @@ func (rcv *OMM) CY_DOT_X() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [5,1] km**2/s
+/// CY_DOT_X [km**2/s]
 func (rcv *OMM) MutateCY_DOT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(92, n)
 }
 
-/// Covariance matrix [5,2] km**2/s
+/// CY_DOT_Y [km**2/s]
 func (rcv *OMM) CY_DOT_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
@@ -667,12 +661,12 @@ func (rcv *OMM) CY_DOT_Y() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [5,2] km**2/s
+/// CY_DOT_Y [km**2/s]
 func (rcv *OMM) MutateCY_DOT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
 }
 
-/// Covariance matrix [5,3] km**2/s
+/// CY_DOT_Z [km**2/s]
 func (rcv *OMM) CY_DOT_Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
@@ -681,12 +675,12 @@ func (rcv *OMM) CY_DOT_Z() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [5,3] km**2/s
+/// CY_DOT_Z [km**2/s]
 func (rcv *OMM) MutateCY_DOT_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(96, n)
 }
 
-/// Covariance matrix [5,4] km**2/s**2
+/// CY_DOT_X_DOT [km**2/s**2]
 func (rcv *OMM) CY_DOT_X_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
@@ -695,12 +689,12 @@ func (rcv *OMM) CY_DOT_X_DOT() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [5,4] km**2/s**2
+/// CY_DOT_X_DOT [km**2/s**2]
 func (rcv *OMM) MutateCY_DOT_X_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(98, n)
 }
 
-/// Covariance matrix [5,5] km**2/s**2
+/// CY_DOT_Y_DOT [km**2/s**2]
 func (rcv *OMM) CY_DOT_Y_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
@@ -709,12 +703,12 @@ func (rcv *OMM) CY_DOT_Y_DOT() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [5,5] km**2/s**2
+/// CY_DOT_Y_DOT [km**2/s**2]
 func (rcv *OMM) MutateCY_DOT_Y_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(100, n)
 }
 
-/// Covariance matrix [6,1] km**2/s
+/// CZ_DOT_X [km**2/s]
 func (rcv *OMM) CZ_DOT_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
@@ -723,12 +717,12 @@ func (rcv *OMM) CZ_DOT_X() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [6,1] km**2/s
+/// CZ_DOT_X [km**2/s]
 func (rcv *OMM) MutateCZ_DOT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(102, n)
 }
 
-/// Covariance matrix [6,2] km**2/s
+/// CZ_DOT_Y [km**2/s]
 func (rcv *OMM) CZ_DOT_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -737,12 +731,12 @@ func (rcv *OMM) CZ_DOT_Y() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [6,2] km**2/s
+/// CZ_DOT_Y [km**2/s]
 func (rcv *OMM) MutateCZ_DOT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(104, n)
 }
 
-/// Covariance matrix [6,3] km**2/s
+/// CZ_DOT_Z [km**2/s]
 func (rcv *OMM) CZ_DOT_Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
@@ -751,12 +745,12 @@ func (rcv *OMM) CZ_DOT_Z() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [6,3] km**2/s
+/// CZ_DOT_Z [km**2/s]
 func (rcv *OMM) MutateCZ_DOT_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(106, n)
 }
 
-/// Covariance matrix [6,4] km**2/s**2
+/// CZ_DOT_X_DOT [km**2/s**2]
 func (rcv *OMM) CZ_DOT_X_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
@@ -765,12 +759,12 @@ func (rcv *OMM) CZ_DOT_X_DOT() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [6,4] km**2/s**2
+/// CZ_DOT_X_DOT [km**2/s**2]
 func (rcv *OMM) MutateCZ_DOT_X_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(108, n)
 }
 
-/// Covariance matrix [6,5] km**2/s**2
+/// CZ_DOT_Y_DOT [km**2/s**2]
 func (rcv *OMM) CZ_DOT_Y_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
@@ -779,12 +773,12 @@ func (rcv *OMM) CZ_DOT_Y_DOT() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [6,5] km**2/s**2
+/// CZ_DOT_Y_DOT [km**2/s**2]
 func (rcv *OMM) MutateCZ_DOT_Y_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(110, n)
 }
 
-/// Covariance matrix [6,6] km**2/s**2
+/// CZ_DOT_Z_DOT [km**2/s**2]
 func (rcv *OMM) CZ_DOT_Z_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
@@ -793,12 +787,12 @@ func (rcv *OMM) CZ_DOT_Z_DOT() float64 {
 	return 0.0
 }
 
-/// Covariance matrix [6,6] km**2/s**2
+/// CZ_DOT_Z_DOT [km**2/s**2]
 func (rcv *OMM) MutateCZ_DOT_Z_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(112, n)
 }
 
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_BIP_0044_TYPE() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
@@ -807,12 +801,12 @@ func (rcv *OMM) USER_DEFINED_BIP_0044_TYPE() uint32 {
 	return 0
 }
 
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_BIP_0044_TYPE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(114, n)
 }
 
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
@@ -821,8 +815,8 @@ func (rcv *OMM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
 	return nil
 }
 
-/// User defined parameter, must be described in an ICD
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
+/// USER_DEFINED_EARTH_MODEL [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_EARTH_MODEL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
@@ -831,8 +825,8 @@ func (rcv *OMM) USER_DEFINED_EARTH_MODEL() []byte {
 	return nil
 }
 
-/// User defined parameter, must be described in an ICD
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_EARTH_MODEL [O, units per ICD]
+/// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
@@ -841,12 +835,12 @@ func (rcv *OMM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
 	return 0.0
 }
 
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_EPOCH_TIMESTAMP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(120, n)
 }
 
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_MICROSECONDS [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_MICROSECONDS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
 	if o != 0 {
@@ -855,7 +849,7 @@ func (rcv *OMM) USER_DEFINED_MICROSECONDS() float64 {
 	return 0.0
 }
 
-/// User defined parameter, must be described in an ICD
+/// USER_DEFINED_MICROSECONDS [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_MICROSECONDS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(122, n)
 }
