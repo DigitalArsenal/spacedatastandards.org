@@ -7,34 +7,34 @@ class MPECOLLECTION
 
 /// Minimum Propagatable Element Set
 class MPE : flatbuffers.handle
-    /// Unique ID as a String
+    /// Unique ID as a String [no units]
     def ENTITY_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+    /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
     def EPOCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
-    /// Semi-major axis in km or mean motion in rev/day
+    /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
     def MEAN_MOTION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
-    /// Eccentricity
+    /// Eccentricity (unitless)
     def ECCENTRICITY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    /// Inclination
+    /// Inclination in degrees
     def INCLINATION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
-    /// Right ascension of ascending node
+    /// Right ascension of ascending node in degrees
     def RA_OF_ASC_NODE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
-    /// Argument of pericenter
+    /// Argument of pericenter in degrees
     def ARG_OF_PERICENTER() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
-    /// Mean anomaly
+    /// Mean anomaly in degrees
     def MEAN_ANOMALY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+    /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
     def BSTAR() -> float:
         return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
-    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+    /// Description of the Mean Element Theory (SGP4, DSST, USM)
     def MEAN_ELEMENT_THEORY() -> meanElementTheory:
         return meanElementTheory(flatbuffers.field_int8(buf_, pos_, 22, 0))
 

@@ -19,9 +19,9 @@ public struct OMM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// OMM Header
+  /// CCSDS OMM Version 
   public double CCSDS_OMM_VERS { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Creation Date
+  /// Creation Date (ISO 8601 UTC format) 
   public string CREATION_DATE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCREATION_DATEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -29,7 +29,7 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetCREATION_DATEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCREATION_DATEArray() { return __p.__vector_as_array<byte>(6); }
-  /// Originator
+  /// Originator 
   public string ORIGINATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIGINATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -37,7 +37,6 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetORIGINATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(8); }
-  /// OMM Metadata
   /// Satellite Name(s)
   public string OBJECT_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -54,7 +53,7 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(12); }
-  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+  /// Center Name (e.g. EARTH, MARS)
   public string CENTER_NAME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -62,9 +61,9 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(14); }
-  /// Name of the reference frame (TEME, EME2000, etc.)
+  /// Reference Frame
   public refFrame REFERENCE_FRAME { get { int o = __p.__offset(16); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.TEME; } }
-  /// REFERENCE_FRAME_EPOCH
+  /// Reference Frame Epoch (ISO 8601 UTC format)
   public string REFERENCE_FRAME_EPOCH { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetREFERENCE_FRAME_EPOCHBytes() { return __p.__vector_as_span<byte>(18, 1); }
@@ -72,12 +71,11 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetREFERENCE_FRAME_EPOCHBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetREFERENCE_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(18); }
-  /// Time system used for the orbit state and covariance matrix. (UTC)
+  /// Time System [M, UTC]
   public timeSystem TIME_SYSTEM { get { int o = __p.__offset(20); return o != 0 ? (timeSystem)__p.bb.GetSbyte(o + __p.bb_pos) : timeSystem.UTC; } }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Mean Element Theory
   public meanElementTheory MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementTheory)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementTheory.SGP4; } }
-  /// Mean Keplerian Elements in the Specified Reference Frame
-  /// Plain-Text Comment
+  /// COMMENT (O)
   public string COMMENT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(24, 1); }
@@ -85,7 +83,7 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(24); }
-  /// Epoch time, in ISO 8601 UTC format
+  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   public string EPOCH { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(26, 1); }
@@ -93,37 +91,36 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
   public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(26); }
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Semi-major axis in km or Mean Motion in rev/day
   public double SEMI_MAJOR_AXIS { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Mean motion
+  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
   public double MEAN_MOTION { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Eccentricity
+  /// Eccentricity (unitless)
   public double ECCENTRICITY { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Inclination
+  /// Inclination in degrees
   public double INCLINATION { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Right ascension of ascending node
+  /// RA_OF_ASC_NODE in degrees
   public double RA_OF_ASC_NODE { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Argument of pericenter
+  /// ARG_OF_PERICENTER in degrees
   public double ARG_OF_PERICENTER { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Mean anomaly
+  /// MEAN_ANOMALY in degrees
   public double MEAN_ANOMALY { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+  /// GM in km**3/s**2
   public double GM { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Spacecraft Parameters
-  /// S/C Mass
+  /// MASS in kg
   public double MASS { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Solar Radiation Pressure Area (AR) m**2
+  /// SOLAR_RAD_AREA in m**2
   public double SOLAR_RAD_AREA { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Solar Radiation Pressure Coefficient (CR)
+  /// SOLAR_RAD_COEFF (unitless)
   public double SOLAR_RAD_COEFF { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Drag Area (AD) m**2
+  /// DRAG_AREA in m**2
   public double DRAG_AREA { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Drag Coefficient (CD)
+  /// DRAG_COEFF (unitless)
   public double DRAG_COEFF { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  /// Default value = 0
+  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// EPHEMERIS_TYPE Default=0
   public ephemerisType EPHEMERIS_TYPE { get { int o = __p.__offset(54); return o != 0 ? (ephemerisType)__p.bb.GetSbyte(o + __p.bb_pos) : ephemerisType.SGP4; } }
-  /// Default value = U
+  /// CLASSIFICATION_TYPE Default=U
   public string CLASSIFICATION_TYPE { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_span<byte>(56, 1); }
@@ -131,66 +128,66 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
   public byte[] GetCLASSIFICATION_TYPEArray() { return __p.__vector_as_array<byte>(56); }
-  /// NORAD Catalog Number (Satellite Number) an integer
+  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
   public uint NORAD_CAT_ID { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Element set number for this satellite
+  /// ELEMENT_SET_NO [O if SGP/SGP4]
   public uint ELEMENT_SET_NO { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Revolution Number
+  /// REV_AT_EPOCH [O if SGP/SGP4]
   public double REV_AT_EPOCH { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
   public double BSTAR { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// First Time Derivative of the Mean Motion
+  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
   public double MEAN_MOTION_DOT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Second Time Derivative of Mean Motion
+  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
   public double MEAN_MOTION_DDOT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Position/Velocity Covariance Matrix
-  /// Reference frame for the covariance matrix
+  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  /// COV_REF_FRAME reference frame for covariance [C if covariance given]
   public refFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(70); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.RSW; } }
-  /// Covariance matrix [1,1] km**2
+  /// CX_X [km**2]
   public double CX_X { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [2,1] km**2
+  /// CY_X [km**2]
   public double CY_X { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [2,2] km**2
+  /// CY_Y [km**2]
   public double CY_Y { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [3,1] km**2
+  /// CZ_X [km**2]
   public double CZ_X { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [3,2] km**2
+  /// CZ_Y [km**2]
   public double CZ_Y { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [3,3] km**2
+  /// CZ_Z [km**2]
   public double CZ_Z { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [4,1] km**2/s
+  /// CX_DOT_X [km**2/s]
   public double CX_DOT_X { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [4,2] km**2/s
+  /// CX_DOT_Y [km**2/s]
   public double CX_DOT_Y { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [4,3] km**2/s
+  /// CX_DOT_Z [km**2/s]
   public double CX_DOT_Z { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [4,4] km**2/s**2
+  /// CX_DOT_X_DOT [km**2/s**2]
   public double CX_DOT_X_DOT { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [5,1] km**2/s
+  /// CY_DOT_X [km**2/s]
   public double CY_DOT_X { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [5,2] km**2/s
+  /// CY_DOT_Y [km**2/s]
   public double CY_DOT_Y { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [5,3] km**2/s
+  /// CY_DOT_Z [km**2/s]
   public double CY_DOT_Z { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [5,4] km**2/s**2
+  /// CY_DOT_X_DOT [km**2/s**2]
   public double CY_DOT_X_DOT { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [5,5] km**2/s**2
+  /// CY_DOT_Y_DOT [km**2/s**2]
   public double CY_DOT_Y_DOT { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [6,1] km**2/s
+  /// CZ_DOT_X [km**2/s]
   public double CZ_DOT_X { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [6,2] km**2/s
+  /// CZ_DOT_Y [km**2/s]
   public double CZ_DOT_Y { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [6,3] km**2/s
+  /// CZ_DOT_Z [km**2/s]
   public double CZ_DOT_Z { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [6,4] km**2/s**2
+  /// CZ_DOT_X_DOT [km**2/s**2]
   public double CZ_DOT_X_DOT { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [6,5] km**2/s**2
+  /// CZ_DOT_Y_DOT [km**2/s**2]
   public double CZ_DOT_Y_DOT { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance matrix [6,6] km**2/s**2
+  /// CZ_DOT_Z_DOT [km**2/s**2]
   public double CZ_DOT_Z_DOT { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   public uint USER_DEFINED_BIP_0044_TYPE { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
   public string USER_DEFINED_OBJECT_DESIGNATOR { get { int o = __p.__offset(116); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(116, 1); }
@@ -198,7 +195,7 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(116); }
 #endif
   public byte[] GetUSER_DEFINED_OBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(116); }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
   public string USER_DEFINED_EARTH_MODEL { get { int o = __p.__offset(118); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_span<byte>(118, 1); }
@@ -206,9 +203,9 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_arraysegment(118); }
 #endif
   public byte[] GetUSER_DEFINED_EARTH_MODELArray() { return __p.__vector_as_array<byte>(118); }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
   public double USER_DEFINED_EPOCH_TIMESTAMP { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// User defined parameter, must be described in an ICD
+  /// USER_DEFINED_MICROSECONDS [O, units per ICD]
   public double USER_DEFINED_MICROSECONDS { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<OMM> CreateOMM(FlatBufferBuilder builder,

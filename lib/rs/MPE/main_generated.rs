@@ -88,7 +88,7 @@ impl<'a> MPE<'a> {
     }
   }
 
-  /// Unique ID as a String
+  /// Unique ID as a String [no units]
   #[inline]
   pub fn ENTITY_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -96,7 +96,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MPE::VT_ENTITY_ID, None)}
   }
-  /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
   #[inline]
   pub fn EPOCH(&self) -> f64 {
     // Safety:
@@ -104,7 +104,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_EPOCH, Some(0.0)).unwrap()}
   }
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
   #[inline]
   pub fn MEAN_MOTION(&self) -> f64 {
     // Safety:
@@ -112,7 +112,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_MEAN_MOTION, Some(0.0)).unwrap()}
   }
-  /// Eccentricity
+  /// Eccentricity (unitless)
   #[inline]
   pub fn ECCENTRICITY(&self) -> f64 {
     // Safety:
@@ -120,7 +120,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_ECCENTRICITY, Some(0.0)).unwrap()}
   }
-  /// Inclination
+  /// Inclination in degrees
   #[inline]
   pub fn INCLINATION(&self) -> f64 {
     // Safety:
@@ -128,7 +128,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_INCLINATION, Some(0.0)).unwrap()}
   }
-  /// Right ascension of ascending node
+  /// Right ascension of ascending node in degrees
   #[inline]
   pub fn RA_OF_ASC_NODE(&self) -> f64 {
     // Safety:
@@ -136,7 +136,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_RA_OF_ASC_NODE, Some(0.0)).unwrap()}
   }
-  /// Argument of pericenter
+  /// Argument of pericenter in degrees
   #[inline]
   pub fn ARG_OF_PERICENTER(&self) -> f64 {
     // Safety:
@@ -144,7 +144,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_ARG_OF_PERICENTER, Some(0.0)).unwrap()}
   }
-  /// Mean anomaly
+  /// Mean anomaly in degrees
   #[inline]
   pub fn MEAN_ANOMALY(&self) -> f64 {
     // Safety:
@@ -152,7 +152,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
   }
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   #[inline]
   pub fn BSTAR(&self) -> f64 {
     // Safety:
@@ -160,7 +160,7 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MPE::VT_BSTAR, Some(0.0)).unwrap()}
   }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Description of the Mean Element Theory (SGP4, DSST, USM)
   #[inline]
   pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementTheory {
     // Safety:

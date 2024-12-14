@@ -11,44 +11,44 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
     static getSizePrefixedRootAsMPE(bb: flatbuffers.ByteBuffer, obj?: MPE): MPE;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
-     * Unique ID as a String
+     * Unique ID as a String [no units]
      */
     ENTITY_ID(): string | null;
     ENTITY_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+     * Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
      */
     EPOCH(): number;
     /**
-     * Semi-major axis in km or mean motion in rev/day
+     * Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
      */
     MEAN_MOTION(): number;
     /**
-     * Eccentricity
+     * Eccentricity (unitless)
      */
     ECCENTRICITY(): number;
     /**
-     * Inclination
+     * Inclination in degrees
      */
     INCLINATION(): number;
     /**
-     * Right ascension of ascending node
+     * Right ascension of ascending node in degrees
      */
     RA_OF_ASC_NODE(): number;
     /**
-     * Argument of pericenter
+     * Argument of pericenter in degrees
      */
     ARG_OF_PERICENTER(): number;
     /**
-     * Mean anomaly
+     * Mean anomaly in degrees
      */
     MEAN_ANOMALY(): number;
     /**
-     * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+     * SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
      */
     BSTAR(): number;
     /**
-     * Description of the Mean Element Theory. (SGP4,DSST,USM)
+     * Description of the Mean Element Theory (SGP4, DSST, USM)
      */
     MEAN_ELEMENT_THEORY(): meanElementTheory;
     static startMPE(builder: flatbuffers.Builder): void;

@@ -41,7 +41,7 @@ class OMM extends Table
         return $this;
     }
 
-    /// OMM Header
+    /// CCSDS OMM Version 
     /**
      * @return double
      */
@@ -51,21 +51,20 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Creation Date
+    /// Creation Date (ISO 8601 UTC format) 
     public function getCREATION_DATE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Originator
+    /// Originator 
     public function getORIGINATOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// OMM Metadata
     /// Satellite Name(s)
     public function getOBJECT_NAME()
     {
@@ -80,14 +79,14 @@ class OMM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+    /// Center Name (e.g. EARTH, MARS)
     public function getCENTER_NAME()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Name of the reference frame (TEME, EME2000, etc.)
+    /// Reference Frame
     /**
      * @return sbyte
      */
@@ -97,14 +96,14 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::TEME;
     }
 
-    /// REFERENCE_FRAME_EPOCH
+    /// Reference Frame Epoch (ISO 8601 UTC format)
     public function getREFERENCE_FRAME_EPOCH()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Time system used for the orbit state and covariance matrix. (UTC)
+    /// Time System [M, UTC]
     /**
      * @return sbyte
      */
@@ -114,7 +113,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timeSystem::UTC;
     }
 
-    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+    /// Mean Element Theory
     /**
      * @return sbyte
      */
@@ -124,22 +123,21 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementTheory::SGP4;
     }
 
-    /// Mean Keplerian Elements in the Specified Reference Frame
-    /// Plain-Text Comment
+    /// COMMENT (O)
     public function getCOMMENT()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Epoch time, in ISO 8601 UTC format
+    /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
     public function getEPOCH()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Semi-major axis in km or mean motion in rev/day
+    /// Semi-major axis in km or Mean Motion in rev/day
     /**
      * @return double
      */
@@ -149,7 +147,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Mean motion
+    /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
     /**
      * @return double
      */
@@ -159,7 +157,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Eccentricity
+    /// Eccentricity (unitless)
     /**
      * @return double
      */
@@ -169,7 +167,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Inclination
+    /// Inclination in degrees
     /**
      * @return double
      */
@@ -179,7 +177,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Right ascension of ascending node
+    /// RA_OF_ASC_NODE in degrees
     /**
      * @return double
      */
@@ -189,7 +187,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Argument of pericenter
+    /// ARG_OF_PERICENTER in degrees
     /**
      * @return double
      */
@@ -199,7 +197,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Mean anomaly
+    /// MEAN_ANOMALY in degrees
     /**
      * @return double
      */
@@ -209,7 +207,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+    /// GM in km**3/s**2
     /**
      * @return double
      */
@@ -219,8 +217,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Spacecraft Parameters
-    /// S/C Mass
+    /// MASS in kg
     /**
      * @return double
      */
@@ -230,7 +227,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Solar Radiation Pressure Area (AR) m**2
+    /// SOLAR_RAD_AREA in m**2
     /**
      * @return double
      */
@@ -240,7 +237,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Solar Radiation Pressure Coefficient (CR)
+    /// SOLAR_RAD_COEFF (unitless)
     /**
      * @return double
      */
@@ -250,7 +247,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Drag Area (AD) m**2
+    /// DRAG_AREA in m**2
     /**
      * @return double
      */
@@ -260,7 +257,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Drag Coefficient (CD)
+    /// DRAG_COEFF (unitless)
     /**
      * @return double
      */
@@ -270,8 +267,8 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-    /// Default value = 0
+    /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+    /// EPHEMERIS_TYPE Default=0
     /**
      * @return sbyte
      */
@@ -281,14 +278,14 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ephemerisType::SGP4;
     }
 
-    /// Default value = U
+    /// CLASSIFICATION_TYPE Default=U
     public function getCLASSIFICATION_TYPE()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// NORAD Catalog Number (Satellite Number) an integer
+    /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
     /**
      * @return uint
      */
@@ -298,7 +295,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Element set number for this satellite
+    /// ELEMENT_SET_NO [O if SGP/SGP4]
     /**
      * @return uint
      */
@@ -308,7 +305,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Revolution Number
+    /// REV_AT_EPOCH [O if SGP/SGP4]
     /**
      * @return double
      */
@@ -318,7 +315,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+    /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
     /**
      * @return double
      */
@@ -328,7 +325,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// First Time Derivative of the Mean Motion
+    /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
     /**
      * @return double
      */
@@ -338,7 +335,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Second Time Derivative of Mean Motion
+    /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
     /**
      * @return double
      */
@@ -348,8 +345,8 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Position/Velocity Covariance Matrix
-    /// Reference frame for the covariance matrix
+    /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+    /// COV_REF_FRAME reference frame for covariance [C if covariance given]
     /**
      * @return sbyte
      */
@@ -359,7 +356,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::RSW;
     }
 
-    /// Covariance matrix [1,1] km**2
+    /// CX_X [km**2]
     /**
      * @return double
      */
@@ -369,7 +366,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [2,1] km**2
+    /// CY_X [km**2]
     /**
      * @return double
      */
@@ -379,7 +376,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [2,2] km**2
+    /// CY_Y [km**2]
     /**
      * @return double
      */
@@ -389,7 +386,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [3,1] km**2
+    /// CZ_X [km**2]
     /**
      * @return double
      */
@@ -399,7 +396,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [3,2] km**2
+    /// CZ_Y [km**2]
     /**
      * @return double
      */
@@ -409,7 +406,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [3,3] km**2
+    /// CZ_Z [km**2]
     /**
      * @return double
      */
@@ -419,7 +416,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [4,1] km**2/s
+    /// CX_DOT_X [km**2/s]
     /**
      * @return double
      */
@@ -429,7 +426,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [4,2] km**2/s
+    /// CX_DOT_Y [km**2/s]
     /**
      * @return double
      */
@@ -439,7 +436,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [4,3] km**2/s
+    /// CX_DOT_Z [km**2/s]
     /**
      * @return double
      */
@@ -449,7 +446,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [4,4] km**2/s**2
+    /// CX_DOT_X_DOT [km**2/s**2]
     /**
      * @return double
      */
@@ -459,7 +456,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [5,1] km**2/s
+    /// CY_DOT_X [km**2/s]
     /**
      * @return double
      */
@@ -469,7 +466,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [5,2] km**2/s
+    /// CY_DOT_Y [km**2/s]
     /**
      * @return double
      */
@@ -479,7 +476,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [5,3] km**2/s
+    /// CY_DOT_Z [km**2/s]
     /**
      * @return double
      */
@@ -489,7 +486,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [5,4] km**2/s**2
+    /// CY_DOT_X_DOT [km**2/s**2]
     /**
      * @return double
      */
@@ -499,7 +496,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [5,5] km**2/s**2
+    /// CY_DOT_Y_DOT [km**2/s**2]
     /**
      * @return double
      */
@@ -509,7 +506,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [6,1] km**2/s
+    /// CZ_DOT_X [km**2/s]
     /**
      * @return double
      */
@@ -519,7 +516,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [6,2] km**2/s
+    /// CZ_DOT_Y [km**2/s]
     /**
      * @return double
      */
@@ -529,7 +526,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [6,3] km**2/s
+    /// CZ_DOT_Z [km**2/s]
     /**
      * @return double
      */
@@ -539,7 +536,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [6,4] km**2/s**2
+    /// CZ_DOT_X_DOT [km**2/s**2]
     /**
      * @return double
      */
@@ -549,7 +546,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [6,5] km**2/s**2
+    /// CZ_DOT_Y_DOT [km**2/s**2]
     /**
      * @return double
      */
@@ -559,7 +556,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Covariance matrix [6,6] km**2/s**2
+    /// CZ_DOT_Z_DOT [km**2/s**2]
     /**
      * @return double
      */
@@ -569,7 +566,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
     /**
      * @return uint
      */
@@ -579,21 +576,21 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
     public function getUSER_DEFINED_OBJECT_DESIGNATOR()
     {
         $o = $this->__offset(116);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
     public function getUSER_DEFINED_EARTH_MODEL()
     {
         $o = $this->__offset(118);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
     /**
      * @return double
      */
@@ -603,7 +600,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_MICROSECONDS [O, units per ICD]
     /**
      * @return double
      */

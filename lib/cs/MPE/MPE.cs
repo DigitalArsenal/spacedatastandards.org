@@ -19,7 +19,7 @@ public struct MPE : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MPE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Unique ID as a String
+  /// Unique ID as a String [no units]
   public string ENTITY_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetENTITY_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -27,23 +27,23 @@ public struct MPE : IFlatbufferObject
   public ArraySegment<byte>? GetENTITY_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetENTITY_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
   public double EPOCH { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Semi-major axis in km or mean motion in rev/day
+  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
   public double MEAN_MOTION { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Eccentricity
+  /// Eccentricity (unitless)
   public double ECCENTRICITY { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Inclination
+  /// Inclination in degrees
   public double INCLINATION { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Right ascension of ascending node
+  /// Right ascension of ascending node in degrees
   public double RA_OF_ASC_NODE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Argument of pericenter
+  /// Argument of pericenter in degrees
   public double ARG_OF_PERICENTER { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Mean anomaly
+  /// Mean anomaly in degrees
   public double MEAN_ANOMALY { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   public double BSTAR { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+  /// Description of the Mean Element Theory (SGP4, DSST, USM)
   public meanElementTheory MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementTheory)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementTheory.SGP4; } }
 
   public static Offset<MPE> CreateMPE(FlatBufferBuilder builder,

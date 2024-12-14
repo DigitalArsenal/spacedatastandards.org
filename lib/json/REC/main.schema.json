@@ -525,11 +525,11 @@
       "properties" : {
         "CCSDS_OMM_VERS" : {
                 "type" : "number",
-                "description" : "OMM Header"
+                "description" : "CCSDS OMM Version"
               },
         "CREATION_DATE" : {
                 "type" : "string",
-                "description" : "Creation Date"
+                "description" : "Creation Date (ISO 8601 UTC format)"
               },
         "ORIGINATOR" : {
                 "type" : "string",
@@ -537,7 +537,7 @@
               },
         "OBJECT_NAME" : {
                 "type" : "string",
-                "description" : "OMM Metadata\nSatellite Name(s)"
+                "description" : "Satellite Name(s)"
               },
         "OBJECT_ID" : {
                 "type" : "string",
@@ -545,223 +545,223 @@
               },
         "CENTER_NAME" : {
                 "type" : "string",
-                "description" : "Origin of reference frame (EARTH, MARS, MOON, etc.)"
+                "description" : "Center Name (e.g. EARTH, MARS)"
               },
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/refFrame",
-                "description" : "Name of the reference frame (TEME, EME2000, etc.)"
+                "description" : "Reference Frame"
               },
         "REFERENCE_FRAME_EPOCH" : {
                 "type" : "string",
-                "description" : "REFERENCE_FRAME_EPOCH"
+                "description" : "Reference Frame Epoch (ISO 8601 UTC format)"
               },
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem",
-                "description" : "Time system used for the orbit state and covariance matrix. (UTC)"
+                "description" : "Time System [M, UTC]"
               },
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory",
-                "description" : "Description of the Mean Element Theory. (SGP4,DSST,USM)"
+                "description" : "Mean Element Theory"
               },
         "COMMENT" : {
                 "type" : "string",
-                "description" : "Mean Keplerian Elements in the Specified Reference Frame\nPlain-Text Comment"
+                "description" : "COMMENT (O)"
               },
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch time, in ISO 8601 UTC format"
+                "description" : "EPOCH of Mean Keplerian elements (ISO 8601 UTC format)"
               },
         "SEMI_MAJOR_AXIS" : {
                 "type" : "number",
-                "description" : "Semi-major axis in km or mean motion in rev/day"
+                "description" : "Semi-major axis in km or Mean Motion in rev/day"
               },
         "MEAN_MOTION" : {
                 "type" : "number",
-                "description" : "Mean motion"
+                "description" : "Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused"
               },
         "ECCENTRICITY" : {
                 "type" : "number",
-                "description" : "Eccentricity"
+                "description" : "Eccentricity (unitless)"
               },
         "INCLINATION" : {
                 "type" : "number",
-                "description" : "Inclination"
+                "description" : "Inclination in degrees"
               },
         "RA_OF_ASC_NODE" : {
                 "type" : "number",
-                "description" : "Right ascension of ascending node"
+                "description" : "RA_OF_ASC_NODE in degrees"
               },
         "ARG_OF_PERICENTER" : {
                 "type" : "number",
-                "description" : "Argument of pericenter"
+                "description" : "ARG_OF_PERICENTER in degrees"
               },
         "MEAN_ANOMALY" : {
                 "type" : "number",
-                "description" : "Mean anomaly"
+                "description" : "MEAN_ANOMALY in degrees"
               },
         "GM" : {
                 "type" : "number",
-                "description" : "Gravitational Coefficient (Gravitational Constant x Central Mass)"
+                "description" : "GM in km**3/s**2"
               },
         "MASS" : {
                 "type" : "number",
-                "description" : "Spacecraft Parameters\nS/C Mass"
+                "description" : "MASS in kg"
               },
         "SOLAR_RAD_AREA" : {
                 "type" : "number",
-                "description" : "Solar Radiation Pressure Area (AR) m**2"
+                "description" : "SOLAR_RAD_AREA in m**2"
               },
         "SOLAR_RAD_COEFF" : {
                 "type" : "number",
-                "description" : "Solar Radiation Pressure Coefficient (CR)"
+                "description" : "SOLAR_RAD_COEFF (unitless)"
               },
         "DRAG_AREA" : {
                 "type" : "number",
-                "description" : "Drag Area (AD) m**2"
+                "description" : "DRAG_AREA in m**2"
               },
         "DRAG_COEFF" : {
                 "type" : "number",
-                "description" : "Drag Coefficient (CD)"
+                "description" : "DRAG_COEFF (unitless)"
               },
         "EPHEMERIS_TYPE" : {
                 "$ref" : "#/definitions/ephemerisType",
-                "description" : "TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)\nDefault value = 0"
+                "description" : "TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)\nEPHEMERIS_TYPE Default=0"
               },
         "CLASSIFICATION_TYPE" : {
                 "type" : "string",
-                "description" : "Default value = U"
+                "description" : "CLASSIFICATION_TYPE Default=U"
               },
         "NORAD_CAT_ID" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "NORAD Catalog Number (Satellite Number) an integer"
+                "description" : "NORAD_CAT_ID (integer) [O if SGP/SGP4]"
               },
         "ELEMENT_SET_NO" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Element set number for this satellite"
+                "description" : "ELEMENT_SET_NO [O if SGP/SGP4]"
               },
         "REV_AT_EPOCH" : {
                 "type" : "number",
-                "description" : "Revolution Number"
+                "description" : "REV_AT_EPOCH [O if SGP/SGP4]"
               },
         "BSTAR" : {
                 "type" : "number",
-                "description" : "SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])"
+                "description" : "BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]"
               },
         "MEAN_MOTION_DOT" : {
                 "type" : "number",
-                "description" : "First Time Derivative of the Mean Motion"
+                "description" : "MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]"
               },
         "MEAN_MOTION_DDOT" : {
                 "type" : "number",
-                "description" : "Second Time Derivative of Mean Motion"
+                "description" : "MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]"
               },
         "COV_REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/refFrame",
-                "description" : "Position/Velocity Covariance Matrix\nReference frame for the covariance matrix"
+                "description" : "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]"
               },
         "CX_X" : {
                 "type" : "number",
-                "description" : "Covariance matrix [1,1] km**2"
+                "description" : "CX_X [km**2]"
               },
         "CY_X" : {
                 "type" : "number",
-                "description" : "Covariance matrix [2,1] km**2"
+                "description" : "CY_X [km**2]"
               },
         "CY_Y" : {
                 "type" : "number",
-                "description" : "Covariance matrix [2,2] km**2"
+                "description" : "CY_Y [km**2]"
               },
         "CZ_X" : {
                 "type" : "number",
-                "description" : "Covariance matrix [3,1] km**2"
+                "description" : "CZ_X [km**2]"
               },
         "CZ_Y" : {
                 "type" : "number",
-                "description" : "Covariance matrix [3,2] km**2"
+                "description" : "CZ_Y [km**2]"
               },
         "CZ_Z" : {
                 "type" : "number",
-                "description" : "Covariance matrix [3,3] km**2"
+                "description" : "CZ_Z [km**2]"
               },
         "CX_DOT_X" : {
                 "type" : "number",
-                "description" : "Covariance matrix [4,1] km**2/s"
+                "description" : "CX_DOT_X [km**2/s]"
               },
         "CX_DOT_Y" : {
                 "type" : "number",
-                "description" : "Covariance matrix [4,2] km**2/s"
+                "description" : "CX_DOT_Y [km**2/s]"
               },
         "CX_DOT_Z" : {
                 "type" : "number",
-                "description" : "Covariance matrix [4,3] km**2/s"
+                "description" : "CX_DOT_Z [km**2/s]"
               },
         "CX_DOT_X_DOT" : {
                 "type" : "number",
-                "description" : "Covariance matrix [4,4] km**2/s**2"
+                "description" : "CX_DOT_X_DOT [km**2/s**2]"
               },
         "CY_DOT_X" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,1] km**2/s"
+                "description" : "CY_DOT_X [km**2/s]"
               },
         "CY_DOT_Y" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,2] km**2/s"
+                "description" : "CY_DOT_Y [km**2/s]"
               },
         "CY_DOT_Z" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,3] km**2/s"
+                "description" : "CY_DOT_Z [km**2/s]"
               },
         "CY_DOT_X_DOT" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,4] km**2/s**2"
+                "description" : "CY_DOT_X_DOT [km**2/s**2]"
               },
         "CY_DOT_Y_DOT" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,5] km**2/s**2"
+                "description" : "CY_DOT_Y_DOT [km**2/s**2]"
               },
         "CZ_DOT_X" : {
                 "type" : "number",
-                "description" : "Covariance matrix [6,1] km**2/s"
+                "description" : "CZ_DOT_X [km**2/s]"
               },
         "CZ_DOT_Y" : {
                 "type" : "number",
-                "description" : "Covariance matrix [6,2] km**2/s"
+                "description" : "CZ_DOT_Y [km**2/s]"
               },
         "CZ_DOT_Z" : {
                 "type" : "number",
-                "description" : "Covariance matrix [6,3] km**2/s"
+                "description" : "CZ_DOT_Z [km**2/s]"
               },
         "CZ_DOT_X_DOT" : {
                 "type" : "number",
-                "description" : "Covariance matrix [6,4] km**2/s**2"
+                "description" : "CZ_DOT_X_DOT [km**2/s**2]"
               },
         "CZ_DOT_Y_DOT" : {
                 "type" : "number",
-                "description" : "Covariance matrix [6,5] km**2/s**2"
+                "description" : "CZ_DOT_Y_DOT [km**2/s**2]"
               },
         "CZ_DOT_Z_DOT" : {
                 "type" : "number",
-                "description" : "Covariance matrix [6,6] km**2/s**2"
+                "description" : "CZ_DOT_Z_DOT [km**2/s**2]"
               },
         "USER_DEFINED_BIP_0044_TYPE" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "User defined parameter, must be described in an ICD"
+                "description" : "USER_DEFINED_BIP_0044_TYPE [O, units per ICD]"
               },
         "USER_DEFINED_OBJECT_DESIGNATOR" : {
                 "type" : "string",
-                "description" : "User defined parameter, must be described in an ICD"
+                "description" : "USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]"
               },
         "USER_DEFINED_EARTH_MODEL" : {
                 "type" : "string",
-                "description" : "User defined parameter, must be described in an ICD"
+                "description" : "USER_DEFINED_EARTH_MODEL [O, units per ICD]"
               },
         "USER_DEFINED_EPOCH_TIMESTAMP" : {
                 "type" : "number",
-                "description" : "User defined parameter, must be described in an ICD"
+                "description" : "USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]"
               },
         "USER_DEFINED_MICROSECONDS" : {
                 "type" : "number",
-                "description" : "User defined parameter, must be described in an ICD"
+                "description" : "USER_DEFINED_MICROSECONDS [O, units per ICD]"
               }
       },
       "additionalProperties" : false
@@ -1007,43 +1007,43 @@
       "properties" : {
         "ENTITY_ID" : {
                 "type" : "string",
-                "description" : "Unique ID as a String"
+                "description" : "Unique ID as a String [no units]"
               },
         "EPOCH" : {
                 "type" : "number",
-                "description" : "Epoch of Mean Keplerian elements. (UNIX TimeStamp)"
+                "description" : "Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]"
               },
         "MEAN_MOTION" : {
                 "type" : "number",
-                "description" : "Semi-major axis in km or mean motion in rev/day"
+                "description" : "Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]"
               },
         "ECCENTRICITY" : {
                 "type" : "number",
-                "description" : "Eccentricity"
+                "description" : "Eccentricity (unitless)"
               },
         "INCLINATION" : {
                 "type" : "number",
-                "description" : "Inclination"
+                "description" : "Inclination in degrees"
               },
         "RA_OF_ASC_NODE" : {
                 "type" : "number",
-                "description" : "Right ascension of ascending node"
+                "description" : "Right ascension of ascending node in degrees"
               },
         "ARG_OF_PERICENTER" : {
                 "type" : "number",
-                "description" : "Argument of pericenter"
+                "description" : "Argument of pericenter in degrees"
               },
         "MEAN_ANOMALY" : {
                 "type" : "number",
-                "description" : "Mean anomaly"
+                "description" : "Mean anomaly in degrees"
               },
         "BSTAR" : {
                 "type" : "number",
-                "description" : "SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])"
+                "description" : "SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]"
               },
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory",
-                "description" : "Description of the Mean Element Theory. (SGP4,DSST,USM)"
+                "description" : "Description of the Mean Element Theory (SGP4, DSST, USM)"
               }
       },
       "additionalProperties" : false

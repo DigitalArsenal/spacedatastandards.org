@@ -30,23 +30,22 @@ public final class OMM extends Table {
   public OMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * OMM Header
+   * CCSDS OMM Version 
    */
   public double CCSDS_OMM_VERS() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Creation Date
+   * Creation Date (ISO 8601 UTC format) 
    */
   public String CREATION_DATE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CREATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CREATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
-   * Originator
+   * Originator 
    */
   public String ORIGINATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIGINATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ORIGINATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * OMM Metadata
    * Satellite Name(s)
    */
   public String OBJECT_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
@@ -59,241 +58,239 @@ public final class OMM extends Table {
   public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * Origin of reference frame (EARTH, MARS, MOON, etc.)
+   * Center Name (e.g. EARTH, MARS)
    */
   public String CENTER_NAME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
-   * Name of the reference frame (TEME, EME2000, etc.)
+   * Reference Frame
    */
   public byte REFERENCE_FRAME() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 2; }
   /**
-   * REFERENCE_FRAME_EPOCH
+   * Reference Frame Epoch (ISO 8601 UTC format)
    */
   public String REFERENCE_FRAME_EPOCH() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REFERENCE_FRAME_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
   public ByteBuffer REFERENCE_FRAME_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
   /**
-   * Time system used for the orbit state and covariance matrix. (UTC)
+   * Time System [M, UTC]
    */
   public byte TIME_SYSTEM() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 11; }
   /**
-   * Description of the Mean Element Theory. (SGP4,DSST,USM)
+   * Mean Element Theory
    */
   public byte MEAN_ELEMENT_THEORY() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Mean Keplerian Elements in the Specified Reference Frame
-   * Plain-Text Comment
+   * COMMENT (O)
    */
   public String COMMENT() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
-   * Epoch time, in ISO 8601 UTC format
+   * EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
    */
   public String EPOCH() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
   public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
   /**
-   * Semi-major axis in km or mean motion in rev/day
+   * Semi-major axis in km or Mean Motion in rev/day
    */
   public double SEMI_MAJOR_AXIS() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Mean motion
+   * Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
    */
   public double MEAN_MOTION() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Eccentricity
+   * Eccentricity (unitless)
    */
   public double ECCENTRICITY() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Inclination
+   * Inclination in degrees
    */
   public double INCLINATION() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Right ascension of ascending node
+   * RA_OF_ASC_NODE in degrees
    */
   public double RA_OF_ASC_NODE() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Argument of pericenter
+   * ARG_OF_PERICENTER in degrees
    */
   public double ARG_OF_PERICENTER() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Mean anomaly
+   * MEAN_ANOMALY in degrees
    */
   public double MEAN_ANOMALY() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Gravitational Coefficient (Gravitational Constant x Central Mass)
+   * GM in km**3/s**2
    */
   public double GM() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Spacecraft Parameters
-   * S/C Mass
+   * MASS in kg
    */
   public double MASS() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Solar Radiation Pressure Area (AR) m**2
+   * SOLAR_RAD_AREA in m**2
    */
   public double SOLAR_RAD_AREA() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Solar Radiation Pressure Coefficient (CR)
+   * SOLAR_RAD_COEFF (unitless)
    */
   public double SOLAR_RAD_COEFF() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Drag Area (AD) m**2
+   * DRAG_AREA in m**2
    */
   public double DRAG_AREA() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Drag Coefficient (CD)
+   * DRAG_COEFF (unitless)
    */
   public double DRAG_COEFF() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-   * Default value = 0
+   * TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+   * EPHEMERIS_TYPE Default=0
    */
   public byte EPHEMERIS_TYPE() { int o = __offset(54); return o != 0 ? bb.get(o + bb_pos) : 1; }
   /**
-   * Default value = U
+   * CLASSIFICATION_TYPE Default=U
    */
   public String CLASSIFICATION_TYPE() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CLASSIFICATION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
   public ByteBuffer CLASSIFICATION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
   /**
-   * NORAD Catalog Number (Satellite Number) an integer
+   * NORAD_CAT_ID (integer) [O if SGP/SGP4]
    */
   public long NORAD_CAT_ID() { int o = __offset(58); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Element set number for this satellite
+   * ELEMENT_SET_NO [O if SGP/SGP4]
    */
   public long ELEMENT_SET_NO() { int o = __offset(60); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Revolution Number
+   * REV_AT_EPOCH [O if SGP/SGP4]
    */
   public double REV_AT_EPOCH() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+   * BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
    */
   public double BSTAR() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * First Time Derivative of the Mean Motion
+   * MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
    */
   public double MEAN_MOTION_DOT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Second Time Derivative of Mean Motion
+   * MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
    */
   public double MEAN_MOTION_DDOT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Position/Velocity Covariance Matrix
-   * Reference frame for the covariance matrix
+   * Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+   * COV_REF_FRAME reference frame for covariance [C if covariance given]
    */
   public byte COV_REFERENCE_FRAME() { int o = __offset(70); return o != 0 ? bb.get(o + bb_pos) : 23; }
   /**
-   * Covariance matrix [1,1] km**2
+   * CX_X [km**2]
    */
   public double CX_X() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [2,1] km**2
+   * CY_X [km**2]
    */
   public double CY_X() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [2,2] km**2
+   * CY_Y [km**2]
    */
   public double CY_Y() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [3,1] km**2
+   * CZ_X [km**2]
    */
   public double CZ_X() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [3,2] km**2
+   * CZ_Y [km**2]
    */
   public double CZ_Y() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [3,3] km**2
+   * CZ_Z [km**2]
    */
   public double CZ_Z() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [4,1] km**2/s
+   * CX_DOT_X [km**2/s]
    */
   public double CX_DOT_X() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [4,2] km**2/s
+   * CX_DOT_Y [km**2/s]
    */
   public double CX_DOT_Y() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [4,3] km**2/s
+   * CX_DOT_Z [km**2/s]
    */
   public double CX_DOT_Z() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [4,4] km**2/s**2
+   * CX_DOT_X_DOT [km**2/s**2]
    */
   public double CX_DOT_X_DOT() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [5,1] km**2/s
+   * CY_DOT_X [km**2/s]
    */
   public double CY_DOT_X() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [5,2] km**2/s
+   * CY_DOT_Y [km**2/s]
    */
   public double CY_DOT_Y() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [5,3] km**2/s
+   * CY_DOT_Z [km**2/s]
    */
   public double CY_DOT_Z() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [5,4] km**2/s**2
+   * CY_DOT_X_DOT [km**2/s**2]
    */
   public double CY_DOT_X_DOT() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [5,5] km**2/s**2
+   * CY_DOT_Y_DOT [km**2/s**2]
    */
   public double CY_DOT_Y_DOT() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [6,1] km**2/s
+   * CZ_DOT_X [km**2/s]
    */
   public double CZ_DOT_X() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [6,2] km**2/s
+   * CZ_DOT_Y [km**2/s]
    */
   public double CZ_DOT_Y() { int o = __offset(104); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [6,3] km**2/s
+   * CZ_DOT_Z [km**2/s]
    */
   public double CZ_DOT_Z() { int o = __offset(106); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [6,4] km**2/s**2
+   * CZ_DOT_X_DOT [km**2/s**2]
    */
   public double CZ_DOT_X_DOT() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [6,5] km**2/s**2
+   * CZ_DOT_Y_DOT [km**2/s**2]
    */
   public double CZ_DOT_Y_DOT() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance matrix [6,6] km**2/s**2
+   * CZ_DOT_Z_DOT [km**2/s**2]
    */
   public double CZ_DOT_Z_DOT() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * User defined parameter, must be described in an ICD
+   * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
    */
   public long USER_DEFINED_BIP_0044_TYPE() { int o = __offset(114); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * User defined parameter, must be described in an ICD
+   * USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
    */
   public String USER_DEFINED_OBJECT_DESIGNATOR() { int o = __offset(116); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(116, 1); }
   public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 1); }
   /**
-   * User defined parameter, must be described in an ICD
+   * USER_DEFINED_EARTH_MODEL [O, units per ICD]
    */
   public String USER_DEFINED_EARTH_MODEL() { int o = __offset(118); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer USER_DEFINED_EARTH_MODELAsByteBuffer() { return __vector_as_bytebuffer(118, 1); }
   public ByteBuffer USER_DEFINED_EARTH_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 1); }
   /**
-   * User defined parameter, must be described in an ICD
+   * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
    */
   public double USER_DEFINED_EPOCH_TIMESTAMP() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * User defined parameter, must be described in an ICD
+   * USER_DEFINED_MICROSECONDS [O, units per ICD]
    */
   public double USER_DEFINED_MICROSECONDS() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 

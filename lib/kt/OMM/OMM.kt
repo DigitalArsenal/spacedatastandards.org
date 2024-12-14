@@ -30,7 +30,7 @@ class OMM : Table() {
         return this
     }
     /**
-     * OMM Header
+     * CCSDS OMM Version 
      */
     val CCSDS_OMM_VERS : Double
         get() {
@@ -38,7 +38,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Creation Date
+     * Creation Date (ISO 8601 UTC format) 
      */
     val CREATION_DATE : String?
         get() {
@@ -52,7 +52,7 @@ class OMM : Table() {
     val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Originator
+     * Originator 
      */
     val ORIGINATOR : String?
         get() {
@@ -66,7 +66,6 @@ class OMM : Table() {
     val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * OMM Metadata
      * Satellite Name(s)
      */
     val OBJECT_NAME : String?
@@ -95,7 +94,7 @@ class OMM : Table() {
     val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Origin of reference frame (EARTH, MARS, MOON, etc.)
+     * Center Name (e.g. EARTH, MARS)
      */
     val CENTER_NAME : String?
         get() {
@@ -109,7 +108,7 @@ class OMM : Table() {
     val CENTER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun CENTER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Name of the reference frame (TEME, EME2000, etc.)
+     * Reference Frame
      */
     val REFERENCE_FRAME : Byte
         get() {
@@ -117,7 +116,7 @@ class OMM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 2
         }
     /**
-     * REFERENCE_FRAME_EPOCH
+     * Reference Frame Epoch (ISO 8601 UTC format)
      */
     val REFERENCE_FRAME_EPOCH : String?
         get() {
@@ -131,7 +130,7 @@ class OMM : Table() {
     val REFERENCE_FRAME_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
     fun REFERENCE_FRAME_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
     /**
-     * Time system used for the orbit state and covariance matrix. (UTC)
+     * Time System [M, UTC]
      */
     val TIME_SYSTEM : Byte
         get() {
@@ -139,7 +138,7 @@ class OMM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 11
         }
     /**
-     * Description of the Mean Element Theory. (SGP4,DSST,USM)
+     * Mean Element Theory
      */
     val MEAN_ELEMENT_THEORY : Byte
         get() {
@@ -147,8 +146,7 @@ class OMM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * Mean Keplerian Elements in the Specified Reference Frame
-     * Plain-Text Comment
+     * COMMENT (O)
      */
     val COMMENT : String?
         get() {
@@ -162,7 +160,7 @@ class OMM : Table() {
     val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
     fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Epoch time, in ISO 8601 UTC format
+     * EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
      */
     val EPOCH : String?
         get() {
@@ -176,7 +174,7 @@ class OMM : Table() {
     val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
     fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
     /**
-     * Semi-major axis in km or mean motion in rev/day
+     * Semi-major axis in km or Mean Motion in rev/day
      */
     val SEMI_MAJOR_AXIS : Double
         get() {
@@ -184,7 +182,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Mean motion
+     * Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
      */
     val MEAN_MOTION : Double
         get() {
@@ -192,7 +190,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Eccentricity
+     * Eccentricity (unitless)
      */
     val ECCENTRICITY : Double
         get() {
@@ -200,7 +198,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Inclination
+     * Inclination in degrees
      */
     val INCLINATION : Double
         get() {
@@ -208,7 +206,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Right ascension of ascending node
+     * RA_OF_ASC_NODE in degrees
      */
     val RA_OF_ASC_NODE : Double
         get() {
@@ -216,7 +214,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Argument of pericenter
+     * ARG_OF_PERICENTER in degrees
      */
     val ARG_OF_PERICENTER : Double
         get() {
@@ -224,7 +222,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Mean anomaly
+     * MEAN_ANOMALY in degrees
      */
     val MEAN_ANOMALY : Double
         get() {
@@ -232,7 +230,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Gravitational Coefficient (Gravitational Constant x Central Mass)
+     * GM in km**3/s**2
      */
     val GM : Double
         get() {
@@ -240,8 +238,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Spacecraft Parameters
-     * S/C Mass
+     * MASS in kg
      */
     val MASS : Double
         get() {
@@ -249,7 +246,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Solar Radiation Pressure Area (AR) m**2
+     * SOLAR_RAD_AREA in m**2
      */
     val SOLAR_RAD_AREA : Double
         get() {
@@ -257,7 +254,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Solar Radiation Pressure Coefficient (CR)
+     * SOLAR_RAD_COEFF (unitless)
      */
     val SOLAR_RAD_COEFF : Double
         get() {
@@ -265,7 +262,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Drag Area (AD) m**2
+     * DRAG_AREA in m**2
      */
     val DRAG_AREA : Double
         get() {
@@ -273,7 +270,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Drag Coefficient (CD)
+     * DRAG_COEFF (unitless)
      */
     val DRAG_COEFF : Double
         get() {
@@ -281,8 +278,8 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-     * Default value = 0
+     * TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+     * EPHEMERIS_TYPE Default=0
      */
     val EPHEMERIS_TYPE : Byte
         get() {
@@ -290,7 +287,7 @@ class OMM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 1
         }
     /**
-     * Default value = U
+     * CLASSIFICATION_TYPE Default=U
      */
     val CLASSIFICATION_TYPE : String?
         get() {
@@ -304,7 +301,7 @@ class OMM : Table() {
     val CLASSIFICATION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
     fun CLASSIFICATION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
     /**
-     * NORAD Catalog Number (Satellite Number) an integer
+     * NORAD_CAT_ID (integer) [O if SGP/SGP4]
      */
     val NORAD_CAT_ID : UInt
         get() {
@@ -312,7 +309,7 @@ class OMM : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Element set number for this satellite
+     * ELEMENT_SET_NO [O if SGP/SGP4]
      */
     val ELEMENT_SET_NO : UInt
         get() {
@@ -320,7 +317,7 @@ class OMM : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Revolution Number
+     * REV_AT_EPOCH [O if SGP/SGP4]
      */
     val REV_AT_EPOCH : Double
         get() {
@@ -328,7 +325,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+     * BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
      */
     val BSTAR : Double
         get() {
@@ -336,7 +333,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * First Time Derivative of the Mean Motion
+     * MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
      */
     val MEAN_MOTION_DOT : Double
         get() {
@@ -344,7 +341,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Second Time Derivative of Mean Motion
+     * MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
      */
     val MEAN_MOTION_DDOT : Double
         get() {
@@ -352,8 +349,8 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Position/Velocity Covariance Matrix
-     * Reference frame for the covariance matrix
+     * Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+     * COV_REF_FRAME reference frame for covariance [C if covariance given]
      */
     val COV_REFERENCE_FRAME : Byte
         get() {
@@ -361,7 +358,7 @@ class OMM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 23
         }
     /**
-     * Covariance matrix [1,1] km**2
+     * CX_X [km**2]
      */
     val CX_X : Double
         get() {
@@ -369,7 +366,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [2,1] km**2
+     * CY_X [km**2]
      */
     val CY_X : Double
         get() {
@@ -377,7 +374,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [2,2] km**2
+     * CY_Y [km**2]
      */
     val CY_Y : Double
         get() {
@@ -385,7 +382,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [3,1] km**2
+     * CZ_X [km**2]
      */
     val CZ_X : Double
         get() {
@@ -393,7 +390,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [3,2] km**2
+     * CZ_Y [km**2]
      */
     val CZ_Y : Double
         get() {
@@ -401,7 +398,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [3,3] km**2
+     * CZ_Z [km**2]
      */
     val CZ_Z : Double
         get() {
@@ -409,7 +406,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [4,1] km**2/s
+     * CX_DOT_X [km**2/s]
      */
     val CX_DOT_X : Double
         get() {
@@ -417,7 +414,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [4,2] km**2/s
+     * CX_DOT_Y [km**2/s]
      */
     val CX_DOT_Y : Double
         get() {
@@ -425,7 +422,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [4,3] km**2/s
+     * CX_DOT_Z [km**2/s]
      */
     val CX_DOT_Z : Double
         get() {
@@ -433,7 +430,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [4,4] km**2/s**2
+     * CX_DOT_X_DOT [km**2/s**2]
      */
     val CX_DOT_X_DOT : Double
         get() {
@@ -441,7 +438,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [5,1] km**2/s
+     * CY_DOT_X [km**2/s]
      */
     val CY_DOT_X : Double
         get() {
@@ -449,7 +446,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [5,2] km**2/s
+     * CY_DOT_Y [km**2/s]
      */
     val CY_DOT_Y : Double
         get() {
@@ -457,7 +454,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [5,3] km**2/s
+     * CY_DOT_Z [km**2/s]
      */
     val CY_DOT_Z : Double
         get() {
@@ -465,7 +462,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [5,4] km**2/s**2
+     * CY_DOT_X_DOT [km**2/s**2]
      */
     val CY_DOT_X_DOT : Double
         get() {
@@ -473,7 +470,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [5,5] km**2/s**2
+     * CY_DOT_Y_DOT [km**2/s**2]
      */
     val CY_DOT_Y_DOT : Double
         get() {
@@ -481,7 +478,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [6,1] km**2/s
+     * CZ_DOT_X [km**2/s]
      */
     val CZ_DOT_X : Double
         get() {
@@ -489,7 +486,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [6,2] km**2/s
+     * CZ_DOT_Y [km**2/s]
      */
     val CZ_DOT_Y : Double
         get() {
@@ -497,7 +494,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [6,3] km**2/s
+     * CZ_DOT_Z [km**2/s]
      */
     val CZ_DOT_Z : Double
         get() {
@@ -505,7 +502,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [6,4] km**2/s**2
+     * CZ_DOT_X_DOT [km**2/s**2]
      */
     val CZ_DOT_X_DOT : Double
         get() {
@@ -513,7 +510,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [6,5] km**2/s**2
+     * CZ_DOT_Y_DOT [km**2/s**2]
      */
     val CZ_DOT_Y_DOT : Double
         get() {
@@ -521,7 +518,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance matrix [6,6] km**2/s**2
+     * CZ_DOT_Z_DOT [km**2/s**2]
      */
     val CZ_DOT_Z_DOT : Double
         get() {
@@ -529,7 +526,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * User defined parameter, must be described in an ICD
+     * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
      */
     val USER_DEFINED_BIP_0044_TYPE : UInt
         get() {
@@ -537,7 +534,7 @@ class OMM : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * User defined parameter, must be described in an ICD
+     * USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
      */
     val USER_DEFINED_OBJECT_DESIGNATOR : String?
         get() {
@@ -551,7 +548,7 @@ class OMM : Table() {
     val USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(116, 1)
     fun USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 116, 1)
     /**
-     * User defined parameter, must be described in an ICD
+     * USER_DEFINED_EARTH_MODEL [O, units per ICD]
      */
     val USER_DEFINED_EARTH_MODEL : String?
         get() {
@@ -565,7 +562,7 @@ class OMM : Table() {
     val USER_DEFINED_EARTH_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(118, 1)
     fun USER_DEFINED_EARTH_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 118, 1)
     /**
-     * User defined parameter, must be described in an ICD
+     * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
      */
     val USER_DEFINED_EPOCH_TIMESTAMP : Double
         get() {
@@ -573,7 +570,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * User defined parameter, must be described in an ICD
+     * USER_DEFINED_MICROSECONDS [O, units per ICD]
      */
     val USER_DEFINED_MICROSECONDS : Double
         get() {

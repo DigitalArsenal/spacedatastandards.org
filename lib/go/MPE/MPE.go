@@ -54,7 +54,7 @@ func (rcv *MPE) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Unique ID as a String
+/// Unique ID as a String [no units]
 func (rcv *MPE) ENTITY_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -63,8 +63,8 @@ func (rcv *MPE) ENTITY_ID() []byte {
 	return nil
 }
 
-/// Unique ID as a String
-/// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+/// Unique ID as a String [no units]
+/// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
 func (rcv *MPE) EPOCH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -73,12 +73,12 @@ func (rcv *MPE) EPOCH() float64 {
 	return 0.0
 }
 
-/// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+/// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
 func (rcv *MPE) MutateEPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
 
-/// Semi-major axis in km or mean motion in rev/day
+/// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
 func (rcv *MPE) MEAN_MOTION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -87,12 +87,12 @@ func (rcv *MPE) MEAN_MOTION() float64 {
 	return 0.0
 }
 
-/// Semi-major axis in km or mean motion in rev/day
+/// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
 func (rcv *MPE) MutateMEAN_MOTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
-/// Eccentricity
+/// Eccentricity (unitless)
 func (rcv *MPE) ECCENTRICITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -101,12 +101,12 @@ func (rcv *MPE) ECCENTRICITY() float64 {
 	return 0.0
 }
 
-/// Eccentricity
+/// Eccentricity (unitless)
 func (rcv *MPE) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
-/// Inclination
+/// Inclination in degrees
 func (rcv *MPE) INCLINATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -115,12 +115,12 @@ func (rcv *MPE) INCLINATION() float64 {
 	return 0.0
 }
 
-/// Inclination
+/// Inclination in degrees
 func (rcv *MPE) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
 
-/// Right ascension of ascending node
+/// Right ascension of ascending node in degrees
 func (rcv *MPE) RA_OF_ASC_NODE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -129,12 +129,12 @@ func (rcv *MPE) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
-/// Right ascension of ascending node
+/// Right ascension of ascending node in degrees
 func (rcv *MPE) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
-/// Argument of pericenter
+/// Argument of pericenter in degrees
 func (rcv *MPE) ARG_OF_PERICENTER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -143,12 +143,12 @@ func (rcv *MPE) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
-/// Argument of pericenter
+/// Argument of pericenter in degrees
 func (rcv *MPE) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
-/// Mean anomaly
+/// Mean anomaly in degrees
 func (rcv *MPE) MEAN_ANOMALY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -157,12 +157,12 @@ func (rcv *MPE) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
-/// Mean anomaly
+/// Mean anomaly in degrees
 func (rcv *MPE) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
-/// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+/// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
 func (rcv *MPE) BSTAR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -171,12 +171,12 @@ func (rcv *MPE) BSTAR() float64 {
 	return 0.0
 }
 
-/// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+/// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
 func (rcv *MPE) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
-/// Description of the Mean Element Theory. (SGP4,DSST,USM)
+/// Description of the Mean Element Theory (SGP4, DSST, USM)
 func (rcv *MPE) MEAN_ELEMENT_THEORY() meanElementTheory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -185,7 +185,7 @@ func (rcv *MPE) MEAN_ELEMENT_THEORY() meanElementTheory {
 	return 0
 }
 
-/// Description of the Mean Element Theory. (SGP4,DSST,USM)
+/// Description of the Mean Element Theory (SGP4, DSST, USM)
 func (rcv *MPE) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
 }

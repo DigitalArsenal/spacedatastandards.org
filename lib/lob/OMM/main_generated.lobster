@@ -19,189 +19,186 @@ class OMMCOLLECTION
 
 /// Orbit Mean Elements Message
 class OMM : flatbuffers.handle
-    /// OMM Header
+    /// CCSDS OMM Version 
     def CCSDS_OMM_VERS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
-    /// Creation Date
+    /// Creation Date (ISO 8601 UTC format) 
     def CREATION_DATE() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
-    /// Originator
+    /// Originator 
     def ORIGINATOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// OMM Metadata
     /// Satellite Name(s)
     def OBJECT_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
     /// International Designator (YYYY-NNNAAA)
     def OBJECT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
-    /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+    /// Center Name (e.g. EARTH, MARS)
     def CENTER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
-    /// Name of the reference frame (TEME, EME2000, etc.)
+    /// Reference Frame
     def REFERENCE_FRAME() -> refFrame:
         return refFrame(flatbuffers.field_int8(buf_, pos_, 16, 2))
-    /// REFERENCE_FRAME_EPOCH
+    /// Reference Frame Epoch (ISO 8601 UTC format)
     def REFERENCE_FRAME_EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 18)
-    /// Time system used for the orbit state and covariance matrix. (UTC)
+    /// Time System [M, UTC]
     def TIME_SYSTEM() -> timeSystem:
         return timeSystem(flatbuffers.field_int8(buf_, pos_, 20, 11))
-    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+    /// Mean Element Theory
     def MEAN_ELEMENT_THEORY() -> meanElementTheory:
         return meanElementTheory(flatbuffers.field_int8(buf_, pos_, 22, 0))
-    /// Mean Keplerian Elements in the Specified Reference Frame
-    /// Plain-Text Comment
+    /// COMMENT (O)
     def COMMENT() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
-    /// Epoch time, in ISO 8601 UTC format
+    /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 26)
-    /// Semi-major axis in km or mean motion in rev/day
+    /// Semi-major axis in km or Mean Motion in rev/day
     def SEMI_MAJOR_AXIS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
-    /// Mean motion
+    /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
     def MEAN_MOTION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
-    /// Eccentricity
+    /// Eccentricity (unitless)
     def ECCENTRICITY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
-    /// Inclination
+    /// Inclination in degrees
     def INCLINATION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
-    /// Right ascension of ascending node
+    /// RA_OF_ASC_NODE in degrees
     def RA_OF_ASC_NODE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
-    /// Argument of pericenter
+    /// ARG_OF_PERICENTER in degrees
     def ARG_OF_PERICENTER() -> float:
         return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
-    /// Mean anomaly
+    /// MEAN_ANOMALY in degrees
     def MEAN_ANOMALY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
-    /// Gravitational Coefficient (Gravitational Constant x Central Mass)
+    /// GM in km**3/s**2
     def GM() -> float:
         return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
-    /// Spacecraft Parameters
-    /// S/C Mass
+    /// MASS in kg
     def MASS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
-    /// Solar Radiation Pressure Area (AR) m**2
+    /// SOLAR_RAD_AREA in m**2
     def SOLAR_RAD_AREA() -> float:
         return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
-    /// Solar Radiation Pressure Coefficient (CR)
+    /// SOLAR_RAD_COEFF (unitless)
     def SOLAR_RAD_COEFF() -> float:
         return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
-    /// Drag Area (AD) m**2
+    /// DRAG_AREA in m**2
     def DRAG_AREA() -> float:
         return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
-    /// Drag Coefficient (CD)
+    /// DRAG_COEFF (unitless)
     def DRAG_COEFF() -> float:
         return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
-    /// TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-    /// Default value = 0
+    /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+    /// EPHEMERIS_TYPE Default=0
     def EPHEMERIS_TYPE() -> ephemerisType:
         return ephemerisType(flatbuffers.field_int8(buf_, pos_, 54, 1))
-    /// Default value = U
+    /// CLASSIFICATION_TYPE Default=U
     def CLASSIFICATION_TYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 56)
-    /// NORAD Catalog Number (Satellite Number) an integer
+    /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
     def NORAD_CAT_ID() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 58, 0)
-    /// Element set number for this satellite
+    /// ELEMENT_SET_NO [O if SGP/SGP4]
     def ELEMENT_SET_NO() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 60, 0)
-    /// Revolution Number
+    /// REV_AT_EPOCH [O if SGP/SGP4]
     def REV_AT_EPOCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
-    /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+    /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
     def BSTAR() -> float:
         return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
-    /// First Time Derivative of the Mean Motion
+    /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
     def MEAN_MOTION_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
-    /// Second Time Derivative of Mean Motion
+    /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
     def MEAN_MOTION_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
-    /// Position/Velocity Covariance Matrix
-    /// Reference frame for the covariance matrix
+    /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+    /// COV_REF_FRAME reference frame for covariance [C if covariance given]
     def COV_REFERENCE_FRAME() -> refFrame:
         return refFrame(flatbuffers.field_int8(buf_, pos_, 70, 23))
-    /// Covariance matrix [1,1] km**2
+    /// CX_X [km**2]
     def CX_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
-    /// Covariance matrix [2,1] km**2
+    /// CY_X [km**2]
     def CY_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
-    /// Covariance matrix [2,2] km**2
+    /// CY_Y [km**2]
     def CY_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
-    /// Covariance matrix [3,1] km**2
+    /// CZ_X [km**2]
     def CZ_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
-    /// Covariance matrix [3,2] km**2
+    /// CZ_Y [km**2]
     def CZ_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
-    /// Covariance matrix [3,3] km**2
+    /// CZ_Z [km**2]
     def CZ_Z() -> float:
         return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
-    /// Covariance matrix [4,1] km**2/s
+    /// CX_DOT_X [km**2/s]
     def CX_DOT_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
-    /// Covariance matrix [4,2] km**2/s
+    /// CX_DOT_Y [km**2/s]
     def CX_DOT_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 86, 0.0)
-    /// Covariance matrix [4,3] km**2/s
+    /// CX_DOT_Z [km**2/s]
     def CX_DOT_Z() -> float:
         return flatbuffers.field_float64(buf_, pos_, 88, 0.0)
-    /// Covariance matrix [4,4] km**2/s**2
+    /// CX_DOT_X_DOT [km**2/s**2]
     def CX_DOT_X_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 90, 0.0)
-    /// Covariance matrix [5,1] km**2/s
+    /// CY_DOT_X [km**2/s]
     def CY_DOT_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
-    /// Covariance matrix [5,2] km**2/s
+    /// CY_DOT_Y [km**2/s]
     def CY_DOT_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
-    /// Covariance matrix [5,3] km**2/s
+    /// CY_DOT_Z [km**2/s]
     def CY_DOT_Z() -> float:
         return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
-    /// Covariance matrix [5,4] km**2/s**2
+    /// CY_DOT_X_DOT [km**2/s**2]
     def CY_DOT_X_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
-    /// Covariance matrix [5,5] km**2/s**2
+    /// CY_DOT_Y_DOT [km**2/s**2]
     def CY_DOT_Y_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 100, 0.0)
-    /// Covariance matrix [6,1] km**2/s
+    /// CZ_DOT_X [km**2/s]
     def CZ_DOT_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 102, 0.0)
-    /// Covariance matrix [6,2] km**2/s
+    /// CZ_DOT_Y [km**2/s]
     def CZ_DOT_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 104, 0.0)
-    /// Covariance matrix [6,3] km**2/s
+    /// CZ_DOT_Z [km**2/s]
     def CZ_DOT_Z() -> float:
         return flatbuffers.field_float64(buf_, pos_, 106, 0.0)
-    /// Covariance matrix [6,4] km**2/s**2
+    /// CZ_DOT_X_DOT [km**2/s**2]
     def CZ_DOT_X_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 108, 0.0)
-    /// Covariance matrix [6,5] km**2/s**2
+    /// CZ_DOT_Y_DOT [km**2/s**2]
     def CZ_DOT_Y_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 110, 0.0)
-    /// Covariance matrix [6,6] km**2/s**2
+    /// CZ_DOT_Z_DOT [km**2/s**2]
     def CZ_DOT_Z_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 112, 0.0)
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
     def USER_DEFINED_BIP_0044_TYPE() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 114, 0)
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
     def USER_DEFINED_OBJECT_DESIGNATOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 116)
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
     def USER_DEFINED_EARTH_MODEL() -> string:
         return flatbuffers.field_string(buf_, pos_, 118)
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
     def USER_DEFINED_EPOCH_TIMESTAMP() -> float:
         return flatbuffers.field_float64(buf_, pos_, 120, 0.0)
-    /// User defined parameter, must be described in an ICD
+    /// USER_DEFINED_MICROSECONDS [O, units per ICD]
     def USER_DEFINED_MICROSECONDS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 122, 0.0)
 

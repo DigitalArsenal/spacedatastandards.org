@@ -36,7 +36,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * OMM Header
+ * CCSDS OMM Version 
  */
 CCSDS_OMM_VERS():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
@@ -44,7 +44,7 @@ CCSDS_OMM_VERS():number {
 }
 
 /**
- * Creation Date
+ * Creation Date (ISO 8601 UTC format) 
  */
 CREATION_DATE():string|null
 CREATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -54,7 +54,7 @@ CREATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Originator
+ * Originator 
  */
 ORIGINATOR():string|null
 ORIGINATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -64,7 +64,6 @@ ORIGINATOR(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * OMM Metadata
  * Satellite Name(s)
  */
 OBJECT_NAME():string|null
@@ -85,7 +84,7 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Origin of reference frame (EARTH, MARS, MOON, etc.)
+ * Center Name (e.g. EARTH, MARS)
  */
 CENTER_NAME():string|null
 CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -95,7 +94,7 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Name of the reference frame (TEME, EME2000, etc.)
+ * Reference Frame
  */
 REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -103,7 +102,7 @@ REFERENCE_FRAME():refFrame {
 }
 
 /**
- * REFERENCE_FRAME_EPOCH
+ * Reference Frame Epoch (ISO 8601 UTC format)
  */
 REFERENCE_FRAME_EPOCH():string|null
 REFERENCE_FRAME_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -113,7 +112,7 @@ REFERENCE_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Time system used for the orbit state and covariance matrix. (UTC)
+ * Time System [M, UTC]
  */
 TIME_SYSTEM():timeSystem {
   const offset = this.bb!.__offset(this.bb_pos, 20);
@@ -121,7 +120,7 @@ TIME_SYSTEM():timeSystem {
 }
 
 /**
- * Description of the Mean Element Theory. (SGP4,DSST,USM)
+ * Mean Element Theory
  */
 MEAN_ELEMENT_THEORY():meanElementTheory {
   const offset = this.bb!.__offset(this.bb_pos, 22);
@@ -129,8 +128,7 @@ MEAN_ELEMENT_THEORY():meanElementTheory {
 }
 
 /**
- * Mean Keplerian Elements in the Specified Reference Frame
- * Plain-Text Comment
+ * COMMENT (O)
  */
 COMMENT():string|null
 COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -140,7 +138,7 @@ COMMENT(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Epoch time, in ISO 8601 UTC format
+ * EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
  */
 EPOCH():string|null
 EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -150,7 +148,7 @@ EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Semi-major axis in km or mean motion in rev/day
+ * Semi-major axis in km or Mean Motion in rev/day
  */
 SEMI_MAJOR_AXIS():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
@@ -158,7 +156,7 @@ SEMI_MAJOR_AXIS():number {
 }
 
 /**
- * Mean motion
+ * Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
  */
 MEAN_MOTION():number {
   const offset = this.bb!.__offset(this.bb_pos, 30);
@@ -166,7 +164,7 @@ MEAN_MOTION():number {
 }
 
 /**
- * Eccentricity
+ * Eccentricity (unitless)
  */
 ECCENTRICITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
@@ -174,7 +172,7 @@ ECCENTRICITY():number {
 }
 
 /**
- * Inclination
+ * Inclination in degrees
  */
 INCLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
@@ -182,7 +180,7 @@ INCLINATION():number {
 }
 
 /**
- * Right ascension of ascending node
+ * RA_OF_ASC_NODE in degrees
  */
 RA_OF_ASC_NODE():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
@@ -190,7 +188,7 @@ RA_OF_ASC_NODE():number {
 }
 
 /**
- * Argument of pericenter
+ * ARG_OF_PERICENTER in degrees
  */
 ARG_OF_PERICENTER():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
@@ -198,7 +196,7 @@ ARG_OF_PERICENTER():number {
 }
 
 /**
- * Mean anomaly
+ * MEAN_ANOMALY in degrees
  */
 MEAN_ANOMALY():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
@@ -206,7 +204,7 @@ MEAN_ANOMALY():number {
 }
 
 /**
- * Gravitational Coefficient (Gravitational Constant x Central Mass)
+ * GM in km**3/s**2
  */
 GM():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
@@ -214,8 +212,7 @@ GM():number {
 }
 
 /**
- * Spacecraft Parameters
- * S/C Mass
+ * MASS in kg
  */
 MASS():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
@@ -223,7 +220,7 @@ MASS():number {
 }
 
 /**
- * Solar Radiation Pressure Area (AR) m**2
+ * SOLAR_RAD_AREA in m**2
  */
 SOLAR_RAD_AREA():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
@@ -231,7 +228,7 @@ SOLAR_RAD_AREA():number {
 }
 
 /**
- * Solar Radiation Pressure Coefficient (CR)
+ * SOLAR_RAD_COEFF (unitless)
  */
 SOLAR_RAD_COEFF():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
@@ -239,7 +236,7 @@ SOLAR_RAD_COEFF():number {
 }
 
 /**
- * Drag Area (AD) m**2
+ * DRAG_AREA in m**2
  */
 DRAG_AREA():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
@@ -247,7 +244,7 @@ DRAG_AREA():number {
 }
 
 /**
- * Drag Coefficient (CD)
+ * DRAG_COEFF (unitless)
  */
 DRAG_COEFF():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
@@ -255,8 +252,8 @@ DRAG_COEFF():number {
 }
 
 /**
- * TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
- * Default value = 0
+ * TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+ * EPHEMERIS_TYPE Default=0
  */
 EPHEMERIS_TYPE():ephemerisType {
   const offset = this.bb!.__offset(this.bb_pos, 54);
@@ -264,7 +261,7 @@ EPHEMERIS_TYPE():ephemerisType {
 }
 
 /**
- * Default value = U
+ * CLASSIFICATION_TYPE Default=U
  */
 CLASSIFICATION_TYPE():string|null
 CLASSIFICATION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -274,7 +271,7 @@ CLASSIFICATION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * NORAD Catalog Number (Satellite Number) an integer
+ * NORAD_CAT_ID (integer) [O if SGP/SGP4]
  */
 NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
@@ -282,7 +279,7 @@ NORAD_CAT_ID():number {
 }
 
 /**
- * Element set number for this satellite
+ * ELEMENT_SET_NO [O if SGP/SGP4]
  */
 ELEMENT_SET_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
@@ -290,7 +287,7 @@ ELEMENT_SET_NO():number {
 }
 
 /**
- * Revolution Number
+ * REV_AT_EPOCH [O if SGP/SGP4]
  */
 REV_AT_EPOCH():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
@@ -298,7 +295,7 @@ REV_AT_EPOCH():number {
 }
 
 /**
- * SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+ * BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
  */
 BSTAR():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
@@ -306,7 +303,7 @@ BSTAR():number {
 }
 
 /**
- * First Time Derivative of the Mean Motion
+ * MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
  */
 MEAN_MOTION_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
@@ -314,7 +311,7 @@ MEAN_MOTION_DOT():number {
 }
 
 /**
- * Second Time Derivative of Mean Motion
+ * MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
  */
 MEAN_MOTION_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
@@ -322,8 +319,8 @@ MEAN_MOTION_DDOT():number {
 }
 
 /**
- * Position/Velocity Covariance Matrix
- * Reference frame for the covariance matrix
+ * Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+ * COV_REF_FRAME reference frame for covariance [C if covariance given]
  */
 COV_REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 70);
@@ -331,7 +328,7 @@ COV_REFERENCE_FRAME():refFrame {
 }
 
 /**
- * Covariance matrix [1,1] km**2
+ * CX_X [km**2]
  */
 CX_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 72);
@@ -339,7 +336,7 @@ CX_X():number {
 }
 
 /**
- * Covariance matrix [2,1] km**2
+ * CY_X [km**2]
  */
 CY_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 74);
@@ -347,7 +344,7 @@ CY_X():number {
 }
 
 /**
- * Covariance matrix [2,2] km**2
+ * CY_Y [km**2]
  */
 CY_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 76);
@@ -355,7 +352,7 @@ CY_Y():number {
 }
 
 /**
- * Covariance matrix [3,1] km**2
+ * CZ_X [km**2]
  */
 CZ_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
@@ -363,7 +360,7 @@ CZ_X():number {
 }
 
 /**
- * Covariance matrix [3,2] km**2
+ * CZ_Y [km**2]
  */
 CZ_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
@@ -371,7 +368,7 @@ CZ_Y():number {
 }
 
 /**
- * Covariance matrix [3,3] km**2
+ * CZ_Z [km**2]
  */
 CZ_Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 82);
@@ -379,7 +376,7 @@ CZ_Z():number {
 }
 
 /**
- * Covariance matrix [4,1] km**2/s
+ * CX_DOT_X [km**2/s]
  */
 CX_DOT_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
@@ -387,7 +384,7 @@ CX_DOT_X():number {
 }
 
 /**
- * Covariance matrix [4,2] km**2/s
+ * CX_DOT_Y [km**2/s]
  */
 CX_DOT_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 86);
@@ -395,7 +392,7 @@ CX_DOT_Y():number {
 }
 
 /**
- * Covariance matrix [4,3] km**2/s
+ * CX_DOT_Z [km**2/s]
  */
 CX_DOT_Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 88);
@@ -403,7 +400,7 @@ CX_DOT_Z():number {
 }
 
 /**
- * Covariance matrix [4,4] km**2/s**2
+ * CX_DOT_X_DOT [km**2/s**2]
  */
 CX_DOT_X_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 90);
@@ -411,7 +408,7 @@ CX_DOT_X_DOT():number {
 }
 
 /**
- * Covariance matrix [5,1] km**2/s
+ * CY_DOT_X [km**2/s]
  */
 CY_DOT_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 92);
@@ -419,7 +416,7 @@ CY_DOT_X():number {
 }
 
 /**
- * Covariance matrix [5,2] km**2/s
+ * CY_DOT_Y [km**2/s]
  */
 CY_DOT_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 94);
@@ -427,7 +424,7 @@ CY_DOT_Y():number {
 }
 
 /**
- * Covariance matrix [5,3] km**2/s
+ * CY_DOT_Z [km**2/s]
  */
 CY_DOT_Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 96);
@@ -435,7 +432,7 @@ CY_DOT_Z():number {
 }
 
 /**
- * Covariance matrix [5,4] km**2/s**2
+ * CY_DOT_X_DOT [km**2/s**2]
  */
 CY_DOT_X_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 98);
@@ -443,7 +440,7 @@ CY_DOT_X_DOT():number {
 }
 
 /**
- * Covariance matrix [5,5] km**2/s**2
+ * CY_DOT_Y_DOT [km**2/s**2]
  */
 CY_DOT_Y_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 100);
@@ -451,7 +448,7 @@ CY_DOT_Y_DOT():number {
 }
 
 /**
- * Covariance matrix [6,1] km**2/s
+ * CZ_DOT_X [km**2/s]
  */
 CZ_DOT_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 102);
@@ -459,7 +456,7 @@ CZ_DOT_X():number {
 }
 
 /**
- * Covariance matrix [6,2] km**2/s
+ * CZ_DOT_Y [km**2/s]
  */
 CZ_DOT_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 104);
@@ -467,7 +464,7 @@ CZ_DOT_Y():number {
 }
 
 /**
- * Covariance matrix [6,3] km**2/s
+ * CZ_DOT_Z [km**2/s]
  */
 CZ_DOT_Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 106);
@@ -475,7 +472,7 @@ CZ_DOT_Z():number {
 }
 
 /**
- * Covariance matrix [6,4] km**2/s**2
+ * CZ_DOT_X_DOT [km**2/s**2]
  */
 CZ_DOT_X_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 108);
@@ -483,7 +480,7 @@ CZ_DOT_X_DOT():number {
 }
 
 /**
- * Covariance matrix [6,5] km**2/s**2
+ * CZ_DOT_Y_DOT [km**2/s**2]
  */
 CZ_DOT_Y_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 110);
@@ -491,7 +488,7 @@ CZ_DOT_Y_DOT():number {
 }
 
 /**
- * Covariance matrix [6,6] km**2/s**2
+ * CZ_DOT_Z_DOT [km**2/s**2]
  */
 CZ_DOT_Z_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 112);
@@ -499,7 +496,7 @@ CZ_DOT_Z_DOT():number {
 }
 
 /**
- * User defined parameter, must be described in an ICD
+ * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
  */
 USER_DEFINED_BIP_0044_TYPE():number {
   const offset = this.bb!.__offset(this.bb_pos, 114);
@@ -507,7 +504,7 @@ USER_DEFINED_BIP_0044_TYPE():number {
 }
 
 /**
- * User defined parameter, must be described in an ICD
+ * USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
  */
 USER_DEFINED_OBJECT_DESIGNATOR():string|null
 USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -517,7 +514,7 @@ USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * User defined parameter, must be described in an ICD
+ * USER_DEFINED_EARTH_MODEL [O, units per ICD]
  */
 USER_DEFINED_EARTH_MODEL():string|null
 USER_DEFINED_EARTH_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -527,7 +524,7 @@ USER_DEFINED_EARTH_MODEL(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * User defined parameter, must be described in an ICD
+ * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
  */
 USER_DEFINED_EPOCH_TIMESTAMP():number {
   const offset = this.bb!.__offset(this.bb_pos, 120);
@@ -535,7 +532,7 @@ USER_DEFINED_EPOCH_TIMESTAMP():number {
 }
 
 /**
- * User defined parameter, must be described in an ICD
+ * USER_DEFINED_MICROSECONDS [O, units per ICD]
  */
 USER_DEFINED_MICROSECONDS():number {
   const offset = this.bb!.__offset(this.bb_pos, 122);

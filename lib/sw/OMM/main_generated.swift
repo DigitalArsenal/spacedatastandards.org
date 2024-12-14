@@ -101,141 +101,138 @@ public struct OMM: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  ///  OMM Header
+  ///  CCSDS OMM Version 
   public var CCSDS_OMM_VERS: Double { let o = _accessor.offset(VTOFFSET.CCSDS_OMM_VERS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Creation Date
+  ///  Creation Date (ISO 8601 UTC format) 
   public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
-  ///  Originator
+  ///  Originator 
   public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
-  ///  OMM Metadata
   ///  Satellite Name(s)
   public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
   ///  International Designator (YYYY-NNNAAA)
   public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
-  ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
+  ///  Center Name (e.g. EARTH, MARS)
   public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
-  ///  Name of the reference frame (TEME, EME2000, etc.)
+  ///  Reference Frame
   public var REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .teme : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .teme }
-  ///  REFERENCE_FRAME_EPOCH
+  ///  Reference Frame Epoch (ISO 8601 UTC format)
   public var REFERENCE_FRAME_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var REFERENCE_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME_EPOCH.v) }
-  ///  Time system used for the orbit state and covariance matrix. (UTC)
+  ///  Time System [M, UTC]
   public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .utc : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utc }
-  ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
+  ///  Mean Element Theory
   public var MEAN_ELEMENT_THEORY: meanElementTheory { let o = _accessor.offset(VTOFFSET.MEAN_ELEMENT_THEORY.v); return o == 0 ? .sgp4 : meanElementTheory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
-  ///  Mean Keplerian Elements in the Specified Reference Frame
-  ///  Plain-Text Comment
+  ///  COMMENT (O)
   public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
-  ///  Epoch time, in ISO 8601 UTC format
+  ///  EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  ///  Semi-major axis in km or mean motion in rev/day
+  ///  Semi-major axis in km or Mean Motion in rev/day
   public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Mean motion
+  ///  Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
   public var MEAN_MOTION: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentricity
+  ///  Eccentricity (unitless)
   public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Inclination
+  ///  Inclination in degrees
   public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Right ascension of ascending node
+  ///  RA_OF_ASC_NODE in degrees
   public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VTOFFSET.RA_OF_ASC_NODE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Argument of pericenter
+  ///  ARG_OF_PERICENTER in degrees
   public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VTOFFSET.ARG_OF_PERICENTER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Mean anomaly
+  ///  MEAN_ANOMALY in degrees
   public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Gravitational Coefficient (Gravitational Constant x Central Mass)
+  ///  GM in km**3/s**2
   public var GM: Double { let o = _accessor.offset(VTOFFSET.GM.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Spacecraft Parameters
-  ///  S/C Mass
+  ///  MASS in kg
   public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Solar Radiation Pressure Area (AR) m**2
+  ///  SOLAR_RAD_AREA in m**2
   public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Solar Radiation Pressure Coefficient (CR)
+  ///  SOLAR_RAD_COEFF (unitless)
   public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Drag Area (AD) m**2
+  ///  DRAG_AREA in m**2
   public var DRAG_AREA: Double { let o = _accessor.offset(VTOFFSET.DRAG_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Drag Coefficient (CD)
+  ///  DRAG_COEFF (unitless)
   public var DRAG_COEFF: Double { let o = _accessor.offset(VTOFFSET.DRAG_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-  ///  Default value = 0
+  ///  TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  ///  EPHEMERIS_TYPE Default=0
   public var EPHEMERIS_TYPE: ephemerisType { let o = _accessor.offset(VTOFFSET.EPHEMERIS_TYPE.v); return o == 0 ? .sgp4 : ephemerisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
-  ///  Default value = U
+  ///  CLASSIFICATION_TYPE Default=U
   public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION_TYPE.v) }
-  ///  NORAD Catalog Number (Satellite Number) an integer
+  ///  NORAD_CAT_ID (integer) [O if SGP/SGP4]
   public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VTOFFSET.NORAD_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Element set number for this satellite
+  ///  ELEMENT_SET_NO [O if SGP/SGP4]
   public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VTOFFSET.ELEMENT_SET_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Revolution Number
+  ///  REV_AT_EPOCH [O if SGP/SGP4]
   public var REV_AT_EPOCH: Double { let o = _accessor.offset(VTOFFSET.REV_AT_EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  ///  BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
   public var BSTAR: Double { let o = _accessor.offset(VTOFFSET.BSTAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  First Time Derivative of the Mean Motion
+  ///  MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
   public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Second Time Derivative of Mean Motion
+  ///  MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Position/Velocity Covariance Matrix
-  ///  Reference frame for the covariance matrix
+  ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
   public var COV_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? .rsw : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rsw }
-  ///  Covariance matrix [1,1] km**2
+  ///  CX_X [km**2]
   public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [2,1] km**2
+  ///  CY_X [km**2]
   public var CY_X: Double { let o = _accessor.offset(VTOFFSET.CY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [2,2] km**2
+  ///  CY_Y [km**2]
   public var CY_Y: Double { let o = _accessor.offset(VTOFFSET.CY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [3,1] km**2
+  ///  CZ_X [km**2]
   public var CZ_X: Double { let o = _accessor.offset(VTOFFSET.CZ_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [3,2] km**2
+  ///  CZ_Y [km**2]
   public var CZ_Y: Double { let o = _accessor.offset(VTOFFSET.CZ_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [3,3] km**2
+  ///  CZ_Z [km**2]
   public var CZ_Z: Double { let o = _accessor.offset(VTOFFSET.CZ_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,1] km**2/s
+  ///  CX_DOT_X [km**2/s]
   public var CX_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,2] km**2/s
+  ///  CX_DOT_Y [km**2/s]
   public var CX_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,3] km**2/s
+  ///  CX_DOT_Z [km**2/s]
   public var CX_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,4] km**2/s**2
+  ///  CX_DOT_X_DOT [km**2/s**2]
   public var CX_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,1] km**2/s
+  ///  CY_DOT_X [km**2/s]
   public var CY_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,2] km**2/s
+  ///  CY_DOT_Y [km**2/s]
   public var CY_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,3] km**2/s
+  ///  CY_DOT_Z [km**2/s]
   public var CY_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,4] km**2/s**2
+  ///  CY_DOT_X_DOT [km**2/s**2]
   public var CY_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,5] km**2/s**2
+  ///  CY_DOT_Y_DOT [km**2/s**2]
   public var CY_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,1] km**2/s
+  ///  CZ_DOT_X [km**2/s]
   public var CZ_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,2] km**2/s
+  ///  CZ_DOT_Y [km**2/s]
   public var CZ_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,3] km**2/s
+  ///  CZ_DOT_Z [km**2/s]
   public var CZ_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,4] km**2/s**2
+  ///  CZ_DOT_X_DOT [km**2/s**2]
   public var CZ_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,5] km**2/s**2
+  ///  CZ_DOT_Y_DOT [km**2/s**2]
   public var CZ_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,6] km**2/s**2
+  ///  CZ_DOT_Z_DOT [km**2/s**2]
   public var CZ_DOT_Z_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   public var USER_DEFINED_BIP_0044_TYPE: UInt32 { let o = _accessor.offset(VTOFFSET.USER_DEFINED_BIP_0044_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
   public var USER_DEFINED_OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var USER_DEFINED_OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.v) }
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_EARTH_MODEL [O, units per ICD]
   public var USER_DEFINED_EARTH_MODEL: String? { let o = _accessor.offset(VTOFFSET.USER_DEFINED_EARTH_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var USER_DEFINED_EARTH_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.USER_DEFINED_EARTH_MODEL.v) }
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
   public var USER_DEFINED_EPOCH_TIMESTAMP: Double { let o = _accessor.offset(VTOFFSET.USER_DEFINED_EPOCH_TIMESTAMP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  User defined parameter, must be described in an ICD
+  ///  USER_DEFINED_MICROSECONDS [O, units per ICD]
   public var USER_DEFINED_MICROSECONDS: Double { let o = _accessor.offset(VTOFFSET.USER_DEFINED_MICROSECONDS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startOMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 60) }
   public static func add(CCSDS_OMM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OMM_VERS, def: 0.0, at: VTOFFSET.CCSDS_OMM_VERS.p) }

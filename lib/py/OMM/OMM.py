@@ -29,7 +29,7 @@ class OMM(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # OMM Header
+    # CCSDS OMM Version 
     # OMM
     def CCSDS_OMM_VERS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,7 +37,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Creation Date
+    # Creation Date (ISO 8601 UTC format) 
     # OMM
     def CREATION_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,7 +45,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Originator
+    # Originator 
     # OMM
     def ORIGINATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -53,7 +53,6 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # OMM Metadata
     # Satellite Name(s)
     # OMM
     def OBJECT_NAME(self):
@@ -70,7 +69,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Origin of reference frame (EARTH, MARS, MOON, etc.)
+    # Center Name (e.g. EARTH, MARS)
     # OMM
     def CENTER_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -78,7 +77,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Name of the reference frame (TEME, EME2000, etc.)
+    # Reference Frame
     # OMM
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -86,7 +85,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 2
 
-    # REFERENCE_FRAME_EPOCH
+    # Reference Frame Epoch (ISO 8601 UTC format)
     # OMM
     def REFERENCE_FRAME_EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -94,7 +93,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Time system used for the orbit state and covariance matrix. (UTC)
+    # Time System [M, UTC]
     # OMM
     def TIME_SYSTEM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -102,7 +101,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 11
 
-    # Description of the Mean Element Theory. (SGP4,DSST,USM)
+    # Mean Element Theory
     # OMM
     def MEAN_ELEMENT_THEORY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -110,8 +109,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Mean Keplerian Elements in the Specified Reference Frame
-    # Plain-Text Comment
+    # COMMENT (O)
     # OMM
     def COMMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -119,7 +117,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Epoch time, in ISO 8601 UTC format
+    # EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
     # OMM
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -127,7 +125,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Semi-major axis in km or mean motion in rev/day
+    # Semi-major axis in km or Mean Motion in rev/day
     # OMM
     def SEMI_MAJOR_AXIS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
@@ -135,7 +133,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Mean motion
+    # Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
     # OMM
     def MEAN_MOTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -143,7 +141,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Eccentricity
+    # Eccentricity (unitless)
     # OMM
     def ECCENTRICITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -151,7 +149,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Inclination
+    # Inclination in degrees
     # OMM
     def INCLINATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -159,7 +157,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Right ascension of ascending node
+    # RA_OF_ASC_NODE in degrees
     # OMM
     def RA_OF_ASC_NODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -167,7 +165,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Argument of pericenter
+    # ARG_OF_PERICENTER in degrees
     # OMM
     def ARG_OF_PERICENTER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -175,7 +173,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Mean anomaly
+    # MEAN_ANOMALY in degrees
     # OMM
     def MEAN_ANOMALY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -183,7 +181,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Gravitational Coefficient (Gravitational Constant x Central Mass)
+    # GM in km**3/s**2
     # OMM
     def GM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
@@ -191,8 +189,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Spacecraft Parameters
-    # S/C Mass
+    # MASS in kg
     # OMM
     def MASS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
@@ -200,7 +197,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Solar Radiation Pressure Area (AR) m**2
+    # SOLAR_RAD_AREA in m**2
     # OMM
     def SOLAR_RAD_AREA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -208,7 +205,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Solar Radiation Pressure Coefficient (CR)
+    # SOLAR_RAD_COEFF (unitless)
     # OMM
     def SOLAR_RAD_COEFF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -216,7 +213,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Drag Area (AD) m**2
+    # DRAG_AREA in m**2
     # OMM
     def DRAG_AREA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
@@ -224,7 +221,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Drag Coefficient (CD)
+    # DRAG_COEFF (unitless)
     # OMM
     def DRAG_COEFF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
@@ -232,8 +229,8 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # TLE Related Parameters (This section is only required if MEAN_ELEMENT_THEORY=SGP/SGP4)
-    # Default value = 0
+    # TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+    # EPHEMERIS_TYPE Default=0
     # OMM
     def EPHEMERIS_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
@@ -241,7 +238,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 1
 
-    # Default value = U
+    # CLASSIFICATION_TYPE Default=U
     # OMM
     def CLASSIFICATION_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -249,7 +246,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # NORAD Catalog Number (Satellite Number) an integer
+    # NORAD_CAT_ID (integer) [O if SGP/SGP4]
     # OMM
     def NORAD_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
@@ -257,7 +254,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # Element set number for this satellite
+    # ELEMENT_SET_NO [O if SGP/SGP4]
     # OMM
     def ELEMENT_SET_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
@@ -265,7 +262,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # Revolution Number
+    # REV_AT_EPOCH [O if SGP/SGP4]
     # OMM
     def REV_AT_EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
@@ -273,7 +270,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+    # BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
     # OMM
     def BSTAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -281,7 +278,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # First Time Derivative of the Mean Motion
+    # MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
     # OMM
     def MEAN_MOTION_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
@@ -289,7 +286,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Second Time Derivative of Mean Motion
+    # MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
     # OMM
     def MEAN_MOTION_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -297,8 +294,8 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Position/Velocity Covariance Matrix
-    # Reference frame for the covariance matrix
+    # Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+    # COV_REF_FRAME reference frame for covariance [C if covariance given]
     # OMM
     def COV_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
@@ -306,7 +303,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 23
 
-    # Covariance matrix [1,1] km**2
+    # CX_X [km**2]
     # OMM
     def CX_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
@@ -314,7 +311,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [2,1] km**2
+    # CY_X [km**2]
     # OMM
     def CY_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
@@ -322,7 +319,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [2,2] km**2
+    # CY_Y [km**2]
     # OMM
     def CY_Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -330,7 +327,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [3,1] km**2
+    # CZ_X [km**2]
     # OMM
     def CZ_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
@@ -338,7 +335,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [3,2] km**2
+    # CZ_Y [km**2]
     # OMM
     def CZ_Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
@@ -346,7 +343,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [3,3] km**2
+    # CZ_Z [km**2]
     # OMM
     def CZ_Z(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
@@ -354,7 +351,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [4,1] km**2/s
+    # CX_DOT_X [km**2/s]
     # OMM
     def CX_DOT_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
@@ -362,7 +359,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [4,2] km**2/s
+    # CX_DOT_Y [km**2/s]
     # OMM
     def CX_DOT_Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
@@ -370,7 +367,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [4,3] km**2/s
+    # CX_DOT_Z [km**2/s]
     # OMM
     def CX_DOT_Z(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
@@ -378,7 +375,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [4,4] km**2/s**2
+    # CX_DOT_X_DOT [km**2/s**2]
     # OMM
     def CX_DOT_X_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
@@ -386,7 +383,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [5,1] km**2/s
+    # CY_DOT_X [km**2/s]
     # OMM
     def CY_DOT_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
@@ -394,7 +391,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [5,2] km**2/s
+    # CY_DOT_Y [km**2/s]
     # OMM
     def CY_DOT_Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
@@ -402,7 +399,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [5,3] km**2/s
+    # CY_DOT_Z [km**2/s]
     # OMM
     def CY_DOT_Z(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
@@ -410,7 +407,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [5,4] km**2/s**2
+    # CY_DOT_X_DOT [km**2/s**2]
     # OMM
     def CY_DOT_X_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
@@ -418,7 +415,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [5,5] km**2/s**2
+    # CY_DOT_Y_DOT [km**2/s**2]
     # OMM
     def CY_DOT_Y_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
@@ -426,7 +423,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [6,1] km**2/s
+    # CZ_DOT_X [km**2/s]
     # OMM
     def CZ_DOT_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
@@ -434,7 +431,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [6,2] km**2/s
+    # CZ_DOT_Y [km**2/s]
     # OMM
     def CZ_DOT_Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
@@ -442,7 +439,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [6,3] km**2/s
+    # CZ_DOT_Z [km**2/s]
     # OMM
     def CZ_DOT_Z(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
@@ -450,7 +447,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [6,4] km**2/s**2
+    # CZ_DOT_X_DOT [km**2/s**2]
     # OMM
     def CZ_DOT_X_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
@@ -458,7 +455,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [6,5] km**2/s**2
+    # CZ_DOT_Y_DOT [km**2/s**2]
     # OMM
     def CZ_DOT_Y_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
@@ -466,7 +463,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Covariance matrix [6,6] km**2/s**2
+    # CZ_DOT_Z_DOT [km**2/s**2]
     # OMM
     def CZ_DOT_Z_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
@@ -474,7 +471,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # User defined parameter, must be described in an ICD
+    # USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
     # OMM
     def USER_DEFINED_BIP_0044_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
@@ -482,7 +479,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # User defined parameter, must be described in an ICD
+    # USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
     # OMM
     def USER_DEFINED_OBJECT_DESIGNATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
@@ -490,7 +487,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # User defined parameter, must be described in an ICD
+    # USER_DEFINED_EARTH_MODEL [O, units per ICD]
     # OMM
     def USER_DEFINED_EARTH_MODEL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
@@ -498,7 +495,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # User defined parameter, must be described in an ICD
+    # USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
     # OMM
     def USER_DEFINED_EPOCH_TIMESTAMP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
@@ -506,7 +503,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # User defined parameter, must be described in an ICD
+    # USER_DEFINED_MICROSECONDS [O, units per ICD]
     # OMM
     def USER_DEFINED_MICROSECONDS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))

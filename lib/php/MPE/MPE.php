@@ -41,14 +41,14 @@ class MPE extends Table
         return $this;
     }
 
-    /// Unique ID as a String
+    /// Unique ID as a String [no units]
     public function getENTITY_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+    /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
     /**
      * @return double
      */
@@ -58,7 +58,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Semi-major axis in km or mean motion in rev/day
+    /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
     /**
      * @return double
      */
@@ -68,7 +68,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Eccentricity
+    /// Eccentricity (unitless)
     /**
      * @return double
      */
@@ -78,7 +78,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Inclination
+    /// Inclination in degrees
     /**
      * @return double
      */
@@ -88,7 +88,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Right ascension of ascending node
+    /// Right ascension of ascending node in degrees
     /**
      * @return double
      */
@@ -98,7 +98,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Argument of pericenter
+    /// Argument of pericenter in degrees
     /**
      * @return double
      */
@@ -108,7 +108,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Mean anomaly
+    /// Mean anomaly in degrees
     /**
      * @return double
      */
@@ -118,7 +118,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+    /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
     /**
      * @return double
      */
@@ -128,7 +128,7 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Description of the Mean Element Theory. (SGP4,DSST,USM)
+    /// Description of the Mean Element Theory (SGP4, DSST, USM)
     /**
      * @return sbyte
      */

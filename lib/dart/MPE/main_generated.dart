@@ -20,25 +20,25 @@ class MPE {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique ID as a String
+  ///  Unique ID as a String [no units]
   String? get ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Epoch of Mean Keplerian elements. (UNIX TimeStamp)
+  ///  Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
   double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  Semi-major axis in km or mean motion in rev/day
+  ///  Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
   double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///  Eccentricity
+  ///  Eccentricity (unitless)
   double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Inclination
+  ///  Inclination in degrees
   double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  ///  Right ascension of ascending node
+  ///  Right ascension of ascending node in degrees
   double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  ///  Argument of pericenter
+  ///  Argument of pericenter in degrees
   double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  ///  Mean anomaly
+  ///  Mean anomaly in degrees
   double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  ///  SGP/SGP4 drag-like coefficient (in units 1/[Earth radii])
+  ///  SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  ///  Description of the Mean Element Theory. (SGP4,DSST,USM)
+  ///  Description of the Mean Element Theory (SGP4, DSST, USM)
   MeanElementTheory get MEAN_ELEMENT_THEORY => MeanElementTheory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
 
   @override
