@@ -34,5 +34,6 @@ class RecordType private constructor() {
         const val BOV: UByte = 28u
         const val LDM: UByte = 29u
         const val TDM: UByte = 30u
+        const val SPW: UByte = 31u
     }
 }

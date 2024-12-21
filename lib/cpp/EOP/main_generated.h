@@ -16,8 +16,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct EOP;
 struct EOPBuilder;
 
-struct EOPCOLLECTION;
-struct EOPCOLLECTIONBuilder;
+struct EOPCollection;
+struct EOPCollectionBuilder;
 
 enum DataType : int8_t {
   DataType_OBSERVED = 0,
@@ -55,52 +55,62 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_DATE = 4,
     VT_MJD = 6,
-    VT_X_POLE_WANDER_RADIANS = 8,
-    VT_Y_POLE_WANDER_RADIANS = 10,
-    VT_X_CELESTIAL_POLE_OFFSET_RADIANS = 12,
-    VT_Y_CELESTIAL_POLE_OFFSET_RADIANS = 14,
-    VT_UT1_MINUS_UTC_SECONDS = 16,
-    VT_TAI_MINUS_UTC_SECONDS = 18,
-    VT_LENGTH_OF_DAY_CORRECTION_SECONDS = 20,
-    VT_DATA_TYPE = 22
+    VT_X = 8,
+    VT_Y = 10,
+    VT_UT1_MINUS_UTC = 12,
+    VT_LOD = 14,
+    VT_DPSI = 16,
+    VT_DEPS = 18,
+    VT_DX = 20,
+    VT_DY = 22,
+    VT_DAT = 24,
+    VT_DATA_TYPE = 26
   };
-  ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+  /// Date in ISO 8601 format
   const ::flatbuffers::String *DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DATE);
   }
-  ///  Modified Julian Date in UTC, e.g., 58119
+  /// Modified Julian Date
   uint32_t MJD() const {
     return GetField<uint32_t>(VT_MJD, 0);
   }
-  ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
-  float X_POLE_WANDER_RADIANS() const {
-    return GetField<float>(VT_X_POLE_WANDER_RADIANS, 0.0f);
+  /// x pole coordinate in arcseconds
+  float X() const {
+    return GetField<float>(VT_X, 0.0f);
   }
-  ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
-  float Y_POLE_WANDER_RADIANS() const {
-    return GetField<float>(VT_Y_POLE_WANDER_RADIANS, 0.0f);
+  /// y pole coordinate in arcseconds
+  float Y() const {
+    return GetField<float>(VT_Y, 0.0f);
   }
-  ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
-  float X_CELESTIAL_POLE_OFFSET_RADIANS() const {
-    return GetField<float>(VT_X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f);
+  /// UT1-UTC in seconds
+  float UT1_MINUS_UTC() const {
+    return GetField<float>(VT_UT1_MINUS_UTC, 0.0f);
   }
-  ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
-  float Y_CELESTIAL_POLE_OFFSET_RADIANS() const {
-    return GetField<float>(VT_Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f);
+  /// Length of Day correction in seconds
+  float LOD() const {
+    return GetField<float>(VT_LOD, 0.0f);
   }
-  ///  UT1 minus UTC in seconds, e.g., 0.2163567
-  float UT1_MINUS_UTC_SECONDS() const {
-    return GetField<float>(VT_UT1_MINUS_UTC_SECONDS, 0.0f);
+  /// Nutation correction in longitude (δΔψ) in arcseconds
+  float DPSI() const {
+    return GetField<float>(VT_DPSI, 0.0f);
   }
-  ///  TAI minus UTC in seconds, e.g., 37
-  uint16_t TAI_MINUS_UTC_SECONDS() const {
-    return GetField<uint16_t>(VT_TAI_MINUS_UTC_SECONDS, 0);
+  /// Nutation correction in obliquity (δΔε) in arcseconds
+  float DEPS() const {
+    return GetField<float>(VT_DEPS, 0.0f);
   }
-  ///  Correction to Length of Day in seconds, e.g., 8.094E-4
-  float LENGTH_OF_DAY_CORRECTION_SECONDS() const {
-    return GetField<float>(VT_LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0f);
+  /// Celestial pole offset in x (δX) in arcseconds
+  float DX() const {
+    return GetField<float>(VT_DX, 0.0f);
   }
-  ///  Data type (O = Observed, P = Predicted)
+  /// Celestial pole offset in y (δY) in arcseconds
+  float DY() const {
+    return GetField<float>(VT_DY, 0.0f);
+  }
+  /// Delta Atomic Time (TAI-UTC) in seconds
+  uint16_t DAT() const {
+    return GetField<uint16_t>(VT_DAT, 0);
+  }
+  /// Data type (O = Observed, P = Predicted)
   DataType DATA_TYPE() const {
     return static_cast<DataType>(GetField<int8_t>(VT_DATA_TYPE, 0));
   }
@@ -109,13 +119,15 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_DATE) &&
            verifier.VerifyString(DATE()) &&
            VerifyField<uint32_t>(verifier, VT_MJD, 4) &&
-           VerifyField<float>(verifier, VT_X_POLE_WANDER_RADIANS, 4) &&
-           VerifyField<float>(verifier, VT_Y_POLE_WANDER_RADIANS, 4) &&
-           VerifyField<float>(verifier, VT_X_CELESTIAL_POLE_OFFSET_RADIANS, 4) &&
-           VerifyField<float>(verifier, VT_Y_CELESTIAL_POLE_OFFSET_RADIANS, 4) &&
-           VerifyField<float>(verifier, VT_UT1_MINUS_UTC_SECONDS, 4) &&
-           VerifyField<uint16_t>(verifier, VT_TAI_MINUS_UTC_SECONDS, 2) &&
-           VerifyField<float>(verifier, VT_LENGTH_OF_DAY_CORRECTION_SECONDS, 4) &&
+           VerifyField<float>(verifier, VT_X, 4) &&
+           VerifyField<float>(verifier, VT_Y, 4) &&
+           VerifyField<float>(verifier, VT_UT1_MINUS_UTC, 4) &&
+           VerifyField<float>(verifier, VT_LOD, 4) &&
+           VerifyField<float>(verifier, VT_DPSI, 4) &&
+           VerifyField<float>(verifier, VT_DEPS, 4) &&
+           VerifyField<float>(verifier, VT_DX, 4) &&
+           VerifyField<float>(verifier, VT_DY, 4) &&
+           VerifyField<uint16_t>(verifier, VT_DAT, 2) &&
            VerifyField<int8_t>(verifier, VT_DATA_TYPE, 1) &&
            verifier.EndTable();
   }
@@ -131,26 +143,32 @@ struct EOPBuilder {
   void add_MJD(uint32_t MJD) {
     fbb_.AddElement<uint32_t>(EOP::VT_MJD, MJD, 0);
   }
-  void add_X_POLE_WANDER_RADIANS(float X_POLE_WANDER_RADIANS) {
-    fbb_.AddElement<float>(EOP::VT_X_POLE_WANDER_RADIANS, X_POLE_WANDER_RADIANS, 0.0f);
+  void add_X(float X) {
+    fbb_.AddElement<float>(EOP::VT_X, X, 0.0f);
   }
-  void add_Y_POLE_WANDER_RADIANS(float Y_POLE_WANDER_RADIANS) {
-    fbb_.AddElement<float>(EOP::VT_Y_POLE_WANDER_RADIANS, Y_POLE_WANDER_RADIANS, 0.0f);
+  void add_Y(float Y) {
+    fbb_.AddElement<float>(EOP::VT_Y, Y, 0.0f);
   }
-  void add_X_CELESTIAL_POLE_OFFSET_RADIANS(float X_CELESTIAL_POLE_OFFSET_RADIANS) {
-    fbb_.AddElement<float>(EOP::VT_X_CELESTIAL_POLE_OFFSET_RADIANS, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f);
+  void add_UT1_MINUS_UTC(float UT1_MINUS_UTC) {
+    fbb_.AddElement<float>(EOP::VT_UT1_MINUS_UTC, UT1_MINUS_UTC, 0.0f);
   }
-  void add_Y_CELESTIAL_POLE_OFFSET_RADIANS(float Y_CELESTIAL_POLE_OFFSET_RADIANS) {
-    fbb_.AddElement<float>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f);
+  void add_LOD(float LOD) {
+    fbb_.AddElement<float>(EOP::VT_LOD, LOD, 0.0f);
   }
-  void add_UT1_MINUS_UTC_SECONDS(float UT1_MINUS_UTC_SECONDS) {
-    fbb_.AddElement<float>(EOP::VT_UT1_MINUS_UTC_SECONDS, UT1_MINUS_UTC_SECONDS, 0.0f);
+  void add_DPSI(float DPSI) {
+    fbb_.AddElement<float>(EOP::VT_DPSI, DPSI, 0.0f);
   }
-  void add_TAI_MINUS_UTC_SECONDS(uint16_t TAI_MINUS_UTC_SECONDS) {
-    fbb_.AddElement<uint16_t>(EOP::VT_TAI_MINUS_UTC_SECONDS, TAI_MINUS_UTC_SECONDS, 0);
+  void add_DEPS(float DEPS) {
+    fbb_.AddElement<float>(EOP::VT_DEPS, DEPS, 0.0f);
   }
-  void add_LENGTH_OF_DAY_CORRECTION_SECONDS(float LENGTH_OF_DAY_CORRECTION_SECONDS) {
-    fbb_.AddElement<float>(EOP::VT_LENGTH_OF_DAY_CORRECTION_SECONDS, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0f);
+  void add_DX(float DX) {
+    fbb_.AddElement<float>(EOP::VT_DX, DX, 0.0f);
+  }
+  void add_DY(float DY) {
+    fbb_.AddElement<float>(EOP::VT_DY, DY, 0.0f);
+  }
+  void add_DAT(uint16_t DAT) {
+    fbb_.AddElement<uint16_t>(EOP::VT_DAT, DAT, 0);
   }
   void add_DATA_TYPE(DataType DATA_TYPE) {
     fbb_.AddElement<int8_t>(EOP::VT_DATA_TYPE, static_cast<int8_t>(DATA_TYPE), 0);
@@ -170,24 +188,28 @@ inline ::flatbuffers::Offset<EOP> CreateEOP(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> DATE = 0,
     uint32_t MJD = 0,
-    float X_POLE_WANDER_RADIANS = 0.0f,
-    float Y_POLE_WANDER_RADIANS = 0.0f,
-    float X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f,
-    float Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f,
-    float UT1_MINUS_UTC_SECONDS = 0.0f,
-    uint16_t TAI_MINUS_UTC_SECONDS = 0,
-    float LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f,
+    float X = 0.0f,
+    float Y = 0.0f,
+    float UT1_MINUS_UTC = 0.0f,
+    float LOD = 0.0f,
+    float DPSI = 0.0f,
+    float DEPS = 0.0f,
+    float DX = 0.0f,
+    float DY = 0.0f,
+    uint16_t DAT = 0,
     DataType DATA_TYPE = DataType_OBSERVED) {
   EOPBuilder builder_(_fbb);
-  builder_.add_LENGTH_OF_DAY_CORRECTION_SECONDS(LENGTH_OF_DAY_CORRECTION_SECONDS);
-  builder_.add_UT1_MINUS_UTC_SECONDS(UT1_MINUS_UTC_SECONDS);
-  builder_.add_Y_CELESTIAL_POLE_OFFSET_RADIANS(Y_CELESTIAL_POLE_OFFSET_RADIANS);
-  builder_.add_X_CELESTIAL_POLE_OFFSET_RADIANS(X_CELESTIAL_POLE_OFFSET_RADIANS);
-  builder_.add_Y_POLE_WANDER_RADIANS(Y_POLE_WANDER_RADIANS);
-  builder_.add_X_POLE_WANDER_RADIANS(X_POLE_WANDER_RADIANS);
+  builder_.add_DY(DY);
+  builder_.add_DX(DX);
+  builder_.add_DEPS(DEPS);
+  builder_.add_DPSI(DPSI);
+  builder_.add_LOD(LOD);
+  builder_.add_UT1_MINUS_UTC(UT1_MINUS_UTC);
+  builder_.add_Y(Y);
+  builder_.add_X(X);
   builder_.add_MJD(MJD);
   builder_.add_DATE(DATE);
-  builder_.add_TAI_MINUS_UTC_SECONDS(TAI_MINUS_UTC_SECONDS);
+  builder_.add_DAT(DAT);
   builder_.add_DATA_TYPE(DATA_TYPE);
   return builder_.Finish();
 }
@@ -196,31 +218,35 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *DATE = nullptr,
     uint32_t MJD = 0,
-    float X_POLE_WANDER_RADIANS = 0.0f,
-    float Y_POLE_WANDER_RADIANS = 0.0f,
-    float X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f,
-    float Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f,
-    float UT1_MINUS_UTC_SECONDS = 0.0f,
-    uint16_t TAI_MINUS_UTC_SECONDS = 0,
-    float LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f,
+    float X = 0.0f,
+    float Y = 0.0f,
+    float UT1_MINUS_UTC = 0.0f,
+    float LOD = 0.0f,
+    float DPSI = 0.0f,
+    float DEPS = 0.0f,
+    float DX = 0.0f,
+    float DY = 0.0f,
+    uint16_t DAT = 0,
     DataType DATA_TYPE = DataType_OBSERVED) {
   auto DATE__ = DATE ? _fbb.CreateString(DATE) : 0;
   return CreateEOP(
       _fbb,
       DATE__,
       MJD,
-      X_POLE_WANDER_RADIANS,
-      Y_POLE_WANDER_RADIANS,
-      X_CELESTIAL_POLE_OFFSET_RADIANS,
-      Y_CELESTIAL_POLE_OFFSET_RADIANS,
-      UT1_MINUS_UTC_SECONDS,
-      TAI_MINUS_UTC_SECONDS,
-      LENGTH_OF_DAY_CORRECTION_SECONDS,
+      X,
+      Y,
+      UT1_MINUS_UTC,
+      LOD,
+      DPSI,
+      DEPS,
+      DX,
+      DY,
+      DAT,
       DATA_TYPE);
 }
 
-struct EOPCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef EOPCOLLECTIONBuilder Builder;
+struct EOPCollection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef EOPCollectionBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RECORDS = 4
   };
@@ -236,37 +262,37 @@ struct EOPCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct EOPCOLLECTIONBuilder {
-  typedef EOPCOLLECTION Table;
+struct EOPCollectionBuilder {
+  typedef EOPCollection Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOP>>> RECORDS) {
-    fbb_.AddOffset(EOPCOLLECTION::VT_RECORDS, RECORDS);
+    fbb_.AddOffset(EOPCollection::VT_RECORDS, RECORDS);
   }
-  explicit EOPCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit EOPCollectionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<EOPCOLLECTION> Finish() {
+  ::flatbuffers::Offset<EOPCollection> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<EOPCOLLECTION>(end);
+    auto o = ::flatbuffers::Offset<EOPCollection>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<EOPCOLLECTION> CreateEOPCOLLECTION(
+inline ::flatbuffers::Offset<EOPCollection> CreateEOPCollection(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOP>>> RECORDS = 0) {
-  EOPCOLLECTIONBuilder builder_(_fbb);
+  EOPCollectionBuilder builder_(_fbb);
   builder_.add_RECORDS(RECORDS);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<EOPCOLLECTION> CreateEOPCOLLECTIONDirect(
+inline ::flatbuffers::Offset<EOPCollection> CreateEOPCollectionDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const std::vector<::flatbuffers::Offset<EOP>> *RECORDS = nullptr) {
   auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<EOP>>(*RECORDS) : 0;
-  return CreateEOPCOLLECTION(
+  return CreateEOPCollection(
       _fbb,
       RECORDS__);
 }

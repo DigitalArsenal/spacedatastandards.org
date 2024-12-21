@@ -34,6 +34,7 @@ class RecordType(object):
     BOV = 28
     LDM = 29
     TDM = 30
+    SPW = 31
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -129,4 +130,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.TDM:
         import TDM
         return TDM.TDMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SPW:
+        import SPW
+        return SPW.SPWT.InitFromBuf(table.Bytes, table.Pos)
     return None

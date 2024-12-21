@@ -30,7 +30,7 @@ class EOP : Table() {
         return this
     }
     /**
-     *  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+     * Date in ISO 8601 format
      */
     val DATE : String?
         get() {
@@ -44,7 +44,7 @@ class EOP : Table() {
     val DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     *  Modified Julian Date in UTC, e.g., 58119
+     * Modified Julian Date
      */
     val MJD : UInt
         get() {
@@ -52,67 +52,83 @@ class EOP : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     *  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+     * x pole coordinate in arcseconds
      */
-    val X_POLE_WANDER_RADIANS : Float
+    val X : Float
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+     * y pole coordinate in arcseconds
      */
-    val Y_POLE_WANDER_RADIANS : Float
+    val Y : Float
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+     * UT1-UTC in seconds
      */
-    val X_CELESTIAL_POLE_OFFSET_RADIANS : Float
+    val UT1_MINUS_UTC : Float
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+     * Length of Day correction in seconds
      */
-    val Y_CELESTIAL_POLE_OFFSET_RADIANS : Float
+    val LOD : Float
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  UT1 minus UTC in seconds, e.g., 0.2163567
+     * Nutation correction in longitude (δΔψ) in arcseconds
      */
-    val UT1_MINUS_UTC_SECONDS : Float
+    val DPSI : Float
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  TAI minus UTC in seconds, e.g., 37
+     * Nutation correction in obliquity (δΔε) in arcseconds
      */
-    val TAI_MINUS_UTC_SECONDS : UShort
+    val DEPS : Float
         get() {
             val o = __offset(18)
-            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  Correction to Length of Day in seconds, e.g., 8.094E-4
+     * Celestial pole offset in x (δX) in arcseconds
      */
-    val LENGTH_OF_DAY_CORRECTION_SECONDS : Float
+    val DX : Float
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     *  Data type (O = Observed, P = Predicted)
+     * Celestial pole offset in y (δY) in arcseconds
+     */
+    val DY : Float
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Delta Atomic Time (TAI-UTC) in seconds
+     */
+    val DAT : UShort
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Data type (O = Observed, P = Predicted)
      */
     val DATA_TYPE : Byte
         get() {
-            val o = __offset(22)
+            val o = __offset(26)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
@@ -123,31 +139,35 @@ class EOP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOP")
-        fun createEOP(builder: FlatBufferBuilder, DATEOffset: Int, MJD: UInt, X_POLE_WANDER_RADIANS: Float, Y_POLE_WANDER_RADIANS: Float, X_CELESTIAL_POLE_OFFSET_RADIANS: Float, Y_CELESTIAL_POLE_OFFSET_RADIANS: Float, UT1_MINUS_UTC_SECONDS: Float, TAI_MINUS_UTC_SECONDS: UShort, LENGTH_OF_DAY_CORRECTION_SECONDS: Float, DATA_TYPE: Byte) : Int {
-            builder.startTable(10)
-            addLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS)
-            addUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS)
-            addY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS)
-            addX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS)
-            addY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS)
-            addX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS)
+        fun createEOP(builder: FlatBufferBuilder, DATEOffset: Int, MJD: UInt, X: Float, Y: Float, UT1_MINUS_UTC: Float, LOD: Float, DPSI: Float, DEPS: Float, DX: Float, DY: Float, DAT: UShort, DATA_TYPE: Byte) : Int {
+            builder.startTable(12)
+            addDY(builder, DY)
+            addDX(builder, DX)
+            addDEPS(builder, DEPS)
+            addDPSI(builder, DPSI)
+            addLOD(builder, LOD)
+            addUT1_MINUS_UTC(builder, UT1_MINUS_UTC)
+            addY(builder, Y)
+            addX(builder, X)
             addMJD(builder, MJD)
             addDATE(builder, DATEOffset)
-            addTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS)
+            addDAT(builder, DAT)
             addDATA_TYPE(builder, DATA_TYPE)
             return endEOP(builder)
         }
-        fun startEOP(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startEOP(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addDATE(builder: FlatBufferBuilder, DATE: Int) = builder.addOffset(0, DATE, 0)
         fun addMJD(builder: FlatBufferBuilder, MJD: UInt) = builder.addInt(1, MJD.toInt(), 0)
-        fun addX_POLE_WANDER_RADIANS(builder: FlatBufferBuilder, X_POLE_WANDER_RADIANS: Float) = builder.addFloat(2, X_POLE_WANDER_RADIANS, 0.0)
-        fun addY_POLE_WANDER_RADIANS(builder: FlatBufferBuilder, Y_POLE_WANDER_RADIANS: Float) = builder.addFloat(3, Y_POLE_WANDER_RADIANS, 0.0)
-        fun addX_CELESTIAL_POLE_OFFSET_RADIANS(builder: FlatBufferBuilder, X_CELESTIAL_POLE_OFFSET_RADIANS: Float) = builder.addFloat(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
-        fun addY_CELESTIAL_POLE_OFFSET_RADIANS(builder: FlatBufferBuilder, Y_CELESTIAL_POLE_OFFSET_RADIANS: Float) = builder.addFloat(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
-        fun addUT1_MINUS_UTC_SECONDS(builder: FlatBufferBuilder, UT1_MINUS_UTC_SECONDS: Float) = builder.addFloat(6, UT1_MINUS_UTC_SECONDS, 0.0)
-        fun addTAI_MINUS_UTC_SECONDS(builder: FlatBufferBuilder, TAI_MINUS_UTC_SECONDS: UShort) = builder.addShort(7, TAI_MINUS_UTC_SECONDS.toShort(), 0)
-        fun addLENGTH_OF_DAY_CORRECTION_SECONDS(builder: FlatBufferBuilder, LENGTH_OF_DAY_CORRECTION_SECONDS: Float) = builder.addFloat(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0)
-        fun addDATA_TYPE(builder: FlatBufferBuilder, DATA_TYPE: Byte) = builder.addByte(9, DATA_TYPE, 0)
+        fun addX(builder: FlatBufferBuilder, X: Float) = builder.addFloat(2, X, 0.0)
+        fun addY(builder: FlatBufferBuilder, Y: Float) = builder.addFloat(3, Y, 0.0)
+        fun addUT1_MINUS_UTC(builder: FlatBufferBuilder, UT1_MINUS_UTC: Float) = builder.addFloat(4, UT1_MINUS_UTC, 0.0)
+        fun addLOD(builder: FlatBufferBuilder, LOD: Float) = builder.addFloat(5, LOD, 0.0)
+        fun addDPSI(builder: FlatBufferBuilder, DPSI: Float) = builder.addFloat(6, DPSI, 0.0)
+        fun addDEPS(builder: FlatBufferBuilder, DEPS: Float) = builder.addFloat(7, DEPS, 0.0)
+        fun addDX(builder: FlatBufferBuilder, DX: Float) = builder.addFloat(8, DX, 0.0)
+        fun addDY(builder: FlatBufferBuilder, DY: Float) = builder.addFloat(9, DY, 0.0)
+        fun addDAT(builder: FlatBufferBuilder, DAT: UShort) = builder.addShort(10, DAT.toShort(), 0)
+        fun addDATA_TYPE(builder: FlatBufferBuilder, DATA_TYPE: Byte) = builder.addByte(11, DATA_TYPE, 0)
         fun endEOP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

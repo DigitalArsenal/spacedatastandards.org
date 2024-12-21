@@ -23,7 +23,7 @@ class RecordTypeTypeId {
       value == null ? null : RecordTypeTypeId.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 30;
+  static const int maxValue = 31;
   static bool containsValue(int value) => values.containsKey(value);
 
   static const RecordTypeTypeId NONE = RecordTypeTypeId._(0);
@@ -57,6 +57,7 @@ class RecordTypeTypeId {
   static const RecordTypeTypeId BOV = RecordTypeTypeId._(28);
   static const RecordTypeTypeId LDM = RecordTypeTypeId._(29);
   static const RecordTypeTypeId TDM = RecordTypeTypeId._(30);
+  static const RecordTypeTypeId SPW = RecordTypeTypeId._(31);
   static const Map<int, RecordTypeTypeId> values = {
     0: NONE,
     1: CRM,
@@ -88,7 +89,8 @@ class RecordTypeTypeId {
     27: RFM,
     28: BOV,
     29: LDM,
-    30: TDM};
+    30: TDM,
+    31: SPW};
 
   static const fb.Reader<RecordTypeTypeId> reader = _RecordTypeTypeIdReader();
 
@@ -154,6 +156,7 @@ class Record {
       case 28: return BOV.reader.vTableGetNullable(_bc, _bcOffset, 6);
       case 29: return LDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
       case 30: return TDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 31: return SPW.reader.vTableGetNullable(_bc, _bcOffset, 6);
       default: return null;
     }
   }

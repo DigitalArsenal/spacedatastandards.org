@@ -32,6 +32,7 @@ import { ROC, ROCT } from './ROC.js';
 import { RecordType, unionToRecordType, unionListToRecordType } from './RecordType.js';
 import { SCM, SCMT } from './SCM.js';
 import { SIT, SITT } from './SIT.js';
+import { SPW, SPWT } from './SPW.js';
 import { TDM, TDMT } from './TDM.js';
 import { TIM, TIMT } from './TIM.js';
 import { VCM, VCMT } from './VCM.js';
@@ -114,7 +115,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null
+  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|SPWT|TDMT|TIMT|VCMT|null = null
 ){}
 
 

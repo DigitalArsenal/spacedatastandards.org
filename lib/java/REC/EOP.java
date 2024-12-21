@@ -30,84 +30,98 @@ public final class EOP extends Table {
   public EOP __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   *  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+   * Date in ISO 8601 format
    */
   public String DATE() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DATEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   *  Modified Julian Date in UTC, e.g., 58119
+   * Modified Julian Date
    */
   public long MJD() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   *  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+   * x pole coordinate in arcseconds
    */
-  public float X_POLE_WANDER_RADIANS() { int o = __offset(8); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float X() { int o = __offset(8); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+   * y pole coordinate in arcseconds
    */
-  public float Y_POLE_WANDER_RADIANS() { int o = __offset(10); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float Y() { int o = __offset(10); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+   * UT1-UTC in seconds
    */
-  public float X_CELESTIAL_POLE_OFFSET_RADIANS() { int o = __offset(12); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float UT1_MINUS_UTC() { int o = __offset(12); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+   * Length of Day correction in seconds
    */
-  public float Y_CELESTIAL_POLE_OFFSET_RADIANS() { int o = __offset(14); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOD() { int o = __offset(14); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  UT1 minus UTC in seconds, e.g., 0.2163567
+   * Nutation correction in longitude (δΔψ) in arcseconds
    */
-  public float UT1_MINUS_UTC_SECONDS() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float DPSI() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  TAI minus UTC in seconds, e.g., 37
+   * Nutation correction in obliquity (δΔε) in arcseconds
    */
-  public int TAI_MINUS_UTC_SECONDS() { int o = __offset(18); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  public float DEPS() { int o = __offset(18); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  Correction to Length of Day in seconds, e.g., 8.094E-4
+   * Celestial pole offset in x (δX) in arcseconds
    */
-  public float LENGTH_OF_DAY_CORRECTION_SECONDS() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float DX() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   *  Data type (O = Observed, P = Predicted)
+   * Celestial pole offset in y (δY) in arcseconds
    */
-  public byte DATA_TYPE() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public float DY() { int o = __offset(22); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Delta Atomic Time (TAI-UTC) in seconds
+   */
+  public int DAT() { int o = __offset(24); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Data type (O = Observed, P = Predicted)
+   */
+  public byte DATA_TYPE() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createEOP(FlatBufferBuilder builder,
       int DATEOffset,
       long MJD,
-      float X_POLE_WANDER_RADIANS,
-      float Y_POLE_WANDER_RADIANS,
-      float X_CELESTIAL_POLE_OFFSET_RADIANS,
-      float Y_CELESTIAL_POLE_OFFSET_RADIANS,
-      float UT1_MINUS_UTC_SECONDS,
-      int TAI_MINUS_UTC_SECONDS,
-      float LENGTH_OF_DAY_CORRECTION_SECONDS,
+      float X,
+      float Y,
+      float UT1_MINUS_UTC,
+      float LOD,
+      float DPSI,
+      float DEPS,
+      float DX,
+      float DY,
+      int DAT,
       byte DATA_TYPE) {
-    builder.startTable(10);
-    EOP.addLengthOfDayCorrectionSeconds(builder, LENGTH_OF_DAY_CORRECTION_SECONDS);
-    EOP.addUt1MinusUtcSeconds(builder, UT1_MINUS_UTC_SECONDS);
-    EOP.addYCelestialPoleOffsetRadians(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS);
-    EOP.addXCelestialPoleOffsetRadians(builder, X_CELESTIAL_POLE_OFFSET_RADIANS);
-    EOP.addYPoleWanderRadians(builder, Y_POLE_WANDER_RADIANS);
-    EOP.addXPoleWanderRadians(builder, X_POLE_WANDER_RADIANS);
+    builder.startTable(12);
+    EOP.addDy(builder, DY);
+    EOP.addDx(builder, DX);
+    EOP.addDeps(builder, DEPS);
+    EOP.addDpsi(builder, DPSI);
+    EOP.addLod(builder, LOD);
+    EOP.addUt1MinusUtc(builder, UT1_MINUS_UTC);
+    EOP.addY(builder, Y);
+    EOP.addX(builder, X);
     EOP.addMjd(builder, MJD);
     EOP.addDate(builder, DATEOffset);
-    EOP.addTaiMinusUtcSeconds(builder, TAI_MINUS_UTC_SECONDS);
+    EOP.addDat(builder, DAT);
     EOP.addDataType(builder, DATA_TYPE);
     return EOP.endEOP(builder);
   }
 
-  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addDate(FlatBufferBuilder builder, int DATEOffset) { builder.addOffset(0, DATEOffset, 0); }
   public static void addMjd(FlatBufferBuilder builder, long MJD) { builder.addInt(1, (int) MJD, (int) 0L); }
-  public static void addXPoleWanderRadians(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.addFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
-  public static void addYPoleWanderRadians(FlatBufferBuilder builder, float Y_POLE_WANDER_RADIANS) { builder.addFloat(3, Y_POLE_WANDER_RADIANS, 0.0f); }
-  public static void addXCelestialPoleOffsetRadians(FlatBufferBuilder builder, float X_CELESTIAL_POLE_OFFSET_RADIANS) { builder.addFloat(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f); }
-  public static void addYCelestialPoleOffsetRadians(FlatBufferBuilder builder, float Y_CELESTIAL_POLE_OFFSET_RADIANS) { builder.addFloat(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f); }
-  public static void addUt1MinusUtcSeconds(FlatBufferBuilder builder, float UT1_MINUS_UTC_SECONDS) { builder.addFloat(6, UT1_MINUS_UTC_SECONDS, 0.0f); }
-  public static void addTaiMinusUtcSeconds(FlatBufferBuilder builder, int TAI_MINUS_UTC_SECONDS) { builder.addShort(7, (short) TAI_MINUS_UTC_SECONDS, (short) 0); }
-  public static void addLengthOfDayCorrectionSeconds(FlatBufferBuilder builder, float LENGTH_OF_DAY_CORRECTION_SECONDS) { builder.addFloat(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0f); }
-  public static void addDataType(FlatBufferBuilder builder, byte DATA_TYPE) { builder.addByte(9, DATA_TYPE, 0); }
+  public static void addX(FlatBufferBuilder builder, float X) { builder.addFloat(2, X, 0.0f); }
+  public static void addY(FlatBufferBuilder builder, float Y) { builder.addFloat(3, Y, 0.0f); }
+  public static void addUt1MinusUtc(FlatBufferBuilder builder, float UT1_MINUS_UTC) { builder.addFloat(4, UT1_MINUS_UTC, 0.0f); }
+  public static void addLod(FlatBufferBuilder builder, float LOD) { builder.addFloat(5, LOD, 0.0f); }
+  public static void addDpsi(FlatBufferBuilder builder, float DPSI) { builder.addFloat(6, DPSI, 0.0f); }
+  public static void addDeps(FlatBufferBuilder builder, float DEPS) { builder.addFloat(7, DEPS, 0.0f); }
+  public static void addDx(FlatBufferBuilder builder, float DX) { builder.addFloat(8, DX, 0.0f); }
+  public static void addDy(FlatBufferBuilder builder, float DY) { builder.addFloat(9, DY, 0.0f); }
+  public static void addDat(FlatBufferBuilder builder, int DAT) { builder.addShort(10, (short) DAT, (short) 0); }
+  public static void addDataType(FlatBufferBuilder builder, byte DATA_TYPE) { builder.addByte(11, DATA_TYPE, 0); }
   public static int endEOP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

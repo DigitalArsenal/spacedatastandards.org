@@ -113,14 +113,16 @@ impl<'a> flatbuffers::Follow<'a> for EOP<'a> {
 impl<'a> EOP<'a> {
   pub const VT_DATE: flatbuffers::VOffsetT = 4;
   pub const VT_MJD: flatbuffers::VOffsetT = 6;
-  pub const VT_X_POLE_WANDER_RADIANS: flatbuffers::VOffsetT = 8;
-  pub const VT_Y_POLE_WANDER_RADIANS: flatbuffers::VOffsetT = 10;
-  pub const VT_X_CELESTIAL_POLE_OFFSET_RADIANS: flatbuffers::VOffsetT = 12;
-  pub const VT_Y_CELESTIAL_POLE_OFFSET_RADIANS: flatbuffers::VOffsetT = 14;
-  pub const VT_UT1_MINUS_UTC_SECONDS: flatbuffers::VOffsetT = 16;
-  pub const VT_TAI_MINUS_UTC_SECONDS: flatbuffers::VOffsetT = 18;
-  pub const VT_LENGTH_OF_DAY_CORRECTION_SECONDS: flatbuffers::VOffsetT = 20;
-  pub const VT_DATA_TYPE: flatbuffers::VOffsetT = 22;
+  pub const VT_X: flatbuffers::VOffsetT = 8;
+  pub const VT_Y: flatbuffers::VOffsetT = 10;
+  pub const VT_UT1_MINUS_UTC: flatbuffers::VOffsetT = 12;
+  pub const VT_LOD: flatbuffers::VOffsetT = 14;
+  pub const VT_DPSI: flatbuffers::VOffsetT = 16;
+  pub const VT_DEPS: flatbuffers::VOffsetT = 18;
+  pub const VT_DX: flatbuffers::VOffsetT = 20;
+  pub const VT_DY: flatbuffers::VOffsetT = 22;
+  pub const VT_DAT: flatbuffers::VOffsetT = 24;
+  pub const VT_DATA_TYPE: flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -132,15 +134,17 @@ impl<'a> EOP<'a> {
     args: &'args EOPArgs<'args>
   ) -> flatbuffers::WIPOffset<EOP<'bldr>> {
     let mut builder = EOPBuilder::new(_fbb);
-    builder.add_LENGTH_OF_DAY_CORRECTION_SECONDS(args.LENGTH_OF_DAY_CORRECTION_SECONDS);
-    builder.add_UT1_MINUS_UTC_SECONDS(args.UT1_MINUS_UTC_SECONDS);
-    builder.add_Y_CELESTIAL_POLE_OFFSET_RADIANS(args.Y_CELESTIAL_POLE_OFFSET_RADIANS);
-    builder.add_X_CELESTIAL_POLE_OFFSET_RADIANS(args.X_CELESTIAL_POLE_OFFSET_RADIANS);
-    builder.add_Y_POLE_WANDER_RADIANS(args.Y_POLE_WANDER_RADIANS);
-    builder.add_X_POLE_WANDER_RADIANS(args.X_POLE_WANDER_RADIANS);
+    builder.add_DY(args.DY);
+    builder.add_DX(args.DX);
+    builder.add_DEPS(args.DEPS);
+    builder.add_DPSI(args.DPSI);
+    builder.add_LOD(args.LOD);
+    builder.add_UT1_MINUS_UTC(args.UT1_MINUS_UTC);
+    builder.add_Y(args.Y);
+    builder.add_X(args.X);
     builder.add_MJD(args.MJD);
     if let Some(x) = args.DATE { builder.add_DATE(x); }
-    builder.add_TAI_MINUS_UTC_SECONDS(args.TAI_MINUS_UTC_SECONDS);
+    builder.add_DAT(args.DAT);
     builder.add_DATA_TYPE(args.DATA_TYPE);
     builder.finish()
   }
@@ -150,29 +154,33 @@ impl<'a> EOP<'a> {
       x.to_string()
     });
     let MJD = self.MJD();
-    let X_POLE_WANDER_RADIANS = self.X_POLE_WANDER_RADIANS();
-    let Y_POLE_WANDER_RADIANS = self.Y_POLE_WANDER_RADIANS();
-    let X_CELESTIAL_POLE_OFFSET_RADIANS = self.X_CELESTIAL_POLE_OFFSET_RADIANS();
-    let Y_CELESTIAL_POLE_OFFSET_RADIANS = self.Y_CELESTIAL_POLE_OFFSET_RADIANS();
-    let UT1_MINUS_UTC_SECONDS = self.UT1_MINUS_UTC_SECONDS();
-    let TAI_MINUS_UTC_SECONDS = self.TAI_MINUS_UTC_SECONDS();
-    let LENGTH_OF_DAY_CORRECTION_SECONDS = self.LENGTH_OF_DAY_CORRECTION_SECONDS();
+    let X = self.X();
+    let Y = self.Y();
+    let UT1_MINUS_UTC = self.UT1_MINUS_UTC();
+    let LOD = self.LOD();
+    let DPSI = self.DPSI();
+    let DEPS = self.DEPS();
+    let DX = self.DX();
+    let DY = self.DY();
+    let DAT = self.DAT();
     let DATA_TYPE = self.DATA_TYPE();
     EOPT {
       DATE,
       MJD,
-      X_POLE_WANDER_RADIANS,
-      Y_POLE_WANDER_RADIANS,
-      X_CELESTIAL_POLE_OFFSET_RADIANS,
-      Y_CELESTIAL_POLE_OFFSET_RADIANS,
-      UT1_MINUS_UTC_SECONDS,
-      TAI_MINUS_UTC_SECONDS,
-      LENGTH_OF_DAY_CORRECTION_SECONDS,
+      X,
+      Y,
+      UT1_MINUS_UTC,
+      LOD,
+      DPSI,
+      DEPS,
+      DX,
+      DY,
+      DAT,
       DATA_TYPE,
     }
   }
 
-  ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+  /// Date in ISO 8601 format
   #[inline]
   pub fn DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -180,7 +188,7 @@ impl<'a> EOP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOP::VT_DATE, None)}
   }
-  ///  Modified Julian Date in UTC, e.g., 58119
+  /// Modified Julian Date
   #[inline]
   pub fn MJD(&self) -> u32 {
     // Safety:
@@ -188,63 +196,79 @@ impl<'a> EOP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(EOP::VT_MJD, Some(0)).unwrap()}
   }
-  ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+  /// x pole coordinate in arcseconds
   #[inline]
-  pub fn X_POLE_WANDER_RADIANS(&self) -> f32 {
+  pub fn X(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(EOP::VT_X_POLE_WANDER_RADIANS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_X, Some(0.0)).unwrap()}
   }
-  ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+  /// y pole coordinate in arcseconds
   #[inline]
-  pub fn Y_POLE_WANDER_RADIANS(&self) -> f32 {
+  pub fn Y(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(EOP::VT_Y_POLE_WANDER_RADIANS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_Y, Some(0.0)).unwrap()}
   }
-  ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+  /// UT1-UTC in seconds
   #[inline]
-  pub fn X_CELESTIAL_POLE_OFFSET_RADIANS(&self) -> f32 {
+  pub fn UT1_MINUS_UTC(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(EOP::VT_X_CELESTIAL_POLE_OFFSET_RADIANS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_UT1_MINUS_UTC, Some(0.0)).unwrap()}
   }
-  ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+  /// Length of Day correction in seconds
   #[inline]
-  pub fn Y_CELESTIAL_POLE_OFFSET_RADIANS(&self) -> f32 {
+  pub fn LOD(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_LOD, Some(0.0)).unwrap()}
   }
-  ///  UT1 minus UTC in seconds, e.g., 0.2163567
+  /// Nutation correction in longitude (δΔψ) in arcseconds
   #[inline]
-  pub fn UT1_MINUS_UTC_SECONDS(&self) -> f32 {
+  pub fn DPSI(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(EOP::VT_UT1_MINUS_UTC_SECONDS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_DPSI, Some(0.0)).unwrap()}
   }
-  ///  TAI minus UTC in seconds, e.g., 37
+  /// Nutation correction in obliquity (δΔε) in arcseconds
   #[inline]
-  pub fn TAI_MINUS_UTC_SECONDS(&self) -> u16 {
+  pub fn DEPS(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(EOP::VT_TAI_MINUS_UTC_SECONDS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_DEPS, Some(0.0)).unwrap()}
   }
-  ///  Correction to Length of Day in seconds, e.g., 8.094E-4
+  /// Celestial pole offset in x (δX) in arcseconds
   #[inline]
-  pub fn LENGTH_OF_DAY_CORRECTION_SECONDS(&self) -> f32 {
+  pub fn DX(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(EOP::VT_LENGTH_OF_DAY_CORRECTION_SECONDS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f32>(EOP::VT_DX, Some(0.0)).unwrap()}
   }
-  ///  Data type (O = Observed, P = Predicted)
+  /// Celestial pole offset in y (δY) in arcseconds
+  #[inline]
+  pub fn DY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_DY, Some(0.0)).unwrap()}
+  }
+  /// Delta Atomic Time (TAI-UTC) in seconds
+  #[inline]
+  pub fn DAT(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(EOP::VT_DAT, Some(0)).unwrap()}
+  }
+  /// Data type (O = Observed, P = Predicted)
   #[inline]
   pub fn DATA_TYPE(&self) -> DataType {
     // Safety:
@@ -263,13 +287,15 @@ impl flatbuffers::Verifiable for EOP<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DATE", Self::VT_DATE, false)?
      .visit_field::<u32>("MJD", Self::VT_MJD, false)?
-     .visit_field::<f32>("X_POLE_WANDER_RADIANS", Self::VT_X_POLE_WANDER_RADIANS, false)?
-     .visit_field::<f32>("Y_POLE_WANDER_RADIANS", Self::VT_Y_POLE_WANDER_RADIANS, false)?
-     .visit_field::<f32>("X_CELESTIAL_POLE_OFFSET_RADIANS", Self::VT_X_CELESTIAL_POLE_OFFSET_RADIANS, false)?
-     .visit_field::<f32>("Y_CELESTIAL_POLE_OFFSET_RADIANS", Self::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS, false)?
-     .visit_field::<f32>("UT1_MINUS_UTC_SECONDS", Self::VT_UT1_MINUS_UTC_SECONDS, false)?
-     .visit_field::<u16>("TAI_MINUS_UTC_SECONDS", Self::VT_TAI_MINUS_UTC_SECONDS, false)?
-     .visit_field::<f32>("LENGTH_OF_DAY_CORRECTION_SECONDS", Self::VT_LENGTH_OF_DAY_CORRECTION_SECONDS, false)?
+     .visit_field::<f32>("X", Self::VT_X, false)?
+     .visit_field::<f32>("Y", Self::VT_Y, false)?
+     .visit_field::<f32>("UT1_MINUS_UTC", Self::VT_UT1_MINUS_UTC, false)?
+     .visit_field::<f32>("LOD", Self::VT_LOD, false)?
+     .visit_field::<f32>("DPSI", Self::VT_DPSI, false)?
+     .visit_field::<f32>("DEPS", Self::VT_DEPS, false)?
+     .visit_field::<f32>("DX", Self::VT_DX, false)?
+     .visit_field::<f32>("DY", Self::VT_DY, false)?
+     .visit_field::<u16>("DAT", Self::VT_DAT, false)?
      .visit_field::<DataType>("DATA_TYPE", Self::VT_DATA_TYPE, false)?
      .finish();
     Ok(())
@@ -278,13 +304,15 @@ impl flatbuffers::Verifiable for EOP<'_> {
 pub struct EOPArgs<'a> {
     pub DATE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MJD: u32,
-    pub X_POLE_WANDER_RADIANS: f32,
-    pub Y_POLE_WANDER_RADIANS: f32,
-    pub X_CELESTIAL_POLE_OFFSET_RADIANS: f32,
-    pub Y_CELESTIAL_POLE_OFFSET_RADIANS: f32,
-    pub UT1_MINUS_UTC_SECONDS: f32,
-    pub TAI_MINUS_UTC_SECONDS: u16,
-    pub LENGTH_OF_DAY_CORRECTION_SECONDS: f32,
+    pub X: f32,
+    pub Y: f32,
+    pub UT1_MINUS_UTC: f32,
+    pub LOD: f32,
+    pub DPSI: f32,
+    pub DEPS: f32,
+    pub DX: f32,
+    pub DY: f32,
+    pub DAT: u16,
     pub DATA_TYPE: DataType,
 }
 impl<'a> Default for EOPArgs<'a> {
@@ -293,13 +321,15 @@ impl<'a> Default for EOPArgs<'a> {
     EOPArgs {
       DATE: None,
       MJD: 0,
-      X_POLE_WANDER_RADIANS: 0.0,
-      Y_POLE_WANDER_RADIANS: 0.0,
-      X_CELESTIAL_POLE_OFFSET_RADIANS: 0.0,
-      Y_CELESTIAL_POLE_OFFSET_RADIANS: 0.0,
-      UT1_MINUS_UTC_SECONDS: 0.0,
-      TAI_MINUS_UTC_SECONDS: 0,
-      LENGTH_OF_DAY_CORRECTION_SECONDS: 0.0,
+      X: 0.0,
+      Y: 0.0,
+      UT1_MINUS_UTC: 0.0,
+      LOD: 0.0,
+      DPSI: 0.0,
+      DEPS: 0.0,
+      DX: 0.0,
+      DY: 0.0,
+      DAT: 0,
       DATA_TYPE: DataType::OBSERVED,
     }
   }
@@ -319,32 +349,40 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOPBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u32>(EOP::VT_MJD, MJD, 0);
   }
   #[inline]
-  pub fn add_X_POLE_WANDER_RADIANS(&mut self, X_POLE_WANDER_RADIANS: f32) {
-    self.fbb_.push_slot::<f32>(EOP::VT_X_POLE_WANDER_RADIANS, X_POLE_WANDER_RADIANS, 0.0);
+  pub fn add_X(&mut self, X: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_X, X, 0.0);
   }
   #[inline]
-  pub fn add_Y_POLE_WANDER_RADIANS(&mut self, Y_POLE_WANDER_RADIANS: f32) {
-    self.fbb_.push_slot::<f32>(EOP::VT_Y_POLE_WANDER_RADIANS, Y_POLE_WANDER_RADIANS, 0.0);
+  pub fn add_Y(&mut self, Y: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_Y, Y, 0.0);
   }
   #[inline]
-  pub fn add_X_CELESTIAL_POLE_OFFSET_RADIANS(&mut self, X_CELESTIAL_POLE_OFFSET_RADIANS: f32) {
-    self.fbb_.push_slot::<f32>(EOP::VT_X_CELESTIAL_POLE_OFFSET_RADIANS, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0);
+  pub fn add_UT1_MINUS_UTC(&mut self, UT1_MINUS_UTC: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_UT1_MINUS_UTC, UT1_MINUS_UTC, 0.0);
   }
   #[inline]
-  pub fn add_Y_CELESTIAL_POLE_OFFSET_RADIANS(&mut self, Y_CELESTIAL_POLE_OFFSET_RADIANS: f32) {
-    self.fbb_.push_slot::<f32>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_RADIANS, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0);
+  pub fn add_LOD(&mut self, LOD: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_LOD, LOD, 0.0);
   }
   #[inline]
-  pub fn add_UT1_MINUS_UTC_SECONDS(&mut self, UT1_MINUS_UTC_SECONDS: f32) {
-    self.fbb_.push_slot::<f32>(EOP::VT_UT1_MINUS_UTC_SECONDS, UT1_MINUS_UTC_SECONDS, 0.0);
+  pub fn add_DPSI(&mut self, DPSI: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_DPSI, DPSI, 0.0);
   }
   #[inline]
-  pub fn add_TAI_MINUS_UTC_SECONDS(&mut self, TAI_MINUS_UTC_SECONDS: u16) {
-    self.fbb_.push_slot::<u16>(EOP::VT_TAI_MINUS_UTC_SECONDS, TAI_MINUS_UTC_SECONDS, 0);
+  pub fn add_DEPS(&mut self, DEPS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_DEPS, DEPS, 0.0);
   }
   #[inline]
-  pub fn add_LENGTH_OF_DAY_CORRECTION_SECONDS(&mut self, LENGTH_OF_DAY_CORRECTION_SECONDS: f32) {
-    self.fbb_.push_slot::<f32>(EOP::VT_LENGTH_OF_DAY_CORRECTION_SECONDS, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0);
+  pub fn add_DX(&mut self, DX: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_DX, DX, 0.0);
+  }
+  #[inline]
+  pub fn add_DY(&mut self, DY: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_DY, DY, 0.0);
+  }
+  #[inline]
+  pub fn add_DAT(&mut self, DAT: u16) {
+    self.fbb_.push_slot::<u16>(EOP::VT_DAT, DAT, 0);
   }
   #[inline]
   pub fn add_DATA_TYPE(&mut self, DATA_TYPE: DataType) {
@@ -370,13 +408,15 @@ impl core::fmt::Debug for EOP<'_> {
     let mut ds = f.debug_struct("EOP");
       ds.field("DATE", &self.DATE());
       ds.field("MJD", &self.MJD());
-      ds.field("X_POLE_WANDER_RADIANS", &self.X_POLE_WANDER_RADIANS());
-      ds.field("Y_POLE_WANDER_RADIANS", &self.Y_POLE_WANDER_RADIANS());
-      ds.field("X_CELESTIAL_POLE_OFFSET_RADIANS", &self.X_CELESTIAL_POLE_OFFSET_RADIANS());
-      ds.field("Y_CELESTIAL_POLE_OFFSET_RADIANS", &self.Y_CELESTIAL_POLE_OFFSET_RADIANS());
-      ds.field("UT1_MINUS_UTC_SECONDS", &self.UT1_MINUS_UTC_SECONDS());
-      ds.field("TAI_MINUS_UTC_SECONDS", &self.TAI_MINUS_UTC_SECONDS());
-      ds.field("LENGTH_OF_DAY_CORRECTION_SECONDS", &self.LENGTH_OF_DAY_CORRECTION_SECONDS());
+      ds.field("X", &self.X());
+      ds.field("Y", &self.Y());
+      ds.field("UT1_MINUS_UTC", &self.UT1_MINUS_UTC());
+      ds.field("LOD", &self.LOD());
+      ds.field("DPSI", &self.DPSI());
+      ds.field("DEPS", &self.DEPS());
+      ds.field("DX", &self.DX());
+      ds.field("DY", &self.DY());
+      ds.field("DAT", &self.DAT());
       ds.field("DATA_TYPE", &self.DATA_TYPE());
       ds.finish()
   }
@@ -386,13 +426,15 @@ impl core::fmt::Debug for EOP<'_> {
 pub struct EOPT {
   pub DATE: Option<String>,
   pub MJD: u32,
-  pub X_POLE_WANDER_RADIANS: f32,
-  pub Y_POLE_WANDER_RADIANS: f32,
-  pub X_CELESTIAL_POLE_OFFSET_RADIANS: f32,
-  pub Y_CELESTIAL_POLE_OFFSET_RADIANS: f32,
-  pub UT1_MINUS_UTC_SECONDS: f32,
-  pub TAI_MINUS_UTC_SECONDS: u16,
-  pub LENGTH_OF_DAY_CORRECTION_SECONDS: f32,
+  pub X: f32,
+  pub Y: f32,
+  pub UT1_MINUS_UTC: f32,
+  pub LOD: f32,
+  pub DPSI: f32,
+  pub DEPS: f32,
+  pub DX: f32,
+  pub DY: f32,
+  pub DAT: u16,
   pub DATA_TYPE: DataType,
 }
 impl Default for EOPT {
@@ -400,13 +442,15 @@ impl Default for EOPT {
     Self {
       DATE: None,
       MJD: 0,
-      X_POLE_WANDER_RADIANS: 0.0,
-      Y_POLE_WANDER_RADIANS: 0.0,
-      X_CELESTIAL_POLE_OFFSET_RADIANS: 0.0,
-      Y_CELESTIAL_POLE_OFFSET_RADIANS: 0.0,
-      UT1_MINUS_UTC_SECONDS: 0.0,
-      TAI_MINUS_UTC_SECONDS: 0,
-      LENGTH_OF_DAY_CORRECTION_SECONDS: 0.0,
+      X: 0.0,
+      Y: 0.0,
+      UT1_MINUS_UTC: 0.0,
+      LOD: 0.0,
+      DPSI: 0.0,
+      DEPS: 0.0,
+      DX: 0.0,
+      DY: 0.0,
+      DAT: 0,
       DATA_TYPE: DataType::OBSERVED,
     }
   }
@@ -420,65 +464,69 @@ impl EOPT {
       _fbb.create_string(x)
     });
     let MJD = self.MJD;
-    let X_POLE_WANDER_RADIANS = self.X_POLE_WANDER_RADIANS;
-    let Y_POLE_WANDER_RADIANS = self.Y_POLE_WANDER_RADIANS;
-    let X_CELESTIAL_POLE_OFFSET_RADIANS = self.X_CELESTIAL_POLE_OFFSET_RADIANS;
-    let Y_CELESTIAL_POLE_OFFSET_RADIANS = self.Y_CELESTIAL_POLE_OFFSET_RADIANS;
-    let UT1_MINUS_UTC_SECONDS = self.UT1_MINUS_UTC_SECONDS;
-    let TAI_MINUS_UTC_SECONDS = self.TAI_MINUS_UTC_SECONDS;
-    let LENGTH_OF_DAY_CORRECTION_SECONDS = self.LENGTH_OF_DAY_CORRECTION_SECONDS;
+    let X = self.X;
+    let Y = self.Y;
+    let UT1_MINUS_UTC = self.UT1_MINUS_UTC;
+    let LOD = self.LOD;
+    let DPSI = self.DPSI;
+    let DEPS = self.DEPS;
+    let DX = self.DX;
+    let DY = self.DY;
+    let DAT = self.DAT;
     let DATA_TYPE = self.DATA_TYPE;
     EOP::create(_fbb, &EOPArgs{
       DATE,
       MJD,
-      X_POLE_WANDER_RADIANS,
-      Y_POLE_WANDER_RADIANS,
-      X_CELESTIAL_POLE_OFFSET_RADIANS,
-      Y_CELESTIAL_POLE_OFFSET_RADIANS,
-      UT1_MINUS_UTC_SECONDS,
-      TAI_MINUS_UTC_SECONDS,
-      LENGTH_OF_DAY_CORRECTION_SECONDS,
+      X,
+      Y,
+      UT1_MINUS_UTC,
+      LOD,
+      DPSI,
+      DEPS,
+      DX,
+      DY,
+      DAT,
       DATA_TYPE,
     })
   }
 }
-pub enum EOPCOLLECTIONOffset {}
+pub enum EOPCollectionOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-pub struct EOPCOLLECTION<'a> {
+pub struct EOPCollection<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
 
-impl<'a> flatbuffers::Follow<'a> for EOPCOLLECTION<'a> {
-  type Inner = EOPCOLLECTION<'a>;
+impl<'a> flatbuffers::Follow<'a> for EOPCollection<'a> {
+  type Inner = EOPCollection<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: flatbuffers::Table::new(buf, loc) }
   }
 }
 
-impl<'a> EOPCOLLECTION<'a> {
+impl<'a> EOPCollection<'a> {
   pub const VT_RECORDS: flatbuffers::VOffsetT = 4;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    EOPCOLLECTION { _tab: table }
+    EOPCollection { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args EOPCOLLECTIONArgs<'args>
-  ) -> flatbuffers::WIPOffset<EOPCOLLECTION<'bldr>> {
-    let mut builder = EOPCOLLECTIONBuilder::new(_fbb);
+    args: &'args EOPCollectionArgs<'args>
+  ) -> flatbuffers::WIPOffset<EOPCollection<'bldr>> {
+    let mut builder = EOPCollectionBuilder::new(_fbb);
     if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> EOPCOLLECTIONT {
+  pub fn unpack(&self) -> EOPCollectionT {
     let RECORDS = self.RECORDS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
-    EOPCOLLECTIONT {
+    EOPCollectionT {
       RECORDS,
     }
   }
@@ -488,11 +536,11 @@ impl<'a> EOPCOLLECTION<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EOP>>>>(EOPCOLLECTION::VT_RECORDS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EOP>>>>(EOPCollection::VT_RECORDS, None)}
   }
 }
 
-impl flatbuffers::Verifiable for EOPCOLLECTION<'_> {
+impl flatbuffers::Verifiable for EOPCollection<'_> {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -504,70 +552,70 @@ impl flatbuffers::Verifiable for EOPCOLLECTION<'_> {
     Ok(())
   }
 }
-pub struct EOPCOLLECTIONArgs<'a> {
+pub struct EOPCollectionArgs<'a> {
     pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<EOP<'a>>>>>,
 }
-impl<'a> Default for EOPCOLLECTIONArgs<'a> {
+impl<'a> Default for EOPCollectionArgs<'a> {
   #[inline]
   fn default() -> Self {
-    EOPCOLLECTIONArgs {
+    EOPCollectionArgs {
       RECORDS: None,
     }
   }
 }
 
-pub struct EOPCOLLECTIONBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+pub struct EOPCollectionBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
   fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
   start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOPCOLLECTIONBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOPCollectionBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<EOP<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOPCOLLECTION::VT_RECORDS, RECORDS);
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOPCollection::VT_RECORDS, RECORDS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOPCOLLECTIONBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOPCollectionBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    EOPCOLLECTIONBuilder {
+    EOPCollectionBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<EOPCOLLECTION<'a>> {
+  pub fn finish(self) -> flatbuffers::WIPOffset<EOPCollection<'a>> {
     let o = self.fbb_.end_table(self.start_);
     flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl core::fmt::Debug for EOPCOLLECTION<'_> {
+impl core::fmt::Debug for EOPCollection<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("EOPCOLLECTION");
+    let mut ds = f.debug_struct("EOPCollection");
       ds.field("RECORDS", &self.RECORDS());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct EOPCOLLECTIONT {
+pub struct EOPCollectionT {
   pub RECORDS: Option<Vec<EOPT>>,
 }
-impl Default for EOPCOLLECTIONT {
+impl Default for EOPCollectionT {
   fn default() -> Self {
     Self {
       RECORDS: None,
     }
   }
 }
-impl EOPCOLLECTIONT {
+impl EOPCollectionT {
   pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> flatbuffers::WIPOffset<EOPCOLLECTION<'b>> {
+  ) -> flatbuffers::WIPOffset<EOPCollection<'b>> {
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    EOPCOLLECTION::create(_fbb, &EOPCOLLECTIONArgs{
+    EOPCollection::create(_fbb, &EOPCollectionArgs{
       RECORDS,
     })
   }

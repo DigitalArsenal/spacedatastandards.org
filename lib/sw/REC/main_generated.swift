@@ -44,8 +44,9 @@ public enum RecordType: UInt8, UnionEnum {
   case bov = 28
   case ldm = 29
   case tdm = 30
+  case spw = 31
 
-  public static var max: RecordType { return .tdm }
+  public static var max: RecordType { return .spw }
   public static var min: RecordType { return .none_ }
 }
 
@@ -151,6 +152,8 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<LDM>.verify(&verifier, at: pos, of: LDM.self)
       case .tdm:
         try ForwardOffset<TDM>.verify(&verifier, at: pos, of: TDM.self)
+      case .spw:
+        try ForwardOffset<SPW>.verify(&verifier, at: pos, of: SPW.self)
       }
     })
     _v.finish()

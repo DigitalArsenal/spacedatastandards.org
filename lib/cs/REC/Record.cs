@@ -48,6 +48,7 @@ public struct Record : IFlatbufferObject
   public BOV ValueAsBOV() { return Value<BOV>().Value; }
   public LDM ValueAsLDM() { return Value<LDM>().Value; }
   public TDM ValueAsTDM() { return Value<TDM>().Value; }
+  public SPW ValueAsSPW() { return Value<SPW>().Value; }
 
   public static Offset<Record> CreateRecord(FlatBufferBuilder builder,
       RecordType value_type = RecordType.NONE,
@@ -164,6 +165,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.TDM:
         _o.Value.Value = this.Value<TDM>().HasValue ? this.Value<TDM>().Value.UnPack() : null;
+        break;
+      case RecordType.SPW:
+        _o.Value.Value = this.Value<SPW>().HasValue ? this.Value<SPW>().Value.UnPack() : null;
         break;
     }
   }

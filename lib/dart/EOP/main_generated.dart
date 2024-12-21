@@ -62,30 +62,34 @@ class EOP {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///   Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+  ///  Date in ISO 8601 format
   String? get DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///   Modified Julian Date in UTC, e.g., 58119
+  ///  Modified Julian Date
   int get MJD => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  ///   x component of Pole Wander in radians, e.g., 2.872908911518888E-7
-  double get X_POLE_WANDER_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  ///   y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
-  double get Y_POLE_WANDER_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///   x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
-  double get X_CELESTIAL_POLE_OFFSET_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  ///   y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
-  double get Y_CELESTIAL_POLE_OFFSET_RADIANS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  ///   UT1 minus UTC in seconds, e.g., 0.2163567
-  double get UT1_MINUS_UTC_SECONDS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  ///   TAI minus UTC in seconds, e.g., 37
-  int get TAI_MINUS_UTC_SECONDS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  ///   Correction to Length of Day in seconds, e.g., 8.094E-4
-  double get LENGTH_OF_DAY_CORRECTION_SECONDS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  ///   Data type (O = Observed, P = Predicted)
-  DataType get DATA_TYPE => DataType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  x pole coordinate in arcseconds
+  double get X => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  y pole coordinate in arcseconds
+  double get Y => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  UT1-UTC in seconds
+  double get UT1_MINUS_UTC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Length of Day correction in seconds
+  double get LOD => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Nutation correction in longitude (δΔψ) in arcseconds
+  double get DPSI => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Nutation correction in obliquity (δΔε) in arcseconds
+  double get DEPS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Celestial pole offset in x (δX) in arcseconds
+  double get DX => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Celestial pole offset in y (δY) in arcseconds
+  double get DY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Delta Atomic Time (TAI-UTC) in seconds
+  int get DAT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  ///  Data type (O = Observed, P = Predicted)
+  DataType get DATA_TYPE => DataType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
 
   @override
   String toString() {
-    return 'EOP{DATE: ${DATE}, MJD: ${MJD}, X_POLE_WANDER_RADIANS: ${X_POLE_WANDER_RADIANS}, Y_POLE_WANDER_RADIANS: ${Y_POLE_WANDER_RADIANS}, X_CELESTIAL_POLE_OFFSET_RADIANS: ${X_CELESTIAL_POLE_OFFSET_RADIANS}, Y_CELESTIAL_POLE_OFFSET_RADIANS: ${Y_CELESTIAL_POLE_OFFSET_RADIANS}, UT1_MINUS_UTC_SECONDS: ${UT1_MINUS_UTC_SECONDS}, TAI_MINUS_UTC_SECONDS: ${TAI_MINUS_UTC_SECONDS}, LENGTH_OF_DAY_CORRECTION_SECONDS: ${LENGTH_OF_DAY_CORRECTION_SECONDS}, DATA_TYPE: ${DATA_TYPE}}';
+    return 'EOP{DATE: ${DATE}, MJD: ${MJD}, X: ${X}, Y: ${Y}, UT1_MINUS_UTC: ${UT1_MINUS_UTC}, LOD: ${LOD}, DPSI: ${DPSI}, DEPS: ${DEPS}, DX: ${DX}, DY: ${DY}, DAT: ${DAT}, DATA_TYPE: ${DATA_TYPE}}';
   }
 }
 
@@ -103,7 +107,7 @@ class EOPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(12);
   }
 
   int addDateOffset(int? offset) {
@@ -114,36 +118,44 @@ class EOPBuilder {
     fbBuilder.addUint32(1, MJD);
     return fbBuilder.offset;
   }
-  int addXPoleWanderRadians(double? X_POLE_WANDER_RADIANS) {
-    fbBuilder.addFloat32(2, X_POLE_WANDER_RADIANS);
+  int addX(double? X) {
+    fbBuilder.addFloat32(2, X);
     return fbBuilder.offset;
   }
-  int addYPoleWanderRadians(double? Y_POLE_WANDER_RADIANS) {
-    fbBuilder.addFloat32(3, Y_POLE_WANDER_RADIANS);
+  int addY(double? Y) {
+    fbBuilder.addFloat32(3, Y);
     return fbBuilder.offset;
   }
-  int addXCelestialPoleOffsetRadians(double? X_CELESTIAL_POLE_OFFSET_RADIANS) {
-    fbBuilder.addFloat32(4, X_CELESTIAL_POLE_OFFSET_RADIANS);
+  int addUt1MinusUtc(double? UT1_MINUS_UTC) {
+    fbBuilder.addFloat32(4, UT1_MINUS_UTC);
     return fbBuilder.offset;
   }
-  int addYCelestialPoleOffsetRadians(double? Y_CELESTIAL_POLE_OFFSET_RADIANS) {
-    fbBuilder.addFloat32(5, Y_CELESTIAL_POLE_OFFSET_RADIANS);
+  int addLod(double? LOD) {
+    fbBuilder.addFloat32(5, LOD);
     return fbBuilder.offset;
   }
-  int addUt1MinusUtcSeconds(double? UT1_MINUS_UTC_SECONDS) {
-    fbBuilder.addFloat32(6, UT1_MINUS_UTC_SECONDS);
+  int addDpsi(double? DPSI) {
+    fbBuilder.addFloat32(6, DPSI);
     return fbBuilder.offset;
   }
-  int addTaiMinusUtcSeconds(int? TAI_MINUS_UTC_SECONDS) {
-    fbBuilder.addUint16(7, TAI_MINUS_UTC_SECONDS);
+  int addDeps(double? DEPS) {
+    fbBuilder.addFloat32(7, DEPS);
     return fbBuilder.offset;
   }
-  int addLengthOfDayCorrectionSeconds(double? LENGTH_OF_DAY_CORRECTION_SECONDS) {
-    fbBuilder.addFloat32(8, LENGTH_OF_DAY_CORRECTION_SECONDS);
+  int addDx(double? DX) {
+    fbBuilder.addFloat32(8, DX);
+    return fbBuilder.offset;
+  }
+  int addDy(double? DY) {
+    fbBuilder.addFloat32(9, DY);
+    return fbBuilder.offset;
+  }
+  int addDat(int? DAT) {
+    fbBuilder.addUint16(10, DAT);
     return fbBuilder.offset;
   }
   int addDataType(DataType? DATA_TYPE) {
-    fbBuilder.addInt8(9, DATA_TYPE?.value);
+    fbBuilder.addInt8(11, DATA_TYPE?.value);
     return fbBuilder.offset;
   }
 
@@ -155,36 +167,42 @@ class EOPBuilder {
 class EOPObjectBuilder extends fb.ObjectBuilder {
   final String? _DATE;
   final int? _MJD;
-  final double? _X_POLE_WANDER_RADIANS;
-  final double? _Y_POLE_WANDER_RADIANS;
-  final double? _X_CELESTIAL_POLE_OFFSET_RADIANS;
-  final double? _Y_CELESTIAL_POLE_OFFSET_RADIANS;
-  final double? _UT1_MINUS_UTC_SECONDS;
-  final int? _TAI_MINUS_UTC_SECONDS;
-  final double? _LENGTH_OF_DAY_CORRECTION_SECONDS;
+  final double? _X;
+  final double? _Y;
+  final double? _UT1_MINUS_UTC;
+  final double? _LOD;
+  final double? _DPSI;
+  final double? _DEPS;
+  final double? _DX;
+  final double? _DY;
+  final int? _DAT;
   final DataType? _DATA_TYPE;
 
   EOPObjectBuilder({
     String? DATE,
     int? MJD,
-    double? X_POLE_WANDER_RADIANS,
-    double? Y_POLE_WANDER_RADIANS,
-    double? X_CELESTIAL_POLE_OFFSET_RADIANS,
-    double? Y_CELESTIAL_POLE_OFFSET_RADIANS,
-    double? UT1_MINUS_UTC_SECONDS,
-    int? TAI_MINUS_UTC_SECONDS,
-    double? LENGTH_OF_DAY_CORRECTION_SECONDS,
+    double? X,
+    double? Y,
+    double? UT1_MINUS_UTC,
+    double? LOD,
+    double? DPSI,
+    double? DEPS,
+    double? DX,
+    double? DY,
+    int? DAT,
     DataType? DATA_TYPE,
   })
       : _DATE = DATE,
         _MJD = MJD,
-        _X_POLE_WANDER_RADIANS = X_POLE_WANDER_RADIANS,
-        _Y_POLE_WANDER_RADIANS = Y_POLE_WANDER_RADIANS,
-        _X_CELESTIAL_POLE_OFFSET_RADIANS = X_CELESTIAL_POLE_OFFSET_RADIANS,
-        _Y_CELESTIAL_POLE_OFFSET_RADIANS = Y_CELESTIAL_POLE_OFFSET_RADIANS,
-        _UT1_MINUS_UTC_SECONDS = UT1_MINUS_UTC_SECONDS,
-        _TAI_MINUS_UTC_SECONDS = TAI_MINUS_UTC_SECONDS,
-        _LENGTH_OF_DAY_CORRECTION_SECONDS = LENGTH_OF_DAY_CORRECTION_SECONDS,
+        _X = X,
+        _Y = Y,
+        _UT1_MINUS_UTC = UT1_MINUS_UTC,
+        _LOD = LOD,
+        _DPSI = DPSI,
+        _DEPS = DEPS,
+        _DX = DX,
+        _DY = DY,
+        _DAT = DAT,
         _DATA_TYPE = DATA_TYPE;
 
   /// Finish building, and store into the [fbBuilder].
@@ -192,17 +210,19 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? DATEOffset = _DATE == null ? null
         : fbBuilder.writeString(_DATE!);
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, DATEOffset);
     fbBuilder.addUint32(1, _MJD);
-    fbBuilder.addFloat32(2, _X_POLE_WANDER_RADIANS);
-    fbBuilder.addFloat32(3, _Y_POLE_WANDER_RADIANS);
-    fbBuilder.addFloat32(4, _X_CELESTIAL_POLE_OFFSET_RADIANS);
-    fbBuilder.addFloat32(5, _Y_CELESTIAL_POLE_OFFSET_RADIANS);
-    fbBuilder.addFloat32(6, _UT1_MINUS_UTC_SECONDS);
-    fbBuilder.addUint16(7, _TAI_MINUS_UTC_SECONDS);
-    fbBuilder.addFloat32(8, _LENGTH_OF_DAY_CORRECTION_SECONDS);
-    fbBuilder.addInt8(9, _DATA_TYPE?.value);
+    fbBuilder.addFloat32(2, _X);
+    fbBuilder.addFloat32(3, _Y);
+    fbBuilder.addFloat32(4, _UT1_MINUS_UTC);
+    fbBuilder.addFloat32(5, _LOD);
+    fbBuilder.addFloat32(6, _DPSI);
+    fbBuilder.addFloat32(7, _DEPS);
+    fbBuilder.addFloat32(8, _DX);
+    fbBuilder.addFloat32(9, _DY);
+    fbBuilder.addUint16(10, _DAT);
+    fbBuilder.addInt8(11, _DATA_TYPE?.value);
     return fbBuilder.endTable();
   }
 
@@ -214,14 +234,14 @@ class EOPObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class EOPCOLLECTION {
-  EOPCOLLECTION._(this._bc, this._bcOffset);
-  factory EOPCOLLECTION(List<int> bytes) {
+class Eopcollection {
+  Eopcollection._(this._bc, this._bcOffset);
+  factory Eopcollection(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<EOPCOLLECTION> reader = _EOPCOLLECTIONReader();
+  static const fb.Reader<Eopcollection> reader = _EopcollectionReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
@@ -230,20 +250,20 @@ class EOPCOLLECTION {
 
   @override
   String toString() {
-    return 'EOPCOLLECTION{RECORDS: ${RECORDS}}';
+    return 'Eopcollection{RECORDS: ${RECORDS}}';
   }
 }
 
-class _EOPCOLLECTIONReader extends fb.TableReader<EOPCOLLECTION> {
-  const _EOPCOLLECTIONReader();
+class _EopcollectionReader extends fb.TableReader<Eopcollection> {
+  const _EopcollectionReader();
 
   @override
-  EOPCOLLECTION createObject(fb.BufferContext bc, int offset) => 
-    EOPCOLLECTION._(bc, offset);
+  Eopcollection createObject(fb.BufferContext bc, int offset) => 
+    Eopcollection._(bc, offset);
 }
 
-class EOPCOLLECTIONBuilder {
-  EOPCOLLECTIONBuilder(this.fbBuilder);
+class EopcollectionBuilder {
+  EopcollectionBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -261,10 +281,10 @@ class EOPCOLLECTIONBuilder {
   }
 }
 
-class EOPCOLLECTIONObjectBuilder extends fb.ObjectBuilder {
+class EopcollectionObjectBuilder extends fb.ObjectBuilder {
   final List<EOPObjectBuilder>? _RECORDS;
 
-  EOPCOLLECTIONObjectBuilder({
+  EopcollectionObjectBuilder({
     List<EOPObjectBuilder>? RECORDS,
   })
       : _RECORDS = RECORDS;

@@ -34,6 +34,7 @@ class RecordType
     const BOV = 28;
     const LDM = 29;
     const TDM = 30;
+    const SPW = 31;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -67,6 +68,7 @@ class RecordType
         RecordType::BOV=>"BOV",
         RecordType::LDM=>"LDM",
         RecordType::TDM=>"TDM",
+        RecordType::SPW=>"SPW",
     );
 
     public static function Name($e)

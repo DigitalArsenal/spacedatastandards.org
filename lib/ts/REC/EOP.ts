@@ -33,7 +33,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- *  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+ * Date in ISO 8601 format
  */
 DATE():string|null
 DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -43,7 +43,7 @@ DATE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- *  Modified Julian Date in UTC, e.g., 58119
+ * Modified Julian Date
  */
 MJD():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
@@ -51,71 +51,87 @@ MJD():number {
 }
 
 /**
- *  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+ * x pole coordinate in arcseconds
  */
-X_POLE_WANDER_RADIANS():number {
+X():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+ * y pole coordinate in arcseconds
  */
-Y_POLE_WANDER_RADIANS():number {
+Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+ * UT1-UTC in seconds
  */
-X_CELESTIAL_POLE_OFFSET_RADIANS():number {
+UT1_MINUS_UTC():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+ * Length of Day correction in seconds
  */
-Y_CELESTIAL_POLE_OFFSET_RADIANS():number {
+LOD():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  UT1 minus UTC in seconds, e.g., 0.2163567
+ * Nutation correction in longitude (δΔψ) in arcseconds
  */
-UT1_MINUS_UTC_SECONDS():number {
+DPSI():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  TAI minus UTC in seconds, e.g., 37
+ * Nutation correction in obliquity (δΔε) in arcseconds
  */
-TAI_MINUS_UTC_SECONDS():number {
+DEPS():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  Correction to Length of Day in seconds, e.g., 8.094E-4
+ * Celestial pole offset in x (δX) in arcseconds
  */
-LENGTH_OF_DAY_CORRECTION_SECONDS():number {
+DX():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
 /**
- *  Data type (O = Observed, P = Predicted)
+ * Celestial pole offset in y (δY) in arcseconds
+ */
+DY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Delta Atomic Time (TAI-UTC) in seconds
+ */
+DAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Data type (O = Observed, P = Predicted)
  */
 DATA_TYPE():DataType {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : DataType.OBSERVED;
 }
 
 static startEOP(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(12);
 }
 
 static addDate(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset) {
@@ -126,36 +142,44 @@ static addMjd(builder:flatbuffers.Builder, MJD:number) {
   builder.addFieldInt32(1, MJD, 0);
 }
 
-static addXPoleWanderRadians(builder:flatbuffers.Builder, X_POLE_WANDER_RADIANS:number) {
-  builder.addFieldFloat32(2, X_POLE_WANDER_RADIANS, 0.0);
+static addX(builder:flatbuffers.Builder, X:number) {
+  builder.addFieldFloat32(2, X, 0.0);
 }
 
-static addYPoleWanderRadians(builder:flatbuffers.Builder, Y_POLE_WANDER_RADIANS:number) {
-  builder.addFieldFloat32(3, Y_POLE_WANDER_RADIANS, 0.0);
+static addY(builder:flatbuffers.Builder, Y:number) {
+  builder.addFieldFloat32(3, Y, 0.0);
 }
 
-static addXCelestialPoleOffsetRadians(builder:flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_RADIANS:number) {
-  builder.addFieldFloat32(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0);
+static addUt1MinusUtc(builder:flatbuffers.Builder, UT1_MINUS_UTC:number) {
+  builder.addFieldFloat32(4, UT1_MINUS_UTC, 0.0);
 }
 
-static addYCelestialPoleOffsetRadians(builder:flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_RADIANS:number) {
-  builder.addFieldFloat32(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0);
+static addLod(builder:flatbuffers.Builder, LOD:number) {
+  builder.addFieldFloat32(5, LOD, 0.0);
 }
 
-static addUt1MinusUtcSeconds(builder:flatbuffers.Builder, UT1_MINUS_UTC_SECONDS:number) {
-  builder.addFieldFloat32(6, UT1_MINUS_UTC_SECONDS, 0.0);
+static addDpsi(builder:flatbuffers.Builder, DPSI:number) {
+  builder.addFieldFloat32(6, DPSI, 0.0);
 }
 
-static addTaiMinusUtcSeconds(builder:flatbuffers.Builder, TAI_MINUS_UTC_SECONDS:number) {
-  builder.addFieldInt16(7, TAI_MINUS_UTC_SECONDS, 0);
+static addDeps(builder:flatbuffers.Builder, DEPS:number) {
+  builder.addFieldFloat32(7, DEPS, 0.0);
 }
 
-static addLengthOfDayCorrectionSeconds(builder:flatbuffers.Builder, LENGTH_OF_DAY_CORRECTION_SECONDS:number) {
-  builder.addFieldFloat32(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0);
+static addDx(builder:flatbuffers.Builder, DX:number) {
+  builder.addFieldFloat32(8, DX, 0.0);
+}
+
+static addDy(builder:flatbuffers.Builder, DY:number) {
+  builder.addFieldFloat32(9, DY, 0.0);
+}
+
+static addDat(builder:flatbuffers.Builder, DAT:number) {
+  builder.addFieldInt16(10, DAT, 0);
 }
 
 static addDataType(builder:flatbuffers.Builder, DATA_TYPE:DataType) {
-  builder.addFieldInt8(9, DATA_TYPE, DataType.OBSERVED);
+  builder.addFieldInt8(11, DATA_TYPE, DataType.OBSERVED);
 }
 
 static endEOP(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -171,17 +195,19 @@ static finishSizePrefixedEOPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOP', true);
 }
 
-static createEOP(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, MJD:number, X_POLE_WANDER_RADIANS:number, Y_POLE_WANDER_RADIANS:number, X_CELESTIAL_POLE_OFFSET_RADIANS:number, Y_CELESTIAL_POLE_OFFSET_RADIANS:number, UT1_MINUS_UTC_SECONDS:number, TAI_MINUS_UTC_SECONDS:number, LENGTH_OF_DAY_CORRECTION_SECONDS:number, DATA_TYPE:DataType):flatbuffers.Offset {
+static createEOP(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, MJD:number, X:number, Y:number, UT1_MINUS_UTC:number, LOD:number, DPSI:number, DEPS:number, DX:number, DY:number, DAT:number, DATA_TYPE:DataType):flatbuffers.Offset {
   EOP.startEOP(builder);
   EOP.addDate(builder, DATEOffset);
   EOP.addMjd(builder, MJD);
-  EOP.addXPoleWanderRadians(builder, X_POLE_WANDER_RADIANS);
-  EOP.addYPoleWanderRadians(builder, Y_POLE_WANDER_RADIANS);
-  EOP.addXCelestialPoleOffsetRadians(builder, X_CELESTIAL_POLE_OFFSET_RADIANS);
-  EOP.addYCelestialPoleOffsetRadians(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS);
-  EOP.addUt1MinusUtcSeconds(builder, UT1_MINUS_UTC_SECONDS);
-  EOP.addTaiMinusUtcSeconds(builder, TAI_MINUS_UTC_SECONDS);
-  EOP.addLengthOfDayCorrectionSeconds(builder, LENGTH_OF_DAY_CORRECTION_SECONDS);
+  EOP.addX(builder, X);
+  EOP.addY(builder, Y);
+  EOP.addUt1MinusUtc(builder, UT1_MINUS_UTC);
+  EOP.addLod(builder, LOD);
+  EOP.addDpsi(builder, DPSI);
+  EOP.addDeps(builder, DEPS);
+  EOP.addDx(builder, DX);
+  EOP.addDy(builder, DY);
+  EOP.addDat(builder, DAT);
   EOP.addDataType(builder, DATA_TYPE);
   return EOP.endEOP(builder);
 }
@@ -190,13 +216,15 @@ unpack(): EOPT {
   return new EOPT(
     this.DATE(),
     this.MJD(),
-    this.X_POLE_WANDER_RADIANS(),
-    this.Y_POLE_WANDER_RADIANS(),
-    this.X_CELESTIAL_POLE_OFFSET_RADIANS(),
-    this.Y_CELESTIAL_POLE_OFFSET_RADIANS(),
-    this.UT1_MINUS_UTC_SECONDS(),
-    this.TAI_MINUS_UTC_SECONDS(),
-    this.LENGTH_OF_DAY_CORRECTION_SECONDS(),
+    this.X(),
+    this.Y(),
+    this.UT1_MINUS_UTC(),
+    this.LOD(),
+    this.DPSI(),
+    this.DEPS(),
+    this.DX(),
+    this.DY(),
+    this.DAT(),
     this.DATA_TYPE()
   );
 }
@@ -205,13 +233,15 @@ unpack(): EOPT {
 unpackTo(_o: EOPT): void {
   _o.DATE = this.DATE();
   _o.MJD = this.MJD();
-  _o.X_POLE_WANDER_RADIANS = this.X_POLE_WANDER_RADIANS();
-  _o.Y_POLE_WANDER_RADIANS = this.Y_POLE_WANDER_RADIANS();
-  _o.X_CELESTIAL_POLE_OFFSET_RADIANS = this.X_CELESTIAL_POLE_OFFSET_RADIANS();
-  _o.Y_CELESTIAL_POLE_OFFSET_RADIANS = this.Y_CELESTIAL_POLE_OFFSET_RADIANS();
-  _o.UT1_MINUS_UTC_SECONDS = this.UT1_MINUS_UTC_SECONDS();
-  _o.TAI_MINUS_UTC_SECONDS = this.TAI_MINUS_UTC_SECONDS();
-  _o.LENGTH_OF_DAY_CORRECTION_SECONDS = this.LENGTH_OF_DAY_CORRECTION_SECONDS();
+  _o.X = this.X();
+  _o.Y = this.Y();
+  _o.UT1_MINUS_UTC = this.UT1_MINUS_UTC();
+  _o.LOD = this.LOD();
+  _o.DPSI = this.DPSI();
+  _o.DEPS = this.DEPS();
+  _o.DX = this.DX();
+  _o.DY = this.DY();
+  _o.DAT = this.DAT();
   _o.DATA_TYPE = this.DATA_TYPE();
 }
 }
@@ -220,13 +250,15 @@ export class EOPT implements flatbuffers.IGeneratedObject {
 constructor(
   public DATE: string|Uint8Array|null = null,
   public MJD: number = 0,
-  public X_POLE_WANDER_RADIANS: number = 0.0,
-  public Y_POLE_WANDER_RADIANS: number = 0.0,
-  public X_CELESTIAL_POLE_OFFSET_RADIANS: number = 0.0,
-  public Y_CELESTIAL_POLE_OFFSET_RADIANS: number = 0.0,
-  public UT1_MINUS_UTC_SECONDS: number = 0.0,
-  public TAI_MINUS_UTC_SECONDS: number = 0,
-  public LENGTH_OF_DAY_CORRECTION_SECONDS: number = 0.0,
+  public X: number = 0.0,
+  public Y: number = 0.0,
+  public UT1_MINUS_UTC: number = 0.0,
+  public LOD: number = 0.0,
+  public DPSI: number = 0.0,
+  public DEPS: number = 0.0,
+  public DX: number = 0.0,
+  public DY: number = 0.0,
+  public DAT: number = 0,
   public DATA_TYPE: DataType = DataType.OBSERVED
 ){}
 
@@ -237,13 +269,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return EOP.createEOP(builder,
     DATE,
     this.MJD,
-    this.X_POLE_WANDER_RADIANS,
-    this.Y_POLE_WANDER_RADIANS,
-    this.X_CELESTIAL_POLE_OFFSET_RADIANS,
-    this.Y_CELESTIAL_POLE_OFFSET_RADIANS,
-    this.UT1_MINUS_UTC_SECONDS,
-    this.TAI_MINUS_UTC_SECONDS,
-    this.LENGTH_OF_DAY_CORRECTION_SECONDS,
+    this.X,
+    this.Y,
+    this.UT1_MINUS_UTC,
+    this.LOD,
+    this.DPSI,
+    this.DEPS,
+    this.DX,
+    this.DY,
+    this.DAT,
     this.DATA_TYPE
   );
 }

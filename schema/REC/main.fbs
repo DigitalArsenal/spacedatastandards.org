@@ -1,5 +1,5 @@
-// Hash: 93f5f2cfe9c84c2191d248d76c539da94565e26f5d8b965a660b2c6b75f2a88d
-// Version: 1.26.0
+// Hash: 940da1a70d30ab55e0cb5237fcfb585af116fe0912374aab3dc1bb75aa999dc7
+// Version: 1.30.0
 // -----------------------------------END_HEADER
 include "../CRM/main.fbs";
 include "../OMM/main.fbs";
@@ -31,6 +31,7 @@ include "../RFM/main.fbs";
 include "../BOV/main.fbs";
 include "../LDM/main.fbs";
 include "../TDM/main.fbs";
+include "../SPW/main.fbs";
 
 union RecordType {
   CRM, OMM, PRG, OSM,
@@ -40,7 +41,7 @@ union RecordType {
   ROC, EOP, CAT, OCM,
   CTR, TIM, MET, PLD,
   EOO, SIT, RFM, BOV,
-  LDM, TDM
+  LDM, TDM, SPW
 }  // Union of all record types
 
 table Record {

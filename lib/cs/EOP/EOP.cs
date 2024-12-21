@@ -19,7 +19,7 @@ public struct EOP : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EOP __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+  /// Date in ISO 8601 format
   public string DATE { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDATEBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -27,61 +27,71 @@ public struct EOP : IFlatbufferObject
   public ArraySegment<byte>? GetDATEBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetDATEArray() { return __p.__vector_as_array<byte>(4); }
-  ///  Modified Julian Date in UTC, e.g., 58119
+  /// Modified Julian Date
   public uint MJD { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
-  public float X_POLE_WANDER_RADIANS { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
-  public float Y_POLE_WANDER_RADIANS { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
-  public float X_CELESTIAL_POLE_OFFSET_RADIANS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
-  public float Y_CELESTIAL_POLE_OFFSET_RADIANS { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  ///  UT1 minus UTC in seconds, e.g., 0.2163567
-  public float UT1_MINUS_UTC_SECONDS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  ///  TAI minus UTC in seconds, e.g., 37
-  public ushort TAI_MINUS_UTC_SECONDS { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  ///  Correction to Length of Day in seconds, e.g., 8.094E-4
-  public float LENGTH_OF_DAY_CORRECTION_SECONDS { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  ///  Data type (O = Observed, P = Predicted)
-  public DataType DATA_TYPE { get { int o = __p.__offset(22); return o != 0 ? (DataType)__p.bb.GetSbyte(o + __p.bb_pos) : DataType.OBSERVED; } }
+  /// x pole coordinate in arcseconds
+  public float X { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// y pole coordinate in arcseconds
+  public float Y { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// UT1-UTC in seconds
+  public float UT1_MINUS_UTC { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Length of Day correction in seconds
+  public float LOD { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Nutation correction in longitude (δΔψ) in arcseconds
+  public float DPSI { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Nutation correction in obliquity (δΔε) in arcseconds
+  public float DEPS { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Celestial pole offset in x (δX) in arcseconds
+  public float DX { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Celestial pole offset in y (δY) in arcseconds
+  public float DY { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Delta Atomic Time (TAI-UTC) in seconds
+  public ushort DAT { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Data type (O = Observed, P = Predicted)
+  public DataType DATA_TYPE { get { int o = __p.__offset(26); return o != 0 ? (DataType)__p.bb.GetSbyte(o + __p.bb_pos) : DataType.OBSERVED; } }
 
   public static Offset<EOP> CreateEOP(FlatBufferBuilder builder,
       StringOffset DATEOffset = default(StringOffset),
       uint MJD = 0,
-      float X_POLE_WANDER_RADIANS = 0.0f,
-      float Y_POLE_WANDER_RADIANS = 0.0f,
-      float X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f,
-      float Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f,
-      float UT1_MINUS_UTC_SECONDS = 0.0f,
-      ushort TAI_MINUS_UTC_SECONDS = 0,
-      float LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f,
+      float X = 0.0f,
+      float Y = 0.0f,
+      float UT1_MINUS_UTC = 0.0f,
+      float LOD = 0.0f,
+      float DPSI = 0.0f,
+      float DEPS = 0.0f,
+      float DX = 0.0f,
+      float DY = 0.0f,
+      ushort DAT = 0,
       DataType DATA_TYPE = DataType.OBSERVED) {
-    builder.StartTable(10);
-    EOP.AddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS);
-    EOP.AddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS);
-    EOP.AddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS);
-    EOP.AddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS);
-    EOP.AddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS);
-    EOP.AddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS);
+    builder.StartTable(12);
+    EOP.AddDY(builder, DY);
+    EOP.AddDX(builder, DX);
+    EOP.AddDEPS(builder, DEPS);
+    EOP.AddDPSI(builder, DPSI);
+    EOP.AddLOD(builder, LOD);
+    EOP.AddUT1_MINUS_UTC(builder, UT1_MINUS_UTC);
+    EOP.AddY(builder, Y);
+    EOP.AddX(builder, X);
     EOP.AddMJD(builder, MJD);
     EOP.AddDATE(builder, DATEOffset);
-    EOP.AddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS);
+    EOP.AddDAT(builder, DAT);
     EOP.AddDATA_TYPE(builder, DATA_TYPE);
     return EOP.EndEOP(builder);
   }
 
-  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddDATE(FlatBufferBuilder builder, StringOffset DATEOffset) { builder.AddOffset(0, DATEOffset.Value, 0); }
   public static void AddMJD(FlatBufferBuilder builder, uint MJD) { builder.AddUint(1, MJD, 0); }
-  public static void AddX_POLE_WANDER_RADIANS(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.AddFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
-  public static void AddY_POLE_WANDER_RADIANS(FlatBufferBuilder builder, float Y_POLE_WANDER_RADIANS) { builder.AddFloat(3, Y_POLE_WANDER_RADIANS, 0.0f); }
-  public static void AddX_CELESTIAL_POLE_OFFSET_RADIANS(FlatBufferBuilder builder, float X_CELESTIAL_POLE_OFFSET_RADIANS) { builder.AddFloat(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f); }
-  public static void AddY_CELESTIAL_POLE_OFFSET_RADIANS(FlatBufferBuilder builder, float Y_CELESTIAL_POLE_OFFSET_RADIANS) { builder.AddFloat(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0f); }
-  public static void AddUT1_MINUS_UTC_SECONDS(FlatBufferBuilder builder, float UT1_MINUS_UTC_SECONDS) { builder.AddFloat(6, UT1_MINUS_UTC_SECONDS, 0.0f); }
-  public static void AddTAI_MINUS_UTC_SECONDS(FlatBufferBuilder builder, ushort TAI_MINUS_UTC_SECONDS) { builder.AddUshort(7, TAI_MINUS_UTC_SECONDS, 0); }
-  public static void AddLENGTH_OF_DAY_CORRECTION_SECONDS(FlatBufferBuilder builder, float LENGTH_OF_DAY_CORRECTION_SECONDS) { builder.AddFloat(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0f); }
-  public static void AddDATA_TYPE(FlatBufferBuilder builder, DataType DATA_TYPE) { builder.AddSbyte(9, (sbyte)DATA_TYPE, 0); }
+  public static void AddX(FlatBufferBuilder builder, float X) { builder.AddFloat(2, X, 0.0f); }
+  public static void AddY(FlatBufferBuilder builder, float Y) { builder.AddFloat(3, Y, 0.0f); }
+  public static void AddUT1_MINUS_UTC(FlatBufferBuilder builder, float UT1_MINUS_UTC) { builder.AddFloat(4, UT1_MINUS_UTC, 0.0f); }
+  public static void AddLOD(FlatBufferBuilder builder, float LOD) { builder.AddFloat(5, LOD, 0.0f); }
+  public static void AddDPSI(FlatBufferBuilder builder, float DPSI) { builder.AddFloat(6, DPSI, 0.0f); }
+  public static void AddDEPS(FlatBufferBuilder builder, float DEPS) { builder.AddFloat(7, DEPS, 0.0f); }
+  public static void AddDX(FlatBufferBuilder builder, float DX) { builder.AddFloat(8, DX, 0.0f); }
+  public static void AddDY(FlatBufferBuilder builder, float DY) { builder.AddFloat(9, DY, 0.0f); }
+  public static void AddDAT(FlatBufferBuilder builder, ushort DAT) { builder.AddUshort(10, DAT, 0); }
+  public static void AddDATA_TYPE(FlatBufferBuilder builder, DataType DATA_TYPE) { builder.AddSbyte(11, (sbyte)DATA_TYPE, 0); }
   public static Offset<EOP> EndEOP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOP>(o);
@@ -96,13 +106,15 @@ public struct EOP : IFlatbufferObject
   public void UnPackTo(EOPT _o) {
     _o.DATE = this.DATE;
     _o.MJD = this.MJD;
-    _o.X_POLE_WANDER_RADIANS = this.X_POLE_WANDER_RADIANS;
-    _o.Y_POLE_WANDER_RADIANS = this.Y_POLE_WANDER_RADIANS;
-    _o.X_CELESTIAL_POLE_OFFSET_RADIANS = this.X_CELESTIAL_POLE_OFFSET_RADIANS;
-    _o.Y_CELESTIAL_POLE_OFFSET_RADIANS = this.Y_CELESTIAL_POLE_OFFSET_RADIANS;
-    _o.UT1_MINUS_UTC_SECONDS = this.UT1_MINUS_UTC_SECONDS;
-    _o.TAI_MINUS_UTC_SECONDS = this.TAI_MINUS_UTC_SECONDS;
-    _o.LENGTH_OF_DAY_CORRECTION_SECONDS = this.LENGTH_OF_DAY_CORRECTION_SECONDS;
+    _o.X = this.X;
+    _o.Y = this.Y;
+    _o.UT1_MINUS_UTC = this.UT1_MINUS_UTC;
+    _o.LOD = this.LOD;
+    _o.DPSI = this.DPSI;
+    _o.DEPS = this.DEPS;
+    _o.DX = this.DX;
+    _o.DY = this.DY;
+    _o.DAT = this.DAT;
     _o.DATA_TYPE = this.DATA_TYPE;
   }
   public static Offset<EOP> Pack(FlatBufferBuilder builder, EOPT _o) {
@@ -112,13 +124,15 @@ public struct EOP : IFlatbufferObject
       builder,
       _DATE,
       _o.MJD,
-      _o.X_POLE_WANDER_RADIANS,
-      _o.Y_POLE_WANDER_RADIANS,
-      _o.X_CELESTIAL_POLE_OFFSET_RADIANS,
-      _o.Y_CELESTIAL_POLE_OFFSET_RADIANS,
-      _o.UT1_MINUS_UTC_SECONDS,
-      _o.TAI_MINUS_UTC_SECONDS,
-      _o.LENGTH_OF_DAY_CORRECTION_SECONDS,
+      _o.X,
+      _o.Y,
+      _o.UT1_MINUS_UTC,
+      _o.LOD,
+      _o.DPSI,
+      _o.DEPS,
+      _o.DX,
+      _o.DY,
+      _o.DAT,
       _o.DATA_TYPE);
   }
 }
@@ -127,25 +141,29 @@ public class EOPT
 {
   public string DATE { get; set; }
   public uint MJD { get; set; }
-  public float X_POLE_WANDER_RADIANS { get; set; }
-  public float Y_POLE_WANDER_RADIANS { get; set; }
-  public float X_CELESTIAL_POLE_OFFSET_RADIANS { get; set; }
-  public float Y_CELESTIAL_POLE_OFFSET_RADIANS { get; set; }
-  public float UT1_MINUS_UTC_SECONDS { get; set; }
-  public ushort TAI_MINUS_UTC_SECONDS { get; set; }
-  public float LENGTH_OF_DAY_CORRECTION_SECONDS { get; set; }
+  public float X { get; set; }
+  public float Y { get; set; }
+  public float UT1_MINUS_UTC { get; set; }
+  public float LOD { get; set; }
+  public float DPSI { get; set; }
+  public float DEPS { get; set; }
+  public float DX { get; set; }
+  public float DY { get; set; }
+  public ushort DAT { get; set; }
   public DataType DATA_TYPE { get; set; }
 
   public EOPT() {
     this.DATE = null;
     this.MJD = 0;
-    this.X_POLE_WANDER_RADIANS = 0.0f;
-    this.Y_POLE_WANDER_RADIANS = 0.0f;
-    this.X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f;
-    this.Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0f;
-    this.UT1_MINUS_UTC_SECONDS = 0.0f;
-    this.TAI_MINUS_UTC_SECONDS = 0;
-    this.LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f;
+    this.X = 0.0f;
+    this.Y = 0.0f;
+    this.UT1_MINUS_UTC = 0.0f;
+    this.LOD = 0.0f;
+    this.DPSI = 0.0f;
+    this.DEPS = 0.0f;
+    this.DX = 0.0f;
+    this.DY = 0.0f;
+    this.DAT = 0;
     this.DATA_TYPE = DataType.OBSERVED;
   }
   public static EOPT DeserializeFromBinary(byte[] fbBuffer) {
@@ -166,14 +184,16 @@ static public class EOPVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*DATE*/, false)
       && verifier.VerifyField(tablePos, 6 /*MJD*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 8 /*X_POLE_WANDER_RADIANS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 10 /*Y_POLE_WANDER_RADIANS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 12 /*X_CELESTIAL_POLE_OFFSET_RADIANS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 14 /*Y_CELESTIAL_POLE_OFFSET_RADIANS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 16 /*UT1_MINUS_UTC_SECONDS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 18 /*TAI_MINUS_UTC_SECONDS*/, 2 /*ushort*/, 2, false)
-      && verifier.VerifyField(tablePos, 20 /*LENGTH_OF_DAY_CORRECTION_SECONDS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 22 /*DATA_TYPE*/, 1 /*DataType*/, 1, false)
+      && verifier.VerifyField(tablePos, 8 /*X*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 10 /*Y*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 12 /*UT1_MINUS_UTC*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 14 /*LOD*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 16 /*DPSI*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 18 /*DEPS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 20 /*DX*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 22 /*DY*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 24 /*DAT*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 26 /*DATA_TYPE*/, 1 /*DataType*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

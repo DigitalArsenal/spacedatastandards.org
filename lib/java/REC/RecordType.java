@@ -34,8 +34,9 @@ public final class RecordType {
   public static final byte BOV = 28;
   public static final byte LDM = 29;
   public static final byte TDM = 30;
+  public static final byte SPW = 31;
 
-  public static final String[] names = { "NONE", "CRM", "OMM", "PRG", "OSM", "EPM", "MPE", "EME", "OEM", "VCM", "CDM", "IDM", "SCM", "PNM", "CSM", "HYP", "LCC", "ROC", "EOP", "CAT", "OCM", "CTR", "TIM", "MET", "PLD", "EOO", "SIT", "RFM", "BOV", "LDM", "TDM", };
+  public static final String[] names = { "NONE", "CRM", "OMM", "PRG", "OSM", "EPM", "MPE", "EME", "OEM", "VCM", "CDM", "IDM", "SCM", "PNM", "CSM", "HYP", "LCC", "ROC", "EOP", "CAT", "OCM", "CTR", "TIM", "MET", "PLD", "EOO", "SIT", "RFM", "BOV", "LDM", "TDM", "SPW", };
 
   public static String name(int e) { return names[e]; }
 }

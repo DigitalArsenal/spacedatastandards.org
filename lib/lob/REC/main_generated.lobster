@@ -33,6 +33,7 @@ enum RecordType:
     RecordType_BOV = 28
     RecordType_LDM = 29
     RecordType_TDM = 30
+    RecordType_SPW = 31
 
 class Record
 
@@ -103,6 +104,8 @@ class Record : flatbuffers.handle
         return LDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TDM():
         return TDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SPW():
+        return SPW { buf_, flatbuffers.field_table(buf_, pos_, 6) }
 
 def GetRootAsRecord(buf:string): return Record { buf, flatbuffers.indirect(buf, 0) }
 

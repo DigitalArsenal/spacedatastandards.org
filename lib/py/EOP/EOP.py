@@ -29,7 +29,7 @@ class EOP(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    #  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
+    # Date in ISO 8601 format
     # EOP
     def DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,7 +37,7 @@ class EOP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    #  Modified Julian Date in UTC, e.g., 58119
+    # Modified Julian Date
     # EOP
     def MJD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,72 +45,88 @@ class EOP(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    #  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
+    # x pole coordinate in arcseconds
     # EOP
-    def X_POLE_WANDER_RADIANS(self):
+    def X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    #  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
+    # y pole coordinate in arcseconds
     # EOP
-    def Y_POLE_WANDER_RADIANS(self):
+    def Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    #  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
+    # UT1-UTC in seconds
     # EOP
-    def X_CELESTIAL_POLE_OFFSET_RADIANS(self):
+    def UT1_MINUS_UTC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    #  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
+    # Length of Day correction in seconds
     # EOP
-    def Y_CELESTIAL_POLE_OFFSET_RADIANS(self):
+    def LOD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    #  UT1 minus UTC in seconds, e.g., 0.2163567
+    # Nutation correction in longitude (δΔψ) in arcseconds
     # EOP
-    def UT1_MINUS_UTC_SECONDS(self):
+    def DPSI(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    #  TAI minus UTC in seconds, e.g., 37
+    # Nutation correction in obliquity (δΔε) in arcseconds
     # EOP
-    def TAI_MINUS_UTC_SECONDS(self):
+    def DEPS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
 
-    #  Correction to Length of Day in seconds, e.g., 8.094E-4
+    # Celestial pole offset in x (δX) in arcseconds
     # EOP
-    def LENGTH_OF_DAY_CORRECTION_SECONDS(self):
+    def DX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    #  Data type (O = Observed, P = Predicted)
+    # Celestial pole offset in y (δY) in arcseconds
+    # EOP
+    def DY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Delta Atomic Time (TAI-UTC) in seconds
+    # EOP
+    def DAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Data type (O = Observed, P = Predicted)
     # EOP
     def DATA_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
 def EOPStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(12)
 
 def Start(builder):
     EOPStart(builder)
@@ -127,50 +143,62 @@ def EOPAddMJD(builder, MJD):
 def AddMJD(builder, MJD):
     EOPAddMJD(builder, MJD)
 
-def EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS):
-    builder.PrependFloat32Slot(2, X_POLE_WANDER_RADIANS, 0.0)
+def EOPAddX(builder, X):
+    builder.PrependFloat32Slot(2, X, 0.0)
 
-def AddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS):
-    EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS)
+def AddX(builder, X):
+    EOPAddX(builder, X)
 
-def EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS):
-    builder.PrependFloat32Slot(3, Y_POLE_WANDER_RADIANS, 0.0)
+def EOPAddY(builder, Y):
+    builder.PrependFloat32Slot(3, Y, 0.0)
 
-def AddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS):
-    EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS)
+def AddY(builder, Y):
+    EOPAddY(builder, Y)
 
-def EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS):
-    builder.PrependFloat32Slot(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+def EOPAddUT1_MINUS_UTC(builder, UT1_MINUS_UTC):
+    builder.PrependFloat32Slot(4, UT1_MINUS_UTC, 0.0)
 
-def AddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS):
-    EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS)
+def AddUT1_MINUS_UTC(builder, UT1_MINUS_UTC):
+    EOPAddUT1_MINUS_UTC(builder, UT1_MINUS_UTC)
 
-def EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS):
-    builder.PrependFloat32Slot(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+def EOPAddLOD(builder, LOD):
+    builder.PrependFloat32Slot(5, LOD, 0.0)
 
-def AddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS):
-    EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS)
+def AddLOD(builder, LOD):
+    EOPAddLOD(builder, LOD)
 
-def EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS):
-    builder.PrependFloat32Slot(6, UT1_MINUS_UTC_SECONDS, 0.0)
+def EOPAddDPSI(builder, DPSI):
+    builder.PrependFloat32Slot(6, DPSI, 0.0)
 
-def AddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS):
-    EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS)
+def AddDPSI(builder, DPSI):
+    EOPAddDPSI(builder, DPSI)
 
-def EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS):
-    builder.PrependUint16Slot(7, TAI_MINUS_UTC_SECONDS, 0)
+def EOPAddDEPS(builder, DEPS):
+    builder.PrependFloat32Slot(7, DEPS, 0.0)
 
-def AddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS):
-    EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS)
+def AddDEPS(builder, DEPS):
+    EOPAddDEPS(builder, DEPS)
 
-def EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS):
-    builder.PrependFloat32Slot(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0)
+def EOPAddDX(builder, DX):
+    builder.PrependFloat32Slot(8, DX, 0.0)
 
-def AddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS):
-    EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS)
+def AddDX(builder, DX):
+    EOPAddDX(builder, DX)
+
+def EOPAddDY(builder, DY):
+    builder.PrependFloat32Slot(9, DY, 0.0)
+
+def AddDY(builder, DY):
+    EOPAddDY(builder, DY)
+
+def EOPAddDAT(builder, DAT):
+    builder.PrependUint16Slot(10, DAT, 0)
+
+def AddDAT(builder, DAT):
+    EOPAddDAT(builder, DAT)
 
 def EOPAddDATA_TYPE(builder, DATA_TYPE):
-    builder.PrependInt8Slot(9, DATA_TYPE, 0)
+    builder.PrependInt8Slot(11, DATA_TYPE, 0)
 
 def AddDATA_TYPE(builder, DATA_TYPE):
     EOPAddDATA_TYPE(builder, DATA_TYPE)
@@ -188,13 +216,15 @@ class EOPT(object):
     def __init__(self):
         self.DATE = None  # type: str
         self.MJD = 0  # type: int
-        self.X_POLE_WANDER_RADIANS = 0.0  # type: float
-        self.Y_POLE_WANDER_RADIANS = 0.0  # type: float
-        self.X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0  # type: float
-        self.Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0  # type: float
-        self.UT1_MINUS_UTC_SECONDS = 0.0  # type: float
-        self.TAI_MINUS_UTC_SECONDS = 0  # type: int
-        self.LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0  # type: float
+        self.X = 0.0  # type: float
+        self.Y = 0.0  # type: float
+        self.UT1_MINUS_UTC = 0.0  # type: float
+        self.LOD = 0.0  # type: float
+        self.DPSI = 0.0  # type: float
+        self.DEPS = 0.0  # type: float
+        self.DX = 0.0  # type: float
+        self.DY = 0.0  # type: float
+        self.DAT = 0  # type: int
         self.DATA_TYPE = 0  # type: int
 
     @classmethod
@@ -220,13 +250,15 @@ class EOPT(object):
             return
         self.DATE = EOP.DATE()
         self.MJD = EOP.MJD()
-        self.X_POLE_WANDER_RADIANS = EOP.X_POLE_WANDER_RADIANS()
-        self.Y_POLE_WANDER_RADIANS = EOP.Y_POLE_WANDER_RADIANS()
-        self.X_CELESTIAL_POLE_OFFSET_RADIANS = EOP.X_CELESTIAL_POLE_OFFSET_RADIANS()
-        self.Y_CELESTIAL_POLE_OFFSET_RADIANS = EOP.Y_CELESTIAL_POLE_OFFSET_RADIANS()
-        self.UT1_MINUS_UTC_SECONDS = EOP.UT1_MINUS_UTC_SECONDS()
-        self.TAI_MINUS_UTC_SECONDS = EOP.TAI_MINUS_UTC_SECONDS()
-        self.LENGTH_OF_DAY_CORRECTION_SECONDS = EOP.LENGTH_OF_DAY_CORRECTION_SECONDS()
+        self.X = EOP.X()
+        self.Y = EOP.Y()
+        self.UT1_MINUS_UTC = EOP.UT1_MINUS_UTC()
+        self.LOD = EOP.LOD()
+        self.DPSI = EOP.DPSI()
+        self.DEPS = EOP.DEPS()
+        self.DX = EOP.DX()
+        self.DY = EOP.DY()
+        self.DAT = EOP.DAT()
         self.DATA_TYPE = EOP.DATA_TYPE()
 
     # EOPT
@@ -237,13 +269,15 @@ class EOPT(object):
         if self.DATE is not None:
             EOPAddDATE(builder, DATE)
         EOPAddMJD(builder, self.MJD)
-        EOPAddX_POLE_WANDER_RADIANS(builder, self.X_POLE_WANDER_RADIANS)
-        EOPAddY_POLE_WANDER_RADIANS(builder, self.Y_POLE_WANDER_RADIANS)
-        EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, self.X_CELESTIAL_POLE_OFFSET_RADIANS)
-        EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, self.Y_CELESTIAL_POLE_OFFSET_RADIANS)
-        EOPAddUT1_MINUS_UTC_SECONDS(builder, self.UT1_MINUS_UTC_SECONDS)
-        EOPAddTAI_MINUS_UTC_SECONDS(builder, self.TAI_MINUS_UTC_SECONDS)
-        EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, self.LENGTH_OF_DAY_CORRECTION_SECONDS)
+        EOPAddX(builder, self.X)
+        EOPAddY(builder, self.Y)
+        EOPAddUT1_MINUS_UTC(builder, self.UT1_MINUS_UTC)
+        EOPAddLOD(builder, self.LOD)
+        EOPAddDPSI(builder, self.DPSI)
+        EOPAddDEPS(builder, self.DEPS)
+        EOPAddDX(builder, self.DX)
+        EOPAddDY(builder, self.DY)
+        EOPAddDAT(builder, self.DAT)
         EOPAddDATA_TYPE(builder, self.DATA_TYPE)
         EOP = EOPEnd(builder)
         return EOP

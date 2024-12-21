@@ -35,6 +35,7 @@ public enum RecordType : byte
   BOV = 28,
   LDM = 29,
   TDM = 30,
+  SPW = 31,
 };
 
 public class RecordTypeUnion {
@@ -107,6 +108,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromLDM(LDMT _ldm) { return new RecordTypeUnion{ Type = RecordType.LDM, Value = _ldm }; }
   public TDMT AsTDM() { return this.As<TDMT>(); }
   public static RecordTypeUnion FromTDM(TDMT _tdm) { return new RecordTypeUnion{ Type = RecordType.TDM, Value = _tdm }; }
+  public SPWT AsSPW() { return this.As<SPWT>(); }
+  public static RecordTypeUnion FromSPW(SPWT _spw) { return new RecordTypeUnion{ Type = RecordType.SPW, Value = _spw }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -141,6 +144,7 @@ public class RecordTypeUnion {
       case RecordType.BOV: return BOV.Pack(builder, _o.AsBOV()).Value;
       case RecordType.LDM: return LDM.Pack(builder, _o.AsLDM()).Value;
       case RecordType.TDM: return TDM.Pack(builder, _o.AsTDM()).Value;
+      case RecordType.SPW: return SPW.Pack(builder, _o.AsSPW()).Value;
     }
   }
 }
@@ -243,6 +247,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.TDM:
         result = TDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SPW:
+        result = SPWVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

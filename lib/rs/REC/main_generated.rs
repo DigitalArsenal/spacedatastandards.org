@@ -33,6 +33,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -42,10 +43,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 30;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 31;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 31] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 32] = [
   RecordType::NONE,
   RecordType::CRM,
   RecordType::OMM,
@@ -77,6 +78,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 31] = [
   RecordType::BOV,
   RecordType::LDM,
   RecordType::TDM,
+  RecordType::SPW,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -115,9 +117,10 @@ impl RecordType {
   pub const BOV: Self = Self(28);
   pub const LDM: Self = Self(29);
   pub const TDM: Self = Self(30);
+  pub const SPW: Self = Self(31);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 30;
+  pub const ENUM_MAX: u8 = 31;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::CRM,
@@ -150,6 +153,7 @@ impl RecordType {
     Self::BOV,
     Self::LDM,
     Self::TDM,
+    Self::SPW,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -185,6 +189,7 @@ impl RecordType {
       Self::BOV => Some("BOV"),
       Self::LDM => Some("LDM"),
       Self::TDM => Some("TDM"),
+      Self::SPW => Some("SPW"),
       _ => None,
     }
   }
@@ -277,6 +282,7 @@ pub enum RecordTypeT {
   BOV(Box<BOVT>),
   LDM(Box<LDMT>),
   TDM(Box<TDMT>),
+  SPW(Box<SPWT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -317,6 +323,7 @@ impl RecordTypeT {
       Self::BOV(_) => RecordType::BOV,
       Self::LDM(_) => RecordType::LDM,
       Self::TDM(_) => RecordType::TDM,
+      Self::SPW(_) => RecordType::SPW,
     }
   }
   pub fn pack<'b, A: flatbuffers::Allocator + 'b>(&self, fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
@@ -352,6 +359,7 @@ impl RecordTypeT {
       Self::BOV(v) => Some(v.pack(fbb).as_union_value()),
       Self::LDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::TDM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SPW(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned CRMT, setting the union to NONE.
@@ -984,6 +992,27 @@ impl RecordTypeT {
   pub fn as_TDM_mut(&mut self) -> Option<&mut TDMT> {
     if let Self::TDM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned SPWT, setting the union to NONE.
+  pub fn take_SPW(&mut self) -> Option<Box<SPWT>> {
+    if let Self::SPW(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SPW(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SPWT.
+  pub fn as_SPW(&self) -> Option<&SPWT> {
+    if let Self::SPW(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SPWT.
+  pub fn as_SPW_mut(&mut self) -> Option<&mut SPWT> {
+    if let Self::SPW(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -1170,6 +1199,11 @@ impl<'a> Record<'a> {
       RecordType::TDM => RecordTypeT::TDM(Box::new(
         self.value_as_TDM()
             .expect("Invalid union table, expected `RecordType::TDM`.")
+            .unpack()
+      )),
+      RecordType::SPW => RecordTypeT::SPW(Box::new(
+        self.value_as_SPW()
+            .expect("Invalid union table, expected `RecordType::SPW`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -1643,6 +1677,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SPW(&self) -> Option<SPW<'a>> {
+    if self.value_type() == RecordType::SPW {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SPW::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl flatbuffers::Verifiable for Record<'_> {
@@ -1684,6 +1733,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::BOV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BOV>>("RecordType::BOV", pos),
           RecordType::LDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LDM>>("RecordType::LDM", pos),
           RecordType::TDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TDM>>("RecordType::TDM", pos),
+          RecordType::SPW => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SPW>>("RecordType::SPW", pos),
           _ => Ok(()),
         }
      })?
@@ -1943,6 +1993,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::TDM => {
           if let Some(x) = self.value_as_TDM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SPW => {
+          if let Some(x) = self.value_as_SPW() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

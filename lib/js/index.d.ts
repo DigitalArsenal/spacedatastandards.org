@@ -26,6 +26,7 @@ export * as RFM from './RFM/main.js';
 export * as ROC from './ROC/main.js';
 export * as SCM from './SCM/main.js';
 export * as SIT from './SIT/main.js';
+export * as SPW from './SPW/main.js';
 export * as TDM from './TDM/main.js';
 export * as TIM from './TIM/main.js';
 export * as VCM from './VCM/main.js';

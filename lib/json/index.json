@@ -5916,43 +5916,51 @@
                     "properties": {
                         "DATE": {
                             "type": "string",
-                            "description": "Date in ISO 8601 format, e.g., \"2018-01-01T00:00:00Z\""
+                            "description": "Date in ISO 8601 format"
                         },
                         "MJD": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Modified Julian Date in UTC, e.g., 58119"
+                            "description": "Modified Julian Date"
                         },
-                        "X_POLE_WANDER_RADIANS": {
+                        "X": {
                             "type": "number",
-                            "description": "x component of Pole Wander in radians, e.g., 2.872908911518888E-7"
+                            "description": "x pole coordinate in arcseconds"
                         },
-                        "Y_POLE_WANDER_RADIANS": {
+                        "Y": {
                             "type": "number",
-                            "description": "y component of Pole Wander in radians, e.g., 1.2003259523750447E-6"
+                            "description": "y pole coordinate in arcseconds"
                         },
-                        "X_CELESTIAL_POLE_OFFSET_RADIANS": {
+                        "UT1_MINUS_UTC": {
                             "type": "number",
-                            "description": "x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10"
+                            "description": "UT1-UTC in seconds"
                         },
-                        "Y_CELESTIAL_POLE_OFFSET_RADIANS": {
+                        "LOD": {
                             "type": "number",
-                            "description": "y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10"
+                            "description": "Length of Day correction in seconds"
                         },
-                        "UT1_MINUS_UTC_SECONDS": {
+                        "DPSI": {
                             "type": "number",
-                            "description": "UT1 minus UTC in seconds, e.g., 0.2163567"
+                            "description": "Nutation correction in longitude (\u03b4\u0394\u03c8) in arcseconds"
                         },
-                        "TAI_MINUS_UTC_SECONDS": {
+                        "DEPS": {
+                            "type": "number",
+                            "description": "Nutation correction in obliquity (\u03b4\u0394\u03b5) in arcseconds"
+                        },
+                        "DX": {
+                            "type": "number",
+                            "description": "Celestial pole offset in x (\u03b4X) in arcseconds"
+                        },
+                        "DY": {
+                            "type": "number",
+                            "description": "Celestial pole offset in y (\u03b4Y) in arcseconds"
+                        },
+                        "DAT": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "TAI minus UTC in seconds, e.g., 37"
-                        },
-                        "LENGTH_OF_DAY_CORRECTION_SECONDS": {
-                            "type": "number",
-                            "description": "Correction to Length of Day in seconds, e.g., 8.094E-4"
+                            "description": "Delta Atomic Time (TAI-UTC) in seconds"
                         },
                         "DATA_TYPE": {
                             "$ref": "#/definitions/DataType",
@@ -5961,7 +5969,7 @@
                     },
                     "additionalProperties": false
                 },
-                "EOPCOLLECTION": {
+                "EOPCollection": {
                     "type": "object",
                     "properties": {
                         "RECORDS": {
@@ -7181,6 +7189,25 @@
                         "OTHER"
                     ]
                 },
+                "FluxQualifier": {
+                    "type": "string",
+                    "enum": [
+                        "OBSERVED",
+                        "BURST_ADJUSTED",
+                        "INTERPOLATED_EXTRAPOLATED",
+                        "NO_OBSERVATION",
+                        "CELESTRAK_INTERPOLATED"
+                    ]
+                },
+                "F107DataType": {
+                    "type": "string",
+                    "enum": [
+                        "OBS",
+                        "INT",
+                        "PRD",
+                        "PRM"
+                    ]
+                },
                 "RecordType": {
                     "type": "string",
                     "enum": [
@@ -7214,7 +7241,8 @@
                         "RFM",
                         "BOV",
                         "LDM",
-                        "TDM"
+                        "TDM",
+                        "SPW"
                     ]
                 },
                 "CRM": {
@@ -10099,43 +10127,51 @@
                     "properties": {
                         "DATE": {
                             "type": "string",
-                            "description": "Date in ISO 8601 format, e.g., \"2018-01-01T00:00:00Z\""
+                            "description": "Date in ISO 8601 format"
                         },
                         "MJD": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Modified Julian Date in UTC, e.g., 58119"
+                            "description": "Modified Julian Date"
                         },
-                        "X_POLE_WANDER_RADIANS": {
+                        "X": {
                             "type": "number",
-                            "description": "x component of Pole Wander in radians, e.g., 2.872908911518888E-7"
+                            "description": "x pole coordinate in arcseconds"
                         },
-                        "Y_POLE_WANDER_RADIANS": {
+                        "Y": {
                             "type": "number",
-                            "description": "y component of Pole Wander in radians, e.g., 1.2003259523750447E-6"
+                            "description": "y pole coordinate in arcseconds"
                         },
-                        "X_CELESTIAL_POLE_OFFSET_RADIANS": {
+                        "UT1_MINUS_UTC": {
                             "type": "number",
-                            "description": "x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10"
+                            "description": "UT1-UTC in seconds"
                         },
-                        "Y_CELESTIAL_POLE_OFFSET_RADIANS": {
+                        "LOD": {
                             "type": "number",
-                            "description": "y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10"
+                            "description": "Length of Day correction in seconds"
                         },
-                        "UT1_MINUS_UTC_SECONDS": {
+                        "DPSI": {
                             "type": "number",
-                            "description": "UT1 minus UTC in seconds, e.g., 0.2163567"
+                            "description": "Nutation correction in longitude (\u03b4\u0394\u03c8) in arcseconds"
                         },
-                        "TAI_MINUS_UTC_SECONDS": {
+                        "DEPS": {
+                            "type": "number",
+                            "description": "Nutation correction in obliquity (\u03b4\u0394\u03b5) in arcseconds"
+                        },
+                        "DX": {
+                            "type": "number",
+                            "description": "Celestial pole offset in x (\u03b4X) in arcseconds"
+                        },
+                        "DY": {
+                            "type": "number",
+                            "description": "Celestial pole offset in y (\u03b4Y) in arcseconds"
+                        },
+                        "DAT": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "TAI minus UTC in seconds, e.g., 37"
-                        },
-                        "LENGTH_OF_DAY_CORRECTION_SECONDS": {
-                            "type": "number",
-                            "description": "Correction to Length of Day in seconds, e.g., 8.094E-4"
+                            "description": "Delta Atomic Time (TAI-UTC) in seconds"
                         },
                         "DATA_TYPE": {
                             "$ref": "#/definitions/DataType",
@@ -10144,7 +10180,7 @@
                     },
                     "additionalProperties": false
                 },
-                "EOPCOLLECTION": {
+                "EOPCollection": {
                     "type": "object",
                     "properties": {
                         "RECORDS": {
@@ -11918,6 +11954,193 @@
                     },
                     "additionalProperties": false
                 },
+                "SPW": {
+                    "type": "object",
+                    "description": "Space Weather Data Record",
+                    "properties": {
+                        "DATE": {
+                            "type": "string",
+                            "description": "Date in ISO 8601 format"
+                        },
+                        "BSRN": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Bartels Solar Rotation Number"
+                        },
+                        "ND": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Day within Bartels cycle (1-27)"
+                        },
+                        "KP1": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10"
+                        },
+                        "KP2": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10"
+                        },
+                        "KP3": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10"
+                        },
+                        "KP4": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10"
+                        },
+                        "KP5": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10"
+                        },
+                        "KP6": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10"
+                        },
+                        "KP7": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10"
+                        },
+                        "KP8": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10"
+                        },
+                        "KP_SUM": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Sum of the 8 Kp indices for the day"
+                        },
+                        "AP1": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT"
+                        },
+                        "AP2": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT"
+                        },
+                        "AP3": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT"
+                        },
+                        "AP4": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT"
+                        },
+                        "AP5": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT"
+                        },
+                        "AP6": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT"
+                        },
+                        "AP7": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT"
+                        },
+                        "AP8": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT"
+                        },
+                        "AP_AVG": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Arithmetic average of the 8 Ap indices for the day"
+                        },
+                        "CP": {
+                            "type": "number",
+                            "description": "Planetary Daily Character Figure (0.0 to 2.5)"
+                        },
+                        "C9": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "C9 index (0-9)"
+                        },
+                        "ISN": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "International Sunspot Number"
+                        },
+                        "F107_OBS": {
+                            "type": "number",
+                            "description": "Observed 10.7cm Solar Radio Flux"
+                        },
+                        "F107_ADJ": {
+                            "type": "number",
+                            "description": "Adjusted 10.7cm Solar Radio Flux (to 1 AU)"
+                        },
+                        "F107_DATA_TYPE": {
+                            "$ref": "#/definitions/F107DataType",
+                            "description": "F10.7 Data Type"
+                        },
+                        "F107_OBS_CENTER81": {
+                            "type": "number",
+                            "description": "81-day centered average of observed F10.7"
+                        },
+                        "F107_OBS_LAST81": {
+                            "type": "number",
+                            "description": "81-day trailing average of observed F10.7"
+                        },
+                        "F107_ADJ_CENTER81": {
+                            "type": "number",
+                            "description": "81-day centered average of adjusted F10.7"
+                        },
+                        "F107_ADJ_LAST81": {
+                            "type": "number",
+                            "description": "81-day trailing average of adjusted F10.7"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SPWCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SPW"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "Record": {
                     "type": "object",
                     "properties": {
@@ -12015,6 +12238,9 @@
                                 },
                                 {
                                     "$ref": "#/definitions/TDM"
+                                },
+                                {
+                                    "$ref": "#/definitions/SPW"
                                 }
                             ]
                         }
@@ -16026,6 +16252,218 @@
                 }
             },
             "$ref": "#/definitions/TDM"
+        },
+        "SPW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "FluxQualifier": {
+                    "type": "string",
+                    "enum": [
+                        "OBSERVED",
+                        "BURST_ADJUSTED",
+                        "INTERPOLATED_EXTRAPOLATED",
+                        "NO_OBSERVATION",
+                        "CELESTRAK_INTERPOLATED"
+                    ]
+                },
+                "F107DataType": {
+                    "type": "string",
+                    "enum": [
+                        "OBS",
+                        "INT",
+                        "PRD",
+                        "PRM"
+                    ]
+                },
+                "SPW": {
+                    "type": "object",
+                    "description": "Space Weather Data Record",
+                    "properties": {
+                        "DATE": {
+                            "type": "string",
+                            "description": "Date in ISO 8601 format"
+                        },
+                        "BSRN": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Bartels Solar Rotation Number"
+                        },
+                        "ND": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Day within Bartels cycle (1-27)"
+                        },
+                        "KP1": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10"
+                        },
+                        "KP2": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10"
+                        },
+                        "KP3": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10"
+                        },
+                        "KP4": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10"
+                        },
+                        "KP5": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10"
+                        },
+                        "KP6": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10"
+                        },
+                        "KP7": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10"
+                        },
+                        "KP8": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10"
+                        },
+                        "KP_SUM": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Sum of the 8 Kp indices for the day"
+                        },
+                        "AP1": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT"
+                        },
+                        "AP2": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT"
+                        },
+                        "AP3": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT"
+                        },
+                        "AP4": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT"
+                        },
+                        "AP5": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT"
+                        },
+                        "AP6": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT"
+                        },
+                        "AP7": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT"
+                        },
+                        "AP8": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT"
+                        },
+                        "AP_AVG": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Arithmetic average of the 8 Ap indices for the day"
+                        },
+                        "CP": {
+                            "type": "number",
+                            "description": "Planetary Daily Character Figure (0.0 to 2.5)"
+                        },
+                        "C9": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "C9 index (0-9)"
+                        },
+                        "ISN": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "International Sunspot Number"
+                        },
+                        "F107_OBS": {
+                            "type": "number",
+                            "description": "Observed 10.7cm Solar Radio Flux"
+                        },
+                        "F107_ADJ": {
+                            "type": "number",
+                            "description": "Adjusted 10.7cm Solar Radio Flux (to 1 AU)"
+                        },
+                        "F107_DATA_TYPE": {
+                            "$ref": "#/definitions/F107DataType",
+                            "description": "F10.7 Data Type"
+                        },
+                        "F107_OBS_CENTER81": {
+                            "type": "number",
+                            "description": "81-day centered average of observed F10.7"
+                        },
+                        "F107_OBS_LAST81": {
+                            "type": "number",
+                            "description": "81-day trailing average of observed F10.7"
+                        },
+                        "F107_ADJ_CENTER81": {
+                            "type": "number",
+                            "description": "81-day centered average of adjusted F10.7"
+                        },
+                        "F107_ADJ_LAST81": {
+                            "type": "number",
+                            "description": "81-day trailing average of adjusted F10.7"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SPWCOLLECTION": {
+                    "type": "object",
+                    "properties": {
+                        "RECORDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SPW"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SPW"
         }
     }
 }

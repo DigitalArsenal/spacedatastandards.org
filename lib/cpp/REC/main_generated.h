@@ -43,6 +43,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -85,11 +86,12 @@ enum RecordType : uint8_t {
   RecordType_BOV = 28,
   RecordType_LDM = 29,
   RecordType_TDM = 30,
+  RecordType_SPW = 31,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_TDM
+  RecordType_MAX = RecordType_SPW
 };
 
-inline const RecordType (&EnumValuesRecordType())[31] {
+inline const RecordType (&EnumValuesRecordType())[32] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_CRM,
@@ -121,13 +123,14 @@ inline const RecordType (&EnumValuesRecordType())[31] {
     RecordType_RFM,
     RecordType_BOV,
     RecordType_LDM,
-    RecordType_TDM
+    RecordType_TDM,
+    RecordType_SPW
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[32] = {
+  static const char * const names[33] = {
     "NONE",
     "CRM",
     "OMM",
@@ -159,13 +162,14 @@ inline const char * const *EnumNamesRecordType() {
     "BOV",
     "LDM",
     "TDM",
+    "SPW",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_TDM)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_SPW)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -294,6 +298,10 @@ template<> struct RecordTypeTraits<TDM> {
   static const RecordType enum_value = RecordType_TDM;
 };
 
+template<> struct RecordTypeTraits<SPW> {
+  static const RecordType enum_value = RecordType_SPW;
+};
+
 bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj, RecordType type);
 bool VerifyRecordTypeVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
@@ -399,6 +407,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const TDM *value_as_TDM() const {
     return value_type() == RecordType_TDM ? static_cast<const TDM *>(value()) : nullptr;
+  }
+  const SPW *value_as_SPW() const {
+    return value_type() == RecordType_SPW ? static_cast<const SPW *>(value()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -527,6 +538,10 @@ template<> inline const LDM *Record::value_as<LDM>() const {
 
 template<> inline const TDM *Record::value_as<TDM>() const {
   return value_as_TDM();
+}
+
+template<> inline const SPW *Record::value_as<SPW>() const {
+  return value_as_SPW();
 }
 
 struct RecordBuilder {
@@ -816,6 +831,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     }
     case RecordType_TDM: {
       auto ptr = reinterpret_cast<const TDM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_SPW: {
+      auto ptr = reinterpret_cast<const SPW *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
