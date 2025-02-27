@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacAllergy_Abridged" : {
+      "type" : "object",
+      "description" : "/// Allergy information.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Type of patient allergy (e.g.  PENICILLIN, SULFA, OTHER).\nExample: /// Example: PENICILLIN\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "comments" : {
+                "type" : "string",
+                "description" : "Additional comments on the  patient's allergy information.\nExample: /// Example: Comments on the patient's allergies.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacAllergy_Abridged"
+}

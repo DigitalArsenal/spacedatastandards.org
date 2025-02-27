@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionAdditional_Full" : {
+      "type" : "object",
+      "description" : "/// Additional start and stop for the collection.",
+      "properties" : {
+        "id" : {
+                "type" : "string",
+                "description" : "Unique Identifier of additional collection period.\nExample: /// Example: ISRCOLLECTIONADDITIONAL\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "start" : {
+                "type" : "string",
+                "description" : "Start time of collection, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              },
+        "stop" : {
+                "type" : "string",
+                "description" : "Stop time of collection, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionAdditional_Full"
+}

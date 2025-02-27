@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacEtiology_Full" : {
+      "type" : "object",
+      "description" : "/// Medical condition causation information.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "The cause or manner of causation of the medical condition.  Intended as, but not constrained to, K07.1 EtiologyType Enumeration (e.g. ASSAULT, BUILDING COLLAPSE, BURN CHEMICAL, BURN ELECTRICAL, BURN, BURN HOT LIQUID, BURN RADIATION, BURN THERMAL, etc.).\nExample: /// Example: BURN\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "bodyPart" : {
+                "type" : "string",
+                "description" : "The body part or location affected from the etiology.  Intended as, but not constrained to, K07.1 Body Location Enumeration (e.g. ANKLE LEFT BACK, ANKLE LEFT FRONT, ANKLE RIGHT BACK, ANKLE RIGHT FRONT, ARM LEFT BACK, ARM LEFT ELBOW BACK, ARM LEFT ELBOW FRONT, ARM LEFT FRONT, ARM LEFT LOWER BACK, etc.).\nExample: /// Example: ARM LEFT FRONT\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "time" : {
+                "type" : "string",
+                "description" : "Datetime of the discovery of the etiology state in ISO 8601 UTC format.\nExample: /// Example: 2021-10-16T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "comments" : {
+                "type" : "string",
+                "description" : "Additional comments on the patient's etiology information.\nExample: /// Example: Comments on the etiology info.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacEtiology_Full"
+}

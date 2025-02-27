@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionTaskings_Ingest_type_Enum" : {
+      "type" : "string",
+      "enum": ["DELIBERATE", "DYNAMIC", "TRAINING", "TRANSIT"]
+    },
+    "ISRCollectionTaskings_Ingest_collectionType_Enum" : {
+      "type" : "string",
+      "enum": ["SIMULTANEOUS", "SEQUENTIAL", "OPERATIONALLY", "DRIVEN", "PRIORITY", "ORDER"]
+    },
+    "ISRCollectionTaskings_Ingest" : {
+      "type" : "object",
+      "description" : "/// Individual taskings to complete the mission.",
+      "properties" : {
+        "id" : {
+                "type" : "string",
+                "description" : "Tasking Unique Identifier.\nExample: /// Example: ISRCOLLECTIONTASKINGS-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "type" : {
+                "$ref" : "#/definitions/ISRCollectionTaskings_Ingest_type_Enum",
+                "description" : "Type of tasking.\nExample: /// Example: Deliberate\nConstraints: Minimum length = 1, Maximum length = 16"
+              },
+        "collectionType" : {
+                "$ref" : "#/definitions/ISRCollectionTaskings_Ingest_collectionType_Enum",
+                "description" : "Type of collection tasked.\nExample: /// Example: Simultaneous\nConstraints: Minimum length = 1, Maximum length = 16"
+              },
+        "taskingAOR" : {
+                "type" : "string",
+                "description" : "Human readable definition of this taskings Area Of Responsibility.\nExample: /// Example: Kandahar\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "eightLine" : {
+                "type" : "string",
+                "description" : "Eight line.\nExample: /// Example: No example provided.\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "taskingPrimaryIntelDiscipline" : {
+                "type" : "string",
+                "description" : "Primary type of intelligence to be collected during the mission.\nExample: /// Example: Sig\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingPrimarySubCategory" : {
+                "type" : "string",
+                "description" : "Sub category of primary intelligence to be collected.\nExample: /// Example: FMV\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingSecondaryIntelDiscipline" : {
+                "type" : "string",
+                "description" : "Type of tasking intelligence to be collected second.\nExample: /// Example: Intelligence_2\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingSecondarySubCategory" : {
+                "type" : "string",
+                "description" : "Mission sub category for secondary intelligence discipline to be collected.\nExample: /// Example: Convoy\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingRole" : {
+                "type" : "string",
+                "description" : "What is the primary objective(Role) of this task.\nExample: /// Example: Provide Targeting of Lead Vehicle\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingOperation" : {
+                "type" : "string",
+                "description" : "Tasking operation name.\nExample: /// Example: OP-HONEY-BADGER\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingPriority" : {
+                "type" : "number",
+                "description" : "Tasking Priority (1-n).\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "taskingSupportedUnit" : {
+                "type" : "string",
+                "description" : "Military Base to transmit the dissemination of this data.\nExample: /// Example: ENVOYS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingEmphasis" : {
+                "type" : "string",
+                "description" : "Tasking emphasis.\nExample: /// Example: EMPHASIS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingRetaskTime" : {
+                "type" : "string",
+                "description" : "Time of retasking, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              },
+        "taskingStartPointLat" : {
+                "type" : "number",
+                "description" : "WGS-84 latitude of the start position, in degrees. -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "taskingStartPointLong" : {
+                "type" : "number",
+                "description" : "WGS-84 longitude of the start position, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "taskingCollectionArea" : {
+                "type" : "string",
+                "description" : "Tasking geographical collection area.\nExample: /// Example: AREA\nConstraints: No constraints specified."
+              },
+        "taskingJoa" : {
+                "type" : "string",
+                "description" : "Joint Operations Area.\nExample: /// Example: AREA\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingSyncMatrixBin" : {
+                "type" : "string",
+                "description" : "A synchronization matrix is used to organize the logistics synchronization process during a mission.\nExample: /// Example: MATRIX\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingCountry" : {
+                "type" : "string",
+                "description" : "Country code of the tasking.  A Country may represent countries, multi-national consortiums, and international organizations.\nExample: /// Example: CODE\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "taskingRegion" : {
+                "type" : "string",
+                "description" : "Region of the tasking.\nExample: /// Example: REGION\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskingSubRegion" : {
+                "type" : "string",
+                "description" : "Subregion of the tasking.\nExample: /// Example: SUBREGION\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "sroTrack" : {
+                "type" : "string",
+                "description" : "Value of the Sensitive Reconnaissance Operations Track.\nExample: /// Example: SRO\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "specialComGuidance" : {
+                "type" : "string",
+                "description" : "Free text field for the user to specify special instructions needed for this collection.\nExample: /// Example: TEXT\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "collectionPeriods" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "taskingCollectionRequirements" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Tasking desired collection requirements.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionTaskings_Ingest"
+}

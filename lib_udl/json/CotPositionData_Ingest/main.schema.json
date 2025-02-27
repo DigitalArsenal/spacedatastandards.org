@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CotPositionData_Ingest" : {
+      "type" : "object",
+      "description" : "/// Schema for the CotPositionData to post.",
+      "properties" : {
+        "callSign" : {
+                "type" : "string",
+                "description" : "Name of the POI target Object.\nExample: /// Example: POI_NAME\nConstraints: Minimum length = 1, Maximum length = 2147483647"
+              },
+        "teamRole" : {
+                "type" : "string",
+                "description" : "Team role  (Team Member| Team Lead | HQ | Sniper | Medic | Forward Observer | RTO | K9).\nExample: /// Example: Team Member\nConstraints: Minimum length = 1, Maximum length = 2147483647"
+              },
+        "team" : {
+                "type" : "string",
+                "description" : "Description of the POI target Object.\nExample: /// Example: Description of the object\nConstraints: Minimum length = 1, Maximum length = 2147483647"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CotPositionData_Ingest"
+}

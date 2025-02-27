@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionActual_Abridged" : {
+      "type" : "object",
+      "description" : "/// Actual start and stop for the collection.",
+      "properties" : {
+        "id" : {
+                "type" : "string",
+                "description" : "Unique Identifier of actual collection period for historical archive.\nExample: /// Example: ISRCOLLECTIONACTUAL-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "start" : {
+                "type" : "string",
+                "description" : "Start time the collection actually occurred, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              },
+        "stop" : {
+                "type" : "string",
+                "description" : "Stop time the collection actually occurred, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionActual_Abridged"
+}

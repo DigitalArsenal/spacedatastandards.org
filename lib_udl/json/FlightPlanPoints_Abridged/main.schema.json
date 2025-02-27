@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FlightPlanPoints_Abridged" : {
+      "type" : "object",
+      "description" : "/// Array of point data for this Point Group.",
+      "properties" : {
+        "pointName" : {
+                "type" : "string",
+                "description" : "Name of this point.\nExample: /// Example: CRUISE ALTITUDE ETP\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "fppLat" : {
+                "type" : "number",
+                "description" : "WGS84 latitude of the point location, in degrees. -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "fppLon" : {
+                "type" : "number",
+                "description" : "WGS84 longitude of the point location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 179.1\nConstraints: No constraints specified."
+              },
+        "fppEta" : {
+                "type" : "string",
+                "description" : "Estimated Time of Arrival (ETA) at this point in ISO 8601 UTC format, with millisecond precision.\nExample: /// Example: 2023-09-09T01:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "fppReqFuel" : {
+                "type" : "number",
+                "description" : "Fuel required at this point to execute an Equal Time Point (ETP) or Extended Operations (ETOPS) plan in pounds.\nExample: /// Example: 4250.1\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FlightPlanPoints_Abridged"
+}

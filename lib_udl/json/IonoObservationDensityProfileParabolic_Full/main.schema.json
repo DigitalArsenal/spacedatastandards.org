@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfileParabolic_Full" : {
+      "type" : "object",
+      "description" : "/// Coefficients to describe the E, F1, and F2 layers as parabolic-shape segments.",
+      "properties" : {
+        "description" : {
+                "type" : "string",
+                "description" : "General description of the QP computation algorithm.\nExample: /// Example: Best-fit algorithm in NHPC software.\nConstraints: No constraints specified."
+              },
+        "parabolicItems" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Describes the E, F1, and F2 layers as parabolic-shape segments.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfileParabolic_Full"
+}

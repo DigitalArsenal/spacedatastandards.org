@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FlightPlanAirRefuelEvents_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of air refueling events occurring on this flight.",
+      "properties" : {
+        "arDegrade" : {
+                "type" : "number",
+                "description" : "Additional degrade for air refueling, cumulative with fuelDegrade field percent.\nExample: /// Example: 3.1\nConstraints: No constraints specified."
+              },
+        "arNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of this air refueling event within the flight plan.\nExample: /// Example: 2\nConstraints: No constraints specified."
+              },
+        "arExchangedFuel" : {
+                "type" : "number",
+                "description" : "Fuel onloaded (use positive numbers) or fuel offloaded (use negative numbers) in pounds.\nExample: /// Example: 1500.1\nConstraints: No constraints specified."
+              },
+        "divertFuel" : {
+                "type" : "number",
+                "description" : "Fuel required to fly from air refueling exit point to air refueling divert alternate airfield in pounds.\nExample: /// Example: 143000.1\nConstraints: No constraints specified."
+              },
+        "exitFuel" : {
+                "type" : "number",
+                "description" : "Fuel remaining at the air refueling exit in pounds.\nExample: /// Example: 160000.1\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FlightPlanAirRefuelEvents_Abridged"
+}

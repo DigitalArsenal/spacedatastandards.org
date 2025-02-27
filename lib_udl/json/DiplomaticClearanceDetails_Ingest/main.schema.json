@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DiplomaticClearanceDetails_Ingest" : {
+      "type" : "object",
+      "description" : "/// Collection of diplomatic clearance details.",
+      "properties" : {
+        "idSortie" : {
+                "type" : "string",
+                "description" : "Unique identifier of the Aircraft Sortie associated with this diplomatic clearance record.\nExample: /// Example: 207010e0-f97d-431c-8c00-7e46acfef0f5\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "legNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Identifies the Itinerary point of a sortie where an air event occurs.\nExample: /// Example: 825\nConstraints: No constraints specified."
+              },
+        "routeString" : {
+                "type" : "string",
+                "description" : "The 1801 fileable route of flight string associated with this diplomatic clearance. The route of flight string contains route designators, significant points, change of speed/altitude, change of flight rules, and cruise climbs.\nExample: /// Example: DCT DOH P430 BAYAN/M062F150 P430 RAMKI\nConstraints: Minimum length = 0, Maximum length = 4000"
+              },
+        "validStartTime" : {
+                "type" : "string",
+                "description" : "The start time of the validity of this diplomatic clearance, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-01T01:01:01.123Z\nConstraints: No constraints specified."
+              },
+        "validEndTime" : {
+                "type" : "string",
+                "description" : "The end time of the validity of this diplomatic clearance, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-01T01:01:01.123Z\nConstraints: No constraints specified."
+              },
+        "clearanceId" : {
+                "type" : "string",
+                "description" : "Identifier of this diplomatic clearance issued by the host country.\nExample: /// Example: MFMW225662GHQ\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "externalClearanceId" : {
+                "type" : "string",
+                "description" : "Optional clearance ID from external systems. This field has no meaning within UDL and is provided as a convenience for systems that require tracking of an internal system generated ID.\nExample: /// Example: aa714f4d52a37ab1a00b21af9566e379\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "clearedCallSign" : {
+                "type" : "string",
+                "description" : "The call sign of the sortie cleared with this diplomatic clearance.\nExample: /// Example: FALCN09\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "sequenceNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The placement of this diplomatic clearance within a sequence of clearances used on a sortie. For example, a sequence value of 3 means that it is the third diplomatic clearance the aircraft will use.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "countryCode" : {
+                "type" : "string",
+                "description" : "The DoD Standard Country Code designator for the country issuing the diplomatic clearance. This field will be set to \"OTHR\" if the source value does not match a UDL Country code value (ISO-3166-ALPHA-2).\nExample: /// Example: NL\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "altCountryCode" : {
+                "type" : "string",
+                "description" : "Specifies an alternate country code if the data provider code is not part of an official Country Code standard such as ISO-3166 or FIPS. This field will be set to the value provided by the source and should be used for all Queries specifying a Country Code.\nExample: /// Example: IZ\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "countryName" : {
+                "type" : "string",
+                "description" : "Name of the country issuing this diplomatic clearance.\nExample: /// Example: NETHERLANDS\nConstraints: Minimum length = 0, Maximum length = 50"
+              },
+        "validDesc" : {
+                "type" : "string",
+                "description" : "Description of when this diplomatic clearance is valid.\nExample: /// Example: CY2023\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "windowRemark" : {
+                "type" : "string",
+                "description" : "Remarks concerning the valid diplomatic clearance window.\nExample: /// Example: Period remarks\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "entryPoint" : {
+                "type" : "string",
+                "description" : "The navigation point name where the aircraft must enter the country.\nExample: /// Example: LOMOS\nConstraints: Minimum length = 0, Maximum length = 38"
+              },
+        "entryNET" : {
+                "type" : "string",
+                "description" : "Earliest time the aircraft may enter the country, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-01T01:01:01.123Z\nConstraints: No constraints specified."
+              },
+        "exitPoint" : {
+                "type" : "string",
+                "description" : "The navigation point name where the aircraft must exit the country.\nExample: /// Example: BUDOP\nConstraints: Minimum length = 0, Maximum length = 38"
+              },
+        "exitNLT" : {
+                "type" : "string",
+                "description" : "Latest time the aircraft may exit the country, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-01T01:01:01.123Z\nConstraints: No constraints specified."
+              },
+        "reqICAO" : {
+                "type" : "boolean",
+                "description" : "Flag indicating whether the clearance request requires ICAO specific information.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "action" : {
+                "type" : "string",
+                "description" : "The type of action the aircraft can take with this diplomatic clearance (e.g. O for Overfly, L for Land, etc.).\nExample: /// Example: O\nConstraints: Minimum length = 0, Maximum length = 1"
+              },
+        "status" : {
+                "type" : "string",
+                "description" : "Indicates the current status of the diplomatic clearance request.\nExample: /// Example: IN WORK\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "profile" : {
+                "type" : "string",
+                "description" : "The diplomatic clearance profile name used within clearance management systems.\nExample: /// Example: T LAND/OFLY IATA COMPLIANT CARGO 23\nConstraints: Minimum length = 0, Maximum length = 100"
+              },
+        "reqPoint" : {
+                "type" : "boolean",
+                "description" : "Flag indicating whether entry/exit points are required for clearances.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "clearanceRemark" : {
+                "type" : "string",
+                "description" : "Remarks concerning this diplomatic clearance.\nExample: /// Example: Clearance remarks\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DiplomaticClearanceDetails_Ingest"
+}

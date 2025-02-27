@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsStocks_Full" : {
+      "type" : "object",
+      "description" : "/// The supply stocks for this support item.",
+      "properties" : {
+        "sourceICAO" : {
+                "type" : "string",
+                "description" : "The ICAO code for the primary location with available parts.\nExample: /// Example: PHIK\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "quantity" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The quantity of available parts needed from sourceICAO.\nExample: /// Example: 4\nConstraints: No constraints specified."
+              },
+        "stockCheckTime" : {
+                "type" : "string",
+                "description" : "The datetime when the parts were sourced, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-13T13:47:00.123Z\nConstraints: No constraints specified."
+              },
+        "stockPOC" : {
+                "type" : "string",
+                "description" : "The point of contact at the sourced location.\nExample: /// Example: SMITH, JOHN J\nConstraints: Minimum length = 0, Maximum length = 68"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsStocks_Full"
+}

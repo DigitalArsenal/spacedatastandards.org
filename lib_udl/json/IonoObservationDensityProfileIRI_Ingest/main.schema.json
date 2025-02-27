@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfileIRI_Ingest" : {
+      "type" : "object",
+      "description" : "/// Full set of the IRI formalism coefficients.",
+      "properties" : {
+        "description" : {
+                "type" : "string",
+                "description" : "Description of IRI implementation.\nExample: /// Example: Full altitude range of 1D vertical plasma density profile for D, E, and F regions of the ionosphere provided by IRI, in which model parameters are replaced with observed ionogram-derived data where available.\nConstraints: No constraints specified."
+              },
+        "nmF2" : {
+                "type" : "number",
+                "description" : "Peak density of F2 layer, in grams per cubic centimeter.\nExample: /// Example: 313283.1\nConstraints: No constraints specified."
+              },
+        "hmF2" : {
+                "type" : "number",
+                "description" : "Peak height of F2 layer, in kilometers.\nExample: /// Example: 265.42\nConstraints: No constraints specified."
+              },
+        "b0" : {
+                "type" : "number",
+                "description" : "B0 parameter of the F2 layer shape.\nExample: /// Example: 245.1\nConstraints: No constraints specified."
+              },
+        "b1" : {
+                "type" : "number",
+                "description" : "B1 parameter of the F2 layer shape.\nExample: /// Example: 3.45\nConstraints: No constraints specified."
+              },
+        "nmF1" : {
+                "type" : "number",
+                "description" : "Peak density of the F1 layer, in grams per cubic centimeter.\nExample: /// Example: 210486\nConstraints: No constraints specified."
+              },
+        "hmF1" : {
+                "type" : "number",
+                "description" : "Peak height of the F1 layer, in kilometers.\nExample: /// Example: 210.3\nConstraints: No constraints specified."
+              },
+        "d1" : {
+                "type" : "number",
+                "description" : "D1 parameter of the F1 layer shape.\nExample: /// Example: 0\nConstraints: No constraints specified."
+              },
+        "hz" : {
+                "type" : "number",
+                "description" : "Height HZ of the interim layer, in kilometers.\nExample: /// Example: 142.7\nConstraints: No constraints specified."
+              },
+        "hValTop" : {
+                "type" : "number",
+                "description" : "The valley height, in kilometers.\nExample: /// Example: 116.2\nConstraints: No constraints specified."
+              },
+        "nValB" : {
+                "type" : "number",
+                "description" : "The valley depth, in grams per cubic centimeter.\nExample: /// Example: 147025.1\nConstraints: No constraints specified."
+              },
+        "nmE" : {
+                "type" : "number",
+                "description" : "Peak density of the E layer, in per cubic centimeter.\nExample: /// Example: 154164.1\nConstraints: No constraints specified."
+              },
+        "hmE" : {
+                "type" : "number",
+                "description" : "Peak height of the F2 layer, in kilometers.\nExample: /// Example: 99.8\nConstraints: No constraints specified."
+              },
+        "hdx" : {
+                "type" : "number",
+                "description" : "Height of the intermediate region at the top of D region, in kilometers.\nExample: /// Example: 85.6\nConstraints: No constraints specified."
+              },
+        "nmD" : {
+                "type" : "number",
+                "description" : "Peak density of the D layer, in per cubic centimeter.\nExample: /// Example: 937543116.1\nConstraints: No constraints specified."
+              },
+        "hmD" : {
+                "type" : "number",
+                "description" : "Peak height of the D layer, in kilometers.\nExample: /// Example: 81.1\nConstraints: No constraints specified."
+              },
+        "ha" : {
+                "type" : "number",
+                "description" : "Starting height of the D layer, in kilometers.\nExample: /// Example: 50.1\nConstraints: No constraints specified."
+              },
+        "fp1" : {
+                "type" : "number",
+                "description" : "TBD.\nExample: /// Example: 0.0474732023322638\nConstraints: No constraints specified."
+              },
+        "fp2" : {
+                "type" : "number",
+                "description" : "TBD.\nExample: /// Example: -0.00112685246984002\nConstraints: No constraints specified."
+              },
+        "fp30" : {
+                "type" : "number",
+                "description" : "TBD.\nExample: /// Example: 0.00827559450035957\nConstraints: No constraints specified."
+              },
+        "fp3U" : {
+                "type" : "number",
+                "description" : "TBD.\nExample: /// Example: 0.000201178475411428\nConstraints: No constraints specified."
+              },
+        "chi" : {
+                "type" : "number",
+                "description" : "Peak Density Thickness (PDT) for description of the flat-nose shape, in kilometers.\nExample: /// Example: 35.1\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfileIRI_Ingest"
+}

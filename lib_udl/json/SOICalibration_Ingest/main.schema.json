@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SOICalibration_Ingest" : {
+      "type" : "object",
+      "description" : "/// Schema for SOI Calibration data.",
+      "properties" : {
+        "calExtinctionCoeff" : {
+                "type" : "number",
+                "description" : "Coefficient value for how much signal would be lost to atmospheric attenuation for a star at zenith, in magnitudes per air mass.\nExample: /// Example: 0.2\nConstraints: No constraints specified."
+              },
+        "calSkyBg" : {
+                "type" : "number",
+                "description" : "Average Sky Background signals in magnitudes, at calibration. Sky Background refers to the incoming light from an apparently empty part of the night sky.\nExample: /// Example: 30086.25\nConstraints: No constraints specified."
+              },
+        "calBgIntensity" : {
+                "type" : "number",
+                "description" : "Background intensity, at calibration, specified in kilowatts per steradian per micrometer.\nExample: /// Example: 1.1\nConstraints: No constraints specified."
+              },
+        "calSpectralFilterSolarMag" : {
+                "type" : "number",
+                "description" : "In-band solar magnitudes at 1 A.U, at calibration (e.g. -5.0 to 30.0).\nExample: /// Example: 19.23664587\nConstraints: No constraints specified."
+              },
+        "calZeroPoint" : {
+                "type" : "number",
+                "description" : "Value representing the difference between the catalog magnitude and instrumental magnitude for a set of standard stars, at calibration (e.g. -5.0 to 30.0).\nExample: /// Example: 25.15682157\nConstraints: No constraints specified."
+              },
+        "calNumDetectedStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of detected stars in the FOV with the target object, at calibration. Helps identify frames with clouds.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "calNumCorrelatedStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of correlated stars in the FOV with the target object, at calibration. Can be 0 for narrow FOV sensors.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "calExtinctionCoeffUnc" : {
+                "type" : "number",
+                "description" : "Extinction coefficient uncertainty in magnitudes, at calibration, which represents the difference between the measured brightness and predicted brightness of the star with the extinction removed, making it exo-atmospheric (e.g. -5.0 to 30.0).\nExample: /// Example: 0.06474939\nConstraints: No constraints specified."
+              },
+        "calExtinctionCoeffMaxUnc" : {
+                "type" : "number",
+                "description" : "Maximum extinction coefficient uncertainty in magnitudes, at calibration (e.g. -5.0 to 30.0).\nExample: /// Example: 0.19708838\nConstraints: No constraints specified."
+              },
+        "calTime" : {
+                "type" : "string",
+                "description" : "Start time of calibration in ISO 8601 UTC time, with millisecond precision.\nExample: /// Example: 2023-01-02T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "calType" : {
+                "type" : "string",
+                "description" : "Type of calibration (e.g. PRE, MID, POST).\nExample: /// Example: PRE\nConstraints: Minimum length = 0, Maximum length = 24"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SOICalibration_Ingest"
+}

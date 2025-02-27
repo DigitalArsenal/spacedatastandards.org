@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirTransportMissionHazMat_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of Hazardous Material information associated with this Air Transport Mission.",
+      "properties" : {
+        "extHazMatId" : {
+                "type" : "string",
+                "description" : "The hazMat identifier provided by the originating source.\nExample: /// Example: cb6289e0f38534e01291ab6421d42724\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "itemName" : {
+                "type" : "string",
+                "description" : "United Nations proper shipping name of the hazardous material according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.\nExample: /// Example: LITHIUM METAL BATTERIES\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "unNum" : {
+                "type" : "string",
+                "description" : "United Nations number or North America number that identifies hazardous materials according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.\nExample: /// Example: 0181\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "pieces" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of pieces of hazardous cargo.\nExample: /// Example: 29\nConstraints: No constraints specified."
+              },
+        "weight" : {
+                "type" : "number",
+                "description" : "Total weight of hazardous cargo, including non-explosive parts, in kilograms.\nExample: /// Example: 22.1\nConstraints: No constraints specified."
+              },
+        "netExpWt" : {
+                "type" : "number",
+                "description" : "Net explosive weight of the hazardous material, in kilograms.\nExample: /// Example: 12.1\nConstraints: No constraints specified."
+              },
+        "classDiv" : {
+                "type" : "number",
+                "description" : "Class and division of the hazardous material according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.\nExample: /// Example: 1.1\nConstraints: No constraints specified."
+              },
+        "cgc" : {
+                "type" : "string",
+                "description" : "Compatibility group code used to specify the controls for the transportation and storage of hazardous materials according to the Hazardous Materials Regulations issued by the U.S. Department of Transportation.\nExample: /// Example: A\nConstraints: Minimum length = 0, Maximum length = 2"
+              },
+        "cgn" : {
+                "type" : "string",
+                "description" : "Comma delimited list of Note IDs for compatibility groups, specific to GDSS systems.\nExample: /// Example: 4,5,7,8\nConstraints: Minimum length = 0, Maximum length = 100"
+              },
+        "applicableNotes" : {
+                "type" : "string",
+                "description" : "Comma delimited list of Note IDs for Item Class Segregation groups, specific to GDSS systems.\nExample: /// Example: 11,12\nConstraints: Minimum length = 0, Maximum length = 100"
+              },
+        "onItin" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Itinerary number that identifies where the hazardous material is loaded.\nExample: /// Example: 50\nConstraints: No constraints specified."
+              },
+        "onICAO" : {
+                "type" : "string",
+                "description" : "The International Civil Aviation Organization (ICAO) code of the site where the hazardous material is loaded.\nExample: /// Example: LIRQ\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "offItin" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Itinerary number that identifies where the hazardous material is unloaded.\nExample: /// Example: 300\nConstraints: No constraints specified."
+              },
+        "offICAO" : {
+                "type" : "string",
+                "description" : "The International Civil Aviation Organization (ICAO) code of the site where the hazardous material is unloaded.\nExample: /// Example: MBPV\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "planned" : {
+                "type" : "string",
+                "description" : "Flag indicating if hazardous material is associated with this air transport mission. Possible values are P (planned to be associated with the mission) or A (actually associated with the mission). Enum: [P, A].\nExample: /// Example: P\nConstraints: Minimum length = 0, Maximum length = 1"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirTransportMissionHazMat_Abridged"
+}

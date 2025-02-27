@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacEnemyData_Abridged" : {
+      "type" : "object",
+      "description" : "/// Data defining any enemy intelligence reported by the requestor.",
+      "properties" : {
+        "dirToEnemy" : {
+                "type" : "string",
+                "description" : "Directions to known enemies in the operation area (NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, SURROUNDED).\nExample: /// Example: NORTH\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "hostileFireType" : {
+                "type" : "string",
+                "description" : "The type of hostile fire received (SMALL ARMS, MORTAR, ARTILLERY, ROCKETS).\nExample: /// Example: SMALL ARMS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "friendliesRemarks" : {
+                "type" : "string",
+                "description" : "Comments provided by friendlies about the evac zone.\nExample: /// Example: Comments from friendlies.\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "hlzRemarks" : {
+                "type" : "string",
+                "description" : "Hot Landing Zone remarks.\nExample: /// Example: Remarks about hot landing zone.\nConstraints: Minimum length = 0, Maximum length = 128"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacEnemyData_Abridged"
+}

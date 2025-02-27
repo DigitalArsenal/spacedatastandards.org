@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "NavalFlightOperations_Full" : {
+      "type" : "object",
+      "description" : "/// Collection that specifies the naval flight operations for this ATO.",
+      "properties" : {
+        "shipName" : {
+                "type" : "string",
+                "description" : "The name of a ship or maritime vessel. Specify UNKNOWN if name is not known.\nExample: /// Example: USS WASP\nConstraints: Minimum length = 1, Maximum length = 48"
+              },
+        "fltOpStart" : {
+                "type" : "string",
+                "description" : "The time when flight operations begin in ISO8601 UTC format with millisecond precision.\nExample: /// Example: 2021-02-25T12:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "fltOpStop" : {
+                "type" : "string",
+                "description" : "The time when flight operations end in ISO8601 UTC format with millisecond precision.\nExample: /// Example: 2021-02-25T12:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "schdLaunchRcvyTime" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of times at which an aircraft will be launched and/or recovered in ISO8601 UTC format with millisecond precision.\nExample: /// Example: ['2021-02-25T12:00:00.123Z']\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NavalFlightOperations_Full"
+}

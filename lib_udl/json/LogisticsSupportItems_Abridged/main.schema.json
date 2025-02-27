@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsSupportItems_Abridged" : {
+      "type" : "object",
+      "description" : "/// Support items associated with this LogisticsSupport record.",
+      "properties" : {
+        "recoveryRequestTypeCode" : {
+                "type" : "string",
+                "description" : "The type of recovery request needed. Contact the source provider for details.\nExample: /// Example: E\nConstraints: Minimum length = 1, Maximum length = 1"
+              },
+        "requestNumber" : {
+                "type" : "string",
+                "description" : "The request or record number for this item type (Equipent, Part, or MRT).\nExample: /// Example: 89208\nConstraints: Minimum length = 0, Maximum length = 5"
+              },
+        "quantity" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Military aircraft discrepancy logistics requisition ordered quantity. The quantity of equipment ordered that is required to fix the aircraft.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "description" : {
+                "type" : "string",
+                "description" : "The technical order name of the part ordered.\nExample: /// Example: HOIST ADAPTER KIT\nConstraints: Minimum length = 0, Maximum length = 150"
+              },
+        "shipmentUnitId" : {
+                "type" : "string",
+                "description" : "Shipment Unit Identifier is the Transportation Control Number (TCN) for shipping that piece of equipment being requested.\nExample: /// Example: FB44273196X501XXX\nConstraints: Minimum length = 0, Maximum length = 17"
+              },
+        "redeployShipmentUnitId" : {
+                "type" : "string",
+                "description" : "This is the Redeploy (return) Transportation Control Number/Tracking Reference Number for the selected item.\nExample: /// Example: X400LA31949108\nConstraints: Minimum length = 0, Maximum length = 17"
+              },
+        "jobControlNumber" : {
+                "type" : "string",
+                "description" : "A number assigned by Job Control to monitor and record maintenance actions required to correct the associated aircraft maintenance discrepancy.  It is seven, nine or twelve characters, depending on the base-specific numbering scheme.  If seven characters: characters 1-3 are Julian date, 4-7 are sequence numbers.  If nine characters: characters 1-2 are last two digits of the year, characters 3-5 are Julian date, 6-9 are sequence numbers.  If twelve characters: characters 1-2 are last two digits of the year, 3-5 are Julian date, 6-9 are sequence numbers, and 10-12 are a three-digit supplemental number.\nExample: /// Example: 231942400\nConstraints: Minimum length = 0, Maximum length = 12"
+              },
+        "sourceICAO" : {
+                "type" : "string",
+                "description" : "The code that represents the International Civil Aviation Organization (ICAO) designations of an airport.\nExample: /// Example: PHIK\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "deployPlanNumber" : {
+                "type" : "string",
+                "description" : "System generated reference id for the transportation plan.  Format: TXXXXXNNNN  T - Transportation, Sequence Number, Node Id.\nExample: /// Example: T89003\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "redeployPlanNumber" : {
+                "type" : "string",
+                "description" : "System generated reference id for the transportation plan.  Format: TXXXXXNNNN  T - Transportation, Sequence Number, Node Id.\nExample: /// Example: T89003\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "cannibalized" : {
+                "type" : "boolean",
+                "description" : "This element indicates whether or not the supplied item is contained within another item.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "siPOC" : {
+                "type" : "string",
+                "description" : "The point of contact is a free text field to add information about the individual(s) with knowledge of the referenced requested or supplied item(s). The default value for this field is the last name, first name, and middle initial of the operator who created the records and/or generated the transaction.\nExample: /// Example: SMITH, JOHN J\nConstraints: Minimum length = 0, Maximum length = 68"
+              },
+        "readyTime" : {
+                "type" : "string",
+                "description" : "The time the item is ready, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:04:00.123Z\nConstraints: No constraints specified."
+              },
+        "receivedTime" : {
+                "type" : "string",
+                "description" : "The time the item is received, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:04:00.123Z\nConstraints: No constraints specified."
+              },
+        "resupportFlag" : {
+                "type" : "boolean",
+                "description" : "This element indicates if the supplied item is characterized as additional support.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "itemLastChangedDate" : {
+                "type" : "string",
+                "description" : "The last time this supported item was updated, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:04:00.123Z\nConstraints: No constraints specified."
+              },
+        "logisticsParts" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The parts associated with this support item.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "logisticsSpecialties" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The specialties required to implement this support item.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "logisticsRemarks" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Remarks associated with this support item.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsSupportItems_Abridged"
+}

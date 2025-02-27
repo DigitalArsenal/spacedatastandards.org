@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GenText_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection that details special instructions, important information, guidance, and amplifying information regarding this ATO.",
+      "properties" : {
+        "textInd" : {
+                "type" : "string",
+                "description" : "The indicator for the general text block. Examples include \"OPENING REMARKS\" and \"GENERAL SPINS INFORMATION\".\nExample: /// Example: OPENING REMARKS\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "text" : {
+                "type" : "string",
+                "description" : "The free text that describes the information specific to the text indicator.\nExample: /// Example: FREE-TEXT\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GenText_Abridged"
+}

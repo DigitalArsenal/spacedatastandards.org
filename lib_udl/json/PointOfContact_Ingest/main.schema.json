@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PointOfContact_Ingest" : {
+      "type" : "object",
+      "description" : "/// Point of contacts for scheduling or modifying the route.",
+      "properties" : {
+        "pocSequenceId" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sequencing field for point of contact.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "pocTypeName" : {
+                "type" : "string",
+                "description" : "A code or name that represents the contact's role in association to the track route (ex. Originator, Scheduler, Maintainer, etc.).\nExample: /// Example: Originator\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "pocName" : {
+                "type" : "string",
+                "description" : "The name of the contact.\nExample: /// Example: Fred Smith\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "office" : {
+                "type" : "string",
+                "description" : "Office name for which the contact belongs.\nExample: /// Example: A34\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "username" : {
+                "type" : "string",
+                "description" : "The username of the contact.\nExample: /// Example: fgsmith\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "rank" : {
+                "type" : "string",
+                "description" : "The rank of contact.\nExample: /// Example: Capt\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "pocOrg" : {
+                "type" : "string",
+                "description" : "Organization name for which the contact belongs.\nExample: /// Example: HQAF\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "phone" : {
+                "type" : "string",
+                "description" : "Phone number of the contact.\nExample: /// Example: 8675309\nConstraints: Minimum length = 0, Maximum length = 45"
+              },
+        "remark" : {
+                "type" : "string",
+                "description" : "Text of the remark.\nExample: /// Example: POC remark.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PointOfContact_Ingest"
+}

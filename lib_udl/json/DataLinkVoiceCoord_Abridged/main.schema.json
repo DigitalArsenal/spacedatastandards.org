@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkVoiceCoord_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of information regarding the function, frequency, and priority of interface control and coordination nets for this data link message. There can be 1 to many DataLinkVoiceCoord collections within the datalink service.",
+      "properties" : {
+        "voiceNetDes" : {
+                "type" : "string",
+                "description" : "Designator assigned to a voice interface control and coordination net for this data link message (e.g. ADCCN, DCN, VPN, etc.).\nExample: /// Example: VPN\nConstraints: Minimum length = 0, Maximum length = 5"
+              },
+        "freqDes" : {
+                "type" : "string",
+                "description" : "Designator used in nonsecure communications to refer to a radio frequency for this data link message.\nExample: /// Example: ST300A\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "commPri" : {
+                "type" : "string",
+                "description" : "Priority of a communication circuit, channel or frequency for this data link message such as P (Primary), M (Monitor), etc.\nExample: /// Example: P\nConstraints: Minimum length = 0, Maximum length = 1"
+              },
+        "teleFreqNums" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of telephone numbers or contact frequencies used for interface control for this data link message.\nExample: /// Example: ['TEL:804-555-4142', 'TEL:804-867-5309']\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkVoiceCoord_Abridged"
+}

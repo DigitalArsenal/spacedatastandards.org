@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirspaceControlOrderReference_Abridged" : {
+      "type" : "object",
+      "description" : "/// The airspaceControlReferences set provides both USMTF and non-USMTF references for this airspace control order.",
+      "properties" : {
+        "refSId" : {
+                "type" : "string",
+                "description" : "Specifies an alphabetic serial number identifying a reference pertaining to this message.\nExample: /// Example: A\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "refType" : {
+                "type" : "string",
+                "description" : "Specifies the type for this reference.\nExample: /// Example: NBC1\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "refOriginator" : {
+                "type" : "string",
+                "description" : "The originator of this reference.\nExample: /// Example: SHAPE\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "refTs" : {
+                "type" : "string",
+                "description" : "Timestamp of the referenced message, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-07T13:55:43.123Z\nConstraints: No constraints specified."
+              },
+        "refSerialNum" : {
+                "type" : "string",
+                "description" : "The reference serial number.\nExample: /// Example: 100\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "refSpecialNotation" : {
+                "type" : "string",
+                "description" : "Indicates any special actions, restrictions, guidance, or information relating to this reference.\nExample: /// Example: NOTAL\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "refSICs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of NATO Subject Indicator Codes (SIC) or filing numbers of the document being referenced.\nExample: /// Example: ['RCA', 'FN:4503B']\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirspaceControlOrderReference_Abridged"
+}

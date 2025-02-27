@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationTraceGeneric_Ingest" : {
+      "type" : "object",
+      "description" : "/// Multi dimensional array of trace generic data.",
+      "properties" : {
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Multi-dimensional Array. The 1st dimension spans points along the trace while the 2nd dimension spans frequency-range pairs.\nExample: /// Example: [[[1.23, 1.0903]]]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of dimension names for trace generic data.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the trace generic data.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationTraceGeneric_Ingest"
+}

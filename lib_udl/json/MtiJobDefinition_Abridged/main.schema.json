@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiJobDefinition_Abridged" : {
+      "type" : "object",
+      "description" : "/// The means for the platform to pass information pertaining to the sensor job that will be performed and details of the location parameters (terrain elevation model and geoid model) used in the measurement.",
+      "properties" : {
+        "j2" : {
+                "type" : "string",
+                "description" : "The type of sensor or the platform.\nExample: /// Example: TYPE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "j3" : {
+                "type" : "string",
+                "description" : "Identifier of the particular variant of the sensor type.\nExample: /// Example: J3-ID\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "j4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Flag field indicating whether filtering has been applied to the targets detected within the dwell area.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "j5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Priority of this tasking request relative to all other active tasking requests scheduled for execution on the specified platform.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "j6" : {
+                "type" : "number",
+                "description" : "North-South position of the first corner (Point A) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j7" : {
+                "type" : "number",
+                "description" : "East-West position of the first corner (Point A) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j8" : {
+                "type" : "number",
+                "description" : "North-South position of the second corner (Point B) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j9" : {
+                "type" : "number",
+                "description" : "East-West position of the second corner (Point B) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j10" : {
+                "type" : "number",
+                "description" : "North-South position of the third corner (Point C) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j11" : {
+                "type" : "number",
+                "description" : "East-West position of the third corner (Point C) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j12" : {
+                "type" : "number",
+                "description" : "North-South position of the fourth corner (Point D) defining the area for sensor service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j13" : {
+                "type" : "number",
+                "description" : "East-West position of the fourth corner (Point D) defining the area for sensor service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j14" : {
+                "type" : "string",
+                "description" : "Mode in which the radar will operate for the given job ID.\nExample: /// Example: MODE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "j15" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The nominal revisit interval for the job ID, expressed in deciseconds.  Value of zero, indicates that the sensor is not revisiting the previous area.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "j16" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal estimate of the standard deviation in the estimated horizontal (along track) sensor location, expressed in decimeters.   measured along the sensor track direction defined in the Dwell segment.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "j17" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal estimate of the standard deviation in the estimated horizontal sensor location, measured orthogonal to the track direction, expressed in decimeters.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "j18" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal estimate of the standard deviation of the measured sensor altitude, expressed in decimeters.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "j19" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation of the estimate of sensor track heading, expressed in degrees.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j20" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal standard deviation of the estimate of sensor speed, expressed in millimeters per second.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j21" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal standard deviation of the slant range of the reported detection, expressed in centimeters.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j22" : {
+                "type" : "number",
+                "description" : "Nominal standard deviation of the measured cross angle to the reported detection, expressed in degrees.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "j23" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal standard deviation of the velocity line-of-sight component, expressed in centimeters per second.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j24" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal minimum velocity component along the line of sight, which can be detected by the sensor, expressed in decimeters per second.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j25" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Nominal probability that an unobscured ten square-meter target will be detected within the given area of surveillance.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j26" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The expected density of False Alarms (FA), expressed as the negative of the decibel value.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "j27" : {
+                "type" : "string",
+                "description" : "The terrain elevation model used for developing the target reports.\nExample: /// Example: MODEL\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "j28" : {
+                "type" : "string",
+                "description" : "The geoid model used for developing the target reports.\nExample: /// Example: MODEL\nConstraints: Minimum length = 0, Maximum length = 64"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiJobDefinition_Abridged"
+}

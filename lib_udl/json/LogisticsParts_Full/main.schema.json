@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsParts_Full" : {
+      "type" : "object",
+      "description" : "/// The parts associated with this support item.",
+      "properties" : {
+        "partNumber" : {
+                "type" : "string",
+                "description" : "Requested or supplied part number.\nExample: /// Example: MS35338-42\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "nationalStockNumber" : {
+                "type" : "string",
+                "description" : "The National Stock Number of the part being requested or supplied.\nExample: /// Example: 5310-00-045-3299\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "measurementUnitCode" : {
+                "type" : "string",
+                "description" : "Code for a unit of measurement.\nExample: /// Example: EA\nConstraints: Minimum length = 0, Maximum length = 2"
+              },
+        "workUnitCode" : {
+                "type" : "string",
+                "description" : "Work Unit Code (WUC), or for some aircraft types, the Reference Designator.\nExample: /// Example: 5611UU001\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "technicalOrderText" : {
+                "type" : "string",
+                "description" : "Indicates the specified Technical Order manual holding the aircraft information for use in diagnosing a problem or condition.\nExample: /// Example: 1C-17A-4\nConstraints: Minimum length = 0, Maximum length = 15"
+              },
+        "figureNumber" : {
+                "type" : "string",
+                "description" : "Technical order manual figure number for the requested / supplied part.\nExample: /// Example: 3\nConstraints: Minimum length = 0, Maximum length = 7"
+              },
+        "indexNumber" : {
+                "type" : "string",
+                "description" : "Technical order manual index number for the requested part.\nExample: /// Example: 4\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "requestVerifier" : {
+                "type" : "string",
+                "description" : "The person who validated the request for parts.\nExample: /// Example: JOHN SMITH\nConstraints: Minimum length = 0, Maximum length = 25"
+              },
+        "locationVerifier" : {
+                "type" : "string",
+                "description" : "The person who validated that the sourced location has, and can supply, the requested parts.\nExample: /// Example: JANE DOE\nConstraints: Minimum length = 0, Maximum length = 25"
+              },
+        "supplyDocumentNumber" : {
+                "type" : "string",
+                "description" : "The supply document number.\nExample: /// Example: J223FU31908300\nConstraints: Minimum length = 0, Maximum length = 17"
+              },
+        "logisticsStocks" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The supply stocks for this support item.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsParts_Full"
+}

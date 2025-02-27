@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationRange_Full" : {
+      "type" : "object",
+      "description" : "/// The group path from transmitter to receiver.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the range data.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers of the range array dimensions.\nExample: /// Example: [1, 2]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for range dimensions.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of range data.\nExample: /// Example: [[[[[[[0.02, 0.034]]]]]]]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationRange_Full"
+}

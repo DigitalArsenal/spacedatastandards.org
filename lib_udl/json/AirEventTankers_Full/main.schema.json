@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirEventTankers_Full" : {
+      "type" : "object",
+      "description" : "/// Collection of tanker aircraft associated with this Air Event.",
+      "properties" : {
+        "idTankerSortie" : {
+                "type" : "string",
+                "description" : "The UDL ID of the aircraft sortie this tanker is associated with for this event.\nExample: /// Example: d833a4bc-756b-41d5-8845-f146fe563387\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "idTankerMission" : {
+                "type" : "string",
+                "description" : "The UDL ID of the mission this tanker is associated with for this event.\nExample: /// Example: edef700c-9917-4dbf-a153-89ffd4446fe9\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "idTankerAirfield" : {
+                "type" : "string",
+                "description" : "The UDL ID of the airfield this tanker is associated with for this event.\nExample: /// Example: b33955d2-67d3-42be-8316-263e284ce6cc\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "externalTankerId" : {
+                "type" : "string",
+                "description" : "Optional tanker identifier from external systems. This field has no meaning within UDL and is provided as a convenience for systems that require tracking of an internal system generated ID.\nExample: /// Example: ca673c580fb949a5b733f0e0b67ffab2\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "tankerCoord" : {
+                "type" : "string",
+                "description" : "Coordination record identifier of this tanker.\nExample: /// Example: TTC601\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "tankerMDS" : {
+                "type" : "string",
+                "description" : "The Model Design Series designation of this tanker.\nExample: /// Example: KC135R\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "amcTankerMissionId" : {
+                "type" : "string",
+                "description" : "The Air Mobility Command (AMC) mission identifier of this tanker.\nExample: /// Example: 8PH000B1S052\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "altTankerMissionId" : {
+                "type" : "string",
+                "description" : "Alternate mission identifier of this tanker provided by source.\nExample: /// Example: 1UN05201L121\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "tankerCallSign" : {
+                "type" : "string",
+                "description" : "The call sign assigned to this tanker.\nExample: /// Example: BAKER\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "tankerOwner" : {
+                "type" : "string",
+                "description" : "The wing or unit that owns this tanker.\nExample: /// Example: 117ARW\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "tankerPOC" : {
+                "type" : "string",
+                "description" : "The name and/or number of the point of contact for this tanker.\nExample: /// Example: JOHN SMITH (555)555-5555\nConstraints: Minimum length = 0, Maximum length = 68"
+              },
+        "tankerLegNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Identifies the itinerary point of a mission that this tanker is linked to.\nExample: /// Example: 825\nConstraints: No constraints specified."
+              },
+        "tankerDeployedICAO" : {
+                "type" : "string",
+                "description" : "Location the tanker has been deployed to in preparation for an air refueling event.\nExample: /// Example: KOFF\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "tankerDeliveryMethod" : {
+                "type" : "string",
+                "description" : "Type of fuel delivery method used by the tanker during an air refueling event (BOOM, DROGUE, BOTH).\nExample: /// Example: DROGUE\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "fuelOff" : {
+                "type" : "number",
+                "description" : "Total weight of the fuel transferred from this tanker during an air refueling event, in pounds.\nExample: /// Example: 15000000.1\nConstraints: No constraints specified."
+              },
+        "tankerCellPosition" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Position of this tanker within a group of tankers in an air refueling event.\nExample: /// Example: 2\nConstraints: No constraints specified."
+              },
+        "tankerFuelType" : {
+                "type" : "string",
+                "description" : "Type of fuel being transferred from the tanker in an air refueling event.\nExample: /// Example: JP8\nConstraints: Minimum length = 0, Maximum length = 3"
+              },
+        "dualRole" : {
+                "type" : "boolean",
+                "description" : "Flag indicating that this tanker is flying a dual role mission in an air refueling event.\nExample: /// Example: True\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirEventTankers_Full"
+}

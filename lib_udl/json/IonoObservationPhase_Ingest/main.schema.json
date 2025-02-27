@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationPhase_Ingest" : {
+      "type" : "object",
+      "description" : "/// Multi-dimensional array with the same dimensions as power plus one additional dimension for antenna_element (where each array element corresponds to a single antenna element). This variable is enabled for post-process polarization and/or antenna array determination. Note: this phase_array can be combined with power_array or amplitude_array to create a phasor.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the phase data. Orientation and position for each antenna element across the antenna_element dimension.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers of the phase array dimensions.\nExample: /// Example: [1, 2]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for phase dimensions.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of phase data.\nExample: /// Example: [[[[[[[0.02, 0.034]]]]]]]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationPhase_Ingest"
+}

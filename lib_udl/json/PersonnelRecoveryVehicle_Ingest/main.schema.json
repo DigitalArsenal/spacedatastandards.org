@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PersonnelRecoveryVehicle_Ingest" : {
+      "type" : "object",
+      "description" : "/// Information regarding the recovery vehicle.",
+      "properties" : {
+        "callSign" : {
+                "type" : "string",
+                "description" : "The call sign of the recovery vehicle.\nExample: /// Example: FALCO\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "type" : {
+                "type" : "string",
+                "description" : "The particular type of recovery vehicle to be used.\nExample: /// Example: C17\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "primaryFreq" : {
+                "type" : "number",
+                "description" : "Primary contact frequency of the recovery vehicle.\nExample: /// Example: 34.55\nConstraints: No constraints specified."
+              },
+        "strength" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of objects or units moving as a group and represented as a single entity in this recovery vehicle message. If null, the strength is assumed to represent a single object.  Note that if this recovery derives from a J-series message then special definitions apply for the following values: 13 indicates an estimated 2-7 units, 14 indicates an estimated more than 7 units, and 15 indicates an estimated more than 12 units.\nExample: /// Example: 5\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PersonnelRecoveryVehicle_Ingest"
+}

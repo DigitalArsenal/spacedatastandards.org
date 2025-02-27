@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationTime_Abridged" : {
+      "type" : "object",
+      "description" : "/// Array of times in number of seconds passed since January 1st, 1970  with the same dimensions as power.",
+      "properties" : {
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers of the time array dimensions.\nExample: /// Example: [1, 2]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for dimensions.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "notes" : {
+                "type" : "string",
+                "description" : "The notes indicate the scheme and accuracy.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of times in number of seconds passed since January 1st, 1970 with the same dimensions as power.\nExample: /// Example: [[[[[[[0.02, 0.034]]]]]]]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationTime_Abridged"
+}

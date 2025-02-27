@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IndividualAircraftTasking_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection that specifies the naval flight operations for this ATO.",
+      "properties" : {
+        "numAcft" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of aircraft participating in this mission.\nExample: /// Example: 2\nConstraints: No constraints specified."
+              },
+        "acftType" : {
+                "type" : "string",
+                "description" : "The type and model number for the aircraft. The field may specify a value of an aircraft not yet assigned an aircraft code contained in the aircraft codes list.\nExample: /// Example: F35A\nConstraints: Minimum length = 1, Maximum length = 36"
+              },
+        "callSign" : {
+                "type" : "string",
+                "description" : "The call sign assigned to this mission aircraft.\nExample: /// Example: EAGLE47\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "priConfigCode" : {
+                "type" : "string",
+                "description" : "The code that indicates the ordinance mix carried on this mission aircraft.\nExample: /// Example: 6A2W3\nConstraints: Minimum length = 0, Maximum length = 48"
+              },
+        "secConfigCode" : {
+                "type" : "string",
+                "description" : "The code for the secondary ordinance mix carried on this mission aircraft.\nExample: /// Example: 2S2WG\nConstraints: Minimum length = 0, Maximum length = 48"
+              },
+        "link16CallSign" : {
+                "type" : "string",
+                "description" : "The Link 16 abbreviated call sign assigned to the ACA. This is normally the first and last letter and the last two numbers of the call sign.\nExample: /// Example: EE47\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "tacanChan" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The TACAN channel assigned to this mission aircraft.\nExample: /// Example: 123\nConstraints: No constraints specified."
+              },
+        "juAddress" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An optional array of link 16 octal track numbers assigned as the primary JTIDS Unit (JU) address for the mission aircraft.\nExample: /// Example: 12345\nConstraints: No constraints specified."
+              },
+        "iffSifMode1Code" : {
+                "type" : "string",
+                "description" : "The mode 1 and code of the Identification Friend or FOE (IFF) or Selective Identification Feature (SIF).\nExample: /// Example: 111\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "iffSifMode2Code" : {
+                "type" : "string",
+                "description" : "The mode 2 and code of the Identification Friend or FOE (IFF) or Selective Identification Feature (SIF).\nExample: /// Example: 20147\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "iffSifMode3Code" : {
+                "type" : "string",
+                "description" : "The mode 3 and code of the Identification Friend or FOE (IFF) or Selective Identification Feature (SIF).\nExample: /// Example: 30147\nConstraints: Minimum length = 0, Maximum length = 8"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IndividualAircraftTasking_Abridged"
+}

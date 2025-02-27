@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OpticalSOIObservation_Full" : {
+      "type" : "object",
+      "description" : "/// An Optical SOI record contains observation information taken from a sensor about a Space Object.",
+      "properties" : {
+        "obStartTime" : {
+                "type" : "string",
+                "description" : "Observation detection start time in ISO 8601 UTC with microsecond precision.\nExample: /// Example: 2018-01-01T16:00:00.888456Z\nConstraints: No constraints specified."
+              },
+        "intensityTimes" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of start times for each intensity measurement. The 1st value in the array will match obStartTime.\nExample: /// Example: ['2018-01-01T16:00:00.888456Z', '2018-01-01T16:00:00.898456Z', '2018-01-01T16:00:00.998456Z']\nConstraints: No constraints specified."
+              },
+        "currentSpectralFilterNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The reference number, x, where x ranges from 1 to n, where n is the number specified in spectralFilters that corresponds to the spectral filter used.\nExample: /// Example: 0\nConstraints: No constraints specified."
+              },
+        "expDuration" : {
+                "type" : "number",
+                "description" : "Image exposure duration in seconds.\nExample: /// Example: 0.455\nConstraints: No constraints specified."
+              },
+        "intensities" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of intensities of the Space Object for observations, in kilowatts per steradian per micrometer.\nExample: /// Example: [1.1, 1.1, 1.1]\nConstraints: No constraints specified."
+              },
+        "extinctionCoeffs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of coefficients for how much signal would be lost to atmospheric attenuation for a star at zenith for each element in intensities, in magnitudes per air mass.\nExample: /// Example: [0.32, 0.32, 0.32]\nConstraints: No constraints specified."
+              },
+        "extinctionCoeffsUnc" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of extinction coefficient uncertainties for each element in intensities. Each value represents the difference between the measured brightness and predicted brightness of the star with the extinction removed, making it exo-atmospheric (e.g. -5.0 to 30.0).\nExample: /// Example: [0.06, 0.06, 0.06]\nConstraints: No constraints specified."
+              },
+        "skyBgs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of average Sky Background signals, in magnitudes, with a value corresponding to the time of each intensity measurement. Sky Background refers to the incoming light from an apparently empty part of the night sky.\nExample: /// Example: [100625.375, 100625.375, 100625.375]\nConstraints: No constraints specified."
+              },
+        "localSkyBgs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of local average Sky Background signals, in magnitudes, with a value corresponding to the time of each intensity measurement. Sky Background refers to the incoming light from an apparently empty part of the night sky.\nExample: /// Example: [100625.375, 100625.375, 100625.375]\nConstraints: No constraints specified."
+              },
+        "localSkyBgsUnc" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of uncertainty of the local average Sky Background signal, in magnitudes, with a value corresponding to the time of each intensity measurement.\nExample: /// Example: [0.065, 0.065, 0.065]\nConstraints: No constraints specified."
+              },
+        "numDetectedStars" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the number of detected stars in the FOV with a value for each element in the intensities field.\nExample: /// Example: [6, 6, 6]\nConstraints: No constraints specified."
+              },
+        "numCorrelatedStars" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the number of correlated stars in the FOV with a value for each element in the intensities field.\nExample: /// Example: [3, 3, 3]\nConstraints: No constraints specified."
+              },
+        "zeroPoints" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of values for the zero-point in magnitudes, calculated at the time of each intensity measurement. It is the difference between the catalog mag and instrumental mag for a set of standard stars (e.g. -5.0 to 30.0).\nExample: /// Example: [24.711, 24.711, 24.711]\nConstraints: No constraints specified."
+              },
+        "ras" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of right ascension values, in degrees, of the Target object from the frame of reference of the sensor. A value is provided for each element in the intensities field.\nExample: /// Example: [107.4, 107.4, 107.4]\nConstraints: No constraints specified."
+              },
+        "declinations" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of declination values, in degrees, of the Target object from the frame of reference of the sensor. A value is provided for each element in the intensities field, at the middle of the frame’s exposure time.\nExample: /// Example: [-0.45, -0.45, -0.45]\nConstraints: No constraints specified."
+              },
+        "raRates" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of right ascension rate values, in degrees per second, measuring the rate the telescope is moving to track the Target object from the frame of reference of the sensor, for each element in the intensities field, at the middle of the frame’s exposure time.\nExample: /// Example: [0, 0, 0]\nConstraints: No constraints specified."
+              },
+        "percentSats" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of values giving the percent of pixels that make up the object signal that are beyond the saturation point for the sensor, with a value for each element in the intensities field.\nExample: /// Example: [0.1, 0.2, 1]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OpticalSOIObservation_Full"
+}

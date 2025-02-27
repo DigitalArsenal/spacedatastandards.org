@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TrackSensor_Abridged_sensorFOVType_Enum" : {
+      "type" : "string",
+      "enum": ["BUTTERFLY", "CONE_ANGULAR", "CONE_DISTANCE", "HORIZON_TO_HORIZON", "UNKNOWN"]
+    },
+    "TrackSensor_Abridged" : {
+      "type" : "object",
+      "description" : "/// Schema for Track Sensor data.",
+      "properties" : {
+        "range" : {
+                "type" : "number",
+                "description" : "The track object range from the observing sensor, in kilometers.\nExample: /// Example: 4023.95\nConstraints: No constraints specified."
+              },
+        "az" : {
+                "type" : "number",
+                "description" : "The observing sensor azimuth angle, in degrees and topocentric frame.\nExample: /// Example: 90\nConstraints: No constraints specified."
+              },
+        "sensorNumber" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number assigned to this sensor. Since there is no authoritative numbering scheme, these numbers sometimes collide across sensors (especially commercial sensors). It is therefore not a unique identifier.\nExample: /// Example: 1234\nConstraints: No constraints specified."
+              },
+        "sensorName" : {
+                "type" : "string",
+                "description" : "Unique name of this sensor.\nExample: /// Example: SENSOR_NAME\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "missionNumber" : {
+                "type" : "string",
+                "description" : "The mission number which produced this track observation.\nExample: /// Example: Example Mission\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "minRangeLimit" : {
+                "type" : "number",
+                "description" : "Minimum range measurement capability of the sensor, in kilometers.\nExample: /// Example: 20.23\nConstraints: No constraints specified."
+              },
+        "sensorFOVType" : {
+                "$ref" : "#/definitions/TrackSensor_Abridged_sensorFOVType_Enum",
+                "description" : "The field of view (FOV) type (Butterfly, Cone Angular, Cone Distance, Horizon to Horizon, Unknown) employed by the sensor observing this object.\nExample: /// Example: UNKNOWN\nConstraints: Minimum length = 0, Maximum length = 24"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TrackSensor_Abridged"
+}

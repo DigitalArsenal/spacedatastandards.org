@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkMultiDutyVoiceCoord_Full" : {
+      "type" : "object",
+      "description" : "/// Collection of information regarding the function, frequency, and priority of interface control and coordination nets for multilink coordination. There can be 0 to many DataLinkMultiVoiceCoord collections within a DataLinkMultiDuty collection.",
+      "properties" : {
+        "multiVoiceNetDes" : {
+                "type" : "string",
+                "description" : "Designator assigned to a voice interface control and coordination net for multilink coordination (e.g. ADCCN, DCN, VPN, etc.).\nExample: /// Example: VPN\nConstraints: Minimum length = 0, Maximum length = 5"
+              },
+        "multiFreqDes" : {
+                "type" : "string",
+                "description" : "Designator used in nonsecure communications to refer to a radio frequency for multilink coordination.\nExample: /// Example: ST300A\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "multiCommPri" : {
+                "type" : "string",
+                "description" : "Priority of a communication circuit, channel or frequency for multilink coordination (e.g. P - Primary, M - Monitor).\nExample: /// Example: P\nConstraints: Minimum length = 0, Maximum length = 1"
+              },
+        "multiTeleFreqNums" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of telephone numbers or contact frequencies used for interface control for multilink coordination.\nExample: /// Example: ['TEL:804-555-4142', 'TEL:804-867-5309']\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkMultiDutyVoiceCoord_Full"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiFreeText_Abridged" : {
+      "type" : "object",
+      "description" : "/// Provides a means of sending Basic Character Set alphanumeric text messages.",
+      "properties" : {
+        "f1" : {
+                "type" : "string",
+                "description" : "The originator of the Free Text message.\nExample: /// Example: ORIGINATOR\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "f2" : {
+                "type" : "string",
+                "description" : "The recipient for which the Free Text message is intended.\nExample: /// Example: RECIPIENT\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "f3" : {
+                "type" : "string",
+                "description" : "Free text data message.\nExample: /// Example: TEXT\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiFreeText_Abridged"
+}

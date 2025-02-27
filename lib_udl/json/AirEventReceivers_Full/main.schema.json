@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirEventReceivers_Full" : {
+      "type" : "object",
+      "description" : "/// Collection of receiver aircraft associated with this Air Event.",
+      "properties" : {
+        "idReceiverSortie" : {
+                "type" : "string",
+                "description" : "The UDL ID of the aircraft sortie this receiver is associated with for this event.\nExample: /// Example: 1d03e85a-1fb9-4f6e-86a0-593306b6e3f0\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "idReceiverMission" : {
+                "type" : "string",
+                "description" : "The UDL ID of the mission this receiver is associated with for this event.\nExample: /// Example: ce99757d-f733-461f-8939-3939d4f05946\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "idReceiverAirfield" : {
+                "type" : "string",
+                "description" : "The UDL ID of the airfield this receiver is associated with for this event.\nExample: /// Example: 96c4c2ba-a031-4e58-9b8e-3c6fb90a7534\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "externalReceiverId" : {
+                "type" : "string",
+                "description" : "Optional receiver identifier from external systems. This field has no meaning within UDL and is provided as a convenience for systems that require tracking of an internal system generated ID.\nExample: /// Example: 3fb8169f-adc1-4667-acab-8415a012d766\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "receiverCoord" : {
+                "type" : "string",
+                "description" : "Coordination record identifier of this receiver.\nExample: /// Example: TTC601\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "receiverMDS" : {
+                "type" : "string",
+                "description" : "The Model Design Series designation of this receiver.\nExample: /// Example: KC135R\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "amcReceiverMissionId" : {
+                "type" : "string",
+                "description" : "The Air Mobility Command (AMC) mission identifier of this receiver.\nExample: /// Example: 8PH000B1S052\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "altReceiverMissionId" : {
+                "type" : "string",
+                "description" : "Alternate mission identifier of this receiver provided by source.\nExample: /// Example: 1UN05201L121\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "receiverCallSign" : {
+                "type" : "string",
+                "description" : "The call sign assigned to this receiver.\nExample: /// Example: BAKER\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "receiverOwner" : {
+                "type" : "string",
+                "description" : "The wing or unit that owns this receiver.\nExample: /// Example: 117ARW\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "receiverPOC" : {
+                "type" : "string",
+                "description" : "The name and/or number of the point of contact for this receiver.\nExample: /// Example: JOHN SMITH (555)555-5555\nConstraints: Minimum length = 0, Maximum length = 68"
+              },
+        "receiverLegNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Identifies the itinerary point of a mission that this receiver is linked to.\nExample: /// Example: 825\nConstraints: No constraints specified."
+              },
+        "receiverDeployedICAO" : {
+                "type" : "string",
+                "description" : "Location the receiver is deployed to for an air refueling event.\nExample: /// Example: KOFF\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "receiverDeliveryMethod" : {
+                "type" : "string",
+                "description" : "Type of fuel delivery method used by the receiver during an air refueling event (BOOM, DROGUE, BOTH).\nExample: /// Example: DROGUE\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "fuelOn" : {
+                "type" : "number",
+                "description" : "Total weight of the fuel transferred to this receiver during an air refueling event, in pounds.\nExample: /// Example: 15000000.1\nConstraints: No constraints specified."
+              },
+        "receiverCellPosition" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Position of this receiver within a group of receivers in an air refueling event.\nExample: /// Example: 2\nConstraints: No constraints specified."
+              },
+        "sequenceNum" : {
+                "type" : "string",
+                "description" : "Indicates the unique number by Unit ID, which identifies an air refueling event.\nExample: /// Example: 1018\nConstraints: Minimum length = 0, Maximum length = 15"
+              },
+        "recOrg" : {
+                "type" : "string",
+                "description" : "The major command level (MAJCOM) or foreign military sales (FMS) name of the receiver's organization. The tanker flying hours used for an air refueling event are logged against the receiver MAJCOM or foreign government being supported.\nExample: /// Example: AMC\nConstraints: Minimum length = 0, Maximum length = 3"
+              },
+        "numRecAircraft" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of aircraft contained within one receiver coordination record for an air refueling event.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "receiverFuelType" : {
+                "type" : "string",
+                "description" : "Type of fuel being transferred to the receiver in an air refueling event.\nExample: /// Example: JP8\nConstraints: Minimum length = 0, Maximum length = 3"
+              },
+        "receiverExercise" : {
+                "type" : "string",
+                "description" : "Name of the receiver exercise associated with an air refueling event.\nExample: /// Example: NATO19\nConstraints: Minimum length = 0, Maximum length = 12"
+              },
+        "packageId" : {
+                "type" : "string",
+                "description" : "The package identifier for the receiver in an air refueling event.\nExample: /// Example: 135\nConstraints: Minimum length = 0, Maximum length = 3"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirEventReceivers_Full"
+}

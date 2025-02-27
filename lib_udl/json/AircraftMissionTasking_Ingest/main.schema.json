@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AircraftMissionTasking_Ingest" : {
+      "type" : "object",
+      "description" : "/// Collection that specifies the tasked country, tasked service, unit and mission level tasking for this ATO.",
+      "properties" : {
+        "countryCode" : {
+                "type" : "string",
+                "description" : "The country code responsible for conducting this aircraft mission tasking for the exercise or operation.\nExample: /// Example: US\nConstraints: Minimum length = 1, Maximum length = 4"
+              },
+        "taskedService" : {
+                "type" : "string",
+                "description" : "The service tasked with conducting this aircraft mission tasking for the exercise or operation.\nExample: /// Example: A\nConstraints: Minimum length = 1, Maximum length = 1"
+              },
+        "unitDesignator" : {
+                "type" : "string",
+                "description" : "The designator of the unit that is tasked to perform this aircraft mission tasking.\nExample: /// Example: AMPHIB5DIV\nConstraints: Minimum length = 1, Maximum length = 36"
+              },
+        "unitLocName" : {
+                "type" : "string",
+                "description" : "The tasked units location expressed as an ICAO or a place name.\nExample: /// Example: ICAO:KXXQ\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "resMsnInd" : {
+                "type" : "string",
+                "description" : "An indicator of whether a mission is or will be a residual mission.\nExample: /// Example: N\nConstraints: Minimum length = 0, Maximum length = 1"
+              },
+        "amcMsnNum" : {
+                "type" : "string",
+                "description" : "The AMC number assigned to identify one aircraft from another.\nExample: /// Example: AMC:JJXD123HA045\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "pkgId" : {
+                "type" : "string",
+                "description" : "The identifier for the composite set of missions for this operation/exercise.\nExample: /// Example: ZZ\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "msnCommander" : {
+                "type" : "string",
+                "description" : "The commander responsible for the planning and execution of the forces necessary to achieve desired objectives.\nExample: /// Example: MC\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "msnNum" : {
+                "type" : "string",
+                "description" : "The mission number assigned to this mission.\nExample: /// Example: D123HA\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "priMsnType" : {
+                "type" : "string",
+                "description" : "The code for the preferred type or designator for a tasked air mission.\nExample: /// Example: CAS\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "secMsnType" : {
+                "type" : "string",
+                "description" : "The code for the alternative type of a tasked air mission.\nExample: /// Example: SEAD\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "alertStatus" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The readiness status expressed in time (minutes) for an aircraft to be airborne after the launch order is received or the time required for a missile unit to assume battle stations.\nExample: /// Example: 30\nConstraints: No constraints specified."
+              },
+        "depLocName" : {
+                "type" : "string",
+                "description" : "The location or name specified for the departure of the tasked air mission.\nExample: /// Example: ICAO:KBIF\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "depLocUTM" : {
+                "type" : "string",
+                "description" : "The departure location specified in UTM (100 meter) coordinates for the tasked air mission.\nExample: /// Example: 32WDL123123\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "depLocLat" : {
+                "type" : "number",
+                "description" : "WGS-84 latitude of the departure location, in degrees. -90 to 90 degrees (negative values south of equator) for this tasked air mission.\nExample: /// Example: 35.123\nConstraints: No constraints specified."
+              },
+        "depLocLon" : {
+                "type" : "number",
+                "description" : "WGS-84 longitude of the departure location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian) for this tasked air mission.\nExample: /// Example: 79.2354\nConstraints: No constraints specified."
+              },
+        "depTime" : {
+                "type" : "string",
+                "description" : "The time of departure for the tasked air mission in ISO8601 UTC format with millisecond precision.\nExample: /// Example: 2021-10-25T12:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "rcvyLocName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of locations specified for the recovery of the tasked air mission represented by varying formats.\nExample: /// Example: ['ARRLOC:KBIF', 'ARRLOC:KDZ7']\nConstraints: No constraints specified."
+              },
+        "rcvyLocUTM" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of recovery locations specified in UTM (100 meter) coordinates for the tasked air mission.\nExample: /// Example: ['ARRUTMO:32WDL123123', 'ARRUTMO:32WDL321321']\nConstraints: No constraints specified."
+              },
+        "rcvyLocLat" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of WGS-84 latitude of the recovery locations, in degrees. -90 to 90 degrees (negative values south of equator) for this tasked air mission.\nExample: /// Example: [48.8584, 40.7554]\nConstraints: No constraints specified."
+              },
+        "rcvyLocLon" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of WGS-84 longitude of the recovery locations, in degrees. -180 to 180 degrees (negative values west of Prime Meridian) for this tasked air mission.\nExample: /// Example: [2.2945, -73.9866]\nConstraints: No constraints specified."
+              },
+        "rcvyTime" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of recovery times for the tasked air mission in ISO8601 UTC format with millisecond precision.\nExample: /// Example: ['2021-10-25T16:00:00.234Z', '2021-10-26T16:00:00.234Z']\nConstraints: No constraints specified."
+              },
+        "indACTasking" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "A collection of the individual aircraft assigned to this aircraft mission tasking.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "acMsnLocSeg" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "A collection of aircraft mission location information for this aircraft mission tasking.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AircraftMissionTasking_Ingest"
+}

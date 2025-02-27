@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirspaceControlMeansStatus_Full" : {
+      "type" : "object",
+      "description" : "/// Mandatory nested segment to report multiple airspace control means statuses within an ACOID.",
+      "properties" : {
+        "cmStat" : {
+                "type" : "string",
+                "description" : "Status of Airspace Control Means. Must be ADD, CHANGE, or DELETE.\nExample: /// Example: ADD\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "cmStatId" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Airspace control means name or designator. Mandatory if acmStat equals \"DELETE,\" otherwise this field is prohibited.\nExample: /// Example: ['DESIGN:B35', 'NAME:ERMA', 'RANG:C21-C25']\nConstraints: No constraints specified."
+              },
+        "airspaceControlMeans" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "A conditional nested segment to report multiple airspace control means within a particular airspace control means status.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirspaceControlMeansStatus_Full"
+}

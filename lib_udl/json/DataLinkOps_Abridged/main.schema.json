@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkOps_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of information describing the establishment and detailed operation of tactical data links. There can be 0 to many DataLinkOps collections within the datalink service.",
+      "properties" : {
+        "linkName" : {
+                "type" : "string",
+                "description" : "Name of the data link.\nExample: /// Example: Link-16\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "linkStartTime" : {
+                "type" : "string",
+                "description" : "The start of the effective time period of the data link, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-07T13:55:43.123Z\nConstraints: No constraints specified."
+              },
+        "linkStopTime" : {
+                "type" : "string",
+                "description" : "The end of the effective time period of the data link, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-08T13:55:43.123Z\nConstraints: No constraints specified."
+              },
+        "linkStopTimeMod" : {
+                "type" : "string",
+                "description" : "A qualifier for the end of the effective time period of this data link, such as AFTER, ASOF, NLT, etc. Used with field linkStopTimeMod to indicate a relative time.\nExample: /// Example: AFTER\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "linkDetails" : {
+                "type" : "string",
+                "description" : "Detailed characteristics of the data link.\nExample: /// Example: Link details\nConstraints: Minimum length = 0, Maximum length = 3000"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkOps_Abridged"
+}

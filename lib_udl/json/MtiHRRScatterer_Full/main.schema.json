@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiHRRScatterer_Full" : {
+      "type" : "object",
+      "description" : "/// HRR Scatterer record for a target pixel that exceeds the target detection threshold.",
+      "properties" : {
+        "h32_1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Scatterer’s power magnitude.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h32_2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Scatterer’s complex phase, in degrees.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h32_3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Scatterer’s Range index relative to Range-Doppler chip, where increasing index equates to increasing range.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h32_4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Scatterer’s Doppler index relative to Range-Doppler chip, where increasing index equates to increasing Doppler.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiHRRScatterer_Full"
+}

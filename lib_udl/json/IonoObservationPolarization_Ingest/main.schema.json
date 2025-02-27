@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationPolarization_Ingest_data_Enum" : {
+      "type" : "string",
+      "enum": ["X", "O"]
+    },
+    "IonoObservationPolarization_Ingest" : {
+      "type" : "object",
+      "description" : "/// Multidimensional array of enums that identifies either classic/basic polarization discrimination “O” or “X” corresponding to ordinary or extraordinary polarizations, respectively. Exclude this enumeration if no classic/basic polarization discrimination is implemented. May accommodate other modes in addition to “O” and “X” with proper documentation in notes field.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the polarization data.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers for polarization dimensions.\nExample: /// Example: [1, 2]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for dimensions.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "data" : {
+                "$ref" : "#/definitions/IonoObservationPolarization_Ingest_data_Enum",
+                "description" : "Array of polarization data.\nExample: /// Example: [[[[[[['X', 'O']]]]]]]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationPolarization_Ingest"
+}

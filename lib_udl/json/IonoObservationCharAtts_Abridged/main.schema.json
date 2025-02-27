@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationCharAtts_Abridged" : {
+      "type" : "object",
+      "description" : "/// Characteristic attributes of a IonoObservation.",
+      "properties" : {
+        "ursiID" : {
+                "type" : "string",
+                "description" : "Characteristic's URSI ID. See the characteristic's description for its corresponding URSI ID.\nExample: /// Example: 04\nConstraints: Minimum length = 0, Maximum length = 3"
+              },
+        "charName" : {
+                "type" : "string",
+                "description" : "Characteristic name. This value should reflect the UDL field name for the corresponding characteristic.\nExample: /// Example: hprimeF2\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "lowerBound" : {
+                "type" : "number",
+                "description" : "Specified characteristic's lower bound. Should be less than or equal to the characteristic's current value as set in this record.\nExample: /// Example: 1.26\nConstraints: No constraints specified."
+              },
+        "upperBound" : {
+                "type" : "number",
+                "description" : "Specified characteristic's upper bound. Should be greater than or equal to the characteristic's current value as set in this record.\nExample: /// Example: 2.57\nConstraints: No constraints specified."
+              },
+        "q" : {
+                "type" : "string",
+                "description" : "Qualifying letter (Q) for the characteristic specified by URSI ID. Describes specific ionospheric conditions, beyond numerical values.\nExample: /// Example: T\nConstraints: No constraints specified."
+              },
+        "d" : {
+                "type" : "string",
+                "description" : "Descriptive letter (D) for the characteristic specified by URSI ID. Describes specific ionospheric conditions, beyond numerical values.\nExample: /// Example: K\nConstraints: No constraints specified."
+              },
+        "climateModelName" : {
+                "type" : "string",
+                "description" : "Name of the climate model.\nExample: /// Example: IRI\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "climateModelOptions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of options for the climate model.\nExample: /// Example: ['URSI-88', 'No storm']\nConstraints: No constraints specified."
+              },
+        "climateModelInputParams" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Input parameters for the climate model.\nExample: /// Example: ['ISSN1 88.1', 'Option 2']\nConstraints: No constraints specified."
+              },
+        "uncertaintyBoundType" : {
+                "type" : "string",
+                "description" : "Uncertainty Bounds (lower and upper) define an interval around reported value that contains true value at the specified probability level. Probability levels are specified in terms of percentile (from 1 to 100) or the standard deviation, sigma (e.g. 1sigma, 2sigma, 3sigma, 5percentile, 10percentile, 25percentile).\nExample: /// Example: 1sigma\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationCharAtts_Abridged"
+}

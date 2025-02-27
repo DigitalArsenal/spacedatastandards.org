@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiPlatformLocation_Abridged" : {
+      "type" : "object",
+      "description" : "/// Provides information pertaining to the location of the sensor platform during periods when the sensor is not collecting data. It shall be sent as required during periods in which the sensor is not collecting data, such as enroute to an orbit location, during a turn, or any other time at which platform location is required.",
+      "properties" : {
+        "l1" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Elapsed time, expressed in milliseconds, from midnight at the beginning of the day specified in the Reference Time fields of the Mission Segment to the time the report is prepared.\nExample: /// Example: 1234567890\nConstraints: No constraints specified."
+              },
+        "l2" : {
+                "type" : "number",
+                "description" : "North-South position of the platform at the time the report is prepared, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "l3" : {
+                "type" : "number",
+                "description" : "East-West position of the platform at the time the report is prepared, expressed as degrees East (positive) from the Prime Meridian.\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "l4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Altitude of the platform at the time the report is prepared, referenced to its position above the WGS-84 ellipsoid, in centimeters.\nExample: /// Example: 45\nConstraints: No constraints specified."
+              },
+        "l5" : {
+                "type" : "number",
+                "description" : "Ground track of the platform at the time the report is prepared, expressed as the angle in degrees (clockwise) from True North.\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "l6" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ground speed of the platform at the time the report is prepared, expressed as millimeters per second.\nExample: /// Example: 50\nConstraints: No constraints specified."
+              },
+        "l7" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Velocity of the platform in the vertical direction, expressed as decimeters per second.\nExample: /// Example: 82\nConstraints: No constraints specified."
+              },
+        "platlocts" : {
+                "type" : "string",
+                "description" : "Platform location timestamp in ISO8601 UTC format.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiPlatformLocation_Abridged"
+}

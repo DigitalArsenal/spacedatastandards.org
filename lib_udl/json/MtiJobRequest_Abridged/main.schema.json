@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiJobRequest_Abridged" : {
+      "type" : "object",
+      "description" : "/// A grouping of zero or more target reports for which the sensor provides a single time, sensor position, reference position on the ground with simple estimates for the observed area at the reported time, and other pertinent data.",
+      "properties" : {
+        "r1" : {
+                "type" : "string",
+                "description" : "The requestor of the sensor service.\nExample: /// Example: REQUESTER\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "r2" : {
+                "type" : "string",
+                "description" : "Identifier for the tasking message sent by the requesting station.\nExample: /// Example: IDENTIFIER\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "r3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The priority of the request relative to other requests originated by the requesting station.\nExample: /// Example: 15\nConstraints: No constraints specified."
+              },
+        "r4" : {
+                "type" : "number",
+                "description" : "North-South position of the first corner (Point A) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r5" : {
+                "type" : "number",
+                "description" : "East-West position of the first corner (Point A) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r6" : {
+                "type" : "number",
+                "description" : "North-South position of the second corner (Point B) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r7" : {
+                "type" : "number",
+                "description" : "East-West position of the second corner (Point B) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r8" : {
+                "type" : "number",
+                "description" : "North-South position of the third corner (Point C) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r9" : {
+                "type" : "number",
+                "description" : "East-West position of the third corner (Point C) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r10" : {
+                "type" : "number",
+                "description" : "North-South position of the fourth corner (Point D) defining the requested area for service, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r11" : {
+                "type" : "number",
+                "description" : "East-West position of the fourth corner (Point D) defining the requested area for service, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "r12" : {
+                "type" : "string",
+                "description" : "Identifies the radar mode requested by the requestor.\nExample: /// Example: MODE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "r13" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Specifies the radar range resolution requested by the requestor, expressed in centimeters.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "r14" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Specifies the radar cross-range resolution requested by the requestor, expressed in decimeters.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "jobReqEst" : {
+                "type" : "string",
+                "description" : "Specifies the Earliest Start Time for which the service is requested.  Composite of fields R15-R20.\nExample: /// Example: 2018-01-01T16:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "r21" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Specifies the maximum time from the requested start time after which the request is to be abandoned, expressed in seconds.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "r22" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Specifies the time duration for the radar job, measured from the actual start of the job, expressed in seconds.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "r23" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Specifies the revisit interval for the radar job, expressed in deciseconds.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "r24" : {
+                "type" : "string",
+                "description" : "the type of sensor or the platform.\nExample: /// Example: TYPE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "r25" : {
+                "type" : "string",
+                "description" : "The particular variant of the sensor type.\nExample: /// Example: VARIANT\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "r26" : {
+                "type" : "boolean",
+                "description" : "Flag field indicating that it is an initial request (flag = 0) or the desire of the requestor to cancel (flag = 1) the requested job.\nExample: /// Example: True\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiJobRequest_Abridged"
+}

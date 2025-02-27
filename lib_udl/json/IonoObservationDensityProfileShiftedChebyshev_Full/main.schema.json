@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfileShiftedChebyshev_Full" : {
+      "type" : "object",
+      "description" : "/// Coefficients to describe either the E, F1, and bottomside F2 profile shapes or the height uncertainty boundaries.",
+      "properties" : {
+        "description" : {
+                "type" : "string",
+                "description" : "Description of the computation technique.\nExample: /// Example: Best-fit Huang-Reinisch formalism based on shifted Chebyshev expansion.\nConstraints: No constraints specified."
+              },
+        "shiftedChebyshevs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Up to 3 groups of coefficients, using “shiftedChebyshev” sub-field, to describe E, F1, and bottomside F2 profile shapes, or up to 6 groups of coefficients to describe height uncertainty boundaries (upper and lower).\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfileShiftedChebyshev_Full"
+}

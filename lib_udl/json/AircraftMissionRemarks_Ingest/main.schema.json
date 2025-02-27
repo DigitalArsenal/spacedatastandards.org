@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AircraftMissionRemarks_Ingest" : {
+      "type" : "object",
+      "description" : "/// Collection of Remarks associated with this Air Transport Mission.",
+      "properties" : {
+        "gdssRemarkId" : {
+                "type" : "string",
+                "description" : "Global Decision Support System (GDSS) remark identifier.\nExample: /// Example: GDSSREMARK-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "type" : {
+                "type" : "string",
+                "description" : "Remark type.\nExample: /// Example: MP\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "text" : {
+                "type" : "string",
+                "description" : "Text of the remark.\nExample: /// Example: Example mission remarks.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "date" : {
+                "type" : "string",
+                "description" : "Date the remark was published, in ISO 8601 UTC format, with millisecond precision.\nExample: /// Example: 2022-01-01T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "user" : {
+                "type" : "string",
+                "description" : "User who published the remark.\nExample: /// Example: John Doe\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "itineraryNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "If the remark is sortie specific, this is the number of the sortie it applies to.\nExample: /// Example: 825\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AircraftMissionRemarks_Ingest"
+}

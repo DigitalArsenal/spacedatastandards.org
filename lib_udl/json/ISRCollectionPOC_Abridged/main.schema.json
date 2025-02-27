@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionPOC_Abridged" : {
+      "type" : "object",
+      "description" : "/// Information about the Point of Contact (POC) for this ISR Collection.",
+      "properties" : {
+        "id" : {
+                "type" : "string",
+                "description" : "Unique identifier of the collection requirement POC.\nExample: /// Example: ISRCOLLECTIONPOC-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "name" : {
+                "type" : "string",
+                "description" : "Name of the POC.\nExample: /// Example: NAME\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "callsign" : {
+                "type" : "string",
+                "description" : "Callsign of the POC.\nExample: /// Example: CALLSIGN\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "unit" : {
+                "type" : "string",
+                "description" : "Unit the POC belongs to.\nExample: /// Example: UNIT\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "email" : {
+                "type" : "string",
+                "description" : "Email address of the POC.\nExample: /// Example: EMAIL\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "phone" : {
+                "type" : "string",
+                "description" : "Phone number of the POC.\nExample: /// Example: PHONE\nConstraints: Minimum length = 0, Maximum length = 45"
+              },
+        "radioFrequency" : {
+                "type" : "number",
+                "description" : "Radio Frequency the POC is on.\nExample: /// Example: 123.23\nConstraints: No constraints specified."
+              },
+        "chatSystem" : {
+                "type" : "string",
+                "description" : "Chat system the POC is accessing.\nExample: /// Example: CHAT\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "chatName" : {
+                "type" : "string",
+                "description" : "Chat name of the POC.\nExample: /// Example: CHAT_NAME\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "notes" : {
+                "type" : "string",
+                "description" : "Amplifying notes about the POC.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 256"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionPOC_Abridged"
+}

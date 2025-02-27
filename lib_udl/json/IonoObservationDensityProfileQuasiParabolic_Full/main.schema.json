@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfileQuasiParabolic_Full" : {
+      "type" : "object",
+      "description" : "/// Coefficients to describe profile shape as quasi-parabolic segments.",
+      "properties" : {
+        "description" : {
+                "type" : "string",
+                "description" : "General description of the quasi-parabolic computation algorithm.\nExample: /// Example: Array of the best-fit 3-parameter quasi-parabolas defined via A, B, C coefficients, f^2=A/r^2+B/r+C\nConstraints: No constraints specified."
+              },
+        "earthRadius" : {
+                "type" : "number",
+                "description" : "Value of the Earth's radius, in kilometers, used for computations.\nExample: /// Example: 6370.1\nConstraints: No constraints specified."
+              },
+        "quasiParabolicSegments" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of quasi-parabolic segments. Each segment is the best-fit 3-parameter quasi-parabolas defined via A, B, C coefficients, f^2=A/r^2+B/r+C”. Usually 3 groups for E, F1, and F2 layers, but additional segments may be used to improve accuracy.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfileQuasiParabolic_Full"
+}

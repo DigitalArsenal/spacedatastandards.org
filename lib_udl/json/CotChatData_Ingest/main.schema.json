@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CotChatData_Ingest" : {
+      "type" : "object",
+      "description" : "/// Schema for the CotChatData to post.",
+      "properties" : {
+        "chatRoom" : {
+                "type" : "string",
+                "description" : "Chat room name to send chat message to.\nExample: /// Example: All Chat Rooms\nConstraints: No constraints specified."
+              },
+        "chatSenderCallSign" : {
+                "type" : "string",
+                "description" : "Callsign of chat sender.\nExample: /// Example: Pebble\nConstraints: No constraints specified."
+              },
+        "chatMsg" : {
+                "type" : "string",
+                "description" : "Contents of a chat message.\nExample: /// Example: Mission is go\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CotChatData_Ingest"
+}

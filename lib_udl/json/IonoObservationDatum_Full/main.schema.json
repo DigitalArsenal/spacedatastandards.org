@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDatum_Full" : {
+      "type" : "object",
+      "description" : "/// Array to support sparse data collections.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the datum with details of what the data is, units, etc.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array to support sparse data collections.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDatum_Full"
+}

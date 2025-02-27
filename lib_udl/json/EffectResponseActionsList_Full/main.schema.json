@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EffectResponseActionsList_Full" : {
+      "type" : "object",
+      "description" : "/// List of actions associated with this effect response.",
+      "properties" : {
+        "summary" : {
+                "type" : "string",
+                "description" : "A summary string describing different aspects of the action.\nExample: /// Example: Example summary\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "actionId" : {
+                "type" : "string",
+                "description" : "Identifier of this action.\nExample: /// Example: ACTION-ID\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "actionStartTime" : {
+                "type" : "string",
+                "description" : "The desired start time of this task, in ISO8601 UTC format.\nExample: /// Example: 2021-01-01T00:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "actionEndTime" : {
+                "type" : "string",
+                "description" : "The desired end time of this task, in ISO8601 UTC format.\nExample: /// Example: 2021-01-01T00:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "totStartTime" : {
+                "type" : "string",
+                "description" : "The start time of the asset TOT (time over target), in ISO8601 UTC format.\nExample: /// Example: 2021-01-01T00:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "totEndTime" : {
+                "type" : "string",
+                "description" : "The end time of the asset TOT (time over target), in ISO8601 UTC format.\nExample: /// Example: 2021-01-01T00:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "actionActorSrcType" : {
+                "type" : "string",
+                "description" : "The source type of the asset/actor identifier (AIRCRAFT, LANDCRAFT, SEACRAFT, TRACK).\nExample: /// Example: AIRCRAFT\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "actionActorSrcId" : {
+                "type" : "string",
+                "description" : "The record ID, depending on the type identified in actorSrcType, of the requested asset/actor.\nExample: /// Example: ACTIONACTORSRC-ID\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "effector" : {
+                "type" : "string",
+                "description" : "The type of munition or sensor used by this asset/actor.\nExample: /// Example: SENSOR1\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "targetSrcType" : {
+                "type" : "string",
+                "description" : "The source type of the targetId identifier (POI, TRACK).\nExample: /// Example: POI\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "targetSrcId" : {
+                "type" : "string",
+                "description" : "The POI or TRACK ID, depending on the type identified in targetSrcType, of the requested target. This identifier corresponds to either poi.poiid or track.trkId from their respective schemas.\nExample: /// Example: TARGETSRC-ID\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "actorInterceptLat" : {
+                "type" : "number",
+                "description" : "The WGS-84 latitude of the asset/actor location at weapon launch, in degrees.  -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.1\nConstraints: No constraints specified."
+              },
+        "actorInterceptLon" : {
+                "type" : "number",
+                "description" : "The WGS-84 longitude of the asset/actor location at weapon launch, in degrees.  -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 180.1\nConstraints: No constraints specified."
+              },
+        "actorInterceptAlt" : {
+                "type" : "number",
+                "description" : "The WGS-84 altitude of the asset/actor location at weapon launch, in meters.\nExample: /// Example: 1.1\nConstraints: No constraints specified."
+              },
+        "weaponInterceptLat" : {
+                "type" : "number",
+                "description" : "The WGS-84 latitude of the weapon destination location, in degrees.  -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.1\nConstraints: No constraints specified."
+              },
+        "weaponInterceptLon" : {
+                "type" : "number",
+                "description" : "The WGS-84 longitude of the weapon destination location, in degrees.  -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 180.1\nConstraints: No constraints specified."
+              },
+        "weaponInterceptAlt" : {
+                "type" : "number",
+                "description" : "The WGS-84 altitude of the weapon destination location, in meters.\nExample: /// Example: 1.1\nConstraints: No constraints specified."
+              },
+        "actionMetrics" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of metrics associated with this action.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EffectResponseActionsList_Full"
+}

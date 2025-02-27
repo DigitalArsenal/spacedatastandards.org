@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirspaceTimePeriod_Ingest" : {
+      "type" : "object",
+      "description" : "/// The timePeriod set describes the effective datetime for a given airspace control means.",
+      "properties" : {
+        "timeMode" : {
+                "type" : "string",
+                "description" : "The airspace time code associated with the ACO. Can be DISCRETE, a fixed time block, or INTERVAL, a repeating time block.\nExample: /// Example: DISCRETE\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "timeStart" : {
+                "type" : "string",
+                "description" : "The start time designating that the airspace control order is active.\nExample: /// Example: 141325ZFEB2002\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "timeEnd" : {
+                "type" : "string",
+                "description" : "The end time designating that the airspace control order is no longer active. Can contain datetime information or a stop time qualifier code, such as AFTER, NET, UFN, etc.\nExample: /// Example: 141325ZFEB2002\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "intFreq" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Mandatory if timeMode is INTERVAL. Can be on of the interval frequency codes, such as BIWEEKLY, DAILY, YEARLY, etc.\nExample: /// Example: ['WEEKLY']\nConstraints: No constraints specified."
+              },
+        "intDur" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Mandatory if timeMode is INTERVAL. Can be a numerical multiplier on an interval frequency code, a stop time qualifier code such as AFTER, NET, UFN, etc, or a datetime like string.\nExample: /// Example: ['65WK']\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirspaceTimePeriod_Ingest"
+}

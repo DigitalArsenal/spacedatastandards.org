@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PersonnelRecoveryExecutionInfo_Abridged" : {
+      "type" : "object",
+      "description" : "/// Information pertaining to the details of executing the recovery.",
+      "properties" : {
+        "initialPoint" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the initial location. This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).\nExample: /// Example: [103.23, 30.445]\nConstraints: No constraints specified."
+              },
+        "ingress" : {
+                "type" : "number",
+                "description" : "The heading, in degrees clockwise from North, of entering the recovery zone.\nExample: /// Example: 35.66\nConstraints: No constraints specified."
+              },
+        "objStrategy" : {
+                "type" : "string",
+                "description" : "Description of the objective strategy plan.\nExample: /// Example: Description of strategy plan.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "egressPoint" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the egress location. This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).\nExample: /// Example: [107.23, 30.455]\nConstraints: No constraints specified."
+              },
+        "egress" : {
+                "type" : "number",
+                "description" : "The heading, in degrees, of leaving the recovery zone.\nExample: /// Example: 66.53\nConstraints: No constraints specified."
+              },
+        "recoveryVehicle" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "escortVehicle" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PersonnelRecoveryExecutionInfo_Abridged"
+}

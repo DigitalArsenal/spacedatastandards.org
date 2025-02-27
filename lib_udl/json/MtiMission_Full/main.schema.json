@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiMission_Full" : {
+      "type" : "object",
+      "description" : "/// Information on the mission and flight plans, the type and configuration of the platform, and the reference time.",
+      "properties" : {
+        "m1" : {
+                "type" : "string",
+                "description" : "The mission plan id.\nExample: /// Example: M1-ID\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "m2" : {
+                "type" : "string",
+                "description" : "Unique identification of the flight plan.\nExample: /// Example: M2-ID\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "m3" : {
+                "type" : "string",
+                "description" : "Platform type that originated the data.\nExample: /// Example: PLATFORM\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "m4" : {
+                "type" : "string",
+                "description" : "Identification of the platform variant, modifications, etc.\nExample: /// Example: IDENT\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "msnRefTs" : {
+                "type" : "string",
+                "description" : "Mission origination date.\nExample: /// Example: 2018-01-01\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiMission_Full"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PersonnelRecoveryObjectiveAreaInfo_Ingest" : {
+      "type" : "object",
+      "description" : "/// Objective Area Information.",
+      "properties" : {
+        "pzLocation" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the pz location.  This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).\nExample: /// Example: [103.23, 30.445]\nConstraints: No constraints specified."
+              },
+        "pzDesc" : {
+                "type" : "string",
+                "description" : "Description of the pickup zone location.\nExample: /// Example: Near the lake.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "oscCallSign" : {
+                "type" : "string",
+                "description" : "The call sign of the on-scene commander.\nExample: /// Example: STARFOX\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "oscFreq" : {
+                "type" : "number",
+                "description" : "The radio frequency of the on-scene commander.\nExample: /// Example: 12.55\nConstraints: No constraints specified."
+              },
+        "enemyData" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Information detailing knowledge of enemies in the area.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PersonnelRecoveryObjectiveAreaInfo_Ingest"
+}

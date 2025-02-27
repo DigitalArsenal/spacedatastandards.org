@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionPlanned_Full" : {
+      "type" : "object",
+      "description" : "/// Planned start and stop for the collection.",
+      "properties" : {
+        "start" : {
+                "type" : "string",
+                "description" : "Start time of collection, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              },
+        "stop" : {
+                "type" : "string",
+                "description" : "Stop time of collection, in ISO 8601 UTC format.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              },
+        "additional" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Additional start and stop for the collection.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionPlanned_Full"
+}

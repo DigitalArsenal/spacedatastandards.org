@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacMedication_Ingest" : {
+      "type" : "object",
+      "description" : "/// Medication specifics.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "The type of medication administered.   Intended as, but not constrained to, K07.1 Medication Enumeration (CEFOTETAN, ABRASION, ABX, AMOXILOXACIN, ANALGESIC, COLLOID, CRYOPECIPITATES, CRYSTALLOID, EPINEPHRINE, ERTAPENEM, FENTANYL, HEXTEND, LACTATED RINGERS, MOBIC, MORPHINE, NARCOTIC, NS, PENICILLIN, PLASMA, PLATELETS, PRBC, TYLENOL, WHOLE BLOOD MT).\nExample: /// Example: TYLENOL\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "bodyPart" : {
+                "type" : "string",
+                "description" : "Body part location or body part referenced for medication. Intended as, but not constrained to, K07.1 Body Location Enumeration (e.g. ANKLE LEFT BACK, ANKLE LEFT FRONT, ANKLE RIGHT BACK, ANKLE RIGHT FRONT, ARM LEFT BACK, ARM LEFT ELBOW BACK, ARM LEFT ELBOW FRONT, ARM LEFT FRONT, ARM LEFT LOWER BACK, etc.).\nExample: /// Example: ARM LEFT BACK\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "dose" : {
+                "type" : "string",
+                "description" : "Quantity of medicine or drug administered or recommended to be taken at a particular time.\nExample: /// Example: 800mg\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "adminRoute" : {
+                "type" : "string",
+                "description" : "Route of medication delivery (e.g. INJECTION, ORAL, etc.).\nExample: /// Example: ORAL\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "time" : {
+                "type" : "string",
+                "description" : "The time that the medication was administered in ISO 8601 UTC format.\nExample: /// Example: 2021-10-15T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "comments" : {
+                "type" : "string",
+                "description" : "Additional comments on the patient's medication information.\nExample: /// Example: Comments on the patient's medication information.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacMedication_Ingest"
+}

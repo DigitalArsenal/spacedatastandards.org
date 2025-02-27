@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsSegments_Abridged" : {
+      "type" : "object",
+      "description" : "/// Remarks associated with this LogisticsSupport record.",
+      "properties" : {
+        "segmentNumber" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Used to sequence the segments in the transportation plan.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "modeCode" : {
+                "type" : "string",
+                "description" : "Transportation mode.  AMC airlift, Commercial airlift, Other, or surface transportation.\nExample: /// Example: A\nConstraints: Minimum length = 1, Maximum length = 1"
+              },
+        "missionType" : {
+                "type" : "string",
+                "description" : "The type of mission (e.g. SAAM, CHNL, etc.).\nExample: /// Example: SAAM\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "idMission" : {
+                "type" : "string",
+                "description" : "The unique identifier of the mission to which this logistics record is assigned.\nExample: /// Example: EXAMPLE-UUID\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "extMissionId" : {
+                "type" : "string",
+                "description" : "The GDSS mission ID for this segment.\nExample: /// Example: 2001101RF01202307062205\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "missionNumber" : {
+                "type" : "string",
+                "description" : "The user generated identifier for an air mission subgroup.\nExample: /// Example: TAM308901196\nConstraints: Minimum length = 0, Maximum length = 12"
+              },
+        "itin" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Start air mission itinerary point identifier.\nExample: /// Example: 200\nConstraints: No constraints specified."
+              },
+        "segTailNumber" : {
+                "type" : "string",
+                "description" : "The identifier that represents a specific aircraft within an aircraft type.\nExample: /// Example: N819AX\nConstraints: Minimum length = 0, Maximum length = 7"
+              },
+        "segAircraftMDS" : {
+                "type" : "string",
+                "description" : "The aircraft Model Design Series (MDS) designation (e.g. E-2C HAWKEYE, F-15 EAGLE, KC-130 HERCULES, etc.) of this aircraft. Intended as, but not constrained to, MIL-STD-6016 environment dependent specific type designations.\nExample: /// Example: B7772E\nConstraints: Minimum length = 0, Maximum length = 30"
+              },
+        "departureICAO" : {
+                "type" : "string",
+                "description" : "Airport ICAO departure code.\nExample: /// Example: PHIK\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "segActDepTime" : {
+                "type" : "string",
+                "description" : "Actual departure time to the segment destination, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:20:00.123Z\nConstraints: No constraints specified."
+              },
+        "arrivalICAO" : {
+                "type" : "string",
+                "description" : "Airport ICAO arrival code.\nExample: /// Example: YBCS\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "segActArrTime" : {
+                "type" : "string",
+                "description" : "Actual arrival time to segment destination, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:20:00.123Z\nConstraints: No constraints specified."
+              },
+        "segEstDepTime" : {
+                "type" : "string",
+                "description" : "GC. LGTPS_C_DT_EST_DEP.  GD2: Estimated departure time from the segment origin. Only supplied when the segment is not attached to a Mission, otherwise the ETD is derived from the Mission segment origin point. This datetime should be in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:20:00.123Z\nConstraints: No constraints specified."
+              },
+        "segEstArrTime" : {
+                "type" : "string",
+                "description" : "GC. LGTPS_C_DT_EST_ARR.  GD2: Estimated arrival time to the segment destination. Only supplied when the segment is not attached to a Mission, otherwise the ETA is derived from the Mission segment destination point. This datetime should be in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T19:20:00.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsSegments_Abridged"
+}

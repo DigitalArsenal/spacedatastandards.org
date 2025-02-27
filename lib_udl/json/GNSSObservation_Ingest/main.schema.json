@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GNSSObservation_Ingest" : {
+      "type" : "object",
+      "description" : "/// Information for Global Navigation Satellite Systems (GNSS) Observations collected from GNSS receivers, including the specific GNSS sat from which each signal was received, and the observation codes of each observation in the record. Each GNSS Observation is associated with a GNSS Observation Set record containing data which applies to all observations in the set, including observation time, receiver location, and Dilution of Precision (DOP) values. Users can Reference RINEX 3+ documentation for further information concerning many of the standards and conventions for GNSS observations.",
+      "properties" : {
+        "gnssSatId" : {
+                "type" : "string",
+                "description" : "RINEX 3+ compliant GNSS System and Satellite Identifier (represented as SNN, where S is the system code, and NN is the satellite identifier) associated with this observation:\nG - GPS (NN = PRN)\nR - GLONASS (NN = Slot Number)\nS - SBAS Payload (NN = PRN-100)\nE - Galileo (NN = PRN)\nC - BeiDou (NN = PRN)\nJ - QZSS (NN = PRN - 1923)\nI - IRNSS (NN = PRN)\nExample: /// Example: GEJ\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "trackingStatus" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Status of the GNSS receiver signal. Status options are 0, 1 or 2 (0 being the best).\nExample: /// Example: 0\nConstraints: No constraints specified."
+              },
+        "agcState" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "GNSS Automatic Gain Control State.\nExample: /// Example: 20\nConstraints: No constraints specified."
+              },
+        "obsCodeSet" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The observation code set that applies to this observation record.  Reference RINEX 3+ for further information concerning observation code set conventions.\nExample: /// Example: ['S1C', 'C1C', 'C1D']\nConstraints: No constraints specified."
+              },
+        "ob" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of observation(s).  The ob array must be the same length as the obsCodeSet.  Pseudorange (C) is expressed meters, carrier phase (L) in cycles,  doppler (D) in Hz where + values indicate approaching sats, and signal strength C/No (S) in dB-Hz.\nExample: /// Example: [42.1, 1000.0, 0.9]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GNSSObservation_Ingest"
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsDiscrepancyInfos_Ingest" : {
+      "type" : "object",
+      "description" : "/// Discrepancy information associated with this LogisticsSupport record.",
+      "properties" : {
+        "jcn" : {
+                "type" : "string",
+                "description" : "Job Control Number of the discrepancy.\nExample: /// Example: 231942400\nConstraints: Minimum length = 0, Maximum length = 12"
+              },
+        "discrepancyInfo" : {
+                "type" : "string",
+                "description" : "The aircraft discrepancy description.\nExample: /// Example: PILOT WINDSHIELD PANEL ASSY CRACKED, AND ARCING REQ R2 IAW 56.11.10\nConstraints: Minimum length = 0, Maximum length = 680"
+              },
+        "jobStTime" : {
+                "type" : "string",
+                "description" : "The job start time, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T10:30:00.123Z\nConstraints: No constraints specified."
+              },
+        "closureTime" : {
+                "type" : "string",
+                "description" : "The discrepancy closure time, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-17T10:30:00.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsDiscrepancyInfos_Ingest"
+}

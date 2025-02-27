@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FlightPlanWaypoints_Ingest" : {
+      "type" : "object",
+      "description" : "/// Collection of waypoints associated with this flight plan.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Points are designated by type as either a comment point or a waypoint. A comment point conveys important information about the point for pilots but is not entered into a flight management system. A waypoint is a point that is entered into a flight management system and/or filed with Air Traffic Control.\nExample: /// Example: COMMENT\nConstraints: Minimum length = 1, Maximum length = 16"
+              },
+        "waypointName" : {
+                "type" : "string",
+                "description" : "Name of the point. The name of a comment point identifies important information about that point, e.g. Top of Climb. The name of a waypoint identifies the location of that point.\nExample: /// Example: KCHS\nConstraints: Minimum length = 1, Maximum length = 32"
+              },
+        "waypointNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The waypoint number on the route. Comment points do not get a waypoint number.\nExample: /// Example: 20\nConstraints: No constraints specified."
+              },
+        "airway" : {
+                "type" : "string",
+                "description" : "The flight path flown for this leg.\nExample: /// Example: W15\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "arpt" : {
+                "type" : "string",
+                "description" : "Point identifying an air refueling track/anchor or fixed track.\nExample: /// Example: ARIP\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "lat" : {
+                "type" : "number",
+                "description" : "WGS84 latitude of the point location, in degrees. -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "lon" : {
+                "type" : "number",
+                "description" : "WGS84 longitude of the point location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 179.1\nConstraints: No constraints specified."
+              },
+        "arId" : {
+                "type" : "string",
+                "description" : "The ID of the air refueling track/anchor or fixed track.\nExample: /// Example: AR202\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "navaid" : {
+                "type" : "string",
+                "description" : "Navigational Aid (NAVAID) identification code.\nExample: /// Example: HTO\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "tacanChannel" : {
+                "type" : "string",
+                "description" : "Tactical Air Navigation (TACAN) channel for the Navigational Aid (NAVAID).\nExample: /// Example: 83X\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "vorFreq" : {
+                "type" : "number",
+                "description" : "VHF Omni-directional Range (VOR) frequency for the Navigational Aid (NAVAID) in megahertz.\nExample: /// Example: 113.6\nConstraints: No constraints specified."
+              },
+        "turbCat" : {
+                "type" : "string",
+                "description" : "The turbulence intensity classification for this flight (LIGHT, MODERATE, etc).\nExample: /// Example: EXTREME\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "iceCat" : {
+                "type" : "string",
+                "description" : "The icing intensity classification for this flight (LIGHT, MODERATE, etc).\nExample: /// Example: MODERATE\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "thunderCat" : {
+                "type" : "string",
+                "description" : "The thunderstorm intensity classification for this flight (LIGHT, MODERATE, etc).\nExample: /// Example: MODERATE\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "alt" : {
+                "type" : "number",
+                "description" : "Altitude of a level, point, or object measured in feet above mean sea level.\nExample: /// Example: 27000.1\nConstraints: No constraints specified."
+              },
+        "tempDev" : {
+                "type" : "number",
+                "description" : "Average temperature deviation from standard day profile for this leg in degrees Celsius.\nExample: /// Example: 12.1\nConstraints: No constraints specified."
+              },
+        "legFuelDegrade" : {
+                "type" : "number",
+                "description" : "The fuel degrade percentage used for this leg.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "legMach" : {
+                "type" : "number",
+                "description" : "The average Mach speed for this leg.\nExample: /// Example: 0.74\nConstraints: No constraints specified."
+              },
+        "legMsnIndex" : {
+                "type" : "number",
+                "description" : "The mission index value for this leg. The mission index is the ratio of time-related cost of aircraft operation to the cost of fuel.\nExample: /// Example: 65\nConstraints: No constraints specified."
+              },
+        "legDragIndex" : {
+                "type" : "number",
+                "description" : "The percent degrade due to drag for this aircraft for this leg.\nExample: /// Example: 1.2\nConstraints: No constraints specified."
+              },
+        "avgCalAirspeed" : {
+                "type" : "number",
+                "description" : "The average calibrated airspeed (CAS) for this leg in knots.\nExample: /// Example: 200.1\nConstraints: No constraints specified."
+              },
+        "avgTrueAirspeed" : {
+                "type" : "number",
+                "description" : "The average true airspeed (TAS) for this leg in knots.\nExample: /// Example: 210.1\nConstraints: No constraints specified."
+              },
+        "avgGroundSpeed" : {
+                "type" : "number",
+                "description" : "The average ground speed for this leg in knots.\nExample: /// Example: 300.1\nConstraints: No constraints specified."
+              },
+        "priFreq" : {
+                "type" : "number",
+                "description" : "The primary UHF radio frequency used for the air refueling track or anchor in megahertz.\nExample: /// Example: 357.5\nConstraints: No constraints specified."
+              },
+        "pointWindDir" : {
+                "type" : "number",
+                "description" : "The wind direction at this specific point in degrees from true north.\nExample: /// Example: 165.5\nConstraints: No constraints specified."
+              },
+        "pointWindSpeed" : {
+                "type" : "number",
+                "description" : "The wind velocity at this specific point in knots.\nExample: /// Example: 14.4\nConstraints: No constraints specified."
+              },
+        "avgWindDir" : {
+                "type" : "number",
+                "description" : "The average wind direction for this leg in degrees from true north.\nExample: /// Example: 165.5\nConstraints: No constraints specified."
+              },
+        "avgWindSpeed" : {
+                "type" : "number",
+                "description" : "The average wind speed for this leg in knots.\nExample: /// Example: 14.4\nConstraints: No constraints specified."
+              },
+        "legWindFac" : {
+                "type" : "number",
+                "description" : "The wind factor for this leg in knots. A positive value indicates a headwind, while a negative value indicates a tailwind.\nExample: /// Example: -32.1\nConstraints: No constraints specified."
+              },
+        "avgDriftAng" : {
+                "type" : "number",
+                "description" : "The average drift angle for this leg in degrees from true north.\nExample: /// Example: -3.2\nConstraints: No constraints specified."
+              },
+        "secFreq" : {
+                "type" : "number",
+                "description" : "The secondary UHF radio frequency used for the air refueling track or anchor in megahertz.\nExample: /// Example: 357.5\nConstraints: No constraints specified."
+              },
+        "magCourse" : {
+                "type" : "number",
+                "description" : "The magnetic course at leg midpoint in degrees from true north.\nExample: /// Example: 338.1\nConstraints: No constraints specified."
+              },
+        "trueCourse" : {
+                "type" : "number",
+                "description" : "The true course at leg midpoint in degrees from true north.\nExample: /// Example: 328.1\nConstraints: No constraints specified."
+              },
+        "magHeading" : {
+                "type" : "number",
+                "description" : "The magnetic heading at leg midpoint in degrees from true north.\nExample: /// Example: 212.1\nConstraints: No constraints specified."
+              },
+        "aaTacanChannel" : {
+                "type" : "string",
+                "description" : "The air-to-air Tactical Air Navigation (TACAN) channels used by the receiver/tanker during air refueling.\nExample: /// Example: 31/94\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "zoneDistance" : {
+                "type" : "number",
+                "description" : "The zone/leg distance flown in nautical miles.\nExample: /// Example: 212.1\nConstraints: No constraints specified."
+              },
+        "totalFlownDistance" : {
+                "type" : "number",
+                "description" : "The total distance flown to this waypoint calculated from point of departure in nautical miles.\nExample: /// Example: 688.1\nConstraints: No constraints specified."
+              },
+        "totalRemDistance" : {
+                "type" : "number",
+                "description" : "The total distance remaining from this waypoint to the point of arrival in nautical miles.\nExample: /// Example: 1288.1\nConstraints: No constraints specified."
+              },
+        "zoneTime" : {
+                "type" : "number",
+                "description" : "The time to fly this zone/leg in minutes.\nExample: /// Example: 36.1\nConstraints: No constraints specified."
+              },
+        "totalTime" : {
+                "type" : "string",
+                "description" : "The total time accumulated from takeoff to this waypoint expressed as HH:MM.\nExample: /// Example: 08:45\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "totalTimeRem" : {
+                "type" : "string",
+                "description" : "The total time remaining from this waypoint to the point of arrival expressed as HH:MM.\nExample: /// Example: 01:43\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "zoneFuel" : {
+                "type" : "number",
+                "description" : "The amount of fuel used on this zone/leg in pounds.\nExample: /// Example: 1120.1\nConstraints: No constraints specified."
+              },
+        "totalUsedFuel" : {
+                "type" : "number",
+                "description" : "The total fuel used to this waypoint from point of departure in pounds.\nExample: /// Example: 70431.1\nConstraints: No constraints specified."
+              },
+        "totalRemFuel" : {
+                "type" : "number",
+                "description" : "The total fuel remaining at this waypoint in pounds.\nExample: /// Example: 30453.1\nConstraints: No constraints specified."
+              },
+        "exchangedFuel" : {
+                "type" : "number",
+                "description" : "The amount of fuel onloaded or offloaded at this waypoint in pounds (negative value for offload).\nExample: /// Example: -30400.1\nConstraints: No constraints specified."
+              },
+        "airDistance" : {
+                "type" : "number",
+                "description" : "The air distance of this leg in nautical miles.\nExample: /// Example: 321.1\nConstraints: No constraints specified."
+              },
+        "totalAirDistance" : {
+                "type" : "number",
+                "description" : "The total air distance to this waypoint in nautical miles.\nExample: /// Example: 3251.1\nConstraints: No constraints specified."
+              },
+        "totalWeight" : {
+                "type" : "number",
+                "description" : "The total weight of the aircraft at this waypoint in pounds.\nExample: /// Example: 207123.1\nConstraints: No constraints specified."
+              },
+        "eta" : {
+                "type" : "string",
+                "description" : "Estimated Time of Arrival (ETA) at this waypoint in ISO 8601 UTC format, with millisecond precision.\nExample: /// Example: 2023-09-09T01:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "ata" : {
+                "type" : "string",
+                "description" : "Actual Time of Arrival (ATA) at this waypoint in ISO 8601 UTC format, with millisecond precision.\nExample: /// Example: 2023-09-09T01:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "fuelFlow" : {
+                "type" : "number",
+                "description" : "The leg fuel flow in pounds per hour.\nExample: /// Example: 17654.1\nConstraints: No constraints specified."
+              },
+        "legAlternate" : {
+                "type" : "string",
+                "description" : "The planned alternate leg based on user-defined constraints, International Civil Aviation Organization (ICAO) code preferred.\nExample: /// Example: KCHS\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "magVar" : {
+                "type" : "number",
+                "description" : "The magnetic variation for this leg in degrees.\nExample: /// Example: -13.2\nConstraints: No constraints specified."
+              },
+        "dayLowAlt" : {
+                "type" : "number",
+                "description" : "The day low level altitude in feet above sea level for the leg ending at this waypoint.\nExample: /// Example: 1500.1\nConstraints: No constraints specified."
+              },
+        "nightLowAlt" : {
+                "type" : "number",
+                "description" : "The night low level altitude in feet above sea level for the leg ending at this waypoint.\nExample: /// Example: 2300.1\nConstraints: No constraints specified."
+              },
+        "nvgLowAlt" : {
+                "type" : "number",
+                "description" : "The night vision goggle low level altitude in feet above sea level for the leg ending at this waypoint.\nExample: /// Example: 2450.1\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FlightPlanWaypoints_Ingest"
+}

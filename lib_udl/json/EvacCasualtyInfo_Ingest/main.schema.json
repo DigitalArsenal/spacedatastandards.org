@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacCasualtyInfo_Ingest" : {
+      "type" : "object",
+      "description" : "/// Identity and medical information on the patient to be evacuated.",
+      "properties" : {
+        "priority" : {
+                "type" : "string",
+                "description" : "The priority of the medevac mission for this patient (URGENT, PRIORITY, ROUTINE, URGENT SURGERY, CONVENIENCE).\nExample: /// Example: ROUTINE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "evacType" : {
+                "type" : "string",
+                "description" : "The required evacuation method for this patient (AIR, GROUND, NOT EVACUATED).\nExample: /// Example: GROUND\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "casualtyType" : {
+                "type" : "string",
+                "description" : "The type of medical issue resulting in the need to evacuate the patient (NON BATTLE, CUT, BURN, SICK, FRACTURE, AMPUTATION, PERFORATION, NUCLEAR, EXHAUSTION, BIOLOGICAL, CHEMICAL, SHOCK, PUNCTURE WOUND, OTHER CUT, WOUNDED IN ACTION, DENIAL, COMBAT STRESS).\nExample: /// Example: DENTAL\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "bodyPart" : {
+                "type" : "string",
+                "description" : "The body part involved for the patient (HEAD, NECK, ABDOMEN, UPPER EXTREMITIES, BACK, FACE, LOWER EXTREMITIES, FRONT, OBSTETRICAL GYNECOLOGICAL, OTHER BODY PART).\nExample: /// Example: FACE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "contamType" : {
+                "type" : "string",
+                "description" : "The contamination specified for the patient (NONE, RADIATION, BIOLOGICAL, CHEMICAL).\nExample: /// Example: NONE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "specMedEquip" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array specifying if any special equipment is need for each of the evacuation of this patient  (EXTRACTION EQUIPMENT, SEMI RIGID LITTER, BACKBOARD, CERVICAL COLLAR ,JUNGLE PENETRATOR, OXYGEN, WHOLE BLOOD, VENTILATOR, HOIST, NONE).\nExample: /// Example: ['OXYGEN', 'HOIST']\nConstraints: No constraints specified."
+              },
+        "casualtyKey" : {
+                "type" : "string",
+                "description" : "Optional casualty key.\nExample: /// Example: casualty-007\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "patientStatus" : {
+                "type" : "string",
+                "description" : "The patient service status (US MILITARY, US CIVILIAN, NON US MILITARY, NON US CIVILIAN, ENEMY POW).\nExample: /// Example: US CIVILIAN\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "patientIdentity" : {
+                "type" : "string",
+                "description" : "The patient service identity (UNKNOWN MILITARY, UNKNOWN CIVILIAN, FRIEND MILITARY, FRIEND CIVILIAN, NEUTRAL MILITARY, NEUTRAL CIVILIAN, HOSTILE MILITARY, HOSTILE CIVILIAN).\nExample: /// Example: FRIEND CIVILIAN\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "nationality" : {
+                "type" : "string",
+                "description" : "The country code indicating the citizenship of the patient.\nExample: /// Example: US\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "payGrade" : {
+                "type" : "string",
+                "description" : "The patient pay grade or rank designation (O-10, O-9, O-8, O-7, O-6, O-5, O-4, O-3, O-2, O-1, CWO-5, CWO-4, CWO-2, CWO-1, E -9, E-8, E-7, E-6, E-5, E-4, E-3, E-2, E-1, NONE, CIVILIAN).\nExample: /// Example: CIVILIAN\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "name" : {
+                "type" : "string",
+                "description" : "The patient common or legal name.\nExample: /// Example: John Smith\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "age" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The patient age, in years.\nExample: /// Example: 35\nConstraints: No constraints specified."
+              },
+        "gender" : {
+                "type" : "string",
+                "description" : "The patient sex (MALE, FEMALE).\nExample: /// Example: MALE\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "last4SSN" : {
+                "type" : "string",
+                "description" : "Last 4 characters of the patient social security code, or equivalent.\nExample: /// Example: 1234\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "bloodType" : {
+                "type" : "string",
+                "description" : "The patient blood type (A POS, B POS, AB POS, O POS, A NEG, B NEG, AB NEG, O NEG).\nExample: /// Example: O NEG\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "service" : {
+                "type" : "string",
+                "description" : "The patient branch of service (AIR FORCE, ARMY, NAVY, MARINES, CIV, CONTR, UNKNOWN SERVICE).\nExample: /// Example: CIV\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "callSign" : {
+                "type" : "string",
+                "description" : "The call sign of this patient.\nExample: /// Example: SHARK\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "occSpeciality" : {
+                "type" : "string",
+                "description" : "The career field of this patient.\nExample: /// Example: Healthcare\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "burialLocation" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the burial location.  This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).\nExample: /// Example: [-33.123, 150.33, 0.24]\nConstraints: No constraints specified."
+              },
+        "collectionPoint" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the WGS-84 latitude (-90 to 90, negative values south of the equator) in degrees, longitude (-180 to 180, negative values west of Prime Meridian) in degrees, and altitude, in meters, of the collection point.  This array must contain a minimum of 2 elements (latitude and longitude), and may contain an optional 3rd element (altitude).\nExample: /// Example: [12.44, 122.55, 0.98]\nConstraints: No constraints specified."
+              },
+        "careProviderUrn" : {
+                "type" : "string",
+                "description" : "Unique identifier for the patient care provider.\nExample: /// Example: CARE_PROVIDER-1\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "dispositionType" : {
+                "type" : "string",
+                "description" : "The expected disposition of this patient (R T D, EVACUATE, EVACUATE TO FORWARD SURGICAL TEAM, EVACUATE TO COMBAT SUPPORT HOSPITAL, EVACUATE TO AERO MEDICAL STAGING FACILITY, EVACUATE TO SUSTAINING BASE MEDICAL TREATMENT FACILITY).\nExample: /// Example: EVACUATE\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "disposition" : {
+                "type" : "string",
+                "description" : "The patient's general medical state (SICK IN QUARTERS, RETURN TO DUTY, EVACUATE WOUNDED, EVACUATE DECEASED, INTERRED).\nExample: /// Example: EVACUATE WOUNDED\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "reportGen" : {
+                "type" : "string",
+                "description" : "The method used to generate this medevac report (DEVICE, GROUND COMBAT PERSONNEL, EVACUATION PERSONNEL, ECHELON1 PERSONNEL, ECHELON2 PERSONNEL).\nExample: /// Example: DEVICE\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "reportTime" : {
+                "type" : "string",
+                "description" : "Datetime of the compiling of the patients casualty report, in ISO 8601 UTC format.\nExample: /// Example: 2021-10-15T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "comments" : {
+                "type" : "string",
+                "description" : "Additional comments on the  patient's casualty information.\nExample: /// Example: Comments relating to this casualty info.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "etiology" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Medical condition causation information.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "treatment" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Treatment information.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "vitalSignData" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Information obtained for vital signs.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "healthState" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Health state information.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "condition" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Health condition information.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "medication" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Medication specifics.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "injury" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Injury specifics.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "allergy" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Allergy information.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacCasualtyInfo_Ingest"
+}

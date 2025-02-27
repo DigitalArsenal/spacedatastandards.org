@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacHealthState_Full" : {
+      "type" : "object",
+      "description" : "/// Health state information.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Generalized state of health type (BIOLOGICAL, CHEMICAL, COGNITIVE, HYDRATION, LIFE SIGN, RADIATION, SHOCK, THERMAL).\nExample: /// Example: COGNITIVE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "healthStateCode" : {
+                "type" : "string",
+                "description" : "Medical color code used to quickly identify various medical state (e.g. AMBER, BLACK, BLUE, GRAY, NORMAL, RED).\nExample: /// Example: BLUE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "medConfFactor" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Medical confidence factor.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "time" : {
+                "type" : "string",
+                "description" : "Datetime of the health state diagnosis in ISO 8601 UTC datetime format.\nExample: /// Example: 2021-10-15T16:00:00.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacHealthState_Full"
+}

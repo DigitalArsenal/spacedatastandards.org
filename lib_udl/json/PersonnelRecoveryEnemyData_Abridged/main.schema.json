@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PersonnelRecoveryEnemyData_Abridged" : {
+      "type" : "object",
+      "description" : "/// Information detailing knowledge of enemies in the area.",
+      "properties" : {
+        "dirToEnemy" : {
+                "type" : "string",
+                "description" : "Directions to known enemies in the operation area (NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, SURROUNDED).\nExample: /// Example: NORTHWEST\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "hostileFireType" : {
+                "type" : "string",
+                "description" : "The type of hostile fire received (SMALL ARMS, MORTAR, ARTILLERY, ROCKETS).\nExample: /// Example: SMALL ARMS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "friendliesRemarks" : {
+                "type" : "string",
+                "description" : "Comments provided by friendlies about the evac zone.\nExample: /// Example: Comments from friendlies.\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "hlzRemarks" : {
+                "type" : "string",
+                "description" : "Hot Landing Zone remarks.\nExample: /// Example: Hot Landing Zone remarks.\nConstraints: Minimum length = 0, Maximum length = 128"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PersonnelRecoveryEnemyData_Abridged"
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationProfileDensityShiftedChebyshevEntry_Abridged" : {
+      "type" : "object",
+      "description" : "/// Coefficients, using ‘shiftedChebyshev’ sub-field, to describe E, F1, and bottomside F2 profile shapes, or height uncertainty boundaries (upper and lower).",
+      "properties" : {
+        "layer" : {
+                "type" : "string",
+                "description" : "The ionospheric plasma layer.\nExample: /// Example: F2\nConstraints: No constraints specified."
+              },
+        "fstart" : {
+                "type" : "number",
+                "description" : "Start frequency of the layer, in MHz.\nExample: /// Example: 0.2\nConstraints: No constraints specified."
+              },
+        "fstop" : {
+                "type" : "number",
+                "description" : "Stop frequency of the layer, in MHz.\nExample: /// Example: 1.39\nConstraints: No constraints specified."
+              },
+        "peakheight" : {
+                "type" : "number",
+                "description" : "Peak height of the layer, in kilometers.\nExample: /// Example: 110.1\nConstraints: No constraints specified."
+              },
+        "zhalfNm" : {
+                "type" : "number",
+                "description" : "Height at which density is half of the peak Nm, in kilometers.\nExample: /// Example: 210.1\nConstraints: No constraints specified."
+              },
+        "n" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of coefficients in the expansion.\nExample: /// Example: 5\nConstraints: No constraints specified."
+              },
+        "coeffs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of coefficients.\nExample: /// Example: [-11.2, -10.536, 3.357, -0.888, 0.155]\nConstraints: No constraints specified."
+              },
+        "error" : {
+                "type" : "number",
+                "description" : "Best fit error.\nExample: /// Example: 0.02\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationProfileDensityShiftedChebyshevEntry_Abridged"
+}

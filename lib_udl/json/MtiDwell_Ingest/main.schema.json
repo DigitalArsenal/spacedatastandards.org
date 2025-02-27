@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiDwell_Ingest" : {
+      "type" : "object",
+      "description" : "/// A grouping of zero or more target reports for which the sensor provides a single time, sensor position, reference position on the ground with simple estimates for the observed area at the reported time, and other pertinent data.",
+      "properties" : {
+        "d2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sequential count of a revisit of the bounding area in the last sent Job Definition Segment, where a Revisit Index of '0' indicates the first revisit.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Temporally sequential count of a dwell within the revisit of a particular bounding area for a given job ID.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d4" : {
+                "type" : "boolean",
+                "description" : "Flag indicating the last dwell of the revisit.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "d5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Count of the total number of targets reported during this dwell and sent in this Dwell Segment.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d6" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Elapsed time, expressed in milliseconds, from midnight at the beginning of the day specified in the Reference Time fields (missionRefTime) of the Mission Segment.\nExample: /// Example: 1234567890\nConstraints: No constraints specified."
+              },
+        "d7" : {
+                "type" : "number",
+                "description" : "North-South position of the sensor at the temporal center of the dwell, in degrees.\nExample: /// Example: 1.2\nConstraints: No constraints specified."
+              },
+        "d8" : {
+                "type" : "number",
+                "description" : "The East-West position of the sensor at the temporal center of the dwell, in degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d9" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The altitude of the sensor at temporal center of the dwell, above the WGS 84 ellipsoid, expressed in centimeters.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d10" : {
+                "type" : "number",
+                "description" : "Factor which modifies the value of the reported target latitude (Delta Latitude, field D32.4).\nExample: /// Example: 1.2\nConstraints: No constraints specified."
+              },
+        "d11" : {
+                "type" : "number",
+                "description" : "Factor which modifies the value of the reported target longitude (Delta Longitude, field D32.5).\nExample: /// Example: 1.2\nConstraints: No constraints specified."
+              },
+        "d12" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation in the estimated horizontal sensor location at the time of the dwell, measured along the sensor track direction (field D15), in centimeters.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d13" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation in the estimated horizontal sensor location at the time of the dwell, measured orthogonal to the sensor track direction (field D15), in centimeters.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d14" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation of the sensor altitude estimate (field D9), in centimeters.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d15" : {
+                "type" : "number",
+                "description" : "Ground track of the sensor at the time of the dwell, as the angle in degrees (clockwise) from True North.\nExample: /// Example: 1.2\nConstraints: No constraints specified."
+              },
+        "d16" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ground speed of the sensor at the time of the dwell, in millimeters per second.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d17" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Velocity of the sensor in the vertical direction, in decimeters per second.\nExample: /// Example: 2\nConstraints: No constraints specified."
+              },
+        "d18" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation of the estimate of the sensor track, in degrees.\nExample: /// Example: 2\nConstraints: No constraints specified."
+              },
+        "d19" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation of estimate of the sensor speed, in millimeters per second.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d20" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation of estimate of the sensor vertical velocity, expressed in centimeters per second.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "d21" : {
+                "type" : "number",
+                "description" : "Heading of the platform at the time of the dwell, as the angle in degrees (clockwise) from True North to the roll axis of the platform.\nExample: /// Example: 1.2\nConstraints: No constraints specified."
+              },
+        "d22" : {
+                "type" : "number",
+                "description" : "Pitch angle of the platform at the time of the dwell, in degrees.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d23" : {
+                "type" : "number",
+                "description" : "Roll angle of the platform at the time of the dwell, in degrees.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d24" : {
+                "type" : "number",
+                "description" : "The North-South position of the center of the dwell area, expressed as degrees North (positive) or South (negative) of the Equator.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d25" : {
+                "type" : "number",
+                "description" : "The East-West position of the center of the dwell area, expressed as degrees East (positive, 0 to 180) or West (negative, 0 to -180) of the Prime Meridian.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d26" : {
+                "type" : "number",
+                "description" : "Distance on the earth surface, expressed in kilometers, from the near edge to the center of the dwell area.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d27" : {
+                "type" : "number",
+                "description" : "For dwell based radars, one-half of the 3-dB beamwidth.  For non-dwell based radars, the angle between the beginning of the dwell to the center of the dwell.  Measured in degrees.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d28" : {
+                "type" : "number",
+                "description" : "Rotation of the sensor broadside face about the local vertical axis of the platform, in degrees.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d29" : {
+                "type" : "number",
+                "description" : "Rotation angle of the sensor about the transverse axis of the sensor broadside, in degrees.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d30" : {
+                "type" : "number",
+                "description" : "Rotation angle of the sensor about the transverse axis of the sensor broadside, in degrees.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "d31" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Minimum velocity component, along the line of sight, which can be detected by the sensor, in decimeters per second.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "d32" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Minimum velocity component, along the line of sight, which can be detected by the sensor, in decimeters per second.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "dwellts" : {
+                "type" : "string",
+                "description" : "Dwell timestamp in ISO8601 UTC format.\nExample: /// Example: 2018-01-01T16:00:00.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiDwell_Ingest"
+}

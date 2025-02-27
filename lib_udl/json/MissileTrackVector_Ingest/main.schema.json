@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MissileTrackVector_Ingest" : {
+      "type" : "object",
+      "description" : "/// Schema for Missile Track Vector data.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Type of vector represented (e.g. LOS, PREDICTED, STATE).\nExample: /// Example: STATE\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "object" : {
+                "type" : "string",
+                "description" : "Object to which this vector applies.\nExample: /// Example: TARGET\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "epoch" : {
+                "type" : "string",
+                "description" : "Vector timestamp in ISO8601 UTC format, with microsecond precision.\nExample: /// Example: 2024-03-30T15:02:39.346768Z\nConstraints: No constraints specified."
+              },
+        "idSensor" : {
+                "type" : "string",
+                "description" : "Unique identifier of the reporting sensor of the object.\nExample: /// Example: a7e99418-b6d6-29ab-e767-440a989cce26\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "origSensorId" : {
+                "type" : "string",
+                "description" : "Optional identifier provided by the source to indicate the reporting sensor of the object. This may be an internal identifier and not necessarily a valid sensor ID.\nExample: /// Example: ORIGSENSOR-ID\nConstraints: Minimum length = 0, Maximum length = 46"
+              },
+        "pos" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Three element array, expressing the cartesian position vector of the target object, in kilometers, in the specified referenceFrame. If referenceFrame is null then ECEF should be assumed. The array element order is [x, y, z].\nExample: /// Example: [-1456.91592, -2883.54041, 6165.55186]\nConstraints: No constraints specified."
+              },
+        "vel" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Three element array, expressing the cartesian velocity vector of the target object, in kilometers/second, in the specified referenceFrame. If referenceFrame is null then ECEF should be assumed. The array element order is [x', y', z'].\nExample: /// Example: [-1.21981, -6.60208, -3.36515]\nConstraints: No constraints specified."
+              },
+        "accel" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Three element array, expressing the cartesian acceleration vector of the target object, in kilometers/second^2, in the specified referenceFrame. If referenceFrame is null then ECEF should be assumed. The array element order is [x'', y'', z''].\nExample: /// Example: [0.59236, -0.03537, 0.35675]\nConstraints: No constraints specified."
+              },
+        "course" : {
+                "type" : "number",
+                "description" : "Track object course, in degrees clockwise from true north.\nExample: /// Example: 7.3580153\nConstraints: No constraints specified."
+              },
+        "spd" : {
+                "type" : "number",
+                "description" : "Track object speed, in kilometers/sec.\nExample: /// Example: 15.03443\nConstraints: No constraints specified."
+              },
+        "referenceFrame" : {
+                "type" : "string",
+                "description" : "The reference frame of the cartesian vector (ECEF, J2000). If the referenceFrame is null it is assumed to be ECEF.\nExample: /// Example: ECEF\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "cov" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Covariance matrix, in kilometer and second based units, in the specified covReferenceFrame.\nIf the covReferenceFrame is null it is assumed to be UVW. The array values (1-45) represent the upper triangular half of the position-velocity-acceleration covariance matrix.\nThe covariance elements are position dependent within the array with values ordered as follows:\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y'&nbsp;&nbsp;&nbsp;&nbsp;z'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x\"&nbsp;&nbsp;&nbsp;&nbsp;y\"&nbsp;&nbsp;&nbsp;&nbsp;z\"\nx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9\ny&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;11&nbsp;&nbsp;&nbsp;12&nbsp;&nbsp;&nbsp;13&nbsp;&nbsp;&nbsp;14&nbsp;&nbsp;&nbsp;15&nbsp;&nbsp;&nbsp;16&nbsp;&nbsp;&nbsp;17\nz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18&nbsp;&nbsp;&nbsp;19&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;21&nbsp;&nbsp;&nbsp;22&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;24\nx'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25&nbsp;&nbsp;&nbsp;26&nbsp;&nbsp;&nbsp;27&nbsp;&nbsp;&nbsp;28&nbsp;&nbsp;&nbsp;29&nbsp;&nbsp;&nbsp;30\ny'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31&nbsp;&nbsp;&nbsp;32&nbsp;&nbsp;&nbsp;33&nbsp;&nbsp;&nbsp;34&nbsp;&nbsp;&nbsp;35\nz'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;37&nbsp;&nbsp;&nbsp;38&nbsp;&nbsp;&nbsp;39\nx\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40&nbsp;&nbsp;&nbsp;41&nbsp;&nbsp;&nbsp;42\ny\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;43&nbsp;&nbsp;&nbsp;44\nz\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45\nThe cov array should contain only the upper right triangle values from top left down to bottom right, in order.\nExample: /// Example: [1.1, 2.2, 3.3]\nConstraints: No constraints specified."
+              },
+        "covReferenceFrame" : {
+                "type" : "string",
+                "description" : "The reference frame of the covariance elements (ECEF, J2000, UVW). If the referenceFrame is null it is assumed to be UVW.\nExample: /// Example: ECEF\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "vectorLat" : {
+                "type" : "number",
+                "description" : "WGS-84 object latitude subpoint at epoch, represented as -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.0\nConstraints: No constraints specified."
+              },
+        "vectorLon" : {
+                "type" : "number",
+                "description" : "WGS-84 object longitude subpoint at epoch, represented as -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 150.0\nConstraints: No constraints specified."
+              },
+        "vectorAlt" : {
+                "type" : "number",
+                "description" : "Object altitude at epoch, expressed in kilometers above WGS-84 ellipsoid.\nExample: /// Example: 25.0\nConstraints: No constraints specified."
+              },
+        "confidence" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Confidence of the vector, 0-100.\nExample: /// Example: 100\nConstraints: No constraints specified."
+              },
+        "status" : {
+                "type" : "string",
+                "description" : "Status of the vector (e.g. INITIAL, UPDATE).\nExample: /// Example: INITIAL\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "timeSource" : {
+                "type" : "string",
+                "description" : "Source of the time value.\nExample: /// Example: Sensor 1\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "quat" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The quaternion describing the attitude of the spacecraft with respect to the reference frame listed in the 'referenceFrame' field. The array element order convention is the three vector components, followed by the scalar component.\nExample: /// Example: [0.03, 0.02, 0.01, 0.012]\nConstraints: No constraints specified."
+              },
+        "flightAz" : {
+                "type" : "number",
+                "description" : "The flight azimuth associated with the current state vector (0-360 degrees).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MissileTrackVector_Ingest"
+}

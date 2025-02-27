@@ -1,0 +1,349 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EOObservationDetails_Full_dataMode_Enum" : {
+      "type" : "string",
+      "enum": ["REAL", "TEST", "SIMULATED", "EXERCISE"]
+    },
+    "EOObservationDetails_Full" : {
+      "type" : "object",
+      "description" : "/// Model representation of additional detailed observation data for electro-optical based sensor phenomenologies.",
+      "properties" : {
+        "idEOObservation" : {
+                "type" : "string",
+                "description" : "Unique identifier of the parent EOObservation.\nExample: /// Example: EOOBSERVATION-ID\nConstraints: Minimum length = 1, Maximum length = 36"
+              },
+        "classificationMarking" : {
+                "type" : "string",
+                "description" : "Classification marking of the data in IC/CAPCO Portion-marked format, will be set to EOObservation classificationMarking if blank.\nExample: /// Example: U\nConstraints: Minimum length = 1, Maximum length = 128"
+              },
+        "obTime" : {
+                "type" : "string",
+                "description" : "Ob detection time in ISO 8601 UTC with microsecond precision, will be set to EOObservation obTime if blank.\nExample: /// Example: 2018-01-01T16:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "predictedRa" : {
+                "type" : "number",
+                "description" : "Predicted Right Ascension of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "predictedDeclination" : {
+                "type" : "number",
+                "description" : "Predicted Declination of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "predictedAzimuth" : {
+                "type" : "number",
+                "description" : "Predicted Azimuth angle of the target object from a ground -based sensor (no atmospheric refraction correction required). AZ_EL implies apparent topocentric place in true of date reference frame as seen from the observer with aberration due to the observer velocity and light travel time applied.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "predictedElevation" : {
+                "type" : "number",
+                "description" : "Predicted elevation angle of the target object from a ground -based sensor (no atmospheric refraction correction required). AZ_EL implies apparent topocentric place in true of date reference frame as seen from the observer with aberration due to the observer velocity and light travel time applied.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "sunAzimuth" : {
+                "type" : "number",
+                "description" : "Azimuth angle of the sun from a ground-based telescope (no atmospheric refraction correction required) the observer with aberration due to the observer velocity and light travel time applied.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "sunElevation" : {
+                "type" : "number",
+                "description" : "Elevation angle of the sun from a ground-based telescope (no atmospheric refraction correction required).\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "numSpectralFilters" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The value is the number of spectral filters used.\nExample: /// Example: 10\nConstraints: No constraints specified."
+              },
+        "spectralFilters" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the SpectralFilters keywords, must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: ['Keyword1', 'Keyword2']\nConstraints: No constraints specified."
+              },
+        "spectralZMFL" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "This is the in-band average irradiance of a 0th mag source. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.  Units = W/m2/nm.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "spectralFilterSolarMag" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "This is the in-band solar magnitude at 1 A.U. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.  Units = mag.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "zeroPoints" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "This is the value for the zero-point calculated for each filter denoted in spectralFilters. It is the difference between the catalog mag and instrumental mag for a set of standard stars. For use with All Sky photometry. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "zeroPointsUnc" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "This is the uncertainty in the zero point for the filter denoted in spectralFilters. For use with All Sky photometry. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "extinctionCoeffs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The extinction coefficient computed for the nth filter. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n. Units = mag/airmass.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "extinctionCoeffsUnc" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "This is the uncertainty in the extinction coefficient for the nth filter. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n. -9999 for space-based sensors. Units = mag/airmass.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "colorCoeffs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Color coefficient for filter n for a space-based sensor where there is no atmospheric extinction. Must be present for all values n=1 to numSpectralFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "numNeutralDensityFilters" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The value is the number of neutral density filters used.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "neutralDensityFilterNames" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Must be present for all values n=1 to numNeutralDensityFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: ['numNeutralDensityFilters1', 'numNeutralDensityFilters2']\nConstraints: No constraints specified."
+              },
+        "neutralDensityFilterTransmissions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The transmission of the nth neutral density filter. Must be present for all values n=1 to numNeutralDensityFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "neutralDensityFilterTransmissionsUnc" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "This is the uncertainty in the transmission for the nth filter. Must be present for all values n=1 to numNeutralDensityFilters, in incrementing order of n, and for no other values of n.\nExample: /// Example: [1.1, 2.1, 3.1]\nConstraints: No constraints specified."
+              },
+        "gain" : {
+                "type" : "number",
+                "description" : "Some sensors have gain settings. This value is the gain used during the observation in units e-/ADU. If no gain is used, the value = 1.\nExample: /// Example: 234.2\nConstraints: No constraints specified."
+              },
+        "ifov" : {
+                "type" : "number",
+                "description" : "Sensor instantaneous field of view (ratio of pixel pitch to focal length).\nExample: /// Example: 0.2\nConstraints: No constraints specified."
+              },
+        "pixelArrayWidth" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Pixel array size (width) in pixels.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "pixelArrayHeight" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Pixel array size (height) in pixels.\nExample: /// Example: 23\nConstraints: No constraints specified."
+              },
+        "pixelMin" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Minimum valid pixel value, this is typically 0.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "pixelMax" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Maximum valid pixel value, this is defined as 2^(number of bits per pixel). For example, a CCD with 8-bitpixels, would have a maximum valid pixel value of 2^8 = 256. This can represent the saturation value of the detector, but some sensors will saturate at a value significantly lower than full well depth. This is the analog-to-digital conversion (ADC) saturation value.\nExample: /// Example: 256\nConstraints: No constraints specified."
+              },
+        "centroidRow" : {
+                "type" : "number",
+                "description" : "Observed centroid row number on the focal plane in pixels (0 is top edge, 0.5 is center of pixels along top of image).\nExample: /// Example: 0.1\nConstraints: No constraints specified."
+              },
+        "centroidColumn" : {
+                "type" : "number",
+                "description" : "Observed centroid column number on the focal plane in pixels (0 is left edge, 0.5 is center of pixels along left of image).\nExample: /// Example: 0.5\nConstraints: No constraints specified."
+              },
+        "rowVariance" : {
+                "type" : "number",
+                "description" : "Spatial variance of image distribution in vertical direction measured in pixels squared.\nExample: /// Example: 0.1\nConstraints: No constraints specified."
+              },
+        "columnVariance" : {
+                "type" : "number",
+                "description" : "Spatial variance of image distribution in horizontal direction measured in pixels squared.\nExample: /// Example: 0.1\nConstraints: No constraints specified."
+              },
+        "rowColCov" : {
+                "type" : "number",
+                "description" : "Spatial covariance of image distribution across horizontal and vertical directions measured in pixels squared.\nExample: /// Example: 0.01\nConstraints: No constraints specified."
+              },
+        "distFromStreakCenter" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of measurements that correspond to the distance from the streak center measured from the optical image in pixels that show change over an interval of time. The array length is dependent on the length of the streak. The distFromStreakCenter, surfBrightness, and surfBrightnessUnc arrays will match in size.\nExample: /// Example: [-127.153, -126.153, -125.153]\nConstraints: No constraints specified."
+              },
+        "surfBrightness" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of surface brightness measurements in magnitudes per square arcsecond from the optical image that show change over an interval of time. The array length is dependent on the length of the streak. The distFromStreakCenter, surfBrightness, and surfBrightnessUnc arrays will match in size.\nExample: /// Example: [21.01, 21.382, 21.725]\nConstraints: No constraints specified."
+              },
+        "surfBrightnessUnc" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of surface brightness uncertainty measurements in magnitudes per square arcsecond from the optical image that show change over an interval of time. The array length is dependent on the length of the streak. The distFromStreakCenter, surfBrightness, and surfBrightnessUnc arrays will match in size.\nExample: /// Example: [0.165, 0.165, 0.165]\nConstraints: No constraints specified."
+              },
+        "timesUnc" : {
+                "type" : "number",
+                "description" : "Uncertainty in the times reported in UTC in seconds.\nExample: /// Example: 13.1\nConstraints: No constraints specified."
+              },
+        "ccdTemp" : {
+                "type" : "number",
+                "description" : "Operating temperature of CCD recorded during exposure or measured during calibrations in K.\nExample: /// Example: 123.4\nConstraints: No constraints specified."
+              },
+        "currentSpectralFilterNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The reference number, x, where x ranges from 1 to n, where n is the number specified in spectralFilters that corresponds to the spectral filter given in the corresponding spectralFilterNames.\nExample: /// Example: 23\nConstraints: No constraints specified."
+              },
+        "currentNeutralDensityFilterNum" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The reference number n, in neutralDensityFilters for the currently used neutral density filter.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "binningHoriz" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of pixels binned horizontally.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "binningVert" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of pixels binned vertically.\nExample: /// Example: 14\nConstraints: No constraints specified."
+              },
+        "pcalNumStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of stars used in photometric fit count.\nExample: /// Example: 23\nConstraints: No constraints specified."
+              },
+        "ccdObjPosX" : {
+                "type" : "number",
+                "description" : "The x centroid position on the CCD of the target object in pixels.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "ccdObjPosY" : {
+                "type" : "number",
+                "description" : "The y centroid position on the CCD of the target object in pixels.\nExample: /// Example: 321.4\nConstraints: No constraints specified."
+              },
+        "ccdObjWidth" : {
+                "type" : "number",
+                "description" : "This is the pixel width of the target. This is either a frame-by-frame measurement or a constant point spread function or synthetic aperture used in the extraction.\nExample: /// Example: 133.2\nConstraints: No constraints specified."
+              },
+        "backgroundSignal" : {
+                "type" : "number",
+                "description" : "This is the background signal at or in the vicinity of the radiometric source position. Specifically, this is the average background count level (DN/pixel) divided by the exposure time in seconds of the background pixels used in the photometric extraction. DN/pixel/sec.\nExample: /// Example: 4134.1\nConstraints: No constraints specified."
+              },
+        "backgroundSignalUnc" : {
+                "type" : "number",
+                "description" : "Estimated 1-sigma uncertainty in the background signal at or in the vicinity of the radiometric source position. DN/pixel/sec.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "peakApertureCount" : {
+                "type" : "number",
+                "description" : "Peak Aperture Raw Counts is the value of the peak pixel in the real or synthetic aperture containing the target signal.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "peakBackgroundCount" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Peak Background Raw Counts is the largest pixel value used in background signal.\nExample: /// Example: 321\nConstraints: No constraints specified."
+              },
+        "snrEst" : {
+                "type" : "number",
+                "description" : "Estimated signal-to-noise ratio (SNR) for the total radiometric signal. Under some algorithms, this can be a constant per target (not per observation). Note: this SNR applies to the total signal of the radiometric source (i.e., Net_Obj_Sig with units DN/sec), not to be confused with the SNR of the signal in the peak pixel (i.e., DN/pixel/sec).\nExample: /// Example: 13.4\nConstraints: No constraints specified."
+              },
+        "magInstrumental" : {
+                "type" : "number",
+                "description" : "Instrumental magnitude of a sensor before corrections are applied for atmosphere or to transform to standard magnitude scale.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "magInstrumentalUnc" : {
+                "type" : "number",
+                "description" : "Uncertainty in the instrumental magnitude.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "opticalCrossSection" : {
+                "type" : "number",
+                "description" : "Optical Cross Section computed in units m(2)/ster.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "opticalCrossSectionUnc" : {
+                "type" : "number",
+                "description" : "Uncertainty in Optical Cross Section computed in units m(2)/ster.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "sunStatePosX" : {
+                "type" : "number",
+                "description" : "Sun state vector in ECI J2000 coordinate frame in km.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "sunStatePosY" : {
+                "type" : "number",
+                "description" : "Sun state vector in ECI J2000 coordinate frame in km.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "sunStatePosZ" : {
+                "type" : "number",
+                "description" : "Sun state vector in ECI J2000 coordinate frame in km.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "sunStateVelX" : {
+                "type" : "number",
+                "description" : "Sun state vector in ECI J2000 coordinate frame in km/sec.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "sunStateVelY" : {
+                "type" : "number",
+                "description" : "Sun state vector in ECI J2000 coordinate frame in km/sec.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "sunStateVelZ" : {
+                "type" : "number",
+                "description" : "Sun state vector in ECI J2000 coordinate frame in km/sec.\nExample: /// Example: 123.3\nConstraints: No constraints specified."
+              },
+        "numCatalogStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of catalog stars in the detector field of view (FOV) with the target object. Can be 0 for narrow FOV sensors.\nExample: /// Example: 123\nConstraints: No constraints specified."
+              },
+        "numDetectedStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of detected stars in the FOV with the target object. Helps identify frames with clouds.\nExample: /// Example: 123\nConstraints: No constraints specified."
+              },
+        "numCorrelatedStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of correlated stars in the FOV with the target object. Can be 0 for narrow FOV sensors.\nExample: /// Example: 123\nConstraints: No constraints specified."
+              },
+        "predictedRaUnc" : {
+                "type" : "number",
+                "description" : "Uncertainty of predicted Right Ascension of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "predictedDeclinationUnc" : {
+                "type" : "number",
+                "description" : "Uncertainty of Predicted Declination of the Target object from the frame of reference of the sensor (J2000, geocentric velocity aberration). SGP4 and VCMs produce geocentric origin and velocity aberration and subtracting the sensor geocentric position of the sensor places in its reference frame.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "raCov" : {
+                "type" : "number",
+                "description" : "Covariance (x^2) in measured Right Ascension (X) in deg^2.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "declinationCov" : {
+                "type" : "number",
+                "description" : "Covariance (Y^2) in measured declination (Y) in deg^2.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "raDeclinationCov" : {
+                "type" : "number",
+                "description" : "Covariance (XY) in measured ra/declination (XY) in deg^2.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "acalCrPixX" : {
+                "type" : "number",
+                "description" : "World Coordinate System (WCS) X pixel origin in astrometric fit.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "acalCrPixY" : {
+                "type" : "number",
+                "description" : "World Coordinate System (WCS) Y pixel origin in astrometric fit.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "acalCrValX" : {
+                "type" : "number",
+                "description" : "World Coordinate System (WCS) equatorial coordinate X origin corresponding to CRPIX in astrometric fit in degrees.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "acalCrValY" : {
+                "type" : "number",
+                "description" : "World Coordinate System (WCS) equatorial coordinate Y origin corresponding to CRPIX in astrometric fit in degrees.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "acalNumStars" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of stars used in astrometric fit.\nExample: /// Example: 123\nConstraints: No constraints specified."
+              },
+        "objSunRange" : {
+                "type" : "number",
+                "description" : "Distance from the target object to the sun during the observation in meters.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "phaseAngBisect" : {
+                "type" : "number",
+                "description" : "Solar phase angle bisector vector. The vector that bisects the solar phase angle. The phase angle bisector is the angle that is << of the value in #48. Then calculate the point on the RA/DEC (ECI J2000.0) sphere that a vector at this angle would intersect.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "solarDiskFrac" : {
+                "type" : "number",
+                "description" : "Fraction of the sun that is illuminating the target object. This indicates if the target is in the Earth’s penumbra or umbra. (It is 0 when object is in umbra and 1 when object is fully illuminated.).\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "toes" : {
+                "type" : "number",
+                "description" : "Time off element set.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "does" : {
+                "type" : "number",
+                "description" : "Degrees Off Element Set.\nExample: /// Example: 123.2\nConstraints: No constraints specified."
+              },
+        "source" : {
+                "type" : "string",
+                "description" : "Source of the data, will be set to EOObservation source if blank.\nExample: /// Example: Bluestaq\nConstraints: Minimum length = 1, Maximum length = 64"
+              },
+        "dataMode" : {
+                "$ref" : "#/definitions/EOObservationDetails_Full_dataMode_Enum",
+                "description" : "Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST data:\nEXERCISE:&nbsp;Data pertaining to a government or military exercise. The data may include both real and simulated data.\nREAL:&nbsp;Data collected or produced that pertains to real-world objects, events, and analysis.\nSIMULATED:&nbsp;Synthetic data generated by a model to mimic real-world datasets.\nTEST:&nbsp;Specific datasets used to evaluate compliance with specifications and requirements, and for validating technical, functional, and performance characteristics.\n, will be set to EOObservation dataMode if blank.\nExample: /// Example: TEST\nConstraints: Minimum length = 1, Maximum length = 32"
+              },
+        "createdAt" : {
+                "type" : "string",
+                "description" : "Time the row was created in the database, auto-populated by the system.\nExample: /// Example: 2018-01-01T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "createdBy" : {
+                "type" : "string",
+                "description" : "Application user who created the row in the database, auto-populated by the system.\nExample: /// Example: some.user\nConstraints: Minimum length = 1, Maximum length = 64"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EOObservationDetails_Full"
+}

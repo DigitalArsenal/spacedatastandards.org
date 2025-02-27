@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ExportableEntities" : {
+      "type" : "object",
+      "description" : "/// No description available.",
+      "properties" : {
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ExportableEntities"
+}

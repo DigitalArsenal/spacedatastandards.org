@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirEventRemarks_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of remarks associated with this Air Event.",
+      "properties" : {
+        "externalRemarkId" : {
+                "type" : "string",
+                "description" : "Optional remark ID from external systems. This field has no meaning within UDL and is provided as a convenience for systems that require tracking of an internal system generated ID.\nExample: /// Example: 23ea2877a6f74d7d8f309567a5896441\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "text" : {
+                "type" : "string",
+                "description" : "Text of the remark.\nExample: /// Example: Example air event remarks.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              },
+        "date" : {
+                "type" : "string",
+                "description" : "Date the remark was published, in ISO 8601 UTC format, with millisecond precision.\nExample: /// Example: 2024-01-01T01:01:01.123Z\nConstraints: No constraints specified."
+              },
+        "user" : {
+                "type" : "string",
+                "description" : "User who published the remark.\nExample: /// Example: John Doe\nConstraints: Minimum length = 0, Maximum length = 20"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirEventRemarks_Abridged"
+}

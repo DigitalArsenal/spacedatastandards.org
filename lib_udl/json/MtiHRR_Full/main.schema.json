@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MtiHRR_Full" : {
+      "type" : "object",
+      "description" : "/// Data on High-Range Resolution (HRR) targets or High Range Resolution Range Doppler Maps (RDM) for a specified area.",
+      "properties" : {
+        "h2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sequential count of a revisit of the bounding area for a given job ID.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "h3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sequential count of a dwell within the revisit of a particular bounding area for a given job ID.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "h4" : {
+                "type" : "boolean",
+                "description" : "Flag to indicate the last dwell of the revisit.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "h5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sequential index of the associated MTI Report.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "h6" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of Range Doppler pixels that exceed target scatterer threshold and are reported in this segment.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "h7" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of Range Bins/Samples in a Range Doppler Chip.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "h8" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of Doppler bins in a Range-Doppler chip.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "h9" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The Peak Scatter returns the maximum power level (e.g. in milliwatts, or dBm) registered by the sensor.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h10" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Detection threshold used to isolate significant target scatterer pixels, expressed as power relative to clutter mean in negative quarter-decibels.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h11" : {
+                "type" : "number",
+                "description" : "3dB range impulse response of the radar, expressed in centimeters.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "h12" : {
+                "type" : "number",
+                "description" : "Slant Range pixel spacing after over sampling, expressed in centimeters.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "h13" : {
+                "type" : "number",
+                "description" : "3dB Doppler resolution of the radar, expressed in Hertz.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "h14" : {
+                "type" : "number",
+                "description" : "Doppler pixel spacing after over sampling, expressed in Hertz.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "h15" : {
+                "type" : "number",
+                "description" : "Center Frequency of the radar in GHz.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "h16" : {
+                "type" : "string",
+                "description" : "Enumeration table denoting the compression technique used.\nExample: /// Example: TABLE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "h17" : {
+                "type" : "string",
+                "description" : "Enumeration table indicating the spectral weighting used in the range compression process.\nExample: /// Example: TABLE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "h18" : {
+                "type" : "string",
+                "description" : "Enumeration table indicating the spectral weighting used in the cross-range or Doppler compression process.\nExample: /// Example: TABLE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "h19" : {
+                "type" : "number",
+                "description" : "Initial power of the peak scatterer, expressed in dB.\nExample: /// Example: 12.23\nConstraints: No constraints specified."
+              },
+        "h20" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "RCS of the peak scatterer, expressed in half-decibels (dB/2).\nExample: /// Example: 117\nConstraints: No constraints specified."
+              },
+        "h21" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "When the RDM does not correlate to a single MTI report index or when the center range bin does not correlate to the center of the dwell; provide the range sample offset in meters from Dwell Center (positive is away from the sensor) of the first scatterer record.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h22" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "When the RDM does not correlate to a single MTI report index or the center doppler bin does not correlate to the doppler centroid of the dwell; Doppler sample value in Hz of the first scatterer record.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h23" : {
+                "type" : "string",
+                "description" : "Enumeration field which designates the type of data being delivered.\nExample: /// Example: FIELD\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "h24" : {
+                "type" : "string",
+                "description" : "Flag field to indicate the additional signal processing techniques applied to the data.\nExample: /// Example: FLAG\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "h27" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of pixels in the range dimension of the chip.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h28" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Distance from Range Bin to closest edge in the entire chip, expressed in centimeters.\nExample: /// Example: 1234567890\nConstraints: No constraints specified."
+              },
+        "h29" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Relative velocity to skin line.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "h30" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Computed object length based upon HRR profile, in meters.\nExample: /// Example: 22\nConstraints: No constraints specified."
+              },
+        "h31" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Standard deviation of estimate of the object length, expressed in meters.\nExample: /// Example: 55\nConstraints: No constraints specified."
+              },
+        "h32" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Standard deviation of estimate of the object length, expressed in meters.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MtiHRR_Full"
+}

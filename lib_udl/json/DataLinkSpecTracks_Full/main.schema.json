@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkSpecTracks_Full" : {
+      "type" : "object",
+      "description" : "/// Collection of special track numbers used on the data links. There can be 0 to many DataLinkSpecTracks collections within the datalink service.",
+      "properties" : {
+        "specTrackNum" : {
+                "type" : "string",
+                "description" : "The special track number used on the data link entered as an octal reference number. Used to identify a particular type of platform (e.g. MPA, KRESTA) or platform name (e.g. TROMP, MOUNT WHITNEY) which is not included in assigned track blocks.\nExample: /// Example: 12345\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "specTrackNumDesc" : {
+                "type" : "string",
+                "description" : "Description of the special track number.\nExample: /// Example: SAM SITE CHARLIE\nConstraints: Minimum length = 0, Maximum length = 40"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkSpecTracks_Full"
+}

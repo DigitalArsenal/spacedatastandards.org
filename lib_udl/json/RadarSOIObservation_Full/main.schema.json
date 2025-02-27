@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RadarSOIObservation_Full" : {
+      "type" : "object",
+      "description" : "/// A Radar SOI record contains observation information taken from a sensor about a Space Object.",
+      "properties" : {
+        "obStartTime" : {
+                "type" : "string",
+                "description" : "Observation detection start time in ISO 8601 UTC format with microsecond precision.\nExample: /// Example: 2018-01-01T16:00:00.888456Z\nConstraints: No constraints specified."
+              },
+        "tovs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the times of validity in ISO 8601 UTC format with microsecond precision.\nExample: /// Example: ['2018-01-01T16:00:00.888456Z', '2018-01-01T16:00:00.888456Z', '2018-01-01T16:00:00.888456Z']\nConstraints: No constraints specified."
+              },
+        "rspaces" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of range sample spacing in meters. The 'tov' and 'rspace' arrays must match in size.\nExample: /// Example: [0.006, 0.006, 0.006]\nConstraints: No constraints specified."
+              },
+        "xspaces" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of cross-range sample spacing in meters. The 'tov' and 'xspace' arrays must match in size.\nExample: /// Example: [0.006, 0.006, 0.006]\nConstraints: No constraints specified."
+              },
+        "doppler2XRs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of conversion factors between Doppler in hertz and cross-range in meters. The 'tov' and 'doppler2XR' arrays must match in size.\nExample: /// Example: [5644.27, 5644.27, 5644.27]\nConstraints: No constraints specified."
+              },
+        "deltaTimes" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of average Interpulse spacing in seconds. The 'tov' and 'deltaTime' arrays must match in size.\nExample: /// Example: [0.005, 0.005, 0.005]\nConstraints: No constraints specified."
+              },
+        "aspectAngles" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the aspect angle at the center of the image in degrees.  The 'tov' and 'aspectAngle' arrays must match in size.\nExample: /// Example: [4.278, 4.278, 4.278]\nConstraints: No constraints specified."
+              },
+        "projAngVels" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the component of target angular velocity observable by radar in radians per second.  The 'tov' and 'projAngVel' arrays must match in size.\nExample: /// Example: [0.166, 0.166, 0.166]\nConstraints: No constraints specified."
+              },
+        "idStateVector" : {
+                "type" : "string",
+                "description" : "Optional id of assumed StateVector of object being observed.\nExample: /// Example: 99a0de63-b38f-4d81-b057\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "idAttitudeSet" : {
+                "type" : "string",
+                "description" : "Optional id of assumed AttitudeSet of object being observed.\nExample: /// Example: 99a0de63-b38f-4d81-b057\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "ranges" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the range to target at image center in kilometers. The 'tov' and 'range' arrays must match in size.\nExample: /// Example: [877.938, 877.938, 877.938]\nConstraints: No constraints specified."
+              },
+        "azimuths" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the azimuth angle to target at image center in degrees. The 'tov' and 'azimuth' arrays must match in size.\nExample: /// Example: [278.27, 278.27, 278.27]\nConstraints: No constraints specified."
+              },
+        "elevations" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the elevation angle to target at image center in degrees. The 'tov' and 'elevation' arrays must match in size.\nExample: /// Example: [70.85, 70.85, 70.85]\nConstraints: No constraints specified."
+              },
+        "rangeRates" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the range rate of target at image center in kilometers per second. The 'tov' and 'rangeRate' arrays must match in size.\nExample: /// Example: [0.317, 0.317, 0.317]\nConstraints: No constraints specified."
+              },
+        "azimuthRates" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the azimuth rate of target at image center in degrees per second. The 'tov' and 'azimuthRate' arrays must match in size.\nExample: /// Example: [-1.481, -1.481, -1.481]\nConstraints: No constraints specified."
+              },
+        "elevationRates" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the elevation rate of target at image center in degrees per second. The 'tov' and 'elevationRate' arrays must match in size.\nExample: /// Example: [-0.074, -0.074, -0.074]\nConstraints: No constraints specified."
+              },
+        "azimuthBiases" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of  sensor azimuth angle biases in degrees. The 'tov' and 'azimuthBias' arrays must match in size.\nExample: /// Example: [45.23, 45.23, 45.23]\nConstraints: No constraints specified."
+              },
+        "elevationBiases" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of sensor elevation biases in degrees. The 'tov' and 'elevationBias' arrays must match in size.\nExample: /// Example: [1.23, 1.23, 1.23]\nConstraints: No constraints specified."
+              },
+        "rangeBiases" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of sensor range biases in kilometers. The 'tov' and 'rangeBias' arrays must match in size.\nExample: /// Example: [1.23, 1.23, 1.23]\nConstraints: No constraints specified."
+              },
+        "integrationAngles" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of Integration angles in degrees. The 'tov' and 'integrationAngle' arrays must match in size.\nExample: /// Example: [8.594, 8.594, 8.594]\nConstraints: No constraints specified."
+              },
+        "crossRangeRes" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of cross-range resolutions (accounting for weighting function) in kilometers. The 'tov' and 'crossRangeRes' arrays must match in size.\nExample: /// Example: [11.301, 11.301, 11.301]\nConstraints: No constraints specified."
+              },
+        "beta" : {
+                "type" : "number",
+                "description" : "Beta angle (between target and radar-image frame z axis) in degrees.\nExample: /// Example: -89.97\nConstraints: No constraints specified."
+              },
+        "kappa" : {
+                "type" : "number",
+                "description" : "Kappa angle (between radar-line-of-sight and target-frame x axis) in degrees.\nExample: /// Example: 103.04\nConstraints: No constraints specified."
+              },
+        "peakAmplitudes" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the peak pixel amplitude for each image in decibels. The 'tov' and 'peakAmplitude' arrays must match in size.\nExample: /// Example: [33.1, 33.1, 33.1]\nConstraints: No constraints specified."
+              },
+        "centerFrequency" : {
+                "type" : "number",
+                "description" : "Radar center frequency of the radar in hertz.\nExample: /// Example: 160047.0625\nConstraints: No constraints specified."
+              },
+        "pulseBandwidth" : {
+                "type" : "number",
+                "description" : "Bandwidth of radar pulse in hertz.\nExample: /// Example: 24094.12\nConstraints: No constraints specified."
+              },
+        "xpos" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the cartesian X positions of the target, in kilometers, in the specified referenceFrame. If referenceFrame is null then J2K should be assumed. The 'tov' and 'xpos' arrays must match in size.\nExample: /// Example: [-1118.577381, -1118.577381, -1118.577381]\nConstraints: No constraints specified."
+              },
+        "ypos" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the cartesian Y positions of the target, in kilometers, in the specified referenceFrame. If referenceFrame is null then J2K should be assumed. The 'tov' and 'ypos' arrays must match in size.\nExample: /// Example: [3026.231084, 3026.231084, 3026.231084]\nConstraints: No constraints specified."
+              },
+        "zpos" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the cartesian Z positions of the target, in kilometers, in the specified referenceFrame. If referenceFrame is null then J2K should be assumed. The 'tov' and 'zpos' arrays must match in size.\nExample: /// Example: [6167.831808, 6167.831808, 6167.831808]\nConstraints: No constraints specified."
+              },
+        "xvel" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the cartesian X velocities of target, in kilometers per second, in the specified referenceFrame. If referenceFrame is null then J2K should be assumed. The 'tov' and 'xvel' arrays must match in size.\nExample: /// Example: [-4.25242784, -4.25242784, -4.25242784]\nConstraints: No constraints specified."
+              },
+        "yvel" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the cartesian Y velocities of target, in kilometers per second, in the specified referenceFrame.  If referenceFrame is null then J2K should be assumed. The 'tov' and 'yvel' arrays must match in size.\nExample: /// Example: [5.291107434, 5.291107434, 5.291107434]\nConstraints: No constraints specified."
+              },
+        "zvel" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of the cartesian Z velocities of target, in kilometers per second, in the specified referenceFrame.  If referenceFrame is null then J2K should be assumed. The 'tov' and 'zvel' arrays must match in size.\nExample: /// Example: [-3.356493869, -3.356493869, -3.356493869]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RadarSOIObservation_Full"
+}

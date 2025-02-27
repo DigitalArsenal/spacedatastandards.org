@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AltitudeBlocks_Full" : {
+      "type" : "object",
+      "description" : "/// Minimum and maximum altitude bounds for the track.",
+      "properties" : {
+        "altitudeSequenceId" : {
+                "type" : "string",
+                "description" : "Sequencing field for the altitude block.\nExample: /// Example: A1\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "lowerAltitude" : {
+                "type" : "number",
+                "description" : "Lowest altitude of the track route altitude block above mean sea level in feet.\nExample: /// Example: 27000.1\nConstraints: No constraints specified."
+              },
+        "upperAltitude" : {
+                "type" : "number",
+                "description" : "Highest altitude of the track route altitude block above mean sea level in feet.\nExample: /// Example: 27200.5\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AltitudeBlocks_Full"
+}

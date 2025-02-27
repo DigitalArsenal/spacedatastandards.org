@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfile_Abridged" : {
+      "type" : "object",
+      "description" : "/// Profile of electron densities in the ionosphere associated with an IonoObservation.",
+      "properties" : {
+        "parabolic" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "quasiParabolic" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "valleyModelDescription" : {
+                "type" : "string",
+                "description" : "Description of the valley model and parameters.\nExample: /// Example: 2-parameter UMLCAR model with width W in km and depth D in MHz, no fitting.\nConstraints: No constraints specified."
+              },
+        "valleyModelCoeffs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of valley model coefficients.\nExample: /// Example: [39.597, 0.1777]\nConstraints: No constraints specified."
+              },
+        "shiftedChebyshev" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "topsideExtensionChapmanConst" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "topsideExtensionVaryChap" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "iri" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfile_Abridged"
+}

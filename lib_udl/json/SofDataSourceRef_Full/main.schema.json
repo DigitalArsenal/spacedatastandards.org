@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SofDataSourceRef_Full" : {
+      "type" : "object",
+      "description" : "/// List of data sources related to this document.",
+      "properties" : {
+        "dataSourceId" : {
+                "type" : "string",
+                "description" : "Data source id.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "startPosition" : {
+                "type" : "string",
+                "description" : "start position.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "endPosition" : {
+                "type" : "string",
+                "description" : "end position.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "paragraphNumber" : {
+                "type" : "string",
+                "description" : "paragraph number.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "sentenceNumber" : {
+                "type" : "string",
+                "description" : "sentence number.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SofDataSourceRef_Full"
+}

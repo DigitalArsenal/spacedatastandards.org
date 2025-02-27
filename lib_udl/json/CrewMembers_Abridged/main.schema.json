@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CrewMembers_Abridged" : {
+      "type" : "object",
+      "description" : "/// Schema for Crew Member data.",
+      "properties" : {
+        "lastName" : {
+                "type" : "string",
+                "description" : "The last name of the crew member.\nExample: /// Example: Smith\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "firstName" : {
+                "type" : "string",
+                "description" : "The first name of the crew member.\nExample: /// Example: Freddie\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "middleInitial" : {
+                "type" : "string",
+                "description" : "The middle initial of the crew member.\nExample: /// Example: G\nConstraints: Minimum length = 0, Maximum length = 1"
+              },
+        "memberId" : {
+                "type" : "string",
+                "description" : "Unique identifier of the crew member assigned by the originating source.\nExample: /// Example: 12345678abc\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "civilian" : {
+                "type" : "boolean",
+                "description" : "Flag indicating this crew member is a civilian or non-military person.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "commander" : {
+                "type" : "boolean",
+                "description" : "Flag indicating this person is the aircraft commander.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "last4SSN" : {
+                "type" : "string",
+                "description" : "Last four digits of the crew member's social security number.\nExample: /// Example: 1234\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "dodID" : {
+                "type" : "string",
+                "description" : "The crew member's 10-digit DoD ID number.\nExample: /// Example: 0123456789\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "dutyPosition" : {
+                "type" : "string",
+                "description" : "The duty position of the crew member.\nExample: /// Example: IP\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "crewPosition" : {
+                "type" : "string",
+                "description" : "The crew position of the crew member.\nExample: /// Example: EP A\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "memberType" : {
+                "type" : "string",
+                "description" : "Amplifying details about the crew member type (e.g. RAVEN, FCC, COMCAM, AIRCREW, MEP, OTHER, etc.).\nExample: /// Example: AIRCREW\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "branch" : {
+                "type" : "string",
+                "description" : "The military branch assignment of the crew member.\nExample: /// Example: Air Force\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "rank" : {
+                "type" : "string",
+                "description" : "The rank of the crew member.\nExample: /// Example: Capt\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "wing" : {
+                "type" : "string",
+                "description" : "The wing the crew member serves.\nExample: /// Example: 60AMW\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "squadron" : {
+                "type" : "string",
+                "description" : "The squadron the crew member serves.\nExample: /// Example: 21AS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "memberRemarks" : {
+                "type" : "string",
+                "description" : "Remarks concerning the crew member.\nExample: /// Example: Crew member remark\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "username" : {
+                "type" : "string",
+                "description" : "The Mattermost username of this crew member.\nExample: /// Example: fgsmith\nConstraints: Minimum length = 0, Maximum length = 64"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CrewMembers_Abridged"
+}

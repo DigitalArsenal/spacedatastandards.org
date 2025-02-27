@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsTransportationPlans_Full" : {
+      "type" : "object",
+      "description" : "/// Transportation plans associated with this LogisticsSupport record, used to coordinate maintenance efforts.",
+      "properties" : {
+        "plansNumber" : {
+                "type" : "string",
+                "description" : "System generated reference id for the transportation plan.  Format: TXXXXXNNNN  T - Transportation, Sequence Number, Node Id.\nExample: /// Example: T89002\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "missionChange" : {
+                "type" : "boolean",
+                "description" : "Indicates whether there have been changes to changes to ICAOs, estArrTime, or estDepTime since this Transportation Plan was last edited.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "planDefinition" : {
+                "type" : "string",
+                "description" : "Defines the transporation plan as either a deployment or redeployment.\nExample: /// Example: DEPLOY\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "statusCode" : {
+                "type" : "string",
+                "description" : "Transporation Coordination status code. Cancel, Send to APCC, working, agree, disapprove or blank.\nExample: /// Example: N\nConstraints: Minimum length = 1, Maximum length = 1"
+              },
+        "coordinator" : {
+                "type" : "string",
+                "description" : "The AMS username of the operator who alters the coordination status.  Automatically captured by the system.\nExample: /// Example: SMITH, JOHN\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "coordinatorUnit" : {
+                "type" : "string",
+                "description" : "The AMS user unit_id of the operator who alters the coordination status.  Automatically captured by the system from table AMS_USER.\nExample: /// Example: TACC\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "originICAO" : {
+                "type" : "string",
+                "description" : "The origin location.\nExample: /// Example: KATL\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "estDepTime" : {
+                "type" : "string",
+                "description" : "ETD of the first segment, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-15T14:25:00.123Z\nConstraints: No constraints specified."
+              },
+        "estArrTime" : {
+                "type" : "string",
+                "description" : "ETA of the final segment, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-15T14:25:00.123Z\nConstraints: No constraints specified."
+              },
+        "destinationICAO" : {
+                "type" : "string",
+                "description" : "Destination location ICAO.\nExample: /// Example: YBCS\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "logisticMasterRecordId" : {
+                "type" : "string",
+                "description" : "The identifier that represents a Logistics Master Record.\nExample: /// Example: L62126\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "tpTailNumber" : {
+                "type" : "string",
+                "description" : "Contains the tail number displayed by GDSS2.\nExample: /// Example: 99209\nConstraints: Minimum length = 0, Maximum length = 7"
+              },
+        "tpAircraftMDS" : {
+                "type" : "string",
+                "description" : "The aircraft Model Design Series (MDS) designation (e.g. E-2C HAWKEYE, F-15 EAGLE, KC-130 HERCULES, etc.) of this aircraft. Intended as, but not constrained to, MIL-STD-6016 environment dependent specific type designations.\nExample: /// Example: C17A\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "majcom" : {
+                "type" : "string",
+                "description" : "The major command for the current unit.\nExample: /// Example: HQAMC\nConstraints: Minimum length = 0, Maximum length = 250"
+              },
+        "approxArrTime" : {
+                "type" : "string",
+                "description" : "Approximate time of arrival of final segement, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-14T20:37:00.123Z\nConstraints: No constraints specified."
+              },
+        "duration" : {
+                "type" : "string",
+                "description" : "Transportation plan duration, expressed in the format MMM:SS.\nExample: /// Example: 086:20\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "actDepTime" : {
+                "type" : "string",
+                "description" : "Actual time of departure of first segment, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-14T19:37:00.123Z\nConstraints: No constraints specified."
+              },
+        "closedDate" : {
+                "type" : "string",
+                "description" : "GC. LGTP_CLSD_DT.  GD2:  Date when the transportation plan was closed, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-14T20:37:00.123Z\nConstraints: No constraints specified."
+              },
+        "cancelledDate" : {
+                "type" : "string",
+                "description" : "GC. LGTP_CANX_DT.  GD2: Date when the transportation plan was cancelled, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-14T20:37:00.123Z\nConstraints: No constraints specified."
+              },
+        "aircraftStatus" : {
+                "type" : "string",
+                "description" : "These are the initial maintenance values entered based on the pilot descriptions or the official maintenance evaluation code.\nExample: /// Example: NMCMU\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "numEnrouteStops" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Transportation plan enroute stops.\nExample: /// Example: 4\nConstraints: No constraints specified."
+              },
+        "serialNumber" : {
+                "type" : "string",
+                "description" : "GDSS2 uses an 8 character serial number to uniquely identify the aircraft and MDS combination. This is a portion of the full manufacturer serial number.\nExample: /// Example: 9009209\nConstraints: Minimum length = 0, Maximum length = 30"
+              },
+        "numTransLoads" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of transloads for this Transportation Plan.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "lastChangedDate" : {
+                "type" : "string",
+                "description" : "Last time transportation plan was updated, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2023-07-14T20:37:00.123Z\nConstraints: No constraints specified."
+              },
+        "logisticsSegments" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The transportation segments associated with this transportation plan.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "logisticsTransportationPlansRemarks" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Remarks associated with this transportation plan.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsTransportationPlans_Full"
+}

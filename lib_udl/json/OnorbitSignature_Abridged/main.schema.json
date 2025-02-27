@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OnorbitSignature_Abridged" : {
+      "type" : "object",
+      "description" : "/// Contains a list of common information across both Radar and EO observations.",
+      "properties" : {
+        "eoObservation" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "radarObservation" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "rfObservation" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OnorbitSignature_Abridged"
+}

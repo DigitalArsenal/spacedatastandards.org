@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionTransit_Full" : {
+      "type" : "object",
+      "description" : "/// Object for data dissemination.",
+      "properties" : {
+        "id" : {
+                "type" : "string",
+                "description" : "Transit Unique Identifier.\nExample: /// Example: ISRCOLLECTIONTRANSIT-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "base" : {
+                "type" : "string",
+                "description" : "Military Base to transmit the dissemination of this data.\nExample: /// Example: ENVOYS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "duration" : {
+                "type" : "number",
+                "description" : "Length of mission in milliseconds.\nExample: /// Example: 200.23\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionTransit_Full"
+}

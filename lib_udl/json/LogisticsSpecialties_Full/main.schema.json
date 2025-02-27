@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsSpecialties_Full" : {
+      "type" : "object",
+      "description" : "/// The specialties required to implement this support item.",
+      "properties" : {
+        "specialty" : {
+                "type" : "string",
+                "description" : "Indicates where the repairs will be performed, or which shop specialty has been assigned responsibility for correcting the discrepancy. Shop specialties are normally listed in abbreviated format.\nExample: /// Example: ELEN\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "skillLevel" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Skill level of the mission response team member.\nExample: /// Example: 3\nConstraints: No constraints specified."
+              },
+        "firstName" : {
+                "type" : "string",
+                "description" : "The first name of the specialist.\nExample: /// Example: JOHN\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "lastName" : {
+                "type" : "string",
+                "description" : "The last name of the specialist.\nExample: /// Example: SMITH\nConstraints: Minimum length = 0, Maximum length = 30"
+              },
+        "rankCode" : {
+                "type" : "string",
+                "description" : "Military service rank designation.\nExample: /// Example: MAJ\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "last4Ssn" : {
+                "type" : "string",
+                "description" : "The last four digits of the specialist's social security number.\nExample: /// Example: 9999\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "roleTypeCode" : {
+                "type" : "string",
+                "description" : "Type code that determines role of the mission response team member. TC - Team Chief, TM - Team Member.\nExample: /// Example: TC\nConstraints: Minimum length = 0, Maximum length = 2"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsSpecialties_Full"
+}

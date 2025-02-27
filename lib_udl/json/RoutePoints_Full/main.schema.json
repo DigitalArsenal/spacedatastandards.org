@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RoutePoints_Full" : {
+      "type" : "object",
+      "description" : "/// Points identified within the route.",
+      "properties" : {
+        "ptSequenceId" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sequencing field for the track route. This is the identifier representing the sequence of waypoints associated to the track route.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "ptTypeCode" : {
+                "type" : "string",
+                "description" : "Code representation of the point within the track route (ex. EP, EX, CP, IP, etc.).\nExample: /// Example: EP\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "ptTypeName" : {
+                "type" : "string",
+                "description" : "The name that represents the point within the track route (ex. ENTRY POINT, EXIT POINT, CONTROL POINT, INITIAL POINT, etc.).\nExample: /// Example: ENTRY POINT\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "waypointName" : {
+                "type" : "string",
+                "description" : "Name of a waypoint which identifies the location of the point.\nExample: /// Example: KCHS\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "dafifPt" : {
+                "type" : "boolean",
+                "description" : "Flag indicating this is a Digital Aeronautical Flight Information File (DAFIF) point.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "ptLat" : {
+                "type" : "number",
+                "description" : "WGS84 latitude of the point location, in degrees. -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "ptLon" : {
+                "type" : "number",
+                "description" : "WGS84 longitude of the point location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian).\nExample: /// Example: 179.1\nConstraints: No constraints specified."
+              },
+        "magDec" : {
+                "type" : "number",
+                "description" : "The magnetic declination/variation of the route point location from true north, in degrees. Positive values east of true north and negative values west of true north.\nExample: /// Example: 7.35\nConstraints: No constraints specified."
+              },
+        "navaidLength" : {
+                "type" : "number",
+                "description" : "The length of the course from the Navigational Aid (NAVAID) in nautical miles.\nExample: /// Example: 100.2\nConstraints: No constraints specified."
+              },
+        "navaid" : {
+                "type" : "string",
+                "description" : "Navigational Aid (NAVAID) identification code.\nExample: /// Example: HTO\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "countryCode" : {
+                "type" : "string",
+                "description" : "The DoD Standard Country Code designator for the country where the route point resides. This field should be set to \"OTHR\" if the source value does not match a UDL country code value (ISO-3166-ALPHA-2).\nExample: /// Example: NL\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "altCountryCode" : {
+                "type" : "string",
+                "description" : "Specifies an alternate country code if the data provider code is not part of an official NAVAID Country Code standard such as ISO-3166 or FIPS. This field will be set to the value provided by the source and should be used for all Queries specifying a Country Code.\nExample: /// Example: IZ\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "navaidType" : {
+                "type" : "string",
+                "description" : "The NAVAID type of this route point (ex. VOR, VORTAC, TACAN, etc.).\nExample: /// Example: VORTAC\nConstraints: Minimum length = 0, Maximum length = 12"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RoutePoints_Full"
+}

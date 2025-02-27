@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirspaceControlPoint_Abridged" : {
+      "type" : "object",
+      "description" : "/// The controlPoint set describes any reference/controlling/rendevous point for a given airspace control means.",
+      "properties" : {
+        "ctrlPtType" : {
+                "type" : "string",
+                "description" : "One of possible control point type codes, such as CP, ER, OT, etc.\nExample: /// Example: CP\nConstraints: Minimum length = 0, Maximum length = 2"
+              },
+        "ctrlPtName" : {
+                "type" : "string",
+                "description" : "The name applied to the control point, used as a reference.\nExample: /// Example: APPLE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "ctrlPtLocation" : {
+                "type" : "string",
+                "description" : "A geospatial point coordinate specified in DMS (Degrees, Minutes, Seconds) format that represents the location of the control point.\nExample: /// Example: 203632N0594256E\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "ctrlPtAltitude" : {
+                "type" : "string",
+                "description" : "The altitude of the control point.\nExample: /// Example: BRFL:MSL-FL230\nConstraints: Minimum length = 0, Maximum length = 32"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirspaceControlPoint_Abridged"
+}

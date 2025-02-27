@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkRemarks_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of remarks associated with this data link message.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Indicates the subject matter of the remark.\nExample: /// Example: CONTINGENCY PROCEDURES\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "text" : {
+                "type" : "string",
+                "description" : "Text of the remark.\nExample: /// Example: Example data link remarks\nConstraints: Minimum length = 0, Maximum length = 128"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkRemarks_Abridged"
+}

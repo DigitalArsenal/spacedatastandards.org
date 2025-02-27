@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.33.0+1734959521680",
+    "version": "1.34.0+1740681301938",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -93,7 +93,6 @@
         "lobster"
     ],
     "scripts": {
-        "postinstall": "cd website && npm i",
         "test": "mocha",
         "test:watch": "nodemon --exec 'npm test' --watch .",
         "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
@@ -101,7 +100,7 @@
         "start": "node index.js",
         "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateGoModule.py",
-        "build:website": "cd website && npm run build",
+        "build:website": "cd website && npm i && npm run build",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "dev": "npm run build && cd website && npm run dev"
     },

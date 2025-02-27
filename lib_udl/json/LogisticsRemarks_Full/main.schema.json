@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LogisticsRemarks_Full" : {
+      "type" : "object",
+      "description" : "/// Remarks associated with this LogisticsSupport record.",
+      "properties" : {
+        "username" : {
+                "type" : "string",
+                "description" : "User who published the remark.\nExample: /// Example: JSMITH\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "remark" : {
+                "type" : "string",
+                "description" : "Text of the remark.\nExample: /// Example: EXAMPLE REMARK\nConstraints: Minimum length = 0, Maximum length = 4000"
+              },
+        "lastChanged" : {
+                "type" : "string",
+                "description" : "Date the remark was published or updated, in ISO 8601 UTC format, with millisecond precision.\nExample: /// Example: 2023-07-17T10:30:00.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LogisticsRemarks_Full"
+}

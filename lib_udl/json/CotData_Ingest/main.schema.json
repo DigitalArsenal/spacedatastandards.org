@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CotData_Ingest" : {
+      "type" : "object",
+      "description" : "/// Schema for the CotData to post.",
+      "properties" : {
+        "senderUid" : {
+                "type" : "string",
+                "description" : "Identifier of the sender of the cot message which should remain the same on subsequent POI records of the same point of interest.\nExample: /// Example: POI-ID\nConstraints: No constraints specified."
+              },
+        "how" : {
+                "type" : "string",
+                "description" : "How the event point was generated, in CoT object heirarchy notation (optional, CoT).\nExample: /// Example: h-e\nConstraints: No constraints specified."
+              },
+        "ce" : {
+                "type" : "number",
+                "description" : "Radius of circular area about lat/lon point, in meters (1-sigma, if representing error).\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "le" : {
+                "type" : "number",
+                "description" : "Height above lat/lon point, in meters (1-sigma, if representing linear error).\nExample: /// Example: 10.23\nConstraints: No constraints specified."
+              },
+        "stale" : {
+                "type" : "string",
+                "description" : "Stale timestamp (optional), in ISO8601 UTC format.\nExample: /// Example: 2020-01-01T16:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "start" : {
+                "type" : "string",
+                "description" : "Start time of event validity (optional), in ISO8601 UTC format.\nExample: /// Example: 2020-01-01T16:00:00.123456Z\nConstraints: No constraints specified."
+              },
+        "lat" : {
+                "type" : "number",
+                "description" : "WGS-84 latitude of the POI, in degrees (+N, -S), -90 to 90.\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "lon" : {
+                "type" : "number",
+                "description" : "WGS-84 longitude of the POI, in degrees (+E, -W), -180 to 180.\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "type" : {
+                "type" : "string",
+                "description" : "Event type, in CoT object heirarchy notation (optional, CoT).\nExample: /// Example: a-h-G\nConstraints: No constraints specified."
+              },
+        "alt" : {
+                "type" : "number",
+                "description" : "Point height above ellipsoid (WGS-84), in meters.\nExample: /// Example: 5.23\nConstraints: No constraints specified."
+              },
+        "cotPositionData" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "cotChatData" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "callSigns" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Optional list of call signs to send message to directly.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "uids" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Optional list of TAK user ids to send message to directly.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "groups" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Optional set of groups to send message to specifically.  If not specified, the message will be sent to the default _ANON_ group.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CotData_Ingest"
+}

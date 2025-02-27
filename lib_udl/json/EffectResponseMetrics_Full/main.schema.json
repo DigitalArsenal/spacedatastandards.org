@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EffectResponseMetrics_Full" : {
+      "type" : "object",
+      "description" : "/// List of COA metrics associated with this effect response.",
+      "properties" : {
+        "metricType" : {
+                "type" : "string",
+                "description" : "The type of the metric (e.g. CollateralDamage, GoalAchievement, OpportunityCost, Timeliness, Unavailable, etc.).\nExample: /// Example: GoalAchievement\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "domainValue" : {
+                "type" : "number",
+                "description" : "The metric score specific to its domain.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "relativeValue" : {
+                "type" : "number",
+                "description" : "The metric score adjusted to be relative and comparable to other domains.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "provenance" : {
+                "type" : "string",
+                "description" : "The metric that was used to score this task.\nExample: /// Example: Example metric\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EffectResponseMetrics_Full"
+}

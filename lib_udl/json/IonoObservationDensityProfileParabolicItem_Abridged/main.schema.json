@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfileParabolicItem_Abridged" : {
+      "type" : "object",
+      "description" : "/// Describes the E, F1, and F2 layers as parabolic-shape segments.",
+      "properties" : {
+        "layer" : {
+                "type" : "string",
+                "description" : "Ionospheric plasma layer (E, F1, or F2).\nExample: /// Example: E\nConstraints: No constraints specified."
+              },
+        "f" : {
+                "type" : "number",
+                "description" : "Plasma frequency at the layer peak, in MHz.\nExample: /// Example: 3.621\nConstraints: No constraints specified."
+              },
+        "z" : {
+                "type" : "number",
+                "description" : "Height of the layer peak, in kilometers.\nExample: /// Example: 110.2\nConstraints: No constraints specified."
+              },
+        "y" : {
+                "type" : "number",
+                "description" : "Half-thickness of the layer, in kilometers.\nExample: /// Example: 11.1\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfileParabolicItem_Abridged"
+}

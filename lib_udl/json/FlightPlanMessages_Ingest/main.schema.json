@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FlightPlanMessages_Ingest" : {
+      "type" : "object",
+      "description" : "/// Collection of messages associated with this flight plan indicating the severity, the point where the message was generated, the path (Primary, Alternate, etc.), and the text of the message.",
+      "properties" : {
+        "severity" : {
+                "type" : "string",
+                "description" : "The severity of the message.\nExample: /// Example: SEVERE\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "wpNum" : {
+                "type" : "string",
+                "description" : "The waypoint number for which the message was generated, or enter \"PLAN\" for a message impacting the entire route.\nExample: /// Example: 20\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "routePath" : {
+                "type" : "string",
+                "description" : "The flight path that generated the message (PRIMARY, ALTERNATE, etc.).\nExample: /// Example: PRIMARY\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "msgText" : {
+                "type" : "string",
+                "description" : "The text of the message.\nExample: /// Example: Message text\nConstraints: Minimum length = 0, Maximum length = 256"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FlightPlanMessages_Ingest"
+}

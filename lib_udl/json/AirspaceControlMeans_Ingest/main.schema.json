@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AirspaceControlMeans_Ingest_cmShape_Enum" : {
+      "type" : "string",
+      "enum": ["POLYARC", "E1TRACK", "POLYGON", "CIRCLE", "CORRIDOR", "APOINT", "AORBIT", "GEOLINE"]
+    },
+    "AirspaceControlMeans_Ingest" : {
+      "type" : "object",
+      "description" : "/// A conditional nested segment to report multiple airspace control means within a particular airspace control means status.",
+      "properties" : {
+        "cmType" : {
+                "type" : "string",
+                "description" : "The code for the type of airspace control means.\nExample: /// Example: ACM:ADAREA\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "cmId" : {
+                "type" : "string",
+                "description" : "Airspace control means name or designator.\nExample: /// Example: DESIG:C34\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "cmShape" : {
+                "$ref" : "#/definitions/AirspaceControlMeans_Ingest_cmShape_Enum",
+                "description" : "Designates the geometric type that defines the airspace shape. One of CIRCLE, CORRIDOR, LINE, ORBIT, etc.\nExample: /// Example: POLYARC\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "usage" : {
+                "type" : "string",
+                "description" : "Designates the means by which a defined airspace control means is to be used.\nExample: /// Example: USE:AIRCOR\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "link16Id" : {
+                "type" : "string",
+                "description" : "Unique Link 16 identifier assigned to the airspace control means.\nExample: /// Example: F3356\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "transAltitude" : {
+                "type" : "string",
+                "description" : "The altitude at or below which the vertical position of an aircraft is controlled by reference to true altitude.\nExample: /// Example: 18000FT\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "geoDatumAlt" : {
+                "type" : "string",
+                "description" : "Specifies the geodetic datum by which the spatial coordinates of the controlled airspace are calculated, if different from the top level ACO datum.\nExample: /// Example: NAR\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "coord0" : {
+                "type" : "string",
+                "description" : "A geospatial point coordinate specified in DMS (Degrees, Minutes, Seconds) format. The fields coord0 and coord1 should be used in the specification of any airspace control shape that requires exactly one (1) or two (2) reference points for construction. For shapes requiring one reference point, For instance, when shape is set to \"APOINT,\" this field is required and singluarly defines the shape. Similarly, this field is required to define the center point of a \"CIRCLE\" shape, or the \"origin of bearing\" for arcs.\nExample: /// Example: 152345N0505657E\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "coord1" : {
+                "type" : "string",
+                "description" : "A geospatial point coordinate specified in DMS (Degrees, Minutes, Seconds) format. The fields coord0 and coord1 should be used in the specification of any airspace control shape that requires exactly one (1) or two (2) reference points for construction. For shapes requiring one reference point, For instance, when shape is set to \"APOINT,\" this field is required and singluarly defines the shape. Similarly, this field is required to define the center point of a \"CIRCLE\" shape, or the \"origin of bearing\" for arcs.\nExample: /// Example: 1523N05057E\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "bearing0" : {
+                "type" : "number",
+                "description" : "A bearing measured from true North, in angular degrees. If cmShape is set to \"POLYARC\" or \"RADARC,\" this field is required and is mapped to the \"beginning\" radial bearing parameter.\nExample: /// Example: 330\nConstraints: No constraints specified."
+              },
+        "bearing1" : {
+                "type" : "number",
+                "description" : "A bearing measured from true North, in angular degrees. If cmShape is set to \"POLYARC\" or \"RADARC,\" this field is required and is mapped to the \"ending\" radial bearing parameter.\nExample: /// Example: 160\nConstraints: No constraints specified."
+              },
+        "radMag0" : {
+                "type" : "number",
+                "description" : "A distance that represents a radial magnitude. If cmShape is set to \"CIRCLE\" or \"POLYARC,\" one of either fields radMag0 or radMag1 is required. If cmShape is set to \"RADARC,\" this field is required and maps to the \"inner\" radial magnitude arc limit. If provided, the field radMagUnit is required.\nExample: /// Example: 30.04\nConstraints: No constraints specified."
+              },
+        "radMag1" : {
+                "type" : "number",
+                "description" : "A distance that represents a radial magnitude. If cmShape is set to \"CIRCLE\" or \"POLYARC,\" one of either fields radMag0 or radMag1 is required. If cmShape is set to \"RADARC,\" this field is required and maps to the \"outer\" radial magnitude arc limit. If provided, the field radMagUnit is required.\nExample: /// Example: 50.12\nConstraints: No constraints specified."
+              },
+        "radMagUnit" : {
+                "type" : "string",
+                "description" : "Specifies the unit of length in which radial magnitudes are given. Use M for meters, KM for kilometers, or NM for nautical miles.\nExample: /// Example: NM\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "polyCoord" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "A set of geospatial coordinates specified in DMS (Degrees, Minutes, Seconds) format which determine the vertices of a one or two dimensional geospatial shape. When shape is set to \"POLYARC\" or \"POLYGON,\" this field is required as applied in the construction of the area boundary. If cmShape is set to \"COORIDOR\" or \"GEOLINE,\" this field is required and can be interpreted as an ordered set of points along a path in space.\nExample: /// Example: ['203632N0594256E', '155000N0594815E', '155000N0591343E']\nConstraints: No constraints specified."
+              },
+        "trackLeg" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index of a segment in an airtrack, which is defined by an ordered set of points.\nExample: /// Example: 99\nConstraints: No constraints specified."
+              },
+        "widthLeft" : {
+                "type" : "number",
+                "description" : "Given an ordered pair of spatial coordinates (p0, p1), defines a distance extending into the LEFT half-plane realtive to the direction of the vector that maps p0 to p1. If cmShape is set to \"1TRACK\", this field is required to define the width of the airspace track as measured from the left of the track segment line. If provided, the field widthUnit is required.\nExample: /// Example: 5.2\nConstraints: No constraints specified."
+              },
+        "widthRight" : {
+                "type" : "number",
+                "description" : "Given an ordered pair of spatial coordinates (p0, p1), defines a distance extending into the RIGHT half-plane relative to the direction of the vector that maps p0 to p1. If cmShape is set to \"1TRACK\", this field is required to define the width of the airspace track as measured from the right of the track segment line. If provided, the field widthUnit is required.\nExample: /// Example: 10.4\nConstraints: No constraints specified."
+              },
+        "width" : {
+                "type" : "number",
+                "description" : "Used to describe the \"side to side\" distance of a target, object or area. If cmShape is set to \"CORRIDOR\" or \"AORBIT\", this field is required and is mapped to the width parameter. If provided, the field widthUnit is required.\nExample: /// Example: 15.6\nConstraints: No constraints specified."
+              },
+        "widthUnit" : {
+                "type" : "string",
+                "description" : "Specifies the unit of length for which widths are given. Use M for meters, KM for kilometers, or NM for nautical miles.\nExample: /// Example: KM\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "corrWayPoints" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of at least two alphanumeric symbols used to serially identify the corridor waypoints. If cmShape is set to \"CORRIDOR,\" one of either corrWayPoints or polyCoord is required to specify the centerline of the corridor path.\nExample: /// Example: ['POB', 'RDU', 'IAD']\nConstraints: No constraints specified."
+              },
+        "orbitAlignment" : {
+                "type" : "string",
+                "description" : "Orbit alignment look-up code. Can be C=Center, L=Left, R=Right.\nExample: /// Example: C\nConstraints: Minimum length = 0, Maximum length = 1"
+              },
+        "effVDim" : {
+                "type" : "string",
+                "description" : "Description of the airspace vertical dimension.\nExample: /// Example: BRRA:GL-100AGL\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "airspaceTimePeriod" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The timePeriod set describes the effective datetime for a given airspace control means.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "airspaceControlPoint" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The controlPoint set describes any reference/controlling/rendevous point for a given airspace control means.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "ctrlAuth" : {
+                "type" : "string",
+                "description" : "The commander responsible within a specified geographical area for the airspace control operation assigned to him.\nExample: /// Example: RHEIN MAIN CP\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "ctrlAuthFreqs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The frequency for the airspace control authority. Can specify HZ, KHZ, MHZ, GHZ or a DESIG frequency designator code.\nExample: /// Example: ['125.25MHZ']\nConstraints: No constraints specified."
+              },
+        "genTextInd" : {
+                "type" : "string",
+                "description" : "Used to provide transit intstructions for the airspace control means.\nExample: /// Example: SITUATION\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "freeText" : {
+                "type" : "string",
+                "description" : "General informat detailing the transit instruction for the airspace control means.\nExample: /// Example: 1. CAPACITY: MDM TK, 50 VEHICLE CONVOY. 2. CHOKE POINTS: EXIT 5\nConstraints: Minimum length = 0, Maximum length = 128"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AirspaceControlMeans_Ingest"
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AircraftMissionLocationTasking_Full" : {
+      "type" : "object",
+      "description" : "/// Collection of aircraft mission location information for this aircraft mission tasking.",
+      "properties" : {
+        "startTime" : {
+                "type" : "string",
+                "description" : "The start time of this mission in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2021-10-25T12:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "endTime" : {
+                "type" : "string",
+                "description" : "The end time of this mission in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2021-10-25T12:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "msnLocName" : {
+                "type" : "string",
+                "description" : "The name that identifies the location at which this mission is to be performed. This can be the name of a general target area, orbit, cap point, station, etc.\nExample: /// Example: KLSV\nConstraints: Minimum length = 0, Maximum length = 24"
+              },
+        "alt" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The altitude for this mission represented as hundreds of feet above MSL.\nExample: /// Example: 210\nConstraints: No constraints specified."
+              },
+        "airMsnPri" : {
+                "type" : "string",
+                "description" : "The code for the priority assigned to this mission.\nExample: /// Example: 1A\nConstraints: Minimum length = 0, Maximum length = 8"
+              },
+        "areaGeoRad" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The radius of the circle around the location being reported in feet.\nExample: /// Example: 1000\nConstraints: No constraints specified."
+              },
+        "msnLocPtName" : {
+                "type" : "string",
+                "description" : "The location name for this mission.\nExample: /// Example: PT ALFA\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "msnLocPtLat" : {
+                "type" : "number",
+                "description" : "WGS-84 latitude of the mission location, in degrees. -90 to 90 degrees (negative values south of equator) for this tasked air mission.\nExample: /// Example: 35.123\nConstraints: No constraints specified."
+              },
+        "msnLocPtLon" : {
+                "type" : "number",
+                "description" : "WGS-84 longitude of the mission location, in degrees. -180 to 180 degrees (negative values west of Prime Meridian) for this tasked air mission.\nExample: /// Example: 79.01\nConstraints: No constraints specified."
+              },
+        "msnLocPtBarT" : {
+                "type" : "string",
+                "description" : "The alpha-numeric specified location for this mission specified as a bearing angle in degrees relative to true north and a range in nautical miles (NM).\nExample: /// Example: 330T-PT ALFA-50NM\nConstraints: Minimum length = 0, Maximum length = 36"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AircraftMissionLocationTasking_Full"
+}

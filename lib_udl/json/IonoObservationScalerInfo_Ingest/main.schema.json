@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationScalerInfo_Ingest" : {
+      "type" : "object",
+      "description" : "/// The ScalerInfo record describes the person or system who interpreted the ionogram in IonoObservation.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Scaler type (MANUAL, AUTOMATIC or UNKNOWN).\nExample: /// Example: MANUAL\nConstraints: Minimum length = 0, Maximum length = 9"
+              },
+        "name" : {
+                "type" : "string",
+                "description" : "Scaler name.\nExample: /// Example: ARTIST-4\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "organization" : {
+                "type" : "string",
+                "description" : "Scaler organization.\nExample: /// Example: UML\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "version" : {
+                "type" : "number",
+                "description" : "Scaler version.\nExample: /// Example: 500200.1\nConstraints: No constraints specified."
+              },
+        "confidenceScore" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Scaler confidence score.\nExample: /// Example: 75\nConstraints: No constraints specified."
+              },
+        "confidenceLevel" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Scaler confidence level.\nExample: /// Example: 11\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationScalerInfo_Ingest"
+}

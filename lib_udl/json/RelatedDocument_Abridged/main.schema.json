@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RelatedDocument_Abridged" : {
+      "type" : "object",
+      "description" : "/// Related document ids.",
+      "properties" : {
+        "documentId" : {
+                "type" : "string",
+                "description" : "The document id of the related document.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "dataSourceRefs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of data sources related to this document.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RelatedDocument_Abridged"
+}

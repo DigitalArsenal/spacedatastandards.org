@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkRefPoints_Full" : {
+      "type" : "object",
+      "description" : "/// Collection that identifies points of reference used in the establishment of the data links. There can be 1 to many DataLinkRefPoints collections within the datalink service.",
+      "properties" : {
+        "refPointType" : {
+                "type" : "string",
+                "description" : "Type of data link reference point or grid origin.\nExample: /// Example: DLRP\nConstraints: Minimum length = 0, Maximum length = 7"
+              },
+        "refDes" : {
+                "type" : "string",
+                "description" : "Identifier to designate a reference point.\nExample: /// Example: L5\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "refLocName" : {
+                "type" : "string",
+                "description" : "The location name of the point of reference for this data link message.\nExample: /// Example: FORT BRAGG\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "refLat" : {
+                "type" : "number",
+                "description" : "WGS84 latitude of the reference point for this data link message, in degrees. -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 45.23\nConstraints: No constraints specified."
+              },
+        "refLon" : {
+                "type" : "number",
+                "description" : "WGS84 longitude of the reference point for this data link message, in degrees. -90 to 90 degrees (negative values south of equator).\nExample: /// Example: 179.1\nConstraints: No constraints specified."
+              },
+        "effEventTime" : {
+                "type" : "string",
+                "description" : "Indicates when a particular event or nickname becomes effective or the old event or nickname is deleted, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-08T13:55:43.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkRefPoints_Full"
+}

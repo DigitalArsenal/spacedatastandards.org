@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionRequirements_Abridged" : {
+      "type" : "object",
+      "description" : "/// Tasking desired collection requirements.",
+      "properties" : {
+        "id" : {
+                "type" : "string",
+                "description" : "Collection Requirement Unique Identifier.\nExample: /// Example: ISCRCOLLECTIONREQUIREMENTS\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "hash" : {
+                "type" : "string",
+                "description" : "Encryption hashing algorithm.\nExample: /// Example: HASH\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "type" : {
+                "type" : "string",
+                "description" : "Type collection this requirement applies to.\nExample: /// Example: COLLECTION_TYPE\nConstraints: Minimum length = 0, Maximum length = 128"
+              },
+        "cridNumbers" : {
+                "type" : "string",
+                "description" : "Collection Requirement Unique Identifier.\nExample: /// Example: CRID\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "priority" : {
+                "type" : "number",
+                "description" : "1-n priority for this collection requirement.\nExample: /// Example: 20.23\nConstraints: No constraints specified."
+              },
+        "recordId" : {
+                "type" : "string",
+                "description" : "Record id.\nExample: /// Example: RECORD-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "reconSurvey" : {
+                "type" : "string",
+                "description" : "Reconnaissance Survey information the operator needs.\nExample: /// Example: SURVEY_INFO\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "intelDiscipline" : {
+                "type" : "string",
+                "description" : "Primary type of intelligence to be collected for this requirement.\nExample: /// Example: Sig\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "secondary" : {
+                "type" : "boolean",
+                "description" : "Sub category of primary intelligence to be collected for this requirement.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "emphasized" : {
+                "type" : "boolean",
+                "description" : "Is this collection requirement an emphasized/critical requirement.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "isPrismCr" : {
+                "type" : "boolean",
+                "description" : "Is this collection request for the Prism system?.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "start" : {
+                "type" : "string",
+                "description" : "Start time for this requirement, should be within the mission time window.\nExample: /// Example: 2021-01-19T01:01:15.001Z\nConstraints: No constraints specified."
+              },
+        "stop" : {
+                "type" : "string",
+                "description" : "Stop time for this requirement, should be within the mission time window.\nExample: /// Example: 2021-01-19T01:20:01.001Z\nConstraints: No constraints specified."
+              },
+        "operation" : {
+                "type" : "string",
+                "description" : "Human readable name for this operation.\nExample: /// Example: NAME\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "supportedUnit" : {
+                "type" : "string",
+                "description" : "The name of the military unit that this assigned collection requirement will support.\nExample: /// Example: UNIT\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "country" : {
+                "type" : "string",
+                "description" : "Country code of the collection requirement. A Country may represent countries, multi-national consortiums, and international organizations.\nExample: /// Example: COUNTRY_CODE\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "region" : {
+                "type" : "string",
+                "description" : "Region of the collection requirement.\nExample: /// Example: REGION\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "subregion" : {
+                "type" : "string",
+                "description" : "Subregion of the collection requirement.\nExample: /// Example: SUBREGION\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "specialComGuidance" : {
+                "type" : "string",
+                "description" : "Free text field for the user to specify special instructions needed for this collection.\nExample: /// Example: TEXT\nConstraints: Minimum length = 0, Maximum length = 256"
+              },
+        "criticalTimes" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "exploitationRequirement" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "targetList" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of POI Id's for the targets being tasked.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionRequirements_Abridged"
+}

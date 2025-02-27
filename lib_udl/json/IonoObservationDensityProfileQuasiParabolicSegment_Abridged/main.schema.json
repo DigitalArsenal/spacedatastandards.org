@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationDensityProfileQuasiParabolicSegment_Abridged" : {
+      "type" : "object",
+      "description" : "/// A quasi-parabolic segment is the best-fit 3-parameter quasi-parabolas defined via A, B, C coefficients, f^2=A/r^2+B/r+C”. Usually 3 groups for E, F1, and F2 layers, but additional segments may be used to improve accuracy.",
+      "properties" : {
+        "index" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The index of this segment in the list, from 1 to NumSegments.\nExample: /// Example: 12\nConstraints: No constraints specified."
+              },
+        "rb" : {
+                "type" : "number",
+                "description" : "Starting range of the segment, in kilometers from the Earth's center.\nExample: /// Example: 6460.1\nConstraints: No constraints specified."
+              },
+        "re" : {
+                "type" : "number",
+                "description" : "Ending range of the segment, in kilometers from the Earth's center.\nExample: /// Example: 6480.001\nConstraints: No constraints specified."
+              },
+        "a" : {
+                "type" : "number",
+                "description" : "Coefficient A.\nExample: /// Example: -550273940000\nConstraints: No constraints specified."
+              },
+        "b" : {
+                "type" : "number",
+                "description" : "Coefficient B.\nExample: /// Example: 169837632\nConstraints: No constraints specified."
+              },
+        "c" : {
+                "type" : "number",
+                "description" : "Coefficient C.\nExample: /// Example: 13104.63\nConstraints: No constraints specified."
+              },
+        "error" : {
+                "type" : "number",
+                "description" : "Best-fit error.\nExample: /// Example: 0.0016\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationDensityProfileQuasiParabolicSegment_Abridged"
+}

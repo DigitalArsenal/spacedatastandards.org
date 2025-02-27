@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationAzimuth_Full" : {
+      "type" : "object",
+      "description" : "/// Multidimensional array of incoming azimuth at the receiver. Has the same dimensions as power. Antenna type, configuration, and method of determination to be documented in the azimuthNotes field.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the azimuth data.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers of the azimuth array dimensions.\nExample: /// Example: [1, 2]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for dimensions.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of incoming azimuth at the receiver.\nExample: /// Example: [[[[[[[0.02, 0.034]]]]]]]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationAzimuth_Full"
+}

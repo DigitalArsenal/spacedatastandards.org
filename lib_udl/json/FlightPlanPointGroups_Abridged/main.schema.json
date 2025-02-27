@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FlightPlanPointGroups_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of point groups generated for this flight plan. Groups include point sets for Extended Operations (ETOPS), Critical Fuel Point, and Equal Time Point (ETP).",
+      "properties" : {
+        "pointGroupName" : {
+                "type" : "string",
+                "description" : "Name of the point group, usually Extended Operations (ETOPS), Critical Fuel Point, and Equal Time Point (ETP) sections.\nExample: /// Example: ETOPS_CF_POINT_1\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "worstFuelCase" : {
+                "type" : "string",
+                "description" : "Specifies which Point Group case requires the most fuel.\nExample: /// Example: DEPRESSURIZED ENGINE OUT ETP\nConstraints: Minimum length = 0, Maximum length = 48"
+              },
+        "lsafName" : {
+                "type" : "string",
+                "description" : "Name of the last suitable airfield, International Civil Aviation Organization (ICAO) code preferred.\nExample: /// Example: LPPD\nConstraints: Minimum length = 0, Maximum length = 5"
+              },
+        "lsafDistance" : {
+                "type" : "number",
+                "description" : "Distance from the Equal Time Point (ETP) to the last suitable airfield in nautical miles.\nExample: /// Example: 684.1\nConstraints: No constraints specified."
+              },
+        "fsafDistance" : {
+                "type" : "number",
+                "description" : "Distance from the Equal Time Point (ETP) to the first suitable airfield in nautical miles.\nExample: /// Example: 684.1\nConstraints: No constraints specified."
+              },
+        "etopsDistance" : {
+                "type" : "number",
+                "description" : "Distance from the Extended Operations (ETOPS) point to the recovery airfield in nautical miles.\nExample: /// Example: 684.1\nConstraints: No constraints specified."
+              },
+        "lsafTime" : {
+                "type" : "string",
+                "description" : "Time to fly from the Equal Time Point (ETP) to the last suitable airfield expressed in HH:MM format.\nExample: /// Example: 01:23\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "fsafTime" : {
+                "type" : "string",
+                "description" : "Time to fly from the Equal Time Point (ETP) to the first suitable airfield expressed in HH:MM format.\nExample: /// Example: 01:23\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "etopsTime" : {
+                "type" : "string",
+                "description" : "Time to fly from the Extended Operations (ETOPS) point to the recovery airfield expressed in HH:MM format.\nExample: /// Example: 01:23\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "lsafAvgWindFactor" : {
+                "type" : "number",
+                "description" : "Average wind factor from the Equal Time Point (ETP) to the last suitable airfield in knots.\nExample: /// Example: 13.1\nConstraints: No constraints specified."
+              },
+        "fsafAvgWindFactor" : {
+                "type" : "number",
+                "description" : "Average wind factor from the Equal Time Point (ETP) to the first suitable airfield in knots.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "etopsAvgWindFactor" : {
+                "type" : "number",
+                "description" : "Average wind factor from the Extended Operations (ETOPS) point to the recovery airfield in knots.\nExample: /// Example: 10.1\nConstraints: No constraints specified."
+              },
+        "lsafTempDev" : {
+                "type" : "number",
+                "description" : "Temperature deviation from the Equal Time Point (ETP) to the last suitable airfield in degrees Celsius.\nExample: /// Example: 9.1\nConstraints: No constraints specified."
+              },
+        "fsafTempDev" : {
+                "type" : "number",
+                "description" : "Temperature deviation from the Equal Time Point (ETP) to the first suitable airfield in degrees Celsius.\nExample: /// Example: 9.1\nConstraints: No constraints specified."
+              },
+        "etopsTempDev" : {
+                "type" : "number",
+                "description" : "Temperature deviation from the Extended Operations (ETOPS) point to the recovery airfield in degrees Celsius.\nExample: /// Example: 9.1\nConstraints: No constraints specified."
+              },
+        "lsafReqFuel" : {
+                "type" : "number",
+                "description" : "Fuel required to fly from the Equal Time Point (ETP) to the last suitable airfield in pounds.\nExample: /// Example: 50787.1\nConstraints: No constraints specified."
+              },
+        "fsafReqFuel" : {
+                "type" : "number",
+                "description" : "Fuel required to fly from the Equal Time Point (ETP) to the first suitable airfield in pounds.\nExample: /// Example: 50380.1\nConstraints: No constraints specified."
+              },
+        "etopsReqFuel" : {
+                "type" : "number",
+                "description" : "Fuel required to fly from the Extended Operations (ETOPS) point to the recovery airfield in pounds.\nExample: /// Example: 4412.1\nConstraints: No constraints specified."
+              },
+        "fromTakeoffTime" : {
+                "type" : "string",
+                "description" : "Total time from takeoff when the point is reached expressed in HH:MM format.\nExample: /// Example: 07:29\nConstraints: Minimum length = 0, Maximum length = 6"
+              },
+        "plannedFuel" : {
+                "type" : "number",
+                "description" : "Amount of planned fuel on board when the point is reached in pounds.\nExample: /// Example: 190319.1\nConstraints: No constraints specified."
+              },
+        "fuelCalcAlt" : {
+                "type" : "number",
+                "description" : "Flight level of the point at which the fuel was calculated in feet.\nExample: /// Example: 100.1\nConstraints: No constraints specified."
+              },
+        "fuelCalcSpd" : {
+                "type" : "number",
+                "description" : "True airspeed at which the fuel was calculated in knots.\nExample: /// Example: 365.1\nConstraints: No constraints specified."
+              },
+        "avgFuelFlow" : {
+                "type" : "number",
+                "description" : "Average fuel flow at which the fuel was calculated in pounds per hour.\nExample: /// Example: 19693.1\nConstraints: No constraints specified."
+              },
+        "flightPlanPoints" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of point data for this Point Group.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FlightPlanPointGroups_Abridged"
+}

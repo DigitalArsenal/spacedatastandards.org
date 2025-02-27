@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ISRCollectionPeriods_Full" : {
+      "type" : "object",
+      "description" : "/// Tasking collection periods.",
+      "properties" : {
+        "planned" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "actual" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Actual start and stop for the collection.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ISRCollectionPeriods_Full"
+}

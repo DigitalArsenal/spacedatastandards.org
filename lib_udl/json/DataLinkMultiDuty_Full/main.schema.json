@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkMultiDuty_Full" : {
+      "type" : "object",
+      "description" : "/// Collection of contact and identification information for designated multilink coordinator duty assignments. There can be 0 to many DataLinkMultiDuty collections within the datalink service.",
+      "properties" : {
+        "unitDes" : {
+                "type" : "string",
+                "description" : "Designated force of unit specified by ship name, unit call sign, or unit designator.\nExample: /// Example: SHIP:STENNIS\nConstraints: Minimum length = 0, Maximum length = 38"
+              },
+        "name" : {
+                "type" : "string",
+                "description" : "The name of the person to be contacted for multilink coordination.\nExample: /// Example: POPOVICH\nConstraints: Minimum length = 0, Maximum length = 20"
+              },
+        "rank" : {
+                "type" : "string",
+                "description" : "The rank or position of the person to be contacted for multilink coordination.\nExample: /// Example: LCDR\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "duty" : {
+                "type" : "string",
+                "description" : "Specific duties assigned for multilink coordination (e.g. ICO, RICO, SICO).\nExample: /// Example: SICO\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "dutyTeleFreqNums" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of telephone numbers or the frequency values for radio transmission of the person to be contacted for multilink coordination.\nExample: /// Example: ['TEL:804-555-4142', 'TEL:804-867-5309']\nConstraints: No constraints specified."
+              },
+        "multiDutyVoiceCoord" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Collection of information regarding the function, frequency, and priority of interface control and coordination nets for multilink coordination. There can be 0 to many DataLinkMultiVoiceCoord collections within a DataLinkMultiDuty collection.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkMultiDuty_Full"
+}

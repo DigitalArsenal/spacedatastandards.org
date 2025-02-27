@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "Entity_type_Enum" : {
+      "type" : "string",
+      "enum": ["AIRCRAFT", "BUS", "COMM", "IR", "NAVIGATION", "ONORBIT", "RFEMITTER", "SCIENTIFIC", "SENSOR", "SITE", "VESSEL"]
+    },
+    "Entity_ownerType_Enum" : {
+      "type" : "string",
+      "enum": ["COMMERCIAL", "GOVERNMENT", "ACADEMIC", "CONSORTIUM", "OTHER"]
+    },
+    "Entity_dataMode_Enum" : {
+      "type" : "string",
+      "enum": ["REAL", "TEST", "SIMULATED", "EXERCISE"]
+    },
+    "Entity" : {
+      "type" : "object",
+      "description" : "/// An entity is a generic representation of any object within a space/SSA system such as sensors, on-orbit objects, RF Emitters, space craft buses, etc. An entity can have an operating unit, a location (if terrestrial), and statuses.",
+      "properties" : {
+        "idEntity" : {
+                "type" : "string",
+                "description" : "Unique identifier of the record.\nExample: /// Example: ENTITY-ID\nConstraints: Minimum length = 1, Maximum length = 36"
+              },
+        "name" : {
+                "type" : "string",
+                "description" : "Unique entity name.\nExample: /// Example: Example name\nConstraints: Minimum length = 1, Maximum length = 128"
+              },
+        "classificationMarking" : {
+                "type" : "string",
+                "description" : "Classification marking of the data in IC/CAPCO Portion-marked format.\nExample: /// Example: U\nConstraints: Minimum length = 1, Maximum length = 128"
+              },
+        "type" : {
+                "$ref" : "#/definitions/Entity_type_Enum",
+                "description" : "The type of entity represented by this record (AIRCRAFT, BUS, COMM, IR, NAVIGATION, ONORBIT, RFEMITTER, SCIENTIFIC, SENSOR, SITE, VESSEL).\nExample: /// Example: ONORBIT\nConstraints: Minimum length = 1, Maximum length = 45"
+              },
+        "idLocation" : {
+                "type" : "string",
+                "description" : "Unique identifier of the entity location, if terrestrial/fixed.\nExample: /// Example: LOCATION-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "countryCode" : {
+                "type" : "string",
+                "description" : "The country code. This value is typically the ISO 3166 Alpha-2 two-character country code, however it can also represent various consortiums that do not appear in the ISO document. The code must correspond to an existing country in the UDL’s country API. Call udl/country/{code} to get any associated FIPS code, ISO Alpha-3 code, or alternate code values that exist for the specified country code.\nExample: /// Example: US\nConstraints: Minimum length = 0, Maximum length = 4"
+              },
+        "ownerType" : {
+                "$ref" : "#/definitions/Entity_ownerType_Enum",
+                "description" : "Type of organization which owns this entity (e.g. Commercial, Government, Academic, Consortium, etc).\nExample: /// Example: Commercial\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "taskable" : {
+                "type" : "boolean",
+                "description" : "Boolean indicating if this entity is taskable.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "urls" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of URLs to additional details/documents for this entity.\nExample: /// Example: ['URL1', 'URL2']\nConstraints: No constraints specified."
+              },
+        "createdAt" : {
+                "type" : "string",
+                "description" : "Time the row was created in the database, auto-populated by the system.\nExample: /// Example: 2018-01-01T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "createdBy" : {
+                "type" : "string",
+                "description" : "Application user who created the row in the database, auto-populated by the system.\nExample: /// Example: some.user\nConstraints: Minimum length = 1, Maximum length = 64"
+              },
+        "updatedAt" : {
+                "type" : "string",
+                "description" : "Time the row was last updated in the database, auto-populated by the system.\nExample: /// Example: 2018-01-01T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "updatedBy" : {
+                "type" : "string",
+                "description" : "Application user who updated the row in the database, auto-populated by the system.\nExample: /// Example: some.user\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "source" : {
+                "type" : "string",
+                "description" : "Source of the data.\nExample: /// Example: Bluestaq\nConstraints: Minimum length = 1, Maximum length = 64"
+              },
+        "origin" : {
+                "type" : "string",
+                "description" : "Originating system or organization which produced the data, if different from the source. The origin may be different than the source if the source was a mediating system which forwarded the data on behalf of the origin system. If null, the source may be assumed to be the origin.\nExample: /// Example: THIRD_PARTY_DATASOURCE\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "dataMode" : {
+                "$ref" : "#/definitions/Entity_dataMode_Enum",
+                "description" : "Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST data:\nEXERCISE:&nbsp;Data pertaining to a government or military exercise. The data may include both real and simulated data.\nREAL:&nbsp;Data collected or produced that pertains to real-world objects, events, and analysis.\nSIMULATED:&nbsp;Synthetic data generated by a model to mimic real-world datasets.\nTEST:&nbsp;Specific datasets used to evaluate compliance with specifications and requirements, and for validating technical, functional, and performance characteristics.\nExample: /// Example: TEST\nConstraints: Minimum length = 1, Maximum length = 32"
+              },
+        "location" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "onOrbit" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "idOnOrbit" : {
+                "type" : "string",
+                "description" : "Onorbit identifier if this entity is part of an on-orbit object. For the public catalog, the idOnOrbit is typically the satellite number as a string, but may be a UUID for analyst or other unknown or untracked satellites.\nExample: /// Example: ONORBIT-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "operatingUnit" : {
+                "type" : "string",
+                "description" : "No description provided.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "idOperatingUnit" : {
+                "type" : "string",
+                "description" : "Unique identifier of the associated operating unit object.\nExample: /// Example: OPERATINGUNIT-ID\nConstraints: Minimum length = 0, Maximum length = 36"
+              },
+        "origNetwork" : {
+                "type" : "string",
+                "description" : "The originating source network on which this record was created, auto-populated by the system.\nExample: /// Example: OPS1\nConstraints: Minimum length = 1, Maximum length = 32"
+              },
+        "statusCollection" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Read-only collection of statuses which can be collected by multiple sources.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              },
+        "rfBands" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Read-only collection of RF bands utilized by this entity for communication and/or operation.\nExample: /// Example: No example provided.\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/Entity"
+}

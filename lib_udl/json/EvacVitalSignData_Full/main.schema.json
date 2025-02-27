@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacVitalSignData_Full" : {
+      "type" : "object",
+      "description" : "/// Information obtained for vital signs.",
+      "properties" : {
+        "vitalSign" : {
+                "type" : "string",
+                "description" : "Patient vital sign measured (e.g. HEART RATE, PULSE RATE, RESPIRATION RATE, TEMPERATURE CORE, etc.).\nExample: /// Example: HEART RATE\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "vitalSign1" : {
+                "type" : "number",
+                "description" : "Vital sign value 1.  The content of this field is dependent on the type of vital sign being measured (see the vitalSign field).\nExample: /// Example: 120\nConstraints: No constraints specified."
+              },
+        "vitalSign2" : {
+                "type" : "number",
+                "description" : "Vital sign value 2.  The content of this field is dependent on the type of vital sign being measured (see the vitalSign field).\nExample: /// Example: 80\nConstraints: No constraints specified."
+              },
+        "medConfFactor" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Medical confidence factor.\nExample: /// Example: 1\nConstraints: No constraints specified."
+              },
+        "time" : {
+                "type" : "string",
+                "description" : "Datetime of the vital sign measurement in ISO 8601 UTC datetime format.\nExample: /// Example: 2021-10-15T16:00:00.123Z\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacVitalSignData_Full"
+}

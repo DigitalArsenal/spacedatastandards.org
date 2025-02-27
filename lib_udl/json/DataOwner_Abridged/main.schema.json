@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataOwner_Abridged" : {
+      "type" : "object",
+      "description" : "/// Information pertaining to UDL data owners.",
+      "properties" : {
+        "doName" : {
+                "type" : "string",
+                "description" : "The name of the data owner.\nExample: /// Example: Data owner name\nConstraints: Minimum length = 1, Maximum length = 64"
+              },
+        "classificationMarking" : {
+                "type" : "string",
+                "description" : "Classification marking of the data in IC/CAPCO Portion-marked format.\nExample: /// Example: U\nConstraints: Minimum length = 1, Maximum length = 128"
+              },
+        "ownerType" : {
+                "type" : "string",
+                "description" : "Type of organization which this data owner belongs to (e.g. Commercial, Government, Academic, Consortium, etc.).\nExample: /// Example: Commercial\nConstraints: Minimum length = 1, Maximum length = 32"
+              },
+        "dataType" : {
+                "type" : "string",
+                "description" : "Type of data this data owner owns (e.g. EPHEMERIS, IMAGERY, MANEUVER, etc.).\nExample: /// Example: ELSET\nConstraints: Minimum length = 1, Maximum length = 64"
+              },
+        "provider" : {
+                "type" : "string",
+                "description" : "Organization name for the data provider.\nExample: /// Example: ACME\nConstraints: Minimum length = 1, Maximum length = 64"
+              },
+        "countryCode" : {
+                "type" : "string",
+                "description" : "The country code. This value is typically the ISO 3166 Alpha-2 two-character country code, however it can also represent various consortiums that do not appear in the ISO document. The code must correspond to an existing country in the UDL’s country API. Call udl/country/{code} to get any associated FIPS code, ISO Alpha-3 code, or alternate code values that exist for the specified country code.\nExample: /// Example: US\nConstraints: Minimum length = 1, Maximum length = 4"
+              },
+        "idContact" : {
+                "type" : "string",
+                "description" : "Unique identifier of the contact for this data owner.\nExample: /// Example: 026dd511-8ba5-47d3-9909-836149f87686\nConstraints: Minimum length = 1, Maximum length = 36"
+              },
+        "description" : {
+                "type" : "string",
+                "description" : "Description of this data owner.\nExample: /// Example: Description of this data owner.\nConstraints: No constraints specified."
+              },
+        "control" : {
+                "type" : "string",
+                "description" : "Optional control required to access this data type from this owner.\nExample: /// Example: PR-ACME-ELSETS\nConstraints: Minimum length = 1, Maximum length = 128"
+              },
+        "enabled" : {
+                "type" : "boolean",
+                "description" : "Boolean indicating if the data owner is enabled (if not enabled, they should not appear on the data products screen on the storefront).\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "comingSoon" : {
+                "type" : "boolean",
+                "description" : "Boolean indicating if the data owner is coming soon or not yet available.\nExample: /// Example: False\nConstraints: No constraints specified."
+              },
+        "source" : {
+                "type" : "string",
+                "description" : "Source of the data.\nExample: /// Example: some.user\nConstraints: Minimum length = 1, Maximum length = 64"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataOwner_Abridged"
+}

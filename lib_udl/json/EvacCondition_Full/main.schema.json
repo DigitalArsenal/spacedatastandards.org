@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacCondition_Full" : {
+      "type" : "object",
+      "description" : "/// The group path from transmitter to receiver.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Health condition assessment.  Intended as, but not constrained to, K07.1 Condition Type Enumeration (e.g. ACTIVITY HIGH, ACTIVITY LOW, ACTIVITY MEDIUM, ACTIVITY NONE, AVPU ALERT, AVPU ALTERED MENTAL STATE, AVPU PAIN, AVPU UNRESPONSIVE, etc.).\nExample: /// Example: ACTIVITY LOW\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "bodyPart" : {
+                "type" : "string",
+                "description" : "Body part location or body part referenced in condition.  Intended as, but not constrained to, K07.1 Body Location Enumeration (e.g. ANKLE LEFT BACK, ANKLE LEFT FRONT, ANKLE RIGHT BACK, ANKLE RIGHT FRONT, ARM LEFT BACK, ARM LEFT ELBOW BACK, ARM LEFT ELBOW FRONT, ARM LEFT FRONT, ARM LEFT LOWER BACK, etc.).\nExample: /// Example: ANKLE LEFT FRONT\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "time" : {
+                "type" : "string",
+                "description" : "Datetime of the condition diagnosis in ISO 8601 UTC datetime format.\nExample: /// Example: 2021-10-15T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "comments" : {
+                "type" : "string",
+                "description" : "Additional comments on the patient's condition.\nExample: /// Example: Comments on the patient's condition.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacCondition_Full"
+}

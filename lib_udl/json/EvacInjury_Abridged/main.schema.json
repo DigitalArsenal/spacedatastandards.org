@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EvacInjury_Abridged" : {
+      "type" : "object",
+      "description" : "/// Injury specifics.",
+      "properties" : {
+        "type" : {
+                "type" : "string",
+                "description" : "Classification of the injury type (ABRASION, AMPUTATION IT, AVULATION, BALLISTIC, BLAST WAVE, BURN 1ST DEGREE, BURN 2ND DEGREE, BURN 3RD DEGREE, BURN INHALATION, BURN LOWER AIRWAY, CHEST FLAIL, CHEST OPEN, DEGLOVING, ECCHYMOSIS, FRACTURE CLOSED, FRACTURE CREPITUS, FRACTURE IT, FRACTURE OPEN, HEMATOMA, IRREGULAR CONSISTENCY, IRREGULAR CONSISTENCY RIDGED, IRREGULAR CONSISTENCY SWOLLEN, IRREGULAR CONSISTENCY SWOLLEN DISTENDED, IRREGULAR CONSISTENCY TENDER, IRREGULAR POSITION, IRREGULAR SHAPE, IRREGULAR SHAPE MISSHAPED, IRREGULAR SHAPE NON SYMMETRICAL, LACERATION, NEUROVASCULAR COMPROMISE, NEUROVASCULAR INTACT, PUNCTURE, SEAT BELT SIGN, STAB, TIC TIM).\nExample: /// Example: ABRASION\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "bodyPart" : {
+                "type" : "string",
+                "description" : "Body part location of the injury.  Intended as, but not constrained to, K07.1 Body Location Enumeration (e.g. ANKLE LEFT BACK, ANKLE LEFT FRONT, ANKLE RIGHT BACK, ANKLE RIGHT FRONT, ARM LEFT BACK, ARM LEFT ELBOW BACK, ARM LEFT ELBOW FRONT, ARM LEFT FRONT, ARM LEFT LOWER BACK, etc.).\nExample: /// Example: ARM LEFT FRONT\nConstraints: Minimum length = 0, Maximum length = 32"
+              },
+        "time" : {
+                "type" : "string",
+                "description" : "The time of the injury, in ISO 8601 UTC format.\nExample: /// Example: 2021-10-15T16:00:00.123Z\nConstraints: No constraints specified."
+              },
+        "comments" : {
+                "type" : "string",
+                "description" : "Additional comments on the patient's injury information.\nExample: /// Example: Comments on the patient's injury.\nConstraints: Minimum length = 0, Maximum length = 1024"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EvacInjury_Abridged"
+}

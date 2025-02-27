@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationAmplitude_Abridged" : {
+      "type" : "object",
+      "description" : "/// Multi-dimensional array with the same dimensions as power plus one additional dimension antenna_element. This variable is enabled for post-process polarization or antenna array determination. Can be combined with phase to create a phasors and subsequently enable post-processing of polarization and/or antenna array determination.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the amplitude data.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers for amplitude dimensions.\nExample: /// Example: [4, 5]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for dimensions.\nExample: /// Example: ['NAME1', 'NAME2']\nConstraints: No constraints specified."
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of amplitude data.\nExample: /// Example: [[[[[[[0.02, 0.034]]]]]]]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationAmplitude_Abridged"
+}

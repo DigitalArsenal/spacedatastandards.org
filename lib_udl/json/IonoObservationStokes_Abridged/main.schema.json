@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IonoObservationStokes_Abridged" : {
+      "type" : "object",
+      "description" : "/// Multi-dimensional array with the same dimensions as power plus one additional dimension spanning an S dimension for S1, S2, and S3 (the normalized Stokes parameters 1, 2, and 3). It is advised to describe the antenna type, antenna configuration, and Stokes coordinate system as a notes to the variable.",
+      "properties" : {
+        "notes" : {
+                "type" : "string",
+                "description" : "Notes for the stokes data.\nExample: /// Example: NOTES\nConstraints: Minimum length = 0, Maximum length = 512"
+              },
+        "dimensions" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of integers of the stoke array dimensions.\nExample: /// Example: [2, 3]\nConstraints: No constraints specified."
+              },
+        "dimensionName" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of names for dimensions.\nExample: /// Example: ['NAMES1', 'NAMES2']\nConstraints: No constraints specified."
+              },
+        "data" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of received stokes data.\nExample: /// Example: [[[[[[[0.02, 0.034]]]]]]]\nConstraints: No constraints specified."
+              },
+        "s" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "S1, S2, and S3 (the normalized Stokes parameters 1, 2, and 3).\nExample: /// Example: [1.0, 2.0]\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IonoObservationStokes_Abridged"
+}

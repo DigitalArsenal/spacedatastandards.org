@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SEObservation_Ingest" : {
+      "type" : "object",
+      "description" : "/// A single space environment observation.",
+      "properties" : {
+        "obType" : {
+                "type" : "string",
+                "description" : "The type of observation associated with this record.\nExample: /// Example: INTEGRAL FLUX\nConstraints: Minimum length = 1, Maximum length = 24"
+              },
+        "obUoM" : {
+                "type" : "string",
+                "description" : "The Unit of Measure associated with this observation. If there are no physical units associated with the measurement, a value of NONE should be specified.\nExample: /// Example: particles/cm^2/s/sr\nConstraints: Minimum length = 1, Maximum length = 32"
+              },
+        "obValue" : {
+                "type" : "number",
+                "description" : "A single observation value expressed in the specified unit of measure (obUoM). Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.\nExample: /// Example: 0.487687826\nConstraints: No constraints specified."
+              },
+        "obString" : {
+                "type" : "string",
+                "description" : "A single observation string expressed in the specified unit of measure (obUoM). Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.\nExample: /// Example: C1.3\nConstraints: Minimum length = 0, Maximum length = 64"
+              },
+        "obArray" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "An array of observation values expressed in the specified unit of measure (obUoM). Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.\nExample: /// Example: [1.7, 35.6, 21.2, 19.01]\nConstraints: No constraints specified."
+              },
+        "obBool" : {
+                "type" : "boolean",
+                "description" : "A Boolean observation. Because of the variability of the Space Environment data types, each record may employ a numeric observation value (obValue), a string observation value (obString), a Boolean observation value (obBool), an array of numeric observation values (obArray), or any combination of these.\nExample: /// Example: True\nConstraints: No constraints specified."
+              },
+        "obQuality" : {
+                "type" : "string",
+                "description" : "The quality of this individual observation. The observation quality indicator value may vary among providers and may be a generalized statement (BAD, GOOD, UNCERTAIN, UNKNOWN) or a numeric value. Users should consult the data provider to verify the usage of the observation.\nExample: /// Example: GOOD\nConstraints: Minimum length = 0, Maximum length = 16"
+              },
+        "obDescription" : {
+                "type" : "string",
+                "description" : "Descriptive or additional information associated with this individual observation.\nExample: /// Example: Observation Description Text\nConstraints: Minimum length = 0, Maximum length = 512"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SEObservation_Ingest"
+}

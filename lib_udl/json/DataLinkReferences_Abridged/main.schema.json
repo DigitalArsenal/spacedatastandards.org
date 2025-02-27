@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataLinkReferences_Abridged" : {
+      "type" : "object",
+      "description" : "/// Collection of reference information. There can be 0 to many DataLinkReferences collections within the datalink service.",
+      "properties" : {
+        "refSerialId" : {
+                "type" : "string",
+                "description" : "Specifies an alphabetic serial identifier a reference pertaining to the data link message.\nExample: /// Example: A\nConstraints: Minimum length = 0, Maximum length = 2"
+              },
+        "refType" : {
+                "type" : "string",
+                "description" : "Specifies the type of document referenced.\nExample: /// Example: ABSTAT\nConstraints: Minimum length = 0, Maximum length = 56"
+              },
+        "refOriginator" : {
+                "type" : "string",
+                "description" : "The originator of this reference.\nExample: /// Example: CENTCOM\nConstraints: Minimum length = 0, Maximum length = 30"
+              },
+        "refTs" : {
+                "type" : "string",
+                "description" : "Timestamp of the referenced message, in ISO 8601 UTC format with millisecond precision.\nExample: /// Example: 2024-01-07T13:55:43.123Z\nConstraints: No constraints specified."
+              },
+        "refSerialNum" : {
+                "type" : "string",
+                "description" : "Serial number assigned to this reference.\nExample: /// Example: 1402001\nConstraints: Minimum length = 0, Maximum length = 10"
+              },
+        "refSpecialNotation" : {
+                "type" : "string",
+                "description" : "Indicates any special actions, restrictions, guidance, or information relating to this reference.\nExample: /// Example: NOTAL\nConstraints: Minimum length = 0, Maximum length = 5"
+              },
+        "refSICs" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Array of NATO Subject Indicator Codes (SIC) or filing numbers of the document being referenced.\nExample: /// Example: ['RDU', 'C-123-92']\nConstraints: No constraints specified."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DataLinkReferences_Abridged"
+}
