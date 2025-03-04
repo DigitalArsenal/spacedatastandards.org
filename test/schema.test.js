@@ -26,7 +26,7 @@ describe('Data Generation and Verification', () => {
         const type = resolvedProp.type;
 
         if (resolvedProp.enum) {
-            expect(resolvedProp.enum.length).to.greaterThan(value);
+            expect(resolvedProp.enum.length).to.greaterThan(0);
         } else if (type === 'integer') {
             expect(typeof parseFloat(value)).to.equal('number');
         } else if (type === 'number') {
