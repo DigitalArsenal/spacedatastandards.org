@@ -1,5 +1,5 @@
-// Hash: 39cfd12809c44e9343c9c2d611a567a7ecf185a67dc12a00b7784d27a3c4b302
-// Version: 1.0.5
+// Hash: 1b26c6306f87729b947f093ae6e184bcb5b974d491b6ce868f2fab4ecabc8239
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../IDM/main.fbs";
@@ -53,8 +53,14 @@ table EOO {
   /// Optional identifier to track a transaction.
   TRANSACTION_ID: string;
 
-  /// Identifier of the track to which this observation belongs, if applicable.
-  TRACK_ID: string;
+  /// The user-defined set ID of a sequence of images.
+  IMAGE_SET_ID: string;
+
+  /// The number of images in an image set.
+  IMAGE_SET_LENGTH: int;
+
+  /// The sequence ID of an image within an image set.
+  SEQUENCE_ID: int;
 
   /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
   OB_POSITION: ObservationPosition;

@@ -57,88 +57,90 @@ public struct EOO: FlatBufferObject, Verifiable {
     case NORAD_CAT_ID = 18
     case TASK_ID = 20
     case TRANSACTION_ID = 22
-    case TRACK_ID = 24
-    case OB_POSITION = 26
-    case ORIG_OBJECT_ID = 28
-    case ORIG_SENSOR_ID = 30
-    case UCT = 32
-    case AZIMUTH = 34
-    case AZIMUTH_UNC = 36
-    case AZIMUTH_BIAS = 38
-    case AZIMUTH_RATE = 40
-    case ELEVATION = 42
-    case ELEVATION_UNC = 44
-    case ELEVATION_BIAS = 46
-    case ELEVATION_RATE = 48
-    case RANGE = 50
-    case RANGE_UNC = 52
-    case RANGE_BIAS = 54
-    case RANGE_RATE = 56
-    case RANGE_RATE_UNC = 58
-    case RA = 60
-    case RA_RATE = 62
-    case RA_UNC = 64
-    case RA_BIAS = 66
-    case DECLINATION = 68
-    case DECLINATION_RATE = 70
-    case DECLINATION_UNC = 72
-    case DECLINATION_BIAS = 74
-    case LOSX = 76
-    case LOSY = 78
-    case LOSZ = 80
-    case LOS_UNC = 82
-    case LOSXVEL = 84
-    case LOSYVEL = 86
-    case LOSZVEL = 88
-    case SENLAT = 90
-    case SENLON = 92
-    case SENALT = 94
-    case SENX = 96
-    case SENY = 98
-    case SENZ = 100
-    case FOV_COUNT = 102
-    case FOV_COUNT_UCTS = 104
-    case EXP_DURATION = 106
-    case ZEROPTD = 108
-    case NET_OBJ_SIG = 110
-    case NET_OBJ_SIG_UNC = 112
-    case MAG = 114
-    case MAG_UNC = 116
-    case MAG_NORM_RANGE = 118
-    case GEOLAT = 120
-    case GEOLON = 122
-    case GEOALT = 124
-    case GEORANGE = 126
-    case SKY_BKGRND = 128
-    case PRIMARY_EXTINCTION = 130
-    case PRIMARY_EXTINCTION_UNC = 132
-    case SOLAR_PHASE_ANGLE = 134
-    case SOLAR_EQ_PHASE_ANGLE = 136
-    case SOLAR_DEC_ANGLE = 138
-    case SHUTTER_DELAY = 140
-    case TIMING_BIAS = 142
-    case RAW_FILE_URI = 144
-    case INTENSITY = 146
-    case BG_INTENSITY = 148
-    case DESCRIPTOR = 150
-    case SOURCE = 152
-    case ORIGIN = 154
-    case DATA_MODE = 156
-    case CREATED_AT = 158
-    case CREATED_BY = 160
-    case REFERENCE_FRAME = 162
-    case SEN_REFERENCE_FRAME = 164
-    case UMBRA = 166
-    case PENUMBRA = 168
-    case ORIG_NETWORK = 170
-    case SOURCE_DL = 172
-    case TYPE = 174
-    case AZIMUTH_MEASURED = 176
-    case ELEVATION_MEASURED = 178
-    case RANGE_MEASURED = 180
-    case RANGERATE_MEASURED = 182
-    case RA_MEASURED = 184
-    case DECLINATION_MEASURED = 186
+    case IMAGE_SET_ID = 24
+    case IMAGE_SET_LENGTH = 26
+    case SEQUENCE_ID = 28
+    case OB_POSITION = 30
+    case ORIG_OBJECT_ID = 32
+    case ORIG_SENSOR_ID = 34
+    case UCT = 36
+    case AZIMUTH = 38
+    case AZIMUTH_UNC = 40
+    case AZIMUTH_BIAS = 42
+    case AZIMUTH_RATE = 44
+    case ELEVATION = 46
+    case ELEVATION_UNC = 48
+    case ELEVATION_BIAS = 50
+    case ELEVATION_RATE = 52
+    case RANGE = 54
+    case RANGE_UNC = 56
+    case RANGE_BIAS = 58
+    case RANGE_RATE = 60
+    case RANGE_RATE_UNC = 62
+    case RA = 64
+    case RA_RATE = 66
+    case RA_UNC = 68
+    case RA_BIAS = 70
+    case DECLINATION = 72
+    case DECLINATION_RATE = 74
+    case DECLINATION_UNC = 76
+    case DECLINATION_BIAS = 78
+    case LOSX = 80
+    case LOSY = 82
+    case LOSZ = 84
+    case LOS_UNC = 86
+    case LOSXVEL = 88
+    case LOSYVEL = 90
+    case LOSZVEL = 92
+    case SENLAT = 94
+    case SENLON = 96
+    case SENALT = 98
+    case SENX = 100
+    case SENY = 102
+    case SENZ = 104
+    case FOV_COUNT = 106
+    case FOV_COUNT_UCTS = 108
+    case EXP_DURATION = 110
+    case ZEROPTD = 112
+    case NET_OBJ_SIG = 114
+    case NET_OBJ_SIG_UNC = 116
+    case MAG = 118
+    case MAG_UNC = 120
+    case MAG_NORM_RANGE = 122
+    case GEOLAT = 124
+    case GEOLON = 126
+    case GEOALT = 128
+    case GEORANGE = 130
+    case SKY_BKGRND = 132
+    case PRIMARY_EXTINCTION = 134
+    case PRIMARY_EXTINCTION_UNC = 136
+    case SOLAR_PHASE_ANGLE = 138
+    case SOLAR_EQ_PHASE_ANGLE = 140
+    case SOLAR_DEC_ANGLE = 142
+    case SHUTTER_DELAY = 144
+    case TIMING_BIAS = 146
+    case RAW_FILE_URI = 148
+    case INTENSITY = 150
+    case BG_INTENSITY = 152
+    case DESCRIPTOR = 154
+    case SOURCE = 156
+    case ORIGIN = 158
+    case DATA_MODE = 160
+    case CREATED_AT = 162
+    case CREATED_BY = 164
+    case REFERENCE_FRAME = 166
+    case SEN_REFERENCE_FRAME = 168
+    case UMBRA = 170
+    case PENUMBRA = 172
+    case ORIG_NETWORK = 174
+    case SOURCE_DL = 176
+    case TYPE = 178
+    case AZIMUTH_MEASURED = 180
+    case ELEVATION_MEASURED = 182
+    case RANGE_MEASURED = 184
+    case RANGERATE_MEASURED = 186
+    case RA_MEASURED = 188
+    case DECLINATION_MEASURED = 190
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -170,9 +172,13 @@ public struct EOO: FlatBufferObject, Verifiable {
   ///  Optional identifier to track a transaction.
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
-  ///  Identifier of the track to which this observation belongs, if applicable.
-  public var TRACK_ID: String? { let o = _accessor.offset(VTOFFSET.TRACK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_ID.v) }
+  ///  The user-defined set ID of a sequence of images.
+  public var IMAGE_SET_ID: String? { let o = _accessor.offset(VTOFFSET.IMAGE_SET_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE_SET_ID.v) }
+  ///  The number of images in an image set.
+  public var IMAGE_SET_LENGTH: Int32 { let o = _accessor.offset(VTOFFSET.IMAGE_SET_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  The sequence ID of an image within an image set.
+  public var SEQUENCE_ID: Int32 { let o = _accessor.offset(VTOFFSET.SEQUENCE_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
   public var OB_POSITION: ObservationPosition { let o = _accessor.offset(VTOFFSET.OB_POSITION.v); return o == 0 ? .fence : ObservationPosition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fence }
   ///  Provider maintained ID. May not be consistent with 18SDS SAT_NO.
@@ -361,7 +367,7 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var RA_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.RA_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  True if measured, false if computed. Required if declination is reported.
   public var DECLINATION_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.DECLINATION_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 92) }
+  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 94) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
@@ -372,7 +378,9 @@ public struct EOO: FlatBufferObject, Verifiable {
   public static func add(NORAD_CAT_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VTOFFSET.NORAD_CAT_ID.p) }
   public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VTOFFSET.TASK_ID.p) }
   public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
-  public static func add(TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_ID, at: VTOFFSET.TRACK_ID.p) }
+  public static func add(IMAGE_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SET_ID, at: VTOFFSET.IMAGE_SET_ID.p) }
+  public static func add(IMAGE_SET_LENGTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SET_LENGTH, def: 0, at: VTOFFSET.IMAGE_SET_LENGTH.p) }
+  public static func add(SEQUENCE_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_ID, def: 0, at: VTOFFSET.SEQUENCE_ID.p) }
   public static func add(OB_POSITION: ObservationPosition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OB_POSITION.rawValue, def: 0, at: VTOFFSET.OB_POSITION.p) }
   public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
   public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
@@ -476,7 +484,9 @@ public struct EOO: FlatBufferObject, Verifiable {
     NORAD_CAT_ID: Int32 = 0,
     TASK_IDOffset TASK_ID: Offset = Offset(),
     TRANSACTION_IDOffset TRANSACTION_ID: Offset = Offset(),
-    TRACK_IDOffset TRACK_ID: Offset = Offset(),
+    IMAGE_SET_IDOffset IMAGE_SET_ID: Offset = Offset(),
+    IMAGE_SET_LENGTH: Int32 = 0,
+    SEQUENCE_ID: Int32 = 0,
     OB_POSITION: ObservationPosition = .fence,
     ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
     ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
@@ -570,7 +580,9 @@ public struct EOO: FlatBufferObject, Verifiable {
     EOO.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
     EOO.add(TASK_ID: TASK_ID, &fbb)
     EOO.add(TRANSACTION_ID: TRANSACTION_ID, &fbb)
-    EOO.add(TRACK_ID: TRACK_ID, &fbb)
+    EOO.add(IMAGE_SET_ID: IMAGE_SET_ID, &fbb)
+    EOO.add(IMAGE_SET_LENGTH: IMAGE_SET_LENGTH, &fbb)
+    EOO.add(SEQUENCE_ID: SEQUENCE_ID, &fbb)
     EOO.add(OB_POSITION: OB_POSITION, &fbb)
     EOO.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
     EOO.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
@@ -667,7 +679,9 @@ public struct EOO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.NORAD_CAT_ID.p, fieldName: "NORAD_CAT_ID", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.TASK_ID.p, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRACK_ID.p, fieldName: "TRACK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.IMAGE_SET_ID.p, fieldName: "IMAGE_SET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.IMAGE_SET_LENGTH.p, fieldName: "IMAGE_SET_LENGTH", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.SEQUENCE_ID.p, fieldName: "SEQUENCE_ID", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.OB_POSITION.p, fieldName: "OB_POSITION", required: false, type: ObservationPosition.self)
     try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)

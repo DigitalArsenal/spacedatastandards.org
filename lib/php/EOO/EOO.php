@@ -120,11 +120,31 @@ class EOO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Identifier of the track to which this observation belongs, if applicable.
-    public function getTRACK_ID()
+    /// The user-defined set ID of a sequence of images.
+    public function getIMAGE_SET_ID()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// The number of images in an image set.
+    /**
+     * @return int
+     */
+    public function getIMAGE_SET_LENGTH()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// The sequence ID of an image within an image set.
+    /**
+     * @return int
+     */
+    public function getSEQUENCE_ID()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
     /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
@@ -133,21 +153,21 @@ class EOO extends Table
      */
     public function getOB_POSITION()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ObservationPosition::FENCE;
     }
 
     /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
     public function getORIG_OBJECT_ID()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Sensor ID.
     public function getORIG_SENSOR_ID()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -157,7 +177,7 @@ class EOO extends Table
      */
     public function getUCT()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -167,7 +187,7 @@ class EOO extends Table
      */
     public function getAZIMUTH()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -177,7 +197,7 @@ class EOO extends Table
      */
     public function getAZIMUTH_UNC()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -187,7 +207,7 @@ class EOO extends Table
      */
     public function getAZIMUTH_BIAS()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -197,7 +217,7 @@ class EOO extends Table
      */
     public function getAZIMUTH_RATE()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -207,7 +227,7 @@ class EOO extends Table
      */
     public function getELEVATION()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -217,7 +237,7 @@ class EOO extends Table
      */
     public function getELEVATION_UNC()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -227,7 +247,7 @@ class EOO extends Table
      */
     public function getELEVATION_BIAS()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -237,7 +257,7 @@ class EOO extends Table
      */
     public function getELEVATION_RATE()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -247,7 +267,7 @@ class EOO extends Table
      */
     public function getRANGE()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -257,7 +277,7 @@ class EOO extends Table
      */
     public function getRANGE_UNC()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -267,7 +287,7 @@ class EOO extends Table
      */
     public function getRANGE_BIAS()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -277,7 +297,7 @@ class EOO extends Table
      */
     public function getRANGE_RATE()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -287,7 +307,7 @@ class EOO extends Table
      */
     public function getRANGE_RATE_UNC()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -297,7 +317,7 @@ class EOO extends Table
      */
     public function getRA()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -307,7 +327,7 @@ class EOO extends Table
      */
     public function getRA_RATE()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -317,7 +337,7 @@ class EOO extends Table
      */
     public function getRA_UNC()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -327,7 +347,7 @@ class EOO extends Table
      */
     public function getRA_BIAS()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -337,7 +357,7 @@ class EOO extends Table
      */
     public function getDECLINATION()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -347,7 +367,7 @@ class EOO extends Table
      */
     public function getDECLINATION_RATE()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -357,7 +377,7 @@ class EOO extends Table
      */
     public function getDECLINATION_UNC()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -367,7 +387,7 @@ class EOO extends Table
      */
     public function getDECLINATION_BIAS()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -377,7 +397,7 @@ class EOO extends Table
      */
     public function getLOSX()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -387,7 +407,7 @@ class EOO extends Table
      */
     public function getLOSY()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -397,7 +417,7 @@ class EOO extends Table
      */
     public function getLOSZ()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -407,7 +427,7 @@ class EOO extends Table
      */
     public function getLOS_UNC()
     {
-        $o = $this->__offset(82);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -417,7 +437,7 @@ class EOO extends Table
      */
     public function getLOSXVEL()
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -427,7 +447,7 @@ class EOO extends Table
      */
     public function getLOSYVEL()
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -437,7 +457,7 @@ class EOO extends Table
      */
     public function getLOSZVEL()
     {
-        $o = $this->__offset(88);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -447,7 +467,7 @@ class EOO extends Table
      */
     public function getSENLAT()
     {
-        $o = $this->__offset(90);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -457,7 +477,7 @@ class EOO extends Table
      */
     public function getSENLON()
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(96);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -467,7 +487,7 @@ class EOO extends Table
      */
     public function getSENALT()
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(98);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -477,7 +497,7 @@ class EOO extends Table
      */
     public function getSENX()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(100);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -487,7 +507,7 @@ class EOO extends Table
      */
     public function getSENY()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(102);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -497,7 +517,7 @@ class EOO extends Table
      */
     public function getSENZ()
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -507,7 +527,7 @@ class EOO extends Table
      */
     public function getFOV_COUNT()
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -517,7 +537,7 @@ class EOO extends Table
      */
     public function getFOV_COUNT_UCTS()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(108);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -529,7 +549,7 @@ class EOO extends Table
      */
     public function getEXP_DURATION()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(110);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -539,7 +559,7 @@ class EOO extends Table
      */
     public function getZEROPTD()
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(112);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -549,7 +569,7 @@ class EOO extends Table
      */
     public function getNET_OBJ_SIG()
     {
-        $o = $this->__offset(110);
+        $o = $this->__offset(114);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -559,7 +579,7 @@ class EOO extends Table
      */
     public function getNET_OBJ_SIG_UNC()
     {
-        $o = $this->__offset(112);
+        $o = $this->__offset(116);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -569,7 +589,7 @@ class EOO extends Table
      */
     public function getMAG()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(118);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -579,7 +599,7 @@ class EOO extends Table
      */
     public function getMAG_UNC()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(120);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -589,7 +609,7 @@ class EOO extends Table
      */
     public function getMAG_NORM_RANGE()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(122);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -600,7 +620,7 @@ class EOO extends Table
      */
     public function getGEOLAT()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(124);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -611,7 +631,7 @@ class EOO extends Table
      */
     public function getGEOLON()
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(126);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -621,7 +641,7 @@ class EOO extends Table
      */
     public function getGEOALT()
     {
-        $o = $this->__offset(124);
+        $o = $this->__offset(128);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -631,7 +651,7 @@ class EOO extends Table
      */
     public function getGEORANGE()
     {
-        $o = $this->__offset(126);
+        $o = $this->__offset(130);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -642,7 +662,7 @@ class EOO extends Table
      */
     public function getSKY_BKGRND()
     {
-        $o = $this->__offset(128);
+        $o = $this->__offset(132);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -655,7 +675,7 @@ class EOO extends Table
      */
     public function getPRIMARY_EXTINCTION()
     {
-        $o = $this->__offset(130);
+        $o = $this->__offset(134);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -665,7 +685,7 @@ class EOO extends Table
      */
     public function getPRIMARY_EXTINCTION_UNC()
     {
-        $o = $this->__offset(132);
+        $o = $this->__offset(136);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -676,7 +696,7 @@ class EOO extends Table
      */
     public function getSOLAR_PHASE_ANGLE()
     {
-        $o = $this->__offset(134);
+        $o = $this->__offset(138);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -688,7 +708,7 @@ class EOO extends Table
      */
     public function getSOLAR_EQ_PHASE_ANGLE()
     {
-        $o = $this->__offset(136);
+        $o = $this->__offset(140);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -698,7 +718,7 @@ class EOO extends Table
      */
     public function getSOLAR_DEC_ANGLE()
     {
-        $o = $this->__offset(138);
+        $o = $this->__offset(142);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -708,7 +728,7 @@ class EOO extends Table
      */
     public function getSHUTTER_DELAY()
     {
-        $o = $this->__offset(140);
+        $o = $this->__offset(144);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -718,14 +738,14 @@ class EOO extends Table
      */
     public function getTIMING_BIAS()
     {
-        $o = $this->__offset(142);
+        $o = $this->__offset(146);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
     /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
     public function getRAW_FILE_URI()
     {
-        $o = $this->__offset(144);
+        $o = $this->__offset(148);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -735,7 +755,7 @@ class EOO extends Table
      */
     public function getINTENSITY()
     {
-        $o = $this->__offset(146);
+        $o = $this->__offset(150);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -745,21 +765,21 @@ class EOO extends Table
      */
     public function getBG_INTENSITY()
     {
-        $o = $this->__offset(148);
+        $o = $this->__offset(152);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
     /// Optional source-provided and searchable metadata or descriptor of the data.
     public function getDESCRIPTOR()
     {
-        $o = $this->__offset(150);
+        $o = $this->__offset(154);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Source of the data.
     public function getSOURCE()
     {
-        $o = $this->__offset(152);
+        $o = $this->__offset(156);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -768,7 +788,7 @@ class EOO extends Table
     /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
     public function getORIGIN()
     {
-        $o = $this->__offset(154);
+        $o = $this->__offset(158);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -778,21 +798,21 @@ class EOO extends Table
      */
     public function getDATA_MODE()
     {
-        $o = $this->__offset(156);
+        $o = $this->__offset(160);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DataMode::EXERCISE;
     }
 
     /// Time the row was created in the database, auto-populated by the system.
     public function getCREATED_AT()
     {
-        $o = $this->__offset(158);
+        $o = $this->__offset(162);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Application user who created the row in the database, auto-populated by the system.
     public function getCREATED_BY()
     {
-        $o = $this->__offset(160);
+        $o = $this->__offset(164);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -802,7 +822,7 @@ class EOO extends Table
      */
     public function getREFERENCE_FRAME()
     {
-        $o = $this->__offset(162);
+        $o = $this->__offset(166);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
@@ -814,7 +834,7 @@ class EOO extends Table
      */
     public function getSEN_REFERENCE_FRAME()
     {
-        $o = $this->__offset(164);
+        $o = $this->__offset(168);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
@@ -824,7 +844,7 @@ class EOO extends Table
      */
     public function getUMBRA()
     {
-        $o = $this->__offset(166);
+        $o = $this->__offset(170);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -835,21 +855,21 @@ class EOO extends Table
      */
     public function getPENUMBRA()
     {
-        $o = $this->__offset(168);
+        $o = $this->__offset(172);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
     /// The originating source network on which this record was created, auto-populated by the system.
     public function getORIG_NETWORK()
     {
-        $o = $this->__offset(170);
+        $o = $this->__offset(174);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// The source from which this record was received.
     public function getSOURCE_DL()
     {
-        $o = $this->__offset(172);
+        $o = $this->__offset(176);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -859,7 +879,7 @@ class EOO extends Table
      */
     public function getTYPE()
     {
-        $o = $this->__offset(174);
+        $o = $this->__offset(178);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DeviceType::UNKNOWN;
     }
 
@@ -869,7 +889,7 @@ class EOO extends Table
      */
     public function getAZIMUTH_MEASURED()
     {
-        $o = $this->__offset(176);
+        $o = $this->__offset(180);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -879,7 +899,7 @@ class EOO extends Table
      */
     public function getELEVATION_MEASURED()
     {
-        $o = $this->__offset(178);
+        $o = $this->__offset(182);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -889,7 +909,7 @@ class EOO extends Table
      */
     public function getRANGE_MEASURED()
     {
-        $o = $this->__offset(180);
+        $o = $this->__offset(184);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -899,7 +919,7 @@ class EOO extends Table
      */
     public function getRANGERATE_MEASURED()
     {
-        $o = $this->__offset(182);
+        $o = $this->__offset(186);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -909,7 +929,7 @@ class EOO extends Table
      */
     public function getRA_MEASURED()
     {
-        $o = $this->__offset(184);
+        $o = $this->__offset(188);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -919,7 +939,7 @@ class EOO extends Table
      */
     public function getDECLINATION_MEASURED()
     {
-        $o = $this->__offset(186);
+        $o = $this->__offset(190);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -929,16 +949,16 @@ class EOO extends Table
      */
     public static function startEOO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(92);
+        $builder->StartObject(94);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EOO
      */
-    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED)
+    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED)
     {
-        $builder->startObject(92);
+        $builder->startObject(94);
         self::addID($builder, $ID);
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addOB_TIME($builder, $OB_TIME);
@@ -949,7 +969,9 @@ class EOO extends Table
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         self::addTASK_ID($builder, $TASK_ID);
         self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
-        self::addTRACK_ID($builder, $TRACK_ID);
+        self::addIMAGE_SET_ID($builder, $IMAGE_SET_ID);
+        self::addIMAGE_SET_LENGTH($builder, $IMAGE_SET_LENGTH);
+        self::addSEQUENCE_ID($builder, $SEQUENCE_ID);
         self::addOB_POSITION($builder, $OB_POSITION);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
         self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
@@ -1140,9 +1162,29 @@ class EOO extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
+    public static function addIMAGE_SET_ID(FlatBufferBuilder $builder, $IMAGE_SET_ID)
     {
-        $builder->addOffsetX(10, $TRACK_ID, 0);
+        $builder->addOffsetX(10, $IMAGE_SET_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addIMAGE_SET_LENGTH(FlatBufferBuilder $builder, $IMAGE_SET_LENGTH)
+    {
+        $builder->addIntX(11, $IMAGE_SET_LENGTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addSEQUENCE_ID(FlatBufferBuilder $builder, $SEQUENCE_ID)
+    {
+        $builder->addIntX(12, $SEQUENCE_ID, 0);
     }
 
     /**
@@ -1152,7 +1194,7 @@ class EOO extends Table
      */
     public static function addOB_POSITION(FlatBufferBuilder $builder, $OB_POSITION)
     {
-        $builder->addSbyteX(11, $OB_POSITION, 0);
+        $builder->addSbyteX(13, $OB_POSITION, 0);
     }
 
     /**
@@ -1162,7 +1204,7 @@ class EOO extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(12, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(14, $ORIG_OBJECT_ID, 0);
     }
 
     /**
@@ -1172,7 +1214,7 @@ class EOO extends Table
      */
     public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
     {
-        $builder->addOffsetX(13, $ORIG_SENSOR_ID, 0);
+        $builder->addOffsetX(15, $ORIG_SENSOR_ID, 0);
     }
 
     /**
@@ -1182,7 +1224,7 @@ class EOO extends Table
      */
     public static function addUCT(FlatBufferBuilder $builder, $UCT)
     {
-        $builder->addBoolX(14, $UCT, false);
+        $builder->addBoolX(16, $UCT, false);
     }
 
     /**
@@ -1192,7 +1234,7 @@ class EOO extends Table
      */
     public static function addAZIMUTH(FlatBufferBuilder $builder, $AZIMUTH)
     {
-        $builder->addFloatX(15, $AZIMUTH, 0.0);
+        $builder->addFloatX(17, $AZIMUTH, 0.0);
     }
 
     /**
@@ -1202,7 +1244,7 @@ class EOO extends Table
      */
     public static function addAZIMUTH_UNC(FlatBufferBuilder $builder, $AZIMUTH_UNC)
     {
-        $builder->addFloatX(16, $AZIMUTH_UNC, 0.0);
+        $builder->addFloatX(18, $AZIMUTH_UNC, 0.0);
     }
 
     /**
@@ -1212,7 +1254,7 @@ class EOO extends Table
      */
     public static function addAZIMUTH_BIAS(FlatBufferBuilder $builder, $AZIMUTH_BIAS)
     {
-        $builder->addFloatX(17, $AZIMUTH_BIAS, 0.0);
+        $builder->addFloatX(19, $AZIMUTH_BIAS, 0.0);
     }
 
     /**
@@ -1222,7 +1264,7 @@ class EOO extends Table
      */
     public static function addAZIMUTH_RATE(FlatBufferBuilder $builder, $AZIMUTH_RATE)
     {
-        $builder->addFloatX(18, $AZIMUTH_RATE, 0.0);
+        $builder->addFloatX(20, $AZIMUTH_RATE, 0.0);
     }
 
     /**
@@ -1232,7 +1274,7 @@ class EOO extends Table
      */
     public static function addELEVATION(FlatBufferBuilder $builder, $ELEVATION)
     {
-        $builder->addFloatX(19, $ELEVATION, 0.0);
+        $builder->addFloatX(21, $ELEVATION, 0.0);
     }
 
     /**
@@ -1242,7 +1284,7 @@ class EOO extends Table
      */
     public static function addELEVATION_UNC(FlatBufferBuilder $builder, $ELEVATION_UNC)
     {
-        $builder->addFloatX(20, $ELEVATION_UNC, 0.0);
+        $builder->addFloatX(22, $ELEVATION_UNC, 0.0);
     }
 
     /**
@@ -1252,7 +1294,7 @@ class EOO extends Table
      */
     public static function addELEVATION_BIAS(FlatBufferBuilder $builder, $ELEVATION_BIAS)
     {
-        $builder->addFloatX(21, $ELEVATION_BIAS, 0.0);
+        $builder->addFloatX(23, $ELEVATION_BIAS, 0.0);
     }
 
     /**
@@ -1262,7 +1304,7 @@ class EOO extends Table
      */
     public static function addELEVATION_RATE(FlatBufferBuilder $builder, $ELEVATION_RATE)
     {
-        $builder->addFloatX(22, $ELEVATION_RATE, 0.0);
+        $builder->addFloatX(24, $ELEVATION_RATE, 0.0);
     }
 
     /**
@@ -1272,7 +1314,7 @@ class EOO extends Table
      */
     public static function addRANGE(FlatBufferBuilder $builder, $RANGE)
     {
-        $builder->addFloatX(23, $RANGE, 0.0);
+        $builder->addFloatX(25, $RANGE, 0.0);
     }
 
     /**
@@ -1282,7 +1324,7 @@ class EOO extends Table
      */
     public static function addRANGE_UNC(FlatBufferBuilder $builder, $RANGE_UNC)
     {
-        $builder->addFloatX(24, $RANGE_UNC, 0.0);
+        $builder->addFloatX(26, $RANGE_UNC, 0.0);
     }
 
     /**
@@ -1292,7 +1334,7 @@ class EOO extends Table
      */
     public static function addRANGE_BIAS(FlatBufferBuilder $builder, $RANGE_BIAS)
     {
-        $builder->addFloatX(25, $RANGE_BIAS, 0.0);
+        $builder->addFloatX(27, $RANGE_BIAS, 0.0);
     }
 
     /**
@@ -1302,7 +1344,7 @@ class EOO extends Table
      */
     public static function addRANGE_RATE(FlatBufferBuilder $builder, $RANGE_RATE)
     {
-        $builder->addFloatX(26, $RANGE_RATE, 0.0);
+        $builder->addFloatX(28, $RANGE_RATE, 0.0);
     }
 
     /**
@@ -1312,7 +1354,7 @@ class EOO extends Table
      */
     public static function addRANGE_RATE_UNC(FlatBufferBuilder $builder, $RANGE_RATE_UNC)
     {
-        $builder->addFloatX(27, $RANGE_RATE_UNC, 0.0);
+        $builder->addFloatX(29, $RANGE_RATE_UNC, 0.0);
     }
 
     /**
@@ -1322,7 +1364,7 @@ class EOO extends Table
      */
     public static function addRA(FlatBufferBuilder $builder, $RA)
     {
-        $builder->addFloatX(28, $RA, 0.0);
+        $builder->addFloatX(30, $RA, 0.0);
     }
 
     /**
@@ -1332,7 +1374,7 @@ class EOO extends Table
      */
     public static function addRA_RATE(FlatBufferBuilder $builder, $RA_RATE)
     {
-        $builder->addFloatX(29, $RA_RATE, 0.0);
+        $builder->addFloatX(31, $RA_RATE, 0.0);
     }
 
     /**
@@ -1342,7 +1384,7 @@ class EOO extends Table
      */
     public static function addRA_UNC(FlatBufferBuilder $builder, $RA_UNC)
     {
-        $builder->addFloatX(30, $RA_UNC, 0.0);
+        $builder->addFloatX(32, $RA_UNC, 0.0);
     }
 
     /**
@@ -1352,7 +1394,7 @@ class EOO extends Table
      */
     public static function addRA_BIAS(FlatBufferBuilder $builder, $RA_BIAS)
     {
-        $builder->addFloatX(31, $RA_BIAS, 0.0);
+        $builder->addFloatX(33, $RA_BIAS, 0.0);
     }
 
     /**
@@ -1362,7 +1404,7 @@ class EOO extends Table
      */
     public static function addDECLINATION(FlatBufferBuilder $builder, $DECLINATION)
     {
-        $builder->addFloatX(32, $DECLINATION, 0.0);
+        $builder->addFloatX(34, $DECLINATION, 0.0);
     }
 
     /**
@@ -1372,7 +1414,7 @@ class EOO extends Table
      */
     public static function addDECLINATION_RATE(FlatBufferBuilder $builder, $DECLINATION_RATE)
     {
-        $builder->addFloatX(33, $DECLINATION_RATE, 0.0);
+        $builder->addFloatX(35, $DECLINATION_RATE, 0.0);
     }
 
     /**
@@ -1382,7 +1424,7 @@ class EOO extends Table
      */
     public static function addDECLINATION_UNC(FlatBufferBuilder $builder, $DECLINATION_UNC)
     {
-        $builder->addFloatX(34, $DECLINATION_UNC, 0.0);
+        $builder->addFloatX(36, $DECLINATION_UNC, 0.0);
     }
 
     /**
@@ -1392,7 +1434,7 @@ class EOO extends Table
      */
     public static function addDECLINATION_BIAS(FlatBufferBuilder $builder, $DECLINATION_BIAS)
     {
-        $builder->addFloatX(35, $DECLINATION_BIAS, 0.0);
+        $builder->addFloatX(37, $DECLINATION_BIAS, 0.0);
     }
 
     /**
@@ -1402,7 +1444,7 @@ class EOO extends Table
      */
     public static function addLOSX(FlatBufferBuilder $builder, $LOSX)
     {
-        $builder->addFloatX(36, $LOSX, 0.0);
+        $builder->addFloatX(38, $LOSX, 0.0);
     }
 
     /**
@@ -1412,7 +1454,7 @@ class EOO extends Table
      */
     public static function addLOSY(FlatBufferBuilder $builder, $LOSY)
     {
-        $builder->addFloatX(37, $LOSY, 0.0);
+        $builder->addFloatX(39, $LOSY, 0.0);
     }
 
     /**
@@ -1422,7 +1464,7 @@ class EOO extends Table
      */
     public static function addLOSZ(FlatBufferBuilder $builder, $LOSZ)
     {
-        $builder->addFloatX(38, $LOSZ, 0.0);
+        $builder->addFloatX(40, $LOSZ, 0.0);
     }
 
     /**
@@ -1432,7 +1474,7 @@ class EOO extends Table
      */
     public static function addLOS_UNC(FlatBufferBuilder $builder, $LOS_UNC)
     {
-        $builder->addFloatX(39, $LOS_UNC, 0.0);
+        $builder->addFloatX(41, $LOS_UNC, 0.0);
     }
 
     /**
@@ -1442,7 +1484,7 @@ class EOO extends Table
      */
     public static function addLOSXVEL(FlatBufferBuilder $builder, $LOSXVEL)
     {
-        $builder->addFloatX(40, $LOSXVEL, 0.0);
+        $builder->addFloatX(42, $LOSXVEL, 0.0);
     }
 
     /**
@@ -1452,7 +1494,7 @@ class EOO extends Table
      */
     public static function addLOSYVEL(FlatBufferBuilder $builder, $LOSYVEL)
     {
-        $builder->addFloatX(41, $LOSYVEL, 0.0);
+        $builder->addFloatX(43, $LOSYVEL, 0.0);
     }
 
     /**
@@ -1462,7 +1504,7 @@ class EOO extends Table
      */
     public static function addLOSZVEL(FlatBufferBuilder $builder, $LOSZVEL)
     {
-        $builder->addFloatX(42, $LOSZVEL, 0.0);
+        $builder->addFloatX(44, $LOSZVEL, 0.0);
     }
 
     /**
@@ -1472,7 +1514,7 @@ class EOO extends Table
      */
     public static function addSENLAT(FlatBufferBuilder $builder, $SENLAT)
     {
-        $builder->addFloatX(43, $SENLAT, 0.0);
+        $builder->addFloatX(45, $SENLAT, 0.0);
     }
 
     /**
@@ -1482,7 +1524,7 @@ class EOO extends Table
      */
     public static function addSENLON(FlatBufferBuilder $builder, $SENLON)
     {
-        $builder->addFloatX(44, $SENLON, 0.0);
+        $builder->addFloatX(46, $SENLON, 0.0);
     }
 
     /**
@@ -1492,7 +1534,7 @@ class EOO extends Table
      */
     public static function addSENALT(FlatBufferBuilder $builder, $SENALT)
     {
-        $builder->addFloatX(45, $SENALT, 0.0);
+        $builder->addFloatX(47, $SENALT, 0.0);
     }
 
     /**
@@ -1502,7 +1544,7 @@ class EOO extends Table
      */
     public static function addSENX(FlatBufferBuilder $builder, $SENX)
     {
-        $builder->addFloatX(46, $SENX, 0.0);
+        $builder->addFloatX(48, $SENX, 0.0);
     }
 
     /**
@@ -1512,7 +1554,7 @@ class EOO extends Table
      */
     public static function addSENY(FlatBufferBuilder $builder, $SENY)
     {
-        $builder->addFloatX(47, $SENY, 0.0);
+        $builder->addFloatX(49, $SENY, 0.0);
     }
 
     /**
@@ -1522,7 +1564,7 @@ class EOO extends Table
      */
     public static function addSENZ(FlatBufferBuilder $builder, $SENZ)
     {
-        $builder->addFloatX(48, $SENZ, 0.0);
+        $builder->addFloatX(50, $SENZ, 0.0);
     }
 
     /**
@@ -1532,7 +1574,7 @@ class EOO extends Table
      */
     public static function addFOV_COUNT(FlatBufferBuilder $builder, $FOV_COUNT)
     {
-        $builder->addIntX(49, $FOV_COUNT, 0);
+        $builder->addIntX(51, $FOV_COUNT, 0);
     }
 
     /**
@@ -1542,7 +1584,7 @@ class EOO extends Table
      */
     public static function addFOV_COUNT_UCTS(FlatBufferBuilder $builder, $FOV_COUNT_UCTS)
     {
-        $builder->addIntX(50, $FOV_COUNT_UCTS, 0);
+        $builder->addIntX(52, $FOV_COUNT_UCTS, 0);
     }
 
     /**
@@ -1552,7 +1594,7 @@ class EOO extends Table
      */
     public static function addEXP_DURATION(FlatBufferBuilder $builder, $EXP_DURATION)
     {
-        $builder->addFloatX(51, $EXP_DURATION, 0.0);
+        $builder->addFloatX(53, $EXP_DURATION, 0.0);
     }
 
     /**
@@ -1562,7 +1604,7 @@ class EOO extends Table
      */
     public static function addZEROPTD(FlatBufferBuilder $builder, $ZEROPTD)
     {
-        $builder->addFloatX(52, $ZEROPTD, 0.0);
+        $builder->addFloatX(54, $ZEROPTD, 0.0);
     }
 
     /**
@@ -1572,7 +1614,7 @@ class EOO extends Table
      */
     public static function addNET_OBJ_SIG(FlatBufferBuilder $builder, $NET_OBJ_SIG)
     {
-        $builder->addFloatX(53, $NET_OBJ_SIG, 0.0);
+        $builder->addFloatX(55, $NET_OBJ_SIG, 0.0);
     }
 
     /**
@@ -1582,7 +1624,7 @@ class EOO extends Table
      */
     public static function addNET_OBJ_SIG_UNC(FlatBufferBuilder $builder, $NET_OBJ_SIG_UNC)
     {
-        $builder->addFloatX(54, $NET_OBJ_SIG_UNC, 0.0);
+        $builder->addFloatX(56, $NET_OBJ_SIG_UNC, 0.0);
     }
 
     /**
@@ -1592,7 +1634,7 @@ class EOO extends Table
      */
     public static function addMAG(FlatBufferBuilder $builder, $MAG)
     {
-        $builder->addFloatX(55, $MAG, 0.0);
+        $builder->addFloatX(57, $MAG, 0.0);
     }
 
     /**
@@ -1602,7 +1644,7 @@ class EOO extends Table
      */
     public static function addMAG_UNC(FlatBufferBuilder $builder, $MAG_UNC)
     {
-        $builder->addFloatX(56, $MAG_UNC, 0.0);
+        $builder->addFloatX(58, $MAG_UNC, 0.0);
     }
 
     /**
@@ -1612,7 +1654,7 @@ class EOO extends Table
      */
     public static function addMAG_NORM_RANGE(FlatBufferBuilder $builder, $MAG_NORM_RANGE)
     {
-        $builder->addFloatX(57, $MAG_NORM_RANGE, 0.0);
+        $builder->addFloatX(59, $MAG_NORM_RANGE, 0.0);
     }
 
     /**
@@ -1622,7 +1664,7 @@ class EOO extends Table
      */
     public static function addGEOLAT(FlatBufferBuilder $builder, $GEOLAT)
     {
-        $builder->addFloatX(58, $GEOLAT, 0.0);
+        $builder->addFloatX(60, $GEOLAT, 0.0);
     }
 
     /**
@@ -1632,7 +1674,7 @@ class EOO extends Table
      */
     public static function addGEOLON(FlatBufferBuilder $builder, $GEOLON)
     {
-        $builder->addFloatX(59, $GEOLON, 0.0);
+        $builder->addFloatX(61, $GEOLON, 0.0);
     }
 
     /**
@@ -1642,7 +1684,7 @@ class EOO extends Table
      */
     public static function addGEOALT(FlatBufferBuilder $builder, $GEOALT)
     {
-        $builder->addFloatX(60, $GEOALT, 0.0);
+        $builder->addFloatX(62, $GEOALT, 0.0);
     }
 
     /**
@@ -1652,7 +1694,7 @@ class EOO extends Table
      */
     public static function addGEORANGE(FlatBufferBuilder $builder, $GEORANGE)
     {
-        $builder->addFloatX(61, $GEORANGE, 0.0);
+        $builder->addFloatX(63, $GEORANGE, 0.0);
     }
 
     /**
@@ -1662,7 +1704,7 @@ class EOO extends Table
      */
     public static function addSKY_BKGRND(FlatBufferBuilder $builder, $SKY_BKGRND)
     {
-        $builder->addFloatX(62, $SKY_BKGRND, 0.0);
+        $builder->addFloatX(64, $SKY_BKGRND, 0.0);
     }
 
     /**
@@ -1672,7 +1714,7 @@ class EOO extends Table
      */
     public static function addPRIMARY_EXTINCTION(FlatBufferBuilder $builder, $PRIMARY_EXTINCTION)
     {
-        $builder->addFloatX(63, $PRIMARY_EXTINCTION, 0.0);
+        $builder->addFloatX(65, $PRIMARY_EXTINCTION, 0.0);
     }
 
     /**
@@ -1682,7 +1724,7 @@ class EOO extends Table
      */
     public static function addPRIMARY_EXTINCTION_UNC(FlatBufferBuilder $builder, $PRIMARY_EXTINCTION_UNC)
     {
-        $builder->addFloatX(64, $PRIMARY_EXTINCTION_UNC, 0.0);
+        $builder->addFloatX(66, $PRIMARY_EXTINCTION_UNC, 0.0);
     }
 
     /**
@@ -1692,7 +1734,7 @@ class EOO extends Table
      */
     public static function addSOLAR_PHASE_ANGLE(FlatBufferBuilder $builder, $SOLAR_PHASE_ANGLE)
     {
-        $builder->addFloatX(65, $SOLAR_PHASE_ANGLE, 0.0);
+        $builder->addFloatX(67, $SOLAR_PHASE_ANGLE, 0.0);
     }
 
     /**
@@ -1702,7 +1744,7 @@ class EOO extends Table
      */
     public static function addSOLAR_EQ_PHASE_ANGLE(FlatBufferBuilder $builder, $SOLAR_EQ_PHASE_ANGLE)
     {
-        $builder->addFloatX(66, $SOLAR_EQ_PHASE_ANGLE, 0.0);
+        $builder->addFloatX(68, $SOLAR_EQ_PHASE_ANGLE, 0.0);
     }
 
     /**
@@ -1712,7 +1754,7 @@ class EOO extends Table
      */
     public static function addSOLAR_DEC_ANGLE(FlatBufferBuilder $builder, $SOLAR_DEC_ANGLE)
     {
-        $builder->addFloatX(67, $SOLAR_DEC_ANGLE, 0.0);
+        $builder->addFloatX(69, $SOLAR_DEC_ANGLE, 0.0);
     }
 
     /**
@@ -1722,7 +1764,7 @@ class EOO extends Table
      */
     public static function addSHUTTER_DELAY(FlatBufferBuilder $builder, $SHUTTER_DELAY)
     {
-        $builder->addFloatX(68, $SHUTTER_DELAY, 0.0);
+        $builder->addFloatX(70, $SHUTTER_DELAY, 0.0);
     }
 
     /**
@@ -1732,7 +1774,7 @@ class EOO extends Table
      */
     public static function addTIMING_BIAS(FlatBufferBuilder $builder, $TIMING_BIAS)
     {
-        $builder->addFloatX(69, $TIMING_BIAS, 0.0);
+        $builder->addFloatX(71, $TIMING_BIAS, 0.0);
     }
 
     /**
@@ -1742,7 +1784,7 @@ class EOO extends Table
      */
     public static function addRAW_FILE_URI(FlatBufferBuilder $builder, $RAW_FILE_URI)
     {
-        $builder->addOffsetX(70, $RAW_FILE_URI, 0);
+        $builder->addOffsetX(72, $RAW_FILE_URI, 0);
     }
 
     /**
@@ -1752,7 +1794,7 @@ class EOO extends Table
      */
     public static function addINTENSITY(FlatBufferBuilder $builder, $INTENSITY)
     {
-        $builder->addFloatX(71, $INTENSITY, 0.0);
+        $builder->addFloatX(73, $INTENSITY, 0.0);
     }
 
     /**
@@ -1762,7 +1804,7 @@ class EOO extends Table
      */
     public static function addBG_INTENSITY(FlatBufferBuilder $builder, $BG_INTENSITY)
     {
-        $builder->addFloatX(72, $BG_INTENSITY, 0.0);
+        $builder->addFloatX(74, $BG_INTENSITY, 0.0);
     }
 
     /**
@@ -1772,7 +1814,7 @@ class EOO extends Table
      */
     public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
     {
-        $builder->addOffsetX(73, $DESCRIPTOR, 0);
+        $builder->addOffsetX(75, $DESCRIPTOR, 0);
     }
 
     /**
@@ -1782,7 +1824,7 @@ class EOO extends Table
      */
     public static function addSOURCE(FlatBufferBuilder $builder, $SOURCE)
     {
-        $builder->addOffsetX(74, $SOURCE, 0);
+        $builder->addOffsetX(76, $SOURCE, 0);
     }
 
     /**
@@ -1792,7 +1834,7 @@ class EOO extends Table
      */
     public static function addORIGIN(FlatBufferBuilder $builder, $ORIGIN)
     {
-        $builder->addOffsetX(75, $ORIGIN, 0);
+        $builder->addOffsetX(77, $ORIGIN, 0);
     }
 
     /**
@@ -1802,7 +1844,7 @@ class EOO extends Table
      */
     public static function addDATA_MODE(FlatBufferBuilder $builder, $DATA_MODE)
     {
-        $builder->addSbyteX(76, $DATA_MODE, 0);
+        $builder->addSbyteX(78, $DATA_MODE, 0);
     }
 
     /**
@@ -1812,7 +1854,7 @@ class EOO extends Table
      */
     public static function addCREATED_AT(FlatBufferBuilder $builder, $CREATED_AT)
     {
-        $builder->addOffsetX(77, $CREATED_AT, 0);
+        $builder->addOffsetX(79, $CREATED_AT, 0);
     }
 
     /**
@@ -1822,7 +1864,7 @@ class EOO extends Table
      */
     public static function addCREATED_BY(FlatBufferBuilder $builder, $CREATED_BY)
     {
-        $builder->addOffsetX(78, $CREATED_BY, 0);
+        $builder->addOffsetX(80, $CREATED_BY, 0);
     }
 
     /**
@@ -1832,7 +1874,7 @@ class EOO extends Table
      */
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
     {
-        $builder->addSbyteX(79, $REFERENCE_FRAME, 0);
+        $builder->addSbyteX(81, $REFERENCE_FRAME, 0);
     }
 
     /**
@@ -1842,7 +1884,7 @@ class EOO extends Table
      */
     public static function addSEN_REFERENCE_FRAME(FlatBufferBuilder $builder, $SEN_REFERENCE_FRAME)
     {
-        $builder->addSbyteX(80, $SEN_REFERENCE_FRAME, 0);
+        $builder->addSbyteX(82, $SEN_REFERENCE_FRAME, 0);
     }
 
     /**
@@ -1852,7 +1894,7 @@ class EOO extends Table
      */
     public static function addUMBRA(FlatBufferBuilder $builder, $UMBRA)
     {
-        $builder->addBoolX(81, $UMBRA, false);
+        $builder->addBoolX(83, $UMBRA, false);
     }
 
     /**
@@ -1862,7 +1904,7 @@ class EOO extends Table
      */
     public static function addPENUMBRA(FlatBufferBuilder $builder, $PENUMBRA)
     {
-        $builder->addBoolX(82, $PENUMBRA, false);
+        $builder->addBoolX(84, $PENUMBRA, false);
     }
 
     /**
@@ -1872,7 +1914,7 @@ class EOO extends Table
      */
     public static function addORIG_NETWORK(FlatBufferBuilder $builder, $ORIG_NETWORK)
     {
-        $builder->addOffsetX(83, $ORIG_NETWORK, 0);
+        $builder->addOffsetX(85, $ORIG_NETWORK, 0);
     }
 
     /**
@@ -1882,7 +1924,7 @@ class EOO extends Table
      */
     public static function addSOURCE_DL(FlatBufferBuilder $builder, $SOURCE_DL)
     {
-        $builder->addOffsetX(84, $SOURCE_DL, 0);
+        $builder->addOffsetX(86, $SOURCE_DL, 0);
     }
 
     /**
@@ -1892,7 +1934,7 @@ class EOO extends Table
      */
     public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
     {
-        $builder->addSbyteX(85, $TYPE, 0);
+        $builder->addSbyteX(87, $TYPE, 0);
     }
 
     /**
@@ -1902,7 +1944,7 @@ class EOO extends Table
      */
     public static function addAZIMUTH_MEASURED(FlatBufferBuilder $builder, $AZIMUTH_MEASURED)
     {
-        $builder->addBoolX(86, $AZIMUTH_MEASURED, false);
+        $builder->addBoolX(88, $AZIMUTH_MEASURED, false);
     }
 
     /**
@@ -1912,7 +1954,7 @@ class EOO extends Table
      */
     public static function addELEVATION_MEASURED(FlatBufferBuilder $builder, $ELEVATION_MEASURED)
     {
-        $builder->addBoolX(87, $ELEVATION_MEASURED, false);
+        $builder->addBoolX(89, $ELEVATION_MEASURED, false);
     }
 
     /**
@@ -1922,7 +1964,7 @@ class EOO extends Table
      */
     public static function addRANGE_MEASURED(FlatBufferBuilder $builder, $RANGE_MEASURED)
     {
-        $builder->addBoolX(88, $RANGE_MEASURED, false);
+        $builder->addBoolX(90, $RANGE_MEASURED, false);
     }
 
     /**
@@ -1932,7 +1974,7 @@ class EOO extends Table
      */
     public static function addRANGERATE_MEASURED(FlatBufferBuilder $builder, $RANGERATE_MEASURED)
     {
-        $builder->addBoolX(89, $RANGERATE_MEASURED, false);
+        $builder->addBoolX(91, $RANGERATE_MEASURED, false);
     }
 
     /**
@@ -1942,7 +1984,7 @@ class EOO extends Table
      */
     public static function addRA_MEASURED(FlatBufferBuilder $builder, $RA_MEASURED)
     {
-        $builder->addBoolX(90, $RA_MEASURED, false);
+        $builder->addBoolX(92, $RA_MEASURED, false);
     }
 
     /**
@@ -1952,7 +1994,7 @@ class EOO extends Table
      */
     public static function addDECLINATION_MEASURED(FlatBufferBuilder $builder, $DECLINATION_MEASURED)
     {
-        $builder->addBoolX(91, $DECLINATION_MEASURED, false);
+        $builder->addBoolX(93, $DECLINATION_MEASURED, false);
     }
 
     /**

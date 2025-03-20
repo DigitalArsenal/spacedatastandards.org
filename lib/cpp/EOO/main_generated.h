@@ -112,88 +112,90 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NORAD_CAT_ID = 18,
     VT_TASK_ID = 20,
     VT_TRANSACTION_ID = 22,
-    VT_TRACK_ID = 24,
-    VT_OB_POSITION = 26,
-    VT_ORIG_OBJECT_ID = 28,
-    VT_ORIG_SENSOR_ID = 30,
-    VT_UCT = 32,
-    VT_AZIMUTH = 34,
-    VT_AZIMUTH_UNC = 36,
-    VT_AZIMUTH_BIAS = 38,
-    VT_AZIMUTH_RATE = 40,
-    VT_ELEVATION = 42,
-    VT_ELEVATION_UNC = 44,
-    VT_ELEVATION_BIAS = 46,
-    VT_ELEVATION_RATE = 48,
-    VT_RANGE = 50,
-    VT_RANGE_UNC = 52,
-    VT_RANGE_BIAS = 54,
-    VT_RANGE_RATE = 56,
-    VT_RANGE_RATE_UNC = 58,
-    VT_RA = 60,
-    VT_RA_RATE = 62,
-    VT_RA_UNC = 64,
-    VT_RA_BIAS = 66,
-    VT_DECLINATION = 68,
-    VT_DECLINATION_RATE = 70,
-    VT_DECLINATION_UNC = 72,
-    VT_DECLINATION_BIAS = 74,
-    VT_LOSX = 76,
-    VT_LOSY = 78,
-    VT_LOSZ = 80,
-    VT_LOS_UNC = 82,
-    VT_LOSXVEL = 84,
-    VT_LOSYVEL = 86,
-    VT_LOSZVEL = 88,
-    VT_SENLAT = 90,
-    VT_SENLON = 92,
-    VT_SENALT = 94,
-    VT_SENX = 96,
-    VT_SENY = 98,
-    VT_SENZ = 100,
-    VT_FOV_COUNT = 102,
-    VT_FOV_COUNT_UCTS = 104,
-    VT_EXP_DURATION = 106,
-    VT_ZEROPTD = 108,
-    VT_NET_OBJ_SIG = 110,
-    VT_NET_OBJ_SIG_UNC = 112,
-    VT_MAG = 114,
-    VT_MAG_UNC = 116,
-    VT_MAG_NORM_RANGE = 118,
-    VT_GEOLAT = 120,
-    VT_GEOLON = 122,
-    VT_GEOALT = 124,
-    VT_GEORANGE = 126,
-    VT_SKY_BKGRND = 128,
-    VT_PRIMARY_EXTINCTION = 130,
-    VT_PRIMARY_EXTINCTION_UNC = 132,
-    VT_SOLAR_PHASE_ANGLE = 134,
-    VT_SOLAR_EQ_PHASE_ANGLE = 136,
-    VT_SOLAR_DEC_ANGLE = 138,
-    VT_SHUTTER_DELAY = 140,
-    VT_TIMING_BIAS = 142,
-    VT_RAW_FILE_URI = 144,
-    VT_INTENSITY = 146,
-    VT_BG_INTENSITY = 148,
-    VT_DESCRIPTOR = 150,
-    VT_SOURCE = 152,
-    VT_ORIGIN = 154,
-    VT_DATA_MODE = 156,
-    VT_CREATED_AT = 158,
-    VT_CREATED_BY = 160,
-    VT_REFERENCE_FRAME = 162,
-    VT_SEN_REFERENCE_FRAME = 164,
-    VT_UMBRA = 166,
-    VT_PENUMBRA = 168,
-    VT_ORIG_NETWORK = 170,
-    VT_SOURCE_DL = 172,
-    VT_TYPE = 174,
-    VT_AZIMUTH_MEASURED = 176,
-    VT_ELEVATION_MEASURED = 178,
-    VT_RANGE_MEASURED = 180,
-    VT_RANGERATE_MEASURED = 182,
-    VT_RA_MEASURED = 184,
-    VT_DECLINATION_MEASURED = 186
+    VT_IMAGE_SET_ID = 24,
+    VT_IMAGE_SET_LENGTH = 26,
+    VT_SEQUENCE_ID = 28,
+    VT_OB_POSITION = 30,
+    VT_ORIG_OBJECT_ID = 32,
+    VT_ORIG_SENSOR_ID = 34,
+    VT_UCT = 36,
+    VT_AZIMUTH = 38,
+    VT_AZIMUTH_UNC = 40,
+    VT_AZIMUTH_BIAS = 42,
+    VT_AZIMUTH_RATE = 44,
+    VT_ELEVATION = 46,
+    VT_ELEVATION_UNC = 48,
+    VT_ELEVATION_BIAS = 50,
+    VT_ELEVATION_RATE = 52,
+    VT_RANGE = 54,
+    VT_RANGE_UNC = 56,
+    VT_RANGE_BIAS = 58,
+    VT_RANGE_RATE = 60,
+    VT_RANGE_RATE_UNC = 62,
+    VT_RA = 64,
+    VT_RA_RATE = 66,
+    VT_RA_UNC = 68,
+    VT_RA_BIAS = 70,
+    VT_DECLINATION = 72,
+    VT_DECLINATION_RATE = 74,
+    VT_DECLINATION_UNC = 76,
+    VT_DECLINATION_BIAS = 78,
+    VT_LOSX = 80,
+    VT_LOSY = 82,
+    VT_LOSZ = 84,
+    VT_LOS_UNC = 86,
+    VT_LOSXVEL = 88,
+    VT_LOSYVEL = 90,
+    VT_LOSZVEL = 92,
+    VT_SENLAT = 94,
+    VT_SENLON = 96,
+    VT_SENALT = 98,
+    VT_SENX = 100,
+    VT_SENY = 102,
+    VT_SENZ = 104,
+    VT_FOV_COUNT = 106,
+    VT_FOV_COUNT_UCTS = 108,
+    VT_EXP_DURATION = 110,
+    VT_ZEROPTD = 112,
+    VT_NET_OBJ_SIG = 114,
+    VT_NET_OBJ_SIG_UNC = 116,
+    VT_MAG = 118,
+    VT_MAG_UNC = 120,
+    VT_MAG_NORM_RANGE = 122,
+    VT_GEOLAT = 124,
+    VT_GEOLON = 126,
+    VT_GEOALT = 128,
+    VT_GEORANGE = 130,
+    VT_SKY_BKGRND = 132,
+    VT_PRIMARY_EXTINCTION = 134,
+    VT_PRIMARY_EXTINCTION_UNC = 136,
+    VT_SOLAR_PHASE_ANGLE = 138,
+    VT_SOLAR_EQ_PHASE_ANGLE = 140,
+    VT_SOLAR_DEC_ANGLE = 142,
+    VT_SHUTTER_DELAY = 144,
+    VT_TIMING_BIAS = 146,
+    VT_RAW_FILE_URI = 148,
+    VT_INTENSITY = 150,
+    VT_BG_INTENSITY = 152,
+    VT_DESCRIPTOR = 154,
+    VT_SOURCE = 156,
+    VT_ORIGIN = 158,
+    VT_DATA_MODE = 160,
+    VT_CREATED_AT = 162,
+    VT_CREATED_BY = 164,
+    VT_REFERENCE_FRAME = 166,
+    VT_SEN_REFERENCE_FRAME = 168,
+    VT_UMBRA = 170,
+    VT_PENUMBRA = 172,
+    VT_ORIG_NETWORK = 174,
+    VT_SOURCE_DL = 176,
+    VT_TYPE = 178,
+    VT_AZIMUTH_MEASURED = 180,
+    VT_ELEVATION_MEASURED = 182,
+    VT_RANGE_MEASURED = 184,
+    VT_RANGERATE_MEASURED = 186,
+    VT_RA_MEASURED = 188,
+    VT_DECLINATION_MEASURED = 190
   };
   /// Unique identifier of the record.
   const ::flatbuffers::String *ID() const {
@@ -235,9 +237,17 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
-  /// Identifier of the track to which this observation belongs, if applicable.
-  const ::flatbuffers::String *TRACK_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
+  /// The user-defined set ID of a sequence of images.
+  const ::flatbuffers::String *IMAGE_SET_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_SET_ID);
+  }
+  /// The number of images in an image set.
+  int32_t IMAGE_SET_LENGTH() const {
+    return GetField<int32_t>(VT_IMAGE_SET_LENGTH, 0);
+  }
+  /// The sequence ID of an image within an image set.
+  int32_t SEQUENCE_ID() const {
+    return GetField<int32_t>(VT_SEQUENCE_ID, 0);
   }
   /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
   ObservationPosition OB_POSITION() const {
@@ -598,8 +608,10 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TASK_ID()) &&
            VerifyOffset(verifier, VT_TRANSACTION_ID) &&
            verifier.VerifyString(TRANSACTION_ID()) &&
-           VerifyOffset(verifier, VT_TRACK_ID) &&
-           verifier.VerifyString(TRACK_ID()) &&
+           VerifyOffset(verifier, VT_IMAGE_SET_ID) &&
+           verifier.VerifyString(IMAGE_SET_ID()) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_SET_LENGTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_SEQUENCE_ID, 4) &&
            VerifyField<int8_t>(verifier, VT_OB_POSITION, 1) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
@@ -729,8 +741,14 @@ struct EOOBuilder {
   void add_TRANSACTION_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID) {
     fbb_.AddOffset(EOO::VT_TRANSACTION_ID, TRANSACTION_ID);
   }
-  void add_TRACK_ID(::flatbuffers::Offset<::flatbuffers::String> TRACK_ID) {
-    fbb_.AddOffset(EOO::VT_TRACK_ID, TRACK_ID);
+  void add_IMAGE_SET_ID(::flatbuffers::Offset<::flatbuffers::String> IMAGE_SET_ID) {
+    fbb_.AddOffset(EOO::VT_IMAGE_SET_ID, IMAGE_SET_ID);
+  }
+  void add_IMAGE_SET_LENGTH(int32_t IMAGE_SET_LENGTH) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
+  }
+  void add_SEQUENCE_ID(int32_t SEQUENCE_ID) {
+    fbb_.AddElement<int32_t>(EOO::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
   }
   void add_OB_POSITION(ObservationPosition OB_POSITION) {
     fbb_.AddElement<int8_t>(EOO::VT_OB_POSITION, static_cast<int8_t>(OB_POSITION), 0);
@@ -998,7 +1016,9 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     int32_t NORAD_CAT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRACK_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMAGE_SET_ID = 0,
+    int32_t IMAGE_SET_LENGTH = 0,
+    int32_t SEQUENCE_ID = 0,
     ObservationPosition OB_POSITION = ObservationPosition_FENCE,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
@@ -1148,7 +1168,9 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_AZIMUTH(AZIMUTH);
   builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
-  builder_.add_TRACK_ID(TRACK_ID);
+  builder_.add_SEQUENCE_ID(SEQUENCE_ID);
+  builder_.add_IMAGE_SET_LENGTH(IMAGE_SET_LENGTH);
+  builder_.add_IMAGE_SET_ID(IMAGE_SET_ID);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
   builder_.add_TASK_ID(TASK_ID);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
@@ -1188,7 +1210,9 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     int32_t NORAD_CAT_ID = 0,
     const char *TASK_ID = nullptr,
     const char *TRANSACTION_ID = nullptr,
-    const char *TRACK_ID = nullptr,
+    const char *IMAGE_SET_ID = nullptr,
+    int32_t IMAGE_SET_LENGTH = 0,
+    int32_t SEQUENCE_ID = 0,
     ObservationPosition OB_POSITION = ObservationPosition_FENCE,
     const char *ORIG_OBJECT_ID = nullptr,
     const char *ORIG_SENSOR_ID = nullptr,
@@ -1277,7 +1301,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
-  auto TRACK_ID__ = TRACK_ID ? _fbb.CreateString(TRACK_ID) : 0;
+  auto IMAGE_SET_ID__ = IMAGE_SET_ID ? _fbb.CreateString(IMAGE_SET_ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
@@ -1300,7 +1324,9 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       NORAD_CAT_ID,
       TASK_ID__,
       TRANSACTION_ID__,
-      TRACK_ID__,
+      IMAGE_SET_ID__,
+      IMAGE_SET_LENGTH,
+      SEQUENCE_ID,
       OB_POSITION,
       ORIG_OBJECT_ID__,
       ORIG_SENSOR_ID__,

@@ -229,88 +229,90 @@ impl<'a> EOO<'a> {
   pub const VT_NORAD_CAT_ID: flatbuffers::VOffsetT = 18;
   pub const VT_TASK_ID: flatbuffers::VOffsetT = 20;
   pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 22;
-  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 24;
-  pub const VT_OB_POSITION: flatbuffers::VOffsetT = 26;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 28;
-  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 30;
-  pub const VT_UCT: flatbuffers::VOffsetT = 32;
-  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 34;
-  pub const VT_AZIMUTH_UNC: flatbuffers::VOffsetT = 36;
-  pub const VT_AZIMUTH_BIAS: flatbuffers::VOffsetT = 38;
-  pub const VT_AZIMUTH_RATE: flatbuffers::VOffsetT = 40;
-  pub const VT_ELEVATION: flatbuffers::VOffsetT = 42;
-  pub const VT_ELEVATION_UNC: flatbuffers::VOffsetT = 44;
-  pub const VT_ELEVATION_BIAS: flatbuffers::VOffsetT = 46;
-  pub const VT_ELEVATION_RATE: flatbuffers::VOffsetT = 48;
-  pub const VT_RANGE: flatbuffers::VOffsetT = 50;
-  pub const VT_RANGE_UNC: flatbuffers::VOffsetT = 52;
-  pub const VT_RANGE_BIAS: flatbuffers::VOffsetT = 54;
-  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 56;
-  pub const VT_RANGE_RATE_UNC: flatbuffers::VOffsetT = 58;
-  pub const VT_RA: flatbuffers::VOffsetT = 60;
-  pub const VT_RA_RATE: flatbuffers::VOffsetT = 62;
-  pub const VT_RA_UNC: flatbuffers::VOffsetT = 64;
-  pub const VT_RA_BIAS: flatbuffers::VOffsetT = 66;
-  pub const VT_DECLINATION: flatbuffers::VOffsetT = 68;
-  pub const VT_DECLINATION_RATE: flatbuffers::VOffsetT = 70;
-  pub const VT_DECLINATION_UNC: flatbuffers::VOffsetT = 72;
-  pub const VT_DECLINATION_BIAS: flatbuffers::VOffsetT = 74;
-  pub const VT_LOSX: flatbuffers::VOffsetT = 76;
-  pub const VT_LOSY: flatbuffers::VOffsetT = 78;
-  pub const VT_LOSZ: flatbuffers::VOffsetT = 80;
-  pub const VT_LOS_UNC: flatbuffers::VOffsetT = 82;
-  pub const VT_LOSXVEL: flatbuffers::VOffsetT = 84;
-  pub const VT_LOSYVEL: flatbuffers::VOffsetT = 86;
-  pub const VT_LOSZVEL: flatbuffers::VOffsetT = 88;
-  pub const VT_SENLAT: flatbuffers::VOffsetT = 90;
-  pub const VT_SENLON: flatbuffers::VOffsetT = 92;
-  pub const VT_SENALT: flatbuffers::VOffsetT = 94;
-  pub const VT_SENX: flatbuffers::VOffsetT = 96;
-  pub const VT_SENY: flatbuffers::VOffsetT = 98;
-  pub const VT_SENZ: flatbuffers::VOffsetT = 100;
-  pub const VT_FOV_COUNT: flatbuffers::VOffsetT = 102;
-  pub const VT_FOV_COUNT_UCTS: flatbuffers::VOffsetT = 104;
-  pub const VT_EXP_DURATION: flatbuffers::VOffsetT = 106;
-  pub const VT_ZEROPTD: flatbuffers::VOffsetT = 108;
-  pub const VT_NET_OBJ_SIG: flatbuffers::VOffsetT = 110;
-  pub const VT_NET_OBJ_SIG_UNC: flatbuffers::VOffsetT = 112;
-  pub const VT_MAG: flatbuffers::VOffsetT = 114;
-  pub const VT_MAG_UNC: flatbuffers::VOffsetT = 116;
-  pub const VT_MAG_NORM_RANGE: flatbuffers::VOffsetT = 118;
-  pub const VT_GEOLAT: flatbuffers::VOffsetT = 120;
-  pub const VT_GEOLON: flatbuffers::VOffsetT = 122;
-  pub const VT_GEOALT: flatbuffers::VOffsetT = 124;
-  pub const VT_GEORANGE: flatbuffers::VOffsetT = 126;
-  pub const VT_SKY_BKGRND: flatbuffers::VOffsetT = 128;
-  pub const VT_PRIMARY_EXTINCTION: flatbuffers::VOffsetT = 130;
-  pub const VT_PRIMARY_EXTINCTION_UNC: flatbuffers::VOffsetT = 132;
-  pub const VT_SOLAR_PHASE_ANGLE: flatbuffers::VOffsetT = 134;
-  pub const VT_SOLAR_EQ_PHASE_ANGLE: flatbuffers::VOffsetT = 136;
-  pub const VT_SOLAR_DEC_ANGLE: flatbuffers::VOffsetT = 138;
-  pub const VT_SHUTTER_DELAY: flatbuffers::VOffsetT = 140;
-  pub const VT_TIMING_BIAS: flatbuffers::VOffsetT = 142;
-  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 144;
-  pub const VT_INTENSITY: flatbuffers::VOffsetT = 146;
-  pub const VT_BG_INTENSITY: flatbuffers::VOffsetT = 148;
-  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 150;
-  pub const VT_SOURCE: flatbuffers::VOffsetT = 152;
-  pub const VT_ORIGIN: flatbuffers::VOffsetT = 154;
-  pub const VT_DATA_MODE: flatbuffers::VOffsetT = 156;
-  pub const VT_CREATED_AT: flatbuffers::VOffsetT = 158;
-  pub const VT_CREATED_BY: flatbuffers::VOffsetT = 160;
-  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 162;
-  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 164;
-  pub const VT_UMBRA: flatbuffers::VOffsetT = 166;
-  pub const VT_PENUMBRA: flatbuffers::VOffsetT = 168;
-  pub const VT_ORIG_NETWORK: flatbuffers::VOffsetT = 170;
-  pub const VT_SOURCE_DL: flatbuffers::VOffsetT = 172;
-  pub const VT_TYPE: flatbuffers::VOffsetT = 174;
-  pub const VT_AZIMUTH_MEASURED: flatbuffers::VOffsetT = 176;
-  pub const VT_ELEVATION_MEASURED: flatbuffers::VOffsetT = 178;
-  pub const VT_RANGE_MEASURED: flatbuffers::VOffsetT = 180;
-  pub const VT_RANGERATE_MEASURED: flatbuffers::VOffsetT = 182;
-  pub const VT_RA_MEASURED: flatbuffers::VOffsetT = 184;
-  pub const VT_DECLINATION_MEASURED: flatbuffers::VOffsetT = 186;
+  pub const VT_IMAGE_SET_ID: flatbuffers::VOffsetT = 24;
+  pub const VT_IMAGE_SET_LENGTH: flatbuffers::VOffsetT = 26;
+  pub const VT_SEQUENCE_ID: flatbuffers::VOffsetT = 28;
+  pub const VT_OB_POSITION: flatbuffers::VOffsetT = 30;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 32;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 34;
+  pub const VT_UCT: flatbuffers::VOffsetT = 36;
+  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 38;
+  pub const VT_AZIMUTH_UNC: flatbuffers::VOffsetT = 40;
+  pub const VT_AZIMUTH_BIAS: flatbuffers::VOffsetT = 42;
+  pub const VT_AZIMUTH_RATE: flatbuffers::VOffsetT = 44;
+  pub const VT_ELEVATION: flatbuffers::VOffsetT = 46;
+  pub const VT_ELEVATION_UNC: flatbuffers::VOffsetT = 48;
+  pub const VT_ELEVATION_BIAS: flatbuffers::VOffsetT = 50;
+  pub const VT_ELEVATION_RATE: flatbuffers::VOffsetT = 52;
+  pub const VT_RANGE: flatbuffers::VOffsetT = 54;
+  pub const VT_RANGE_UNC: flatbuffers::VOffsetT = 56;
+  pub const VT_RANGE_BIAS: flatbuffers::VOffsetT = 58;
+  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 60;
+  pub const VT_RANGE_RATE_UNC: flatbuffers::VOffsetT = 62;
+  pub const VT_RA: flatbuffers::VOffsetT = 64;
+  pub const VT_RA_RATE: flatbuffers::VOffsetT = 66;
+  pub const VT_RA_UNC: flatbuffers::VOffsetT = 68;
+  pub const VT_RA_BIAS: flatbuffers::VOffsetT = 70;
+  pub const VT_DECLINATION: flatbuffers::VOffsetT = 72;
+  pub const VT_DECLINATION_RATE: flatbuffers::VOffsetT = 74;
+  pub const VT_DECLINATION_UNC: flatbuffers::VOffsetT = 76;
+  pub const VT_DECLINATION_BIAS: flatbuffers::VOffsetT = 78;
+  pub const VT_LOSX: flatbuffers::VOffsetT = 80;
+  pub const VT_LOSY: flatbuffers::VOffsetT = 82;
+  pub const VT_LOSZ: flatbuffers::VOffsetT = 84;
+  pub const VT_LOS_UNC: flatbuffers::VOffsetT = 86;
+  pub const VT_LOSXVEL: flatbuffers::VOffsetT = 88;
+  pub const VT_LOSYVEL: flatbuffers::VOffsetT = 90;
+  pub const VT_LOSZVEL: flatbuffers::VOffsetT = 92;
+  pub const VT_SENLAT: flatbuffers::VOffsetT = 94;
+  pub const VT_SENLON: flatbuffers::VOffsetT = 96;
+  pub const VT_SENALT: flatbuffers::VOffsetT = 98;
+  pub const VT_SENX: flatbuffers::VOffsetT = 100;
+  pub const VT_SENY: flatbuffers::VOffsetT = 102;
+  pub const VT_SENZ: flatbuffers::VOffsetT = 104;
+  pub const VT_FOV_COUNT: flatbuffers::VOffsetT = 106;
+  pub const VT_FOV_COUNT_UCTS: flatbuffers::VOffsetT = 108;
+  pub const VT_EXP_DURATION: flatbuffers::VOffsetT = 110;
+  pub const VT_ZEROPTD: flatbuffers::VOffsetT = 112;
+  pub const VT_NET_OBJ_SIG: flatbuffers::VOffsetT = 114;
+  pub const VT_NET_OBJ_SIG_UNC: flatbuffers::VOffsetT = 116;
+  pub const VT_MAG: flatbuffers::VOffsetT = 118;
+  pub const VT_MAG_UNC: flatbuffers::VOffsetT = 120;
+  pub const VT_MAG_NORM_RANGE: flatbuffers::VOffsetT = 122;
+  pub const VT_GEOLAT: flatbuffers::VOffsetT = 124;
+  pub const VT_GEOLON: flatbuffers::VOffsetT = 126;
+  pub const VT_GEOALT: flatbuffers::VOffsetT = 128;
+  pub const VT_GEORANGE: flatbuffers::VOffsetT = 130;
+  pub const VT_SKY_BKGRND: flatbuffers::VOffsetT = 132;
+  pub const VT_PRIMARY_EXTINCTION: flatbuffers::VOffsetT = 134;
+  pub const VT_PRIMARY_EXTINCTION_UNC: flatbuffers::VOffsetT = 136;
+  pub const VT_SOLAR_PHASE_ANGLE: flatbuffers::VOffsetT = 138;
+  pub const VT_SOLAR_EQ_PHASE_ANGLE: flatbuffers::VOffsetT = 140;
+  pub const VT_SOLAR_DEC_ANGLE: flatbuffers::VOffsetT = 142;
+  pub const VT_SHUTTER_DELAY: flatbuffers::VOffsetT = 144;
+  pub const VT_TIMING_BIAS: flatbuffers::VOffsetT = 146;
+  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 148;
+  pub const VT_INTENSITY: flatbuffers::VOffsetT = 150;
+  pub const VT_BG_INTENSITY: flatbuffers::VOffsetT = 152;
+  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 154;
+  pub const VT_SOURCE: flatbuffers::VOffsetT = 156;
+  pub const VT_ORIGIN: flatbuffers::VOffsetT = 158;
+  pub const VT_DATA_MODE: flatbuffers::VOffsetT = 160;
+  pub const VT_CREATED_AT: flatbuffers::VOffsetT = 162;
+  pub const VT_CREATED_BY: flatbuffers::VOffsetT = 164;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 166;
+  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 168;
+  pub const VT_UMBRA: flatbuffers::VOffsetT = 170;
+  pub const VT_PENUMBRA: flatbuffers::VOffsetT = 172;
+  pub const VT_ORIG_NETWORK: flatbuffers::VOffsetT = 174;
+  pub const VT_SOURCE_DL: flatbuffers::VOffsetT = 176;
+  pub const VT_TYPE: flatbuffers::VOffsetT = 178;
+  pub const VT_AZIMUTH_MEASURED: flatbuffers::VOffsetT = 180;
+  pub const VT_ELEVATION_MEASURED: flatbuffers::VOffsetT = 182;
+  pub const VT_RANGE_MEASURED: flatbuffers::VOffsetT = 184;
+  pub const VT_RANGERATE_MEASURED: flatbuffers::VOffsetT = 186;
+  pub const VT_RA_MEASURED: flatbuffers::VOffsetT = 188;
+  pub const VT_DECLINATION_MEASURED: flatbuffers::VOffsetT = 190;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -389,7 +391,9 @@ impl<'a> EOO<'a> {
     builder.add_AZIMUTH(args.AZIMUTH);
     if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
-    if let Some(x) = args.TRACK_ID { builder.add_TRACK_ID(x); }
+    builder.add_SEQUENCE_ID(args.SEQUENCE_ID);
+    builder.add_IMAGE_SET_LENGTH(args.IMAGE_SET_LENGTH);
+    if let Some(x) = args.IMAGE_SET_ID { builder.add_IMAGE_SET_ID(x); }
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
     if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
@@ -442,9 +446,11 @@ impl<'a> EOO<'a> {
     let TRANSACTION_ID = self.TRANSACTION_ID().map(|x| {
       x.to_string()
     });
-    let TRACK_ID = self.TRACK_ID().map(|x| {
+    let IMAGE_SET_ID = self.IMAGE_SET_ID().map(|x| {
       x.to_string()
     });
+    let IMAGE_SET_LENGTH = self.IMAGE_SET_LENGTH();
+    let SEQUENCE_ID = self.SEQUENCE_ID();
     let OB_POSITION = self.OB_POSITION();
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
@@ -557,7 +563,9 @@ impl<'a> EOO<'a> {
       NORAD_CAT_ID,
       TASK_ID,
       TRANSACTION_ID,
-      TRACK_ID,
+      IMAGE_SET_ID,
+      IMAGE_SET_LENGTH,
+      SEQUENCE_ID,
       OB_POSITION,
       ORIG_OBJECT_ID,
       ORIG_SENSOR_ID,
@@ -722,13 +730,29 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TRANSACTION_ID, None)}
   }
-  /// Identifier of the track to which this observation belongs, if applicable.
+  /// The user-defined set ID of a sequence of images.
   #[inline]
-  pub fn TRACK_ID(&self) -> Option<&'a str> {
+  pub fn IMAGE_SET_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TRACK_ID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_IMAGE_SET_ID, None)}
+  }
+  /// The number of images in an image set.
+  #[inline]
+  pub fn IMAGE_SET_LENGTH(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_IMAGE_SET_LENGTH, Some(0)).unwrap()}
+  }
+  /// The sequence ID of an image within an image set.
+  #[inline]
+  pub fn SEQUENCE_ID(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_SEQUENCE_ID, Some(0)).unwrap()}
   }
   /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
   #[inline]
@@ -1413,7 +1437,9 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<i32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRACK_ID", Self::VT_TRACK_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE_SET_ID", Self::VT_IMAGE_SET_ID, false)?
+     .visit_field::<i32>("IMAGE_SET_LENGTH", Self::VT_IMAGE_SET_LENGTH, false)?
+     .visit_field::<i32>("SEQUENCE_ID", Self::VT_SEQUENCE_ID, false)?
      .visit_field::<ObservationPosition>("OB_POSITION", Self::VT_OB_POSITION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
@@ -1510,7 +1536,9 @@ pub struct EOOArgs<'a> {
     pub NORAD_CAT_ID: i32,
     pub TASK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRACK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub IMAGE_SET_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub IMAGE_SET_LENGTH: i32,
+    pub SEQUENCE_ID: i32,
     pub OB_POSITION: ObservationPosition,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1607,7 +1635,9 @@ impl<'a> Default for EOOArgs<'a> {
       NORAD_CAT_ID: 0,
       TASK_ID: None,
       TRANSACTION_ID: None,
-      TRACK_ID: None,
+      IMAGE_SET_ID: None,
+      IMAGE_SET_LENGTH: 0,
+      SEQUENCE_ID: 0,
       OB_POSITION: ObservationPosition::FENCE,
       ORIG_OBJECT_ID: None,
       ORIG_SENSOR_ID: None,
@@ -1739,8 +1769,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_TRANSACTION_ID, TRANSACTION_ID);
   }
   #[inline]
-  pub fn add_TRACK_ID(&mut self, TRACK_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_TRACK_ID, TRACK_ID);
+  pub fn add_IMAGE_SET_ID(&mut self, IMAGE_SET_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_IMAGE_SET_ID, IMAGE_SET_ID);
+  }
+  #[inline]
+  pub fn add_IMAGE_SET_LENGTH(&mut self, IMAGE_SET_LENGTH: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
+  }
+  #[inline]
+  pub fn add_SEQUENCE_ID(&mut self, SEQUENCE_ID: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
   }
   #[inline]
   pub fn add_OB_POSITION(&mut self, OB_POSITION: ObservationPosition) {
@@ -2094,7 +2132,9 @@ impl core::fmt::Debug for EOO<'_> {
       ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
       ds.field("TASK_ID", &self.TASK_ID());
       ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
-      ds.field("TRACK_ID", &self.TRACK_ID());
+      ds.field("IMAGE_SET_ID", &self.IMAGE_SET_ID());
+      ds.field("IMAGE_SET_LENGTH", &self.IMAGE_SET_LENGTH());
+      ds.field("SEQUENCE_ID", &self.SEQUENCE_ID());
       ds.field("OB_POSITION", &self.OB_POSITION());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
       ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
@@ -2192,7 +2232,9 @@ pub struct EOOT {
   pub NORAD_CAT_ID: i32,
   pub TASK_ID: Option<String>,
   pub TRANSACTION_ID: Option<String>,
-  pub TRACK_ID: Option<String>,
+  pub IMAGE_SET_ID: Option<String>,
+  pub IMAGE_SET_LENGTH: i32,
+  pub SEQUENCE_ID: i32,
   pub OB_POSITION: ObservationPosition,
   pub ORIG_OBJECT_ID: Option<String>,
   pub ORIG_SENSOR_ID: Option<String>,
@@ -2288,7 +2330,9 @@ impl Default for EOOT {
       NORAD_CAT_ID: 0,
       TASK_ID: None,
       TRANSACTION_ID: None,
-      TRACK_ID: None,
+      IMAGE_SET_ID: None,
+      IMAGE_SET_LENGTH: 0,
+      SEQUENCE_ID: 0,
       OB_POSITION: ObservationPosition::FENCE,
       ORIG_OBJECT_ID: None,
       ORIG_SENSOR_ID: None,
@@ -2402,9 +2446,11 @@ impl EOOT {
     let TRANSACTION_ID = self.TRANSACTION_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TRACK_ID = self.TRACK_ID.as_ref().map(|x|{
+    let IMAGE_SET_ID = self.IMAGE_SET_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let IMAGE_SET_LENGTH = self.IMAGE_SET_LENGTH;
+    let SEQUENCE_ID = self.SEQUENCE_ID;
     let OB_POSITION = self.OB_POSITION;
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2517,7 +2563,9 @@ impl EOOT {
       NORAD_CAT_ID,
       TASK_ID,
       TRANSACTION_ID,
-      TRACK_ID,
+      IMAGE_SET_ID,
+      IMAGE_SET_LENGTH,
+      SEQUENCE_ID,
       OB_POSITION,
       ORIG_OBJECT_ID,
       ORIG_SENSOR_ID,

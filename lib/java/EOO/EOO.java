@@ -84,371 +84,379 @@ public final class EOO extends Table {
   public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
-   * Identifier of the track to which this observation belongs, if applicable.
+   * The user-defined set ID of a sequence of images.
    */
-  public String TRACK_ID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  public String IMAGE_SET_ID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMAGE_SET_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer IMAGE_SET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * The number of images in an image set.
+   */
+  public int IMAGE_SET_LENGTH() { int o = __offset(26); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * The sequence ID of an image within an image set.
+   */
+  public int SEQUENCE_ID() { int o = __offset(28); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
    * The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
    */
-  public byte OB_POSITION() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte OB_POSITION() { int o = __offset(30); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Provider maintained ID. May not be consistent with 18SDS SAT_NO.
    */
-  public String ORIG_OBJECT_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  public String ORIG_OBJECT_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
   /**
    * Sensor ID.
    */
-  public String ORIG_SENSOR_ID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  public String ORIG_SENSOR_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
    * Required if correlation is attempted. Indicates whether correlation succeeded.
    */
-  public boolean UCT() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean UCT() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * Line of sight azimuth angle in degrees and topocentric frame.
    */
-  public float AZIMUTH() { int o = __offset(34); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float AZIMUTH() { int o = __offset(38); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line of sight azimuth angle, in degrees.
    */
-  public float AZIMUTH_UNC() { int o = __offset(36); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float AZIMUTH_UNC() { int o = __offset(40); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor line of sight azimuth angle bias in degrees.
    */
-  public float AZIMUTH_BIAS() { int o = __offset(38); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float AZIMUTH_BIAS() { int o = __offset(42); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Rate of change of the line of sight azimuth in degrees per second.
    */
-  public float AZIMUTH_RATE() { int o = __offset(40); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float AZIMUTH_RATE() { int o = __offset(44); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Line of sight elevation in degrees and topocentric frame.
    */
-  public float ELEVATION() { int o = __offset(42); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ELEVATION() { int o = __offset(46); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line of sight elevation angle, in degrees.
    */
-  public float ELEVATION_UNC() { int o = __offset(44); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ELEVATION_UNC() { int o = __offset(48); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor line of sight elevation bias in degrees.
    */
-  public float ELEVATION_BIAS() { int o = __offset(46); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ELEVATION_BIAS() { int o = __offset(50); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Rate of change of the line of sight elevation in degrees per second.
    */
-  public float ELEVATION_RATE() { int o = __offset(48); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ELEVATION_RATE() { int o = __offset(52); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Line of sight range in km. Reported value should include all applicable corrections.
    */
-  public float RANGE() { int o = __offset(50); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RANGE() { int o = __offset(54); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line of sight range, in km.
    */
-  public float RANGE_UNC() { int o = __offset(52); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RANGE_UNC() { int o = __offset(56); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor line of sight range bias in km.
    */
-  public float RANGE_BIAS() { int o = __offset(54); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RANGE_BIAS() { int o = __offset(58); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Range rate in km/s. Reported value should include all applicable corrections.
    */
-  public float RANGE_RATE() { int o = __offset(56); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RANGE_RATE() { int o = __offset(60); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line of sight range rate, in km/sec.
    */
-  public float RANGE_RATE_UNC() { int o = __offset(58); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RANGE_RATE_UNC() { int o = __offset(62); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Right ascension in degrees. Required metric reporting field for EO observations.
    */
-  public float RA() { int o = __offset(60); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RA() { int o = __offset(64); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Line of sight right ascension rate of change, in degrees/sec.
    */
-  public float RA_RATE() { int o = __offset(62); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RA_RATE() { int o = __offset(66); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line of sight right ascension angle, in degrees.
    */
-  public float RA_UNC() { int o = __offset(64); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RA_UNC() { int o = __offset(68); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor line of sight right ascension bias in degrees.
    */
-  public float RA_BIAS() { int o = __offset(66); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float RA_BIAS() { int o = __offset(70); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Declination in degrees. Required metric reporting field for EO observations.
    */
-  public float DECLINATION() { int o = __offset(68); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float DECLINATION() { int o = __offset(72); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Line of sight declination rate of change, in degrees/sec.
    */
-  public float DECLINATION_RATE() { int o = __offset(70); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float DECLINATION_RATE() { int o = __offset(74); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line of sight declination angle, in degrees.
    */
-  public float DECLINATION_UNC() { int o = __offset(72); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float DECLINATION_UNC() { int o = __offset(76); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor line of sight declination angle bias in degrees.
    */
-  public float DECLINATION_BIAS() { int o = __offset(74); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float DECLINATION_BIAS() { int o = __offset(78); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
    */
-  public float LOSX() { int o = __offset(76); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOSX() { int o = __offset(80); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
    */
-  public float LOSY() { int o = __offset(78); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOSY() { int o = __offset(82); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
    */
-  public float LOSZ() { int o = __offset(80); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOSZ() { int o = __offset(84); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * One sigma uncertainty in the line-of-sight direction vector components.
    */
-  public float LOS_UNC() { int o = __offset(82); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOS_UNC() { int o = __offset(86); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * X-component of the velocity vector along the line of sight, in km/s.
    */
-  public float LOSXVEL() { int o = __offset(84); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOSXVEL() { int o = __offset(88); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Y-component of the velocity vector along the line of sight, in km/s.
    */
-  public float LOSYVEL() { int o = __offset(86); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOSYVEL() { int o = __offset(90); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Z-component of the velocity vector along the line of sight, in km/s.
    */
-  public float LOSZVEL() { int o = __offset(88); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float LOSZVEL() { int o = __offset(92); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * WGS-84 latitude in decimal degrees at the time of the observation.
    */
-  public float SENLAT() { int o = __offset(90); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SENLAT() { int o = __offset(94); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * WGS-84 longitude in decimal degrees at the time of the observation.
    */
-  public float SENLON() { int o = __offset(92); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SENLON() { int o = __offset(96); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
    */
-  public float SENALT() { int o = __offset(94); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SENALT() { int o = __offset(98); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Cartesian X position in km at the time of the observation.
    */
-  public float SENX() { int o = __offset(96); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SENX() { int o = __offset(100); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Cartesian Y position in km at the time of the observation.
    */
-  public float SENY() { int o = __offset(98); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SENY() { int o = __offset(102); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Cartesian Z position in km at the time of the observation.
    */
-  public float SENZ() { int o = __offset(100); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SENZ() { int o = __offset(104); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Total number of satellites in the field of view.
    */
-  public int FOV_COUNT() { int o = __offset(102); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int FOV_COUNT() { int o = __offset(106); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
    * Number of uncorrelated satellites in the field of view (JCO).
    */
-  public int FOV_COUNT_UCTS() { int o = __offset(104); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int FOV_COUNT_UCTS() { int o = __offset(108); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
    * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
    * the exposure duration should be the total integration time. This field is highly recommended / required if the 
    * observations are going to be used for photometric processing.
    */
-  public float EXP_DURATION() { int o = __offset(106); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float EXP_DURATION() { int o = __offset(110); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
    */
-  public float ZEROPTD() { int o = __offset(108); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float ZEROPTD() { int o = __offset(112); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Net object signature = counts / EXP_DURATION.
    */
-  public float NET_OBJ_SIG() { int o = __offset(110); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float NET_OBJ_SIG() { int o = __offset(114); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Net object signature uncertainty = counts uncertainty / EXP_DURATION.
    */
-  public float NET_OBJ_SIG_UNC() { int o = __offset(112); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float NET_OBJ_SIG_UNC() { int o = __offset(116); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Measure of observed brightness calibrated against the Gaia G-band.
    */
-  public float MAG() { int o = __offset(114); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float MAG() { int o = __offset(118); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Uncertainty of the observed brightness.
    */
-  public float MAG_UNC() { int o = __offset(116); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float MAG_UNC() { int o = __offset(120); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * [Definition needed].
    */
-  public float MAG_NORM_RANGE() { int o = __offset(118); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float MAG_NORM_RANGE() { int o = __offset(122); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
    * and corresponding viewing geometry. It must NOT be computed from the orbit state.
    */
-  public float GEOLAT() { int o = __offset(120); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float GEOLAT() { int o = __offset(124); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
    * and viewing geometry. It must NOT be computed from the orbit state.
    */
-  public float GEOLON() { int o = __offset(122); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float GEOLON() { int o = __offset(126); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
    */
-  public float GEOALT() { int o = __offset(124); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float GEOALT() { int o = __offset(128); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
    */
-  public float GEORANGE() { int o = __offset(126); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float GEORANGE() { int o = __offset(130); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
    * empty part of the night sky.
    */
-  public float SKY_BKGRND() { int o = __offset(128); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SKY_BKGRND() { int o = __offset(132); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
    * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
    * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
    * object and the observer.
    */
-  public float PRIMARY_EXTINCTION() { int o = __offset(130); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float PRIMARY_EXTINCTION() { int o = __offset(134); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Primary Extinction Coefficient Uncertainty, in Magnitudes.
    */
-  public float PRIMARY_EXTINCTION_UNC() { int o = __offset(132); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float PRIMARY_EXTINCTION_UNC() { int o = __offset(136); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
    * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
    */
-  public float SOLAR_PHASE_ANGLE() { int o = __offset(134); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SOLAR_PHASE_ANGLE() { int o = __offset(138); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
    * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
    * and positive when opening (after the opposition).
    */
-  public float SOLAR_EQ_PHASE_ANGLE() { int o = __offset(136); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SOLAR_EQ_PHASE_ANGLE() { int o = __offset(140); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Angle from the sun to the equatorial plane.
    */
-  public float SOLAR_DEC_ANGLE() { int o = __offset(138); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SOLAR_DEC_ANGLE() { int o = __offset(142); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Shutter delay in seconds.
    */
-  public float SHUTTER_DELAY() { int o = __offset(140); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float SHUTTER_DELAY() { int o = __offset(144); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Sensor timing bias in seconds.
    */
-  public float TIMING_BIAS() { int o = __offset(142); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float TIMING_BIAS() { int o = __offset(146); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
    */
-  public String RAW_FILE_URI() { int o = __offset(144); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(144, 1); }
-  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 144, 1); }
+  public String RAW_FILE_URI() { int o = __offset(148); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(148, 1); }
+  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 148, 1); }
   /**
    * Intensity of the target for IR observations, in kw/sr/em.
    */
-  public float INTENSITY() { int o = __offset(146); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float INTENSITY() { int o = __offset(150); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Background intensity for IR observations, in kw/sr/um.
    */
-  public float BG_INTENSITY() { int o = __offset(148); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float BG_INTENSITY() { int o = __offset(152); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
    * Optional source-provided and searchable metadata or descriptor of the data.
    */
-  public String DESCRIPTOR() { int o = __offset(150); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(150, 1); }
-  public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 150, 1); }
+  public String DESCRIPTOR() { int o = __offset(154); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(154, 1); }
+  public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 154, 1); }
   /**
    * Source of the data.
    */
-  public String SOURCE() { int o = __offset(152); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(152, 1); }
-  public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 152, 1); }
+  public String SOURCE() { int o = __offset(156); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(156, 1); }
+  public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 156, 1); }
   /**
    * Originating system or organization which produced the data, if different from the source.
    * The origin may be different than the source if the source was a mediating system which forwarded 
    * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
    */
-  public String ORIGIN() { int o = __offset(154); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIGINAsByteBuffer() { return __vector_as_bytebuffer(154, 1); }
-  public ByteBuffer ORIGINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 154, 1); }
+  public String ORIGIN() { int o = __offset(158); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINAsByteBuffer() { return __vector_as_bytebuffer(158, 1); }
+  public ByteBuffer ORIGINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 158, 1); }
   /**
    * Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
    */
-  public byte DATA_MODE() { int o = __offset(156); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte DATA_MODE() { int o = __offset(160); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Time the row was created in the database, auto-populated by the system.
    */
-  public String CREATED_AT() { int o = __offset(158); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CREATED_ATAsByteBuffer() { return __vector_as_bytebuffer(158, 1); }
-  public ByteBuffer CREATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 158, 1); }
+  public String CREATED_AT() { int o = __offset(162); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CREATED_ATAsByteBuffer() { return __vector_as_bytebuffer(162, 1); }
+  public ByteBuffer CREATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 162, 1); }
   /**
    * Application user who created the row in the database, auto-populated by the system.
    */
-  public String CREATED_BY() { int o = __offset(160); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CREATED_BYAsByteBuffer() { return __vector_as_bytebuffer(160, 1); }
-  public ByteBuffer CREATED_BYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 160, 1); }
+  public String CREATED_BY() { int o = __offset(164); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CREATED_BYAsByteBuffer() { return __vector_as_bytebuffer(164, 1); }
+  public ByteBuffer CREATED_BYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 164, 1); }
   /**
    * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
    */
-  public byte REFERENCE_FRAME() { int o = __offset(162); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte REFERENCE_FRAME() { int o = __offset(166); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
    * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
    * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
    */
-  public byte SEN_REFERENCE_FRAME() { int o = __offset(164); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte SEN_REFERENCE_FRAME() { int o = __offset(168); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
    */
-  public boolean UMBRA() { int o = __offset(166); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean UMBRA() { int o = __offset(170); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
    * This field is highly recommended if the observations will be used for photometric processing.
    */
-  public boolean PENUMBRA() { int o = __offset(168); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean PENUMBRA() { int o = __offset(172); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * The originating source network on which this record was created, auto-populated by the system.
    */
-  public String ORIG_NETWORK() { int o = __offset(170); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_NETWORKAsByteBuffer() { return __vector_as_bytebuffer(170, 1); }
-  public ByteBuffer ORIG_NETWORKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 170, 1); }
+  public String ORIG_NETWORK() { int o = __offset(174); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_NETWORKAsByteBuffer() { return __vector_as_bytebuffer(174, 1); }
+  public ByteBuffer ORIG_NETWORKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 174, 1); }
   /**
    * The source from which this record was received.
    */
-  public String SOURCE_DL() { int o = __offset(172); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SOURCE_DLAsByteBuffer() { return __vector_as_bytebuffer(172, 1); }
-  public ByteBuffer SOURCE_DLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 172, 1); }
+  public String SOURCE_DL() { int o = __offset(176); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCE_DLAsByteBuffer() { return __vector_as_bytebuffer(176, 1); }
+  public ByteBuffer SOURCE_DLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 176, 1); }
   /**
    * Device Type
    */
-  public byte TYPE() { int o = __offset(174); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte TYPE() { int o = __offset(178); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * True if measured, false if computed. Required if azimuth is reported.
    */
-  public boolean AZIMUTH_MEASURED() { int o = __offset(176); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean AZIMUTH_MEASURED() { int o = __offset(180); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * True if measured, false if computed. Required if elevation is reported.
    */
-  public boolean ELEVATION_MEASURED() { int o = __offset(178); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean ELEVATION_MEASURED() { int o = __offset(182); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * True if measured, false if computed. Required if range is reported.
    */
-  public boolean RANGE_MEASURED() { int o = __offset(180); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean RANGE_MEASURED() { int o = __offset(184); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * True if measured, false if computed. Required if range-rate is reported.
    */
-  public boolean RANGERATE_MEASURED() { int o = __offset(182); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean RANGERATE_MEASURED() { int o = __offset(186); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * True if measured, false if computed. Required if right ascension is reported.
    */
-  public boolean RA_MEASURED() { int o = __offset(184); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean RA_MEASURED() { int o = __offset(188); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * True if measured, false if computed. Required if declination is reported.
    */
-  public boolean DECLINATION_MEASURED() { int o = __offset(186); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean DECLINATION_MEASURED() { int o = __offset(190); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createEOO(FlatBufferBuilder builder,
       int IDOffset,
@@ -461,7 +469,9 @@ public final class EOO extends Table {
       int NORAD_CAT_ID,
       int TASK_IDOffset,
       int TRANSACTION_IDOffset,
-      int TRACK_IDOffset,
+      int IMAGE_SET_IDOffset,
+      int IMAGE_SET_LENGTH,
+      int SEQUENCE_ID,
       byte OB_POSITION,
       int ORIG_OBJECT_IDOffset,
       int ORIG_SENSOR_IDOffset,
@@ -543,7 +553,7 @@ public final class EOO extends Table {
       boolean RANGERATE_MEASURED,
       boolean RA_MEASURED,
       boolean DECLINATION_MEASURED) {
-    builder.startTable(92);
+    builder.startTable(94);
     EOO.addSourceDl(builder, SOURCE_DLOffset);
     EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
     EOO.addCreatedBy(builder, CREATED_BYOffset);
@@ -611,7 +621,9 @@ public final class EOO extends Table {
     EOO.addAzimuth(builder, AZIMUTH);
     EOO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
     EOO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-    EOO.addTrackId(builder, TRACK_IDOffset);
+    EOO.addSequenceId(builder, SEQUENCE_ID);
+    EOO.addImageSetLength(builder, IMAGE_SET_LENGTH);
+    EOO.addImageSetId(builder, IMAGE_SET_IDOffset);
     EOO.addTransactionId(builder, TRANSACTION_IDOffset);
     EOO.addTaskId(builder, TASK_IDOffset);
     EOO.addNoradCatId(builder, NORAD_CAT_ID);
@@ -639,7 +651,7 @@ public final class EOO extends Table {
     return EOO.endEOO(builder);
   }
 
-  public static void startEOO(FlatBufferBuilder builder) { builder.startTable(92); }
+  public static void startEOO(FlatBufferBuilder builder) { builder.startTable(94); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(1, CLASSIFICATIONOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(2, OB_TIMEOffset, 0); }
@@ -650,88 +662,90 @@ public final class EOO extends Table {
   public static void addNoradCatId(FlatBufferBuilder builder, int NORAD_CAT_ID) { builder.addInt(7, NORAD_CAT_ID, 0); }
   public static void addTaskId(FlatBufferBuilder builder, int TASK_IDOffset) { builder.addOffset(8, TASK_IDOffset, 0); }
   public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(9, TRANSACTION_IDOffset, 0); }
-  public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(10, TRACK_IDOffset, 0); }
-  public static void addObPosition(FlatBufferBuilder builder, byte OB_POSITION) { builder.addByte(11, OB_POSITION, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(12, ORIG_OBJECT_IDOffset, 0); }
-  public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(13, ORIG_SENSOR_IDOffset, 0); }
-  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(14, UCT, false); }
-  public static void addAzimuth(FlatBufferBuilder builder, float AZIMUTH) { builder.addFloat(15, AZIMUTH, 0.0f); }
-  public static void addAzimuthUnc(FlatBufferBuilder builder, float AZIMUTH_UNC) { builder.addFloat(16, AZIMUTH_UNC, 0.0f); }
-  public static void addAzimuthBias(FlatBufferBuilder builder, float AZIMUTH_BIAS) { builder.addFloat(17, AZIMUTH_BIAS, 0.0f); }
-  public static void addAzimuthRate(FlatBufferBuilder builder, float AZIMUTH_RATE) { builder.addFloat(18, AZIMUTH_RATE, 0.0f); }
-  public static void addElevation(FlatBufferBuilder builder, float ELEVATION) { builder.addFloat(19, ELEVATION, 0.0f); }
-  public static void addElevationUnc(FlatBufferBuilder builder, float ELEVATION_UNC) { builder.addFloat(20, ELEVATION_UNC, 0.0f); }
-  public static void addElevationBias(FlatBufferBuilder builder, float ELEVATION_BIAS) { builder.addFloat(21, ELEVATION_BIAS, 0.0f); }
-  public static void addElevationRate(FlatBufferBuilder builder, float ELEVATION_RATE) { builder.addFloat(22, ELEVATION_RATE, 0.0f); }
-  public static void addRange(FlatBufferBuilder builder, float RANGE) { builder.addFloat(23, RANGE, 0.0f); }
-  public static void addRangeUnc(FlatBufferBuilder builder, float RANGE_UNC) { builder.addFloat(24, RANGE_UNC, 0.0f); }
-  public static void addRangeBias(FlatBufferBuilder builder, float RANGE_BIAS) { builder.addFloat(25, RANGE_BIAS, 0.0f); }
-  public static void addRangeRate(FlatBufferBuilder builder, float RANGE_RATE) { builder.addFloat(26, RANGE_RATE, 0.0f); }
-  public static void addRangeRateUnc(FlatBufferBuilder builder, float RANGE_RATE_UNC) { builder.addFloat(27, RANGE_RATE_UNC, 0.0f); }
-  public static void addRa(FlatBufferBuilder builder, float RA) { builder.addFloat(28, RA, 0.0f); }
-  public static void addRaRate(FlatBufferBuilder builder, float RA_RATE) { builder.addFloat(29, RA_RATE, 0.0f); }
-  public static void addRaUnc(FlatBufferBuilder builder, float RA_UNC) { builder.addFloat(30, RA_UNC, 0.0f); }
-  public static void addRaBias(FlatBufferBuilder builder, float RA_BIAS) { builder.addFloat(31, RA_BIAS, 0.0f); }
-  public static void addDeclination(FlatBufferBuilder builder, float DECLINATION) { builder.addFloat(32, DECLINATION, 0.0f); }
-  public static void addDeclinationRate(FlatBufferBuilder builder, float DECLINATION_RATE) { builder.addFloat(33, DECLINATION_RATE, 0.0f); }
-  public static void addDeclinationUnc(FlatBufferBuilder builder, float DECLINATION_UNC) { builder.addFloat(34, DECLINATION_UNC, 0.0f); }
-  public static void addDeclinationBias(FlatBufferBuilder builder, float DECLINATION_BIAS) { builder.addFloat(35, DECLINATION_BIAS, 0.0f); }
-  public static void addLosx(FlatBufferBuilder builder, float LOSX) { builder.addFloat(36, LOSX, 0.0f); }
-  public static void addLosy(FlatBufferBuilder builder, float LOSY) { builder.addFloat(37, LOSY, 0.0f); }
-  public static void addLosz(FlatBufferBuilder builder, float LOSZ) { builder.addFloat(38, LOSZ, 0.0f); }
-  public static void addLosUnc(FlatBufferBuilder builder, float LOS_UNC) { builder.addFloat(39, LOS_UNC, 0.0f); }
-  public static void addLosxvel(FlatBufferBuilder builder, float LOSXVEL) { builder.addFloat(40, LOSXVEL, 0.0f); }
-  public static void addLosyvel(FlatBufferBuilder builder, float LOSYVEL) { builder.addFloat(41, LOSYVEL, 0.0f); }
-  public static void addLoszvel(FlatBufferBuilder builder, float LOSZVEL) { builder.addFloat(42, LOSZVEL, 0.0f); }
-  public static void addSenlat(FlatBufferBuilder builder, float SENLAT) { builder.addFloat(43, SENLAT, 0.0f); }
-  public static void addSenlon(FlatBufferBuilder builder, float SENLON) { builder.addFloat(44, SENLON, 0.0f); }
-  public static void addSenalt(FlatBufferBuilder builder, float SENALT) { builder.addFloat(45, SENALT, 0.0f); }
-  public static void addSenx(FlatBufferBuilder builder, float SENX) { builder.addFloat(46, SENX, 0.0f); }
-  public static void addSeny(FlatBufferBuilder builder, float SENY) { builder.addFloat(47, SENY, 0.0f); }
-  public static void addSenz(FlatBufferBuilder builder, float SENZ) { builder.addFloat(48, SENZ, 0.0f); }
-  public static void addFovCount(FlatBufferBuilder builder, int FOV_COUNT) { builder.addInt(49, FOV_COUNT, 0); }
-  public static void addFovCountUcts(FlatBufferBuilder builder, int FOV_COUNT_UCTS) { builder.addInt(50, FOV_COUNT_UCTS, 0); }
-  public static void addExpDuration(FlatBufferBuilder builder, float EXP_DURATION) { builder.addFloat(51, EXP_DURATION, 0.0f); }
-  public static void addZeroptd(FlatBufferBuilder builder, float ZEROPTD) { builder.addFloat(52, ZEROPTD, 0.0f); }
-  public static void addNetObjSig(FlatBufferBuilder builder, float NET_OBJ_SIG) { builder.addFloat(53, NET_OBJ_SIG, 0.0f); }
-  public static void addNetObjSigUnc(FlatBufferBuilder builder, float NET_OBJ_SIG_UNC) { builder.addFloat(54, NET_OBJ_SIG_UNC, 0.0f); }
-  public static void addMag(FlatBufferBuilder builder, float MAG) { builder.addFloat(55, MAG, 0.0f); }
-  public static void addMagUnc(FlatBufferBuilder builder, float MAG_UNC) { builder.addFloat(56, MAG_UNC, 0.0f); }
-  public static void addMagNormRange(FlatBufferBuilder builder, float MAG_NORM_RANGE) { builder.addFloat(57, MAG_NORM_RANGE, 0.0f); }
-  public static void addGeolat(FlatBufferBuilder builder, float GEOLAT) { builder.addFloat(58, GEOLAT, 0.0f); }
-  public static void addGeolon(FlatBufferBuilder builder, float GEOLON) { builder.addFloat(59, GEOLON, 0.0f); }
-  public static void addGeoalt(FlatBufferBuilder builder, float GEOALT) { builder.addFloat(60, GEOALT, 0.0f); }
-  public static void addGeorange(FlatBufferBuilder builder, float GEORANGE) { builder.addFloat(61, GEORANGE, 0.0f); }
-  public static void addSkyBkgrnd(FlatBufferBuilder builder, float SKY_BKGRND) { builder.addFloat(62, SKY_BKGRND, 0.0f); }
-  public static void addPrimaryExtinction(FlatBufferBuilder builder, float PRIMARY_EXTINCTION) { builder.addFloat(63, PRIMARY_EXTINCTION, 0.0f); }
-  public static void addPrimaryExtinctionUnc(FlatBufferBuilder builder, float PRIMARY_EXTINCTION_UNC) { builder.addFloat(64, PRIMARY_EXTINCTION_UNC, 0.0f); }
-  public static void addSolarPhaseAngle(FlatBufferBuilder builder, float SOLAR_PHASE_ANGLE) { builder.addFloat(65, SOLAR_PHASE_ANGLE, 0.0f); }
-  public static void addSolarEqPhaseAngle(FlatBufferBuilder builder, float SOLAR_EQ_PHASE_ANGLE) { builder.addFloat(66, SOLAR_EQ_PHASE_ANGLE, 0.0f); }
-  public static void addSolarDecAngle(FlatBufferBuilder builder, float SOLAR_DEC_ANGLE) { builder.addFloat(67, SOLAR_DEC_ANGLE, 0.0f); }
-  public static void addShutterDelay(FlatBufferBuilder builder, float SHUTTER_DELAY) { builder.addFloat(68, SHUTTER_DELAY, 0.0f); }
-  public static void addTimingBias(FlatBufferBuilder builder, float TIMING_BIAS) { builder.addFloat(69, TIMING_BIAS, 0.0f); }
-  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(70, RAW_FILE_URIOffset, 0); }
-  public static void addIntensity(FlatBufferBuilder builder, float INTENSITY) { builder.addFloat(71, INTENSITY, 0.0f); }
-  public static void addBgIntensity(FlatBufferBuilder builder, float BG_INTENSITY) { builder.addFloat(72, BG_INTENSITY, 0.0f); }
-  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(73, DESCRIPTOROffset, 0); }
-  public static void addSource(FlatBufferBuilder builder, int SOURCEOffset) { builder.addOffset(74, SOURCEOffset, 0); }
-  public static void addOrigin(FlatBufferBuilder builder, int ORIGINOffset) { builder.addOffset(75, ORIGINOffset, 0); }
-  public static void addDataMode(FlatBufferBuilder builder, byte DATA_MODE) { builder.addByte(76, DATA_MODE, 0); }
-  public static void addCreatedAt(FlatBufferBuilder builder, int CREATED_ATOffset) { builder.addOffset(77, CREATED_ATOffset, 0); }
-  public static void addCreatedBy(FlatBufferBuilder builder, int CREATED_BYOffset) { builder.addOffset(78, CREATED_BYOffset, 0); }
-  public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(79, REFERENCE_FRAME, 0); }
-  public static void addSenReferenceFrame(FlatBufferBuilder builder, byte SEN_REFERENCE_FRAME) { builder.addByte(80, SEN_REFERENCE_FRAME, 0); }
-  public static void addUmbra(FlatBufferBuilder builder, boolean UMBRA) { builder.addBoolean(81, UMBRA, false); }
-  public static void addPenumbra(FlatBufferBuilder builder, boolean PENUMBRA) { builder.addBoolean(82, PENUMBRA, false); }
-  public static void addOrigNetwork(FlatBufferBuilder builder, int ORIG_NETWORKOffset) { builder.addOffset(83, ORIG_NETWORKOffset, 0); }
-  public static void addSourceDl(FlatBufferBuilder builder, int SOURCE_DLOffset) { builder.addOffset(84, SOURCE_DLOffset, 0); }
-  public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(85, TYPE, 0); }
-  public static void addAzimuthMeasured(FlatBufferBuilder builder, boolean AZIMUTH_MEASURED) { builder.addBoolean(86, AZIMUTH_MEASURED, false); }
-  public static void addElevationMeasured(FlatBufferBuilder builder, boolean ELEVATION_MEASURED) { builder.addBoolean(87, ELEVATION_MEASURED, false); }
-  public static void addRangeMeasured(FlatBufferBuilder builder, boolean RANGE_MEASURED) { builder.addBoolean(88, RANGE_MEASURED, false); }
-  public static void addRangerateMeasured(FlatBufferBuilder builder, boolean RANGERATE_MEASURED) { builder.addBoolean(89, RANGERATE_MEASURED, false); }
-  public static void addRaMeasured(FlatBufferBuilder builder, boolean RA_MEASURED) { builder.addBoolean(90, RA_MEASURED, false); }
-  public static void addDeclinationMeasured(FlatBufferBuilder builder, boolean DECLINATION_MEASURED) { builder.addBoolean(91, DECLINATION_MEASURED, false); }
+  public static void addImageSetId(FlatBufferBuilder builder, int IMAGE_SET_IDOffset) { builder.addOffset(10, IMAGE_SET_IDOffset, 0); }
+  public static void addImageSetLength(FlatBufferBuilder builder, int IMAGE_SET_LENGTH) { builder.addInt(11, IMAGE_SET_LENGTH, 0); }
+  public static void addSequenceId(FlatBufferBuilder builder, int SEQUENCE_ID) { builder.addInt(12, SEQUENCE_ID, 0); }
+  public static void addObPosition(FlatBufferBuilder builder, byte OB_POSITION) { builder.addByte(13, OB_POSITION, 0); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(14, ORIG_OBJECT_IDOffset, 0); }
+  public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(15, ORIG_SENSOR_IDOffset, 0); }
+  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(16, UCT, false); }
+  public static void addAzimuth(FlatBufferBuilder builder, float AZIMUTH) { builder.addFloat(17, AZIMUTH, 0.0f); }
+  public static void addAzimuthUnc(FlatBufferBuilder builder, float AZIMUTH_UNC) { builder.addFloat(18, AZIMUTH_UNC, 0.0f); }
+  public static void addAzimuthBias(FlatBufferBuilder builder, float AZIMUTH_BIAS) { builder.addFloat(19, AZIMUTH_BIAS, 0.0f); }
+  public static void addAzimuthRate(FlatBufferBuilder builder, float AZIMUTH_RATE) { builder.addFloat(20, AZIMUTH_RATE, 0.0f); }
+  public static void addElevation(FlatBufferBuilder builder, float ELEVATION) { builder.addFloat(21, ELEVATION, 0.0f); }
+  public static void addElevationUnc(FlatBufferBuilder builder, float ELEVATION_UNC) { builder.addFloat(22, ELEVATION_UNC, 0.0f); }
+  public static void addElevationBias(FlatBufferBuilder builder, float ELEVATION_BIAS) { builder.addFloat(23, ELEVATION_BIAS, 0.0f); }
+  public static void addElevationRate(FlatBufferBuilder builder, float ELEVATION_RATE) { builder.addFloat(24, ELEVATION_RATE, 0.0f); }
+  public static void addRange(FlatBufferBuilder builder, float RANGE) { builder.addFloat(25, RANGE, 0.0f); }
+  public static void addRangeUnc(FlatBufferBuilder builder, float RANGE_UNC) { builder.addFloat(26, RANGE_UNC, 0.0f); }
+  public static void addRangeBias(FlatBufferBuilder builder, float RANGE_BIAS) { builder.addFloat(27, RANGE_BIAS, 0.0f); }
+  public static void addRangeRate(FlatBufferBuilder builder, float RANGE_RATE) { builder.addFloat(28, RANGE_RATE, 0.0f); }
+  public static void addRangeRateUnc(FlatBufferBuilder builder, float RANGE_RATE_UNC) { builder.addFloat(29, RANGE_RATE_UNC, 0.0f); }
+  public static void addRa(FlatBufferBuilder builder, float RA) { builder.addFloat(30, RA, 0.0f); }
+  public static void addRaRate(FlatBufferBuilder builder, float RA_RATE) { builder.addFloat(31, RA_RATE, 0.0f); }
+  public static void addRaUnc(FlatBufferBuilder builder, float RA_UNC) { builder.addFloat(32, RA_UNC, 0.0f); }
+  public static void addRaBias(FlatBufferBuilder builder, float RA_BIAS) { builder.addFloat(33, RA_BIAS, 0.0f); }
+  public static void addDeclination(FlatBufferBuilder builder, float DECLINATION) { builder.addFloat(34, DECLINATION, 0.0f); }
+  public static void addDeclinationRate(FlatBufferBuilder builder, float DECLINATION_RATE) { builder.addFloat(35, DECLINATION_RATE, 0.0f); }
+  public static void addDeclinationUnc(FlatBufferBuilder builder, float DECLINATION_UNC) { builder.addFloat(36, DECLINATION_UNC, 0.0f); }
+  public static void addDeclinationBias(FlatBufferBuilder builder, float DECLINATION_BIAS) { builder.addFloat(37, DECLINATION_BIAS, 0.0f); }
+  public static void addLosx(FlatBufferBuilder builder, float LOSX) { builder.addFloat(38, LOSX, 0.0f); }
+  public static void addLosy(FlatBufferBuilder builder, float LOSY) { builder.addFloat(39, LOSY, 0.0f); }
+  public static void addLosz(FlatBufferBuilder builder, float LOSZ) { builder.addFloat(40, LOSZ, 0.0f); }
+  public static void addLosUnc(FlatBufferBuilder builder, float LOS_UNC) { builder.addFloat(41, LOS_UNC, 0.0f); }
+  public static void addLosxvel(FlatBufferBuilder builder, float LOSXVEL) { builder.addFloat(42, LOSXVEL, 0.0f); }
+  public static void addLosyvel(FlatBufferBuilder builder, float LOSYVEL) { builder.addFloat(43, LOSYVEL, 0.0f); }
+  public static void addLoszvel(FlatBufferBuilder builder, float LOSZVEL) { builder.addFloat(44, LOSZVEL, 0.0f); }
+  public static void addSenlat(FlatBufferBuilder builder, float SENLAT) { builder.addFloat(45, SENLAT, 0.0f); }
+  public static void addSenlon(FlatBufferBuilder builder, float SENLON) { builder.addFloat(46, SENLON, 0.0f); }
+  public static void addSenalt(FlatBufferBuilder builder, float SENALT) { builder.addFloat(47, SENALT, 0.0f); }
+  public static void addSenx(FlatBufferBuilder builder, float SENX) { builder.addFloat(48, SENX, 0.0f); }
+  public static void addSeny(FlatBufferBuilder builder, float SENY) { builder.addFloat(49, SENY, 0.0f); }
+  public static void addSenz(FlatBufferBuilder builder, float SENZ) { builder.addFloat(50, SENZ, 0.0f); }
+  public static void addFovCount(FlatBufferBuilder builder, int FOV_COUNT) { builder.addInt(51, FOV_COUNT, 0); }
+  public static void addFovCountUcts(FlatBufferBuilder builder, int FOV_COUNT_UCTS) { builder.addInt(52, FOV_COUNT_UCTS, 0); }
+  public static void addExpDuration(FlatBufferBuilder builder, float EXP_DURATION) { builder.addFloat(53, EXP_DURATION, 0.0f); }
+  public static void addZeroptd(FlatBufferBuilder builder, float ZEROPTD) { builder.addFloat(54, ZEROPTD, 0.0f); }
+  public static void addNetObjSig(FlatBufferBuilder builder, float NET_OBJ_SIG) { builder.addFloat(55, NET_OBJ_SIG, 0.0f); }
+  public static void addNetObjSigUnc(FlatBufferBuilder builder, float NET_OBJ_SIG_UNC) { builder.addFloat(56, NET_OBJ_SIG_UNC, 0.0f); }
+  public static void addMag(FlatBufferBuilder builder, float MAG) { builder.addFloat(57, MAG, 0.0f); }
+  public static void addMagUnc(FlatBufferBuilder builder, float MAG_UNC) { builder.addFloat(58, MAG_UNC, 0.0f); }
+  public static void addMagNormRange(FlatBufferBuilder builder, float MAG_NORM_RANGE) { builder.addFloat(59, MAG_NORM_RANGE, 0.0f); }
+  public static void addGeolat(FlatBufferBuilder builder, float GEOLAT) { builder.addFloat(60, GEOLAT, 0.0f); }
+  public static void addGeolon(FlatBufferBuilder builder, float GEOLON) { builder.addFloat(61, GEOLON, 0.0f); }
+  public static void addGeoalt(FlatBufferBuilder builder, float GEOALT) { builder.addFloat(62, GEOALT, 0.0f); }
+  public static void addGeorange(FlatBufferBuilder builder, float GEORANGE) { builder.addFloat(63, GEORANGE, 0.0f); }
+  public static void addSkyBkgrnd(FlatBufferBuilder builder, float SKY_BKGRND) { builder.addFloat(64, SKY_BKGRND, 0.0f); }
+  public static void addPrimaryExtinction(FlatBufferBuilder builder, float PRIMARY_EXTINCTION) { builder.addFloat(65, PRIMARY_EXTINCTION, 0.0f); }
+  public static void addPrimaryExtinctionUnc(FlatBufferBuilder builder, float PRIMARY_EXTINCTION_UNC) { builder.addFloat(66, PRIMARY_EXTINCTION_UNC, 0.0f); }
+  public static void addSolarPhaseAngle(FlatBufferBuilder builder, float SOLAR_PHASE_ANGLE) { builder.addFloat(67, SOLAR_PHASE_ANGLE, 0.0f); }
+  public static void addSolarEqPhaseAngle(FlatBufferBuilder builder, float SOLAR_EQ_PHASE_ANGLE) { builder.addFloat(68, SOLAR_EQ_PHASE_ANGLE, 0.0f); }
+  public static void addSolarDecAngle(FlatBufferBuilder builder, float SOLAR_DEC_ANGLE) { builder.addFloat(69, SOLAR_DEC_ANGLE, 0.0f); }
+  public static void addShutterDelay(FlatBufferBuilder builder, float SHUTTER_DELAY) { builder.addFloat(70, SHUTTER_DELAY, 0.0f); }
+  public static void addTimingBias(FlatBufferBuilder builder, float TIMING_BIAS) { builder.addFloat(71, TIMING_BIAS, 0.0f); }
+  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(72, RAW_FILE_URIOffset, 0); }
+  public static void addIntensity(FlatBufferBuilder builder, float INTENSITY) { builder.addFloat(73, INTENSITY, 0.0f); }
+  public static void addBgIntensity(FlatBufferBuilder builder, float BG_INTENSITY) { builder.addFloat(74, BG_INTENSITY, 0.0f); }
+  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(75, DESCRIPTOROffset, 0); }
+  public static void addSource(FlatBufferBuilder builder, int SOURCEOffset) { builder.addOffset(76, SOURCEOffset, 0); }
+  public static void addOrigin(FlatBufferBuilder builder, int ORIGINOffset) { builder.addOffset(77, ORIGINOffset, 0); }
+  public static void addDataMode(FlatBufferBuilder builder, byte DATA_MODE) { builder.addByte(78, DATA_MODE, 0); }
+  public static void addCreatedAt(FlatBufferBuilder builder, int CREATED_ATOffset) { builder.addOffset(79, CREATED_ATOffset, 0); }
+  public static void addCreatedBy(FlatBufferBuilder builder, int CREATED_BYOffset) { builder.addOffset(80, CREATED_BYOffset, 0); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(81, REFERENCE_FRAME, 0); }
+  public static void addSenReferenceFrame(FlatBufferBuilder builder, byte SEN_REFERENCE_FRAME) { builder.addByte(82, SEN_REFERENCE_FRAME, 0); }
+  public static void addUmbra(FlatBufferBuilder builder, boolean UMBRA) { builder.addBoolean(83, UMBRA, false); }
+  public static void addPenumbra(FlatBufferBuilder builder, boolean PENUMBRA) { builder.addBoolean(84, PENUMBRA, false); }
+  public static void addOrigNetwork(FlatBufferBuilder builder, int ORIG_NETWORKOffset) { builder.addOffset(85, ORIG_NETWORKOffset, 0); }
+  public static void addSourceDl(FlatBufferBuilder builder, int SOURCE_DLOffset) { builder.addOffset(86, SOURCE_DLOffset, 0); }
+  public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(87, TYPE, 0); }
+  public static void addAzimuthMeasured(FlatBufferBuilder builder, boolean AZIMUTH_MEASURED) { builder.addBoolean(88, AZIMUTH_MEASURED, false); }
+  public static void addElevationMeasured(FlatBufferBuilder builder, boolean ELEVATION_MEASURED) { builder.addBoolean(89, ELEVATION_MEASURED, false); }
+  public static void addRangeMeasured(FlatBufferBuilder builder, boolean RANGE_MEASURED) { builder.addBoolean(90, RANGE_MEASURED, false); }
+  public static void addRangerateMeasured(FlatBufferBuilder builder, boolean RANGERATE_MEASURED) { builder.addBoolean(91, RANGERATE_MEASURED, false); }
+  public static void addRaMeasured(FlatBufferBuilder builder, boolean RA_MEASURED) { builder.addBoolean(92, RA_MEASURED, false); }
+  public static void addDeclinationMeasured(FlatBufferBuilder builder, boolean DECLINATION_MEASURED) { builder.addBoolean(93, DECLINATION_MEASURED, false); }
   public static int endEOO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -278,9 +278,17 @@
                 "type" : "string",
                 "description" : "Optional identifier to track a transaction."
               },
-        "TRACK_ID" : {
+        "IMAGE_SET_ID" : {
                 "type" : "string",
-                "description" : "Identifier of the track to which this observation belongs, if applicable."
+                "description" : "The user-defined set ID of a sequence of images."
+              },
+        "IMAGE_SET_LENGTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The number of images in an image set."
+              },
+        "SEQUENCE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The sequence ID of an image within an image set."
               },
         "OB_POSITION" : {
                 "$ref" : "#/definitions/ObservationPosition",

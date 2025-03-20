@@ -51,275 +51,281 @@ class EOO : flatbuffers.handle
     /// Optional identifier to track a transaction.
     def TRANSACTION_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 22)
-    /// Identifier of the track to which this observation belongs, if applicable.
-    def TRACK_ID() -> string:
+    /// The user-defined set ID of a sequence of images.
+    def IMAGE_SET_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
+    /// The number of images in an image set.
+    def IMAGE_SET_LENGTH() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 26, 0)
+    /// The sequence ID of an image within an image set.
+    def SEQUENCE_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 28, 0)
     /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
     def OB_POSITION() -> ObservationPosition:
-        return ObservationPosition(flatbuffers.field_int8(buf_, pos_, 26, 0))
+        return ObservationPosition(flatbuffers.field_int8(buf_, pos_, 30, 0))
     /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
     def ORIG_OBJECT_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 32)
     /// Sensor ID.
     def ORIG_SENSOR_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 30)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// Required if correlation is attempted. Indicates whether correlation succeeded.
     def UCT() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 36, 0))
     /// Line of sight azimuth angle in degrees and topocentric frame.
     def AZIMUTH() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 34, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 38, 0.0)
     /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
     def AZIMUTH_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 36, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 40, 0.0)
     /// Sensor line of sight azimuth angle bias in degrees.
     def AZIMUTH_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 38, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 42, 0.0)
     /// Rate of change of the line of sight azimuth in degrees per second.
     def AZIMUTH_RATE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 40, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 44, 0.0)
     /// Line of sight elevation in degrees and topocentric frame.
     def ELEVATION() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 42, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 46, 0.0)
     /// One sigma uncertainty in the line of sight elevation angle, in degrees.
     def ELEVATION_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 44, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 48, 0.0)
     /// Sensor line of sight elevation bias in degrees.
     def ELEVATION_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 46, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 50, 0.0)
     /// Rate of change of the line of sight elevation in degrees per second.
     def ELEVATION_RATE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 48, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 52, 0.0)
     /// Line of sight range in km. Reported value should include all applicable corrections.
     def RANGE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 50, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 54, 0.0)
     /// One sigma uncertainty in the line of sight range, in km.
     def RANGE_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 52, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 56, 0.0)
     /// Sensor line of sight range bias in km.
     def RANGE_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 54, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 58, 0.0)
     /// Range rate in km/s. Reported value should include all applicable corrections.
     def RANGE_RATE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 56, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 60, 0.0)
     /// One sigma uncertainty in the line of sight range rate, in km/sec.
     def RANGE_RATE_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 58, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 62, 0.0)
     /// Right ascension in degrees. Required metric reporting field for EO observations.
     def RA() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 60, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 64, 0.0)
     /// Line of sight right ascension rate of change, in degrees/sec.
     def RA_RATE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 62, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 66, 0.0)
     /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
     def RA_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 64, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 68, 0.0)
     /// Sensor line of sight right ascension bias in degrees.
     def RA_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 66, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 70, 0.0)
     /// Declination in degrees. Required metric reporting field for EO observations.
     def DECLINATION() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 68, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 72, 0.0)
     /// Line of sight declination rate of change, in degrees/sec.
     def DECLINATION_RATE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 70, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 74, 0.0)
     /// One sigma uncertainty in the line of sight declination angle, in degrees.
     def DECLINATION_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 72, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 76, 0.0)
     /// Sensor line of sight declination angle bias in degrees.
     def DECLINATION_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 74, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 78, 0.0)
     /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
     def LOSX() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 76, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 80, 0.0)
     /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
     def LOSY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 78, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 82, 0.0)
     /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
     def LOSZ() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 80, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 84, 0.0)
     /// One sigma uncertainty in the line-of-sight direction vector components.
     def LOS_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 82, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 86, 0.0)
     /// X-component of the velocity vector along the line of sight, in km/s.
     def LOSXVEL() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 84, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 88, 0.0)
     /// Y-component of the velocity vector along the line of sight, in km/s.
     def LOSYVEL() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 86, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 90, 0.0)
     /// Z-component of the velocity vector along the line of sight, in km/s.
     def LOSZVEL() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 88, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 92, 0.0)
     /// WGS-84 latitude in decimal degrees at the time of the observation.
     def SENLAT() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 90, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 94, 0.0)
     /// WGS-84 longitude in decimal degrees at the time of the observation.
     def SENLON() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 92, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 96, 0.0)
     /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
     def SENALT() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 94, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 98, 0.0)
     /// Cartesian X position in km at the time of the observation.
     def SENX() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 96, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 100, 0.0)
     /// Cartesian Y position in km at the time of the observation.
     def SENY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 98, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 102, 0.0)
     /// Cartesian Z position in km at the time of the observation.
     def SENZ() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 100, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 104, 0.0)
     /// Total number of satellites in the field of view.
     def FOV_COUNT() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 102, 0)
+        return flatbuffers.field_int32(buf_, pos_, 106, 0)
     /// Number of uncorrelated satellites in the field of view (JCO).
     def FOV_COUNT_UCTS() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 104, 0)
+        return flatbuffers.field_int32(buf_, pos_, 108, 0)
     /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
     /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
     /// observations are going to be used for photometric processing.
     def EXP_DURATION() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 106, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 110, 0.0)
     /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
     def ZEROPTD() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 108, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 112, 0.0)
     /// Net object signature = counts / EXP_DURATION.
     def NET_OBJ_SIG() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 110, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 114, 0.0)
     /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
     def NET_OBJ_SIG_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 112, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 116, 0.0)
     /// Measure of observed brightness calibrated against the Gaia G-band.
     def MAG() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 114, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 118, 0.0)
     /// Uncertainty of the observed brightness.
     def MAG_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 116, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 120, 0.0)
     /// [Definition needed].
     def MAG_NORM_RANGE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 118, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 122, 0.0)
     /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
     /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
     def GEOLAT() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 120, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 124, 0.0)
     /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
     /// and viewing geometry. It must NOT be computed from the orbit state.
     def GEOLON() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 122, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 126, 0.0)
     /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
     def GEOALT() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 124, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 128, 0.0)
     /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
     def GEORANGE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 126, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 130, 0.0)
     /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
     /// empty part of the night sky.
     def SKY_BKGRND() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 128, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 132, 0.0)
     /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
     /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
     /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
     /// object and the observer.
     def PRIMARY_EXTINCTION() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 130, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 134, 0.0)
     /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
     def PRIMARY_EXTINCTION_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 132, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 136, 0.0)
     /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
     /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
     def SOLAR_PHASE_ANGLE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 134, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 138, 0.0)
     /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
     /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
     /// and positive when opening (after the opposition).
     def SOLAR_EQ_PHASE_ANGLE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 136, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 140, 0.0)
     /// Angle from the sun to the equatorial plane.
     def SOLAR_DEC_ANGLE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 138, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 142, 0.0)
     /// Shutter delay in seconds.
     def SHUTTER_DELAY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 140, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 144, 0.0)
     /// Sensor timing bias in seconds.
     def TIMING_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 142, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 146, 0.0)
     /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
     def RAW_FILE_URI() -> string:
-        return flatbuffers.field_string(buf_, pos_, 144)
+        return flatbuffers.field_string(buf_, pos_, 148)
     /// Intensity of the target for IR observations, in kw/sr/em.
     def INTENSITY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 146, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 150, 0.0)
     /// Background intensity for IR observations, in kw/sr/um.
     def BG_INTENSITY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 148, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 152, 0.0)
     /// Optional source-provided and searchable metadata or descriptor of the data.
     def DESCRIPTOR() -> string:
-        return flatbuffers.field_string(buf_, pos_, 150)
+        return flatbuffers.field_string(buf_, pos_, 154)
     /// Source of the data.
     def SOURCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 152)
+        return flatbuffers.field_string(buf_, pos_, 156)
     /// Originating system or organization which produced the data, if different from the source.
     /// The origin may be different than the source if the source was a mediating system which forwarded 
     /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
     def ORIGIN() -> string:
-        return flatbuffers.field_string(buf_, pos_, 154)
+        return flatbuffers.field_string(buf_, pos_, 158)
     /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
     def DATA_MODE() -> DataMode:
-        return DataMode(flatbuffers.field_int8(buf_, pos_, 156, 0))
+        return DataMode(flatbuffers.field_int8(buf_, pos_, 160, 0))
     /// Time the row was created in the database, auto-populated by the system.
     def CREATED_AT() -> string:
-        return flatbuffers.field_string(buf_, pos_, 158)
+        return flatbuffers.field_string(buf_, pos_, 162)
     /// Application user who created the row in the database, auto-populated by the system.
     def CREATED_BY() -> string:
-        return flatbuffers.field_string(buf_, pos_, 160)
+        return flatbuffers.field_string(buf_, pos_, 164)
     /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 162, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 166, 0))
     /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
     /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
     /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
     def SEN_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 164, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 168, 0))
     /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
     def UMBRA() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 166, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 170, 0))
     /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
     /// This field is highly recommended if the observations will be used for photometric processing.
     def PENUMBRA() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 168, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 172, 0))
     /// The originating source network on which this record was created, auto-populated by the system.
     def ORIG_NETWORK() -> string:
-        return flatbuffers.field_string(buf_, pos_, 170)
+        return flatbuffers.field_string(buf_, pos_, 174)
     /// The source from which this record was received.
     def SOURCE_DL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 172)
+        return flatbuffers.field_string(buf_, pos_, 176)
     /// Device Type
     def TYPE() -> DeviceType:
-        return DeviceType(flatbuffers.field_int8(buf_, pos_, 174, 0))
+        return DeviceType(flatbuffers.field_int8(buf_, pos_, 178, 0))
     /// True if measured, false if computed. Required if azimuth is reported.
     def AZIMUTH_MEASURED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 176, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 180, 0))
     /// True if measured, false if computed. Required if elevation is reported.
     def ELEVATION_MEASURED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 178, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 182, 0))
     /// True if measured, false if computed. Required if range is reported.
     def RANGE_MEASURED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 180, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 184, 0))
     /// True if measured, false if computed. Required if range-rate is reported.
     def RANGERATE_MEASURED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 182, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 186, 0))
     /// True if measured, false if computed. Required if right ascension is reported.
     def RA_MEASURED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 184, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 188, 0))
     /// True if measured, false if computed. Required if declination is reported.
     def DECLINATION_MEASURED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 186, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 190, 0))
 
 def GetRootAsEOO(buf:string): return EOO { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(92)
+        b_.StartObject(94)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -351,251 +357,257 @@ struct EOOBuilder:
     def add_TRANSACTION_ID(TRANSACTION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, TRANSACTION_ID)
         return this
-    def add_TRACK_ID(TRACK_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, TRACK_ID)
+    def add_IMAGE_SET_ID(IMAGE_SET_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, IMAGE_SET_ID)
+        return this
+    def add_IMAGE_SET_LENGTH(IMAGE_SET_LENGTH:int):
+        b_.PrependInt32Slot(11, IMAGE_SET_LENGTH, 0)
+        return this
+    def add_SEQUENCE_ID(SEQUENCE_ID:int):
+        b_.PrependInt32Slot(12, SEQUENCE_ID, 0)
         return this
     def add_OB_POSITION(OB_POSITION:ObservationPosition):
-        b_.PrependInt8Slot(11, OB_POSITION, 0)
+        b_.PrependInt8Slot(13, OB_POSITION, 0)
         return this
     def add_ORIG_OBJECT_ID(ORIG_OBJECT_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, ORIG_OBJECT_ID)
+        b_.PrependUOffsetTRelativeSlot(14, ORIG_OBJECT_ID)
         return this
     def add_ORIG_SENSOR_ID(ORIG_SENSOR_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, ORIG_SENSOR_ID)
+        b_.PrependUOffsetTRelativeSlot(15, ORIG_SENSOR_ID)
         return this
     def add_UCT(UCT:bool):
-        b_.PrependBoolSlot(14, UCT, 0)
+        b_.PrependBoolSlot(16, UCT, 0)
         return this
     def add_AZIMUTH(AZIMUTH:float):
-        b_.PrependFloat32Slot(15, AZIMUTH, 0.0)
+        b_.PrependFloat32Slot(17, AZIMUTH, 0.0)
         return this
     def add_AZIMUTH_UNC(AZIMUTH_UNC:float):
-        b_.PrependFloat32Slot(16, AZIMUTH_UNC, 0.0)
+        b_.PrependFloat32Slot(18, AZIMUTH_UNC, 0.0)
         return this
     def add_AZIMUTH_BIAS(AZIMUTH_BIAS:float):
-        b_.PrependFloat32Slot(17, AZIMUTH_BIAS, 0.0)
+        b_.PrependFloat32Slot(19, AZIMUTH_BIAS, 0.0)
         return this
     def add_AZIMUTH_RATE(AZIMUTH_RATE:float):
-        b_.PrependFloat32Slot(18, AZIMUTH_RATE, 0.0)
+        b_.PrependFloat32Slot(20, AZIMUTH_RATE, 0.0)
         return this
     def add_ELEVATION(ELEVATION:float):
-        b_.PrependFloat32Slot(19, ELEVATION, 0.0)
+        b_.PrependFloat32Slot(21, ELEVATION, 0.0)
         return this
     def add_ELEVATION_UNC(ELEVATION_UNC:float):
-        b_.PrependFloat32Slot(20, ELEVATION_UNC, 0.0)
+        b_.PrependFloat32Slot(22, ELEVATION_UNC, 0.0)
         return this
     def add_ELEVATION_BIAS(ELEVATION_BIAS:float):
-        b_.PrependFloat32Slot(21, ELEVATION_BIAS, 0.0)
+        b_.PrependFloat32Slot(23, ELEVATION_BIAS, 0.0)
         return this
     def add_ELEVATION_RATE(ELEVATION_RATE:float):
-        b_.PrependFloat32Slot(22, ELEVATION_RATE, 0.0)
+        b_.PrependFloat32Slot(24, ELEVATION_RATE, 0.0)
         return this
     def add_RANGE(RANGE:float):
-        b_.PrependFloat32Slot(23, RANGE, 0.0)
+        b_.PrependFloat32Slot(25, RANGE, 0.0)
         return this
     def add_RANGE_UNC(RANGE_UNC:float):
-        b_.PrependFloat32Slot(24, RANGE_UNC, 0.0)
+        b_.PrependFloat32Slot(26, RANGE_UNC, 0.0)
         return this
     def add_RANGE_BIAS(RANGE_BIAS:float):
-        b_.PrependFloat32Slot(25, RANGE_BIAS, 0.0)
+        b_.PrependFloat32Slot(27, RANGE_BIAS, 0.0)
         return this
     def add_RANGE_RATE(RANGE_RATE:float):
-        b_.PrependFloat32Slot(26, RANGE_RATE, 0.0)
+        b_.PrependFloat32Slot(28, RANGE_RATE, 0.0)
         return this
     def add_RANGE_RATE_UNC(RANGE_RATE_UNC:float):
-        b_.PrependFloat32Slot(27, RANGE_RATE_UNC, 0.0)
+        b_.PrependFloat32Slot(29, RANGE_RATE_UNC, 0.0)
         return this
     def add_RA(RA:float):
-        b_.PrependFloat32Slot(28, RA, 0.0)
+        b_.PrependFloat32Slot(30, RA, 0.0)
         return this
     def add_RA_RATE(RA_RATE:float):
-        b_.PrependFloat32Slot(29, RA_RATE, 0.0)
+        b_.PrependFloat32Slot(31, RA_RATE, 0.0)
         return this
     def add_RA_UNC(RA_UNC:float):
-        b_.PrependFloat32Slot(30, RA_UNC, 0.0)
+        b_.PrependFloat32Slot(32, RA_UNC, 0.0)
         return this
     def add_RA_BIAS(RA_BIAS:float):
-        b_.PrependFloat32Slot(31, RA_BIAS, 0.0)
+        b_.PrependFloat32Slot(33, RA_BIAS, 0.0)
         return this
     def add_DECLINATION(DECLINATION:float):
-        b_.PrependFloat32Slot(32, DECLINATION, 0.0)
+        b_.PrependFloat32Slot(34, DECLINATION, 0.0)
         return this
     def add_DECLINATION_RATE(DECLINATION_RATE:float):
-        b_.PrependFloat32Slot(33, DECLINATION_RATE, 0.0)
+        b_.PrependFloat32Slot(35, DECLINATION_RATE, 0.0)
         return this
     def add_DECLINATION_UNC(DECLINATION_UNC:float):
-        b_.PrependFloat32Slot(34, DECLINATION_UNC, 0.0)
+        b_.PrependFloat32Slot(36, DECLINATION_UNC, 0.0)
         return this
     def add_DECLINATION_BIAS(DECLINATION_BIAS:float):
-        b_.PrependFloat32Slot(35, DECLINATION_BIAS, 0.0)
+        b_.PrependFloat32Slot(37, DECLINATION_BIAS, 0.0)
         return this
     def add_LOSX(LOSX:float):
-        b_.PrependFloat32Slot(36, LOSX, 0.0)
+        b_.PrependFloat32Slot(38, LOSX, 0.0)
         return this
     def add_LOSY(LOSY:float):
-        b_.PrependFloat32Slot(37, LOSY, 0.0)
+        b_.PrependFloat32Slot(39, LOSY, 0.0)
         return this
     def add_LOSZ(LOSZ:float):
-        b_.PrependFloat32Slot(38, LOSZ, 0.0)
+        b_.PrependFloat32Slot(40, LOSZ, 0.0)
         return this
     def add_LOS_UNC(LOS_UNC:float):
-        b_.PrependFloat32Slot(39, LOS_UNC, 0.0)
+        b_.PrependFloat32Slot(41, LOS_UNC, 0.0)
         return this
     def add_LOSXVEL(LOSXVEL:float):
-        b_.PrependFloat32Slot(40, LOSXVEL, 0.0)
+        b_.PrependFloat32Slot(42, LOSXVEL, 0.0)
         return this
     def add_LOSYVEL(LOSYVEL:float):
-        b_.PrependFloat32Slot(41, LOSYVEL, 0.0)
+        b_.PrependFloat32Slot(43, LOSYVEL, 0.0)
         return this
     def add_LOSZVEL(LOSZVEL:float):
-        b_.PrependFloat32Slot(42, LOSZVEL, 0.0)
+        b_.PrependFloat32Slot(44, LOSZVEL, 0.0)
         return this
     def add_SENLAT(SENLAT:float):
-        b_.PrependFloat32Slot(43, SENLAT, 0.0)
+        b_.PrependFloat32Slot(45, SENLAT, 0.0)
         return this
     def add_SENLON(SENLON:float):
-        b_.PrependFloat32Slot(44, SENLON, 0.0)
+        b_.PrependFloat32Slot(46, SENLON, 0.0)
         return this
     def add_SENALT(SENALT:float):
-        b_.PrependFloat32Slot(45, SENALT, 0.0)
+        b_.PrependFloat32Slot(47, SENALT, 0.0)
         return this
     def add_SENX(SENX:float):
-        b_.PrependFloat32Slot(46, SENX, 0.0)
+        b_.PrependFloat32Slot(48, SENX, 0.0)
         return this
     def add_SENY(SENY:float):
-        b_.PrependFloat32Slot(47, SENY, 0.0)
+        b_.PrependFloat32Slot(49, SENY, 0.0)
         return this
     def add_SENZ(SENZ:float):
-        b_.PrependFloat32Slot(48, SENZ, 0.0)
+        b_.PrependFloat32Slot(50, SENZ, 0.0)
         return this
     def add_FOV_COUNT(FOV_COUNT:int):
-        b_.PrependInt32Slot(49, FOV_COUNT, 0)
+        b_.PrependInt32Slot(51, FOV_COUNT, 0)
         return this
     def add_FOV_COUNT_UCTS(FOV_COUNT_UCTS:int):
-        b_.PrependInt32Slot(50, FOV_COUNT_UCTS, 0)
+        b_.PrependInt32Slot(52, FOV_COUNT_UCTS, 0)
         return this
     def add_EXP_DURATION(EXP_DURATION:float):
-        b_.PrependFloat32Slot(51, EXP_DURATION, 0.0)
+        b_.PrependFloat32Slot(53, EXP_DURATION, 0.0)
         return this
     def add_ZEROPTD(ZEROPTD:float):
-        b_.PrependFloat32Slot(52, ZEROPTD, 0.0)
+        b_.PrependFloat32Slot(54, ZEROPTD, 0.0)
         return this
     def add_NET_OBJ_SIG(NET_OBJ_SIG:float):
-        b_.PrependFloat32Slot(53, NET_OBJ_SIG, 0.0)
+        b_.PrependFloat32Slot(55, NET_OBJ_SIG, 0.0)
         return this
     def add_NET_OBJ_SIG_UNC(NET_OBJ_SIG_UNC:float):
-        b_.PrependFloat32Slot(54, NET_OBJ_SIG_UNC, 0.0)
+        b_.PrependFloat32Slot(56, NET_OBJ_SIG_UNC, 0.0)
         return this
     def add_MAG(MAG:float):
-        b_.PrependFloat32Slot(55, MAG, 0.0)
+        b_.PrependFloat32Slot(57, MAG, 0.0)
         return this
     def add_MAG_UNC(MAG_UNC:float):
-        b_.PrependFloat32Slot(56, MAG_UNC, 0.0)
+        b_.PrependFloat32Slot(58, MAG_UNC, 0.0)
         return this
     def add_MAG_NORM_RANGE(MAG_NORM_RANGE:float):
-        b_.PrependFloat32Slot(57, MAG_NORM_RANGE, 0.0)
+        b_.PrependFloat32Slot(59, MAG_NORM_RANGE, 0.0)
         return this
     def add_GEOLAT(GEOLAT:float):
-        b_.PrependFloat32Slot(58, GEOLAT, 0.0)
+        b_.PrependFloat32Slot(60, GEOLAT, 0.0)
         return this
     def add_GEOLON(GEOLON:float):
-        b_.PrependFloat32Slot(59, GEOLON, 0.0)
+        b_.PrependFloat32Slot(61, GEOLON, 0.0)
         return this
     def add_GEOALT(GEOALT:float):
-        b_.PrependFloat32Slot(60, GEOALT, 0.0)
+        b_.PrependFloat32Slot(62, GEOALT, 0.0)
         return this
     def add_GEORANGE(GEORANGE:float):
-        b_.PrependFloat32Slot(61, GEORANGE, 0.0)
+        b_.PrependFloat32Slot(63, GEORANGE, 0.0)
         return this
     def add_SKY_BKGRND(SKY_BKGRND:float):
-        b_.PrependFloat32Slot(62, SKY_BKGRND, 0.0)
+        b_.PrependFloat32Slot(64, SKY_BKGRND, 0.0)
         return this
     def add_PRIMARY_EXTINCTION(PRIMARY_EXTINCTION:float):
-        b_.PrependFloat32Slot(63, PRIMARY_EXTINCTION, 0.0)
+        b_.PrependFloat32Slot(65, PRIMARY_EXTINCTION, 0.0)
         return this
     def add_PRIMARY_EXTINCTION_UNC(PRIMARY_EXTINCTION_UNC:float):
-        b_.PrependFloat32Slot(64, PRIMARY_EXTINCTION_UNC, 0.0)
+        b_.PrependFloat32Slot(66, PRIMARY_EXTINCTION_UNC, 0.0)
         return this
     def add_SOLAR_PHASE_ANGLE(SOLAR_PHASE_ANGLE:float):
-        b_.PrependFloat32Slot(65, SOLAR_PHASE_ANGLE, 0.0)
+        b_.PrependFloat32Slot(67, SOLAR_PHASE_ANGLE, 0.0)
         return this
     def add_SOLAR_EQ_PHASE_ANGLE(SOLAR_EQ_PHASE_ANGLE:float):
-        b_.PrependFloat32Slot(66, SOLAR_EQ_PHASE_ANGLE, 0.0)
+        b_.PrependFloat32Slot(68, SOLAR_EQ_PHASE_ANGLE, 0.0)
         return this
     def add_SOLAR_DEC_ANGLE(SOLAR_DEC_ANGLE:float):
-        b_.PrependFloat32Slot(67, SOLAR_DEC_ANGLE, 0.0)
+        b_.PrependFloat32Slot(69, SOLAR_DEC_ANGLE, 0.0)
         return this
     def add_SHUTTER_DELAY(SHUTTER_DELAY:float):
-        b_.PrependFloat32Slot(68, SHUTTER_DELAY, 0.0)
+        b_.PrependFloat32Slot(70, SHUTTER_DELAY, 0.0)
         return this
     def add_TIMING_BIAS(TIMING_BIAS:float):
-        b_.PrependFloat32Slot(69, TIMING_BIAS, 0.0)
+        b_.PrependFloat32Slot(71, TIMING_BIAS, 0.0)
         return this
     def add_RAW_FILE_URI(RAW_FILE_URI:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(70, RAW_FILE_URI)
+        b_.PrependUOffsetTRelativeSlot(72, RAW_FILE_URI)
         return this
     def add_INTENSITY(INTENSITY:float):
-        b_.PrependFloat32Slot(71, INTENSITY, 0.0)
+        b_.PrependFloat32Slot(73, INTENSITY, 0.0)
         return this
     def add_BG_INTENSITY(BG_INTENSITY:float):
-        b_.PrependFloat32Slot(72, BG_INTENSITY, 0.0)
+        b_.PrependFloat32Slot(74, BG_INTENSITY, 0.0)
         return this
     def add_DESCRIPTOR(DESCRIPTOR:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(73, DESCRIPTOR)
+        b_.PrependUOffsetTRelativeSlot(75, DESCRIPTOR)
         return this
     def add_SOURCE(SOURCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(74, SOURCE)
+        b_.PrependUOffsetTRelativeSlot(76, SOURCE)
         return this
     def add_ORIGIN(ORIGIN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(75, ORIGIN)
+        b_.PrependUOffsetTRelativeSlot(77, ORIGIN)
         return this
     def add_DATA_MODE(DATA_MODE:DataMode):
-        b_.PrependInt8Slot(76, DATA_MODE, 0)
+        b_.PrependInt8Slot(78, DATA_MODE, 0)
         return this
     def add_CREATED_AT(CREATED_AT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(77, CREATED_AT)
+        b_.PrependUOffsetTRelativeSlot(79, CREATED_AT)
         return this
     def add_CREATED_BY(CREATED_BY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(78, CREATED_BY)
+        b_.PrependUOffsetTRelativeSlot(80, CREATED_BY)
         return this
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(79, REFERENCE_FRAME, 0)
+        b_.PrependInt8Slot(81, REFERENCE_FRAME, 0)
         return this
     def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(80, SEN_REFERENCE_FRAME, 0)
+        b_.PrependInt8Slot(82, SEN_REFERENCE_FRAME, 0)
         return this
     def add_UMBRA(UMBRA:bool):
-        b_.PrependBoolSlot(81, UMBRA, 0)
+        b_.PrependBoolSlot(83, UMBRA, 0)
         return this
     def add_PENUMBRA(PENUMBRA:bool):
-        b_.PrependBoolSlot(82, PENUMBRA, 0)
+        b_.PrependBoolSlot(84, PENUMBRA, 0)
         return this
     def add_ORIG_NETWORK(ORIG_NETWORK:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(83, ORIG_NETWORK)
+        b_.PrependUOffsetTRelativeSlot(85, ORIG_NETWORK)
         return this
     def add_SOURCE_DL(SOURCE_DL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(84, SOURCE_DL)
+        b_.PrependUOffsetTRelativeSlot(86, SOURCE_DL)
         return this
     def add_TYPE(TYPE:DeviceType):
-        b_.PrependInt8Slot(85, TYPE, 0)
+        b_.PrependInt8Slot(87, TYPE, 0)
         return this
     def add_AZIMUTH_MEASURED(AZIMUTH_MEASURED:bool):
-        b_.PrependBoolSlot(86, AZIMUTH_MEASURED, 0)
+        b_.PrependBoolSlot(88, AZIMUTH_MEASURED, 0)
         return this
     def add_ELEVATION_MEASURED(ELEVATION_MEASURED:bool):
-        b_.PrependBoolSlot(87, ELEVATION_MEASURED, 0)
+        b_.PrependBoolSlot(89, ELEVATION_MEASURED, 0)
         return this
     def add_RANGE_MEASURED(RANGE_MEASURED:bool):
-        b_.PrependBoolSlot(88, RANGE_MEASURED, 0)
+        b_.PrependBoolSlot(90, RANGE_MEASURED, 0)
         return this
     def add_RANGERATE_MEASURED(RANGERATE_MEASURED:bool):
-        b_.PrependBoolSlot(89, RANGERATE_MEASURED, 0)
+        b_.PrependBoolSlot(91, RANGERATE_MEASURED, 0)
         return this
     def add_RA_MEASURED(RA_MEASURED:bool):
-        b_.PrependBoolSlot(90, RA_MEASURED, 0)
+        b_.PrependBoolSlot(92, RA_MEASURED, 0)
         return this
     def add_DECLINATION_MEASURED(DECLINATION_MEASURED:bool):
-        b_.PrependBoolSlot(91, DECLINATION_MEASURED, 0)
+        b_.PrependBoolSlot(93, DECLINATION_MEASURED, 0)
         return this
     def end():
         return b_.EndObject()
