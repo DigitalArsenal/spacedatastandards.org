@@ -1139,17 +1139,21 @@ func (rcv *EOO) MutateREFERENCE_FRAME(n refFrame) bool {
 /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
 /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-func (rcv *EOO) SEN_REFERENCE_FRAME() []byte {
+func (rcv *EOO) SEN_REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(164))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
 /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
 /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
+func (rcv *EOO) MutateSEN_REFERENCE_FRAME(n refFrame) bool {
+	return rcv._tab.MutateInt8Slot(164, int8(n))
+}
+
 /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
 func (rcv *EOO) UMBRA() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(166))
@@ -1541,8 +1545,8 @@ func EOOAddCREATED_BY(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffs
 func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
 	builder.PrependInt8Slot(79, int8(REFERENCE_FRAME), 0)
 }
-func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(80, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
+func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME refFrame) {
+	builder.PrependInt8Slot(80, int8(SEN_REFERENCE_FRAME), 0)
 }
 func EOOAddUMBRA(builder *flatbuffers.Builder, UMBRA bool) {
 	builder.PrependBoolSlot(81, UMBRA, false)

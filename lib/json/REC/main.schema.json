@@ -3900,7 +3900,7 @@
                 "description" : "EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified."
               },
         "SEN_REFERENCE_FRAME" : {
-                "type" : "string",
+                "$ref" : "#/definitions/refFrame",
                 "description" : "The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),\nunless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).\nLat / long / height values should be reported using the WGS-84 ellipsoid, where applicable."
               },
         "UMBRA" : {

@@ -726,11 +726,9 @@ REFERENCE_FRAME():refFrame {
  * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
  * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
  */
-SEN_REFERENCE_FRAME():string|null
-SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+SEN_REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 164);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
 /**
@@ -1150,8 +1148,8 @@ static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) 
   builder.addFieldInt8(79, REFERENCE_FRAME, refFrame.ECEF);
 }
 
-static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(80, SEN_REFERENCE_FRAMEOffset, 0);
+static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAME:refFrame) {
+  builder.addFieldInt8(80, SEN_REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addUmbra(builder:flatbuffers.Builder, UMBRA:boolean) {
@@ -1211,7 +1209,7 @@ static finishSizePrefixedEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOO', true);
 }
 
-static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHOD:CollectMethod, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITION:ObservationPosition, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODE:DataMode, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPE:DeviceType, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean):flatbuffers.Offset {
+static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHOD:CollectMethod, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITION:ObservationPosition, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODE:DataMode, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAME:refFrame, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPE:DeviceType, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean):flatbuffers.Offset {
   EOO.startEOO(builder);
   EOO.addId(builder, IDOffset);
   EOO.addClassification(builder, CLASSIFICATIONOffset);
@@ -1293,7 +1291,7 @@ static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASS
   EOO.addCreatedAt(builder, CREATED_ATOffset);
   EOO.addCreatedBy(builder, CREATED_BYOffset);
   EOO.addReferenceFrame(builder, REFERENCE_FRAME);
-  EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
+  EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAME);
   EOO.addUmbra(builder, UMBRA);
   EOO.addPenumbra(builder, PENUMBRA);
   EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
@@ -1584,7 +1582,7 @@ constructor(
   public CREATED_AT: string|Uint8Array|null = null,
   public CREATED_BY: string|Uint8Array|null = null,
   public REFERENCE_FRAME: refFrame = refFrame.ECEF,
-  public SEN_REFERENCE_FRAME: string|Uint8Array|null = null,
+  public SEN_REFERENCE_FRAME: refFrame = refFrame.ECEF,
   public UMBRA: boolean = false,
   public PENUMBRA: boolean = false,
   public ORIG_NETWORK: string|Uint8Array|null = null,
@@ -1616,7 +1614,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORIGIN = (this.ORIGIN !== null ? builder.createString(this.ORIGIN!) : 0);
   const CREATED_AT = (this.CREATED_AT !== null ? builder.createString(this.CREATED_AT!) : 0);
   const CREATED_BY = (this.CREATED_BY !== null ? builder.createString(this.CREATED_BY!) : 0);
-  const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? builder.createString(this.SEN_REFERENCE_FRAME!) : 0);
   const ORIG_NETWORK = (this.ORIG_NETWORK !== null ? builder.createString(this.ORIG_NETWORK!) : 0);
   const SOURCE_DL = (this.SOURCE_DL !== null ? builder.createString(this.SOURCE_DL!) : 0);
 
@@ -1701,7 +1698,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     CREATED_AT,
     CREATED_BY,
     this.REFERENCE_FRAME,
-    SEN_REFERENCE_FRAME,
+    this.SEN_REFERENCE_FRAME,
     this.UMBRA,
     this.PENUMBRA,
     ORIG_NETWORK,

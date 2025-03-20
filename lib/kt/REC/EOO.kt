@@ -783,17 +783,11 @@ class EOO : Table() {
      * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
      * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
      */
-    val SEN_REFERENCE_FRAME : String?
+    val SEN_REFERENCE_FRAME : Byte
         get() {
             val o = __offset(164)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(164, 1)
-    fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 164, 1)
     /**
      * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
      */
@@ -903,11 +897,10 @@ class EOO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
-        fun createEOO(builder: FlatBufferBuilder, IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHOD: Byte, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITION: Byte, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, FOV_COUNT_UCTS: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODE: Byte, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPE: Byte, AZIMUTH_MEASURED: Boolean, ELEVATION_MEASURED: Boolean, RANGE_MEASURED: Boolean, RANGERATE_MEASURED: Boolean, RA_MEASURED: Boolean, DECLINATION_MEASURED: Boolean) : Int {
+        fun createEOO(builder: FlatBufferBuilder, IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHOD: Byte, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITION: Byte, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, FOV_COUNT_UCTS: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODE: Byte, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAME: Byte, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPE: Byte, AZIMUTH_MEASURED: Boolean, ELEVATION_MEASURED: Boolean, RANGE_MEASURED: Boolean, RANGERATE_MEASURED: Boolean, RA_MEASURED: Boolean, DECLINATION_MEASURED: Boolean) : Int {
             builder.startTable(92)
             addSOURCE_DL(builder, SOURCE_DLOffset)
             addORIG_NETWORK(builder, ORIG_NETWORKOffset)
-            addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset)
             addCREATED_BY(builder, CREATED_BYOffset)
             addCREATED_AT(builder, CREATED_ATOffset)
             addORIGIN(builder, ORIGINOffset)
@@ -992,6 +985,7 @@ class EOO : Table() {
             addTYPE(builder, TYPE)
             addPENUMBRA(builder, PENUMBRA)
             addUMBRA(builder, UMBRA)
+            addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
             addREFERENCE_FRAME(builder, REFERENCE_FRAME)
             addDATA_MODE(builder, DATA_MODE)
             addUCT(builder, UCT)
@@ -1080,7 +1074,7 @@ class EOO : Table() {
         fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(77, CREATED_AT, 0)
         fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(78, CREATED_BY, 0)
         fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(79, REFERENCE_FRAME, 0)
-        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(80, SEN_REFERENCE_FRAME, 0)
+        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Byte) = builder.addByte(80, SEN_REFERENCE_FRAME, 0)
         fun addUMBRA(builder: FlatBufferBuilder, UMBRA: Boolean) = builder.addBoolean(81, UMBRA, false)
         fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(82, PENUMBRA, false)
         fun addORIG_NETWORK(builder: FlatBufferBuilder, ORIG_NETWORK: Int) = builder.addOffset(83, ORIG_NETWORK, 0)

@@ -531,8 +531,8 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SEN_REFERENCE_FRAME);
+  refFrame SEN_REFERENCE_FRAME() const {
+    return static_cast<refFrame>(GetField<int8_t>(VT_SEN_REFERENCE_FRAME, 0));
   }
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   bool UMBRA() const {
@@ -677,8 +677,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_CREATED_BY) &&
            verifier.VerifyString(CREATED_BY()) &&
            VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
-           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
-           verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
+           VerifyField<int8_t>(verifier, VT_SEN_REFERENCE_FRAME, 1) &&
            VerifyField<uint8_t>(verifier, VT_UMBRA, 1) &&
            VerifyField<uint8_t>(verifier, VT_PENUMBRA, 1) &&
            VerifyOffset(verifier, VT_ORIG_NETWORK) &&
@@ -940,8 +939,8 @@ struct EOOBuilder {
   void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
     fbb_.AddElement<int8_t>(EOO::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
   }
-  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
-    fbb_.AddOffset(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
+  void add_SEN_REFERENCE_FRAME(refFrame SEN_REFERENCE_FRAME) {
+    fbb_.AddElement<int8_t>(EOO::VT_SEN_REFERENCE_FRAME, static_cast<int8_t>(SEN_REFERENCE_FRAME), 0);
   }
   void add_UMBRA(bool UMBRA) {
     fbb_.AddElement<uint8_t>(EOO::VT_UMBRA, static_cast<uint8_t>(UMBRA), 0);
@@ -1069,7 +1068,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
-    ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
+    refFrame SEN_REFERENCE_FRAME = refFrame_ECEF,
     bool UMBRA = false,
     bool PENUMBRA = false,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_NETWORK = 0,
@@ -1084,7 +1083,6 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   EOOBuilder builder_(_fbb);
   builder_.add_SOURCE_DL(SOURCE_DL);
   builder_.add_ORIG_NETWORK(ORIG_NETWORK);
-  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
   builder_.add_CREATED_BY(CREATED_BY);
   builder_.add_CREATED_AT(CREATED_AT);
   builder_.add_ORIGIN(ORIGIN);
@@ -1169,6 +1167,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_TYPE(TYPE);
   builder_.add_PENUMBRA(PENUMBRA);
   builder_.add_UMBRA(UMBRA);
+  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_DATA_MODE(DATA_MODE);
   builder_.add_UCT(UCT);
@@ -1259,7 +1258,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     const char *CREATED_AT = nullptr,
     const char *CREATED_BY = nullptr,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
-    const char *SEN_REFERENCE_FRAME = nullptr,
+    refFrame SEN_REFERENCE_FRAME = refFrame_ECEF,
     bool UMBRA = false,
     bool PENUMBRA = false,
     const char *ORIG_NETWORK = nullptr,
@@ -1287,7 +1286,6 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
   auto ORIGIN__ = ORIGIN ? _fbb.CreateString(ORIGIN) : 0;
   auto CREATED_AT__ = CREATED_AT ? _fbb.CreateString(CREATED_AT) : 0;
   auto CREATED_BY__ = CREATED_BY ? _fbb.CreateString(CREATED_BY) : 0;
-  auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
   auto ORIG_NETWORK__ = ORIG_NETWORK ? _fbb.CreateString(ORIG_NETWORK) : 0;
   auto SOURCE_DL__ = SOURCE_DL ? _fbb.CreateString(SOURCE_DL) : 0;
   return CreateEOO(
@@ -1372,7 +1370,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       CREATED_AT__,
       CREATED_BY__,
       REFERENCE_FRAME,
-      SEN_REFERENCE_FRAME__,
+      SEN_REFERENCE_FRAME,
       UMBRA,
       PENUMBRA,
       ORIG_NETWORK__,

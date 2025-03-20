@@ -809,10 +809,13 @@ class EOO extends Table
     /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
     /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
     /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
+    /**
+     * @return sbyte
+     */
     public function getSEN_REFERENCE_FRAME()
     {
         $o = $this->__offset(164);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
     /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
@@ -1834,12 +1837,12 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addSEN_REFERENCE_FRAME(FlatBufferBuilder $builder, $SEN_REFERENCE_FRAME)
     {
-        $builder->addOffsetX(80, $SEN_REFERENCE_FRAME, 0);
+        $builder->addSbyteX(80, $SEN_REFERENCE_FRAME, 0);
     }
 
     /**

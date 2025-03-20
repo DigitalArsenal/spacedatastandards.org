@@ -689,8 +689,8 @@ class EOO(object):
     def SEN_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
     # Boolean indicating that the target object was in umbral eclipse at the time of this observation.
     # EOO
@@ -1268,7 +1268,7 @@ def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 
 def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
-    builder.PrependUOffsetTRelativeSlot(80, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+    builder.PrependInt8Slot(80, SEN_REFERENCE_FRAME, 0)
 
 def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
     EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
@@ -1430,7 +1430,7 @@ class EOOT(object):
         self.CREATED_AT = None  # type: str
         self.CREATED_BY = None  # type: str
         self.REFERENCE_FRAME = 0  # type: int
-        self.SEN_REFERENCE_FRAME = None  # type: str
+        self.SEN_REFERENCE_FRAME = 0  # type: int
         self.UMBRA = False  # type: bool
         self.PENUMBRA = False  # type: bool
         self.ORIG_NETWORK = None  # type: str
@@ -1591,8 +1591,6 @@ class EOOT(object):
             CREATED_AT = builder.CreateString(self.CREATED_AT)
         if self.CREATED_BY is not None:
             CREATED_BY = builder.CreateString(self.CREATED_BY)
-        if self.SEN_REFERENCE_FRAME is not None:
-            SEN_REFERENCE_FRAME = builder.CreateString(self.SEN_REFERENCE_FRAME)
         if self.ORIG_NETWORK is not None:
             ORIG_NETWORK = builder.CreateString(self.ORIG_NETWORK)
         if self.SOURCE_DL is not None:
@@ -1694,8 +1692,7 @@ class EOOT(object):
         if self.CREATED_BY is not None:
             EOOAddCREATED_BY(builder, CREATED_BY)
         EOOAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)
-        if self.SEN_REFERENCE_FRAME is not None:
-            EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+        EOOAddSEN_REFERENCE_FRAME(builder, self.SEN_REFERENCE_FRAME)
         EOOAddUMBRA(builder, self.UMBRA)
         EOOAddPENUMBRA(builder, self.PENUMBRA)
         if self.ORIG_NETWORK is not None:

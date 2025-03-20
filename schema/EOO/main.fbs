@@ -1,5 +1,5 @@
-// Hash: 7838ba65bc8c72f405bcd3d4fcccf8ea5d859aa9dd82e932ebf7950e95d3eaac
-// Version: 1.0.4
+// Hash: 39cfd12809c44e9343c9c2d611a567a7ecf185a67dc12a00b7784d27a3c4b302
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../IDM/main.fbs";
@@ -279,7 +279,7 @@ table EOO {
   /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  SEN_REFERENCE_FRAME: string;
+  SEN_REFERENCE_FRAME: refFrame;
 
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   UMBRA: bool;

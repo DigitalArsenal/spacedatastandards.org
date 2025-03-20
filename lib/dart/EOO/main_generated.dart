@@ -295,7 +295,7 @@ class EOO {
   ///  The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   ///  unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   ///  Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 164);
+  RefFrame get SEN_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 164, 0));
   ///  Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   bool get UMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 166, false);
   ///  Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
@@ -663,8 +663,8 @@ class EOOBuilder {
     fbBuilder.addInt8(79, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
-  int addSenReferenceFrameOffset(int? offset) {
-    fbBuilder.addOffset(80, offset);
+  int addSenReferenceFrame(RefFrame? SEN_REFERENCE_FRAME) {
+    fbBuilder.addInt8(80, SEN_REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
   int addUmbra(bool? UMBRA) {
@@ -798,7 +798,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final String? _CREATED_AT;
   final String? _CREATED_BY;
   final RefFrame? _REFERENCE_FRAME;
-  final String? _SEN_REFERENCE_FRAME;
+  final RefFrame? _SEN_REFERENCE_FRAME;
   final bool? _UMBRA;
   final bool? _PENUMBRA;
   final String? _ORIG_NETWORK;
@@ -892,7 +892,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     String? CREATED_AT,
     String? CREATED_BY,
     RefFrame? REFERENCE_FRAME,
-    String? SEN_REFERENCE_FRAME,
+    RefFrame? SEN_REFERENCE_FRAME,
     bool? UMBRA,
     bool? PENUMBRA,
     String? ORIG_NETWORK,
@@ -1033,8 +1033,6 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CREATED_AT!);
     final int? CREATED_BYOffset = _CREATED_BY == null ? null
         : fbBuilder.writeString(_CREATED_BY!);
-    final int? SEN_REFERENCE_FRAMEOffset = _SEN_REFERENCE_FRAME == null ? null
-        : fbBuilder.writeString(_SEN_REFERENCE_FRAME!);
     final int? ORIG_NETWORKOffset = _ORIG_NETWORK == null ? null
         : fbBuilder.writeString(_ORIG_NETWORK!);
     final int? SOURCE_DLOffset = _SOURCE_DL == null ? null
@@ -1120,7 +1118,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(77, CREATED_ATOffset);
     fbBuilder.addOffset(78, CREATED_BYOffset);
     fbBuilder.addInt8(79, _REFERENCE_FRAME?.value);
-    fbBuilder.addOffset(80, SEN_REFERENCE_FRAMEOffset);
+    fbBuilder.addInt8(80, _SEN_REFERENCE_FRAME?.value);
     fbBuilder.addBool(81, _UMBRA);
     fbBuilder.addBool(82, _PENUMBRA);
     fbBuilder.addOffset(83, ORIG_NETWORKOffset);

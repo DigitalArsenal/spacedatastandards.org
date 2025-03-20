@@ -399,9 +399,7 @@ public final class EOO extends Table {
    * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
    * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
    */
-  public String SEN_REFERENCE_FRAME() { int o = __offset(164); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(164, 1); }
-  public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 164, 1); }
+  public byte SEN_REFERENCE_FRAME() { int o = __offset(164); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
    */
@@ -533,7 +531,7 @@ public final class EOO extends Table {
       int CREATED_ATOffset,
       int CREATED_BYOffset,
       byte REFERENCE_FRAME,
-      int SEN_REFERENCE_FRAMEOffset,
+      byte SEN_REFERENCE_FRAME,
       boolean UMBRA,
       boolean PENUMBRA,
       int ORIG_NETWORKOffset,
@@ -548,7 +546,6 @@ public final class EOO extends Table {
     builder.startTable(92);
     EOO.addSourceDl(builder, SOURCE_DLOffset);
     EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
-    EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
     EOO.addCreatedBy(builder, CREATED_BYOffset);
     EOO.addCreatedAt(builder, CREATED_ATOffset);
     EOO.addOrigin(builder, ORIGINOffset);
@@ -633,6 +630,7 @@ public final class EOO extends Table {
     EOO.addType(builder, TYPE);
     EOO.addPenumbra(builder, PENUMBRA);
     EOO.addUmbra(builder, UMBRA);
+    EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAME);
     EOO.addReferenceFrame(builder, REFERENCE_FRAME);
     EOO.addDataMode(builder, DATA_MODE);
     EOO.addUct(builder, UCT);
@@ -722,7 +720,7 @@ public final class EOO extends Table {
   public static void addCreatedAt(FlatBufferBuilder builder, int CREATED_ATOffset) { builder.addOffset(77, CREATED_ATOffset, 0); }
   public static void addCreatedBy(FlatBufferBuilder builder, int CREATED_BYOffset) { builder.addOffset(78, CREATED_BYOffset, 0); }
   public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(79, REFERENCE_FRAME, 0); }
-  public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(80, SEN_REFERENCE_FRAMEOffset, 0); }
+  public static void addSenReferenceFrame(FlatBufferBuilder builder, byte SEN_REFERENCE_FRAME) { builder.addByte(80, SEN_REFERENCE_FRAME, 0); }
   public static void addUmbra(FlatBufferBuilder builder, boolean UMBRA) { builder.addBoolean(81, UMBRA, false); }
   public static void addPenumbra(FlatBufferBuilder builder, boolean PENUMBRA) { builder.addBoolean(82, PENUMBRA, false); }
   public static void addOrigNetwork(FlatBufferBuilder builder, int ORIG_NETWORKOffset) { builder.addOffset(83, ORIG_NETWORKOffset, 0); }

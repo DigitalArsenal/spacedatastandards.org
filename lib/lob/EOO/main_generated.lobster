@@ -277,8 +277,8 @@ class EOO : flatbuffers.handle
     /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
     /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
     /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-    def SEN_REFERENCE_FRAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 164)
+    def SEN_REFERENCE_FRAME() -> refFrame:
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 164, 0))
     /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
     def UMBRA() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 166, 0))
@@ -561,8 +561,8 @@ struct EOOBuilder:
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
         b_.PrependInt8Slot(79, REFERENCE_FRAME, 0)
         return this
-    def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(80, SEN_REFERENCE_FRAME)
+    def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:refFrame):
+        b_.PrependInt8Slot(80, SEN_REFERENCE_FRAME, 0)
         return this
     def add_UMBRA(UMBRA:bool):
         b_.PrependBoolSlot(81, UMBRA, 0)
