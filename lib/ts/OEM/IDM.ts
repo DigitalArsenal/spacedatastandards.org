@@ -63,7 +63,7 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
  */
 DATA_MODE():DataMode {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : DataMode.REAL;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : DataMode.EXERCISE;
 }
 
 /**
@@ -298,7 +298,7 @@ static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
 }
 
 static addDataMode(builder:flatbuffers.Builder, DATA_MODE:DataMode) {
-  builder.addFieldInt8(2, DATA_MODE, DataMode.REAL);
+  builder.addFieldInt8(2, DATA_MODE, DataMode.EXERCISE);
 }
 
 static addUplink(builder:flatbuffers.Builder, UPLINKOffset:flatbuffers.Offset) {
@@ -503,7 +503,7 @@ export class IDMT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public NAME: string|Uint8Array|null = null,
-  public DATA_MODE: DataMode = DataMode.REAL,
+  public DATA_MODE: DataMode = DataMode.EXERCISE,
   public UPLINK: FrequencyRangeT|null = null,
   public DOWNLINK: FrequencyRangeT|null = null,
   public BEACON: FrequencyRangeT|null = null,

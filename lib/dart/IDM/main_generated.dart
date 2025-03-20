@@ -120,16 +120,25 @@ class DataMode {
       value == null ? null : DataMode.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const DataMode REAL = DataMode._(0);
-  static const DataMode SIMULATED = DataMode._(1);
-  static const DataMode SYNTHETIC = DataMode._(2);
+  ///  Data collected during an exercise scenario.
+  static const DataMode EXERCISE = DataMode._(0);
+
+  ///  Data collected from real-world observations.
+  static const DataMode REAL = DataMode._(1);
+
+  ///  Data generated through simulation.
+  static const DataMode SIMULATED = DataMode._(2);
+
+  ///  Data collected for testing purposes.
+  static const DataMode TEST = DataMode._(3);
   static const Map<int, DataMode> values = {
-    0: REAL,
-    1: SIMULATED,
-    2: SYNTHETIC};
+    0: EXERCISE,
+    1: REAL,
+    2: SIMULATED,
+    3: TEST};
 
   static const fb.Reader<DataMode> reader = _DataModeReader();
 

@@ -30,433 +30,441 @@ public final class EOO extends Table {
   public EOO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Unique identifier for Earth Observation Observation
+   * Unique identifier of the record.
    */
-  public String EOBSERVATION_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EOBSERVATION_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer EOBSERVATION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Classification marking of the data
+   * Classification marking of the data in IC/CAPCO Portion-marked format.
    */
   public String CLASSIFICATION() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
-   * Observation time in UTC
+   * Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
    */
   public String OB_TIME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Quality of the correlation
+   * Correlation score of the observation when compared to a known orbit state.
    */
   public float CORR_QUALITY() { int o = __offset(10); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Identifier for the satellite on orbit
+   * Server will auto-populate with SAT_NO if available.
    */
   public String ID_ON_ORBIT() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer ID_ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * Identifier for the sensor
+   * Unique ID of the sensor. Must have a corresponding sensor record on the server.
    */
   public String SENSOR_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
-   * Method of data collection
+   * Accepted Collection Method
    */
-  public String COLLECT_METHOD() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COLLECT_METHODAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer COLLECT_METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public byte COLLECT_METHOD() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * NORAD catalog identifier for the satellite
+   * 18SDS satellite number. Only list if correlated against the 18SDS catalog.
    */
   public int NORAD_CAT_ID() { int o = __offset(18); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
-   * Identifier for the task
+   * Identifier for the collectRequest message if the collection was in response to tasking.
    */
   public String TASK_ID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TASK_IDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
   public ByteBuffer TASK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
   /**
-   * Identifier for the transaction
+   * Optional identifier to track a transaction.
    */
   public String TRANSACTION_ID() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
-   * Identifier for the track
+   * Identifier of the track to which this observation belongs, if applicable.
    */
   public String TRACK_ID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
-   * Position of the observation
+   * The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
    */
-  public String OB_POSITION() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OB_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer OB_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  public byte OB_POSITION() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Original object identifier
+   * Provider maintained ID. May not be consistent with 18SDS SAT_NO.
    */
   public String ORIG_OBJECT_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
   public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
   /**
-   * Original sensor identifier
+   * Sensor ID.
    */
   public String ORIG_SENSOR_ID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
   public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
   /**
-   * Universal Coordinated Time flag
+   * Required if correlation is attempted. Indicates whether correlation succeeded.
    */
   public boolean UCT() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Azimuth angle
+   * Line of sight azimuth angle in degrees and topocentric frame.
    */
   public float AZIMUTH() { int o = __offset(34); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in azimuth angle
+   * One sigma uncertainty in the line of sight azimuth angle, in degrees.
    */
   public float AZIMUTH_UNC() { int o = __offset(36); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Bias in azimuth angle
+   * Sensor line of sight azimuth angle bias in degrees.
    */
   public float AZIMUTH_BIAS() { int o = __offset(38); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Rate of change in azimuth
+   * Rate of change of the line of sight azimuth in degrees per second.
    */
   public float AZIMUTH_RATE() { int o = __offset(40); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Elevation angle
+   * Line of sight elevation in degrees and topocentric frame.
    */
   public float ELEVATION() { int o = __offset(42); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in elevation angle
+   * One sigma uncertainty in the line of sight elevation angle, in degrees.
    */
   public float ELEVATION_UNC() { int o = __offset(44); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Bias in elevation angle
+   * Sensor line of sight elevation bias in degrees.
    */
   public float ELEVATION_BIAS() { int o = __offset(46); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Rate of change in elevation
+   * Rate of change of the line of sight elevation in degrees per second.
    */
   public float ELEVATION_RATE() { int o = __offset(48); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Range to the target
+   * Line of sight range in km. Reported value should include all applicable corrections.
    */
   public float RANGE() { int o = __offset(50); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in range
+   * One sigma uncertainty in the line of sight range, in km.
    */
   public float RANGE_UNC() { int o = __offset(52); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Bias in range measurement
+   * Sensor line of sight range bias in km.
    */
   public float RANGE_BIAS() { int o = __offset(54); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Rate of change in range
+   * Range rate in km/s. Reported value should include all applicable corrections.
    */
   public float RANGE_RATE() { int o = __offset(56); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in range rate
+   * One sigma uncertainty in the line of sight range rate, in km/sec.
    */
   public float RANGE_RATE_UNC() { int o = __offset(58); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Right ascension
+   * Right ascension in degrees. Required metric reporting field for EO observations.
    */
   public float RA() { int o = __offset(60); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Rate of change in right ascension
+   * Line of sight right ascension rate of change, in degrees/sec.
    */
   public float RA_RATE() { int o = __offset(62); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in right ascension
+   * One sigma uncertainty in the line of sight right ascension angle, in degrees.
    */
   public float RA_UNC() { int o = __offset(64); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Bias in right ascension
+   * Sensor line of sight right ascension bias in degrees.
    */
   public float RA_BIAS() { int o = __offset(66); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Declination angle
+   * Declination in degrees. Required metric reporting field for EO observations.
    */
   public float DECLINATION() { int o = __offset(68); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Rate of change in declination
+   * Line of sight declination rate of change, in degrees/sec.
    */
   public float DECLINATION_RATE() { int o = __offset(70); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in declination
+   * One sigma uncertainty in the line of sight declination angle, in degrees.
    */
   public float DECLINATION_UNC() { int o = __offset(72); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Bias in declination
+   * Sensor line of sight declination angle bias in degrees.
    */
   public float DECLINATION_BIAS() { int o = __offset(74); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * X-component of line-of-sight vector
+   * X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
    */
   public float LOSX() { int o = __offset(76); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Y-component of line-of-sight vector
+   * Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
    */
   public float LOSY() { int o = __offset(78); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Z-component of line-of-sight vector
+   * Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
    */
   public float LOSZ() { int o = __offset(80); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in line-of-sight vector
+   * One sigma uncertainty in the line-of-sight direction vector components.
    */
   public float LOS_UNC() { int o = __offset(82); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * X-component of line-of-sight velocity
+   * X-component of the velocity vector along the line of sight, in km/s.
    */
   public float LOSXVEL() { int o = __offset(84); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Y-component of line-of-sight velocity
+   * Y-component of the velocity vector along the line of sight, in km/s.
    */
   public float LOSYVEL() { int o = __offset(86); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Z-component of line-of-sight velocity
+   * Z-component of the velocity vector along the line of sight, in km/s.
    */
   public float LOSZVEL() { int o = __offset(88); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Latitude of sensor
+   * WGS-84 latitude in decimal degrees at the time of the observation.
    */
   public float SENLAT() { int o = __offset(90); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Longitude of sensor
+   * WGS-84 longitude in decimal degrees at the time of the observation.
    */
   public float SENLON() { int o = __offset(92); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Altitude of sensor
+   * Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
    */
   public float SENALT() { int o = __offset(94); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * X-coordinate of sensor position
+   * Cartesian X position in km at the time of the observation.
    */
   public float SENX() { int o = __offset(96); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Y-coordinate of sensor position
+   * Cartesian Y position in km at the time of the observation.
    */
   public float SENY() { int o = __offset(98); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Z-coordinate of sensor position
+   * Cartesian Z position in km at the time of the observation.
    */
   public float SENZ() { int o = __offset(100); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Number of fields of view
+   * Total number of satellites in the field of view.
    */
   public int FOV_COUNT() { int o = __offset(102); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
-   * Number of uncorrelated satellites in the field of view (JCO)
+   * Number of uncorrelated satellites in the field of view (JCO).
    */
   public int FOV_COUNT_UCTS() { int o = __offset(104); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
-   * Duration of the exposure
+   * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+   * the exposure duration should be the total integration time. This field is highly recommended / required if the 
+   * observations are going to be used for photometric processing.
    */
   public float EXP_DURATION() { int o = __offset(106); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Zero-point displacement
+   * Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
    */
   public float ZEROPTD() { int o = __offset(108); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Net object signal
+   * Net object signature = counts / EXP_DURATION.
    */
   public float NET_OBJ_SIG() { int o = __offset(110); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in net object signal
+   * Net object signature uncertainty = counts uncertainty / EXP_DURATION.
    */
   public float NET_OBJ_SIG_UNC() { int o = __offset(112); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Magnitude of the observation
+   * Measure of observed brightness calibrated against the Gaia G-band.
    */
   public float MAG() { int o = __offset(114); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in magnitude
+   * Uncertainty of the observed brightness.
    */
   public float MAG_UNC() { int o = __offset(116); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Normalized range for magnitude
+   * [Definition needed].
    */
   public float MAG_NORM_RANGE() { int o = __offset(118); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Geocentric latitude
+   * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+   * and corresponding viewing geometry. It must NOT be computed from the orbit state.
    */
   public float GEOLAT() { int o = __offset(120); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Geocentric longitude
+   * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+   * and viewing geometry. It must NOT be computed from the orbit state.
    */
   public float GEOLON() { int o = __offset(122); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Geocentric altitude
+   * Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
    */
   public float GEOALT() { int o = __offset(124); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Geocentric range
+   * Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
    */
   public float GEORANGE() { int o = __offset(126); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Sky background level
+   * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+   * empty part of the night sky.
    */
   public float SKY_BKGRND() { int o = __offset(128); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Primary extinction
+   * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+   * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+   * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+   * object and the observer.
    */
   public float PRIMARY_EXTINCTION() { int o = __offset(130); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Uncertainty in primary extinction
+   * Primary Extinction Coefficient Uncertainty, in Magnitudes.
    */
   public float PRIMARY_EXTINCTION_UNC() { int o = __offset(132); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Solar phase angle
+   * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+   * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
    */
   public float SOLAR_PHASE_ANGLE() { int o = __offset(134); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Solar equatorial phase angle
+   * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+   * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+   * and positive when opening (after the opposition).
    */
   public float SOLAR_EQ_PHASE_ANGLE() { int o = __offset(136); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Solar declination angle
+   * Angle from the sun to the equatorial plane.
    */
   public float SOLAR_DEC_ANGLE() { int o = __offset(138); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Shutter delay
+   * Shutter delay in seconds.
    */
   public float SHUTTER_DELAY() { int o = __offset(140); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Timing bias
+   * Sensor timing bias in seconds.
    */
   public float TIMING_BIAS() { int o = __offset(142); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * URI of the raw data file
+   * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
    */
   public String RAW_FILE_URI() { int o = __offset(144); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(144, 1); }
   public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 144, 1); }
   /**
-   * Intensity of the observation
+   * Intensity of the target for IR observations, in kw/sr/em.
    */
   public float INTENSITY() { int o = __offset(146); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Background intensity
+   * Background intensity for IR observations, in kw/sr/um.
    */
   public float BG_INTENSITY() { int o = __offset(148); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Descriptor of the provided data
+   * Optional source-provided and searchable metadata or descriptor of the data.
    */
   public String DESCRIPTOR() { int o = __offset(150); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(150, 1); }
   public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 150, 1); }
   /**
-   * Source of the data
+   * Source of the data.
    */
   public String SOURCE() { int o = __offset(152); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(152, 1); }
   public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 152, 1); }
   /**
-   * Origin of the data
+   * Originating system or organization which produced the data, if different from the source.
+   * The origin may be different than the source if the source was a mediating system which forwarded 
+   * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
    */
   public String ORIGIN() { int o = __offset(154); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIGINAsByteBuffer() { return __vector_as_bytebuffer(154, 1); }
   public ByteBuffer ORIGINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 154, 1); }
   /**
-   * Mode of the data
+   * Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
    */
-  public String DATA_MODE() { int o = __offset(156); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DATA_MODEAsByteBuffer() { return __vector_as_bytebuffer(156, 1); }
-  public ByteBuffer DATA_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 156, 1); }
+  public byte DATA_MODE() { int o = __offset(156); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Creation time of the record
+   * Time the row was created in the database, auto-populated by the system.
    */
   public String CREATED_AT() { int o = __offset(158); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CREATED_ATAsByteBuffer() { return __vector_as_bytebuffer(158, 1); }
   public ByteBuffer CREATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 158, 1); }
   /**
-   * User who created the record
+   * Application user who created the row in the database, auto-populated by the system.
    */
   public String CREATED_BY() { int o = __offset(160); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CREATED_BYAsByteBuffer() { return __vector_as_bytebuffer(160, 1); }
   public ByteBuffer CREATED_BYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 160, 1); }
   /**
-   * Reference frame of the observation
+   * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
    */
   public byte REFERENCE_FRAME() { int o = __offset(162); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Reference frame of the sensor
+   * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+   * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+   * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
    */
   public String SEN_REFERENCE_FRAME() { int o = __offset(164); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(164, 1); }
   public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 164, 1); }
   /**
-   * Flag for umbra (total eclipse)
+   * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
    */
   public boolean UMBRA() { int o = __offset(166); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Flag for penumbra (partial eclipse)
+   * Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+   * This field is highly recommended if the observations will be used for photometric processing.
    */
   public boolean PENUMBRA() { int o = __offset(168); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Original network identifier
+   * The originating source network on which this record was created, auto-populated by the system.
    */
   public String ORIG_NETWORK() { int o = __offset(170); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_NETWORKAsByteBuffer() { return __vector_as_bytebuffer(170, 1); }
   public ByteBuffer ORIG_NETWORKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 170, 1); }
   /**
-   * Data link source
+   * The source from which this record was received.
    */
   public String SOURCE_DL() { int o = __offset(172); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCE_DLAsByteBuffer() { return __vector_as_bytebuffer(172, 1); }
   public ByteBuffer SOURCE_DLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 172, 1); }
   /**
-   * Type of the observation
+   * Device Type
    */
-  public String TYPE() { int o = __offset(174); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TYPEAsByteBuffer() { return __vector_as_bytebuffer(174, 1); }
-  public ByteBuffer TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 174, 1); }
+  public byte TYPE() { int o = __offset(174); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * True if measured, false if computed. Required if azimuth is reported (JCO)
+   * True if measured, false if computed. Required if azimuth is reported.
    */
   public boolean AZIMUTH_MEASURED() { int o = __offset(176); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * True if measured, false if computed. Required if elevation is reported (JCO)
+   * True if measured, false if computed. Required if elevation is reported.
    */
   public boolean ELEVATION_MEASURED() { int o = __offset(178); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * True if measured, false if computed. Required if range is reported (JCO)
+   * True if measured, false if computed. Required if range is reported.
    */
   public boolean RANGE_MEASURED() { int o = __offset(180); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * True if measured, false if computed. Required if range-rate is reported (JCO)
+   * True if measured, false if computed. Required if range-rate is reported.
    */
   public boolean RANGERATE_MEASURED() { int o = __offset(182); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * True if measured, false if computed. Required if right ascension is reported (JCO)
+   * True if measured, false if computed. Required if right ascension is reported.
    */
   public boolean RA_MEASURED() { int o = __offset(184); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * True if measured, false if computed. Required if declination is reported (JCO)
+   * True if measured, false if computed. Required if declination is reported.
    */
   public boolean DECLINATION_MEASURED() { int o = __offset(186); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createEOO(FlatBufferBuilder builder,
-      int EOBSERVATION_IDOffset,
+      int IDOffset,
       int CLASSIFICATIONOffset,
       int OB_TIMEOffset,
       float CORR_QUALITY,
       int ID_ON_ORBITOffset,
       int SENSOR_IDOffset,
-      int COLLECT_METHODOffset,
+      byte COLLECT_METHOD,
       int NORAD_CAT_ID,
       int TASK_IDOffset,
       int TRANSACTION_IDOffset,
       int TRACK_IDOffset,
-      int OB_POSITIONOffset,
+      byte OB_POSITION,
       int ORIG_OBJECT_IDOffset,
       int ORIG_SENSOR_IDOffset,
       boolean UCT,
@@ -521,7 +529,7 @@ public final class EOO extends Table {
       int DESCRIPTOROffset,
       int SOURCEOffset,
       int ORIGINOffset,
-      int DATA_MODEOffset,
+      byte DATA_MODE,
       int CREATED_ATOffset,
       int CREATED_BYOffset,
       byte REFERENCE_FRAME,
@@ -530,7 +538,7 @@ public final class EOO extends Table {
       boolean PENUMBRA,
       int ORIG_NETWORKOffset,
       int SOURCE_DLOffset,
-      int TYPEOffset,
+      byte TYPE,
       boolean AZIMUTH_MEASURED,
       boolean ELEVATION_MEASURED,
       boolean RANGE_MEASURED,
@@ -538,13 +546,11 @@ public final class EOO extends Table {
       boolean RA_MEASURED,
       boolean DECLINATION_MEASURED) {
     builder.startTable(92);
-    EOO.addType(builder, TYPEOffset);
     EOO.addSourceDl(builder, SOURCE_DLOffset);
     EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
     EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
     EOO.addCreatedBy(builder, CREATED_BYOffset);
     EOO.addCreatedAt(builder, CREATED_ATOffset);
-    EOO.addDataMode(builder, DATA_MODEOffset);
     EOO.addOrigin(builder, ORIGINOffset);
     EOO.addSource(builder, SOURCEOffset);
     EOO.addDescriptor(builder, DESCRIPTOROffset);
@@ -608,44 +614,46 @@ public final class EOO extends Table {
     EOO.addAzimuth(builder, AZIMUTH);
     EOO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
     EOO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-    EOO.addObPosition(builder, OB_POSITIONOffset);
     EOO.addTrackId(builder, TRACK_IDOffset);
     EOO.addTransactionId(builder, TRANSACTION_IDOffset);
     EOO.addTaskId(builder, TASK_IDOffset);
     EOO.addNoradCatId(builder, NORAD_CAT_ID);
-    EOO.addCollectMethod(builder, COLLECT_METHODOffset);
     EOO.addSensorId(builder, SENSOR_IDOffset);
     EOO.addIdOnOrbit(builder, ID_ON_ORBITOffset);
     EOO.addCorrQuality(builder, CORR_QUALITY);
     EOO.addObTime(builder, OB_TIMEOffset);
     EOO.addClassification(builder, CLASSIFICATIONOffset);
-    EOO.addEobservationId(builder, EOBSERVATION_IDOffset);
+    EOO.addId(builder, IDOffset);
     EOO.addDeclinationMeasured(builder, DECLINATION_MEASURED);
     EOO.addRaMeasured(builder, RA_MEASURED);
     EOO.addRangerateMeasured(builder, RANGERATE_MEASURED);
     EOO.addRangeMeasured(builder, RANGE_MEASURED);
     EOO.addElevationMeasured(builder, ELEVATION_MEASURED);
     EOO.addAzimuthMeasured(builder, AZIMUTH_MEASURED);
+    EOO.addType(builder, TYPE);
     EOO.addPenumbra(builder, PENUMBRA);
     EOO.addUmbra(builder, UMBRA);
     EOO.addReferenceFrame(builder, REFERENCE_FRAME);
+    EOO.addDataMode(builder, DATA_MODE);
     EOO.addUct(builder, UCT);
+    EOO.addObPosition(builder, OB_POSITION);
+    EOO.addCollectMethod(builder, COLLECT_METHOD);
     return EOO.endEOO(builder);
   }
 
   public static void startEOO(FlatBufferBuilder builder) { builder.startTable(92); }
-  public static void addEobservationId(FlatBufferBuilder builder, int EOBSERVATION_IDOffset) { builder.addOffset(0, EOBSERVATION_IDOffset, 0); }
+  public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(1, CLASSIFICATIONOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(2, OB_TIMEOffset, 0); }
   public static void addCorrQuality(FlatBufferBuilder builder, float CORR_QUALITY) { builder.addFloat(3, CORR_QUALITY, 0.0f); }
   public static void addIdOnOrbit(FlatBufferBuilder builder, int ID_ON_ORBITOffset) { builder.addOffset(4, ID_ON_ORBITOffset, 0); }
   public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(5, SENSOR_IDOffset, 0); }
-  public static void addCollectMethod(FlatBufferBuilder builder, int COLLECT_METHODOffset) { builder.addOffset(6, COLLECT_METHODOffset, 0); }
+  public static void addCollectMethod(FlatBufferBuilder builder, byte COLLECT_METHOD) { builder.addByte(6, COLLECT_METHOD, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, int NORAD_CAT_ID) { builder.addInt(7, NORAD_CAT_ID, 0); }
   public static void addTaskId(FlatBufferBuilder builder, int TASK_IDOffset) { builder.addOffset(8, TASK_IDOffset, 0); }
   public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(9, TRANSACTION_IDOffset, 0); }
   public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(10, TRACK_IDOffset, 0); }
-  public static void addObPosition(FlatBufferBuilder builder, int OB_POSITIONOffset) { builder.addOffset(11, OB_POSITIONOffset, 0); }
+  public static void addObPosition(FlatBufferBuilder builder, byte OB_POSITION) { builder.addByte(11, OB_POSITION, 0); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(12, ORIG_OBJECT_IDOffset, 0); }
   public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(13, ORIG_SENSOR_IDOffset, 0); }
   public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(14, UCT, false); }
@@ -710,7 +718,7 @@ public final class EOO extends Table {
   public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(73, DESCRIPTOROffset, 0); }
   public static void addSource(FlatBufferBuilder builder, int SOURCEOffset) { builder.addOffset(74, SOURCEOffset, 0); }
   public static void addOrigin(FlatBufferBuilder builder, int ORIGINOffset) { builder.addOffset(75, ORIGINOffset, 0); }
-  public static void addDataMode(FlatBufferBuilder builder, int DATA_MODEOffset) { builder.addOffset(76, DATA_MODEOffset, 0); }
+  public static void addDataMode(FlatBufferBuilder builder, byte DATA_MODE) { builder.addByte(76, DATA_MODE, 0); }
   public static void addCreatedAt(FlatBufferBuilder builder, int CREATED_ATOffset) { builder.addOffset(77, CREATED_ATOffset, 0); }
   public static void addCreatedBy(FlatBufferBuilder builder, int CREATED_BYOffset) { builder.addOffset(78, CREATED_BYOffset, 0); }
   public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(79, REFERENCE_FRAME, 0); }
@@ -719,7 +727,7 @@ public final class EOO extends Table {
   public static void addPenumbra(FlatBufferBuilder builder, boolean PENUMBRA) { builder.addBoolean(82, PENUMBRA, false); }
   public static void addOrigNetwork(FlatBufferBuilder builder, int ORIG_NETWORKOffset) { builder.addOffset(83, ORIG_NETWORKOffset, 0); }
   public static void addSourceDl(FlatBufferBuilder builder, int SOURCE_DLOffset) { builder.addOffset(84, SOURCE_DLOffset, 0); }
-  public static void addType(FlatBufferBuilder builder, int TYPEOffset) { builder.addOffset(85, TYPEOffset, 0); }
+  public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(85, TYPE, 0); }
   public static void addAzimuthMeasured(FlatBufferBuilder builder, boolean AZIMUTH_MEASURED) { builder.addBoolean(86, AZIMUTH_MEASURED, false); }
   public static void addElevationMeasured(FlatBufferBuilder builder, boolean ELEVATION_MEASURED) { builder.addBoolean(87, ELEVATION_MEASURED, false); }
   public static void addRangeMeasured(FlatBufferBuilder builder, boolean RANGE_MEASURED) { builder.addBoolean(88, RANGE_MEASURED, false); }

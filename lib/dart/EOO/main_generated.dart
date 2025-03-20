@@ -7,6 +7,105 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
+///  Enumeration for data collection methods
+class CollectMethod {
+  final int value;
+  const CollectMethod._(this.value);
+
+  factory CollectMethod.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CollectMethod');
+    }
+    return result;
+  }
+
+  static CollectMethod? _createOrNull(int? value) => 
+      value == null ? null : CollectMethod.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CollectMethod SIDEREAL = CollectMethod._(0);
+  static const CollectMethod RATE_TRACK = CollectMethod._(1);
+  static const CollectMethod FIXED_STARE = CollectMethod._(2);
+  static const CollectMethod OTHER = CollectMethod._(3);
+  static const Map<int, CollectMethod> values = {
+    0: SIDEREAL,
+    1: RATE_TRACK,
+    2: FIXED_STARE,
+    3: OTHER};
+
+  static const fb.Reader<CollectMethod> reader = _CollectMethodReader();
+
+  @override
+  String toString() {
+    return 'CollectMethod{value: $value}';
+  }
+}
+
+class _CollectMethodReader extends fb.Reader<CollectMethod> {
+  const _CollectMethodReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CollectMethod read(fb.BufferContext bc, int offset) =>
+      CollectMethod.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class ObservationPosition {
+  final int value;
+  const ObservationPosition._(this.value);
+
+  factory ObservationPosition.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ObservationPosition');
+    }
+    return result;
+  }
+
+  static ObservationPosition? _createOrNull(int? value) => 
+      value == null ? null : ObservationPosition.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ObservationPosition FENCE = ObservationPosition._(0);
+  static const ObservationPosition FIRST = ObservationPosition._(1);
+  static const ObservationPosition IN = ObservationPosition._(2);
+  static const ObservationPosition LAST = ObservationPosition._(3);
+  static const ObservationPosition SINGLE = ObservationPosition._(4);
+  static const Map<int, ObservationPosition> values = {
+    0: FENCE,
+    1: FIRST,
+    2: IN,
+    3: LAST,
+    4: SINGLE};
+
+  static const fb.Reader<ObservationPosition> reader = _ObservationPositionReader();
+
+  @override
+  String toString() {
+    return 'ObservationPosition{value: $value}';
+  }
+}
+
+class _ObservationPositionReader extends fb.Reader<ObservationPosition> {
+  const _ObservationPositionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ObservationPosition read(fb.BufferContext bc, int offset) =>
+      ObservationPosition.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Electro-Optical Observation
 class EOO {
   EOO._(this._bc, this._bcOffset);
@@ -20,194 +119,210 @@ class EOO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique identifier for Earth Observation Observation
-  String? get EOBSERVATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Classification marking of the data
+  ///  Unique identifier of the record.
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Classification marking of the data in IC/CAPCO Portion-marked format.
   String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Observation time in UTC
+  ///  Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
   String? get OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Quality of the correlation
+  ///  Correlation score of the observation when compared to a known orbit state.
   double get CORR_QUALITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Identifier for the satellite on orbit
+  ///  Server will auto-populate with SAT_NO if available.
   String? get ID_ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Identifier for the sensor
+  ///  Unique ID of the sensor. Must have a corresponding sensor record on the server.
   String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Method of data collection
-  String? get COLLECT_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  ///  NORAD catalog identifier for the satellite
+  ///  Accepted Collection Method
+  CollectMethod get COLLECT_METHOD => CollectMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ///  18SDS satellite number. Only list if correlated against the 18SDS catalog.
   int get NORAD_CAT_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  ///  Identifier for the task
+  ///  Identifier for the collectRequest message if the collection was in response to tasking.
   String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  ///  Identifier for the transaction
+  ///  Optional identifier to track a transaction.
   String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  ///  Identifier for the track
+  ///  Identifier of the track to which this observation belongs, if applicable.
   String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  ///  Position of the observation
-  String? get OB_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  ///  Original object identifier
+  ///  The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+  ObservationPosition get OB_POSITION => ObservationPosition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  ///  Provider maintained ID. May not be consistent with 18SDS SAT_NO.
   String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  ///  Original sensor identifier
+  ///  Sensor ID.
   String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  ///  Universal Coordinated Time flag
+  ///  Required if correlation is attempted. Indicates whether correlation succeeded.
   bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
-  ///  Azimuth angle
+  ///  Line of sight azimuth angle in degrees and topocentric frame.
   double get AZIMUTH => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  ///  Uncertainty in azimuth angle
+  ///  One sigma uncertainty in the line of sight azimuth angle, in degrees.
   double get AZIMUTH_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  ///  Bias in azimuth angle
+  ///  Sensor line of sight azimuth angle bias in degrees.
   double get AZIMUTH_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  ///  Rate of change in azimuth
+  ///  Rate of change of the line of sight azimuth in degrees per second.
   double get AZIMUTH_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  ///  Elevation angle
+  ///  Line of sight elevation in degrees and topocentric frame.
   double get ELEVATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  ///  Uncertainty in elevation angle
+  ///  One sigma uncertainty in the line of sight elevation angle, in degrees.
   double get ELEVATION_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  ///  Bias in elevation angle
+  ///  Sensor line of sight elevation bias in degrees.
   double get ELEVATION_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  ///  Rate of change in elevation
+  ///  Rate of change of the line of sight elevation in degrees per second.
   double get ELEVATION_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  ///  Range to the target
+  ///  Line of sight range in km. Reported value should include all applicable corrections.
   double get RANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  ///  Uncertainty in range
+  ///  One sigma uncertainty in the line of sight range, in km.
   double get RANGE_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  ///  Bias in range measurement
+  ///  Sensor line of sight range bias in km.
   double get RANGE_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  ///  Rate of change in range
+  ///  Range rate in km/s. Reported value should include all applicable corrections.
   double get RANGE_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  ///  Uncertainty in range rate
+  ///  One sigma uncertainty in the line of sight range rate, in km/sec.
   double get RANGE_RATE_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  ///  Right ascension
+  ///  Right ascension in degrees. Required metric reporting field for EO observations.
   double get RA => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  ///  Rate of change in right ascension
+  ///  Line of sight right ascension rate of change, in degrees/sec.
   double get RA_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  ///  Uncertainty in right ascension
+  ///  One sigma uncertainty in the line of sight right ascension angle, in degrees.
   double get RA_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  ///  Bias in right ascension
+  ///  Sensor line of sight right ascension bias in degrees.
   double get RA_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  ///  Declination angle
+  ///  Declination in degrees. Required metric reporting field for EO observations.
   double get DECLINATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  ///  Rate of change in declination
+  ///  Line of sight declination rate of change, in degrees/sec.
   double get DECLINATION_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  ///  Uncertainty in declination
+  ///  One sigma uncertainty in the line of sight declination angle, in degrees.
   double get DECLINATION_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  ///  Bias in declination
+  ///  Sensor line of sight declination angle bias in degrees.
   double get DECLINATION_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  ///  X-component of line-of-sight vector
+  ///  X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   double get LOSX => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  ///  Y-component of line-of-sight vector
+  ///  Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   double get LOSY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  ///  Z-component of line-of-sight vector
+  ///  Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   double get LOSZ => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  ///  Uncertainty in line-of-sight vector
+  ///  One sigma uncertainty in the line-of-sight direction vector components.
   double get LOS_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  ///  X-component of line-of-sight velocity
+  ///  X-component of the velocity vector along the line of sight, in km/s.
   double get LOSXVEL => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  ///  Y-component of line-of-sight velocity
+  ///  Y-component of the velocity vector along the line of sight, in km/s.
   double get LOSYVEL => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  ///  Z-component of line-of-sight velocity
+  ///  Z-component of the velocity vector along the line of sight, in km/s.
   double get LOSZVEL => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  ///  Latitude of sensor
+  ///  WGS-84 latitude in decimal degrees at the time of the observation.
   double get SENLAT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
-  ///  Longitude of sensor
+  ///  WGS-84 longitude in decimal degrees at the time of the observation.
   double get SENLON => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  ///  Altitude of sensor
+  ///  Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
   double get SENALT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  ///  X-coordinate of sensor position
+  ///  Cartesian X position in km at the time of the observation.
   double get SENX => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  ///  Y-coordinate of sensor position
+  ///  Cartesian Y position in km at the time of the observation.
   double get SENY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  ///  Z-coordinate of sensor position
+  ///  Cartesian Z position in km at the time of the observation.
   double get SENZ => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
-  ///  Number of fields of view
+  ///  Total number of satellites in the field of view.
   int get FOV_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 102, 0);
-  ///  Number of uncorrelated satellites in the field of view (JCO)
+  ///  Number of uncorrelated satellites in the field of view (JCO).
   int get FOV_COUNT_UCTS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 104, 0);
-  ///  Duration of the exposure
+  ///  Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  ///  the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  ///  observations are going to be used for photometric processing.
   double get EXP_DURATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
-  ///  Zero-point displacement
+  ///  Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
   double get ZEROPTD => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
-  ///  Net object signal
+  ///  Net object signature = counts / EXP_DURATION.
   double get NET_OBJ_SIG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
-  ///  Uncertainty in net object signal
+  ///  Net object signature uncertainty = counts uncertainty / EXP_DURATION.
   double get NET_OBJ_SIG_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
-  ///  Magnitude of the observation
+  ///  Measure of observed brightness calibrated against the Gaia G-band.
   double get MAG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
-  ///  Uncertainty in magnitude
+  ///  Uncertainty of the observed brightness.
   double get MAG_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 116, 0.0);
-  ///  Normalized range for magnitude
+  ///  [Definition needed].
   double get MAG_NORM_RANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
-  ///  Geocentric latitude
+  ///  Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  ///  and corresponding viewing geometry. It must NOT be computed from the orbit state.
   double get GEOLAT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
-  ///  Geocentric longitude
+  ///  Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  ///  and viewing geometry. It must NOT be computed from the orbit state.
   double get GEOLON => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
-  ///  Geocentric altitude
+  ///  Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
   double get GEOALT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 124, 0.0);
-  ///  Geocentric range
+  ///  Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
   double get GEORANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 126, 0.0);
-  ///  Sky background level
+  ///  Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  ///  empty part of the night sky.
   double get SKY_BKGRND => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
-  ///  Primary extinction
+  ///  Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  ///  to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  ///  describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  ///  object and the observer.
   double get PRIMARY_EXTINCTION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
-  ///  Uncertainty in primary extinction
+  ///  Primary Extinction Coefficient Uncertainty, in Magnitudes.
   double get PRIMARY_EXTINCTION_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 132, 0.0);
-  ///  Solar phase angle
+  ///  The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  ///  calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   double get SOLAR_PHASE_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 134, 0.0);
-  ///  Solar equatorial phase angle
+  ///  The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  ///  onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  ///  and positive when opening (after the opposition).
   double get SOLAR_EQ_PHASE_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 136, 0.0);
-  ///  Solar declination angle
+  ///  Angle from the sun to the equatorial plane.
   double get SOLAR_DEC_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 138, 0.0);
-  ///  Shutter delay
+  ///  Shutter delay in seconds.
   double get SHUTTER_DELAY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
-  ///  Timing bias
+  ///  Sensor timing bias in seconds.
   double get TIMING_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
-  ///  URI of the raw data file
+  ///  Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
   String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 144);
-  ///  Intensity of the observation
+  ///  Intensity of the target for IR observations, in kw/sr/em.
   double get INTENSITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
-  ///  Background intensity
+  ///  Background intensity for IR observations, in kw/sr/um.
   double get BG_INTENSITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 148, 0.0);
-  ///  Descriptor of the provided data
+  ///  Optional source-provided and searchable metadata or descriptor of the data.
   String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 150);
-  ///  Source of the data
+  ///  Source of the data.
   String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 152);
-  ///  Origin of the data
+  ///  Originating system or organization which produced the data, if different from the source.
+  ///  The origin may be different than the source if the source was a mediating system which forwarded 
+  ///  the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   String? get ORIGIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 154);
-  ///  Mode of the data
-  String? get DATA_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 156);
-  ///  Creation time of the record
+  ///  Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+  DataMode get DATA_MODE => DataMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 156, 0));
+  ///  Time the row was created in the database, auto-populated by the system.
   String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
-  ///  User who created the record
+  ///  Application user who created the row in the database, auto-populated by the system.
   String? get CREATED_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 160);
-  ///  Reference frame of the observation
+  ///  EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 162, 0));
-  ///  Reference frame of the sensor
+  ///  The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  ///  unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  ///  Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 164);
-  ///  Flag for umbra (total eclipse)
+  ///  Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   bool get UMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 166, false);
-  ///  Flag for penumbra (partial eclipse)
+  ///  Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  ///  This field is highly recommended if the observations will be used for photometric processing.
   bool get PENUMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 168, false);
-  ///  Original network identifier
+  ///  The originating source network on which this record was created, auto-populated by the system.
   String? get ORIG_NETWORK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 170);
-  ///  Data link source
+  ///  The source from which this record was received.
   String? get SOURCE_DL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 172);
-  ///  Type of the observation
-  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 174);
-  ///  True if measured, false if computed. Required if azimuth is reported (JCO)
+  ///  Device Type
+  DeviceType get TYPE => DeviceType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 174, 0));
+  ///  True if measured, false if computed. Required if azimuth is reported.
   bool get AZIMUTH_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 176, false);
-  ///  True if measured, false if computed. Required if elevation is reported (JCO)
+  ///  True if measured, false if computed. Required if elevation is reported.
   bool get ELEVATION_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 178, false);
-  ///  True if measured, false if computed. Required if range is reported (JCO)
+  ///  True if measured, false if computed. Required if range is reported.
   bool get RANGE_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 180, false);
-  ///  True if measured, false if computed. Required if range-rate is reported (JCO)
+  ///  True if measured, false if computed. Required if range-rate is reported.
   bool get RANGERATE_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 182, false);
-  ///  True if measured, false if computed. Required if right ascension is reported (JCO)
+  ///  True if measured, false if computed. Required if right ascension is reported.
   bool get RA_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 184, false);
-  ///  True if measured, false if computed. Required if declination is reported (JCO)
+  ///  True if measured, false if computed. Required if declination is reported.
   bool get DECLINATION_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 186, false);
 
   @override
   String toString() {
-    return 'EOO{EOBSERVATION_ID: ${EOBSERVATION_ID}, CLASSIFICATION: ${CLASSIFICATION}, OB_TIME: ${OB_TIME}, CORR_QUALITY: ${CORR_QUALITY}, ID_ON_ORBIT: ${ID_ON_ORBIT}, SENSOR_ID: ${SENSOR_ID}, COLLECT_METHOD: ${COLLECT_METHOD}, NORAD_CAT_ID: ${NORAD_CAT_ID}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RA: ${RA}, RA_RATE: ${RA_RATE}, RA_UNC: ${RA_UNC}, RA_BIAS: ${RA_BIAS}, DECLINATION: ${DECLINATION}, DECLINATION_RATE: ${DECLINATION_RATE}, DECLINATION_UNC: ${DECLINATION_UNC}, DECLINATION_BIAS: ${DECLINATION_BIAS}, LOSX: ${LOSX}, LOSY: ${LOSY}, LOSZ: ${LOSZ}, LOS_UNC: ${LOS_UNC}, LOSXVEL: ${LOSXVEL}, LOSYVEL: ${LOSYVEL}, LOSZVEL: ${LOSZVEL}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, FOV_COUNT: ${FOV_COUNT}, FOV_COUNT_UCTS: ${FOV_COUNT_UCTS}, EXP_DURATION: ${EXP_DURATION}, ZEROPTD: ${ZEROPTD}, NET_OBJ_SIG: ${NET_OBJ_SIG}, NET_OBJ_SIG_UNC: ${NET_OBJ_SIG_UNC}, MAG: ${MAG}, MAG_UNC: ${MAG_UNC}, MAG_NORM_RANGE: ${MAG_NORM_RANGE}, GEOLAT: ${GEOLAT}, GEOLON: ${GEOLON}, GEOALT: ${GEOALT}, GEORANGE: ${GEORANGE}, SKY_BKGRND: ${SKY_BKGRND}, PRIMARY_EXTINCTION: ${PRIMARY_EXTINCTION}, PRIMARY_EXTINCTION_UNC: ${PRIMARY_EXTINCTION_UNC}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, SOLAR_EQ_PHASE_ANGLE: ${SOLAR_EQ_PHASE_ANGLE}, SOLAR_DEC_ANGLE: ${SOLAR_DEC_ANGLE}, SHUTTER_DELAY: ${SHUTTER_DELAY}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, INTENSITY: ${INTENSITY}, BG_INTENSITY: ${BG_INTENSITY}, DESCRIPTOR: ${DESCRIPTOR}, SOURCE: ${SOURCE}, ORIGIN: ${ORIGIN}, DATA_MODE: ${DATA_MODE}, CREATED_AT: ${CREATED_AT}, CREATED_BY: ${CREATED_BY}, REFERENCE_FRAME: ${REFERENCE_FRAME}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, UMBRA: ${UMBRA}, PENUMBRA: ${PENUMBRA}, ORIG_NETWORK: ${ORIG_NETWORK}, SOURCE_DL: ${SOURCE_DL}, TYPE: ${TYPE}, AZIMUTH_MEASURED: ${AZIMUTH_MEASURED}, ELEVATION_MEASURED: ${ELEVATION_MEASURED}, RANGE_MEASURED: ${RANGE_MEASURED}, RANGERATE_MEASURED: ${RANGERATE_MEASURED}, RA_MEASURED: ${RA_MEASURED}, DECLINATION_MEASURED: ${DECLINATION_MEASURED}}';
+    return 'EOO{ID: ${ID}, CLASSIFICATION: ${CLASSIFICATION}, OB_TIME: ${OB_TIME}, CORR_QUALITY: ${CORR_QUALITY}, ID_ON_ORBIT: ${ID_ON_ORBIT}, SENSOR_ID: ${SENSOR_ID}, COLLECT_METHOD: ${COLLECT_METHOD}, NORAD_CAT_ID: ${NORAD_CAT_ID}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RA: ${RA}, RA_RATE: ${RA_RATE}, RA_UNC: ${RA_UNC}, RA_BIAS: ${RA_BIAS}, DECLINATION: ${DECLINATION}, DECLINATION_RATE: ${DECLINATION_RATE}, DECLINATION_UNC: ${DECLINATION_UNC}, DECLINATION_BIAS: ${DECLINATION_BIAS}, LOSX: ${LOSX}, LOSY: ${LOSY}, LOSZ: ${LOSZ}, LOS_UNC: ${LOS_UNC}, LOSXVEL: ${LOSXVEL}, LOSYVEL: ${LOSYVEL}, LOSZVEL: ${LOSZVEL}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, FOV_COUNT: ${FOV_COUNT}, FOV_COUNT_UCTS: ${FOV_COUNT_UCTS}, EXP_DURATION: ${EXP_DURATION}, ZEROPTD: ${ZEROPTD}, NET_OBJ_SIG: ${NET_OBJ_SIG}, NET_OBJ_SIG_UNC: ${NET_OBJ_SIG_UNC}, MAG: ${MAG}, MAG_UNC: ${MAG_UNC}, MAG_NORM_RANGE: ${MAG_NORM_RANGE}, GEOLAT: ${GEOLAT}, GEOLON: ${GEOLON}, GEOALT: ${GEOALT}, GEORANGE: ${GEORANGE}, SKY_BKGRND: ${SKY_BKGRND}, PRIMARY_EXTINCTION: ${PRIMARY_EXTINCTION}, PRIMARY_EXTINCTION_UNC: ${PRIMARY_EXTINCTION_UNC}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, SOLAR_EQ_PHASE_ANGLE: ${SOLAR_EQ_PHASE_ANGLE}, SOLAR_DEC_ANGLE: ${SOLAR_DEC_ANGLE}, SHUTTER_DELAY: ${SHUTTER_DELAY}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, INTENSITY: ${INTENSITY}, BG_INTENSITY: ${BG_INTENSITY}, DESCRIPTOR: ${DESCRIPTOR}, SOURCE: ${SOURCE}, ORIGIN: ${ORIGIN}, DATA_MODE: ${DATA_MODE}, CREATED_AT: ${CREATED_AT}, CREATED_BY: ${CREATED_BY}, REFERENCE_FRAME: ${REFERENCE_FRAME}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, UMBRA: ${UMBRA}, PENUMBRA: ${PENUMBRA}, ORIG_NETWORK: ${ORIG_NETWORK}, SOURCE_DL: ${SOURCE_DL}, TYPE: ${TYPE}, AZIMUTH_MEASURED: ${AZIMUTH_MEASURED}, ELEVATION_MEASURED: ${ELEVATION_MEASURED}, RANGE_MEASURED: ${RANGE_MEASURED}, RANGERATE_MEASURED: ${RANGERATE_MEASURED}, RA_MEASURED: ${RA_MEASURED}, DECLINATION_MEASURED: ${DECLINATION_MEASURED}}';
   }
 }
 
@@ -228,7 +343,7 @@ class EOOBuilder {
     fbBuilder.startTable(92);
   }
 
-  int addEobservationIdOffset(int? offset) {
+  int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
@@ -252,8 +367,8 @@ class EOOBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addCollectMethodOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addCollectMethod(CollectMethod? COLLECT_METHOD) {
+    fbBuilder.addInt8(6, COLLECT_METHOD?.value);
     return fbBuilder.offset;
   }
   int addNoradCatId(int? NORAD_CAT_ID) {
@@ -272,8 +387,8 @@ class EOOBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addObPositionOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
+  int addObPosition(ObservationPosition? OB_POSITION) {
+    fbBuilder.addInt8(11, OB_POSITION?.value);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
@@ -532,8 +647,8 @@ class EOOBuilder {
     fbBuilder.addOffset(75, offset);
     return fbBuilder.offset;
   }
-  int addDataModeOffset(int? offset) {
-    fbBuilder.addOffset(76, offset);
+  int addDataMode(DataMode? DATA_MODE) {
+    fbBuilder.addInt8(76, DATA_MODE?.value);
     return fbBuilder.offset;
   }
   int addCreatedAtOffset(int? offset) {
@@ -568,8 +683,8 @@ class EOOBuilder {
     fbBuilder.addOffset(84, offset);
     return fbBuilder.offset;
   }
-  int addTypeOffset(int? offset) {
-    fbBuilder.addOffset(85, offset);
+  int addType(DeviceType? TYPE) {
+    fbBuilder.addInt8(85, TYPE?.value);
     return fbBuilder.offset;
   }
   int addAzimuthMeasured(bool? AZIMUTH_MEASURED) {
@@ -603,18 +718,18 @@ class EOOBuilder {
 }
 
 class EOOObjectBuilder extends fb.ObjectBuilder {
-  final String? _EOBSERVATION_ID;
+  final String? _ID;
   final String? _CLASSIFICATION;
   final String? _OB_TIME;
   final double? _CORR_QUALITY;
   final String? _ID_ON_ORBIT;
   final String? _SENSOR_ID;
-  final String? _COLLECT_METHOD;
+  final CollectMethod? _COLLECT_METHOD;
   final int? _NORAD_CAT_ID;
   final String? _TASK_ID;
   final String? _TRANSACTION_ID;
   final String? _TRACK_ID;
-  final String? _OB_POSITION;
+  final ObservationPosition? _OB_POSITION;
   final String? _ORIG_OBJECT_ID;
   final String? _ORIG_SENSOR_ID;
   final bool? _UCT;
@@ -679,7 +794,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final String? _DESCRIPTOR;
   final String? _SOURCE;
   final String? _ORIGIN;
-  final String? _DATA_MODE;
+  final DataMode? _DATA_MODE;
   final String? _CREATED_AT;
   final String? _CREATED_BY;
   final RefFrame? _REFERENCE_FRAME;
@@ -688,7 +803,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final bool? _PENUMBRA;
   final String? _ORIG_NETWORK;
   final String? _SOURCE_DL;
-  final String? _TYPE;
+  final DeviceType? _TYPE;
   final bool? _AZIMUTH_MEASURED;
   final bool? _ELEVATION_MEASURED;
   final bool? _RANGE_MEASURED;
@@ -697,18 +812,18 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final bool? _DECLINATION_MEASURED;
 
   EOOObjectBuilder({
-    String? EOBSERVATION_ID,
+    String? ID,
     String? CLASSIFICATION,
     String? OB_TIME,
     double? CORR_QUALITY,
     String? ID_ON_ORBIT,
     String? SENSOR_ID,
-    String? COLLECT_METHOD,
+    CollectMethod? COLLECT_METHOD,
     int? NORAD_CAT_ID,
     String? TASK_ID,
     String? TRANSACTION_ID,
     String? TRACK_ID,
-    String? OB_POSITION,
+    ObservationPosition? OB_POSITION,
     String? ORIG_OBJECT_ID,
     String? ORIG_SENSOR_ID,
     bool? UCT,
@@ -773,7 +888,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     String? DESCRIPTOR,
     String? SOURCE,
     String? ORIGIN,
-    String? DATA_MODE,
+    DataMode? DATA_MODE,
     String? CREATED_AT,
     String? CREATED_BY,
     RefFrame? REFERENCE_FRAME,
@@ -782,7 +897,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     bool? PENUMBRA,
     String? ORIG_NETWORK,
     String? SOURCE_DL,
-    String? TYPE,
+    DeviceType? TYPE,
     bool? AZIMUTH_MEASURED,
     bool? ELEVATION_MEASURED,
     bool? RANGE_MEASURED,
@@ -790,7 +905,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     bool? RA_MEASURED,
     bool? DECLINATION_MEASURED,
   })
-      : _EOBSERVATION_ID = EOBSERVATION_ID,
+      : _ID = ID,
         _CLASSIFICATION = CLASSIFICATION,
         _OB_TIME = OB_TIME,
         _CORR_QUALITY = CORR_QUALITY,
@@ -886,8 +1001,8 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? EOBSERVATION_IDOffset = _EOBSERVATION_ID == null ? null
-        : fbBuilder.writeString(_EOBSERVATION_ID!);
+    final int? IDOffset = _ID == null ? null
+        : fbBuilder.writeString(_ID!);
     final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
         : fbBuilder.writeString(_CLASSIFICATION!);
     final int? OB_TIMEOffset = _OB_TIME == null ? null
@@ -896,16 +1011,12 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID_ON_ORBIT!);
     final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
         : fbBuilder.writeString(_SENSOR_ID!);
-    final int? COLLECT_METHODOffset = _COLLECT_METHOD == null ? null
-        : fbBuilder.writeString(_COLLECT_METHOD!);
     final int? TASK_IDOffset = _TASK_ID == null ? null
         : fbBuilder.writeString(_TASK_ID!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
         : fbBuilder.writeString(_TRANSACTION_ID!);
     final int? TRACK_IDOffset = _TRACK_ID == null ? null
         : fbBuilder.writeString(_TRACK_ID!);
-    final int? OB_POSITIONOffset = _OB_POSITION == null ? null
-        : fbBuilder.writeString(_OB_POSITION!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
         : fbBuilder.writeString(_ORIG_OBJECT_ID!);
     final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
@@ -918,8 +1029,6 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOURCE!);
     final int? ORIGINOffset = _ORIGIN == null ? null
         : fbBuilder.writeString(_ORIGIN!);
-    final int? DATA_MODEOffset = _DATA_MODE == null ? null
-        : fbBuilder.writeString(_DATA_MODE!);
     final int? CREATED_ATOffset = _CREATED_AT == null ? null
         : fbBuilder.writeString(_CREATED_AT!);
     final int? CREATED_BYOffset = _CREATED_BY == null ? null
@@ -930,21 +1039,19 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORIG_NETWORK!);
     final int? SOURCE_DLOffset = _SOURCE_DL == null ? null
         : fbBuilder.writeString(_SOURCE_DL!);
-    final int? TYPEOffset = _TYPE == null ? null
-        : fbBuilder.writeString(_TYPE!);
     fbBuilder.startTable(92);
-    fbBuilder.addOffset(0, EOBSERVATION_IDOffset);
+    fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, CLASSIFICATIONOffset);
     fbBuilder.addOffset(2, OB_TIMEOffset);
     fbBuilder.addFloat32(3, _CORR_QUALITY);
     fbBuilder.addOffset(4, ID_ON_ORBITOffset);
     fbBuilder.addOffset(5, SENSOR_IDOffset);
-    fbBuilder.addOffset(6, COLLECT_METHODOffset);
+    fbBuilder.addInt8(6, _COLLECT_METHOD?.value);
     fbBuilder.addInt32(7, _NORAD_CAT_ID);
     fbBuilder.addOffset(8, TASK_IDOffset);
     fbBuilder.addOffset(9, TRANSACTION_IDOffset);
     fbBuilder.addOffset(10, TRACK_IDOffset);
-    fbBuilder.addOffset(11, OB_POSITIONOffset);
+    fbBuilder.addInt8(11, _OB_POSITION?.value);
     fbBuilder.addOffset(12, ORIG_OBJECT_IDOffset);
     fbBuilder.addOffset(13, ORIG_SENSOR_IDOffset);
     fbBuilder.addBool(14, _UCT);
@@ -1009,7 +1116,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(73, DESCRIPTOROffset);
     fbBuilder.addOffset(74, SOURCEOffset);
     fbBuilder.addOffset(75, ORIGINOffset);
-    fbBuilder.addOffset(76, DATA_MODEOffset);
+    fbBuilder.addInt8(76, _DATA_MODE?.value);
     fbBuilder.addOffset(77, CREATED_ATOffset);
     fbBuilder.addOffset(78, CREATED_BYOffset);
     fbBuilder.addInt8(79, _REFERENCE_FRAME?.value);
@@ -1018,7 +1125,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(82, _PENUMBRA);
     fbBuilder.addOffset(83, ORIG_NETWORKOffset);
     fbBuilder.addOffset(84, SOURCE_DLOffset);
-    fbBuilder.addOffset(85, TYPEOffset);
+    fbBuilder.addInt8(85, _TYPE?.value);
     fbBuilder.addBool(86, _AZIMUTH_MEASURED);
     fbBuilder.addBool(87, _ELEVATION_MEASURED);
     fbBuilder.addBool(88, _RANGE_MEASURED);

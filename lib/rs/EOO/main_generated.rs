@@ -4,12 +4,204 @@
 // @generated
 
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_COLLECT_METHOD: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_COLLECT_METHOD: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_COLLECT_METHOD: [CollectMethod; 4] = [
+  CollectMethod::SIDEREAL,
+  CollectMethod::RATE_TRACK,
+  CollectMethod::FIXED_STARE,
+  CollectMethod::OTHER,
+];
+
+/// Enumeration for data collection methods
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CollectMethod(pub i8);
+#[allow(non_upper_case_globals)]
+impl CollectMethod {
+  pub const SIDEREAL: Self = Self(0);
+  pub const RATE_TRACK: Self = Self(1);
+  pub const FIXED_STARE: Self = Self(2);
+  pub const OTHER: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SIDEREAL,
+    Self::RATE_TRACK,
+    Self::FIXED_STARE,
+    Self::OTHER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SIDEREAL => Some("SIDEREAL"),
+      Self::RATE_TRACK => Some("RATE_TRACK"),
+      Self::FIXED_STARE => Some("FIXED_STARE"),
+      Self::OTHER => Some("OTHER"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CollectMethod {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CollectMethod {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CollectMethod {
+    type Output = CollectMethod;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CollectMethod {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CollectMethod {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CollectMethod {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OBSERVATION_POSITION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OBSERVATION_POSITION: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OBSERVATION_POSITION: [ObservationPosition; 5] = [
+  ObservationPosition::FENCE,
+  ObservationPosition::FIRST,
+  ObservationPosition::IN,
+  ObservationPosition::LAST,
+  ObservationPosition::SINGLE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ObservationPosition(pub i8);
+#[allow(non_upper_case_globals)]
+impl ObservationPosition {
+  pub const FENCE: Self = Self(0);
+  pub const FIRST: Self = Self(1);
+  pub const IN: Self = Self(2);
+  pub const LAST: Self = Self(3);
+  pub const SINGLE: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::FENCE,
+    Self::FIRST,
+    Self::IN,
+    Self::LAST,
+    Self::SINGLE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::FENCE => Some("FENCE"),
+      Self::FIRST => Some("FIRST"),
+      Self::IN => Some("IN"),
+      Self::LAST => Some("LAST"),
+      Self::SINGLE => Some("SINGLE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for ObservationPosition {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for ObservationPosition {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for ObservationPosition {
+    type Output = ObservationPosition;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for ObservationPosition {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for ObservationPosition {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for ObservationPosition {}
 pub enum EOOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,7 +219,7 @@ impl<'a> flatbuffers::Follow<'a> for EOO<'a> {
 }
 
 impl<'a> EOO<'a> {
-  pub const VT_EOBSERVATION_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_CLASSIFICATION: flatbuffers::VOffsetT = 6;
   pub const VT_OB_TIME: flatbuffers::VOffsetT = 8;
   pub const VT_CORR_QUALITY: flatbuffers::VOffsetT = 10;
@@ -130,13 +322,11 @@ impl<'a> EOO<'a> {
     args: &'args EOOArgs<'args>
   ) -> flatbuffers::WIPOffset<EOO<'bldr>> {
     let mut builder = EOOBuilder::new(_fbb);
-    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
     if let Some(x) = args.SOURCE_DL { builder.add_SOURCE_DL(x); }
     if let Some(x) = args.ORIG_NETWORK { builder.add_ORIG_NETWORK(x); }
     if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
     if let Some(x) = args.CREATED_BY { builder.add_CREATED_BY(x); }
     if let Some(x) = args.CREATED_AT { builder.add_CREATED_AT(x); }
-    if let Some(x) = args.DATA_MODE { builder.add_DATA_MODE(x); }
     if let Some(x) = args.ORIGIN { builder.add_ORIGIN(x); }
     if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
     if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
@@ -200,33 +390,35 @@ impl<'a> EOO<'a> {
     builder.add_AZIMUTH(args.AZIMUTH);
     if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
-    if let Some(x) = args.OB_POSITION { builder.add_OB_POSITION(x); }
     if let Some(x) = args.TRACK_ID { builder.add_TRACK_ID(x); }
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
     if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
-    if let Some(x) = args.COLLECT_METHOD { builder.add_COLLECT_METHOD(x); }
     if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
     if let Some(x) = args.ID_ON_ORBIT { builder.add_ID_ON_ORBIT(x); }
     builder.add_CORR_QUALITY(args.CORR_QUALITY);
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
     if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
-    if let Some(x) = args.EOBSERVATION_ID { builder.add_EOBSERVATION_ID(x); }
+    if let Some(x) = args.ID { builder.add_ID(x); }
     builder.add_DECLINATION_MEASURED(args.DECLINATION_MEASURED);
     builder.add_RA_MEASURED(args.RA_MEASURED);
     builder.add_RANGERATE_MEASURED(args.RANGERATE_MEASURED);
     builder.add_RANGE_MEASURED(args.RANGE_MEASURED);
     builder.add_ELEVATION_MEASURED(args.ELEVATION_MEASURED);
     builder.add_AZIMUTH_MEASURED(args.AZIMUTH_MEASURED);
+    builder.add_TYPE(args.TYPE);
     builder.add_PENUMBRA(args.PENUMBRA);
     builder.add_UMBRA(args.UMBRA);
     builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
+    builder.add_DATA_MODE(args.DATA_MODE);
     builder.add_UCT(args.UCT);
+    builder.add_OB_POSITION(args.OB_POSITION);
+    builder.add_COLLECT_METHOD(args.COLLECT_METHOD);
     builder.finish()
   }
 
   pub fn unpack(&self) -> EOOT {
-    let EOBSERVATION_ID = self.EOBSERVATION_ID().map(|x| {
+    let ID = self.ID().map(|x| {
       x.to_string()
     });
     let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
@@ -242,9 +434,7 @@ impl<'a> EOO<'a> {
     let SENSOR_ID = self.SENSOR_ID().map(|x| {
       x.to_string()
     });
-    let COLLECT_METHOD = self.COLLECT_METHOD().map(|x| {
-      x.to_string()
-    });
+    let COLLECT_METHOD = self.COLLECT_METHOD();
     let NORAD_CAT_ID = self.NORAD_CAT_ID();
     let TASK_ID = self.TASK_ID().map(|x| {
       x.to_string()
@@ -255,9 +445,7 @@ impl<'a> EOO<'a> {
     let TRACK_ID = self.TRACK_ID().map(|x| {
       x.to_string()
     });
-    let OB_POSITION = self.OB_POSITION().map(|x| {
-      x.to_string()
-    });
+    let OB_POSITION = self.OB_POSITION();
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
@@ -334,9 +522,7 @@ impl<'a> EOO<'a> {
     let ORIGIN = self.ORIGIN().map(|x| {
       x.to_string()
     });
-    let DATA_MODE = self.DATA_MODE().map(|x| {
-      x.to_string()
-    });
+    let DATA_MODE = self.DATA_MODE();
     let CREATED_AT = self.CREATED_AT().map(|x| {
       x.to_string()
     });
@@ -355,9 +541,7 @@ impl<'a> EOO<'a> {
     let SOURCE_DL = self.SOURCE_DL().map(|x| {
       x.to_string()
     });
-    let TYPE = self.TYPE().map(|x| {
-      x.to_string()
-    });
+    let TYPE = self.TYPE();
     let AZIMUTH_MEASURED = self.AZIMUTH_MEASURED();
     let ELEVATION_MEASURED = self.ELEVATION_MEASURED();
     let RANGE_MEASURED = self.RANGE_MEASURED();
@@ -365,7 +549,7 @@ impl<'a> EOO<'a> {
     let RA_MEASURED = self.RA_MEASURED();
     let DECLINATION_MEASURED = self.DECLINATION_MEASURED();
     EOOT {
-      EOBSERVATION_ID,
+      ID,
       CLASSIFICATION,
       OB_TIME,
       CORR_QUALITY,
@@ -460,15 +644,15 @@ impl<'a> EOO<'a> {
     }
   }
 
-  /// Unique identifier for Earth Observation Observation
+  /// Unique identifier of the record.
   #[inline]
-  pub fn EOBSERVATION_ID(&self) -> Option<&'a str> {
+  pub fn ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_EOBSERVATION_ID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ID, None)}
   }
-  /// Classification marking of the data
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
   #[inline]
   pub fn CLASSIFICATION(&self) -> Option<&'a str> {
     // Safety:
@@ -476,7 +660,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_CLASSIFICATION, None)}
   }
-  /// Observation time in UTC
+  /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
   #[inline]
   pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -484,7 +668,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_OB_TIME, None)}
   }
-  /// Quality of the correlation
+  /// Correlation score of the observation when compared to a known orbit state.
   #[inline]
   pub fn CORR_QUALITY(&self) -> f32 {
     // Safety:
@@ -492,7 +676,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_CORR_QUALITY, Some(0.0)).unwrap()}
   }
-  /// Identifier for the satellite on orbit
+  /// Server will auto-populate with SAT_NO if available.
   #[inline]
   pub fn ID_ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -500,7 +684,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ID_ON_ORBIT, None)}
   }
-  /// Identifier for the sensor
+  /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
   #[inline]
   pub fn SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -508,15 +692,15 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SENSOR_ID, None)}
   }
-  /// Method of data collection
+  /// Accepted Collection Method
   #[inline]
-  pub fn COLLECT_METHOD(&self) -> Option<&'a str> {
+  pub fn COLLECT_METHOD(&self) -> CollectMethod {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_COLLECT_METHOD, None)}
+    unsafe { self._tab.get::<CollectMethod>(EOO::VT_COLLECT_METHOD, Some(CollectMethod::SIDEREAL)).unwrap()}
   }
-  /// NORAD catalog identifier for the satellite
+  /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
   #[inline]
   pub fn NORAD_CAT_ID(&self) -> i32 {
     // Safety:
@@ -524,7 +708,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(EOO::VT_NORAD_CAT_ID, Some(0)).unwrap()}
   }
-  /// Identifier for the task
+  /// Identifier for the collectRequest message if the collection was in response to tasking.
   #[inline]
   pub fn TASK_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -532,7 +716,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TASK_ID, None)}
   }
-  /// Identifier for the transaction
+  /// Optional identifier to track a transaction.
   #[inline]
   pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -540,7 +724,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TRANSACTION_ID, None)}
   }
-  /// Identifier for the track
+  /// Identifier of the track to which this observation belongs, if applicable.
   #[inline]
   pub fn TRACK_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -548,15 +732,15 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TRACK_ID, None)}
   }
-  /// Position of the observation
+  /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
   #[inline]
-  pub fn OB_POSITION(&self) -> Option<&'a str> {
+  pub fn OB_POSITION(&self) -> ObservationPosition {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_OB_POSITION, None)}
+    unsafe { self._tab.get::<ObservationPosition>(EOO::VT_OB_POSITION, Some(ObservationPosition::FENCE)).unwrap()}
   }
-  /// Original object identifier
+  /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -564,7 +748,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIG_OBJECT_ID, None)}
   }
-  /// Original sensor identifier
+  /// Sensor ID.
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -572,7 +756,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIG_SENSOR_ID, None)}
   }
-  /// Universal Coordinated Time flag
+  /// Required if correlation is attempted. Indicates whether correlation succeeded.
   #[inline]
   pub fn UCT(&self) -> bool {
     // Safety:
@@ -580,7 +764,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_UCT, Some(false)).unwrap()}
   }
-  /// Azimuth angle
+  /// Line of sight azimuth angle in degrees and topocentric frame.
   #[inline]
   pub fn AZIMUTH(&self) -> f32 {
     // Safety:
@@ -588,7 +772,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in azimuth angle
+  /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
   #[inline]
   pub fn AZIMUTH_UNC(&self) -> f32 {
     // Safety:
@@ -596,7 +780,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH_UNC, Some(0.0)).unwrap()}
   }
-  /// Bias in azimuth angle
+  /// Sensor line of sight azimuth angle bias in degrees.
   #[inline]
   pub fn AZIMUTH_BIAS(&self) -> f32 {
     // Safety:
@@ -604,7 +788,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH_BIAS, Some(0.0)).unwrap()}
   }
-  /// Rate of change in azimuth
+  /// Rate of change of the line of sight azimuth in degrees per second.
   #[inline]
   pub fn AZIMUTH_RATE(&self) -> f32 {
     // Safety:
@@ -612,7 +796,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH_RATE, Some(0.0)).unwrap()}
   }
-  /// Elevation angle
+  /// Line of sight elevation in degrees and topocentric frame.
   #[inline]
   pub fn ELEVATION(&self) -> f32 {
     // Safety:
@@ -620,7 +804,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in elevation angle
+  /// One sigma uncertainty in the line of sight elevation angle, in degrees.
   #[inline]
   pub fn ELEVATION_UNC(&self) -> f32 {
     // Safety:
@@ -628,7 +812,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION_UNC, Some(0.0)).unwrap()}
   }
-  /// Bias in elevation angle
+  /// Sensor line of sight elevation bias in degrees.
   #[inline]
   pub fn ELEVATION_BIAS(&self) -> f32 {
     // Safety:
@@ -636,7 +820,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION_BIAS, Some(0.0)).unwrap()}
   }
-  /// Rate of change in elevation
+  /// Rate of change of the line of sight elevation in degrees per second.
   #[inline]
   pub fn ELEVATION_RATE(&self) -> f32 {
     // Safety:
@@ -644,7 +828,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION_RATE, Some(0.0)).unwrap()}
   }
-  /// Range to the target
+  /// Line of sight range in km. Reported value should include all applicable corrections.
   #[inline]
   pub fn RANGE(&self) -> f32 {
     // Safety:
@@ -652,7 +836,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RANGE, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in range
+  /// One sigma uncertainty in the line of sight range, in km.
   #[inline]
   pub fn RANGE_UNC(&self) -> f32 {
     // Safety:
@@ -660,7 +844,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RANGE_UNC, Some(0.0)).unwrap()}
   }
-  /// Bias in range measurement
+  /// Sensor line of sight range bias in km.
   #[inline]
   pub fn RANGE_BIAS(&self) -> f32 {
     // Safety:
@@ -668,7 +852,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RANGE_BIAS, Some(0.0)).unwrap()}
   }
-  /// Rate of change in range
+  /// Range rate in km/s. Reported value should include all applicable corrections.
   #[inline]
   pub fn RANGE_RATE(&self) -> f32 {
     // Safety:
@@ -676,7 +860,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RANGE_RATE, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in range rate
+  /// One sigma uncertainty in the line of sight range rate, in km/sec.
   #[inline]
   pub fn RANGE_RATE_UNC(&self) -> f32 {
     // Safety:
@@ -684,7 +868,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RANGE_RATE_UNC, Some(0.0)).unwrap()}
   }
-  /// Right ascension
+  /// Right ascension in degrees. Required metric reporting field for EO observations.
   #[inline]
   pub fn RA(&self) -> f32 {
     // Safety:
@@ -692,7 +876,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RA, Some(0.0)).unwrap()}
   }
-  /// Rate of change in right ascension
+  /// Line of sight right ascension rate of change, in degrees/sec.
   #[inline]
   pub fn RA_RATE(&self) -> f32 {
     // Safety:
@@ -700,7 +884,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RA_RATE, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in right ascension
+  /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
   #[inline]
   pub fn RA_UNC(&self) -> f32 {
     // Safety:
@@ -708,7 +892,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RA_UNC, Some(0.0)).unwrap()}
   }
-  /// Bias in right ascension
+  /// Sensor line of sight right ascension bias in degrees.
   #[inline]
   pub fn RA_BIAS(&self) -> f32 {
     // Safety:
@@ -716,7 +900,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_RA_BIAS, Some(0.0)).unwrap()}
   }
-  /// Declination angle
+  /// Declination in degrees. Required metric reporting field for EO observations.
   #[inline]
   pub fn DECLINATION(&self) -> f32 {
     // Safety:
@@ -724,7 +908,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION, Some(0.0)).unwrap()}
   }
-  /// Rate of change in declination
+  /// Line of sight declination rate of change, in degrees/sec.
   #[inline]
   pub fn DECLINATION_RATE(&self) -> f32 {
     // Safety:
@@ -732,7 +916,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION_RATE, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in declination
+  /// One sigma uncertainty in the line of sight declination angle, in degrees.
   #[inline]
   pub fn DECLINATION_UNC(&self) -> f32 {
     // Safety:
@@ -740,7 +924,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION_UNC, Some(0.0)).unwrap()}
   }
-  /// Bias in declination
+  /// Sensor line of sight declination angle bias in degrees.
   #[inline]
   pub fn DECLINATION_BIAS(&self) -> f32 {
     // Safety:
@@ -748,7 +932,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION_BIAS, Some(0.0)).unwrap()}
   }
-  /// X-component of line-of-sight vector
+  /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   #[inline]
   pub fn LOSX(&self) -> f32 {
     // Safety:
@@ -756,7 +940,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOSX, Some(0.0)).unwrap()}
   }
-  /// Y-component of line-of-sight vector
+  /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   #[inline]
   pub fn LOSY(&self) -> f32 {
     // Safety:
@@ -764,7 +948,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOSY, Some(0.0)).unwrap()}
   }
-  /// Z-component of line-of-sight vector
+  /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   #[inline]
   pub fn LOSZ(&self) -> f32 {
     // Safety:
@@ -772,7 +956,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOSZ, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in line-of-sight vector
+  /// One sigma uncertainty in the line-of-sight direction vector components.
   #[inline]
   pub fn LOS_UNC(&self) -> f32 {
     // Safety:
@@ -780,7 +964,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOS_UNC, Some(0.0)).unwrap()}
   }
-  /// X-component of line-of-sight velocity
+  /// X-component of the velocity vector along the line of sight, in km/s.
   #[inline]
   pub fn LOSXVEL(&self) -> f32 {
     // Safety:
@@ -788,7 +972,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOSXVEL, Some(0.0)).unwrap()}
   }
-  /// Y-component of line-of-sight velocity
+  /// Y-component of the velocity vector along the line of sight, in km/s.
   #[inline]
   pub fn LOSYVEL(&self) -> f32 {
     // Safety:
@@ -796,7 +980,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOSYVEL, Some(0.0)).unwrap()}
   }
-  /// Z-component of line-of-sight velocity
+  /// Z-component of the velocity vector along the line of sight, in km/s.
   #[inline]
   pub fn LOSZVEL(&self) -> f32 {
     // Safety:
@@ -804,7 +988,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_LOSZVEL, Some(0.0)).unwrap()}
   }
-  /// Latitude of sensor
+  /// WGS-84 latitude in decimal degrees at the time of the observation.
   #[inline]
   pub fn SENLAT(&self) -> f32 {
     // Safety:
@@ -812,7 +996,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SENLAT, Some(0.0)).unwrap()}
   }
-  /// Longitude of sensor
+  /// WGS-84 longitude in decimal degrees at the time of the observation.
   #[inline]
   pub fn SENLON(&self) -> f32 {
     // Safety:
@@ -820,7 +1004,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SENLON, Some(0.0)).unwrap()}
   }
-  /// Altitude of sensor
+  /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
   #[inline]
   pub fn SENALT(&self) -> f32 {
     // Safety:
@@ -828,7 +1012,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SENALT, Some(0.0)).unwrap()}
   }
-  /// X-coordinate of sensor position
+  /// Cartesian X position in km at the time of the observation.
   #[inline]
   pub fn SENX(&self) -> f32 {
     // Safety:
@@ -836,7 +1020,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SENX, Some(0.0)).unwrap()}
   }
-  /// Y-coordinate of sensor position
+  /// Cartesian Y position in km at the time of the observation.
   #[inline]
   pub fn SENY(&self) -> f32 {
     // Safety:
@@ -844,7 +1028,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SENY, Some(0.0)).unwrap()}
   }
-  /// Z-coordinate of sensor position
+  /// Cartesian Z position in km at the time of the observation.
   #[inline]
   pub fn SENZ(&self) -> f32 {
     // Safety:
@@ -852,7 +1036,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SENZ, Some(0.0)).unwrap()}
   }
-  /// Number of fields of view
+  /// Total number of satellites in the field of view.
   #[inline]
   pub fn FOV_COUNT(&self) -> i32 {
     // Safety:
@@ -860,7 +1044,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT, Some(0)).unwrap()}
   }
-  /// Number of uncorrelated satellites in the field of view (JCO)
+  /// Number of uncorrelated satellites in the field of view (JCO).
   #[inline]
   pub fn FOV_COUNT_UCTS(&self) -> i32 {
     // Safety:
@@ -868,7 +1052,9 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT_UCTS, Some(0)).unwrap()}
   }
-  /// Duration of the exposure
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// observations are going to be used for photometric processing.
   #[inline]
   pub fn EXP_DURATION(&self) -> f32 {
     // Safety:
@@ -876,7 +1062,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_EXP_DURATION, Some(0.0)).unwrap()}
   }
-  /// Zero-point displacement
+  /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
   #[inline]
   pub fn ZEROPTD(&self) -> f32 {
     // Safety:
@@ -884,7 +1070,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_ZEROPTD, Some(0.0)).unwrap()}
   }
-  /// Net object signal
+  /// Net object signature = counts / EXP_DURATION.
   #[inline]
   pub fn NET_OBJ_SIG(&self) -> f32 {
     // Safety:
@@ -892,7 +1078,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_NET_OBJ_SIG, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in net object signal
+  /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
   #[inline]
   pub fn NET_OBJ_SIG_UNC(&self) -> f32 {
     // Safety:
@@ -900,7 +1086,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_NET_OBJ_SIG_UNC, Some(0.0)).unwrap()}
   }
-  /// Magnitude of the observation
+  /// Measure of observed brightness calibrated against the Gaia G-band.
   #[inline]
   pub fn MAG(&self) -> f32 {
     // Safety:
@@ -908,7 +1094,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_MAG, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in magnitude
+  /// Uncertainty of the observed brightness.
   #[inline]
   pub fn MAG_UNC(&self) -> f32 {
     // Safety:
@@ -916,7 +1102,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_MAG_UNC, Some(0.0)).unwrap()}
   }
-  /// Normalized range for magnitude
+  /// [Definition needed].
   #[inline]
   pub fn MAG_NORM_RANGE(&self) -> f32 {
     // Safety:
@@ -924,7 +1110,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_MAG_NORM_RANGE, Some(0.0)).unwrap()}
   }
-  /// Geocentric latitude
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   #[inline]
   pub fn GEOLAT(&self) -> f32 {
     // Safety:
@@ -932,7 +1119,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_GEOLAT, Some(0.0)).unwrap()}
   }
-  /// Geocentric longitude
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// and viewing geometry. It must NOT be computed from the orbit state.
   #[inline]
   pub fn GEOLON(&self) -> f32 {
     // Safety:
@@ -940,7 +1128,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_GEOLON, Some(0.0)).unwrap()}
   }
-  /// Geocentric altitude
+  /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
   #[inline]
   pub fn GEOALT(&self) -> f32 {
     // Safety:
@@ -948,7 +1136,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_GEOALT, Some(0.0)).unwrap()}
   }
-  /// Geocentric range
+  /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
   #[inline]
   pub fn GEORANGE(&self) -> f32 {
     // Safety:
@@ -956,7 +1144,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_GEORANGE, Some(0.0)).unwrap()}
   }
-  /// Sky background level
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// empty part of the night sky.
   #[inline]
   pub fn SKY_BKGRND(&self) -> f32 {
     // Safety:
@@ -964,7 +1153,10 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SKY_BKGRND, Some(0.0)).unwrap()}
   }
-  /// Primary extinction
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// object and the observer.
   #[inline]
   pub fn PRIMARY_EXTINCTION(&self) -> f32 {
     // Safety:
@@ -972,7 +1164,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_PRIMARY_EXTINCTION, Some(0.0)).unwrap()}
   }
-  /// Uncertainty in primary extinction
+  /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
   #[inline]
   pub fn PRIMARY_EXTINCTION_UNC(&self) -> f32 {
     // Safety:
@@ -980,7 +1172,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_PRIMARY_EXTINCTION_UNC, Some(0.0)).unwrap()}
   }
-  /// Solar phase angle
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   #[inline]
   pub fn SOLAR_PHASE_ANGLE(&self) -> f32 {
     // Safety:
@@ -988,7 +1181,9 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_PHASE_ANGLE, Some(0.0)).unwrap()}
   }
-  /// Solar equatorial phase angle
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// and positive when opening (after the opposition).
   #[inline]
   pub fn SOLAR_EQ_PHASE_ANGLE(&self) -> f32 {
     // Safety:
@@ -996,7 +1191,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_EQ_PHASE_ANGLE, Some(0.0)).unwrap()}
   }
-  /// Solar declination angle
+  /// Angle from the sun to the equatorial plane.
   #[inline]
   pub fn SOLAR_DEC_ANGLE(&self) -> f32 {
     // Safety:
@@ -1004,7 +1199,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_DEC_ANGLE, Some(0.0)).unwrap()}
   }
-  /// Shutter delay
+  /// Shutter delay in seconds.
   #[inline]
   pub fn SHUTTER_DELAY(&self) -> f32 {
     // Safety:
@@ -1012,7 +1207,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SHUTTER_DELAY, Some(0.0)).unwrap()}
   }
-  /// Timing bias
+  /// Sensor timing bias in seconds.
   #[inline]
   pub fn TIMING_BIAS(&self) -> f32 {
     // Safety:
@@ -1020,7 +1215,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_TIMING_BIAS, Some(0.0)).unwrap()}
   }
-  /// URI of the raw data file
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
   #[inline]
   pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
     // Safety:
@@ -1028,7 +1223,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_RAW_FILE_URI, None)}
   }
-  /// Intensity of the observation
+  /// Intensity of the target for IR observations, in kw/sr/em.
   #[inline]
   pub fn INTENSITY(&self) -> f32 {
     // Safety:
@@ -1036,7 +1231,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_INTENSITY, Some(0.0)).unwrap()}
   }
-  /// Background intensity
+  /// Background intensity for IR observations, in kw/sr/um.
   #[inline]
   pub fn BG_INTENSITY(&self) -> f32 {
     // Safety:
@@ -1044,7 +1239,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_BG_INTENSITY, Some(0.0)).unwrap()}
   }
-  /// Descriptor of the provided data
+  /// Optional source-provided and searchable metadata or descriptor of the data.
   #[inline]
   pub fn DESCRIPTOR(&self) -> Option<&'a str> {
     // Safety:
@@ -1052,7 +1247,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_DESCRIPTOR, None)}
   }
-  /// Source of the data
+  /// Source of the data.
   #[inline]
   pub fn SOURCE(&self) -> Option<&'a str> {
     // Safety:
@@ -1060,7 +1255,9 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SOURCE, None)}
   }
-  /// Origin of the data
+  /// Originating system or organization which produced the data, if different from the source.
+  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   #[inline]
   pub fn ORIGIN(&self) -> Option<&'a str> {
     // Safety:
@@ -1068,15 +1265,15 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIGIN, None)}
   }
-  /// Mode of the data
+  /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
   #[inline]
-  pub fn DATA_MODE(&self) -> Option<&'a str> {
+  pub fn DATA_MODE(&self) -> DataMode {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_DATA_MODE, None)}
+    unsafe { self._tab.get::<DataMode>(EOO::VT_DATA_MODE, Some(DataMode::EXERCISE)).unwrap()}
   }
-  /// Creation time of the record
+  /// Time the row was created in the database, auto-populated by the system.
   #[inline]
   pub fn CREATED_AT(&self) -> Option<&'a str> {
     // Safety:
@@ -1084,7 +1281,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_CREATED_AT, None)}
   }
-  /// User who created the record
+  /// Application user who created the row in the database, auto-populated by the system.
   #[inline]
   pub fn CREATED_BY(&self) -> Option<&'a str> {
     // Safety:
@@ -1092,7 +1289,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_CREATED_BY, None)}
   }
-  /// Reference frame of the observation
+  /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   #[inline]
   pub fn REFERENCE_FRAME(&self) -> refFrame {
     // Safety:
@@ -1100,7 +1297,9 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<refFrame>(EOO::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
   }
-  /// Reference frame of the sensor
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   #[inline]
   pub fn SEN_REFERENCE_FRAME(&self) -> Option<&'a str> {
     // Safety:
@@ -1108,7 +1307,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SEN_REFERENCE_FRAME, None)}
   }
-  /// Flag for umbra (total eclipse)
+  /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   #[inline]
   pub fn UMBRA(&self) -> bool {
     // Safety:
@@ -1116,7 +1315,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_UMBRA, Some(false)).unwrap()}
   }
-  /// Flag for penumbra (partial eclipse)
+  /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  /// This field is highly recommended if the observations will be used for photometric processing.
   #[inline]
   pub fn PENUMBRA(&self) -> bool {
     // Safety:
@@ -1124,7 +1324,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_PENUMBRA, Some(false)).unwrap()}
   }
-  /// Original network identifier
+  /// The originating source network on which this record was created, auto-populated by the system.
   #[inline]
   pub fn ORIG_NETWORK(&self) -> Option<&'a str> {
     // Safety:
@@ -1132,7 +1332,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIG_NETWORK, None)}
   }
-  /// Data link source
+  /// The source from which this record was received.
   #[inline]
   pub fn SOURCE_DL(&self) -> Option<&'a str> {
     // Safety:
@@ -1140,15 +1340,15 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SOURCE_DL, None)}
   }
-  /// Type of the observation
+  /// Device Type
   #[inline]
-  pub fn TYPE(&self) -> Option<&'a str> {
+  pub fn TYPE(&self) -> DeviceType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TYPE, None)}
+    unsafe { self._tab.get::<DeviceType>(EOO::VT_TYPE, Some(DeviceType::UNKNOWN)).unwrap()}
   }
-  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  /// True if measured, false if computed. Required if azimuth is reported.
   #[inline]
   pub fn AZIMUTH_MEASURED(&self) -> bool {
     // Safety:
@@ -1156,7 +1356,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_AZIMUTH_MEASURED, Some(false)).unwrap()}
   }
-  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  /// True if measured, false if computed. Required if elevation is reported.
   #[inline]
   pub fn ELEVATION_MEASURED(&self) -> bool {
     // Safety:
@@ -1164,7 +1364,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_ELEVATION_MEASURED, Some(false)).unwrap()}
   }
-  /// True if measured, false if computed. Required if range is reported (JCO)
+  /// True if measured, false if computed. Required if range is reported.
   #[inline]
   pub fn RANGE_MEASURED(&self) -> bool {
     // Safety:
@@ -1172,7 +1372,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_RANGE_MEASURED, Some(false)).unwrap()}
   }
-  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  /// True if measured, false if computed. Required if range-rate is reported.
   #[inline]
   pub fn RANGERATE_MEASURED(&self) -> bool {
     // Safety:
@@ -1180,7 +1380,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_RANGERATE_MEASURED, Some(false)).unwrap()}
   }
-  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  /// True if measured, false if computed. Required if right ascension is reported.
   #[inline]
   pub fn RA_MEASURED(&self) -> bool {
     // Safety:
@@ -1188,7 +1388,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(EOO::VT_RA_MEASURED, Some(false)).unwrap()}
   }
-  /// True if measured, false if computed. Required if declination is reported (JCO)
+  /// True if measured, false if computed. Required if declination is reported.
   #[inline]
   pub fn DECLINATION_MEASURED(&self) -> bool {
     // Safety:
@@ -1205,18 +1405,18 @@ impl flatbuffers::Verifiable for EOO<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EOBSERVATION_ID", Self::VT_EOBSERVATION_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
      .visit_field::<f32>("CORR_QUALITY", Self::VT_CORR_QUALITY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ON_ORBIT", Self::VT_ID_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLLECT_METHOD", Self::VT_COLLECT_METHOD, false)?
+     .visit_field::<CollectMethod>("COLLECT_METHOD", Self::VT_COLLECT_METHOD, false)?
      .visit_field::<i32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRACK_ID", Self::VT_TRACK_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_POSITION", Self::VT_OB_POSITION, false)?
+     .visit_field::<ObservationPosition>("OB_POSITION", Self::VT_OB_POSITION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
      .visit_field::<bool>("UCT", Self::VT_UCT, false)?
@@ -1281,7 +1481,7 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIGIN", Self::VT_ORIGIN, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DATA_MODE", Self::VT_DATA_MODE, false)?
+     .visit_field::<DataMode>("DATA_MODE", Self::VT_DATA_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_BY", Self::VT_CREATED_BY, false)?
      .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
@@ -1290,7 +1490,7 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<bool>("PENUMBRA", Self::VT_PENUMBRA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_NETWORK", Self::VT_ORIG_NETWORK, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOURCE_DL", Self::VT_SOURCE_DL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<DeviceType>("TYPE", Self::VT_TYPE, false)?
      .visit_field::<bool>("AZIMUTH_MEASURED", Self::VT_AZIMUTH_MEASURED, false)?
      .visit_field::<bool>("ELEVATION_MEASURED", Self::VT_ELEVATION_MEASURED, false)?
      .visit_field::<bool>("RANGE_MEASURED", Self::VT_RANGE_MEASURED, false)?
@@ -1302,18 +1502,18 @@ impl flatbuffers::Verifiable for EOO<'_> {
   }
 }
 pub struct EOOArgs<'a> {
-    pub EOBSERVATION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CLASSIFICATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CORR_QUALITY: f32,
     pub ID_ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COLLECT_METHOD: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLLECT_METHOD: CollectMethod,
     pub NORAD_CAT_ID: i32,
     pub TASK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRACK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OB_POSITION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OB_POSITION: ObservationPosition,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub UCT: bool,
@@ -1378,7 +1578,7 @@ pub struct EOOArgs<'a> {
     pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIGIN: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DATA_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_MODE: DataMode,
     pub CREATED_AT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CREATED_BY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REFERENCE_FRAME: refFrame,
@@ -1387,7 +1587,7 @@ pub struct EOOArgs<'a> {
     pub PENUMBRA: bool,
     pub ORIG_NETWORK: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_DL: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TYPE: DeviceType,
     pub AZIMUTH_MEASURED: bool,
     pub ELEVATION_MEASURED: bool,
     pub RANGE_MEASURED: bool,
@@ -1399,18 +1599,18 @@ impl<'a> Default for EOOArgs<'a> {
   #[inline]
   fn default() -> Self {
     EOOArgs {
-      EOBSERVATION_ID: None,
+      ID: None,
       CLASSIFICATION: None,
       OB_TIME: None,
       CORR_QUALITY: 0.0,
       ID_ON_ORBIT: None,
       SENSOR_ID: None,
-      COLLECT_METHOD: None,
+      COLLECT_METHOD: CollectMethod::SIDEREAL,
       NORAD_CAT_ID: 0,
       TASK_ID: None,
       TRANSACTION_ID: None,
       TRACK_ID: None,
-      OB_POSITION: None,
+      OB_POSITION: ObservationPosition::FENCE,
       ORIG_OBJECT_ID: None,
       ORIG_SENSOR_ID: None,
       UCT: false,
@@ -1475,7 +1675,7 @@ impl<'a> Default for EOOArgs<'a> {
       DESCRIPTOR: None,
       SOURCE: None,
       ORIGIN: None,
-      DATA_MODE: None,
+      DATA_MODE: DataMode::EXERCISE,
       CREATED_AT: None,
       CREATED_BY: None,
       REFERENCE_FRAME: refFrame::ECEF,
@@ -1484,7 +1684,7 @@ impl<'a> Default for EOOArgs<'a> {
       PENUMBRA: false,
       ORIG_NETWORK: None,
       SOURCE_DL: None,
-      TYPE: None,
+      TYPE: DeviceType::UNKNOWN,
       AZIMUTH_MEASURED: false,
       ELEVATION_MEASURED: false,
       RANGE_MEASURED: false,
@@ -1501,8 +1701,8 @@ pub struct EOOBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
 }
 impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_EOBSERVATION_ID(&mut self, EOBSERVATION_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_EOBSERVATION_ID, EOBSERVATION_ID);
+  pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_ID, ID);
   }
   #[inline]
   pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: flatbuffers::WIPOffset<&'b  str>) {
@@ -1525,8 +1725,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_SENSOR_ID, SENSOR_ID);
   }
   #[inline]
-  pub fn add_COLLECT_METHOD(&mut self, COLLECT_METHOD: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_COLLECT_METHOD, COLLECT_METHOD);
+  pub fn add_COLLECT_METHOD(&mut self, COLLECT_METHOD: CollectMethod) {
+    self.fbb_.push_slot::<CollectMethod>(EOO::VT_COLLECT_METHOD, COLLECT_METHOD, CollectMethod::SIDEREAL);
   }
   #[inline]
   pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: i32) {
@@ -1545,8 +1745,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_TRACK_ID, TRACK_ID);
   }
   #[inline]
-  pub fn add_OB_POSITION(&mut self, OB_POSITION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_OB_POSITION, OB_POSITION);
+  pub fn add_OB_POSITION(&mut self, OB_POSITION: ObservationPosition) {
+    self.fbb_.push_slot::<ObservationPosition>(EOO::VT_OB_POSITION, OB_POSITION, ObservationPosition::FENCE);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -1805,8 +2005,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_ORIGIN, ORIGIN);
   }
   #[inline]
-  pub fn add_DATA_MODE(&mut self, DATA_MODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_DATA_MODE, DATA_MODE);
+  pub fn add_DATA_MODE(&mut self, DATA_MODE: DataMode) {
+    self.fbb_.push_slot::<DataMode>(EOO::VT_DATA_MODE, DATA_MODE, DataMode::EXERCISE);
   }
   #[inline]
   pub fn add_CREATED_AT(&mut self, CREATED_AT: flatbuffers::WIPOffset<&'b  str>) {
@@ -1841,8 +2041,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_SOURCE_DL, SOURCE_DL);
   }
   #[inline]
-  pub fn add_TYPE(&mut self, TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_TYPE, TYPE);
+  pub fn add_TYPE(&mut self, TYPE: DeviceType) {
+    self.fbb_.push_slot::<DeviceType>(EOO::VT_TYPE, TYPE, DeviceType::UNKNOWN);
   }
   #[inline]
   pub fn add_AZIMUTH_MEASURED(&mut self, AZIMUTH_MEASURED: bool) {
@@ -1886,7 +2086,7 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
 impl core::fmt::Debug for EOO<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("EOO");
-      ds.field("EOBSERVATION_ID", &self.EOBSERVATION_ID());
+      ds.field("ID", &self.ID());
       ds.field("CLASSIFICATION", &self.CLASSIFICATION());
       ds.field("OB_TIME", &self.OB_TIME());
       ds.field("CORR_QUALITY", &self.CORR_QUALITY());
@@ -1984,18 +2184,18 @@ impl core::fmt::Debug for EOO<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct EOOT {
-  pub EOBSERVATION_ID: Option<String>,
+  pub ID: Option<String>,
   pub CLASSIFICATION: Option<String>,
   pub OB_TIME: Option<String>,
   pub CORR_QUALITY: f32,
   pub ID_ON_ORBIT: Option<String>,
   pub SENSOR_ID: Option<String>,
-  pub COLLECT_METHOD: Option<String>,
+  pub COLLECT_METHOD: CollectMethod,
   pub NORAD_CAT_ID: i32,
   pub TASK_ID: Option<String>,
   pub TRANSACTION_ID: Option<String>,
   pub TRACK_ID: Option<String>,
-  pub OB_POSITION: Option<String>,
+  pub OB_POSITION: ObservationPosition,
   pub ORIG_OBJECT_ID: Option<String>,
   pub ORIG_SENSOR_ID: Option<String>,
   pub UCT: bool,
@@ -2060,7 +2260,7 @@ pub struct EOOT {
   pub DESCRIPTOR: Option<String>,
   pub SOURCE: Option<String>,
   pub ORIGIN: Option<String>,
-  pub DATA_MODE: Option<String>,
+  pub DATA_MODE: DataMode,
   pub CREATED_AT: Option<String>,
   pub CREATED_BY: Option<String>,
   pub REFERENCE_FRAME: refFrame,
@@ -2069,7 +2269,7 @@ pub struct EOOT {
   pub PENUMBRA: bool,
   pub ORIG_NETWORK: Option<String>,
   pub SOURCE_DL: Option<String>,
-  pub TYPE: Option<String>,
+  pub TYPE: DeviceType,
   pub AZIMUTH_MEASURED: bool,
   pub ELEVATION_MEASURED: bool,
   pub RANGE_MEASURED: bool,
@@ -2080,18 +2280,18 @@ pub struct EOOT {
 impl Default for EOOT {
   fn default() -> Self {
     Self {
-      EOBSERVATION_ID: None,
+      ID: None,
       CLASSIFICATION: None,
       OB_TIME: None,
       CORR_QUALITY: 0.0,
       ID_ON_ORBIT: None,
       SENSOR_ID: None,
-      COLLECT_METHOD: None,
+      COLLECT_METHOD: CollectMethod::SIDEREAL,
       NORAD_CAT_ID: 0,
       TASK_ID: None,
       TRANSACTION_ID: None,
       TRACK_ID: None,
-      OB_POSITION: None,
+      OB_POSITION: ObservationPosition::FENCE,
       ORIG_OBJECT_ID: None,
       ORIG_SENSOR_ID: None,
       UCT: false,
@@ -2156,7 +2356,7 @@ impl Default for EOOT {
       DESCRIPTOR: None,
       SOURCE: None,
       ORIGIN: None,
-      DATA_MODE: None,
+      DATA_MODE: DataMode::EXERCISE,
       CREATED_AT: None,
       CREATED_BY: None,
       REFERENCE_FRAME: refFrame::ECEF,
@@ -2165,7 +2365,7 @@ impl Default for EOOT {
       PENUMBRA: false,
       ORIG_NETWORK: None,
       SOURCE_DL: None,
-      TYPE: None,
+      TYPE: DeviceType::UNKNOWN,
       AZIMUTH_MEASURED: false,
       ELEVATION_MEASURED: false,
       RANGE_MEASURED: false,
@@ -2180,7 +2380,7 @@ impl EOOT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<EOO<'b>> {
-    let EOBSERVATION_ID = self.EOBSERVATION_ID.as_ref().map(|x|{
+    let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
@@ -2196,9 +2396,7 @@ impl EOOT {
     let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let COLLECT_METHOD = self.COLLECT_METHOD.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let COLLECT_METHOD = self.COLLECT_METHOD;
     let NORAD_CAT_ID = self.NORAD_CAT_ID;
     let TASK_ID = self.TASK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -2209,9 +2407,7 @@ impl EOOT {
     let TRACK_ID = self.TRACK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let OB_POSITION = self.OB_POSITION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let OB_POSITION = self.OB_POSITION;
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2288,9 +2484,7 @@ impl EOOT {
     let ORIGIN = self.ORIGIN.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DATA_MODE = self.DATA_MODE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let DATA_MODE = self.DATA_MODE;
     let CREATED_AT = self.CREATED_AT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2309,9 +2503,7 @@ impl EOOT {
     let SOURCE_DL = self.SOURCE_DL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TYPE = self.TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let TYPE = self.TYPE;
     let AZIMUTH_MEASURED = self.AZIMUTH_MEASURED;
     let ELEVATION_MEASURED = self.ELEVATION_MEASURED;
     let RANGE_MEASURED = self.RANGE_MEASURED;
@@ -2319,7 +2511,7 @@ impl EOOT {
     let RA_MEASURED = self.RA_MEASURED;
     let DECLINATION_MEASURED = self.DECLINATION_MEASURED;
     EOO::create(_fbb, &EOOArgs{
-      EOBSERVATION_ID,
+      ID,
       CLASSIFICATION,
       OB_TIME,
       CORR_QUALITY,

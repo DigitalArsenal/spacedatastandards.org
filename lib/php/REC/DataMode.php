@@ -4,14 +4,20 @@
 /// Enum for the mode of data (real, simulated, synthetic)
 class DataMode
 {
-    const REAL = 0;
-    const SIMULATED = 1;
-    const SYNTHETIC = 2;
+    /// Data collected during an exercise scenario.
+    const EXERCISE = 0;
+    /// Data collected from real-world observations.
+    const REAL = 1;
+    /// Data generated through simulation.
+    const SIMULATED = 2;
+    /// Data collected for testing purposes.
+    const TEST = 3;
 
     private static $names = array(
+        DataMode::EXERCISE=>"EXERCISE",
         DataMode::REAL=>"REAL",
         DataMode::SIMULATED=>"SIMULATED",
-        DataMode::SYNTHETIC=>"SYNTHETIC",
+        DataMode::TEST=>"TEST",
     );
 
     public static function Name($e)

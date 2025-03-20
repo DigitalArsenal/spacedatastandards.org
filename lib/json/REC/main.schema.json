@@ -31,7 +31,7 @@
     },
     "DataMode" : {
       "type" : "string",
-      "enum": ["REAL", "SIMULATED", "SYNTHETIC"]
+      "enum": ["EXERCISE", "REAL", "SIMULATED", "TEST"]
     },
     "DeviceType" : {
       "type" : "string",
@@ -124,6 +124,14 @@
     "DataType" : {
       "type" : "string",
       "enum": ["OBSERVED", "PREDICTED"]
+    },
+    "CollectMethod" : {
+      "type" : "string",
+      "enum": ["SIDEREAL", "RATE_TRACK", "FIXED_STARE", "OTHER"]
+    },
+    "ObservationPosition" : {
+      "type" : "string",
+      "enum": ["FENCE", "FIRST", "IN", "LAST", "SINGLE"]
     },
     "SiteType" : {
       "type" : "string",
@@ -3571,373 +3579,373 @@
       "type" : "object",
       "description" : "Electro-Optical Observation",
       "properties" : {
-        "EOBSERVATION_ID" : {
+        "ID" : {
                 "type" : "string",
-                "description" : "Unique identifier for Earth Observation Observation"
+                "description" : "Unique identifier of the record."
               },
         "CLASSIFICATION" : {
                 "type" : "string",
-                "description" : "Classification marking of the data"
+                "description" : "Classification marking of the data in IC/CAPCO Portion-marked format."
               },
         "OB_TIME" : {
                 "type" : "string",
-                "description" : "Observation time in UTC"
+                "description" : "Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision."
               },
         "CORR_QUALITY" : {
                 "type" : "number",
-                "description" : "Quality of the correlation"
+                "description" : "Correlation score of the observation when compared to a known orbit state."
               },
         "ID_ON_ORBIT" : {
                 "type" : "string",
-                "description" : "Identifier for the satellite on orbit"
+                "description" : "Server will auto-populate with SAT_NO if available."
               },
         "SENSOR_ID" : {
                 "type" : "string",
-                "description" : "Identifier for the sensor"
+                "description" : "Unique ID of the sensor. Must have a corresponding sensor record on the server."
               },
         "COLLECT_METHOD" : {
-                "type" : "string",
-                "description" : "Method of data collection"
+                "$ref" : "#/definitions/CollectMethod",
+                "description" : "Accepted Collection Method"
               },
         "NORAD_CAT_ID" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "NORAD catalog identifier for the satellite"
+                "description" : "18SDS satellite number. Only list if correlated against the 18SDS catalog."
               },
         "TASK_ID" : {
                 "type" : "string",
-                "description" : "Identifier for the task"
+                "description" : "Identifier for the collectRequest message if the collection was in response to tasking."
               },
         "TRANSACTION_ID" : {
                 "type" : "string",
-                "description" : "Identifier for the transaction"
+                "description" : "Optional identifier to track a transaction."
               },
         "TRACK_ID" : {
                 "type" : "string",
-                "description" : "Identifier for the track"
+                "description" : "Identifier of the track to which this observation belongs, if applicable."
               },
         "OB_POSITION" : {
-                "type" : "string",
-                "description" : "Position of the observation"
+                "$ref" : "#/definitions/ObservationPosition",
+                "description" : "The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE)."
               },
         "ORIG_OBJECT_ID" : {
                 "type" : "string",
-                "description" : "Original object identifier"
+                "description" : "Provider maintained ID. May not be consistent with 18SDS SAT_NO."
               },
         "ORIG_SENSOR_ID" : {
                 "type" : "string",
-                "description" : "Original sensor identifier"
+                "description" : "Sensor ID."
               },
         "UCT" : {
                 "type" : "boolean",
-                "description" : "Universal Coordinated Time flag"
+                "description" : "Required if correlation is attempted. Indicates whether correlation succeeded."
               },
         "AZIMUTH" : {
                 "type" : "number",
-                "description" : "Azimuth angle"
+                "description" : "Line of sight azimuth angle in degrees and topocentric frame."
               },
         "AZIMUTH_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in azimuth angle"
+                "description" : "One sigma uncertainty in the line of sight azimuth angle, in degrees."
               },
         "AZIMUTH_BIAS" : {
                 "type" : "number",
-                "description" : "Bias in azimuth angle"
+                "description" : "Sensor line of sight azimuth angle bias in degrees."
               },
         "AZIMUTH_RATE" : {
                 "type" : "number",
-                "description" : "Rate of change in azimuth"
+                "description" : "Rate of change of the line of sight azimuth in degrees per second."
               },
         "ELEVATION" : {
                 "type" : "number",
-                "description" : "Elevation angle"
+                "description" : "Line of sight elevation in degrees and topocentric frame."
               },
         "ELEVATION_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in elevation angle"
+                "description" : "One sigma uncertainty in the line of sight elevation angle, in degrees."
               },
         "ELEVATION_BIAS" : {
                 "type" : "number",
-                "description" : "Bias in elevation angle"
+                "description" : "Sensor line of sight elevation bias in degrees."
               },
         "ELEVATION_RATE" : {
                 "type" : "number",
-                "description" : "Rate of change in elevation"
+                "description" : "Rate of change of the line of sight elevation in degrees per second."
               },
         "RANGE" : {
                 "type" : "number",
-                "description" : "Range to the target"
+                "description" : "Line of sight range in km. Reported value should include all applicable corrections."
               },
         "RANGE_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in range"
+                "description" : "One sigma uncertainty in the line of sight range, in km."
               },
         "RANGE_BIAS" : {
                 "type" : "number",
-                "description" : "Bias in range measurement"
+                "description" : "Sensor line of sight range bias in km."
               },
         "RANGE_RATE" : {
                 "type" : "number",
-                "description" : "Rate of change in range"
+                "description" : "Range rate in km/s. Reported value should include all applicable corrections."
               },
         "RANGE_RATE_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in range rate"
+                "description" : "One sigma uncertainty in the line of sight range rate, in km/sec."
               },
         "RA" : {
                 "type" : "number",
-                "description" : "Right ascension"
+                "description" : "Right ascension in degrees. Required metric reporting field for EO observations."
               },
         "RA_RATE" : {
                 "type" : "number",
-                "description" : "Rate of change in right ascension"
+                "description" : "Line of sight right ascension rate of change, in degrees/sec."
               },
         "RA_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in right ascension"
+                "description" : "One sigma uncertainty in the line of sight right ascension angle, in degrees."
               },
         "RA_BIAS" : {
                 "type" : "number",
-                "description" : "Bias in right ascension"
+                "description" : "Sensor line of sight right ascension bias in degrees."
               },
         "DECLINATION" : {
                 "type" : "number",
-                "description" : "Declination angle"
+                "description" : "Declination in degrees. Required metric reporting field for EO observations."
               },
         "DECLINATION_RATE" : {
                 "type" : "number",
-                "description" : "Rate of change in declination"
+                "description" : "Line of sight declination rate of change, in degrees/sec."
               },
         "DECLINATION_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in declination"
+                "description" : "One sigma uncertainty in the line of sight declination angle, in degrees."
               },
         "DECLINATION_BIAS" : {
                 "type" : "number",
-                "description" : "Bias in declination"
+                "description" : "Sensor line of sight declination angle bias in degrees."
               },
         "LOSX" : {
                 "type" : "number",
-                "description" : "X-component of line-of-sight vector"
+                "description" : "X-component of the unit vector representing the line-of-sight direction in the observer's reference frame."
               },
         "LOSY" : {
                 "type" : "number",
-                "description" : "Y-component of line-of-sight vector"
+                "description" : "Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame."
               },
         "LOSZ" : {
                 "type" : "number",
-                "description" : "Z-component of line-of-sight vector"
+                "description" : "Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame."
               },
         "LOS_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in line-of-sight vector"
+                "description" : "One sigma uncertainty in the line-of-sight direction vector components."
               },
         "LOSXVEL" : {
                 "type" : "number",
-                "description" : "X-component of line-of-sight velocity"
+                "description" : "X-component of the velocity vector along the line of sight, in km/s."
               },
         "LOSYVEL" : {
                 "type" : "number",
-                "description" : "Y-component of line-of-sight velocity"
+                "description" : "Y-component of the velocity vector along the line of sight, in km/s."
               },
         "LOSZVEL" : {
                 "type" : "number",
-                "description" : "Z-component of line-of-sight velocity"
+                "description" : "Z-component of the velocity vector along the line of sight, in km/s."
               },
         "SENLAT" : {
                 "type" : "number",
-                "description" : "Latitude of sensor"
+                "description" : "WGS-84 latitude in decimal degrees at the time of the observation."
               },
         "SENLON" : {
                 "type" : "number",
-                "description" : "Longitude of sensor"
+                "description" : "WGS-84 longitude in decimal degrees at the time of the observation."
               },
         "SENALT" : {
                 "type" : "number",
-                "description" : "Altitude of sensor"
+                "description" : "Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation."
               },
         "SENX" : {
                 "type" : "number",
-                "description" : "X-coordinate of sensor position"
+                "description" : "Cartesian X position in km at the time of the observation."
               },
         "SENY" : {
                 "type" : "number",
-                "description" : "Y-coordinate of sensor position"
+                "description" : "Cartesian Y position in km at the time of the observation."
               },
         "SENZ" : {
                 "type" : "number",
-                "description" : "Z-coordinate of sensor position"
+                "description" : "Cartesian Z position in km at the time of the observation."
               },
         "FOV_COUNT" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Number of fields of view"
+                "description" : "Total number of satellites in the field of view."
               },
         "FOV_COUNT_UCTS" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Number of uncorrelated satellites in the field of view (JCO)"
+                "description" : "Number of uncorrelated satellites in the field of view (JCO)."
               },
         "EXP_DURATION" : {
                 "type" : "number",
-                "description" : "Duration of the exposure"
+                "description" : "Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,\nthe exposure duration should be the total integration time. This field is highly recommended / required if the\nobservations are going to be used for photometric processing."
               },
         "ZEROPTD" : {
                 "type" : "number",
-                "description" : "Zero-point displacement"
+                "description" : "Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION)."
               },
         "NET_OBJ_SIG" : {
                 "type" : "number",
-                "description" : "Net object signal"
+                "description" : "Net object signature = counts / EXP_DURATION."
               },
         "NET_OBJ_SIG_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in net object signal"
+                "description" : "Net object signature uncertainty = counts uncertainty / EXP_DURATION."
               },
         "MAG" : {
                 "type" : "number",
-                "description" : "Magnitude of the observation"
+                "description" : "Measure of observed brightness calibrated against the Gaia G-band."
               },
         "MAG_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in magnitude"
+                "description" : "Uncertainty of the observed brightness."
               },
         "MAG_NORM_RANGE" : {
                 "type" : "number",
-                "description" : "Normalized range for magnitude"
+                "description" : "[Definition needed]."
               },
         "GEOLAT" : {
                 "type" : "number",
-                "description" : "Geocentric latitude"
+                "description" : "Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range\nand corresponding viewing geometry. It must NOT be computed from the orbit state."
               },
         "GEOLON" : {
                 "type" : "number",
-                "description" : "Geocentric longitude"
+                "description" : "Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range\nand viewing geometry. It must NOT be computed from the orbit state."
               },
         "GEOALT" : {
                 "type" : "number",
-                "description" : "Geocentric altitude"
+                "description" : "Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state."
               },
         "GEORANGE" : {
                 "type" : "number",
-                "description" : "Geocentric range"
+                "description" : "Computed estimate of the slant range in km. It must NOT be computed from the orbit state."
               },
         "SKY_BKGRND" : {
                 "type" : "number",
-                "description" : "Sky background level"
+                "description" : "Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently\nempty part of the night sky."
               },
         "PRIMARY_EXTINCTION" : {
                 "type" : "number",
-                "description" : "Primary extinction"
+                "description" : "Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass\nto determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,\ndescribes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical\nobject and the observer."
               },
         "PRIMARY_EXTINCTION_UNC" : {
                 "type" : "number",
-                "description" : "Uncertainty in primary extinction"
+                "description" : "Primary Extinction Coefficient Uncertainty, in Magnitudes."
               },
         "SOLAR_PHASE_ANGLE" : {
                 "type" : "number",
-                "description" : "Solar phase angle"
+                "description" : "The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the\ncalculation listed in the EOSSA documentation, pg 106 of the EOSSA spec."
               },
         "SOLAR_EQ_PHASE_ANGLE" : {
                 "type" : "number",
-                "description" : "Solar equatorial phase angle"
+                "description" : "The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector\nonto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)\nand positive when opening (after the opposition)."
               },
         "SOLAR_DEC_ANGLE" : {
                 "type" : "number",
-                "description" : "Solar declination angle"
+                "description" : "Angle from the sun to the equatorial plane."
               },
         "SHUTTER_DELAY" : {
                 "type" : "number",
-                "description" : "Shutter delay"
+                "description" : "Shutter delay in seconds."
               },
         "TIMING_BIAS" : {
                 "type" : "number",
-                "description" : "Timing bias"
+                "description" : "Sensor timing bias in seconds."
               },
         "RAW_FILE_URI" : {
                 "type" : "string",
-                "description" : "URI of the raw data file"
+                "description" : "Optional URI location in the document repository of the raw file parsed by the system to produce this record."
               },
         "INTENSITY" : {
                 "type" : "number",
-                "description" : "Intensity of the observation"
+                "description" : "Intensity of the target for IR observations, in kw/sr/em."
               },
         "BG_INTENSITY" : {
                 "type" : "number",
-                "description" : "Background intensity"
+                "description" : "Background intensity for IR observations, in kw/sr/um."
               },
         "DESCRIPTOR" : {
                 "type" : "string",
-                "description" : "Descriptor of the provided data"
+                "description" : "Optional source-provided and searchable metadata or descriptor of the data."
               },
         "SOURCE" : {
                 "type" : "string",
-                "description" : "Source of the data"
+                "description" : "Source of the data."
               },
         "ORIGIN" : {
                 "type" : "string",
-                "description" : "Origin of the data"
+                "description" : "Originating system or organization which produced the data, if different from the source.\nThe origin may be different than the source if the source was a mediating system which forwarded\nthe data on behalf of the origin system. If null, the source may be assumed to be the origin."
               },
         "DATA_MODE" : {
-                "type" : "string",
-                "description" : "Mode of the data"
+                "$ref" : "#/definitions/DataMode",
+                "description" : "Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST."
               },
         "CREATED_AT" : {
                 "type" : "string",
-                "description" : "Creation time of the record"
+                "description" : "Time the row was created in the database, auto-populated by the system."
               },
         "CREATED_BY" : {
                 "type" : "string",
-                "description" : "User who created the record"
+                "description" : "Application user who created the row in the database, auto-populated by the system."
               },
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/refFrame",
-                "description" : "Reference frame of the observation"
+                "description" : "EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified."
               },
         "SEN_REFERENCE_FRAME" : {
                 "type" : "string",
-                "description" : "Reference frame of the sensor"
+                "description" : "The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),\nunless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).\nLat / long / height values should be reported using the WGS-84 ellipsoid, where applicable."
               },
         "UMBRA" : {
                 "type" : "boolean",
-                "description" : "Flag for umbra (total eclipse)"
+                "description" : "Boolean indicating that the target object was in umbral eclipse at the time of this observation."
               },
         "PENUMBRA" : {
                 "type" : "boolean",
-                "description" : "Flag for penumbra (partial eclipse)"
+                "description" : "Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.\nThis field is highly recommended if the observations will be used for photometric processing."
               },
         "ORIG_NETWORK" : {
                 "type" : "string",
-                "description" : "Original network identifier"
+                "description" : "The originating source network on which this record was created, auto-populated by the system."
               },
         "SOURCE_DL" : {
                 "type" : "string",
-                "description" : "Data link source"
+                "description" : "The source from which this record was received."
               },
         "TYPE" : {
-                "type" : "string",
-                "description" : "Type of the observation"
+                "$ref" : "#/definitions/DeviceType",
+                "description" : "Device Type"
               },
         "AZIMUTH_MEASURED" : {
                 "type" : "boolean",
-                "description" : "True if measured, false if computed. Required if azimuth is reported (JCO)"
+                "description" : "True if measured, false if computed. Required if azimuth is reported."
               },
         "ELEVATION_MEASURED" : {
                 "type" : "boolean",
-                "description" : "True if measured, false if computed. Required if elevation is reported (JCO)"
+                "description" : "True if measured, false if computed. Required if elevation is reported."
               },
         "RANGE_MEASURED" : {
                 "type" : "boolean",
-                "description" : "True if measured, false if computed. Required if range is reported (JCO)"
+                "description" : "True if measured, false if computed. Required if range is reported."
               },
         "RANGERATE_MEASURED" : {
                 "type" : "boolean",
-                "description" : "True if measured, false if computed. Required if range-rate is reported (JCO)"
+                "description" : "True if measured, false if computed. Required if range-rate is reported."
               },
         "RA_MEASURED" : {
                 "type" : "boolean",
-                "description" : "True if measured, false if computed. Required if right ascension is reported (JCO)"
+                "description" : "True if measured, false if computed. Required if right ascension is reported."
               },
         "DECLINATION_MEASURED" : {
                 "type" : "boolean",
-                "description" : "True if measured, false if computed. Required if declination is reported (JCO)"
+                "description" : "True if measured, false if computed. Required if declination is reported."
               }
       },
       "additionalProperties" : false

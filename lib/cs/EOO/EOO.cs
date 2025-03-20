@@ -19,15 +19,15 @@ public struct EOO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public EOO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Unique identifier for Earth Observation Observation
-  public string EOBSERVATION_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Unique identifier of the record.
+  public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEOBSERVATION_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetEOBSERVATION_IDBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetEOBSERVATION_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Classification marking of the data
+  public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
   public string CLASSIFICATION { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -35,7 +35,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(6); }
-  /// Observation time in UTC
+  /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
   public string OB_TIME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOB_TIMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -43,9 +43,9 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetOB_TIMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetOB_TIMEArray() { return __p.__vector_as_array<byte>(8); }
-  /// Quality of the correlation
+  /// Correlation score of the observation when compared to a known orbit state.
   public float CORR_QUALITY { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Identifier for the satellite on orbit
+  /// Server will auto-populate with SAT_NO if available.
   public string ID_ON_ORBIT { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_ON_ORBITBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -53,7 +53,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetID_ON_ORBITBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetID_ON_ORBITArray() { return __p.__vector_as_array<byte>(12); }
-  /// Identifier for the sensor
+  /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
   public string SENSOR_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -61,17 +61,11 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(14); }
-  /// Method of data collection
-  public string COLLECT_METHOD { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCOLLECT_METHODBytes() { return __p.__vector_as_span<byte>(16, 1); }
-#else
-  public ArraySegment<byte>? GetCOLLECT_METHODBytes() { return __p.__vector_as_arraysegment(16); }
-#endif
-  public byte[] GetCOLLECT_METHODArray() { return __p.__vector_as_array<byte>(16); }
-  /// NORAD catalog identifier for the satellite
+  /// Accepted Collection Method
+  public CollectMethod COLLECT_METHOD { get { int o = __p.__offset(16); return o != 0 ? (CollectMethod)__p.bb.GetSbyte(o + __p.bb_pos) : CollectMethod.SIDEREAL; } }
+  /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
   public int NORAD_CAT_ID { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  /// Identifier for the task
+  /// Identifier for the collectRequest message if the collection was in response to tasking.
   public string TASK_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTASK_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
@@ -79,7 +73,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetTASK_IDBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetTASK_IDArray() { return __p.__vector_as_array<byte>(20); }
-  /// Identifier for the transaction
+  /// Optional identifier to track a transaction.
   public string TRANSACTION_ID { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(22, 1); }
@@ -87,7 +81,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
   public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(22); }
-  /// Identifier for the track
+  /// Identifier of the track to which this observation belongs, if applicable.
   public string TRACK_ID { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRACK_IDBytes() { return __p.__vector_as_span<byte>(24, 1); }
@@ -95,15 +89,9 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetTRACK_IDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetTRACK_IDArray() { return __p.__vector_as_array<byte>(24); }
-  /// Position of the observation
-  public string OB_POSITION { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOB_POSITIONBytes() { return __p.__vector_as_span<byte>(26, 1); }
-#else
-  public ArraySegment<byte>? GetOB_POSITIONBytes() { return __p.__vector_as_arraysegment(26); }
-#endif
-  public byte[] GetOB_POSITIONArray() { return __p.__vector_as_array<byte>(26); }
-  /// Original object identifier
+  /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+  public ObservationPosition OB_POSITION { get { int o = __p.__offset(26); return o != 0 ? (ObservationPosition)__p.bb.GetSbyte(o + __p.bb_pos) : ObservationPosition.FENCE; } }
+  /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
   public string ORIG_OBJECT_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
@@ -111,7 +99,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
   public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(28); }
-  /// Original sensor identifier
+  /// Sensor ID.
   public string ORIG_SENSOR_ID { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(30, 1); }
@@ -119,119 +107,130 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
   public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(30); }
-  /// Universal Coordinated Time flag
+  /// Required if correlation is attempted. Indicates whether correlation succeeded.
   public bool UCT { get { int o = __p.__offset(32); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Azimuth angle
+  /// Line of sight azimuth angle in degrees and topocentric frame.
   public float AZIMUTH { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in azimuth angle
+  /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
   public float AZIMUTH_UNC { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Bias in azimuth angle
+  /// Sensor line of sight azimuth angle bias in degrees.
   public float AZIMUTH_BIAS { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Rate of change in azimuth
+  /// Rate of change of the line of sight azimuth in degrees per second.
   public float AZIMUTH_RATE { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Elevation angle
+  /// Line of sight elevation in degrees and topocentric frame.
   public float ELEVATION { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in elevation angle
+  /// One sigma uncertainty in the line of sight elevation angle, in degrees.
   public float ELEVATION_UNC { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Bias in elevation angle
+  /// Sensor line of sight elevation bias in degrees.
   public float ELEVATION_BIAS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Rate of change in elevation
+  /// Rate of change of the line of sight elevation in degrees per second.
   public float ELEVATION_RATE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Range to the target
+  /// Line of sight range in km. Reported value should include all applicable corrections.
   public float RANGE { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in range
+  /// One sigma uncertainty in the line of sight range, in km.
   public float RANGE_UNC { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Bias in range measurement
+  /// Sensor line of sight range bias in km.
   public float RANGE_BIAS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Rate of change in range
+  /// Range rate in km/s. Reported value should include all applicable corrections.
   public float RANGE_RATE { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in range rate
+  /// One sigma uncertainty in the line of sight range rate, in km/sec.
   public float RANGE_RATE_UNC { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Right ascension
+  /// Right ascension in degrees. Required metric reporting field for EO observations.
   public float RA { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Rate of change in right ascension
+  /// Line of sight right ascension rate of change, in degrees/sec.
   public float RA_RATE { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in right ascension
+  /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
   public float RA_UNC { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Bias in right ascension
+  /// Sensor line of sight right ascension bias in degrees.
   public float RA_BIAS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Declination angle
+  /// Declination in degrees. Required metric reporting field for EO observations.
   public float DECLINATION { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Rate of change in declination
+  /// Line of sight declination rate of change, in degrees/sec.
   public float DECLINATION_RATE { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in declination
+  /// One sigma uncertainty in the line of sight declination angle, in degrees.
   public float DECLINATION_UNC { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Bias in declination
+  /// Sensor line of sight declination angle bias in degrees.
   public float DECLINATION_BIAS { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// X-component of line-of-sight vector
+  /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   public float LOSX { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Y-component of line-of-sight vector
+  /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   public float LOSY { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Z-component of line-of-sight vector
+  /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   public float LOSZ { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in line-of-sight vector
+  /// One sigma uncertainty in the line-of-sight direction vector components.
   public float LOS_UNC { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// X-component of line-of-sight velocity
+  /// X-component of the velocity vector along the line of sight, in km/s.
   public float LOSXVEL { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Y-component of line-of-sight velocity
+  /// Y-component of the velocity vector along the line of sight, in km/s.
   public float LOSYVEL { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Z-component of line-of-sight velocity
+  /// Z-component of the velocity vector along the line of sight, in km/s.
   public float LOSZVEL { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Latitude of sensor
+  /// WGS-84 latitude in decimal degrees at the time of the observation.
   public float SENLAT { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Longitude of sensor
+  /// WGS-84 longitude in decimal degrees at the time of the observation.
   public float SENLON { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Altitude of sensor
+  /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
   public float SENALT { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// X-coordinate of sensor position
+  /// Cartesian X position in km at the time of the observation.
   public float SENX { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Y-coordinate of sensor position
+  /// Cartesian Y position in km at the time of the observation.
   public float SENY { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Z-coordinate of sensor position
+  /// Cartesian Z position in km at the time of the observation.
   public float SENZ { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Number of fields of view
+  /// Total number of satellites in the field of view.
   public int FOV_COUNT { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  /// Number of uncorrelated satellites in the field of view (JCO)
+  /// Number of uncorrelated satellites in the field of view (JCO).
   public int FOV_COUNT_UCTS { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  /// Duration of the exposure
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// observations are going to be used for photometric processing.
   public float EXP_DURATION { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Zero-point displacement
+  /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
   public float ZEROPTD { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Net object signal
+  /// Net object signature = counts / EXP_DURATION.
   public float NET_OBJ_SIG { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in net object signal
+  /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
   public float NET_OBJ_SIG_UNC { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Magnitude of the observation
+  /// Measure of observed brightness calibrated against the Gaia G-band.
   public float MAG { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in magnitude
+  /// Uncertainty of the observed brightness.
   public float MAG_UNC { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Normalized range for magnitude
+  /// [Definition needed].
   public float MAG_NORM_RANGE { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Geocentric latitude
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   public float GEOLAT { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Geocentric longitude
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// and viewing geometry. It must NOT be computed from the orbit state.
   public float GEOLON { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Geocentric altitude
+  /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
   public float GEOALT { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Geocentric range
+  /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
   public float GEORANGE { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Sky background level
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// empty part of the night sky.
   public float SKY_BKGRND { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Primary extinction
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// object and the observer.
   public float PRIMARY_EXTINCTION { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Uncertainty in primary extinction
+  /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
   public float PRIMARY_EXTINCTION_UNC { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Solar phase angle
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   public float SOLAR_PHASE_ANGLE { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Solar equatorial phase angle
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// and positive when opening (after the opposition).
   public float SOLAR_EQ_PHASE_ANGLE { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Solar declination angle
+  /// Angle from the sun to the equatorial plane.
   public float SOLAR_DEC_ANGLE { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Shutter delay
+  /// Shutter delay in seconds.
   public float SHUTTER_DELAY { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Timing bias
+  /// Sensor timing bias in seconds.
   public float TIMING_BIAS { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// URI of the raw data file
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
   public string RAW_FILE_URI { get { int o = __p.__offset(144); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(144, 1); }
@@ -239,11 +238,11 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(144); }
 #endif
   public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(144); }
-  /// Intensity of the observation
+  /// Intensity of the target for IR observations, in kw/sr/em.
   public float INTENSITY { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Background intensity
+  /// Background intensity for IR observations, in kw/sr/um.
   public float BG_INTENSITY { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Descriptor of the provided data
+  /// Optional source-provided and searchable metadata or descriptor of the data.
   public string DESCRIPTOR { get { int o = __p.__offset(150); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(150, 1); }
@@ -251,7 +250,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(150); }
 #endif
   public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(150); }
-  /// Source of the data
+  /// Source of the data.
   public string SOURCE { get { int o = __p.__offset(152); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(152, 1); }
@@ -259,7 +258,9 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCEBytes() { return __p.__vector_as_arraysegment(152); }
 #endif
   public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(152); }
-  /// Origin of the data
+  /// Originating system or organization which produced the data, if different from the source.
+  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   public string ORIGIN { get { int o = __p.__offset(154); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIGINBytes() { return __p.__vector_as_span<byte>(154, 1); }
@@ -267,15 +268,9 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetORIGINBytes() { return __p.__vector_as_arraysegment(154); }
 #endif
   public byte[] GetORIGINArray() { return __p.__vector_as_array<byte>(154); }
-  /// Mode of the data
-  public string DATA_MODE { get { int o = __p.__offset(156); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDATA_MODEBytes() { return __p.__vector_as_span<byte>(156, 1); }
-#else
-  public ArraySegment<byte>? GetDATA_MODEBytes() { return __p.__vector_as_arraysegment(156); }
-#endif
-  public byte[] GetDATA_MODEArray() { return __p.__vector_as_array<byte>(156); }
-  /// Creation time of the record
+  /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+  public DataMode DATA_MODE { get { int o = __p.__offset(156); return o != 0 ? (DataMode)__p.bb.GetSbyte(o + __p.bb_pos) : DataMode.EXERCISE; } }
+  /// Time the row was created in the database, auto-populated by the system.
   public string CREATED_AT { get { int o = __p.__offset(158); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCREATED_ATBytes() { return __p.__vector_as_span<byte>(158, 1); }
@@ -283,7 +278,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetCREATED_ATBytes() { return __p.__vector_as_arraysegment(158); }
 #endif
   public byte[] GetCREATED_ATArray() { return __p.__vector_as_array<byte>(158); }
-  /// User who created the record
+  /// Application user who created the row in the database, auto-populated by the system.
   public string CREATED_BY { get { int o = __p.__offset(160); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCREATED_BYBytes() { return __p.__vector_as_span<byte>(160, 1); }
@@ -291,9 +286,11 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetCREATED_BYBytes() { return __p.__vector_as_arraysegment(160); }
 #endif
   public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(160); }
-  /// Reference frame of the observation
+  /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   public refFrame REFERENCE_FRAME { get { int o = __p.__offset(162); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
-  /// Reference frame of the sensor
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   public string SEN_REFERENCE_FRAME { get { int o = __p.__offset(164); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(164, 1); }
@@ -301,11 +298,12 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(164); }
 #endif
   public byte[] GetSEN_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(164); }
-  /// Flag for umbra (total eclipse)
+  /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   public bool UMBRA { get { int o = __p.__offset(166); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Flag for penumbra (partial eclipse)
+  /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  /// This field is highly recommended if the observations will be used for photometric processing.
   public bool PENUMBRA { get { int o = __p.__offset(168); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Original network identifier
+  /// The originating source network on which this record was created, auto-populated by the system.
   public string ORIG_NETWORK { get { int o = __p.__offset(170); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_NETWORKBytes() { return __p.__vector_as_span<byte>(170, 1); }
@@ -313,7 +311,7 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_NETWORKBytes() { return __p.__vector_as_arraysegment(170); }
 #endif
   public byte[] GetORIG_NETWORKArray() { return __p.__vector_as_array<byte>(170); }
-  /// Data link source
+  /// The source from which this record was received.
   public string SOURCE_DL { get { int o = __p.__offset(172); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCE_DLBytes() { return __p.__vector_as_span<byte>(172, 1); }
@@ -321,40 +319,34 @@ public struct EOO : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCE_DLBytes() { return __p.__vector_as_arraysegment(172); }
 #endif
   public byte[] GetSOURCE_DLArray() { return __p.__vector_as_array<byte>(172); }
-  /// Type of the observation
-  public string TYPE { get { int o = __p.__offset(174); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTYPEBytes() { return __p.__vector_as_span<byte>(174, 1); }
-#else
-  public ArraySegment<byte>? GetTYPEBytes() { return __p.__vector_as_arraysegment(174); }
-#endif
-  public byte[] GetTYPEArray() { return __p.__vector_as_array<byte>(174); }
-  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  /// Device Type
+  public DeviceType TYPE { get { int o = __p.__offset(174); return o != 0 ? (DeviceType)__p.bb.GetSbyte(o + __p.bb_pos) : DeviceType.UNKNOWN; } }
+  /// True if measured, false if computed. Required if azimuth is reported.
   public bool AZIMUTH_MEASURED { get { int o = __p.__offset(176); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  /// True if measured, false if computed. Required if elevation is reported.
   public bool ELEVATION_MEASURED { get { int o = __p.__offset(178); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// True if measured, false if computed. Required if range is reported (JCO)
+  /// True if measured, false if computed. Required if range is reported.
   public bool RANGE_MEASURED { get { int o = __p.__offset(180); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  /// True if measured, false if computed. Required if range-rate is reported.
   public bool RANGERATE_MEASURED { get { int o = __p.__offset(182); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  /// True if measured, false if computed. Required if right ascension is reported.
   public bool RA_MEASURED { get { int o = __p.__offset(184); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// True if measured, false if computed. Required if declination is reported (JCO)
+  /// True if measured, false if computed. Required if declination is reported.
   public bool DECLINATION_MEASURED { get { int o = __p.__offset(186); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<EOO> CreateEOO(FlatBufferBuilder builder,
-      StringOffset EOBSERVATION_IDOffset = default(StringOffset),
+      StringOffset IDOffset = default(StringOffset),
       StringOffset CLASSIFICATIONOffset = default(StringOffset),
       StringOffset OB_TIMEOffset = default(StringOffset),
       float CORR_QUALITY = 0.0f,
       StringOffset ID_ON_ORBITOffset = default(StringOffset),
       StringOffset SENSOR_IDOffset = default(StringOffset),
-      StringOffset COLLECT_METHODOffset = default(StringOffset),
+      CollectMethod COLLECT_METHOD = CollectMethod.SIDEREAL,
       int NORAD_CAT_ID = 0,
       StringOffset TASK_IDOffset = default(StringOffset),
       StringOffset TRANSACTION_IDOffset = default(StringOffset),
       StringOffset TRACK_IDOffset = default(StringOffset),
-      StringOffset OB_POSITIONOffset = default(StringOffset),
+      ObservationPosition OB_POSITION = ObservationPosition.FENCE,
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
       StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
       bool UCT = false,
@@ -419,7 +411,7 @@ public struct EOO : IFlatbufferObject
       StringOffset DESCRIPTOROffset = default(StringOffset),
       StringOffset SOURCEOffset = default(StringOffset),
       StringOffset ORIGINOffset = default(StringOffset),
-      StringOffset DATA_MODEOffset = default(StringOffset),
+      DataMode DATA_MODE = DataMode.EXERCISE,
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset CREATED_BYOffset = default(StringOffset),
       refFrame REFERENCE_FRAME = refFrame.ECEF,
@@ -428,7 +420,7 @@ public struct EOO : IFlatbufferObject
       bool PENUMBRA = false,
       StringOffset ORIG_NETWORKOffset = default(StringOffset),
       StringOffset SOURCE_DLOffset = default(StringOffset),
-      StringOffset TYPEOffset = default(StringOffset),
+      DeviceType TYPE = DeviceType.UNKNOWN,
       bool AZIMUTH_MEASURED = false,
       bool ELEVATION_MEASURED = false,
       bool RANGE_MEASURED = false,
@@ -436,13 +428,11 @@ public struct EOO : IFlatbufferObject
       bool RA_MEASURED = false,
       bool DECLINATION_MEASURED = false) {
     builder.StartTable(92);
-    EOO.AddTYPE(builder, TYPEOffset);
     EOO.AddSOURCE_DL(builder, SOURCE_DLOffset);
     EOO.AddORIG_NETWORK(builder, ORIG_NETWORKOffset);
     EOO.AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset);
     EOO.AddCREATED_BY(builder, CREATED_BYOffset);
     EOO.AddCREATED_AT(builder, CREATED_ATOffset);
-    EOO.AddDATA_MODE(builder, DATA_MODEOffset);
     EOO.AddORIGIN(builder, ORIGINOffset);
     EOO.AddSOURCE(builder, SOURCEOffset);
     EOO.AddDESCRIPTOR(builder, DESCRIPTOROffset);
@@ -506,44 +496,46 @@ public struct EOO : IFlatbufferObject
     EOO.AddAZIMUTH(builder, AZIMUTH);
     EOO.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
     EOO.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
-    EOO.AddOB_POSITION(builder, OB_POSITIONOffset);
     EOO.AddTRACK_ID(builder, TRACK_IDOffset);
     EOO.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
     EOO.AddTASK_ID(builder, TASK_IDOffset);
     EOO.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
-    EOO.AddCOLLECT_METHOD(builder, COLLECT_METHODOffset);
     EOO.AddSENSOR_ID(builder, SENSOR_IDOffset);
     EOO.AddID_ON_ORBIT(builder, ID_ON_ORBITOffset);
     EOO.AddCORR_QUALITY(builder, CORR_QUALITY);
     EOO.AddOB_TIME(builder, OB_TIMEOffset);
     EOO.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
-    EOO.AddEOBSERVATION_ID(builder, EOBSERVATION_IDOffset);
+    EOO.AddID(builder, IDOffset);
     EOO.AddDECLINATION_MEASURED(builder, DECLINATION_MEASURED);
     EOO.AddRA_MEASURED(builder, RA_MEASURED);
     EOO.AddRANGERATE_MEASURED(builder, RANGERATE_MEASURED);
     EOO.AddRANGE_MEASURED(builder, RANGE_MEASURED);
     EOO.AddELEVATION_MEASURED(builder, ELEVATION_MEASURED);
     EOO.AddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED);
+    EOO.AddTYPE(builder, TYPE);
     EOO.AddPENUMBRA(builder, PENUMBRA);
     EOO.AddUMBRA(builder, UMBRA);
     EOO.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
+    EOO.AddDATA_MODE(builder, DATA_MODE);
     EOO.AddUCT(builder, UCT);
+    EOO.AddOB_POSITION(builder, OB_POSITION);
+    EOO.AddCOLLECT_METHOD(builder, COLLECT_METHOD);
     return EOO.EndEOO(builder);
   }
 
   public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(92); }
-  public static void AddEOBSERVATION_ID(FlatBufferBuilder builder, StringOffset EOBSERVATION_IDOffset) { builder.AddOffset(0, EOBSERVATION_IDOffset.Value, 0); }
+  public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(1, CLASSIFICATIONOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(2, OB_TIMEOffset.Value, 0); }
   public static void AddCORR_QUALITY(FlatBufferBuilder builder, float CORR_QUALITY) { builder.AddFloat(3, CORR_QUALITY, 0.0f); }
   public static void AddID_ON_ORBIT(FlatBufferBuilder builder, StringOffset ID_ON_ORBITOffset) { builder.AddOffset(4, ID_ON_ORBITOffset.Value, 0); }
   public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(5, SENSOR_IDOffset.Value, 0); }
-  public static void AddCOLLECT_METHOD(FlatBufferBuilder builder, StringOffset COLLECT_METHODOffset) { builder.AddOffset(6, COLLECT_METHODOffset.Value, 0); }
+  public static void AddCOLLECT_METHOD(FlatBufferBuilder builder, CollectMethod COLLECT_METHOD) { builder.AddSbyte(6, (sbyte)COLLECT_METHOD, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, int NORAD_CAT_ID) { builder.AddInt(7, NORAD_CAT_ID, 0); }
   public static void AddTASK_ID(FlatBufferBuilder builder, StringOffset TASK_IDOffset) { builder.AddOffset(8, TASK_IDOffset.Value, 0); }
   public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(9, TRANSACTION_IDOffset.Value, 0); }
   public static void AddTRACK_ID(FlatBufferBuilder builder, StringOffset TRACK_IDOffset) { builder.AddOffset(10, TRACK_IDOffset.Value, 0); }
-  public static void AddOB_POSITION(FlatBufferBuilder builder, StringOffset OB_POSITIONOffset) { builder.AddOffset(11, OB_POSITIONOffset.Value, 0); }
+  public static void AddOB_POSITION(FlatBufferBuilder builder, ObservationPosition OB_POSITION) { builder.AddSbyte(11, (sbyte)OB_POSITION, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(12, ORIG_OBJECT_IDOffset.Value, 0); }
   public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(13, ORIG_SENSOR_IDOffset.Value, 0); }
   public static void AddUCT(FlatBufferBuilder builder, bool UCT) { builder.AddBool(14, UCT, false); }
@@ -608,7 +600,7 @@ public struct EOO : IFlatbufferObject
   public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(73, DESCRIPTOROffset.Value, 0); }
   public static void AddSOURCE(FlatBufferBuilder builder, StringOffset SOURCEOffset) { builder.AddOffset(74, SOURCEOffset.Value, 0); }
   public static void AddORIGIN(FlatBufferBuilder builder, StringOffset ORIGINOffset) { builder.AddOffset(75, ORIGINOffset.Value, 0); }
-  public static void AddDATA_MODE(FlatBufferBuilder builder, StringOffset DATA_MODEOffset) { builder.AddOffset(76, DATA_MODEOffset.Value, 0); }
+  public static void AddDATA_MODE(FlatBufferBuilder builder, DataMode DATA_MODE) { builder.AddSbyte(76, (sbyte)DATA_MODE, 0); }
   public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(77, CREATED_ATOffset.Value, 0); }
   public static void AddCREATED_BY(FlatBufferBuilder builder, StringOffset CREATED_BYOffset) { builder.AddOffset(78, CREATED_BYOffset.Value, 0); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(79, (sbyte)REFERENCE_FRAME, 0); }
@@ -617,7 +609,7 @@ public struct EOO : IFlatbufferObject
   public static void AddPENUMBRA(FlatBufferBuilder builder, bool PENUMBRA) { builder.AddBool(82, PENUMBRA, false); }
   public static void AddORIG_NETWORK(FlatBufferBuilder builder, StringOffset ORIG_NETWORKOffset) { builder.AddOffset(83, ORIG_NETWORKOffset.Value, 0); }
   public static void AddSOURCE_DL(FlatBufferBuilder builder, StringOffset SOURCE_DLOffset) { builder.AddOffset(84, SOURCE_DLOffset.Value, 0); }
-  public static void AddTYPE(FlatBufferBuilder builder, StringOffset TYPEOffset) { builder.AddOffset(85, TYPEOffset.Value, 0); }
+  public static void AddTYPE(FlatBufferBuilder builder, DeviceType TYPE) { builder.AddSbyte(85, (sbyte)TYPE, 0); }
   public static void AddAZIMUTH_MEASURED(FlatBufferBuilder builder, bool AZIMUTH_MEASURED) { builder.AddBool(86, AZIMUTH_MEASURED, false); }
   public static void AddELEVATION_MEASURED(FlatBufferBuilder builder, bool ELEVATION_MEASURED) { builder.AddBool(87, ELEVATION_MEASURED, false); }
   public static void AddRANGE_MEASURED(FlatBufferBuilder builder, bool RANGE_MEASURED) { builder.AddBool(88, RANGE_MEASURED, false); }
@@ -636,7 +628,7 @@ public struct EOO : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(EOOT _o) {
-    _o.EOBSERVATION_ID = this.EOBSERVATION_ID;
+    _o.ID = this.ID;
     _o.CLASSIFICATION = this.CLASSIFICATION;
     _o.OB_TIME = this.OB_TIME;
     _o.CORR_QUALITY = this.CORR_QUALITY;
@@ -731,43 +723,39 @@ public struct EOO : IFlatbufferObject
   }
   public static Offset<EOO> Pack(FlatBufferBuilder builder, EOOT _o) {
     if (_o == null) return default(Offset<EOO>);
-    var _EOBSERVATION_ID = _o.EOBSERVATION_ID == null ? default(StringOffset) : builder.CreateString(_o.EOBSERVATION_ID);
+    var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
     var _OB_TIME = _o.OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.OB_TIME);
     var _ID_ON_ORBIT = _o.ID_ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ID_ON_ORBIT);
     var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
-    var _COLLECT_METHOD = _o.COLLECT_METHOD == null ? default(StringOffset) : builder.CreateString(_o.COLLECT_METHOD);
     var _TASK_ID = _o.TASK_ID == null ? default(StringOffset) : builder.CreateString(_o.TASK_ID);
     var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
     var _TRACK_ID = _o.TRACK_ID == null ? default(StringOffset) : builder.CreateString(_o.TRACK_ID);
-    var _OB_POSITION = _o.OB_POSITION == null ? default(StringOffset) : builder.CreateString(_o.OB_POSITION);
     var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
     var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _RAW_FILE_URI = _o.RAW_FILE_URI == null ? default(StringOffset) : builder.CreateString(_o.RAW_FILE_URI);
     var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
     var _SOURCE = _o.SOURCE == null ? default(StringOffset) : builder.CreateString(_o.SOURCE);
     var _ORIGIN = _o.ORIGIN == null ? default(StringOffset) : builder.CreateString(_o.ORIGIN);
-    var _DATA_MODE = _o.DATA_MODE == null ? default(StringOffset) : builder.CreateString(_o.DATA_MODE);
     var _CREATED_AT = _o.CREATED_AT == null ? default(StringOffset) : builder.CreateString(_o.CREATED_AT);
     var _CREATED_BY = _o.CREATED_BY == null ? default(StringOffset) : builder.CreateString(_o.CREATED_BY);
     var _SEN_REFERENCE_FRAME = _o.SEN_REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.SEN_REFERENCE_FRAME);
     var _ORIG_NETWORK = _o.ORIG_NETWORK == null ? default(StringOffset) : builder.CreateString(_o.ORIG_NETWORK);
     var _SOURCE_DL = _o.SOURCE_DL == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_DL);
-    var _TYPE = _o.TYPE == null ? default(StringOffset) : builder.CreateString(_o.TYPE);
     return CreateEOO(
       builder,
-      _EOBSERVATION_ID,
+      _ID,
       _CLASSIFICATION,
       _OB_TIME,
       _o.CORR_QUALITY,
       _ID_ON_ORBIT,
       _SENSOR_ID,
-      _COLLECT_METHOD,
+      _o.COLLECT_METHOD,
       _o.NORAD_CAT_ID,
       _TASK_ID,
       _TRANSACTION_ID,
       _TRACK_ID,
-      _OB_POSITION,
+      _o.OB_POSITION,
       _ORIG_OBJECT_ID,
       _ORIG_SENSOR_ID,
       _o.UCT,
@@ -832,7 +820,7 @@ public struct EOO : IFlatbufferObject
       _DESCRIPTOR,
       _SOURCE,
       _ORIGIN,
-      _DATA_MODE,
+      _o.DATA_MODE,
       _CREATED_AT,
       _CREATED_BY,
       _o.REFERENCE_FRAME,
@@ -841,7 +829,7 @@ public struct EOO : IFlatbufferObject
       _o.PENUMBRA,
       _ORIG_NETWORK,
       _SOURCE_DL,
-      _TYPE,
+      _o.TYPE,
       _o.AZIMUTH_MEASURED,
       _o.ELEVATION_MEASURED,
       _o.RANGE_MEASURED,
@@ -853,18 +841,18 @@ public struct EOO : IFlatbufferObject
 
 public class EOOT
 {
-  public string EOBSERVATION_ID { get; set; }
+  public string ID { get; set; }
   public string CLASSIFICATION { get; set; }
   public string OB_TIME { get; set; }
   public float CORR_QUALITY { get; set; }
   public string ID_ON_ORBIT { get; set; }
   public string SENSOR_ID { get; set; }
-  public string COLLECT_METHOD { get; set; }
+  public CollectMethod COLLECT_METHOD { get; set; }
   public int NORAD_CAT_ID { get; set; }
   public string TASK_ID { get; set; }
   public string TRANSACTION_ID { get; set; }
   public string TRACK_ID { get; set; }
-  public string OB_POSITION { get; set; }
+  public ObservationPosition OB_POSITION { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
   public string ORIG_SENSOR_ID { get; set; }
   public bool UCT { get; set; }
@@ -929,7 +917,7 @@ public class EOOT
   public string DESCRIPTOR { get; set; }
   public string SOURCE { get; set; }
   public string ORIGIN { get; set; }
-  public string DATA_MODE { get; set; }
+  public DataMode DATA_MODE { get; set; }
   public string CREATED_AT { get; set; }
   public string CREATED_BY { get; set; }
   public refFrame REFERENCE_FRAME { get; set; }
@@ -938,7 +926,7 @@ public class EOOT
   public bool PENUMBRA { get; set; }
   public string ORIG_NETWORK { get; set; }
   public string SOURCE_DL { get; set; }
-  public string TYPE { get; set; }
+  public DeviceType TYPE { get; set; }
   public bool AZIMUTH_MEASURED { get; set; }
   public bool ELEVATION_MEASURED { get; set; }
   public bool RANGE_MEASURED { get; set; }
@@ -947,18 +935,18 @@ public class EOOT
   public bool DECLINATION_MEASURED { get; set; }
 
   public EOOT() {
-    this.EOBSERVATION_ID = null;
+    this.ID = null;
     this.CLASSIFICATION = null;
     this.OB_TIME = null;
     this.CORR_QUALITY = 0.0f;
     this.ID_ON_ORBIT = null;
     this.SENSOR_ID = null;
-    this.COLLECT_METHOD = null;
+    this.COLLECT_METHOD = CollectMethod.SIDEREAL;
     this.NORAD_CAT_ID = 0;
     this.TASK_ID = null;
     this.TRANSACTION_ID = null;
     this.TRACK_ID = null;
-    this.OB_POSITION = null;
+    this.OB_POSITION = ObservationPosition.FENCE;
     this.ORIG_OBJECT_ID = null;
     this.ORIG_SENSOR_ID = null;
     this.UCT = false;
@@ -1023,7 +1011,7 @@ public class EOOT
     this.DESCRIPTOR = null;
     this.SOURCE = null;
     this.ORIGIN = null;
-    this.DATA_MODE = null;
+    this.DATA_MODE = DataMode.EXERCISE;
     this.CREATED_AT = null;
     this.CREATED_BY = null;
     this.REFERENCE_FRAME = refFrame.ECEF;
@@ -1032,7 +1020,7 @@ public class EOOT
     this.PENUMBRA = false;
     this.ORIG_NETWORK = null;
     this.SOURCE_DL = null;
-    this.TYPE = null;
+    this.TYPE = DeviceType.UNKNOWN;
     this.AZIMUTH_MEASURED = false;
     this.ELEVATION_MEASURED = false;
     this.RANGE_MEASURED = false;
@@ -1056,18 +1044,18 @@ static public class EOOVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*EOBSERVATION_ID*/, false)
+      && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*CLASSIFICATION*/, false)
       && verifier.VerifyString(tablePos, 8 /*OB_TIME*/, false)
       && verifier.VerifyField(tablePos, 10 /*CORR_QUALITY*/, 4 /*float*/, 4, false)
       && verifier.VerifyString(tablePos, 12 /*ID_ON_ORBIT*/, false)
       && verifier.VerifyString(tablePos, 14 /*SENSOR_ID*/, false)
-      && verifier.VerifyString(tablePos, 16 /*COLLECT_METHOD*/, false)
+      && verifier.VerifyField(tablePos, 16 /*COLLECT_METHOD*/, 1 /*CollectMethod*/, 1, false)
       && verifier.VerifyField(tablePos, 18 /*NORAD_CAT_ID*/, 4 /*int*/, 4, false)
       && verifier.VerifyString(tablePos, 20 /*TASK_ID*/, false)
       && verifier.VerifyString(tablePos, 22 /*TRANSACTION_ID*/, false)
       && verifier.VerifyString(tablePos, 24 /*TRACK_ID*/, false)
-      && verifier.VerifyString(tablePos, 26 /*OB_POSITION*/, false)
+      && verifier.VerifyField(tablePos, 26 /*OB_POSITION*/, 1 /*ObservationPosition*/, 1, false)
       && verifier.VerifyString(tablePos, 28 /*ORIG_OBJECT_ID*/, false)
       && verifier.VerifyString(tablePos, 30 /*ORIG_SENSOR_ID*/, false)
       && verifier.VerifyField(tablePos, 32 /*UCT*/, 1 /*bool*/, 1, false)
@@ -1132,7 +1120,7 @@ static public class EOOVerify
       && verifier.VerifyString(tablePos, 150 /*DESCRIPTOR*/, false)
       && verifier.VerifyString(tablePos, 152 /*SOURCE*/, false)
       && verifier.VerifyString(tablePos, 154 /*ORIGIN*/, false)
-      && verifier.VerifyString(tablePos, 156 /*DATA_MODE*/, false)
+      && verifier.VerifyField(tablePos, 156 /*DATA_MODE*/, 1 /*DataMode*/, 1, false)
       && verifier.VerifyString(tablePos, 158 /*CREATED_AT*/, false)
       && verifier.VerifyString(tablePos, 160 /*CREATED_BY*/, false)
       && verifier.VerifyField(tablePos, 162 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
@@ -1141,7 +1129,7 @@ static public class EOOVerify
       && verifier.VerifyField(tablePos, 168 /*PENUMBRA*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 170 /*ORIG_NETWORK*/, false)
       && verifier.VerifyString(tablePos, 172 /*SOURCE_DL*/, false)
-      && verifier.VerifyString(tablePos, 174 /*TYPE*/, false)
+      && verifier.VerifyField(tablePos, 174 /*TYPE*/, 1 /*DeviceType*/, 1, false)
       && verifier.VerifyField(tablePos, 176 /*AZIMUTH_MEASURED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 178 /*ELEVATION_MEASURED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 180 /*RANGE_MEASURED*/, 1 /*bool*/, 1, false)

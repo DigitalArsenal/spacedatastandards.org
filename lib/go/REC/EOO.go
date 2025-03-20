@@ -54,8 +54,8 @@ func (rcv *EOO) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Unique identifier for Earth Observation Observation
-func (rcv *EOO) EOBSERVATION_ID() []byte {
+/// Unique identifier of the record.
+func (rcv *EOO) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -63,8 +63,8 @@ func (rcv *EOO) EOBSERVATION_ID() []byte {
 	return nil
 }
 
-/// Unique identifier for Earth Observation Observation
-/// Classification marking of the data
+/// Unique identifier of the record.
+/// Classification marking of the data in IC/CAPCO Portion-marked format.
 func (rcv *EOO) CLASSIFICATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -73,8 +73,8 @@ func (rcv *EOO) CLASSIFICATION() []byte {
 	return nil
 }
 
-/// Classification marking of the data
-/// Observation time in UTC
+/// Classification marking of the data in IC/CAPCO Portion-marked format.
+/// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
 func (rcv *EOO) OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -83,8 +83,8 @@ func (rcv *EOO) OB_TIME() []byte {
 	return nil
 }
 
-/// Observation time in UTC
-/// Quality of the correlation
+/// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
+/// Correlation score of the observation when compared to a known orbit state.
 func (rcv *EOO) CORR_QUALITY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -93,12 +93,12 @@ func (rcv *EOO) CORR_QUALITY() float32 {
 	return 0.0
 }
 
-/// Quality of the correlation
+/// Correlation score of the observation when compared to a known orbit state.
 func (rcv *EOO) MutateCORR_QUALITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
 }
 
-/// Identifier for the satellite on orbit
+/// Server will auto-populate with SAT_NO if available.
 func (rcv *EOO) ID_ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -107,8 +107,8 @@ func (rcv *EOO) ID_ON_ORBIT() []byte {
 	return nil
 }
 
-/// Identifier for the satellite on orbit
-/// Identifier for the sensor
+/// Server will auto-populate with SAT_NO if available.
+/// Unique ID of the sensor. Must have a corresponding sensor record on the server.
 func (rcv *EOO) SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -117,18 +117,22 @@ func (rcv *EOO) SENSOR_ID() []byte {
 	return nil
 }
 
-/// Identifier for the sensor
-/// Method of data collection
-func (rcv *EOO) COLLECT_METHOD() []byte {
+/// Unique ID of the sensor. Must have a corresponding sensor record on the server.
+/// Accepted Collection Method
+func (rcv *EOO) COLLECT_METHOD() CollectMethod {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return CollectMethod(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-/// Method of data collection
-/// NORAD catalog identifier for the satellite
+/// Accepted Collection Method
+func (rcv *EOO) MutateCOLLECT_METHOD(n CollectMethod) bool {
+	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+/// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
 func (rcv *EOO) NORAD_CAT_ID() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -137,12 +141,12 @@ func (rcv *EOO) NORAD_CAT_ID() int32 {
 	return 0
 }
 
-/// NORAD catalog identifier for the satellite
+/// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
 func (rcv *EOO) MutateNORAD_CAT_ID(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
 }
 
-/// Identifier for the task
+/// Identifier for the collectRequest message if the collection was in response to tasking.
 func (rcv *EOO) TASK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -151,8 +155,8 @@ func (rcv *EOO) TASK_ID() []byte {
 	return nil
 }
 
-/// Identifier for the task
-/// Identifier for the transaction
+/// Identifier for the collectRequest message if the collection was in response to tasking.
+/// Optional identifier to track a transaction.
 func (rcv *EOO) TRANSACTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -161,8 +165,8 @@ func (rcv *EOO) TRANSACTION_ID() []byte {
 	return nil
 }
 
-/// Identifier for the transaction
-/// Identifier for the track
+/// Optional identifier to track a transaction.
+/// Identifier of the track to which this observation belongs, if applicable.
 func (rcv *EOO) TRACK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -171,18 +175,22 @@ func (rcv *EOO) TRACK_ID() []byte {
 	return nil
 }
 
-/// Identifier for the track
-/// Position of the observation
-func (rcv *EOO) OB_POSITION() []byte {
+/// Identifier of the track to which this observation belongs, if applicable.
+/// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+func (rcv *EOO) OB_POSITION() ObservationPosition {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return ObservationPosition(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-/// Position of the observation
-/// Original object identifier
+/// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+func (rcv *EOO) MutateOB_POSITION(n ObservationPosition) bool {
+	return rcv._tab.MutateInt8Slot(26, int8(n))
+}
+
+/// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
 func (rcv *EOO) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -191,8 +199,8 @@ func (rcv *EOO) ORIG_OBJECT_ID() []byte {
 	return nil
 }
 
-/// Original object identifier
-/// Original sensor identifier
+/// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
+/// Sensor ID.
 func (rcv *EOO) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -201,8 +209,8 @@ func (rcv *EOO) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
-/// Original sensor identifier
-/// Universal Coordinated Time flag
+/// Sensor ID.
+/// Required if correlation is attempted. Indicates whether correlation succeeded.
 func (rcv *EOO) UCT() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -211,12 +219,12 @@ func (rcv *EOO) UCT() bool {
 	return false
 }
 
-/// Universal Coordinated Time flag
+/// Required if correlation is attempted. Indicates whether correlation succeeded.
 func (rcv *EOO) MutateUCT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(32, n)
 }
 
-/// Azimuth angle
+/// Line of sight azimuth angle in degrees and topocentric frame.
 func (rcv *EOO) AZIMUTH() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -225,12 +233,12 @@ func (rcv *EOO) AZIMUTH() float32 {
 	return 0.0
 }
 
-/// Azimuth angle
+/// Line of sight azimuth angle in degrees and topocentric frame.
 func (rcv *EOO) MutateAZIMUTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(34, n)
 }
 
-/// Uncertainty in azimuth angle
+/// One sigma uncertainty in the line of sight azimuth angle, in degrees.
 func (rcv *EOO) AZIMUTH_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -239,12 +247,12 @@ func (rcv *EOO) AZIMUTH_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in azimuth angle
+/// One sigma uncertainty in the line of sight azimuth angle, in degrees.
 func (rcv *EOO) MutateAZIMUTH_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(36, n)
 }
 
-/// Bias in azimuth angle
+/// Sensor line of sight azimuth angle bias in degrees.
 func (rcv *EOO) AZIMUTH_BIAS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -253,12 +261,12 @@ func (rcv *EOO) AZIMUTH_BIAS() float32 {
 	return 0.0
 }
 
-/// Bias in azimuth angle
+/// Sensor line of sight azimuth angle bias in degrees.
 func (rcv *EOO) MutateAZIMUTH_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(38, n)
 }
 
-/// Rate of change in azimuth
+/// Rate of change of the line of sight azimuth in degrees per second.
 func (rcv *EOO) AZIMUTH_RATE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -267,12 +275,12 @@ func (rcv *EOO) AZIMUTH_RATE() float32 {
 	return 0.0
 }
 
-/// Rate of change in azimuth
+/// Rate of change of the line of sight azimuth in degrees per second.
 func (rcv *EOO) MutateAZIMUTH_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(40, n)
 }
 
-/// Elevation angle
+/// Line of sight elevation in degrees and topocentric frame.
 func (rcv *EOO) ELEVATION() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -281,12 +289,12 @@ func (rcv *EOO) ELEVATION() float32 {
 	return 0.0
 }
 
-/// Elevation angle
+/// Line of sight elevation in degrees and topocentric frame.
 func (rcv *EOO) MutateELEVATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(42, n)
 }
 
-/// Uncertainty in elevation angle
+/// One sigma uncertainty in the line of sight elevation angle, in degrees.
 func (rcv *EOO) ELEVATION_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -295,12 +303,12 @@ func (rcv *EOO) ELEVATION_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in elevation angle
+/// One sigma uncertainty in the line of sight elevation angle, in degrees.
 func (rcv *EOO) MutateELEVATION_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(44, n)
 }
 
-/// Bias in elevation angle
+/// Sensor line of sight elevation bias in degrees.
 func (rcv *EOO) ELEVATION_BIAS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -309,12 +317,12 @@ func (rcv *EOO) ELEVATION_BIAS() float32 {
 	return 0.0
 }
 
-/// Bias in elevation angle
+/// Sensor line of sight elevation bias in degrees.
 func (rcv *EOO) MutateELEVATION_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(46, n)
 }
 
-/// Rate of change in elevation
+/// Rate of change of the line of sight elevation in degrees per second.
 func (rcv *EOO) ELEVATION_RATE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -323,12 +331,12 @@ func (rcv *EOO) ELEVATION_RATE() float32 {
 	return 0.0
 }
 
-/// Rate of change in elevation
+/// Rate of change of the line of sight elevation in degrees per second.
 func (rcv *EOO) MutateELEVATION_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(48, n)
 }
 
-/// Range to the target
+/// Line of sight range in km. Reported value should include all applicable corrections.
 func (rcv *EOO) RANGE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -337,12 +345,12 @@ func (rcv *EOO) RANGE() float32 {
 	return 0.0
 }
 
-/// Range to the target
+/// Line of sight range in km. Reported value should include all applicable corrections.
 func (rcv *EOO) MutateRANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(50, n)
 }
 
-/// Uncertainty in range
+/// One sigma uncertainty in the line of sight range, in km.
 func (rcv *EOO) RANGE_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
@@ -351,12 +359,12 @@ func (rcv *EOO) RANGE_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in range
+/// One sigma uncertainty in the line of sight range, in km.
 func (rcv *EOO) MutateRANGE_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(52, n)
 }
 
-/// Bias in range measurement
+/// Sensor line of sight range bias in km.
 func (rcv *EOO) RANGE_BIAS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -365,12 +373,12 @@ func (rcv *EOO) RANGE_BIAS() float32 {
 	return 0.0
 }
 
-/// Bias in range measurement
+/// Sensor line of sight range bias in km.
 func (rcv *EOO) MutateRANGE_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(54, n)
 }
 
-/// Rate of change in range
+/// Range rate in km/s. Reported value should include all applicable corrections.
 func (rcv *EOO) RANGE_RATE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -379,12 +387,12 @@ func (rcv *EOO) RANGE_RATE() float32 {
 	return 0.0
 }
 
-/// Rate of change in range
+/// Range rate in km/s. Reported value should include all applicable corrections.
 func (rcv *EOO) MutateRANGE_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(56, n)
 }
 
-/// Uncertainty in range rate
+/// One sigma uncertainty in the line of sight range rate, in km/sec.
 func (rcv *EOO) RANGE_RATE_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
@@ -393,12 +401,12 @@ func (rcv *EOO) RANGE_RATE_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in range rate
+/// One sigma uncertainty in the line of sight range rate, in km/sec.
 func (rcv *EOO) MutateRANGE_RATE_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(58, n)
 }
 
-/// Right ascension
+/// Right ascension in degrees. Required metric reporting field for EO observations.
 func (rcv *EOO) RA() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -407,12 +415,12 @@ func (rcv *EOO) RA() float32 {
 	return 0.0
 }
 
-/// Right ascension
+/// Right ascension in degrees. Required metric reporting field for EO observations.
 func (rcv *EOO) MutateRA(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(60, n)
 }
 
-/// Rate of change in right ascension
+/// Line of sight right ascension rate of change, in degrees/sec.
 func (rcv *EOO) RA_RATE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -421,12 +429,12 @@ func (rcv *EOO) RA_RATE() float32 {
 	return 0.0
 }
 
-/// Rate of change in right ascension
+/// Line of sight right ascension rate of change, in degrees/sec.
 func (rcv *EOO) MutateRA_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(62, n)
 }
 
-/// Uncertainty in right ascension
+/// One sigma uncertainty in the line of sight right ascension angle, in degrees.
 func (rcv *EOO) RA_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -435,12 +443,12 @@ func (rcv *EOO) RA_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in right ascension
+/// One sigma uncertainty in the line of sight right ascension angle, in degrees.
 func (rcv *EOO) MutateRA_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(64, n)
 }
 
-/// Bias in right ascension
+/// Sensor line of sight right ascension bias in degrees.
 func (rcv *EOO) RA_BIAS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -449,12 +457,12 @@ func (rcv *EOO) RA_BIAS() float32 {
 	return 0.0
 }
 
-/// Bias in right ascension
+/// Sensor line of sight right ascension bias in degrees.
 func (rcv *EOO) MutateRA_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(66, n)
 }
 
-/// Declination angle
+/// Declination in degrees. Required metric reporting field for EO observations.
 func (rcv *EOO) DECLINATION() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -463,12 +471,12 @@ func (rcv *EOO) DECLINATION() float32 {
 	return 0.0
 }
 
-/// Declination angle
+/// Declination in degrees. Required metric reporting field for EO observations.
 func (rcv *EOO) MutateDECLINATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(68, n)
 }
 
-/// Rate of change in declination
+/// Line of sight declination rate of change, in degrees/sec.
 func (rcv *EOO) DECLINATION_RATE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
@@ -477,12 +485,12 @@ func (rcv *EOO) DECLINATION_RATE() float32 {
 	return 0.0
 }
 
-/// Rate of change in declination
+/// Line of sight declination rate of change, in degrees/sec.
 func (rcv *EOO) MutateDECLINATION_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(70, n)
 }
 
-/// Uncertainty in declination
+/// One sigma uncertainty in the line of sight declination angle, in degrees.
 func (rcv *EOO) DECLINATION_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -491,12 +499,12 @@ func (rcv *EOO) DECLINATION_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in declination
+/// One sigma uncertainty in the line of sight declination angle, in degrees.
 func (rcv *EOO) MutateDECLINATION_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(72, n)
 }
 
-/// Bias in declination
+/// Sensor line of sight declination angle bias in degrees.
 func (rcv *EOO) DECLINATION_BIAS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
@@ -505,12 +513,12 @@ func (rcv *EOO) DECLINATION_BIAS() float32 {
 	return 0.0
 }
 
-/// Bias in declination
+/// Sensor line of sight declination angle bias in degrees.
 func (rcv *EOO) MutateDECLINATION_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(74, n)
 }
 
-/// X-component of line-of-sight vector
+/// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) LOSX() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -519,12 +527,12 @@ func (rcv *EOO) LOSX() float32 {
 	return 0.0
 }
 
-/// X-component of line-of-sight vector
+/// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) MutateLOSX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(76, n)
 }
 
-/// Y-component of line-of-sight vector
+/// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) LOSY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
@@ -533,12 +541,12 @@ func (rcv *EOO) LOSY() float32 {
 	return 0.0
 }
 
-/// Y-component of line-of-sight vector
+/// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) MutateLOSY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(78, n)
 }
 
-/// Z-component of line-of-sight vector
+/// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) LOSZ() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
@@ -547,12 +555,12 @@ func (rcv *EOO) LOSZ() float32 {
 	return 0.0
 }
 
-/// Z-component of line-of-sight vector
+/// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) MutateLOSZ(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(80, n)
 }
 
-/// Uncertainty in line-of-sight vector
+/// One sigma uncertainty in the line-of-sight direction vector components.
 func (rcv *EOO) LOS_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
@@ -561,12 +569,12 @@ func (rcv *EOO) LOS_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in line-of-sight vector
+/// One sigma uncertainty in the line-of-sight direction vector components.
 func (rcv *EOO) MutateLOS_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(82, n)
 }
 
-/// X-component of line-of-sight velocity
+/// X-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) LOSXVEL() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
@@ -575,12 +583,12 @@ func (rcv *EOO) LOSXVEL() float32 {
 	return 0.0
 }
 
-/// X-component of line-of-sight velocity
+/// X-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) MutateLOSXVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(84, n)
 }
 
-/// Y-component of line-of-sight velocity
+/// Y-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) LOSYVEL() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
@@ -589,12 +597,12 @@ func (rcv *EOO) LOSYVEL() float32 {
 	return 0.0
 }
 
-/// Y-component of line-of-sight velocity
+/// Y-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) MutateLOSYVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(86, n)
 }
 
-/// Z-component of line-of-sight velocity
+/// Z-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) LOSZVEL() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
@@ -603,12 +611,12 @@ func (rcv *EOO) LOSZVEL() float32 {
 	return 0.0
 }
 
-/// Z-component of line-of-sight velocity
+/// Z-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) MutateLOSZVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(88, n)
 }
 
-/// Latitude of sensor
+/// WGS-84 latitude in decimal degrees at the time of the observation.
 func (rcv *EOO) SENLAT() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
@@ -617,12 +625,12 @@ func (rcv *EOO) SENLAT() float32 {
 	return 0.0
 }
 
-/// Latitude of sensor
+/// WGS-84 latitude in decimal degrees at the time of the observation.
 func (rcv *EOO) MutateSENLAT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(90, n)
 }
 
-/// Longitude of sensor
+/// WGS-84 longitude in decimal degrees at the time of the observation.
 func (rcv *EOO) SENLON() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
@@ -631,12 +639,12 @@ func (rcv *EOO) SENLON() float32 {
 	return 0.0
 }
 
-/// Longitude of sensor
+/// WGS-84 longitude in decimal degrees at the time of the observation.
 func (rcv *EOO) MutateSENLON(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(92, n)
 }
 
-/// Altitude of sensor
+/// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
 func (rcv *EOO) SENALT() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
@@ -645,12 +653,12 @@ func (rcv *EOO) SENALT() float32 {
 	return 0.0
 }
 
-/// Altitude of sensor
+/// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
 func (rcv *EOO) MutateSENALT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(94, n)
 }
 
-/// X-coordinate of sensor position
+/// Cartesian X position in km at the time of the observation.
 func (rcv *EOO) SENX() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
@@ -659,12 +667,12 @@ func (rcv *EOO) SENX() float32 {
 	return 0.0
 }
 
-/// X-coordinate of sensor position
+/// Cartesian X position in km at the time of the observation.
 func (rcv *EOO) MutateSENX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(96, n)
 }
 
-/// Y-coordinate of sensor position
+/// Cartesian Y position in km at the time of the observation.
 func (rcv *EOO) SENY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
@@ -673,12 +681,12 @@ func (rcv *EOO) SENY() float32 {
 	return 0.0
 }
 
-/// Y-coordinate of sensor position
+/// Cartesian Y position in km at the time of the observation.
 func (rcv *EOO) MutateSENY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(98, n)
 }
 
-/// Z-coordinate of sensor position
+/// Cartesian Z position in km at the time of the observation.
 func (rcv *EOO) SENZ() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
@@ -687,12 +695,12 @@ func (rcv *EOO) SENZ() float32 {
 	return 0.0
 }
 
-/// Z-coordinate of sensor position
+/// Cartesian Z position in km at the time of the observation.
 func (rcv *EOO) MutateSENZ(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(100, n)
 }
 
-/// Number of fields of view
+/// Total number of satellites in the field of view.
 func (rcv *EOO) FOV_COUNT() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
@@ -701,12 +709,12 @@ func (rcv *EOO) FOV_COUNT() int32 {
 	return 0
 }
 
-/// Number of fields of view
+/// Total number of satellites in the field of view.
 func (rcv *EOO) MutateFOV_COUNT(n int32) bool {
 	return rcv._tab.MutateInt32Slot(102, n)
 }
 
-/// Number of uncorrelated satellites in the field of view (JCO)
+/// Number of uncorrelated satellites in the field of view (JCO).
 func (rcv *EOO) FOV_COUNT_UCTS() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -715,12 +723,14 @@ func (rcv *EOO) FOV_COUNT_UCTS() int32 {
 	return 0
 }
 
-/// Number of uncorrelated satellites in the field of view (JCO)
+/// Number of uncorrelated satellites in the field of view (JCO).
 func (rcv *EOO) MutateFOV_COUNT_UCTS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(104, n)
 }
 
-/// Duration of the exposure
+/// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+/// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+/// observations are going to be used for photometric processing.
 func (rcv *EOO) EXP_DURATION() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
@@ -729,12 +739,14 @@ func (rcv *EOO) EXP_DURATION() float32 {
 	return 0.0
 }
 
-/// Duration of the exposure
+/// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+/// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+/// observations are going to be used for photometric processing.
 func (rcv *EOO) MutateEXP_DURATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(106, n)
 }
 
-/// Zero-point displacement
+/// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
 func (rcv *EOO) ZEROPTD() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
@@ -743,12 +755,12 @@ func (rcv *EOO) ZEROPTD() float32 {
 	return 0.0
 }
 
-/// Zero-point displacement
+/// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
 func (rcv *EOO) MutateZEROPTD(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(108, n)
 }
 
-/// Net object signal
+/// Net object signature = counts / EXP_DURATION.
 func (rcv *EOO) NET_OBJ_SIG() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
@@ -757,12 +769,12 @@ func (rcv *EOO) NET_OBJ_SIG() float32 {
 	return 0.0
 }
 
-/// Net object signal
+/// Net object signature = counts / EXP_DURATION.
 func (rcv *EOO) MutateNET_OBJ_SIG(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(110, n)
 }
 
-/// Uncertainty in net object signal
+/// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
 func (rcv *EOO) NET_OBJ_SIG_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
@@ -771,12 +783,12 @@ func (rcv *EOO) NET_OBJ_SIG_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in net object signal
+/// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
 func (rcv *EOO) MutateNET_OBJ_SIG_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(112, n)
 }
 
-/// Magnitude of the observation
+/// Measure of observed brightness calibrated against the Gaia G-band.
 func (rcv *EOO) MAG() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
@@ -785,12 +797,12 @@ func (rcv *EOO) MAG() float32 {
 	return 0.0
 }
 
-/// Magnitude of the observation
+/// Measure of observed brightness calibrated against the Gaia G-band.
 func (rcv *EOO) MutateMAG(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(114, n)
 }
 
-/// Uncertainty in magnitude
+/// Uncertainty of the observed brightness.
 func (rcv *EOO) MAG_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
@@ -799,12 +811,12 @@ func (rcv *EOO) MAG_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in magnitude
+/// Uncertainty of the observed brightness.
 func (rcv *EOO) MutateMAG_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(116, n)
 }
 
-/// Normalized range for magnitude
+/// [Definition needed].
 func (rcv *EOO) MAG_NORM_RANGE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
@@ -813,12 +825,13 @@ func (rcv *EOO) MAG_NORM_RANGE() float32 {
 	return 0.0
 }
 
-/// Normalized range for magnitude
+/// [Definition needed].
 func (rcv *EOO) MutateMAG_NORM_RANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(118, n)
 }
 
-/// Geocentric latitude
+/// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+/// and corresponding viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) GEOLAT() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
@@ -827,12 +840,14 @@ func (rcv *EOO) GEOLAT() float32 {
 	return 0.0
 }
 
-/// Geocentric latitude
+/// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+/// and corresponding viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOLAT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(120, n)
 }
 
-/// Geocentric longitude
+/// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+/// and viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) GEOLON() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
 	if o != 0 {
@@ -841,12 +856,13 @@ func (rcv *EOO) GEOLON() float32 {
 	return 0.0
 }
 
-/// Geocentric longitude
+/// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+/// and viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOLON(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(122, n)
 }
 
-/// Geocentric altitude
+/// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
 func (rcv *EOO) GEOALT() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
 	if o != 0 {
@@ -855,12 +871,12 @@ func (rcv *EOO) GEOALT() float32 {
 	return 0.0
 }
 
-/// Geocentric altitude
+/// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOALT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(124, n)
 }
 
-/// Geocentric range
+/// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
 func (rcv *EOO) GEORANGE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
 	if o != 0 {
@@ -869,12 +885,13 @@ func (rcv *EOO) GEORANGE() float32 {
 	return 0.0
 }
 
-/// Geocentric range
+/// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEORANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(126, n)
 }
 
-/// Sky background level
+/// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+/// empty part of the night sky.
 func (rcv *EOO) SKY_BKGRND() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
 	if o != 0 {
@@ -883,12 +900,16 @@ func (rcv *EOO) SKY_BKGRND() float32 {
 	return 0.0
 }
 
-/// Sky background level
+/// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+/// empty part of the night sky.
 func (rcv *EOO) MutateSKY_BKGRND(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(128, n)
 }
 
-/// Primary extinction
+/// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+/// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+/// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+/// object and the observer.
 func (rcv *EOO) PRIMARY_EXTINCTION() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
 	if o != 0 {
@@ -897,12 +918,15 @@ func (rcv *EOO) PRIMARY_EXTINCTION() float32 {
 	return 0.0
 }
 
-/// Primary extinction
+/// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+/// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+/// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+/// object and the observer.
 func (rcv *EOO) MutatePRIMARY_EXTINCTION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(130, n)
 }
 
-/// Uncertainty in primary extinction
+/// Primary Extinction Coefficient Uncertainty, in Magnitudes.
 func (rcv *EOO) PRIMARY_EXTINCTION_UNC() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
 	if o != 0 {
@@ -911,12 +935,13 @@ func (rcv *EOO) PRIMARY_EXTINCTION_UNC() float32 {
 	return 0.0
 }
 
-/// Uncertainty in primary extinction
+/// Primary Extinction Coefficient Uncertainty, in Magnitudes.
 func (rcv *EOO) MutatePRIMARY_EXTINCTION_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(132, n)
 }
 
-/// Solar phase angle
+/// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+/// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
 func (rcv *EOO) SOLAR_PHASE_ANGLE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
 	if o != 0 {
@@ -925,12 +950,15 @@ func (rcv *EOO) SOLAR_PHASE_ANGLE() float32 {
 	return 0.0
 }
 
-/// Solar phase angle
+/// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+/// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
 func (rcv *EOO) MutateSOLAR_PHASE_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(134, n)
 }
 
-/// Solar equatorial phase angle
+/// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+/// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+/// and positive when opening (after the opposition).
 func (rcv *EOO) SOLAR_EQ_PHASE_ANGLE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
 	if o != 0 {
@@ -939,12 +967,14 @@ func (rcv *EOO) SOLAR_EQ_PHASE_ANGLE() float32 {
 	return 0.0
 }
 
-/// Solar equatorial phase angle
+/// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+/// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+/// and positive when opening (after the opposition).
 func (rcv *EOO) MutateSOLAR_EQ_PHASE_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(136, n)
 }
 
-/// Solar declination angle
+/// Angle from the sun to the equatorial plane.
 func (rcv *EOO) SOLAR_DEC_ANGLE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
 	if o != 0 {
@@ -953,12 +983,12 @@ func (rcv *EOO) SOLAR_DEC_ANGLE() float32 {
 	return 0.0
 }
 
-/// Solar declination angle
+/// Angle from the sun to the equatorial plane.
 func (rcv *EOO) MutateSOLAR_DEC_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(138, n)
 }
 
-/// Shutter delay
+/// Shutter delay in seconds.
 func (rcv *EOO) SHUTTER_DELAY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
 	if o != 0 {
@@ -967,12 +997,12 @@ func (rcv *EOO) SHUTTER_DELAY() float32 {
 	return 0.0
 }
 
-/// Shutter delay
+/// Shutter delay in seconds.
 func (rcv *EOO) MutateSHUTTER_DELAY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(140, n)
 }
 
-/// Timing bias
+/// Sensor timing bias in seconds.
 func (rcv *EOO) TIMING_BIAS() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(142))
 	if o != 0 {
@@ -981,12 +1011,12 @@ func (rcv *EOO) TIMING_BIAS() float32 {
 	return 0.0
 }
 
-/// Timing bias
+/// Sensor timing bias in seconds.
 func (rcv *EOO) MutateTIMING_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(142, n)
 }
 
-/// URI of the raw data file
+/// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
 func (rcv *EOO) RAW_FILE_URI() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(144))
 	if o != 0 {
@@ -995,8 +1025,8 @@ func (rcv *EOO) RAW_FILE_URI() []byte {
 	return nil
 }
 
-/// URI of the raw data file
-/// Intensity of the observation
+/// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+/// Intensity of the target for IR observations, in kw/sr/em.
 func (rcv *EOO) INTENSITY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(146))
 	if o != 0 {
@@ -1005,12 +1035,12 @@ func (rcv *EOO) INTENSITY() float32 {
 	return 0.0
 }
 
-/// Intensity of the observation
+/// Intensity of the target for IR observations, in kw/sr/em.
 func (rcv *EOO) MutateINTENSITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(146, n)
 }
 
-/// Background intensity
+/// Background intensity for IR observations, in kw/sr/um.
 func (rcv *EOO) BG_INTENSITY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
 	if o != 0 {
@@ -1019,12 +1049,12 @@ func (rcv *EOO) BG_INTENSITY() float32 {
 	return 0.0
 }
 
-/// Background intensity
+/// Background intensity for IR observations, in kw/sr/um.
 func (rcv *EOO) MutateBG_INTENSITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(148, n)
 }
 
-/// Descriptor of the provided data
+/// Optional source-provided and searchable metadata or descriptor of the data.
 func (rcv *EOO) DESCRIPTOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
 	if o != 0 {
@@ -1033,8 +1063,8 @@ func (rcv *EOO) DESCRIPTOR() []byte {
 	return nil
 }
 
-/// Descriptor of the provided data
-/// Source of the data
+/// Optional source-provided and searchable metadata or descriptor of the data.
+/// Source of the data.
 func (rcv *EOO) SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(152))
 	if o != 0 {
@@ -1043,8 +1073,10 @@ func (rcv *EOO) SOURCE() []byte {
 	return nil
 }
 
-/// Source of the data
-/// Origin of the data
+/// Source of the data.
+/// Originating system or organization which produced the data, if different from the source.
+/// The origin may be different than the source if the source was a mediating system which forwarded 
+/// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
 func (rcv *EOO) ORIGIN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(154))
 	if o != 0 {
@@ -1053,18 +1085,24 @@ func (rcv *EOO) ORIGIN() []byte {
 	return nil
 }
 
-/// Origin of the data
-/// Mode of the data
-func (rcv *EOO) DATA_MODE() []byte {
+/// Originating system or organization which produced the data, if different from the source.
+/// The origin may be different than the source if the source was a mediating system which forwarded 
+/// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
+/// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+func (rcv *EOO) DATA_MODE() DataMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(156))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return DataMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-/// Mode of the data
-/// Creation time of the record
+/// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+func (rcv *EOO) MutateDATA_MODE(n DataMode) bool {
+	return rcv._tab.MutateInt8Slot(156, int8(n))
+}
+
+/// Time the row was created in the database, auto-populated by the system.
 func (rcv *EOO) CREATED_AT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(158))
 	if o != 0 {
@@ -1073,8 +1111,8 @@ func (rcv *EOO) CREATED_AT() []byte {
 	return nil
 }
 
-/// Creation time of the record
-/// User who created the record
+/// Time the row was created in the database, auto-populated by the system.
+/// Application user who created the row in the database, auto-populated by the system.
 func (rcv *EOO) CREATED_BY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(160))
 	if o != 0 {
@@ -1083,8 +1121,8 @@ func (rcv *EOO) CREATED_BY() []byte {
 	return nil
 }
 
-/// User who created the record
-/// Reference frame of the observation
+/// Application user who created the row in the database, auto-populated by the system.
+/// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
 func (rcv *EOO) REFERENCE_FRAME() refFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(162))
 	if o != 0 {
@@ -1093,12 +1131,14 @@ func (rcv *EOO) REFERENCE_FRAME() refFrame {
 	return 0
 }
 
-/// Reference frame of the observation
+/// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
 func (rcv *EOO) MutateREFERENCE_FRAME(n refFrame) bool {
 	return rcv._tab.MutateInt8Slot(162, int8(n))
 }
 
-/// Reference frame of the sensor
+/// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+/// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+/// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
 func (rcv *EOO) SEN_REFERENCE_FRAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(164))
 	if o != 0 {
@@ -1107,8 +1147,10 @@ func (rcv *EOO) SEN_REFERENCE_FRAME() []byte {
 	return nil
 }
 
-/// Reference frame of the sensor
-/// Flag for umbra (total eclipse)
+/// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+/// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+/// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
+/// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
 func (rcv *EOO) UMBRA() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(166))
 	if o != 0 {
@@ -1117,12 +1159,13 @@ func (rcv *EOO) UMBRA() bool {
 	return false
 }
 
-/// Flag for umbra (total eclipse)
+/// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
 func (rcv *EOO) MutateUMBRA(n bool) bool {
 	return rcv._tab.MutateBoolSlot(166, n)
 }
 
-/// Flag for penumbra (partial eclipse)
+/// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+/// This field is highly recommended if the observations will be used for photometric processing.
 func (rcv *EOO) PENUMBRA() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(168))
 	if o != 0 {
@@ -1131,12 +1174,13 @@ func (rcv *EOO) PENUMBRA() bool {
 	return false
 }
 
-/// Flag for penumbra (partial eclipse)
+/// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+/// This field is highly recommended if the observations will be used for photometric processing.
 func (rcv *EOO) MutatePENUMBRA(n bool) bool {
 	return rcv._tab.MutateBoolSlot(168, n)
 }
 
-/// Original network identifier
+/// The originating source network on which this record was created, auto-populated by the system.
 func (rcv *EOO) ORIG_NETWORK() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(170))
 	if o != 0 {
@@ -1145,8 +1189,8 @@ func (rcv *EOO) ORIG_NETWORK() []byte {
 	return nil
 }
 
-/// Original network identifier
-/// Data link source
+/// The originating source network on which this record was created, auto-populated by the system.
+/// The source from which this record was received.
 func (rcv *EOO) SOURCE_DL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(172))
 	if o != 0 {
@@ -1155,18 +1199,22 @@ func (rcv *EOO) SOURCE_DL() []byte {
 	return nil
 }
 
-/// Data link source
-/// Type of the observation
-func (rcv *EOO) TYPE() []byte {
+/// The source from which this record was received.
+/// Device Type
+func (rcv *EOO) TYPE() DeviceType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(174))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return DeviceType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-/// Type of the observation
-/// True if measured, false if computed. Required if azimuth is reported (JCO)
+/// Device Type
+func (rcv *EOO) MutateTYPE(n DeviceType) bool {
+	return rcv._tab.MutateInt8Slot(174, int8(n))
+}
+
+/// True if measured, false if computed. Required if azimuth is reported.
 func (rcv *EOO) AZIMUTH_MEASURED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(176))
 	if o != 0 {
@@ -1175,12 +1223,12 @@ func (rcv *EOO) AZIMUTH_MEASURED() bool {
 	return false
 }
 
-/// True if measured, false if computed. Required if azimuth is reported (JCO)
+/// True if measured, false if computed. Required if azimuth is reported.
 func (rcv *EOO) MutateAZIMUTH_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(176, n)
 }
 
-/// True if measured, false if computed. Required if elevation is reported (JCO)
+/// True if measured, false if computed. Required if elevation is reported.
 func (rcv *EOO) ELEVATION_MEASURED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(178))
 	if o != 0 {
@@ -1189,12 +1237,12 @@ func (rcv *EOO) ELEVATION_MEASURED() bool {
 	return false
 }
 
-/// True if measured, false if computed. Required if elevation is reported (JCO)
+/// True if measured, false if computed. Required if elevation is reported.
 func (rcv *EOO) MutateELEVATION_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(178, n)
 }
 
-/// True if measured, false if computed. Required if range is reported (JCO)
+/// True if measured, false if computed. Required if range is reported.
 func (rcv *EOO) RANGE_MEASURED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(180))
 	if o != 0 {
@@ -1203,12 +1251,12 @@ func (rcv *EOO) RANGE_MEASURED() bool {
 	return false
 }
 
-/// True if measured, false if computed. Required if range is reported (JCO)
+/// True if measured, false if computed. Required if range is reported.
 func (rcv *EOO) MutateRANGE_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(180, n)
 }
 
-/// True if measured, false if computed. Required if range-rate is reported (JCO)
+/// True if measured, false if computed. Required if range-rate is reported.
 func (rcv *EOO) RANGERATE_MEASURED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(182))
 	if o != 0 {
@@ -1217,12 +1265,12 @@ func (rcv *EOO) RANGERATE_MEASURED() bool {
 	return false
 }
 
-/// True if measured, false if computed. Required if range-rate is reported (JCO)
+/// True if measured, false if computed. Required if range-rate is reported.
 func (rcv *EOO) MutateRANGERATE_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(182, n)
 }
 
-/// True if measured, false if computed. Required if right ascension is reported (JCO)
+/// True if measured, false if computed. Required if right ascension is reported.
 func (rcv *EOO) RA_MEASURED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(184))
 	if o != 0 {
@@ -1231,12 +1279,12 @@ func (rcv *EOO) RA_MEASURED() bool {
 	return false
 }
 
-/// True if measured, false if computed. Required if right ascension is reported (JCO)
+/// True if measured, false if computed. Required if right ascension is reported.
 func (rcv *EOO) MutateRA_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(184, n)
 }
 
-/// True if measured, false if computed. Required if declination is reported (JCO)
+/// True if measured, false if computed. Required if declination is reported.
 func (rcv *EOO) DECLINATION_MEASURED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(186))
 	if o != 0 {
@@ -1245,7 +1293,7 @@ func (rcv *EOO) DECLINATION_MEASURED() bool {
 	return false
 }
 
-/// True if measured, false if computed. Required if declination is reported (JCO)
+/// True if measured, false if computed. Required if declination is reported.
 func (rcv *EOO) MutateDECLINATION_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(186, n)
 }
@@ -1253,8 +1301,8 @@ func (rcv *EOO) MutateDECLINATION_MEASURED(n bool) bool {
 func EOOStart(builder *flatbuffers.Builder) {
 	builder.StartObject(92)
 }
-func EOOAddEOBSERVATION_ID(builder *flatbuffers.Builder, EOBSERVATION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EOBSERVATION_ID), 0)
+func EOOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
 func EOOAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CLASSIFICATION), 0)
@@ -1271,8 +1319,8 @@ func EOOAddID_ON_ORBIT(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOf
 func EOOAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
-func EOOAddCOLLECT_METHOD(builder *flatbuffers.Builder, COLLECT_METHOD flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COLLECT_METHOD), 0)
+func EOOAddCOLLECT_METHOD(builder *flatbuffers.Builder, COLLECT_METHOD CollectMethod) {
+	builder.PrependInt8Slot(6, int8(COLLECT_METHOD), 0)
 }
 func EOOAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID int32) {
 	builder.PrependInt32Slot(7, NORAD_CAT_ID, 0)
@@ -1286,8 +1334,8 @@ func EOOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffe
 func EOOAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TRACK_ID), 0)
 }
-func EOOAddOB_POSITION(builder *flatbuffers.Builder, OB_POSITION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(OB_POSITION), 0)
+func EOOAddOB_POSITION(builder *flatbuffers.Builder, OB_POSITION ObservationPosition) {
+	builder.PrependInt8Slot(11, int8(OB_POSITION), 0)
 }
 func EOOAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
@@ -1481,8 +1529,8 @@ func EOOAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 func EOOAddORIGIN(builder *flatbuffers.Builder, ORIGIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(75, flatbuffers.UOffsetT(ORIGIN), 0)
 }
-func EOOAddDATA_MODE(builder *flatbuffers.Builder, DATA_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(76, flatbuffers.UOffsetT(DATA_MODE), 0)
+func EOOAddDATA_MODE(builder *flatbuffers.Builder, DATA_MODE DataMode) {
+	builder.PrependInt8Slot(76, int8(DATA_MODE), 0)
 }
 func EOOAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(77, flatbuffers.UOffsetT(CREATED_AT), 0)
@@ -1508,8 +1556,8 @@ func EOOAddORIG_NETWORK(builder *flatbuffers.Builder, ORIG_NETWORK flatbuffers.U
 func EOOAddSOURCE_DL(builder *flatbuffers.Builder, SOURCE_DL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(84, flatbuffers.UOffsetT(SOURCE_DL), 0)
 }
-func EOOAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(85, flatbuffers.UOffsetT(TYPE), 0)
+func EOOAddTYPE(builder *flatbuffers.Builder, TYPE DeviceType) {
+	builder.PrependInt8Slot(85, int8(TYPE), 0)
 }
 func EOOAddAZIMUTH_MEASURED(builder *flatbuffers.Builder, AZIMUTH_MEASURED bool) {
 	builder.PrependBoolSlot(86, AZIMUTH_MEASURED, false)

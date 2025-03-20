@@ -6,11 +6,24 @@
 @SuppressWarnings("unused")
 public final class DataMode {
   private DataMode() { }
-  public static final byte REAL = 0;
-  public static final byte SIMULATED = 1;
-  public static final byte SYNTHETIC = 2;
+  /**
+   * Data collected during an exercise scenario.
+   */
+  public static final byte EXERCISE = 0;
+  /**
+   * Data collected from real-world observations.
+   */
+  public static final byte REAL = 1;
+  /**
+   * Data generated through simulation.
+   */
+  public static final byte SIMULATED = 2;
+  /**
+   * Data collected for testing purposes.
+   */
+  public static final byte TEST = 3;
 
-  public static final String[] names = { "REAL", "SIMULATED", "SYNTHETIC", };
+  public static final String[] names = { "EXERCISE", "REAL", "SIMULATED", "TEST", };
 
   public static String name(int e) { return names[e]; }
 }

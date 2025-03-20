@@ -39,12 +39,17 @@ public enum DataMode: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case real = 0
-  case simulated = 1
-  case synthetic = 2
+  ///  Data collected during an exercise scenario.
+  case exercise = 0
+  ///  Data collected from real-world observations.
+  case real = 1
+  ///  Data generated through simulation.
+  case simulated = 2
+  ///  Data collected for testing purposes.
+  case test = 3
 
-  public static var max: DataMode { return .synthetic }
-  public static var min: DataMode { return .real }
+  public static var max: DataMode { return .test }
+  public static var min: DataMode { return .exercise }
 }
 
 
@@ -355,7 +360,7 @@ public struct IDM: FlatBufferObject, Verifiable {
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   ///  Mode of the data (real, simulated, synthetic)
-  public var DATA_MODE: DataMode { let o = _accessor.offset(VTOFFSET.DATA_MODE.v); return o == 0 ? .real : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .real }
+  public var DATA_MODE: DataMode { let o = _accessor.offset(VTOFFSET.DATA_MODE.v); return o == 0 ? .exercise : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .exercise }
   ///  Uplink frequency range
   public var UPLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.UPLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Downlink frequency range
@@ -451,7 +456,7 @@ public struct IDM: FlatBufferObject, Verifiable {
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
-    DATA_MODE: DataMode = .real,
+    DATA_MODE: DataMode = .exercise,
     UPLINKOffset UPLINK: Offset = Offset(),
     DOWNLINKOffset DOWNLINK: Offset = Offset(),
     BEACONOffset BEACON: Offset = Offset(),

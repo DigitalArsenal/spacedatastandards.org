@@ -8,21 +8,28 @@ import "strconv"
 type DataMode int8
 
 const (
-	DataModeREAL      DataMode = 0
-	DataModeSIMULATED DataMode = 1
-	DataModeSYNTHETIC DataMode = 2
+	/// Data collected during an exercise scenario.
+	DataModeEXERCISE  DataMode = 0
+	/// Data collected from real-world observations.
+	DataModeREAL      DataMode = 1
+	/// Data generated through simulation.
+	DataModeSIMULATED DataMode = 2
+	/// Data collected for testing purposes.
+	DataModeTEST      DataMode = 3
 )
 
 var EnumNamesDataMode = map[DataMode]string{
+	DataModeEXERCISE:  "EXERCISE",
 	DataModeREAL:      "REAL",
 	DataModeSIMULATED: "SIMULATED",
-	DataModeSYNTHETIC: "SYNTHETIC",
+	DataModeTEST:      "TEST",
 }
 
 var EnumValuesDataMode = map[string]DataMode{
+	"EXERCISE":  DataModeEXERCISE,
 	"REAL":      DataModeREAL,
 	"SIMULATED": DataModeSIMULATED,
-	"SYNTHETIC": DataModeSYNTHETIC,
+	"TEST":      DataModeTEST,
 }
 
 func (v DataMode) String() string {

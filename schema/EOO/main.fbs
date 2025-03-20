@@ -1,286 +1,320 @@
-// Hash: aa2d410805e2bf218bfdd6be4f056372a46a78cb307ec3783623fb4e23729626
-// Version: 1.0.2
+// Hash: 7838ba65bc8c72f405bcd3d4fcccf8ea5d859aa9dd82e932ebf7950e95d3eaac
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
+include "../IDM/main.fbs";
+
+/// Enumeration for data collection methods
+enum CollectMethod : byte {
+  SIDEREAL,
+  RATE_TRACK,
+  FIXED_STARE,
+  OTHER
+}
+
+enum ObservationPosition : byte {
+  FENCE,
+  FIRST,
+  IN,
+  LAST,
+  SINGLE
+}
 
 /// Electro-Optical Observation
 table EOO {
   
-  /// Unique identifier for Earth Observation Observation
-  EOBSERVATION_ID: string;
+  /// Unique identifier of the record.
+  ID: string;
 
-  /// Classification marking of the data
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
   CLASSIFICATION: string;
 
-  /// Observation time in UTC
+  /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
   OB_TIME: string;
 
-  /// Quality of the correlation
+  /// Correlation score of the observation when compared to a known orbit state.
   CORR_QUALITY: float;
 
-  /// Identifier for the satellite on orbit
+  /// Server will auto-populate with SAT_NO if available.
   ID_ON_ORBIT: string;
 
-  /// Identifier for the sensor
+  /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
   SENSOR_ID: string;
 
-  /// Method of data collection
-  COLLECT_METHOD: string;
+  /// Accepted Collection Method
+  COLLECT_METHOD: CollectMethod;
 
-  /// NORAD catalog identifier for the satellite
+  /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
   NORAD_CAT_ID: int;
 
-  /// Identifier for the task
+  /// Identifier for the collectRequest message if the collection was in response to tasking.
   TASK_ID: string;
 
-  /// Identifier for the transaction
+  /// Optional identifier to track a transaction.
   TRANSACTION_ID: string;
 
-  /// Identifier for the track
+  /// Identifier of the track to which this observation belongs, if applicable.
   TRACK_ID: string;
 
-  /// Position of the observation
-  OB_POSITION: string;
+  /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+  OB_POSITION: ObservationPosition;
 
-  /// Original object identifier
+  /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
   ORIG_OBJECT_ID: string;
 
-  /// Original sensor identifier
+  /// Sensor ID.
   ORIG_SENSOR_ID: string;
 
-  /// Universal Coordinated Time flag
+  /// Required if correlation is attempted. Indicates whether correlation succeeded.
   UCT: bool;
 
-  /// Azimuth angle
+  /// Line of sight azimuth angle in degrees and topocentric frame.
   AZIMUTH: float;
 
-  /// Uncertainty in azimuth angle
+  /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
   AZIMUTH_UNC: float;
   
-  /// Bias in azimuth angle
+  /// Sensor line of sight azimuth angle bias in degrees.
   AZIMUTH_BIAS: float;
 
-  /// Rate of change in azimuth
+  /// Rate of change of the line of sight azimuth in degrees per second.
   AZIMUTH_RATE: float;
 
-  /// Elevation angle
+  /// Line of sight elevation in degrees and topocentric frame.
   ELEVATION: float;
 
-  /// Uncertainty in elevation angle
+  /// One sigma uncertainty in the line of sight elevation angle, in degrees.
   ELEVATION_UNC: float;
 
-  /// Bias in elevation angle
+  /// Sensor line of sight elevation bias in degrees.
   ELEVATION_BIAS: float;
 
-  /// Rate of change in elevation
+  /// Rate of change of the line of sight elevation in degrees per second.
   ELEVATION_RATE: float;
 
-  /// Range to the target
+  /// Line of sight range in km. Reported value should include all applicable corrections.
   RANGE: float;
 
-  /// Uncertainty in range
+  /// One sigma uncertainty in the line of sight range, in km.
   RANGE_UNC: float;
 
-  /// Bias in range measurement
+  /// Sensor line of sight range bias in km.
   RANGE_BIAS: float;
 
-  /// Rate of change in range
+  /// Range rate in km/s. Reported value should include all applicable corrections.
   RANGE_RATE: float;
 
-  /// Uncertainty in range rate
+  /// One sigma uncertainty in the line of sight range rate, in km/sec.
   RANGE_RATE_UNC: float;
 
-  /// Right ascension
+  /// Right ascension in degrees. Required metric reporting field for EO observations.
   RA: float;
 
-  /// Rate of change in right ascension
+  /// Line of sight right ascension rate of change, in degrees/sec.
   RA_RATE: float;
 
-  /// Uncertainty in right ascension
+  /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
   RA_UNC: float;
 
-  /// Bias in right ascension
+  /// Sensor line of sight right ascension bias in degrees.
   RA_BIAS: float;
 
-  /// Declination angle
+  /// Declination in degrees. Required metric reporting field for EO observations.
   DECLINATION: float;
 
-  /// Rate of change in declination
+  /// Line of sight declination rate of change, in degrees/sec.
   DECLINATION_RATE: float;
 
-  /// Uncertainty in declination
+  /// One sigma uncertainty in the line of sight declination angle, in degrees.
   DECLINATION_UNC: float;
 
-  /// Bias in declination
+  /// Sensor line of sight declination angle bias in degrees.
   DECLINATION_BIAS: float;
 
-  /// X-component of line-of-sight vector
+  /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   LOSX: float;
 
-  /// Y-component of line-of-sight vector
+  /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   LOSY: float;
 
-  /// Z-component of line-of-sight vector
+  /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   LOSZ: float;
 
-  /// Uncertainty in line-of-sight vector
+  /// One sigma uncertainty in the line-of-sight direction vector components.
   LOS_UNC: float;
 
-  /// X-component of line-of-sight velocity
+  /// X-component of the velocity vector along the line of sight, in km/s.
   LOSXVEL: float;
 
-  /// Y-component of line-of-sight velocity
+  /// Y-component of the velocity vector along the line of sight, in km/s.
   LOSYVEL: float;
 
-  /// Z-component of line-of-sight velocity
+  /// Z-component of the velocity vector along the line of sight, in km/s.
   LOSZVEL: float;
 
-  /// Latitude of sensor
+  /// WGS-84 latitude in decimal degrees at the time of the observation.
   SENLAT: float;
 
-  /// Longitude of sensor
+  /// WGS-84 longitude in decimal degrees at the time of the observation.
   SENLON: float;
 
-  /// Altitude of sensor
+  /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
   SENALT: float;
 
-  /// X-coordinate of sensor position
+  /// Cartesian X position in km at the time of the observation.
   SENX: float;
 
-  /// Y-coordinate of sensor position
+  /// Cartesian Y position in km at the time of the observation.
   SENY: float;
 
-  /// Z-coordinate of sensor position
+  /// Cartesian Z position in km at the time of the observation.
   SENZ: float;
 
-  /// Number of fields of view
+  /// Total number of satellites in the field of view.
   FOV_COUNT: int;
 
-  /// Number of uncorrelated satellites in the field of view (JCO)
+  /// Number of uncorrelated satellites in the field of view (JCO).
   FOV_COUNT_UCTS: int;
 
-  /// Duration of the exposure
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// observations are going to be used for photometric processing.
   EXP_DURATION: float;
 
-  /// Zero-point displacement
+  /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
   ZEROPTD: float;
 
-  /// Net object signal
+  /// Net object signature = counts / EXP_DURATION.
   NET_OBJ_SIG: float;
 
-  /// Uncertainty in net object signal
+  /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
   NET_OBJ_SIG_UNC: float;
 
-  /// Magnitude of the observation
+  /// Measure of observed brightness calibrated against the Gaia G-band.
   MAG: float;
 
-  /// Uncertainty in magnitude
+  /// Uncertainty of the observed brightness.
   MAG_UNC: float;
 
-  /// Normalized range for magnitude
+  /// [Definition needed].
   MAG_NORM_RANGE: float;
 
-  /// Geocentric latitude
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   GEOLAT: float;
 
-  /// Geocentric longitude
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// and viewing geometry. It must NOT be computed from the orbit state.
   GEOLON: float;
 
-  /// Geocentric altitude
+  /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
   GEOALT: float;
 
-  /// Geocentric range
+  /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
   GEORANGE: float;
 
-  /// Sky background level
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// empty part of the night sky.
   SKY_BKGRND: float;
 
-  /// Primary extinction
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// object and the observer.
   PRIMARY_EXTINCTION: float;
 
-  /// Uncertainty in primary extinction
+  /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
   PRIMARY_EXTINCTION_UNC: float;
 
-  /// Solar phase angle
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   SOLAR_PHASE_ANGLE: float;
 
-  /// Solar equatorial phase angle
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// and positive when opening (after the opposition).
   SOLAR_EQ_PHASE_ANGLE: float;
 
-  /// Solar declination angle
+  /// Angle from the sun to the equatorial plane.
   SOLAR_DEC_ANGLE: float;
 
-  /// Shutter delay
+  /// Shutter delay in seconds.
   SHUTTER_DELAY: float;
 
-  /// Timing bias
+  /// Sensor timing bias in seconds.
   TIMING_BIAS: float;
 
-  /// URI of the raw data file
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
   RAW_FILE_URI: string;
 
-  /// Intensity of the observation
+   /// Intensity of the target for IR observations, in kw/sr/em.
   INTENSITY: float;
 
-  /// Background intensity
+  /// Background intensity for IR observations, in kw/sr/um.
   BG_INTENSITY: float;
 
-  /// Descriptor of the provided data
+  /// Optional source-provided and searchable metadata or descriptor of the data.
   DESCRIPTOR: string;
 
-  /// Source of the data
+  /// Source of the data.
   SOURCE: string;
 
-  /// Origin of the data
+  /// Originating system or organization which produced the data, if different from the source.
+  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   ORIGIN: string;
 
-  /// Mode of the data
-  DATA_MODE: string;
+  /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+  DATA_MODE: DataMode;
 
-  /// Creation time of the record
+  /// Time the row was created in the database, auto-populated by the system.
   CREATED_AT: string;
 
-  /// User who created the record
+  /// Application user who created the row in the database, auto-populated by the system.
   CREATED_BY: string;
 
-  /// Reference frame of the observation
+  /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   REFERENCE_FRAME: refFrame;
 
-  /// Reference frame of the sensor
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   SEN_REFERENCE_FRAME: string;
 
-  /// Flag for umbra (total eclipse)
+  /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   UMBRA: bool;
 
-  /// Flag for penumbra (partial eclipse)
+  /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  /// This field is highly recommended if the observations will be used for photometric processing.
   PENUMBRA: bool;
 
-  /// Original network identifier
+  /// The originating source network on which this record was created, auto-populated by the system.
   ORIG_NETWORK: string;
 
-  /// Data link source
+  /// The source from which this record was received.
   SOURCE_DL: string;
 
-  /// Type of the observation
-  TYPE: string;
+  /// Device Type
+  TYPE: DeviceType;
 
-  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  /// True if measured, false if computed. Required if azimuth is reported.
   AZIMUTH_MEASURED: bool;
 
-  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  /// True if measured, false if computed. Required if elevation is reported.
   ELEVATION_MEASURED: bool;
 
-  /// True if measured, false if computed. Required if range is reported (JCO)
+  /// True if measured, false if computed. Required if range is reported.
   RANGE_MEASURED: bool;
 
-  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  /// True if measured, false if computed. Required if range-rate is reported.
   RANGERATE_MEASURED: bool;
 
-  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  /// True if measured, false if computed. Required if right ascension is reported.
   RA_MEASURED: bool;
 
-  /// True if measured, false if computed. Required if declination is reported (JCO)
+  /// True if measured, false if computed. Required if declination is reported.
   DECLINATION_MEASURED: bool;
+
 }
 
 table EOOCOLLECTION {

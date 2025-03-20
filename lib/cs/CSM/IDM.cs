@@ -36,7 +36,7 @@ public struct IDM : IFlatbufferObject
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(6); }
   /// Mode of the data (real, simulated, synthetic)
-  public DataMode DATA_MODE { get { int o = __p.__offset(8); return o != 0 ? (DataMode)__p.bb.GetSbyte(o + __p.bb_pos) : DataMode.REAL; } }
+  public DataMode DATA_MODE { get { int o = __p.__offset(8); return o != 0 ? (DataMode)__p.bb.GetSbyte(o + __p.bb_pos) : DataMode.EXERCISE; } }
   /// Uplink frequency range
   public FrequencyRange? UPLINK { get { int o = __p.__offset(10); return o != 0 ? (FrequencyRange?)(new FrequencyRange()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Downlink frequency range
@@ -112,7 +112,7 @@ public struct IDM : IFlatbufferObject
   public static Offset<IDM> CreateIDM(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
-      DataMode DATA_MODE = DataMode.REAL,
+      DataMode DATA_MODE = DataMode.EXERCISE,
       Offset<FrequencyRange> UPLINKOffset = default(Offset<FrequencyRange>),
       Offset<FrequencyRange> DOWNLINKOffset = default(Offset<FrequencyRange>),
       Offset<FrequencyRange> BEACONOffset = default(Offset<FrequencyRange>),
@@ -336,7 +336,7 @@ public class IDMT
   public IDMT() {
     this.ID = null;
     this.NAME = null;
-    this.DATA_MODE = DataMode.REAL;
+    this.DATA_MODE = DataMode.EXERCISE;
     this.UPLINK = null;
     this.DOWNLINK = null;
     this.BEACON = null;

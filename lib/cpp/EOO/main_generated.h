@@ -14,6 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
              "Non-compatible flatbuffers version included");
 
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct EOO;
 struct EOOBuilder;
@@ -21,11 +22,87 @@ struct EOOBuilder;
 struct EOOCOLLECTION;
 struct EOOCOLLECTIONBuilder;
 
+/// Enumeration for data collection methods
+enum CollectMethod : int8_t {
+  CollectMethod_SIDEREAL = 0,
+  CollectMethod_RATE_TRACK = 1,
+  CollectMethod_FIXED_STARE = 2,
+  CollectMethod_OTHER = 3,
+  CollectMethod_MIN = CollectMethod_SIDEREAL,
+  CollectMethod_MAX = CollectMethod_OTHER
+};
+
+inline const CollectMethod (&EnumValuesCollectMethod())[4] {
+  static const CollectMethod values[] = {
+    CollectMethod_SIDEREAL,
+    CollectMethod_RATE_TRACK,
+    CollectMethod_FIXED_STARE,
+    CollectMethod_OTHER
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCollectMethod() {
+  static const char * const names[5] = {
+    "SIDEREAL",
+    "RATE_TRACK",
+    "FIXED_STARE",
+    "OTHER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCollectMethod(CollectMethod e) {
+  if (::flatbuffers::IsOutRange(e, CollectMethod_SIDEREAL, CollectMethod_OTHER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCollectMethod()[index];
+}
+
+enum ObservationPosition : int8_t {
+  ObservationPosition_FENCE = 0,
+  ObservationPosition_FIRST = 1,
+  ObservationPosition_IN = 2,
+  ObservationPosition_LAST = 3,
+  ObservationPosition_SINGLE = 4,
+  ObservationPosition_MIN = ObservationPosition_FENCE,
+  ObservationPosition_MAX = ObservationPosition_SINGLE
+};
+
+inline const ObservationPosition (&EnumValuesObservationPosition())[5] {
+  static const ObservationPosition values[] = {
+    ObservationPosition_FENCE,
+    ObservationPosition_FIRST,
+    ObservationPosition_IN,
+    ObservationPosition_LAST,
+    ObservationPosition_SINGLE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesObservationPosition() {
+  static const char * const names[6] = {
+    "FENCE",
+    "FIRST",
+    "IN",
+    "LAST",
+    "SINGLE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameObservationPosition(ObservationPosition e) {
+  if (::flatbuffers::IsOutRange(e, ObservationPosition_FENCE, ObservationPosition_SINGLE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesObservationPosition()[index];
+}
+
 /// Electro-Optical Observation
 struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EOOBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_EOBSERVATION_ID = 4,
+    VT_ID = 4,
     VT_CLASSIFICATION = 6,
     VT_OB_TIME = 8,
     VT_CORR_QUALITY = 10,
@@ -118,378 +195,394 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RA_MEASURED = 184,
     VT_DECLINATION_MEASURED = 186
   };
-  /// Unique identifier for Earth Observation Observation
-  const ::flatbuffers::String *EOBSERVATION_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EOBSERVATION_ID);
+  /// Unique identifier of the record.
+  const ::flatbuffers::String *ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  /// Classification marking of the data
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
   const ::flatbuffers::String *CLASSIFICATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
   }
-  /// Observation time in UTC
+  /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
   const ::flatbuffers::String *OB_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
-  /// Quality of the correlation
+  /// Correlation score of the observation when compared to a known orbit state.
   float CORR_QUALITY() const {
     return GetField<float>(VT_CORR_QUALITY, 0.0f);
   }
-  /// Identifier for the satellite on orbit
+  /// Server will auto-populate with SAT_NO if available.
   const ::flatbuffers::String *ID_ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ON_ORBIT);
   }
-  /// Identifier for the sensor
+  /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
   const ::flatbuffers::String *SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
-  /// Method of data collection
-  const ::flatbuffers::String *COLLECT_METHOD() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_COLLECT_METHOD);
+  /// Accepted Collection Method
+  CollectMethod COLLECT_METHOD() const {
+    return static_cast<CollectMethod>(GetField<int8_t>(VT_COLLECT_METHOD, 0));
   }
-  /// NORAD catalog identifier for the satellite
+  /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
   int32_t NORAD_CAT_ID() const {
     return GetField<int32_t>(VT_NORAD_CAT_ID, 0);
   }
-  /// Identifier for the task
+  /// Identifier for the collectRequest message if the collection was in response to tasking.
   const ::flatbuffers::String *TASK_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
   }
-  /// Identifier for the transaction
+  /// Optional identifier to track a transaction.
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
-  /// Identifier for the track
+  /// Identifier of the track to which this observation belongs, if applicable.
   const ::flatbuffers::String *TRACK_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
   }
-  /// Position of the observation
-  const ::flatbuffers::String *OB_POSITION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OB_POSITION);
+  /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+  ObservationPosition OB_POSITION() const {
+    return static_cast<ObservationPosition>(GetField<int8_t>(VT_OB_POSITION, 0));
   }
-  /// Original object identifier
+  /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  /// Original sensor identifier
+  /// Sensor ID.
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
-  /// Universal Coordinated Time flag
+  /// Required if correlation is attempted. Indicates whether correlation succeeded.
   bool UCT() const {
     return GetField<uint8_t>(VT_UCT, 0) != 0;
   }
-  /// Azimuth angle
+  /// Line of sight azimuth angle in degrees and topocentric frame.
   float AZIMUTH() const {
     return GetField<float>(VT_AZIMUTH, 0.0f);
   }
-  /// Uncertainty in azimuth angle
+  /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
   float AZIMUTH_UNC() const {
     return GetField<float>(VT_AZIMUTH_UNC, 0.0f);
   }
-  /// Bias in azimuth angle
+  /// Sensor line of sight azimuth angle bias in degrees.
   float AZIMUTH_BIAS() const {
     return GetField<float>(VT_AZIMUTH_BIAS, 0.0f);
   }
-  /// Rate of change in azimuth
+  /// Rate of change of the line of sight azimuth in degrees per second.
   float AZIMUTH_RATE() const {
     return GetField<float>(VT_AZIMUTH_RATE, 0.0f);
   }
-  /// Elevation angle
+  /// Line of sight elevation in degrees and topocentric frame.
   float ELEVATION() const {
     return GetField<float>(VT_ELEVATION, 0.0f);
   }
-  /// Uncertainty in elevation angle
+  /// One sigma uncertainty in the line of sight elevation angle, in degrees.
   float ELEVATION_UNC() const {
     return GetField<float>(VT_ELEVATION_UNC, 0.0f);
   }
-  /// Bias in elevation angle
+  /// Sensor line of sight elevation bias in degrees.
   float ELEVATION_BIAS() const {
     return GetField<float>(VT_ELEVATION_BIAS, 0.0f);
   }
-  /// Rate of change in elevation
+  /// Rate of change of the line of sight elevation in degrees per second.
   float ELEVATION_RATE() const {
     return GetField<float>(VT_ELEVATION_RATE, 0.0f);
   }
-  /// Range to the target
+  /// Line of sight range in km. Reported value should include all applicable corrections.
   float RANGE() const {
     return GetField<float>(VT_RANGE, 0.0f);
   }
-  /// Uncertainty in range
+  /// One sigma uncertainty in the line of sight range, in km.
   float RANGE_UNC() const {
     return GetField<float>(VT_RANGE_UNC, 0.0f);
   }
-  /// Bias in range measurement
+  /// Sensor line of sight range bias in km.
   float RANGE_BIAS() const {
     return GetField<float>(VT_RANGE_BIAS, 0.0f);
   }
-  /// Rate of change in range
+  /// Range rate in km/s. Reported value should include all applicable corrections.
   float RANGE_RATE() const {
     return GetField<float>(VT_RANGE_RATE, 0.0f);
   }
-  /// Uncertainty in range rate
+  /// One sigma uncertainty in the line of sight range rate, in km/sec.
   float RANGE_RATE_UNC() const {
     return GetField<float>(VT_RANGE_RATE_UNC, 0.0f);
   }
-  /// Right ascension
+  /// Right ascension in degrees. Required metric reporting field for EO observations.
   float RA() const {
     return GetField<float>(VT_RA, 0.0f);
   }
-  /// Rate of change in right ascension
+  /// Line of sight right ascension rate of change, in degrees/sec.
   float RA_RATE() const {
     return GetField<float>(VT_RA_RATE, 0.0f);
   }
-  /// Uncertainty in right ascension
+  /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
   float RA_UNC() const {
     return GetField<float>(VT_RA_UNC, 0.0f);
   }
-  /// Bias in right ascension
+  /// Sensor line of sight right ascension bias in degrees.
   float RA_BIAS() const {
     return GetField<float>(VT_RA_BIAS, 0.0f);
   }
-  /// Declination angle
+  /// Declination in degrees. Required metric reporting field for EO observations.
   float DECLINATION() const {
     return GetField<float>(VT_DECLINATION, 0.0f);
   }
-  /// Rate of change in declination
+  /// Line of sight declination rate of change, in degrees/sec.
   float DECLINATION_RATE() const {
     return GetField<float>(VT_DECLINATION_RATE, 0.0f);
   }
-  /// Uncertainty in declination
+  /// One sigma uncertainty in the line of sight declination angle, in degrees.
   float DECLINATION_UNC() const {
     return GetField<float>(VT_DECLINATION_UNC, 0.0f);
   }
-  /// Bias in declination
+  /// Sensor line of sight declination angle bias in degrees.
   float DECLINATION_BIAS() const {
     return GetField<float>(VT_DECLINATION_BIAS, 0.0f);
   }
-  /// X-component of line-of-sight vector
+  /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   float LOSX() const {
     return GetField<float>(VT_LOSX, 0.0f);
   }
-  /// Y-component of line-of-sight vector
+  /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   float LOSY() const {
     return GetField<float>(VT_LOSY, 0.0f);
   }
-  /// Z-component of line-of-sight vector
+  /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
   float LOSZ() const {
     return GetField<float>(VT_LOSZ, 0.0f);
   }
-  /// Uncertainty in line-of-sight vector
+  /// One sigma uncertainty in the line-of-sight direction vector components.
   float LOS_UNC() const {
     return GetField<float>(VT_LOS_UNC, 0.0f);
   }
-  /// X-component of line-of-sight velocity
+  /// X-component of the velocity vector along the line of sight, in km/s.
   float LOSXVEL() const {
     return GetField<float>(VT_LOSXVEL, 0.0f);
   }
-  /// Y-component of line-of-sight velocity
+  /// Y-component of the velocity vector along the line of sight, in km/s.
   float LOSYVEL() const {
     return GetField<float>(VT_LOSYVEL, 0.0f);
   }
-  /// Z-component of line-of-sight velocity
+  /// Z-component of the velocity vector along the line of sight, in km/s.
   float LOSZVEL() const {
     return GetField<float>(VT_LOSZVEL, 0.0f);
   }
-  /// Latitude of sensor
+  /// WGS-84 latitude in decimal degrees at the time of the observation.
   float SENLAT() const {
     return GetField<float>(VT_SENLAT, 0.0f);
   }
-  /// Longitude of sensor
+  /// WGS-84 longitude in decimal degrees at the time of the observation.
   float SENLON() const {
     return GetField<float>(VT_SENLON, 0.0f);
   }
-  /// Altitude of sensor
+  /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
   float SENALT() const {
     return GetField<float>(VT_SENALT, 0.0f);
   }
-  /// X-coordinate of sensor position
+  /// Cartesian X position in km at the time of the observation.
   float SENX() const {
     return GetField<float>(VT_SENX, 0.0f);
   }
-  /// Y-coordinate of sensor position
+  /// Cartesian Y position in km at the time of the observation.
   float SENY() const {
     return GetField<float>(VT_SENY, 0.0f);
   }
-  /// Z-coordinate of sensor position
+  /// Cartesian Z position in km at the time of the observation.
   float SENZ() const {
     return GetField<float>(VT_SENZ, 0.0f);
   }
-  /// Number of fields of view
+  /// Total number of satellites in the field of view.
   int32_t FOV_COUNT() const {
     return GetField<int32_t>(VT_FOV_COUNT, 0);
   }
-  /// Number of uncorrelated satellites in the field of view (JCO)
+  /// Number of uncorrelated satellites in the field of view (JCO).
   int32_t FOV_COUNT_UCTS() const {
     return GetField<int32_t>(VT_FOV_COUNT_UCTS, 0);
   }
-  /// Duration of the exposure
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// observations are going to be used for photometric processing.
   float EXP_DURATION() const {
     return GetField<float>(VT_EXP_DURATION, 0.0f);
   }
-  /// Zero-point displacement
+  /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
   float ZEROPTD() const {
     return GetField<float>(VT_ZEROPTD, 0.0f);
   }
-  /// Net object signal
+  /// Net object signature = counts / EXP_DURATION.
   float NET_OBJ_SIG() const {
     return GetField<float>(VT_NET_OBJ_SIG, 0.0f);
   }
-  /// Uncertainty in net object signal
+  /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
   float NET_OBJ_SIG_UNC() const {
     return GetField<float>(VT_NET_OBJ_SIG_UNC, 0.0f);
   }
-  /// Magnitude of the observation
+  /// Measure of observed brightness calibrated against the Gaia G-band.
   float MAG() const {
     return GetField<float>(VT_MAG, 0.0f);
   }
-  /// Uncertainty in magnitude
+  /// Uncertainty of the observed brightness.
   float MAG_UNC() const {
     return GetField<float>(VT_MAG_UNC, 0.0f);
   }
-  /// Normalized range for magnitude
+  /// [Definition needed].
   float MAG_NORM_RANGE() const {
     return GetField<float>(VT_MAG_NORM_RANGE, 0.0f);
   }
-  /// Geocentric latitude
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   float GEOLAT() const {
     return GetField<float>(VT_GEOLAT, 0.0f);
   }
-  /// Geocentric longitude
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// and viewing geometry. It must NOT be computed from the orbit state.
   float GEOLON() const {
     return GetField<float>(VT_GEOLON, 0.0f);
   }
-  /// Geocentric altitude
+  /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
   float GEOALT() const {
     return GetField<float>(VT_GEOALT, 0.0f);
   }
-  /// Geocentric range
+  /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
   float GEORANGE() const {
     return GetField<float>(VT_GEORANGE, 0.0f);
   }
-  /// Sky background level
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// empty part of the night sky.
   float SKY_BKGRND() const {
     return GetField<float>(VT_SKY_BKGRND, 0.0f);
   }
-  /// Primary extinction
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// object and the observer.
   float PRIMARY_EXTINCTION() const {
     return GetField<float>(VT_PRIMARY_EXTINCTION, 0.0f);
   }
-  /// Uncertainty in primary extinction
+  /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
   float PRIMARY_EXTINCTION_UNC() const {
     return GetField<float>(VT_PRIMARY_EXTINCTION_UNC, 0.0f);
   }
-  /// Solar phase angle
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   float SOLAR_PHASE_ANGLE() const {
     return GetField<float>(VT_SOLAR_PHASE_ANGLE, 0.0f);
   }
-  /// Solar equatorial phase angle
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// and positive when opening (after the opposition).
   float SOLAR_EQ_PHASE_ANGLE() const {
     return GetField<float>(VT_SOLAR_EQ_PHASE_ANGLE, 0.0f);
   }
-  /// Solar declination angle
+  /// Angle from the sun to the equatorial plane.
   float SOLAR_DEC_ANGLE() const {
     return GetField<float>(VT_SOLAR_DEC_ANGLE, 0.0f);
   }
-  /// Shutter delay
+  /// Shutter delay in seconds.
   float SHUTTER_DELAY() const {
     return GetField<float>(VT_SHUTTER_DELAY, 0.0f);
   }
-  /// Timing bias
+  /// Sensor timing bias in seconds.
   float TIMING_BIAS() const {
     return GetField<float>(VT_TIMING_BIAS, 0.0f);
   }
-  /// URI of the raw data file
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
   const ::flatbuffers::String *RAW_FILE_URI() const {
     return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
   }
-  /// Intensity of the observation
+  /// Intensity of the target for IR observations, in kw/sr/em.
   float INTENSITY() const {
     return GetField<float>(VT_INTENSITY, 0.0f);
   }
-  /// Background intensity
+  /// Background intensity for IR observations, in kw/sr/um.
   float BG_INTENSITY() const {
     return GetField<float>(VT_BG_INTENSITY, 0.0f);
   }
-  /// Descriptor of the provided data
+  /// Optional source-provided and searchable metadata or descriptor of the data.
   const ::flatbuffers::String *DESCRIPTOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
   }
-  /// Source of the data
+  /// Source of the data.
   const ::flatbuffers::String *SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
   }
-  /// Origin of the data
+  /// Originating system or organization which produced the data, if different from the source.
+  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   const ::flatbuffers::String *ORIGIN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGIN);
   }
-  /// Mode of the data
-  const ::flatbuffers::String *DATA_MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DATA_MODE);
+  /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+  DataMode DATA_MODE() const {
+    return static_cast<DataMode>(GetField<int8_t>(VT_DATA_MODE, 0));
   }
-  /// Creation time of the record
+  /// Time the row was created in the database, auto-populated by the system.
   const ::flatbuffers::String *CREATED_AT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATED_AT);
   }
-  /// User who created the record
+  /// Application user who created the row in the database, auto-populated by the system.
   const ::flatbuffers::String *CREATED_BY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATED_BY);
   }
-  /// Reference frame of the observation
+  /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   refFrame REFERENCE_FRAME() const {
     return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
   }
-  /// Reference frame of the sensor
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SEN_REFERENCE_FRAME);
   }
-  /// Flag for umbra (total eclipse)
+  /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   bool UMBRA() const {
     return GetField<uint8_t>(VT_UMBRA, 0) != 0;
   }
-  /// Flag for penumbra (partial eclipse)
+  /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  /// This field is highly recommended if the observations will be used for photometric processing.
   bool PENUMBRA() const {
     return GetField<uint8_t>(VT_PENUMBRA, 0) != 0;
   }
-  /// Original network identifier
+  /// The originating source network on which this record was created, auto-populated by the system.
   const ::flatbuffers::String *ORIG_NETWORK() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_NETWORK);
   }
-  /// Data link source
+  /// The source from which this record was received.
   const ::flatbuffers::String *SOURCE_DL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_DL);
   }
-  /// Type of the observation
-  const ::flatbuffers::String *TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
+  /// Device Type
+  DeviceType TYPE() const {
+    return static_cast<DeviceType>(GetField<int8_t>(VT_TYPE, 0));
   }
-  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  /// True if measured, false if computed. Required if azimuth is reported.
   bool AZIMUTH_MEASURED() const {
     return GetField<uint8_t>(VT_AZIMUTH_MEASURED, 0) != 0;
   }
-  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  /// True if measured, false if computed. Required if elevation is reported.
   bool ELEVATION_MEASURED() const {
     return GetField<uint8_t>(VT_ELEVATION_MEASURED, 0) != 0;
   }
-  /// True if measured, false if computed. Required if range is reported (JCO)
+  /// True if measured, false if computed. Required if range is reported.
   bool RANGE_MEASURED() const {
     return GetField<uint8_t>(VT_RANGE_MEASURED, 0) != 0;
   }
-  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  /// True if measured, false if computed. Required if range-rate is reported.
   bool RANGERATE_MEASURED() const {
     return GetField<uint8_t>(VT_RANGERATE_MEASURED, 0) != 0;
   }
-  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  /// True if measured, false if computed. Required if right ascension is reported.
   bool RA_MEASURED() const {
     return GetField<uint8_t>(VT_RA_MEASURED, 0) != 0;
   }
-  /// True if measured, false if computed. Required if declination is reported (JCO)
+  /// True if measured, false if computed. Required if declination is reported.
   bool DECLINATION_MEASURED() const {
     return GetField<uint8_t>(VT_DECLINATION_MEASURED, 0) != 0;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_EOBSERVATION_ID) &&
-           verifier.VerifyString(EOBSERVATION_ID()) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_CLASSIFICATION) &&
            verifier.VerifyString(CLASSIFICATION()) &&
            VerifyOffset(verifier, VT_OB_TIME) &&
@@ -499,8 +592,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID_ON_ORBIT()) &&
            VerifyOffset(verifier, VT_SENSOR_ID) &&
            verifier.VerifyString(SENSOR_ID()) &&
-           VerifyOffset(verifier, VT_COLLECT_METHOD) &&
-           verifier.VerifyString(COLLECT_METHOD()) &&
+           VerifyField<int8_t>(verifier, VT_COLLECT_METHOD, 1) &&
            VerifyField<int32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
            VerifyOffset(verifier, VT_TASK_ID) &&
            verifier.VerifyString(TASK_ID()) &&
@@ -508,8 +600,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TRANSACTION_ID()) &&
            VerifyOffset(verifier, VT_TRACK_ID) &&
            verifier.VerifyString(TRACK_ID()) &&
-           VerifyOffset(verifier, VT_OB_POSITION) &&
-           verifier.VerifyString(OB_POSITION()) &&
+           VerifyField<int8_t>(verifier, VT_OB_POSITION, 1) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
            VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
@@ -580,8 +671,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SOURCE()) &&
            VerifyOffset(verifier, VT_ORIGIN) &&
            verifier.VerifyString(ORIGIN()) &&
-           VerifyOffset(verifier, VT_DATA_MODE) &&
-           verifier.VerifyString(DATA_MODE()) &&
+           VerifyField<int8_t>(verifier, VT_DATA_MODE, 1) &&
            VerifyOffset(verifier, VT_CREATED_AT) &&
            verifier.VerifyString(CREATED_AT()) &&
            VerifyOffset(verifier, VT_CREATED_BY) &&
@@ -595,8 +685,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ORIG_NETWORK()) &&
            VerifyOffset(verifier, VT_SOURCE_DL) &&
            verifier.VerifyString(SOURCE_DL()) &&
-           VerifyOffset(verifier, VT_TYPE) &&
-           verifier.VerifyString(TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
            VerifyField<uint8_t>(verifier, VT_AZIMUTH_MEASURED, 1) &&
            VerifyField<uint8_t>(verifier, VT_ELEVATION_MEASURED, 1) &&
            VerifyField<uint8_t>(verifier, VT_RANGE_MEASURED, 1) &&
@@ -611,8 +700,8 @@ struct EOOBuilder {
   typedef EOO Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_EOBSERVATION_ID(::flatbuffers::Offset<::flatbuffers::String> EOBSERVATION_ID) {
-    fbb_.AddOffset(EOO::VT_EOBSERVATION_ID, EOBSERVATION_ID);
+  void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
+    fbb_.AddOffset(EOO::VT_ID, ID);
   }
   void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
     fbb_.AddOffset(EOO::VT_CLASSIFICATION, CLASSIFICATION);
@@ -629,8 +718,8 @@ struct EOOBuilder {
   void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
     fbb_.AddOffset(EOO::VT_SENSOR_ID, SENSOR_ID);
   }
-  void add_COLLECT_METHOD(::flatbuffers::Offset<::flatbuffers::String> COLLECT_METHOD) {
-    fbb_.AddOffset(EOO::VT_COLLECT_METHOD, COLLECT_METHOD);
+  void add_COLLECT_METHOD(CollectMethod COLLECT_METHOD) {
+    fbb_.AddElement<int8_t>(EOO::VT_COLLECT_METHOD, static_cast<int8_t>(COLLECT_METHOD), 0);
   }
   void add_NORAD_CAT_ID(int32_t NORAD_CAT_ID) {
     fbb_.AddElement<int32_t>(EOO::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
@@ -644,8 +733,8 @@ struct EOOBuilder {
   void add_TRACK_ID(::flatbuffers::Offset<::flatbuffers::String> TRACK_ID) {
     fbb_.AddOffset(EOO::VT_TRACK_ID, TRACK_ID);
   }
-  void add_OB_POSITION(::flatbuffers::Offset<::flatbuffers::String> OB_POSITION) {
-    fbb_.AddOffset(EOO::VT_OB_POSITION, OB_POSITION);
+  void add_OB_POSITION(ObservationPosition OB_POSITION) {
+    fbb_.AddElement<int8_t>(EOO::VT_OB_POSITION, static_cast<int8_t>(OB_POSITION), 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(EOO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
@@ -839,8 +928,8 @@ struct EOOBuilder {
   void add_ORIGIN(::flatbuffers::Offset<::flatbuffers::String> ORIGIN) {
     fbb_.AddOffset(EOO::VT_ORIGIN, ORIGIN);
   }
-  void add_DATA_MODE(::flatbuffers::Offset<::flatbuffers::String> DATA_MODE) {
-    fbb_.AddOffset(EOO::VT_DATA_MODE, DATA_MODE);
+  void add_DATA_MODE(DataMode DATA_MODE) {
+    fbb_.AddElement<int8_t>(EOO::VT_DATA_MODE, static_cast<int8_t>(DATA_MODE), 0);
   }
   void add_CREATED_AT(::flatbuffers::Offset<::flatbuffers::String> CREATED_AT) {
     fbb_.AddOffset(EOO::VT_CREATED_AT, CREATED_AT);
@@ -866,8 +955,8 @@ struct EOOBuilder {
   void add_SOURCE_DL(::flatbuffers::Offset<::flatbuffers::String> SOURCE_DL) {
     fbb_.AddOffset(EOO::VT_SOURCE_DL, SOURCE_DL);
   }
-  void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
-    fbb_.AddOffset(EOO::VT_TYPE, TYPE);
+  void add_TYPE(DeviceType TYPE) {
+    fbb_.AddElement<int8_t>(EOO::VT_TYPE, static_cast<int8_t>(TYPE), 0);
   }
   void add_AZIMUTH_MEASURED(bool AZIMUTH_MEASURED) {
     fbb_.AddElement<uint8_t>(EOO::VT_AZIMUTH_MEASURED, static_cast<uint8_t>(AZIMUTH_MEASURED), 0);
@@ -900,18 +989,18 @@ struct EOOBuilder {
 
 inline ::flatbuffers::Offset<EOO> CreateEOO(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> EOBSERVATION_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
     float CORR_QUALITY = 0.0f,
     ::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COLLECT_METHOD = 0,
+    CollectMethod COLLECT_METHOD = CollectMethod_SIDEREAL,
     int32_t NORAD_CAT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRACK_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OB_POSITION = 0,
+    ObservationPosition OB_POSITION = ObservationPosition_FENCE,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
     bool UCT = false,
@@ -976,7 +1065,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIGIN = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATA_MODE = 0,
+    DataMode DATA_MODE = DataMode_EXERCISE,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
@@ -985,7 +1074,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     bool PENUMBRA = false,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_NETWORK = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE_DL = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0,
+    DeviceType TYPE = DeviceType_UNKNOWN,
     bool AZIMUTH_MEASURED = false,
     bool ELEVATION_MEASURED = false,
     bool RANGE_MEASURED = false,
@@ -993,13 +1082,11 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     bool RA_MEASURED = false,
     bool DECLINATION_MEASURED = false) {
   EOOBuilder builder_(_fbb);
-  builder_.add_TYPE(TYPE);
   builder_.add_SOURCE_DL(SOURCE_DL);
   builder_.add_ORIG_NETWORK(ORIG_NETWORK);
   builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
   builder_.add_CREATED_BY(CREATED_BY);
   builder_.add_CREATED_AT(CREATED_AT);
-  builder_.add_DATA_MODE(DATA_MODE);
   builder_.add_ORIGIN(ORIGIN);
   builder_.add_SOURCE(SOURCE);
   builder_.add_DESCRIPTOR(DESCRIPTOR);
@@ -1063,45 +1150,47 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_AZIMUTH(AZIMUTH);
   builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
-  builder_.add_OB_POSITION(OB_POSITION);
   builder_.add_TRACK_ID(TRACK_ID);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
   builder_.add_TASK_ID(TASK_ID);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
-  builder_.add_COLLECT_METHOD(COLLECT_METHOD);
   builder_.add_SENSOR_ID(SENSOR_ID);
   builder_.add_ID_ON_ORBIT(ID_ON_ORBIT);
   builder_.add_CORR_QUALITY(CORR_QUALITY);
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_CLASSIFICATION(CLASSIFICATION);
-  builder_.add_EOBSERVATION_ID(EOBSERVATION_ID);
+  builder_.add_ID(ID);
   builder_.add_DECLINATION_MEASURED(DECLINATION_MEASURED);
   builder_.add_RA_MEASURED(RA_MEASURED);
   builder_.add_RANGERATE_MEASURED(RANGERATE_MEASURED);
   builder_.add_RANGE_MEASURED(RANGE_MEASURED);
   builder_.add_ELEVATION_MEASURED(ELEVATION_MEASURED);
   builder_.add_AZIMUTH_MEASURED(AZIMUTH_MEASURED);
+  builder_.add_TYPE(TYPE);
   builder_.add_PENUMBRA(PENUMBRA);
   builder_.add_UMBRA(UMBRA);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_DATA_MODE(DATA_MODE);
   builder_.add_UCT(UCT);
+  builder_.add_OB_POSITION(OB_POSITION);
+  builder_.add_COLLECT_METHOD(COLLECT_METHOD);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *EOBSERVATION_ID = nullptr,
+    const char *ID = nullptr,
     const char *CLASSIFICATION = nullptr,
     const char *OB_TIME = nullptr,
     float CORR_QUALITY = 0.0f,
     const char *ID_ON_ORBIT = nullptr,
     const char *SENSOR_ID = nullptr,
-    const char *COLLECT_METHOD = nullptr,
+    CollectMethod COLLECT_METHOD = CollectMethod_SIDEREAL,
     int32_t NORAD_CAT_ID = 0,
     const char *TASK_ID = nullptr,
     const char *TRANSACTION_ID = nullptr,
     const char *TRACK_ID = nullptr,
-    const char *OB_POSITION = nullptr,
+    ObservationPosition OB_POSITION = ObservationPosition_FENCE,
     const char *ORIG_OBJECT_ID = nullptr,
     const char *ORIG_SENSOR_ID = nullptr,
     bool UCT = false,
@@ -1166,7 +1255,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     const char *DESCRIPTOR = nullptr,
     const char *SOURCE = nullptr,
     const char *ORIGIN = nullptr,
-    const char *DATA_MODE = nullptr,
+    DataMode DATA_MODE = DataMode_EXERCISE,
     const char *CREATED_AT = nullptr,
     const char *CREATED_BY = nullptr,
     refFrame REFERENCE_FRAME = refFrame_ECEF,
@@ -1175,50 +1264,46 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     bool PENUMBRA = false,
     const char *ORIG_NETWORK = nullptr,
     const char *SOURCE_DL = nullptr,
-    const char *TYPE = nullptr,
+    DeviceType TYPE = DeviceType_UNKNOWN,
     bool AZIMUTH_MEASURED = false,
     bool ELEVATION_MEASURED = false,
     bool RANGE_MEASURED = false,
     bool RANGERATE_MEASURED = false,
     bool RA_MEASURED = false,
     bool DECLINATION_MEASURED = false) {
-  auto EOBSERVATION_ID__ = EOBSERVATION_ID ? _fbb.CreateString(EOBSERVATION_ID) : 0;
+  auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
   auto ID_ON_ORBIT__ = ID_ON_ORBIT ? _fbb.CreateString(ID_ON_ORBIT) : 0;
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
-  auto COLLECT_METHOD__ = COLLECT_METHOD ? _fbb.CreateString(COLLECT_METHOD) : 0;
   auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
   auto TRACK_ID__ = TRACK_ID ? _fbb.CreateString(TRACK_ID) : 0;
-  auto OB_POSITION__ = OB_POSITION ? _fbb.CreateString(OB_POSITION) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
   auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
   auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
   auto ORIGIN__ = ORIGIN ? _fbb.CreateString(ORIGIN) : 0;
-  auto DATA_MODE__ = DATA_MODE ? _fbb.CreateString(DATA_MODE) : 0;
   auto CREATED_AT__ = CREATED_AT ? _fbb.CreateString(CREATED_AT) : 0;
   auto CREATED_BY__ = CREATED_BY ? _fbb.CreateString(CREATED_BY) : 0;
   auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
   auto ORIG_NETWORK__ = ORIG_NETWORK ? _fbb.CreateString(ORIG_NETWORK) : 0;
   auto SOURCE_DL__ = SOURCE_DL ? _fbb.CreateString(SOURCE_DL) : 0;
-  auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
   return CreateEOO(
       _fbb,
-      EOBSERVATION_ID__,
+      ID__,
       CLASSIFICATION__,
       OB_TIME__,
       CORR_QUALITY,
       ID_ON_ORBIT__,
       SENSOR_ID__,
-      COLLECT_METHOD__,
+      COLLECT_METHOD,
       NORAD_CAT_ID,
       TASK_ID__,
       TRANSACTION_ID__,
       TRACK_ID__,
-      OB_POSITION__,
+      OB_POSITION,
       ORIG_OBJECT_ID__,
       ORIG_SENSOR_ID__,
       UCT,
@@ -1283,7 +1368,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       DESCRIPTOR__,
       SOURCE__,
       ORIGIN__,
-      DATA_MODE__,
+      DATA_MODE,
       CREATED_AT__,
       CREATED_BY__,
       REFERENCE_FRAME,
@@ -1292,7 +1377,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       PENUMBRA,
       ORIG_NETWORK__,
       SOURCE_DL__,
-      TYPE__,
+      TYPE,
       AZIMUTH_MEASURED,
       ELEVATION_MEASURED,
       RANGE_MEASURED,

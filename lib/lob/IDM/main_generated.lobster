@@ -17,9 +17,14 @@ enum SimplePolarization:
 
 /// Enum for the mode of data (real, simulated, synthetic)
 enum DataMode:
-    DataMode_REAL = 0
-    DataMode_SIMULATED = 1
-    DataMode_SYNTHETIC = 2
+    /// Data collected during an exercise scenario.
+    DataMode_EXERCISE = 0
+    /// Data collected from real-world observations.
+    DataMode_REAL = 1
+    /// Data generated through simulation.
+    DataMode_SIMULATED = 2
+    /// Data collected for testing purposes.
+    DataMode_TEST = 3
 
 enum DeviceType:
     /// Basic or undefined sensor type

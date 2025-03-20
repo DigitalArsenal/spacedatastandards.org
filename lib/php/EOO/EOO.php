@@ -41,28 +41,28 @@ class EOO extends Table
         return $this;
     }
 
-    /// Unique identifier for Earth Observation Observation
-    public function getEOBSERVATION_ID()
+    /// Unique identifier of the record.
+    public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Classification marking of the data
+    /// Classification marking of the data in IC/CAPCO Portion-marked format.
     public function getCLASSIFICATION()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Observation time in UTC
+    /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
     public function getOB_TIME()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Quality of the correlation
+    /// Correlation score of the observation when compared to a known orbit state.
     /**
      * @return float
      */
@@ -72,28 +72,31 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Identifier for the satellite on orbit
+    /// Server will auto-populate with SAT_NO if available.
     public function getID_ON_ORBIT()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Identifier for the sensor
+    /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
     public function getSENSOR_ID()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Method of data collection
+    /// Accepted Collection Method
+    /**
+     * @return sbyte
+     */
     public function getCOLLECT_METHOD()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CollectMethod::SIDEREAL;
     }
 
-    /// NORAD catalog identifier for the satellite
+    /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
     /**
      * @return int
      */
@@ -103,49 +106,52 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
-    /// Identifier for the task
+    /// Identifier for the collectRequest message if the collection was in response to tasking.
     public function getTASK_ID()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Identifier for the transaction
+    /// Optional identifier to track a transaction.
     public function getTRANSACTION_ID()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Identifier for the track
+    /// Identifier of the track to which this observation belongs, if applicable.
     public function getTRACK_ID()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Position of the observation
+    /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+    /**
+     * @return sbyte
+     */
     public function getOB_POSITION()
     {
         $o = $this->__offset(26);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ObservationPosition::FENCE;
     }
 
-    /// Original object identifier
+    /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
     public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Original sensor identifier
+    /// Sensor ID.
     public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Universal Coordinated Time flag
+    /// Required if correlation is attempted. Indicates whether correlation succeeded.
     /**
      * @return bool
      */
@@ -155,7 +161,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Azimuth angle
+    /// Line of sight azimuth angle in degrees and topocentric frame.
     /**
      * @return float
      */
@@ -165,7 +171,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in azimuth angle
+    /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
     /**
      * @return float
      */
@@ -175,7 +181,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Bias in azimuth angle
+    /// Sensor line of sight azimuth angle bias in degrees.
     /**
      * @return float
      */
@@ -185,7 +191,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Rate of change in azimuth
+    /// Rate of change of the line of sight azimuth in degrees per second.
     /**
      * @return float
      */
@@ -195,7 +201,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Elevation angle
+    /// Line of sight elevation in degrees and topocentric frame.
     /**
      * @return float
      */
@@ -205,7 +211,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in elevation angle
+    /// One sigma uncertainty in the line of sight elevation angle, in degrees.
     /**
      * @return float
      */
@@ -215,7 +221,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Bias in elevation angle
+    /// Sensor line of sight elevation bias in degrees.
     /**
      * @return float
      */
@@ -225,7 +231,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Rate of change in elevation
+    /// Rate of change of the line of sight elevation in degrees per second.
     /**
      * @return float
      */
@@ -235,7 +241,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Range to the target
+    /// Line of sight range in km. Reported value should include all applicable corrections.
     /**
      * @return float
      */
@@ -245,7 +251,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in range
+    /// One sigma uncertainty in the line of sight range, in km.
     /**
      * @return float
      */
@@ -255,7 +261,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Bias in range measurement
+    /// Sensor line of sight range bias in km.
     /**
      * @return float
      */
@@ -265,7 +271,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Rate of change in range
+    /// Range rate in km/s. Reported value should include all applicable corrections.
     /**
      * @return float
      */
@@ -275,7 +281,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in range rate
+    /// One sigma uncertainty in the line of sight range rate, in km/sec.
     /**
      * @return float
      */
@@ -285,7 +291,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Right ascension
+    /// Right ascension in degrees. Required metric reporting field for EO observations.
     /**
      * @return float
      */
@@ -295,7 +301,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Rate of change in right ascension
+    /// Line of sight right ascension rate of change, in degrees/sec.
     /**
      * @return float
      */
@@ -305,7 +311,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in right ascension
+    /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
     /**
      * @return float
      */
@@ -315,7 +321,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Bias in right ascension
+    /// Sensor line of sight right ascension bias in degrees.
     /**
      * @return float
      */
@@ -325,7 +331,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Declination angle
+    /// Declination in degrees. Required metric reporting field for EO observations.
     /**
      * @return float
      */
@@ -335,7 +341,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Rate of change in declination
+    /// Line of sight declination rate of change, in degrees/sec.
     /**
      * @return float
      */
@@ -345,7 +351,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in declination
+    /// One sigma uncertainty in the line of sight declination angle, in degrees.
     /**
      * @return float
      */
@@ -355,7 +361,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Bias in declination
+    /// Sensor line of sight declination angle bias in degrees.
     /**
      * @return float
      */
@@ -365,7 +371,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// X-component of line-of-sight vector
+    /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
     /**
      * @return float
      */
@@ -375,7 +381,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Y-component of line-of-sight vector
+    /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
     /**
      * @return float
      */
@@ -385,7 +391,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Z-component of line-of-sight vector
+    /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
     /**
      * @return float
      */
@@ -395,7 +401,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in line-of-sight vector
+    /// One sigma uncertainty in the line-of-sight direction vector components.
     /**
      * @return float
      */
@@ -405,7 +411,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// X-component of line-of-sight velocity
+    /// X-component of the velocity vector along the line of sight, in km/s.
     /**
      * @return float
      */
@@ -415,7 +421,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Y-component of line-of-sight velocity
+    /// Y-component of the velocity vector along the line of sight, in km/s.
     /**
      * @return float
      */
@@ -425,7 +431,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Z-component of line-of-sight velocity
+    /// Z-component of the velocity vector along the line of sight, in km/s.
     /**
      * @return float
      */
@@ -435,7 +441,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Latitude of sensor
+    /// WGS-84 latitude in decimal degrees at the time of the observation.
     /**
      * @return float
      */
@@ -445,7 +451,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Longitude of sensor
+    /// WGS-84 longitude in decimal degrees at the time of the observation.
     /**
      * @return float
      */
@@ -455,7 +461,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Altitude of sensor
+    /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
     /**
      * @return float
      */
@@ -465,7 +471,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// X-coordinate of sensor position
+    /// Cartesian X position in km at the time of the observation.
     /**
      * @return float
      */
@@ -475,7 +481,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Y-coordinate of sensor position
+    /// Cartesian Y position in km at the time of the observation.
     /**
      * @return float
      */
@@ -485,7 +491,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Z-coordinate of sensor position
+    /// Cartesian Z position in km at the time of the observation.
     /**
      * @return float
      */
@@ -495,7 +501,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Number of fields of view
+    /// Total number of satellites in the field of view.
     /**
      * @return int
      */
@@ -505,7 +511,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
-    /// Number of uncorrelated satellites in the field of view (JCO)
+    /// Number of uncorrelated satellites in the field of view (JCO).
     /**
      * @return int
      */
@@ -515,7 +521,9 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
-    /// Duration of the exposure
+    /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+    /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+    /// observations are going to be used for photometric processing.
     /**
      * @return float
      */
@@ -525,7 +533,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Zero-point displacement
+    /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
     /**
      * @return float
      */
@@ -535,7 +543,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Net object signal
+    /// Net object signature = counts / EXP_DURATION.
     /**
      * @return float
      */
@@ -545,7 +553,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in net object signal
+    /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
     /**
      * @return float
      */
@@ -555,7 +563,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Magnitude of the observation
+    /// Measure of observed brightness calibrated against the Gaia G-band.
     /**
      * @return float
      */
@@ -565,7 +573,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in magnitude
+    /// Uncertainty of the observed brightness.
     /**
      * @return float
      */
@@ -575,7 +583,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Normalized range for magnitude
+    /// [Definition needed].
     /**
      * @return float
      */
@@ -585,7 +593,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Geocentric latitude
+    /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+    /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
     /**
      * @return float
      */
@@ -595,7 +604,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Geocentric longitude
+    /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+    /// and viewing geometry. It must NOT be computed from the orbit state.
     /**
      * @return float
      */
@@ -605,7 +615,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Geocentric altitude
+    /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
     /**
      * @return float
      */
@@ -615,7 +625,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Geocentric range
+    /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
     /**
      * @return float
      */
@@ -625,7 +635,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Sky background level
+    /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+    /// empty part of the night sky.
     /**
      * @return float
      */
@@ -635,7 +646,10 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Primary extinction
+    /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+    /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+    /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+    /// object and the observer.
     /**
      * @return float
      */
@@ -645,7 +659,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Uncertainty in primary extinction
+    /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
     /**
      * @return float
      */
@@ -655,7 +669,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Solar phase angle
+    /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+    /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
     /**
      * @return float
      */
@@ -665,7 +680,9 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Solar equatorial phase angle
+    /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+    /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+    /// and positive when opening (after the opposition).
     /**
      * @return float
      */
@@ -675,7 +692,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Solar declination angle
+    /// Angle from the sun to the equatorial plane.
     /**
      * @return float
      */
@@ -685,7 +702,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Shutter delay
+    /// Shutter delay in seconds.
     /**
      * @return float
      */
@@ -695,7 +712,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Timing bias
+    /// Sensor timing bias in seconds.
     /**
      * @return float
      */
@@ -705,14 +722,14 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// URI of the raw data file
+    /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
     public function getRAW_FILE_URI()
     {
         $o = $this->__offset(144);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Intensity of the observation
+    /// Intensity of the target for IR observations, in kw/sr/em.
     /**
      * @return float
      */
@@ -722,7 +739,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Background intensity
+    /// Background intensity for IR observations, in kw/sr/um.
     /**
      * @return float
      */
@@ -732,49 +749,54 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Descriptor of the provided data
+    /// Optional source-provided and searchable metadata or descriptor of the data.
     public function getDESCRIPTOR()
     {
         $o = $this->__offset(150);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Source of the data
+    /// Source of the data.
     public function getSOURCE()
     {
         $o = $this->__offset(152);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Origin of the data
+    /// Originating system or organization which produced the data, if different from the source.
+    /// The origin may be different than the source if the source was a mediating system which forwarded 
+    /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
     public function getORIGIN()
     {
         $o = $this->__offset(154);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Mode of the data
+    /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+    /**
+     * @return sbyte
+     */
     public function getDATA_MODE()
     {
         $o = $this->__offset(156);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DataMode::EXERCISE;
     }
 
-    /// Creation time of the record
+    /// Time the row was created in the database, auto-populated by the system.
     public function getCREATED_AT()
     {
         $o = $this->__offset(158);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// User who created the record
+    /// Application user who created the row in the database, auto-populated by the system.
     public function getCREATED_BY()
     {
         $o = $this->__offset(160);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Reference frame of the observation
+    /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
     /**
      * @return sbyte
      */
@@ -784,14 +806,16 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
     }
 
-    /// Reference frame of the sensor
+    /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+    /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+    /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
     public function getSEN_REFERENCE_FRAME()
     {
         $o = $this->__offset(164);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Flag for umbra (total eclipse)
+    /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
     /**
      * @return bool
      */
@@ -801,7 +825,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Flag for penumbra (partial eclipse)
+    /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+    /// This field is highly recommended if the observations will be used for photometric processing.
     /**
      * @return bool
      */
@@ -811,28 +836,31 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Original network identifier
+    /// The originating source network on which this record was created, auto-populated by the system.
     public function getORIG_NETWORK()
     {
         $o = $this->__offset(170);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Data link source
+    /// The source from which this record was received.
     public function getSOURCE_DL()
     {
         $o = $this->__offset(172);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Type of the observation
+    /// Device Type
+    /**
+     * @return sbyte
+     */
     public function getTYPE()
     {
         $o = $this->__offset(174);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DeviceType::UNKNOWN;
     }
 
-    /// True if measured, false if computed. Required if azimuth is reported (JCO)
+    /// True if measured, false if computed. Required if azimuth is reported.
     /**
      * @return bool
      */
@@ -842,7 +870,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// True if measured, false if computed. Required if elevation is reported (JCO)
+    /// True if measured, false if computed. Required if elevation is reported.
     /**
      * @return bool
      */
@@ -852,7 +880,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// True if measured, false if computed. Required if range is reported (JCO)
+    /// True if measured, false if computed. Required if range is reported.
     /**
      * @return bool
      */
@@ -862,7 +890,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// True if measured, false if computed. Required if range-rate is reported (JCO)
+    /// True if measured, false if computed. Required if range-rate is reported.
     /**
      * @return bool
      */
@@ -872,7 +900,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// True if measured, false if computed. Required if right ascension is reported (JCO)
+    /// True if measured, false if computed. Required if right ascension is reported.
     /**
      * @return bool
      */
@@ -882,7 +910,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// True if measured, false if computed. Required if declination is reported (JCO)
+    /// True if measured, false if computed. Required if declination is reported.
     /**
      * @return bool
      */
@@ -905,10 +933,10 @@ class EOO extends Table
      * @param FlatBufferBuilder $builder
      * @return EOO
      */
-    public static function createEOO(FlatBufferBuilder $builder, $EOBSERVATION_ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED)
+    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED)
     {
         $builder->startObject(92);
-        self::addEOBSERVATION_ID($builder, $EOBSERVATION_ID);
+        self::addID($builder, $ID);
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addOB_TIME($builder, $OB_TIME);
         self::addCORR_QUALITY($builder, $CORR_QUALITY);
@@ -1009,9 +1037,9 @@ class EOO extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addEOBSERVATION_ID(FlatBufferBuilder $builder, $EOBSERVATION_ID)
+    public static function addID(FlatBufferBuilder $builder, $ID)
     {
-        $builder->addOffsetX(0, $EOBSERVATION_ID, 0);
+        $builder->addOffsetX(0, $ID, 0);
     }
 
     /**
@@ -1066,12 +1094,12 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addCOLLECT_METHOD(FlatBufferBuilder $builder, $COLLECT_METHOD)
     {
-        $builder->addOffsetX(6, $COLLECT_METHOD, 0);
+        $builder->addSbyteX(6, $COLLECT_METHOD, 0);
     }
 
     /**
@@ -1116,12 +1144,12 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addOB_POSITION(FlatBufferBuilder $builder, $OB_POSITION)
     {
-        $builder->addOffsetX(11, $OB_POSITION, 0);
+        $builder->addSbyteX(11, $OB_POSITION, 0);
     }
 
     /**
@@ -1766,12 +1794,12 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addDATA_MODE(FlatBufferBuilder $builder, $DATA_MODE)
     {
-        $builder->addOffsetX(76, $DATA_MODE, 0);
+        $builder->addSbyteX(76, $DATA_MODE, 0);
     }
 
     /**
@@ -1856,12 +1884,12 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
     {
-        $builder->addOffsetX(85, $TYPE, 0);
+        $builder->addSbyteX(85, $TYPE, 0);
     }
 
     /**

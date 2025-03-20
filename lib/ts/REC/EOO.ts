@@ -4,6 +4,10 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CollectMethod } from './CollectMethod.js';
+import { DataMode } from './DataMode.js';
+import { DeviceType } from './DeviceType.js';
+import { ObservationPosition } from './ObservationPosition.js';
 import { refFrame } from './refFrame.js';
 
 
@@ -33,17 +37,17 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * Unique identifier for Earth Observation Observation
+ * Unique identifier of the record.
  */
-EOBSERVATION_ID():string|null
-EOBSERVATION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EOBSERVATION_ID(optionalEncoding?:any):string|Uint8Array|null {
+ID():string|null
+ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
- * Classification marking of the data
+ * Classification marking of the data in IC/CAPCO Portion-marked format.
  */
 CLASSIFICATION():string|null
 CLASSIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -53,7 +57,7 @@ CLASSIFICATION(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Observation time in UTC
+ * Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
  */
 OB_TIME():string|null
 OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -63,7 +67,7 @@ OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Quality of the correlation
+ * Correlation score of the observation when compared to a known orbit state.
  */
 CORR_QUALITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -71,7 +75,7 @@ CORR_QUALITY():number {
 }
 
 /**
- * Identifier for the satellite on orbit
+ * Server will auto-populate with SAT_NO if available.
  */
 ID_ON_ORBIT():string|null
 ID_ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -81,7 +85,7 @@ ID_ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Identifier for the sensor
+ * Unique ID of the sensor. Must have a corresponding sensor record on the server.
  */
 SENSOR_ID():string|null
 SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -91,17 +95,15 @@ SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Method of data collection
+ * Accepted Collection Method
  */
-COLLECT_METHOD():string|null
-COLLECT_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COLLECT_METHOD(optionalEncoding?:any):string|Uint8Array|null {
+COLLECT_METHOD():CollectMethod {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : CollectMethod.SIDEREAL;
 }
 
 /**
- * NORAD catalog identifier for the satellite
+ * 18SDS satellite number. Only list if correlated against the 18SDS catalog.
  */
 NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -109,7 +111,7 @@ NORAD_CAT_ID():number {
 }
 
 /**
- * Identifier for the task
+ * Identifier for the collectRequest message if the collection was in response to tasking.
  */
 TASK_ID():string|null
 TASK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -119,7 +121,7 @@ TASK_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Identifier for the transaction
+ * Optional identifier to track a transaction.
  */
 TRANSACTION_ID():string|null
 TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -129,7 +131,7 @@ TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Identifier for the track
+ * Identifier of the track to which this observation belongs, if applicable.
  */
 TRACK_ID():string|null
 TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -139,17 +141,15 @@ TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Position of the observation
+ * The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
  */
-OB_POSITION():string|null
-OB_POSITION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OB_POSITION(optionalEncoding?:any):string|Uint8Array|null {
+OB_POSITION():ObservationPosition {
   const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ObservationPosition.FENCE;
 }
 
 /**
- * Original object identifier
+ * Provider maintained ID. May not be consistent with 18SDS SAT_NO.
  */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -159,7 +159,7 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Original sensor identifier
+ * Sensor ID.
  */
 ORIG_SENSOR_ID():string|null
 ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -169,7 +169,7 @@ ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Universal Coordinated Time flag
+ * Required if correlation is attempted. Indicates whether correlation succeeded.
  */
 UCT():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 32);
@@ -177,7 +177,7 @@ UCT():boolean {
 }
 
 /**
- * Azimuth angle
+ * Line of sight azimuth angle in degrees and topocentric frame.
  */
 AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
@@ -185,7 +185,7 @@ AZIMUTH():number {
 }
 
 /**
- * Uncertainty in azimuth angle
+ * One sigma uncertainty in the line of sight azimuth angle, in degrees.
  */
 AZIMUTH_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
@@ -193,7 +193,7 @@ AZIMUTH_UNC():number {
 }
 
 /**
- * Bias in azimuth angle
+ * Sensor line of sight azimuth angle bias in degrees.
  */
 AZIMUTH_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
@@ -201,7 +201,7 @@ AZIMUTH_BIAS():number {
 }
 
 /**
- * Rate of change in azimuth
+ * Rate of change of the line of sight azimuth in degrees per second.
  */
 AZIMUTH_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
@@ -209,7 +209,7 @@ AZIMUTH_RATE():number {
 }
 
 /**
- * Elevation angle
+ * Line of sight elevation in degrees and topocentric frame.
  */
 ELEVATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
@@ -217,7 +217,7 @@ ELEVATION():number {
 }
 
 /**
- * Uncertainty in elevation angle
+ * One sigma uncertainty in the line of sight elevation angle, in degrees.
  */
 ELEVATION_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
@@ -225,7 +225,7 @@ ELEVATION_UNC():number {
 }
 
 /**
- * Bias in elevation angle
+ * Sensor line of sight elevation bias in degrees.
  */
 ELEVATION_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
@@ -233,7 +233,7 @@ ELEVATION_BIAS():number {
 }
 
 /**
- * Rate of change in elevation
+ * Rate of change of the line of sight elevation in degrees per second.
  */
 ELEVATION_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
@@ -241,7 +241,7 @@ ELEVATION_RATE():number {
 }
 
 /**
- * Range to the target
+ * Line of sight range in km. Reported value should include all applicable corrections.
  */
 RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
@@ -249,7 +249,7 @@ RANGE():number {
 }
 
 /**
- * Uncertainty in range
+ * One sigma uncertainty in the line of sight range, in km.
  */
 RANGE_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
@@ -257,7 +257,7 @@ RANGE_UNC():number {
 }
 
 /**
- * Bias in range measurement
+ * Sensor line of sight range bias in km.
  */
 RANGE_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
@@ -265,7 +265,7 @@ RANGE_BIAS():number {
 }
 
 /**
- * Rate of change in range
+ * Range rate in km/s. Reported value should include all applicable corrections.
  */
 RANGE_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
@@ -273,7 +273,7 @@ RANGE_RATE():number {
 }
 
 /**
- * Uncertainty in range rate
+ * One sigma uncertainty in the line of sight range rate, in km/sec.
  */
 RANGE_RATE_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
@@ -281,7 +281,7 @@ RANGE_RATE_UNC():number {
 }
 
 /**
- * Right ascension
+ * Right ascension in degrees. Required metric reporting field for EO observations.
  */
 RA():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
@@ -289,7 +289,7 @@ RA():number {
 }
 
 /**
- * Rate of change in right ascension
+ * Line of sight right ascension rate of change, in degrees/sec.
  */
 RA_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
@@ -297,7 +297,7 @@ RA_RATE():number {
 }
 
 /**
- * Uncertainty in right ascension
+ * One sigma uncertainty in the line of sight right ascension angle, in degrees.
  */
 RA_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
@@ -305,7 +305,7 @@ RA_UNC():number {
 }
 
 /**
- * Bias in right ascension
+ * Sensor line of sight right ascension bias in degrees.
  */
 RA_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
@@ -313,7 +313,7 @@ RA_BIAS():number {
 }
 
 /**
- * Declination angle
+ * Declination in degrees. Required metric reporting field for EO observations.
  */
 DECLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
@@ -321,7 +321,7 @@ DECLINATION():number {
 }
 
 /**
- * Rate of change in declination
+ * Line of sight declination rate of change, in degrees/sec.
  */
 DECLINATION_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 70);
@@ -329,7 +329,7 @@ DECLINATION_RATE():number {
 }
 
 /**
- * Uncertainty in declination
+ * One sigma uncertainty in the line of sight declination angle, in degrees.
  */
 DECLINATION_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 72);
@@ -337,7 +337,7 @@ DECLINATION_UNC():number {
 }
 
 /**
- * Bias in declination
+ * Sensor line of sight declination angle bias in degrees.
  */
 DECLINATION_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 74);
@@ -345,7 +345,7 @@ DECLINATION_BIAS():number {
 }
 
 /**
- * X-component of line-of-sight vector
+ * X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
  */
 LOSX():number {
   const offset = this.bb!.__offset(this.bb_pos, 76);
@@ -353,7 +353,7 @@ LOSX():number {
 }
 
 /**
- * Y-component of line-of-sight vector
+ * Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
  */
 LOSY():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
@@ -361,7 +361,7 @@ LOSY():number {
 }
 
 /**
- * Z-component of line-of-sight vector
+ * Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
  */
 LOSZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
@@ -369,7 +369,7 @@ LOSZ():number {
 }
 
 /**
- * Uncertainty in line-of-sight vector
+ * One sigma uncertainty in the line-of-sight direction vector components.
  */
 LOS_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 82);
@@ -377,7 +377,7 @@ LOS_UNC():number {
 }
 
 /**
- * X-component of line-of-sight velocity
+ * X-component of the velocity vector along the line of sight, in km/s.
  */
 LOSXVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
@@ -385,7 +385,7 @@ LOSXVEL():number {
 }
 
 /**
- * Y-component of line-of-sight velocity
+ * Y-component of the velocity vector along the line of sight, in km/s.
  */
 LOSYVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 86);
@@ -393,7 +393,7 @@ LOSYVEL():number {
 }
 
 /**
- * Z-component of line-of-sight velocity
+ * Z-component of the velocity vector along the line of sight, in km/s.
  */
 LOSZVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 88);
@@ -401,7 +401,7 @@ LOSZVEL():number {
 }
 
 /**
- * Latitude of sensor
+ * WGS-84 latitude in decimal degrees at the time of the observation.
  */
 SENLAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 90);
@@ -409,7 +409,7 @@ SENLAT():number {
 }
 
 /**
- * Longitude of sensor
+ * WGS-84 longitude in decimal degrees at the time of the observation.
  */
 SENLON():number {
   const offset = this.bb!.__offset(this.bb_pos, 92);
@@ -417,7 +417,7 @@ SENLON():number {
 }
 
 /**
- * Altitude of sensor
+ * Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
  */
 SENALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 94);
@@ -425,7 +425,7 @@ SENALT():number {
 }
 
 /**
- * X-coordinate of sensor position
+ * Cartesian X position in km at the time of the observation.
  */
 SENX():number {
   const offset = this.bb!.__offset(this.bb_pos, 96);
@@ -433,7 +433,7 @@ SENX():number {
 }
 
 /**
- * Y-coordinate of sensor position
+ * Cartesian Y position in km at the time of the observation.
  */
 SENY():number {
   const offset = this.bb!.__offset(this.bb_pos, 98);
@@ -441,7 +441,7 @@ SENY():number {
 }
 
 /**
- * Z-coordinate of sensor position
+ * Cartesian Z position in km at the time of the observation.
  */
 SENZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 100);
@@ -449,7 +449,7 @@ SENZ():number {
 }
 
 /**
- * Number of fields of view
+ * Total number of satellites in the field of view.
  */
 FOV_COUNT():number {
   const offset = this.bb!.__offset(this.bb_pos, 102);
@@ -457,7 +457,7 @@ FOV_COUNT():number {
 }
 
 /**
- * Number of uncorrelated satellites in the field of view (JCO)
+ * Number of uncorrelated satellites in the field of view (JCO).
  */
 FOV_COUNT_UCTS():number {
   const offset = this.bb!.__offset(this.bb_pos, 104);
@@ -465,7 +465,9 @@ FOV_COUNT_UCTS():number {
 }
 
 /**
- * Duration of the exposure
+ * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+ * the exposure duration should be the total integration time. This field is highly recommended / required if the 
+ * observations are going to be used for photometric processing.
  */
 EXP_DURATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 106);
@@ -473,7 +475,7 @@ EXP_DURATION():number {
 }
 
 /**
- * Zero-point displacement
+ * Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
  */
 ZEROPTD():number {
   const offset = this.bb!.__offset(this.bb_pos, 108);
@@ -481,7 +483,7 @@ ZEROPTD():number {
 }
 
 /**
- * Net object signal
+ * Net object signature = counts / EXP_DURATION.
  */
 NET_OBJ_SIG():number {
   const offset = this.bb!.__offset(this.bb_pos, 110);
@@ -489,7 +491,7 @@ NET_OBJ_SIG():number {
 }
 
 /**
- * Uncertainty in net object signal
+ * Net object signature uncertainty = counts uncertainty / EXP_DURATION.
  */
 NET_OBJ_SIG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 112);
@@ -497,7 +499,7 @@ NET_OBJ_SIG_UNC():number {
 }
 
 /**
- * Magnitude of the observation
+ * Measure of observed brightness calibrated against the Gaia G-band.
  */
 MAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 114);
@@ -505,7 +507,7 @@ MAG():number {
 }
 
 /**
- * Uncertainty in magnitude
+ * Uncertainty of the observed brightness.
  */
 MAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 116);
@@ -513,7 +515,7 @@ MAG_UNC():number {
 }
 
 /**
- * Normalized range for magnitude
+ * [Definition needed].
  */
 MAG_NORM_RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 118);
@@ -521,7 +523,8 @@ MAG_NORM_RANGE():number {
 }
 
 /**
- * Geocentric latitude
+ * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+ * and corresponding viewing geometry. It must NOT be computed from the orbit state.
  */
 GEOLAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 120);
@@ -529,7 +532,8 @@ GEOLAT():number {
 }
 
 /**
- * Geocentric longitude
+ * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+ * and viewing geometry. It must NOT be computed from the orbit state.
  */
 GEOLON():number {
   const offset = this.bb!.__offset(this.bb_pos, 122);
@@ -537,7 +541,7 @@ GEOLON():number {
 }
 
 /**
- * Geocentric altitude
+ * Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
  */
 GEOALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 124);
@@ -545,7 +549,7 @@ GEOALT():number {
 }
 
 /**
- * Geocentric range
+ * Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
  */
 GEORANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 126);
@@ -553,7 +557,8 @@ GEORANGE():number {
 }
 
 /**
- * Sky background level
+ * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+ * empty part of the night sky.
  */
 SKY_BKGRND():number {
   const offset = this.bb!.__offset(this.bb_pos, 128);
@@ -561,7 +566,10 @@ SKY_BKGRND():number {
 }
 
 /**
- * Primary extinction
+ * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+ * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+ * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+ * object and the observer.
  */
 PRIMARY_EXTINCTION():number {
   const offset = this.bb!.__offset(this.bb_pos, 130);
@@ -569,7 +577,7 @@ PRIMARY_EXTINCTION():number {
 }
 
 /**
- * Uncertainty in primary extinction
+ * Primary Extinction Coefficient Uncertainty, in Magnitudes.
  */
 PRIMARY_EXTINCTION_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 132);
@@ -577,7 +585,8 @@ PRIMARY_EXTINCTION_UNC():number {
 }
 
 /**
- * Solar phase angle
+ * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+ * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
  */
 SOLAR_PHASE_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 134);
@@ -585,7 +594,9 @@ SOLAR_PHASE_ANGLE():number {
 }
 
 /**
- * Solar equatorial phase angle
+ * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+ * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+ * and positive when opening (after the opposition).
  */
 SOLAR_EQ_PHASE_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 136);
@@ -593,7 +604,7 @@ SOLAR_EQ_PHASE_ANGLE():number {
 }
 
 /**
- * Solar declination angle
+ * Angle from the sun to the equatorial plane.
  */
 SOLAR_DEC_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 138);
@@ -601,7 +612,7 @@ SOLAR_DEC_ANGLE():number {
 }
 
 /**
- * Shutter delay
+ * Shutter delay in seconds.
  */
 SHUTTER_DELAY():number {
   const offset = this.bb!.__offset(this.bb_pos, 140);
@@ -609,7 +620,7 @@ SHUTTER_DELAY():number {
 }
 
 /**
- * Timing bias
+ * Sensor timing bias in seconds.
  */
 TIMING_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 142);
@@ -617,7 +628,7 @@ TIMING_BIAS():number {
 }
 
 /**
- * URI of the raw data file
+ * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
  */
 RAW_FILE_URI():string|null
 RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -627,7 +638,7 @@ RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Intensity of the observation
+ * Intensity of the target for IR observations, in kw/sr/em.
  */
 INTENSITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 146);
@@ -635,7 +646,7 @@ INTENSITY():number {
 }
 
 /**
- * Background intensity
+ * Background intensity for IR observations, in kw/sr/um.
  */
 BG_INTENSITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 148);
@@ -643,7 +654,7 @@ BG_INTENSITY():number {
 }
 
 /**
- * Descriptor of the provided data
+ * Optional source-provided and searchable metadata or descriptor of the data.
  */
 DESCRIPTOR():string|null
 DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -653,7 +664,7 @@ DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Source of the data
+ * Source of the data.
  */
 SOURCE():string|null
 SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -663,7 +674,9 @@ SOURCE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Origin of the data
+ * Originating system or organization which produced the data, if different from the source.
+ * The origin may be different than the source if the source was a mediating system which forwarded 
+ * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
  */
 ORIGIN():string|null
 ORIGIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -673,17 +686,15 @@ ORIGIN(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Mode of the data
+ * Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
  */
-DATA_MODE():string|null
-DATA_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DATA_MODE(optionalEncoding?:any):string|Uint8Array|null {
+DATA_MODE():DataMode {
   const offset = this.bb!.__offset(this.bb_pos, 156);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : DataMode.EXERCISE;
 }
 
 /**
- * Creation time of the record
+ * Time the row was created in the database, auto-populated by the system.
  */
 CREATED_AT():string|null
 CREATED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -693,7 +704,7 @@ CREATED_AT(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * User who created the record
+ * Application user who created the row in the database, auto-populated by the system.
  */
 CREATED_BY():string|null
 CREATED_BY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -703,7 +714,7 @@ CREATED_BY(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Reference frame of the observation
+ * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
  */
 REFERENCE_FRAME():refFrame {
   const offset = this.bb!.__offset(this.bb_pos, 162);
@@ -711,7 +722,9 @@ REFERENCE_FRAME():refFrame {
 }
 
 /**
- * Reference frame of the sensor
+ * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+ * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+ * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
  */
 SEN_REFERENCE_FRAME():string|null
 SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -721,7 +734,7 @@ SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Flag for umbra (total eclipse)
+ * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
  */
 UMBRA():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 166);
@@ -729,7 +742,8 @@ UMBRA():boolean {
 }
 
 /**
- * Flag for penumbra (partial eclipse)
+ * Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+ * This field is highly recommended if the observations will be used for photometric processing.
  */
 PENUMBRA():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 168);
@@ -737,7 +751,7 @@ PENUMBRA():boolean {
 }
 
 /**
- * Original network identifier
+ * The originating source network on which this record was created, auto-populated by the system.
  */
 ORIG_NETWORK():string|null
 ORIG_NETWORK(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -747,7 +761,7 @@ ORIG_NETWORK(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Data link source
+ * The source from which this record was received.
  */
 SOURCE_DL():string|null
 SOURCE_DL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -757,17 +771,15 @@ SOURCE_DL(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Type of the observation
+ * Device Type
  */
-TYPE():string|null
-TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TYPE(optionalEncoding?:any):string|Uint8Array|null {
+TYPE():DeviceType {
   const offset = this.bb!.__offset(this.bb_pos, 174);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : DeviceType.UNKNOWN;
 }
 
 /**
- * True if measured, false if computed. Required if azimuth is reported (JCO)
+ * True if measured, false if computed. Required if azimuth is reported.
  */
 AZIMUTH_MEASURED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 176);
@@ -775,7 +787,7 @@ AZIMUTH_MEASURED():boolean {
 }
 
 /**
- * True if measured, false if computed. Required if elevation is reported (JCO)
+ * True if measured, false if computed. Required if elevation is reported.
  */
 ELEVATION_MEASURED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 178);
@@ -783,7 +795,7 @@ ELEVATION_MEASURED():boolean {
 }
 
 /**
- * True if measured, false if computed. Required if range is reported (JCO)
+ * True if measured, false if computed. Required if range is reported.
  */
 RANGE_MEASURED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 180);
@@ -791,7 +803,7 @@ RANGE_MEASURED():boolean {
 }
 
 /**
- * True if measured, false if computed. Required if range-rate is reported (JCO)
+ * True if measured, false if computed. Required if range-rate is reported.
  */
 RANGERATE_MEASURED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 182);
@@ -799,7 +811,7 @@ RANGERATE_MEASURED():boolean {
 }
 
 /**
- * True if measured, false if computed. Required if right ascension is reported (JCO)
+ * True if measured, false if computed. Required if right ascension is reported.
  */
 RA_MEASURED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 184);
@@ -807,7 +819,7 @@ RA_MEASURED():boolean {
 }
 
 /**
- * True if measured, false if computed. Required if declination is reported (JCO)
+ * True if measured, false if computed. Required if declination is reported.
  */
 DECLINATION_MEASURED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 186);
@@ -818,8 +830,8 @@ static startEOO(builder:flatbuffers.Builder) {
   builder.startObject(92);
 }
 
-static addEobservationId(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, EOBSERVATION_IDOffset, 0);
+static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, IDOffset, 0);
 }
 
 static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
@@ -842,8 +854,8 @@ static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offs
   builder.addFieldOffset(5, SENSOR_IDOffset, 0);
 }
 
-static addCollectMethod(builder:flatbuffers.Builder, COLLECT_METHODOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, COLLECT_METHODOffset, 0);
+static addCollectMethod(builder:flatbuffers.Builder, COLLECT_METHOD:CollectMethod) {
+  builder.addFieldInt8(6, COLLECT_METHOD, CollectMethod.SIDEREAL);
 }
 
 static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
@@ -862,8 +874,8 @@ static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset
   builder.addFieldOffset(10, TRACK_IDOffset, 0);
 }
 
-static addObPosition(builder:flatbuffers.Builder, OB_POSITIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, OB_POSITIONOffset, 0);
+static addObPosition(builder:flatbuffers.Builder, OB_POSITION:ObservationPosition) {
+  builder.addFieldInt8(11, OB_POSITION, ObservationPosition.FENCE);
 }
 
 static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
@@ -1122,8 +1134,8 @@ static addOrigin(builder:flatbuffers.Builder, ORIGINOffset:flatbuffers.Offset) {
   builder.addFieldOffset(75, ORIGINOffset, 0);
 }
 
-static addDataMode(builder:flatbuffers.Builder, DATA_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(76, DATA_MODEOffset, 0);
+static addDataMode(builder:flatbuffers.Builder, DATA_MODE:DataMode) {
+  builder.addFieldInt8(76, DATA_MODE, DataMode.EXERCISE);
 }
 
 static addCreatedAt(builder:flatbuffers.Builder, CREATED_ATOffset:flatbuffers.Offset) {
@@ -1158,8 +1170,8 @@ static addSourceDl(builder:flatbuffers.Builder, SOURCE_DLOffset:flatbuffers.Offs
   builder.addFieldOffset(84, SOURCE_DLOffset, 0);
 }
 
-static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(85, TYPEOffset, 0);
+static addType(builder:flatbuffers.Builder, TYPE:DeviceType) {
+  builder.addFieldInt8(85, TYPE, DeviceType.UNKNOWN);
 }
 
 static addAzimuthMeasured(builder:flatbuffers.Builder, AZIMUTH_MEASURED:boolean) {
@@ -1199,20 +1211,20 @@ static finishSizePrefixedEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOO', true);
 }
 
-static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHODOffset:flatbuffers.Offset, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODEOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean):flatbuffers.Offset {
+static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHOD:CollectMethod, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITION:ObservationPosition, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODE:DataMode, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPE:DeviceType, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean):flatbuffers.Offset {
   EOO.startEOO(builder);
-  EOO.addEobservationId(builder, EOBSERVATION_IDOffset);
+  EOO.addId(builder, IDOffset);
   EOO.addClassification(builder, CLASSIFICATIONOffset);
   EOO.addObTime(builder, OB_TIMEOffset);
   EOO.addCorrQuality(builder, CORR_QUALITY);
   EOO.addIdOnOrbit(builder, ID_ON_ORBITOffset);
   EOO.addSensorId(builder, SENSOR_IDOffset);
-  EOO.addCollectMethod(builder, COLLECT_METHODOffset);
+  EOO.addCollectMethod(builder, COLLECT_METHOD);
   EOO.addNoradCatId(builder, NORAD_CAT_ID);
   EOO.addTaskId(builder, TASK_IDOffset);
   EOO.addTransactionId(builder, TRANSACTION_IDOffset);
   EOO.addTrackId(builder, TRACK_IDOffset);
-  EOO.addObPosition(builder, OB_POSITIONOffset);
+  EOO.addObPosition(builder, OB_POSITION);
   EOO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
   EOO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   EOO.addUct(builder, UCT);
@@ -1277,7 +1289,7 @@ static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.
   EOO.addDescriptor(builder, DESCRIPTOROffset);
   EOO.addSource(builder, SOURCEOffset);
   EOO.addOrigin(builder, ORIGINOffset);
-  EOO.addDataMode(builder, DATA_MODEOffset);
+  EOO.addDataMode(builder, DATA_MODE);
   EOO.addCreatedAt(builder, CREATED_ATOffset);
   EOO.addCreatedBy(builder, CREATED_BYOffset);
   EOO.addReferenceFrame(builder, REFERENCE_FRAME);
@@ -1286,7 +1298,7 @@ static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.
   EOO.addPenumbra(builder, PENUMBRA);
   EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
   EOO.addSourceDl(builder, SOURCE_DLOffset);
-  EOO.addType(builder, TYPEOffset);
+  EOO.addType(builder, TYPE);
   EOO.addAzimuthMeasured(builder, AZIMUTH_MEASURED);
   EOO.addElevationMeasured(builder, ELEVATION_MEASURED);
   EOO.addRangeMeasured(builder, RANGE_MEASURED);
@@ -1298,7 +1310,7 @@ static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.
 
 unpack(): EOOT {
   return new EOOT(
-    this.EOBSERVATION_ID(),
+    this.ID(),
     this.CLASSIFICATION(),
     this.OB_TIME(),
     this.CORR_QUALITY(),
@@ -1395,7 +1407,7 @@ unpack(): EOOT {
 
 
 unpackTo(_o: EOOT): void {
-  _o.EOBSERVATION_ID = this.EOBSERVATION_ID();
+  _o.ID = this.ID();
   _o.CLASSIFICATION = this.CLASSIFICATION();
   _o.OB_TIME = this.OB_TIME();
   _o.CORR_QUALITY = this.CORR_QUALITY();
@@ -1492,18 +1504,18 @@ unpackTo(_o: EOOT): void {
 
 export class EOOT implements flatbuffers.IGeneratedObject {
 constructor(
-  public EOBSERVATION_ID: string|Uint8Array|null = null,
+  public ID: string|Uint8Array|null = null,
   public CLASSIFICATION: string|Uint8Array|null = null,
   public OB_TIME: string|Uint8Array|null = null,
   public CORR_QUALITY: number = 0.0,
   public ID_ON_ORBIT: string|Uint8Array|null = null,
   public SENSOR_ID: string|Uint8Array|null = null,
-  public COLLECT_METHOD: string|Uint8Array|null = null,
+  public COLLECT_METHOD: CollectMethod = CollectMethod.SIDEREAL,
   public NORAD_CAT_ID: number = 0,
   public TASK_ID: string|Uint8Array|null = null,
   public TRANSACTION_ID: string|Uint8Array|null = null,
   public TRACK_ID: string|Uint8Array|null = null,
-  public OB_POSITION: string|Uint8Array|null = null,
+  public OB_POSITION: ObservationPosition = ObservationPosition.FENCE,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
   public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public UCT: boolean = false,
@@ -1568,7 +1580,7 @@ constructor(
   public DESCRIPTOR: string|Uint8Array|null = null,
   public SOURCE: string|Uint8Array|null = null,
   public ORIGIN: string|Uint8Array|null = null,
-  public DATA_MODE: string|Uint8Array|null = null,
+  public DATA_MODE: DataMode = DataMode.EXERCISE,
   public CREATED_AT: string|Uint8Array|null = null,
   public CREATED_BY: string|Uint8Array|null = null,
   public REFERENCE_FRAME: refFrame = refFrame.ECEF,
@@ -1577,7 +1589,7 @@ constructor(
   public PENUMBRA: boolean = false,
   public ORIG_NETWORK: string|Uint8Array|null = null,
   public SOURCE_DL: string|Uint8Array|null = null,
-  public TYPE: string|Uint8Array|null = null,
+  public TYPE: DeviceType = DeviceType.UNKNOWN,
   public AZIMUTH_MEASURED: boolean = false,
   public ELEVATION_MEASURED: boolean = false,
   public RANGE_MEASURED: boolean = false,
@@ -1588,43 +1600,39 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const EOBSERVATION_ID = (this.EOBSERVATION_ID !== null ? builder.createString(this.EOBSERVATION_ID!) : 0);
+  const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
   const OB_TIME = (this.OB_TIME !== null ? builder.createString(this.OB_TIME!) : 0);
   const ID_ON_ORBIT = (this.ID_ON_ORBIT !== null ? builder.createString(this.ID_ON_ORBIT!) : 0);
   const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
-  const COLLECT_METHOD = (this.COLLECT_METHOD !== null ? builder.createString(this.COLLECT_METHOD!) : 0);
   const TASK_ID = (this.TASK_ID !== null ? builder.createString(this.TASK_ID!) : 0);
   const TRANSACTION_ID = (this.TRANSACTION_ID !== null ? builder.createString(this.TRANSACTION_ID!) : 0);
   const TRACK_ID = (this.TRACK_ID !== null ? builder.createString(this.TRACK_ID!) : 0);
-  const OB_POSITION = (this.OB_POSITION !== null ? builder.createString(this.OB_POSITION!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
   const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
   const DESCRIPTOR = (this.DESCRIPTOR !== null ? builder.createString(this.DESCRIPTOR!) : 0);
   const SOURCE = (this.SOURCE !== null ? builder.createString(this.SOURCE!) : 0);
   const ORIGIN = (this.ORIGIN !== null ? builder.createString(this.ORIGIN!) : 0);
-  const DATA_MODE = (this.DATA_MODE !== null ? builder.createString(this.DATA_MODE!) : 0);
   const CREATED_AT = (this.CREATED_AT !== null ? builder.createString(this.CREATED_AT!) : 0);
   const CREATED_BY = (this.CREATED_BY !== null ? builder.createString(this.CREATED_BY!) : 0);
   const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? builder.createString(this.SEN_REFERENCE_FRAME!) : 0);
   const ORIG_NETWORK = (this.ORIG_NETWORK !== null ? builder.createString(this.ORIG_NETWORK!) : 0);
   const SOURCE_DL = (this.SOURCE_DL !== null ? builder.createString(this.SOURCE_DL!) : 0);
-  const TYPE = (this.TYPE !== null ? builder.createString(this.TYPE!) : 0);
 
   return EOO.createEOO(builder,
-    EOBSERVATION_ID,
+    ID,
     CLASSIFICATION,
     OB_TIME,
     this.CORR_QUALITY,
     ID_ON_ORBIT,
     SENSOR_ID,
-    COLLECT_METHOD,
+    this.COLLECT_METHOD,
     this.NORAD_CAT_ID,
     TASK_ID,
     TRANSACTION_ID,
     TRACK_ID,
-    OB_POSITION,
+    this.OB_POSITION,
     ORIG_OBJECT_ID,
     ORIG_SENSOR_ID,
     this.UCT,
@@ -1689,7 +1697,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     DESCRIPTOR,
     SOURCE,
     ORIGIN,
-    DATA_MODE,
+    this.DATA_MODE,
     CREATED_AT,
     CREATED_BY,
     this.REFERENCE_FRAME,
@@ -1698,7 +1706,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PENUMBRA,
     ORIG_NETWORK,
     SOURCE_DL,
-    TYPE,
+    this.TYPE,
     this.AZIMUTH_MEASURED,
     this.ELEVATION_MEASURED,
     this.RANGE_MEASURED,

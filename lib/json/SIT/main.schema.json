@@ -11,7 +11,7 @@
     },
     "DataMode" : {
       "type" : "string",
-      "enum": ["REAL", "SIMULATED", "SYNTHETIC"]
+      "enum": ["EXERCISE", "REAL", "SIMULATED", "TEST"]
     },
     "DeviceType" : {
       "type" : "string",

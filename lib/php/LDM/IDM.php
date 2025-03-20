@@ -62,7 +62,7 @@ class IDM extends Table
     public function getDATA_MODE()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DataMode::REAL;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DataMode::EXERCISE;
     }
 
     /// Uplink frequency range

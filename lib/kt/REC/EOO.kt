@@ -30,9 +30,9 @@ class EOO : Table() {
         return this
     }
     /**
-     * Unique identifier for Earth Observation Observation
+     * Unique identifier of the record.
      */
-    val EOBSERVATION_ID : String?
+    val ID : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,10 +41,10 @@ class EOO : Table() {
                 null
             }
         }
-    val EOBSERVATION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EOBSERVATION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Classification marking of the data
+     * Classification marking of the data in IC/CAPCO Portion-marked format.
      */
     val CLASSIFICATION : String?
         get() {
@@ -58,7 +58,7 @@ class EOO : Table() {
     val CLASSIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CLASSIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Observation time in UTC
+     * Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
      */
     val OB_TIME : String?
         get() {
@@ -72,7 +72,7 @@ class EOO : Table() {
     val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Quality of the correlation
+     * Correlation score of the observation when compared to a known orbit state.
      */
     val CORR_QUALITY : Float
         get() {
@@ -80,7 +80,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Identifier for the satellite on orbit
+     * Server will auto-populate with SAT_NO if available.
      */
     val ID_ON_ORBIT : String?
         get() {
@@ -94,7 +94,7 @@ class EOO : Table() {
     val ID_ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun ID_ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Identifier for the sensor
+     * Unique ID of the sensor. Must have a corresponding sensor record on the server.
      */
     val SENSOR_ID : String?
         get() {
@@ -108,21 +108,15 @@ class EOO : Table() {
     val SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Method of data collection
+     * Accepted Collection Method
      */
-    val COLLECT_METHOD : String?
+    val COLLECT_METHOD : Byte
         get() {
             val o = __offset(16)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val COLLECT_METHODAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun COLLECT_METHODInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
     /**
-     * NORAD catalog identifier for the satellite
+     * 18SDS satellite number. Only list if correlated against the 18SDS catalog.
      */
     val NORAD_CAT_ID : Int
         get() {
@@ -130,7 +124,7 @@ class EOO : Table() {
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     /**
-     * Identifier for the task
+     * Identifier for the collectRequest message if the collection was in response to tasking.
      */
     val TASK_ID : String?
         get() {
@@ -144,7 +138,7 @@ class EOO : Table() {
     val TASK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
     fun TASK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
     /**
-     * Identifier for the transaction
+     * Optional identifier to track a transaction.
      */
     val TRANSACTION_ID : String?
         get() {
@@ -158,7 +152,7 @@ class EOO : Table() {
     val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
     fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
     /**
-     * Identifier for the track
+     * Identifier of the track to which this observation belongs, if applicable.
      */
     val TRACK_ID : String?
         get() {
@@ -172,21 +166,15 @@ class EOO : Table() {
     val TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
     fun TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Position of the observation
+     * The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
      */
-    val OB_POSITION : String?
+    val OB_POSITION : Byte
         get() {
             val o = __offset(26)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val OB_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun OB_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
     /**
-     * Original object identifier
+     * Provider maintained ID. May not be consistent with 18SDS SAT_NO.
      */
     val ORIG_OBJECT_ID : String?
         get() {
@@ -200,7 +188,7 @@ class EOO : Table() {
     val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
     fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
     /**
-     * Original sensor identifier
+     * Sensor ID.
      */
     val ORIG_SENSOR_ID : String?
         get() {
@@ -214,7 +202,7 @@ class EOO : Table() {
     val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
     fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
     /**
-     * Universal Coordinated Time flag
+     * Required if correlation is attempted. Indicates whether correlation succeeded.
      */
     val UCT : Boolean
         get() {
@@ -222,7 +210,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Azimuth angle
+     * Line of sight azimuth angle in degrees and topocentric frame.
      */
     val AZIMUTH : Float
         get() {
@@ -230,7 +218,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in azimuth angle
+     * One sigma uncertainty in the line of sight azimuth angle, in degrees.
      */
     val AZIMUTH_UNC : Float
         get() {
@@ -238,7 +226,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Bias in azimuth angle
+     * Sensor line of sight azimuth angle bias in degrees.
      */
     val AZIMUTH_BIAS : Float
         get() {
@@ -246,7 +234,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Rate of change in azimuth
+     * Rate of change of the line of sight azimuth in degrees per second.
      */
     val AZIMUTH_RATE : Float
         get() {
@@ -254,7 +242,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Elevation angle
+     * Line of sight elevation in degrees and topocentric frame.
      */
     val ELEVATION : Float
         get() {
@@ -262,7 +250,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in elevation angle
+     * One sigma uncertainty in the line of sight elevation angle, in degrees.
      */
     val ELEVATION_UNC : Float
         get() {
@@ -270,7 +258,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Bias in elevation angle
+     * Sensor line of sight elevation bias in degrees.
      */
     val ELEVATION_BIAS : Float
         get() {
@@ -278,7 +266,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Rate of change in elevation
+     * Rate of change of the line of sight elevation in degrees per second.
      */
     val ELEVATION_RATE : Float
         get() {
@@ -286,7 +274,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Range to the target
+     * Line of sight range in km. Reported value should include all applicable corrections.
      */
     val RANGE : Float
         get() {
@@ -294,7 +282,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in range
+     * One sigma uncertainty in the line of sight range, in km.
      */
     val RANGE_UNC : Float
         get() {
@@ -302,7 +290,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Bias in range measurement
+     * Sensor line of sight range bias in km.
      */
     val RANGE_BIAS : Float
         get() {
@@ -310,7 +298,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Rate of change in range
+     * Range rate in km/s. Reported value should include all applicable corrections.
      */
     val RANGE_RATE : Float
         get() {
@@ -318,7 +306,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in range rate
+     * One sigma uncertainty in the line of sight range rate, in km/sec.
      */
     val RANGE_RATE_UNC : Float
         get() {
@@ -326,7 +314,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Right ascension
+     * Right ascension in degrees. Required metric reporting field for EO observations.
      */
     val RA : Float
         get() {
@@ -334,7 +322,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Rate of change in right ascension
+     * Line of sight right ascension rate of change, in degrees/sec.
      */
     val RA_RATE : Float
         get() {
@@ -342,7 +330,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in right ascension
+     * One sigma uncertainty in the line of sight right ascension angle, in degrees.
      */
     val RA_UNC : Float
         get() {
@@ -350,7 +338,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Bias in right ascension
+     * Sensor line of sight right ascension bias in degrees.
      */
     val RA_BIAS : Float
         get() {
@@ -358,7 +346,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Declination angle
+     * Declination in degrees. Required metric reporting field for EO observations.
      */
     val DECLINATION : Float
         get() {
@@ -366,7 +354,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Rate of change in declination
+     * Line of sight declination rate of change, in degrees/sec.
      */
     val DECLINATION_RATE : Float
         get() {
@@ -374,7 +362,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in declination
+     * One sigma uncertainty in the line of sight declination angle, in degrees.
      */
     val DECLINATION_UNC : Float
         get() {
@@ -382,7 +370,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Bias in declination
+     * Sensor line of sight declination angle bias in degrees.
      */
     val DECLINATION_BIAS : Float
         get() {
@@ -390,7 +378,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * X-component of line-of-sight vector
+     * X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
     val LOSX : Float
         get() {
@@ -398,7 +386,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Y-component of line-of-sight vector
+     * Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
     val LOSY : Float
         get() {
@@ -406,7 +394,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Z-component of line-of-sight vector
+     * Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
     val LOSZ : Float
         get() {
@@ -414,7 +402,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in line-of-sight vector
+     * One sigma uncertainty in the line-of-sight direction vector components.
      */
     val LOS_UNC : Float
         get() {
@@ -422,7 +410,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * X-component of line-of-sight velocity
+     * X-component of the velocity vector along the line of sight, in km/s.
      */
     val LOSXVEL : Float
         get() {
@@ -430,7 +418,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Y-component of line-of-sight velocity
+     * Y-component of the velocity vector along the line of sight, in km/s.
      */
     val LOSYVEL : Float
         get() {
@@ -438,7 +426,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Z-component of line-of-sight velocity
+     * Z-component of the velocity vector along the line of sight, in km/s.
      */
     val LOSZVEL : Float
         get() {
@@ -446,7 +434,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Latitude of sensor
+     * WGS-84 latitude in decimal degrees at the time of the observation.
      */
     val SENLAT : Float
         get() {
@@ -454,7 +442,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Longitude of sensor
+     * WGS-84 longitude in decimal degrees at the time of the observation.
      */
     val SENLON : Float
         get() {
@@ -462,7 +450,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Altitude of sensor
+     * Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
      */
     val SENALT : Float
         get() {
@@ -470,7 +458,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * X-coordinate of sensor position
+     * Cartesian X position in km at the time of the observation.
      */
     val SENX : Float
         get() {
@@ -478,7 +466,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Y-coordinate of sensor position
+     * Cartesian Y position in km at the time of the observation.
      */
     val SENY : Float
         get() {
@@ -486,7 +474,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Z-coordinate of sensor position
+     * Cartesian Z position in km at the time of the observation.
      */
     val SENZ : Float
         get() {
@@ -494,7 +482,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Number of fields of view
+     * Total number of satellites in the field of view.
      */
     val FOV_COUNT : Int
         get() {
@@ -502,7 +490,7 @@ class EOO : Table() {
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     /**
-     * Number of uncorrelated satellites in the field of view (JCO)
+     * Number of uncorrelated satellites in the field of view (JCO).
      */
     val FOV_COUNT_UCTS : Int
         get() {
@@ -510,7 +498,9 @@ class EOO : Table() {
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     /**
-     * Duration of the exposure
+     * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+     * the exposure duration should be the total integration time. This field is highly recommended / required if the 
+     * observations are going to be used for photometric processing.
      */
     val EXP_DURATION : Float
         get() {
@@ -518,7 +508,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Zero-point displacement
+     * Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
      */
     val ZEROPTD : Float
         get() {
@@ -526,7 +516,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Net object signal
+     * Net object signature = counts / EXP_DURATION.
      */
     val NET_OBJ_SIG : Float
         get() {
@@ -534,7 +524,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in net object signal
+     * Net object signature uncertainty = counts uncertainty / EXP_DURATION.
      */
     val NET_OBJ_SIG_UNC : Float
         get() {
@@ -542,7 +532,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Magnitude of the observation
+     * Measure of observed brightness calibrated against the Gaia G-band.
      */
     val MAG : Float
         get() {
@@ -550,7 +540,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in magnitude
+     * Uncertainty of the observed brightness.
      */
     val MAG_UNC : Float
         get() {
@@ -558,7 +548,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Normalized range for magnitude
+     * [Definition needed].
      */
     val MAG_NORM_RANGE : Float
         get() {
@@ -566,7 +556,8 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Geocentric latitude
+     * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+     * and corresponding viewing geometry. It must NOT be computed from the orbit state.
      */
     val GEOLAT : Float
         get() {
@@ -574,7 +565,8 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Geocentric longitude
+     * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+     * and viewing geometry. It must NOT be computed from the orbit state.
      */
     val GEOLON : Float
         get() {
@@ -582,7 +574,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Geocentric altitude
+     * Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
      */
     val GEOALT : Float
         get() {
@@ -590,7 +582,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Geocentric range
+     * Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
      */
     val GEORANGE : Float
         get() {
@@ -598,7 +590,8 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Sky background level
+     * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+     * empty part of the night sky.
      */
     val SKY_BKGRND : Float
         get() {
@@ -606,7 +599,10 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Primary extinction
+     * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+     * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+     * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+     * object and the observer.
      */
     val PRIMARY_EXTINCTION : Float
         get() {
@@ -614,7 +610,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Uncertainty in primary extinction
+     * Primary Extinction Coefficient Uncertainty, in Magnitudes.
      */
     val PRIMARY_EXTINCTION_UNC : Float
         get() {
@@ -622,7 +618,8 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Solar phase angle
+     * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+     * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
      */
     val SOLAR_PHASE_ANGLE : Float
         get() {
@@ -630,7 +627,9 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Solar equatorial phase angle
+     * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+     * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+     * and positive when opening (after the opposition).
      */
     val SOLAR_EQ_PHASE_ANGLE : Float
         get() {
@@ -638,7 +637,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Solar declination angle
+     * Angle from the sun to the equatorial plane.
      */
     val SOLAR_DEC_ANGLE : Float
         get() {
@@ -646,7 +645,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Shutter delay
+     * Shutter delay in seconds.
      */
     val SHUTTER_DELAY : Float
         get() {
@@ -654,7 +653,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Timing bias
+     * Sensor timing bias in seconds.
      */
     val TIMING_BIAS : Float
         get() {
@@ -662,7 +661,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * URI of the raw data file
+     * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
      */
     val RAW_FILE_URI : String?
         get() {
@@ -676,7 +675,7 @@ class EOO : Table() {
     val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(144, 1)
     fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 144, 1)
     /**
-     * Intensity of the observation
+     * Intensity of the target for IR observations, in kw/sr/em.
      */
     val INTENSITY : Float
         get() {
@@ -684,7 +683,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Background intensity
+     * Background intensity for IR observations, in kw/sr/um.
      */
     val BG_INTENSITY : Float
         get() {
@@ -692,7 +691,7 @@ class EOO : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Descriptor of the provided data
+     * Optional source-provided and searchable metadata or descriptor of the data.
      */
     val DESCRIPTOR : String?
         get() {
@@ -706,7 +705,7 @@ class EOO : Table() {
     val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(150, 1)
     fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 150, 1)
     /**
-     * Source of the data
+     * Source of the data.
      */
     val SOURCE : String?
         get() {
@@ -720,7 +719,9 @@ class EOO : Table() {
     val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(152, 1)
     fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 152, 1)
     /**
-     * Origin of the data
+     * Originating system or organization which produced the data, if different from the source.
+     * The origin may be different than the source if the source was a mediating system which forwarded 
+     * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
      */
     val ORIGIN : String?
         get() {
@@ -734,21 +735,15 @@ class EOO : Table() {
     val ORIGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(154, 1)
     fun ORIGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 154, 1)
     /**
-     * Mode of the data
+     * Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
      */
-    val DATA_MODE : String?
+    val DATA_MODE : Byte
         get() {
             val o = __offset(156)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val DATA_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(156, 1)
-    fun DATA_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 156, 1)
     /**
-     * Creation time of the record
+     * Time the row was created in the database, auto-populated by the system.
      */
     val CREATED_AT : String?
         get() {
@@ -762,7 +757,7 @@ class EOO : Table() {
     val CREATED_ATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(158, 1)
     fun CREATED_ATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 158, 1)
     /**
-     * User who created the record
+     * Application user who created the row in the database, auto-populated by the system.
      */
     val CREATED_BY : String?
         get() {
@@ -776,7 +771,7 @@ class EOO : Table() {
     val CREATED_BYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(160, 1)
     fun CREATED_BYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 160, 1)
     /**
-     * Reference frame of the observation
+     * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
      */
     val REFERENCE_FRAME : Byte
         get() {
@@ -784,7 +779,9 @@ class EOO : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * Reference frame of the sensor
+     * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+     * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+     * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
      */
     val SEN_REFERENCE_FRAME : String?
         get() {
@@ -798,7 +795,7 @@ class EOO : Table() {
     val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(164, 1)
     fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 164, 1)
     /**
-     * Flag for umbra (total eclipse)
+     * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
      */
     val UMBRA : Boolean
         get() {
@@ -806,7 +803,8 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Flag for penumbra (partial eclipse)
+     * Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+     * This field is highly recommended if the observations will be used for photometric processing.
      */
     val PENUMBRA : Boolean
         get() {
@@ -814,7 +812,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Original network identifier
+     * The originating source network on which this record was created, auto-populated by the system.
      */
     val ORIG_NETWORK : String?
         get() {
@@ -828,7 +826,7 @@ class EOO : Table() {
     val ORIG_NETWORKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(170, 1)
     fun ORIG_NETWORKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 170, 1)
     /**
-     * Data link source
+     * The source from which this record was received.
      */
     val SOURCE_DL : String?
         get() {
@@ -842,21 +840,15 @@ class EOO : Table() {
     val SOURCE_DLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(172, 1)
     fun SOURCE_DLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 172, 1)
     /**
-     * Type of the observation
+     * Device Type
      */
-    val TYPE : String?
+    val TYPE : Byte
         get() {
             val o = __offset(174)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(174, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 174, 1)
     /**
-     * True if measured, false if computed. Required if azimuth is reported (JCO)
+     * True if measured, false if computed. Required if azimuth is reported.
      */
     val AZIMUTH_MEASURED : Boolean
         get() {
@@ -864,7 +856,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * True if measured, false if computed. Required if elevation is reported (JCO)
+     * True if measured, false if computed. Required if elevation is reported.
      */
     val ELEVATION_MEASURED : Boolean
         get() {
@@ -872,7 +864,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * True if measured, false if computed. Required if range is reported (JCO)
+     * True if measured, false if computed. Required if range is reported.
      */
     val RANGE_MEASURED : Boolean
         get() {
@@ -880,7 +872,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * True if measured, false if computed. Required if range-rate is reported (JCO)
+     * True if measured, false if computed. Required if range-rate is reported.
      */
     val RANGERATE_MEASURED : Boolean
         get() {
@@ -888,7 +880,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * True if measured, false if computed. Required if right ascension is reported (JCO)
+     * True if measured, false if computed. Required if right ascension is reported.
      */
     val RA_MEASURED : Boolean
         get() {
@@ -896,7 +888,7 @@ class EOO : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * True if measured, false if computed. Required if declination is reported (JCO)
+     * True if measured, false if computed. Required if declination is reported.
      */
     val DECLINATION_MEASURED : Boolean
         get() {
@@ -911,15 +903,13 @@ class EOO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
-        fun createEOO(builder: FlatBufferBuilder, EOBSERVATION_IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHODOffset: Int, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, FOV_COUNT_UCTS: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPEOffset: Int, AZIMUTH_MEASURED: Boolean, ELEVATION_MEASURED: Boolean, RANGE_MEASURED: Boolean, RANGERATE_MEASURED: Boolean, RA_MEASURED: Boolean, DECLINATION_MEASURED: Boolean) : Int {
+        fun createEOO(builder: FlatBufferBuilder, IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHOD: Byte, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITION: Byte, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, FOV_COUNT_UCTS: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODE: Byte, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPE: Byte, AZIMUTH_MEASURED: Boolean, ELEVATION_MEASURED: Boolean, RANGE_MEASURED: Boolean, RANGERATE_MEASURED: Boolean, RA_MEASURED: Boolean, DECLINATION_MEASURED: Boolean) : Int {
             builder.startTable(92)
-            addTYPE(builder, TYPEOffset)
             addSOURCE_DL(builder, SOURCE_DLOffset)
             addORIG_NETWORK(builder, ORIG_NETWORKOffset)
             addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset)
             addCREATED_BY(builder, CREATED_BYOffset)
             addCREATED_AT(builder, CREATED_ATOffset)
-            addDATA_MODE(builder, DATA_MODEOffset)
             addORIGIN(builder, ORIGINOffset)
             addSOURCE(builder, SOURCEOffset)
             addDESCRIPTOR(builder, DESCRIPTOROffset)
@@ -983,43 +973,45 @@ class EOO : Table() {
             addAZIMUTH(builder, AZIMUTH)
             addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
             addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addOB_POSITION(builder, OB_POSITIONOffset)
             addTRACK_ID(builder, TRACK_IDOffset)
             addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
             addTASK_ID(builder, TASK_IDOffset)
             addNORAD_CAT_ID(builder, NORAD_CAT_ID)
-            addCOLLECT_METHOD(builder, COLLECT_METHODOffset)
             addSENSOR_ID(builder, SENSOR_IDOffset)
             addID_ON_ORBIT(builder, ID_ON_ORBITOffset)
             addCORR_QUALITY(builder, CORR_QUALITY)
             addOB_TIME(builder, OB_TIMEOffset)
             addCLASSIFICATION(builder, CLASSIFICATIONOffset)
-            addEOBSERVATION_ID(builder, EOBSERVATION_IDOffset)
+            addID(builder, IDOffset)
             addDECLINATION_MEASURED(builder, DECLINATION_MEASURED)
             addRA_MEASURED(builder, RA_MEASURED)
             addRANGERATE_MEASURED(builder, RANGERATE_MEASURED)
             addRANGE_MEASURED(builder, RANGE_MEASURED)
             addELEVATION_MEASURED(builder, ELEVATION_MEASURED)
             addAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED)
+            addTYPE(builder, TYPE)
             addPENUMBRA(builder, PENUMBRA)
             addUMBRA(builder, UMBRA)
             addREFERENCE_FRAME(builder, REFERENCE_FRAME)
+            addDATA_MODE(builder, DATA_MODE)
             addUCT(builder, UCT)
+            addOB_POSITION(builder, OB_POSITION)
+            addCOLLECT_METHOD(builder, COLLECT_METHOD)
             return endEOO(builder)
         }
         fun startEOO(builder: FlatBufferBuilder) = builder.startTable(92)
-        fun addEOBSERVATION_ID(builder: FlatBufferBuilder, EOBSERVATION_ID: Int) = builder.addOffset(0, EOBSERVATION_ID, 0)
+        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(1, CLASSIFICATION, 0)
         fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(2, OB_TIME, 0)
         fun addCORR_QUALITY(builder: FlatBufferBuilder, CORR_QUALITY: Float) = builder.addFloat(3, CORR_QUALITY, 0.0)
         fun addID_ON_ORBIT(builder: FlatBufferBuilder, ID_ON_ORBIT: Int) = builder.addOffset(4, ID_ON_ORBIT, 0)
         fun addSENSOR_ID(builder: FlatBufferBuilder, SENSOR_ID: Int) = builder.addOffset(5, SENSOR_ID, 0)
-        fun addCOLLECT_METHOD(builder: FlatBufferBuilder, COLLECT_METHOD: Int) = builder.addOffset(6, COLLECT_METHOD, 0)
+        fun addCOLLECT_METHOD(builder: FlatBufferBuilder, COLLECT_METHOD: Byte) = builder.addByte(6, COLLECT_METHOD, 0)
         fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: Int) = builder.addInt(7, NORAD_CAT_ID, 0)
         fun addTASK_ID(builder: FlatBufferBuilder, TASK_ID: Int) = builder.addOffset(8, TASK_ID, 0)
         fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(9, TRANSACTION_ID, 0)
         fun addTRACK_ID(builder: FlatBufferBuilder, TRACK_ID: Int) = builder.addOffset(10, TRACK_ID, 0)
-        fun addOB_POSITION(builder: FlatBufferBuilder, OB_POSITION: Int) = builder.addOffset(11, OB_POSITION, 0)
+        fun addOB_POSITION(builder: FlatBufferBuilder, OB_POSITION: Byte) = builder.addByte(11, OB_POSITION, 0)
         fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(12, ORIG_OBJECT_ID, 0)
         fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(13, ORIG_SENSOR_ID, 0)
         fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(14, UCT, false)
@@ -1084,7 +1076,7 @@ class EOO : Table() {
         fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(73, DESCRIPTOR, 0)
         fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(74, SOURCE, 0)
         fun addORIGIN(builder: FlatBufferBuilder, ORIGIN: Int) = builder.addOffset(75, ORIGIN, 0)
-        fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Int) = builder.addOffset(76, DATA_MODE, 0)
+        fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Byte) = builder.addByte(76, DATA_MODE, 0)
         fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(77, CREATED_AT, 0)
         fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(78, CREATED_BY, 0)
         fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(79, REFERENCE_FRAME, 0)
@@ -1093,7 +1085,7 @@ class EOO : Table() {
         fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(82, PENUMBRA, false)
         fun addORIG_NETWORK(builder: FlatBufferBuilder, ORIG_NETWORK: Int) = builder.addOffset(83, ORIG_NETWORK, 0)
         fun addSOURCE_DL(builder: FlatBufferBuilder, SOURCE_DL: Int) = builder.addOffset(84, SOURCE_DL, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(85, TYPE, 0)
+        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(85, TYPE, 0)
         fun addAZIMUTH_MEASURED(builder: FlatBufferBuilder, AZIMUTH_MEASURED: Boolean) = builder.addBoolean(86, AZIMUTH_MEASURED, false)
         fun addELEVATION_MEASURED(builder: FlatBufferBuilder, ELEVATION_MEASURED: Boolean) = builder.addBoolean(87, ELEVATION_MEASURED, false)
         fun addRANGE_MEASURED(builder: FlatBufferBuilder, RANGE_MEASURED: Boolean) = builder.addBoolean(88, RANGE_MEASURED, false)

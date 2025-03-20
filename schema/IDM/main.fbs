@@ -1,5 +1,5 @@
-// Hash: 0d940623f42302276c637f4777a3d4c774c04c936f7dcd8ab9314e9ee69b65f9
-// Version: 1.0.0
+// Hash: 66b4152401551e60dae8f48716364c643ae46ea395df886b8c1ac211686cc300
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 /// Different types of polarization in EMT
 enum PolarizationType: byte {
@@ -47,9 +47,14 @@ table Band {
 
 /// Enum for the mode of data (real, simulated, synthetic)
 enum DataMode: byte {
+  /// Data collected during an exercise scenario.
+  EXERCISE,
+  /// Data collected from real-world observations.
   REAL,
+  /// Data generated through simulation.
   SIMULATED,
-  SYNTHETIC
+  /// Data collected for testing purposes.
+  TEST
 }
 
 enum DeviceType: byte {

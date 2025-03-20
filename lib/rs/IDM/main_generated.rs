@@ -200,13 +200,14 @@ impl flatbuffers::SimpleToVerifyInSlice for SimplePolarization {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_DATA_MODE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DATA_MODE: i8 = 2;
+pub const ENUM_MAX_DATA_MODE: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DATA_MODE: [DataMode; 3] = [
+pub const ENUM_VALUES_DATA_MODE: [DataMode; 4] = [
+  DataMode::EXERCISE,
   DataMode::REAL,
   DataMode::SIMULATED,
-  DataMode::SYNTHETIC,
+  DataMode::TEST,
 ];
 
 /// Enum for the mode of data (real, simulated, synthetic)
@@ -215,23 +216,30 @@ pub const ENUM_VALUES_DATA_MODE: [DataMode; 3] = [
 pub struct DataMode(pub i8);
 #[allow(non_upper_case_globals)]
 impl DataMode {
-  pub const REAL: Self = Self(0);
-  pub const SIMULATED: Self = Self(1);
-  pub const SYNTHETIC: Self = Self(2);
+  /// Data collected during an exercise scenario.
+  pub const EXERCISE: Self = Self(0);
+  /// Data collected from real-world observations.
+  pub const REAL: Self = Self(1);
+  /// Data generated through simulation.
+  pub const SIMULATED: Self = Self(2);
+  /// Data collected for testing purposes.
+  pub const TEST: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_MAX: i8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
+    Self::EXERCISE,
     Self::REAL,
     Self::SIMULATED,
-    Self::SYNTHETIC,
+    Self::TEST,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
+      Self::EXERCISE => Some("EXERCISE"),
       Self::REAL => Some("REAL"),
       Self::SIMULATED => Some("SIMULATED"),
-      Self::SYNTHETIC => Some("SYNTHETIC"),
+      Self::TEST => Some("TEST"),
       _ => None,
     }
   }
@@ -1299,7 +1307,7 @@ impl<'a> IDM<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<DataMode>(IDM::VT_DATA_MODE, Some(DataMode::REAL)).unwrap()}
+    unsafe { self._tab.get::<DataMode>(IDM::VT_DATA_MODE, Some(DataMode::EXERCISE)).unwrap()}
   }
   /// Uplink frequency range
   #[inline]
@@ -1588,7 +1596,7 @@ impl<'a> Default for IDMArgs<'a> {
     IDMArgs {
       ID: None,
       NAME: None,
-      DATA_MODE: DataMode::REAL,
+      DATA_MODE: DataMode::EXERCISE,
       UPLINK: None,
       DOWNLINK: None,
       BEACON: None,
@@ -1634,7 +1642,7 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> IDMBuilder<'a, 'b, A> {
   }
   #[inline]
   pub fn add_DATA_MODE(&mut self, DATA_MODE: DataMode) {
-    self.fbb_.push_slot::<DataMode>(IDM::VT_DATA_MODE, DATA_MODE, DataMode::REAL);
+    self.fbb_.push_slot::<DataMode>(IDM::VT_DATA_MODE, DATA_MODE, DataMode::EXERCISE);
   }
   #[inline]
   pub fn add_UPLINK(&mut self, UPLINK: flatbuffers::WIPOffset<FrequencyRange<'b >>) {
@@ -1828,7 +1836,7 @@ impl Default for IDMT {
     Self {
       ID: None,
       NAME: None,
-      DATA_MODE: DataMode::REAL,
+      DATA_MODE: DataMode::EXERCISE,
       UPLINK: None,
       DOWNLINK: None,
       BEACON: None,

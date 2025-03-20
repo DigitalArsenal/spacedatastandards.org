@@ -104,34 +104,41 @@ inline const char *EnumNameSimplePolarization(SimplePolarization e) {
 
 /// Enum for the mode of data (real, simulated, synthetic)
 enum DataMode : int8_t {
-  DataMode_REAL = 0,
-  DataMode_SIMULATED = 1,
-  DataMode_SYNTHETIC = 2,
-  DataMode_MIN = DataMode_REAL,
-  DataMode_MAX = DataMode_SYNTHETIC
+  /// Data collected during an exercise scenario.
+  DataMode_EXERCISE = 0,
+  /// Data collected from real-world observations.
+  DataMode_REAL = 1,
+  /// Data generated through simulation.
+  DataMode_SIMULATED = 2,
+  /// Data collected for testing purposes.
+  DataMode_TEST = 3,
+  DataMode_MIN = DataMode_EXERCISE,
+  DataMode_MAX = DataMode_TEST
 };
 
-inline const DataMode (&EnumValuesDataMode())[3] {
+inline const DataMode (&EnumValuesDataMode())[4] {
   static const DataMode values[] = {
+    DataMode_EXERCISE,
     DataMode_REAL,
     DataMode_SIMULATED,
-    DataMode_SYNTHETIC
+    DataMode_TEST
   };
   return values;
 }
 
 inline const char * const *EnumNamesDataMode() {
-  static const char * const names[4] = {
+  static const char * const names[5] = {
+    "EXERCISE",
     "REAL",
     "SIMULATED",
-    "SYNTHETIC",
+    "TEST",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameDataMode(DataMode e) {
-  if (::flatbuffers::IsOutRange(e, DataMode_REAL, DataMode_SYNTHETIC)) return "";
+  if (::flatbuffers::IsOutRange(e, DataMode_EXERCISE, DataMode_TEST)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesDataMode()[index];
 }
@@ -842,7 +849,7 @@ inline ::flatbuffers::Offset<IDM> CreateIDM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    DataMode DATA_MODE = DataMode_REAL,
+    DataMode DATA_MODE = DataMode_EXERCISE,
     ::flatbuffers::Offset<FrequencyRange> UPLINK = 0,
     ::flatbuffers::Offset<FrequencyRange> DOWNLINK = 0,
     ::flatbuffers::Offset<FrequencyRange> BEACON = 0,
@@ -906,7 +913,7 @@ inline ::flatbuffers::Offset<IDM> CreateIDMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *NAME = nullptr,
-    DataMode DATA_MODE = DataMode_REAL,
+    DataMode DATA_MODE = DataMode_EXERCISE,
     ::flatbuffers::Offset<FrequencyRange> UPLINK = 0,
     ::flatbuffers::Offset<FrequencyRange> DOWNLINK = 0,
     ::flatbuffers::Offset<FrequencyRange> BEACON = 0,

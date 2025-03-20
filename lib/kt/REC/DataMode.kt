@@ -6,8 +6,21 @@
 @Suppress("unused")
 class DataMode private constructor() {
     companion object {
-        const val REAL: Byte = 0
-        const val SIMULATED: Byte = 1
-        const val SYNTHETIC: Byte = 2
+        /**
+         * Data collected during an exercise scenario.
+         */
+        const val EXERCISE: Byte = 0
+        /**
+         * Data collected from real-world observations.
+         */
+        const val REAL: Byte = 1
+        /**
+         * Data generated through simulation.
+         */
+        const val SIMULATED: Byte = 2
+        /**
+         * Data collected for testing purposes.
+         */
+        const val TEST: Byte = 3
     }
 }

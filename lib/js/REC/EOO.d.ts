@@ -1,4 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
+import { CollectMethod } from './CollectMethod.js';
+import { DataMode } from './DataMode.js';
+import { DeviceType } from './DeviceType.js';
+import { ObservationPosition } from './ObservationPosition.js';
 import { refFrame } from './refFrame.js';
 /**
  * Electro-Optical Observation
@@ -11,409 +15,421 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
     static getSizePrefixedRootAsEOO(bb: flatbuffers.ByteBuffer, obj?: EOO): EOO;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
-     * Unique identifier for Earth Observation Observation
+     * Unique identifier of the record.
      */
-    EOBSERVATION_ID(): string | null;
-    EOBSERVATION_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ID(): string | null;
+    ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Classification marking of the data
+     * Classification marking of the data in IC/CAPCO Portion-marked format.
      */
     CLASSIFICATION(): string | null;
     CLASSIFICATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Observation time in UTC
+     * Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
      */
     OB_TIME(): string | null;
     OB_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Quality of the correlation
+     * Correlation score of the observation when compared to a known orbit state.
      */
     CORR_QUALITY(): number;
     /**
-     * Identifier for the satellite on orbit
+     * Server will auto-populate with SAT_NO if available.
      */
     ID_ON_ORBIT(): string | null;
     ID_ON_ORBIT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Identifier for the sensor
+     * Unique ID of the sensor. Must have a corresponding sensor record on the server.
      */
     SENSOR_ID(): string | null;
     SENSOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Method of data collection
+     * Accepted Collection Method
      */
-    COLLECT_METHOD(): string | null;
-    COLLECT_METHOD(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    COLLECT_METHOD(): CollectMethod;
     /**
-     * NORAD catalog identifier for the satellite
+     * 18SDS satellite number. Only list if correlated against the 18SDS catalog.
      */
     NORAD_CAT_ID(): number;
     /**
-     * Identifier for the task
+     * Identifier for the collectRequest message if the collection was in response to tasking.
      */
     TASK_ID(): string | null;
     TASK_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Identifier for the transaction
+     * Optional identifier to track a transaction.
      */
     TRANSACTION_ID(): string | null;
     TRANSACTION_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Identifier for the track
+     * Identifier of the track to which this observation belongs, if applicable.
      */
     TRACK_ID(): string | null;
     TRACK_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Position of the observation
+     * The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
      */
-    OB_POSITION(): string | null;
-    OB_POSITION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    OB_POSITION(): ObservationPosition;
     /**
-     * Original object identifier
+     * Provider maintained ID. May not be consistent with 18SDS SAT_NO.
      */
     ORIG_OBJECT_ID(): string | null;
     ORIG_OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Original sensor identifier
+     * Sensor ID.
      */
     ORIG_SENSOR_ID(): string | null;
     ORIG_SENSOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Universal Coordinated Time flag
+     * Required if correlation is attempted. Indicates whether correlation succeeded.
      */
     UCT(): boolean;
     /**
-     * Azimuth angle
+     * Line of sight azimuth angle in degrees and topocentric frame.
      */
     AZIMUTH(): number;
     /**
-     * Uncertainty in azimuth angle
+     * One sigma uncertainty in the line of sight azimuth angle, in degrees.
      */
     AZIMUTH_UNC(): number;
     /**
-     * Bias in azimuth angle
+     * Sensor line of sight azimuth angle bias in degrees.
      */
     AZIMUTH_BIAS(): number;
     /**
-     * Rate of change in azimuth
+     * Rate of change of the line of sight azimuth in degrees per second.
      */
     AZIMUTH_RATE(): number;
     /**
-     * Elevation angle
+     * Line of sight elevation in degrees and topocentric frame.
      */
     ELEVATION(): number;
     /**
-     * Uncertainty in elevation angle
+     * One sigma uncertainty in the line of sight elevation angle, in degrees.
      */
     ELEVATION_UNC(): number;
     /**
-     * Bias in elevation angle
+     * Sensor line of sight elevation bias in degrees.
      */
     ELEVATION_BIAS(): number;
     /**
-     * Rate of change in elevation
+     * Rate of change of the line of sight elevation in degrees per second.
      */
     ELEVATION_RATE(): number;
     /**
-     * Range to the target
+     * Line of sight range in km. Reported value should include all applicable corrections.
      */
     RANGE(): number;
     /**
-     * Uncertainty in range
+     * One sigma uncertainty in the line of sight range, in km.
      */
     RANGE_UNC(): number;
     /**
-     * Bias in range measurement
+     * Sensor line of sight range bias in km.
      */
     RANGE_BIAS(): number;
     /**
-     * Rate of change in range
+     * Range rate in km/s. Reported value should include all applicable corrections.
      */
     RANGE_RATE(): number;
     /**
-     * Uncertainty in range rate
+     * One sigma uncertainty in the line of sight range rate, in km/sec.
      */
     RANGE_RATE_UNC(): number;
     /**
-     * Right ascension
+     * Right ascension in degrees. Required metric reporting field for EO observations.
      */
     RA(): number;
     /**
-     * Rate of change in right ascension
+     * Line of sight right ascension rate of change, in degrees/sec.
      */
     RA_RATE(): number;
     /**
-     * Uncertainty in right ascension
+     * One sigma uncertainty in the line of sight right ascension angle, in degrees.
      */
     RA_UNC(): number;
     /**
-     * Bias in right ascension
+     * Sensor line of sight right ascension bias in degrees.
      */
     RA_BIAS(): number;
     /**
-     * Declination angle
+     * Declination in degrees. Required metric reporting field for EO observations.
      */
     DECLINATION(): number;
     /**
-     * Rate of change in declination
+     * Line of sight declination rate of change, in degrees/sec.
      */
     DECLINATION_RATE(): number;
     /**
-     * Uncertainty in declination
+     * One sigma uncertainty in the line of sight declination angle, in degrees.
      */
     DECLINATION_UNC(): number;
     /**
-     * Bias in declination
+     * Sensor line of sight declination angle bias in degrees.
      */
     DECLINATION_BIAS(): number;
     /**
-     * X-component of line-of-sight vector
+     * X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
     LOSX(): number;
     /**
-     * Y-component of line-of-sight vector
+     * Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
     LOSY(): number;
     /**
-     * Z-component of line-of-sight vector
+     * Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
     LOSZ(): number;
     /**
-     * Uncertainty in line-of-sight vector
+     * One sigma uncertainty in the line-of-sight direction vector components.
      */
     LOS_UNC(): number;
     /**
-     * X-component of line-of-sight velocity
+     * X-component of the velocity vector along the line of sight, in km/s.
      */
     LOSXVEL(): number;
     /**
-     * Y-component of line-of-sight velocity
+     * Y-component of the velocity vector along the line of sight, in km/s.
      */
     LOSYVEL(): number;
     /**
-     * Z-component of line-of-sight velocity
+     * Z-component of the velocity vector along the line of sight, in km/s.
      */
     LOSZVEL(): number;
     /**
-     * Latitude of sensor
+     * WGS-84 latitude in decimal degrees at the time of the observation.
      */
     SENLAT(): number;
     /**
-     * Longitude of sensor
+     * WGS-84 longitude in decimal degrees at the time of the observation.
      */
     SENLON(): number;
     /**
-     * Altitude of sensor
+     * Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
      */
     SENALT(): number;
     /**
-     * X-coordinate of sensor position
+     * Cartesian X position in km at the time of the observation.
      */
     SENX(): number;
     /**
-     * Y-coordinate of sensor position
+     * Cartesian Y position in km at the time of the observation.
      */
     SENY(): number;
     /**
-     * Z-coordinate of sensor position
+     * Cartesian Z position in km at the time of the observation.
      */
     SENZ(): number;
     /**
-     * Number of fields of view
+     * Total number of satellites in the field of view.
      */
     FOV_COUNT(): number;
     /**
-     * Number of uncorrelated satellites in the field of view (JCO)
+     * Number of uncorrelated satellites in the field of view (JCO).
      */
     FOV_COUNT_UCTS(): number;
     /**
-     * Duration of the exposure
+     * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+     * the exposure duration should be the total integration time. This field is highly recommended / required if the
+     * observations are going to be used for photometric processing.
      */
     EXP_DURATION(): number;
     /**
-     * Zero-point displacement
+     * Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
      */
     ZEROPTD(): number;
     /**
-     * Net object signal
+     * Net object signature = counts / EXP_DURATION.
      */
     NET_OBJ_SIG(): number;
     /**
-     * Uncertainty in net object signal
+     * Net object signature uncertainty = counts uncertainty / EXP_DURATION.
      */
     NET_OBJ_SIG_UNC(): number;
     /**
-     * Magnitude of the observation
+     * Measure of observed brightness calibrated against the Gaia G-band.
      */
     MAG(): number;
     /**
-     * Uncertainty in magnitude
+     * Uncertainty of the observed brightness.
      */
     MAG_UNC(): number;
     /**
-     * Normalized range for magnitude
+     * [Definition needed].
      */
     MAG_NORM_RANGE(): number;
     /**
-     * Geocentric latitude
+     * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
+     * and corresponding viewing geometry. It must NOT be computed from the orbit state.
      */
     GEOLAT(): number;
     /**
-     * Geocentric longitude
+     * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
+     * and viewing geometry. It must NOT be computed from the orbit state.
      */
     GEOLON(): number;
     /**
-     * Geocentric altitude
+     * Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
      */
     GEOALT(): number;
     /**
-     * Geocentric range
+     * Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
      */
     GEORANGE(): number;
     /**
-     * Sky background level
+     * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
+     * empty part of the night sky.
      */
     SKY_BKGRND(): number;
     /**
-     * Primary extinction
+     * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+     * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+     * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
+     * object and the observer.
      */
     PRIMARY_EXTINCTION(): number;
     /**
-     * Uncertainty in primary extinction
+     * Primary Extinction Coefficient Uncertainty, in Magnitudes.
      */
     PRIMARY_EXTINCTION_UNC(): number;
     /**
-     * Solar phase angle
+     * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
+     * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
      */
     SOLAR_PHASE_ANGLE(): number;
     /**
-     * Solar equatorial phase angle
+     * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+     * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
+     * and positive when opening (after the opposition).
      */
     SOLAR_EQ_PHASE_ANGLE(): number;
     /**
-     * Solar declination angle
+     * Angle from the sun to the equatorial plane.
      */
     SOLAR_DEC_ANGLE(): number;
     /**
-     * Shutter delay
+     * Shutter delay in seconds.
      */
     SHUTTER_DELAY(): number;
     /**
-     * Timing bias
+     * Sensor timing bias in seconds.
      */
     TIMING_BIAS(): number;
     /**
-     * URI of the raw data file
+     * Optional URI location in the document repository of the raw file parsed by the system to produce this record.
      */
     RAW_FILE_URI(): string | null;
     RAW_FILE_URI(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Intensity of the observation
+     * Intensity of the target for IR observations, in kw/sr/em.
      */
     INTENSITY(): number;
     /**
-     * Background intensity
+     * Background intensity for IR observations, in kw/sr/um.
      */
     BG_INTENSITY(): number;
     /**
-     * Descriptor of the provided data
+     * Optional source-provided and searchable metadata or descriptor of the data.
      */
     DESCRIPTOR(): string | null;
     DESCRIPTOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Source of the data
+     * Source of the data.
      */
     SOURCE(): string | null;
     SOURCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Origin of the data
+     * Originating system or organization which produced the data, if different from the source.
+     * The origin may be different than the source if the source was a mediating system which forwarded
+     * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
      */
     ORIGIN(): string | null;
     ORIGIN(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Mode of the data
+     * Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
      */
-    DATA_MODE(): string | null;
-    DATA_MODE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    DATA_MODE(): DataMode;
     /**
-     * Creation time of the record
+     * Time the row was created in the database, auto-populated by the system.
      */
     CREATED_AT(): string | null;
     CREATED_AT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * User who created the record
+     * Application user who created the row in the database, auto-populated by the system.
      */
     CREATED_BY(): string | null;
     CREATED_BY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Reference frame of the observation
+     * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
      */
     REFERENCE_FRAME(): refFrame;
     /**
-     * Reference frame of the sensor
+     * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+     * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
+     * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
      */
     SEN_REFERENCE_FRAME(): string | null;
     SEN_REFERENCE_FRAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Flag for umbra (total eclipse)
+     * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
      */
     UMBRA(): boolean;
     /**
-     * Flag for penumbra (partial eclipse)
+     * Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+     * This field is highly recommended if the observations will be used for photometric processing.
      */
     PENUMBRA(): boolean;
     /**
-     * Original network identifier
+     * The originating source network on which this record was created, auto-populated by the system.
      */
     ORIG_NETWORK(): string | null;
     ORIG_NETWORK(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Data link source
+     * The source from which this record was received.
      */
     SOURCE_DL(): string | null;
     SOURCE_DL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Type of the observation
+     * Device Type
      */
-    TYPE(): string | null;
-    TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TYPE(): DeviceType;
     /**
-     * True if measured, false if computed. Required if azimuth is reported (JCO)
+     * True if measured, false if computed. Required if azimuth is reported.
      */
     AZIMUTH_MEASURED(): boolean;
     /**
-     * True if measured, false if computed. Required if elevation is reported (JCO)
+     * True if measured, false if computed. Required if elevation is reported.
      */
     ELEVATION_MEASURED(): boolean;
     /**
-     * True if measured, false if computed. Required if range is reported (JCO)
+     * True if measured, false if computed. Required if range is reported.
      */
     RANGE_MEASURED(): boolean;
     /**
-     * True if measured, false if computed. Required if range-rate is reported (JCO)
+     * True if measured, false if computed. Required if range-rate is reported.
      */
     RANGERATE_MEASURED(): boolean;
     /**
-     * True if measured, false if computed. Required if right ascension is reported (JCO)
+     * True if measured, false if computed. Required if right ascension is reported.
      */
     RA_MEASURED(): boolean;
     /**
-     * True if measured, false if computed. Required if declination is reported (JCO)
+     * True if measured, false if computed. Required if declination is reported.
      */
     DECLINATION_MEASURED(): boolean;
     static startEOO(builder: flatbuffers.Builder): void;
-    static addEobservationId(builder: flatbuffers.Builder, EOBSERVATION_IDOffset: flatbuffers.Offset): void;
+    static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addClassification(builder: flatbuffers.Builder, CLASSIFICATIONOffset: flatbuffers.Offset): void;
     static addObTime(builder: flatbuffers.Builder, OB_TIMEOffset: flatbuffers.Offset): void;
     static addCorrQuality(builder: flatbuffers.Builder, CORR_QUALITY: number): void;
     static addIdOnOrbit(builder: flatbuffers.Builder, ID_ON_ORBITOffset: flatbuffers.Offset): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
-    static addCollectMethod(builder: flatbuffers.Builder, COLLECT_METHODOffset: flatbuffers.Offset): void;
+    static addCollectMethod(builder: flatbuffers.Builder, COLLECT_METHOD: CollectMethod): void;
     static addNoradCatId(builder: flatbuffers.Builder, NORAD_CAT_ID: number): void;
     static addTaskId(builder: flatbuffers.Builder, TASK_IDOffset: flatbuffers.Offset): void;
     static addTransactionId(builder: flatbuffers.Builder, TRANSACTION_IDOffset: flatbuffers.Offset): void;
     static addTrackId(builder: flatbuffers.Builder, TRACK_IDOffset: flatbuffers.Offset): void;
-    static addObPosition(builder: flatbuffers.Builder, OB_POSITIONOffset: flatbuffers.Offset): void;
+    static addObPosition(builder: flatbuffers.Builder, OB_POSITION: ObservationPosition): void;
     static addOrigObjectId(builder: flatbuffers.Builder, ORIG_OBJECT_IDOffset: flatbuffers.Offset): void;
     static addOrigSensorId(builder: flatbuffers.Builder, ORIG_SENSOR_IDOffset: flatbuffers.Offset): void;
     static addUct(builder: flatbuffers.Builder, UCT: boolean): void;
@@ -478,7 +494,7 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
     static addDescriptor(builder: flatbuffers.Builder, DESCRIPTOROffset: flatbuffers.Offset): void;
     static addSource(builder: flatbuffers.Builder, SOURCEOffset: flatbuffers.Offset): void;
     static addOrigin(builder: flatbuffers.Builder, ORIGINOffset: flatbuffers.Offset): void;
-    static addDataMode(builder: flatbuffers.Builder, DATA_MODEOffset: flatbuffers.Offset): void;
+    static addDataMode(builder: flatbuffers.Builder, DATA_MODE: DataMode): void;
     static addCreatedAt(builder: flatbuffers.Builder, CREATED_ATOffset: flatbuffers.Offset): void;
     static addCreatedBy(builder: flatbuffers.Builder, CREATED_BYOffset: flatbuffers.Offset): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAME: refFrame): void;
@@ -487,7 +503,7 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
     static addPenumbra(builder: flatbuffers.Builder, PENUMBRA: boolean): void;
     static addOrigNetwork(builder: flatbuffers.Builder, ORIG_NETWORKOffset: flatbuffers.Offset): void;
     static addSourceDl(builder: flatbuffers.Builder, SOURCE_DLOffset: flatbuffers.Offset): void;
-    static addType(builder: flatbuffers.Builder, TYPEOffset: flatbuffers.Offset): void;
+    static addType(builder: flatbuffers.Builder, TYPE: DeviceType): void;
     static addAzimuthMeasured(builder: flatbuffers.Builder, AZIMUTH_MEASURED: boolean): void;
     static addElevationMeasured(builder: flatbuffers.Builder, ELEVATION_MEASURED: boolean): void;
     static addRangeMeasured(builder: flatbuffers.Builder, RANGE_MEASURED: boolean): void;
@@ -497,23 +513,23 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
     static endEOO(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEOOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEOOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createEOO(builder: flatbuffers.Builder, EOBSERVATION_IDOffset: flatbuffers.Offset, CLASSIFICATIONOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, CORR_QUALITY: number, ID_ON_ORBITOffset: flatbuffers.Offset, SENSOR_IDOffset: flatbuffers.Offset, COLLECT_METHODOffset: flatbuffers.Offset, NORAD_CAT_ID: number, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TRACK_IDOffset: flatbuffers.Offset, OB_POSITIONOffset: flatbuffers.Offset, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, UCT: boolean, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_BIAS: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_BIAS: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_BIAS: number, RANGE_RATE: number, RANGE_RATE_UNC: number, RA: number, RA_RATE: number, RA_UNC: number, RA_BIAS: number, DECLINATION: number, DECLINATION_RATE: number, DECLINATION_UNC: number, DECLINATION_BIAS: number, LOSX: number, LOSY: number, LOSZ: number, LOS_UNC: number, LOSXVEL: number, LOSYVEL: number, LOSZVEL: number, SENLAT: number, SENLON: number, SENALT: number, SENX: number, SENY: number, SENZ: number, FOV_COUNT: number, FOV_COUNT_UCTS: number, EXP_DURATION: number, ZEROPTD: number, NET_OBJ_SIG: number, NET_OBJ_SIG_UNC: number, MAG: number, MAG_UNC: number, MAG_NORM_RANGE: number, GEOLAT: number, GEOLON: number, GEOALT: number, GEORANGE: number, SKY_BKGRND: number, PRIMARY_EXTINCTION: number, PRIMARY_EXTINCTION_UNC: number, SOLAR_PHASE_ANGLE: number, SOLAR_EQ_PHASE_ANGLE: number, SOLAR_DEC_ANGLE: number, SHUTTER_DELAY: number, TIMING_BIAS: number, RAW_FILE_URIOffset: flatbuffers.Offset, INTENSITY: number, BG_INTENSITY: number, DESCRIPTOROffset: flatbuffers.Offset, SOURCEOffset: flatbuffers.Offset, ORIGINOffset: flatbuffers.Offset, DATA_MODEOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, CREATED_BYOffset: flatbuffers.Offset, REFERENCE_FRAME: refFrame, SEN_REFERENCE_FRAMEOffset: flatbuffers.Offset, UMBRA: boolean, PENUMBRA: boolean, ORIG_NETWORKOffset: flatbuffers.Offset, SOURCE_DLOffset: flatbuffers.Offset, TYPEOffset: flatbuffers.Offset, AZIMUTH_MEASURED: boolean, ELEVATION_MEASURED: boolean, RANGE_MEASURED: boolean, RANGERATE_MEASURED: boolean, RA_MEASURED: boolean, DECLINATION_MEASURED: boolean): flatbuffers.Offset;
+    static createEOO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CLASSIFICATIONOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, CORR_QUALITY: number, ID_ON_ORBITOffset: flatbuffers.Offset, SENSOR_IDOffset: flatbuffers.Offset, COLLECT_METHOD: CollectMethod, NORAD_CAT_ID: number, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TRACK_IDOffset: flatbuffers.Offset, OB_POSITION: ObservationPosition, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, UCT: boolean, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_BIAS: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_BIAS: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_BIAS: number, RANGE_RATE: number, RANGE_RATE_UNC: number, RA: number, RA_RATE: number, RA_UNC: number, RA_BIAS: number, DECLINATION: number, DECLINATION_RATE: number, DECLINATION_UNC: number, DECLINATION_BIAS: number, LOSX: number, LOSY: number, LOSZ: number, LOS_UNC: number, LOSXVEL: number, LOSYVEL: number, LOSZVEL: number, SENLAT: number, SENLON: number, SENALT: number, SENX: number, SENY: number, SENZ: number, FOV_COUNT: number, FOV_COUNT_UCTS: number, EXP_DURATION: number, ZEROPTD: number, NET_OBJ_SIG: number, NET_OBJ_SIG_UNC: number, MAG: number, MAG_UNC: number, MAG_NORM_RANGE: number, GEOLAT: number, GEOLON: number, GEOALT: number, GEORANGE: number, SKY_BKGRND: number, PRIMARY_EXTINCTION: number, PRIMARY_EXTINCTION_UNC: number, SOLAR_PHASE_ANGLE: number, SOLAR_EQ_PHASE_ANGLE: number, SOLAR_DEC_ANGLE: number, SHUTTER_DELAY: number, TIMING_BIAS: number, RAW_FILE_URIOffset: flatbuffers.Offset, INTENSITY: number, BG_INTENSITY: number, DESCRIPTOROffset: flatbuffers.Offset, SOURCEOffset: flatbuffers.Offset, ORIGINOffset: flatbuffers.Offset, DATA_MODE: DataMode, CREATED_ATOffset: flatbuffers.Offset, CREATED_BYOffset: flatbuffers.Offset, REFERENCE_FRAME: refFrame, SEN_REFERENCE_FRAMEOffset: flatbuffers.Offset, UMBRA: boolean, PENUMBRA: boolean, ORIG_NETWORKOffset: flatbuffers.Offset, SOURCE_DLOffset: flatbuffers.Offset, TYPE: DeviceType, AZIMUTH_MEASURED: boolean, ELEVATION_MEASURED: boolean, RANGE_MEASURED: boolean, RANGERATE_MEASURED: boolean, RA_MEASURED: boolean, DECLINATION_MEASURED: boolean): flatbuffers.Offset;
     unpack(): EOOT;
     unpackTo(_o: EOOT): void;
 }
 export declare class EOOT implements flatbuffers.IGeneratedObject {
-    EOBSERVATION_ID: string | Uint8Array | null;
+    ID: string | Uint8Array | null;
     CLASSIFICATION: string | Uint8Array | null;
     OB_TIME: string | Uint8Array | null;
     CORR_QUALITY: number;
     ID_ON_ORBIT: string | Uint8Array | null;
     SENSOR_ID: string | Uint8Array | null;
-    COLLECT_METHOD: string | Uint8Array | null;
+    COLLECT_METHOD: CollectMethod;
     NORAD_CAT_ID: number;
     TASK_ID: string | Uint8Array | null;
     TRANSACTION_ID: string | Uint8Array | null;
     TRACK_ID: string | Uint8Array | null;
-    OB_POSITION: string | Uint8Array | null;
+    OB_POSITION: ObservationPosition;
     ORIG_OBJECT_ID: string | Uint8Array | null;
     ORIG_SENSOR_ID: string | Uint8Array | null;
     UCT: boolean;
@@ -578,7 +594,7 @@ export declare class EOOT implements flatbuffers.IGeneratedObject {
     DESCRIPTOR: string | Uint8Array | null;
     SOURCE: string | Uint8Array | null;
     ORIGIN: string | Uint8Array | null;
-    DATA_MODE: string | Uint8Array | null;
+    DATA_MODE: DataMode;
     CREATED_AT: string | Uint8Array | null;
     CREATED_BY: string | Uint8Array | null;
     REFERENCE_FRAME: refFrame;
@@ -587,14 +603,14 @@ export declare class EOOT implements flatbuffers.IGeneratedObject {
     PENUMBRA: boolean;
     ORIG_NETWORK: string | Uint8Array | null;
     SOURCE_DL: string | Uint8Array | null;
-    TYPE: string | Uint8Array | null;
+    TYPE: DeviceType;
     AZIMUTH_MEASURED: boolean;
     ELEVATION_MEASURED: boolean;
     RANGE_MEASURED: boolean;
     RANGERATE_MEASURED: boolean;
     RA_MEASURED: boolean;
     DECLINATION_MEASURED: boolean;
-    constructor(EOBSERVATION_ID?: string | Uint8Array | null, CLASSIFICATION?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, CORR_QUALITY?: number, ID_ON_ORBIT?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, COLLECT_METHOD?: string | Uint8Array | null, NORAD_CAT_ID?: number, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TRACK_ID?: string | Uint8Array | null, OB_POSITION?: string | Uint8Array | null, ORIG_OBJECT_ID?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, UCT?: boolean, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RA?: number, RA_RATE?: number, RA_UNC?: number, RA_BIAS?: number, DECLINATION?: number, DECLINATION_RATE?: number, DECLINATION_UNC?: number, DECLINATION_BIAS?: number, LOSX?: number, LOSY?: number, LOSZ?: number, LOS_UNC?: number, LOSXVEL?: number, LOSYVEL?: number, LOSZVEL?: number, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, FOV_COUNT?: number, FOV_COUNT_UCTS?: number, EXP_DURATION?: number, ZEROPTD?: number, NET_OBJ_SIG?: number, NET_OBJ_SIG_UNC?: number, MAG?: number, MAG_UNC?: number, MAG_NORM_RANGE?: number, GEOLAT?: number, GEOLON?: number, GEOALT?: number, GEORANGE?: number, SKY_BKGRND?: number, PRIMARY_EXTINCTION?: number, PRIMARY_EXTINCTION_UNC?: number, SOLAR_PHASE_ANGLE?: number, SOLAR_EQ_PHASE_ANGLE?: number, SOLAR_DEC_ANGLE?: number, SHUTTER_DELAY?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, INTENSITY?: number, BG_INTENSITY?: number, DESCRIPTOR?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, ORIGIN?: string | Uint8Array | null, DATA_MODE?: string | Uint8Array | null, CREATED_AT?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, SEN_REFERENCE_FRAME?: string | Uint8Array | null, UMBRA?: boolean, PENUMBRA?: boolean, ORIG_NETWORK?: string | Uint8Array | null, SOURCE_DL?: string | Uint8Array | null, TYPE?: string | Uint8Array | null, AZIMUTH_MEASURED?: boolean, ELEVATION_MEASURED?: boolean, RANGE_MEASURED?: boolean, RANGERATE_MEASURED?: boolean, RA_MEASURED?: boolean, DECLINATION_MEASURED?: boolean);
+    constructor(ID?: string | Uint8Array | null, CLASSIFICATION?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, CORR_QUALITY?: number, ID_ON_ORBIT?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, COLLECT_METHOD?: CollectMethod, NORAD_CAT_ID?: number, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TRACK_ID?: string | Uint8Array | null, OB_POSITION?: ObservationPosition, ORIG_OBJECT_ID?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, UCT?: boolean, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RA?: number, RA_RATE?: number, RA_UNC?: number, RA_BIAS?: number, DECLINATION?: number, DECLINATION_RATE?: number, DECLINATION_UNC?: number, DECLINATION_BIAS?: number, LOSX?: number, LOSY?: number, LOSZ?: number, LOS_UNC?: number, LOSXVEL?: number, LOSYVEL?: number, LOSZVEL?: number, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, FOV_COUNT?: number, FOV_COUNT_UCTS?: number, EXP_DURATION?: number, ZEROPTD?: number, NET_OBJ_SIG?: number, NET_OBJ_SIG_UNC?: number, MAG?: number, MAG_UNC?: number, MAG_NORM_RANGE?: number, GEOLAT?: number, GEOLON?: number, GEOALT?: number, GEORANGE?: number, SKY_BKGRND?: number, PRIMARY_EXTINCTION?: number, PRIMARY_EXTINCTION_UNC?: number, SOLAR_PHASE_ANGLE?: number, SOLAR_EQ_PHASE_ANGLE?: number, SOLAR_DEC_ANGLE?: number, SHUTTER_DELAY?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, INTENSITY?: number, BG_INTENSITY?: number, DESCRIPTOR?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, ORIGIN?: string | Uint8Array | null, DATA_MODE?: DataMode, CREATED_AT?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, SEN_REFERENCE_FRAME?: string | Uint8Array | null, UMBRA?: boolean, PENUMBRA?: boolean, ORIG_NETWORK?: string | Uint8Array | null, SOURCE_DL?: string | Uint8Array | null, TYPE?: DeviceType, AZIMUTH_MEASURED?: boolean, ELEVATION_MEASURED?: boolean, RANGE_MEASURED?: boolean, RANGERATE_MEASURED?: boolean, RA_MEASURED?: boolean, DECLINATION_MEASURED?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EOO.d.ts.map
