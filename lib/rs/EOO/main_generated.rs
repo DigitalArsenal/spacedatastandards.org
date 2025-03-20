@@ -77,41 +77,48 @@ impl<'a> EOO<'a> {
   pub const VT_SENY: flatbuffers::VOffsetT = 98;
   pub const VT_SENZ: flatbuffers::VOffsetT = 100;
   pub const VT_FOV_COUNT: flatbuffers::VOffsetT = 102;
-  pub const VT_EXP_DURATION: flatbuffers::VOffsetT = 104;
-  pub const VT_ZEROPTD: flatbuffers::VOffsetT = 106;
-  pub const VT_NET_OBJ_SIG: flatbuffers::VOffsetT = 108;
-  pub const VT_NET_OBJ_SIG_UNC: flatbuffers::VOffsetT = 110;
-  pub const VT_MAG: flatbuffers::VOffsetT = 112;
-  pub const VT_MAG_UNC: flatbuffers::VOffsetT = 114;
-  pub const VT_MAG_NORM_RANGE: flatbuffers::VOffsetT = 116;
-  pub const VT_GEOLAT: flatbuffers::VOffsetT = 118;
-  pub const VT_GEOLON: flatbuffers::VOffsetT = 120;
-  pub const VT_GEOALT: flatbuffers::VOffsetT = 122;
-  pub const VT_GEORANGE: flatbuffers::VOffsetT = 124;
-  pub const VT_SKY_BKGRND: flatbuffers::VOffsetT = 126;
-  pub const VT_PRIMARY_EXTINCTION: flatbuffers::VOffsetT = 128;
-  pub const VT_PRIMARY_EXTINCTION_UNC: flatbuffers::VOffsetT = 130;
-  pub const VT_SOLAR_PHASE_ANGLE: flatbuffers::VOffsetT = 132;
-  pub const VT_SOLAR_EQ_PHASE_ANGLE: flatbuffers::VOffsetT = 134;
-  pub const VT_SOLAR_DEC_ANGLE: flatbuffers::VOffsetT = 136;
-  pub const VT_SHUTTER_DELAY: flatbuffers::VOffsetT = 138;
-  pub const VT_TIMING_BIAS: flatbuffers::VOffsetT = 140;
-  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 142;
-  pub const VT_INTENSITY: flatbuffers::VOffsetT = 144;
-  pub const VT_BG_INTENSITY: flatbuffers::VOffsetT = 146;
-  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 148;
-  pub const VT_SOURCE: flatbuffers::VOffsetT = 150;
-  pub const VT_ORIGIN: flatbuffers::VOffsetT = 152;
-  pub const VT_DATA_MODE: flatbuffers::VOffsetT = 154;
-  pub const VT_CREATED_AT: flatbuffers::VOffsetT = 156;
-  pub const VT_CREATED_BY: flatbuffers::VOffsetT = 158;
-  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 160;
-  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 162;
-  pub const VT_UMBRA: flatbuffers::VOffsetT = 164;
-  pub const VT_PENUMBRA: flatbuffers::VOffsetT = 166;
-  pub const VT_ORIG_NETWORK: flatbuffers::VOffsetT = 168;
-  pub const VT_SOURCE_DL: flatbuffers::VOffsetT = 170;
-  pub const VT_TYPE: flatbuffers::VOffsetT = 172;
+  pub const VT_FOV_COUNT_UCTS: flatbuffers::VOffsetT = 104;
+  pub const VT_EXP_DURATION: flatbuffers::VOffsetT = 106;
+  pub const VT_ZEROPTD: flatbuffers::VOffsetT = 108;
+  pub const VT_NET_OBJ_SIG: flatbuffers::VOffsetT = 110;
+  pub const VT_NET_OBJ_SIG_UNC: flatbuffers::VOffsetT = 112;
+  pub const VT_MAG: flatbuffers::VOffsetT = 114;
+  pub const VT_MAG_UNC: flatbuffers::VOffsetT = 116;
+  pub const VT_MAG_NORM_RANGE: flatbuffers::VOffsetT = 118;
+  pub const VT_GEOLAT: flatbuffers::VOffsetT = 120;
+  pub const VT_GEOLON: flatbuffers::VOffsetT = 122;
+  pub const VT_GEOALT: flatbuffers::VOffsetT = 124;
+  pub const VT_GEORANGE: flatbuffers::VOffsetT = 126;
+  pub const VT_SKY_BKGRND: flatbuffers::VOffsetT = 128;
+  pub const VT_PRIMARY_EXTINCTION: flatbuffers::VOffsetT = 130;
+  pub const VT_PRIMARY_EXTINCTION_UNC: flatbuffers::VOffsetT = 132;
+  pub const VT_SOLAR_PHASE_ANGLE: flatbuffers::VOffsetT = 134;
+  pub const VT_SOLAR_EQ_PHASE_ANGLE: flatbuffers::VOffsetT = 136;
+  pub const VT_SOLAR_DEC_ANGLE: flatbuffers::VOffsetT = 138;
+  pub const VT_SHUTTER_DELAY: flatbuffers::VOffsetT = 140;
+  pub const VT_TIMING_BIAS: flatbuffers::VOffsetT = 142;
+  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 144;
+  pub const VT_INTENSITY: flatbuffers::VOffsetT = 146;
+  pub const VT_BG_INTENSITY: flatbuffers::VOffsetT = 148;
+  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 150;
+  pub const VT_SOURCE: flatbuffers::VOffsetT = 152;
+  pub const VT_ORIGIN: flatbuffers::VOffsetT = 154;
+  pub const VT_DATA_MODE: flatbuffers::VOffsetT = 156;
+  pub const VT_CREATED_AT: flatbuffers::VOffsetT = 158;
+  pub const VT_CREATED_BY: flatbuffers::VOffsetT = 160;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 162;
+  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 164;
+  pub const VT_UMBRA: flatbuffers::VOffsetT = 166;
+  pub const VT_PENUMBRA: flatbuffers::VOffsetT = 168;
+  pub const VT_ORIG_NETWORK: flatbuffers::VOffsetT = 170;
+  pub const VT_SOURCE_DL: flatbuffers::VOffsetT = 172;
+  pub const VT_TYPE: flatbuffers::VOffsetT = 174;
+  pub const VT_AZIMUTH_MEASURED: flatbuffers::VOffsetT = 176;
+  pub const VT_ELEVATION_MEASURED: flatbuffers::VOffsetT = 178;
+  pub const VT_RANGE_MEASURED: flatbuffers::VOffsetT = 180;
+  pub const VT_RANGERATE_MEASURED: flatbuffers::VOffsetT = 182;
+  pub const VT_RA_MEASURED: flatbuffers::VOffsetT = 184;
+  pub const VT_DECLINATION_MEASURED: flatbuffers::VOffsetT = 186;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -155,6 +162,7 @@ impl<'a> EOO<'a> {
     builder.add_NET_OBJ_SIG(args.NET_OBJ_SIG);
     builder.add_ZEROPTD(args.ZEROPTD);
     builder.add_EXP_DURATION(args.EXP_DURATION);
+    builder.add_FOV_COUNT_UCTS(args.FOV_COUNT_UCTS);
     builder.add_FOV_COUNT(args.FOV_COUNT);
     builder.add_SENZ(args.SENZ);
     builder.add_SENY(args.SENY);
@@ -204,6 +212,12 @@ impl<'a> EOO<'a> {
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
     if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
     if let Some(x) = args.EOBSERVATION_ID { builder.add_EOBSERVATION_ID(x); }
+    builder.add_DECLINATION_MEASURED(args.DECLINATION_MEASURED);
+    builder.add_RA_MEASURED(args.RA_MEASURED);
+    builder.add_RANGERATE_MEASURED(args.RANGERATE_MEASURED);
+    builder.add_RANGE_MEASURED(args.RANGE_MEASURED);
+    builder.add_ELEVATION_MEASURED(args.ELEVATION_MEASURED);
+    builder.add_AZIMUTH_MEASURED(args.AZIMUTH_MEASURED);
     builder.add_PENUMBRA(args.PENUMBRA);
     builder.add_UMBRA(args.UMBRA);
     builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
@@ -286,6 +300,7 @@ impl<'a> EOO<'a> {
     let SENY = self.SENY();
     let SENZ = self.SENZ();
     let FOV_COUNT = self.FOV_COUNT();
+    let FOV_COUNT_UCTS = self.FOV_COUNT_UCTS();
     let EXP_DURATION = self.EXP_DURATION();
     let ZEROPTD = self.ZEROPTD();
     let NET_OBJ_SIG = self.NET_OBJ_SIG();
@@ -343,6 +358,12 @@ impl<'a> EOO<'a> {
     let TYPE = self.TYPE().map(|x| {
       x.to_string()
     });
+    let AZIMUTH_MEASURED = self.AZIMUTH_MEASURED();
+    let ELEVATION_MEASURED = self.ELEVATION_MEASURED();
+    let RANGE_MEASURED = self.RANGE_MEASURED();
+    let RANGERATE_MEASURED = self.RANGERATE_MEASURED();
+    let RA_MEASURED = self.RA_MEASURED();
+    let DECLINATION_MEASURED = self.DECLINATION_MEASURED();
     EOOT {
       EOBSERVATION_ID,
       CLASSIFICATION,
@@ -394,6 +415,7 @@ impl<'a> EOO<'a> {
       SENY,
       SENZ,
       FOV_COUNT,
+      FOV_COUNT_UCTS,
       EXP_DURATION,
       ZEROPTD,
       NET_OBJ_SIG,
@@ -429,6 +451,12 @@ impl<'a> EOO<'a> {
       ORIG_NETWORK,
       SOURCE_DL,
       TYPE,
+      AZIMUTH_MEASURED,
+      ELEVATION_MEASURED,
+      RANGE_MEASURED,
+      RANGERATE_MEASURED,
+      RA_MEASURED,
+      DECLINATION_MEASURED,
     }
   }
 
@@ -832,6 +860,14 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT, Some(0)).unwrap()}
   }
+  /// Number of uncorrelated satellites in the field of view (JCO)
+  #[inline]
+  pub fn FOV_COUNT_UCTS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT_UCTS, Some(0)).unwrap()}
+  }
   /// Duration of the exposure
   #[inline]
   pub fn EXP_DURATION(&self) -> f32 {
@@ -1112,6 +1148,54 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TYPE, None)}
   }
+  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  #[inline]
+  pub fn AZIMUTH_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_AZIMUTH_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  #[inline]
+  pub fn ELEVATION_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_ELEVATION_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if range is reported (JCO)
+  #[inline]
+  pub fn RANGE_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_RANGE_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  #[inline]
+  pub fn RANGERATE_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_RANGERATE_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  #[inline]
+  pub fn RA_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_RA_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if declination is reported (JCO)
+  #[inline]
+  pub fn DECLINATION_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_DECLINATION_MEASURED, Some(false)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for EOO<'_> {
@@ -1171,6 +1255,7 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<f32>("SENY", Self::VT_SENY, false)?
      .visit_field::<f32>("SENZ", Self::VT_SENZ, false)?
      .visit_field::<i32>("FOV_COUNT", Self::VT_FOV_COUNT, false)?
+     .visit_field::<i32>("FOV_COUNT_UCTS", Self::VT_FOV_COUNT_UCTS, false)?
      .visit_field::<f32>("EXP_DURATION", Self::VT_EXP_DURATION, false)?
      .visit_field::<f32>("ZEROPTD", Self::VT_ZEROPTD, false)?
      .visit_field::<f32>("NET_OBJ_SIG", Self::VT_NET_OBJ_SIG, false)?
@@ -1206,6 +1291,12 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_NETWORK", Self::VT_ORIG_NETWORK, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOURCE_DL", Self::VT_SOURCE_DL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<bool>("AZIMUTH_MEASURED", Self::VT_AZIMUTH_MEASURED, false)?
+     .visit_field::<bool>("ELEVATION_MEASURED", Self::VT_ELEVATION_MEASURED, false)?
+     .visit_field::<bool>("RANGE_MEASURED", Self::VT_RANGE_MEASURED, false)?
+     .visit_field::<bool>("RANGERATE_MEASURED", Self::VT_RANGERATE_MEASURED, false)?
+     .visit_field::<bool>("RA_MEASURED", Self::VT_RA_MEASURED, false)?
+     .visit_field::<bool>("DECLINATION_MEASURED", Self::VT_DECLINATION_MEASURED, false)?
      .finish();
     Ok(())
   }
@@ -1261,6 +1352,7 @@ pub struct EOOArgs<'a> {
     pub SENY: f32,
     pub SENZ: f32,
     pub FOV_COUNT: i32,
+    pub FOV_COUNT_UCTS: i32,
     pub EXP_DURATION: f32,
     pub ZEROPTD: f32,
     pub NET_OBJ_SIG: f32,
@@ -1296,6 +1388,12 @@ pub struct EOOArgs<'a> {
     pub ORIG_NETWORK: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_DL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub AZIMUTH_MEASURED: bool,
+    pub ELEVATION_MEASURED: bool,
+    pub RANGE_MEASURED: bool,
+    pub RANGERATE_MEASURED: bool,
+    pub RA_MEASURED: bool,
+    pub DECLINATION_MEASURED: bool,
 }
 impl<'a> Default for EOOArgs<'a> {
   #[inline]
@@ -1351,6 +1449,7 @@ impl<'a> Default for EOOArgs<'a> {
       SENY: 0.0,
       SENZ: 0.0,
       FOV_COUNT: 0,
+      FOV_COUNT_UCTS: 0,
       EXP_DURATION: 0.0,
       ZEROPTD: 0.0,
       NET_OBJ_SIG: 0.0,
@@ -1386,6 +1485,12 @@ impl<'a> Default for EOOArgs<'a> {
       ORIG_NETWORK: None,
       SOURCE_DL: None,
       TYPE: None,
+      AZIMUTH_MEASURED: false,
+      ELEVATION_MEASURED: false,
+      RANGE_MEASURED: false,
+      RANGERATE_MEASURED: false,
+      RA_MEASURED: false,
+      DECLINATION_MEASURED: false,
     }
   }
 }
@@ -1596,6 +1701,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<i32>(EOO::VT_FOV_COUNT, FOV_COUNT, 0);
   }
   #[inline]
+  pub fn add_FOV_COUNT_UCTS(&mut self, FOV_COUNT_UCTS: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_FOV_COUNT_UCTS, FOV_COUNT_UCTS, 0);
+  }
+  #[inline]
   pub fn add_EXP_DURATION(&mut self, EXP_DURATION: f32) {
     self.fbb_.push_slot::<f32>(EOO::VT_EXP_DURATION, EXP_DURATION, 0.0);
   }
@@ -1736,6 +1845,30 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_TYPE, TYPE);
   }
   #[inline]
+  pub fn add_AZIMUTH_MEASURED(&mut self, AZIMUTH_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_AZIMUTH_MEASURED, AZIMUTH_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_ELEVATION_MEASURED(&mut self, ELEVATION_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_ELEVATION_MEASURED, ELEVATION_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_RANGE_MEASURED(&mut self, RANGE_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_RANGE_MEASURED, RANGE_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_RANGERATE_MEASURED(&mut self, RANGERATE_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_RANGERATE_MEASURED, RANGERATE_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_RA_MEASURED(&mut self, RA_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_RA_MEASURED, RA_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_DECLINATION_MEASURED(&mut self, DECLINATION_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_DECLINATION_MEASURED, DECLINATION_MEASURED, false);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EOOBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOOBuilder {
@@ -1803,6 +1936,7 @@ impl core::fmt::Debug for EOO<'_> {
       ds.field("SENY", &self.SENY());
       ds.field("SENZ", &self.SENZ());
       ds.field("FOV_COUNT", &self.FOV_COUNT());
+      ds.field("FOV_COUNT_UCTS", &self.FOV_COUNT_UCTS());
       ds.field("EXP_DURATION", &self.EXP_DURATION());
       ds.field("ZEROPTD", &self.ZEROPTD());
       ds.field("NET_OBJ_SIG", &self.NET_OBJ_SIG());
@@ -1838,6 +1972,12 @@ impl core::fmt::Debug for EOO<'_> {
       ds.field("ORIG_NETWORK", &self.ORIG_NETWORK());
       ds.field("SOURCE_DL", &self.SOURCE_DL());
       ds.field("TYPE", &self.TYPE());
+      ds.field("AZIMUTH_MEASURED", &self.AZIMUTH_MEASURED());
+      ds.field("ELEVATION_MEASURED", &self.ELEVATION_MEASURED());
+      ds.field("RANGE_MEASURED", &self.RANGE_MEASURED());
+      ds.field("RANGERATE_MEASURED", &self.RANGERATE_MEASURED());
+      ds.field("RA_MEASURED", &self.RA_MEASURED());
+      ds.field("DECLINATION_MEASURED", &self.DECLINATION_MEASURED());
       ds.finish()
   }
 }
@@ -1894,6 +2034,7 @@ pub struct EOOT {
   pub SENY: f32,
   pub SENZ: f32,
   pub FOV_COUNT: i32,
+  pub FOV_COUNT_UCTS: i32,
   pub EXP_DURATION: f32,
   pub ZEROPTD: f32,
   pub NET_OBJ_SIG: f32,
@@ -1929,6 +2070,12 @@ pub struct EOOT {
   pub ORIG_NETWORK: Option<String>,
   pub SOURCE_DL: Option<String>,
   pub TYPE: Option<String>,
+  pub AZIMUTH_MEASURED: bool,
+  pub ELEVATION_MEASURED: bool,
+  pub RANGE_MEASURED: bool,
+  pub RANGERATE_MEASURED: bool,
+  pub RA_MEASURED: bool,
+  pub DECLINATION_MEASURED: bool,
 }
 impl Default for EOOT {
   fn default() -> Self {
@@ -1983,6 +2130,7 @@ impl Default for EOOT {
       SENY: 0.0,
       SENZ: 0.0,
       FOV_COUNT: 0,
+      FOV_COUNT_UCTS: 0,
       EXP_DURATION: 0.0,
       ZEROPTD: 0.0,
       NET_OBJ_SIG: 0.0,
@@ -2018,6 +2166,12 @@ impl Default for EOOT {
       ORIG_NETWORK: None,
       SOURCE_DL: None,
       TYPE: None,
+      AZIMUTH_MEASURED: false,
+      ELEVATION_MEASURED: false,
+      RANGE_MEASURED: false,
+      RANGERATE_MEASURED: false,
+      RA_MEASURED: false,
+      DECLINATION_MEASURED: false,
     }
   }
 }
@@ -2100,6 +2254,7 @@ impl EOOT {
     let SENY = self.SENY;
     let SENZ = self.SENZ;
     let FOV_COUNT = self.FOV_COUNT;
+    let FOV_COUNT_UCTS = self.FOV_COUNT_UCTS;
     let EXP_DURATION = self.EXP_DURATION;
     let ZEROPTD = self.ZEROPTD;
     let NET_OBJ_SIG = self.NET_OBJ_SIG;
@@ -2157,6 +2312,12 @@ impl EOOT {
     let TYPE = self.TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let AZIMUTH_MEASURED = self.AZIMUTH_MEASURED;
+    let ELEVATION_MEASURED = self.ELEVATION_MEASURED;
+    let RANGE_MEASURED = self.RANGE_MEASURED;
+    let RANGERATE_MEASURED = self.RANGERATE_MEASURED;
+    let RA_MEASURED = self.RA_MEASURED;
+    let DECLINATION_MEASURED = self.DECLINATION_MEASURED;
     EOO::create(_fbb, &EOOArgs{
       EOBSERVATION_ID,
       CLASSIFICATION,
@@ -2208,6 +2369,7 @@ impl EOOT {
       SENY,
       SENZ,
       FOV_COUNT,
+      FOV_COUNT_UCTS,
       EXP_DURATION,
       ZEROPTD,
       NET_OBJ_SIG,
@@ -2243,6 +2405,12 @@ impl EOOT {
       ORIG_NETWORK,
       SOURCE_DL,
       TYPE,
+      AZIMUTH_MEASURED,
+      ELEVATION_MEASURED,
+      RANGE_MEASURED,
+      RANGERATE_MEASURED,
+      RA_MEASURED,
+      DECLINATION_MEASURED,
     })
   }
 }

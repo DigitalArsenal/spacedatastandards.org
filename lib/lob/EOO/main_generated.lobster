@@ -157,118 +157,139 @@ class EOO : flatbuffers.handle
     /// Number of fields of view
     def FOV_COUNT() -> int:
         return flatbuffers.field_int32(buf_, pos_, 102, 0)
+    /// Number of uncorrelated satellites in the field of view (JCO)
+    def FOV_COUNT_UCTS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 104, 0)
     /// Duration of the exposure
     def EXP_DURATION() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 104, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 106, 0.0)
     /// Zero-point displacement
     def ZEROPTD() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 106, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 108, 0.0)
     /// Net object signal
     def NET_OBJ_SIG() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 108, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 110, 0.0)
     /// Uncertainty in net object signal
     def NET_OBJ_SIG_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 110, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 112, 0.0)
     /// Magnitude of the observation
     def MAG() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 112, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 114, 0.0)
     /// Uncertainty in magnitude
     def MAG_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 114, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 116, 0.0)
     /// Normalized range for magnitude
     def MAG_NORM_RANGE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 116, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 118, 0.0)
     /// Geocentric latitude
     def GEOLAT() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 118, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 120, 0.0)
     /// Geocentric longitude
     def GEOLON() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 120, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 122, 0.0)
     /// Geocentric altitude
     def GEOALT() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 122, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 124, 0.0)
     /// Geocentric range
     def GEORANGE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 124, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 126, 0.0)
     /// Sky background level
     def SKY_BKGRND() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 126, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 128, 0.0)
     /// Primary extinction
     def PRIMARY_EXTINCTION() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 128, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 130, 0.0)
     /// Uncertainty in primary extinction
     def PRIMARY_EXTINCTION_UNC() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 130, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 132, 0.0)
     /// Solar phase angle
     def SOLAR_PHASE_ANGLE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 132, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 134, 0.0)
     /// Solar equatorial phase angle
     def SOLAR_EQ_PHASE_ANGLE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 134, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 136, 0.0)
     /// Solar declination angle
     def SOLAR_DEC_ANGLE() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 136, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 138, 0.0)
     /// Shutter delay
     def SHUTTER_DELAY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 138, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 140, 0.0)
     /// Timing bias
     def TIMING_BIAS() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 140, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 142, 0.0)
     /// URI of the raw data file
     def RAW_FILE_URI() -> string:
-        return flatbuffers.field_string(buf_, pos_, 142)
+        return flatbuffers.field_string(buf_, pos_, 144)
     /// Intensity of the observation
     def INTENSITY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 144, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 146, 0.0)
     /// Background intensity
     def BG_INTENSITY() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 146, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 148, 0.0)
     /// Descriptor of the provided data
     def DESCRIPTOR() -> string:
-        return flatbuffers.field_string(buf_, pos_, 148)
+        return flatbuffers.field_string(buf_, pos_, 150)
     /// Source of the data
     def SOURCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 150)
+        return flatbuffers.field_string(buf_, pos_, 152)
     /// Origin of the data
     def ORIGIN() -> string:
-        return flatbuffers.field_string(buf_, pos_, 152)
+        return flatbuffers.field_string(buf_, pos_, 154)
     /// Mode of the data
     def DATA_MODE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 154)
+        return flatbuffers.field_string(buf_, pos_, 156)
     /// Creation time of the record
     def CREATED_AT() -> string:
-        return flatbuffers.field_string(buf_, pos_, 156)
+        return flatbuffers.field_string(buf_, pos_, 158)
     /// User who created the record
     def CREATED_BY() -> string:
-        return flatbuffers.field_string(buf_, pos_, 158)
+        return flatbuffers.field_string(buf_, pos_, 160)
     /// Reference frame of the observation
     def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 160, 0))
+        return refFrame(flatbuffers.field_int8(buf_, pos_, 162, 0))
     /// Reference frame of the sensor
     def SEN_REFERENCE_FRAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 162)
+        return flatbuffers.field_string(buf_, pos_, 164)
     /// Flag for umbra (total eclipse)
     def UMBRA() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 164, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 166, 0))
     /// Flag for penumbra (partial eclipse)
     def PENUMBRA() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 166, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 168, 0))
     /// Original network identifier
     def ORIG_NETWORK() -> string:
-        return flatbuffers.field_string(buf_, pos_, 168)
+        return flatbuffers.field_string(buf_, pos_, 170)
     /// Data link source
     def SOURCE_DL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 170)
+        return flatbuffers.field_string(buf_, pos_, 172)
     /// Type of the observation
     def TYPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 172)
+        return flatbuffers.field_string(buf_, pos_, 174)
+    /// True if measured, false if computed. Required if azimuth is reported (JCO)
+    def AZIMUTH_MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 176, 0))
+    /// True if measured, false if computed. Required if elevation is reported (JCO)
+    def ELEVATION_MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 178, 0))
+    /// True if measured, false if computed. Required if range is reported (JCO)
+    def RANGE_MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 180, 0))
+    /// True if measured, false if computed. Required if range-rate is reported (JCO)
+    def RANGERATE_MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 182, 0))
+    /// True if measured, false if computed. Required if right ascension is reported (JCO)
+    def RA_MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 184, 0))
+    /// True if measured, false if computed. Required if declination is reported (JCO)
+    def DECLINATION_MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 186, 0))
 
 def GetRootAsEOO(buf:string): return EOO { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(85)
+        b_.StartObject(92)
         return this
     def add_EOBSERVATION_ID(EOBSERVATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EOBSERVATION_ID)
@@ -420,110 +441,131 @@ struct EOOBuilder:
     def add_FOV_COUNT(FOV_COUNT:int):
         b_.PrependInt32Slot(49, FOV_COUNT, 0)
         return this
+    def add_FOV_COUNT_UCTS(FOV_COUNT_UCTS:int):
+        b_.PrependInt32Slot(50, FOV_COUNT_UCTS, 0)
+        return this
     def add_EXP_DURATION(EXP_DURATION:float):
-        b_.PrependFloat32Slot(50, EXP_DURATION, 0.0)
+        b_.PrependFloat32Slot(51, EXP_DURATION, 0.0)
         return this
     def add_ZEROPTD(ZEROPTD:float):
-        b_.PrependFloat32Slot(51, ZEROPTD, 0.0)
+        b_.PrependFloat32Slot(52, ZEROPTD, 0.0)
         return this
     def add_NET_OBJ_SIG(NET_OBJ_SIG:float):
-        b_.PrependFloat32Slot(52, NET_OBJ_SIG, 0.0)
+        b_.PrependFloat32Slot(53, NET_OBJ_SIG, 0.0)
         return this
     def add_NET_OBJ_SIG_UNC(NET_OBJ_SIG_UNC:float):
-        b_.PrependFloat32Slot(53, NET_OBJ_SIG_UNC, 0.0)
+        b_.PrependFloat32Slot(54, NET_OBJ_SIG_UNC, 0.0)
         return this
     def add_MAG(MAG:float):
-        b_.PrependFloat32Slot(54, MAG, 0.0)
+        b_.PrependFloat32Slot(55, MAG, 0.0)
         return this
     def add_MAG_UNC(MAG_UNC:float):
-        b_.PrependFloat32Slot(55, MAG_UNC, 0.0)
+        b_.PrependFloat32Slot(56, MAG_UNC, 0.0)
         return this
     def add_MAG_NORM_RANGE(MAG_NORM_RANGE:float):
-        b_.PrependFloat32Slot(56, MAG_NORM_RANGE, 0.0)
+        b_.PrependFloat32Slot(57, MAG_NORM_RANGE, 0.0)
         return this
     def add_GEOLAT(GEOLAT:float):
-        b_.PrependFloat32Slot(57, GEOLAT, 0.0)
+        b_.PrependFloat32Slot(58, GEOLAT, 0.0)
         return this
     def add_GEOLON(GEOLON:float):
-        b_.PrependFloat32Slot(58, GEOLON, 0.0)
+        b_.PrependFloat32Slot(59, GEOLON, 0.0)
         return this
     def add_GEOALT(GEOALT:float):
-        b_.PrependFloat32Slot(59, GEOALT, 0.0)
+        b_.PrependFloat32Slot(60, GEOALT, 0.0)
         return this
     def add_GEORANGE(GEORANGE:float):
-        b_.PrependFloat32Slot(60, GEORANGE, 0.0)
+        b_.PrependFloat32Slot(61, GEORANGE, 0.0)
         return this
     def add_SKY_BKGRND(SKY_BKGRND:float):
-        b_.PrependFloat32Slot(61, SKY_BKGRND, 0.0)
+        b_.PrependFloat32Slot(62, SKY_BKGRND, 0.0)
         return this
     def add_PRIMARY_EXTINCTION(PRIMARY_EXTINCTION:float):
-        b_.PrependFloat32Slot(62, PRIMARY_EXTINCTION, 0.0)
+        b_.PrependFloat32Slot(63, PRIMARY_EXTINCTION, 0.0)
         return this
     def add_PRIMARY_EXTINCTION_UNC(PRIMARY_EXTINCTION_UNC:float):
-        b_.PrependFloat32Slot(63, PRIMARY_EXTINCTION_UNC, 0.0)
+        b_.PrependFloat32Slot(64, PRIMARY_EXTINCTION_UNC, 0.0)
         return this
     def add_SOLAR_PHASE_ANGLE(SOLAR_PHASE_ANGLE:float):
-        b_.PrependFloat32Slot(64, SOLAR_PHASE_ANGLE, 0.0)
+        b_.PrependFloat32Slot(65, SOLAR_PHASE_ANGLE, 0.0)
         return this
     def add_SOLAR_EQ_PHASE_ANGLE(SOLAR_EQ_PHASE_ANGLE:float):
-        b_.PrependFloat32Slot(65, SOLAR_EQ_PHASE_ANGLE, 0.0)
+        b_.PrependFloat32Slot(66, SOLAR_EQ_PHASE_ANGLE, 0.0)
         return this
     def add_SOLAR_DEC_ANGLE(SOLAR_DEC_ANGLE:float):
-        b_.PrependFloat32Slot(66, SOLAR_DEC_ANGLE, 0.0)
+        b_.PrependFloat32Slot(67, SOLAR_DEC_ANGLE, 0.0)
         return this
     def add_SHUTTER_DELAY(SHUTTER_DELAY:float):
-        b_.PrependFloat32Slot(67, SHUTTER_DELAY, 0.0)
+        b_.PrependFloat32Slot(68, SHUTTER_DELAY, 0.0)
         return this
     def add_TIMING_BIAS(TIMING_BIAS:float):
-        b_.PrependFloat32Slot(68, TIMING_BIAS, 0.0)
+        b_.PrependFloat32Slot(69, TIMING_BIAS, 0.0)
         return this
     def add_RAW_FILE_URI(RAW_FILE_URI:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(69, RAW_FILE_URI)
+        b_.PrependUOffsetTRelativeSlot(70, RAW_FILE_URI)
         return this
     def add_INTENSITY(INTENSITY:float):
-        b_.PrependFloat32Slot(70, INTENSITY, 0.0)
+        b_.PrependFloat32Slot(71, INTENSITY, 0.0)
         return this
     def add_BG_INTENSITY(BG_INTENSITY:float):
-        b_.PrependFloat32Slot(71, BG_INTENSITY, 0.0)
+        b_.PrependFloat32Slot(72, BG_INTENSITY, 0.0)
         return this
     def add_DESCRIPTOR(DESCRIPTOR:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(72, DESCRIPTOR)
+        b_.PrependUOffsetTRelativeSlot(73, DESCRIPTOR)
         return this
     def add_SOURCE(SOURCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(73, SOURCE)
+        b_.PrependUOffsetTRelativeSlot(74, SOURCE)
         return this
     def add_ORIGIN(ORIGIN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(74, ORIGIN)
+        b_.PrependUOffsetTRelativeSlot(75, ORIGIN)
         return this
     def add_DATA_MODE(DATA_MODE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(75, DATA_MODE)
+        b_.PrependUOffsetTRelativeSlot(76, DATA_MODE)
         return this
     def add_CREATED_AT(CREATED_AT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(76, CREATED_AT)
+        b_.PrependUOffsetTRelativeSlot(77, CREATED_AT)
         return this
     def add_CREATED_BY(CREATED_BY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(77, CREATED_BY)
+        b_.PrependUOffsetTRelativeSlot(78, CREATED_BY)
         return this
     def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(78, REFERENCE_FRAME, 0)
+        b_.PrependInt8Slot(79, REFERENCE_FRAME, 0)
         return this
     def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(79, SEN_REFERENCE_FRAME)
+        b_.PrependUOffsetTRelativeSlot(80, SEN_REFERENCE_FRAME)
         return this
     def add_UMBRA(UMBRA:bool):
-        b_.PrependBoolSlot(80, UMBRA, 0)
+        b_.PrependBoolSlot(81, UMBRA, 0)
         return this
     def add_PENUMBRA(PENUMBRA:bool):
-        b_.PrependBoolSlot(81, PENUMBRA, 0)
+        b_.PrependBoolSlot(82, PENUMBRA, 0)
         return this
     def add_ORIG_NETWORK(ORIG_NETWORK:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(82, ORIG_NETWORK)
+        b_.PrependUOffsetTRelativeSlot(83, ORIG_NETWORK)
         return this
     def add_SOURCE_DL(SOURCE_DL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(83, SOURCE_DL)
+        b_.PrependUOffsetTRelativeSlot(84, SOURCE_DL)
         return this
     def add_TYPE(TYPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(84, TYPE)
+        b_.PrependUOffsetTRelativeSlot(85, TYPE)
+        return this
+    def add_AZIMUTH_MEASURED(AZIMUTH_MEASURED:bool):
+        b_.PrependBoolSlot(86, AZIMUTH_MEASURED, 0)
+        return this
+    def add_ELEVATION_MEASURED(ELEVATION_MEASURED:bool):
+        b_.PrependBoolSlot(87, ELEVATION_MEASURED, 0)
+        return this
+    def add_RANGE_MEASURED(RANGE_MEASURED:bool):
+        b_.PrependBoolSlot(88, RANGE_MEASURED, 0)
+        return this
+    def add_RANGERATE_MEASURED(RANGERATE_MEASURED:bool):
+        b_.PrependBoolSlot(89, RANGERATE_MEASURED, 0)
+        return this
+    def add_RA_MEASURED(RA_MEASURED:bool):
+        b_.PrependBoolSlot(90, RA_MEASURED, 0)
+        return this
+    def add_DECLINATION_MEASURED(DECLINATION_MEASURED:bool):
+        b_.PrependBoolSlot(91, DECLINATION_MEASURED, 0)
         return this
     def end():
         return b_.EndObject()

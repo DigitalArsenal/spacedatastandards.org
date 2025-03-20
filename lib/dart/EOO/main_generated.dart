@@ -120,80 +120,94 @@ class EOO {
   double get SENZ => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
   ///  Number of fields of view
   int get FOV_COUNT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 102, 0);
+  ///  Number of uncorrelated satellites in the field of view (JCO)
+  int get FOV_COUNT_UCTS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 104, 0);
   ///  Duration of the exposure
-  double get EXP_DURATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
+  double get EXP_DURATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
   ///  Zero-point displacement
-  double get ZEROPTD => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
+  double get ZEROPTD => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
   ///  Net object signal
-  double get NET_OBJ_SIG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
+  double get NET_OBJ_SIG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
   ///  Uncertainty in net object signal
-  double get NET_OBJ_SIG_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
+  double get NET_OBJ_SIG_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
   ///  Magnitude of the observation
-  double get MAG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
+  double get MAG => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
   ///  Uncertainty in magnitude
-  double get MAG_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
+  double get MAG_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 116, 0.0);
   ///  Normalized range for magnitude
-  double get MAG_NORM_RANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 116, 0.0);
+  double get MAG_NORM_RANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
   ///  Geocentric latitude
-  double get GEOLAT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
+  double get GEOLAT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
   ///  Geocentric longitude
-  double get GEOLON => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
+  double get GEOLON => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
   ///  Geocentric altitude
-  double get GEOALT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
+  double get GEOALT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 124, 0.0);
   ///  Geocentric range
-  double get GEORANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 124, 0.0);
+  double get GEORANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 126, 0.0);
   ///  Sky background level
-  double get SKY_BKGRND => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 126, 0.0);
+  double get SKY_BKGRND => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
   ///  Primary extinction
-  double get PRIMARY_EXTINCTION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
+  double get PRIMARY_EXTINCTION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
   ///  Uncertainty in primary extinction
-  double get PRIMARY_EXTINCTION_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
+  double get PRIMARY_EXTINCTION_UNC => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 132, 0.0);
   ///  Solar phase angle
-  double get SOLAR_PHASE_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 132, 0.0);
+  double get SOLAR_PHASE_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 134, 0.0);
   ///  Solar equatorial phase angle
-  double get SOLAR_EQ_PHASE_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 134, 0.0);
+  double get SOLAR_EQ_PHASE_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 136, 0.0);
   ///  Solar declination angle
-  double get SOLAR_DEC_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 136, 0.0);
+  double get SOLAR_DEC_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 138, 0.0);
   ///  Shutter delay
-  double get SHUTTER_DELAY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 138, 0.0);
+  double get SHUTTER_DELAY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
   ///  Timing bias
-  double get TIMING_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
+  double get TIMING_BIAS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
   ///  URI of the raw data file
-  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 142);
+  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 144);
   ///  Intensity of the observation
-  double get INTENSITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 144, 0.0);
+  double get INTENSITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
   ///  Background intensity
-  double get BG_INTENSITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
+  double get BG_INTENSITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 148, 0.0);
   ///  Descriptor of the provided data
-  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 148);
+  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 150);
   ///  Source of the data
-  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 150);
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 152);
   ///  Origin of the data
-  String? get ORIGIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 152);
+  String? get ORIGIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 154);
   ///  Mode of the data
-  String? get DATA_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 154);
+  String? get DATA_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 156);
   ///  Creation time of the record
-  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 156);
+  String? get CREATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
   ///  User who created the record
-  String? get CREATED_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
+  String? get CREATED_BY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 160);
   ///  Reference frame of the observation
-  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 160, 0));
+  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 162, 0));
   ///  Reference frame of the sensor
-  String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 162);
+  String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 164);
   ///  Flag for umbra (total eclipse)
-  bool get UMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 164, false);
+  bool get UMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 166, false);
   ///  Flag for penumbra (partial eclipse)
-  bool get PENUMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 166, false);
+  bool get PENUMBRA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 168, false);
   ///  Original network identifier
-  String? get ORIG_NETWORK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 168);
+  String? get ORIG_NETWORK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 170);
   ///  Data link source
-  String? get SOURCE_DL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 170);
+  String? get SOURCE_DL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 172);
   ///  Type of the observation
-  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 172);
+  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 174);
+  ///  True if measured, false if computed. Required if azimuth is reported (JCO)
+  bool get AZIMUTH_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 176, false);
+  ///  True if measured, false if computed. Required if elevation is reported (JCO)
+  bool get ELEVATION_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 178, false);
+  ///  True if measured, false if computed. Required if range is reported (JCO)
+  bool get RANGE_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 180, false);
+  ///  True if measured, false if computed. Required if range-rate is reported (JCO)
+  bool get RANGERATE_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 182, false);
+  ///  True if measured, false if computed. Required if right ascension is reported (JCO)
+  bool get RA_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 184, false);
+  ///  True if measured, false if computed. Required if declination is reported (JCO)
+  bool get DECLINATION_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 186, false);
 
   @override
   String toString() {
-    return 'EOO{EOBSERVATION_ID: ${EOBSERVATION_ID}, CLASSIFICATION: ${CLASSIFICATION}, OB_TIME: ${OB_TIME}, CORR_QUALITY: ${CORR_QUALITY}, ID_ON_ORBIT: ${ID_ON_ORBIT}, SENSOR_ID: ${SENSOR_ID}, COLLECT_METHOD: ${COLLECT_METHOD}, NORAD_CAT_ID: ${NORAD_CAT_ID}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RA: ${RA}, RA_RATE: ${RA_RATE}, RA_UNC: ${RA_UNC}, RA_BIAS: ${RA_BIAS}, DECLINATION: ${DECLINATION}, DECLINATION_RATE: ${DECLINATION_RATE}, DECLINATION_UNC: ${DECLINATION_UNC}, DECLINATION_BIAS: ${DECLINATION_BIAS}, LOSX: ${LOSX}, LOSY: ${LOSY}, LOSZ: ${LOSZ}, LOS_UNC: ${LOS_UNC}, LOSXVEL: ${LOSXVEL}, LOSYVEL: ${LOSYVEL}, LOSZVEL: ${LOSZVEL}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, FOV_COUNT: ${FOV_COUNT}, EXP_DURATION: ${EXP_DURATION}, ZEROPTD: ${ZEROPTD}, NET_OBJ_SIG: ${NET_OBJ_SIG}, NET_OBJ_SIG_UNC: ${NET_OBJ_SIG_UNC}, MAG: ${MAG}, MAG_UNC: ${MAG_UNC}, MAG_NORM_RANGE: ${MAG_NORM_RANGE}, GEOLAT: ${GEOLAT}, GEOLON: ${GEOLON}, GEOALT: ${GEOALT}, GEORANGE: ${GEORANGE}, SKY_BKGRND: ${SKY_BKGRND}, PRIMARY_EXTINCTION: ${PRIMARY_EXTINCTION}, PRIMARY_EXTINCTION_UNC: ${PRIMARY_EXTINCTION_UNC}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, SOLAR_EQ_PHASE_ANGLE: ${SOLAR_EQ_PHASE_ANGLE}, SOLAR_DEC_ANGLE: ${SOLAR_DEC_ANGLE}, SHUTTER_DELAY: ${SHUTTER_DELAY}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, INTENSITY: ${INTENSITY}, BG_INTENSITY: ${BG_INTENSITY}, DESCRIPTOR: ${DESCRIPTOR}, SOURCE: ${SOURCE}, ORIGIN: ${ORIGIN}, DATA_MODE: ${DATA_MODE}, CREATED_AT: ${CREATED_AT}, CREATED_BY: ${CREATED_BY}, REFERENCE_FRAME: ${REFERENCE_FRAME}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, UMBRA: ${UMBRA}, PENUMBRA: ${PENUMBRA}, ORIG_NETWORK: ${ORIG_NETWORK}, SOURCE_DL: ${SOURCE_DL}, TYPE: ${TYPE}}';
+    return 'EOO{EOBSERVATION_ID: ${EOBSERVATION_ID}, CLASSIFICATION: ${CLASSIFICATION}, OB_TIME: ${OB_TIME}, CORR_QUALITY: ${CORR_QUALITY}, ID_ON_ORBIT: ${ID_ON_ORBIT}, SENSOR_ID: ${SENSOR_ID}, COLLECT_METHOD: ${COLLECT_METHOD}, NORAD_CAT_ID: ${NORAD_CAT_ID}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RA: ${RA}, RA_RATE: ${RA_RATE}, RA_UNC: ${RA_UNC}, RA_BIAS: ${RA_BIAS}, DECLINATION: ${DECLINATION}, DECLINATION_RATE: ${DECLINATION_RATE}, DECLINATION_UNC: ${DECLINATION_UNC}, DECLINATION_BIAS: ${DECLINATION_BIAS}, LOSX: ${LOSX}, LOSY: ${LOSY}, LOSZ: ${LOSZ}, LOS_UNC: ${LOS_UNC}, LOSXVEL: ${LOSXVEL}, LOSYVEL: ${LOSYVEL}, LOSZVEL: ${LOSZVEL}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, FOV_COUNT: ${FOV_COUNT}, FOV_COUNT_UCTS: ${FOV_COUNT_UCTS}, EXP_DURATION: ${EXP_DURATION}, ZEROPTD: ${ZEROPTD}, NET_OBJ_SIG: ${NET_OBJ_SIG}, NET_OBJ_SIG_UNC: ${NET_OBJ_SIG_UNC}, MAG: ${MAG}, MAG_UNC: ${MAG_UNC}, MAG_NORM_RANGE: ${MAG_NORM_RANGE}, GEOLAT: ${GEOLAT}, GEOLON: ${GEOLON}, GEOALT: ${GEOALT}, GEORANGE: ${GEORANGE}, SKY_BKGRND: ${SKY_BKGRND}, PRIMARY_EXTINCTION: ${PRIMARY_EXTINCTION}, PRIMARY_EXTINCTION_UNC: ${PRIMARY_EXTINCTION_UNC}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, SOLAR_EQ_PHASE_ANGLE: ${SOLAR_EQ_PHASE_ANGLE}, SOLAR_DEC_ANGLE: ${SOLAR_DEC_ANGLE}, SHUTTER_DELAY: ${SHUTTER_DELAY}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, INTENSITY: ${INTENSITY}, BG_INTENSITY: ${BG_INTENSITY}, DESCRIPTOR: ${DESCRIPTOR}, SOURCE: ${SOURCE}, ORIGIN: ${ORIGIN}, DATA_MODE: ${DATA_MODE}, CREATED_AT: ${CREATED_AT}, CREATED_BY: ${CREATED_BY}, REFERENCE_FRAME: ${REFERENCE_FRAME}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, UMBRA: ${UMBRA}, PENUMBRA: ${PENUMBRA}, ORIG_NETWORK: ${ORIG_NETWORK}, SOURCE_DL: ${SOURCE_DL}, TYPE: ${TYPE}, AZIMUTH_MEASURED: ${AZIMUTH_MEASURED}, ELEVATION_MEASURED: ${ELEVATION_MEASURED}, RANGE_MEASURED: ${RANGE_MEASURED}, RANGERATE_MEASURED: ${RANGERATE_MEASURED}, RA_MEASURED: ${RA_MEASURED}, DECLINATION_MEASURED: ${DECLINATION_MEASURED}}';
   }
 }
 
@@ -211,7 +225,7 @@ class EOOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(85);
+    fbBuilder.startTable(92);
   }
 
   int addEobservationIdOffset(int? offset) {
@@ -414,144 +428,172 @@ class EOOBuilder {
     fbBuilder.addInt32(49, FOV_COUNT);
     return fbBuilder.offset;
   }
+  int addFovCountUcts(int? FOV_COUNT_UCTS) {
+    fbBuilder.addInt32(50, FOV_COUNT_UCTS);
+    return fbBuilder.offset;
+  }
   int addExpDuration(double? EXP_DURATION) {
-    fbBuilder.addFloat32(50, EXP_DURATION);
+    fbBuilder.addFloat32(51, EXP_DURATION);
     return fbBuilder.offset;
   }
   int addZeroptd(double? ZEROPTD) {
-    fbBuilder.addFloat32(51, ZEROPTD);
+    fbBuilder.addFloat32(52, ZEROPTD);
     return fbBuilder.offset;
   }
   int addNetObjSig(double? NET_OBJ_SIG) {
-    fbBuilder.addFloat32(52, NET_OBJ_SIG);
+    fbBuilder.addFloat32(53, NET_OBJ_SIG);
     return fbBuilder.offset;
   }
   int addNetObjSigUnc(double? NET_OBJ_SIG_UNC) {
-    fbBuilder.addFloat32(53, NET_OBJ_SIG_UNC);
+    fbBuilder.addFloat32(54, NET_OBJ_SIG_UNC);
     return fbBuilder.offset;
   }
   int addMag(double? MAG) {
-    fbBuilder.addFloat32(54, MAG);
+    fbBuilder.addFloat32(55, MAG);
     return fbBuilder.offset;
   }
   int addMagUnc(double? MAG_UNC) {
-    fbBuilder.addFloat32(55, MAG_UNC);
+    fbBuilder.addFloat32(56, MAG_UNC);
     return fbBuilder.offset;
   }
   int addMagNormRange(double? MAG_NORM_RANGE) {
-    fbBuilder.addFloat32(56, MAG_NORM_RANGE);
+    fbBuilder.addFloat32(57, MAG_NORM_RANGE);
     return fbBuilder.offset;
   }
   int addGeolat(double? GEOLAT) {
-    fbBuilder.addFloat32(57, GEOLAT);
+    fbBuilder.addFloat32(58, GEOLAT);
     return fbBuilder.offset;
   }
   int addGeolon(double? GEOLON) {
-    fbBuilder.addFloat32(58, GEOLON);
+    fbBuilder.addFloat32(59, GEOLON);
     return fbBuilder.offset;
   }
   int addGeoalt(double? GEOALT) {
-    fbBuilder.addFloat32(59, GEOALT);
+    fbBuilder.addFloat32(60, GEOALT);
     return fbBuilder.offset;
   }
   int addGeorange(double? GEORANGE) {
-    fbBuilder.addFloat32(60, GEORANGE);
+    fbBuilder.addFloat32(61, GEORANGE);
     return fbBuilder.offset;
   }
   int addSkyBkgrnd(double? SKY_BKGRND) {
-    fbBuilder.addFloat32(61, SKY_BKGRND);
+    fbBuilder.addFloat32(62, SKY_BKGRND);
     return fbBuilder.offset;
   }
   int addPrimaryExtinction(double? PRIMARY_EXTINCTION) {
-    fbBuilder.addFloat32(62, PRIMARY_EXTINCTION);
+    fbBuilder.addFloat32(63, PRIMARY_EXTINCTION);
     return fbBuilder.offset;
   }
   int addPrimaryExtinctionUnc(double? PRIMARY_EXTINCTION_UNC) {
-    fbBuilder.addFloat32(63, PRIMARY_EXTINCTION_UNC);
+    fbBuilder.addFloat32(64, PRIMARY_EXTINCTION_UNC);
     return fbBuilder.offset;
   }
   int addSolarPhaseAngle(double? SOLAR_PHASE_ANGLE) {
-    fbBuilder.addFloat32(64, SOLAR_PHASE_ANGLE);
+    fbBuilder.addFloat32(65, SOLAR_PHASE_ANGLE);
     return fbBuilder.offset;
   }
   int addSolarEqPhaseAngle(double? SOLAR_EQ_PHASE_ANGLE) {
-    fbBuilder.addFloat32(65, SOLAR_EQ_PHASE_ANGLE);
+    fbBuilder.addFloat32(66, SOLAR_EQ_PHASE_ANGLE);
     return fbBuilder.offset;
   }
   int addSolarDecAngle(double? SOLAR_DEC_ANGLE) {
-    fbBuilder.addFloat32(66, SOLAR_DEC_ANGLE);
+    fbBuilder.addFloat32(67, SOLAR_DEC_ANGLE);
     return fbBuilder.offset;
   }
   int addShutterDelay(double? SHUTTER_DELAY) {
-    fbBuilder.addFloat32(67, SHUTTER_DELAY);
+    fbBuilder.addFloat32(68, SHUTTER_DELAY);
     return fbBuilder.offset;
   }
   int addTimingBias(double? TIMING_BIAS) {
-    fbBuilder.addFloat32(68, TIMING_BIAS);
+    fbBuilder.addFloat32(69, TIMING_BIAS);
     return fbBuilder.offset;
   }
   int addRawFileUriOffset(int? offset) {
-    fbBuilder.addOffset(69, offset);
+    fbBuilder.addOffset(70, offset);
     return fbBuilder.offset;
   }
   int addIntensity(double? INTENSITY) {
-    fbBuilder.addFloat32(70, INTENSITY);
+    fbBuilder.addFloat32(71, INTENSITY);
     return fbBuilder.offset;
   }
   int addBgIntensity(double? BG_INTENSITY) {
-    fbBuilder.addFloat32(71, BG_INTENSITY);
+    fbBuilder.addFloat32(72, BG_INTENSITY);
     return fbBuilder.offset;
   }
   int addDescriptorOffset(int? offset) {
-    fbBuilder.addOffset(72, offset);
-    return fbBuilder.offset;
-  }
-  int addSourceOffset(int? offset) {
     fbBuilder.addOffset(73, offset);
     return fbBuilder.offset;
   }
-  int addOriginOffset(int? offset) {
+  int addSourceOffset(int? offset) {
     fbBuilder.addOffset(74, offset);
     return fbBuilder.offset;
   }
-  int addDataModeOffset(int? offset) {
+  int addOriginOffset(int? offset) {
     fbBuilder.addOffset(75, offset);
     return fbBuilder.offset;
   }
-  int addCreatedAtOffset(int? offset) {
+  int addDataModeOffset(int? offset) {
     fbBuilder.addOffset(76, offset);
     return fbBuilder.offset;
   }
-  int addCreatedByOffset(int? offset) {
+  int addCreatedAtOffset(int? offset) {
     fbBuilder.addOffset(77, offset);
     return fbBuilder.offset;
   }
+  int addCreatedByOffset(int? offset) {
+    fbBuilder.addOffset(78, offset);
+    return fbBuilder.offset;
+  }
   int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
-    fbBuilder.addInt8(78, REFERENCE_FRAME?.value);
+    fbBuilder.addInt8(79, REFERENCE_FRAME?.value);
     return fbBuilder.offset;
   }
   int addSenReferenceFrameOffset(int? offset) {
-    fbBuilder.addOffset(79, offset);
+    fbBuilder.addOffset(80, offset);
     return fbBuilder.offset;
   }
   int addUmbra(bool? UMBRA) {
-    fbBuilder.addBool(80, UMBRA);
+    fbBuilder.addBool(81, UMBRA);
     return fbBuilder.offset;
   }
   int addPenumbra(bool? PENUMBRA) {
-    fbBuilder.addBool(81, PENUMBRA);
+    fbBuilder.addBool(82, PENUMBRA);
     return fbBuilder.offset;
   }
   int addOrigNetworkOffset(int? offset) {
-    fbBuilder.addOffset(82, offset);
-    return fbBuilder.offset;
-  }
-  int addSourceDlOffset(int? offset) {
     fbBuilder.addOffset(83, offset);
     return fbBuilder.offset;
   }
-  int addTypeOffset(int? offset) {
+  int addSourceDlOffset(int? offset) {
     fbBuilder.addOffset(84, offset);
+    return fbBuilder.offset;
+  }
+  int addTypeOffset(int? offset) {
+    fbBuilder.addOffset(85, offset);
+    return fbBuilder.offset;
+  }
+  int addAzimuthMeasured(bool? AZIMUTH_MEASURED) {
+    fbBuilder.addBool(86, AZIMUTH_MEASURED);
+    return fbBuilder.offset;
+  }
+  int addElevationMeasured(bool? ELEVATION_MEASURED) {
+    fbBuilder.addBool(87, ELEVATION_MEASURED);
+    return fbBuilder.offset;
+  }
+  int addRangeMeasured(bool? RANGE_MEASURED) {
+    fbBuilder.addBool(88, RANGE_MEASURED);
+    return fbBuilder.offset;
+  }
+  int addRangerateMeasured(bool? RANGERATE_MEASURED) {
+    fbBuilder.addBool(89, RANGERATE_MEASURED);
+    return fbBuilder.offset;
+  }
+  int addRaMeasured(bool? RA_MEASURED) {
+    fbBuilder.addBool(90, RA_MEASURED);
+    return fbBuilder.offset;
+  }
+  int addDeclinationMeasured(bool? DECLINATION_MEASURED) {
+    fbBuilder.addBool(91, DECLINATION_MEASURED);
     return fbBuilder.offset;
   }
 
@@ -611,6 +653,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final double? _SENY;
   final double? _SENZ;
   final int? _FOV_COUNT;
+  final int? _FOV_COUNT_UCTS;
   final double? _EXP_DURATION;
   final double? _ZEROPTD;
   final double? _NET_OBJ_SIG;
@@ -646,6 +689,12 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final String? _ORIG_NETWORK;
   final String? _SOURCE_DL;
   final String? _TYPE;
+  final bool? _AZIMUTH_MEASURED;
+  final bool? _ELEVATION_MEASURED;
+  final bool? _RANGE_MEASURED;
+  final bool? _RANGERATE_MEASURED;
+  final bool? _RA_MEASURED;
+  final bool? _DECLINATION_MEASURED;
 
   EOOObjectBuilder({
     String? EOBSERVATION_ID,
@@ -698,6 +747,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     double? SENY,
     double? SENZ,
     int? FOV_COUNT,
+    int? FOV_COUNT_UCTS,
     double? EXP_DURATION,
     double? ZEROPTD,
     double? NET_OBJ_SIG,
@@ -733,6 +783,12 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     String? ORIG_NETWORK,
     String? SOURCE_DL,
     String? TYPE,
+    bool? AZIMUTH_MEASURED,
+    bool? ELEVATION_MEASURED,
+    bool? RANGE_MEASURED,
+    bool? RANGERATE_MEASURED,
+    bool? RA_MEASURED,
+    bool? DECLINATION_MEASURED,
   })
       : _EOBSERVATION_ID = EOBSERVATION_ID,
         _CLASSIFICATION = CLASSIFICATION,
@@ -784,6 +840,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         _SENY = SENY,
         _SENZ = SENZ,
         _FOV_COUNT = FOV_COUNT,
+        _FOV_COUNT_UCTS = FOV_COUNT_UCTS,
         _EXP_DURATION = EXP_DURATION,
         _ZEROPTD = ZEROPTD,
         _NET_OBJ_SIG = NET_OBJ_SIG,
@@ -818,7 +875,13 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         _PENUMBRA = PENUMBRA,
         _ORIG_NETWORK = ORIG_NETWORK,
         _SOURCE_DL = SOURCE_DL,
-        _TYPE = TYPE;
+        _TYPE = TYPE,
+        _AZIMUTH_MEASURED = AZIMUTH_MEASURED,
+        _ELEVATION_MEASURED = ELEVATION_MEASURED,
+        _RANGE_MEASURED = RANGE_MEASURED,
+        _RANGERATE_MEASURED = RANGERATE_MEASURED,
+        _RA_MEASURED = RA_MEASURED,
+        _DECLINATION_MEASURED = DECLINATION_MEASURED;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -869,7 +932,7 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOURCE_DL!);
     final int? TYPEOffset = _TYPE == null ? null
         : fbBuilder.writeString(_TYPE!);
-    fbBuilder.startTable(85);
+    fbBuilder.startTable(92);
     fbBuilder.addOffset(0, EOBSERVATION_IDOffset);
     fbBuilder.addOffset(1, CLASSIFICATIONOffset);
     fbBuilder.addOffset(2, OB_TIMEOffset);
@@ -920,41 +983,48 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat32(47, _SENY);
     fbBuilder.addFloat32(48, _SENZ);
     fbBuilder.addInt32(49, _FOV_COUNT);
-    fbBuilder.addFloat32(50, _EXP_DURATION);
-    fbBuilder.addFloat32(51, _ZEROPTD);
-    fbBuilder.addFloat32(52, _NET_OBJ_SIG);
-    fbBuilder.addFloat32(53, _NET_OBJ_SIG_UNC);
-    fbBuilder.addFloat32(54, _MAG);
-    fbBuilder.addFloat32(55, _MAG_UNC);
-    fbBuilder.addFloat32(56, _MAG_NORM_RANGE);
-    fbBuilder.addFloat32(57, _GEOLAT);
-    fbBuilder.addFloat32(58, _GEOLON);
-    fbBuilder.addFloat32(59, _GEOALT);
-    fbBuilder.addFloat32(60, _GEORANGE);
-    fbBuilder.addFloat32(61, _SKY_BKGRND);
-    fbBuilder.addFloat32(62, _PRIMARY_EXTINCTION);
-    fbBuilder.addFloat32(63, _PRIMARY_EXTINCTION_UNC);
-    fbBuilder.addFloat32(64, _SOLAR_PHASE_ANGLE);
-    fbBuilder.addFloat32(65, _SOLAR_EQ_PHASE_ANGLE);
-    fbBuilder.addFloat32(66, _SOLAR_DEC_ANGLE);
-    fbBuilder.addFloat32(67, _SHUTTER_DELAY);
-    fbBuilder.addFloat32(68, _TIMING_BIAS);
-    fbBuilder.addOffset(69, RAW_FILE_URIOffset);
-    fbBuilder.addFloat32(70, _INTENSITY);
-    fbBuilder.addFloat32(71, _BG_INTENSITY);
-    fbBuilder.addOffset(72, DESCRIPTOROffset);
-    fbBuilder.addOffset(73, SOURCEOffset);
-    fbBuilder.addOffset(74, ORIGINOffset);
-    fbBuilder.addOffset(75, DATA_MODEOffset);
-    fbBuilder.addOffset(76, CREATED_ATOffset);
-    fbBuilder.addOffset(77, CREATED_BYOffset);
-    fbBuilder.addInt8(78, _REFERENCE_FRAME?.value);
-    fbBuilder.addOffset(79, SEN_REFERENCE_FRAMEOffset);
-    fbBuilder.addBool(80, _UMBRA);
-    fbBuilder.addBool(81, _PENUMBRA);
-    fbBuilder.addOffset(82, ORIG_NETWORKOffset);
-    fbBuilder.addOffset(83, SOURCE_DLOffset);
-    fbBuilder.addOffset(84, TYPEOffset);
+    fbBuilder.addInt32(50, _FOV_COUNT_UCTS);
+    fbBuilder.addFloat32(51, _EXP_DURATION);
+    fbBuilder.addFloat32(52, _ZEROPTD);
+    fbBuilder.addFloat32(53, _NET_OBJ_SIG);
+    fbBuilder.addFloat32(54, _NET_OBJ_SIG_UNC);
+    fbBuilder.addFloat32(55, _MAG);
+    fbBuilder.addFloat32(56, _MAG_UNC);
+    fbBuilder.addFloat32(57, _MAG_NORM_RANGE);
+    fbBuilder.addFloat32(58, _GEOLAT);
+    fbBuilder.addFloat32(59, _GEOLON);
+    fbBuilder.addFloat32(60, _GEOALT);
+    fbBuilder.addFloat32(61, _GEORANGE);
+    fbBuilder.addFloat32(62, _SKY_BKGRND);
+    fbBuilder.addFloat32(63, _PRIMARY_EXTINCTION);
+    fbBuilder.addFloat32(64, _PRIMARY_EXTINCTION_UNC);
+    fbBuilder.addFloat32(65, _SOLAR_PHASE_ANGLE);
+    fbBuilder.addFloat32(66, _SOLAR_EQ_PHASE_ANGLE);
+    fbBuilder.addFloat32(67, _SOLAR_DEC_ANGLE);
+    fbBuilder.addFloat32(68, _SHUTTER_DELAY);
+    fbBuilder.addFloat32(69, _TIMING_BIAS);
+    fbBuilder.addOffset(70, RAW_FILE_URIOffset);
+    fbBuilder.addFloat32(71, _INTENSITY);
+    fbBuilder.addFloat32(72, _BG_INTENSITY);
+    fbBuilder.addOffset(73, DESCRIPTOROffset);
+    fbBuilder.addOffset(74, SOURCEOffset);
+    fbBuilder.addOffset(75, ORIGINOffset);
+    fbBuilder.addOffset(76, DATA_MODEOffset);
+    fbBuilder.addOffset(77, CREATED_ATOffset);
+    fbBuilder.addOffset(78, CREATED_BYOffset);
+    fbBuilder.addInt8(79, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(80, SEN_REFERENCE_FRAMEOffset);
+    fbBuilder.addBool(81, _UMBRA);
+    fbBuilder.addBool(82, _PENUMBRA);
+    fbBuilder.addOffset(83, ORIG_NETWORKOffset);
+    fbBuilder.addOffset(84, SOURCE_DLOffset);
+    fbBuilder.addOffset(85, TYPEOffset);
+    fbBuilder.addBool(86, _AZIMUTH_MEASURED);
+    fbBuilder.addBool(87, _ELEVATION_MEASURED);
+    fbBuilder.addBool(88, _RANGE_MEASURED);
+    fbBuilder.addBool(89, _RANGERATE_MEASURED);
+    fbBuilder.addBool(90, _RA_MEASURED);
+    fbBuilder.addBool(91, _DECLINATION_MEASURED);
     return fbBuilder.endTable();
   }
 

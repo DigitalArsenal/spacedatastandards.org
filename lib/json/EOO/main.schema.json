@@ -229,6 +229,10 @@
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
                 "description" : "Number of fields of view"
               },
+        "FOV_COUNT_UCTS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of uncorrelated satellites in the field of view (JCO)"
+              },
         "EXP_DURATION" : {
                 "type" : "number",
                 "description" : "Duration of the exposure"
@@ -368,6 +372,30 @@
         "TYPE" : {
                 "type" : "string",
                 "description" : "Type of the observation"
+              },
+        "AZIMUTH_MEASURED" : {
+                "type" : "boolean",
+                "description" : "True if measured, false if computed. Required if azimuth is reported (JCO)"
+              },
+        "ELEVATION_MEASURED" : {
+                "type" : "boolean",
+                "description" : "True if measured, false if computed. Required if elevation is reported (JCO)"
+              },
+        "RANGE_MEASURED" : {
+                "type" : "boolean",
+                "description" : "True if measured, false if computed. Required if range is reported (JCO)"
+              },
+        "RANGERATE_MEASURED" : {
+                "type" : "boolean",
+                "description" : "True if measured, false if computed. Required if range-rate is reported (JCO)"
+              },
+        "RA_MEASURED" : {
+                "type" : "boolean",
+                "description" : "True if measured, false if computed. Required if right ascension is reported (JCO)"
+              },
+        "DECLINATION_MEASURED" : {
+                "type" : "boolean",
+                "description" : "True if measured, false if computed. Required if declination is reported (JCO)"
               }
       },
       "additionalProperties" : false

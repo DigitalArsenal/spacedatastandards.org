@@ -429,10 +429,18 @@ class EOO(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
+    # Number of uncorrelated satellites in the field of view (JCO)
+    # EOO
+    def FOV_COUNT_UCTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
     # Duration of the exposure
     # EOO
     def EXP_DURATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -440,7 +448,7 @@ class EOO(object):
     # Zero-point displacement
     # EOO
     def ZEROPTD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -448,7 +456,7 @@ class EOO(object):
     # Net object signal
     # EOO
     def NET_OBJ_SIG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -456,7 +464,7 @@ class EOO(object):
     # Uncertainty in net object signal
     # EOO
     def NET_OBJ_SIG_UNC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -464,7 +472,7 @@ class EOO(object):
     # Magnitude of the observation
     # EOO
     def MAG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -472,7 +480,7 @@ class EOO(object):
     # Uncertainty in magnitude
     # EOO
     def MAG_UNC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -480,7 +488,7 @@ class EOO(object):
     # Normalized range for magnitude
     # EOO
     def MAG_NORM_RANGE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -488,7 +496,7 @@ class EOO(object):
     # Geocentric latitude
     # EOO
     def GEOLAT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -496,7 +504,7 @@ class EOO(object):
     # Geocentric longitude
     # EOO
     def GEOLON(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -504,7 +512,7 @@ class EOO(object):
     # Geocentric altitude
     # EOO
     def GEOALT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -512,7 +520,7 @@ class EOO(object):
     # Geocentric range
     # EOO
     def GEORANGE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -520,7 +528,7 @@ class EOO(object):
     # Sky background level
     # EOO
     def SKY_BKGRND(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -528,7 +536,7 @@ class EOO(object):
     # Primary extinction
     # EOO
     def PRIMARY_EXTINCTION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -536,7 +544,7 @@ class EOO(object):
     # Uncertainty in primary extinction
     # EOO
     def PRIMARY_EXTINCTION_UNC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -544,7 +552,7 @@ class EOO(object):
     # Solar phase angle
     # EOO
     def SOLAR_PHASE_ANGLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -552,7 +560,7 @@ class EOO(object):
     # Solar equatorial phase angle
     # EOO
     def SOLAR_EQ_PHASE_ANGLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -560,7 +568,7 @@ class EOO(object):
     # Solar declination angle
     # EOO
     def SOLAR_DEC_ANGLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -568,7 +576,7 @@ class EOO(object):
     # Shutter delay
     # EOO
     def SHUTTER_DELAY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -576,7 +584,7 @@ class EOO(object):
     # Timing bias
     # EOO
     def TIMING_BIAS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -584,7 +592,7 @@ class EOO(object):
     # URI of the raw data file
     # EOO
     def RAW_FILE_URI(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -592,7 +600,7 @@ class EOO(object):
     # Intensity of the observation
     # EOO
     def INTENSITY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -600,7 +608,7 @@ class EOO(object):
     # Background intensity
     # EOO
     def BG_INTENSITY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
@@ -608,7 +616,7 @@ class EOO(object):
     # Descriptor of the provided data
     # EOO
     def DESCRIPTOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -616,7 +624,7 @@ class EOO(object):
     # Source of the data
     # EOO
     def SOURCE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -624,7 +632,7 @@ class EOO(object):
     # Origin of the data
     # EOO
     def ORIGIN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -632,7 +640,7 @@ class EOO(object):
     # Mode of the data
     # EOO
     def DATA_MODE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -640,7 +648,7 @@ class EOO(object):
     # Creation time of the record
     # EOO
     def CREATED_AT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -648,7 +656,7 @@ class EOO(object):
     # User who created the record
     # EOO
     def CREATED_BY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -656,7 +664,7 @@ class EOO(object):
     # Reference frame of the observation
     # EOO
     def REFERENCE_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
@@ -664,7 +672,7 @@ class EOO(object):
     # Reference frame of the sensor
     # EOO
     def SEN_REFERENCE_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -672,7 +680,7 @@ class EOO(object):
     # Flag for umbra (total eclipse)
     # EOO
     def UMBRA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
@@ -680,7 +688,7 @@ class EOO(object):
     # Flag for penumbra (partial eclipse)
     # EOO
     def PENUMBRA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
@@ -688,7 +696,7 @@ class EOO(object):
     # Original network identifier
     # EOO
     def ORIG_NETWORK(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -696,7 +704,7 @@ class EOO(object):
     # Data link source
     # EOO
     def SOURCE_DL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -704,13 +712,61 @@ class EOO(object):
     # Type of the observation
     # EOO
     def TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if measured, false if computed. Required if azimuth is reported (JCO)
+    # EOO
+    def AZIMUTH_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(176))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if elevation is reported (JCO)
+    # EOO
+    def ELEVATION_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if range is reported (JCO)
+    # EOO
+    def RANGE_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(180))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if range-rate is reported (JCO)
+    # EOO
+    def RANGERATE_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if right ascension is reported (JCO)
+    # EOO
+    def RA_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(184))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if declination is reported (JCO)
+    # EOO
+    def DECLINATION_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(186))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def EOOStart(builder):
-    builder.StartObject(85)
+    builder.StartObject(92)
 
 def Start(builder):
     EOOStart(builder)
@@ -1015,215 +1071,257 @@ def EOOAddFOV_COUNT(builder, FOV_COUNT):
 def AddFOV_COUNT(builder, FOV_COUNT):
     EOOAddFOV_COUNT(builder, FOV_COUNT)
 
+def EOOAddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS):
+    builder.PrependInt32Slot(50, FOV_COUNT_UCTS, 0)
+
+def AddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS):
+    EOOAddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS)
+
 def EOOAddEXP_DURATION(builder, EXP_DURATION):
-    builder.PrependFloat32Slot(50, EXP_DURATION, 0.0)
+    builder.PrependFloat32Slot(51, EXP_DURATION, 0.0)
 
 def AddEXP_DURATION(builder, EXP_DURATION):
     EOOAddEXP_DURATION(builder, EXP_DURATION)
 
 def EOOAddZEROPTD(builder, ZEROPTD):
-    builder.PrependFloat32Slot(51, ZEROPTD, 0.0)
+    builder.PrependFloat32Slot(52, ZEROPTD, 0.0)
 
 def AddZEROPTD(builder, ZEROPTD):
     EOOAddZEROPTD(builder, ZEROPTD)
 
 def EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG):
-    builder.PrependFloat32Slot(52, NET_OBJ_SIG, 0.0)
+    builder.PrependFloat32Slot(53, NET_OBJ_SIG, 0.0)
 
 def AddNET_OBJ_SIG(builder, NET_OBJ_SIG):
     EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG)
 
 def EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC):
-    builder.PrependFloat32Slot(53, NET_OBJ_SIG_UNC, 0.0)
+    builder.PrependFloat32Slot(54, NET_OBJ_SIG_UNC, 0.0)
 
 def AddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC):
     EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC)
 
 def EOOAddMAG(builder, MAG):
-    builder.PrependFloat32Slot(54, MAG, 0.0)
+    builder.PrependFloat32Slot(55, MAG, 0.0)
 
 def AddMAG(builder, MAG):
     EOOAddMAG(builder, MAG)
 
 def EOOAddMAG_UNC(builder, MAG_UNC):
-    builder.PrependFloat32Slot(55, MAG_UNC, 0.0)
+    builder.PrependFloat32Slot(56, MAG_UNC, 0.0)
 
 def AddMAG_UNC(builder, MAG_UNC):
     EOOAddMAG_UNC(builder, MAG_UNC)
 
 def EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE):
-    builder.PrependFloat32Slot(56, MAG_NORM_RANGE, 0.0)
+    builder.PrependFloat32Slot(57, MAG_NORM_RANGE, 0.0)
 
 def AddMAG_NORM_RANGE(builder, MAG_NORM_RANGE):
     EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE)
 
 def EOOAddGEOLAT(builder, GEOLAT):
-    builder.PrependFloat32Slot(57, GEOLAT, 0.0)
+    builder.PrependFloat32Slot(58, GEOLAT, 0.0)
 
 def AddGEOLAT(builder, GEOLAT):
     EOOAddGEOLAT(builder, GEOLAT)
 
 def EOOAddGEOLON(builder, GEOLON):
-    builder.PrependFloat32Slot(58, GEOLON, 0.0)
+    builder.PrependFloat32Slot(59, GEOLON, 0.0)
 
 def AddGEOLON(builder, GEOLON):
     EOOAddGEOLON(builder, GEOLON)
 
 def EOOAddGEOALT(builder, GEOALT):
-    builder.PrependFloat32Slot(59, GEOALT, 0.0)
+    builder.PrependFloat32Slot(60, GEOALT, 0.0)
 
 def AddGEOALT(builder, GEOALT):
     EOOAddGEOALT(builder, GEOALT)
 
 def EOOAddGEORANGE(builder, GEORANGE):
-    builder.PrependFloat32Slot(60, GEORANGE, 0.0)
+    builder.PrependFloat32Slot(61, GEORANGE, 0.0)
 
 def AddGEORANGE(builder, GEORANGE):
     EOOAddGEORANGE(builder, GEORANGE)
 
 def EOOAddSKY_BKGRND(builder, SKY_BKGRND):
-    builder.PrependFloat32Slot(61, SKY_BKGRND, 0.0)
+    builder.PrependFloat32Slot(62, SKY_BKGRND, 0.0)
 
 def AddSKY_BKGRND(builder, SKY_BKGRND):
     EOOAddSKY_BKGRND(builder, SKY_BKGRND)
 
 def EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION):
-    builder.PrependFloat32Slot(62, PRIMARY_EXTINCTION, 0.0)
+    builder.PrependFloat32Slot(63, PRIMARY_EXTINCTION, 0.0)
 
 def AddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION):
     EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION)
 
 def EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC):
-    builder.PrependFloat32Slot(63, PRIMARY_EXTINCTION_UNC, 0.0)
+    builder.PrependFloat32Slot(64, PRIMARY_EXTINCTION_UNC, 0.0)
 
 def AddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC):
     EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC)
 
 def EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
-    builder.PrependFloat32Slot(64, SOLAR_PHASE_ANGLE, 0.0)
+    builder.PrependFloat32Slot(65, SOLAR_PHASE_ANGLE, 0.0)
 
 def AddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
     EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
 
 def EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE):
-    builder.PrependFloat32Slot(65, SOLAR_EQ_PHASE_ANGLE, 0.0)
+    builder.PrependFloat32Slot(66, SOLAR_EQ_PHASE_ANGLE, 0.0)
 
 def AddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE):
     EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE)
 
 def EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE):
-    builder.PrependFloat32Slot(66, SOLAR_DEC_ANGLE, 0.0)
+    builder.PrependFloat32Slot(67, SOLAR_DEC_ANGLE, 0.0)
 
 def AddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE):
     EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE)
 
 def EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY):
-    builder.PrependFloat32Slot(67, SHUTTER_DELAY, 0.0)
+    builder.PrependFloat32Slot(68, SHUTTER_DELAY, 0.0)
 
 def AddSHUTTER_DELAY(builder, SHUTTER_DELAY):
     EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY)
 
 def EOOAddTIMING_BIAS(builder, TIMING_BIAS):
-    builder.PrependFloat32Slot(68, TIMING_BIAS, 0.0)
+    builder.PrependFloat32Slot(69, TIMING_BIAS, 0.0)
 
 def AddTIMING_BIAS(builder, TIMING_BIAS):
     EOOAddTIMING_BIAS(builder, TIMING_BIAS)
 
 def EOOAddRAW_FILE_URI(builder, RAW_FILE_URI):
-    builder.PrependUOffsetTRelativeSlot(69, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+    builder.PrependUOffsetTRelativeSlot(70, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
 
 def AddRAW_FILE_URI(builder, RAW_FILE_URI):
     EOOAddRAW_FILE_URI(builder, RAW_FILE_URI)
 
 def EOOAddINTENSITY(builder, INTENSITY):
-    builder.PrependFloat32Slot(70, INTENSITY, 0.0)
+    builder.PrependFloat32Slot(71, INTENSITY, 0.0)
 
 def AddINTENSITY(builder, INTENSITY):
     EOOAddINTENSITY(builder, INTENSITY)
 
 def EOOAddBG_INTENSITY(builder, BG_INTENSITY):
-    builder.PrependFloat32Slot(71, BG_INTENSITY, 0.0)
+    builder.PrependFloat32Slot(72, BG_INTENSITY, 0.0)
 
 def AddBG_INTENSITY(builder, BG_INTENSITY):
     EOOAddBG_INTENSITY(builder, BG_INTENSITY)
 
 def EOOAddDESCRIPTOR(builder, DESCRIPTOR):
-    builder.PrependUOffsetTRelativeSlot(72, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+    builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
 
 def AddDESCRIPTOR(builder, DESCRIPTOR):
     EOOAddDESCRIPTOR(builder, DESCRIPTOR)
 
 def EOOAddSOURCE(builder, SOURCE):
-    builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+    builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
 
 def AddSOURCE(builder, SOURCE):
     EOOAddSOURCE(builder, SOURCE)
 
 def EOOAddORIGIN(builder, ORIGIN):
-    builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
+    builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
 
 def AddORIGIN(builder, ORIGIN):
     EOOAddORIGIN(builder, ORIGIN)
 
 def EOOAddDATA_MODE(builder, DATA_MODE):
-    builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODE), 0)
+    builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_MODE), 0)
 
 def AddDATA_MODE(builder, DATA_MODE):
     EOOAddDATA_MODE(builder, DATA_MODE)
 
 def EOOAddCREATED_AT(builder, CREATED_AT):
-    builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)
+    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)
 
 def AddCREATED_AT(builder, CREATED_AT):
     EOOAddCREATED_AT(builder, CREATED_AT)
 
 def EOOAddCREATED_BY(builder, CREATED_BY):
-    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
+    builder.PrependUOffsetTRelativeSlot(78, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
 
 def AddCREATED_BY(builder, CREATED_BY):
     EOOAddCREATED_BY(builder, CREATED_BY)
 
 def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependInt8Slot(78, REFERENCE_FRAME, 0)
+    builder.PrependInt8Slot(79, REFERENCE_FRAME, 0)
 
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 
 def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
-    builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+    builder.PrependUOffsetTRelativeSlot(80, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
 
 def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
     EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
 
 def EOOAddUMBRA(builder, UMBRA):
-    builder.PrependBoolSlot(80, UMBRA, 0)
+    builder.PrependBoolSlot(81, UMBRA, 0)
 
 def AddUMBRA(builder, UMBRA):
     EOOAddUMBRA(builder, UMBRA)
 
 def EOOAddPENUMBRA(builder, PENUMBRA):
-    builder.PrependBoolSlot(81, PENUMBRA, 0)
+    builder.PrependBoolSlot(82, PENUMBRA, 0)
 
 def AddPENUMBRA(builder, PENUMBRA):
     EOOAddPENUMBRA(builder, PENUMBRA)
 
 def EOOAddORIG_NETWORK(builder, ORIG_NETWORK):
-    builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_NETWORK), 0)
+    builder.PrependUOffsetTRelativeSlot(83, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_NETWORK), 0)
 
 def AddORIG_NETWORK(builder, ORIG_NETWORK):
     EOOAddORIG_NETWORK(builder, ORIG_NETWORK)
 
 def EOOAddSOURCE_DL(builder, SOURCE_DL):
-    builder.PrependUOffsetTRelativeSlot(83, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_DL), 0)
+    builder.PrependUOffsetTRelativeSlot(84, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_DL), 0)
 
 def AddSOURCE_DL(builder, SOURCE_DL):
     EOOAddSOURCE_DL(builder, SOURCE_DL)
 
 def EOOAddTYPE(builder, TYPE):
-    builder.PrependUOffsetTRelativeSlot(84, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+    builder.PrependUOffsetTRelativeSlot(85, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
 
 def AddTYPE(builder, TYPE):
     EOOAddTYPE(builder, TYPE)
+
+def EOOAddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED):
+    builder.PrependBoolSlot(86, AZIMUTH_MEASURED, 0)
+
+def AddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED):
+    EOOAddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED)
+
+def EOOAddELEVATION_MEASURED(builder, ELEVATION_MEASURED):
+    builder.PrependBoolSlot(87, ELEVATION_MEASURED, 0)
+
+def AddELEVATION_MEASURED(builder, ELEVATION_MEASURED):
+    EOOAddELEVATION_MEASURED(builder, ELEVATION_MEASURED)
+
+def EOOAddRANGE_MEASURED(builder, RANGE_MEASURED):
+    builder.PrependBoolSlot(88, RANGE_MEASURED, 0)
+
+def AddRANGE_MEASURED(builder, RANGE_MEASURED):
+    EOOAddRANGE_MEASURED(builder, RANGE_MEASURED)
+
+def EOOAddRANGERATE_MEASURED(builder, RANGERATE_MEASURED):
+    builder.PrependBoolSlot(89, RANGERATE_MEASURED, 0)
+
+def AddRANGERATE_MEASURED(builder, RANGERATE_MEASURED):
+    EOOAddRANGERATE_MEASURED(builder, RANGERATE_MEASURED)
+
+def EOOAddRA_MEASURED(builder, RA_MEASURED):
+    builder.PrependBoolSlot(90, RA_MEASURED, 0)
+
+def AddRA_MEASURED(builder, RA_MEASURED):
+    EOOAddRA_MEASURED(builder, RA_MEASURED)
+
+def EOOAddDECLINATION_MEASURED(builder, DECLINATION_MEASURED):
+    builder.PrependBoolSlot(91, DECLINATION_MEASURED, 0)
+
+def AddDECLINATION_MEASURED(builder, DECLINATION_MEASURED):
+    EOOAddDECLINATION_MEASURED(builder, DECLINATION_MEASURED)
 
 def EOOEnd(builder):
     return builder.EndObject()
@@ -1286,6 +1384,7 @@ class EOOT(object):
         self.SENY = 0.0  # type: float
         self.SENZ = 0.0  # type: float
         self.FOV_COUNT = 0  # type: int
+        self.FOV_COUNT_UCTS = 0  # type: int
         self.EXP_DURATION = 0.0  # type: float
         self.ZEROPTD = 0.0  # type: float
         self.NET_OBJ_SIG = 0.0  # type: float
@@ -1321,6 +1420,12 @@ class EOOT(object):
         self.ORIG_NETWORK = None  # type: str
         self.SOURCE_DL = None  # type: str
         self.TYPE = None  # type: str
+        self.AZIMUTH_MEASURED = False  # type: bool
+        self.ELEVATION_MEASURED = False  # type: bool
+        self.RANGE_MEASURED = False  # type: bool
+        self.RANGERATE_MEASURED = False  # type: bool
+        self.RA_MEASURED = False  # type: bool
+        self.DECLINATION_MEASURED = False  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1393,6 +1498,7 @@ class EOOT(object):
         self.SENY = EOO.SENY()
         self.SENZ = EOO.SENZ()
         self.FOV_COUNT = EOO.FOV_COUNT()
+        self.FOV_COUNT_UCTS = EOO.FOV_COUNT_UCTS()
         self.EXP_DURATION = EOO.EXP_DURATION()
         self.ZEROPTD = EOO.ZEROPTD()
         self.NET_OBJ_SIG = EOO.NET_OBJ_SIG()
@@ -1428,6 +1534,12 @@ class EOOT(object):
         self.ORIG_NETWORK = EOO.ORIG_NETWORK()
         self.SOURCE_DL = EOO.SOURCE_DL()
         self.TYPE = EOO.TYPE()
+        self.AZIMUTH_MEASURED = EOO.AZIMUTH_MEASURED()
+        self.ELEVATION_MEASURED = EOO.ELEVATION_MEASURED()
+        self.RANGE_MEASURED = EOO.RANGE_MEASURED()
+        self.RANGERATE_MEASURED = EOO.RANGERATE_MEASURED()
+        self.RA_MEASURED = EOO.RA_MEASURED()
+        self.DECLINATION_MEASURED = EOO.DECLINATION_MEASURED()
 
     # EOOT
     def Pack(self, builder):
@@ -1540,6 +1652,7 @@ class EOOT(object):
         EOOAddSENY(builder, self.SENY)
         EOOAddSENZ(builder, self.SENZ)
         EOOAddFOV_COUNT(builder, self.FOV_COUNT)
+        EOOAddFOV_COUNT_UCTS(builder, self.FOV_COUNT_UCTS)
         EOOAddEXP_DURATION(builder, self.EXP_DURATION)
         EOOAddZEROPTD(builder, self.ZEROPTD)
         EOOAddNET_OBJ_SIG(builder, self.NET_OBJ_SIG)
@@ -1586,5 +1699,11 @@ class EOOT(object):
             EOOAddSOURCE_DL(builder, SOURCE_DL)
         if self.TYPE is not None:
             EOOAddTYPE(builder, TYPE)
+        EOOAddAZIMUTH_MEASURED(builder, self.AZIMUTH_MEASURED)
+        EOOAddELEVATION_MEASURED(builder, self.ELEVATION_MEASURED)
+        EOOAddRANGE_MEASURED(builder, self.RANGE_MEASURED)
+        EOOAddRANGERATE_MEASURED(builder, self.RANGERATE_MEASURED)
+        EOOAddRA_MEASURED(builder, self.RA_MEASURED)
+        EOOAddDECLINATION_MEASURED(builder, self.DECLINATION_MEASURED)
         EOO = EOOEnd(builder)
         return EOO

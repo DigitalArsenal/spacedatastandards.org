@@ -191,142 +191,156 @@ public struct EOO : IFlatbufferObject
   public float SENZ { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Number of fields of view
   public int FOV_COUNT { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Number of uncorrelated satellites in the field of view (JCO)
+  public int FOV_COUNT_UCTS { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   /// Duration of the exposure
-  public float EXP_DURATION { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float EXP_DURATION { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Zero-point displacement
-  public float ZEROPTD { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float ZEROPTD { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Net object signal
-  public float NET_OBJ_SIG { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float NET_OBJ_SIG { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Uncertainty in net object signal
-  public float NET_OBJ_SIG_UNC { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float NET_OBJ_SIG_UNC { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Magnitude of the observation
-  public float MAG { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float MAG { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Uncertainty in magnitude
-  public float MAG_UNC { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float MAG_UNC { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Normalized range for magnitude
-  public float MAG_NORM_RANGE { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float MAG_NORM_RANGE { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Geocentric latitude
-  public float GEOLAT { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float GEOLAT { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Geocentric longitude
-  public float GEOLON { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float GEOLON { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Geocentric altitude
-  public float GEOALT { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float GEOALT { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Geocentric range
-  public float GEORANGE { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float GEORANGE { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Sky background level
-  public float SKY_BKGRND { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float SKY_BKGRND { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Primary extinction
-  public float PRIMARY_EXTINCTION { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float PRIMARY_EXTINCTION { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Uncertainty in primary extinction
-  public float PRIMARY_EXTINCTION_UNC { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float PRIMARY_EXTINCTION_UNC { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Solar phase angle
-  public float SOLAR_PHASE_ANGLE { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float SOLAR_PHASE_ANGLE { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Solar equatorial phase angle
-  public float SOLAR_EQ_PHASE_ANGLE { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float SOLAR_EQ_PHASE_ANGLE { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Solar declination angle
-  public float SOLAR_DEC_ANGLE { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float SOLAR_DEC_ANGLE { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Shutter delay
-  public float SHUTTER_DELAY { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float SHUTTER_DELAY { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Timing bias
-  public float TIMING_BIAS { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float TIMING_BIAS { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// URI of the raw data file
-  public string RAW_FILE_URI { get { int o = __p.__offset(142); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string RAW_FILE_URI { get { int o = __p.__offset(144); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(142, 1); }
+  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(144, 1); }
 #else
-  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(142); }
+  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(144); }
 #endif
-  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(142); }
+  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(144); }
   /// Intensity of the observation
-  public float INTENSITY { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float INTENSITY { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Background intensity
-  public float BG_INTENSITY { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float BG_INTENSITY { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Descriptor of the provided data
-  public string DESCRIPTOR { get { int o = __p.__offset(148); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DESCRIPTOR { get { int o = __p.__offset(150); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(148, 1); }
+  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(150, 1); }
 #else
-  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(148); }
+  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(150); }
 #endif
-  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(148); }
+  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(150); }
   /// Source of the data
-  public string SOURCE { get { int o = __p.__offset(150); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SOURCE { get { int o = __p.__offset(152); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(150, 1); }
+  public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(152, 1); }
 #else
-  public ArraySegment<byte>? GetSOURCEBytes() { return __p.__vector_as_arraysegment(150); }
+  public ArraySegment<byte>? GetSOURCEBytes() { return __p.__vector_as_arraysegment(152); }
 #endif
-  public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(150); }
+  public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(152); }
   /// Origin of the data
-  public string ORIGIN { get { int o = __p.__offset(152); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ORIGIN { get { int o = __p.__offset(154); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIGINBytes() { return __p.__vector_as_span<byte>(152, 1); }
+  public Span<byte> GetORIGINBytes() { return __p.__vector_as_span<byte>(154, 1); }
 #else
-  public ArraySegment<byte>? GetORIGINBytes() { return __p.__vector_as_arraysegment(152); }
+  public ArraySegment<byte>? GetORIGINBytes() { return __p.__vector_as_arraysegment(154); }
 #endif
-  public byte[] GetORIGINArray() { return __p.__vector_as_array<byte>(152); }
+  public byte[] GetORIGINArray() { return __p.__vector_as_array<byte>(154); }
   /// Mode of the data
-  public string DATA_MODE { get { int o = __p.__offset(154); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DATA_MODE { get { int o = __p.__offset(156); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDATA_MODEBytes() { return __p.__vector_as_span<byte>(154, 1); }
+  public Span<byte> GetDATA_MODEBytes() { return __p.__vector_as_span<byte>(156, 1); }
 #else
-  public ArraySegment<byte>? GetDATA_MODEBytes() { return __p.__vector_as_arraysegment(154); }
+  public ArraySegment<byte>? GetDATA_MODEBytes() { return __p.__vector_as_arraysegment(156); }
 #endif
-  public byte[] GetDATA_MODEArray() { return __p.__vector_as_array<byte>(154); }
+  public byte[] GetDATA_MODEArray() { return __p.__vector_as_array<byte>(156); }
   /// Creation time of the record
-  public string CREATED_AT { get { int o = __p.__offset(156); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CREATED_AT { get { int o = __p.__offset(158); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCREATED_ATBytes() { return __p.__vector_as_span<byte>(156, 1); }
+  public Span<byte> GetCREATED_ATBytes() { return __p.__vector_as_span<byte>(158, 1); }
 #else
-  public ArraySegment<byte>? GetCREATED_ATBytes() { return __p.__vector_as_arraysegment(156); }
+  public ArraySegment<byte>? GetCREATED_ATBytes() { return __p.__vector_as_arraysegment(158); }
 #endif
-  public byte[] GetCREATED_ATArray() { return __p.__vector_as_array<byte>(156); }
+  public byte[] GetCREATED_ATArray() { return __p.__vector_as_array<byte>(158); }
   /// User who created the record
-  public string CREATED_BY { get { int o = __p.__offset(158); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CREATED_BY { get { int o = __p.__offset(160); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCREATED_BYBytes() { return __p.__vector_as_span<byte>(158, 1); }
+  public Span<byte> GetCREATED_BYBytes() { return __p.__vector_as_span<byte>(160, 1); }
 #else
-  public ArraySegment<byte>? GetCREATED_BYBytes() { return __p.__vector_as_arraysegment(158); }
+  public ArraySegment<byte>? GetCREATED_BYBytes() { return __p.__vector_as_arraysegment(160); }
 #endif
-  public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(158); }
+  public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(160); }
   /// Reference frame of the observation
-  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(160); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(162); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
   /// Reference frame of the sensor
-  public string SEN_REFERENCE_FRAME { get { int o = __p.__offset(162); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SEN_REFERENCE_FRAME { get { int o = __p.__offset(164); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(162, 1); }
+  public Span<byte> GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(164, 1); }
 #else
-  public ArraySegment<byte>? GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(162); }
+  public ArraySegment<byte>? GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(164); }
 #endif
-  public byte[] GetSEN_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(162); }
+  public byte[] GetSEN_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(164); }
   /// Flag for umbra (total eclipse)
-  public bool UMBRA { get { int o = __p.__offset(164); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool UMBRA { get { int o = __p.__offset(166); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Flag for penumbra (partial eclipse)
-  public bool PENUMBRA { get { int o = __p.__offset(166); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool PENUMBRA { get { int o = __p.__offset(168); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Original network identifier
-  public string ORIG_NETWORK { get { int o = __p.__offset(168); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ORIG_NETWORK { get { int o = __p.__offset(170); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_NETWORKBytes() { return __p.__vector_as_span<byte>(168, 1); }
+  public Span<byte> GetORIG_NETWORKBytes() { return __p.__vector_as_span<byte>(170, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_NETWORKBytes() { return __p.__vector_as_arraysegment(168); }
+  public ArraySegment<byte>? GetORIG_NETWORKBytes() { return __p.__vector_as_arraysegment(170); }
 #endif
-  public byte[] GetORIG_NETWORKArray() { return __p.__vector_as_array<byte>(168); }
+  public byte[] GetORIG_NETWORKArray() { return __p.__vector_as_array<byte>(170); }
   /// Data link source
-  public string SOURCE_DL { get { int o = __p.__offset(170); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SOURCE_DL { get { int o = __p.__offset(172); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSOURCE_DLBytes() { return __p.__vector_as_span<byte>(170, 1); }
+  public Span<byte> GetSOURCE_DLBytes() { return __p.__vector_as_span<byte>(172, 1); }
 #else
-  public ArraySegment<byte>? GetSOURCE_DLBytes() { return __p.__vector_as_arraysegment(170); }
+  public ArraySegment<byte>? GetSOURCE_DLBytes() { return __p.__vector_as_arraysegment(172); }
 #endif
-  public byte[] GetSOURCE_DLArray() { return __p.__vector_as_array<byte>(170); }
+  public byte[] GetSOURCE_DLArray() { return __p.__vector_as_array<byte>(172); }
   /// Type of the observation
-  public string TYPE { get { int o = __p.__offset(172); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string TYPE { get { int o = __p.__offset(174); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTYPEBytes() { return __p.__vector_as_span<byte>(172, 1); }
+  public Span<byte> GetTYPEBytes() { return __p.__vector_as_span<byte>(174, 1); }
 #else
-  public ArraySegment<byte>? GetTYPEBytes() { return __p.__vector_as_arraysegment(172); }
+  public ArraySegment<byte>? GetTYPEBytes() { return __p.__vector_as_arraysegment(174); }
 #endif
-  public byte[] GetTYPEArray() { return __p.__vector_as_array<byte>(172); }
+  public byte[] GetTYPEArray() { return __p.__vector_as_array<byte>(174); }
+  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  public bool AZIMUTH_MEASURED { get { int o = __p.__offset(176); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  public bool ELEVATION_MEASURED { get { int o = __p.__offset(178); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if measured, false if computed. Required if range is reported (JCO)
+  public bool RANGE_MEASURED { get { int o = __p.__offset(180); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  public bool RANGERATE_MEASURED { get { int o = __p.__offset(182); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  public bool RA_MEASURED { get { int o = __p.__offset(184); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if measured, false if computed. Required if declination is reported (JCO)
+  public bool DECLINATION_MEASURED { get { int o = __p.__offset(186); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<EOO> CreateEOO(FlatBufferBuilder builder,
       StringOffset EOBSERVATION_IDOffset = default(StringOffset),
@@ -379,6 +393,7 @@ public struct EOO : IFlatbufferObject
       float SENY = 0.0f,
       float SENZ = 0.0f,
       int FOV_COUNT = 0,
+      int FOV_COUNT_UCTS = 0,
       float EXP_DURATION = 0.0f,
       float ZEROPTD = 0.0f,
       float NET_OBJ_SIG = 0.0f,
@@ -413,8 +428,14 @@ public struct EOO : IFlatbufferObject
       bool PENUMBRA = false,
       StringOffset ORIG_NETWORKOffset = default(StringOffset),
       StringOffset SOURCE_DLOffset = default(StringOffset),
-      StringOffset TYPEOffset = default(StringOffset)) {
-    builder.StartTable(85);
+      StringOffset TYPEOffset = default(StringOffset),
+      bool AZIMUTH_MEASURED = false,
+      bool ELEVATION_MEASURED = false,
+      bool RANGE_MEASURED = false,
+      bool RANGERATE_MEASURED = false,
+      bool RA_MEASURED = false,
+      bool DECLINATION_MEASURED = false) {
+    builder.StartTable(92);
     EOO.AddTYPE(builder, TYPEOffset);
     EOO.AddSOURCE_DL(builder, SOURCE_DLOffset);
     EOO.AddORIG_NETWORK(builder, ORIG_NETWORKOffset);
@@ -447,6 +468,7 @@ public struct EOO : IFlatbufferObject
     EOO.AddNET_OBJ_SIG(builder, NET_OBJ_SIG);
     EOO.AddZEROPTD(builder, ZEROPTD);
     EOO.AddEXP_DURATION(builder, EXP_DURATION);
+    EOO.AddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS);
     EOO.AddFOV_COUNT(builder, FOV_COUNT);
     EOO.AddSENZ(builder, SENZ);
     EOO.AddSENY(builder, SENY);
@@ -496,6 +518,12 @@ public struct EOO : IFlatbufferObject
     EOO.AddOB_TIME(builder, OB_TIMEOffset);
     EOO.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
     EOO.AddEOBSERVATION_ID(builder, EOBSERVATION_IDOffset);
+    EOO.AddDECLINATION_MEASURED(builder, DECLINATION_MEASURED);
+    EOO.AddRA_MEASURED(builder, RA_MEASURED);
+    EOO.AddRANGERATE_MEASURED(builder, RANGERATE_MEASURED);
+    EOO.AddRANGE_MEASURED(builder, RANGE_MEASURED);
+    EOO.AddELEVATION_MEASURED(builder, ELEVATION_MEASURED);
+    EOO.AddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED);
     EOO.AddPENUMBRA(builder, PENUMBRA);
     EOO.AddUMBRA(builder, UMBRA);
     EOO.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
@@ -503,7 +531,7 @@ public struct EOO : IFlatbufferObject
     return EOO.EndEOO(builder);
   }
 
-  public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(85); }
+  public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(92); }
   public static void AddEOBSERVATION_ID(FlatBufferBuilder builder, StringOffset EOBSERVATION_IDOffset) { builder.AddOffset(0, EOBSERVATION_IDOffset.Value, 0); }
   public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(1, CLASSIFICATIONOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(2, OB_TIMEOffset.Value, 0); }
@@ -554,41 +582,48 @@ public struct EOO : IFlatbufferObject
   public static void AddSENY(FlatBufferBuilder builder, float SENY) { builder.AddFloat(47, SENY, 0.0f); }
   public static void AddSENZ(FlatBufferBuilder builder, float SENZ) { builder.AddFloat(48, SENZ, 0.0f); }
   public static void AddFOV_COUNT(FlatBufferBuilder builder, int FOV_COUNT) { builder.AddInt(49, FOV_COUNT, 0); }
-  public static void AddEXP_DURATION(FlatBufferBuilder builder, float EXP_DURATION) { builder.AddFloat(50, EXP_DURATION, 0.0f); }
-  public static void AddZEROPTD(FlatBufferBuilder builder, float ZEROPTD) { builder.AddFloat(51, ZEROPTD, 0.0f); }
-  public static void AddNET_OBJ_SIG(FlatBufferBuilder builder, float NET_OBJ_SIG) { builder.AddFloat(52, NET_OBJ_SIG, 0.0f); }
-  public static void AddNET_OBJ_SIG_UNC(FlatBufferBuilder builder, float NET_OBJ_SIG_UNC) { builder.AddFloat(53, NET_OBJ_SIG_UNC, 0.0f); }
-  public static void AddMAG(FlatBufferBuilder builder, float MAG) { builder.AddFloat(54, MAG, 0.0f); }
-  public static void AddMAG_UNC(FlatBufferBuilder builder, float MAG_UNC) { builder.AddFloat(55, MAG_UNC, 0.0f); }
-  public static void AddMAG_NORM_RANGE(FlatBufferBuilder builder, float MAG_NORM_RANGE) { builder.AddFloat(56, MAG_NORM_RANGE, 0.0f); }
-  public static void AddGEOLAT(FlatBufferBuilder builder, float GEOLAT) { builder.AddFloat(57, GEOLAT, 0.0f); }
-  public static void AddGEOLON(FlatBufferBuilder builder, float GEOLON) { builder.AddFloat(58, GEOLON, 0.0f); }
-  public static void AddGEOALT(FlatBufferBuilder builder, float GEOALT) { builder.AddFloat(59, GEOALT, 0.0f); }
-  public static void AddGEORANGE(FlatBufferBuilder builder, float GEORANGE) { builder.AddFloat(60, GEORANGE, 0.0f); }
-  public static void AddSKY_BKGRND(FlatBufferBuilder builder, float SKY_BKGRND) { builder.AddFloat(61, SKY_BKGRND, 0.0f); }
-  public static void AddPRIMARY_EXTINCTION(FlatBufferBuilder builder, float PRIMARY_EXTINCTION) { builder.AddFloat(62, PRIMARY_EXTINCTION, 0.0f); }
-  public static void AddPRIMARY_EXTINCTION_UNC(FlatBufferBuilder builder, float PRIMARY_EXTINCTION_UNC) { builder.AddFloat(63, PRIMARY_EXTINCTION_UNC, 0.0f); }
-  public static void AddSOLAR_PHASE_ANGLE(FlatBufferBuilder builder, float SOLAR_PHASE_ANGLE) { builder.AddFloat(64, SOLAR_PHASE_ANGLE, 0.0f); }
-  public static void AddSOLAR_EQ_PHASE_ANGLE(FlatBufferBuilder builder, float SOLAR_EQ_PHASE_ANGLE) { builder.AddFloat(65, SOLAR_EQ_PHASE_ANGLE, 0.0f); }
-  public static void AddSOLAR_DEC_ANGLE(FlatBufferBuilder builder, float SOLAR_DEC_ANGLE) { builder.AddFloat(66, SOLAR_DEC_ANGLE, 0.0f); }
-  public static void AddSHUTTER_DELAY(FlatBufferBuilder builder, float SHUTTER_DELAY) { builder.AddFloat(67, SHUTTER_DELAY, 0.0f); }
-  public static void AddTIMING_BIAS(FlatBufferBuilder builder, float TIMING_BIAS) { builder.AddFloat(68, TIMING_BIAS, 0.0f); }
-  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(69, RAW_FILE_URIOffset.Value, 0); }
-  public static void AddINTENSITY(FlatBufferBuilder builder, float INTENSITY) { builder.AddFloat(70, INTENSITY, 0.0f); }
-  public static void AddBG_INTENSITY(FlatBufferBuilder builder, float BG_INTENSITY) { builder.AddFloat(71, BG_INTENSITY, 0.0f); }
-  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(72, DESCRIPTOROffset.Value, 0); }
-  public static void AddSOURCE(FlatBufferBuilder builder, StringOffset SOURCEOffset) { builder.AddOffset(73, SOURCEOffset.Value, 0); }
-  public static void AddORIGIN(FlatBufferBuilder builder, StringOffset ORIGINOffset) { builder.AddOffset(74, ORIGINOffset.Value, 0); }
-  public static void AddDATA_MODE(FlatBufferBuilder builder, StringOffset DATA_MODEOffset) { builder.AddOffset(75, DATA_MODEOffset.Value, 0); }
-  public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(76, CREATED_ATOffset.Value, 0); }
-  public static void AddCREATED_BY(FlatBufferBuilder builder, StringOffset CREATED_BYOffset) { builder.AddOffset(77, CREATED_BYOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(78, (sbyte)REFERENCE_FRAME, 0); }
-  public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset SEN_REFERENCE_FRAMEOffset) { builder.AddOffset(79, SEN_REFERENCE_FRAMEOffset.Value, 0); }
-  public static void AddUMBRA(FlatBufferBuilder builder, bool UMBRA) { builder.AddBool(80, UMBRA, false); }
-  public static void AddPENUMBRA(FlatBufferBuilder builder, bool PENUMBRA) { builder.AddBool(81, PENUMBRA, false); }
-  public static void AddORIG_NETWORK(FlatBufferBuilder builder, StringOffset ORIG_NETWORKOffset) { builder.AddOffset(82, ORIG_NETWORKOffset.Value, 0); }
-  public static void AddSOURCE_DL(FlatBufferBuilder builder, StringOffset SOURCE_DLOffset) { builder.AddOffset(83, SOURCE_DLOffset.Value, 0); }
-  public static void AddTYPE(FlatBufferBuilder builder, StringOffset TYPEOffset) { builder.AddOffset(84, TYPEOffset.Value, 0); }
+  public static void AddFOV_COUNT_UCTS(FlatBufferBuilder builder, int FOV_COUNT_UCTS) { builder.AddInt(50, FOV_COUNT_UCTS, 0); }
+  public static void AddEXP_DURATION(FlatBufferBuilder builder, float EXP_DURATION) { builder.AddFloat(51, EXP_DURATION, 0.0f); }
+  public static void AddZEROPTD(FlatBufferBuilder builder, float ZEROPTD) { builder.AddFloat(52, ZEROPTD, 0.0f); }
+  public static void AddNET_OBJ_SIG(FlatBufferBuilder builder, float NET_OBJ_SIG) { builder.AddFloat(53, NET_OBJ_SIG, 0.0f); }
+  public static void AddNET_OBJ_SIG_UNC(FlatBufferBuilder builder, float NET_OBJ_SIG_UNC) { builder.AddFloat(54, NET_OBJ_SIG_UNC, 0.0f); }
+  public static void AddMAG(FlatBufferBuilder builder, float MAG) { builder.AddFloat(55, MAG, 0.0f); }
+  public static void AddMAG_UNC(FlatBufferBuilder builder, float MAG_UNC) { builder.AddFloat(56, MAG_UNC, 0.0f); }
+  public static void AddMAG_NORM_RANGE(FlatBufferBuilder builder, float MAG_NORM_RANGE) { builder.AddFloat(57, MAG_NORM_RANGE, 0.0f); }
+  public static void AddGEOLAT(FlatBufferBuilder builder, float GEOLAT) { builder.AddFloat(58, GEOLAT, 0.0f); }
+  public static void AddGEOLON(FlatBufferBuilder builder, float GEOLON) { builder.AddFloat(59, GEOLON, 0.0f); }
+  public static void AddGEOALT(FlatBufferBuilder builder, float GEOALT) { builder.AddFloat(60, GEOALT, 0.0f); }
+  public static void AddGEORANGE(FlatBufferBuilder builder, float GEORANGE) { builder.AddFloat(61, GEORANGE, 0.0f); }
+  public static void AddSKY_BKGRND(FlatBufferBuilder builder, float SKY_BKGRND) { builder.AddFloat(62, SKY_BKGRND, 0.0f); }
+  public static void AddPRIMARY_EXTINCTION(FlatBufferBuilder builder, float PRIMARY_EXTINCTION) { builder.AddFloat(63, PRIMARY_EXTINCTION, 0.0f); }
+  public static void AddPRIMARY_EXTINCTION_UNC(FlatBufferBuilder builder, float PRIMARY_EXTINCTION_UNC) { builder.AddFloat(64, PRIMARY_EXTINCTION_UNC, 0.0f); }
+  public static void AddSOLAR_PHASE_ANGLE(FlatBufferBuilder builder, float SOLAR_PHASE_ANGLE) { builder.AddFloat(65, SOLAR_PHASE_ANGLE, 0.0f); }
+  public static void AddSOLAR_EQ_PHASE_ANGLE(FlatBufferBuilder builder, float SOLAR_EQ_PHASE_ANGLE) { builder.AddFloat(66, SOLAR_EQ_PHASE_ANGLE, 0.0f); }
+  public static void AddSOLAR_DEC_ANGLE(FlatBufferBuilder builder, float SOLAR_DEC_ANGLE) { builder.AddFloat(67, SOLAR_DEC_ANGLE, 0.0f); }
+  public static void AddSHUTTER_DELAY(FlatBufferBuilder builder, float SHUTTER_DELAY) { builder.AddFloat(68, SHUTTER_DELAY, 0.0f); }
+  public static void AddTIMING_BIAS(FlatBufferBuilder builder, float TIMING_BIAS) { builder.AddFloat(69, TIMING_BIAS, 0.0f); }
+  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(70, RAW_FILE_URIOffset.Value, 0); }
+  public static void AddINTENSITY(FlatBufferBuilder builder, float INTENSITY) { builder.AddFloat(71, INTENSITY, 0.0f); }
+  public static void AddBG_INTENSITY(FlatBufferBuilder builder, float BG_INTENSITY) { builder.AddFloat(72, BG_INTENSITY, 0.0f); }
+  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(73, DESCRIPTOROffset.Value, 0); }
+  public static void AddSOURCE(FlatBufferBuilder builder, StringOffset SOURCEOffset) { builder.AddOffset(74, SOURCEOffset.Value, 0); }
+  public static void AddORIGIN(FlatBufferBuilder builder, StringOffset ORIGINOffset) { builder.AddOffset(75, ORIGINOffset.Value, 0); }
+  public static void AddDATA_MODE(FlatBufferBuilder builder, StringOffset DATA_MODEOffset) { builder.AddOffset(76, DATA_MODEOffset.Value, 0); }
+  public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(77, CREATED_ATOffset.Value, 0); }
+  public static void AddCREATED_BY(FlatBufferBuilder builder, StringOffset CREATED_BYOffset) { builder.AddOffset(78, CREATED_BYOffset.Value, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(79, (sbyte)REFERENCE_FRAME, 0); }
+  public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset SEN_REFERENCE_FRAMEOffset) { builder.AddOffset(80, SEN_REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddUMBRA(FlatBufferBuilder builder, bool UMBRA) { builder.AddBool(81, UMBRA, false); }
+  public static void AddPENUMBRA(FlatBufferBuilder builder, bool PENUMBRA) { builder.AddBool(82, PENUMBRA, false); }
+  public static void AddORIG_NETWORK(FlatBufferBuilder builder, StringOffset ORIG_NETWORKOffset) { builder.AddOffset(83, ORIG_NETWORKOffset.Value, 0); }
+  public static void AddSOURCE_DL(FlatBufferBuilder builder, StringOffset SOURCE_DLOffset) { builder.AddOffset(84, SOURCE_DLOffset.Value, 0); }
+  public static void AddTYPE(FlatBufferBuilder builder, StringOffset TYPEOffset) { builder.AddOffset(85, TYPEOffset.Value, 0); }
+  public static void AddAZIMUTH_MEASURED(FlatBufferBuilder builder, bool AZIMUTH_MEASURED) { builder.AddBool(86, AZIMUTH_MEASURED, false); }
+  public static void AddELEVATION_MEASURED(FlatBufferBuilder builder, bool ELEVATION_MEASURED) { builder.AddBool(87, ELEVATION_MEASURED, false); }
+  public static void AddRANGE_MEASURED(FlatBufferBuilder builder, bool RANGE_MEASURED) { builder.AddBool(88, RANGE_MEASURED, false); }
+  public static void AddRANGERATE_MEASURED(FlatBufferBuilder builder, bool RANGERATE_MEASURED) { builder.AddBool(89, RANGERATE_MEASURED, false); }
+  public static void AddRA_MEASURED(FlatBufferBuilder builder, bool RA_MEASURED) { builder.AddBool(90, RA_MEASURED, false); }
+  public static void AddDECLINATION_MEASURED(FlatBufferBuilder builder, bool DECLINATION_MEASURED) { builder.AddBool(91, DECLINATION_MEASURED, false); }
   public static Offset<EOO> EndEOO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOO>(o);
@@ -651,6 +686,7 @@ public struct EOO : IFlatbufferObject
     _o.SENY = this.SENY;
     _o.SENZ = this.SENZ;
     _o.FOV_COUNT = this.FOV_COUNT;
+    _o.FOV_COUNT_UCTS = this.FOV_COUNT_UCTS;
     _o.EXP_DURATION = this.EXP_DURATION;
     _o.ZEROPTD = this.ZEROPTD;
     _o.NET_OBJ_SIG = this.NET_OBJ_SIG;
@@ -686,6 +722,12 @@ public struct EOO : IFlatbufferObject
     _o.ORIG_NETWORK = this.ORIG_NETWORK;
     _o.SOURCE_DL = this.SOURCE_DL;
     _o.TYPE = this.TYPE;
+    _o.AZIMUTH_MEASURED = this.AZIMUTH_MEASURED;
+    _o.ELEVATION_MEASURED = this.ELEVATION_MEASURED;
+    _o.RANGE_MEASURED = this.RANGE_MEASURED;
+    _o.RANGERATE_MEASURED = this.RANGERATE_MEASURED;
+    _o.RA_MEASURED = this.RA_MEASURED;
+    _o.DECLINATION_MEASURED = this.DECLINATION_MEASURED;
   }
   public static Offset<EOO> Pack(FlatBufferBuilder builder, EOOT _o) {
     if (_o == null) return default(Offset<EOO>);
@@ -764,6 +806,7 @@ public struct EOO : IFlatbufferObject
       _o.SENY,
       _o.SENZ,
       _o.FOV_COUNT,
+      _o.FOV_COUNT_UCTS,
       _o.EXP_DURATION,
       _o.ZEROPTD,
       _o.NET_OBJ_SIG,
@@ -798,7 +841,13 @@ public struct EOO : IFlatbufferObject
       _o.PENUMBRA,
       _ORIG_NETWORK,
       _SOURCE_DL,
-      _TYPE);
+      _TYPE,
+      _o.AZIMUTH_MEASURED,
+      _o.ELEVATION_MEASURED,
+      _o.RANGE_MEASURED,
+      _o.RANGERATE_MEASURED,
+      _o.RA_MEASURED,
+      _o.DECLINATION_MEASURED);
   }
 }
 
@@ -854,6 +903,7 @@ public class EOOT
   public float SENY { get; set; }
   public float SENZ { get; set; }
   public int FOV_COUNT { get; set; }
+  public int FOV_COUNT_UCTS { get; set; }
   public float EXP_DURATION { get; set; }
   public float ZEROPTD { get; set; }
   public float NET_OBJ_SIG { get; set; }
@@ -889,6 +939,12 @@ public class EOOT
   public string ORIG_NETWORK { get; set; }
   public string SOURCE_DL { get; set; }
   public string TYPE { get; set; }
+  public bool AZIMUTH_MEASURED { get; set; }
+  public bool ELEVATION_MEASURED { get; set; }
+  public bool RANGE_MEASURED { get; set; }
+  public bool RANGERATE_MEASURED { get; set; }
+  public bool RA_MEASURED { get; set; }
+  public bool DECLINATION_MEASURED { get; set; }
 
   public EOOT() {
     this.EOBSERVATION_ID = null;
@@ -941,6 +997,7 @@ public class EOOT
     this.SENY = 0.0f;
     this.SENZ = 0.0f;
     this.FOV_COUNT = 0;
+    this.FOV_COUNT_UCTS = 0;
     this.EXP_DURATION = 0.0f;
     this.ZEROPTD = 0.0f;
     this.NET_OBJ_SIG = 0.0f;
@@ -976,6 +1033,12 @@ public class EOOT
     this.ORIG_NETWORK = null;
     this.SOURCE_DL = null;
     this.TYPE = null;
+    this.AZIMUTH_MEASURED = false;
+    this.ELEVATION_MEASURED = false;
+    this.RANGE_MEASURED = false;
+    this.RANGERATE_MEASURED = false;
+    this.RA_MEASURED = false;
+    this.DECLINATION_MEASURED = false;
   }
   public static EOOT DeserializeFromBinary(byte[] fbBuffer) {
     return EOO.GetRootAsEOO(new ByteBuffer(fbBuffer)).UnPack();
@@ -1043,41 +1106,48 @@ static public class EOOVerify
       && verifier.VerifyField(tablePos, 98 /*SENY*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 100 /*SENZ*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 102 /*FOV_COUNT*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 104 /*EXP_DURATION*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 106 /*ZEROPTD*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 108 /*NET_OBJ_SIG*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 110 /*NET_OBJ_SIG_UNC*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 112 /*MAG*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 114 /*MAG_UNC*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 116 /*MAG_NORM_RANGE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 118 /*GEOLAT*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 120 /*GEOLON*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 122 /*GEOALT*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 124 /*GEORANGE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 126 /*SKY_BKGRND*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 128 /*PRIMARY_EXTINCTION*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 130 /*PRIMARY_EXTINCTION_UNC*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 132 /*SOLAR_PHASE_ANGLE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 134 /*SOLAR_EQ_PHASE_ANGLE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 136 /*SOLAR_DEC_ANGLE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 138 /*SHUTTER_DELAY*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 140 /*TIMING_BIAS*/, 4 /*float*/, 4, false)
-      && verifier.VerifyString(tablePos, 142 /*RAW_FILE_URI*/, false)
-      && verifier.VerifyField(tablePos, 144 /*INTENSITY*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 146 /*BG_INTENSITY*/, 4 /*float*/, 4, false)
-      && verifier.VerifyString(tablePos, 148 /*DESCRIPTOR*/, false)
-      && verifier.VerifyString(tablePos, 150 /*SOURCE*/, false)
-      && verifier.VerifyString(tablePos, 152 /*ORIGIN*/, false)
-      && verifier.VerifyString(tablePos, 154 /*DATA_MODE*/, false)
-      && verifier.VerifyString(tablePos, 156 /*CREATED_AT*/, false)
-      && verifier.VerifyString(tablePos, 158 /*CREATED_BY*/, false)
-      && verifier.VerifyField(tablePos, 160 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
-      && verifier.VerifyString(tablePos, 162 /*SEN_REFERENCE_FRAME*/, false)
-      && verifier.VerifyField(tablePos, 164 /*UMBRA*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 166 /*PENUMBRA*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 168 /*ORIG_NETWORK*/, false)
-      && verifier.VerifyString(tablePos, 170 /*SOURCE_DL*/, false)
-      && verifier.VerifyString(tablePos, 172 /*TYPE*/, false)
+      && verifier.VerifyField(tablePos, 104 /*FOV_COUNT_UCTS*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 106 /*EXP_DURATION*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 108 /*ZEROPTD*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 110 /*NET_OBJ_SIG*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 112 /*NET_OBJ_SIG_UNC*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 114 /*MAG*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 116 /*MAG_UNC*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 118 /*MAG_NORM_RANGE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 120 /*GEOLAT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 122 /*GEOLON*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 124 /*GEOALT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 126 /*GEORANGE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 128 /*SKY_BKGRND*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 130 /*PRIMARY_EXTINCTION*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 132 /*PRIMARY_EXTINCTION_UNC*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 134 /*SOLAR_PHASE_ANGLE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 136 /*SOLAR_EQ_PHASE_ANGLE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 138 /*SOLAR_DEC_ANGLE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 140 /*SHUTTER_DELAY*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 142 /*TIMING_BIAS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyString(tablePos, 144 /*RAW_FILE_URI*/, false)
+      && verifier.VerifyField(tablePos, 146 /*INTENSITY*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 148 /*BG_INTENSITY*/, 4 /*float*/, 4, false)
+      && verifier.VerifyString(tablePos, 150 /*DESCRIPTOR*/, false)
+      && verifier.VerifyString(tablePos, 152 /*SOURCE*/, false)
+      && verifier.VerifyString(tablePos, 154 /*ORIGIN*/, false)
+      && verifier.VerifyString(tablePos, 156 /*DATA_MODE*/, false)
+      && verifier.VerifyString(tablePos, 158 /*CREATED_AT*/, false)
+      && verifier.VerifyString(tablePos, 160 /*CREATED_BY*/, false)
+      && verifier.VerifyField(tablePos, 162 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyString(tablePos, 164 /*SEN_REFERENCE_FRAME*/, false)
+      && verifier.VerifyField(tablePos, 166 /*UMBRA*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 168 /*PENUMBRA*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 170 /*ORIG_NETWORK*/, false)
+      && verifier.VerifyString(tablePos, 172 /*SOURCE_DL*/, false)
+      && verifier.VerifyString(tablePos, 174 /*TYPE*/, false)
+      && verifier.VerifyField(tablePos, 176 /*AZIMUTH_MEASURED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 178 /*ELEVATION_MEASURED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 180 /*RANGE_MEASURED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 182 /*RANGERATE_MEASURED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 184 /*RA_MEASURED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 186 /*DECLINATION_MEASURED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

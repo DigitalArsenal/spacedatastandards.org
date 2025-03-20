@@ -706,9 +706,23 @@ func (rcv *EOO) MutateFOV_COUNT(n int32) bool {
 	return rcv._tab.MutateInt32Slot(102, n)
 }
 
+/// Number of uncorrelated satellites in the field of view (JCO)
+func (rcv *EOO) FOV_COUNT_UCTS() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of uncorrelated satellites in the field of view (JCO)
+func (rcv *EOO) MutateFOV_COUNT_UCTS(n int32) bool {
+	return rcv._tab.MutateInt32Slot(104, n)
+}
+
 /// Duration of the exposure
 func (rcv *EOO) EXP_DURATION() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -717,12 +731,12 @@ func (rcv *EOO) EXP_DURATION() float32 {
 
 /// Duration of the exposure
 func (rcv *EOO) MutateEXP_DURATION(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(104, n)
+	return rcv._tab.MutateFloat32Slot(106, n)
 }
 
 /// Zero-point displacement
 func (rcv *EOO) ZEROPTD() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -731,12 +745,12 @@ func (rcv *EOO) ZEROPTD() float32 {
 
 /// Zero-point displacement
 func (rcv *EOO) MutateZEROPTD(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(106, n)
+	return rcv._tab.MutateFloat32Slot(108, n)
 }
 
 /// Net object signal
 func (rcv *EOO) NET_OBJ_SIG() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -745,12 +759,12 @@ func (rcv *EOO) NET_OBJ_SIG() float32 {
 
 /// Net object signal
 func (rcv *EOO) MutateNET_OBJ_SIG(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(108, n)
+	return rcv._tab.MutateFloat32Slot(110, n)
 }
 
 /// Uncertainty in net object signal
 func (rcv *EOO) NET_OBJ_SIG_UNC() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -759,12 +773,12 @@ func (rcv *EOO) NET_OBJ_SIG_UNC() float32 {
 
 /// Uncertainty in net object signal
 func (rcv *EOO) MutateNET_OBJ_SIG_UNC(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(110, n)
+	return rcv._tab.MutateFloat32Slot(112, n)
 }
 
 /// Magnitude of the observation
 func (rcv *EOO) MAG() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -773,12 +787,12 @@ func (rcv *EOO) MAG() float32 {
 
 /// Magnitude of the observation
 func (rcv *EOO) MutateMAG(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(112, n)
+	return rcv._tab.MutateFloat32Slot(114, n)
 }
 
 /// Uncertainty in magnitude
 func (rcv *EOO) MAG_UNC() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -787,12 +801,12 @@ func (rcv *EOO) MAG_UNC() float32 {
 
 /// Uncertainty in magnitude
 func (rcv *EOO) MutateMAG_UNC(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(114, n)
+	return rcv._tab.MutateFloat32Slot(116, n)
 }
 
 /// Normalized range for magnitude
 func (rcv *EOO) MAG_NORM_RANGE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -801,12 +815,12 @@ func (rcv *EOO) MAG_NORM_RANGE() float32 {
 
 /// Normalized range for magnitude
 func (rcv *EOO) MutateMAG_NORM_RANGE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(116, n)
+	return rcv._tab.MutateFloat32Slot(118, n)
 }
 
 /// Geocentric latitude
 func (rcv *EOO) GEOLAT() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -815,12 +829,12 @@ func (rcv *EOO) GEOLAT() float32 {
 
 /// Geocentric latitude
 func (rcv *EOO) MutateGEOLAT(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(118, n)
+	return rcv._tab.MutateFloat32Slot(120, n)
 }
 
 /// Geocentric longitude
 func (rcv *EOO) GEOLON() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -829,12 +843,12 @@ func (rcv *EOO) GEOLON() float32 {
 
 /// Geocentric longitude
 func (rcv *EOO) MutateGEOLON(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(120, n)
+	return rcv._tab.MutateFloat32Slot(122, n)
 }
 
 /// Geocentric altitude
 func (rcv *EOO) GEOALT() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -843,12 +857,12 @@ func (rcv *EOO) GEOALT() float32 {
 
 /// Geocentric altitude
 func (rcv *EOO) MutateGEOALT(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(122, n)
+	return rcv._tab.MutateFloat32Slot(124, n)
 }
 
 /// Geocentric range
 func (rcv *EOO) GEORANGE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -857,12 +871,12 @@ func (rcv *EOO) GEORANGE() float32 {
 
 /// Geocentric range
 func (rcv *EOO) MutateGEORANGE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(124, n)
+	return rcv._tab.MutateFloat32Slot(126, n)
 }
 
 /// Sky background level
 func (rcv *EOO) SKY_BKGRND() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -871,12 +885,12 @@ func (rcv *EOO) SKY_BKGRND() float32 {
 
 /// Sky background level
 func (rcv *EOO) MutateSKY_BKGRND(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(126, n)
+	return rcv._tab.MutateFloat32Slot(128, n)
 }
 
 /// Primary extinction
 func (rcv *EOO) PRIMARY_EXTINCTION() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -885,12 +899,12 @@ func (rcv *EOO) PRIMARY_EXTINCTION() float32 {
 
 /// Primary extinction
 func (rcv *EOO) MutatePRIMARY_EXTINCTION(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(128, n)
+	return rcv._tab.MutateFloat32Slot(130, n)
 }
 
 /// Uncertainty in primary extinction
 func (rcv *EOO) PRIMARY_EXTINCTION_UNC() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -899,12 +913,12 @@ func (rcv *EOO) PRIMARY_EXTINCTION_UNC() float32 {
 
 /// Uncertainty in primary extinction
 func (rcv *EOO) MutatePRIMARY_EXTINCTION_UNC(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(130, n)
+	return rcv._tab.MutateFloat32Slot(132, n)
 }
 
 /// Solar phase angle
 func (rcv *EOO) SOLAR_PHASE_ANGLE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -913,12 +927,12 @@ func (rcv *EOO) SOLAR_PHASE_ANGLE() float32 {
 
 /// Solar phase angle
 func (rcv *EOO) MutateSOLAR_PHASE_ANGLE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(132, n)
+	return rcv._tab.MutateFloat32Slot(134, n)
 }
 
 /// Solar equatorial phase angle
 func (rcv *EOO) SOLAR_EQ_PHASE_ANGLE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -927,12 +941,12 @@ func (rcv *EOO) SOLAR_EQ_PHASE_ANGLE() float32 {
 
 /// Solar equatorial phase angle
 func (rcv *EOO) MutateSOLAR_EQ_PHASE_ANGLE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(134, n)
+	return rcv._tab.MutateFloat32Slot(136, n)
 }
 
 /// Solar declination angle
 func (rcv *EOO) SOLAR_DEC_ANGLE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -941,12 +955,12 @@ func (rcv *EOO) SOLAR_DEC_ANGLE() float32 {
 
 /// Solar declination angle
 func (rcv *EOO) MutateSOLAR_DEC_ANGLE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(136, n)
+	return rcv._tab.MutateFloat32Slot(138, n)
 }
 
 /// Shutter delay
 func (rcv *EOO) SHUTTER_DELAY() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -955,12 +969,12 @@ func (rcv *EOO) SHUTTER_DELAY() float32 {
 
 /// Shutter delay
 func (rcv *EOO) MutateSHUTTER_DELAY(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(138, n)
+	return rcv._tab.MutateFloat32Slot(140, n)
 }
 
 /// Timing bias
 func (rcv *EOO) TIMING_BIAS() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(142))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -969,12 +983,12 @@ func (rcv *EOO) TIMING_BIAS() float32 {
 
 /// Timing bias
 func (rcv *EOO) MutateTIMING_BIAS(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(140, n)
+	return rcv._tab.MutateFloat32Slot(142, n)
 }
 
 /// URI of the raw data file
 func (rcv *EOO) RAW_FILE_URI() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(142))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(144))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -984,7 +998,7 @@ func (rcv *EOO) RAW_FILE_URI() []byte {
 /// URI of the raw data file
 /// Intensity of the observation
 func (rcv *EOO) INTENSITY() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(144))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(146))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -993,12 +1007,12 @@ func (rcv *EOO) INTENSITY() float32 {
 
 /// Intensity of the observation
 func (rcv *EOO) MutateINTENSITY(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(144, n)
+	return rcv._tab.MutateFloat32Slot(146, n)
 }
 
 /// Background intensity
 func (rcv *EOO) BG_INTENSITY() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(146))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -1007,12 +1021,12 @@ func (rcv *EOO) BG_INTENSITY() float32 {
 
 /// Background intensity
 func (rcv *EOO) MutateBG_INTENSITY(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(146, n)
+	return rcv._tab.MutateFloat32Slot(148, n)
 }
 
 /// Descriptor of the provided data
 func (rcv *EOO) DESCRIPTOR() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1022,7 +1036,7 @@ func (rcv *EOO) DESCRIPTOR() []byte {
 /// Descriptor of the provided data
 /// Source of the data
 func (rcv *EOO) SOURCE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(152))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1032,7 +1046,7 @@ func (rcv *EOO) SOURCE() []byte {
 /// Source of the data
 /// Origin of the data
 func (rcv *EOO) ORIGIN() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(152))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(154))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1042,7 +1056,7 @@ func (rcv *EOO) ORIGIN() []byte {
 /// Origin of the data
 /// Mode of the data
 func (rcv *EOO) DATA_MODE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(154))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(156))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1052,7 +1066,7 @@ func (rcv *EOO) DATA_MODE() []byte {
 /// Mode of the data
 /// Creation time of the record
 func (rcv *EOO) CREATED_AT() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(156))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(158))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1062,7 +1076,7 @@ func (rcv *EOO) CREATED_AT() []byte {
 /// Creation time of the record
 /// User who created the record
 func (rcv *EOO) CREATED_BY() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(158))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(160))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1072,7 +1086,7 @@ func (rcv *EOO) CREATED_BY() []byte {
 /// User who created the record
 /// Reference frame of the observation
 func (rcv *EOO) REFERENCE_FRAME() refFrame {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(160))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(162))
 	if o != 0 {
 		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
@@ -1081,12 +1095,12 @@ func (rcv *EOO) REFERENCE_FRAME() refFrame {
 
 /// Reference frame of the observation
 func (rcv *EOO) MutateREFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(160, int8(n))
+	return rcv._tab.MutateInt8Slot(162, int8(n))
 }
 
 /// Reference frame of the sensor
 func (rcv *EOO) SEN_REFERENCE_FRAME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(162))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(164))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1096,7 +1110,7 @@ func (rcv *EOO) SEN_REFERENCE_FRAME() []byte {
 /// Reference frame of the sensor
 /// Flag for umbra (total eclipse)
 func (rcv *EOO) UMBRA() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(164))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(166))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -1105,12 +1119,12 @@ func (rcv *EOO) UMBRA() bool {
 
 /// Flag for umbra (total eclipse)
 func (rcv *EOO) MutateUMBRA(n bool) bool {
-	return rcv._tab.MutateBoolSlot(164, n)
+	return rcv._tab.MutateBoolSlot(166, n)
 }
 
 /// Flag for penumbra (partial eclipse)
 func (rcv *EOO) PENUMBRA() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(166))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(168))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -1119,12 +1133,12 @@ func (rcv *EOO) PENUMBRA() bool {
 
 /// Flag for penumbra (partial eclipse)
 func (rcv *EOO) MutatePENUMBRA(n bool) bool {
-	return rcv._tab.MutateBoolSlot(166, n)
+	return rcv._tab.MutateBoolSlot(168, n)
 }
 
 /// Original network identifier
 func (rcv *EOO) ORIG_NETWORK() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(168))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(170))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1134,7 +1148,7 @@ func (rcv *EOO) ORIG_NETWORK() []byte {
 /// Original network identifier
 /// Data link source
 func (rcv *EOO) SOURCE_DL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(170))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(172))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1144,7 +1158,7 @@ func (rcv *EOO) SOURCE_DL() []byte {
 /// Data link source
 /// Type of the observation
 func (rcv *EOO) TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(172))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(174))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1152,8 +1166,92 @@ func (rcv *EOO) TYPE() []byte {
 }
 
 /// Type of the observation
+/// True if measured, false if computed. Required if azimuth is reported (JCO)
+func (rcv *EOO) AZIMUTH_MEASURED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(176))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if measured, false if computed. Required if azimuth is reported (JCO)
+func (rcv *EOO) MutateAZIMUTH_MEASURED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(176, n)
+}
+
+/// True if measured, false if computed. Required if elevation is reported (JCO)
+func (rcv *EOO) ELEVATION_MEASURED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(178))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if measured, false if computed. Required if elevation is reported (JCO)
+func (rcv *EOO) MutateELEVATION_MEASURED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(178, n)
+}
+
+/// True if measured, false if computed. Required if range is reported (JCO)
+func (rcv *EOO) RANGE_MEASURED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(180))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if measured, false if computed. Required if range is reported (JCO)
+func (rcv *EOO) MutateRANGE_MEASURED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(180, n)
+}
+
+/// True if measured, false if computed. Required if range-rate is reported (JCO)
+func (rcv *EOO) RANGERATE_MEASURED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(182))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if measured, false if computed. Required if range-rate is reported (JCO)
+func (rcv *EOO) MutateRANGERATE_MEASURED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(182, n)
+}
+
+/// True if measured, false if computed. Required if right ascension is reported (JCO)
+func (rcv *EOO) RA_MEASURED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(184))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if measured, false if computed. Required if right ascension is reported (JCO)
+func (rcv *EOO) MutateRA_MEASURED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(184, n)
+}
+
+/// True if measured, false if computed. Required if declination is reported (JCO)
+func (rcv *EOO) DECLINATION_MEASURED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(186))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if measured, false if computed. Required if declination is reported (JCO)
+func (rcv *EOO) MutateDECLINATION_MEASURED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(186, n)
+}
+
 func EOOStart(builder *flatbuffers.Builder) {
-	builder.StartObject(85)
+	builder.StartObject(92)
 }
 func EOOAddEOBSERVATION_ID(builder *flatbuffers.Builder, EOBSERVATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EOBSERVATION_ID), 0)
@@ -1305,110 +1403,131 @@ func EOOAddSENZ(builder *flatbuffers.Builder, SENZ float32) {
 func EOOAddFOV_COUNT(builder *flatbuffers.Builder, FOV_COUNT int32) {
 	builder.PrependInt32Slot(49, FOV_COUNT, 0)
 }
+func EOOAddFOV_COUNT_UCTS(builder *flatbuffers.Builder, FOV_COUNT_UCTS int32) {
+	builder.PrependInt32Slot(50, FOV_COUNT_UCTS, 0)
+}
 func EOOAddEXP_DURATION(builder *flatbuffers.Builder, EXP_DURATION float32) {
-	builder.PrependFloat32Slot(50, EXP_DURATION, 0.0)
+	builder.PrependFloat32Slot(51, EXP_DURATION, 0.0)
 }
 func EOOAddZEROPTD(builder *flatbuffers.Builder, ZEROPTD float32) {
-	builder.PrependFloat32Slot(51, ZEROPTD, 0.0)
+	builder.PrependFloat32Slot(52, ZEROPTD, 0.0)
 }
 func EOOAddNET_OBJ_SIG(builder *flatbuffers.Builder, NET_OBJ_SIG float32) {
-	builder.PrependFloat32Slot(52, NET_OBJ_SIG, 0.0)
+	builder.PrependFloat32Slot(53, NET_OBJ_SIG, 0.0)
 }
 func EOOAddNET_OBJ_SIG_UNC(builder *flatbuffers.Builder, NET_OBJ_SIG_UNC float32) {
-	builder.PrependFloat32Slot(53, NET_OBJ_SIG_UNC, 0.0)
+	builder.PrependFloat32Slot(54, NET_OBJ_SIG_UNC, 0.0)
 }
 func EOOAddMAG(builder *flatbuffers.Builder, MAG float32) {
-	builder.PrependFloat32Slot(54, MAG, 0.0)
+	builder.PrependFloat32Slot(55, MAG, 0.0)
 }
 func EOOAddMAG_UNC(builder *flatbuffers.Builder, MAG_UNC float32) {
-	builder.PrependFloat32Slot(55, MAG_UNC, 0.0)
+	builder.PrependFloat32Slot(56, MAG_UNC, 0.0)
 }
 func EOOAddMAG_NORM_RANGE(builder *flatbuffers.Builder, MAG_NORM_RANGE float32) {
-	builder.PrependFloat32Slot(56, MAG_NORM_RANGE, 0.0)
+	builder.PrependFloat32Slot(57, MAG_NORM_RANGE, 0.0)
 }
 func EOOAddGEOLAT(builder *flatbuffers.Builder, GEOLAT float32) {
-	builder.PrependFloat32Slot(57, GEOLAT, 0.0)
+	builder.PrependFloat32Slot(58, GEOLAT, 0.0)
 }
 func EOOAddGEOLON(builder *flatbuffers.Builder, GEOLON float32) {
-	builder.PrependFloat32Slot(58, GEOLON, 0.0)
+	builder.PrependFloat32Slot(59, GEOLON, 0.0)
 }
 func EOOAddGEOALT(builder *flatbuffers.Builder, GEOALT float32) {
-	builder.PrependFloat32Slot(59, GEOALT, 0.0)
+	builder.PrependFloat32Slot(60, GEOALT, 0.0)
 }
 func EOOAddGEORANGE(builder *flatbuffers.Builder, GEORANGE float32) {
-	builder.PrependFloat32Slot(60, GEORANGE, 0.0)
+	builder.PrependFloat32Slot(61, GEORANGE, 0.0)
 }
 func EOOAddSKY_BKGRND(builder *flatbuffers.Builder, SKY_BKGRND float32) {
-	builder.PrependFloat32Slot(61, SKY_BKGRND, 0.0)
+	builder.PrependFloat32Slot(62, SKY_BKGRND, 0.0)
 }
 func EOOAddPRIMARY_EXTINCTION(builder *flatbuffers.Builder, PRIMARY_EXTINCTION float32) {
-	builder.PrependFloat32Slot(62, PRIMARY_EXTINCTION, 0.0)
+	builder.PrependFloat32Slot(63, PRIMARY_EXTINCTION, 0.0)
 }
 func EOOAddPRIMARY_EXTINCTION_UNC(builder *flatbuffers.Builder, PRIMARY_EXTINCTION_UNC float32) {
-	builder.PrependFloat32Slot(63, PRIMARY_EXTINCTION_UNC, 0.0)
+	builder.PrependFloat32Slot(64, PRIMARY_EXTINCTION_UNC, 0.0)
 }
 func EOOAddSOLAR_PHASE_ANGLE(builder *flatbuffers.Builder, SOLAR_PHASE_ANGLE float32) {
-	builder.PrependFloat32Slot(64, SOLAR_PHASE_ANGLE, 0.0)
+	builder.PrependFloat32Slot(65, SOLAR_PHASE_ANGLE, 0.0)
 }
 func EOOAddSOLAR_EQ_PHASE_ANGLE(builder *flatbuffers.Builder, SOLAR_EQ_PHASE_ANGLE float32) {
-	builder.PrependFloat32Slot(65, SOLAR_EQ_PHASE_ANGLE, 0.0)
+	builder.PrependFloat32Slot(66, SOLAR_EQ_PHASE_ANGLE, 0.0)
 }
 func EOOAddSOLAR_DEC_ANGLE(builder *flatbuffers.Builder, SOLAR_DEC_ANGLE float32) {
-	builder.PrependFloat32Slot(66, SOLAR_DEC_ANGLE, 0.0)
+	builder.PrependFloat32Slot(67, SOLAR_DEC_ANGLE, 0.0)
 }
 func EOOAddSHUTTER_DELAY(builder *flatbuffers.Builder, SHUTTER_DELAY float32) {
-	builder.PrependFloat32Slot(67, SHUTTER_DELAY, 0.0)
+	builder.PrependFloat32Slot(68, SHUTTER_DELAY, 0.0)
 }
 func EOOAddTIMING_BIAS(builder *flatbuffers.Builder, TIMING_BIAS float32) {
-	builder.PrependFloat32Slot(68, TIMING_BIAS, 0.0)
+	builder.PrependFloat32Slot(69, TIMING_BIAS, 0.0)
 }
 func EOOAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(69, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
+	builder.PrependUOffsetTSlot(70, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
 }
 func EOOAddINTENSITY(builder *flatbuffers.Builder, INTENSITY float32) {
-	builder.PrependFloat32Slot(70, INTENSITY, 0.0)
+	builder.PrependFloat32Slot(71, INTENSITY, 0.0)
 }
 func EOOAddBG_INTENSITY(builder *flatbuffers.Builder, BG_INTENSITY float32) {
-	builder.PrependFloat32Slot(71, BG_INTENSITY, 0.0)
+	builder.PrependFloat32Slot(72, BG_INTENSITY, 0.0)
 }
 func EOOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(72, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+	builder.PrependUOffsetTSlot(73, flatbuffers.UOffsetT(DESCRIPTOR), 0)
 }
 func EOOAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(73, flatbuffers.UOffsetT(SOURCE), 0)
+	builder.PrependUOffsetTSlot(74, flatbuffers.UOffsetT(SOURCE), 0)
 }
 func EOOAddORIGIN(builder *flatbuffers.Builder, ORIGIN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(74, flatbuffers.UOffsetT(ORIGIN), 0)
+	builder.PrependUOffsetTSlot(75, flatbuffers.UOffsetT(ORIGIN), 0)
 }
 func EOOAddDATA_MODE(builder *flatbuffers.Builder, DATA_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(75, flatbuffers.UOffsetT(DATA_MODE), 0)
+	builder.PrependUOffsetTSlot(76, flatbuffers.UOffsetT(DATA_MODE), 0)
 }
 func EOOAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(76, flatbuffers.UOffsetT(CREATED_AT), 0)
+	builder.PrependUOffsetTSlot(77, flatbuffers.UOffsetT(CREATED_AT), 0)
 }
 func EOOAddCREATED_BY(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(77, flatbuffers.UOffsetT(CREATED_BY), 0)
+	builder.PrependUOffsetTSlot(78, flatbuffers.UOffsetT(CREATED_BY), 0)
 }
 func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(78, int8(REFERENCE_FRAME), 0)
+	builder.PrependInt8Slot(79, int8(REFERENCE_FRAME), 0)
 }
 func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(79, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
+	builder.PrependUOffsetTSlot(80, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
 }
 func EOOAddUMBRA(builder *flatbuffers.Builder, UMBRA bool) {
-	builder.PrependBoolSlot(80, UMBRA, false)
+	builder.PrependBoolSlot(81, UMBRA, false)
 }
 func EOOAddPENUMBRA(builder *flatbuffers.Builder, PENUMBRA bool) {
-	builder.PrependBoolSlot(81, PENUMBRA, false)
+	builder.PrependBoolSlot(82, PENUMBRA, false)
 }
 func EOOAddORIG_NETWORK(builder *flatbuffers.Builder, ORIG_NETWORK flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(82, flatbuffers.UOffsetT(ORIG_NETWORK), 0)
+	builder.PrependUOffsetTSlot(83, flatbuffers.UOffsetT(ORIG_NETWORK), 0)
 }
 func EOOAddSOURCE_DL(builder *flatbuffers.Builder, SOURCE_DL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(83, flatbuffers.UOffsetT(SOURCE_DL), 0)
+	builder.PrependUOffsetTSlot(84, flatbuffers.UOffsetT(SOURCE_DL), 0)
 }
 func EOOAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(84, flatbuffers.UOffsetT(TYPE), 0)
+	builder.PrependUOffsetTSlot(85, flatbuffers.UOffsetT(TYPE), 0)
+}
+func EOOAddAZIMUTH_MEASURED(builder *flatbuffers.Builder, AZIMUTH_MEASURED bool) {
+	builder.PrependBoolSlot(86, AZIMUTH_MEASURED, false)
+}
+func EOOAddELEVATION_MEASURED(builder *flatbuffers.Builder, ELEVATION_MEASURED bool) {
+	builder.PrependBoolSlot(87, ELEVATION_MEASURED, false)
+}
+func EOOAddRANGE_MEASURED(builder *flatbuffers.Builder, RANGE_MEASURED bool) {
+	builder.PrependBoolSlot(88, RANGE_MEASURED, false)
+}
+func EOOAddRANGERATE_MEASURED(builder *flatbuffers.Builder, RANGERATE_MEASURED bool) {
+	builder.PrependBoolSlot(89, RANGERATE_MEASURED, false)
+}
+func EOOAddRA_MEASURED(builder *flatbuffers.Builder, RA_MEASURED bool) {
+	builder.PrependBoolSlot(90, RA_MEASURED, false)
+}
+func EOOAddDECLINATION_MEASURED(builder *flatbuffers.Builder, DECLINATION_MEASURED bool) {
+	builder.PrependBoolSlot(91, DECLINATION_MEASURED, false)
 }
 func EOOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -67,41 +67,48 @@ public struct EOO: FlatBufferObject, Verifiable {
     case SENY = 98
     case SENZ = 100
     case FOV_COUNT = 102
-    case EXP_DURATION = 104
-    case ZEROPTD = 106
-    case NET_OBJ_SIG = 108
-    case NET_OBJ_SIG_UNC = 110
-    case MAG = 112
-    case MAG_UNC = 114
-    case MAG_NORM_RANGE = 116
-    case GEOLAT = 118
-    case GEOLON = 120
-    case GEOALT = 122
-    case GEORANGE = 124
-    case SKY_BKGRND = 126
-    case PRIMARY_EXTINCTION = 128
-    case PRIMARY_EXTINCTION_UNC = 130
-    case SOLAR_PHASE_ANGLE = 132
-    case SOLAR_EQ_PHASE_ANGLE = 134
-    case SOLAR_DEC_ANGLE = 136
-    case SHUTTER_DELAY = 138
-    case TIMING_BIAS = 140
-    case RAW_FILE_URI = 142
-    case INTENSITY = 144
-    case BG_INTENSITY = 146
-    case DESCRIPTOR = 148
-    case SOURCE = 150
-    case ORIGIN = 152
-    case DATA_MODE = 154
-    case CREATED_AT = 156
-    case CREATED_BY = 158
-    case REFERENCE_FRAME = 160
-    case SEN_REFERENCE_FRAME = 162
-    case UMBRA = 164
-    case PENUMBRA = 166
-    case ORIG_NETWORK = 168
-    case SOURCE_DL = 170
-    case TYPE = 172
+    case FOV_COUNT_UCTS = 104
+    case EXP_DURATION = 106
+    case ZEROPTD = 108
+    case NET_OBJ_SIG = 110
+    case NET_OBJ_SIG_UNC = 112
+    case MAG = 114
+    case MAG_UNC = 116
+    case MAG_NORM_RANGE = 118
+    case GEOLAT = 120
+    case GEOLON = 122
+    case GEOALT = 124
+    case GEORANGE = 126
+    case SKY_BKGRND = 128
+    case PRIMARY_EXTINCTION = 130
+    case PRIMARY_EXTINCTION_UNC = 132
+    case SOLAR_PHASE_ANGLE = 134
+    case SOLAR_EQ_PHASE_ANGLE = 136
+    case SOLAR_DEC_ANGLE = 138
+    case SHUTTER_DELAY = 140
+    case TIMING_BIAS = 142
+    case RAW_FILE_URI = 144
+    case INTENSITY = 146
+    case BG_INTENSITY = 148
+    case DESCRIPTOR = 150
+    case SOURCE = 152
+    case ORIGIN = 154
+    case DATA_MODE = 156
+    case CREATED_AT = 158
+    case CREATED_BY = 160
+    case REFERENCE_FRAME = 162
+    case SEN_REFERENCE_FRAME = 164
+    case UMBRA = 166
+    case PENUMBRA = 168
+    case ORIG_NETWORK = 170
+    case SOURCE_DL = 172
+    case TYPE = 174
+    case AZIMUTH_MEASURED = 176
+    case ELEVATION_MEASURED = 178
+    case RANGE_MEASURED = 180
+    case RANGERATE_MEASURED = 182
+    case RA_MEASURED = 184
+    case DECLINATION_MEASURED = 186
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -218,6 +225,8 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var SENZ: Float32 { let o = _accessor.offset(VTOFFSET.SENZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Number of fields of view
   public var FOV_COUNT: Int32 { let o = _accessor.offset(VTOFFSET.FOV_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Number of uncorrelated satellites in the field of view (JCO)
+  public var FOV_COUNT_UCTS: Int32 { let o = _accessor.offset(VTOFFSET.FOV_COUNT_UCTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Duration of the exposure
   public var EXP_DURATION: Float32 { let o = _accessor.offset(VTOFFSET.EXP_DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Zero-point displacement
@@ -299,7 +308,19 @@ public struct EOO: FlatBufferObject, Verifiable {
   ///  Type of the observation
   public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
-  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 85) }
+  ///  True if measured, false if computed. Required if azimuth is reported (JCO)
+  public var AZIMUTH_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.AZIMUTH_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if elevation is reported (JCO)
+  public var ELEVATION_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.ELEVATION_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if range is reported (JCO)
+  public var RANGE_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.RANGE_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if range-rate is reported (JCO)
+  public var RANGERATE_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.RANGERATE_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if right ascension is reported (JCO)
+  public var RA_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.RA_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if measured, false if computed. Required if declination is reported (JCO)
+  public var DECLINATION_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.DECLINATION_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 92) }
   public static func add(EOBSERVATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOBSERVATION_ID, at: VTOFFSET.EOBSERVATION_ID.p) }
   public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
@@ -351,6 +372,7 @@ public struct EOO: FlatBufferObject, Verifiable {
   public static func add(SENY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENY, def: 0.0, at: VTOFFSET.SENY.p) }
   public static func add(SENZ: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENZ, def: 0.0, at: VTOFFSET.SENZ.p) }
   public static func add(FOV_COUNT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_COUNT, def: 0, at: VTOFFSET.FOV_COUNT.p) }
+  public static func add(FOV_COUNT_UCTS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_COUNT_UCTS, def: 0, at: VTOFFSET.FOV_COUNT_UCTS.p) }
   public static func add(EXP_DURATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXP_DURATION, def: 0.0, at: VTOFFSET.EXP_DURATION.p) }
   public static func add(ZEROPTD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ZEROPTD, def: 0.0, at: VTOFFSET.ZEROPTD.p) }
   public static func add(NET_OBJ_SIG: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NET_OBJ_SIG, def: 0.0, at: VTOFFSET.NET_OBJ_SIG.p) }
@@ -388,6 +410,18 @@ public struct EOO: FlatBufferObject, Verifiable {
   public static func add(ORIG_NETWORK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_NETWORK, at: VTOFFSET.ORIG_NETWORK.p) }
   public static func add(SOURCE_DL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_DL, at: VTOFFSET.SOURCE_DL.p) }
   public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
+  public static func add(AZIMUTH_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_MEASURED, def: false,
+   at: VTOFFSET.AZIMUTH_MEASURED.p) }
+  public static func add(ELEVATION_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_MEASURED, def: false,
+   at: VTOFFSET.ELEVATION_MEASURED.p) }
+  public static func add(RANGE_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_MEASURED, def: false,
+   at: VTOFFSET.RANGE_MEASURED.p) }
+  public static func add(RANGERATE_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGERATE_MEASURED, def: false,
+   at: VTOFFSET.RANGERATE_MEASURED.p) }
+  public static func add(RA_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_MEASURED, def: false,
+   at: VTOFFSET.RA_MEASURED.p) }
+  public static func add(DECLINATION_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION_MEASURED, def: false,
+   at: VTOFFSET.DECLINATION_MEASURED.p) }
   public static func endEOO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEOO(
     _ fbb: inout FlatBufferBuilder,
@@ -441,6 +475,7 @@ public struct EOO: FlatBufferObject, Verifiable {
     SENY: Float32 = 0.0,
     SENZ: Float32 = 0.0,
     FOV_COUNT: Int32 = 0,
+    FOV_COUNT_UCTS: Int32 = 0,
     EXP_DURATION: Float32 = 0.0,
     ZEROPTD: Float32 = 0.0,
     NET_OBJ_SIG: Float32 = 0.0,
@@ -475,7 +510,13 @@ public struct EOO: FlatBufferObject, Verifiable {
     PENUMBRA: Bool = false,
     ORIG_NETWORKOffset ORIG_NETWORK: Offset = Offset(),
     SOURCE_DLOffset SOURCE_DL: Offset = Offset(),
-    TYPEOffset TYPE: Offset = Offset()
+    TYPEOffset TYPE: Offset = Offset(),
+    AZIMUTH_MEASURED: Bool = false,
+    ELEVATION_MEASURED: Bool = false,
+    RANGE_MEASURED: Bool = false,
+    RANGERATE_MEASURED: Bool = false,
+    RA_MEASURED: Bool = false,
+    DECLINATION_MEASURED: Bool = false
   ) -> Offset {
     let __start = EOO.startEOO(&fbb)
     EOO.add(EOBSERVATION_ID: EOBSERVATION_ID, &fbb)
@@ -528,6 +569,7 @@ public struct EOO: FlatBufferObject, Verifiable {
     EOO.add(SENY: SENY, &fbb)
     EOO.add(SENZ: SENZ, &fbb)
     EOO.add(FOV_COUNT: FOV_COUNT, &fbb)
+    EOO.add(FOV_COUNT_UCTS: FOV_COUNT_UCTS, &fbb)
     EOO.add(EXP_DURATION: EXP_DURATION, &fbb)
     EOO.add(ZEROPTD: ZEROPTD, &fbb)
     EOO.add(NET_OBJ_SIG: NET_OBJ_SIG, &fbb)
@@ -563,6 +605,12 @@ public struct EOO: FlatBufferObject, Verifiable {
     EOO.add(ORIG_NETWORK: ORIG_NETWORK, &fbb)
     EOO.add(SOURCE_DL: SOURCE_DL, &fbb)
     EOO.add(TYPE: TYPE, &fbb)
+    EOO.add(AZIMUTH_MEASURED: AZIMUTH_MEASURED, &fbb)
+    EOO.add(ELEVATION_MEASURED: ELEVATION_MEASURED, &fbb)
+    EOO.add(RANGE_MEASURED: RANGE_MEASURED, &fbb)
+    EOO.add(RANGERATE_MEASURED: RANGERATE_MEASURED, &fbb)
+    EOO.add(RA_MEASURED: RA_MEASURED, &fbb)
+    EOO.add(DECLINATION_MEASURED: DECLINATION_MEASURED, &fbb)
     return EOO.endEOO(&fbb, start: __start)
   }
 
@@ -618,6 +666,7 @@ public struct EOO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.SENY.p, fieldName: "SENY", required: false, type: Float32.self)
     try _v.visit(field: VTOFFSET.SENZ.p, fieldName: "SENZ", required: false, type: Float32.self)
     try _v.visit(field: VTOFFSET.FOV_COUNT.p, fieldName: "FOV_COUNT", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.FOV_COUNT_UCTS.p, fieldName: "FOV_COUNT_UCTS", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.EXP_DURATION.p, fieldName: "EXP_DURATION", required: false, type: Float32.self)
     try _v.visit(field: VTOFFSET.ZEROPTD.p, fieldName: "ZEROPTD", required: false, type: Float32.self)
     try _v.visit(field: VTOFFSET.NET_OBJ_SIG.p, fieldName: "NET_OBJ_SIG", required: false, type: Float32.self)
@@ -653,6 +702,12 @@ public struct EOO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ORIG_NETWORK.p, fieldName: "ORIG_NETWORK", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SOURCE_DL.p, fieldName: "SOURCE_DL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.AZIMUTH_MEASURED.p, fieldName: "AZIMUTH_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.ELEVATION_MEASURED.p, fieldName: "ELEVATION_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.RANGE_MEASURED.p, fieldName: "RANGE_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.RANGERATE_MEASURED.p, fieldName: "RANGERATE_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.RA_MEASURED.p, fieldName: "RA_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.DECLINATION_MEASURED.p, fieldName: "DECLINATION_MEASURED", required: false, type: Bool.self)
     _v.finish()
   }
 }

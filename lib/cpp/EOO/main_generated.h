@@ -75,41 +75,48 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SENY = 98,
     VT_SENZ = 100,
     VT_FOV_COUNT = 102,
-    VT_EXP_DURATION = 104,
-    VT_ZEROPTD = 106,
-    VT_NET_OBJ_SIG = 108,
-    VT_NET_OBJ_SIG_UNC = 110,
-    VT_MAG = 112,
-    VT_MAG_UNC = 114,
-    VT_MAG_NORM_RANGE = 116,
-    VT_GEOLAT = 118,
-    VT_GEOLON = 120,
-    VT_GEOALT = 122,
-    VT_GEORANGE = 124,
-    VT_SKY_BKGRND = 126,
-    VT_PRIMARY_EXTINCTION = 128,
-    VT_PRIMARY_EXTINCTION_UNC = 130,
-    VT_SOLAR_PHASE_ANGLE = 132,
-    VT_SOLAR_EQ_PHASE_ANGLE = 134,
-    VT_SOLAR_DEC_ANGLE = 136,
-    VT_SHUTTER_DELAY = 138,
-    VT_TIMING_BIAS = 140,
-    VT_RAW_FILE_URI = 142,
-    VT_INTENSITY = 144,
-    VT_BG_INTENSITY = 146,
-    VT_DESCRIPTOR = 148,
-    VT_SOURCE = 150,
-    VT_ORIGIN = 152,
-    VT_DATA_MODE = 154,
-    VT_CREATED_AT = 156,
-    VT_CREATED_BY = 158,
-    VT_REFERENCE_FRAME = 160,
-    VT_SEN_REFERENCE_FRAME = 162,
-    VT_UMBRA = 164,
-    VT_PENUMBRA = 166,
-    VT_ORIG_NETWORK = 168,
-    VT_SOURCE_DL = 170,
-    VT_TYPE = 172
+    VT_FOV_COUNT_UCTS = 104,
+    VT_EXP_DURATION = 106,
+    VT_ZEROPTD = 108,
+    VT_NET_OBJ_SIG = 110,
+    VT_NET_OBJ_SIG_UNC = 112,
+    VT_MAG = 114,
+    VT_MAG_UNC = 116,
+    VT_MAG_NORM_RANGE = 118,
+    VT_GEOLAT = 120,
+    VT_GEOLON = 122,
+    VT_GEOALT = 124,
+    VT_GEORANGE = 126,
+    VT_SKY_BKGRND = 128,
+    VT_PRIMARY_EXTINCTION = 130,
+    VT_PRIMARY_EXTINCTION_UNC = 132,
+    VT_SOLAR_PHASE_ANGLE = 134,
+    VT_SOLAR_EQ_PHASE_ANGLE = 136,
+    VT_SOLAR_DEC_ANGLE = 138,
+    VT_SHUTTER_DELAY = 140,
+    VT_TIMING_BIAS = 142,
+    VT_RAW_FILE_URI = 144,
+    VT_INTENSITY = 146,
+    VT_BG_INTENSITY = 148,
+    VT_DESCRIPTOR = 150,
+    VT_SOURCE = 152,
+    VT_ORIGIN = 154,
+    VT_DATA_MODE = 156,
+    VT_CREATED_AT = 158,
+    VT_CREATED_BY = 160,
+    VT_REFERENCE_FRAME = 162,
+    VT_SEN_REFERENCE_FRAME = 164,
+    VT_UMBRA = 166,
+    VT_PENUMBRA = 168,
+    VT_ORIG_NETWORK = 170,
+    VT_SOURCE_DL = 172,
+    VT_TYPE = 174,
+    VT_AZIMUTH_MEASURED = 176,
+    VT_ELEVATION_MEASURED = 178,
+    VT_RANGE_MEASURED = 180,
+    VT_RANGERATE_MEASURED = 182,
+    VT_RA_MEASURED = 184,
+    VT_DECLINATION_MEASURED = 186
   };
   /// Unique identifier for Earth Observation Observation
   const ::flatbuffers::String *EOBSERVATION_ID() const {
@@ -311,6 +318,10 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t FOV_COUNT() const {
     return GetField<int32_t>(VT_FOV_COUNT, 0);
   }
+  /// Number of uncorrelated satellites in the field of view (JCO)
+  int32_t FOV_COUNT_UCTS() const {
+    return GetField<int32_t>(VT_FOV_COUNT_UCTS, 0);
+  }
   /// Duration of the exposure
   float EXP_DURATION() const {
     return GetField<float>(VT_EXP_DURATION, 0.0f);
@@ -451,6 +462,30 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
   }
+  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  bool AZIMUTH_MEASURED() const {
+    return GetField<uint8_t>(VT_AZIMUTH_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  bool ELEVATION_MEASURED() const {
+    return GetField<uint8_t>(VT_ELEVATION_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if range is reported (JCO)
+  bool RANGE_MEASURED() const {
+    return GetField<uint8_t>(VT_RANGE_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  bool RANGERATE_MEASURED() const {
+    return GetField<uint8_t>(VT_RANGERATE_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  bool RA_MEASURED() const {
+    return GetField<uint8_t>(VT_RA_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if declination is reported (JCO)
+  bool DECLINATION_MEASURED() const {
+    return GetField<uint8_t>(VT_DECLINATION_MEASURED, 0) != 0;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EOBSERVATION_ID) &&
@@ -515,6 +550,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<float>(verifier, VT_SENY, 4) &&
            VerifyField<float>(verifier, VT_SENZ, 4) &&
            VerifyField<int32_t>(verifier, VT_FOV_COUNT, 4) &&
+           VerifyField<int32_t>(verifier, VT_FOV_COUNT_UCTS, 4) &&
            VerifyField<float>(verifier, VT_EXP_DURATION, 4) &&
            VerifyField<float>(verifier, VT_ZEROPTD, 4) &&
            VerifyField<float>(verifier, VT_NET_OBJ_SIG, 4) &&
@@ -561,6 +597,12 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SOURCE_DL()) &&
            VerifyOffset(verifier, VT_TYPE) &&
            verifier.VerifyString(TYPE()) &&
+           VerifyField<uint8_t>(verifier, VT_AZIMUTH_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_ELEVATION_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RANGE_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RANGERATE_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RA_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_DECLINATION_MEASURED, 1) &&
            verifier.EndTable();
   }
 };
@@ -719,6 +761,9 @@ struct EOOBuilder {
   void add_FOV_COUNT(int32_t FOV_COUNT) {
     fbb_.AddElement<int32_t>(EOO::VT_FOV_COUNT, FOV_COUNT, 0);
   }
+  void add_FOV_COUNT_UCTS(int32_t FOV_COUNT_UCTS) {
+    fbb_.AddElement<int32_t>(EOO::VT_FOV_COUNT_UCTS, FOV_COUNT_UCTS, 0);
+  }
   void add_EXP_DURATION(float EXP_DURATION) {
     fbb_.AddElement<float>(EOO::VT_EXP_DURATION, EXP_DURATION, 0.0f);
   }
@@ -824,6 +869,24 @@ struct EOOBuilder {
   void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
     fbb_.AddOffset(EOO::VT_TYPE, TYPE);
   }
+  void add_AZIMUTH_MEASURED(bool AZIMUTH_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_AZIMUTH_MEASURED, static_cast<uint8_t>(AZIMUTH_MEASURED), 0);
+  }
+  void add_ELEVATION_MEASURED(bool ELEVATION_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_ELEVATION_MEASURED, static_cast<uint8_t>(ELEVATION_MEASURED), 0);
+  }
+  void add_RANGE_MEASURED(bool RANGE_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_RANGE_MEASURED, static_cast<uint8_t>(RANGE_MEASURED), 0);
+  }
+  void add_RANGERATE_MEASURED(bool RANGERATE_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_RANGERATE_MEASURED, static_cast<uint8_t>(RANGERATE_MEASURED), 0);
+  }
+  void add_RA_MEASURED(bool RA_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_RA_MEASURED, static_cast<uint8_t>(RA_MEASURED), 0);
+  }
+  void add_DECLINATION_MEASURED(bool DECLINATION_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_DECLINATION_MEASURED, static_cast<uint8_t>(DECLINATION_MEASURED), 0);
+  }
   explicit EOOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -887,6 +950,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     float SENY = 0.0f,
     float SENZ = 0.0f,
     int32_t FOV_COUNT = 0,
+    int32_t FOV_COUNT_UCTS = 0,
     float EXP_DURATION = 0.0f,
     float ZEROPTD = 0.0f,
     float NET_OBJ_SIG = 0.0f,
@@ -921,7 +985,13 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     bool PENUMBRA = false,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_NETWORK = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE_DL = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0,
+    bool AZIMUTH_MEASURED = false,
+    bool ELEVATION_MEASURED = false,
+    bool RANGE_MEASURED = false,
+    bool RANGERATE_MEASURED = false,
+    bool RA_MEASURED = false,
+    bool DECLINATION_MEASURED = false) {
   EOOBuilder builder_(_fbb);
   builder_.add_TYPE(TYPE);
   builder_.add_SOURCE_DL(SOURCE_DL);
@@ -955,6 +1025,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_NET_OBJ_SIG(NET_OBJ_SIG);
   builder_.add_ZEROPTD(ZEROPTD);
   builder_.add_EXP_DURATION(EXP_DURATION);
+  builder_.add_FOV_COUNT_UCTS(FOV_COUNT_UCTS);
   builder_.add_FOV_COUNT(FOV_COUNT);
   builder_.add_SENZ(SENZ);
   builder_.add_SENY(SENY);
@@ -1004,6 +1075,12 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_CLASSIFICATION(CLASSIFICATION);
   builder_.add_EOBSERVATION_ID(EOBSERVATION_ID);
+  builder_.add_DECLINATION_MEASURED(DECLINATION_MEASURED);
+  builder_.add_RA_MEASURED(RA_MEASURED);
+  builder_.add_RANGERATE_MEASURED(RANGERATE_MEASURED);
+  builder_.add_RANGE_MEASURED(RANGE_MEASURED);
+  builder_.add_ELEVATION_MEASURED(ELEVATION_MEASURED);
+  builder_.add_AZIMUTH_MEASURED(AZIMUTH_MEASURED);
   builder_.add_PENUMBRA(PENUMBRA);
   builder_.add_UMBRA(UMBRA);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
@@ -1063,6 +1140,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     float SENY = 0.0f,
     float SENZ = 0.0f,
     int32_t FOV_COUNT = 0,
+    int32_t FOV_COUNT_UCTS = 0,
     float EXP_DURATION = 0.0f,
     float ZEROPTD = 0.0f,
     float NET_OBJ_SIG = 0.0f,
@@ -1097,7 +1175,13 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     bool PENUMBRA = false,
     const char *ORIG_NETWORK = nullptr,
     const char *SOURCE_DL = nullptr,
-    const char *TYPE = nullptr) {
+    const char *TYPE = nullptr,
+    bool AZIMUTH_MEASURED = false,
+    bool ELEVATION_MEASURED = false,
+    bool RANGE_MEASURED = false,
+    bool RANGERATE_MEASURED = false,
+    bool RA_MEASURED = false,
+    bool DECLINATION_MEASURED = false) {
   auto EOBSERVATION_ID__ = EOBSERVATION_ID ? _fbb.CreateString(EOBSERVATION_ID) : 0;
   auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
@@ -1173,6 +1257,7 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       SENY,
       SENZ,
       FOV_COUNT,
+      FOV_COUNT_UCTS,
       EXP_DURATION,
       ZEROPTD,
       NET_OBJ_SIG,
@@ -1207,7 +1292,13 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       PENUMBRA,
       ORIG_NETWORK__,
       SOURCE_DL__,
-      TYPE__);
+      TYPE__,
+      AZIMUTH_MEASURED,
+      ELEVATION_MEASURED,
+      RANGE_MEASURED,
+      RANGERATE_MEASURED,
+      RA_MEASURED,
+      DECLINATION_MEASURED);
 }
 
 struct EOOCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

@@ -457,10 +457,18 @@ FOV_COUNT():number {
 }
 
 /**
+ * Number of uncorrelated satellites in the field of view (JCO)
+ */
+FOV_COUNT_UCTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
  * Duration of the exposure
  */
 EXP_DURATION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 104);
+  const offset = this.bb!.__offset(this.bb_pos, 106);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -468,7 +476,7 @@ EXP_DURATION():number {
  * Zero-point displacement
  */
 ZEROPTD():number {
-  const offset = this.bb!.__offset(this.bb_pos, 106);
+  const offset = this.bb!.__offset(this.bb_pos, 108);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -476,7 +484,7 @@ ZEROPTD():number {
  * Net object signal
  */
 NET_OBJ_SIG():number {
-  const offset = this.bb!.__offset(this.bb_pos, 108);
+  const offset = this.bb!.__offset(this.bb_pos, 110);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -484,7 +492,7 @@ NET_OBJ_SIG():number {
  * Uncertainty in net object signal
  */
 NET_OBJ_SIG_UNC():number {
-  const offset = this.bb!.__offset(this.bb_pos, 110);
+  const offset = this.bb!.__offset(this.bb_pos, 112);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -492,7 +500,7 @@ NET_OBJ_SIG_UNC():number {
  * Magnitude of the observation
  */
 MAG():number {
-  const offset = this.bb!.__offset(this.bb_pos, 112);
+  const offset = this.bb!.__offset(this.bb_pos, 114);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -500,7 +508,7 @@ MAG():number {
  * Uncertainty in magnitude
  */
 MAG_UNC():number {
-  const offset = this.bb!.__offset(this.bb_pos, 114);
+  const offset = this.bb!.__offset(this.bb_pos, 116);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -508,7 +516,7 @@ MAG_UNC():number {
  * Normalized range for magnitude
  */
 MAG_NORM_RANGE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 116);
+  const offset = this.bb!.__offset(this.bb_pos, 118);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -516,7 +524,7 @@ MAG_NORM_RANGE():number {
  * Geocentric latitude
  */
 GEOLAT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 118);
+  const offset = this.bb!.__offset(this.bb_pos, 120);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -524,7 +532,7 @@ GEOLAT():number {
  * Geocentric longitude
  */
 GEOLON():number {
-  const offset = this.bb!.__offset(this.bb_pos, 120);
+  const offset = this.bb!.__offset(this.bb_pos, 122);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -532,7 +540,7 @@ GEOLON():number {
  * Geocentric altitude
  */
 GEOALT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
+  const offset = this.bb!.__offset(this.bb_pos, 124);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -540,7 +548,7 @@ GEOALT():number {
  * Geocentric range
  */
 GEORANGE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 124);
+  const offset = this.bb!.__offset(this.bb_pos, 126);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -548,7 +556,7 @@ GEORANGE():number {
  * Sky background level
  */
 SKY_BKGRND():number {
-  const offset = this.bb!.__offset(this.bb_pos, 126);
+  const offset = this.bb!.__offset(this.bb_pos, 128);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -556,7 +564,7 @@ SKY_BKGRND():number {
  * Primary extinction
  */
 PRIMARY_EXTINCTION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 128);
+  const offset = this.bb!.__offset(this.bb_pos, 130);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -564,7 +572,7 @@ PRIMARY_EXTINCTION():number {
  * Uncertainty in primary extinction
  */
 PRIMARY_EXTINCTION_UNC():number {
-  const offset = this.bb!.__offset(this.bb_pos, 130);
+  const offset = this.bb!.__offset(this.bb_pos, 132);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -572,7 +580,7 @@ PRIMARY_EXTINCTION_UNC():number {
  * Solar phase angle
  */
 SOLAR_PHASE_ANGLE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 132);
+  const offset = this.bb!.__offset(this.bb_pos, 134);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -580,7 +588,7 @@ SOLAR_PHASE_ANGLE():number {
  * Solar equatorial phase angle
  */
 SOLAR_EQ_PHASE_ANGLE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 134);
+  const offset = this.bb!.__offset(this.bb_pos, 136);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -588,7 +596,7 @@ SOLAR_EQ_PHASE_ANGLE():number {
  * Solar declination angle
  */
 SOLAR_DEC_ANGLE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 136);
+  const offset = this.bb!.__offset(this.bb_pos, 138);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -596,7 +604,7 @@ SOLAR_DEC_ANGLE():number {
  * Shutter delay
  */
 SHUTTER_DELAY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 138);
+  const offset = this.bb!.__offset(this.bb_pos, 140);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -604,7 +612,7 @@ SHUTTER_DELAY():number {
  * Timing bias
  */
 TIMING_BIAS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 140);
+  const offset = this.bb!.__offset(this.bb_pos, 142);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -614,7 +622,7 @@ TIMING_BIAS():number {
 RAW_FILE_URI():string|null
 RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 142);
+  const offset = this.bb!.__offset(this.bb_pos, 144);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -622,7 +630,7 @@ RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
  * Intensity of the observation
  */
 INTENSITY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 144);
+  const offset = this.bb!.__offset(this.bb_pos, 146);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -630,7 +638,7 @@ INTENSITY():number {
  * Background intensity
  */
 BG_INTENSITY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 146);
+  const offset = this.bb!.__offset(this.bb_pos, 148);
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
@@ -640,7 +648,7 @@ BG_INTENSITY():number {
 DESCRIPTOR():string|null
 DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 148);
+  const offset = this.bb!.__offset(this.bb_pos, 150);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -650,7 +658,7 @@ DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
 SOURCE():string|null
 SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SOURCE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 150);
+  const offset = this.bb!.__offset(this.bb_pos, 152);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -660,7 +668,7 @@ SOURCE(optionalEncoding?:any):string|Uint8Array|null {
 ORIGIN():string|null
 ORIGIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIGIN(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 152);
+  const offset = this.bb!.__offset(this.bb_pos, 154);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -670,7 +678,7 @@ ORIGIN(optionalEncoding?:any):string|Uint8Array|null {
 DATA_MODE():string|null
 DATA_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DATA_MODE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 154);
+  const offset = this.bb!.__offset(this.bb_pos, 156);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -680,7 +688,7 @@ DATA_MODE(optionalEncoding?:any):string|Uint8Array|null {
 CREATED_AT():string|null
 CREATED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CREATED_AT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 156);
+  const offset = this.bb!.__offset(this.bb_pos, 158);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -690,7 +698,7 @@ CREATED_AT(optionalEncoding?:any):string|Uint8Array|null {
 CREATED_BY():string|null
 CREATED_BY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CREATED_BY(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 158);
+  const offset = this.bb!.__offset(this.bb_pos, 160);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -698,7 +706,7 @@ CREATED_BY(optionalEncoding?:any):string|Uint8Array|null {
  * Reference frame of the observation
  */
 REFERENCE_FRAME():refFrame {
-  const offset = this.bb!.__offset(this.bb_pos, 160);
+  const offset = this.bb!.__offset(this.bb_pos, 162);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
 }
 
@@ -708,7 +716,7 @@ REFERENCE_FRAME():refFrame {
 SEN_REFERENCE_FRAME():string|null
 SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 162);
+  const offset = this.bb!.__offset(this.bb_pos, 164);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -716,7 +724,7 @@ SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
  * Flag for umbra (total eclipse)
  */
 UMBRA():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 164);
+  const offset = this.bb!.__offset(this.bb_pos, 166);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
@@ -724,7 +732,7 @@ UMBRA():boolean {
  * Flag for penumbra (partial eclipse)
  */
 PENUMBRA():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 166);
+  const offset = this.bb!.__offset(this.bb_pos, 168);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
@@ -734,7 +742,7 @@ PENUMBRA():boolean {
 ORIG_NETWORK():string|null
 ORIG_NETWORK(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_NETWORK(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 168);
+  const offset = this.bb!.__offset(this.bb_pos, 170);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -744,7 +752,7 @@ ORIG_NETWORK(optionalEncoding?:any):string|Uint8Array|null {
 SOURCE_DL():string|null
 SOURCE_DL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SOURCE_DL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 170);
+  const offset = this.bb!.__offset(this.bb_pos, 172);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -754,12 +762,60 @@ SOURCE_DL(optionalEncoding?:any):string|Uint8Array|null {
 TYPE():string|null
 TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 172);
+  const offset = this.bb!.__offset(this.bb_pos, 174);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * True if measured, false if computed. Required if azimuth is reported (JCO)
+ */
+AZIMUTH_MEASURED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 176);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if measured, false if computed. Required if elevation is reported (JCO)
+ */
+ELEVATION_MEASURED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 178);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if measured, false if computed. Required if range is reported (JCO)
+ */
+RANGE_MEASURED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 180);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if measured, false if computed. Required if range-rate is reported (JCO)
+ */
+RANGERATE_MEASURED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 182);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if measured, false if computed. Required if right ascension is reported (JCO)
+ */
+RA_MEASURED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 184);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if measured, false if computed. Required if declination is reported (JCO)
+ */
+DECLINATION_MEASURED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 186);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startEOO(builder:flatbuffers.Builder) {
-  builder.startObject(85);
+  builder.startObject(92);
 }
 
 static addEobservationId(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.Offset) {
@@ -962,144 +1018,172 @@ static addFovCount(builder:flatbuffers.Builder, FOV_COUNT:number) {
   builder.addFieldInt32(49, FOV_COUNT, 0);
 }
 
+static addFovCountUcts(builder:flatbuffers.Builder, FOV_COUNT_UCTS:number) {
+  builder.addFieldInt32(50, FOV_COUNT_UCTS, 0);
+}
+
 static addExpDuration(builder:flatbuffers.Builder, EXP_DURATION:number) {
-  builder.addFieldFloat32(50, EXP_DURATION, 0.0);
+  builder.addFieldFloat32(51, EXP_DURATION, 0.0);
 }
 
 static addZeroptd(builder:flatbuffers.Builder, ZEROPTD:number) {
-  builder.addFieldFloat32(51, ZEROPTD, 0.0);
+  builder.addFieldFloat32(52, ZEROPTD, 0.0);
 }
 
 static addNetObjSig(builder:flatbuffers.Builder, NET_OBJ_SIG:number) {
-  builder.addFieldFloat32(52, NET_OBJ_SIG, 0.0);
+  builder.addFieldFloat32(53, NET_OBJ_SIG, 0.0);
 }
 
 static addNetObjSigUnc(builder:flatbuffers.Builder, NET_OBJ_SIG_UNC:number) {
-  builder.addFieldFloat32(53, NET_OBJ_SIG_UNC, 0.0);
+  builder.addFieldFloat32(54, NET_OBJ_SIG_UNC, 0.0);
 }
 
 static addMag(builder:flatbuffers.Builder, MAG:number) {
-  builder.addFieldFloat32(54, MAG, 0.0);
+  builder.addFieldFloat32(55, MAG, 0.0);
 }
 
 static addMagUnc(builder:flatbuffers.Builder, MAG_UNC:number) {
-  builder.addFieldFloat32(55, MAG_UNC, 0.0);
+  builder.addFieldFloat32(56, MAG_UNC, 0.0);
 }
 
 static addMagNormRange(builder:flatbuffers.Builder, MAG_NORM_RANGE:number) {
-  builder.addFieldFloat32(56, MAG_NORM_RANGE, 0.0);
+  builder.addFieldFloat32(57, MAG_NORM_RANGE, 0.0);
 }
 
 static addGeolat(builder:flatbuffers.Builder, GEOLAT:number) {
-  builder.addFieldFloat32(57, GEOLAT, 0.0);
+  builder.addFieldFloat32(58, GEOLAT, 0.0);
 }
 
 static addGeolon(builder:flatbuffers.Builder, GEOLON:number) {
-  builder.addFieldFloat32(58, GEOLON, 0.0);
+  builder.addFieldFloat32(59, GEOLON, 0.0);
 }
 
 static addGeoalt(builder:flatbuffers.Builder, GEOALT:number) {
-  builder.addFieldFloat32(59, GEOALT, 0.0);
+  builder.addFieldFloat32(60, GEOALT, 0.0);
 }
 
 static addGeorange(builder:flatbuffers.Builder, GEORANGE:number) {
-  builder.addFieldFloat32(60, GEORANGE, 0.0);
+  builder.addFieldFloat32(61, GEORANGE, 0.0);
 }
 
 static addSkyBkgrnd(builder:flatbuffers.Builder, SKY_BKGRND:number) {
-  builder.addFieldFloat32(61, SKY_BKGRND, 0.0);
+  builder.addFieldFloat32(62, SKY_BKGRND, 0.0);
 }
 
 static addPrimaryExtinction(builder:flatbuffers.Builder, PRIMARY_EXTINCTION:number) {
-  builder.addFieldFloat32(62, PRIMARY_EXTINCTION, 0.0);
+  builder.addFieldFloat32(63, PRIMARY_EXTINCTION, 0.0);
 }
 
 static addPrimaryExtinctionUnc(builder:flatbuffers.Builder, PRIMARY_EXTINCTION_UNC:number) {
-  builder.addFieldFloat32(63, PRIMARY_EXTINCTION_UNC, 0.0);
+  builder.addFieldFloat32(64, PRIMARY_EXTINCTION_UNC, 0.0);
 }
 
 static addSolarPhaseAngle(builder:flatbuffers.Builder, SOLAR_PHASE_ANGLE:number) {
-  builder.addFieldFloat32(64, SOLAR_PHASE_ANGLE, 0.0);
+  builder.addFieldFloat32(65, SOLAR_PHASE_ANGLE, 0.0);
 }
 
 static addSolarEqPhaseAngle(builder:flatbuffers.Builder, SOLAR_EQ_PHASE_ANGLE:number) {
-  builder.addFieldFloat32(65, SOLAR_EQ_PHASE_ANGLE, 0.0);
+  builder.addFieldFloat32(66, SOLAR_EQ_PHASE_ANGLE, 0.0);
 }
 
 static addSolarDecAngle(builder:flatbuffers.Builder, SOLAR_DEC_ANGLE:number) {
-  builder.addFieldFloat32(66, SOLAR_DEC_ANGLE, 0.0);
+  builder.addFieldFloat32(67, SOLAR_DEC_ANGLE, 0.0);
 }
 
 static addShutterDelay(builder:flatbuffers.Builder, SHUTTER_DELAY:number) {
-  builder.addFieldFloat32(67, SHUTTER_DELAY, 0.0);
+  builder.addFieldFloat32(68, SHUTTER_DELAY, 0.0);
 }
 
 static addTimingBias(builder:flatbuffers.Builder, TIMING_BIAS:number) {
-  builder.addFieldFloat32(68, TIMING_BIAS, 0.0);
+  builder.addFieldFloat32(69, TIMING_BIAS, 0.0);
 }
 
 static addRawFileUri(builder:flatbuffers.Builder, RAW_FILE_URIOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(69, RAW_FILE_URIOffset, 0);
+  builder.addFieldOffset(70, RAW_FILE_URIOffset, 0);
 }
 
 static addIntensity(builder:flatbuffers.Builder, INTENSITY:number) {
-  builder.addFieldFloat32(70, INTENSITY, 0.0);
+  builder.addFieldFloat32(71, INTENSITY, 0.0);
 }
 
 static addBgIntensity(builder:flatbuffers.Builder, BG_INTENSITY:number) {
-  builder.addFieldFloat32(71, BG_INTENSITY, 0.0);
+  builder.addFieldFloat32(72, BG_INTENSITY, 0.0);
 }
 
 static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(72, DESCRIPTOROffset, 0);
+  builder.addFieldOffset(73, DESCRIPTOROffset, 0);
 }
 
 static addSource(builder:flatbuffers.Builder, SOURCEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(73, SOURCEOffset, 0);
+  builder.addFieldOffset(74, SOURCEOffset, 0);
 }
 
 static addOrigin(builder:flatbuffers.Builder, ORIGINOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(74, ORIGINOffset, 0);
+  builder.addFieldOffset(75, ORIGINOffset, 0);
 }
 
 static addDataMode(builder:flatbuffers.Builder, DATA_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(75, DATA_MODEOffset, 0);
+  builder.addFieldOffset(76, DATA_MODEOffset, 0);
 }
 
 static addCreatedAt(builder:flatbuffers.Builder, CREATED_ATOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(76, CREATED_ATOffset, 0);
+  builder.addFieldOffset(77, CREATED_ATOffset, 0);
 }
 
 static addCreatedBy(builder:flatbuffers.Builder, CREATED_BYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(77, CREATED_BYOffset, 0);
+  builder.addFieldOffset(78, CREATED_BYOffset, 0);
 }
 
 static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(78, REFERENCE_FRAME, refFrame.ECEF);
+  builder.addFieldInt8(79, REFERENCE_FRAME, refFrame.ECEF);
 }
 
 static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(79, SEN_REFERENCE_FRAMEOffset, 0);
+  builder.addFieldOffset(80, SEN_REFERENCE_FRAMEOffset, 0);
 }
 
 static addUmbra(builder:flatbuffers.Builder, UMBRA:boolean) {
-  builder.addFieldInt8(80, +UMBRA, +false);
+  builder.addFieldInt8(81, +UMBRA, +false);
 }
 
 static addPenumbra(builder:flatbuffers.Builder, PENUMBRA:boolean) {
-  builder.addFieldInt8(81, +PENUMBRA, +false);
+  builder.addFieldInt8(82, +PENUMBRA, +false);
 }
 
 static addOrigNetwork(builder:flatbuffers.Builder, ORIG_NETWORKOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(82, ORIG_NETWORKOffset, 0);
+  builder.addFieldOffset(83, ORIG_NETWORKOffset, 0);
 }
 
 static addSourceDl(builder:flatbuffers.Builder, SOURCE_DLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(83, SOURCE_DLOffset, 0);
+  builder.addFieldOffset(84, SOURCE_DLOffset, 0);
 }
 
 static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(84, TYPEOffset, 0);
+  builder.addFieldOffset(85, TYPEOffset, 0);
+}
+
+static addAzimuthMeasured(builder:flatbuffers.Builder, AZIMUTH_MEASURED:boolean) {
+  builder.addFieldInt8(86, +AZIMUTH_MEASURED, +false);
+}
+
+static addElevationMeasured(builder:flatbuffers.Builder, ELEVATION_MEASURED:boolean) {
+  builder.addFieldInt8(87, +ELEVATION_MEASURED, +false);
+}
+
+static addRangeMeasured(builder:flatbuffers.Builder, RANGE_MEASURED:boolean) {
+  builder.addFieldInt8(88, +RANGE_MEASURED, +false);
+}
+
+static addRangerateMeasured(builder:flatbuffers.Builder, RANGERATE_MEASURED:boolean) {
+  builder.addFieldInt8(89, +RANGERATE_MEASURED, +false);
+}
+
+static addRaMeasured(builder:flatbuffers.Builder, RA_MEASURED:boolean) {
+  builder.addFieldInt8(90, +RA_MEASURED, +false);
+}
+
+static addDeclinationMeasured(builder:flatbuffers.Builder, DECLINATION_MEASURED:boolean) {
+  builder.addFieldInt8(91, +DECLINATION_MEASURED, +false);
 }
 
 static endEOO(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -1115,7 +1199,7 @@ static finishSizePrefixedEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOO', true);
 }
 
-static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHODOffset:flatbuffers.Offset, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODEOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHODOffset:flatbuffers.Offset, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODEOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean):flatbuffers.Offset {
   EOO.startEOO(builder);
   EOO.addEobservationId(builder, EOBSERVATION_IDOffset);
   EOO.addClassification(builder, CLASSIFICATIONOffset);
@@ -1167,6 +1251,7 @@ static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.
   EOO.addSeny(builder, SENY);
   EOO.addSenz(builder, SENZ);
   EOO.addFovCount(builder, FOV_COUNT);
+  EOO.addFovCountUcts(builder, FOV_COUNT_UCTS);
   EOO.addExpDuration(builder, EXP_DURATION);
   EOO.addZeroptd(builder, ZEROPTD);
   EOO.addNetObjSig(builder, NET_OBJ_SIG);
@@ -1202,6 +1287,12 @@ static createEOO(builder:flatbuffers.Builder, EOBSERVATION_IDOffset:flatbuffers.
   EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
   EOO.addSourceDl(builder, SOURCE_DLOffset);
   EOO.addType(builder, TYPEOffset);
+  EOO.addAzimuthMeasured(builder, AZIMUTH_MEASURED);
+  EOO.addElevationMeasured(builder, ELEVATION_MEASURED);
+  EOO.addRangeMeasured(builder, RANGE_MEASURED);
+  EOO.addRangerateMeasured(builder, RANGERATE_MEASURED);
+  EOO.addRaMeasured(builder, RA_MEASURED);
+  EOO.addDeclinationMeasured(builder, DECLINATION_MEASURED);
   return EOO.endEOO(builder);
 }
 
@@ -1257,6 +1348,7 @@ unpack(): EOOT {
     this.SENY(),
     this.SENZ(),
     this.FOV_COUNT(),
+    this.FOV_COUNT_UCTS(),
     this.EXP_DURATION(),
     this.ZEROPTD(),
     this.NET_OBJ_SIG(),
@@ -1291,7 +1383,13 @@ unpack(): EOOT {
     this.PENUMBRA(),
     this.ORIG_NETWORK(),
     this.SOURCE_DL(),
-    this.TYPE()
+    this.TYPE(),
+    this.AZIMUTH_MEASURED(),
+    this.ELEVATION_MEASURED(),
+    this.RANGE_MEASURED(),
+    this.RANGERATE_MEASURED(),
+    this.RA_MEASURED(),
+    this.DECLINATION_MEASURED()
   );
 }
 
@@ -1347,6 +1445,7 @@ unpackTo(_o: EOOT): void {
   _o.SENY = this.SENY();
   _o.SENZ = this.SENZ();
   _o.FOV_COUNT = this.FOV_COUNT();
+  _o.FOV_COUNT_UCTS = this.FOV_COUNT_UCTS();
   _o.EXP_DURATION = this.EXP_DURATION();
   _o.ZEROPTD = this.ZEROPTD();
   _o.NET_OBJ_SIG = this.NET_OBJ_SIG();
@@ -1382,6 +1481,12 @@ unpackTo(_o: EOOT): void {
   _o.ORIG_NETWORK = this.ORIG_NETWORK();
   _o.SOURCE_DL = this.SOURCE_DL();
   _o.TYPE = this.TYPE();
+  _o.AZIMUTH_MEASURED = this.AZIMUTH_MEASURED();
+  _o.ELEVATION_MEASURED = this.ELEVATION_MEASURED();
+  _o.RANGE_MEASURED = this.RANGE_MEASURED();
+  _o.RANGERATE_MEASURED = this.RANGERATE_MEASURED();
+  _o.RA_MEASURED = this.RA_MEASURED();
+  _o.DECLINATION_MEASURED = this.DECLINATION_MEASURED();
 }
 }
 
@@ -1437,6 +1542,7 @@ constructor(
   public SENY: number = 0.0,
   public SENZ: number = 0.0,
   public FOV_COUNT: number = 0,
+  public FOV_COUNT_UCTS: number = 0,
   public EXP_DURATION: number = 0.0,
   public ZEROPTD: number = 0.0,
   public NET_OBJ_SIG: number = 0.0,
@@ -1471,7 +1577,13 @@ constructor(
   public PENUMBRA: boolean = false,
   public ORIG_NETWORK: string|Uint8Array|null = null,
   public SOURCE_DL: string|Uint8Array|null = null,
-  public TYPE: string|Uint8Array|null = null
+  public TYPE: string|Uint8Array|null = null,
+  public AZIMUTH_MEASURED: boolean = false,
+  public ELEVATION_MEASURED: boolean = false,
+  public RANGE_MEASURED: boolean = false,
+  public RANGERATE_MEASURED: boolean = false,
+  public RA_MEASURED: boolean = false,
+  public DECLINATION_MEASURED: boolean = false
 ){}
 
 
@@ -1551,6 +1663,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SENY,
     this.SENZ,
     this.FOV_COUNT,
+    this.FOV_COUNT_UCTS,
     this.EXP_DURATION,
     this.ZEROPTD,
     this.NET_OBJ_SIG,
@@ -1585,7 +1698,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PENUMBRA,
     ORIG_NETWORK,
     SOURCE_DL,
-    TYPE
+    TYPE,
+    this.AZIMUTH_MEASURED,
+    this.ELEVATION_MEASURED,
+    this.RANGE_MEASURED,
+    this.RANGERATE_MEASURED,
+    this.RA_MEASURED,
+    this.DECLINATION_MEASURED
   );
 }
 }

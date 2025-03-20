@@ -502,11 +502,19 @@ class EOO : Table() {
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     /**
+     * Number of uncorrelated satellites in the field of view (JCO)
+     */
+    val FOV_COUNT_UCTS : Int
+        get() {
+            val o = __offset(104)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
      * Duration of the exposure
      */
     val EXP_DURATION : Float
         get() {
-            val o = __offset(104)
+            val o = __offset(106)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -514,7 +522,7 @@ class EOO : Table() {
      */
     val ZEROPTD : Float
         get() {
-            val o = __offset(106)
+            val o = __offset(108)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -522,7 +530,7 @@ class EOO : Table() {
      */
     val NET_OBJ_SIG : Float
         get() {
-            val o = __offset(108)
+            val o = __offset(110)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -530,7 +538,7 @@ class EOO : Table() {
      */
     val NET_OBJ_SIG_UNC : Float
         get() {
-            val o = __offset(110)
+            val o = __offset(112)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -538,7 +546,7 @@ class EOO : Table() {
      */
     val MAG : Float
         get() {
-            val o = __offset(112)
+            val o = __offset(114)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -546,7 +554,7 @@ class EOO : Table() {
      */
     val MAG_UNC : Float
         get() {
-            val o = __offset(114)
+            val o = __offset(116)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -554,7 +562,7 @@ class EOO : Table() {
      */
     val MAG_NORM_RANGE : Float
         get() {
-            val o = __offset(116)
+            val o = __offset(118)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -562,7 +570,7 @@ class EOO : Table() {
      */
     val GEOLAT : Float
         get() {
-            val o = __offset(118)
+            val o = __offset(120)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -570,7 +578,7 @@ class EOO : Table() {
      */
     val GEOLON : Float
         get() {
-            val o = __offset(120)
+            val o = __offset(122)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -578,7 +586,7 @@ class EOO : Table() {
      */
     val GEOALT : Float
         get() {
-            val o = __offset(122)
+            val o = __offset(124)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -586,7 +594,7 @@ class EOO : Table() {
      */
     val GEORANGE : Float
         get() {
-            val o = __offset(124)
+            val o = __offset(126)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -594,7 +602,7 @@ class EOO : Table() {
      */
     val SKY_BKGRND : Float
         get() {
-            val o = __offset(126)
+            val o = __offset(128)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -602,7 +610,7 @@ class EOO : Table() {
      */
     val PRIMARY_EXTINCTION : Float
         get() {
-            val o = __offset(128)
+            val o = __offset(130)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -610,7 +618,7 @@ class EOO : Table() {
      */
     val PRIMARY_EXTINCTION_UNC : Float
         get() {
-            val o = __offset(130)
+            val o = __offset(132)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -618,7 +626,7 @@ class EOO : Table() {
      */
     val SOLAR_PHASE_ANGLE : Float
         get() {
-            val o = __offset(132)
+            val o = __offset(134)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -626,7 +634,7 @@ class EOO : Table() {
      */
     val SOLAR_EQ_PHASE_ANGLE : Float
         get() {
-            val o = __offset(134)
+            val o = __offset(136)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -634,7 +642,7 @@ class EOO : Table() {
      */
     val SOLAR_DEC_ANGLE : Float
         get() {
-            val o = __offset(136)
+            val o = __offset(138)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -642,7 +650,7 @@ class EOO : Table() {
      */
     val SHUTTER_DELAY : Float
         get() {
-            val o = __offset(138)
+            val o = __offset(140)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -650,7 +658,7 @@ class EOO : Table() {
      */
     val TIMING_BIAS : Float
         get() {
-            val o = __offset(140)
+            val o = __offset(142)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -658,21 +666,21 @@ class EOO : Table() {
      */
     val RAW_FILE_URI : String?
         get() {
-            val o = __offset(142)
+            val o = __offset(144)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(142, 1)
-    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 142, 1)
+    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(144, 1)
+    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 144, 1)
     /**
      * Intensity of the observation
      */
     val INTENSITY : Float
         get() {
-            val o = __offset(144)
+            val o = __offset(146)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
@@ -680,27 +688,13 @@ class EOO : Table() {
      */
     val BG_INTENSITY : Float
         get() {
-            val o = __offset(146)
+            val o = __offset(148)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
      * Descriptor of the provided data
      */
     val DESCRIPTOR : String?
-        get() {
-            val o = __offset(148)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(148, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 148, 1)
-    /**
-     * Source of the data
-     */
-    val SOURCE : String?
         get() {
             val o = __offset(150)
             return if (o != 0) {
@@ -709,12 +703,12 @@ class EOO : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(150, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 150, 1)
+    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(150, 1)
+    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 150, 1)
     /**
-     * Origin of the data
+     * Source of the data
      */
-    val ORIGIN : String?
+    val SOURCE : String?
         get() {
             val o = __offset(152)
             return if (o != 0) {
@@ -723,12 +717,12 @@ class EOO : Table() {
                 null
             }
         }
-    val ORIGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(152, 1)
-    fun ORIGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 152, 1)
+    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(152, 1)
+    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 152, 1)
     /**
-     * Mode of the data
+     * Origin of the data
      */
-    val DATA_MODE : String?
+    val ORIGIN : String?
         get() {
             val o = __offset(154)
             return if (o != 0) {
@@ -737,12 +731,12 @@ class EOO : Table() {
                 null
             }
         }
-    val DATA_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(154, 1)
-    fun DATA_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 154, 1)
+    val ORIGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(154, 1)
+    fun ORIGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 154, 1)
     /**
-     * Creation time of the record
+     * Mode of the data
      */
-    val CREATED_AT : String?
+    val DATA_MODE : String?
         get() {
             val o = __offset(156)
             return if (o != 0) {
@@ -751,12 +745,12 @@ class EOO : Table() {
                 null
             }
         }
-    val CREATED_ATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(156, 1)
-    fun CREATED_ATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 156, 1)
+    val DATA_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(156, 1)
+    fun DATA_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 156, 1)
     /**
-     * User who created the record
+     * Creation time of the record
      */
-    val CREATED_BY : String?
+    val CREATED_AT : String?
         get() {
             val o = __offset(158)
             return if (o != 0) {
@@ -765,14 +759,28 @@ class EOO : Table() {
                 null
             }
         }
-    val CREATED_BYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(158, 1)
-    fun CREATED_BYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 158, 1)
+    val CREATED_ATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(158, 1)
+    fun CREATED_ATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 158, 1)
+    /**
+     * User who created the record
+     */
+    val CREATED_BY : String?
+        get() {
+            val o = __offset(160)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val CREATED_BYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(160, 1)
+    fun CREATED_BYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 160, 1)
     /**
      * Reference frame of the observation
      */
     val REFERENCE_FRAME : Byte
         get() {
-            val o = __offset(160)
+            val o = __offset(162)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
@@ -780,21 +788,21 @@ class EOO : Table() {
      */
     val SEN_REFERENCE_FRAME : String?
         get() {
-            val o = __offset(162)
+            val o = __offset(164)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(162, 1)
-    fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 162, 1)
+    val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(164, 1)
+    fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 164, 1)
     /**
      * Flag for umbra (total eclipse)
      */
     val UMBRA : Boolean
         get() {
-            val o = __offset(164)
+            val o = __offset(166)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
@@ -802,27 +810,13 @@ class EOO : Table() {
      */
     val PENUMBRA : Boolean
         get() {
-            val o = __offset(166)
+            val o = __offset(168)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
      * Original network identifier
      */
     val ORIG_NETWORK : String?
-        get() {
-            val o = __offset(168)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ORIG_NETWORKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(168, 1)
-    fun ORIG_NETWORKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 168, 1)
-    /**
-     * Data link source
-     */
-    val SOURCE_DL : String?
         get() {
             val o = __offset(170)
             return if (o != 0) {
@@ -831,12 +825,12 @@ class EOO : Table() {
                 null
             }
         }
-    val SOURCE_DLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(170, 1)
-    fun SOURCE_DLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 170, 1)
+    val ORIG_NETWORKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(170, 1)
+    fun ORIG_NETWORKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 170, 1)
     /**
-     * Type of the observation
+     * Data link source
      */
-    val TYPE : String?
+    val SOURCE_DL : String?
         get() {
             val o = __offset(172)
             return if (o != 0) {
@@ -845,8 +839,70 @@ class EOO : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(172, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 172, 1)
+    val SOURCE_DLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(172, 1)
+    fun SOURCE_DLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 172, 1)
+    /**
+     * Type of the observation
+     */
+    val TYPE : String?
+        get() {
+            val o = __offset(174)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(174, 1)
+    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 174, 1)
+    /**
+     * True if measured, false if computed. Required if azimuth is reported (JCO)
+     */
+    val AZIMUTH_MEASURED : Boolean
+        get() {
+            val o = __offset(176)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if measured, false if computed. Required if elevation is reported (JCO)
+     */
+    val ELEVATION_MEASURED : Boolean
+        get() {
+            val o = __offset(178)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if measured, false if computed. Required if range is reported (JCO)
+     */
+    val RANGE_MEASURED : Boolean
+        get() {
+            val o = __offset(180)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if measured, false if computed. Required if range-rate is reported (JCO)
+     */
+    val RANGERATE_MEASURED : Boolean
+        get() {
+            val o = __offset(182)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if measured, false if computed. Required if right ascension is reported (JCO)
+     */
+    val RA_MEASURED : Boolean
+        get() {
+            val o = __offset(184)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if measured, false if computed. Required if declination is reported (JCO)
+     */
+    val DECLINATION_MEASURED : Boolean
+        get() {
+            val o = __offset(186)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEOO(_bb: ByteBuffer): EOO = getRootAsEOO(_bb, EOO())
@@ -855,8 +911,8 @@ class EOO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
-        fun createEOO(builder: FlatBufferBuilder, EOBSERVATION_IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHODOffset: Int, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPEOffset: Int) : Int {
-            builder.startTable(85)
+        fun createEOO(builder: FlatBufferBuilder, EOBSERVATION_IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHODOffset: Int, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, FOV_COUNT_UCTS: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODEOffset: Int, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAMEOffset: Int, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPEOffset: Int, AZIMUTH_MEASURED: Boolean, ELEVATION_MEASURED: Boolean, RANGE_MEASURED: Boolean, RANGERATE_MEASURED: Boolean, RA_MEASURED: Boolean, DECLINATION_MEASURED: Boolean) : Int {
+            builder.startTable(92)
             addTYPE(builder, TYPEOffset)
             addSOURCE_DL(builder, SOURCE_DLOffset)
             addORIG_NETWORK(builder, ORIG_NETWORKOffset)
@@ -889,6 +945,7 @@ class EOO : Table() {
             addNET_OBJ_SIG(builder, NET_OBJ_SIG)
             addZEROPTD(builder, ZEROPTD)
             addEXP_DURATION(builder, EXP_DURATION)
+            addFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS)
             addFOV_COUNT(builder, FOV_COUNT)
             addSENZ(builder, SENZ)
             addSENY(builder, SENY)
@@ -938,13 +995,19 @@ class EOO : Table() {
             addOB_TIME(builder, OB_TIMEOffset)
             addCLASSIFICATION(builder, CLASSIFICATIONOffset)
             addEOBSERVATION_ID(builder, EOBSERVATION_IDOffset)
+            addDECLINATION_MEASURED(builder, DECLINATION_MEASURED)
+            addRA_MEASURED(builder, RA_MEASURED)
+            addRANGERATE_MEASURED(builder, RANGERATE_MEASURED)
+            addRANGE_MEASURED(builder, RANGE_MEASURED)
+            addELEVATION_MEASURED(builder, ELEVATION_MEASURED)
+            addAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED)
             addPENUMBRA(builder, PENUMBRA)
             addUMBRA(builder, UMBRA)
             addREFERENCE_FRAME(builder, REFERENCE_FRAME)
             addUCT(builder, UCT)
             return endEOO(builder)
         }
-        fun startEOO(builder: FlatBufferBuilder) = builder.startTable(85)
+        fun startEOO(builder: FlatBufferBuilder) = builder.startTable(92)
         fun addEOBSERVATION_ID(builder: FlatBufferBuilder, EOBSERVATION_ID: Int) = builder.addOffset(0, EOBSERVATION_ID, 0)
         fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(1, CLASSIFICATION, 0)
         fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(2, OB_TIME, 0)
@@ -995,41 +1058,48 @@ class EOO : Table() {
         fun addSENY(builder: FlatBufferBuilder, SENY: Float) = builder.addFloat(47, SENY, 0.0)
         fun addSENZ(builder: FlatBufferBuilder, SENZ: Float) = builder.addFloat(48, SENZ, 0.0)
         fun addFOV_COUNT(builder: FlatBufferBuilder, FOV_COUNT: Int) = builder.addInt(49, FOV_COUNT, 0)
-        fun addEXP_DURATION(builder: FlatBufferBuilder, EXP_DURATION: Float) = builder.addFloat(50, EXP_DURATION, 0.0)
-        fun addZEROPTD(builder: FlatBufferBuilder, ZEROPTD: Float) = builder.addFloat(51, ZEROPTD, 0.0)
-        fun addNET_OBJ_SIG(builder: FlatBufferBuilder, NET_OBJ_SIG: Float) = builder.addFloat(52, NET_OBJ_SIG, 0.0)
-        fun addNET_OBJ_SIG_UNC(builder: FlatBufferBuilder, NET_OBJ_SIG_UNC: Float) = builder.addFloat(53, NET_OBJ_SIG_UNC, 0.0)
-        fun addMAG(builder: FlatBufferBuilder, MAG: Float) = builder.addFloat(54, MAG, 0.0)
-        fun addMAG_UNC(builder: FlatBufferBuilder, MAG_UNC: Float) = builder.addFloat(55, MAG_UNC, 0.0)
-        fun addMAG_NORM_RANGE(builder: FlatBufferBuilder, MAG_NORM_RANGE: Float) = builder.addFloat(56, MAG_NORM_RANGE, 0.0)
-        fun addGEOLAT(builder: FlatBufferBuilder, GEOLAT: Float) = builder.addFloat(57, GEOLAT, 0.0)
-        fun addGEOLON(builder: FlatBufferBuilder, GEOLON: Float) = builder.addFloat(58, GEOLON, 0.0)
-        fun addGEOALT(builder: FlatBufferBuilder, GEOALT: Float) = builder.addFloat(59, GEOALT, 0.0)
-        fun addGEORANGE(builder: FlatBufferBuilder, GEORANGE: Float) = builder.addFloat(60, GEORANGE, 0.0)
-        fun addSKY_BKGRND(builder: FlatBufferBuilder, SKY_BKGRND: Float) = builder.addFloat(61, SKY_BKGRND, 0.0)
-        fun addPRIMARY_EXTINCTION(builder: FlatBufferBuilder, PRIMARY_EXTINCTION: Float) = builder.addFloat(62, PRIMARY_EXTINCTION, 0.0)
-        fun addPRIMARY_EXTINCTION_UNC(builder: FlatBufferBuilder, PRIMARY_EXTINCTION_UNC: Float) = builder.addFloat(63, PRIMARY_EXTINCTION_UNC, 0.0)
-        fun addSOLAR_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_PHASE_ANGLE: Float) = builder.addFloat(64, SOLAR_PHASE_ANGLE, 0.0)
-        fun addSOLAR_EQ_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_EQ_PHASE_ANGLE: Float) = builder.addFloat(65, SOLAR_EQ_PHASE_ANGLE, 0.0)
-        fun addSOLAR_DEC_ANGLE(builder: FlatBufferBuilder, SOLAR_DEC_ANGLE: Float) = builder.addFloat(66, SOLAR_DEC_ANGLE, 0.0)
-        fun addSHUTTER_DELAY(builder: FlatBufferBuilder, SHUTTER_DELAY: Float) = builder.addFloat(67, SHUTTER_DELAY, 0.0)
-        fun addTIMING_BIAS(builder: FlatBufferBuilder, TIMING_BIAS: Float) = builder.addFloat(68, TIMING_BIAS, 0.0)
-        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(69, RAW_FILE_URI, 0)
-        fun addINTENSITY(builder: FlatBufferBuilder, INTENSITY: Float) = builder.addFloat(70, INTENSITY, 0.0)
-        fun addBG_INTENSITY(builder: FlatBufferBuilder, BG_INTENSITY: Float) = builder.addFloat(71, BG_INTENSITY, 0.0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(72, DESCRIPTOR, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(73, SOURCE, 0)
-        fun addORIGIN(builder: FlatBufferBuilder, ORIGIN: Int) = builder.addOffset(74, ORIGIN, 0)
-        fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Int) = builder.addOffset(75, DATA_MODE, 0)
-        fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(76, CREATED_AT, 0)
-        fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(77, CREATED_BY, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(78, REFERENCE_FRAME, 0)
-        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(79, SEN_REFERENCE_FRAME, 0)
-        fun addUMBRA(builder: FlatBufferBuilder, UMBRA: Boolean) = builder.addBoolean(80, UMBRA, false)
-        fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(81, PENUMBRA, false)
-        fun addORIG_NETWORK(builder: FlatBufferBuilder, ORIG_NETWORK: Int) = builder.addOffset(82, ORIG_NETWORK, 0)
-        fun addSOURCE_DL(builder: FlatBufferBuilder, SOURCE_DL: Int) = builder.addOffset(83, SOURCE_DL, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(84, TYPE, 0)
+        fun addFOV_COUNT_UCTS(builder: FlatBufferBuilder, FOV_COUNT_UCTS: Int) = builder.addInt(50, FOV_COUNT_UCTS, 0)
+        fun addEXP_DURATION(builder: FlatBufferBuilder, EXP_DURATION: Float) = builder.addFloat(51, EXP_DURATION, 0.0)
+        fun addZEROPTD(builder: FlatBufferBuilder, ZEROPTD: Float) = builder.addFloat(52, ZEROPTD, 0.0)
+        fun addNET_OBJ_SIG(builder: FlatBufferBuilder, NET_OBJ_SIG: Float) = builder.addFloat(53, NET_OBJ_SIG, 0.0)
+        fun addNET_OBJ_SIG_UNC(builder: FlatBufferBuilder, NET_OBJ_SIG_UNC: Float) = builder.addFloat(54, NET_OBJ_SIG_UNC, 0.0)
+        fun addMAG(builder: FlatBufferBuilder, MAG: Float) = builder.addFloat(55, MAG, 0.0)
+        fun addMAG_UNC(builder: FlatBufferBuilder, MAG_UNC: Float) = builder.addFloat(56, MAG_UNC, 0.0)
+        fun addMAG_NORM_RANGE(builder: FlatBufferBuilder, MAG_NORM_RANGE: Float) = builder.addFloat(57, MAG_NORM_RANGE, 0.0)
+        fun addGEOLAT(builder: FlatBufferBuilder, GEOLAT: Float) = builder.addFloat(58, GEOLAT, 0.0)
+        fun addGEOLON(builder: FlatBufferBuilder, GEOLON: Float) = builder.addFloat(59, GEOLON, 0.0)
+        fun addGEOALT(builder: FlatBufferBuilder, GEOALT: Float) = builder.addFloat(60, GEOALT, 0.0)
+        fun addGEORANGE(builder: FlatBufferBuilder, GEORANGE: Float) = builder.addFloat(61, GEORANGE, 0.0)
+        fun addSKY_BKGRND(builder: FlatBufferBuilder, SKY_BKGRND: Float) = builder.addFloat(62, SKY_BKGRND, 0.0)
+        fun addPRIMARY_EXTINCTION(builder: FlatBufferBuilder, PRIMARY_EXTINCTION: Float) = builder.addFloat(63, PRIMARY_EXTINCTION, 0.0)
+        fun addPRIMARY_EXTINCTION_UNC(builder: FlatBufferBuilder, PRIMARY_EXTINCTION_UNC: Float) = builder.addFloat(64, PRIMARY_EXTINCTION_UNC, 0.0)
+        fun addSOLAR_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_PHASE_ANGLE: Float) = builder.addFloat(65, SOLAR_PHASE_ANGLE, 0.0)
+        fun addSOLAR_EQ_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_EQ_PHASE_ANGLE: Float) = builder.addFloat(66, SOLAR_EQ_PHASE_ANGLE, 0.0)
+        fun addSOLAR_DEC_ANGLE(builder: FlatBufferBuilder, SOLAR_DEC_ANGLE: Float) = builder.addFloat(67, SOLAR_DEC_ANGLE, 0.0)
+        fun addSHUTTER_DELAY(builder: FlatBufferBuilder, SHUTTER_DELAY: Float) = builder.addFloat(68, SHUTTER_DELAY, 0.0)
+        fun addTIMING_BIAS(builder: FlatBufferBuilder, TIMING_BIAS: Float) = builder.addFloat(69, TIMING_BIAS, 0.0)
+        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(70, RAW_FILE_URI, 0)
+        fun addINTENSITY(builder: FlatBufferBuilder, INTENSITY: Float) = builder.addFloat(71, INTENSITY, 0.0)
+        fun addBG_INTENSITY(builder: FlatBufferBuilder, BG_INTENSITY: Float) = builder.addFloat(72, BG_INTENSITY, 0.0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(73, DESCRIPTOR, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(74, SOURCE, 0)
+        fun addORIGIN(builder: FlatBufferBuilder, ORIGIN: Int) = builder.addOffset(75, ORIGIN, 0)
+        fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Int) = builder.addOffset(76, DATA_MODE, 0)
+        fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(77, CREATED_AT, 0)
+        fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(78, CREATED_BY, 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(79, REFERENCE_FRAME, 0)
+        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(80, SEN_REFERENCE_FRAME, 0)
+        fun addUMBRA(builder: FlatBufferBuilder, UMBRA: Boolean) = builder.addBoolean(81, UMBRA, false)
+        fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(82, PENUMBRA, false)
+        fun addORIG_NETWORK(builder: FlatBufferBuilder, ORIG_NETWORK: Int) = builder.addOffset(83, ORIG_NETWORK, 0)
+        fun addSOURCE_DL(builder: FlatBufferBuilder, SOURCE_DL: Int) = builder.addOffset(84, SOURCE_DL, 0)
+        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(85, TYPE, 0)
+        fun addAZIMUTH_MEASURED(builder: FlatBufferBuilder, AZIMUTH_MEASURED: Boolean) = builder.addBoolean(86, AZIMUTH_MEASURED, false)
+        fun addELEVATION_MEASURED(builder: FlatBufferBuilder, ELEVATION_MEASURED: Boolean) = builder.addBoolean(87, ELEVATION_MEASURED, false)
+        fun addRANGE_MEASURED(builder: FlatBufferBuilder, RANGE_MEASURED: Boolean) = builder.addBoolean(88, RANGE_MEASURED, false)
+        fun addRANGERATE_MEASURED(builder: FlatBufferBuilder, RANGERATE_MEASURED: Boolean) = builder.addBoolean(89, RANGERATE_MEASURED, false)
+        fun addRA_MEASURED(builder: FlatBufferBuilder, RA_MEASURED: Boolean) = builder.addBoolean(90, RA_MEASURED, false)
+        fun addDECLINATION_MEASURED(builder: FlatBufferBuilder, DECLINATION_MEASURED: Boolean) = builder.addBoolean(91, DECLINATION_MEASURED, false)
         fun endEOO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
