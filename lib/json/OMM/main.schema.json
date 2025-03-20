@@ -1,0 +1,336 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "refFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW", "EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING", "ALIGN_CB", "ALIGN_EARTH", "B1950", "CIRS", "DTRFyyyy", "EFG", "EME2000", "FIXED_CB", "FIXED_EARTH", "GCRFn", "GTOD", "MOD_CB", "MOD_EARTH", "MOD_MOON", "MOE_CB", "MOE_EARTH", "MOON_ME", "MOON_MEIAUE", "MOON_PAxxx", "TEMEOFDATE", "TEMEOFEPOCH", "TIRS", "TOD_CB", "TOD_EARTH", "TOD_MOON", "TOE_CB", "TOE_EARTH", "TOE_MOON", "TRUE_ECLIPTIC", "UVW_GO_INERTIAL", "WGS84", "ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "meanElementTheory" : {
+      "type" : "string",
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "ephemerisType" : {
+      "type" : "string",
+      "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/refFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCOLLECTION" : {
+      "type" : "object",
+      "description" : "Collection of Reference Frame Messages",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "description" : "Time System",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MET" : {
+      "type" : "object",
+      "description" : "Mean Element Theory",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "METCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMM" : {
+      "type" : "object",
+      "description" : "Orbit Mean Elements Message",
+      "properties" : {
+        "CCSDS_OMM_VERS" : {
+                "type" : "number",
+                "description" : "CCSDS OMM Version"
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation Date (ISO 8601 UTC format)"
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Satellite Name(s)"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International Designator (YYYY-NNNAAA)"
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Center Name (e.g. EARTH, MARS)"
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/refFrame",
+                "description" : "Reference Frame"
+              },
+        "REFERENCE_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Reference Frame Epoch (ISO 8601 UTC format)"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem",
+                "description" : "Time System [M, UTC]"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory",
+                "description" : "Mean Element Theory"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT (O)"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "EPOCH of Mean Keplerian elements (ISO 8601 UTC format)"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis in km or Mean Motion in rev/day"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity (unitless)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "RA_OF_ASC_NODE in degrees"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "ARG_OF_PERICENTER in degrees"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "MEAN_ANOMALY in degrees"
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "GM in km**3/s**2"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "MASS in kg"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_AREA in m**2"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_COEFF (unitless)"
+              },
+        "DRAG_AREA" : {
+                "type" : "number",
+                "description" : "DRAG_AREA in m**2"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number",
+                "description" : "DRAG_COEFF (unitless)"
+              },
+        "EPHEMERIS_TYPE" : {
+                "$ref" : "#/definitions/ephemerisType",
+                "description" : "TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)\nEPHEMERIS_TYPE Default=0"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION_TYPE Default=U"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD_CAT_ID (integer) [O if SGP/SGP4]"
+              },
+        "ELEMENT_SET_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ELEMENT_SET_NO [O if SGP/SGP4]"
+              },
+        "REV_AT_EPOCH" : {
+                "type" : "number",
+                "description" : "REV_AT_EPOCH [O if SGP/SGP4]"
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/refFrame",
+                "description" : "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]"
+              },
+        "CX_X" : {
+                "type" : "number",
+                "description" : "CX_X [km**2]"
+              },
+        "CY_X" : {
+                "type" : "number",
+                "description" : "CY_X [km**2]"
+              },
+        "CY_Y" : {
+                "type" : "number",
+                "description" : "CY_Y [km**2]"
+              },
+        "CZ_X" : {
+                "type" : "number",
+                "description" : "CZ_X [km**2]"
+              },
+        "CZ_Y" : {
+                "type" : "number",
+                "description" : "CZ_Y [km**2]"
+              },
+        "CZ_Z" : {
+                "type" : "number",
+                "description" : "CZ_Z [km**2]"
+              },
+        "CX_DOT_X" : {
+                "type" : "number",
+                "description" : "CX_DOT_X [km**2/s]"
+              },
+        "CX_DOT_Y" : {
+                "type" : "number",
+                "description" : "CX_DOT_Y [km**2/s]"
+              },
+        "CX_DOT_Z" : {
+                "type" : "number",
+                "description" : "CX_DOT_Z [km**2/s]"
+              },
+        "CX_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "CX_DOT_X_DOT [km**2/s**2]"
+              },
+        "CY_DOT_X" : {
+                "type" : "number",
+                "description" : "CY_DOT_X [km**2/s]"
+              },
+        "CY_DOT_Y" : {
+                "type" : "number",
+                "description" : "CY_DOT_Y [km**2/s]"
+              },
+        "CY_DOT_Z" : {
+                "type" : "number",
+                "description" : "CY_DOT_Z [km**2/s]"
+              },
+        "CY_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "CY_DOT_X_DOT [km**2/s**2]"
+              },
+        "CY_DOT_Y_DOT" : {
+                "type" : "number",
+                "description" : "CY_DOT_Y_DOT [km**2/s**2]"
+              },
+        "CZ_DOT_X" : {
+                "type" : "number",
+                "description" : "CZ_DOT_X [km**2/s]"
+              },
+        "CZ_DOT_Y" : {
+                "type" : "number",
+                "description" : "CZ_DOT_Y [km**2/s]"
+              },
+        "CZ_DOT_Z" : {
+                "type" : "number",
+                "description" : "CZ_DOT_Z [km**2/s]"
+              },
+        "CZ_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "CZ_DOT_X_DOT [km**2/s**2]"
+              },
+        "CZ_DOT_Y_DOT" : {
+                "type" : "number",
+                "description" : "CZ_DOT_Y_DOT [km**2/s**2]"
+              },
+        "CZ_DOT_Z_DOT" : {
+                "type" : "number",
+                "description" : "CZ_DOT_Z_DOT [km**2/s**2]"
+              },
+        "USER_DEFINED_BIP_0044_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "USER_DEFINED_BIP_0044_TYPE [O, units per ICD]"
+              },
+        "USER_DEFINED_OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]"
+              },
+        "USER_DEFINED_EARTH_MODEL" : {
+                "type" : "string",
+                "description" : "USER_DEFINED_EARTH_MODEL [O, units per ICD]"
+              },
+        "USER_DEFINED_EPOCH_TIMESTAMP" : {
+                "type" : "number",
+                "description" : "USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]"
+              },
+        "USER_DEFINED_MICROSECONDS" : {
+                "type" : "number",
+                "description" : "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMM"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OMM"
+}

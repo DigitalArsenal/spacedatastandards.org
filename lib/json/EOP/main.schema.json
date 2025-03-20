@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DataType" : {
+      "type" : "string",
+      "enum": ["OBSERVED", "PREDICTED"]
+    },
+    "EOP" : {
+      "type" : "object",
+      "description" : "Earth Orientation Parameters",
+      "properties" : {
+        "DATE" : {
+                "type" : "string",
+                "description" : "Date in ISO 8601 format"
+              },
+        "MJD" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Modified Julian Date"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "x pole coordinate in arcseconds"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "y pole coordinate in arcseconds"
+              },
+        "UT1_MINUS_UTC" : {
+                "type" : "number",
+                "description" : "UT1-UTC in seconds"
+              },
+        "LOD" : {
+                "type" : "number",
+                "description" : "Length of Day correction in seconds"
+              },
+        "DPSI" : {
+                "type" : "number",
+                "description" : "Nutation correction in longitude (δΔψ) in arcseconds"
+              },
+        "DEPS" : {
+                "type" : "number",
+                "description" : "Nutation correction in obliquity (δΔε) in arcseconds"
+              },
+        "DX" : {
+                "type" : "number",
+                "description" : "Celestial pole offset in x (δX) in arcseconds"
+              },
+        "DY" : {
+                "type" : "number",
+                "description" : "Celestial pole offset in y (δY) in arcseconds"
+              },
+        "DAT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Delta Atomic Time (TAI-UTC) in seconds"
+              },
+        "DATA_TYPE" : {
+                "$ref" : "#/definitions/DataType",
+                "description" : "Data type (O = Observed, P = Predicted)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EOPCollection" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOP"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EOP"
+}

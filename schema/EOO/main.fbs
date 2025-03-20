@@ -1,5 +1,5 @@
-// Hash: 37a060275afbaf2f0cfd2091121ee7690bc37620efaa9073451a9b8edc660572
-// Version: 1.0.0
+// Hash: aa2d410805e2bf218bfdd6be4f056372a46a78cb307ec3783623fb4e23729626
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
@@ -156,6 +156,9 @@ table EOO {
   /// Number of fields of view
   FOV_COUNT: int;
 
+  /// Number of uncorrelated satellites in the field of view (JCO)
+  FOV_COUNT_UCTS: int;
+
   /// Duration of the exposure
   EXP_DURATION: float;
 
@@ -260,8 +263,25 @@ table EOO {
 
   /// Type of the observation
   TYPE: string;
-}
 
+  /// True if measured, false if computed. Required if azimuth is reported (JCO)
+  AZIMUTH_MEASURED: bool;
+
+  /// True if measured, false if computed. Required if elevation is reported (JCO)
+  ELEVATION_MEASURED: bool;
+
+  /// True if measured, false if computed. Required if range is reported (JCO)
+  RANGE_MEASURED: bool;
+
+  /// True if measured, false if computed. Required if range-rate is reported (JCO)
+  RANGERATE_MEASURED: bool;
+
+  /// True if measured, false if computed. Required if right ascension is reported (JCO)
+  RA_MEASURED: bool;
+
+  /// True if measured, false if computed. Required if declination is reported (JCO)
+  DECLINATION_MEASURED: bool;
+}
 
 table EOOCOLLECTION {
   RECORDS: [EOO];
