@@ -141,6 +141,46 @@ public struct EOO: FlatBufferObject, Verifiable {
     case RANGERATE_MEASURED = 186
     case RA_MEASURED = 188
     case DECLINATION_MEASURED = 190
+    case NIIRS = 192
+    case METERS_PER_PIXEL = 194
+    case IMAGE_SNR = 196
+    case IMAGE_BIT_DEPTH = 198
+    case IMAGE_WIDTH = 200
+    case IMAGE_HEIGHT = 202
+    case IMAGE_COMPRESSION = 204
+    case IMAGE_COMPRESSION_RATIO = 206
+    case PROCESSED_IMAGE_URI = 208
+    case IMAGE_AUTO_ENHANCED = 210
+    case MULTI_FRAME_STACKED = 212
+    case SYNTHETIC_TRACKING_USED = 214
+    case IMAGE_SHARPNESS = 216
+    case IMAGE_NOISE_STDDEV = 218
+    case IMAGE_CONTRAST = 220
+    case IMAGE_DYNAMIC_RANGE = 222
+    case IMAGE_ENTROPY = 224
+    case BACKGROUND_UNIFORMITY = 226
+    case BACKGROUND_MEAN_LEVEL = 228
+    case SATURATED_PIXEL_PERCENT = 230
+    case DEAD_PIXEL_PERCENT = 232
+    case PSF_FWHM = 234
+    case CLOUD_COVER_PERCENT = 236
+    case CLOUD_DETECTION_CONFIDENCE = 238
+    case HAZE_PERCENT = 240
+    case AEROSOL_OPTICAL_THICKNESS = 242
+    case WATER_VAPOR_CONTENT = 244
+    case SUN_ELEVATION = 246
+    case SUN_AZIMUTH = 248
+    case VIEW_ZENITH_ANGLE = 250
+    case VIEW_AZIMUTH_ANGLE = 252
+    case OFF_NADIR_ANGLE = 254
+    case SWATH_WIDTH_KM = 256
+    case MEAN_TERRAIN_ELEVATION = 258
+    case TERRAIN_ELEVATION_STDDEV = 260
+    case SHADOW_COVER_PERCENT = 262
+    case SUNGLINT_PRESENT = 264
+    case SUNGLINT_PERCENT = 266
+    case SNOW_ICE_COVER_PERCENT = 268
+    case VALID_DATA_AREA_KM2 = 270
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -367,7 +407,89 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var RA_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.RA_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  True if measured, false if computed. Required if declination is reported.
   public var DECLINATION_MEASURED: Bool { let o = _accessor.offset(VTOFFSET.DECLINATION_MEASURED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 94) }
+  ///  National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  public var NIIRS: Float32 { let o = _accessor.offset(VTOFFSET.NIIRS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Ground sample distance in meters per pixel.
+  public var METERS_PER_PIXEL: Float32 { let o = _accessor.offset(VTOFFSET.METERS_PER_PIXEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  public var IMAGE_SNR: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Bit depth of the image (e.g., 8, 12, 16).
+  public var IMAGE_BIT_DEPTH: Int32 { let o = _accessor.offset(VTOFFSET.IMAGE_BIT_DEPTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Width of the image in pixels.
+  public var IMAGE_WIDTH: Int32 { let o = _accessor.offset(VTOFFSET.IMAGE_WIDTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Height of the image in pixels.
+  public var IMAGE_HEIGHT: Int32 { let o = _accessor.offset(VTOFFSET.IMAGE_HEIGHT.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  public var IMAGE_COMPRESSION: String? { let o = _accessor.offset(VTOFFSET.IMAGE_COMPRESSION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_COMPRESSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE_COMPRESSION.v) }
+  ///  Compression ratio used (original size / compressed size), if applicable.
+  public var IMAGE_COMPRESSION_RATIO: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_COMPRESSION_RATIO.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  URI to the processed image used for this observation.
+  public var PROCESSED_IMAGE_URI: String? { let o = _accessor.offset(VTOFFSET.PROCESSED_IMAGE_URI.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROCESSED_IMAGE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROCESSED_IMAGE_URI.v) }
+  ///  Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  public var IMAGE_AUTO_ENHANCED: Bool { let o = _accessor.offset(VTOFFSET.IMAGE_AUTO_ENHANCED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if the observation was taken with multiple frames stacked into one image.
+  public var MULTI_FRAME_STACKED: Bool { let o = _accessor.offset(VTOFFSET.MULTI_FRAME_STACKED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if synthetic tracking was used to create the image.
+  public var SYNTHETIC_TRACKING_USED: Bool { let o = _accessor.offset(VTOFFSET.SYNTHETIC_TRACKING_USED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  public var IMAGE_SHARPNESS: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_SHARPNESS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Noise level of the image, estimated via pixel intensity variance in background regions.
+  public var IMAGE_NOISE_STDDEV: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_NOISE_STDDEV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  public var IMAGE_CONTRAST: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_CONTRAST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  public var IMAGE_DYNAMIC_RANGE: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_DYNAMIC_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  public var IMAGE_ENTROPY: Float32 { let o = _accessor.offset(VTOFFSET.IMAGE_ENTROPY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  public var BACKGROUND_UNIFORMITY: Float32 { let o = _accessor.offset(VTOFFSET.BACKGROUND_UNIFORMITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Mean background level, computed from non-object regions in pixel units.
+  public var BACKGROUND_MEAN_LEVEL: Float32 { let o = _accessor.offset(VTOFFSET.BACKGROUND_MEAN_LEVEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Percentage of saturated pixels in the image. Indicates overexposure when high.
+  public var SATURATED_PIXEL_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.SATURATED_PIXEL_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  public var DEAD_PIXEL_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.DEAD_PIXEL_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  public var PSF_FWHM: Float32 { let o = _accessor.offset(VTOFFSET.PSF_FWHM.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  public var CLOUD_COVER_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.CLOUD_COVER_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  public var CLOUD_DETECTION_CONFIDENCE: Float32 { let o = _accessor.offset(VTOFFSET.CLOUD_DETECTION_CONFIDENCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  public var HAZE_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.HAZE_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  public var AEROSOL_OPTICAL_THICKNESS: Float32 { let o = _accessor.offset(VTOFFSET.AEROSOL_OPTICAL_THICKNESS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  public var WATER_VAPOR_CONTENT: Float32 { let o = _accessor.offset(VTOFFSET.WATER_VAPOR_CONTENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sun elevation angle at the time of image capture, in degrees above the horizon.
+  public var SUN_ELEVATION: Float32 { let o = _accessor.offset(VTOFFSET.SUN_ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Sun azimuth angle at the time of image capture, in degrees from true north.
+  public var SUN_AZIMUTH: Float32 { let o = _accessor.offset(VTOFFSET.SUN_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  public var VIEW_ZENITH_ANGLE: Float32 { let o = _accessor.offset(VTOFFSET.VIEW_ZENITH_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  View azimuth angle (direction of sensor relative to north), in degrees.
+  public var VIEW_AZIMUTH_ANGLE: Float32 { let o = _accessor.offset(VTOFFSET.VIEW_AZIMUTH_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Off-nadir angle of the sensor at the time of image capture, in degrees.
+  public var OFF_NADIR_ANGLE: Float32 { let o = _accessor.offset(VTOFFSET.OFF_NADIR_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Ground coverage width of the image swath in kilometers.
+  public var SWATH_WIDTH_KM: Float32 { let o = _accessor.offset(VTOFFSET.SWATH_WIDTH_KM.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Mean terrain elevation in the image footprint, in meters above sea level.
+  public var MEAN_TERRAIN_ELEVATION: Float32 { let o = _accessor.offset(VTOFFSET.MEAN_TERRAIN_ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Standard deviation of terrain elevation in the image footprint, in meters.
+  public var TERRAIN_ELEVATION_STDDEV: Float32 { let o = _accessor.offset(VTOFFSET.TERRAIN_ELEVATION_STDDEV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  public var SHADOW_COVER_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.SHADOW_COVER_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  public var SUNGLINT_PRESENT: Bool { let o = _accessor.offset(VTOFFSET.SUNGLINT_PRESENT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Percentage of image affected by sunglint.
+  public var SUNGLINT_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.SUNGLINT_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Estimated percentage of snow or ice coverage in the image footprint.
+  public var SNOW_ICE_COVER_PERCENT: Float32 { let o = _accessor.offset(VTOFFSET.SNOW_ICE_COVER_PERCENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  public var VALID_DATA_AREA_KM2: Float32 { let o = _accessor.offset(VTOFFSET.VALID_DATA_AREA_KM2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public static func startEOO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 134) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
@@ -471,6 +593,50 @@ public struct EOO: FlatBufferObject, Verifiable {
    at: VTOFFSET.RA_MEASURED.p) }
   public static func add(DECLINATION_MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION_MEASURED, def: false,
    at: VTOFFSET.DECLINATION_MEASURED.p) }
+  public static func add(NIIRS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NIIRS, def: 0.0, at: VTOFFSET.NIIRS.p) }
+  public static func add(METERS_PER_PIXEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METERS_PER_PIXEL, def: 0.0, at: VTOFFSET.METERS_PER_PIXEL.p) }
+  public static func add(IMAGE_SNR: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SNR, def: 0.0, at: VTOFFSET.IMAGE_SNR.p) }
+  public static func add(IMAGE_BIT_DEPTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_BIT_DEPTH, def: 0, at: VTOFFSET.IMAGE_BIT_DEPTH.p) }
+  public static func add(IMAGE_WIDTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_WIDTH, def: 0, at: VTOFFSET.IMAGE_WIDTH.p) }
+  public static func add(IMAGE_HEIGHT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_HEIGHT, def: 0, at: VTOFFSET.IMAGE_HEIGHT.p) }
+  public static func add(IMAGE_COMPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_COMPRESSION, at: VTOFFSET.IMAGE_COMPRESSION.p) }
+  public static func add(IMAGE_COMPRESSION_RATIO: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_COMPRESSION_RATIO, def: 0.0, at: VTOFFSET.IMAGE_COMPRESSION_RATIO.p) }
+  public static func add(PROCESSED_IMAGE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESSED_IMAGE_URI, at: VTOFFSET.PROCESSED_IMAGE_URI.p) }
+  public static func add(IMAGE_AUTO_ENHANCED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_AUTO_ENHANCED, def: false,
+   at: VTOFFSET.IMAGE_AUTO_ENHANCED.p) }
+  public static func add(MULTI_FRAME_STACKED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULTI_FRAME_STACKED, def: false,
+   at: VTOFFSET.MULTI_FRAME_STACKED.p) }
+  public static func add(SYNTHETIC_TRACKING_USED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYNTHETIC_TRACKING_USED, def: false,
+   at: VTOFFSET.SYNTHETIC_TRACKING_USED.p) }
+  public static func add(IMAGE_SHARPNESS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SHARPNESS, def: 0.0, at: VTOFFSET.IMAGE_SHARPNESS.p) }
+  public static func add(IMAGE_NOISE_STDDEV: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_NOISE_STDDEV, def: 0.0, at: VTOFFSET.IMAGE_NOISE_STDDEV.p) }
+  public static func add(IMAGE_CONTRAST: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_CONTRAST, def: 0.0, at: VTOFFSET.IMAGE_CONTRAST.p) }
+  public static func add(IMAGE_DYNAMIC_RANGE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_DYNAMIC_RANGE, def: 0.0, at: VTOFFSET.IMAGE_DYNAMIC_RANGE.p) }
+  public static func add(IMAGE_ENTROPY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_ENTROPY, def: 0.0, at: VTOFFSET.IMAGE_ENTROPY.p) }
+  public static func add(BACKGROUND_UNIFORMITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_UNIFORMITY, def: 0.0, at: VTOFFSET.BACKGROUND_UNIFORMITY.p) }
+  public static func add(BACKGROUND_MEAN_LEVEL: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_MEAN_LEVEL, def: 0.0, at: VTOFFSET.BACKGROUND_MEAN_LEVEL.p) }
+  public static func add(SATURATED_PIXEL_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SATURATED_PIXEL_PERCENT, def: 0.0, at: VTOFFSET.SATURATED_PIXEL_PERCENT.p) }
+  public static func add(DEAD_PIXEL_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEAD_PIXEL_PERCENT, def: 0.0, at: VTOFFSET.DEAD_PIXEL_PERCENT.p) }
+  public static func add(PSF_FWHM: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PSF_FWHM, def: 0.0, at: VTOFFSET.PSF_FWHM.p) }
+  public static func add(CLOUD_COVER_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOUD_COVER_PERCENT, def: 0.0, at: VTOFFSET.CLOUD_COVER_PERCENT.p) }
+  public static func add(CLOUD_DETECTION_CONFIDENCE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOUD_DETECTION_CONFIDENCE, def: 0.0, at: VTOFFSET.CLOUD_DETECTION_CONFIDENCE.p) }
+  public static func add(HAZE_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAZE_PERCENT, def: 0.0, at: VTOFFSET.HAZE_PERCENT.p) }
+  public static func add(AEROSOL_OPTICAL_THICKNESS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AEROSOL_OPTICAL_THICKNESS, def: 0.0, at: VTOFFSET.AEROSOL_OPTICAL_THICKNESS.p) }
+  public static func add(WATER_VAPOR_CONTENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WATER_VAPOR_CONTENT, def: 0.0, at: VTOFFSET.WATER_VAPOR_CONTENT.p) }
+  public static func add(SUN_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_ELEVATION, def: 0.0, at: VTOFFSET.SUN_ELEVATION.p) }
+  public static func add(SUN_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_AZIMUTH, def: 0.0, at: VTOFFSET.SUN_AZIMUTH.p) }
+  public static func add(VIEW_ZENITH_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_ZENITH_ANGLE, def: 0.0, at: VTOFFSET.VIEW_ZENITH_ANGLE.p) }
+  public static func add(VIEW_AZIMUTH_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_AZIMUTH_ANGLE, def: 0.0, at: VTOFFSET.VIEW_AZIMUTH_ANGLE.p) }
+  public static func add(OFF_NADIR_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFF_NADIR_ANGLE, def: 0.0, at: VTOFFSET.OFF_NADIR_ANGLE.p) }
+  public static func add(SWATH_WIDTH_KM: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SWATH_WIDTH_KM, def: 0.0, at: VTOFFSET.SWATH_WIDTH_KM.p) }
+  public static func add(MEAN_TERRAIN_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_TERRAIN_ELEVATION, def: 0.0, at: VTOFFSET.MEAN_TERRAIN_ELEVATION.p) }
+  public static func add(TERRAIN_ELEVATION_STDDEV: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERRAIN_ELEVATION_STDDEV, def: 0.0, at: VTOFFSET.TERRAIN_ELEVATION_STDDEV.p) }
+  public static func add(SHADOW_COVER_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADOW_COVER_PERCENT, def: 0.0, at: VTOFFSET.SHADOW_COVER_PERCENT.p) }
+  public static func add(SUNGLINT_PRESENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUNGLINT_PRESENT, def: false,
+   at: VTOFFSET.SUNGLINT_PRESENT.p) }
+  public static func add(SUNGLINT_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUNGLINT_PERCENT, def: 0.0, at: VTOFFSET.SUNGLINT_PERCENT.p) }
+  public static func add(SNOW_ICE_COVER_PERCENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNOW_ICE_COVER_PERCENT, def: 0.0, at: VTOFFSET.SNOW_ICE_COVER_PERCENT.p) }
+  public static func add(VALID_DATA_AREA_KM2: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_DATA_AREA_KM2, def: 0.0, at: VTOFFSET.VALID_DATA_AREA_KM2.p) }
   public static func endEOO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEOO(
     _ fbb: inout FlatBufferBuilder,
@@ -567,7 +733,47 @@ public struct EOO: FlatBufferObject, Verifiable {
     RANGE_MEASURED: Bool = false,
     RANGERATE_MEASURED: Bool = false,
     RA_MEASURED: Bool = false,
-    DECLINATION_MEASURED: Bool = false
+    DECLINATION_MEASURED: Bool = false,
+    NIIRS: Float32 = 0.0,
+    METERS_PER_PIXEL: Float32 = 0.0,
+    IMAGE_SNR: Float32 = 0.0,
+    IMAGE_BIT_DEPTH: Int32 = 0,
+    IMAGE_WIDTH: Int32 = 0,
+    IMAGE_HEIGHT: Int32 = 0,
+    IMAGE_COMPRESSIONOffset IMAGE_COMPRESSION: Offset = Offset(),
+    IMAGE_COMPRESSION_RATIO: Float32 = 0.0,
+    PROCESSED_IMAGE_URIOffset PROCESSED_IMAGE_URI: Offset = Offset(),
+    IMAGE_AUTO_ENHANCED: Bool = false,
+    MULTI_FRAME_STACKED: Bool = false,
+    SYNTHETIC_TRACKING_USED: Bool = false,
+    IMAGE_SHARPNESS: Float32 = 0.0,
+    IMAGE_NOISE_STDDEV: Float32 = 0.0,
+    IMAGE_CONTRAST: Float32 = 0.0,
+    IMAGE_DYNAMIC_RANGE: Float32 = 0.0,
+    IMAGE_ENTROPY: Float32 = 0.0,
+    BACKGROUND_UNIFORMITY: Float32 = 0.0,
+    BACKGROUND_MEAN_LEVEL: Float32 = 0.0,
+    SATURATED_PIXEL_PERCENT: Float32 = 0.0,
+    DEAD_PIXEL_PERCENT: Float32 = 0.0,
+    PSF_FWHM: Float32 = 0.0,
+    CLOUD_COVER_PERCENT: Float32 = 0.0,
+    CLOUD_DETECTION_CONFIDENCE: Float32 = 0.0,
+    HAZE_PERCENT: Float32 = 0.0,
+    AEROSOL_OPTICAL_THICKNESS: Float32 = 0.0,
+    WATER_VAPOR_CONTENT: Float32 = 0.0,
+    SUN_ELEVATION: Float32 = 0.0,
+    SUN_AZIMUTH: Float32 = 0.0,
+    VIEW_ZENITH_ANGLE: Float32 = 0.0,
+    VIEW_AZIMUTH_ANGLE: Float32 = 0.0,
+    OFF_NADIR_ANGLE: Float32 = 0.0,
+    SWATH_WIDTH_KM: Float32 = 0.0,
+    MEAN_TERRAIN_ELEVATION: Float32 = 0.0,
+    TERRAIN_ELEVATION_STDDEV: Float32 = 0.0,
+    SHADOW_COVER_PERCENT: Float32 = 0.0,
+    SUNGLINT_PRESENT: Bool = false,
+    SUNGLINT_PERCENT: Float32 = 0.0,
+    SNOW_ICE_COVER_PERCENT: Float32 = 0.0,
+    VALID_DATA_AREA_KM2: Float32 = 0.0
   ) -> Offset {
     let __start = EOO.startEOO(&fbb)
     EOO.add(ID: ID, &fbb)
@@ -664,6 +870,46 @@ public struct EOO: FlatBufferObject, Verifiable {
     EOO.add(RANGERATE_MEASURED: RANGERATE_MEASURED, &fbb)
     EOO.add(RA_MEASURED: RA_MEASURED, &fbb)
     EOO.add(DECLINATION_MEASURED: DECLINATION_MEASURED, &fbb)
+    EOO.add(NIIRS: NIIRS, &fbb)
+    EOO.add(METERS_PER_PIXEL: METERS_PER_PIXEL, &fbb)
+    EOO.add(IMAGE_SNR: IMAGE_SNR, &fbb)
+    EOO.add(IMAGE_BIT_DEPTH: IMAGE_BIT_DEPTH, &fbb)
+    EOO.add(IMAGE_WIDTH: IMAGE_WIDTH, &fbb)
+    EOO.add(IMAGE_HEIGHT: IMAGE_HEIGHT, &fbb)
+    EOO.add(IMAGE_COMPRESSION: IMAGE_COMPRESSION, &fbb)
+    EOO.add(IMAGE_COMPRESSION_RATIO: IMAGE_COMPRESSION_RATIO, &fbb)
+    EOO.add(PROCESSED_IMAGE_URI: PROCESSED_IMAGE_URI, &fbb)
+    EOO.add(IMAGE_AUTO_ENHANCED: IMAGE_AUTO_ENHANCED, &fbb)
+    EOO.add(MULTI_FRAME_STACKED: MULTI_FRAME_STACKED, &fbb)
+    EOO.add(SYNTHETIC_TRACKING_USED: SYNTHETIC_TRACKING_USED, &fbb)
+    EOO.add(IMAGE_SHARPNESS: IMAGE_SHARPNESS, &fbb)
+    EOO.add(IMAGE_NOISE_STDDEV: IMAGE_NOISE_STDDEV, &fbb)
+    EOO.add(IMAGE_CONTRAST: IMAGE_CONTRAST, &fbb)
+    EOO.add(IMAGE_DYNAMIC_RANGE: IMAGE_DYNAMIC_RANGE, &fbb)
+    EOO.add(IMAGE_ENTROPY: IMAGE_ENTROPY, &fbb)
+    EOO.add(BACKGROUND_UNIFORMITY: BACKGROUND_UNIFORMITY, &fbb)
+    EOO.add(BACKGROUND_MEAN_LEVEL: BACKGROUND_MEAN_LEVEL, &fbb)
+    EOO.add(SATURATED_PIXEL_PERCENT: SATURATED_PIXEL_PERCENT, &fbb)
+    EOO.add(DEAD_PIXEL_PERCENT: DEAD_PIXEL_PERCENT, &fbb)
+    EOO.add(PSF_FWHM: PSF_FWHM, &fbb)
+    EOO.add(CLOUD_COVER_PERCENT: CLOUD_COVER_PERCENT, &fbb)
+    EOO.add(CLOUD_DETECTION_CONFIDENCE: CLOUD_DETECTION_CONFIDENCE, &fbb)
+    EOO.add(HAZE_PERCENT: HAZE_PERCENT, &fbb)
+    EOO.add(AEROSOL_OPTICAL_THICKNESS: AEROSOL_OPTICAL_THICKNESS, &fbb)
+    EOO.add(WATER_VAPOR_CONTENT: WATER_VAPOR_CONTENT, &fbb)
+    EOO.add(SUN_ELEVATION: SUN_ELEVATION, &fbb)
+    EOO.add(SUN_AZIMUTH: SUN_AZIMUTH, &fbb)
+    EOO.add(VIEW_ZENITH_ANGLE: VIEW_ZENITH_ANGLE, &fbb)
+    EOO.add(VIEW_AZIMUTH_ANGLE: VIEW_AZIMUTH_ANGLE, &fbb)
+    EOO.add(OFF_NADIR_ANGLE: OFF_NADIR_ANGLE, &fbb)
+    EOO.add(SWATH_WIDTH_KM: SWATH_WIDTH_KM, &fbb)
+    EOO.add(MEAN_TERRAIN_ELEVATION: MEAN_TERRAIN_ELEVATION, &fbb)
+    EOO.add(TERRAIN_ELEVATION_STDDEV: TERRAIN_ELEVATION_STDDEV, &fbb)
+    EOO.add(SHADOW_COVER_PERCENT: SHADOW_COVER_PERCENT, &fbb)
+    EOO.add(SUNGLINT_PRESENT: SUNGLINT_PRESENT, &fbb)
+    EOO.add(SUNGLINT_PERCENT: SUNGLINT_PERCENT, &fbb)
+    EOO.add(SNOW_ICE_COVER_PERCENT: SNOW_ICE_COVER_PERCENT, &fbb)
+    EOO.add(VALID_DATA_AREA_KM2: VALID_DATA_AREA_KM2, &fbb)
     return EOO.endEOO(&fbb, start: __start)
   }
 
@@ -763,6 +1009,46 @@ public struct EOO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.RANGERATE_MEASURED.p, fieldName: "RANGERATE_MEASURED", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.RA_MEASURED.p, fieldName: "RA_MEASURED", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.DECLINATION_MEASURED.p, fieldName: "DECLINATION_MEASURED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.NIIRS.p, fieldName: "NIIRS", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.METERS_PER_PIXEL.p, fieldName: "METERS_PER_PIXEL", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_SNR.p, fieldName: "IMAGE_SNR", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_BIT_DEPTH.p, fieldName: "IMAGE_BIT_DEPTH", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_WIDTH.p, fieldName: "IMAGE_WIDTH", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_HEIGHT.p, fieldName: "IMAGE_HEIGHT", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_COMPRESSION.p, fieldName: "IMAGE_COMPRESSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.IMAGE_COMPRESSION_RATIO.p, fieldName: "IMAGE_COMPRESSION_RATIO", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.PROCESSED_IMAGE_URI.p, fieldName: "PROCESSED_IMAGE_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.IMAGE_AUTO_ENHANCED.p, fieldName: "IMAGE_AUTO_ENHANCED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.MULTI_FRAME_STACKED.p, fieldName: "MULTI_FRAME_STACKED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.SYNTHETIC_TRACKING_USED.p, fieldName: "SYNTHETIC_TRACKING_USED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.IMAGE_SHARPNESS.p, fieldName: "IMAGE_SHARPNESS", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_NOISE_STDDEV.p, fieldName: "IMAGE_NOISE_STDDEV", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_CONTRAST.p, fieldName: "IMAGE_CONTRAST", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_DYNAMIC_RANGE.p, fieldName: "IMAGE_DYNAMIC_RANGE", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.IMAGE_ENTROPY.p, fieldName: "IMAGE_ENTROPY", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.BACKGROUND_UNIFORMITY.p, fieldName: "BACKGROUND_UNIFORMITY", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.BACKGROUND_MEAN_LEVEL.p, fieldName: "BACKGROUND_MEAN_LEVEL", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SATURATED_PIXEL_PERCENT.p, fieldName: "SATURATED_PIXEL_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.DEAD_PIXEL_PERCENT.p, fieldName: "DEAD_PIXEL_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.PSF_FWHM.p, fieldName: "PSF_FWHM", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.CLOUD_COVER_PERCENT.p, fieldName: "CLOUD_COVER_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.CLOUD_DETECTION_CONFIDENCE.p, fieldName: "CLOUD_DETECTION_CONFIDENCE", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.HAZE_PERCENT.p, fieldName: "HAZE_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.AEROSOL_OPTICAL_THICKNESS.p, fieldName: "AEROSOL_OPTICAL_THICKNESS", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.WATER_VAPOR_CONTENT.p, fieldName: "WATER_VAPOR_CONTENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SUN_ELEVATION.p, fieldName: "SUN_ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SUN_AZIMUTH.p, fieldName: "SUN_AZIMUTH", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.VIEW_ZENITH_ANGLE.p, fieldName: "VIEW_ZENITH_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.VIEW_AZIMUTH_ANGLE.p, fieldName: "VIEW_AZIMUTH_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.OFF_NADIR_ANGLE.p, fieldName: "OFF_NADIR_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SWATH_WIDTH_KM.p, fieldName: "SWATH_WIDTH_KM", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.MEAN_TERRAIN_ELEVATION.p, fieldName: "MEAN_TERRAIN_ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.TERRAIN_ELEVATION_STDDEV.p, fieldName: "TERRAIN_ELEVATION_STDDEV", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SHADOW_COVER_PERCENT.p, fieldName: "SHADOW_COVER_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SUNGLINT_PRESENT.p, fieldName: "SUNGLINT_PRESENT", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.SUNGLINT_PERCENT.p, fieldName: "SUNGLINT_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.SNOW_ICE_COVER_PERCENT.p, fieldName: "SNOW_ICE_COVER_PERCENT", required: false, type: Float32.self)
+    try _v.visit(field: VTOFFSET.VALID_DATA_AREA_KM2.p, fieldName: "VALID_DATA_AREA_KM2", required: false, type: Float32.self)
     _v.finish()
   }
 }

@@ -319,13 +319,133 @@ class EOO : flatbuffers.handle
     /// True if measured, false if computed. Required if declination is reported.
     def DECLINATION_MEASURED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 190, 0))
+    /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+    def NIIRS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 192, 0.0)
+    /// Ground sample distance in meters per pixel.
+    def METERS_PER_PIXEL() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 194, 0.0)
+    /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+    def IMAGE_SNR() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 196, 0.0)
+    /// Bit depth of the image (e.g., 8, 12, 16).
+    def IMAGE_BIT_DEPTH() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 198, 0)
+    /// Width of the image in pixels.
+    def IMAGE_WIDTH() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 200, 0)
+    /// Height of the image in pixels.
+    def IMAGE_HEIGHT() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 202, 0)
+    /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+    def IMAGE_COMPRESSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 204)
+    /// Compression ratio used (original size / compressed size), if applicable.
+    def IMAGE_COMPRESSION_RATIO() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 206, 0.0)
+    /// URI to the processed image used for this observation.
+    def PROCESSED_IMAGE_URI() -> string:
+        return flatbuffers.field_string(buf_, pos_, 208)
+    /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+    def IMAGE_AUTO_ENHANCED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 210, 0))
+    /// True if the observation was taken with multiple frames stacked into one image.
+    def MULTI_FRAME_STACKED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 212, 0))
+    /// True if synthetic tracking was used to create the image.
+    def SYNTHETIC_TRACKING_USED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 214, 0))
+    /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+    def IMAGE_SHARPNESS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 216, 0.0)
+    /// Noise level of the image, estimated via pixel intensity variance in background regions.
+    def IMAGE_NOISE_STDDEV() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 218, 0.0)
+    /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+    def IMAGE_CONTRAST() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 220, 0.0)
+    /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+    def IMAGE_DYNAMIC_RANGE() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 222, 0.0)
+    /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+    def IMAGE_ENTROPY() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 224, 0.0)
+    /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+    def BACKGROUND_UNIFORMITY() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 226, 0.0)
+    /// Mean background level, computed from non-object regions in pixel units.
+    def BACKGROUND_MEAN_LEVEL() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 228, 0.0)
+    /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+    def SATURATED_PIXEL_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 230, 0.0)
+    /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+    def DEAD_PIXEL_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 232, 0.0)
+    /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+    def PSF_FWHM() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 234, 0.0)
+    /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+    def CLOUD_COVER_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 236, 0.0)
+    /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+    def CLOUD_DETECTION_CONFIDENCE() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 238, 0.0)
+    /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+    def HAZE_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 240, 0.0)
+    /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+    def AEROSOL_OPTICAL_THICKNESS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 242, 0.0)
+    /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+    def WATER_VAPOR_CONTENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 244, 0.0)
+    /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+    def SUN_ELEVATION() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 246, 0.0)
+    /// Sun azimuth angle at the time of image capture, in degrees from true north.
+    def SUN_AZIMUTH() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 248, 0.0)
+    /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+    def VIEW_ZENITH_ANGLE() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 250, 0.0)
+    /// View azimuth angle (direction of sensor relative to north), in degrees.
+    def VIEW_AZIMUTH_ANGLE() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 252, 0.0)
+    /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+    def OFF_NADIR_ANGLE() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 254, 0.0)
+    /// Ground coverage width of the image swath in kilometers.
+    def SWATH_WIDTH_KM() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 256, 0.0)
+    /// Mean terrain elevation in the image footprint, in meters above sea level.
+    def MEAN_TERRAIN_ELEVATION() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 258, 0.0)
+    /// Standard deviation of terrain elevation in the image footprint, in meters.
+    def TERRAIN_ELEVATION_STDDEV() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 260, 0.0)
+    /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+    def SHADOW_COVER_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 262, 0.0)
+    /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+    def SUNGLINT_PRESENT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 264, 0))
+    /// Percentage of image affected by sunglint.
+    def SUNGLINT_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 266, 0.0)
+    /// Estimated percentage of snow or ice coverage in the image footprint.
+    def SNOW_ICE_COVER_PERCENT() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 268, 0.0)
+    /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+    def VALID_DATA_AREA_KM2() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 270, 0.0)
 
 def GetRootAsEOO(buf:string): return EOO { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(94)
+        b_.StartObject(134)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -608,6 +728,126 @@ struct EOOBuilder:
         return this
     def add_DECLINATION_MEASURED(DECLINATION_MEASURED:bool):
         b_.PrependBoolSlot(93, DECLINATION_MEASURED, 0)
+        return this
+    def add_NIIRS(NIIRS:float):
+        b_.PrependFloat32Slot(94, NIIRS, 0.0)
+        return this
+    def add_METERS_PER_PIXEL(METERS_PER_PIXEL:float):
+        b_.PrependFloat32Slot(95, METERS_PER_PIXEL, 0.0)
+        return this
+    def add_IMAGE_SNR(IMAGE_SNR:float):
+        b_.PrependFloat32Slot(96, IMAGE_SNR, 0.0)
+        return this
+    def add_IMAGE_BIT_DEPTH(IMAGE_BIT_DEPTH:int):
+        b_.PrependInt32Slot(97, IMAGE_BIT_DEPTH, 0)
+        return this
+    def add_IMAGE_WIDTH(IMAGE_WIDTH:int):
+        b_.PrependInt32Slot(98, IMAGE_WIDTH, 0)
+        return this
+    def add_IMAGE_HEIGHT(IMAGE_HEIGHT:int):
+        b_.PrependInt32Slot(99, IMAGE_HEIGHT, 0)
+        return this
+    def add_IMAGE_COMPRESSION(IMAGE_COMPRESSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(100, IMAGE_COMPRESSION)
+        return this
+    def add_IMAGE_COMPRESSION_RATIO(IMAGE_COMPRESSION_RATIO:float):
+        b_.PrependFloat32Slot(101, IMAGE_COMPRESSION_RATIO, 0.0)
+        return this
+    def add_PROCESSED_IMAGE_URI(PROCESSED_IMAGE_URI:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(102, PROCESSED_IMAGE_URI)
+        return this
+    def add_IMAGE_AUTO_ENHANCED(IMAGE_AUTO_ENHANCED:bool):
+        b_.PrependBoolSlot(103, IMAGE_AUTO_ENHANCED, 0)
+        return this
+    def add_MULTI_FRAME_STACKED(MULTI_FRAME_STACKED:bool):
+        b_.PrependBoolSlot(104, MULTI_FRAME_STACKED, 0)
+        return this
+    def add_SYNTHETIC_TRACKING_USED(SYNTHETIC_TRACKING_USED:bool):
+        b_.PrependBoolSlot(105, SYNTHETIC_TRACKING_USED, 0)
+        return this
+    def add_IMAGE_SHARPNESS(IMAGE_SHARPNESS:float):
+        b_.PrependFloat32Slot(106, IMAGE_SHARPNESS, 0.0)
+        return this
+    def add_IMAGE_NOISE_STDDEV(IMAGE_NOISE_STDDEV:float):
+        b_.PrependFloat32Slot(107, IMAGE_NOISE_STDDEV, 0.0)
+        return this
+    def add_IMAGE_CONTRAST(IMAGE_CONTRAST:float):
+        b_.PrependFloat32Slot(108, IMAGE_CONTRAST, 0.0)
+        return this
+    def add_IMAGE_DYNAMIC_RANGE(IMAGE_DYNAMIC_RANGE:float):
+        b_.PrependFloat32Slot(109, IMAGE_DYNAMIC_RANGE, 0.0)
+        return this
+    def add_IMAGE_ENTROPY(IMAGE_ENTROPY:float):
+        b_.PrependFloat32Slot(110, IMAGE_ENTROPY, 0.0)
+        return this
+    def add_BACKGROUND_UNIFORMITY(BACKGROUND_UNIFORMITY:float):
+        b_.PrependFloat32Slot(111, BACKGROUND_UNIFORMITY, 0.0)
+        return this
+    def add_BACKGROUND_MEAN_LEVEL(BACKGROUND_MEAN_LEVEL:float):
+        b_.PrependFloat32Slot(112, BACKGROUND_MEAN_LEVEL, 0.0)
+        return this
+    def add_SATURATED_PIXEL_PERCENT(SATURATED_PIXEL_PERCENT:float):
+        b_.PrependFloat32Slot(113, SATURATED_PIXEL_PERCENT, 0.0)
+        return this
+    def add_DEAD_PIXEL_PERCENT(DEAD_PIXEL_PERCENT:float):
+        b_.PrependFloat32Slot(114, DEAD_PIXEL_PERCENT, 0.0)
+        return this
+    def add_PSF_FWHM(PSF_FWHM:float):
+        b_.PrependFloat32Slot(115, PSF_FWHM, 0.0)
+        return this
+    def add_CLOUD_COVER_PERCENT(CLOUD_COVER_PERCENT:float):
+        b_.PrependFloat32Slot(116, CLOUD_COVER_PERCENT, 0.0)
+        return this
+    def add_CLOUD_DETECTION_CONFIDENCE(CLOUD_DETECTION_CONFIDENCE:float):
+        b_.PrependFloat32Slot(117, CLOUD_DETECTION_CONFIDENCE, 0.0)
+        return this
+    def add_HAZE_PERCENT(HAZE_PERCENT:float):
+        b_.PrependFloat32Slot(118, HAZE_PERCENT, 0.0)
+        return this
+    def add_AEROSOL_OPTICAL_THICKNESS(AEROSOL_OPTICAL_THICKNESS:float):
+        b_.PrependFloat32Slot(119, AEROSOL_OPTICAL_THICKNESS, 0.0)
+        return this
+    def add_WATER_VAPOR_CONTENT(WATER_VAPOR_CONTENT:float):
+        b_.PrependFloat32Slot(120, WATER_VAPOR_CONTENT, 0.0)
+        return this
+    def add_SUN_ELEVATION(SUN_ELEVATION:float):
+        b_.PrependFloat32Slot(121, SUN_ELEVATION, 0.0)
+        return this
+    def add_SUN_AZIMUTH(SUN_AZIMUTH:float):
+        b_.PrependFloat32Slot(122, SUN_AZIMUTH, 0.0)
+        return this
+    def add_VIEW_ZENITH_ANGLE(VIEW_ZENITH_ANGLE:float):
+        b_.PrependFloat32Slot(123, VIEW_ZENITH_ANGLE, 0.0)
+        return this
+    def add_VIEW_AZIMUTH_ANGLE(VIEW_AZIMUTH_ANGLE:float):
+        b_.PrependFloat32Slot(124, VIEW_AZIMUTH_ANGLE, 0.0)
+        return this
+    def add_OFF_NADIR_ANGLE(OFF_NADIR_ANGLE:float):
+        b_.PrependFloat32Slot(125, OFF_NADIR_ANGLE, 0.0)
+        return this
+    def add_SWATH_WIDTH_KM(SWATH_WIDTH_KM:float):
+        b_.PrependFloat32Slot(126, SWATH_WIDTH_KM, 0.0)
+        return this
+    def add_MEAN_TERRAIN_ELEVATION(MEAN_TERRAIN_ELEVATION:float):
+        b_.PrependFloat32Slot(127, MEAN_TERRAIN_ELEVATION, 0.0)
+        return this
+    def add_TERRAIN_ELEVATION_STDDEV(TERRAIN_ELEVATION_STDDEV:float):
+        b_.PrependFloat32Slot(128, TERRAIN_ELEVATION_STDDEV, 0.0)
+        return this
+    def add_SHADOW_COVER_PERCENT(SHADOW_COVER_PERCENT:float):
+        b_.PrependFloat32Slot(129, SHADOW_COVER_PERCENT, 0.0)
+        return this
+    def add_SUNGLINT_PRESENT(SUNGLINT_PRESENT:bool):
+        b_.PrependBoolSlot(130, SUNGLINT_PRESENT, 0)
+        return this
+    def add_SUNGLINT_PERCENT(SUNGLINT_PERCENT:float):
+        b_.PrependFloat32Slot(131, SUNGLINT_PERCENT, 0.0)
+        return this
+    def add_SNOW_ICE_COVER_PERCENT(SNOW_ICE_COVER_PERCENT:float):
+        b_.PrependFloat32Slot(132, SNOW_ICE_COVER_PERCENT, 0.0)
+        return this
+    def add_VALID_DATA_AREA_KM2(VALID_DATA_AREA_KM2:float):
+        b_.PrependFloat32Slot(133, VALID_DATA_AREA_KM2, 0.0)
         return this
     def end():
         return b_.EndObject()

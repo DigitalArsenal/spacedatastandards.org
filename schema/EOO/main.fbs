@@ -1,5 +1,5 @@
-// Hash: 1b26c6306f87729b947f093ae6e184bcb5b974d491b6ce868f2fab4ecabc8239
-// Version: 1.0.6
+// Hash: 545c92b9ed8147a6eb7cded867979c8ae0fba687548e0638d416e21ee0e6dcfe
+// Version: 1.0.7
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../IDM/main.fbs";
@@ -320,6 +320,126 @@ table EOO {
 
   /// True if measured, false if computed. Required if declination is reported.
   DECLINATION_MEASURED: bool;
+
+  /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  NIIRS: float;
+
+  /// Ground sample distance in meters per pixel.
+  METERS_PER_PIXEL: float;
+
+  /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  IMAGE_SNR: float;
+
+  /// Bit depth of the image (e.g., 8, 12, 16).
+  IMAGE_BIT_DEPTH: int;
+
+  /// Width of the image in pixels.
+  IMAGE_WIDTH: int;
+
+  /// Height of the image in pixels.
+  IMAGE_HEIGHT: int;
+
+  /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  IMAGE_COMPRESSION: string;
+
+  /// Compression ratio used (original size / compressed size), if applicable.
+  IMAGE_COMPRESSION_RATIO: float;
+
+  /// URI to the processed image used for this observation.
+  PROCESSED_IMAGE_URI: string;
+
+  /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  IMAGE_AUTO_ENHANCED: bool;
+
+  /// True if the observation was taken with multiple frames stacked into one image.
+  MULTI_FRAME_STACKED: bool;
+
+  /// True if synthetic tracking was used to create the image.
+  SYNTHETIC_TRACKING_USED: bool;
+
+  /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  IMAGE_SHARPNESS: float;
+
+  /// Noise level of the image, estimated via pixel intensity variance in background regions.
+  IMAGE_NOISE_STDDEV: float;
+
+  /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  IMAGE_CONTRAST: float;
+
+  /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  IMAGE_DYNAMIC_RANGE: float;
+
+  /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  IMAGE_ENTROPY: float;
+
+  /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  BACKGROUND_UNIFORMITY: float;
+
+  /// Mean background level, computed from non-object regions in pixel units.
+  BACKGROUND_MEAN_LEVEL: float;
+
+  /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+  SATURATED_PIXEL_PERCENT: float;
+
+  /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  DEAD_PIXEL_PERCENT: float;
+
+  /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  PSF_FWHM: float;
+
+  /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  CLOUD_COVER_PERCENT: float;
+
+  /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  CLOUD_DETECTION_CONFIDENCE: float;
+
+  /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  HAZE_PERCENT: float;
+
+  /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  AEROSOL_OPTICAL_THICKNESS: float;
+
+  /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  WATER_VAPOR_CONTENT: float;
+
+  /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+  SUN_ELEVATION: float;
+
+  /// Sun azimuth angle at the time of image capture, in degrees from true north.
+  SUN_AZIMUTH: float;
+
+  /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  VIEW_ZENITH_ANGLE: float;
+
+  /// View azimuth angle (direction of sensor relative to north), in degrees.
+  VIEW_AZIMUTH_ANGLE: float;
+
+  /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+  OFF_NADIR_ANGLE: float;
+
+  /// Ground coverage width of the image swath in kilometers.
+  SWATH_WIDTH_KM: float;
+
+  /// Mean terrain elevation in the image footprint, in meters above sea level.
+  MEAN_TERRAIN_ELEVATION: float;
+
+  /// Standard deviation of terrain elevation in the image footprint, in meters.
+  TERRAIN_ELEVATION_STDDEV: float;
+
+  /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  SHADOW_COVER_PERCENT: float;
+
+  /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  SUNGLINT_PRESENT: bool;
+
+  /// Percentage of image affected by sunglint.
+  SUNGLINT_PERCENT: float;
+
+  /// Estimated percentage of snow or ice coverage in the image footprint.
+  SNOW_ICE_COVER_PERCENT: float;
+
+  /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  VALID_DATA_AREA_KM2: float;
 
 }
 

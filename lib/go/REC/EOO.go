@@ -1330,8 +1330,560 @@ func (rcv *EOO) MutateDECLINATION_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(190, n)
 }
 
+/// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+func (rcv *EOO) NIIRS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(192))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+func (rcv *EOO) MutateNIIRS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(192, n)
+}
+
+/// Ground sample distance in meters per pixel.
+func (rcv *EOO) METERS_PER_PIXEL() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(194))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Ground sample distance in meters per pixel.
+func (rcv *EOO) MutateMETERS_PER_PIXEL(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(194, n)
+}
+
+/// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+func (rcv *EOO) IMAGE_SNR() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(196))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+func (rcv *EOO) MutateIMAGE_SNR(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(196, n)
+}
+
+/// Bit depth of the image (e.g., 8, 12, 16).
+func (rcv *EOO) IMAGE_BIT_DEPTH() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(198))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Bit depth of the image (e.g., 8, 12, 16).
+func (rcv *EOO) MutateIMAGE_BIT_DEPTH(n int32) bool {
+	return rcv._tab.MutateInt32Slot(198, n)
+}
+
+/// Width of the image in pixels.
+func (rcv *EOO) IMAGE_WIDTH() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(200))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Width of the image in pixels.
+func (rcv *EOO) MutateIMAGE_WIDTH(n int32) bool {
+	return rcv._tab.MutateInt32Slot(200, n)
+}
+
+/// Height of the image in pixels.
+func (rcv *EOO) IMAGE_HEIGHT() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(202))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Height of the image in pixels.
+func (rcv *EOO) MutateIMAGE_HEIGHT(n int32) bool {
+	return rcv._tab.MutateInt32Slot(202, n)
+}
+
+/// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+func (rcv *EOO) IMAGE_COMPRESSION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(204))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+/// Compression ratio used (original size / compressed size), if applicable.
+func (rcv *EOO) IMAGE_COMPRESSION_RATIO() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(206))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Compression ratio used (original size / compressed size), if applicable.
+func (rcv *EOO) MutateIMAGE_COMPRESSION_RATIO(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(206, n)
+}
+
+/// URI to the processed image used for this observation.
+func (rcv *EOO) PROCESSED_IMAGE_URI() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(208))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// URI to the processed image used for this observation.
+/// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+func (rcv *EOO) IMAGE_AUTO_ENHANCED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(210))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+func (rcv *EOO) MutateIMAGE_AUTO_ENHANCED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(210, n)
+}
+
+/// True if the observation was taken with multiple frames stacked into one image.
+func (rcv *EOO) MULTI_FRAME_STACKED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(212))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if the observation was taken with multiple frames stacked into one image.
+func (rcv *EOO) MutateMULTI_FRAME_STACKED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(212, n)
+}
+
+/// True if synthetic tracking was used to create the image.
+func (rcv *EOO) SYNTHETIC_TRACKING_USED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(214))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if synthetic tracking was used to create the image.
+func (rcv *EOO) MutateSYNTHETIC_TRACKING_USED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(214, n)
+}
+
+/// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+func (rcv *EOO) IMAGE_SHARPNESS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(216))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+func (rcv *EOO) MutateIMAGE_SHARPNESS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(216, n)
+}
+
+/// Noise level of the image, estimated via pixel intensity variance in background regions.
+func (rcv *EOO) IMAGE_NOISE_STDDEV() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(218))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Noise level of the image, estimated via pixel intensity variance in background regions.
+func (rcv *EOO) MutateIMAGE_NOISE_STDDEV(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(218, n)
+}
+
+/// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+func (rcv *EOO) IMAGE_CONTRAST() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(220))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+func (rcv *EOO) MutateIMAGE_CONTRAST(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(220, n)
+}
+
+/// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+func (rcv *EOO) IMAGE_DYNAMIC_RANGE() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(222))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+func (rcv *EOO) MutateIMAGE_DYNAMIC_RANGE(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(222, n)
+}
+
+/// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+func (rcv *EOO) IMAGE_ENTROPY() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(224))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+func (rcv *EOO) MutateIMAGE_ENTROPY(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(224, n)
+}
+
+/// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+func (rcv *EOO) BACKGROUND_UNIFORMITY() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(226))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+func (rcv *EOO) MutateBACKGROUND_UNIFORMITY(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(226, n)
+}
+
+/// Mean background level, computed from non-object regions in pixel units.
+func (rcv *EOO) BACKGROUND_MEAN_LEVEL() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(228))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Mean background level, computed from non-object regions in pixel units.
+func (rcv *EOO) MutateBACKGROUND_MEAN_LEVEL(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(228, n)
+}
+
+/// Percentage of saturated pixels in the image. Indicates overexposure when high.
+func (rcv *EOO) SATURATED_PIXEL_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(230))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Percentage of saturated pixels in the image. Indicates overexposure when high.
+func (rcv *EOO) MutateSATURATED_PIXEL_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(230, n)
+}
+
+/// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+func (rcv *EOO) DEAD_PIXEL_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(232))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+func (rcv *EOO) MutateDEAD_PIXEL_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(232, n)
+}
+
+/// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+func (rcv *EOO) PSF_FWHM() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(234))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+func (rcv *EOO) MutatePSF_FWHM(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(234, n)
+}
+
+/// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+func (rcv *EOO) CLOUD_COVER_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(236))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+func (rcv *EOO) MutateCLOUD_COVER_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(236, n)
+}
+
+/// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+func (rcv *EOO) CLOUD_DETECTION_CONFIDENCE() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(238))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+func (rcv *EOO) MutateCLOUD_DETECTION_CONFIDENCE(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(238, n)
+}
+
+/// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+func (rcv *EOO) HAZE_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(240))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+func (rcv *EOO) MutateHAZE_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(240, n)
+}
+
+/// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+func (rcv *EOO) AEROSOL_OPTICAL_THICKNESS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(242))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+func (rcv *EOO) MutateAEROSOL_OPTICAL_THICKNESS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(242, n)
+}
+
+/// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+func (rcv *EOO) WATER_VAPOR_CONTENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(244))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+func (rcv *EOO) MutateWATER_VAPOR_CONTENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(244, n)
+}
+
+/// Sun elevation angle at the time of image capture, in degrees above the horizon.
+func (rcv *EOO) SUN_ELEVATION() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(246))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Sun elevation angle at the time of image capture, in degrees above the horizon.
+func (rcv *EOO) MutateSUN_ELEVATION(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(246, n)
+}
+
+/// Sun azimuth angle at the time of image capture, in degrees from true north.
+func (rcv *EOO) SUN_AZIMUTH() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(248))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Sun azimuth angle at the time of image capture, in degrees from true north.
+func (rcv *EOO) MutateSUN_AZIMUTH(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(248, n)
+}
+
+/// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+func (rcv *EOO) VIEW_ZENITH_ANGLE() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(250))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+func (rcv *EOO) MutateVIEW_ZENITH_ANGLE(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(250, n)
+}
+
+/// View azimuth angle (direction of sensor relative to north), in degrees.
+func (rcv *EOO) VIEW_AZIMUTH_ANGLE() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(252))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// View azimuth angle (direction of sensor relative to north), in degrees.
+func (rcv *EOO) MutateVIEW_AZIMUTH_ANGLE(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(252, n)
+}
+
+/// Off-nadir angle of the sensor at the time of image capture, in degrees.
+func (rcv *EOO) OFF_NADIR_ANGLE() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(254))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Off-nadir angle of the sensor at the time of image capture, in degrees.
+func (rcv *EOO) MutateOFF_NADIR_ANGLE(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(254, n)
+}
+
+/// Ground coverage width of the image swath in kilometers.
+func (rcv *EOO) SWATH_WIDTH_KM() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(256))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Ground coverage width of the image swath in kilometers.
+func (rcv *EOO) MutateSWATH_WIDTH_KM(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(256, n)
+}
+
+/// Mean terrain elevation in the image footprint, in meters above sea level.
+func (rcv *EOO) MEAN_TERRAIN_ELEVATION() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(258))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Mean terrain elevation in the image footprint, in meters above sea level.
+func (rcv *EOO) MutateMEAN_TERRAIN_ELEVATION(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(258, n)
+}
+
+/// Standard deviation of terrain elevation in the image footprint, in meters.
+func (rcv *EOO) TERRAIN_ELEVATION_STDDEV() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(260))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Standard deviation of terrain elevation in the image footprint, in meters.
+func (rcv *EOO) MutateTERRAIN_ELEVATION_STDDEV(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(260, n)
+}
+
+/// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+func (rcv *EOO) SHADOW_COVER_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(262))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+func (rcv *EOO) MutateSHADOW_COVER_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(262, n)
+}
+
+/// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+func (rcv *EOO) SUNGLINT_PRESENT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(264))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+func (rcv *EOO) MutateSUNGLINT_PRESENT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(264, n)
+}
+
+/// Percentage of image affected by sunglint.
+func (rcv *EOO) SUNGLINT_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(266))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Percentage of image affected by sunglint.
+func (rcv *EOO) MutateSUNGLINT_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(266, n)
+}
+
+/// Estimated percentage of snow or ice coverage in the image footprint.
+func (rcv *EOO) SNOW_ICE_COVER_PERCENT() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(268))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Estimated percentage of snow or ice coverage in the image footprint.
+func (rcv *EOO) MutateSNOW_ICE_COVER_PERCENT(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(268, n)
+}
+
+/// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+func (rcv *EOO) VALID_DATA_AREA_KM2() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(270))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+func (rcv *EOO) MutateVALID_DATA_AREA_KM2(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(270, n)
+}
+
 func EOOStart(builder *flatbuffers.Builder) {
-	builder.StartObject(94)
+	builder.StartObject(134)
 }
 func EOOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -1614,6 +2166,126 @@ func EOOAddRA_MEASURED(builder *flatbuffers.Builder, RA_MEASURED bool) {
 }
 func EOOAddDECLINATION_MEASURED(builder *flatbuffers.Builder, DECLINATION_MEASURED bool) {
 	builder.PrependBoolSlot(93, DECLINATION_MEASURED, false)
+}
+func EOOAddNIIRS(builder *flatbuffers.Builder, NIIRS float32) {
+	builder.PrependFloat32Slot(94, NIIRS, 0.0)
+}
+func EOOAddMETERS_PER_PIXEL(builder *flatbuffers.Builder, METERS_PER_PIXEL float32) {
+	builder.PrependFloat32Slot(95, METERS_PER_PIXEL, 0.0)
+}
+func EOOAddIMAGE_SNR(builder *flatbuffers.Builder, IMAGE_SNR float32) {
+	builder.PrependFloat32Slot(96, IMAGE_SNR, 0.0)
+}
+func EOOAddIMAGE_BIT_DEPTH(builder *flatbuffers.Builder, IMAGE_BIT_DEPTH int32) {
+	builder.PrependInt32Slot(97, IMAGE_BIT_DEPTH, 0)
+}
+func EOOAddIMAGE_WIDTH(builder *flatbuffers.Builder, IMAGE_WIDTH int32) {
+	builder.PrependInt32Slot(98, IMAGE_WIDTH, 0)
+}
+func EOOAddIMAGE_HEIGHT(builder *flatbuffers.Builder, IMAGE_HEIGHT int32) {
+	builder.PrependInt32Slot(99, IMAGE_HEIGHT, 0)
+}
+func EOOAddIMAGE_COMPRESSION(builder *flatbuffers.Builder, IMAGE_COMPRESSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(100, flatbuffers.UOffsetT(IMAGE_COMPRESSION), 0)
+}
+func EOOAddIMAGE_COMPRESSION_RATIO(builder *flatbuffers.Builder, IMAGE_COMPRESSION_RATIO float32) {
+	builder.PrependFloat32Slot(101, IMAGE_COMPRESSION_RATIO, 0.0)
+}
+func EOOAddPROCESSED_IMAGE_URI(builder *flatbuffers.Builder, PROCESSED_IMAGE_URI flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(102, flatbuffers.UOffsetT(PROCESSED_IMAGE_URI), 0)
+}
+func EOOAddIMAGE_AUTO_ENHANCED(builder *flatbuffers.Builder, IMAGE_AUTO_ENHANCED bool) {
+	builder.PrependBoolSlot(103, IMAGE_AUTO_ENHANCED, false)
+}
+func EOOAddMULTI_FRAME_STACKED(builder *flatbuffers.Builder, MULTI_FRAME_STACKED bool) {
+	builder.PrependBoolSlot(104, MULTI_FRAME_STACKED, false)
+}
+func EOOAddSYNTHETIC_TRACKING_USED(builder *flatbuffers.Builder, SYNTHETIC_TRACKING_USED bool) {
+	builder.PrependBoolSlot(105, SYNTHETIC_TRACKING_USED, false)
+}
+func EOOAddIMAGE_SHARPNESS(builder *flatbuffers.Builder, IMAGE_SHARPNESS float32) {
+	builder.PrependFloat32Slot(106, IMAGE_SHARPNESS, 0.0)
+}
+func EOOAddIMAGE_NOISE_STDDEV(builder *flatbuffers.Builder, IMAGE_NOISE_STDDEV float32) {
+	builder.PrependFloat32Slot(107, IMAGE_NOISE_STDDEV, 0.0)
+}
+func EOOAddIMAGE_CONTRAST(builder *flatbuffers.Builder, IMAGE_CONTRAST float32) {
+	builder.PrependFloat32Slot(108, IMAGE_CONTRAST, 0.0)
+}
+func EOOAddIMAGE_DYNAMIC_RANGE(builder *flatbuffers.Builder, IMAGE_DYNAMIC_RANGE float32) {
+	builder.PrependFloat32Slot(109, IMAGE_DYNAMIC_RANGE, 0.0)
+}
+func EOOAddIMAGE_ENTROPY(builder *flatbuffers.Builder, IMAGE_ENTROPY float32) {
+	builder.PrependFloat32Slot(110, IMAGE_ENTROPY, 0.0)
+}
+func EOOAddBACKGROUND_UNIFORMITY(builder *flatbuffers.Builder, BACKGROUND_UNIFORMITY float32) {
+	builder.PrependFloat32Slot(111, BACKGROUND_UNIFORMITY, 0.0)
+}
+func EOOAddBACKGROUND_MEAN_LEVEL(builder *flatbuffers.Builder, BACKGROUND_MEAN_LEVEL float32) {
+	builder.PrependFloat32Slot(112, BACKGROUND_MEAN_LEVEL, 0.0)
+}
+func EOOAddSATURATED_PIXEL_PERCENT(builder *flatbuffers.Builder, SATURATED_PIXEL_PERCENT float32) {
+	builder.PrependFloat32Slot(113, SATURATED_PIXEL_PERCENT, 0.0)
+}
+func EOOAddDEAD_PIXEL_PERCENT(builder *flatbuffers.Builder, DEAD_PIXEL_PERCENT float32) {
+	builder.PrependFloat32Slot(114, DEAD_PIXEL_PERCENT, 0.0)
+}
+func EOOAddPSF_FWHM(builder *flatbuffers.Builder, PSF_FWHM float32) {
+	builder.PrependFloat32Slot(115, PSF_FWHM, 0.0)
+}
+func EOOAddCLOUD_COVER_PERCENT(builder *flatbuffers.Builder, CLOUD_COVER_PERCENT float32) {
+	builder.PrependFloat32Slot(116, CLOUD_COVER_PERCENT, 0.0)
+}
+func EOOAddCLOUD_DETECTION_CONFIDENCE(builder *flatbuffers.Builder, CLOUD_DETECTION_CONFIDENCE float32) {
+	builder.PrependFloat32Slot(117, CLOUD_DETECTION_CONFIDENCE, 0.0)
+}
+func EOOAddHAZE_PERCENT(builder *flatbuffers.Builder, HAZE_PERCENT float32) {
+	builder.PrependFloat32Slot(118, HAZE_PERCENT, 0.0)
+}
+func EOOAddAEROSOL_OPTICAL_THICKNESS(builder *flatbuffers.Builder, AEROSOL_OPTICAL_THICKNESS float32) {
+	builder.PrependFloat32Slot(119, AEROSOL_OPTICAL_THICKNESS, 0.0)
+}
+func EOOAddWATER_VAPOR_CONTENT(builder *flatbuffers.Builder, WATER_VAPOR_CONTENT float32) {
+	builder.PrependFloat32Slot(120, WATER_VAPOR_CONTENT, 0.0)
+}
+func EOOAddSUN_ELEVATION(builder *flatbuffers.Builder, SUN_ELEVATION float32) {
+	builder.PrependFloat32Slot(121, SUN_ELEVATION, 0.0)
+}
+func EOOAddSUN_AZIMUTH(builder *flatbuffers.Builder, SUN_AZIMUTH float32) {
+	builder.PrependFloat32Slot(122, SUN_AZIMUTH, 0.0)
+}
+func EOOAddVIEW_ZENITH_ANGLE(builder *flatbuffers.Builder, VIEW_ZENITH_ANGLE float32) {
+	builder.PrependFloat32Slot(123, VIEW_ZENITH_ANGLE, 0.0)
+}
+func EOOAddVIEW_AZIMUTH_ANGLE(builder *flatbuffers.Builder, VIEW_AZIMUTH_ANGLE float32) {
+	builder.PrependFloat32Slot(124, VIEW_AZIMUTH_ANGLE, 0.0)
+}
+func EOOAddOFF_NADIR_ANGLE(builder *flatbuffers.Builder, OFF_NADIR_ANGLE float32) {
+	builder.PrependFloat32Slot(125, OFF_NADIR_ANGLE, 0.0)
+}
+func EOOAddSWATH_WIDTH_KM(builder *flatbuffers.Builder, SWATH_WIDTH_KM float32) {
+	builder.PrependFloat32Slot(126, SWATH_WIDTH_KM, 0.0)
+}
+func EOOAddMEAN_TERRAIN_ELEVATION(builder *flatbuffers.Builder, MEAN_TERRAIN_ELEVATION float32) {
+	builder.PrependFloat32Slot(127, MEAN_TERRAIN_ELEVATION, 0.0)
+}
+func EOOAddTERRAIN_ELEVATION_STDDEV(builder *flatbuffers.Builder, TERRAIN_ELEVATION_STDDEV float32) {
+	builder.PrependFloat32Slot(128, TERRAIN_ELEVATION_STDDEV, 0.0)
+}
+func EOOAddSHADOW_COVER_PERCENT(builder *flatbuffers.Builder, SHADOW_COVER_PERCENT float32) {
+	builder.PrependFloat32Slot(129, SHADOW_COVER_PERCENT, 0.0)
+}
+func EOOAddSUNGLINT_PRESENT(builder *flatbuffers.Builder, SUNGLINT_PRESENT bool) {
+	builder.PrependBoolSlot(130, SUNGLINT_PRESENT, false)
+}
+func EOOAddSUNGLINT_PERCENT(builder *flatbuffers.Builder, SUNGLINT_PERCENT float32) {
+	builder.PrependFloat32Slot(131, SUNGLINT_PERCENT, 0.0)
+}
+func EOOAddSNOW_ICE_COVER_PERCENT(builder *flatbuffers.Builder, SNOW_ICE_COVER_PERCENT float32) {
+	builder.PrependFloat32Slot(132, SNOW_ICE_COVER_PERCENT, 0.0)
+}
+func EOOAddVALID_DATA_AREA_KM2(builder *flatbuffers.Builder, VALID_DATA_AREA_KM2 float32) {
+	builder.PrependFloat32Slot(133, VALID_DATA_AREA_KM2, 0.0)
 }
 func EOOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

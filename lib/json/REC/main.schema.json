@@ -3954,6 +3954,166 @@
         "DECLINATION_MEASURED" : {
                 "type" : "boolean",
                 "description" : "True if measured, false if computed. Required if declination is reported."
+              },
+        "NIIRS" : {
+                "type" : "number",
+                "description" : "National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest)."
+              },
+        "METERS_PER_PIXEL" : {
+                "type" : "number",
+                "description" : "Ground sample distance in meters per pixel."
+              },
+        "IMAGE_SNR" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio of the image. Higher values indicate cleaner imagery."
+              },
+        "IMAGE_BIT_DEPTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Bit depth of the image (e.g., 8, 12, 16)."
+              },
+        "IMAGE_WIDTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Width of the image in pixels."
+              },
+        "IMAGE_HEIGHT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Height of the image in pixels."
+              },
+        "IMAGE_COMPRESSION" : {
+                "type" : "string",
+                "description" : "Compression type used for the image, e.g., \"JPEG\", \"PNG\", \"RAW\", etc."
+              },
+        "IMAGE_COMPRESSION_RATIO" : {
+                "type" : "number",
+                "description" : "Compression ratio used (original size / compressed size), if applicable."
+              },
+        "PROCESSED_IMAGE_URI" : {
+                "type" : "string",
+                "description" : "URI to the processed image used for this observation."
+              },
+        "IMAGE_AUTO_ENHANCED" : {
+                "type" : "boolean",
+                "description" : "Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise)."
+              },
+        "MULTI_FRAME_STACKED" : {
+                "type" : "boolean",
+                "description" : "True if the observation was taken with multiple frames stacked into one image."
+              },
+        "SYNTHETIC_TRACKING_USED" : {
+                "type" : "boolean",
+                "description" : "True if synthetic tracking was used to create the image."
+              },
+        "IMAGE_SHARPNESS" : {
+                "type" : "number",
+                "description" : "Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images."
+              },
+        "IMAGE_NOISE_STDDEV" : {
+                "type" : "number",
+                "description" : "Noise level of the image, estimated via pixel intensity variance in background regions."
+              },
+        "IMAGE_CONTRAST" : {
+                "type" : "number",
+                "description" : "Contrast metric of the image, such as Michelson contrast or RMS contrast."
+              },
+        "IMAGE_DYNAMIC_RANGE" : {
+                "type" : "number",
+                "description" : "Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread."
+              },
+        "IMAGE_ENTROPY" : {
+                "type" : "number",
+                "description" : "Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail."
+              },
+        "BACKGROUND_UNIFORMITY" : {
+                "type" : "number",
+                "description" : "Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background."
+              },
+        "BACKGROUND_MEAN_LEVEL" : {
+                "type" : "number",
+                "description" : "Mean background level, computed from non-object regions in pixel units."
+              },
+        "SATURATED_PIXEL_PERCENT" : {
+                "type" : "number",
+                "description" : "Percentage of saturated pixels in the image. Indicates overexposure when high."
+              },
+        "DEAD_PIXEL_PERCENT" : {
+                "type" : "number",
+                "description" : "Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure."
+              },
+        "PSF_FWHM" : {
+                "type" : "number",
+                "description" : "Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus."
+              },
+        "CLOUD_COVER_PERCENT" : {
+                "type" : "number",
+                "description" : "Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers."
+              },
+        "CLOUD_DETECTION_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence)."
+              },
+        "HAZE_PERCENT" : {
+                "type" : "number",
+                "description" : "Estimated percentage of the image obscured by haze or atmospheric scattering effects."
+              },
+        "AEROSOL_OPTICAL_THICKNESS" : {
+                "type" : "number",
+                "description" : "Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity."
+              },
+        "WATER_VAPOR_CONTENT" : {
+                "type" : "number",
+                "description" : "Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm."
+              },
+        "SUN_ELEVATION" : {
+                "type" : "number",
+                "description" : "Sun elevation angle at the time of image capture, in degrees above the horizon."
+              },
+        "SUN_AZIMUTH" : {
+                "type" : "number",
+                "description" : "Sun azimuth angle at the time of image capture, in degrees from true north."
+              },
+        "VIEW_ZENITH_ANGLE" : {
+                "type" : "number",
+                "description" : "View zenith angle (sensor line-of-sight angle from nadir), in degrees."
+              },
+        "VIEW_AZIMUTH_ANGLE" : {
+                "type" : "number",
+                "description" : "View azimuth angle (direction of sensor relative to north), in degrees."
+              },
+        "OFF_NADIR_ANGLE" : {
+                "type" : "number",
+                "description" : "Off-nadir angle of the sensor at the time of image capture, in degrees."
+              },
+        "SWATH_WIDTH_KM" : {
+                "type" : "number",
+                "description" : "Ground coverage width of the image swath in kilometers."
+              },
+        "MEAN_TERRAIN_ELEVATION" : {
+                "type" : "number",
+                "description" : "Mean terrain elevation in the image footprint, in meters above sea level."
+              },
+        "TERRAIN_ELEVATION_STDDEV" : {
+                "type" : "number",
+                "description" : "Standard deviation of terrain elevation in the image footprint, in meters."
+              },
+        "SHADOW_COVER_PERCENT" : {
+                "type" : "number",
+                "description" : "Percentage of the image affected by shadows, derived via topographic or object shadow detection."
+              },
+        "SUNGLINT_PRESENT" : {
+                "type" : "boolean",
+                "description" : "Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry)."
+              },
+        "SUNGLINT_PERCENT" : {
+                "type" : "number",
+                "description" : "Percentage of image affected by sunglint."
+              },
+        "SNOW_ICE_COVER_PERCENT" : {
+                "type" : "number",
+                "description" : "Estimated percentage of snow or ice coverage in the image footprint."
+              },
+        "VALID_DATA_AREA_KM2" : {
+                "type" : "number",
+                "description" : "Total area covered by valid data (non-masked, usable imagery) in square kilometers."
               }
       },
       "additionalProperties" : false

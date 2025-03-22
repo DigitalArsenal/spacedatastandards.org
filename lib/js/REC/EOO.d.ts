@@ -424,6 +424,168 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
      * True if measured, false if computed. Required if declination is reported.
      */
     DECLINATION_MEASURED(): boolean;
+    /**
+     * National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+     */
+    NIIRS(): number;
+    /**
+     * Ground sample distance in meters per pixel.
+     */
+    METERS_PER_PIXEL(): number;
+    /**
+     * Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+     */
+    IMAGE_SNR(): number;
+    /**
+     * Bit depth of the image (e.g., 8, 12, 16).
+     */
+    IMAGE_BIT_DEPTH(): number;
+    /**
+     * Width of the image in pixels.
+     */
+    IMAGE_WIDTH(): number;
+    /**
+     * Height of the image in pixels.
+     */
+    IMAGE_HEIGHT(): number;
+    /**
+     * Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+     */
+    IMAGE_COMPRESSION(): string | null;
+    IMAGE_COMPRESSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Compression ratio used (original size / compressed size), if applicable.
+     */
+    IMAGE_COMPRESSION_RATIO(): number;
+    /**
+     * URI to the processed image used for this observation.
+     */
+    PROCESSED_IMAGE_URI(): string | null;
+    PROCESSED_IMAGE_URI(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+     */
+    IMAGE_AUTO_ENHANCED(): boolean;
+    /**
+     * True if the observation was taken with multiple frames stacked into one image.
+     */
+    MULTI_FRAME_STACKED(): boolean;
+    /**
+     * True if synthetic tracking was used to create the image.
+     */
+    SYNTHETIC_TRACKING_USED(): boolean;
+    /**
+     * Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+     */
+    IMAGE_SHARPNESS(): number;
+    /**
+     * Noise level of the image, estimated via pixel intensity variance in background regions.
+     */
+    IMAGE_NOISE_STDDEV(): number;
+    /**
+     * Contrast metric of the image, such as Michelson contrast or RMS contrast.
+     */
+    IMAGE_CONTRAST(): number;
+    /**
+     * Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+     */
+    IMAGE_DYNAMIC_RANGE(): number;
+    /**
+     * Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+     */
+    IMAGE_ENTROPY(): number;
+    /**
+     * Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+     */
+    BACKGROUND_UNIFORMITY(): number;
+    /**
+     * Mean background level, computed from non-object regions in pixel units.
+     */
+    BACKGROUND_MEAN_LEVEL(): number;
+    /**
+     * Percentage of saturated pixels in the image. Indicates overexposure when high.
+     */
+    SATURATED_PIXEL_PERCENT(): number;
+    /**
+     * Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+     */
+    DEAD_PIXEL_PERCENT(): number;
+    /**
+     * Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+     */
+    PSF_FWHM(): number;
+    /**
+     * Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+     */
+    CLOUD_COVER_PERCENT(): number;
+    /**
+     * Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+     */
+    CLOUD_DETECTION_CONFIDENCE(): number;
+    /**
+     * Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+     */
+    HAZE_PERCENT(): number;
+    /**
+     * Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+     */
+    AEROSOL_OPTICAL_THICKNESS(): number;
+    /**
+     * Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+     */
+    WATER_VAPOR_CONTENT(): number;
+    /**
+     * Sun elevation angle at the time of image capture, in degrees above the horizon.
+     */
+    SUN_ELEVATION(): number;
+    /**
+     * Sun azimuth angle at the time of image capture, in degrees from true north.
+     */
+    SUN_AZIMUTH(): number;
+    /**
+     * View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+     */
+    VIEW_ZENITH_ANGLE(): number;
+    /**
+     * View azimuth angle (direction of sensor relative to north), in degrees.
+     */
+    VIEW_AZIMUTH_ANGLE(): number;
+    /**
+     * Off-nadir angle of the sensor at the time of image capture, in degrees.
+     */
+    OFF_NADIR_ANGLE(): number;
+    /**
+     * Ground coverage width of the image swath in kilometers.
+     */
+    SWATH_WIDTH_KM(): number;
+    /**
+     * Mean terrain elevation in the image footprint, in meters above sea level.
+     */
+    MEAN_TERRAIN_ELEVATION(): number;
+    /**
+     * Standard deviation of terrain elevation in the image footprint, in meters.
+     */
+    TERRAIN_ELEVATION_STDDEV(): number;
+    /**
+     * Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+     */
+    SHADOW_COVER_PERCENT(): number;
+    /**
+     * Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+     */
+    SUNGLINT_PRESENT(): boolean;
+    /**
+     * Percentage of image affected by sunglint.
+     */
+    SUNGLINT_PERCENT(): number;
+    /**
+     * Estimated percentage of snow or ice coverage in the image footprint.
+     */
+    SNOW_ICE_COVER_PERCENT(): number;
+    /**
+     * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+     */
+    VALID_DATA_AREA_KM2(): number;
     static startEOO(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addClassification(builder: flatbuffers.Builder, CLASSIFICATIONOffset: flatbuffers.Offset): void;
@@ -519,10 +681,50 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
     static addRangerateMeasured(builder: flatbuffers.Builder, RANGERATE_MEASURED: boolean): void;
     static addRaMeasured(builder: flatbuffers.Builder, RA_MEASURED: boolean): void;
     static addDeclinationMeasured(builder: flatbuffers.Builder, DECLINATION_MEASURED: boolean): void;
+    static addNiirs(builder: flatbuffers.Builder, NIIRS: number): void;
+    static addMetersPerPixel(builder: flatbuffers.Builder, METERS_PER_PIXEL: number): void;
+    static addImageSnr(builder: flatbuffers.Builder, IMAGE_SNR: number): void;
+    static addImageBitDepth(builder: flatbuffers.Builder, IMAGE_BIT_DEPTH: number): void;
+    static addImageWidth(builder: flatbuffers.Builder, IMAGE_WIDTH: number): void;
+    static addImageHeight(builder: flatbuffers.Builder, IMAGE_HEIGHT: number): void;
+    static addImageCompression(builder: flatbuffers.Builder, IMAGE_COMPRESSIONOffset: flatbuffers.Offset): void;
+    static addImageCompressionRatio(builder: flatbuffers.Builder, IMAGE_COMPRESSION_RATIO: number): void;
+    static addProcessedImageUri(builder: flatbuffers.Builder, PROCESSED_IMAGE_URIOffset: flatbuffers.Offset): void;
+    static addImageAutoEnhanced(builder: flatbuffers.Builder, IMAGE_AUTO_ENHANCED: boolean): void;
+    static addMultiFrameStacked(builder: flatbuffers.Builder, MULTI_FRAME_STACKED: boolean): void;
+    static addSyntheticTrackingUsed(builder: flatbuffers.Builder, SYNTHETIC_TRACKING_USED: boolean): void;
+    static addImageSharpness(builder: flatbuffers.Builder, IMAGE_SHARPNESS: number): void;
+    static addImageNoiseStddev(builder: flatbuffers.Builder, IMAGE_NOISE_STDDEV: number): void;
+    static addImageContrast(builder: flatbuffers.Builder, IMAGE_CONTRAST: number): void;
+    static addImageDynamicRange(builder: flatbuffers.Builder, IMAGE_DYNAMIC_RANGE: number): void;
+    static addImageEntropy(builder: flatbuffers.Builder, IMAGE_ENTROPY: number): void;
+    static addBackgroundUniformity(builder: flatbuffers.Builder, BACKGROUND_UNIFORMITY: number): void;
+    static addBackgroundMeanLevel(builder: flatbuffers.Builder, BACKGROUND_MEAN_LEVEL: number): void;
+    static addSaturatedPixelPercent(builder: flatbuffers.Builder, SATURATED_PIXEL_PERCENT: number): void;
+    static addDeadPixelPercent(builder: flatbuffers.Builder, DEAD_PIXEL_PERCENT: number): void;
+    static addPsfFwhm(builder: flatbuffers.Builder, PSF_FWHM: number): void;
+    static addCloudCoverPercent(builder: flatbuffers.Builder, CLOUD_COVER_PERCENT: number): void;
+    static addCloudDetectionConfidence(builder: flatbuffers.Builder, CLOUD_DETECTION_CONFIDENCE: number): void;
+    static addHazePercent(builder: flatbuffers.Builder, HAZE_PERCENT: number): void;
+    static addAerosolOpticalThickness(builder: flatbuffers.Builder, AEROSOL_OPTICAL_THICKNESS: number): void;
+    static addWaterVaporContent(builder: flatbuffers.Builder, WATER_VAPOR_CONTENT: number): void;
+    static addSunElevation(builder: flatbuffers.Builder, SUN_ELEVATION: number): void;
+    static addSunAzimuth(builder: flatbuffers.Builder, SUN_AZIMUTH: number): void;
+    static addViewZenithAngle(builder: flatbuffers.Builder, VIEW_ZENITH_ANGLE: number): void;
+    static addViewAzimuthAngle(builder: flatbuffers.Builder, VIEW_AZIMUTH_ANGLE: number): void;
+    static addOffNadirAngle(builder: flatbuffers.Builder, OFF_NADIR_ANGLE: number): void;
+    static addSwathWidthKm(builder: flatbuffers.Builder, SWATH_WIDTH_KM: number): void;
+    static addMeanTerrainElevation(builder: flatbuffers.Builder, MEAN_TERRAIN_ELEVATION: number): void;
+    static addTerrainElevationStddev(builder: flatbuffers.Builder, TERRAIN_ELEVATION_STDDEV: number): void;
+    static addShadowCoverPercent(builder: flatbuffers.Builder, SHADOW_COVER_PERCENT: number): void;
+    static addSunglintPresent(builder: flatbuffers.Builder, SUNGLINT_PRESENT: boolean): void;
+    static addSunglintPercent(builder: flatbuffers.Builder, SUNGLINT_PERCENT: number): void;
+    static addSnowIceCoverPercent(builder: flatbuffers.Builder, SNOW_ICE_COVER_PERCENT: number): void;
+    static addValidDataAreaKm2(builder: flatbuffers.Builder, VALID_DATA_AREA_KM2: number): void;
     static endEOO(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEOOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEOOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createEOO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CLASSIFICATIONOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, CORR_QUALITY: number, ID_ON_ORBITOffset: flatbuffers.Offset, SENSOR_IDOffset: flatbuffers.Offset, COLLECT_METHOD: CollectMethod, NORAD_CAT_ID: number, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, IMAGE_SET_IDOffset: flatbuffers.Offset, IMAGE_SET_LENGTH: number, SEQUENCE_ID: number, OB_POSITION: ObservationPosition, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, UCT: boolean, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_BIAS: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_BIAS: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_BIAS: number, RANGE_RATE: number, RANGE_RATE_UNC: number, RA: number, RA_RATE: number, RA_UNC: number, RA_BIAS: number, DECLINATION: number, DECLINATION_RATE: number, DECLINATION_UNC: number, DECLINATION_BIAS: number, LOSX: number, LOSY: number, LOSZ: number, LOS_UNC: number, LOSXVEL: number, LOSYVEL: number, LOSZVEL: number, SENLAT: number, SENLON: number, SENALT: number, SENX: number, SENY: number, SENZ: number, FOV_COUNT: number, FOV_COUNT_UCTS: number, EXP_DURATION: number, ZEROPTD: number, NET_OBJ_SIG: number, NET_OBJ_SIG_UNC: number, MAG: number, MAG_UNC: number, MAG_NORM_RANGE: number, GEOLAT: number, GEOLON: number, GEOALT: number, GEORANGE: number, SKY_BKGRND: number, PRIMARY_EXTINCTION: number, PRIMARY_EXTINCTION_UNC: number, SOLAR_PHASE_ANGLE: number, SOLAR_EQ_PHASE_ANGLE: number, SOLAR_DEC_ANGLE: number, SHUTTER_DELAY: number, TIMING_BIAS: number, RAW_FILE_URIOffset: flatbuffers.Offset, INTENSITY: number, BG_INTENSITY: number, DESCRIPTOROffset: flatbuffers.Offset, SOURCEOffset: flatbuffers.Offset, ORIGINOffset: flatbuffers.Offset, DATA_MODE: DataMode, CREATED_ATOffset: flatbuffers.Offset, CREATED_BYOffset: flatbuffers.Offset, REFERENCE_FRAME: refFrame, SEN_REFERENCE_FRAME: refFrame, UMBRA: boolean, PENUMBRA: boolean, ORIG_NETWORKOffset: flatbuffers.Offset, SOURCE_DLOffset: flatbuffers.Offset, TYPE: DeviceType, AZIMUTH_MEASURED: boolean, ELEVATION_MEASURED: boolean, RANGE_MEASURED: boolean, RANGERATE_MEASURED: boolean, RA_MEASURED: boolean, DECLINATION_MEASURED: boolean): flatbuffers.Offset;
+    static createEOO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CLASSIFICATIONOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, CORR_QUALITY: number, ID_ON_ORBITOffset: flatbuffers.Offset, SENSOR_IDOffset: flatbuffers.Offset, COLLECT_METHOD: CollectMethod, NORAD_CAT_ID: number, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, IMAGE_SET_IDOffset: flatbuffers.Offset, IMAGE_SET_LENGTH: number, SEQUENCE_ID: number, OB_POSITION: ObservationPosition, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, UCT: boolean, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_BIAS: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_BIAS: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_BIAS: number, RANGE_RATE: number, RANGE_RATE_UNC: number, RA: number, RA_RATE: number, RA_UNC: number, RA_BIAS: number, DECLINATION: number, DECLINATION_RATE: number, DECLINATION_UNC: number, DECLINATION_BIAS: number, LOSX: number, LOSY: number, LOSZ: number, LOS_UNC: number, LOSXVEL: number, LOSYVEL: number, LOSZVEL: number, SENLAT: number, SENLON: number, SENALT: number, SENX: number, SENY: number, SENZ: number, FOV_COUNT: number, FOV_COUNT_UCTS: number, EXP_DURATION: number, ZEROPTD: number, NET_OBJ_SIG: number, NET_OBJ_SIG_UNC: number, MAG: number, MAG_UNC: number, MAG_NORM_RANGE: number, GEOLAT: number, GEOLON: number, GEOALT: number, GEORANGE: number, SKY_BKGRND: number, PRIMARY_EXTINCTION: number, PRIMARY_EXTINCTION_UNC: number, SOLAR_PHASE_ANGLE: number, SOLAR_EQ_PHASE_ANGLE: number, SOLAR_DEC_ANGLE: number, SHUTTER_DELAY: number, TIMING_BIAS: number, RAW_FILE_URIOffset: flatbuffers.Offset, INTENSITY: number, BG_INTENSITY: number, DESCRIPTOROffset: flatbuffers.Offset, SOURCEOffset: flatbuffers.Offset, ORIGINOffset: flatbuffers.Offset, DATA_MODE: DataMode, CREATED_ATOffset: flatbuffers.Offset, CREATED_BYOffset: flatbuffers.Offset, REFERENCE_FRAME: refFrame, SEN_REFERENCE_FRAME: refFrame, UMBRA: boolean, PENUMBRA: boolean, ORIG_NETWORKOffset: flatbuffers.Offset, SOURCE_DLOffset: flatbuffers.Offset, TYPE: DeviceType, AZIMUTH_MEASURED: boolean, ELEVATION_MEASURED: boolean, RANGE_MEASURED: boolean, RANGERATE_MEASURED: boolean, RA_MEASURED: boolean, DECLINATION_MEASURED: boolean, NIIRS: number, METERS_PER_PIXEL: number, IMAGE_SNR: number, IMAGE_BIT_DEPTH: number, IMAGE_WIDTH: number, IMAGE_HEIGHT: number, IMAGE_COMPRESSIONOffset: flatbuffers.Offset, IMAGE_COMPRESSION_RATIO: number, PROCESSED_IMAGE_URIOffset: flatbuffers.Offset, IMAGE_AUTO_ENHANCED: boolean, MULTI_FRAME_STACKED: boolean, SYNTHETIC_TRACKING_USED: boolean, IMAGE_SHARPNESS: number, IMAGE_NOISE_STDDEV: number, IMAGE_CONTRAST: number, IMAGE_DYNAMIC_RANGE: number, IMAGE_ENTROPY: number, BACKGROUND_UNIFORMITY: number, BACKGROUND_MEAN_LEVEL: number, SATURATED_PIXEL_PERCENT: number, DEAD_PIXEL_PERCENT: number, PSF_FWHM: number, CLOUD_COVER_PERCENT: number, CLOUD_DETECTION_CONFIDENCE: number, HAZE_PERCENT: number, AEROSOL_OPTICAL_THICKNESS: number, WATER_VAPOR_CONTENT: number, SUN_ELEVATION: number, SUN_AZIMUTH: number, VIEW_ZENITH_ANGLE: number, VIEW_AZIMUTH_ANGLE: number, OFF_NADIR_ANGLE: number, SWATH_WIDTH_KM: number, MEAN_TERRAIN_ELEVATION: number, TERRAIN_ELEVATION_STDDEV: number, SHADOW_COVER_PERCENT: number, SUNGLINT_PRESENT: boolean, SUNGLINT_PERCENT: number, SNOW_ICE_COVER_PERCENT: number, VALID_DATA_AREA_KM2: number): flatbuffers.Offset;
     unpack(): EOOT;
     unpackTo(_o: EOOT): void;
 }
@@ -621,7 +823,47 @@ export declare class EOOT implements flatbuffers.IGeneratedObject {
     RANGERATE_MEASURED: boolean;
     RA_MEASURED: boolean;
     DECLINATION_MEASURED: boolean;
-    constructor(ID?: string | Uint8Array | null, CLASSIFICATION?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, CORR_QUALITY?: number, ID_ON_ORBIT?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, COLLECT_METHOD?: CollectMethod, NORAD_CAT_ID?: number, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, IMAGE_SET_ID?: string | Uint8Array | null, IMAGE_SET_LENGTH?: number, SEQUENCE_ID?: number, OB_POSITION?: ObservationPosition, ORIG_OBJECT_ID?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, UCT?: boolean, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RA?: number, RA_RATE?: number, RA_UNC?: number, RA_BIAS?: number, DECLINATION?: number, DECLINATION_RATE?: number, DECLINATION_UNC?: number, DECLINATION_BIAS?: number, LOSX?: number, LOSY?: number, LOSZ?: number, LOS_UNC?: number, LOSXVEL?: number, LOSYVEL?: number, LOSZVEL?: number, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, FOV_COUNT?: number, FOV_COUNT_UCTS?: number, EXP_DURATION?: number, ZEROPTD?: number, NET_OBJ_SIG?: number, NET_OBJ_SIG_UNC?: number, MAG?: number, MAG_UNC?: number, MAG_NORM_RANGE?: number, GEOLAT?: number, GEOLON?: number, GEOALT?: number, GEORANGE?: number, SKY_BKGRND?: number, PRIMARY_EXTINCTION?: number, PRIMARY_EXTINCTION_UNC?: number, SOLAR_PHASE_ANGLE?: number, SOLAR_EQ_PHASE_ANGLE?: number, SOLAR_DEC_ANGLE?: number, SHUTTER_DELAY?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, INTENSITY?: number, BG_INTENSITY?: number, DESCRIPTOR?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, ORIGIN?: string | Uint8Array | null, DATA_MODE?: DataMode, CREATED_AT?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, SEN_REFERENCE_FRAME?: refFrame, UMBRA?: boolean, PENUMBRA?: boolean, ORIG_NETWORK?: string | Uint8Array | null, SOURCE_DL?: string | Uint8Array | null, TYPE?: DeviceType, AZIMUTH_MEASURED?: boolean, ELEVATION_MEASURED?: boolean, RANGE_MEASURED?: boolean, RANGERATE_MEASURED?: boolean, RA_MEASURED?: boolean, DECLINATION_MEASURED?: boolean);
+    NIIRS: number;
+    METERS_PER_PIXEL: number;
+    IMAGE_SNR: number;
+    IMAGE_BIT_DEPTH: number;
+    IMAGE_WIDTH: number;
+    IMAGE_HEIGHT: number;
+    IMAGE_COMPRESSION: string | Uint8Array | null;
+    IMAGE_COMPRESSION_RATIO: number;
+    PROCESSED_IMAGE_URI: string | Uint8Array | null;
+    IMAGE_AUTO_ENHANCED: boolean;
+    MULTI_FRAME_STACKED: boolean;
+    SYNTHETIC_TRACKING_USED: boolean;
+    IMAGE_SHARPNESS: number;
+    IMAGE_NOISE_STDDEV: number;
+    IMAGE_CONTRAST: number;
+    IMAGE_DYNAMIC_RANGE: number;
+    IMAGE_ENTROPY: number;
+    BACKGROUND_UNIFORMITY: number;
+    BACKGROUND_MEAN_LEVEL: number;
+    SATURATED_PIXEL_PERCENT: number;
+    DEAD_PIXEL_PERCENT: number;
+    PSF_FWHM: number;
+    CLOUD_COVER_PERCENT: number;
+    CLOUD_DETECTION_CONFIDENCE: number;
+    HAZE_PERCENT: number;
+    AEROSOL_OPTICAL_THICKNESS: number;
+    WATER_VAPOR_CONTENT: number;
+    SUN_ELEVATION: number;
+    SUN_AZIMUTH: number;
+    VIEW_ZENITH_ANGLE: number;
+    VIEW_AZIMUTH_ANGLE: number;
+    OFF_NADIR_ANGLE: number;
+    SWATH_WIDTH_KM: number;
+    MEAN_TERRAIN_ELEVATION: number;
+    TERRAIN_ELEVATION_STDDEV: number;
+    SHADOW_COVER_PERCENT: number;
+    SUNGLINT_PRESENT: boolean;
+    SUNGLINT_PERCENT: number;
+    SNOW_ICE_COVER_PERCENT: number;
+    VALID_DATA_AREA_KM2: number;
+    constructor(ID?: string | Uint8Array | null, CLASSIFICATION?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, CORR_QUALITY?: number, ID_ON_ORBIT?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, COLLECT_METHOD?: CollectMethod, NORAD_CAT_ID?: number, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, IMAGE_SET_ID?: string | Uint8Array | null, IMAGE_SET_LENGTH?: number, SEQUENCE_ID?: number, OB_POSITION?: ObservationPosition, ORIG_OBJECT_ID?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, UCT?: boolean, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RA?: number, RA_RATE?: number, RA_UNC?: number, RA_BIAS?: number, DECLINATION?: number, DECLINATION_RATE?: number, DECLINATION_UNC?: number, DECLINATION_BIAS?: number, LOSX?: number, LOSY?: number, LOSZ?: number, LOS_UNC?: number, LOSXVEL?: number, LOSYVEL?: number, LOSZVEL?: number, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, FOV_COUNT?: number, FOV_COUNT_UCTS?: number, EXP_DURATION?: number, ZEROPTD?: number, NET_OBJ_SIG?: number, NET_OBJ_SIG_UNC?: number, MAG?: number, MAG_UNC?: number, MAG_NORM_RANGE?: number, GEOLAT?: number, GEOLON?: number, GEOALT?: number, GEORANGE?: number, SKY_BKGRND?: number, PRIMARY_EXTINCTION?: number, PRIMARY_EXTINCTION_UNC?: number, SOLAR_PHASE_ANGLE?: number, SOLAR_EQ_PHASE_ANGLE?: number, SOLAR_DEC_ANGLE?: number, SHUTTER_DELAY?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, INTENSITY?: number, BG_INTENSITY?: number, DESCRIPTOR?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, ORIGIN?: string | Uint8Array | null, DATA_MODE?: DataMode, CREATED_AT?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, REFERENCE_FRAME?: refFrame, SEN_REFERENCE_FRAME?: refFrame, UMBRA?: boolean, PENUMBRA?: boolean, ORIG_NETWORK?: string | Uint8Array | null, SOURCE_DL?: string | Uint8Array | null, TYPE?: DeviceType, AZIMUTH_MEASURED?: boolean, ELEVATION_MEASURED?: boolean, RANGE_MEASURED?: boolean, RANGERATE_MEASURED?: boolean, RA_MEASURED?: boolean, DECLINATION_MEASURED?: boolean, NIIRS?: number, METERS_PER_PIXEL?: number, IMAGE_SNR?: number, IMAGE_BIT_DEPTH?: number, IMAGE_WIDTH?: number, IMAGE_HEIGHT?: number, IMAGE_COMPRESSION?: string | Uint8Array | null, IMAGE_COMPRESSION_RATIO?: number, PROCESSED_IMAGE_URI?: string | Uint8Array | null, IMAGE_AUTO_ENHANCED?: boolean, MULTI_FRAME_STACKED?: boolean, SYNTHETIC_TRACKING_USED?: boolean, IMAGE_SHARPNESS?: number, IMAGE_NOISE_STDDEV?: number, IMAGE_CONTRAST?: number, IMAGE_DYNAMIC_RANGE?: number, IMAGE_ENTROPY?: number, BACKGROUND_UNIFORMITY?: number, BACKGROUND_MEAN_LEVEL?: number, SATURATED_PIXEL_PERCENT?: number, DEAD_PIXEL_PERCENT?: number, PSF_FWHM?: number, CLOUD_COVER_PERCENT?: number, CLOUD_DETECTION_CONFIDENCE?: number, HAZE_PERCENT?: number, AEROSOL_OPTICAL_THICKNESS?: number, WATER_VAPOR_CONTENT?: number, SUN_ELEVATION?: number, SUN_AZIMUTH?: number, VIEW_ZENITH_ANGLE?: number, VIEW_AZIMUTH_ANGLE?: number, OFF_NADIR_ANGLE?: number, SWATH_WIDTH_KM?: number, MEAN_TERRAIN_ELEVATION?: number, TERRAIN_ELEVATION_STDDEV?: number, SHADOW_COVER_PERCENT?: number, SUNGLINT_PRESENT?: boolean, SUNGLINT_PERCENT?: number, SNOW_ICE_COVER_PERCENT?: number, VALID_DATA_AREA_KM2?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EOO.d.ts.map

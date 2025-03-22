@@ -323,10 +323,90 @@ class EOO {
   bool get RA_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 188, false);
   ///  True if measured, false if computed. Required if declination is reported.
   bool get DECLINATION_MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 190, false);
+  ///  National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  double get NIIRS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 192, 0.0);
+  ///  Ground sample distance in meters per pixel.
+  double get METERS_PER_PIXEL => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 194, 0.0);
+  ///  Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  double get IMAGE_SNR => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 196, 0.0);
+  ///  Bit depth of the image (e.g., 8, 12, 16).
+  int get IMAGE_BIT_DEPTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 198, 0);
+  ///  Width of the image in pixels.
+  int get IMAGE_WIDTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 200, 0);
+  ///  Height of the image in pixels.
+  int get IMAGE_HEIGHT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 202, 0);
+  ///  Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  String? get IMAGE_COMPRESSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 204);
+  ///  Compression ratio used (original size / compressed size), if applicable.
+  double get IMAGE_COMPRESSION_RATIO => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 206, 0.0);
+  ///  URI to the processed image used for this observation.
+  String? get PROCESSED_IMAGE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 208);
+  ///  Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  bool get IMAGE_AUTO_ENHANCED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 210, false);
+  ///  True if the observation was taken with multiple frames stacked into one image.
+  bool get MULTI_FRAME_STACKED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 212, false);
+  ///  True if synthetic tracking was used to create the image.
+  bool get SYNTHETIC_TRACKING_USED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 214, false);
+  ///  Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  double get IMAGE_SHARPNESS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 216, 0.0);
+  ///  Noise level of the image, estimated via pixel intensity variance in background regions.
+  double get IMAGE_NOISE_STDDEV => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 218, 0.0);
+  ///  Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  double get IMAGE_CONTRAST => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 220, 0.0);
+  ///  Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  double get IMAGE_DYNAMIC_RANGE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 222, 0.0);
+  ///  Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  double get IMAGE_ENTROPY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 224, 0.0);
+  ///  Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  double get BACKGROUND_UNIFORMITY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 226, 0.0);
+  ///  Mean background level, computed from non-object regions in pixel units.
+  double get BACKGROUND_MEAN_LEVEL => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 228, 0.0);
+  ///  Percentage of saturated pixels in the image. Indicates overexposure when high.
+  double get SATURATED_PIXEL_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 230, 0.0);
+  ///  Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  double get DEAD_PIXEL_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 232, 0.0);
+  ///  Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  double get PSF_FWHM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 234, 0.0);
+  ///  Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  double get CLOUD_COVER_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 236, 0.0);
+  ///  Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  double get CLOUD_DETECTION_CONFIDENCE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 238, 0.0);
+  ///  Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  double get HAZE_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 240, 0.0);
+  ///  Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  double get AEROSOL_OPTICAL_THICKNESS => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 242, 0.0);
+  ///  Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  double get WATER_VAPOR_CONTENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 244, 0.0);
+  ///  Sun elevation angle at the time of image capture, in degrees above the horizon.
+  double get SUN_ELEVATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 246, 0.0);
+  ///  Sun azimuth angle at the time of image capture, in degrees from true north.
+  double get SUN_AZIMUTH => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 248, 0.0);
+  ///  View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  double get VIEW_ZENITH_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 250, 0.0);
+  ///  View azimuth angle (direction of sensor relative to north), in degrees.
+  double get VIEW_AZIMUTH_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 252, 0.0);
+  ///  Off-nadir angle of the sensor at the time of image capture, in degrees.
+  double get OFF_NADIR_ANGLE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 254, 0.0);
+  ///  Ground coverage width of the image swath in kilometers.
+  double get SWATH_WIDTH_KM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 256, 0.0);
+  ///  Mean terrain elevation in the image footprint, in meters above sea level.
+  double get MEAN_TERRAIN_ELEVATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 258, 0.0);
+  ///  Standard deviation of terrain elevation in the image footprint, in meters.
+  double get TERRAIN_ELEVATION_STDDEV => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 260, 0.0);
+  ///  Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  double get SHADOW_COVER_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 262, 0.0);
+  ///  Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  bool get SUNGLINT_PRESENT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 264, false);
+  ///  Percentage of image affected by sunglint.
+  double get SUNGLINT_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 266, 0.0);
+  ///  Estimated percentage of snow or ice coverage in the image footprint.
+  double get SNOW_ICE_COVER_PERCENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 268, 0.0);
+  ///  Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  double get VALID_DATA_AREA_KM2 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 270, 0.0);
 
   @override
   String toString() {
-    return 'EOO{ID: ${ID}, CLASSIFICATION: ${CLASSIFICATION}, OB_TIME: ${OB_TIME}, CORR_QUALITY: ${CORR_QUALITY}, ID_ON_ORBIT: ${ID_ON_ORBIT}, SENSOR_ID: ${SENSOR_ID}, COLLECT_METHOD: ${COLLECT_METHOD}, NORAD_CAT_ID: ${NORAD_CAT_ID}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, IMAGE_SET_ID: ${IMAGE_SET_ID}, IMAGE_SET_LENGTH: ${IMAGE_SET_LENGTH}, SEQUENCE_ID: ${SEQUENCE_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RA: ${RA}, RA_RATE: ${RA_RATE}, RA_UNC: ${RA_UNC}, RA_BIAS: ${RA_BIAS}, DECLINATION: ${DECLINATION}, DECLINATION_RATE: ${DECLINATION_RATE}, DECLINATION_UNC: ${DECLINATION_UNC}, DECLINATION_BIAS: ${DECLINATION_BIAS}, LOSX: ${LOSX}, LOSY: ${LOSY}, LOSZ: ${LOSZ}, LOS_UNC: ${LOS_UNC}, LOSXVEL: ${LOSXVEL}, LOSYVEL: ${LOSYVEL}, LOSZVEL: ${LOSZVEL}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, FOV_COUNT: ${FOV_COUNT}, FOV_COUNT_UCTS: ${FOV_COUNT_UCTS}, EXP_DURATION: ${EXP_DURATION}, ZEROPTD: ${ZEROPTD}, NET_OBJ_SIG: ${NET_OBJ_SIG}, NET_OBJ_SIG_UNC: ${NET_OBJ_SIG_UNC}, MAG: ${MAG}, MAG_UNC: ${MAG_UNC}, MAG_NORM_RANGE: ${MAG_NORM_RANGE}, GEOLAT: ${GEOLAT}, GEOLON: ${GEOLON}, GEOALT: ${GEOALT}, GEORANGE: ${GEORANGE}, SKY_BKGRND: ${SKY_BKGRND}, PRIMARY_EXTINCTION: ${PRIMARY_EXTINCTION}, PRIMARY_EXTINCTION_UNC: ${PRIMARY_EXTINCTION_UNC}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, SOLAR_EQ_PHASE_ANGLE: ${SOLAR_EQ_PHASE_ANGLE}, SOLAR_DEC_ANGLE: ${SOLAR_DEC_ANGLE}, SHUTTER_DELAY: ${SHUTTER_DELAY}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, INTENSITY: ${INTENSITY}, BG_INTENSITY: ${BG_INTENSITY}, DESCRIPTOR: ${DESCRIPTOR}, SOURCE: ${SOURCE}, ORIGIN: ${ORIGIN}, DATA_MODE: ${DATA_MODE}, CREATED_AT: ${CREATED_AT}, CREATED_BY: ${CREATED_BY}, REFERENCE_FRAME: ${REFERENCE_FRAME}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, UMBRA: ${UMBRA}, PENUMBRA: ${PENUMBRA}, ORIG_NETWORK: ${ORIG_NETWORK}, SOURCE_DL: ${SOURCE_DL}, TYPE: ${TYPE}, AZIMUTH_MEASURED: ${AZIMUTH_MEASURED}, ELEVATION_MEASURED: ${ELEVATION_MEASURED}, RANGE_MEASURED: ${RANGE_MEASURED}, RANGERATE_MEASURED: ${RANGERATE_MEASURED}, RA_MEASURED: ${RA_MEASURED}, DECLINATION_MEASURED: ${DECLINATION_MEASURED}}';
+    return 'EOO{ID: ${ID}, CLASSIFICATION: ${CLASSIFICATION}, OB_TIME: ${OB_TIME}, CORR_QUALITY: ${CORR_QUALITY}, ID_ON_ORBIT: ${ID_ON_ORBIT}, SENSOR_ID: ${SENSOR_ID}, COLLECT_METHOD: ${COLLECT_METHOD}, NORAD_CAT_ID: ${NORAD_CAT_ID}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, IMAGE_SET_ID: ${IMAGE_SET_ID}, IMAGE_SET_LENGTH: ${IMAGE_SET_LENGTH}, SEQUENCE_ID: ${SEQUENCE_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RA: ${RA}, RA_RATE: ${RA_RATE}, RA_UNC: ${RA_UNC}, RA_BIAS: ${RA_BIAS}, DECLINATION: ${DECLINATION}, DECLINATION_RATE: ${DECLINATION_RATE}, DECLINATION_UNC: ${DECLINATION_UNC}, DECLINATION_BIAS: ${DECLINATION_BIAS}, LOSX: ${LOSX}, LOSY: ${LOSY}, LOSZ: ${LOSZ}, LOS_UNC: ${LOS_UNC}, LOSXVEL: ${LOSXVEL}, LOSYVEL: ${LOSYVEL}, LOSZVEL: ${LOSZVEL}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, FOV_COUNT: ${FOV_COUNT}, FOV_COUNT_UCTS: ${FOV_COUNT_UCTS}, EXP_DURATION: ${EXP_DURATION}, ZEROPTD: ${ZEROPTD}, NET_OBJ_SIG: ${NET_OBJ_SIG}, NET_OBJ_SIG_UNC: ${NET_OBJ_SIG_UNC}, MAG: ${MAG}, MAG_UNC: ${MAG_UNC}, MAG_NORM_RANGE: ${MAG_NORM_RANGE}, GEOLAT: ${GEOLAT}, GEOLON: ${GEOLON}, GEOALT: ${GEOALT}, GEORANGE: ${GEORANGE}, SKY_BKGRND: ${SKY_BKGRND}, PRIMARY_EXTINCTION: ${PRIMARY_EXTINCTION}, PRIMARY_EXTINCTION_UNC: ${PRIMARY_EXTINCTION_UNC}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, SOLAR_EQ_PHASE_ANGLE: ${SOLAR_EQ_PHASE_ANGLE}, SOLAR_DEC_ANGLE: ${SOLAR_DEC_ANGLE}, SHUTTER_DELAY: ${SHUTTER_DELAY}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, INTENSITY: ${INTENSITY}, BG_INTENSITY: ${BG_INTENSITY}, DESCRIPTOR: ${DESCRIPTOR}, SOURCE: ${SOURCE}, ORIGIN: ${ORIGIN}, DATA_MODE: ${DATA_MODE}, CREATED_AT: ${CREATED_AT}, CREATED_BY: ${CREATED_BY}, REFERENCE_FRAME: ${REFERENCE_FRAME}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, UMBRA: ${UMBRA}, PENUMBRA: ${PENUMBRA}, ORIG_NETWORK: ${ORIG_NETWORK}, SOURCE_DL: ${SOURCE_DL}, TYPE: ${TYPE}, AZIMUTH_MEASURED: ${AZIMUTH_MEASURED}, ELEVATION_MEASURED: ${ELEVATION_MEASURED}, RANGE_MEASURED: ${RANGE_MEASURED}, RANGERATE_MEASURED: ${RANGERATE_MEASURED}, RA_MEASURED: ${RA_MEASURED}, DECLINATION_MEASURED: ${DECLINATION_MEASURED}, NIIRS: ${NIIRS}, METERS_PER_PIXEL: ${METERS_PER_PIXEL}, IMAGE_SNR: ${IMAGE_SNR}, IMAGE_BIT_DEPTH: ${IMAGE_BIT_DEPTH}, IMAGE_WIDTH: ${IMAGE_WIDTH}, IMAGE_HEIGHT: ${IMAGE_HEIGHT}, IMAGE_COMPRESSION: ${IMAGE_COMPRESSION}, IMAGE_COMPRESSION_RATIO: ${IMAGE_COMPRESSION_RATIO}, PROCESSED_IMAGE_URI: ${PROCESSED_IMAGE_URI}, IMAGE_AUTO_ENHANCED: ${IMAGE_AUTO_ENHANCED}, MULTI_FRAME_STACKED: ${MULTI_FRAME_STACKED}, SYNTHETIC_TRACKING_USED: ${SYNTHETIC_TRACKING_USED}, IMAGE_SHARPNESS: ${IMAGE_SHARPNESS}, IMAGE_NOISE_STDDEV: ${IMAGE_NOISE_STDDEV}, IMAGE_CONTRAST: ${IMAGE_CONTRAST}, IMAGE_DYNAMIC_RANGE: ${IMAGE_DYNAMIC_RANGE}, IMAGE_ENTROPY: ${IMAGE_ENTROPY}, BACKGROUND_UNIFORMITY: ${BACKGROUND_UNIFORMITY}, BACKGROUND_MEAN_LEVEL: ${BACKGROUND_MEAN_LEVEL}, SATURATED_PIXEL_PERCENT: ${SATURATED_PIXEL_PERCENT}, DEAD_PIXEL_PERCENT: ${DEAD_PIXEL_PERCENT}, PSF_FWHM: ${PSF_FWHM}, CLOUD_COVER_PERCENT: ${CLOUD_COVER_PERCENT}, CLOUD_DETECTION_CONFIDENCE: ${CLOUD_DETECTION_CONFIDENCE}, HAZE_PERCENT: ${HAZE_PERCENT}, AEROSOL_OPTICAL_THICKNESS: ${AEROSOL_OPTICAL_THICKNESS}, WATER_VAPOR_CONTENT: ${WATER_VAPOR_CONTENT}, SUN_ELEVATION: ${SUN_ELEVATION}, SUN_AZIMUTH: ${SUN_AZIMUTH}, VIEW_ZENITH_ANGLE: ${VIEW_ZENITH_ANGLE}, VIEW_AZIMUTH_ANGLE: ${VIEW_AZIMUTH_ANGLE}, OFF_NADIR_ANGLE: ${OFF_NADIR_ANGLE}, SWATH_WIDTH_KM: ${SWATH_WIDTH_KM}, MEAN_TERRAIN_ELEVATION: ${MEAN_TERRAIN_ELEVATION}, TERRAIN_ELEVATION_STDDEV: ${TERRAIN_ELEVATION_STDDEV}, SHADOW_COVER_PERCENT: ${SHADOW_COVER_PERCENT}, SUNGLINT_PRESENT: ${SUNGLINT_PRESENT}, SUNGLINT_PERCENT: ${SUNGLINT_PERCENT}, SNOW_ICE_COVER_PERCENT: ${SNOW_ICE_COVER_PERCENT}, VALID_DATA_AREA_KM2: ${VALID_DATA_AREA_KM2}}';
   }
 }
 
@@ -344,7 +424,7 @@ class EOOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(94);
+    fbBuilder.startTable(134);
   }
 
   int addIdOffset(int? offset) {
@@ -723,6 +803,166 @@ class EOOBuilder {
     fbBuilder.addBool(93, DECLINATION_MEASURED);
     return fbBuilder.offset;
   }
+  int addNiirs(double? NIIRS) {
+    fbBuilder.addFloat32(94, NIIRS);
+    return fbBuilder.offset;
+  }
+  int addMetersPerPixel(double? METERS_PER_PIXEL) {
+    fbBuilder.addFloat32(95, METERS_PER_PIXEL);
+    return fbBuilder.offset;
+  }
+  int addImageSnr(double? IMAGE_SNR) {
+    fbBuilder.addFloat32(96, IMAGE_SNR);
+    return fbBuilder.offset;
+  }
+  int addImageBitDepth(int? IMAGE_BIT_DEPTH) {
+    fbBuilder.addInt32(97, IMAGE_BIT_DEPTH);
+    return fbBuilder.offset;
+  }
+  int addImageWidth(int? IMAGE_WIDTH) {
+    fbBuilder.addInt32(98, IMAGE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addImageHeight(int? IMAGE_HEIGHT) {
+    fbBuilder.addInt32(99, IMAGE_HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addImageCompressionOffset(int? offset) {
+    fbBuilder.addOffset(100, offset);
+    return fbBuilder.offset;
+  }
+  int addImageCompressionRatio(double? IMAGE_COMPRESSION_RATIO) {
+    fbBuilder.addFloat32(101, IMAGE_COMPRESSION_RATIO);
+    return fbBuilder.offset;
+  }
+  int addProcessedImageUriOffset(int? offset) {
+    fbBuilder.addOffset(102, offset);
+    return fbBuilder.offset;
+  }
+  int addImageAutoEnhanced(bool? IMAGE_AUTO_ENHANCED) {
+    fbBuilder.addBool(103, IMAGE_AUTO_ENHANCED);
+    return fbBuilder.offset;
+  }
+  int addMultiFrameStacked(bool? MULTI_FRAME_STACKED) {
+    fbBuilder.addBool(104, MULTI_FRAME_STACKED);
+    return fbBuilder.offset;
+  }
+  int addSyntheticTrackingUsed(bool? SYNTHETIC_TRACKING_USED) {
+    fbBuilder.addBool(105, SYNTHETIC_TRACKING_USED);
+    return fbBuilder.offset;
+  }
+  int addImageSharpness(double? IMAGE_SHARPNESS) {
+    fbBuilder.addFloat32(106, IMAGE_SHARPNESS);
+    return fbBuilder.offset;
+  }
+  int addImageNoiseStddev(double? IMAGE_NOISE_STDDEV) {
+    fbBuilder.addFloat32(107, IMAGE_NOISE_STDDEV);
+    return fbBuilder.offset;
+  }
+  int addImageContrast(double? IMAGE_CONTRAST) {
+    fbBuilder.addFloat32(108, IMAGE_CONTRAST);
+    return fbBuilder.offset;
+  }
+  int addImageDynamicRange(double? IMAGE_DYNAMIC_RANGE) {
+    fbBuilder.addFloat32(109, IMAGE_DYNAMIC_RANGE);
+    return fbBuilder.offset;
+  }
+  int addImageEntropy(double? IMAGE_ENTROPY) {
+    fbBuilder.addFloat32(110, IMAGE_ENTROPY);
+    return fbBuilder.offset;
+  }
+  int addBackgroundUniformity(double? BACKGROUND_UNIFORMITY) {
+    fbBuilder.addFloat32(111, BACKGROUND_UNIFORMITY);
+    return fbBuilder.offset;
+  }
+  int addBackgroundMeanLevel(double? BACKGROUND_MEAN_LEVEL) {
+    fbBuilder.addFloat32(112, BACKGROUND_MEAN_LEVEL);
+    return fbBuilder.offset;
+  }
+  int addSaturatedPixelPercent(double? SATURATED_PIXEL_PERCENT) {
+    fbBuilder.addFloat32(113, SATURATED_PIXEL_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addDeadPixelPercent(double? DEAD_PIXEL_PERCENT) {
+    fbBuilder.addFloat32(114, DEAD_PIXEL_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addPsfFwhm(double? PSF_FWHM) {
+    fbBuilder.addFloat32(115, PSF_FWHM);
+    return fbBuilder.offset;
+  }
+  int addCloudCoverPercent(double? CLOUD_COVER_PERCENT) {
+    fbBuilder.addFloat32(116, CLOUD_COVER_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addCloudDetectionConfidence(double? CLOUD_DETECTION_CONFIDENCE) {
+    fbBuilder.addFloat32(117, CLOUD_DETECTION_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addHazePercent(double? HAZE_PERCENT) {
+    fbBuilder.addFloat32(118, HAZE_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addAerosolOpticalThickness(double? AEROSOL_OPTICAL_THICKNESS) {
+    fbBuilder.addFloat32(119, AEROSOL_OPTICAL_THICKNESS);
+    return fbBuilder.offset;
+  }
+  int addWaterVaporContent(double? WATER_VAPOR_CONTENT) {
+    fbBuilder.addFloat32(120, WATER_VAPOR_CONTENT);
+    return fbBuilder.offset;
+  }
+  int addSunElevation(double? SUN_ELEVATION) {
+    fbBuilder.addFloat32(121, SUN_ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addSunAzimuth(double? SUN_AZIMUTH) {
+    fbBuilder.addFloat32(122, SUN_AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addViewZenithAngle(double? VIEW_ZENITH_ANGLE) {
+    fbBuilder.addFloat32(123, VIEW_ZENITH_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addViewAzimuthAngle(double? VIEW_AZIMUTH_ANGLE) {
+    fbBuilder.addFloat32(124, VIEW_AZIMUTH_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addOffNadirAngle(double? OFF_NADIR_ANGLE) {
+    fbBuilder.addFloat32(125, OFF_NADIR_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addSwathWidthKm(double? SWATH_WIDTH_KM) {
+    fbBuilder.addFloat32(126, SWATH_WIDTH_KM);
+    return fbBuilder.offset;
+  }
+  int addMeanTerrainElevation(double? MEAN_TERRAIN_ELEVATION) {
+    fbBuilder.addFloat32(127, MEAN_TERRAIN_ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addTerrainElevationStddev(double? TERRAIN_ELEVATION_STDDEV) {
+    fbBuilder.addFloat32(128, TERRAIN_ELEVATION_STDDEV);
+    return fbBuilder.offset;
+  }
+  int addShadowCoverPercent(double? SHADOW_COVER_PERCENT) {
+    fbBuilder.addFloat32(129, SHADOW_COVER_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addSunglintPresent(bool? SUNGLINT_PRESENT) {
+    fbBuilder.addBool(130, SUNGLINT_PRESENT);
+    return fbBuilder.offset;
+  }
+  int addSunglintPercent(double? SUNGLINT_PERCENT) {
+    fbBuilder.addFloat32(131, SUNGLINT_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addSnowIceCoverPercent(double? SNOW_ICE_COVER_PERCENT) {
+    fbBuilder.addFloat32(132, SNOW_ICE_COVER_PERCENT);
+    return fbBuilder.offset;
+  }
+  int addValidDataAreaKm2(double? VALID_DATA_AREA_KM2) {
+    fbBuilder.addFloat32(133, VALID_DATA_AREA_KM2);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -824,6 +1064,46 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
   final bool? _RANGERATE_MEASURED;
   final bool? _RA_MEASURED;
   final bool? _DECLINATION_MEASURED;
+  final double? _NIIRS;
+  final double? _METERS_PER_PIXEL;
+  final double? _IMAGE_SNR;
+  final int? _IMAGE_BIT_DEPTH;
+  final int? _IMAGE_WIDTH;
+  final int? _IMAGE_HEIGHT;
+  final String? _IMAGE_COMPRESSION;
+  final double? _IMAGE_COMPRESSION_RATIO;
+  final String? _PROCESSED_IMAGE_URI;
+  final bool? _IMAGE_AUTO_ENHANCED;
+  final bool? _MULTI_FRAME_STACKED;
+  final bool? _SYNTHETIC_TRACKING_USED;
+  final double? _IMAGE_SHARPNESS;
+  final double? _IMAGE_NOISE_STDDEV;
+  final double? _IMAGE_CONTRAST;
+  final double? _IMAGE_DYNAMIC_RANGE;
+  final double? _IMAGE_ENTROPY;
+  final double? _BACKGROUND_UNIFORMITY;
+  final double? _BACKGROUND_MEAN_LEVEL;
+  final double? _SATURATED_PIXEL_PERCENT;
+  final double? _DEAD_PIXEL_PERCENT;
+  final double? _PSF_FWHM;
+  final double? _CLOUD_COVER_PERCENT;
+  final double? _CLOUD_DETECTION_CONFIDENCE;
+  final double? _HAZE_PERCENT;
+  final double? _AEROSOL_OPTICAL_THICKNESS;
+  final double? _WATER_VAPOR_CONTENT;
+  final double? _SUN_ELEVATION;
+  final double? _SUN_AZIMUTH;
+  final double? _VIEW_ZENITH_ANGLE;
+  final double? _VIEW_AZIMUTH_ANGLE;
+  final double? _OFF_NADIR_ANGLE;
+  final double? _SWATH_WIDTH_KM;
+  final double? _MEAN_TERRAIN_ELEVATION;
+  final double? _TERRAIN_ELEVATION_STDDEV;
+  final double? _SHADOW_COVER_PERCENT;
+  final bool? _SUNGLINT_PRESENT;
+  final double? _SUNGLINT_PERCENT;
+  final double? _SNOW_ICE_COVER_PERCENT;
+  final double? _VALID_DATA_AREA_KM2;
 
   EOOObjectBuilder({
     String? ID,
@@ -920,6 +1200,46 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     bool? RANGERATE_MEASURED,
     bool? RA_MEASURED,
     bool? DECLINATION_MEASURED,
+    double? NIIRS,
+    double? METERS_PER_PIXEL,
+    double? IMAGE_SNR,
+    int? IMAGE_BIT_DEPTH,
+    int? IMAGE_WIDTH,
+    int? IMAGE_HEIGHT,
+    String? IMAGE_COMPRESSION,
+    double? IMAGE_COMPRESSION_RATIO,
+    String? PROCESSED_IMAGE_URI,
+    bool? IMAGE_AUTO_ENHANCED,
+    bool? MULTI_FRAME_STACKED,
+    bool? SYNTHETIC_TRACKING_USED,
+    double? IMAGE_SHARPNESS,
+    double? IMAGE_NOISE_STDDEV,
+    double? IMAGE_CONTRAST,
+    double? IMAGE_DYNAMIC_RANGE,
+    double? IMAGE_ENTROPY,
+    double? BACKGROUND_UNIFORMITY,
+    double? BACKGROUND_MEAN_LEVEL,
+    double? SATURATED_PIXEL_PERCENT,
+    double? DEAD_PIXEL_PERCENT,
+    double? PSF_FWHM,
+    double? CLOUD_COVER_PERCENT,
+    double? CLOUD_DETECTION_CONFIDENCE,
+    double? HAZE_PERCENT,
+    double? AEROSOL_OPTICAL_THICKNESS,
+    double? WATER_VAPOR_CONTENT,
+    double? SUN_ELEVATION,
+    double? SUN_AZIMUTH,
+    double? VIEW_ZENITH_ANGLE,
+    double? VIEW_AZIMUTH_ANGLE,
+    double? OFF_NADIR_ANGLE,
+    double? SWATH_WIDTH_KM,
+    double? MEAN_TERRAIN_ELEVATION,
+    double? TERRAIN_ELEVATION_STDDEV,
+    double? SHADOW_COVER_PERCENT,
+    bool? SUNGLINT_PRESENT,
+    double? SUNGLINT_PERCENT,
+    double? SNOW_ICE_COVER_PERCENT,
+    double? VALID_DATA_AREA_KM2,
   })
       : _ID = ID,
         _CLASSIFICATION = CLASSIFICATION,
@@ -1014,7 +1334,47 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         _RANGE_MEASURED = RANGE_MEASURED,
         _RANGERATE_MEASURED = RANGERATE_MEASURED,
         _RA_MEASURED = RA_MEASURED,
-        _DECLINATION_MEASURED = DECLINATION_MEASURED;
+        _DECLINATION_MEASURED = DECLINATION_MEASURED,
+        _NIIRS = NIIRS,
+        _METERS_PER_PIXEL = METERS_PER_PIXEL,
+        _IMAGE_SNR = IMAGE_SNR,
+        _IMAGE_BIT_DEPTH = IMAGE_BIT_DEPTH,
+        _IMAGE_WIDTH = IMAGE_WIDTH,
+        _IMAGE_HEIGHT = IMAGE_HEIGHT,
+        _IMAGE_COMPRESSION = IMAGE_COMPRESSION,
+        _IMAGE_COMPRESSION_RATIO = IMAGE_COMPRESSION_RATIO,
+        _PROCESSED_IMAGE_URI = PROCESSED_IMAGE_URI,
+        _IMAGE_AUTO_ENHANCED = IMAGE_AUTO_ENHANCED,
+        _MULTI_FRAME_STACKED = MULTI_FRAME_STACKED,
+        _SYNTHETIC_TRACKING_USED = SYNTHETIC_TRACKING_USED,
+        _IMAGE_SHARPNESS = IMAGE_SHARPNESS,
+        _IMAGE_NOISE_STDDEV = IMAGE_NOISE_STDDEV,
+        _IMAGE_CONTRAST = IMAGE_CONTRAST,
+        _IMAGE_DYNAMIC_RANGE = IMAGE_DYNAMIC_RANGE,
+        _IMAGE_ENTROPY = IMAGE_ENTROPY,
+        _BACKGROUND_UNIFORMITY = BACKGROUND_UNIFORMITY,
+        _BACKGROUND_MEAN_LEVEL = BACKGROUND_MEAN_LEVEL,
+        _SATURATED_PIXEL_PERCENT = SATURATED_PIXEL_PERCENT,
+        _DEAD_PIXEL_PERCENT = DEAD_PIXEL_PERCENT,
+        _PSF_FWHM = PSF_FWHM,
+        _CLOUD_COVER_PERCENT = CLOUD_COVER_PERCENT,
+        _CLOUD_DETECTION_CONFIDENCE = CLOUD_DETECTION_CONFIDENCE,
+        _HAZE_PERCENT = HAZE_PERCENT,
+        _AEROSOL_OPTICAL_THICKNESS = AEROSOL_OPTICAL_THICKNESS,
+        _WATER_VAPOR_CONTENT = WATER_VAPOR_CONTENT,
+        _SUN_ELEVATION = SUN_ELEVATION,
+        _SUN_AZIMUTH = SUN_AZIMUTH,
+        _VIEW_ZENITH_ANGLE = VIEW_ZENITH_ANGLE,
+        _VIEW_AZIMUTH_ANGLE = VIEW_AZIMUTH_ANGLE,
+        _OFF_NADIR_ANGLE = OFF_NADIR_ANGLE,
+        _SWATH_WIDTH_KM = SWATH_WIDTH_KM,
+        _MEAN_TERRAIN_ELEVATION = MEAN_TERRAIN_ELEVATION,
+        _TERRAIN_ELEVATION_STDDEV = TERRAIN_ELEVATION_STDDEV,
+        _SHADOW_COVER_PERCENT = SHADOW_COVER_PERCENT,
+        _SUNGLINT_PRESENT = SUNGLINT_PRESENT,
+        _SUNGLINT_PERCENT = SUNGLINT_PERCENT,
+        _SNOW_ICE_COVER_PERCENT = SNOW_ICE_COVER_PERCENT,
+        _VALID_DATA_AREA_KM2 = VALID_DATA_AREA_KM2;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1055,7 +1415,11 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORIG_NETWORK!);
     final int? SOURCE_DLOffset = _SOURCE_DL == null ? null
         : fbBuilder.writeString(_SOURCE_DL!);
-    fbBuilder.startTable(94);
+    final int? IMAGE_COMPRESSIONOffset = _IMAGE_COMPRESSION == null ? null
+        : fbBuilder.writeString(_IMAGE_COMPRESSION!);
+    final int? PROCESSED_IMAGE_URIOffset = _PROCESSED_IMAGE_URI == null ? null
+        : fbBuilder.writeString(_PROCESSED_IMAGE_URI!);
+    fbBuilder.startTable(134);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, CLASSIFICATIONOffset);
     fbBuilder.addOffset(2, OB_TIMEOffset);
@@ -1150,6 +1514,46 @@ class EOOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(91, _RANGERATE_MEASURED);
     fbBuilder.addBool(92, _RA_MEASURED);
     fbBuilder.addBool(93, _DECLINATION_MEASURED);
+    fbBuilder.addFloat32(94, _NIIRS);
+    fbBuilder.addFloat32(95, _METERS_PER_PIXEL);
+    fbBuilder.addFloat32(96, _IMAGE_SNR);
+    fbBuilder.addInt32(97, _IMAGE_BIT_DEPTH);
+    fbBuilder.addInt32(98, _IMAGE_WIDTH);
+    fbBuilder.addInt32(99, _IMAGE_HEIGHT);
+    fbBuilder.addOffset(100, IMAGE_COMPRESSIONOffset);
+    fbBuilder.addFloat32(101, _IMAGE_COMPRESSION_RATIO);
+    fbBuilder.addOffset(102, PROCESSED_IMAGE_URIOffset);
+    fbBuilder.addBool(103, _IMAGE_AUTO_ENHANCED);
+    fbBuilder.addBool(104, _MULTI_FRAME_STACKED);
+    fbBuilder.addBool(105, _SYNTHETIC_TRACKING_USED);
+    fbBuilder.addFloat32(106, _IMAGE_SHARPNESS);
+    fbBuilder.addFloat32(107, _IMAGE_NOISE_STDDEV);
+    fbBuilder.addFloat32(108, _IMAGE_CONTRAST);
+    fbBuilder.addFloat32(109, _IMAGE_DYNAMIC_RANGE);
+    fbBuilder.addFloat32(110, _IMAGE_ENTROPY);
+    fbBuilder.addFloat32(111, _BACKGROUND_UNIFORMITY);
+    fbBuilder.addFloat32(112, _BACKGROUND_MEAN_LEVEL);
+    fbBuilder.addFloat32(113, _SATURATED_PIXEL_PERCENT);
+    fbBuilder.addFloat32(114, _DEAD_PIXEL_PERCENT);
+    fbBuilder.addFloat32(115, _PSF_FWHM);
+    fbBuilder.addFloat32(116, _CLOUD_COVER_PERCENT);
+    fbBuilder.addFloat32(117, _CLOUD_DETECTION_CONFIDENCE);
+    fbBuilder.addFloat32(118, _HAZE_PERCENT);
+    fbBuilder.addFloat32(119, _AEROSOL_OPTICAL_THICKNESS);
+    fbBuilder.addFloat32(120, _WATER_VAPOR_CONTENT);
+    fbBuilder.addFloat32(121, _SUN_ELEVATION);
+    fbBuilder.addFloat32(122, _SUN_AZIMUTH);
+    fbBuilder.addFloat32(123, _VIEW_ZENITH_ANGLE);
+    fbBuilder.addFloat32(124, _VIEW_AZIMUTH_ANGLE);
+    fbBuilder.addFloat32(125, _OFF_NADIR_ANGLE);
+    fbBuilder.addFloat32(126, _SWATH_WIDTH_KM);
+    fbBuilder.addFloat32(127, _MEAN_TERRAIN_ELEVATION);
+    fbBuilder.addFloat32(128, _TERRAIN_ELEVATION_STDDEV);
+    fbBuilder.addFloat32(129, _SHADOW_COVER_PERCENT);
+    fbBuilder.addBool(130, _SUNGLINT_PRESENT);
+    fbBuilder.addFloat32(131, _SUNGLINT_PERCENT);
+    fbBuilder.addFloat32(132, _SNOW_ICE_COVER_PERCENT);
+    fbBuilder.addFloat32(133, _VALID_DATA_AREA_KM2);
     return fbBuilder.endTable();
   }
 

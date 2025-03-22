@@ -331,201 +331,100 @@ public struct EOO : IFlatbufferObject
   public bool RA_MEASURED { get { int o = __p.__offset(188); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// True if measured, false if computed. Required if declination is reported.
   public bool DECLINATION_MEASURED { get { int o = __p.__offset(190); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  public float NIIRS { get { int o = __p.__offset(192); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Ground sample distance in meters per pixel.
+  public float METERS_PER_PIXEL { get { int o = __p.__offset(194); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  public float IMAGE_SNR { get { int o = __p.__offset(196); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Bit depth of the image (e.g., 8, 12, 16).
+  public int IMAGE_BIT_DEPTH { get { int o = __p.__offset(198); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Width of the image in pixels.
+  public int IMAGE_WIDTH { get { int o = __p.__offset(200); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Height of the image in pixels.
+  public int IMAGE_HEIGHT { get { int o = __p.__offset(202); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  public string IMAGE_COMPRESSION { get { int o = __p.__offset(204); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIMAGE_COMPRESSIONBytes() { return __p.__vector_as_span<byte>(204, 1); }
+#else
+  public ArraySegment<byte>? GetIMAGE_COMPRESSIONBytes() { return __p.__vector_as_arraysegment(204); }
+#endif
+  public byte[] GetIMAGE_COMPRESSIONArray() { return __p.__vector_as_array<byte>(204); }
+  /// Compression ratio used (original size / compressed size), if applicable.
+  public float IMAGE_COMPRESSION_RATIO { get { int o = __p.__offset(206); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// URI to the processed image used for this observation.
+  public string PROCESSED_IMAGE_URI { get { int o = __p.__offset(208); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROCESSED_IMAGE_URIBytes() { return __p.__vector_as_span<byte>(208, 1); }
+#else
+  public ArraySegment<byte>? GetPROCESSED_IMAGE_URIBytes() { return __p.__vector_as_arraysegment(208); }
+#endif
+  public byte[] GetPROCESSED_IMAGE_URIArray() { return __p.__vector_as_array<byte>(208); }
+  /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  public bool IMAGE_AUTO_ENHANCED { get { int o = __p.__offset(210); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if the observation was taken with multiple frames stacked into one image.
+  public bool MULTI_FRAME_STACKED { get { int o = __p.__offset(212); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if synthetic tracking was used to create the image.
+  public bool SYNTHETIC_TRACKING_USED { get { int o = __p.__offset(214); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  public float IMAGE_SHARPNESS { get { int o = __p.__offset(216); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Noise level of the image, estimated via pixel intensity variance in background regions.
+  public float IMAGE_NOISE_STDDEV { get { int o = __p.__offset(218); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  public float IMAGE_CONTRAST { get { int o = __p.__offset(220); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  public float IMAGE_DYNAMIC_RANGE { get { int o = __p.__offset(222); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  public float IMAGE_ENTROPY { get { int o = __p.__offset(224); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  public float BACKGROUND_UNIFORMITY { get { int o = __p.__offset(226); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Mean background level, computed from non-object regions in pixel units.
+  public float BACKGROUND_MEAN_LEVEL { get { int o = __p.__offset(228); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+  public float SATURATED_PIXEL_PERCENT { get { int o = __p.__offset(230); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  public float DEAD_PIXEL_PERCENT { get { int o = __p.__offset(232); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  public float PSF_FWHM { get { int o = __p.__offset(234); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  public float CLOUD_COVER_PERCENT { get { int o = __p.__offset(236); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  public float CLOUD_DETECTION_CONFIDENCE { get { int o = __p.__offset(238); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  public float HAZE_PERCENT { get { int o = __p.__offset(240); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  public float AEROSOL_OPTICAL_THICKNESS { get { int o = __p.__offset(242); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  public float WATER_VAPOR_CONTENT { get { int o = __p.__offset(244); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+  public float SUN_ELEVATION { get { int o = __p.__offset(246); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Sun azimuth angle at the time of image capture, in degrees from true north.
+  public float SUN_AZIMUTH { get { int o = __p.__offset(248); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  public float VIEW_ZENITH_ANGLE { get { int o = __p.__offset(250); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// View azimuth angle (direction of sensor relative to north), in degrees.
+  public float VIEW_AZIMUTH_ANGLE { get { int o = __p.__offset(252); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+  public float OFF_NADIR_ANGLE { get { int o = __p.__offset(254); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Ground coverage width of the image swath in kilometers.
+  public float SWATH_WIDTH_KM { get { int o = __p.__offset(256); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Mean terrain elevation in the image footprint, in meters above sea level.
+  public float MEAN_TERRAIN_ELEVATION { get { int o = __p.__offset(258); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Standard deviation of terrain elevation in the image footprint, in meters.
+  public float TERRAIN_ELEVATION_STDDEV { get { int o = __p.__offset(260); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  public float SHADOW_COVER_PERCENT { get { int o = __p.__offset(262); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  public bool SUNGLINT_PRESENT { get { int o = __p.__offset(264); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Percentage of image affected by sunglint.
+  public float SUNGLINT_PERCENT { get { int o = __p.__offset(266); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Estimated percentage of snow or ice coverage in the image footprint.
+  public float SNOW_ICE_COVER_PERCENT { get { int o = __p.__offset(268); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  public float VALID_DATA_AREA_KM2 { get { int o = __p.__offset(270); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
-  public static Offset<EOO> CreateEOO(FlatBufferBuilder builder,
-      StringOffset IDOffset = default(StringOffset),
-      StringOffset CLASSIFICATIONOffset = default(StringOffset),
-      StringOffset OB_TIMEOffset = default(StringOffset),
-      float CORR_QUALITY = 0.0f,
-      StringOffset ID_ON_ORBITOffset = default(StringOffset),
-      StringOffset SENSOR_IDOffset = default(StringOffset),
-      CollectMethod COLLECT_METHOD = CollectMethod.SIDEREAL,
-      int NORAD_CAT_ID = 0,
-      StringOffset TASK_IDOffset = default(StringOffset),
-      StringOffset TRANSACTION_IDOffset = default(StringOffset),
-      StringOffset IMAGE_SET_IDOffset = default(StringOffset),
-      int IMAGE_SET_LENGTH = 0,
-      int SEQUENCE_ID = 0,
-      ObservationPosition OB_POSITION = ObservationPosition.FENCE,
-      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
-      StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
-      bool UCT = false,
-      float AZIMUTH = 0.0f,
-      float AZIMUTH_UNC = 0.0f,
-      float AZIMUTH_BIAS = 0.0f,
-      float AZIMUTH_RATE = 0.0f,
-      float ELEVATION = 0.0f,
-      float ELEVATION_UNC = 0.0f,
-      float ELEVATION_BIAS = 0.0f,
-      float ELEVATION_RATE = 0.0f,
-      float RANGE = 0.0f,
-      float RANGE_UNC = 0.0f,
-      float RANGE_BIAS = 0.0f,
-      float RANGE_RATE = 0.0f,
-      float RANGE_RATE_UNC = 0.0f,
-      float RA = 0.0f,
-      float RA_RATE = 0.0f,
-      float RA_UNC = 0.0f,
-      float RA_BIAS = 0.0f,
-      float DECLINATION = 0.0f,
-      float DECLINATION_RATE = 0.0f,
-      float DECLINATION_UNC = 0.0f,
-      float DECLINATION_BIAS = 0.0f,
-      float LOSX = 0.0f,
-      float LOSY = 0.0f,
-      float LOSZ = 0.0f,
-      float LOS_UNC = 0.0f,
-      float LOSXVEL = 0.0f,
-      float LOSYVEL = 0.0f,
-      float LOSZVEL = 0.0f,
-      float SENLAT = 0.0f,
-      float SENLON = 0.0f,
-      float SENALT = 0.0f,
-      float SENX = 0.0f,
-      float SENY = 0.0f,
-      float SENZ = 0.0f,
-      int FOV_COUNT = 0,
-      int FOV_COUNT_UCTS = 0,
-      float EXP_DURATION = 0.0f,
-      float ZEROPTD = 0.0f,
-      float NET_OBJ_SIG = 0.0f,
-      float NET_OBJ_SIG_UNC = 0.0f,
-      float MAG = 0.0f,
-      float MAG_UNC = 0.0f,
-      float MAG_NORM_RANGE = 0.0f,
-      float GEOLAT = 0.0f,
-      float GEOLON = 0.0f,
-      float GEOALT = 0.0f,
-      float GEORANGE = 0.0f,
-      float SKY_BKGRND = 0.0f,
-      float PRIMARY_EXTINCTION = 0.0f,
-      float PRIMARY_EXTINCTION_UNC = 0.0f,
-      float SOLAR_PHASE_ANGLE = 0.0f,
-      float SOLAR_EQ_PHASE_ANGLE = 0.0f,
-      float SOLAR_DEC_ANGLE = 0.0f,
-      float SHUTTER_DELAY = 0.0f,
-      float TIMING_BIAS = 0.0f,
-      StringOffset RAW_FILE_URIOffset = default(StringOffset),
-      float INTENSITY = 0.0f,
-      float BG_INTENSITY = 0.0f,
-      StringOffset DESCRIPTOROffset = default(StringOffset),
-      StringOffset SOURCEOffset = default(StringOffset),
-      StringOffset ORIGINOffset = default(StringOffset),
-      DataMode DATA_MODE = DataMode.EXERCISE,
-      StringOffset CREATED_ATOffset = default(StringOffset),
-      StringOffset CREATED_BYOffset = default(StringOffset),
-      refFrame REFERENCE_FRAME = refFrame.ECEF,
-      refFrame SEN_REFERENCE_FRAME = refFrame.ECEF,
-      bool UMBRA = false,
-      bool PENUMBRA = false,
-      StringOffset ORIG_NETWORKOffset = default(StringOffset),
-      StringOffset SOURCE_DLOffset = default(StringOffset),
-      DeviceType TYPE = DeviceType.UNKNOWN,
-      bool AZIMUTH_MEASURED = false,
-      bool ELEVATION_MEASURED = false,
-      bool RANGE_MEASURED = false,
-      bool RANGERATE_MEASURED = false,
-      bool RA_MEASURED = false,
-      bool DECLINATION_MEASURED = false) {
-    builder.StartTable(94);
-    EOO.AddSOURCE_DL(builder, SOURCE_DLOffset);
-    EOO.AddORIG_NETWORK(builder, ORIG_NETWORKOffset);
-    EOO.AddCREATED_BY(builder, CREATED_BYOffset);
-    EOO.AddCREATED_AT(builder, CREATED_ATOffset);
-    EOO.AddORIGIN(builder, ORIGINOffset);
-    EOO.AddSOURCE(builder, SOURCEOffset);
-    EOO.AddDESCRIPTOR(builder, DESCRIPTOROffset);
-    EOO.AddBG_INTENSITY(builder, BG_INTENSITY);
-    EOO.AddINTENSITY(builder, INTENSITY);
-    EOO.AddRAW_FILE_URI(builder, RAW_FILE_URIOffset);
-    EOO.AddTIMING_BIAS(builder, TIMING_BIAS);
-    EOO.AddSHUTTER_DELAY(builder, SHUTTER_DELAY);
-    EOO.AddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE);
-    EOO.AddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE);
-    EOO.AddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE);
-    EOO.AddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC);
-    EOO.AddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION);
-    EOO.AddSKY_BKGRND(builder, SKY_BKGRND);
-    EOO.AddGEORANGE(builder, GEORANGE);
-    EOO.AddGEOALT(builder, GEOALT);
-    EOO.AddGEOLON(builder, GEOLON);
-    EOO.AddGEOLAT(builder, GEOLAT);
-    EOO.AddMAG_NORM_RANGE(builder, MAG_NORM_RANGE);
-    EOO.AddMAG_UNC(builder, MAG_UNC);
-    EOO.AddMAG(builder, MAG);
-    EOO.AddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC);
-    EOO.AddNET_OBJ_SIG(builder, NET_OBJ_SIG);
-    EOO.AddZEROPTD(builder, ZEROPTD);
-    EOO.AddEXP_DURATION(builder, EXP_DURATION);
-    EOO.AddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS);
-    EOO.AddFOV_COUNT(builder, FOV_COUNT);
-    EOO.AddSENZ(builder, SENZ);
-    EOO.AddSENY(builder, SENY);
-    EOO.AddSENX(builder, SENX);
-    EOO.AddSENALT(builder, SENALT);
-    EOO.AddSENLON(builder, SENLON);
-    EOO.AddSENLAT(builder, SENLAT);
-    EOO.AddLOSZVEL(builder, LOSZVEL);
-    EOO.AddLOSYVEL(builder, LOSYVEL);
-    EOO.AddLOSXVEL(builder, LOSXVEL);
-    EOO.AddLOS_UNC(builder, LOS_UNC);
-    EOO.AddLOSZ(builder, LOSZ);
-    EOO.AddLOSY(builder, LOSY);
-    EOO.AddLOSX(builder, LOSX);
-    EOO.AddDECLINATION_BIAS(builder, DECLINATION_BIAS);
-    EOO.AddDECLINATION_UNC(builder, DECLINATION_UNC);
-    EOO.AddDECLINATION_RATE(builder, DECLINATION_RATE);
-    EOO.AddDECLINATION(builder, DECLINATION);
-    EOO.AddRA_BIAS(builder, RA_BIAS);
-    EOO.AddRA_UNC(builder, RA_UNC);
-    EOO.AddRA_RATE(builder, RA_RATE);
-    EOO.AddRA(builder, RA);
-    EOO.AddRANGE_RATE_UNC(builder, RANGE_RATE_UNC);
-    EOO.AddRANGE_RATE(builder, RANGE_RATE);
-    EOO.AddRANGE_BIAS(builder, RANGE_BIAS);
-    EOO.AddRANGE_UNC(builder, RANGE_UNC);
-    EOO.AddRANGE(builder, RANGE);
-    EOO.AddELEVATION_RATE(builder, ELEVATION_RATE);
-    EOO.AddELEVATION_BIAS(builder, ELEVATION_BIAS);
-    EOO.AddELEVATION_UNC(builder, ELEVATION_UNC);
-    EOO.AddELEVATION(builder, ELEVATION);
-    EOO.AddAZIMUTH_RATE(builder, AZIMUTH_RATE);
-    EOO.AddAZIMUTH_BIAS(builder, AZIMUTH_BIAS);
-    EOO.AddAZIMUTH_UNC(builder, AZIMUTH_UNC);
-    EOO.AddAZIMUTH(builder, AZIMUTH);
-    EOO.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
-    EOO.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
-    EOO.AddSEQUENCE_ID(builder, SEQUENCE_ID);
-    EOO.AddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH);
-    EOO.AddIMAGE_SET_ID(builder, IMAGE_SET_IDOffset);
-    EOO.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
-    EOO.AddTASK_ID(builder, TASK_IDOffset);
-    EOO.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
-    EOO.AddSENSOR_ID(builder, SENSOR_IDOffset);
-    EOO.AddID_ON_ORBIT(builder, ID_ON_ORBITOffset);
-    EOO.AddCORR_QUALITY(builder, CORR_QUALITY);
-    EOO.AddOB_TIME(builder, OB_TIMEOffset);
-    EOO.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
-    EOO.AddID(builder, IDOffset);
-    EOO.AddDECLINATION_MEASURED(builder, DECLINATION_MEASURED);
-    EOO.AddRA_MEASURED(builder, RA_MEASURED);
-    EOO.AddRANGERATE_MEASURED(builder, RANGERATE_MEASURED);
-    EOO.AddRANGE_MEASURED(builder, RANGE_MEASURED);
-    EOO.AddELEVATION_MEASURED(builder, ELEVATION_MEASURED);
-    EOO.AddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED);
-    EOO.AddTYPE(builder, TYPE);
-    EOO.AddPENUMBRA(builder, PENUMBRA);
-    EOO.AddUMBRA(builder, UMBRA);
-    EOO.AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME);
-    EOO.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
-    EOO.AddDATA_MODE(builder, DATA_MODE);
-    EOO.AddUCT(builder, UCT);
-    EOO.AddOB_POSITION(builder, OB_POSITION);
-    EOO.AddCOLLECT_METHOD(builder, COLLECT_METHOD);
-    return EOO.EndEOO(builder);
-  }
-
-  public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(94); }
+  public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(134); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(1, CLASSIFICATIONOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(2, OB_TIMEOffset.Value, 0); }
@@ -620,6 +519,46 @@ public struct EOO : IFlatbufferObject
   public static void AddRANGERATE_MEASURED(FlatBufferBuilder builder, bool RANGERATE_MEASURED) { builder.AddBool(91, RANGERATE_MEASURED, false); }
   public static void AddRA_MEASURED(FlatBufferBuilder builder, bool RA_MEASURED) { builder.AddBool(92, RA_MEASURED, false); }
   public static void AddDECLINATION_MEASURED(FlatBufferBuilder builder, bool DECLINATION_MEASURED) { builder.AddBool(93, DECLINATION_MEASURED, false); }
+  public static void AddNIIRS(FlatBufferBuilder builder, float NIIRS) { builder.AddFloat(94, NIIRS, 0.0f); }
+  public static void AddMETERS_PER_PIXEL(FlatBufferBuilder builder, float METERS_PER_PIXEL) { builder.AddFloat(95, METERS_PER_PIXEL, 0.0f); }
+  public static void AddIMAGE_SNR(FlatBufferBuilder builder, float IMAGE_SNR) { builder.AddFloat(96, IMAGE_SNR, 0.0f); }
+  public static void AddIMAGE_BIT_DEPTH(FlatBufferBuilder builder, int IMAGE_BIT_DEPTH) { builder.AddInt(97, IMAGE_BIT_DEPTH, 0); }
+  public static void AddIMAGE_WIDTH(FlatBufferBuilder builder, int IMAGE_WIDTH) { builder.AddInt(98, IMAGE_WIDTH, 0); }
+  public static void AddIMAGE_HEIGHT(FlatBufferBuilder builder, int IMAGE_HEIGHT) { builder.AddInt(99, IMAGE_HEIGHT, 0); }
+  public static void AddIMAGE_COMPRESSION(FlatBufferBuilder builder, StringOffset IMAGE_COMPRESSIONOffset) { builder.AddOffset(100, IMAGE_COMPRESSIONOffset.Value, 0); }
+  public static void AddIMAGE_COMPRESSION_RATIO(FlatBufferBuilder builder, float IMAGE_COMPRESSION_RATIO) { builder.AddFloat(101, IMAGE_COMPRESSION_RATIO, 0.0f); }
+  public static void AddPROCESSED_IMAGE_URI(FlatBufferBuilder builder, StringOffset PROCESSED_IMAGE_URIOffset) { builder.AddOffset(102, PROCESSED_IMAGE_URIOffset.Value, 0); }
+  public static void AddIMAGE_AUTO_ENHANCED(FlatBufferBuilder builder, bool IMAGE_AUTO_ENHANCED) { builder.AddBool(103, IMAGE_AUTO_ENHANCED, false); }
+  public static void AddMULTI_FRAME_STACKED(FlatBufferBuilder builder, bool MULTI_FRAME_STACKED) { builder.AddBool(104, MULTI_FRAME_STACKED, false); }
+  public static void AddSYNTHETIC_TRACKING_USED(FlatBufferBuilder builder, bool SYNTHETIC_TRACKING_USED) { builder.AddBool(105, SYNTHETIC_TRACKING_USED, false); }
+  public static void AddIMAGE_SHARPNESS(FlatBufferBuilder builder, float IMAGE_SHARPNESS) { builder.AddFloat(106, IMAGE_SHARPNESS, 0.0f); }
+  public static void AddIMAGE_NOISE_STDDEV(FlatBufferBuilder builder, float IMAGE_NOISE_STDDEV) { builder.AddFloat(107, IMAGE_NOISE_STDDEV, 0.0f); }
+  public static void AddIMAGE_CONTRAST(FlatBufferBuilder builder, float IMAGE_CONTRAST) { builder.AddFloat(108, IMAGE_CONTRAST, 0.0f); }
+  public static void AddIMAGE_DYNAMIC_RANGE(FlatBufferBuilder builder, float IMAGE_DYNAMIC_RANGE) { builder.AddFloat(109, IMAGE_DYNAMIC_RANGE, 0.0f); }
+  public static void AddIMAGE_ENTROPY(FlatBufferBuilder builder, float IMAGE_ENTROPY) { builder.AddFloat(110, IMAGE_ENTROPY, 0.0f); }
+  public static void AddBACKGROUND_UNIFORMITY(FlatBufferBuilder builder, float BACKGROUND_UNIFORMITY) { builder.AddFloat(111, BACKGROUND_UNIFORMITY, 0.0f); }
+  public static void AddBACKGROUND_MEAN_LEVEL(FlatBufferBuilder builder, float BACKGROUND_MEAN_LEVEL) { builder.AddFloat(112, BACKGROUND_MEAN_LEVEL, 0.0f); }
+  public static void AddSATURATED_PIXEL_PERCENT(FlatBufferBuilder builder, float SATURATED_PIXEL_PERCENT) { builder.AddFloat(113, SATURATED_PIXEL_PERCENT, 0.0f); }
+  public static void AddDEAD_PIXEL_PERCENT(FlatBufferBuilder builder, float DEAD_PIXEL_PERCENT) { builder.AddFloat(114, DEAD_PIXEL_PERCENT, 0.0f); }
+  public static void AddPSF_FWHM(FlatBufferBuilder builder, float PSF_FWHM) { builder.AddFloat(115, PSF_FWHM, 0.0f); }
+  public static void AddCLOUD_COVER_PERCENT(FlatBufferBuilder builder, float CLOUD_COVER_PERCENT) { builder.AddFloat(116, CLOUD_COVER_PERCENT, 0.0f); }
+  public static void AddCLOUD_DETECTION_CONFIDENCE(FlatBufferBuilder builder, float CLOUD_DETECTION_CONFIDENCE) { builder.AddFloat(117, CLOUD_DETECTION_CONFIDENCE, 0.0f); }
+  public static void AddHAZE_PERCENT(FlatBufferBuilder builder, float HAZE_PERCENT) { builder.AddFloat(118, HAZE_PERCENT, 0.0f); }
+  public static void AddAEROSOL_OPTICAL_THICKNESS(FlatBufferBuilder builder, float AEROSOL_OPTICAL_THICKNESS) { builder.AddFloat(119, AEROSOL_OPTICAL_THICKNESS, 0.0f); }
+  public static void AddWATER_VAPOR_CONTENT(FlatBufferBuilder builder, float WATER_VAPOR_CONTENT) { builder.AddFloat(120, WATER_VAPOR_CONTENT, 0.0f); }
+  public static void AddSUN_ELEVATION(FlatBufferBuilder builder, float SUN_ELEVATION) { builder.AddFloat(121, SUN_ELEVATION, 0.0f); }
+  public static void AddSUN_AZIMUTH(FlatBufferBuilder builder, float SUN_AZIMUTH) { builder.AddFloat(122, SUN_AZIMUTH, 0.0f); }
+  public static void AddVIEW_ZENITH_ANGLE(FlatBufferBuilder builder, float VIEW_ZENITH_ANGLE) { builder.AddFloat(123, VIEW_ZENITH_ANGLE, 0.0f); }
+  public static void AddVIEW_AZIMUTH_ANGLE(FlatBufferBuilder builder, float VIEW_AZIMUTH_ANGLE) { builder.AddFloat(124, VIEW_AZIMUTH_ANGLE, 0.0f); }
+  public static void AddOFF_NADIR_ANGLE(FlatBufferBuilder builder, float OFF_NADIR_ANGLE) { builder.AddFloat(125, OFF_NADIR_ANGLE, 0.0f); }
+  public static void AddSWATH_WIDTH_KM(FlatBufferBuilder builder, float SWATH_WIDTH_KM) { builder.AddFloat(126, SWATH_WIDTH_KM, 0.0f); }
+  public static void AddMEAN_TERRAIN_ELEVATION(FlatBufferBuilder builder, float MEAN_TERRAIN_ELEVATION) { builder.AddFloat(127, MEAN_TERRAIN_ELEVATION, 0.0f); }
+  public static void AddTERRAIN_ELEVATION_STDDEV(FlatBufferBuilder builder, float TERRAIN_ELEVATION_STDDEV) { builder.AddFloat(128, TERRAIN_ELEVATION_STDDEV, 0.0f); }
+  public static void AddSHADOW_COVER_PERCENT(FlatBufferBuilder builder, float SHADOW_COVER_PERCENT) { builder.AddFloat(129, SHADOW_COVER_PERCENT, 0.0f); }
+  public static void AddSUNGLINT_PRESENT(FlatBufferBuilder builder, bool SUNGLINT_PRESENT) { builder.AddBool(130, SUNGLINT_PRESENT, false); }
+  public static void AddSUNGLINT_PERCENT(FlatBufferBuilder builder, float SUNGLINT_PERCENT) { builder.AddFloat(131, SUNGLINT_PERCENT, 0.0f); }
+  public static void AddSNOW_ICE_COVER_PERCENT(FlatBufferBuilder builder, float SNOW_ICE_COVER_PERCENT) { builder.AddFloat(132, SNOW_ICE_COVER_PERCENT, 0.0f); }
+  public static void AddVALID_DATA_AREA_KM2(FlatBufferBuilder builder, float VALID_DATA_AREA_KM2) { builder.AddFloat(133, VALID_DATA_AREA_KM2, 0.0f); }
   public static Offset<EOO> EndEOO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOO>(o);
@@ -726,6 +665,46 @@ public struct EOO : IFlatbufferObject
     _o.RANGERATE_MEASURED = this.RANGERATE_MEASURED;
     _o.RA_MEASURED = this.RA_MEASURED;
     _o.DECLINATION_MEASURED = this.DECLINATION_MEASURED;
+    _o.NIIRS = this.NIIRS;
+    _o.METERS_PER_PIXEL = this.METERS_PER_PIXEL;
+    _o.IMAGE_SNR = this.IMAGE_SNR;
+    _o.IMAGE_BIT_DEPTH = this.IMAGE_BIT_DEPTH;
+    _o.IMAGE_WIDTH = this.IMAGE_WIDTH;
+    _o.IMAGE_HEIGHT = this.IMAGE_HEIGHT;
+    _o.IMAGE_COMPRESSION = this.IMAGE_COMPRESSION;
+    _o.IMAGE_COMPRESSION_RATIO = this.IMAGE_COMPRESSION_RATIO;
+    _o.PROCESSED_IMAGE_URI = this.PROCESSED_IMAGE_URI;
+    _o.IMAGE_AUTO_ENHANCED = this.IMAGE_AUTO_ENHANCED;
+    _o.MULTI_FRAME_STACKED = this.MULTI_FRAME_STACKED;
+    _o.SYNTHETIC_TRACKING_USED = this.SYNTHETIC_TRACKING_USED;
+    _o.IMAGE_SHARPNESS = this.IMAGE_SHARPNESS;
+    _o.IMAGE_NOISE_STDDEV = this.IMAGE_NOISE_STDDEV;
+    _o.IMAGE_CONTRAST = this.IMAGE_CONTRAST;
+    _o.IMAGE_DYNAMIC_RANGE = this.IMAGE_DYNAMIC_RANGE;
+    _o.IMAGE_ENTROPY = this.IMAGE_ENTROPY;
+    _o.BACKGROUND_UNIFORMITY = this.BACKGROUND_UNIFORMITY;
+    _o.BACKGROUND_MEAN_LEVEL = this.BACKGROUND_MEAN_LEVEL;
+    _o.SATURATED_PIXEL_PERCENT = this.SATURATED_PIXEL_PERCENT;
+    _o.DEAD_PIXEL_PERCENT = this.DEAD_PIXEL_PERCENT;
+    _o.PSF_FWHM = this.PSF_FWHM;
+    _o.CLOUD_COVER_PERCENT = this.CLOUD_COVER_PERCENT;
+    _o.CLOUD_DETECTION_CONFIDENCE = this.CLOUD_DETECTION_CONFIDENCE;
+    _o.HAZE_PERCENT = this.HAZE_PERCENT;
+    _o.AEROSOL_OPTICAL_THICKNESS = this.AEROSOL_OPTICAL_THICKNESS;
+    _o.WATER_VAPOR_CONTENT = this.WATER_VAPOR_CONTENT;
+    _o.SUN_ELEVATION = this.SUN_ELEVATION;
+    _o.SUN_AZIMUTH = this.SUN_AZIMUTH;
+    _o.VIEW_ZENITH_ANGLE = this.VIEW_ZENITH_ANGLE;
+    _o.VIEW_AZIMUTH_ANGLE = this.VIEW_AZIMUTH_ANGLE;
+    _o.OFF_NADIR_ANGLE = this.OFF_NADIR_ANGLE;
+    _o.SWATH_WIDTH_KM = this.SWATH_WIDTH_KM;
+    _o.MEAN_TERRAIN_ELEVATION = this.MEAN_TERRAIN_ELEVATION;
+    _o.TERRAIN_ELEVATION_STDDEV = this.TERRAIN_ELEVATION_STDDEV;
+    _o.SHADOW_COVER_PERCENT = this.SHADOW_COVER_PERCENT;
+    _o.SUNGLINT_PRESENT = this.SUNGLINT_PRESENT;
+    _o.SUNGLINT_PERCENT = this.SUNGLINT_PERCENT;
+    _o.SNOW_ICE_COVER_PERCENT = this.SNOW_ICE_COVER_PERCENT;
+    _o.VALID_DATA_AREA_KM2 = this.VALID_DATA_AREA_KM2;
   }
   public static Offset<EOO> Pack(FlatBufferBuilder builder, EOOT _o) {
     if (_o == null) return default(Offset<EOO>);
@@ -747,102 +726,144 @@ public struct EOO : IFlatbufferObject
     var _CREATED_BY = _o.CREATED_BY == null ? default(StringOffset) : builder.CreateString(_o.CREATED_BY);
     var _ORIG_NETWORK = _o.ORIG_NETWORK == null ? default(StringOffset) : builder.CreateString(_o.ORIG_NETWORK);
     var _SOURCE_DL = _o.SOURCE_DL == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_DL);
-    return CreateEOO(
-      builder,
-      _ID,
-      _CLASSIFICATION,
-      _OB_TIME,
-      _o.CORR_QUALITY,
-      _ID_ON_ORBIT,
-      _SENSOR_ID,
-      _o.COLLECT_METHOD,
-      _o.NORAD_CAT_ID,
-      _TASK_ID,
-      _TRANSACTION_ID,
-      _IMAGE_SET_ID,
-      _o.IMAGE_SET_LENGTH,
-      _o.SEQUENCE_ID,
-      _o.OB_POSITION,
-      _ORIG_OBJECT_ID,
-      _ORIG_SENSOR_ID,
-      _o.UCT,
-      _o.AZIMUTH,
-      _o.AZIMUTH_UNC,
-      _o.AZIMUTH_BIAS,
-      _o.AZIMUTH_RATE,
-      _o.ELEVATION,
-      _o.ELEVATION_UNC,
-      _o.ELEVATION_BIAS,
-      _o.ELEVATION_RATE,
-      _o.RANGE,
-      _o.RANGE_UNC,
-      _o.RANGE_BIAS,
-      _o.RANGE_RATE,
-      _o.RANGE_RATE_UNC,
-      _o.RA,
-      _o.RA_RATE,
-      _o.RA_UNC,
-      _o.RA_BIAS,
-      _o.DECLINATION,
-      _o.DECLINATION_RATE,
-      _o.DECLINATION_UNC,
-      _o.DECLINATION_BIAS,
-      _o.LOSX,
-      _o.LOSY,
-      _o.LOSZ,
-      _o.LOS_UNC,
-      _o.LOSXVEL,
-      _o.LOSYVEL,
-      _o.LOSZVEL,
-      _o.SENLAT,
-      _o.SENLON,
-      _o.SENALT,
-      _o.SENX,
-      _o.SENY,
-      _o.SENZ,
-      _o.FOV_COUNT,
-      _o.FOV_COUNT_UCTS,
-      _o.EXP_DURATION,
-      _o.ZEROPTD,
-      _o.NET_OBJ_SIG,
-      _o.NET_OBJ_SIG_UNC,
-      _o.MAG,
-      _o.MAG_UNC,
-      _o.MAG_NORM_RANGE,
-      _o.GEOLAT,
-      _o.GEOLON,
-      _o.GEOALT,
-      _o.GEORANGE,
-      _o.SKY_BKGRND,
-      _o.PRIMARY_EXTINCTION,
-      _o.PRIMARY_EXTINCTION_UNC,
-      _o.SOLAR_PHASE_ANGLE,
-      _o.SOLAR_EQ_PHASE_ANGLE,
-      _o.SOLAR_DEC_ANGLE,
-      _o.SHUTTER_DELAY,
-      _o.TIMING_BIAS,
-      _RAW_FILE_URI,
-      _o.INTENSITY,
-      _o.BG_INTENSITY,
-      _DESCRIPTOR,
-      _SOURCE,
-      _ORIGIN,
-      _o.DATA_MODE,
-      _CREATED_AT,
-      _CREATED_BY,
-      _o.REFERENCE_FRAME,
-      _o.SEN_REFERENCE_FRAME,
-      _o.UMBRA,
-      _o.PENUMBRA,
-      _ORIG_NETWORK,
-      _SOURCE_DL,
-      _o.TYPE,
-      _o.AZIMUTH_MEASURED,
-      _o.ELEVATION_MEASURED,
-      _o.RANGE_MEASURED,
-      _o.RANGERATE_MEASURED,
-      _o.RA_MEASURED,
-      _o.DECLINATION_MEASURED);
+    var _IMAGE_COMPRESSION = _o.IMAGE_COMPRESSION == null ? default(StringOffset) : builder.CreateString(_o.IMAGE_COMPRESSION);
+    var _PROCESSED_IMAGE_URI = _o.PROCESSED_IMAGE_URI == null ? default(StringOffset) : builder.CreateString(_o.PROCESSED_IMAGE_URI);
+    StartEOO(builder);
+    AddID(builder, _ID);
+    AddCLASSIFICATION(builder, _CLASSIFICATION);
+    AddOB_TIME(builder, _OB_TIME);
+    AddCORR_QUALITY(builder, _o.CORR_QUALITY);
+    AddID_ON_ORBIT(builder, _ID_ON_ORBIT);
+    AddSENSOR_ID(builder, _SENSOR_ID);
+    AddCOLLECT_METHOD(builder, _o.COLLECT_METHOD);
+    AddNORAD_CAT_ID(builder, _o.NORAD_CAT_ID);
+    AddTASK_ID(builder, _TASK_ID);
+    AddTRANSACTION_ID(builder, _TRANSACTION_ID);
+    AddIMAGE_SET_ID(builder, _IMAGE_SET_ID);
+    AddIMAGE_SET_LENGTH(builder, _o.IMAGE_SET_LENGTH);
+    AddSEQUENCE_ID(builder, _o.SEQUENCE_ID);
+    AddOB_POSITION(builder, _o.OB_POSITION);
+    AddORIG_OBJECT_ID(builder, _ORIG_OBJECT_ID);
+    AddORIG_SENSOR_ID(builder, _ORIG_SENSOR_ID);
+    AddUCT(builder, _o.UCT);
+    AddAZIMUTH(builder, _o.AZIMUTH);
+    AddAZIMUTH_UNC(builder, _o.AZIMUTH_UNC);
+    AddAZIMUTH_BIAS(builder, _o.AZIMUTH_BIAS);
+    AddAZIMUTH_RATE(builder, _o.AZIMUTH_RATE);
+    AddELEVATION(builder, _o.ELEVATION);
+    AddELEVATION_UNC(builder, _o.ELEVATION_UNC);
+    AddELEVATION_BIAS(builder, _o.ELEVATION_BIAS);
+    AddELEVATION_RATE(builder, _o.ELEVATION_RATE);
+    AddRANGE(builder, _o.RANGE);
+    AddRANGE_UNC(builder, _o.RANGE_UNC);
+    AddRANGE_BIAS(builder, _o.RANGE_BIAS);
+    AddRANGE_RATE(builder, _o.RANGE_RATE);
+    AddRANGE_RATE_UNC(builder, _o.RANGE_RATE_UNC);
+    AddRA(builder, _o.RA);
+    AddRA_RATE(builder, _o.RA_RATE);
+    AddRA_UNC(builder, _o.RA_UNC);
+    AddRA_BIAS(builder, _o.RA_BIAS);
+    AddDECLINATION(builder, _o.DECLINATION);
+    AddDECLINATION_RATE(builder, _o.DECLINATION_RATE);
+    AddDECLINATION_UNC(builder, _o.DECLINATION_UNC);
+    AddDECLINATION_BIAS(builder, _o.DECLINATION_BIAS);
+    AddLOSX(builder, _o.LOSX);
+    AddLOSY(builder, _o.LOSY);
+    AddLOSZ(builder, _o.LOSZ);
+    AddLOS_UNC(builder, _o.LOS_UNC);
+    AddLOSXVEL(builder, _o.LOSXVEL);
+    AddLOSYVEL(builder, _o.LOSYVEL);
+    AddLOSZVEL(builder, _o.LOSZVEL);
+    AddSENLAT(builder, _o.SENLAT);
+    AddSENLON(builder, _o.SENLON);
+    AddSENALT(builder, _o.SENALT);
+    AddSENX(builder, _o.SENX);
+    AddSENY(builder, _o.SENY);
+    AddSENZ(builder, _o.SENZ);
+    AddFOV_COUNT(builder, _o.FOV_COUNT);
+    AddFOV_COUNT_UCTS(builder, _o.FOV_COUNT_UCTS);
+    AddEXP_DURATION(builder, _o.EXP_DURATION);
+    AddZEROPTD(builder, _o.ZEROPTD);
+    AddNET_OBJ_SIG(builder, _o.NET_OBJ_SIG);
+    AddNET_OBJ_SIG_UNC(builder, _o.NET_OBJ_SIG_UNC);
+    AddMAG(builder, _o.MAG);
+    AddMAG_UNC(builder, _o.MAG_UNC);
+    AddMAG_NORM_RANGE(builder, _o.MAG_NORM_RANGE);
+    AddGEOLAT(builder, _o.GEOLAT);
+    AddGEOLON(builder, _o.GEOLON);
+    AddGEOALT(builder, _o.GEOALT);
+    AddGEORANGE(builder, _o.GEORANGE);
+    AddSKY_BKGRND(builder, _o.SKY_BKGRND);
+    AddPRIMARY_EXTINCTION(builder, _o.PRIMARY_EXTINCTION);
+    AddPRIMARY_EXTINCTION_UNC(builder, _o.PRIMARY_EXTINCTION_UNC);
+    AddSOLAR_PHASE_ANGLE(builder, _o.SOLAR_PHASE_ANGLE);
+    AddSOLAR_EQ_PHASE_ANGLE(builder, _o.SOLAR_EQ_PHASE_ANGLE);
+    AddSOLAR_DEC_ANGLE(builder, _o.SOLAR_DEC_ANGLE);
+    AddSHUTTER_DELAY(builder, _o.SHUTTER_DELAY);
+    AddTIMING_BIAS(builder, _o.TIMING_BIAS);
+    AddRAW_FILE_URI(builder, _RAW_FILE_URI);
+    AddINTENSITY(builder, _o.INTENSITY);
+    AddBG_INTENSITY(builder, _o.BG_INTENSITY);
+    AddDESCRIPTOR(builder, _DESCRIPTOR);
+    AddSOURCE(builder, _SOURCE);
+    AddORIGIN(builder, _ORIGIN);
+    AddDATA_MODE(builder, _o.DATA_MODE);
+    AddCREATED_AT(builder, _CREATED_AT);
+    AddCREATED_BY(builder, _CREATED_BY);
+    AddREFERENCE_FRAME(builder, _o.REFERENCE_FRAME);
+    AddSEN_REFERENCE_FRAME(builder, _o.SEN_REFERENCE_FRAME);
+    AddUMBRA(builder, _o.UMBRA);
+    AddPENUMBRA(builder, _o.PENUMBRA);
+    AddORIG_NETWORK(builder, _ORIG_NETWORK);
+    AddSOURCE_DL(builder, _SOURCE_DL);
+    AddTYPE(builder, _o.TYPE);
+    AddAZIMUTH_MEASURED(builder, _o.AZIMUTH_MEASURED);
+    AddELEVATION_MEASURED(builder, _o.ELEVATION_MEASURED);
+    AddRANGE_MEASURED(builder, _o.RANGE_MEASURED);
+    AddRANGERATE_MEASURED(builder, _o.RANGERATE_MEASURED);
+    AddRA_MEASURED(builder, _o.RA_MEASURED);
+    AddDECLINATION_MEASURED(builder, _o.DECLINATION_MEASURED);
+    AddNIIRS(builder, _o.NIIRS);
+    AddMETERS_PER_PIXEL(builder, _o.METERS_PER_PIXEL);
+    AddIMAGE_SNR(builder, _o.IMAGE_SNR);
+    AddIMAGE_BIT_DEPTH(builder, _o.IMAGE_BIT_DEPTH);
+    AddIMAGE_WIDTH(builder, _o.IMAGE_WIDTH);
+    AddIMAGE_HEIGHT(builder, _o.IMAGE_HEIGHT);
+    AddIMAGE_COMPRESSION(builder, _IMAGE_COMPRESSION);
+    AddIMAGE_COMPRESSION_RATIO(builder, _o.IMAGE_COMPRESSION_RATIO);
+    AddPROCESSED_IMAGE_URI(builder, _PROCESSED_IMAGE_URI);
+    AddIMAGE_AUTO_ENHANCED(builder, _o.IMAGE_AUTO_ENHANCED);
+    AddMULTI_FRAME_STACKED(builder, _o.MULTI_FRAME_STACKED);
+    AddSYNTHETIC_TRACKING_USED(builder, _o.SYNTHETIC_TRACKING_USED);
+    AddIMAGE_SHARPNESS(builder, _o.IMAGE_SHARPNESS);
+    AddIMAGE_NOISE_STDDEV(builder, _o.IMAGE_NOISE_STDDEV);
+    AddIMAGE_CONTRAST(builder, _o.IMAGE_CONTRAST);
+    AddIMAGE_DYNAMIC_RANGE(builder, _o.IMAGE_DYNAMIC_RANGE);
+    AddIMAGE_ENTROPY(builder, _o.IMAGE_ENTROPY);
+    AddBACKGROUND_UNIFORMITY(builder, _o.BACKGROUND_UNIFORMITY);
+    AddBACKGROUND_MEAN_LEVEL(builder, _o.BACKGROUND_MEAN_LEVEL);
+    AddSATURATED_PIXEL_PERCENT(builder, _o.SATURATED_PIXEL_PERCENT);
+    AddDEAD_PIXEL_PERCENT(builder, _o.DEAD_PIXEL_PERCENT);
+    AddPSF_FWHM(builder, _o.PSF_FWHM);
+    AddCLOUD_COVER_PERCENT(builder, _o.CLOUD_COVER_PERCENT);
+    AddCLOUD_DETECTION_CONFIDENCE(builder, _o.CLOUD_DETECTION_CONFIDENCE);
+    AddHAZE_PERCENT(builder, _o.HAZE_PERCENT);
+    AddAEROSOL_OPTICAL_THICKNESS(builder, _o.AEROSOL_OPTICAL_THICKNESS);
+    AddWATER_VAPOR_CONTENT(builder, _o.WATER_VAPOR_CONTENT);
+    AddSUN_ELEVATION(builder, _o.SUN_ELEVATION);
+    AddSUN_AZIMUTH(builder, _o.SUN_AZIMUTH);
+    AddVIEW_ZENITH_ANGLE(builder, _o.VIEW_ZENITH_ANGLE);
+    AddVIEW_AZIMUTH_ANGLE(builder, _o.VIEW_AZIMUTH_ANGLE);
+    AddOFF_NADIR_ANGLE(builder, _o.OFF_NADIR_ANGLE);
+    AddSWATH_WIDTH_KM(builder, _o.SWATH_WIDTH_KM);
+    AddMEAN_TERRAIN_ELEVATION(builder, _o.MEAN_TERRAIN_ELEVATION);
+    AddTERRAIN_ELEVATION_STDDEV(builder, _o.TERRAIN_ELEVATION_STDDEV);
+    AddSHADOW_COVER_PERCENT(builder, _o.SHADOW_COVER_PERCENT);
+    AddSUNGLINT_PRESENT(builder, _o.SUNGLINT_PRESENT);
+    AddSUNGLINT_PERCENT(builder, _o.SUNGLINT_PERCENT);
+    AddSNOW_ICE_COVER_PERCENT(builder, _o.SNOW_ICE_COVER_PERCENT);
+    AddVALID_DATA_AREA_KM2(builder, _o.VALID_DATA_AREA_KM2);
+    return EndEOO(builder);
   }
 }
 
@@ -942,6 +963,46 @@ public class EOOT
   public bool RANGERATE_MEASURED { get; set; }
   public bool RA_MEASURED { get; set; }
   public bool DECLINATION_MEASURED { get; set; }
+  public float NIIRS { get; set; }
+  public float METERS_PER_PIXEL { get; set; }
+  public float IMAGE_SNR { get; set; }
+  public int IMAGE_BIT_DEPTH { get; set; }
+  public int IMAGE_WIDTH { get; set; }
+  public int IMAGE_HEIGHT { get; set; }
+  public string IMAGE_COMPRESSION { get; set; }
+  public float IMAGE_COMPRESSION_RATIO { get; set; }
+  public string PROCESSED_IMAGE_URI { get; set; }
+  public bool IMAGE_AUTO_ENHANCED { get; set; }
+  public bool MULTI_FRAME_STACKED { get; set; }
+  public bool SYNTHETIC_TRACKING_USED { get; set; }
+  public float IMAGE_SHARPNESS { get; set; }
+  public float IMAGE_NOISE_STDDEV { get; set; }
+  public float IMAGE_CONTRAST { get; set; }
+  public float IMAGE_DYNAMIC_RANGE { get; set; }
+  public float IMAGE_ENTROPY { get; set; }
+  public float BACKGROUND_UNIFORMITY { get; set; }
+  public float BACKGROUND_MEAN_LEVEL { get; set; }
+  public float SATURATED_PIXEL_PERCENT { get; set; }
+  public float DEAD_PIXEL_PERCENT { get; set; }
+  public float PSF_FWHM { get; set; }
+  public float CLOUD_COVER_PERCENT { get; set; }
+  public float CLOUD_DETECTION_CONFIDENCE { get; set; }
+  public float HAZE_PERCENT { get; set; }
+  public float AEROSOL_OPTICAL_THICKNESS { get; set; }
+  public float WATER_VAPOR_CONTENT { get; set; }
+  public float SUN_ELEVATION { get; set; }
+  public float SUN_AZIMUTH { get; set; }
+  public float VIEW_ZENITH_ANGLE { get; set; }
+  public float VIEW_AZIMUTH_ANGLE { get; set; }
+  public float OFF_NADIR_ANGLE { get; set; }
+  public float SWATH_WIDTH_KM { get; set; }
+  public float MEAN_TERRAIN_ELEVATION { get; set; }
+  public float TERRAIN_ELEVATION_STDDEV { get; set; }
+  public float SHADOW_COVER_PERCENT { get; set; }
+  public bool SUNGLINT_PRESENT { get; set; }
+  public float SUNGLINT_PERCENT { get; set; }
+  public float SNOW_ICE_COVER_PERCENT { get; set; }
+  public float VALID_DATA_AREA_KM2 { get; set; }
 
   public EOOT() {
     this.ID = null;
@@ -1038,6 +1099,46 @@ public class EOOT
     this.RANGERATE_MEASURED = false;
     this.RA_MEASURED = false;
     this.DECLINATION_MEASURED = false;
+    this.NIIRS = 0.0f;
+    this.METERS_PER_PIXEL = 0.0f;
+    this.IMAGE_SNR = 0.0f;
+    this.IMAGE_BIT_DEPTH = 0;
+    this.IMAGE_WIDTH = 0;
+    this.IMAGE_HEIGHT = 0;
+    this.IMAGE_COMPRESSION = null;
+    this.IMAGE_COMPRESSION_RATIO = 0.0f;
+    this.PROCESSED_IMAGE_URI = null;
+    this.IMAGE_AUTO_ENHANCED = false;
+    this.MULTI_FRAME_STACKED = false;
+    this.SYNTHETIC_TRACKING_USED = false;
+    this.IMAGE_SHARPNESS = 0.0f;
+    this.IMAGE_NOISE_STDDEV = 0.0f;
+    this.IMAGE_CONTRAST = 0.0f;
+    this.IMAGE_DYNAMIC_RANGE = 0.0f;
+    this.IMAGE_ENTROPY = 0.0f;
+    this.BACKGROUND_UNIFORMITY = 0.0f;
+    this.BACKGROUND_MEAN_LEVEL = 0.0f;
+    this.SATURATED_PIXEL_PERCENT = 0.0f;
+    this.DEAD_PIXEL_PERCENT = 0.0f;
+    this.PSF_FWHM = 0.0f;
+    this.CLOUD_COVER_PERCENT = 0.0f;
+    this.CLOUD_DETECTION_CONFIDENCE = 0.0f;
+    this.HAZE_PERCENT = 0.0f;
+    this.AEROSOL_OPTICAL_THICKNESS = 0.0f;
+    this.WATER_VAPOR_CONTENT = 0.0f;
+    this.SUN_ELEVATION = 0.0f;
+    this.SUN_AZIMUTH = 0.0f;
+    this.VIEW_ZENITH_ANGLE = 0.0f;
+    this.VIEW_AZIMUTH_ANGLE = 0.0f;
+    this.OFF_NADIR_ANGLE = 0.0f;
+    this.SWATH_WIDTH_KM = 0.0f;
+    this.MEAN_TERRAIN_ELEVATION = 0.0f;
+    this.TERRAIN_ELEVATION_STDDEV = 0.0f;
+    this.SHADOW_COVER_PERCENT = 0.0f;
+    this.SUNGLINT_PRESENT = false;
+    this.SUNGLINT_PERCENT = 0.0f;
+    this.SNOW_ICE_COVER_PERCENT = 0.0f;
+    this.VALID_DATA_AREA_KM2 = 0.0f;
   }
   public static EOOT DeserializeFromBinary(byte[] fbBuffer) {
     return EOO.GetRootAsEOO(new ByteBuffer(fbBuffer)).UnPack();
@@ -1149,6 +1250,46 @@ static public class EOOVerify
       && verifier.VerifyField(tablePos, 186 /*RANGERATE_MEASURED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 188 /*RA_MEASURED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 190 /*DECLINATION_MEASURED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 192 /*NIIRS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 194 /*METERS_PER_PIXEL*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 196 /*IMAGE_SNR*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 198 /*IMAGE_BIT_DEPTH*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 200 /*IMAGE_WIDTH*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 202 /*IMAGE_HEIGHT*/, 4 /*int*/, 4, false)
+      && verifier.VerifyString(tablePos, 204 /*IMAGE_COMPRESSION*/, false)
+      && verifier.VerifyField(tablePos, 206 /*IMAGE_COMPRESSION_RATIO*/, 4 /*float*/, 4, false)
+      && verifier.VerifyString(tablePos, 208 /*PROCESSED_IMAGE_URI*/, false)
+      && verifier.VerifyField(tablePos, 210 /*IMAGE_AUTO_ENHANCED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 212 /*MULTI_FRAME_STACKED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 214 /*SYNTHETIC_TRACKING_USED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 216 /*IMAGE_SHARPNESS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 218 /*IMAGE_NOISE_STDDEV*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 220 /*IMAGE_CONTRAST*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 222 /*IMAGE_DYNAMIC_RANGE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 224 /*IMAGE_ENTROPY*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 226 /*BACKGROUND_UNIFORMITY*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 228 /*BACKGROUND_MEAN_LEVEL*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 230 /*SATURATED_PIXEL_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 232 /*DEAD_PIXEL_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 234 /*PSF_FWHM*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 236 /*CLOUD_COVER_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 238 /*CLOUD_DETECTION_CONFIDENCE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 240 /*HAZE_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 242 /*AEROSOL_OPTICAL_THICKNESS*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 244 /*WATER_VAPOR_CONTENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 246 /*SUN_ELEVATION*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 248 /*SUN_AZIMUTH*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 250 /*VIEW_ZENITH_ANGLE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 252 /*VIEW_AZIMUTH_ANGLE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 254 /*OFF_NADIR_ANGLE*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 256 /*SWATH_WIDTH_KM*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 258 /*MEAN_TERRAIN_ELEVATION*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 260 /*TERRAIN_ELEVATION_STDDEV*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 262 /*SHADOW_COVER_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 264 /*SUNGLINT_PRESENT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 266 /*SUNGLINT_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 268 /*SNOW_ICE_COVER_PERCENT*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 270 /*VALID_DATA_AREA_KM2*/, 4 /*float*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

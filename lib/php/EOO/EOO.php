@@ -943,22 +943,416 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+    /**
+     * @return float
+     */
+    public function getNIIRS()
+    {
+        $o = $this->__offset(192);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Ground sample distance in meters per pixel.
+    /**
+     * @return float
+     */
+    public function getMETERS_PER_PIXEL()
+    {
+        $o = $this->__offset(194);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+    /**
+     * @return float
+     */
+    public function getIMAGE_SNR()
+    {
+        $o = $this->__offset(196);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Bit depth of the image (e.g., 8, 12, 16).
+    /**
+     * @return int
+     */
+    public function getIMAGE_BIT_DEPTH()
+    {
+        $o = $this->__offset(198);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Width of the image in pixels.
+    /**
+     * @return int
+     */
+    public function getIMAGE_WIDTH()
+    {
+        $o = $this->__offset(200);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Height of the image in pixels.
+    /**
+     * @return int
+     */
+    public function getIMAGE_HEIGHT()
+    {
+        $o = $this->__offset(202);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+    public function getIMAGE_COMPRESSION()
+    {
+        $o = $this->__offset(204);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Compression ratio used (original size / compressed size), if applicable.
+    /**
+     * @return float
+     */
+    public function getIMAGE_COMPRESSION_RATIO()
+    {
+        $o = $this->__offset(206);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// URI to the processed image used for this observation.
+    public function getPROCESSED_IMAGE_URI()
+    {
+        $o = $this->__offset(208);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+    /**
+     * @return bool
+     */
+    public function getIMAGE_AUTO_ENHANCED()
+    {
+        $o = $this->__offset(210);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// True if the observation was taken with multiple frames stacked into one image.
+    /**
+     * @return bool
+     */
+    public function getMULTI_FRAME_STACKED()
+    {
+        $o = $this->__offset(212);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// True if synthetic tracking was used to create the image.
+    /**
+     * @return bool
+     */
+    public function getSYNTHETIC_TRACKING_USED()
+    {
+        $o = $this->__offset(214);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+    /**
+     * @return float
+     */
+    public function getIMAGE_SHARPNESS()
+    {
+        $o = $this->__offset(216);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Noise level of the image, estimated via pixel intensity variance in background regions.
+    /**
+     * @return float
+     */
+    public function getIMAGE_NOISE_STDDEV()
+    {
+        $o = $this->__offset(218);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+    /**
+     * @return float
+     */
+    public function getIMAGE_CONTRAST()
+    {
+        $o = $this->__offset(220);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+    /**
+     * @return float
+     */
+    public function getIMAGE_DYNAMIC_RANGE()
+    {
+        $o = $this->__offset(222);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+    /**
+     * @return float
+     */
+    public function getIMAGE_ENTROPY()
+    {
+        $o = $this->__offset(224);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+    /**
+     * @return float
+     */
+    public function getBACKGROUND_UNIFORMITY()
+    {
+        $o = $this->__offset(226);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Mean background level, computed from non-object regions in pixel units.
+    /**
+     * @return float
+     */
+    public function getBACKGROUND_MEAN_LEVEL()
+    {
+        $o = $this->__offset(228);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+    /**
+     * @return float
+     */
+    public function getSATURATED_PIXEL_PERCENT()
+    {
+        $o = $this->__offset(230);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+    /**
+     * @return float
+     */
+    public function getDEAD_PIXEL_PERCENT()
+    {
+        $o = $this->__offset(232);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+    /**
+     * @return float
+     */
+    public function getPSF_FWHM()
+    {
+        $o = $this->__offset(234);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+    /**
+     * @return float
+     */
+    public function getCLOUD_COVER_PERCENT()
+    {
+        $o = $this->__offset(236);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+    /**
+     * @return float
+     */
+    public function getCLOUD_DETECTION_CONFIDENCE()
+    {
+        $o = $this->__offset(238);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+    /**
+     * @return float
+     */
+    public function getHAZE_PERCENT()
+    {
+        $o = $this->__offset(240);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+    /**
+     * @return float
+     */
+    public function getAEROSOL_OPTICAL_THICKNESS()
+    {
+        $o = $this->__offset(242);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+    /**
+     * @return float
+     */
+    public function getWATER_VAPOR_CONTENT()
+    {
+        $o = $this->__offset(244);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+    /**
+     * @return float
+     */
+    public function getSUN_ELEVATION()
+    {
+        $o = $this->__offset(246);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Sun azimuth angle at the time of image capture, in degrees from true north.
+    /**
+     * @return float
+     */
+    public function getSUN_AZIMUTH()
+    {
+        $o = $this->__offset(248);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+    /**
+     * @return float
+     */
+    public function getVIEW_ZENITH_ANGLE()
+    {
+        $o = $this->__offset(250);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// View azimuth angle (direction of sensor relative to north), in degrees.
+    /**
+     * @return float
+     */
+    public function getVIEW_AZIMUTH_ANGLE()
+    {
+        $o = $this->__offset(252);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+    /**
+     * @return float
+     */
+    public function getOFF_NADIR_ANGLE()
+    {
+        $o = $this->__offset(254);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Ground coverage width of the image swath in kilometers.
+    /**
+     * @return float
+     */
+    public function getSWATH_WIDTH_KM()
+    {
+        $o = $this->__offset(256);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Mean terrain elevation in the image footprint, in meters above sea level.
+    /**
+     * @return float
+     */
+    public function getMEAN_TERRAIN_ELEVATION()
+    {
+        $o = $this->__offset(258);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Standard deviation of terrain elevation in the image footprint, in meters.
+    /**
+     * @return float
+     */
+    public function getTERRAIN_ELEVATION_STDDEV()
+    {
+        $o = $this->__offset(260);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+    /**
+     * @return float
+     */
+    public function getSHADOW_COVER_PERCENT()
+    {
+        $o = $this->__offset(262);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+    /**
+     * @return bool
+     */
+    public function getSUNGLINT_PRESENT()
+    {
+        $o = $this->__offset(264);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Percentage of image affected by sunglint.
+    /**
+     * @return float
+     */
+    public function getSUNGLINT_PERCENT()
+    {
+        $o = $this->__offset(266);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Estimated percentage of snow or ice coverage in the image footprint.
+    /**
+     * @return float
+     */
+    public function getSNOW_ICE_COVER_PERCENT()
+    {
+        $o = $this->__offset(268);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+    /**
+     * @return float
+     */
+    public function getVALID_DATA_AREA_KM2()
+    {
+        $o = $this->__offset(270);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEOO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(94);
+        $builder->StartObject(134);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EOO
      */
-    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED)
+    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED, $NIIRS, $METERS_PER_PIXEL, $IMAGE_SNR, $IMAGE_BIT_DEPTH, $IMAGE_WIDTH, $IMAGE_HEIGHT, $IMAGE_COMPRESSION, $IMAGE_COMPRESSION_RATIO, $PROCESSED_IMAGE_URI, $IMAGE_AUTO_ENHANCED, $MULTI_FRAME_STACKED, $SYNTHETIC_TRACKING_USED, $IMAGE_SHARPNESS, $IMAGE_NOISE_STDDEV, $IMAGE_CONTRAST, $IMAGE_DYNAMIC_RANGE, $IMAGE_ENTROPY, $BACKGROUND_UNIFORMITY, $BACKGROUND_MEAN_LEVEL, $SATURATED_PIXEL_PERCENT, $DEAD_PIXEL_PERCENT, $PSF_FWHM, $CLOUD_COVER_PERCENT, $CLOUD_DETECTION_CONFIDENCE, $HAZE_PERCENT, $AEROSOL_OPTICAL_THICKNESS, $WATER_VAPOR_CONTENT, $SUN_ELEVATION, $SUN_AZIMUTH, $VIEW_ZENITH_ANGLE, $VIEW_AZIMUTH_ANGLE, $OFF_NADIR_ANGLE, $SWATH_WIDTH_KM, $MEAN_TERRAIN_ELEVATION, $TERRAIN_ELEVATION_STDDEV, $SHADOW_COVER_PERCENT, $SUNGLINT_PRESENT, $SUNGLINT_PERCENT, $SNOW_ICE_COVER_PERCENT, $VALID_DATA_AREA_KM2)
     {
-        $builder->startObject(94);
+        $builder->startObject(134);
         self::addID($builder, $ID);
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addOB_TIME($builder, $OB_TIME);
@@ -1053,6 +1447,46 @@ class EOO extends Table
         self::addRANGERATE_MEASURED($builder, $RANGERATE_MEASURED);
         self::addRA_MEASURED($builder, $RA_MEASURED);
         self::addDECLINATION_MEASURED($builder, $DECLINATION_MEASURED);
+        self::addNIIRS($builder, $NIIRS);
+        self::addMETERS_PER_PIXEL($builder, $METERS_PER_PIXEL);
+        self::addIMAGE_SNR($builder, $IMAGE_SNR);
+        self::addIMAGE_BIT_DEPTH($builder, $IMAGE_BIT_DEPTH);
+        self::addIMAGE_WIDTH($builder, $IMAGE_WIDTH);
+        self::addIMAGE_HEIGHT($builder, $IMAGE_HEIGHT);
+        self::addIMAGE_COMPRESSION($builder, $IMAGE_COMPRESSION);
+        self::addIMAGE_COMPRESSION_RATIO($builder, $IMAGE_COMPRESSION_RATIO);
+        self::addPROCESSED_IMAGE_URI($builder, $PROCESSED_IMAGE_URI);
+        self::addIMAGE_AUTO_ENHANCED($builder, $IMAGE_AUTO_ENHANCED);
+        self::addMULTI_FRAME_STACKED($builder, $MULTI_FRAME_STACKED);
+        self::addSYNTHETIC_TRACKING_USED($builder, $SYNTHETIC_TRACKING_USED);
+        self::addIMAGE_SHARPNESS($builder, $IMAGE_SHARPNESS);
+        self::addIMAGE_NOISE_STDDEV($builder, $IMAGE_NOISE_STDDEV);
+        self::addIMAGE_CONTRAST($builder, $IMAGE_CONTRAST);
+        self::addIMAGE_DYNAMIC_RANGE($builder, $IMAGE_DYNAMIC_RANGE);
+        self::addIMAGE_ENTROPY($builder, $IMAGE_ENTROPY);
+        self::addBACKGROUND_UNIFORMITY($builder, $BACKGROUND_UNIFORMITY);
+        self::addBACKGROUND_MEAN_LEVEL($builder, $BACKGROUND_MEAN_LEVEL);
+        self::addSATURATED_PIXEL_PERCENT($builder, $SATURATED_PIXEL_PERCENT);
+        self::addDEAD_PIXEL_PERCENT($builder, $DEAD_PIXEL_PERCENT);
+        self::addPSF_FWHM($builder, $PSF_FWHM);
+        self::addCLOUD_COVER_PERCENT($builder, $CLOUD_COVER_PERCENT);
+        self::addCLOUD_DETECTION_CONFIDENCE($builder, $CLOUD_DETECTION_CONFIDENCE);
+        self::addHAZE_PERCENT($builder, $HAZE_PERCENT);
+        self::addAEROSOL_OPTICAL_THICKNESS($builder, $AEROSOL_OPTICAL_THICKNESS);
+        self::addWATER_VAPOR_CONTENT($builder, $WATER_VAPOR_CONTENT);
+        self::addSUN_ELEVATION($builder, $SUN_ELEVATION);
+        self::addSUN_AZIMUTH($builder, $SUN_AZIMUTH);
+        self::addVIEW_ZENITH_ANGLE($builder, $VIEW_ZENITH_ANGLE);
+        self::addVIEW_AZIMUTH_ANGLE($builder, $VIEW_AZIMUTH_ANGLE);
+        self::addOFF_NADIR_ANGLE($builder, $OFF_NADIR_ANGLE);
+        self::addSWATH_WIDTH_KM($builder, $SWATH_WIDTH_KM);
+        self::addMEAN_TERRAIN_ELEVATION($builder, $MEAN_TERRAIN_ELEVATION);
+        self::addTERRAIN_ELEVATION_STDDEV($builder, $TERRAIN_ELEVATION_STDDEV);
+        self::addSHADOW_COVER_PERCENT($builder, $SHADOW_COVER_PERCENT);
+        self::addSUNGLINT_PRESENT($builder, $SUNGLINT_PRESENT);
+        self::addSUNGLINT_PERCENT($builder, $SUNGLINT_PERCENT);
+        self::addSNOW_ICE_COVER_PERCENT($builder, $SNOW_ICE_COVER_PERCENT);
+        self::addVALID_DATA_AREA_KM2($builder, $VALID_DATA_AREA_KM2);
         $o = $builder->endObject();
         return $o;
     }
@@ -1995,6 +2429,406 @@ class EOO extends Table
     public static function addDECLINATION_MEASURED(FlatBufferBuilder $builder, $DECLINATION_MEASURED)
     {
         $builder->addBoolX(93, $DECLINATION_MEASURED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addNIIRS(FlatBufferBuilder $builder, $NIIRS)
+    {
+        $builder->addFloatX(94, $NIIRS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addMETERS_PER_PIXEL(FlatBufferBuilder $builder, $METERS_PER_PIXEL)
+    {
+        $builder->addFloatX(95, $METERS_PER_PIXEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_SNR(FlatBufferBuilder $builder, $IMAGE_SNR)
+    {
+        $builder->addFloatX(96, $IMAGE_SNR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addIMAGE_BIT_DEPTH(FlatBufferBuilder $builder, $IMAGE_BIT_DEPTH)
+    {
+        $builder->addIntX(97, $IMAGE_BIT_DEPTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addIMAGE_WIDTH(FlatBufferBuilder $builder, $IMAGE_WIDTH)
+    {
+        $builder->addIntX(98, $IMAGE_WIDTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addIMAGE_HEIGHT(FlatBufferBuilder $builder, $IMAGE_HEIGHT)
+    {
+        $builder->addIntX(99, $IMAGE_HEIGHT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addIMAGE_COMPRESSION(FlatBufferBuilder $builder, $IMAGE_COMPRESSION)
+    {
+        $builder->addOffsetX(100, $IMAGE_COMPRESSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_COMPRESSION_RATIO(FlatBufferBuilder $builder, $IMAGE_COMPRESSION_RATIO)
+    {
+        $builder->addFloatX(101, $IMAGE_COMPRESSION_RATIO, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROCESSED_IMAGE_URI(FlatBufferBuilder $builder, $PROCESSED_IMAGE_URI)
+    {
+        $builder->addOffsetX(102, $PROCESSED_IMAGE_URI, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addIMAGE_AUTO_ENHANCED(FlatBufferBuilder $builder, $IMAGE_AUTO_ENHANCED)
+    {
+        $builder->addBoolX(103, $IMAGE_AUTO_ENHANCED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addMULTI_FRAME_STACKED(FlatBufferBuilder $builder, $MULTI_FRAME_STACKED)
+    {
+        $builder->addBoolX(104, $MULTI_FRAME_STACKED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSYNTHETIC_TRACKING_USED(FlatBufferBuilder $builder, $SYNTHETIC_TRACKING_USED)
+    {
+        $builder->addBoolX(105, $SYNTHETIC_TRACKING_USED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_SHARPNESS(FlatBufferBuilder $builder, $IMAGE_SHARPNESS)
+    {
+        $builder->addFloatX(106, $IMAGE_SHARPNESS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_NOISE_STDDEV(FlatBufferBuilder $builder, $IMAGE_NOISE_STDDEV)
+    {
+        $builder->addFloatX(107, $IMAGE_NOISE_STDDEV, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_CONTRAST(FlatBufferBuilder $builder, $IMAGE_CONTRAST)
+    {
+        $builder->addFloatX(108, $IMAGE_CONTRAST, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_DYNAMIC_RANGE(FlatBufferBuilder $builder, $IMAGE_DYNAMIC_RANGE)
+    {
+        $builder->addFloatX(109, $IMAGE_DYNAMIC_RANGE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addIMAGE_ENTROPY(FlatBufferBuilder $builder, $IMAGE_ENTROPY)
+    {
+        $builder->addFloatX(110, $IMAGE_ENTROPY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addBACKGROUND_UNIFORMITY(FlatBufferBuilder $builder, $BACKGROUND_UNIFORMITY)
+    {
+        $builder->addFloatX(111, $BACKGROUND_UNIFORMITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addBACKGROUND_MEAN_LEVEL(FlatBufferBuilder $builder, $BACKGROUND_MEAN_LEVEL)
+    {
+        $builder->addFloatX(112, $BACKGROUND_MEAN_LEVEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSATURATED_PIXEL_PERCENT(FlatBufferBuilder $builder, $SATURATED_PIXEL_PERCENT)
+    {
+        $builder->addFloatX(113, $SATURATED_PIXEL_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addDEAD_PIXEL_PERCENT(FlatBufferBuilder $builder, $DEAD_PIXEL_PERCENT)
+    {
+        $builder->addFloatX(114, $DEAD_PIXEL_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addPSF_FWHM(FlatBufferBuilder $builder, $PSF_FWHM)
+    {
+        $builder->addFloatX(115, $PSF_FWHM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addCLOUD_COVER_PERCENT(FlatBufferBuilder $builder, $CLOUD_COVER_PERCENT)
+    {
+        $builder->addFloatX(116, $CLOUD_COVER_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addCLOUD_DETECTION_CONFIDENCE(FlatBufferBuilder $builder, $CLOUD_DETECTION_CONFIDENCE)
+    {
+        $builder->addFloatX(117, $CLOUD_DETECTION_CONFIDENCE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addHAZE_PERCENT(FlatBufferBuilder $builder, $HAZE_PERCENT)
+    {
+        $builder->addFloatX(118, $HAZE_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addAEROSOL_OPTICAL_THICKNESS(FlatBufferBuilder $builder, $AEROSOL_OPTICAL_THICKNESS)
+    {
+        $builder->addFloatX(119, $AEROSOL_OPTICAL_THICKNESS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addWATER_VAPOR_CONTENT(FlatBufferBuilder $builder, $WATER_VAPOR_CONTENT)
+    {
+        $builder->addFloatX(120, $WATER_VAPOR_CONTENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSUN_ELEVATION(FlatBufferBuilder $builder, $SUN_ELEVATION)
+    {
+        $builder->addFloatX(121, $SUN_ELEVATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSUN_AZIMUTH(FlatBufferBuilder $builder, $SUN_AZIMUTH)
+    {
+        $builder->addFloatX(122, $SUN_AZIMUTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addVIEW_ZENITH_ANGLE(FlatBufferBuilder $builder, $VIEW_ZENITH_ANGLE)
+    {
+        $builder->addFloatX(123, $VIEW_ZENITH_ANGLE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addVIEW_AZIMUTH_ANGLE(FlatBufferBuilder $builder, $VIEW_AZIMUTH_ANGLE)
+    {
+        $builder->addFloatX(124, $VIEW_AZIMUTH_ANGLE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addOFF_NADIR_ANGLE(FlatBufferBuilder $builder, $OFF_NADIR_ANGLE)
+    {
+        $builder->addFloatX(125, $OFF_NADIR_ANGLE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSWATH_WIDTH_KM(FlatBufferBuilder $builder, $SWATH_WIDTH_KM)
+    {
+        $builder->addFloatX(126, $SWATH_WIDTH_KM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addMEAN_TERRAIN_ELEVATION(FlatBufferBuilder $builder, $MEAN_TERRAIN_ELEVATION)
+    {
+        $builder->addFloatX(127, $MEAN_TERRAIN_ELEVATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addTERRAIN_ELEVATION_STDDEV(FlatBufferBuilder $builder, $TERRAIN_ELEVATION_STDDEV)
+    {
+        $builder->addFloatX(128, $TERRAIN_ELEVATION_STDDEV, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSHADOW_COVER_PERCENT(FlatBufferBuilder $builder, $SHADOW_COVER_PERCENT)
+    {
+        $builder->addFloatX(129, $SHADOW_COVER_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSUNGLINT_PRESENT(FlatBufferBuilder $builder, $SUNGLINT_PRESENT)
+    {
+        $builder->addBoolX(130, $SUNGLINT_PRESENT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSUNGLINT_PERCENT(FlatBufferBuilder $builder, $SUNGLINT_PERCENT)
+    {
+        $builder->addFloatX(131, $SUNGLINT_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addSNOW_ICE_COVER_PERCENT(FlatBufferBuilder $builder, $SNOW_ICE_COVER_PERCENT)
+    {
+        $builder->addFloatX(132, $SNOW_ICE_COVER_PERCENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addVALID_DATA_AREA_KM2(FlatBufferBuilder $builder, $VALID_DATA_AREA_KM2)
+    {
+        $builder->addFloatX(133, $VALID_DATA_AREA_KM2, 0.0);
     }
 
     /**

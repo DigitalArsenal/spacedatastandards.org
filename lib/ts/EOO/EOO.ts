@@ -840,8 +840,332 @@ DECLINATION_MEASURED():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+ */
+NIIRS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 192);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Ground sample distance in meters per pixel.
+ */
+METERS_PER_PIXEL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 194);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+ */
+IMAGE_SNR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 196);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Bit depth of the image (e.g., 8, 12, 16).
+ */
+IMAGE_BIT_DEPTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 198);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Width of the image in pixels.
+ */
+IMAGE_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 200);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Height of the image in pixels.
+ */
+IMAGE_HEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 202);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+ */
+IMAGE_COMPRESSION():string|null
+IMAGE_COMPRESSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IMAGE_COMPRESSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 204);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Compression ratio used (original size / compressed size), if applicable.
+ */
+IMAGE_COMPRESSION_RATIO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 206);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * URI to the processed image used for this observation.
+ */
+PROCESSED_IMAGE_URI():string|null
+PROCESSED_IMAGE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROCESSED_IMAGE_URI(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 208);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+ */
+IMAGE_AUTO_ENHANCED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 210);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if the observation was taken with multiple frames stacked into one image.
+ */
+MULTI_FRAME_STACKED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 212);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if synthetic tracking was used to create the image.
+ */
+SYNTHETIC_TRACKING_USED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 214);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+ */
+IMAGE_SHARPNESS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 216);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Noise level of the image, estimated via pixel intensity variance in background regions.
+ */
+IMAGE_NOISE_STDDEV():number {
+  const offset = this.bb!.__offset(this.bb_pos, 218);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Contrast metric of the image, such as Michelson contrast or RMS contrast.
+ */
+IMAGE_CONTRAST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 220);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+ */
+IMAGE_DYNAMIC_RANGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 222);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+ */
+IMAGE_ENTROPY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 224);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+ */
+BACKGROUND_UNIFORMITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 226);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Mean background level, computed from non-object regions in pixel units.
+ */
+BACKGROUND_MEAN_LEVEL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 228);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Percentage of saturated pixels in the image. Indicates overexposure when high.
+ */
+SATURATED_PIXEL_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 230);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+ */
+DEAD_PIXEL_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 232);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+ */
+PSF_FWHM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 234);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+ */
+CLOUD_COVER_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 236);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+ */
+CLOUD_DETECTION_CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 238);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+ */
+HAZE_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 240);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+ */
+AEROSOL_OPTICAL_THICKNESS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 242);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+ */
+WATER_VAPOR_CONTENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 244);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Sun elevation angle at the time of image capture, in degrees above the horizon.
+ */
+SUN_ELEVATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 246);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Sun azimuth angle at the time of image capture, in degrees from true north.
+ */
+SUN_AZIMUTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 248);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+ */
+VIEW_ZENITH_ANGLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 250);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * View azimuth angle (direction of sensor relative to north), in degrees.
+ */
+VIEW_AZIMUTH_ANGLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 252);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Off-nadir angle of the sensor at the time of image capture, in degrees.
+ */
+OFF_NADIR_ANGLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 254);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Ground coverage width of the image swath in kilometers.
+ */
+SWATH_WIDTH_KM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 256);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Mean terrain elevation in the image footprint, in meters above sea level.
+ */
+MEAN_TERRAIN_ELEVATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 258);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Standard deviation of terrain elevation in the image footprint, in meters.
+ */
+TERRAIN_ELEVATION_STDDEV():number {
+  const offset = this.bb!.__offset(this.bb_pos, 260);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+ */
+SHADOW_COVER_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 262);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+ */
+SUNGLINT_PRESENT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 264);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Percentage of image affected by sunglint.
+ */
+SUNGLINT_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 266);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Estimated percentage of snow or ice coverage in the image footprint.
+ */
+SNOW_ICE_COVER_PERCENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 268);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+ */
+VALID_DATA_AREA_KM2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 270);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
 static startEOO(builder:flatbuffers.Builder) {
-  builder.startObject(94);
+  builder.startObject(134);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -1220,6 +1544,166 @@ static addDeclinationMeasured(builder:flatbuffers.Builder, DECLINATION_MEASURED:
   builder.addFieldInt8(93, +DECLINATION_MEASURED, +false);
 }
 
+static addNiirs(builder:flatbuffers.Builder, NIIRS:number) {
+  builder.addFieldFloat32(94, NIIRS, 0.0);
+}
+
+static addMetersPerPixel(builder:flatbuffers.Builder, METERS_PER_PIXEL:number) {
+  builder.addFieldFloat32(95, METERS_PER_PIXEL, 0.0);
+}
+
+static addImageSnr(builder:flatbuffers.Builder, IMAGE_SNR:number) {
+  builder.addFieldFloat32(96, IMAGE_SNR, 0.0);
+}
+
+static addImageBitDepth(builder:flatbuffers.Builder, IMAGE_BIT_DEPTH:number) {
+  builder.addFieldInt32(97, IMAGE_BIT_DEPTH, 0);
+}
+
+static addImageWidth(builder:flatbuffers.Builder, IMAGE_WIDTH:number) {
+  builder.addFieldInt32(98, IMAGE_WIDTH, 0);
+}
+
+static addImageHeight(builder:flatbuffers.Builder, IMAGE_HEIGHT:number) {
+  builder.addFieldInt32(99, IMAGE_HEIGHT, 0);
+}
+
+static addImageCompression(builder:flatbuffers.Builder, IMAGE_COMPRESSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(100, IMAGE_COMPRESSIONOffset, 0);
+}
+
+static addImageCompressionRatio(builder:flatbuffers.Builder, IMAGE_COMPRESSION_RATIO:number) {
+  builder.addFieldFloat32(101, IMAGE_COMPRESSION_RATIO, 0.0);
+}
+
+static addProcessedImageUri(builder:flatbuffers.Builder, PROCESSED_IMAGE_URIOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(102, PROCESSED_IMAGE_URIOffset, 0);
+}
+
+static addImageAutoEnhanced(builder:flatbuffers.Builder, IMAGE_AUTO_ENHANCED:boolean) {
+  builder.addFieldInt8(103, +IMAGE_AUTO_ENHANCED, +false);
+}
+
+static addMultiFrameStacked(builder:flatbuffers.Builder, MULTI_FRAME_STACKED:boolean) {
+  builder.addFieldInt8(104, +MULTI_FRAME_STACKED, +false);
+}
+
+static addSyntheticTrackingUsed(builder:flatbuffers.Builder, SYNTHETIC_TRACKING_USED:boolean) {
+  builder.addFieldInt8(105, +SYNTHETIC_TRACKING_USED, +false);
+}
+
+static addImageSharpness(builder:flatbuffers.Builder, IMAGE_SHARPNESS:number) {
+  builder.addFieldFloat32(106, IMAGE_SHARPNESS, 0.0);
+}
+
+static addImageNoiseStddev(builder:flatbuffers.Builder, IMAGE_NOISE_STDDEV:number) {
+  builder.addFieldFloat32(107, IMAGE_NOISE_STDDEV, 0.0);
+}
+
+static addImageContrast(builder:flatbuffers.Builder, IMAGE_CONTRAST:number) {
+  builder.addFieldFloat32(108, IMAGE_CONTRAST, 0.0);
+}
+
+static addImageDynamicRange(builder:flatbuffers.Builder, IMAGE_DYNAMIC_RANGE:number) {
+  builder.addFieldFloat32(109, IMAGE_DYNAMIC_RANGE, 0.0);
+}
+
+static addImageEntropy(builder:flatbuffers.Builder, IMAGE_ENTROPY:number) {
+  builder.addFieldFloat32(110, IMAGE_ENTROPY, 0.0);
+}
+
+static addBackgroundUniformity(builder:flatbuffers.Builder, BACKGROUND_UNIFORMITY:number) {
+  builder.addFieldFloat32(111, BACKGROUND_UNIFORMITY, 0.0);
+}
+
+static addBackgroundMeanLevel(builder:flatbuffers.Builder, BACKGROUND_MEAN_LEVEL:number) {
+  builder.addFieldFloat32(112, BACKGROUND_MEAN_LEVEL, 0.0);
+}
+
+static addSaturatedPixelPercent(builder:flatbuffers.Builder, SATURATED_PIXEL_PERCENT:number) {
+  builder.addFieldFloat32(113, SATURATED_PIXEL_PERCENT, 0.0);
+}
+
+static addDeadPixelPercent(builder:flatbuffers.Builder, DEAD_PIXEL_PERCENT:number) {
+  builder.addFieldFloat32(114, DEAD_PIXEL_PERCENT, 0.0);
+}
+
+static addPsfFwhm(builder:flatbuffers.Builder, PSF_FWHM:number) {
+  builder.addFieldFloat32(115, PSF_FWHM, 0.0);
+}
+
+static addCloudCoverPercent(builder:flatbuffers.Builder, CLOUD_COVER_PERCENT:number) {
+  builder.addFieldFloat32(116, CLOUD_COVER_PERCENT, 0.0);
+}
+
+static addCloudDetectionConfidence(builder:flatbuffers.Builder, CLOUD_DETECTION_CONFIDENCE:number) {
+  builder.addFieldFloat32(117, CLOUD_DETECTION_CONFIDENCE, 0.0);
+}
+
+static addHazePercent(builder:flatbuffers.Builder, HAZE_PERCENT:number) {
+  builder.addFieldFloat32(118, HAZE_PERCENT, 0.0);
+}
+
+static addAerosolOpticalThickness(builder:flatbuffers.Builder, AEROSOL_OPTICAL_THICKNESS:number) {
+  builder.addFieldFloat32(119, AEROSOL_OPTICAL_THICKNESS, 0.0);
+}
+
+static addWaterVaporContent(builder:flatbuffers.Builder, WATER_VAPOR_CONTENT:number) {
+  builder.addFieldFloat32(120, WATER_VAPOR_CONTENT, 0.0);
+}
+
+static addSunElevation(builder:flatbuffers.Builder, SUN_ELEVATION:number) {
+  builder.addFieldFloat32(121, SUN_ELEVATION, 0.0);
+}
+
+static addSunAzimuth(builder:flatbuffers.Builder, SUN_AZIMUTH:number) {
+  builder.addFieldFloat32(122, SUN_AZIMUTH, 0.0);
+}
+
+static addViewZenithAngle(builder:flatbuffers.Builder, VIEW_ZENITH_ANGLE:number) {
+  builder.addFieldFloat32(123, VIEW_ZENITH_ANGLE, 0.0);
+}
+
+static addViewAzimuthAngle(builder:flatbuffers.Builder, VIEW_AZIMUTH_ANGLE:number) {
+  builder.addFieldFloat32(124, VIEW_AZIMUTH_ANGLE, 0.0);
+}
+
+static addOffNadirAngle(builder:flatbuffers.Builder, OFF_NADIR_ANGLE:number) {
+  builder.addFieldFloat32(125, OFF_NADIR_ANGLE, 0.0);
+}
+
+static addSwathWidthKm(builder:flatbuffers.Builder, SWATH_WIDTH_KM:number) {
+  builder.addFieldFloat32(126, SWATH_WIDTH_KM, 0.0);
+}
+
+static addMeanTerrainElevation(builder:flatbuffers.Builder, MEAN_TERRAIN_ELEVATION:number) {
+  builder.addFieldFloat32(127, MEAN_TERRAIN_ELEVATION, 0.0);
+}
+
+static addTerrainElevationStddev(builder:flatbuffers.Builder, TERRAIN_ELEVATION_STDDEV:number) {
+  builder.addFieldFloat32(128, TERRAIN_ELEVATION_STDDEV, 0.0);
+}
+
+static addShadowCoverPercent(builder:flatbuffers.Builder, SHADOW_COVER_PERCENT:number) {
+  builder.addFieldFloat32(129, SHADOW_COVER_PERCENT, 0.0);
+}
+
+static addSunglintPresent(builder:flatbuffers.Builder, SUNGLINT_PRESENT:boolean) {
+  builder.addFieldInt8(130, +SUNGLINT_PRESENT, +false);
+}
+
+static addSunglintPercent(builder:flatbuffers.Builder, SUNGLINT_PERCENT:number) {
+  builder.addFieldFloat32(131, SUNGLINT_PERCENT, 0.0);
+}
+
+static addSnowIceCoverPercent(builder:flatbuffers.Builder, SNOW_ICE_COVER_PERCENT:number) {
+  builder.addFieldFloat32(132, SNOW_ICE_COVER_PERCENT, 0.0);
+}
+
+static addValidDataAreaKm2(builder:flatbuffers.Builder, VALID_DATA_AREA_KM2:number) {
+  builder.addFieldFloat32(133, VALID_DATA_AREA_KM2, 0.0);
+}
+
 static endEOO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -1233,7 +1717,7 @@ static finishSizePrefixedEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOO', true);
 }
 
-static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHOD:CollectMethod, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, OB_POSITION:ObservationPosition, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODE:DataMode, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAME:refFrame, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPE:DeviceType, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean):flatbuffers.Offset {
+static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHOD:CollectMethod, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, OB_POSITION:ObservationPosition, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODE:DataMode, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAME:refFrame, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPE:DeviceType, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean, NIIRS:number, METERS_PER_PIXEL:number, IMAGE_SNR:number, IMAGE_BIT_DEPTH:number, IMAGE_WIDTH:number, IMAGE_HEIGHT:number, IMAGE_COMPRESSIONOffset:flatbuffers.Offset, IMAGE_COMPRESSION_RATIO:number, PROCESSED_IMAGE_URIOffset:flatbuffers.Offset, IMAGE_AUTO_ENHANCED:boolean, MULTI_FRAME_STACKED:boolean, SYNTHETIC_TRACKING_USED:boolean, IMAGE_SHARPNESS:number, IMAGE_NOISE_STDDEV:number, IMAGE_CONTRAST:number, IMAGE_DYNAMIC_RANGE:number, IMAGE_ENTROPY:number, BACKGROUND_UNIFORMITY:number, BACKGROUND_MEAN_LEVEL:number, SATURATED_PIXEL_PERCENT:number, DEAD_PIXEL_PERCENT:number, PSF_FWHM:number, CLOUD_COVER_PERCENT:number, CLOUD_DETECTION_CONFIDENCE:number, HAZE_PERCENT:number, AEROSOL_OPTICAL_THICKNESS:number, WATER_VAPOR_CONTENT:number, SUN_ELEVATION:number, SUN_AZIMUTH:number, VIEW_ZENITH_ANGLE:number, VIEW_AZIMUTH_ANGLE:number, OFF_NADIR_ANGLE:number, SWATH_WIDTH_KM:number, MEAN_TERRAIN_ELEVATION:number, TERRAIN_ELEVATION_STDDEV:number, SHADOW_COVER_PERCENT:number, SUNGLINT_PRESENT:boolean, SUNGLINT_PERCENT:number, SNOW_ICE_COVER_PERCENT:number, VALID_DATA_AREA_KM2:number):flatbuffers.Offset {
   EOO.startEOO(builder);
   EOO.addId(builder, IDOffset);
   EOO.addClassification(builder, CLASSIFICATIONOffset);
@@ -1329,6 +1813,46 @@ static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASS
   EOO.addRangerateMeasured(builder, RANGERATE_MEASURED);
   EOO.addRaMeasured(builder, RA_MEASURED);
   EOO.addDeclinationMeasured(builder, DECLINATION_MEASURED);
+  EOO.addNiirs(builder, NIIRS);
+  EOO.addMetersPerPixel(builder, METERS_PER_PIXEL);
+  EOO.addImageSnr(builder, IMAGE_SNR);
+  EOO.addImageBitDepth(builder, IMAGE_BIT_DEPTH);
+  EOO.addImageWidth(builder, IMAGE_WIDTH);
+  EOO.addImageHeight(builder, IMAGE_HEIGHT);
+  EOO.addImageCompression(builder, IMAGE_COMPRESSIONOffset);
+  EOO.addImageCompressionRatio(builder, IMAGE_COMPRESSION_RATIO);
+  EOO.addProcessedImageUri(builder, PROCESSED_IMAGE_URIOffset);
+  EOO.addImageAutoEnhanced(builder, IMAGE_AUTO_ENHANCED);
+  EOO.addMultiFrameStacked(builder, MULTI_FRAME_STACKED);
+  EOO.addSyntheticTrackingUsed(builder, SYNTHETIC_TRACKING_USED);
+  EOO.addImageSharpness(builder, IMAGE_SHARPNESS);
+  EOO.addImageNoiseStddev(builder, IMAGE_NOISE_STDDEV);
+  EOO.addImageContrast(builder, IMAGE_CONTRAST);
+  EOO.addImageDynamicRange(builder, IMAGE_DYNAMIC_RANGE);
+  EOO.addImageEntropy(builder, IMAGE_ENTROPY);
+  EOO.addBackgroundUniformity(builder, BACKGROUND_UNIFORMITY);
+  EOO.addBackgroundMeanLevel(builder, BACKGROUND_MEAN_LEVEL);
+  EOO.addSaturatedPixelPercent(builder, SATURATED_PIXEL_PERCENT);
+  EOO.addDeadPixelPercent(builder, DEAD_PIXEL_PERCENT);
+  EOO.addPsfFwhm(builder, PSF_FWHM);
+  EOO.addCloudCoverPercent(builder, CLOUD_COVER_PERCENT);
+  EOO.addCloudDetectionConfidence(builder, CLOUD_DETECTION_CONFIDENCE);
+  EOO.addHazePercent(builder, HAZE_PERCENT);
+  EOO.addAerosolOpticalThickness(builder, AEROSOL_OPTICAL_THICKNESS);
+  EOO.addWaterVaporContent(builder, WATER_VAPOR_CONTENT);
+  EOO.addSunElevation(builder, SUN_ELEVATION);
+  EOO.addSunAzimuth(builder, SUN_AZIMUTH);
+  EOO.addViewZenithAngle(builder, VIEW_ZENITH_ANGLE);
+  EOO.addViewAzimuthAngle(builder, VIEW_AZIMUTH_ANGLE);
+  EOO.addOffNadirAngle(builder, OFF_NADIR_ANGLE);
+  EOO.addSwathWidthKm(builder, SWATH_WIDTH_KM);
+  EOO.addMeanTerrainElevation(builder, MEAN_TERRAIN_ELEVATION);
+  EOO.addTerrainElevationStddev(builder, TERRAIN_ELEVATION_STDDEV);
+  EOO.addShadowCoverPercent(builder, SHADOW_COVER_PERCENT);
+  EOO.addSunglintPresent(builder, SUNGLINT_PRESENT);
+  EOO.addSunglintPercent(builder, SUNGLINT_PERCENT);
+  EOO.addSnowIceCoverPercent(builder, SNOW_ICE_COVER_PERCENT);
+  EOO.addValidDataAreaKm2(builder, VALID_DATA_AREA_KM2);
   return EOO.endEOO(builder);
 }
 
@@ -1427,7 +1951,47 @@ unpack(): EOOT {
     this.RANGE_MEASURED(),
     this.RANGERATE_MEASURED(),
     this.RA_MEASURED(),
-    this.DECLINATION_MEASURED()
+    this.DECLINATION_MEASURED(),
+    this.NIIRS(),
+    this.METERS_PER_PIXEL(),
+    this.IMAGE_SNR(),
+    this.IMAGE_BIT_DEPTH(),
+    this.IMAGE_WIDTH(),
+    this.IMAGE_HEIGHT(),
+    this.IMAGE_COMPRESSION(),
+    this.IMAGE_COMPRESSION_RATIO(),
+    this.PROCESSED_IMAGE_URI(),
+    this.IMAGE_AUTO_ENHANCED(),
+    this.MULTI_FRAME_STACKED(),
+    this.SYNTHETIC_TRACKING_USED(),
+    this.IMAGE_SHARPNESS(),
+    this.IMAGE_NOISE_STDDEV(),
+    this.IMAGE_CONTRAST(),
+    this.IMAGE_DYNAMIC_RANGE(),
+    this.IMAGE_ENTROPY(),
+    this.BACKGROUND_UNIFORMITY(),
+    this.BACKGROUND_MEAN_LEVEL(),
+    this.SATURATED_PIXEL_PERCENT(),
+    this.DEAD_PIXEL_PERCENT(),
+    this.PSF_FWHM(),
+    this.CLOUD_COVER_PERCENT(),
+    this.CLOUD_DETECTION_CONFIDENCE(),
+    this.HAZE_PERCENT(),
+    this.AEROSOL_OPTICAL_THICKNESS(),
+    this.WATER_VAPOR_CONTENT(),
+    this.SUN_ELEVATION(),
+    this.SUN_AZIMUTH(),
+    this.VIEW_ZENITH_ANGLE(),
+    this.VIEW_AZIMUTH_ANGLE(),
+    this.OFF_NADIR_ANGLE(),
+    this.SWATH_WIDTH_KM(),
+    this.MEAN_TERRAIN_ELEVATION(),
+    this.TERRAIN_ELEVATION_STDDEV(),
+    this.SHADOW_COVER_PERCENT(),
+    this.SUNGLINT_PRESENT(),
+    this.SUNGLINT_PERCENT(),
+    this.SNOW_ICE_COVER_PERCENT(),
+    this.VALID_DATA_AREA_KM2()
   );
 }
 
@@ -1527,6 +2091,46 @@ unpackTo(_o: EOOT): void {
   _o.RANGERATE_MEASURED = this.RANGERATE_MEASURED();
   _o.RA_MEASURED = this.RA_MEASURED();
   _o.DECLINATION_MEASURED = this.DECLINATION_MEASURED();
+  _o.NIIRS = this.NIIRS();
+  _o.METERS_PER_PIXEL = this.METERS_PER_PIXEL();
+  _o.IMAGE_SNR = this.IMAGE_SNR();
+  _o.IMAGE_BIT_DEPTH = this.IMAGE_BIT_DEPTH();
+  _o.IMAGE_WIDTH = this.IMAGE_WIDTH();
+  _o.IMAGE_HEIGHT = this.IMAGE_HEIGHT();
+  _o.IMAGE_COMPRESSION = this.IMAGE_COMPRESSION();
+  _o.IMAGE_COMPRESSION_RATIO = this.IMAGE_COMPRESSION_RATIO();
+  _o.PROCESSED_IMAGE_URI = this.PROCESSED_IMAGE_URI();
+  _o.IMAGE_AUTO_ENHANCED = this.IMAGE_AUTO_ENHANCED();
+  _o.MULTI_FRAME_STACKED = this.MULTI_FRAME_STACKED();
+  _o.SYNTHETIC_TRACKING_USED = this.SYNTHETIC_TRACKING_USED();
+  _o.IMAGE_SHARPNESS = this.IMAGE_SHARPNESS();
+  _o.IMAGE_NOISE_STDDEV = this.IMAGE_NOISE_STDDEV();
+  _o.IMAGE_CONTRAST = this.IMAGE_CONTRAST();
+  _o.IMAGE_DYNAMIC_RANGE = this.IMAGE_DYNAMIC_RANGE();
+  _o.IMAGE_ENTROPY = this.IMAGE_ENTROPY();
+  _o.BACKGROUND_UNIFORMITY = this.BACKGROUND_UNIFORMITY();
+  _o.BACKGROUND_MEAN_LEVEL = this.BACKGROUND_MEAN_LEVEL();
+  _o.SATURATED_PIXEL_PERCENT = this.SATURATED_PIXEL_PERCENT();
+  _o.DEAD_PIXEL_PERCENT = this.DEAD_PIXEL_PERCENT();
+  _o.PSF_FWHM = this.PSF_FWHM();
+  _o.CLOUD_COVER_PERCENT = this.CLOUD_COVER_PERCENT();
+  _o.CLOUD_DETECTION_CONFIDENCE = this.CLOUD_DETECTION_CONFIDENCE();
+  _o.HAZE_PERCENT = this.HAZE_PERCENT();
+  _o.AEROSOL_OPTICAL_THICKNESS = this.AEROSOL_OPTICAL_THICKNESS();
+  _o.WATER_VAPOR_CONTENT = this.WATER_VAPOR_CONTENT();
+  _o.SUN_ELEVATION = this.SUN_ELEVATION();
+  _o.SUN_AZIMUTH = this.SUN_AZIMUTH();
+  _o.VIEW_ZENITH_ANGLE = this.VIEW_ZENITH_ANGLE();
+  _o.VIEW_AZIMUTH_ANGLE = this.VIEW_AZIMUTH_ANGLE();
+  _o.OFF_NADIR_ANGLE = this.OFF_NADIR_ANGLE();
+  _o.SWATH_WIDTH_KM = this.SWATH_WIDTH_KM();
+  _o.MEAN_TERRAIN_ELEVATION = this.MEAN_TERRAIN_ELEVATION();
+  _o.TERRAIN_ELEVATION_STDDEV = this.TERRAIN_ELEVATION_STDDEV();
+  _o.SHADOW_COVER_PERCENT = this.SHADOW_COVER_PERCENT();
+  _o.SUNGLINT_PRESENT = this.SUNGLINT_PRESENT();
+  _o.SUNGLINT_PERCENT = this.SUNGLINT_PERCENT();
+  _o.SNOW_ICE_COVER_PERCENT = this.SNOW_ICE_COVER_PERCENT();
+  _o.VALID_DATA_AREA_KM2 = this.VALID_DATA_AREA_KM2();
 }
 }
 
@@ -1625,7 +2229,47 @@ constructor(
   public RANGE_MEASURED: boolean = false,
   public RANGERATE_MEASURED: boolean = false,
   public RA_MEASURED: boolean = false,
-  public DECLINATION_MEASURED: boolean = false
+  public DECLINATION_MEASURED: boolean = false,
+  public NIIRS: number = 0.0,
+  public METERS_PER_PIXEL: number = 0.0,
+  public IMAGE_SNR: number = 0.0,
+  public IMAGE_BIT_DEPTH: number = 0,
+  public IMAGE_WIDTH: number = 0,
+  public IMAGE_HEIGHT: number = 0,
+  public IMAGE_COMPRESSION: string|Uint8Array|null = null,
+  public IMAGE_COMPRESSION_RATIO: number = 0.0,
+  public PROCESSED_IMAGE_URI: string|Uint8Array|null = null,
+  public IMAGE_AUTO_ENHANCED: boolean = false,
+  public MULTI_FRAME_STACKED: boolean = false,
+  public SYNTHETIC_TRACKING_USED: boolean = false,
+  public IMAGE_SHARPNESS: number = 0.0,
+  public IMAGE_NOISE_STDDEV: number = 0.0,
+  public IMAGE_CONTRAST: number = 0.0,
+  public IMAGE_DYNAMIC_RANGE: number = 0.0,
+  public IMAGE_ENTROPY: number = 0.0,
+  public BACKGROUND_UNIFORMITY: number = 0.0,
+  public BACKGROUND_MEAN_LEVEL: number = 0.0,
+  public SATURATED_PIXEL_PERCENT: number = 0.0,
+  public DEAD_PIXEL_PERCENT: number = 0.0,
+  public PSF_FWHM: number = 0.0,
+  public CLOUD_COVER_PERCENT: number = 0.0,
+  public CLOUD_DETECTION_CONFIDENCE: number = 0.0,
+  public HAZE_PERCENT: number = 0.0,
+  public AEROSOL_OPTICAL_THICKNESS: number = 0.0,
+  public WATER_VAPOR_CONTENT: number = 0.0,
+  public SUN_ELEVATION: number = 0.0,
+  public SUN_AZIMUTH: number = 0.0,
+  public VIEW_ZENITH_ANGLE: number = 0.0,
+  public VIEW_AZIMUTH_ANGLE: number = 0.0,
+  public OFF_NADIR_ANGLE: number = 0.0,
+  public SWATH_WIDTH_KM: number = 0.0,
+  public MEAN_TERRAIN_ELEVATION: number = 0.0,
+  public TERRAIN_ELEVATION_STDDEV: number = 0.0,
+  public SHADOW_COVER_PERCENT: number = 0.0,
+  public SUNGLINT_PRESENT: boolean = false,
+  public SUNGLINT_PERCENT: number = 0.0,
+  public SNOW_ICE_COVER_PERCENT: number = 0.0,
+  public VALID_DATA_AREA_KM2: number = 0.0
 ){}
 
 
@@ -1648,6 +2292,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CREATED_BY = (this.CREATED_BY !== null ? builder.createString(this.CREATED_BY!) : 0);
   const ORIG_NETWORK = (this.ORIG_NETWORK !== null ? builder.createString(this.ORIG_NETWORK!) : 0);
   const SOURCE_DL = (this.SOURCE_DL !== null ? builder.createString(this.SOURCE_DL!) : 0);
+  const IMAGE_COMPRESSION = (this.IMAGE_COMPRESSION !== null ? builder.createString(this.IMAGE_COMPRESSION!) : 0);
+  const PROCESSED_IMAGE_URI = (this.PROCESSED_IMAGE_URI !== null ? builder.createString(this.PROCESSED_IMAGE_URI!) : 0);
 
   return EOO.createEOO(builder,
     ID,
@@ -1743,7 +2389,47 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RANGE_MEASURED,
     this.RANGERATE_MEASURED,
     this.RA_MEASURED,
-    this.DECLINATION_MEASURED
+    this.DECLINATION_MEASURED,
+    this.NIIRS,
+    this.METERS_PER_PIXEL,
+    this.IMAGE_SNR,
+    this.IMAGE_BIT_DEPTH,
+    this.IMAGE_WIDTH,
+    this.IMAGE_HEIGHT,
+    IMAGE_COMPRESSION,
+    this.IMAGE_COMPRESSION_RATIO,
+    PROCESSED_IMAGE_URI,
+    this.IMAGE_AUTO_ENHANCED,
+    this.MULTI_FRAME_STACKED,
+    this.SYNTHETIC_TRACKING_USED,
+    this.IMAGE_SHARPNESS,
+    this.IMAGE_NOISE_STDDEV,
+    this.IMAGE_CONTRAST,
+    this.IMAGE_DYNAMIC_RANGE,
+    this.IMAGE_ENTROPY,
+    this.BACKGROUND_UNIFORMITY,
+    this.BACKGROUND_MEAN_LEVEL,
+    this.SATURATED_PIXEL_PERCENT,
+    this.DEAD_PIXEL_PERCENT,
+    this.PSF_FWHM,
+    this.CLOUD_COVER_PERCENT,
+    this.CLOUD_DETECTION_CONFIDENCE,
+    this.HAZE_PERCENT,
+    this.AEROSOL_OPTICAL_THICKNESS,
+    this.WATER_VAPOR_CONTENT,
+    this.SUN_ELEVATION,
+    this.SUN_AZIMUTH,
+    this.VIEW_ZENITH_ANGLE,
+    this.VIEW_AZIMUTH_ANGLE,
+    this.OFF_NADIR_ANGLE,
+    this.SWATH_WIDTH_KM,
+    this.MEAN_TERRAIN_ELEVATION,
+    this.TERRAIN_ELEVATION_STDDEV,
+    this.SHADOW_COVER_PERCENT,
+    this.SUNGLINT_PRESENT,
+    this.SUNGLINT_PERCENT,
+    this.SNOW_ICE_COVER_PERCENT,
+    this.VALID_DATA_AREA_KM2
   );
 }
 }

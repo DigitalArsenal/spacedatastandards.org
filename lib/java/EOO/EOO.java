@@ -457,201 +457,172 @@ public final class EOO extends Table {
    * True if measured, false if computed. Required if declination is reported.
    */
   public boolean DECLINATION_MEASURED() { int o = __offset(190); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+   */
+  public float NIIRS() { int o = __offset(192); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Ground sample distance in meters per pixel.
+   */
+  public float METERS_PER_PIXEL() { int o = __offset(194); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+   */
+  public float IMAGE_SNR() { int o = __offset(196); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Bit depth of the image (e.g., 8, 12, 16).
+   */
+  public int IMAGE_BIT_DEPTH() { int o = __offset(198); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Width of the image in pixels.
+   */
+  public int IMAGE_WIDTH() { int o = __offset(200); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Height of the image in pixels.
+   */
+  public int IMAGE_HEIGHT() { int o = __offset(202); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+   */
+  public String IMAGE_COMPRESSION() { int o = __offset(204); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMAGE_COMPRESSIONAsByteBuffer() { return __vector_as_bytebuffer(204, 1); }
+  public ByteBuffer IMAGE_COMPRESSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 204, 1); }
+  /**
+   * Compression ratio used (original size / compressed size), if applicable.
+   */
+  public float IMAGE_COMPRESSION_RATIO() { int o = __offset(206); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * URI to the processed image used for this observation.
+   */
+  public String PROCESSED_IMAGE_URI() { int o = __offset(208); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROCESSED_IMAGE_URIAsByteBuffer() { return __vector_as_bytebuffer(208, 1); }
+  public ByteBuffer PROCESSED_IMAGE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 208, 1); }
+  /**
+   * Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+   */
+  public boolean IMAGE_AUTO_ENHANCED() { int o = __offset(210); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if the observation was taken with multiple frames stacked into one image.
+   */
+  public boolean MULTI_FRAME_STACKED() { int o = __offset(212); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if synthetic tracking was used to create the image.
+   */
+  public boolean SYNTHETIC_TRACKING_USED() { int o = __offset(214); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+   */
+  public float IMAGE_SHARPNESS() { int o = __offset(216); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Noise level of the image, estimated via pixel intensity variance in background regions.
+   */
+  public float IMAGE_NOISE_STDDEV() { int o = __offset(218); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Contrast metric of the image, such as Michelson contrast or RMS contrast.
+   */
+  public float IMAGE_CONTRAST() { int o = __offset(220); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+   */
+  public float IMAGE_DYNAMIC_RANGE() { int o = __offset(222); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+   */
+  public float IMAGE_ENTROPY() { int o = __offset(224); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+   */
+  public float BACKGROUND_UNIFORMITY() { int o = __offset(226); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Mean background level, computed from non-object regions in pixel units.
+   */
+  public float BACKGROUND_MEAN_LEVEL() { int o = __offset(228); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Percentage of saturated pixels in the image. Indicates overexposure when high.
+   */
+  public float SATURATED_PIXEL_PERCENT() { int o = __offset(230); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+   */
+  public float DEAD_PIXEL_PERCENT() { int o = __offset(232); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+   */
+  public float PSF_FWHM() { int o = __offset(234); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+   */
+  public float CLOUD_COVER_PERCENT() { int o = __offset(236); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+   */
+  public float CLOUD_DETECTION_CONFIDENCE() { int o = __offset(238); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+   */
+  public float HAZE_PERCENT() { int o = __offset(240); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+   */
+  public float AEROSOL_OPTICAL_THICKNESS() { int o = __offset(242); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+   */
+  public float WATER_VAPOR_CONTENT() { int o = __offset(244); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Sun elevation angle at the time of image capture, in degrees above the horizon.
+   */
+  public float SUN_ELEVATION() { int o = __offset(246); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Sun azimuth angle at the time of image capture, in degrees from true north.
+   */
+  public float SUN_AZIMUTH() { int o = __offset(248); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+   */
+  public float VIEW_ZENITH_ANGLE() { int o = __offset(250); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * View azimuth angle (direction of sensor relative to north), in degrees.
+   */
+  public float VIEW_AZIMUTH_ANGLE() { int o = __offset(252); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Off-nadir angle of the sensor at the time of image capture, in degrees.
+   */
+  public float OFF_NADIR_ANGLE() { int o = __offset(254); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Ground coverage width of the image swath in kilometers.
+   */
+  public float SWATH_WIDTH_KM() { int o = __offset(256); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Mean terrain elevation in the image footprint, in meters above sea level.
+   */
+  public float MEAN_TERRAIN_ELEVATION() { int o = __offset(258); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Standard deviation of terrain elevation in the image footprint, in meters.
+   */
+  public float TERRAIN_ELEVATION_STDDEV() { int o = __offset(260); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+   */
+  public float SHADOW_COVER_PERCENT() { int o = __offset(262); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+   */
+  public boolean SUNGLINT_PRESENT() { int o = __offset(264); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Percentage of image affected by sunglint.
+   */
+  public float SUNGLINT_PERCENT() { int o = __offset(266); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Estimated percentage of snow or ice coverage in the image footprint.
+   */
+  public float SNOW_ICE_COVER_PERCENT() { int o = __offset(268); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+   */
+  public float VALID_DATA_AREA_KM2() { int o = __offset(270); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
 
-  public static int createEOO(FlatBufferBuilder builder,
-      int IDOffset,
-      int CLASSIFICATIONOffset,
-      int OB_TIMEOffset,
-      float CORR_QUALITY,
-      int ID_ON_ORBITOffset,
-      int SENSOR_IDOffset,
-      byte COLLECT_METHOD,
-      int NORAD_CAT_ID,
-      int TASK_IDOffset,
-      int TRANSACTION_IDOffset,
-      int IMAGE_SET_IDOffset,
-      int IMAGE_SET_LENGTH,
-      int SEQUENCE_ID,
-      byte OB_POSITION,
-      int ORIG_OBJECT_IDOffset,
-      int ORIG_SENSOR_IDOffset,
-      boolean UCT,
-      float AZIMUTH,
-      float AZIMUTH_UNC,
-      float AZIMUTH_BIAS,
-      float AZIMUTH_RATE,
-      float ELEVATION,
-      float ELEVATION_UNC,
-      float ELEVATION_BIAS,
-      float ELEVATION_RATE,
-      float RANGE,
-      float RANGE_UNC,
-      float RANGE_BIAS,
-      float RANGE_RATE,
-      float RANGE_RATE_UNC,
-      float RA,
-      float RA_RATE,
-      float RA_UNC,
-      float RA_BIAS,
-      float DECLINATION,
-      float DECLINATION_RATE,
-      float DECLINATION_UNC,
-      float DECLINATION_BIAS,
-      float LOSX,
-      float LOSY,
-      float LOSZ,
-      float LOS_UNC,
-      float LOSXVEL,
-      float LOSYVEL,
-      float LOSZVEL,
-      float SENLAT,
-      float SENLON,
-      float SENALT,
-      float SENX,
-      float SENY,
-      float SENZ,
-      int FOV_COUNT,
-      int FOV_COUNT_UCTS,
-      float EXP_DURATION,
-      float ZEROPTD,
-      float NET_OBJ_SIG,
-      float NET_OBJ_SIG_UNC,
-      float MAG,
-      float MAG_UNC,
-      float MAG_NORM_RANGE,
-      float GEOLAT,
-      float GEOLON,
-      float GEOALT,
-      float GEORANGE,
-      float SKY_BKGRND,
-      float PRIMARY_EXTINCTION,
-      float PRIMARY_EXTINCTION_UNC,
-      float SOLAR_PHASE_ANGLE,
-      float SOLAR_EQ_PHASE_ANGLE,
-      float SOLAR_DEC_ANGLE,
-      float SHUTTER_DELAY,
-      float TIMING_BIAS,
-      int RAW_FILE_URIOffset,
-      float INTENSITY,
-      float BG_INTENSITY,
-      int DESCRIPTOROffset,
-      int SOURCEOffset,
-      int ORIGINOffset,
-      byte DATA_MODE,
-      int CREATED_ATOffset,
-      int CREATED_BYOffset,
-      byte REFERENCE_FRAME,
-      byte SEN_REFERENCE_FRAME,
-      boolean UMBRA,
-      boolean PENUMBRA,
-      int ORIG_NETWORKOffset,
-      int SOURCE_DLOffset,
-      byte TYPE,
-      boolean AZIMUTH_MEASURED,
-      boolean ELEVATION_MEASURED,
-      boolean RANGE_MEASURED,
-      boolean RANGERATE_MEASURED,
-      boolean RA_MEASURED,
-      boolean DECLINATION_MEASURED) {
-    builder.startTable(94);
-    EOO.addSourceDl(builder, SOURCE_DLOffset);
-    EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
-    EOO.addCreatedBy(builder, CREATED_BYOffset);
-    EOO.addCreatedAt(builder, CREATED_ATOffset);
-    EOO.addOrigin(builder, ORIGINOffset);
-    EOO.addSource(builder, SOURCEOffset);
-    EOO.addDescriptor(builder, DESCRIPTOROffset);
-    EOO.addBgIntensity(builder, BG_INTENSITY);
-    EOO.addIntensity(builder, INTENSITY);
-    EOO.addRawFileUri(builder, RAW_FILE_URIOffset);
-    EOO.addTimingBias(builder, TIMING_BIAS);
-    EOO.addShutterDelay(builder, SHUTTER_DELAY);
-    EOO.addSolarDecAngle(builder, SOLAR_DEC_ANGLE);
-    EOO.addSolarEqPhaseAngle(builder, SOLAR_EQ_PHASE_ANGLE);
-    EOO.addSolarPhaseAngle(builder, SOLAR_PHASE_ANGLE);
-    EOO.addPrimaryExtinctionUnc(builder, PRIMARY_EXTINCTION_UNC);
-    EOO.addPrimaryExtinction(builder, PRIMARY_EXTINCTION);
-    EOO.addSkyBkgrnd(builder, SKY_BKGRND);
-    EOO.addGeorange(builder, GEORANGE);
-    EOO.addGeoalt(builder, GEOALT);
-    EOO.addGeolon(builder, GEOLON);
-    EOO.addGeolat(builder, GEOLAT);
-    EOO.addMagNormRange(builder, MAG_NORM_RANGE);
-    EOO.addMagUnc(builder, MAG_UNC);
-    EOO.addMag(builder, MAG);
-    EOO.addNetObjSigUnc(builder, NET_OBJ_SIG_UNC);
-    EOO.addNetObjSig(builder, NET_OBJ_SIG);
-    EOO.addZeroptd(builder, ZEROPTD);
-    EOO.addExpDuration(builder, EXP_DURATION);
-    EOO.addFovCountUcts(builder, FOV_COUNT_UCTS);
-    EOO.addFovCount(builder, FOV_COUNT);
-    EOO.addSenz(builder, SENZ);
-    EOO.addSeny(builder, SENY);
-    EOO.addSenx(builder, SENX);
-    EOO.addSenalt(builder, SENALT);
-    EOO.addSenlon(builder, SENLON);
-    EOO.addSenlat(builder, SENLAT);
-    EOO.addLoszvel(builder, LOSZVEL);
-    EOO.addLosyvel(builder, LOSYVEL);
-    EOO.addLosxvel(builder, LOSXVEL);
-    EOO.addLosUnc(builder, LOS_UNC);
-    EOO.addLosz(builder, LOSZ);
-    EOO.addLosy(builder, LOSY);
-    EOO.addLosx(builder, LOSX);
-    EOO.addDeclinationBias(builder, DECLINATION_BIAS);
-    EOO.addDeclinationUnc(builder, DECLINATION_UNC);
-    EOO.addDeclinationRate(builder, DECLINATION_RATE);
-    EOO.addDeclination(builder, DECLINATION);
-    EOO.addRaBias(builder, RA_BIAS);
-    EOO.addRaUnc(builder, RA_UNC);
-    EOO.addRaRate(builder, RA_RATE);
-    EOO.addRa(builder, RA);
-    EOO.addRangeRateUnc(builder, RANGE_RATE_UNC);
-    EOO.addRangeRate(builder, RANGE_RATE);
-    EOO.addRangeBias(builder, RANGE_BIAS);
-    EOO.addRangeUnc(builder, RANGE_UNC);
-    EOO.addRange(builder, RANGE);
-    EOO.addElevationRate(builder, ELEVATION_RATE);
-    EOO.addElevationBias(builder, ELEVATION_BIAS);
-    EOO.addElevationUnc(builder, ELEVATION_UNC);
-    EOO.addElevation(builder, ELEVATION);
-    EOO.addAzimuthRate(builder, AZIMUTH_RATE);
-    EOO.addAzimuthBias(builder, AZIMUTH_BIAS);
-    EOO.addAzimuthUnc(builder, AZIMUTH_UNC);
-    EOO.addAzimuth(builder, AZIMUTH);
-    EOO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-    EOO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-    EOO.addSequenceId(builder, SEQUENCE_ID);
-    EOO.addImageSetLength(builder, IMAGE_SET_LENGTH);
-    EOO.addImageSetId(builder, IMAGE_SET_IDOffset);
-    EOO.addTransactionId(builder, TRANSACTION_IDOffset);
-    EOO.addTaskId(builder, TASK_IDOffset);
-    EOO.addNoradCatId(builder, NORAD_CAT_ID);
-    EOO.addSensorId(builder, SENSOR_IDOffset);
-    EOO.addIdOnOrbit(builder, ID_ON_ORBITOffset);
-    EOO.addCorrQuality(builder, CORR_QUALITY);
-    EOO.addObTime(builder, OB_TIMEOffset);
-    EOO.addClassification(builder, CLASSIFICATIONOffset);
-    EOO.addId(builder, IDOffset);
-    EOO.addDeclinationMeasured(builder, DECLINATION_MEASURED);
-    EOO.addRaMeasured(builder, RA_MEASURED);
-    EOO.addRangerateMeasured(builder, RANGERATE_MEASURED);
-    EOO.addRangeMeasured(builder, RANGE_MEASURED);
-    EOO.addElevationMeasured(builder, ELEVATION_MEASURED);
-    EOO.addAzimuthMeasured(builder, AZIMUTH_MEASURED);
-    EOO.addType(builder, TYPE);
-    EOO.addPenumbra(builder, PENUMBRA);
-    EOO.addUmbra(builder, UMBRA);
-    EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAME);
-    EOO.addReferenceFrame(builder, REFERENCE_FRAME);
-    EOO.addDataMode(builder, DATA_MODE);
-    EOO.addUct(builder, UCT);
-    EOO.addObPosition(builder, OB_POSITION);
-    EOO.addCollectMethod(builder, COLLECT_METHOD);
-    return EOO.endEOO(builder);
-  }
-
-  public static void startEOO(FlatBufferBuilder builder) { builder.startTable(94); }
+  public static void startEOO(FlatBufferBuilder builder) { builder.startTable(134); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(1, CLASSIFICATIONOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(2, OB_TIMEOffset, 0); }
@@ -746,6 +717,46 @@ public final class EOO extends Table {
   public static void addRangerateMeasured(FlatBufferBuilder builder, boolean RANGERATE_MEASURED) { builder.addBoolean(91, RANGERATE_MEASURED, false); }
   public static void addRaMeasured(FlatBufferBuilder builder, boolean RA_MEASURED) { builder.addBoolean(92, RA_MEASURED, false); }
   public static void addDeclinationMeasured(FlatBufferBuilder builder, boolean DECLINATION_MEASURED) { builder.addBoolean(93, DECLINATION_MEASURED, false); }
+  public static void addNiirs(FlatBufferBuilder builder, float NIIRS) { builder.addFloat(94, NIIRS, 0.0f); }
+  public static void addMetersPerPixel(FlatBufferBuilder builder, float METERS_PER_PIXEL) { builder.addFloat(95, METERS_PER_PIXEL, 0.0f); }
+  public static void addImageSnr(FlatBufferBuilder builder, float IMAGE_SNR) { builder.addFloat(96, IMAGE_SNR, 0.0f); }
+  public static void addImageBitDepth(FlatBufferBuilder builder, int IMAGE_BIT_DEPTH) { builder.addInt(97, IMAGE_BIT_DEPTH, 0); }
+  public static void addImageWidth(FlatBufferBuilder builder, int IMAGE_WIDTH) { builder.addInt(98, IMAGE_WIDTH, 0); }
+  public static void addImageHeight(FlatBufferBuilder builder, int IMAGE_HEIGHT) { builder.addInt(99, IMAGE_HEIGHT, 0); }
+  public static void addImageCompression(FlatBufferBuilder builder, int IMAGE_COMPRESSIONOffset) { builder.addOffset(100, IMAGE_COMPRESSIONOffset, 0); }
+  public static void addImageCompressionRatio(FlatBufferBuilder builder, float IMAGE_COMPRESSION_RATIO) { builder.addFloat(101, IMAGE_COMPRESSION_RATIO, 0.0f); }
+  public static void addProcessedImageUri(FlatBufferBuilder builder, int PROCESSED_IMAGE_URIOffset) { builder.addOffset(102, PROCESSED_IMAGE_URIOffset, 0); }
+  public static void addImageAutoEnhanced(FlatBufferBuilder builder, boolean IMAGE_AUTO_ENHANCED) { builder.addBoolean(103, IMAGE_AUTO_ENHANCED, false); }
+  public static void addMultiFrameStacked(FlatBufferBuilder builder, boolean MULTI_FRAME_STACKED) { builder.addBoolean(104, MULTI_FRAME_STACKED, false); }
+  public static void addSyntheticTrackingUsed(FlatBufferBuilder builder, boolean SYNTHETIC_TRACKING_USED) { builder.addBoolean(105, SYNTHETIC_TRACKING_USED, false); }
+  public static void addImageSharpness(FlatBufferBuilder builder, float IMAGE_SHARPNESS) { builder.addFloat(106, IMAGE_SHARPNESS, 0.0f); }
+  public static void addImageNoiseStddev(FlatBufferBuilder builder, float IMAGE_NOISE_STDDEV) { builder.addFloat(107, IMAGE_NOISE_STDDEV, 0.0f); }
+  public static void addImageContrast(FlatBufferBuilder builder, float IMAGE_CONTRAST) { builder.addFloat(108, IMAGE_CONTRAST, 0.0f); }
+  public static void addImageDynamicRange(FlatBufferBuilder builder, float IMAGE_DYNAMIC_RANGE) { builder.addFloat(109, IMAGE_DYNAMIC_RANGE, 0.0f); }
+  public static void addImageEntropy(FlatBufferBuilder builder, float IMAGE_ENTROPY) { builder.addFloat(110, IMAGE_ENTROPY, 0.0f); }
+  public static void addBackgroundUniformity(FlatBufferBuilder builder, float BACKGROUND_UNIFORMITY) { builder.addFloat(111, BACKGROUND_UNIFORMITY, 0.0f); }
+  public static void addBackgroundMeanLevel(FlatBufferBuilder builder, float BACKGROUND_MEAN_LEVEL) { builder.addFloat(112, BACKGROUND_MEAN_LEVEL, 0.0f); }
+  public static void addSaturatedPixelPercent(FlatBufferBuilder builder, float SATURATED_PIXEL_PERCENT) { builder.addFloat(113, SATURATED_PIXEL_PERCENT, 0.0f); }
+  public static void addDeadPixelPercent(FlatBufferBuilder builder, float DEAD_PIXEL_PERCENT) { builder.addFloat(114, DEAD_PIXEL_PERCENT, 0.0f); }
+  public static void addPsfFwhm(FlatBufferBuilder builder, float PSF_FWHM) { builder.addFloat(115, PSF_FWHM, 0.0f); }
+  public static void addCloudCoverPercent(FlatBufferBuilder builder, float CLOUD_COVER_PERCENT) { builder.addFloat(116, CLOUD_COVER_PERCENT, 0.0f); }
+  public static void addCloudDetectionConfidence(FlatBufferBuilder builder, float CLOUD_DETECTION_CONFIDENCE) { builder.addFloat(117, CLOUD_DETECTION_CONFIDENCE, 0.0f); }
+  public static void addHazePercent(FlatBufferBuilder builder, float HAZE_PERCENT) { builder.addFloat(118, HAZE_PERCENT, 0.0f); }
+  public static void addAerosolOpticalThickness(FlatBufferBuilder builder, float AEROSOL_OPTICAL_THICKNESS) { builder.addFloat(119, AEROSOL_OPTICAL_THICKNESS, 0.0f); }
+  public static void addWaterVaporContent(FlatBufferBuilder builder, float WATER_VAPOR_CONTENT) { builder.addFloat(120, WATER_VAPOR_CONTENT, 0.0f); }
+  public static void addSunElevation(FlatBufferBuilder builder, float SUN_ELEVATION) { builder.addFloat(121, SUN_ELEVATION, 0.0f); }
+  public static void addSunAzimuth(FlatBufferBuilder builder, float SUN_AZIMUTH) { builder.addFloat(122, SUN_AZIMUTH, 0.0f); }
+  public static void addViewZenithAngle(FlatBufferBuilder builder, float VIEW_ZENITH_ANGLE) { builder.addFloat(123, VIEW_ZENITH_ANGLE, 0.0f); }
+  public static void addViewAzimuthAngle(FlatBufferBuilder builder, float VIEW_AZIMUTH_ANGLE) { builder.addFloat(124, VIEW_AZIMUTH_ANGLE, 0.0f); }
+  public static void addOffNadirAngle(FlatBufferBuilder builder, float OFF_NADIR_ANGLE) { builder.addFloat(125, OFF_NADIR_ANGLE, 0.0f); }
+  public static void addSwathWidthKm(FlatBufferBuilder builder, float SWATH_WIDTH_KM) { builder.addFloat(126, SWATH_WIDTH_KM, 0.0f); }
+  public static void addMeanTerrainElevation(FlatBufferBuilder builder, float MEAN_TERRAIN_ELEVATION) { builder.addFloat(127, MEAN_TERRAIN_ELEVATION, 0.0f); }
+  public static void addTerrainElevationStddev(FlatBufferBuilder builder, float TERRAIN_ELEVATION_STDDEV) { builder.addFloat(128, TERRAIN_ELEVATION_STDDEV, 0.0f); }
+  public static void addShadowCoverPercent(FlatBufferBuilder builder, float SHADOW_COVER_PERCENT) { builder.addFloat(129, SHADOW_COVER_PERCENT, 0.0f); }
+  public static void addSunglintPresent(FlatBufferBuilder builder, boolean SUNGLINT_PRESENT) { builder.addBoolean(130, SUNGLINT_PRESENT, false); }
+  public static void addSunglintPercent(FlatBufferBuilder builder, float SUNGLINT_PERCENT) { builder.addFloat(131, SUNGLINT_PERCENT, 0.0f); }
+  public static void addSnowIceCoverPercent(FlatBufferBuilder builder, float SNOW_ICE_COVER_PERCENT) { builder.addFloat(132, SNOW_ICE_COVER_PERCENT, 0.0f); }
+  public static void addValidDataAreaKm2(FlatBufferBuilder builder, float VALID_DATA_AREA_KM2) { builder.addFloat(133, VALID_DATA_AREA_KM2, 0.0f); }
   public static int endEOO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

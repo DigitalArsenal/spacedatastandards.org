@@ -195,7 +195,47 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RANGE_MEASURED = 184,
     VT_RANGERATE_MEASURED = 186,
     VT_RA_MEASURED = 188,
-    VT_DECLINATION_MEASURED = 190
+    VT_DECLINATION_MEASURED = 190,
+    VT_NIIRS = 192,
+    VT_METERS_PER_PIXEL = 194,
+    VT_IMAGE_SNR = 196,
+    VT_IMAGE_BIT_DEPTH = 198,
+    VT_IMAGE_WIDTH = 200,
+    VT_IMAGE_HEIGHT = 202,
+    VT_IMAGE_COMPRESSION = 204,
+    VT_IMAGE_COMPRESSION_RATIO = 206,
+    VT_PROCESSED_IMAGE_URI = 208,
+    VT_IMAGE_AUTO_ENHANCED = 210,
+    VT_MULTI_FRAME_STACKED = 212,
+    VT_SYNTHETIC_TRACKING_USED = 214,
+    VT_IMAGE_SHARPNESS = 216,
+    VT_IMAGE_NOISE_STDDEV = 218,
+    VT_IMAGE_CONTRAST = 220,
+    VT_IMAGE_DYNAMIC_RANGE = 222,
+    VT_IMAGE_ENTROPY = 224,
+    VT_BACKGROUND_UNIFORMITY = 226,
+    VT_BACKGROUND_MEAN_LEVEL = 228,
+    VT_SATURATED_PIXEL_PERCENT = 230,
+    VT_DEAD_PIXEL_PERCENT = 232,
+    VT_PSF_FWHM = 234,
+    VT_CLOUD_COVER_PERCENT = 236,
+    VT_CLOUD_DETECTION_CONFIDENCE = 238,
+    VT_HAZE_PERCENT = 240,
+    VT_AEROSOL_OPTICAL_THICKNESS = 242,
+    VT_WATER_VAPOR_CONTENT = 244,
+    VT_SUN_ELEVATION = 246,
+    VT_SUN_AZIMUTH = 248,
+    VT_VIEW_ZENITH_ANGLE = 250,
+    VT_VIEW_AZIMUTH_ANGLE = 252,
+    VT_OFF_NADIR_ANGLE = 254,
+    VT_SWATH_WIDTH_KM = 256,
+    VT_MEAN_TERRAIN_ELEVATION = 258,
+    VT_TERRAIN_ELEVATION_STDDEV = 260,
+    VT_SHADOW_COVER_PERCENT = 262,
+    VT_SUNGLINT_PRESENT = 264,
+    VT_SUNGLINT_PERCENT = 266,
+    VT_SNOW_ICE_COVER_PERCENT = 268,
+    VT_VALID_DATA_AREA_KM2 = 270
   };
   /// Unique identifier of the record.
   const ::flatbuffers::String *ID() const {
@@ -589,6 +629,166 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool DECLINATION_MEASURED() const {
     return GetField<uint8_t>(VT_DECLINATION_MEASURED, 0) != 0;
   }
+  /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  float NIIRS() const {
+    return GetField<float>(VT_NIIRS, 0.0f);
+  }
+  /// Ground sample distance in meters per pixel.
+  float METERS_PER_PIXEL() const {
+    return GetField<float>(VT_METERS_PER_PIXEL, 0.0f);
+  }
+  /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  float IMAGE_SNR() const {
+    return GetField<float>(VT_IMAGE_SNR, 0.0f);
+  }
+  /// Bit depth of the image (e.g., 8, 12, 16).
+  int32_t IMAGE_BIT_DEPTH() const {
+    return GetField<int32_t>(VT_IMAGE_BIT_DEPTH, 0);
+  }
+  /// Width of the image in pixels.
+  int32_t IMAGE_WIDTH() const {
+    return GetField<int32_t>(VT_IMAGE_WIDTH, 0);
+  }
+  /// Height of the image in pixels.
+  int32_t IMAGE_HEIGHT() const {
+    return GetField<int32_t>(VT_IMAGE_HEIGHT, 0);
+  }
+  /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  const ::flatbuffers::String *IMAGE_COMPRESSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_COMPRESSION);
+  }
+  /// Compression ratio used (original size / compressed size), if applicable.
+  float IMAGE_COMPRESSION_RATIO() const {
+    return GetField<float>(VT_IMAGE_COMPRESSION_RATIO, 0.0f);
+  }
+  /// URI to the processed image used for this observation.
+  const ::flatbuffers::String *PROCESSED_IMAGE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROCESSED_IMAGE_URI);
+  }
+  /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  bool IMAGE_AUTO_ENHANCED() const {
+    return GetField<uint8_t>(VT_IMAGE_AUTO_ENHANCED, 0) != 0;
+  }
+  /// True if the observation was taken with multiple frames stacked into one image.
+  bool MULTI_FRAME_STACKED() const {
+    return GetField<uint8_t>(VT_MULTI_FRAME_STACKED, 0) != 0;
+  }
+  /// True if synthetic tracking was used to create the image.
+  bool SYNTHETIC_TRACKING_USED() const {
+    return GetField<uint8_t>(VT_SYNTHETIC_TRACKING_USED, 0) != 0;
+  }
+  /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  float IMAGE_SHARPNESS() const {
+    return GetField<float>(VT_IMAGE_SHARPNESS, 0.0f);
+  }
+  /// Noise level of the image, estimated via pixel intensity variance in background regions.
+  float IMAGE_NOISE_STDDEV() const {
+    return GetField<float>(VT_IMAGE_NOISE_STDDEV, 0.0f);
+  }
+  /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  float IMAGE_CONTRAST() const {
+    return GetField<float>(VT_IMAGE_CONTRAST, 0.0f);
+  }
+  /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  float IMAGE_DYNAMIC_RANGE() const {
+    return GetField<float>(VT_IMAGE_DYNAMIC_RANGE, 0.0f);
+  }
+  /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  float IMAGE_ENTROPY() const {
+    return GetField<float>(VT_IMAGE_ENTROPY, 0.0f);
+  }
+  /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  float BACKGROUND_UNIFORMITY() const {
+    return GetField<float>(VT_BACKGROUND_UNIFORMITY, 0.0f);
+  }
+  /// Mean background level, computed from non-object regions in pixel units.
+  float BACKGROUND_MEAN_LEVEL() const {
+    return GetField<float>(VT_BACKGROUND_MEAN_LEVEL, 0.0f);
+  }
+  /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+  float SATURATED_PIXEL_PERCENT() const {
+    return GetField<float>(VT_SATURATED_PIXEL_PERCENT, 0.0f);
+  }
+  /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  float DEAD_PIXEL_PERCENT() const {
+    return GetField<float>(VT_DEAD_PIXEL_PERCENT, 0.0f);
+  }
+  /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  float PSF_FWHM() const {
+    return GetField<float>(VT_PSF_FWHM, 0.0f);
+  }
+  /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  float CLOUD_COVER_PERCENT() const {
+    return GetField<float>(VT_CLOUD_COVER_PERCENT, 0.0f);
+  }
+  /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  float CLOUD_DETECTION_CONFIDENCE() const {
+    return GetField<float>(VT_CLOUD_DETECTION_CONFIDENCE, 0.0f);
+  }
+  /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  float HAZE_PERCENT() const {
+    return GetField<float>(VT_HAZE_PERCENT, 0.0f);
+  }
+  /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  float AEROSOL_OPTICAL_THICKNESS() const {
+    return GetField<float>(VT_AEROSOL_OPTICAL_THICKNESS, 0.0f);
+  }
+  /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  float WATER_VAPOR_CONTENT() const {
+    return GetField<float>(VT_WATER_VAPOR_CONTENT, 0.0f);
+  }
+  /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+  float SUN_ELEVATION() const {
+    return GetField<float>(VT_SUN_ELEVATION, 0.0f);
+  }
+  /// Sun azimuth angle at the time of image capture, in degrees from true north.
+  float SUN_AZIMUTH() const {
+    return GetField<float>(VT_SUN_AZIMUTH, 0.0f);
+  }
+  /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  float VIEW_ZENITH_ANGLE() const {
+    return GetField<float>(VT_VIEW_ZENITH_ANGLE, 0.0f);
+  }
+  /// View azimuth angle (direction of sensor relative to north), in degrees.
+  float VIEW_AZIMUTH_ANGLE() const {
+    return GetField<float>(VT_VIEW_AZIMUTH_ANGLE, 0.0f);
+  }
+  /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+  float OFF_NADIR_ANGLE() const {
+    return GetField<float>(VT_OFF_NADIR_ANGLE, 0.0f);
+  }
+  /// Ground coverage width of the image swath in kilometers.
+  float SWATH_WIDTH_KM() const {
+    return GetField<float>(VT_SWATH_WIDTH_KM, 0.0f);
+  }
+  /// Mean terrain elevation in the image footprint, in meters above sea level.
+  float MEAN_TERRAIN_ELEVATION() const {
+    return GetField<float>(VT_MEAN_TERRAIN_ELEVATION, 0.0f);
+  }
+  /// Standard deviation of terrain elevation in the image footprint, in meters.
+  float TERRAIN_ELEVATION_STDDEV() const {
+    return GetField<float>(VT_TERRAIN_ELEVATION_STDDEV, 0.0f);
+  }
+  /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  float SHADOW_COVER_PERCENT() const {
+    return GetField<float>(VT_SHADOW_COVER_PERCENT, 0.0f);
+  }
+  /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  bool SUNGLINT_PRESENT() const {
+    return GetField<uint8_t>(VT_SUNGLINT_PRESENT, 0) != 0;
+  }
+  /// Percentage of image affected by sunglint.
+  float SUNGLINT_PERCENT() const {
+    return GetField<float>(VT_SUNGLINT_PERCENT, 0.0f);
+  }
+  /// Estimated percentage of snow or ice coverage in the image footprint.
+  float SNOW_ICE_COVER_PERCENT() const {
+    return GetField<float>(VT_SNOW_ICE_COVER_PERCENT, 0.0f);
+  }
+  /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  float VALID_DATA_AREA_KM2() const {
+    return GetField<float>(VT_VALID_DATA_AREA_KM2, 0.0f);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
@@ -703,6 +903,48 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_RANGERATE_MEASURED, 1) &&
            VerifyField<uint8_t>(verifier, VT_RA_MEASURED, 1) &&
            VerifyField<uint8_t>(verifier, VT_DECLINATION_MEASURED, 1) &&
+           VerifyField<float>(verifier, VT_NIIRS, 4) &&
+           VerifyField<float>(verifier, VT_METERS_PER_PIXEL, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_SNR, 4) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_BIT_DEPTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_WIDTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_HEIGHT, 4) &&
+           VerifyOffset(verifier, VT_IMAGE_COMPRESSION) &&
+           verifier.VerifyString(IMAGE_COMPRESSION()) &&
+           VerifyField<float>(verifier, VT_IMAGE_COMPRESSION_RATIO, 4) &&
+           VerifyOffset(verifier, VT_PROCESSED_IMAGE_URI) &&
+           verifier.VerifyString(PROCESSED_IMAGE_URI()) &&
+           VerifyField<uint8_t>(verifier, VT_IMAGE_AUTO_ENHANCED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_MULTI_FRAME_STACKED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SYNTHETIC_TRACKING_USED, 1) &&
+           VerifyField<float>(verifier, VT_IMAGE_SHARPNESS, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_NOISE_STDDEV, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_CONTRAST, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_DYNAMIC_RANGE, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_ENTROPY, 4) &&
+           VerifyField<float>(verifier, VT_BACKGROUND_UNIFORMITY, 4) &&
+           VerifyField<float>(verifier, VT_BACKGROUND_MEAN_LEVEL, 4) &&
+           VerifyField<float>(verifier, VT_SATURATED_PIXEL_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_DEAD_PIXEL_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_PSF_FWHM, 4) &&
+           VerifyField<float>(verifier, VT_CLOUD_COVER_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_CLOUD_DETECTION_CONFIDENCE, 4) &&
+           VerifyField<float>(verifier, VT_HAZE_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_AEROSOL_OPTICAL_THICKNESS, 4) &&
+           VerifyField<float>(verifier, VT_WATER_VAPOR_CONTENT, 4) &&
+           VerifyField<float>(verifier, VT_SUN_ELEVATION, 4) &&
+           VerifyField<float>(verifier, VT_SUN_AZIMUTH, 4) &&
+           VerifyField<float>(verifier, VT_VIEW_ZENITH_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_VIEW_AZIMUTH_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_OFF_NADIR_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_SWATH_WIDTH_KM, 4) &&
+           VerifyField<float>(verifier, VT_MEAN_TERRAIN_ELEVATION, 4) &&
+           VerifyField<float>(verifier, VT_TERRAIN_ELEVATION_STDDEV, 4) &&
+           VerifyField<float>(verifier, VT_SHADOW_COVER_PERCENT, 4) &&
+           VerifyField<uint8_t>(verifier, VT_SUNGLINT_PRESENT, 1) &&
+           VerifyField<float>(verifier, VT_SUNGLINT_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_SNOW_ICE_COVER_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_VALID_DATA_AREA_KM2, 4) &&
            verifier.EndTable();
   }
 };
@@ -993,6 +1235,126 @@ struct EOOBuilder {
   void add_DECLINATION_MEASURED(bool DECLINATION_MEASURED) {
     fbb_.AddElement<uint8_t>(EOO::VT_DECLINATION_MEASURED, static_cast<uint8_t>(DECLINATION_MEASURED), 0);
   }
+  void add_NIIRS(float NIIRS) {
+    fbb_.AddElement<float>(EOO::VT_NIIRS, NIIRS, 0.0f);
+  }
+  void add_METERS_PER_PIXEL(float METERS_PER_PIXEL) {
+    fbb_.AddElement<float>(EOO::VT_METERS_PER_PIXEL, METERS_PER_PIXEL, 0.0f);
+  }
+  void add_IMAGE_SNR(float IMAGE_SNR) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_SNR, IMAGE_SNR, 0.0f);
+  }
+  void add_IMAGE_BIT_DEPTH(int32_t IMAGE_BIT_DEPTH) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_BIT_DEPTH, IMAGE_BIT_DEPTH, 0);
+  }
+  void add_IMAGE_WIDTH(int32_t IMAGE_WIDTH) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_WIDTH, IMAGE_WIDTH, 0);
+  }
+  void add_IMAGE_HEIGHT(int32_t IMAGE_HEIGHT) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_HEIGHT, IMAGE_HEIGHT, 0);
+  }
+  void add_IMAGE_COMPRESSION(::flatbuffers::Offset<::flatbuffers::String> IMAGE_COMPRESSION) {
+    fbb_.AddOffset(EOO::VT_IMAGE_COMPRESSION, IMAGE_COMPRESSION);
+  }
+  void add_IMAGE_COMPRESSION_RATIO(float IMAGE_COMPRESSION_RATIO) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_COMPRESSION_RATIO, IMAGE_COMPRESSION_RATIO, 0.0f);
+  }
+  void add_PROCESSED_IMAGE_URI(::flatbuffers::Offset<::flatbuffers::String> PROCESSED_IMAGE_URI) {
+    fbb_.AddOffset(EOO::VT_PROCESSED_IMAGE_URI, PROCESSED_IMAGE_URI);
+  }
+  void add_IMAGE_AUTO_ENHANCED(bool IMAGE_AUTO_ENHANCED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_IMAGE_AUTO_ENHANCED, static_cast<uint8_t>(IMAGE_AUTO_ENHANCED), 0);
+  }
+  void add_MULTI_FRAME_STACKED(bool MULTI_FRAME_STACKED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_MULTI_FRAME_STACKED, static_cast<uint8_t>(MULTI_FRAME_STACKED), 0);
+  }
+  void add_SYNTHETIC_TRACKING_USED(bool SYNTHETIC_TRACKING_USED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_SYNTHETIC_TRACKING_USED, static_cast<uint8_t>(SYNTHETIC_TRACKING_USED), 0);
+  }
+  void add_IMAGE_SHARPNESS(float IMAGE_SHARPNESS) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_SHARPNESS, IMAGE_SHARPNESS, 0.0f);
+  }
+  void add_IMAGE_NOISE_STDDEV(float IMAGE_NOISE_STDDEV) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_NOISE_STDDEV, IMAGE_NOISE_STDDEV, 0.0f);
+  }
+  void add_IMAGE_CONTRAST(float IMAGE_CONTRAST) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_CONTRAST, IMAGE_CONTRAST, 0.0f);
+  }
+  void add_IMAGE_DYNAMIC_RANGE(float IMAGE_DYNAMIC_RANGE) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_DYNAMIC_RANGE, IMAGE_DYNAMIC_RANGE, 0.0f);
+  }
+  void add_IMAGE_ENTROPY(float IMAGE_ENTROPY) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_ENTROPY, IMAGE_ENTROPY, 0.0f);
+  }
+  void add_BACKGROUND_UNIFORMITY(float BACKGROUND_UNIFORMITY) {
+    fbb_.AddElement<float>(EOO::VT_BACKGROUND_UNIFORMITY, BACKGROUND_UNIFORMITY, 0.0f);
+  }
+  void add_BACKGROUND_MEAN_LEVEL(float BACKGROUND_MEAN_LEVEL) {
+    fbb_.AddElement<float>(EOO::VT_BACKGROUND_MEAN_LEVEL, BACKGROUND_MEAN_LEVEL, 0.0f);
+  }
+  void add_SATURATED_PIXEL_PERCENT(float SATURATED_PIXEL_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SATURATED_PIXEL_PERCENT, SATURATED_PIXEL_PERCENT, 0.0f);
+  }
+  void add_DEAD_PIXEL_PERCENT(float DEAD_PIXEL_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_DEAD_PIXEL_PERCENT, DEAD_PIXEL_PERCENT, 0.0f);
+  }
+  void add_PSF_FWHM(float PSF_FWHM) {
+    fbb_.AddElement<float>(EOO::VT_PSF_FWHM, PSF_FWHM, 0.0f);
+  }
+  void add_CLOUD_COVER_PERCENT(float CLOUD_COVER_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_CLOUD_COVER_PERCENT, CLOUD_COVER_PERCENT, 0.0f);
+  }
+  void add_CLOUD_DETECTION_CONFIDENCE(float CLOUD_DETECTION_CONFIDENCE) {
+    fbb_.AddElement<float>(EOO::VT_CLOUD_DETECTION_CONFIDENCE, CLOUD_DETECTION_CONFIDENCE, 0.0f);
+  }
+  void add_HAZE_PERCENT(float HAZE_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_HAZE_PERCENT, HAZE_PERCENT, 0.0f);
+  }
+  void add_AEROSOL_OPTICAL_THICKNESS(float AEROSOL_OPTICAL_THICKNESS) {
+    fbb_.AddElement<float>(EOO::VT_AEROSOL_OPTICAL_THICKNESS, AEROSOL_OPTICAL_THICKNESS, 0.0f);
+  }
+  void add_WATER_VAPOR_CONTENT(float WATER_VAPOR_CONTENT) {
+    fbb_.AddElement<float>(EOO::VT_WATER_VAPOR_CONTENT, WATER_VAPOR_CONTENT, 0.0f);
+  }
+  void add_SUN_ELEVATION(float SUN_ELEVATION) {
+    fbb_.AddElement<float>(EOO::VT_SUN_ELEVATION, SUN_ELEVATION, 0.0f);
+  }
+  void add_SUN_AZIMUTH(float SUN_AZIMUTH) {
+    fbb_.AddElement<float>(EOO::VT_SUN_AZIMUTH, SUN_AZIMUTH, 0.0f);
+  }
+  void add_VIEW_ZENITH_ANGLE(float VIEW_ZENITH_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_VIEW_ZENITH_ANGLE, VIEW_ZENITH_ANGLE, 0.0f);
+  }
+  void add_VIEW_AZIMUTH_ANGLE(float VIEW_AZIMUTH_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_VIEW_AZIMUTH_ANGLE, VIEW_AZIMUTH_ANGLE, 0.0f);
+  }
+  void add_OFF_NADIR_ANGLE(float OFF_NADIR_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_OFF_NADIR_ANGLE, OFF_NADIR_ANGLE, 0.0f);
+  }
+  void add_SWATH_WIDTH_KM(float SWATH_WIDTH_KM) {
+    fbb_.AddElement<float>(EOO::VT_SWATH_WIDTH_KM, SWATH_WIDTH_KM, 0.0f);
+  }
+  void add_MEAN_TERRAIN_ELEVATION(float MEAN_TERRAIN_ELEVATION) {
+    fbb_.AddElement<float>(EOO::VT_MEAN_TERRAIN_ELEVATION, MEAN_TERRAIN_ELEVATION, 0.0f);
+  }
+  void add_TERRAIN_ELEVATION_STDDEV(float TERRAIN_ELEVATION_STDDEV) {
+    fbb_.AddElement<float>(EOO::VT_TERRAIN_ELEVATION_STDDEV, TERRAIN_ELEVATION_STDDEV, 0.0f);
+  }
+  void add_SHADOW_COVER_PERCENT(float SHADOW_COVER_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SHADOW_COVER_PERCENT, SHADOW_COVER_PERCENT, 0.0f);
+  }
+  void add_SUNGLINT_PRESENT(bool SUNGLINT_PRESENT) {
+    fbb_.AddElement<uint8_t>(EOO::VT_SUNGLINT_PRESENT, static_cast<uint8_t>(SUNGLINT_PRESENT), 0);
+  }
+  void add_SUNGLINT_PERCENT(float SUNGLINT_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SUNGLINT_PERCENT, SUNGLINT_PERCENT, 0.0f);
+  }
+  void add_SNOW_ICE_COVER_PERCENT(float SNOW_ICE_COVER_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SNOW_ICE_COVER_PERCENT, SNOW_ICE_COVER_PERCENT, 0.0f);
+  }
+  void add_VALID_DATA_AREA_KM2(float VALID_DATA_AREA_KM2) {
+    fbb_.AddElement<float>(EOO::VT_VALID_DATA_AREA_KM2, VALID_DATA_AREA_KM2, 0.0f);
+  }
   explicit EOOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1099,8 +1461,84 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     bool RANGE_MEASURED = false,
     bool RANGERATE_MEASURED = false,
     bool RA_MEASURED = false,
-    bool DECLINATION_MEASURED = false) {
+    bool DECLINATION_MEASURED = false,
+    float NIIRS = 0.0f,
+    float METERS_PER_PIXEL = 0.0f,
+    float IMAGE_SNR = 0.0f,
+    int32_t IMAGE_BIT_DEPTH = 0,
+    int32_t IMAGE_WIDTH = 0,
+    int32_t IMAGE_HEIGHT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMAGE_COMPRESSION = 0,
+    float IMAGE_COMPRESSION_RATIO = 0.0f,
+    ::flatbuffers::Offset<::flatbuffers::String> PROCESSED_IMAGE_URI = 0,
+    bool IMAGE_AUTO_ENHANCED = false,
+    bool MULTI_FRAME_STACKED = false,
+    bool SYNTHETIC_TRACKING_USED = false,
+    float IMAGE_SHARPNESS = 0.0f,
+    float IMAGE_NOISE_STDDEV = 0.0f,
+    float IMAGE_CONTRAST = 0.0f,
+    float IMAGE_DYNAMIC_RANGE = 0.0f,
+    float IMAGE_ENTROPY = 0.0f,
+    float BACKGROUND_UNIFORMITY = 0.0f,
+    float BACKGROUND_MEAN_LEVEL = 0.0f,
+    float SATURATED_PIXEL_PERCENT = 0.0f,
+    float DEAD_PIXEL_PERCENT = 0.0f,
+    float PSF_FWHM = 0.0f,
+    float CLOUD_COVER_PERCENT = 0.0f,
+    float CLOUD_DETECTION_CONFIDENCE = 0.0f,
+    float HAZE_PERCENT = 0.0f,
+    float AEROSOL_OPTICAL_THICKNESS = 0.0f,
+    float WATER_VAPOR_CONTENT = 0.0f,
+    float SUN_ELEVATION = 0.0f,
+    float SUN_AZIMUTH = 0.0f,
+    float VIEW_ZENITH_ANGLE = 0.0f,
+    float VIEW_AZIMUTH_ANGLE = 0.0f,
+    float OFF_NADIR_ANGLE = 0.0f,
+    float SWATH_WIDTH_KM = 0.0f,
+    float MEAN_TERRAIN_ELEVATION = 0.0f,
+    float TERRAIN_ELEVATION_STDDEV = 0.0f,
+    float SHADOW_COVER_PERCENT = 0.0f,
+    bool SUNGLINT_PRESENT = false,
+    float SUNGLINT_PERCENT = 0.0f,
+    float SNOW_ICE_COVER_PERCENT = 0.0f,
+    float VALID_DATA_AREA_KM2 = 0.0f) {
   EOOBuilder builder_(_fbb);
+  builder_.add_VALID_DATA_AREA_KM2(VALID_DATA_AREA_KM2);
+  builder_.add_SNOW_ICE_COVER_PERCENT(SNOW_ICE_COVER_PERCENT);
+  builder_.add_SUNGLINT_PERCENT(SUNGLINT_PERCENT);
+  builder_.add_SHADOW_COVER_PERCENT(SHADOW_COVER_PERCENT);
+  builder_.add_TERRAIN_ELEVATION_STDDEV(TERRAIN_ELEVATION_STDDEV);
+  builder_.add_MEAN_TERRAIN_ELEVATION(MEAN_TERRAIN_ELEVATION);
+  builder_.add_SWATH_WIDTH_KM(SWATH_WIDTH_KM);
+  builder_.add_OFF_NADIR_ANGLE(OFF_NADIR_ANGLE);
+  builder_.add_VIEW_AZIMUTH_ANGLE(VIEW_AZIMUTH_ANGLE);
+  builder_.add_VIEW_ZENITH_ANGLE(VIEW_ZENITH_ANGLE);
+  builder_.add_SUN_AZIMUTH(SUN_AZIMUTH);
+  builder_.add_SUN_ELEVATION(SUN_ELEVATION);
+  builder_.add_WATER_VAPOR_CONTENT(WATER_VAPOR_CONTENT);
+  builder_.add_AEROSOL_OPTICAL_THICKNESS(AEROSOL_OPTICAL_THICKNESS);
+  builder_.add_HAZE_PERCENT(HAZE_PERCENT);
+  builder_.add_CLOUD_DETECTION_CONFIDENCE(CLOUD_DETECTION_CONFIDENCE);
+  builder_.add_CLOUD_COVER_PERCENT(CLOUD_COVER_PERCENT);
+  builder_.add_PSF_FWHM(PSF_FWHM);
+  builder_.add_DEAD_PIXEL_PERCENT(DEAD_PIXEL_PERCENT);
+  builder_.add_SATURATED_PIXEL_PERCENT(SATURATED_PIXEL_PERCENT);
+  builder_.add_BACKGROUND_MEAN_LEVEL(BACKGROUND_MEAN_LEVEL);
+  builder_.add_BACKGROUND_UNIFORMITY(BACKGROUND_UNIFORMITY);
+  builder_.add_IMAGE_ENTROPY(IMAGE_ENTROPY);
+  builder_.add_IMAGE_DYNAMIC_RANGE(IMAGE_DYNAMIC_RANGE);
+  builder_.add_IMAGE_CONTRAST(IMAGE_CONTRAST);
+  builder_.add_IMAGE_NOISE_STDDEV(IMAGE_NOISE_STDDEV);
+  builder_.add_IMAGE_SHARPNESS(IMAGE_SHARPNESS);
+  builder_.add_PROCESSED_IMAGE_URI(PROCESSED_IMAGE_URI);
+  builder_.add_IMAGE_COMPRESSION_RATIO(IMAGE_COMPRESSION_RATIO);
+  builder_.add_IMAGE_COMPRESSION(IMAGE_COMPRESSION);
+  builder_.add_IMAGE_HEIGHT(IMAGE_HEIGHT);
+  builder_.add_IMAGE_WIDTH(IMAGE_WIDTH);
+  builder_.add_IMAGE_BIT_DEPTH(IMAGE_BIT_DEPTH);
+  builder_.add_IMAGE_SNR(IMAGE_SNR);
+  builder_.add_METERS_PER_PIXEL(METERS_PER_PIXEL);
+  builder_.add_NIIRS(NIIRS);
   builder_.add_SOURCE_DL(SOURCE_DL);
   builder_.add_ORIG_NETWORK(ORIG_NETWORK);
   builder_.add_CREATED_BY(CREATED_BY);
@@ -1180,6 +1618,10 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_CLASSIFICATION(CLASSIFICATION);
   builder_.add_ID(ID);
+  builder_.add_SUNGLINT_PRESENT(SUNGLINT_PRESENT);
+  builder_.add_SYNTHETIC_TRACKING_USED(SYNTHETIC_TRACKING_USED);
+  builder_.add_MULTI_FRAME_STACKED(MULTI_FRAME_STACKED);
+  builder_.add_IMAGE_AUTO_ENHANCED(IMAGE_AUTO_ENHANCED);
   builder_.add_DECLINATION_MEASURED(DECLINATION_MEASURED);
   builder_.add_RA_MEASURED(RA_MEASURED);
   builder_.add_RANGERATE_MEASURED(RANGERATE_MEASURED);
@@ -1293,7 +1735,47 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     bool RANGE_MEASURED = false,
     bool RANGERATE_MEASURED = false,
     bool RA_MEASURED = false,
-    bool DECLINATION_MEASURED = false) {
+    bool DECLINATION_MEASURED = false,
+    float NIIRS = 0.0f,
+    float METERS_PER_PIXEL = 0.0f,
+    float IMAGE_SNR = 0.0f,
+    int32_t IMAGE_BIT_DEPTH = 0,
+    int32_t IMAGE_WIDTH = 0,
+    int32_t IMAGE_HEIGHT = 0,
+    const char *IMAGE_COMPRESSION = nullptr,
+    float IMAGE_COMPRESSION_RATIO = 0.0f,
+    const char *PROCESSED_IMAGE_URI = nullptr,
+    bool IMAGE_AUTO_ENHANCED = false,
+    bool MULTI_FRAME_STACKED = false,
+    bool SYNTHETIC_TRACKING_USED = false,
+    float IMAGE_SHARPNESS = 0.0f,
+    float IMAGE_NOISE_STDDEV = 0.0f,
+    float IMAGE_CONTRAST = 0.0f,
+    float IMAGE_DYNAMIC_RANGE = 0.0f,
+    float IMAGE_ENTROPY = 0.0f,
+    float BACKGROUND_UNIFORMITY = 0.0f,
+    float BACKGROUND_MEAN_LEVEL = 0.0f,
+    float SATURATED_PIXEL_PERCENT = 0.0f,
+    float DEAD_PIXEL_PERCENT = 0.0f,
+    float PSF_FWHM = 0.0f,
+    float CLOUD_COVER_PERCENT = 0.0f,
+    float CLOUD_DETECTION_CONFIDENCE = 0.0f,
+    float HAZE_PERCENT = 0.0f,
+    float AEROSOL_OPTICAL_THICKNESS = 0.0f,
+    float WATER_VAPOR_CONTENT = 0.0f,
+    float SUN_ELEVATION = 0.0f,
+    float SUN_AZIMUTH = 0.0f,
+    float VIEW_ZENITH_ANGLE = 0.0f,
+    float VIEW_AZIMUTH_ANGLE = 0.0f,
+    float OFF_NADIR_ANGLE = 0.0f,
+    float SWATH_WIDTH_KM = 0.0f,
+    float MEAN_TERRAIN_ELEVATION = 0.0f,
+    float TERRAIN_ELEVATION_STDDEV = 0.0f,
+    float SHADOW_COVER_PERCENT = 0.0f,
+    bool SUNGLINT_PRESENT = false,
+    float SUNGLINT_PERCENT = 0.0f,
+    float SNOW_ICE_COVER_PERCENT = 0.0f,
+    float VALID_DATA_AREA_KM2 = 0.0f) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
@@ -1312,6 +1794,8 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
   auto CREATED_BY__ = CREATED_BY ? _fbb.CreateString(CREATED_BY) : 0;
   auto ORIG_NETWORK__ = ORIG_NETWORK ? _fbb.CreateString(ORIG_NETWORK) : 0;
   auto SOURCE_DL__ = SOURCE_DL ? _fbb.CreateString(SOURCE_DL) : 0;
+  auto IMAGE_COMPRESSION__ = IMAGE_COMPRESSION ? _fbb.CreateString(IMAGE_COMPRESSION) : 0;
+  auto PROCESSED_IMAGE_URI__ = PROCESSED_IMAGE_URI ? _fbb.CreateString(PROCESSED_IMAGE_URI) : 0;
   return CreateEOO(
       _fbb,
       ID__,
@@ -1407,7 +1891,47 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       RANGE_MEASURED,
       RANGERATE_MEASURED,
       RA_MEASURED,
-      DECLINATION_MEASURED);
+      DECLINATION_MEASURED,
+      NIIRS,
+      METERS_PER_PIXEL,
+      IMAGE_SNR,
+      IMAGE_BIT_DEPTH,
+      IMAGE_WIDTH,
+      IMAGE_HEIGHT,
+      IMAGE_COMPRESSION__,
+      IMAGE_COMPRESSION_RATIO,
+      PROCESSED_IMAGE_URI__,
+      IMAGE_AUTO_ENHANCED,
+      MULTI_FRAME_STACKED,
+      SYNTHETIC_TRACKING_USED,
+      IMAGE_SHARPNESS,
+      IMAGE_NOISE_STDDEV,
+      IMAGE_CONTRAST,
+      IMAGE_DYNAMIC_RANGE,
+      IMAGE_ENTROPY,
+      BACKGROUND_UNIFORMITY,
+      BACKGROUND_MEAN_LEVEL,
+      SATURATED_PIXEL_PERCENT,
+      DEAD_PIXEL_PERCENT,
+      PSF_FWHM,
+      CLOUD_COVER_PERCENT,
+      CLOUD_DETECTION_CONFIDENCE,
+      HAZE_PERCENT,
+      AEROSOL_OPTICAL_THICKNESS,
+      WATER_VAPOR_CONTENT,
+      SUN_ELEVATION,
+      SUN_AZIMUTH,
+      VIEW_ZENITH_ANGLE,
+      VIEW_AZIMUTH_ANGLE,
+      OFF_NADIR_ANGLE,
+      SWATH_WIDTH_KM,
+      MEAN_TERRAIN_ELEVATION,
+      TERRAIN_ELEVATION_STDDEV,
+      SHADOW_COVER_PERCENT,
+      SUNGLINT_PRESENT,
+      SUNGLINT_PERCENT,
+      SNOW_ICE_COVER_PERCENT,
+      VALID_DATA_AREA_KM2);
 }
 
 struct EOOCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

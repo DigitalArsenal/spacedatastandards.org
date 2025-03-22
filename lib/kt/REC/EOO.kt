@@ -905,6 +905,338 @@ class EOO : Table() {
             val o = __offset(190)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+     */
+    val NIIRS : Float
+        get() {
+            val o = __offset(192)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Ground sample distance in meters per pixel.
+     */
+    val METERS_PER_PIXEL : Float
+        get() {
+            val o = __offset(194)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+     */
+    val IMAGE_SNR : Float
+        get() {
+            val o = __offset(196)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Bit depth of the image (e.g., 8, 12, 16).
+     */
+    val IMAGE_BIT_DEPTH : Int
+        get() {
+            val o = __offset(198)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Width of the image in pixels.
+     */
+    val IMAGE_WIDTH : Int
+        get() {
+            val o = __offset(200)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Height of the image in pixels.
+     */
+    val IMAGE_HEIGHT : Int
+        get() {
+            val o = __offset(202)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+     */
+    val IMAGE_COMPRESSION : String?
+        get() {
+            val o = __offset(204)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val IMAGE_COMPRESSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(204, 1)
+    fun IMAGE_COMPRESSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 204, 1)
+    /**
+     * Compression ratio used (original size / compressed size), if applicable.
+     */
+    val IMAGE_COMPRESSION_RATIO : Float
+        get() {
+            val o = __offset(206)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * URI to the processed image used for this observation.
+     */
+    val PROCESSED_IMAGE_URI : String?
+        get() {
+            val o = __offset(208)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val PROCESSED_IMAGE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(208, 1)
+    fun PROCESSED_IMAGE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 208, 1)
+    /**
+     * Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+     */
+    val IMAGE_AUTO_ENHANCED : Boolean
+        get() {
+            val o = __offset(210)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if the observation was taken with multiple frames stacked into one image.
+     */
+    val MULTI_FRAME_STACKED : Boolean
+        get() {
+            val o = __offset(212)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if synthetic tracking was used to create the image.
+     */
+    val SYNTHETIC_TRACKING_USED : Boolean
+        get() {
+            val o = __offset(214)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+     */
+    val IMAGE_SHARPNESS : Float
+        get() {
+            val o = __offset(216)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Noise level of the image, estimated via pixel intensity variance in background regions.
+     */
+    val IMAGE_NOISE_STDDEV : Float
+        get() {
+            val o = __offset(218)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Contrast metric of the image, such as Michelson contrast or RMS contrast.
+     */
+    val IMAGE_CONTRAST : Float
+        get() {
+            val o = __offset(220)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+     */
+    val IMAGE_DYNAMIC_RANGE : Float
+        get() {
+            val o = __offset(222)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+     */
+    val IMAGE_ENTROPY : Float
+        get() {
+            val o = __offset(224)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+     */
+    val BACKGROUND_UNIFORMITY : Float
+        get() {
+            val o = __offset(226)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Mean background level, computed from non-object regions in pixel units.
+     */
+    val BACKGROUND_MEAN_LEVEL : Float
+        get() {
+            val o = __offset(228)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Percentage of saturated pixels in the image. Indicates overexposure when high.
+     */
+    val SATURATED_PIXEL_PERCENT : Float
+        get() {
+            val o = __offset(230)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+     */
+    val DEAD_PIXEL_PERCENT : Float
+        get() {
+            val o = __offset(232)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+     */
+    val PSF_FWHM : Float
+        get() {
+            val o = __offset(234)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+     */
+    val CLOUD_COVER_PERCENT : Float
+        get() {
+            val o = __offset(236)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+     */
+    val CLOUD_DETECTION_CONFIDENCE : Float
+        get() {
+            val o = __offset(238)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+     */
+    val HAZE_PERCENT : Float
+        get() {
+            val o = __offset(240)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+     */
+    val AEROSOL_OPTICAL_THICKNESS : Float
+        get() {
+            val o = __offset(242)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+     */
+    val WATER_VAPOR_CONTENT : Float
+        get() {
+            val o = __offset(244)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Sun elevation angle at the time of image capture, in degrees above the horizon.
+     */
+    val SUN_ELEVATION : Float
+        get() {
+            val o = __offset(246)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Sun azimuth angle at the time of image capture, in degrees from true north.
+     */
+    val SUN_AZIMUTH : Float
+        get() {
+            val o = __offset(248)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+     */
+    val VIEW_ZENITH_ANGLE : Float
+        get() {
+            val o = __offset(250)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * View azimuth angle (direction of sensor relative to north), in degrees.
+     */
+    val VIEW_AZIMUTH_ANGLE : Float
+        get() {
+            val o = __offset(252)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Off-nadir angle of the sensor at the time of image capture, in degrees.
+     */
+    val OFF_NADIR_ANGLE : Float
+        get() {
+            val o = __offset(254)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Ground coverage width of the image swath in kilometers.
+     */
+    val SWATH_WIDTH_KM : Float
+        get() {
+            val o = __offset(256)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Mean terrain elevation in the image footprint, in meters above sea level.
+     */
+    val MEAN_TERRAIN_ELEVATION : Float
+        get() {
+            val o = __offset(258)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Standard deviation of terrain elevation in the image footprint, in meters.
+     */
+    val TERRAIN_ELEVATION_STDDEV : Float
+        get() {
+            val o = __offset(260)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+     */
+    val SHADOW_COVER_PERCENT : Float
+        get() {
+            val o = __offset(262)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+     */
+    val SUNGLINT_PRESENT : Boolean
+        get() {
+            val o = __offset(264)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Percentage of image affected by sunglint.
+     */
+    val SUNGLINT_PERCENT : Float
+        get() {
+            val o = __offset(266)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Estimated percentage of snow or ice coverage in the image footprint.
+     */
+    val SNOW_ICE_COVER_PERCENT : Float
+        get() {
+            val o = __offset(268)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+     */
+    val VALID_DATA_AREA_KM2 : Float
+        get() {
+            val o = __offset(270)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEOO(_bb: ByteBuffer): EOO = getRootAsEOO(_bb, EOO())
@@ -913,105 +1245,7 @@ class EOO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
-        fun createEOO(builder: FlatBufferBuilder, IDOffset: Int, CLASSIFICATIONOffset: Int, OB_TIMEOffset: Int, CORR_QUALITY: Float, ID_ON_ORBITOffset: Int, SENSOR_IDOffset: Int, COLLECT_METHOD: Byte, NORAD_CAT_ID: Int, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, IMAGE_SET_IDOffset: Int, IMAGE_SET_LENGTH: Int, SEQUENCE_ID: Int, OB_POSITION: Byte, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, UCT: Boolean, AZIMUTH: Float, AZIMUTH_UNC: Float, AZIMUTH_BIAS: Float, AZIMUTH_RATE: Float, ELEVATION: Float, ELEVATION_UNC: Float, ELEVATION_BIAS: Float, ELEVATION_RATE: Float, RANGE: Float, RANGE_UNC: Float, RANGE_BIAS: Float, RANGE_RATE: Float, RANGE_RATE_UNC: Float, RA: Float, RA_RATE: Float, RA_UNC: Float, RA_BIAS: Float, DECLINATION: Float, DECLINATION_RATE: Float, DECLINATION_UNC: Float, DECLINATION_BIAS: Float, LOSX: Float, LOSY: Float, LOSZ: Float, LOS_UNC: Float, LOSXVEL: Float, LOSYVEL: Float, LOSZVEL: Float, SENLAT: Float, SENLON: Float, SENALT: Float, SENX: Float, SENY: Float, SENZ: Float, FOV_COUNT: Int, FOV_COUNT_UCTS: Int, EXP_DURATION: Float, ZEROPTD: Float, NET_OBJ_SIG: Float, NET_OBJ_SIG_UNC: Float, MAG: Float, MAG_UNC: Float, MAG_NORM_RANGE: Float, GEOLAT: Float, GEOLON: Float, GEOALT: Float, GEORANGE: Float, SKY_BKGRND: Float, PRIMARY_EXTINCTION: Float, PRIMARY_EXTINCTION_UNC: Float, SOLAR_PHASE_ANGLE: Float, SOLAR_EQ_PHASE_ANGLE: Float, SOLAR_DEC_ANGLE: Float, SHUTTER_DELAY: Float, TIMING_BIAS: Float, RAW_FILE_URIOffset: Int, INTENSITY: Float, BG_INTENSITY: Float, DESCRIPTOROffset: Int, SOURCEOffset: Int, ORIGINOffset: Int, DATA_MODE: Byte, CREATED_ATOffset: Int, CREATED_BYOffset: Int, REFERENCE_FRAME: Byte, SEN_REFERENCE_FRAME: Byte, UMBRA: Boolean, PENUMBRA: Boolean, ORIG_NETWORKOffset: Int, SOURCE_DLOffset: Int, TYPE: Byte, AZIMUTH_MEASURED: Boolean, ELEVATION_MEASURED: Boolean, RANGE_MEASURED: Boolean, RANGERATE_MEASURED: Boolean, RA_MEASURED: Boolean, DECLINATION_MEASURED: Boolean) : Int {
-            builder.startTable(94)
-            addSOURCE_DL(builder, SOURCE_DLOffset)
-            addORIG_NETWORK(builder, ORIG_NETWORKOffset)
-            addCREATED_BY(builder, CREATED_BYOffset)
-            addCREATED_AT(builder, CREATED_ATOffset)
-            addORIGIN(builder, ORIGINOffset)
-            addSOURCE(builder, SOURCEOffset)
-            addDESCRIPTOR(builder, DESCRIPTOROffset)
-            addBG_INTENSITY(builder, BG_INTENSITY)
-            addINTENSITY(builder, INTENSITY)
-            addRAW_FILE_URI(builder, RAW_FILE_URIOffset)
-            addTIMING_BIAS(builder, TIMING_BIAS)
-            addSHUTTER_DELAY(builder, SHUTTER_DELAY)
-            addSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE)
-            addSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE)
-            addSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
-            addPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC)
-            addPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION)
-            addSKY_BKGRND(builder, SKY_BKGRND)
-            addGEORANGE(builder, GEORANGE)
-            addGEOALT(builder, GEOALT)
-            addGEOLON(builder, GEOLON)
-            addGEOLAT(builder, GEOLAT)
-            addMAG_NORM_RANGE(builder, MAG_NORM_RANGE)
-            addMAG_UNC(builder, MAG_UNC)
-            addMAG(builder, MAG)
-            addNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC)
-            addNET_OBJ_SIG(builder, NET_OBJ_SIG)
-            addZEROPTD(builder, ZEROPTD)
-            addEXP_DURATION(builder, EXP_DURATION)
-            addFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS)
-            addFOV_COUNT(builder, FOV_COUNT)
-            addSENZ(builder, SENZ)
-            addSENY(builder, SENY)
-            addSENX(builder, SENX)
-            addSENALT(builder, SENALT)
-            addSENLON(builder, SENLON)
-            addSENLAT(builder, SENLAT)
-            addLOSZVEL(builder, LOSZVEL)
-            addLOSYVEL(builder, LOSYVEL)
-            addLOSXVEL(builder, LOSXVEL)
-            addLOS_UNC(builder, LOS_UNC)
-            addLOSZ(builder, LOSZ)
-            addLOSY(builder, LOSY)
-            addLOSX(builder, LOSX)
-            addDECLINATION_BIAS(builder, DECLINATION_BIAS)
-            addDECLINATION_UNC(builder, DECLINATION_UNC)
-            addDECLINATION_RATE(builder, DECLINATION_RATE)
-            addDECLINATION(builder, DECLINATION)
-            addRA_BIAS(builder, RA_BIAS)
-            addRA_UNC(builder, RA_UNC)
-            addRA_RATE(builder, RA_RATE)
-            addRA(builder, RA)
-            addRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
-            addRANGE_RATE(builder, RANGE_RATE)
-            addRANGE_BIAS(builder, RANGE_BIAS)
-            addRANGE_UNC(builder, RANGE_UNC)
-            addRANGE(builder, RANGE)
-            addELEVATION_RATE(builder, ELEVATION_RATE)
-            addELEVATION_BIAS(builder, ELEVATION_BIAS)
-            addELEVATION_UNC(builder, ELEVATION_UNC)
-            addELEVATION(builder, ELEVATION)
-            addAZIMUTH_RATE(builder, AZIMUTH_RATE)
-            addAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
-            addAZIMUTH_UNC(builder, AZIMUTH_UNC)
-            addAZIMUTH(builder, AZIMUTH)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addSEQUENCE_ID(builder, SEQUENCE_ID)
-            addIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
-            addIMAGE_SET_ID(builder, IMAGE_SET_IDOffset)
-            addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addTASK_ID(builder, TASK_IDOffset)
-            addNORAD_CAT_ID(builder, NORAD_CAT_ID)
-            addSENSOR_ID(builder, SENSOR_IDOffset)
-            addID_ON_ORBIT(builder, ID_ON_ORBITOffset)
-            addCORR_QUALITY(builder, CORR_QUALITY)
-            addOB_TIME(builder, OB_TIMEOffset)
-            addCLASSIFICATION(builder, CLASSIFICATIONOffset)
-            addID(builder, IDOffset)
-            addDECLINATION_MEASURED(builder, DECLINATION_MEASURED)
-            addRA_MEASURED(builder, RA_MEASURED)
-            addRANGERATE_MEASURED(builder, RANGERATE_MEASURED)
-            addRANGE_MEASURED(builder, RANGE_MEASURED)
-            addELEVATION_MEASURED(builder, ELEVATION_MEASURED)
-            addAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED)
-            addTYPE(builder, TYPE)
-            addPENUMBRA(builder, PENUMBRA)
-            addUMBRA(builder, UMBRA)
-            addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAME)
-            addDATA_MODE(builder, DATA_MODE)
-            addUCT(builder, UCT)
-            addOB_POSITION(builder, OB_POSITION)
-            addCOLLECT_METHOD(builder, COLLECT_METHOD)
-            return endEOO(builder)
-        }
-        fun startEOO(builder: FlatBufferBuilder) = builder.startTable(94)
+        fun startEOO(builder: FlatBufferBuilder) = builder.startTable(134)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(1, CLASSIFICATION, 0)
         fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(2, OB_TIME, 0)
@@ -1106,6 +1340,46 @@ class EOO : Table() {
         fun addRANGERATE_MEASURED(builder: FlatBufferBuilder, RANGERATE_MEASURED: Boolean) = builder.addBoolean(91, RANGERATE_MEASURED, false)
         fun addRA_MEASURED(builder: FlatBufferBuilder, RA_MEASURED: Boolean) = builder.addBoolean(92, RA_MEASURED, false)
         fun addDECLINATION_MEASURED(builder: FlatBufferBuilder, DECLINATION_MEASURED: Boolean) = builder.addBoolean(93, DECLINATION_MEASURED, false)
+        fun addNIIRS(builder: FlatBufferBuilder, NIIRS: Float) = builder.addFloat(94, NIIRS, 0.0)
+        fun addMETERS_PER_PIXEL(builder: FlatBufferBuilder, METERS_PER_PIXEL: Float) = builder.addFloat(95, METERS_PER_PIXEL, 0.0)
+        fun addIMAGE_SNR(builder: FlatBufferBuilder, IMAGE_SNR: Float) = builder.addFloat(96, IMAGE_SNR, 0.0)
+        fun addIMAGE_BIT_DEPTH(builder: FlatBufferBuilder, IMAGE_BIT_DEPTH: Int) = builder.addInt(97, IMAGE_BIT_DEPTH, 0)
+        fun addIMAGE_WIDTH(builder: FlatBufferBuilder, IMAGE_WIDTH: Int) = builder.addInt(98, IMAGE_WIDTH, 0)
+        fun addIMAGE_HEIGHT(builder: FlatBufferBuilder, IMAGE_HEIGHT: Int) = builder.addInt(99, IMAGE_HEIGHT, 0)
+        fun addIMAGE_COMPRESSION(builder: FlatBufferBuilder, IMAGE_COMPRESSION: Int) = builder.addOffset(100, IMAGE_COMPRESSION, 0)
+        fun addIMAGE_COMPRESSION_RATIO(builder: FlatBufferBuilder, IMAGE_COMPRESSION_RATIO: Float) = builder.addFloat(101, IMAGE_COMPRESSION_RATIO, 0.0)
+        fun addPROCESSED_IMAGE_URI(builder: FlatBufferBuilder, PROCESSED_IMAGE_URI: Int) = builder.addOffset(102, PROCESSED_IMAGE_URI, 0)
+        fun addIMAGE_AUTO_ENHANCED(builder: FlatBufferBuilder, IMAGE_AUTO_ENHANCED: Boolean) = builder.addBoolean(103, IMAGE_AUTO_ENHANCED, false)
+        fun addMULTI_FRAME_STACKED(builder: FlatBufferBuilder, MULTI_FRAME_STACKED: Boolean) = builder.addBoolean(104, MULTI_FRAME_STACKED, false)
+        fun addSYNTHETIC_TRACKING_USED(builder: FlatBufferBuilder, SYNTHETIC_TRACKING_USED: Boolean) = builder.addBoolean(105, SYNTHETIC_TRACKING_USED, false)
+        fun addIMAGE_SHARPNESS(builder: FlatBufferBuilder, IMAGE_SHARPNESS: Float) = builder.addFloat(106, IMAGE_SHARPNESS, 0.0)
+        fun addIMAGE_NOISE_STDDEV(builder: FlatBufferBuilder, IMAGE_NOISE_STDDEV: Float) = builder.addFloat(107, IMAGE_NOISE_STDDEV, 0.0)
+        fun addIMAGE_CONTRAST(builder: FlatBufferBuilder, IMAGE_CONTRAST: Float) = builder.addFloat(108, IMAGE_CONTRAST, 0.0)
+        fun addIMAGE_DYNAMIC_RANGE(builder: FlatBufferBuilder, IMAGE_DYNAMIC_RANGE: Float) = builder.addFloat(109, IMAGE_DYNAMIC_RANGE, 0.0)
+        fun addIMAGE_ENTROPY(builder: FlatBufferBuilder, IMAGE_ENTROPY: Float) = builder.addFloat(110, IMAGE_ENTROPY, 0.0)
+        fun addBACKGROUND_UNIFORMITY(builder: FlatBufferBuilder, BACKGROUND_UNIFORMITY: Float) = builder.addFloat(111, BACKGROUND_UNIFORMITY, 0.0)
+        fun addBACKGROUND_MEAN_LEVEL(builder: FlatBufferBuilder, BACKGROUND_MEAN_LEVEL: Float) = builder.addFloat(112, BACKGROUND_MEAN_LEVEL, 0.0)
+        fun addSATURATED_PIXEL_PERCENT(builder: FlatBufferBuilder, SATURATED_PIXEL_PERCENT: Float) = builder.addFloat(113, SATURATED_PIXEL_PERCENT, 0.0)
+        fun addDEAD_PIXEL_PERCENT(builder: FlatBufferBuilder, DEAD_PIXEL_PERCENT: Float) = builder.addFloat(114, DEAD_PIXEL_PERCENT, 0.0)
+        fun addPSF_FWHM(builder: FlatBufferBuilder, PSF_FWHM: Float) = builder.addFloat(115, PSF_FWHM, 0.0)
+        fun addCLOUD_COVER_PERCENT(builder: FlatBufferBuilder, CLOUD_COVER_PERCENT: Float) = builder.addFloat(116, CLOUD_COVER_PERCENT, 0.0)
+        fun addCLOUD_DETECTION_CONFIDENCE(builder: FlatBufferBuilder, CLOUD_DETECTION_CONFIDENCE: Float) = builder.addFloat(117, CLOUD_DETECTION_CONFIDENCE, 0.0)
+        fun addHAZE_PERCENT(builder: FlatBufferBuilder, HAZE_PERCENT: Float) = builder.addFloat(118, HAZE_PERCENT, 0.0)
+        fun addAEROSOL_OPTICAL_THICKNESS(builder: FlatBufferBuilder, AEROSOL_OPTICAL_THICKNESS: Float) = builder.addFloat(119, AEROSOL_OPTICAL_THICKNESS, 0.0)
+        fun addWATER_VAPOR_CONTENT(builder: FlatBufferBuilder, WATER_VAPOR_CONTENT: Float) = builder.addFloat(120, WATER_VAPOR_CONTENT, 0.0)
+        fun addSUN_ELEVATION(builder: FlatBufferBuilder, SUN_ELEVATION: Float) = builder.addFloat(121, SUN_ELEVATION, 0.0)
+        fun addSUN_AZIMUTH(builder: FlatBufferBuilder, SUN_AZIMUTH: Float) = builder.addFloat(122, SUN_AZIMUTH, 0.0)
+        fun addVIEW_ZENITH_ANGLE(builder: FlatBufferBuilder, VIEW_ZENITH_ANGLE: Float) = builder.addFloat(123, VIEW_ZENITH_ANGLE, 0.0)
+        fun addVIEW_AZIMUTH_ANGLE(builder: FlatBufferBuilder, VIEW_AZIMUTH_ANGLE: Float) = builder.addFloat(124, VIEW_AZIMUTH_ANGLE, 0.0)
+        fun addOFF_NADIR_ANGLE(builder: FlatBufferBuilder, OFF_NADIR_ANGLE: Float) = builder.addFloat(125, OFF_NADIR_ANGLE, 0.0)
+        fun addSWATH_WIDTH_KM(builder: FlatBufferBuilder, SWATH_WIDTH_KM: Float) = builder.addFloat(126, SWATH_WIDTH_KM, 0.0)
+        fun addMEAN_TERRAIN_ELEVATION(builder: FlatBufferBuilder, MEAN_TERRAIN_ELEVATION: Float) = builder.addFloat(127, MEAN_TERRAIN_ELEVATION, 0.0)
+        fun addTERRAIN_ELEVATION_STDDEV(builder: FlatBufferBuilder, TERRAIN_ELEVATION_STDDEV: Float) = builder.addFloat(128, TERRAIN_ELEVATION_STDDEV, 0.0)
+        fun addSHADOW_COVER_PERCENT(builder: FlatBufferBuilder, SHADOW_COVER_PERCENT: Float) = builder.addFloat(129, SHADOW_COVER_PERCENT, 0.0)
+        fun addSUNGLINT_PRESENT(builder: FlatBufferBuilder, SUNGLINT_PRESENT: Boolean) = builder.addBoolean(130, SUNGLINT_PRESENT, false)
+        fun addSUNGLINT_PERCENT(builder: FlatBufferBuilder, SUNGLINT_PERCENT: Float) = builder.addFloat(131, SUNGLINT_PERCENT, 0.0)
+        fun addSNOW_ICE_COVER_PERCENT(builder: FlatBufferBuilder, SNOW_ICE_COVER_PERCENT: Float) = builder.addFloat(132, SNOW_ICE_COVER_PERCENT, 0.0)
+        fun addVALID_DATA_AREA_KM2(builder: FlatBufferBuilder, VALID_DATA_AREA_KM2: Float) = builder.addFloat(133, VALID_DATA_AREA_KM2, 0.0)
         fun endEOO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
