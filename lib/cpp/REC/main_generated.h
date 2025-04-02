@@ -55,73 +55,73 @@ struct RECCOLLECTIONBuilder;
 
 enum RecordType : uint8_t {
   RecordType_NONE = 0,
-  RecordType_CRM = 1,
-  RecordType_OMM = 2,
-  RecordType_PRG = 3,
-  RecordType_OSM = 4,
-  RecordType_EPM = 5,
-  RecordType_MPE = 6,
-  RecordType_EME = 7,
-  RecordType_OEM = 8,
-  RecordType_VCM = 9,
-  RecordType_CDM = 10,
-  RecordType_IDM = 11,
-  RecordType_SCM = 12,
-  RecordType_PNM = 13,
-  RecordType_CSM = 14,
-  RecordType_HYP = 15,
-  RecordType_LCC = 16,
-  RecordType_ROC = 17,
-  RecordType_EOP = 18,
-  RecordType_CAT = 19,
-  RecordType_OCM = 20,
-  RecordType_CTR = 21,
-  RecordType_TIM = 22,
-  RecordType_MET = 23,
-  RecordType_PLD = 24,
-  RecordType_EOO = 25,
-  RecordType_SIT = 26,
-  RecordType_RFM = 27,
-  RecordType_BOV = 28,
-  RecordType_LDM = 29,
-  RecordType_TDM = 30,
+  RecordType_CAT = 1,
+  RecordType_VCM = 2,
+  RecordType_CDM = 3,
+  RecordType_IDM = 4,
+  RecordType_PLD = 5,
+  RecordType_BOV = 6,
+  RecordType_EPM = 7,
+  RecordType_OSM = 8,
+  RecordType_PRG = 9,
+  RecordType_CTR = 10,
+  RecordType_SIT = 11,
+  RecordType_CRM = 12,
+  RecordType_EOP = 13,
+  RecordType_MET = 14,
+  RecordType_OEM = 15,
+  RecordType_HYP = 16,
+  RecordType_TIM = 17,
+  RecordType_ROC = 18,
+  RecordType_EME = 19,
+  RecordType_RFM = 20,
+  RecordType_OMM = 21,
+  RecordType_CSM = 22,
+  RecordType_LCC = 23,
+  RecordType_MPE = 24,
+  RecordType_LDM = 25,
+  RecordType_SCM = 26,
+  RecordType_EOO = 27,
+  RecordType_TDM = 28,
+  RecordType_OCM = 29,
+  RecordType_PNM = 30,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_TDM
+  RecordType_MAX = RecordType_PNM
 };
 
 inline const RecordType (&EnumValuesRecordType())[31] {
   static const RecordType values[] = {
     RecordType_NONE,
-    RecordType_CRM,
-    RecordType_OMM,
-    RecordType_PRG,
-    RecordType_OSM,
-    RecordType_EPM,
-    RecordType_MPE,
-    RecordType_EME,
-    RecordType_OEM,
+    RecordType_CAT,
     RecordType_VCM,
     RecordType_CDM,
     RecordType_IDM,
-    RecordType_SCM,
-    RecordType_PNM,
-    RecordType_CSM,
-    RecordType_HYP,
-    RecordType_LCC,
-    RecordType_ROC,
-    RecordType_EOP,
-    RecordType_CAT,
-    RecordType_OCM,
-    RecordType_CTR,
-    RecordType_TIM,
-    RecordType_MET,
     RecordType_PLD,
-    RecordType_EOO,
-    RecordType_SIT,
-    RecordType_RFM,
     RecordType_BOV,
+    RecordType_EPM,
+    RecordType_OSM,
+    RecordType_PRG,
+    RecordType_CTR,
+    RecordType_SIT,
+    RecordType_CRM,
+    RecordType_EOP,
+    RecordType_MET,
+    RecordType_OEM,
+    RecordType_HYP,
+    RecordType_TIM,
+    RecordType_ROC,
+    RecordType_EME,
+    RecordType_RFM,
+    RecordType_OMM,
+    RecordType_CSM,
+    RecordType_LCC,
+    RecordType_MPE,
     RecordType_LDM,
-    RecordType_TDM
+    RecordType_SCM,
+    RecordType_EOO,
+    RecordType_TDM,
+    RecordType_OCM,
+    RecordType_PNM
   };
   return values;
 }
@@ -129,43 +129,43 @@ inline const RecordType (&EnumValuesRecordType())[31] {
 inline const char * const *EnumNamesRecordType() {
   static const char * const names[32] = {
     "NONE",
-    "CRM",
-    "OMM",
-    "PRG",
-    "OSM",
-    "EPM",
-    "MPE",
-    "EME",
-    "OEM",
+    "CAT",
     "VCM",
     "CDM",
     "IDM",
-    "SCM",
-    "PNM",
-    "CSM",
-    "HYP",
-    "LCC",
-    "ROC",
-    "EOP",
-    "CAT",
-    "OCM",
-    "CTR",
-    "TIM",
-    "MET",
     "PLD",
-    "EOO",
-    "SIT",
-    "RFM",
     "BOV",
+    "EPM",
+    "OSM",
+    "PRG",
+    "CTR",
+    "SIT",
+    "CRM",
+    "EOP",
+    "MET",
+    "OEM",
+    "HYP",
+    "TIM",
+    "ROC",
+    "EME",
+    "RFM",
+    "OMM",
+    "CSM",
+    "LCC",
+    "MPE",
     "LDM",
+    "SCM",
+    "EOO",
     "TDM",
+    "OCM",
+    "PNM",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_TDM)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_PNM)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -174,36 +174,8 @@ template<typename T> struct RecordTypeTraits {
   static const RecordType enum_value = RecordType_NONE;
 };
 
-template<> struct RecordTypeTraits<CRM> {
-  static const RecordType enum_value = RecordType_CRM;
-};
-
-template<> struct RecordTypeTraits<OMM> {
-  static const RecordType enum_value = RecordType_OMM;
-};
-
-template<> struct RecordTypeTraits<PRG> {
-  static const RecordType enum_value = RecordType_PRG;
-};
-
-template<> struct RecordTypeTraits<OSM> {
-  static const RecordType enum_value = RecordType_OSM;
-};
-
-template<> struct RecordTypeTraits<EPM> {
-  static const RecordType enum_value = RecordType_EPM;
-};
-
-template<> struct RecordTypeTraits<MPE> {
-  static const RecordType enum_value = RecordType_MPE;
-};
-
-template<> struct RecordTypeTraits<EME> {
-  static const RecordType enum_value = RecordType_EME;
-};
-
-template<> struct RecordTypeTraits<OEM> {
-  static const RecordType enum_value = RecordType_OEM;
+template<> struct RecordTypeTraits<CAT> {
+  static const RecordType enum_value = RecordType_CAT;
 };
 
 template<> struct RecordTypeTraits<VCM> {
@@ -218,80 +190,108 @@ template<> struct RecordTypeTraits<IDM> {
   static const RecordType enum_value = RecordType_IDM;
 };
 
-template<> struct RecordTypeTraits<SCM> {
-  static const RecordType enum_value = RecordType_SCM;
-};
-
-template<> struct RecordTypeTraits<PNM> {
-  static const RecordType enum_value = RecordType_PNM;
-};
-
-template<> struct RecordTypeTraits<CSM> {
-  static const RecordType enum_value = RecordType_CSM;
-};
-
-template<> struct RecordTypeTraits<HYP> {
-  static const RecordType enum_value = RecordType_HYP;
-};
-
-template<> struct RecordTypeTraits<LCC> {
-  static const RecordType enum_value = RecordType_LCC;
-};
-
-template<> struct RecordTypeTraits<ROC> {
-  static const RecordType enum_value = RecordType_ROC;
-};
-
-template<> struct RecordTypeTraits<EOP> {
-  static const RecordType enum_value = RecordType_EOP;
-};
-
-template<> struct RecordTypeTraits<CAT> {
-  static const RecordType enum_value = RecordType_CAT;
-};
-
-template<> struct RecordTypeTraits<OCM> {
-  static const RecordType enum_value = RecordType_OCM;
-};
-
-template<> struct RecordTypeTraits<CTR> {
-  static const RecordType enum_value = RecordType_CTR;
-};
-
-template<> struct RecordTypeTraits<TIM> {
-  static const RecordType enum_value = RecordType_TIM;
-};
-
-template<> struct RecordTypeTraits<MET> {
-  static const RecordType enum_value = RecordType_MET;
-};
-
 template<> struct RecordTypeTraits<PLD> {
   static const RecordType enum_value = RecordType_PLD;
-};
-
-template<> struct RecordTypeTraits<EOO> {
-  static const RecordType enum_value = RecordType_EOO;
-};
-
-template<> struct RecordTypeTraits<SIT> {
-  static const RecordType enum_value = RecordType_SIT;
-};
-
-template<> struct RecordTypeTraits<RFM> {
-  static const RecordType enum_value = RecordType_RFM;
 };
 
 template<> struct RecordTypeTraits<BOV> {
   static const RecordType enum_value = RecordType_BOV;
 };
 
+template<> struct RecordTypeTraits<EPM> {
+  static const RecordType enum_value = RecordType_EPM;
+};
+
+template<> struct RecordTypeTraits<OSM> {
+  static const RecordType enum_value = RecordType_OSM;
+};
+
+template<> struct RecordTypeTraits<PRG> {
+  static const RecordType enum_value = RecordType_PRG;
+};
+
+template<> struct RecordTypeTraits<CTR> {
+  static const RecordType enum_value = RecordType_CTR;
+};
+
+template<> struct RecordTypeTraits<SIT> {
+  static const RecordType enum_value = RecordType_SIT;
+};
+
+template<> struct RecordTypeTraits<CRM> {
+  static const RecordType enum_value = RecordType_CRM;
+};
+
+template<> struct RecordTypeTraits<EOP> {
+  static const RecordType enum_value = RecordType_EOP;
+};
+
+template<> struct RecordTypeTraits<MET> {
+  static const RecordType enum_value = RecordType_MET;
+};
+
+template<> struct RecordTypeTraits<OEM> {
+  static const RecordType enum_value = RecordType_OEM;
+};
+
+template<> struct RecordTypeTraits<HYP> {
+  static const RecordType enum_value = RecordType_HYP;
+};
+
+template<> struct RecordTypeTraits<TIM> {
+  static const RecordType enum_value = RecordType_TIM;
+};
+
+template<> struct RecordTypeTraits<ROC> {
+  static const RecordType enum_value = RecordType_ROC;
+};
+
+template<> struct RecordTypeTraits<EME> {
+  static const RecordType enum_value = RecordType_EME;
+};
+
+template<> struct RecordTypeTraits<RFM> {
+  static const RecordType enum_value = RecordType_RFM;
+};
+
+template<> struct RecordTypeTraits<OMM> {
+  static const RecordType enum_value = RecordType_OMM;
+};
+
+template<> struct RecordTypeTraits<CSM> {
+  static const RecordType enum_value = RecordType_CSM;
+};
+
+template<> struct RecordTypeTraits<LCC> {
+  static const RecordType enum_value = RecordType_LCC;
+};
+
+template<> struct RecordTypeTraits<MPE> {
+  static const RecordType enum_value = RecordType_MPE;
+};
+
 template<> struct RecordTypeTraits<LDM> {
   static const RecordType enum_value = RecordType_LDM;
 };
 
+template<> struct RecordTypeTraits<SCM> {
+  static const RecordType enum_value = RecordType_SCM;
+};
+
+template<> struct RecordTypeTraits<EOO> {
+  static const RecordType enum_value = RecordType_EOO;
+};
+
 template<> struct RecordTypeTraits<TDM> {
   static const RecordType enum_value = RecordType_TDM;
+};
+
+template<> struct RecordTypeTraits<OCM> {
+  static const RecordType enum_value = RecordType_OCM;
+};
+
+template<> struct RecordTypeTraits<PNM> {
+  static const RecordType enum_value = RecordType_PNM;
 };
 
 bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj, RecordType type);
@@ -310,29 +310,8 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const void *>(VT_VALUE);
   }
   template<typename T> const T *value_as() const;
-  const CRM *value_as_CRM() const {
-    return value_type() == RecordType_CRM ? static_cast<const CRM *>(value()) : nullptr;
-  }
-  const OMM *value_as_OMM() const {
-    return value_type() == RecordType_OMM ? static_cast<const OMM *>(value()) : nullptr;
-  }
-  const PRG *value_as_PRG() const {
-    return value_type() == RecordType_PRG ? static_cast<const PRG *>(value()) : nullptr;
-  }
-  const OSM *value_as_OSM() const {
-    return value_type() == RecordType_OSM ? static_cast<const OSM *>(value()) : nullptr;
-  }
-  const EPM *value_as_EPM() const {
-    return value_type() == RecordType_EPM ? static_cast<const EPM *>(value()) : nullptr;
-  }
-  const MPE *value_as_MPE() const {
-    return value_type() == RecordType_MPE ? static_cast<const MPE *>(value()) : nullptr;
-  }
-  const EME *value_as_EME() const {
-    return value_type() == RecordType_EME ? static_cast<const EME *>(value()) : nullptr;
-  }
-  const OEM *value_as_OEM() const {
-    return value_type() == RecordType_OEM ? static_cast<const OEM *>(value()) : nullptr;
+  const CAT *value_as_CAT() const {
+    return value_type() == RecordType_CAT ? static_cast<const CAT *>(value()) : nullptr;
   }
   const VCM *value_as_VCM() const {
     return value_type() == RecordType_VCM ? static_cast<const VCM *>(value()) : nullptr;
@@ -343,62 +322,83 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const IDM *value_as_IDM() const {
     return value_type() == RecordType_IDM ? static_cast<const IDM *>(value()) : nullptr;
   }
-  const SCM *value_as_SCM() const {
-    return value_type() == RecordType_SCM ? static_cast<const SCM *>(value()) : nullptr;
-  }
-  const PNM *value_as_PNM() const {
-    return value_type() == RecordType_PNM ? static_cast<const PNM *>(value()) : nullptr;
-  }
-  const CSM *value_as_CSM() const {
-    return value_type() == RecordType_CSM ? static_cast<const CSM *>(value()) : nullptr;
-  }
-  const HYP *value_as_HYP() const {
-    return value_type() == RecordType_HYP ? static_cast<const HYP *>(value()) : nullptr;
-  }
-  const LCC *value_as_LCC() const {
-    return value_type() == RecordType_LCC ? static_cast<const LCC *>(value()) : nullptr;
-  }
-  const ROC *value_as_ROC() const {
-    return value_type() == RecordType_ROC ? static_cast<const ROC *>(value()) : nullptr;
-  }
-  const EOP *value_as_EOP() const {
-    return value_type() == RecordType_EOP ? static_cast<const EOP *>(value()) : nullptr;
-  }
-  const CAT *value_as_CAT() const {
-    return value_type() == RecordType_CAT ? static_cast<const CAT *>(value()) : nullptr;
-  }
-  const OCM *value_as_OCM() const {
-    return value_type() == RecordType_OCM ? static_cast<const OCM *>(value()) : nullptr;
-  }
-  const CTR *value_as_CTR() const {
-    return value_type() == RecordType_CTR ? static_cast<const CTR *>(value()) : nullptr;
-  }
-  const TIM *value_as_TIM() const {
-    return value_type() == RecordType_TIM ? static_cast<const TIM *>(value()) : nullptr;
-  }
-  const MET *value_as_MET() const {
-    return value_type() == RecordType_MET ? static_cast<const MET *>(value()) : nullptr;
-  }
   const PLD *value_as_PLD() const {
     return value_type() == RecordType_PLD ? static_cast<const PLD *>(value()) : nullptr;
-  }
-  const EOO *value_as_EOO() const {
-    return value_type() == RecordType_EOO ? static_cast<const EOO *>(value()) : nullptr;
-  }
-  const SIT *value_as_SIT() const {
-    return value_type() == RecordType_SIT ? static_cast<const SIT *>(value()) : nullptr;
-  }
-  const RFM *value_as_RFM() const {
-    return value_type() == RecordType_RFM ? static_cast<const RFM *>(value()) : nullptr;
   }
   const BOV *value_as_BOV() const {
     return value_type() == RecordType_BOV ? static_cast<const BOV *>(value()) : nullptr;
   }
+  const EPM *value_as_EPM() const {
+    return value_type() == RecordType_EPM ? static_cast<const EPM *>(value()) : nullptr;
+  }
+  const OSM *value_as_OSM() const {
+    return value_type() == RecordType_OSM ? static_cast<const OSM *>(value()) : nullptr;
+  }
+  const PRG *value_as_PRG() const {
+    return value_type() == RecordType_PRG ? static_cast<const PRG *>(value()) : nullptr;
+  }
+  const CTR *value_as_CTR() const {
+    return value_type() == RecordType_CTR ? static_cast<const CTR *>(value()) : nullptr;
+  }
+  const SIT *value_as_SIT() const {
+    return value_type() == RecordType_SIT ? static_cast<const SIT *>(value()) : nullptr;
+  }
+  const CRM *value_as_CRM() const {
+    return value_type() == RecordType_CRM ? static_cast<const CRM *>(value()) : nullptr;
+  }
+  const EOP *value_as_EOP() const {
+    return value_type() == RecordType_EOP ? static_cast<const EOP *>(value()) : nullptr;
+  }
+  const MET *value_as_MET() const {
+    return value_type() == RecordType_MET ? static_cast<const MET *>(value()) : nullptr;
+  }
+  const OEM *value_as_OEM() const {
+    return value_type() == RecordType_OEM ? static_cast<const OEM *>(value()) : nullptr;
+  }
+  const HYP *value_as_HYP() const {
+    return value_type() == RecordType_HYP ? static_cast<const HYP *>(value()) : nullptr;
+  }
+  const TIM *value_as_TIM() const {
+    return value_type() == RecordType_TIM ? static_cast<const TIM *>(value()) : nullptr;
+  }
+  const ROC *value_as_ROC() const {
+    return value_type() == RecordType_ROC ? static_cast<const ROC *>(value()) : nullptr;
+  }
+  const EME *value_as_EME() const {
+    return value_type() == RecordType_EME ? static_cast<const EME *>(value()) : nullptr;
+  }
+  const RFM *value_as_RFM() const {
+    return value_type() == RecordType_RFM ? static_cast<const RFM *>(value()) : nullptr;
+  }
+  const OMM *value_as_OMM() const {
+    return value_type() == RecordType_OMM ? static_cast<const OMM *>(value()) : nullptr;
+  }
+  const CSM *value_as_CSM() const {
+    return value_type() == RecordType_CSM ? static_cast<const CSM *>(value()) : nullptr;
+  }
+  const LCC *value_as_LCC() const {
+    return value_type() == RecordType_LCC ? static_cast<const LCC *>(value()) : nullptr;
+  }
+  const MPE *value_as_MPE() const {
+    return value_type() == RecordType_MPE ? static_cast<const MPE *>(value()) : nullptr;
+  }
   const LDM *value_as_LDM() const {
     return value_type() == RecordType_LDM ? static_cast<const LDM *>(value()) : nullptr;
   }
+  const SCM *value_as_SCM() const {
+    return value_type() == RecordType_SCM ? static_cast<const SCM *>(value()) : nullptr;
+  }
+  const EOO *value_as_EOO() const {
+    return value_type() == RecordType_EOO ? static_cast<const EOO *>(value()) : nullptr;
+  }
   const TDM *value_as_TDM() const {
     return value_type() == RecordType_TDM ? static_cast<const TDM *>(value()) : nullptr;
+  }
+  const OCM *value_as_OCM() const {
+    return value_type() == RecordType_OCM ? static_cast<const OCM *>(value()) : nullptr;
+  }
+  const PNM *value_as_PNM() const {
+    return value_type() == RecordType_PNM ? static_cast<const PNM *>(value()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -409,36 +409,8 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-template<> inline const CRM *Record::value_as<CRM>() const {
-  return value_as_CRM();
-}
-
-template<> inline const OMM *Record::value_as<OMM>() const {
-  return value_as_OMM();
-}
-
-template<> inline const PRG *Record::value_as<PRG>() const {
-  return value_as_PRG();
-}
-
-template<> inline const OSM *Record::value_as<OSM>() const {
-  return value_as_OSM();
-}
-
-template<> inline const EPM *Record::value_as<EPM>() const {
-  return value_as_EPM();
-}
-
-template<> inline const MPE *Record::value_as<MPE>() const {
-  return value_as_MPE();
-}
-
-template<> inline const EME *Record::value_as<EME>() const {
-  return value_as_EME();
-}
-
-template<> inline const OEM *Record::value_as<OEM>() const {
-  return value_as_OEM();
+template<> inline const CAT *Record::value_as<CAT>() const {
+  return value_as_CAT();
 }
 
 template<> inline const VCM *Record::value_as<VCM>() const {
@@ -453,80 +425,108 @@ template<> inline const IDM *Record::value_as<IDM>() const {
   return value_as_IDM();
 }
 
-template<> inline const SCM *Record::value_as<SCM>() const {
-  return value_as_SCM();
-}
-
-template<> inline const PNM *Record::value_as<PNM>() const {
-  return value_as_PNM();
-}
-
-template<> inline const CSM *Record::value_as<CSM>() const {
-  return value_as_CSM();
-}
-
-template<> inline const HYP *Record::value_as<HYP>() const {
-  return value_as_HYP();
-}
-
-template<> inline const LCC *Record::value_as<LCC>() const {
-  return value_as_LCC();
-}
-
-template<> inline const ROC *Record::value_as<ROC>() const {
-  return value_as_ROC();
-}
-
-template<> inline const EOP *Record::value_as<EOP>() const {
-  return value_as_EOP();
-}
-
-template<> inline const CAT *Record::value_as<CAT>() const {
-  return value_as_CAT();
-}
-
-template<> inline const OCM *Record::value_as<OCM>() const {
-  return value_as_OCM();
-}
-
-template<> inline const CTR *Record::value_as<CTR>() const {
-  return value_as_CTR();
-}
-
-template<> inline const TIM *Record::value_as<TIM>() const {
-  return value_as_TIM();
-}
-
-template<> inline const MET *Record::value_as<MET>() const {
-  return value_as_MET();
-}
-
 template<> inline const PLD *Record::value_as<PLD>() const {
   return value_as_PLD();
-}
-
-template<> inline const EOO *Record::value_as<EOO>() const {
-  return value_as_EOO();
-}
-
-template<> inline const SIT *Record::value_as<SIT>() const {
-  return value_as_SIT();
-}
-
-template<> inline const RFM *Record::value_as<RFM>() const {
-  return value_as_RFM();
 }
 
 template<> inline const BOV *Record::value_as<BOV>() const {
   return value_as_BOV();
 }
 
+template<> inline const EPM *Record::value_as<EPM>() const {
+  return value_as_EPM();
+}
+
+template<> inline const OSM *Record::value_as<OSM>() const {
+  return value_as_OSM();
+}
+
+template<> inline const PRG *Record::value_as<PRG>() const {
+  return value_as_PRG();
+}
+
+template<> inline const CTR *Record::value_as<CTR>() const {
+  return value_as_CTR();
+}
+
+template<> inline const SIT *Record::value_as<SIT>() const {
+  return value_as_SIT();
+}
+
+template<> inline const CRM *Record::value_as<CRM>() const {
+  return value_as_CRM();
+}
+
+template<> inline const EOP *Record::value_as<EOP>() const {
+  return value_as_EOP();
+}
+
+template<> inline const MET *Record::value_as<MET>() const {
+  return value_as_MET();
+}
+
+template<> inline const OEM *Record::value_as<OEM>() const {
+  return value_as_OEM();
+}
+
+template<> inline const HYP *Record::value_as<HYP>() const {
+  return value_as_HYP();
+}
+
+template<> inline const TIM *Record::value_as<TIM>() const {
+  return value_as_TIM();
+}
+
+template<> inline const ROC *Record::value_as<ROC>() const {
+  return value_as_ROC();
+}
+
+template<> inline const EME *Record::value_as<EME>() const {
+  return value_as_EME();
+}
+
+template<> inline const RFM *Record::value_as<RFM>() const {
+  return value_as_RFM();
+}
+
+template<> inline const OMM *Record::value_as<OMM>() const {
+  return value_as_OMM();
+}
+
+template<> inline const CSM *Record::value_as<CSM>() const {
+  return value_as_CSM();
+}
+
+template<> inline const LCC *Record::value_as<LCC>() const {
+  return value_as_LCC();
+}
+
+template<> inline const MPE *Record::value_as<MPE>() const {
+  return value_as_MPE();
+}
+
 template<> inline const LDM *Record::value_as<LDM>() const {
   return value_as_LDM();
 }
 
+template<> inline const SCM *Record::value_as<SCM>() const {
+  return value_as_SCM();
+}
+
+template<> inline const EOO *Record::value_as<EOO>() const {
+  return value_as_EOO();
+}
+
 template<> inline const TDM *Record::value_as<TDM>() const {
   return value_as_TDM();
+}
+
+template<> inline const OCM *Record::value_as<OCM>() const {
+  return value_as_OCM();
+}
+
+template<> inline const PNM *Record::value_as<PNM>() const {
+  return value_as_PNM();
 }
 
 struct RecordBuilder {
@@ -698,36 +698,8 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     case RecordType_NONE: {
       return true;
     }
-    case RecordType_CRM: {
-      auto ptr = reinterpret_cast<const CRM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_OMM: {
-      auto ptr = reinterpret_cast<const OMM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_PRG: {
-      auto ptr = reinterpret_cast<const PRG *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_OSM: {
-      auto ptr = reinterpret_cast<const OSM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_EPM: {
-      auto ptr = reinterpret_cast<const EPM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_MPE: {
-      auto ptr = reinterpret_cast<const MPE *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_EME: {
-      auto ptr = reinterpret_cast<const EME *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_OEM: {
-      auto ptr = reinterpret_cast<const OEM *>(obj);
+    case RecordType_CAT: {
+      auto ptr = reinterpret_cast<const CAT *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_VCM: {
@@ -742,80 +714,108 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
       auto ptr = reinterpret_cast<const IDM *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case RecordType_SCM: {
-      auto ptr = reinterpret_cast<const SCM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_PNM: {
-      auto ptr = reinterpret_cast<const PNM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_CSM: {
-      auto ptr = reinterpret_cast<const CSM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_HYP: {
-      auto ptr = reinterpret_cast<const HYP *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_LCC: {
-      auto ptr = reinterpret_cast<const LCC *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_ROC: {
-      auto ptr = reinterpret_cast<const ROC *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_EOP: {
-      auto ptr = reinterpret_cast<const EOP *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_CAT: {
-      auto ptr = reinterpret_cast<const CAT *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_OCM: {
-      auto ptr = reinterpret_cast<const OCM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_CTR: {
-      auto ptr = reinterpret_cast<const CTR *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_TIM: {
-      auto ptr = reinterpret_cast<const TIM *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_MET: {
-      auto ptr = reinterpret_cast<const MET *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
     case RecordType_PLD: {
       auto ptr = reinterpret_cast<const PLD *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_EOO: {
-      auto ptr = reinterpret_cast<const EOO *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_SIT: {
-      auto ptr = reinterpret_cast<const SIT *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case RecordType_RFM: {
-      auto ptr = reinterpret_cast<const RFM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_BOV: {
       auto ptr = reinterpret_cast<const BOV *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case RecordType_EPM: {
+      auto ptr = reinterpret_cast<const EPM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_OSM: {
+      auto ptr = reinterpret_cast<const OSM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PRG: {
+      auto ptr = reinterpret_cast<const PRG *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_CTR: {
+      auto ptr = reinterpret_cast<const CTR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_SIT: {
+      auto ptr = reinterpret_cast<const SIT *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_CRM: {
+      auto ptr = reinterpret_cast<const CRM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_EOP: {
+      auto ptr = reinterpret_cast<const EOP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_MET: {
+      auto ptr = reinterpret_cast<const MET *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_OEM: {
+      auto ptr = reinterpret_cast<const OEM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_HYP: {
+      auto ptr = reinterpret_cast<const HYP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TIM: {
+      auto ptr = reinterpret_cast<const TIM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ROC: {
+      auto ptr = reinterpret_cast<const ROC *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_EME: {
+      auto ptr = reinterpret_cast<const EME *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_RFM: {
+      auto ptr = reinterpret_cast<const RFM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_OMM: {
+      auto ptr = reinterpret_cast<const OMM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_CSM: {
+      auto ptr = reinterpret_cast<const CSM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_LCC: {
+      auto ptr = reinterpret_cast<const LCC *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_MPE: {
+      auto ptr = reinterpret_cast<const MPE *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_LDM: {
       auto ptr = reinterpret_cast<const LDM *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case RecordType_SCM: {
+      auto ptr = reinterpret_cast<const SCM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_EOO: {
+      auto ptr = reinterpret_cast<const EOO *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_TDM: {
       auto ptr = reinterpret_cast<const TDM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_OCM: {
+      auto ptr = reinterpret_cast<const OCM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PNM: {
+      auto ptr = reinterpret_cast<const PNM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

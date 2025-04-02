@@ -1,29 +1,32 @@
 import os
 
-
 def update_go_package_names(parent_dir):
     # Loop through the subdirectories in ./lib/go
-    for subdir in next(os.walk(parent_dir))[
-        1
-    ]:  # `[1]` to get the list of subdirectories
+    for subdir in next(os.walk(parent_dir))[1]:
         subdir_path = os.path.join(parent_dir, subdir)
-        # Check if subdir name is 3 letters long as expected for package names
         for file in os.listdir(subdir_path):
-            # Check if the current file is a Go file
             if file.endswith(".go"):
                 file_path = os.path.join(subdir_path, file)
-                with open(file_path, "r") as file:
-                    lines = file.readlines()
-                with open(file_path, "w") as file:
+                with open(file_path, "r") as f:
+                    lines = f.readlines()
+                with open(file_path, "w") as f:
                     for line in lines:
-                        # Replace package declaration with the new one based on subdir name
                         if line.startswith("package "):
                             line = f"package {subdir}\n"
-                        file.write(line)
+                        f.write(line)
 
+def create_go_mod(lib_go_path):
+    go_mod_content = """module github.com/DigitalArsenal/spacedatastandards.org/lib/go
 
+go 1.21
 
-# Assuming the script is located at the root where `lib` directory is present.
+require github.com/google/flatbuffers/go v23.3.3+incompatible
+"""
+    go_mod_path = os.path.join(lib_go_path, "go.mod")
+    with open(go_mod_path, "w") as f:
+        f.write(go_mod_content)
+
 if __name__ == "__main__":
     lib_go_path = "./lib/go"
     update_go_package_names(lib_go_path)
+    create_go_mod(lib_go_path)

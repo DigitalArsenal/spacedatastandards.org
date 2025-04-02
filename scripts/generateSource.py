@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 import subprocess
 import json
@@ -67,7 +68,8 @@ for subdir in os.listdir(SRC_DIR):
             os.makedirs(OUTPUT_PATH, exist_ok=True)
 
             # Prepare the command
-            flatc_command = os.path.join(FLATC_DIR, "flatc")
+            flatc_executable = "flatc_osx" if platform.system() == "Darwin" else "flatc"
+            flatc_command = os.path.join(FLATC_DIR, flatc_executable)
             command = [
                 flatc_command,
                 "--preserve-case",

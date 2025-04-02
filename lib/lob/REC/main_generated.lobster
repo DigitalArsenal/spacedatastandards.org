@@ -3,36 +3,36 @@ import flatbuffers
 
 enum RecordType:
     RecordType_NONE = 0
-    RecordType_CRM = 1
-    RecordType_OMM = 2
-    RecordType_PRG = 3
-    RecordType_OSM = 4
-    RecordType_EPM = 5
-    RecordType_MPE = 6
-    RecordType_EME = 7
-    RecordType_OEM = 8
-    RecordType_VCM = 9
-    RecordType_CDM = 10
-    RecordType_IDM = 11
-    RecordType_SCM = 12
-    RecordType_PNM = 13
-    RecordType_CSM = 14
-    RecordType_HYP = 15
-    RecordType_LCC = 16
-    RecordType_ROC = 17
-    RecordType_EOP = 18
-    RecordType_CAT = 19
-    RecordType_OCM = 20
-    RecordType_CTR = 21
-    RecordType_TIM = 22
-    RecordType_MET = 23
-    RecordType_PLD = 24
-    RecordType_EOO = 25
-    RecordType_SIT = 26
-    RecordType_RFM = 27
-    RecordType_BOV = 28
-    RecordType_LDM = 29
-    RecordType_TDM = 30
+    RecordType_CAT = 1
+    RecordType_VCM = 2
+    RecordType_CDM = 3
+    RecordType_IDM = 4
+    RecordType_PLD = 5
+    RecordType_BOV = 6
+    RecordType_EPM = 7
+    RecordType_OSM = 8
+    RecordType_PRG = 9
+    RecordType_CTR = 10
+    RecordType_SIT = 11
+    RecordType_CRM = 12
+    RecordType_EOP = 13
+    RecordType_MET = 14
+    RecordType_OEM = 15
+    RecordType_HYP = 16
+    RecordType_TIM = 17
+    RecordType_ROC = 18
+    RecordType_EME = 19
+    RecordType_RFM = 20
+    RecordType_OMM = 21
+    RecordType_CSM = 22
+    RecordType_LCC = 23
+    RecordType_MPE = 24
+    RecordType_LDM = 25
+    RecordType_SCM = 26
+    RecordType_EOO = 27
+    RecordType_TDM = 28
+    RecordType_OCM = 29
+    RecordType_PNM = 30
 
 class Record
 
@@ -43,66 +43,66 @@ class RECCOLLECTION
 class Record : flatbuffers.handle
     def value_type() -> RecordType:
         return RecordType(flatbuffers.field_uint8(buf_, pos_, 4, 0))
-    def value_as_CRM():
-        return CRM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_OMM():
-        return OMM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_PRG():
-        return PRG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_OSM():
-        return OSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_EPM():
-        return EPM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_MPE():
-        return MPE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_EME():
-        return EME { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_OEM():
-        return OEM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CAT():
+        return CAT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_VCM():
         return VCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CDM():
         return CDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_IDM():
         return IDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_SCM():
-        return SCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_PNM():
-        return PNM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_CSM():
-        return CSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_HYP():
-        return HYP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_LCC():
-        return LCC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_ROC():
-        return ROC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_EOP():
-        return EOP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_CAT():
-        return CAT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_OCM():
-        return OCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_CTR():
-        return CTR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_TIM():
-        return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_MET():
-        return MET { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PLD():
         return PLD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_EOO():
-        return EOO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_SIT():
-        return SIT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def value_as_RFM():
-        return RFM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_BOV():
         return BOV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_EPM():
+        return EPM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OSM():
+        return OSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_PRG():
+        return PRG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CTR():
+        return CTR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SIT():
+        return SIT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CRM():
+        return CRM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_EOP():
+        return EOP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MET():
+        return MET { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OEM():
+        return OEM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_HYP():
+        return HYP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TIM():
+        return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_ROC():
+        return ROC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_EME():
+        return EME { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RFM():
+        return RFM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OMM():
+        return OMM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CSM():
+        return CSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_LCC():
+        return LCC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MPE():
+        return MPE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_LDM():
         return LDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SCM():
+        return SCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_EOO():
+        return EOO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TDM():
         return TDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OCM():
+        return OCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_PNM():
+        return PNM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
 
 def GetRootAsRecord(buf:string): return Record { buf, flatbuffers.indirect(buf, 0) }
 
