@@ -34,9 +34,5 @@ table EME {
   ENCRYPTION_ALGORITHM_PARAMETERS: string;
 }
 
-table EMECOLLECTION {
-  RECORDS: [EME];
-}
-
 root_type EME;
 file_identifier "$EME";

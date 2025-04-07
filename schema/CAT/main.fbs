@@ -115,9 +115,5 @@ table CAT {
   PAYLOADS: [PLD];
 }
 
-table CATCOLLECTION {
-  RECORDS: [CAT];
-}
-
 root_type CAT;
 file_identifier "$CAT";

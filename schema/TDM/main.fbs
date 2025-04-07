@@ -187,9 +187,5 @@ table TDM {
   CLOCK_DRIFT: [double];
 }
 
-table TDMCOLLECTION {
-  RECORDS: [TDM];
-}
-
 root_type TDM;
 file_identifier "$TDM";

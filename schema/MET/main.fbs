@@ -16,9 +16,5 @@ enum meanElementTheory : byte {
 table MET {
   MEAN_ELEMENT_THEORY:meanElementTheory;
 }
-table METCOLLECTION {
-  RECORDS: [MET];
-}
-
 root_type MET;
 file_identifier "$MET";

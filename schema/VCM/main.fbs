@@ -253,9 +253,4 @@ table VCM {
   USER_DEFINED_MICROSECONDS: double;
 }
 
-/// Collection of VCM records
-table VCM_COLLECTION {
-  RECORDS: [VCM];
-}
-
 root_type VCM;

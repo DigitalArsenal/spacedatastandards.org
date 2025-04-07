@@ -25,9 +25,5 @@ table USR {
   MESSAGE_TYPES: [string];
 }
 
-table PRGCOLLECTION {
-  RECORDS: [PRG];
-}
-
 root_type PRG;
 file_identifier "$PRG";

@@ -33,9 +33,5 @@ table MPE {
   MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
 }
 
-table MPECOLLECTION {
-  RECORDS: [MPE];
-}
-
 root_type MPE;
 file_identifier "$MPE";

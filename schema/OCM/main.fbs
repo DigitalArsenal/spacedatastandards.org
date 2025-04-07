@@ -330,10 +330,5 @@ table OCM {
   USER_DEFINED_PARAMETERS: [UserDefinedParameters];
 }
 
-table OCMCOLLECTION {
-  /// Collection of OCM records.
-  RECORDS: [OCM];
-}
-
 root_type OCM;
 file_identifier "$OCM";

@@ -246,9 +246,5 @@ table IDM {
   TASKABLE: bool;
 }
 
-table IDMCOLLECTION {
-  RECORDS: [IDM];
-}
-
 root_type IDM;
 file_identifier "$IDM";

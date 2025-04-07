@@ -187,10 +187,5 @@ table RFM {
   REFERENCE_FRAME: refFrame;
 }
 
-/// Collection of Reference Frame Messages
-table RFMCOLLECTION {
-  RECORDS: [RFM];
-}
-
 root_type RFM;
 file_identifier "$RFM";

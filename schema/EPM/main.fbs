@@ -74,10 +74,6 @@ table EPM {
   MULTIFORMAT_ADDRESS: [string];
 }
 
-table EPMCOLLECTION {
-  RECORDS: [EPM];
-}
-
 root_type EPM;
 
 file_identifier "$EPM";

@@ -260,9 +260,5 @@ enum legacyCountryCode : byte {
 table LCC {
   OWNER: legacyCountryCode;
 }
-table LCCCOLLECTION {
-  RECORDS: [LCC];
-}
-
 root_type LCC;
 file_identifier "$LCC";

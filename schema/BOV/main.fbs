@@ -20,9 +20,5 @@ table BOV {
   TIME_FROM_LAUNCH: double; // Seconds with appropriate precision
 }
 
-table BOVCOLLECTION {
-  RECORDS: [BOV];
-}
-
 root_type BOV;
 file_identifier "$BOV";

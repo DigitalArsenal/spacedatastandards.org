@@ -139,11 +139,5 @@ table OEM {
   EPHEMERIS_DATA_BLOCK:[ephemerisDataBlock];
 }
 
-/// Collection of OEM messages
-
-table OEMCOLLECTION {
-  RECORDS: [OEM];
-}
-
 root_type OEM;
 file_identifier "$OEM";

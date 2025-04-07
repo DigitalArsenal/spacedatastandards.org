@@ -23,9 +23,5 @@ table SCM {
 }
 
 /// Declaring the root type
-table SCMCOLLECTION {
-  RECORDS: [SCM];
-}
-
 root_type SCM;
 file_identifier "$SCM";

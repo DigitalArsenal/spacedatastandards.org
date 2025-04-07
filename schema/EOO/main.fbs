@@ -443,9 +443,5 @@ table EOO {
 
 }
 
-table EOOCOLLECTION {
-  RECORDS: [EOO];
-}
-
 root_type EOO;
 file_identifier "$EOO";

@@ -14,9 +14,5 @@ table PLD {
   INSTRUMENTS: [IDM]; // Vector of Instrument Data Messages
 }
 
-table PLDCOLLECTION {
-  RECORDS: [PLD];
-}
-
 root_type PLD;
 file_identifier "$PLD";

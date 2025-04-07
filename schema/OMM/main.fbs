@@ -160,9 +160,5 @@ table OMM {
   USER_DEFINED_MICROSECONDS: double;
 }
 
-table OMMCOLLECTION {
-  RECORDS: [OMM];
-}
-
 root_type OMM;
 file_identifier "$OMM";

@@ -26,9 +26,5 @@ table CSM {
 }
 
 
-table CSMCOLLECTION {
-  RECORDS: [CSM];
-}
-
 root_type CSM;
 file_identifier "$CSM";
