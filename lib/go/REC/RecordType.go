@@ -8,104 +8,104 @@ type RecordType byte
 
 const (
 	RecordTypeNONE RecordType = 0
-	RecordTypeCRM  RecordType = 1
-	RecordTypeOMM  RecordType = 2
-	RecordTypePRG  RecordType = 3
-	RecordTypeOSM  RecordType = 4
-	RecordTypeEPM  RecordType = 5
-	RecordTypeMPE  RecordType = 6
+	RecordTypeBOV  RecordType = 1
+	RecordTypeCAT  RecordType = 2
+	RecordTypeCDM  RecordType = 3
+	RecordTypeCRM  RecordType = 4
+	RecordTypeCSM  RecordType = 5
+	RecordTypeCTR  RecordType = 6
 	RecordTypeEME  RecordType = 7
-	RecordTypeOEM  RecordType = 8
-	RecordTypeVCM  RecordType = 9
-	RecordTypeCDM  RecordType = 10
-	RecordTypeIDM  RecordType = 11
-	RecordTypeSCM  RecordType = 12
-	RecordTypePNM  RecordType = 13
-	RecordTypeCSM  RecordType = 14
-	RecordTypeHYP  RecordType = 15
-	RecordTypeLCC  RecordType = 16
-	RecordTypeROC  RecordType = 17
-	RecordTypeEOP  RecordType = 18
-	RecordTypeCAT  RecordType = 19
-	RecordTypeOCM  RecordType = 20
-	RecordTypeCTR  RecordType = 21
-	RecordTypeTIM  RecordType = 22
-	RecordTypeMET  RecordType = 23
-	RecordTypePLD  RecordType = 24
-	RecordTypeEOO  RecordType = 25
-	RecordTypeSIT  RecordType = 26
-	RecordTypeRFM  RecordType = 27
-	RecordTypeBOV  RecordType = 28
-	RecordTypeLDM  RecordType = 29
-	RecordTypeTDM  RecordType = 30
+	RecordTypeEOO  RecordType = 8
+	RecordTypeEOP  RecordType = 9
+	RecordTypeEPM  RecordType = 10
+	RecordTypeHYP  RecordType = 11
+	RecordTypeIDM  RecordType = 12
+	RecordTypeLCC  RecordType = 13
+	RecordTypeLDM  RecordType = 14
+	RecordTypeMET  RecordType = 15
+	RecordTypeMPE  RecordType = 16
+	RecordTypeOCM  RecordType = 17
+	RecordTypeOEM  RecordType = 18
+	RecordTypeOMM  RecordType = 19
+	RecordTypeOSM  RecordType = 20
+	RecordTypePLD  RecordType = 21
+	RecordTypePNM  RecordType = 22
+	RecordTypePRG  RecordType = 23
+	RecordTypeRFM  RecordType = 24
+	RecordTypeROC  RecordType = 25
+	RecordTypeSCM  RecordType = 26
+	RecordTypeSIT  RecordType = 27
+	RecordTypeTDM  RecordType = 28
+	RecordTypeTIM  RecordType = 29
+	RecordTypeVCM  RecordType = 30
 )
 
 var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeNONE: "NONE",
-	RecordTypeCRM:  "CRM",
-	RecordTypeOMM:  "OMM",
-	RecordTypePRG:  "PRG",
-	RecordTypeOSM:  "OSM",
-	RecordTypeEPM:  "EPM",
-	RecordTypeMPE:  "MPE",
-	RecordTypeEME:  "EME",
-	RecordTypeOEM:  "OEM",
-	RecordTypeVCM:  "VCM",
-	RecordTypeCDM:  "CDM",
-	RecordTypeIDM:  "IDM",
-	RecordTypeSCM:  "SCM",
-	RecordTypePNM:  "PNM",
-	RecordTypeCSM:  "CSM",
-	RecordTypeHYP:  "HYP",
-	RecordTypeLCC:  "LCC",
-	RecordTypeROC:  "ROC",
-	RecordTypeEOP:  "EOP",
-	RecordTypeCAT:  "CAT",
-	RecordTypeOCM:  "OCM",
-	RecordTypeCTR:  "CTR",
-	RecordTypeTIM:  "TIM",
-	RecordTypeMET:  "MET",
-	RecordTypePLD:  "PLD",
-	RecordTypeEOO:  "EOO",
-	RecordTypeSIT:  "SIT",
-	RecordTypeRFM:  "RFM",
 	RecordTypeBOV:  "BOV",
+	RecordTypeCAT:  "CAT",
+	RecordTypeCDM:  "CDM",
+	RecordTypeCRM:  "CRM",
+	RecordTypeCSM:  "CSM",
+	RecordTypeCTR:  "CTR",
+	RecordTypeEME:  "EME",
+	RecordTypeEOO:  "EOO",
+	RecordTypeEOP:  "EOP",
+	RecordTypeEPM:  "EPM",
+	RecordTypeHYP:  "HYP",
+	RecordTypeIDM:  "IDM",
+	RecordTypeLCC:  "LCC",
 	RecordTypeLDM:  "LDM",
+	RecordTypeMET:  "MET",
+	RecordTypeMPE:  "MPE",
+	RecordTypeOCM:  "OCM",
+	RecordTypeOEM:  "OEM",
+	RecordTypeOMM:  "OMM",
+	RecordTypeOSM:  "OSM",
+	RecordTypePLD:  "PLD",
+	RecordTypePNM:  "PNM",
+	RecordTypePRG:  "PRG",
+	RecordTypeRFM:  "RFM",
+	RecordTypeROC:  "ROC",
+	RecordTypeSCM:  "SCM",
+	RecordTypeSIT:  "SIT",
 	RecordTypeTDM:  "TDM",
+	RecordTypeTIM:  "TIM",
+	RecordTypeVCM:  "VCM",
 }
 
 var EnumValuesRecordType = map[string]RecordType{
 	"NONE": RecordTypeNONE,
-	"CRM":  RecordTypeCRM,
-	"OMM":  RecordTypeOMM,
-	"PRG":  RecordTypePRG,
-	"OSM":  RecordTypeOSM,
-	"EPM":  RecordTypeEPM,
-	"MPE":  RecordTypeMPE,
-	"EME":  RecordTypeEME,
-	"OEM":  RecordTypeOEM,
-	"VCM":  RecordTypeVCM,
-	"CDM":  RecordTypeCDM,
-	"IDM":  RecordTypeIDM,
-	"SCM":  RecordTypeSCM,
-	"PNM":  RecordTypePNM,
-	"CSM":  RecordTypeCSM,
-	"HYP":  RecordTypeHYP,
-	"LCC":  RecordTypeLCC,
-	"ROC":  RecordTypeROC,
-	"EOP":  RecordTypeEOP,
-	"CAT":  RecordTypeCAT,
-	"OCM":  RecordTypeOCM,
-	"CTR":  RecordTypeCTR,
-	"TIM":  RecordTypeTIM,
-	"MET":  RecordTypeMET,
-	"PLD":  RecordTypePLD,
-	"EOO":  RecordTypeEOO,
-	"SIT":  RecordTypeSIT,
-	"RFM":  RecordTypeRFM,
 	"BOV":  RecordTypeBOV,
+	"CAT":  RecordTypeCAT,
+	"CDM":  RecordTypeCDM,
+	"CRM":  RecordTypeCRM,
+	"CSM":  RecordTypeCSM,
+	"CTR":  RecordTypeCTR,
+	"EME":  RecordTypeEME,
+	"EOO":  RecordTypeEOO,
+	"EOP":  RecordTypeEOP,
+	"EPM":  RecordTypeEPM,
+	"HYP":  RecordTypeHYP,
+	"IDM":  RecordTypeIDM,
+	"LCC":  RecordTypeLCC,
 	"LDM":  RecordTypeLDM,
+	"MET":  RecordTypeMET,
+	"MPE":  RecordTypeMPE,
+	"OCM":  RecordTypeOCM,
+	"OEM":  RecordTypeOEM,
+	"OMM":  RecordTypeOMM,
+	"OSM":  RecordTypeOSM,
+	"PLD":  RecordTypePLD,
+	"PNM":  RecordTypePNM,
+	"PRG":  RecordTypePRG,
+	"RFM":  RecordTypeRFM,
+	"ROC":  RecordTypeROC,
+	"SCM":  RecordTypeSCM,
+	"SIT":  RecordTypeSIT,
 	"TDM":  RecordTypeTDM,
+	"TIM":  RecordTypeTIM,
+	"VCM":  RecordTypeVCM,
 }
 
 func (v RecordType) String() string {

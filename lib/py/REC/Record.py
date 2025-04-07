@@ -45,8 +45,15 @@ class Record(object):
             return obj
         return None
 
+    # Record
+    def Type(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def RecordStart(builder):
-    builder.StartObject(2)
+    builder.StartObject(3)
 
 def Start(builder):
     RecordStart(builder)
@@ -62,6 +69,12 @@ def RecordAddValue(builder, value):
 
 def AddValue(builder, value):
     RecordAddValue(builder, value)
+
+def RecordAddType(builder, type):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(type), 0)
+
+def AddType(builder, type):
+    RecordAddType(builder, type)
 
 def RecordEnd(builder):
     return builder.EndObject()
@@ -110,7 +123,8 @@ class RecordT(object):
     # RecordT
     def __init__(self):
         self.valueType = 0  # type: int
-        self.value = None  # type: Union[None, CRM.CRMT, OMM.OMMT, PRG.PRGT, OSM.OSMT, EPM.EPMT, MPE.MPET, EME.EMET, OEM.OEMT, VCM.VCMT, CDM.CDMT, IDM.IDMT, SCM.SCMT, PNM.PNMT, CSM.CSMT, HYP.HYPT, LCC.LCCT, ROC.ROCT, EOP.EOPT, CAT.CATT, OCM.OCMT, CTR.CTRT, TIM.TIMT, MET.METT, PLD.PLDT, EOO.EOOT, SIT.SITT, RFM.RFMT, BOV.BOVT, LDM.LDMT, TDM.TDMT]
+        self.value = None  # type: Union[None, BOV.BOVT, CAT.CATT, CDM.CDMT, CRM.CRMT, CSM.CSMT, CTR.CTRT, EME.EMET, EOO.EOOT, EOP.EOPT, EPM.EPMT, HYP.HYPT, IDM.IDMT, LCC.LCCT, LDM.LDMT, MET.METT, MPE.MPET, OCM.OCMT, OEM.OEMT, OMM.OMMT, OSM.OSMT, PLD.PLDT, PNM.PNMT, PRG.PRGT, RFM.RFMT, ROC.ROCT, SCM.SCMT, SIT.SITT, TDM.TDMT, TIM.TIMT, VCM.VCMT]
+        self.type = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -135,14 +149,19 @@ class RecordT(object):
             return
         self.valueType = record.ValueType()
         self.value = RecordType.RecordTypeCreator(self.valueType, record.Value())
+        self.type = record.Type()
 
     # RecordT
     def Pack(self, builder):
         if self.value is not None:
             value = self.value.Pack(builder)
+        if self.type is not None:
+            type = builder.CreateString(self.type)
         RecordStart(builder)
         RecordAddValueType(builder, self.valueType)
         if self.value is not None:
             RecordAddValue(builder, value)
+        if self.type is not None:
+            RecordAddType(builder, type)
         record = RecordEnd(builder)
         return record

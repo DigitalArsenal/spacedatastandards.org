@@ -34,6 +34,17 @@ class Record : Table() {
     fun value(obj: Table) : Table? {
         val o = __offset(6); return if (o != 0) __union(obj, o + bb_pos) else null
     }
+    val type : String?
+        get() {
+            val o = __offset(8)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val typeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRecord(_bb: ByteBuffer): Record = getRootAsRecord(_bb, Record())
@@ -41,15 +52,17 @@ class Record : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int) : Int {
-            builder.startTable(2)
+        fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int, typeOffset: Int) : Int {
+            builder.startTable(3)
+            addType(builder, typeOffset)
             addValue(builder, valueOffset)
             addValueType(builder, valueType)
             return endRecord(builder)
         }
-        fun startRecord(builder: FlatBufferBuilder) = builder.startTable(2)
+        fun startRecord(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addValueType(builder: FlatBufferBuilder, valueType: UByte) = builder.addByte(0, valueType.toByte(), 0)
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
+        fun addType(builder: FlatBufferBuilder, type: Int) = builder.addOffset(2, type, 0)
         fun endRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

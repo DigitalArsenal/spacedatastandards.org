@@ -1,50 +1,51 @@
-// Hash: 93f5f2cfe9c84c2191d248d76c539da94565e26f5d8b965a660b2c6b75f2a88d
-// Version: 1.44.0
+// Hash: 037d9b6926461818fef26c3460e07d1c1e74ad8e6769164ce7f5e34f479705b0
+// Version: 1.44.2
 // -----------------------------------END_HEADER
-include "../CRM/main.fbs";
-include "../OMM/main.fbs";
-include "../PRG/main.fbs";
-include "../OSM/main.fbs";
-include "../EPM/main.fbs";
-include "../MPE/main.fbs";
-include "../EME/main.fbs";
-include "../OEM/main.fbs";
-include "../VCM/main.fbs";
-include "../CDM/main.fbs";
-include "../IDM/main.fbs";
-include "../SCM/main.fbs";
-include "../PNM/main.fbs";
-include "../CSM/main.fbs";
-include "../HYP/main.fbs";
-include "../LCC/main.fbs";
-include "../ROC/main.fbs";
-include "../EOP/main.fbs";
-include "../CAT/main.fbs";
-include "../OCM/main.fbs";
-include "../CTR/main.fbs";
-include "../TIM/main.fbs";
-include "../MET/main.fbs";
-include "../PLD/main.fbs";
-include "../EOO/main.fbs";
-include "../SIT/main.fbs";
-include "../RFM/main.fbs";
 include "../BOV/main.fbs";
+include "../CAT/main.fbs";
+include "../CDM/main.fbs";
+include "../CRM/main.fbs";
+include "../CSM/main.fbs";
+include "../CTR/main.fbs";
+include "../EME/main.fbs";
+include "../EOO/main.fbs";
+include "../EOP/main.fbs";
+include "../EPM/main.fbs";
+include "../HYP/main.fbs";
+include "../IDM/main.fbs";
+include "../LCC/main.fbs";
 include "../LDM/main.fbs";
+include "../MET/main.fbs";
+include "../MPE/main.fbs";
+include "../OCM/main.fbs";
+include "../OEM/main.fbs";
+include "../OMM/main.fbs";
+include "../OSM/main.fbs";
+include "../PLD/main.fbs";
+include "../PNM/main.fbs";
+include "../PRG/main.fbs";
+include "../RFM/main.fbs";
+include "../ROC/main.fbs";
+include "../SCM/main.fbs";
+include "../SIT/main.fbs";
 include "../TDM/main.fbs";
+include "../TIM/main.fbs";
+include "../VCM/main.fbs";
 
 union RecordType {
-  CRM, OMM, PRG, OSM,
-  EPM, MPE, EME, OEM,
-  VCM, CDM, IDM, SCM,
-  PNM, CSM, HYP, LCC,
-  ROC, EOP, CAT, OCM,
-  CTR, TIM, MET, PLD,
-  EOO, SIT, RFM, BOV,
-  LDM, TDM
+  BOV, CAT, CDM, CRM,
+  CSM, CTR, EME, EOO,
+  EOP, EPM, HYP, IDM,
+  LCC, LDM, MET, MPE,
+  OCM, OEM, OMM, OSM,
+  PLD, PNM, PRG, RFM,
+  ROC, SCM, SIT, TDM,
+  TIM, VCM
 }  // Union of all record types
 
 table Record {
   value: RecordType; 
+  type: string;
 }
 
 /// Collection of Standard Records
@@ -52,10 +53,6 @@ table REC {
   version: string;
   standard: string;
   RECORDS: [Record]; 
-}
-
-table RECCOLLECTION {
-  RECORDS: [REC];
 }
 
 root_type REC;

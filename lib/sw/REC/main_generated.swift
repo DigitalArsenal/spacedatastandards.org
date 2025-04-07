@@ -14,38 +14,38 @@ public enum RecordType: UInt8, UnionEnum {
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case none_ = 0
-  case crm = 1
-  case omm = 2
-  case prg = 3
-  case osm = 4
-  case epm = 5
-  case mpe = 6
+  case bov = 1
+  case cat = 2
+  case cdm = 3
+  case crm = 4
+  case csm = 5
+  case ctr = 6
   case eme = 7
-  case oem = 8
-  case vcm = 9
-  case cdm = 10
-  case idm = 11
-  case scm = 12
-  case pnm = 13
-  case csm = 14
-  case hyp = 15
-  case lcc = 16
-  case roc = 17
-  case eop = 18
-  case cat = 19
-  case ocm = 20
-  case ctr = 21
-  case tim = 22
-  case met = 23
-  case pld = 24
-  case eoo = 25
-  case sit = 26
-  case rfm = 27
-  case bov = 28
-  case ldm = 29
-  case tdm = 30
+  case eoo = 8
+  case eop = 9
+  case epm = 10
+  case hyp = 11
+  case idm = 12
+  case lcc = 13
+  case ldm = 14
+  case met = 15
+  case mpe = 16
+  case ocm = 17
+  case oem = 18
+  case omm = 19
+  case osm = 20
+  case pld = 21
+  case pnm = 22
+  case prg = 23
+  case rfm = 24
+  case roc = 25
+  case scm = 26
+  case sit = 27
+  case tdm = 28
+  case tim = 29
+  case vcm = 30
 
-  public static var max: RecordType { return .tdm }
+  public static var max: RecordType { return .vcm }
   public static var min: RecordType { return .none_ }
 }
 
@@ -64,24 +64,30 @@ public struct Record: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case valueType = 4
     case value = 6
+    case type = 8
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
   public var valueType: RecordType { let o = _accessor.offset(VTOFFSET.valueType.v); return o == 0 ? .none_ : RecordType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   public func value<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.value.v); return o == 0 ? nil : _accessor.union(o) }
-  public static func startRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public var type: String? { let o = _accessor.offset(VTOFFSET.type.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var typeSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.type.v) }
+  public static func startRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(valueType: RecordType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: valueType.rawValue, def: 0, at: VTOFFSET.valueType.p) }
   public static func add(value: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: value, at: VTOFFSET.value.p) }
+  public static func add(type: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: type, at: VTOFFSET.type.p) }
   public static func endRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRecord(
     _ fbb: inout FlatBufferBuilder,
     valueType: RecordType = .none_,
-    valueOffset value: Offset = Offset()
+    valueOffset value: Offset = Offset(),
+    typeOffset type: Offset = Offset()
   ) -> Offset {
     let __start = Record.startRecord(&fbb)
     Record.add(valueType: valueType, &fbb)
     Record.add(value: value, &fbb)
+    Record.add(type: type, &fbb)
     return Record.endRecord(&fbb, start: __start)
   }
 
@@ -91,68 +97,69 @@ public struct Record: FlatBufferObject, Verifiable {
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
-      case .crm:
-        try ForwardOffset<CRM>.verify(&verifier, at: pos, of: CRM.self)
-      case .omm:
-        try ForwardOffset<OMM>.verify(&verifier, at: pos, of: OMM.self)
-      case .prg:
-        try ForwardOffset<PRG>.verify(&verifier, at: pos, of: PRG.self)
-      case .osm:
-        try ForwardOffset<OSM>.verify(&verifier, at: pos, of: OSM.self)
-      case .epm:
-        try ForwardOffset<EPM>.verify(&verifier, at: pos, of: EPM.self)
-      case .mpe:
-        try ForwardOffset<MPE>.verify(&verifier, at: pos, of: MPE.self)
-      case .eme:
-        try ForwardOffset<EME>.verify(&verifier, at: pos, of: EME.self)
-      case .oem:
-        try ForwardOffset<OEM>.verify(&verifier, at: pos, of: OEM.self)
-      case .vcm:
-        try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
-      case .cdm:
-        try ForwardOffset<CDM>.verify(&verifier, at: pos, of: CDM.self)
-      case .idm:
-        try ForwardOffset<IDM>.verify(&verifier, at: pos, of: IDM.self)
-      case .scm:
-        try ForwardOffset<SCM>.verify(&verifier, at: pos, of: SCM.self)
-      case .pnm:
-        try ForwardOffset<PNM>.verify(&verifier, at: pos, of: PNM.self)
-      case .csm:
-        try ForwardOffset<CSM>.verify(&verifier, at: pos, of: CSM.self)
-      case .hyp:
-        try ForwardOffset<HYP>.verify(&verifier, at: pos, of: HYP.self)
-      case .lcc:
-        try ForwardOffset<LCC>.verify(&verifier, at: pos, of: LCC.self)
-      case .roc:
-        try ForwardOffset<ROC>.verify(&verifier, at: pos, of: ROC.self)
-      case .eop:
-        try ForwardOffset<EOP>.verify(&verifier, at: pos, of: EOP.self)
-      case .cat:
-        try ForwardOffset<CAT>.verify(&verifier, at: pos, of: CAT.self)
-      case .ocm:
-        try ForwardOffset<OCM>.verify(&verifier, at: pos, of: OCM.self)
-      case .ctr:
-        try ForwardOffset<CTR>.verify(&verifier, at: pos, of: CTR.self)
-      case .tim:
-        try ForwardOffset<TIM>.verify(&verifier, at: pos, of: TIM.self)
-      case .met:
-        try ForwardOffset<MET>.verify(&verifier, at: pos, of: MET.self)
-      case .pld:
-        try ForwardOffset<PLD>.verify(&verifier, at: pos, of: PLD.self)
-      case .eoo:
-        try ForwardOffset<EOO>.verify(&verifier, at: pos, of: EOO.self)
-      case .sit:
-        try ForwardOffset<SIT>.verify(&verifier, at: pos, of: SIT.self)
-      case .rfm:
-        try ForwardOffset<RFM>.verify(&verifier, at: pos, of: RFM.self)
       case .bov:
         try ForwardOffset<BOV>.verify(&verifier, at: pos, of: BOV.self)
+      case .cat:
+        try ForwardOffset<CAT>.verify(&verifier, at: pos, of: CAT.self)
+      case .cdm:
+        try ForwardOffset<CDM>.verify(&verifier, at: pos, of: CDM.self)
+      case .crm:
+        try ForwardOffset<CRM>.verify(&verifier, at: pos, of: CRM.self)
+      case .csm:
+        try ForwardOffset<CSM>.verify(&verifier, at: pos, of: CSM.self)
+      case .ctr:
+        try ForwardOffset<CTR>.verify(&verifier, at: pos, of: CTR.self)
+      case .eme:
+        try ForwardOffset<EME>.verify(&verifier, at: pos, of: EME.self)
+      case .eoo:
+        try ForwardOffset<EOO>.verify(&verifier, at: pos, of: EOO.self)
+      case .eop:
+        try ForwardOffset<EOP>.verify(&verifier, at: pos, of: EOP.self)
+      case .epm:
+        try ForwardOffset<EPM>.verify(&verifier, at: pos, of: EPM.self)
+      case .hyp:
+        try ForwardOffset<HYP>.verify(&verifier, at: pos, of: HYP.self)
+      case .idm:
+        try ForwardOffset<IDM>.verify(&verifier, at: pos, of: IDM.self)
+      case .lcc:
+        try ForwardOffset<LCC>.verify(&verifier, at: pos, of: LCC.self)
       case .ldm:
         try ForwardOffset<LDM>.verify(&verifier, at: pos, of: LDM.self)
+      case .met:
+        try ForwardOffset<MET>.verify(&verifier, at: pos, of: MET.self)
+      case .mpe:
+        try ForwardOffset<MPE>.verify(&verifier, at: pos, of: MPE.self)
+      case .ocm:
+        try ForwardOffset<OCM>.verify(&verifier, at: pos, of: OCM.self)
+      case .oem:
+        try ForwardOffset<OEM>.verify(&verifier, at: pos, of: OEM.self)
+      case .omm:
+        try ForwardOffset<OMM>.verify(&verifier, at: pos, of: OMM.self)
+      case .osm:
+        try ForwardOffset<OSM>.verify(&verifier, at: pos, of: OSM.self)
+      case .pld:
+        try ForwardOffset<PLD>.verify(&verifier, at: pos, of: PLD.self)
+      case .pnm:
+        try ForwardOffset<PNM>.verify(&verifier, at: pos, of: PNM.self)
+      case .prg:
+        try ForwardOffset<PRG>.verify(&verifier, at: pos, of: PRG.self)
+      case .rfm:
+        try ForwardOffset<RFM>.verify(&verifier, at: pos, of: RFM.self)
+      case .roc:
+        try ForwardOffset<ROC>.verify(&verifier, at: pos, of: ROC.self)
+      case .scm:
+        try ForwardOffset<SCM>.verify(&verifier, at: pos, of: SCM.self)
+      case .sit:
+        try ForwardOffset<SIT>.verify(&verifier, at: pos, of: SIT.self)
       case .tdm:
         try ForwardOffset<TDM>.verify(&verifier, at: pos, of: TDM.self)
+      case .tim:
+        try ForwardOffset<TIM>.verify(&verifier, at: pos, of: TIM.self)
+      case .vcm:
+        try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
       }
     })
+    try _v.visit(field: VTOFFSET.type.p, fieldName: "type", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -207,45 +214,6 @@ public struct REC: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.version.p, fieldName: "version", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.standard.p, fieldName: "standard", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<Record>, Record>>.self)
-    _v.finish()
-  }
-}
-
-public struct RECCOLLECTION: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$REC" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RECCOLLECTION.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case RECORDS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
-  public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RECORDS(at index: Int32) -> REC? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : REC(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startRECCOLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
-  public static func endRECCOLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRECCOLLECTION(
-    _ fbb: inout FlatBufferBuilder,
-    RECORDSVectorOffset RECORDS: Offset = Offset()
-  ) -> Offset {
-    let __start = RECCOLLECTION.startRECCOLLECTION(&fbb)
-    RECCOLLECTION.addVectorOf(RECORDS: RECORDS, &fbb)
-    return RECCOLLECTION.endRECCOLLECTION(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<REC>, REC>>.self)
     _v.finish()
   }
 }

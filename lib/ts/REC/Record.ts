@@ -65,8 +65,15 @@ value<T extends flatbuffers.Table>(obj:any):any|null {
   return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
 }
 
+type():string|null
+type(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+type(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startRecord(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(3);
 }
 
 static addValueType(builder:flatbuffers.Builder, valueType:RecordType) {
@@ -77,15 +84,20 @@ static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
   builder.addFieldOffset(1, valueOffset, 0);
 }
 
+static addType(builder:flatbuffers.Builder, typeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, typeOffset, 0);
+}
+
 static endRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createRecord(builder:flatbuffers.Builder, valueType:RecordType, valueOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRecord(builder:flatbuffers.Builder, valueType:RecordType, valueOffset:flatbuffers.Offset, typeOffset:flatbuffers.Offset):flatbuffers.Offset {
   Record.startRecord(builder);
   Record.addValueType(builder, valueType);
   Record.addValue(builder, valueOffset);
+  Record.addType(builder, typeOffset);
   return Record.endRecord(builder);
 }
 
@@ -96,7 +108,8 @@ unpack(): RecordT {
       const temp = unionToRecordType(this.valueType(), this.value.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
-  })()
+  })(),
+    this.type()
   );
 }
 
@@ -108,22 +121,26 @@ unpackTo(_o: RecordT): void {
       if(temp === null) { return null; }
       return temp.unpack()
   })();
+  _o.type = this.type();
 }
 }
 
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null
+  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null,
+  public type: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const value = builder.createObjectOffset(this.value);
+  const type = (this.type !== null ? builder.createString(this.type!) : 0);
 
   return Record.createRecord(builder,
     this.valueType,
-    value
+    value,
+    type
   );
 }
 }

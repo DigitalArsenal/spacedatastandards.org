@@ -58,24 +58,31 @@ class Record extends Table
         return $o != 0 ? $this->__union($obj, $o) : null;
     }
 
+    public function getType()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRecord(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(2);
+        $builder->StartObject(3);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Record
      */
-    public static function createRecord(FlatBufferBuilder $builder, $value_type, $value)
+    public static function createRecord(FlatBufferBuilder $builder, $value_type, $value, $type)
     {
-        $builder->startObject(2);
+        $builder->startObject(3);
         self::addValueType($builder, $value_type);
         self::addValue($builder, $value);
+        self::addType($builder, $type);
         $o = $builder->endObject();
         return $o;
     }
@@ -93,6 +100,16 @@ class Record extends Table
     public static function addValue(FlatBufferBuilder $builder, $offset)
     {
         $builder->addOffsetX(1, $offset, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addType(FlatBufferBuilder $builder, $type)
+    {
+        $builder->addOffsetX(2, $type, 0);
     }
 
     /**

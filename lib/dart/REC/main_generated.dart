@@ -27,68 +27,68 @@ class RecordTypeTypeId {
   static bool containsValue(int value) => values.containsKey(value);
 
   static const RecordTypeTypeId NONE = RecordTypeTypeId._(0);
-  static const RecordTypeTypeId CRM = RecordTypeTypeId._(1);
-  static const RecordTypeTypeId OMM = RecordTypeTypeId._(2);
-  static const RecordTypeTypeId PRG = RecordTypeTypeId._(3);
-  static const RecordTypeTypeId OSM = RecordTypeTypeId._(4);
-  static const RecordTypeTypeId EPM = RecordTypeTypeId._(5);
-  static const RecordTypeTypeId MPE = RecordTypeTypeId._(6);
+  static const RecordTypeTypeId BOV = RecordTypeTypeId._(1);
+  static const RecordTypeTypeId CAT = RecordTypeTypeId._(2);
+  static const RecordTypeTypeId CDM = RecordTypeTypeId._(3);
+  static const RecordTypeTypeId CRM = RecordTypeTypeId._(4);
+  static const RecordTypeTypeId CSM = RecordTypeTypeId._(5);
+  static const RecordTypeTypeId CTR = RecordTypeTypeId._(6);
   static const RecordTypeTypeId EME = RecordTypeTypeId._(7);
-  static const RecordTypeTypeId OEM = RecordTypeTypeId._(8);
-  static const RecordTypeTypeId VCM = RecordTypeTypeId._(9);
-  static const RecordTypeTypeId CDM = RecordTypeTypeId._(10);
-  static const RecordTypeTypeId IDM = RecordTypeTypeId._(11);
-  static const RecordTypeTypeId SCM = RecordTypeTypeId._(12);
-  static const RecordTypeTypeId PNM = RecordTypeTypeId._(13);
-  static const RecordTypeTypeId CSM = RecordTypeTypeId._(14);
-  static const RecordTypeTypeId HYP = RecordTypeTypeId._(15);
-  static const RecordTypeTypeId LCC = RecordTypeTypeId._(16);
-  static const RecordTypeTypeId ROC = RecordTypeTypeId._(17);
-  static const RecordTypeTypeId EOP = RecordTypeTypeId._(18);
-  static const RecordTypeTypeId CAT = RecordTypeTypeId._(19);
-  static const RecordTypeTypeId OCM = RecordTypeTypeId._(20);
-  static const RecordTypeTypeId CTR = RecordTypeTypeId._(21);
-  static const RecordTypeTypeId TIM = RecordTypeTypeId._(22);
-  static const RecordTypeTypeId MET = RecordTypeTypeId._(23);
-  static const RecordTypeTypeId PLD = RecordTypeTypeId._(24);
-  static const RecordTypeTypeId EOO = RecordTypeTypeId._(25);
-  static const RecordTypeTypeId SIT = RecordTypeTypeId._(26);
-  static const RecordTypeTypeId RFM = RecordTypeTypeId._(27);
-  static const RecordTypeTypeId BOV = RecordTypeTypeId._(28);
-  static const RecordTypeTypeId LDM = RecordTypeTypeId._(29);
-  static const RecordTypeTypeId TDM = RecordTypeTypeId._(30);
+  static const RecordTypeTypeId EOO = RecordTypeTypeId._(8);
+  static const RecordTypeTypeId EOP = RecordTypeTypeId._(9);
+  static const RecordTypeTypeId EPM = RecordTypeTypeId._(10);
+  static const RecordTypeTypeId HYP = RecordTypeTypeId._(11);
+  static const RecordTypeTypeId IDM = RecordTypeTypeId._(12);
+  static const RecordTypeTypeId LCC = RecordTypeTypeId._(13);
+  static const RecordTypeTypeId LDM = RecordTypeTypeId._(14);
+  static const RecordTypeTypeId MET = RecordTypeTypeId._(15);
+  static const RecordTypeTypeId MPE = RecordTypeTypeId._(16);
+  static const RecordTypeTypeId OCM = RecordTypeTypeId._(17);
+  static const RecordTypeTypeId OEM = RecordTypeTypeId._(18);
+  static const RecordTypeTypeId OMM = RecordTypeTypeId._(19);
+  static const RecordTypeTypeId OSM = RecordTypeTypeId._(20);
+  static const RecordTypeTypeId PLD = RecordTypeTypeId._(21);
+  static const RecordTypeTypeId PNM = RecordTypeTypeId._(22);
+  static const RecordTypeTypeId PRG = RecordTypeTypeId._(23);
+  static const RecordTypeTypeId RFM = RecordTypeTypeId._(24);
+  static const RecordTypeTypeId ROC = RecordTypeTypeId._(25);
+  static const RecordTypeTypeId SCM = RecordTypeTypeId._(26);
+  static const RecordTypeTypeId SIT = RecordTypeTypeId._(27);
+  static const RecordTypeTypeId TDM = RecordTypeTypeId._(28);
+  static const RecordTypeTypeId TIM = RecordTypeTypeId._(29);
+  static const RecordTypeTypeId VCM = RecordTypeTypeId._(30);
   static const Map<int, RecordTypeTypeId> values = {
     0: NONE,
-    1: CRM,
-    2: OMM,
-    3: PRG,
-    4: OSM,
-    5: EPM,
-    6: MPE,
+    1: BOV,
+    2: CAT,
+    3: CDM,
+    4: CRM,
+    5: CSM,
+    6: CTR,
     7: EME,
-    8: OEM,
-    9: VCM,
-    10: CDM,
-    11: IDM,
-    12: SCM,
-    13: PNM,
-    14: CSM,
-    15: HYP,
-    16: LCC,
-    17: ROC,
-    18: EOP,
-    19: CAT,
-    20: OCM,
-    21: CTR,
-    22: TIM,
-    23: MET,
-    24: PLD,
-    25: EOO,
-    26: SIT,
-    27: RFM,
-    28: BOV,
-    29: LDM,
-    30: TDM};
+    8: EOO,
+    9: EOP,
+    10: EPM,
+    11: HYP,
+    12: IDM,
+    13: LCC,
+    14: LDM,
+    15: MET,
+    16: MPE,
+    17: OCM,
+    18: OEM,
+    19: OMM,
+    20: OSM,
+    21: PLD,
+    22: PNM,
+    23: PRG,
+    24: RFM,
+    25: ROC,
+    26: SCM,
+    27: SIT,
+    28: TDM,
+    29: TIM,
+    30: VCM};
 
   static const fb.Reader<RecordTypeTypeId> reader = _RecordTypeTypeIdReader();
 
@@ -124,43 +124,44 @@ class Record {
   RecordTypeTypeId? get valueType => RecordTypeTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 4));
   dynamic get value {
     switch (valueType?.value) {
-      case 1: return CRM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 2: return OMM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 3: return PRG.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 4: return OSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 5: return EPM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 6: return MPE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 1: return BOV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 2: return CAT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 3: return CDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 4: return CRM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 5: return CSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 6: return CTR.reader.vTableGetNullable(_bc, _bcOffset, 6);
       case 7: return EME.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 8: return OEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 9: return VCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 10: return CDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 11: return IDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 12: return SCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 13: return PNM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 14: return CSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 15: return HYP.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 16: return LCC.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 17: return ROC.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 18: return EOP.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 19: return CAT.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 20: return OCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 21: return CTR.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 22: return TIM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 23: return MET.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 24: return PLD.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 25: return EOO.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 26: return SIT.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 27: return RFM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 28: return BOV.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 29: return LDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 30: return TDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 8: return EOO.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 9: return EOP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 10: return EPM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 11: return HYP.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 12: return IDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 13: return LCC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 14: return LDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 15: return MET.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 16: return MPE.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 17: return OCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 18: return OEM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 19: return OMM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 20: return OSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 21: return PLD.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 22: return PNM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 23: return PRG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 24: return RFM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 25: return ROC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 26: return SCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 27: return SIT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 28: return TDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 29: return TIM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 30: return VCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
       default: return null;
     }
   }
+  String? get type => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'Record{valueType: ${valueType}, value: ${value}}';
+    return 'Record{valueType: ${valueType}, value: ${value}, type: ${type}}';
   }
 }
 
@@ -178,7 +179,7 @@ class RecordBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(3);
   }
 
   int addValueType(RecordTypeTypeId? valueType) {
@@ -187,6 +188,10 @@ class RecordBuilder {
   }
   int addValueOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTypeOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
 
@@ -198,21 +203,27 @@ class RecordBuilder {
 class RecordObjectBuilder extends fb.ObjectBuilder {
   final RecordTypeTypeId? _valueType;
   final dynamic _value;
+  final String? _type;
 
   RecordObjectBuilder({
     RecordTypeTypeId? valueType,
     dynamic value,
+    String? type,
   })
       : _valueType = valueType,
-        _value = value;
+        _value = value,
+        _type = type;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? valueOffset = _value?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
+    final int? typeOffset = _type == null ? null
+        : fbBuilder.writeString(_type!);
+    fbBuilder.startTable(3);
     fbBuilder.addUint8(0, _valueType?.value);
     fbBuilder.addOffset(1, valueOffset);
+    fbBuilder.addOffset(2, typeOffset);
     return fbBuilder.endTable();
   }
 
@@ -309,79 +320,6 @@ class RECObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(0, versionOffset);
     fbBuilder.addOffset(1, standardOffset);
     fbBuilder.addOffset(2, RECORDSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class RECCOLLECTION {
-  RECCOLLECTION._(this._bc, this._bcOffset);
-  factory RECCOLLECTION(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<RECCOLLECTION> reader = _RECCOLLECTIONReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  List<REC>? get RECORDS => const fb.ListReader<REC>(REC.reader).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'RECCOLLECTION{RECORDS: ${RECORDS}}';
-  }
-}
-
-class _RECCOLLECTIONReader extends fb.TableReader<RECCOLLECTION> {
-  const _RECCOLLECTIONReader();
-
-  @override
-  RECCOLLECTION createObject(fb.BufferContext bc, int offset) => 
-    RECCOLLECTION._(bc, offset);
-}
-
-class RECCOLLECTIONBuilder {
-  RECCOLLECTIONBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addRecordsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class RECCOLLECTIONObjectBuilder extends fb.ObjectBuilder {
-  final List<RECObjectBuilder>? _RECORDS;
-
-  RECCOLLECTIONObjectBuilder({
-    List<RECObjectBuilder>? RECORDS,
-  })
-      : _RECORDS = RECORDS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? RECORDSOffset = _RECORDS == null ? null
-        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, RECORDSOffset);
     return fbBuilder.endTable();
   }
 

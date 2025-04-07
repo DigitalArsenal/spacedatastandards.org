@@ -62,14 +62,25 @@ func (rcv *Record) Value(obj *flatbuffers.Table) bool {
 	return false
 }
 
+func (rcv *Record) Type() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
 func RecordStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(3)
 }
 func RecordAddValueType(builder *flatbuffers.Builder, valueType RecordType) {
 	builder.PrependByteSlot(0, byte(valueType), 0)
 }
 func RecordAddValue(builder *flatbuffers.Builder, value flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(value), 0)
+}
+func RecordAddType(builder *flatbuffers.Builder, type_ flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(type_), 0)
 }
 func RecordEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

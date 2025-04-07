@@ -36,36 +36,36 @@ import { VCM, VCMT } from './VCM.js';
 
 export enum RecordType {
   NONE = 0,
-  CRM = 1,
-  OMM = 2,
-  PRG = 3,
-  OSM = 4,
-  EPM = 5,
-  MPE = 6,
+  BOV = 1,
+  CAT = 2,
+  CDM = 3,
+  CRM = 4,
+  CSM = 5,
+  CTR = 6,
   EME = 7,
-  OEM = 8,
-  VCM = 9,
-  CDM = 10,
-  IDM = 11,
-  SCM = 12,
-  PNM = 13,
-  CSM = 14,
-  HYP = 15,
-  LCC = 16,
-  ROC = 17,
-  EOP = 18,
-  CAT = 19,
-  OCM = 20,
-  CTR = 21,
-  TIM = 22,
-  MET = 23,
-  PLD = 24,
-  EOO = 25,
-  SIT = 26,
-  RFM = 27,
-  BOV = 28,
-  LDM = 29,
-  TDM = 30
+  EOO = 8,
+  EOP = 9,
+  EPM = 10,
+  HYP = 11,
+  IDM = 12,
+  LCC = 13,
+  LDM = 14,
+  MET = 15,
+  MPE = 16,
+  OCM = 17,
+  OEM = 18,
+  OMM = 19,
+  OSM = 20,
+  PLD = 21,
+  PNM = 22,
+  PRG = 23,
+  RFM = 24,
+  ROC = 25,
+  SCM = 26,
+  SIT = 27,
+  TDM = 28,
+  TIM = 29,
+  VCM = 30
 }
 
 export function unionToRecordType(
@@ -74,36 +74,36 @@ export function unionToRecordType(
 ): BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
-    case 'CRM': return accessor(new CRM())! as CRM;
-    case 'OMM': return accessor(new OMM())! as OMM;
-    case 'PRG': return accessor(new PRG())! as PRG;
-    case 'OSM': return accessor(new OSM())! as OSM;
-    case 'EPM': return accessor(new EPM())! as EPM;
-    case 'MPE': return accessor(new MPE())! as MPE;
-    case 'EME': return accessor(new EME())! as EME;
-    case 'OEM': return accessor(new OEM())! as OEM;
-    case 'VCM': return accessor(new VCM())! as VCM;
-    case 'CDM': return accessor(new CDM())! as CDM;
-    case 'IDM': return accessor(new IDM())! as IDM;
-    case 'SCM': return accessor(new SCM())! as SCM;
-    case 'PNM': return accessor(new PNM())! as PNM;
-    case 'CSM': return accessor(new CSM())! as CSM;
-    case 'HYP': return accessor(new HYP())! as HYP;
-    case 'LCC': return accessor(new LCC())! as LCC;
-    case 'ROC': return accessor(new ROC())! as ROC;
-    case 'EOP': return accessor(new EOP())! as EOP;
-    case 'CAT': return accessor(new CAT())! as CAT;
-    case 'OCM': return accessor(new OCM())! as OCM;
-    case 'CTR': return accessor(new CTR())! as CTR;
-    case 'TIM': return accessor(new TIM())! as TIM;
-    case 'MET': return accessor(new MET())! as MET;
-    case 'PLD': return accessor(new PLD())! as PLD;
-    case 'EOO': return accessor(new EOO())! as EOO;
-    case 'SIT': return accessor(new SIT())! as SIT;
-    case 'RFM': return accessor(new RFM())! as RFM;
     case 'BOV': return accessor(new BOV())! as BOV;
+    case 'CAT': return accessor(new CAT())! as CAT;
+    case 'CDM': return accessor(new CDM())! as CDM;
+    case 'CRM': return accessor(new CRM())! as CRM;
+    case 'CSM': return accessor(new CSM())! as CSM;
+    case 'CTR': return accessor(new CTR())! as CTR;
+    case 'EME': return accessor(new EME())! as EME;
+    case 'EOO': return accessor(new EOO())! as EOO;
+    case 'EOP': return accessor(new EOP())! as EOP;
+    case 'EPM': return accessor(new EPM())! as EPM;
+    case 'HYP': return accessor(new HYP())! as HYP;
+    case 'IDM': return accessor(new IDM())! as IDM;
+    case 'LCC': return accessor(new LCC())! as LCC;
     case 'LDM': return accessor(new LDM())! as LDM;
+    case 'MET': return accessor(new MET())! as MET;
+    case 'MPE': return accessor(new MPE())! as MPE;
+    case 'OCM': return accessor(new OCM())! as OCM;
+    case 'OEM': return accessor(new OEM())! as OEM;
+    case 'OMM': return accessor(new OMM())! as OMM;
+    case 'OSM': return accessor(new OSM())! as OSM;
+    case 'PLD': return accessor(new PLD())! as PLD;
+    case 'PNM': return accessor(new PNM())! as PNM;
+    case 'PRG': return accessor(new PRG())! as PRG;
+    case 'RFM': return accessor(new RFM())! as RFM;
+    case 'ROC': return accessor(new ROC())! as ROC;
+    case 'SCM': return accessor(new SCM())! as SCM;
+    case 'SIT': return accessor(new SIT())! as SIT;
     case 'TDM': return accessor(new TDM())! as TDM;
+    case 'TIM': return accessor(new TIM())! as TIM;
+    case 'VCM': return accessor(new VCM())! as VCM;
     default: return null;
   }
 }
@@ -115,36 +115,36 @@ export function unionListToRecordType(
 ): BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
-    case 'CRM': return accessor(index, new CRM())! as CRM;
-    case 'OMM': return accessor(index, new OMM())! as OMM;
-    case 'PRG': return accessor(index, new PRG())! as PRG;
-    case 'OSM': return accessor(index, new OSM())! as OSM;
-    case 'EPM': return accessor(index, new EPM())! as EPM;
-    case 'MPE': return accessor(index, new MPE())! as MPE;
-    case 'EME': return accessor(index, new EME())! as EME;
-    case 'OEM': return accessor(index, new OEM())! as OEM;
-    case 'VCM': return accessor(index, new VCM())! as VCM;
-    case 'CDM': return accessor(index, new CDM())! as CDM;
-    case 'IDM': return accessor(index, new IDM())! as IDM;
-    case 'SCM': return accessor(index, new SCM())! as SCM;
-    case 'PNM': return accessor(index, new PNM())! as PNM;
-    case 'CSM': return accessor(index, new CSM())! as CSM;
-    case 'HYP': return accessor(index, new HYP())! as HYP;
-    case 'LCC': return accessor(index, new LCC())! as LCC;
-    case 'ROC': return accessor(index, new ROC())! as ROC;
-    case 'EOP': return accessor(index, new EOP())! as EOP;
-    case 'CAT': return accessor(index, new CAT())! as CAT;
-    case 'OCM': return accessor(index, new OCM())! as OCM;
-    case 'CTR': return accessor(index, new CTR())! as CTR;
-    case 'TIM': return accessor(index, new TIM())! as TIM;
-    case 'MET': return accessor(index, new MET())! as MET;
-    case 'PLD': return accessor(index, new PLD())! as PLD;
-    case 'EOO': return accessor(index, new EOO())! as EOO;
-    case 'SIT': return accessor(index, new SIT())! as SIT;
-    case 'RFM': return accessor(index, new RFM())! as RFM;
     case 'BOV': return accessor(index, new BOV())! as BOV;
+    case 'CAT': return accessor(index, new CAT())! as CAT;
+    case 'CDM': return accessor(index, new CDM())! as CDM;
+    case 'CRM': return accessor(index, new CRM())! as CRM;
+    case 'CSM': return accessor(index, new CSM())! as CSM;
+    case 'CTR': return accessor(index, new CTR())! as CTR;
+    case 'EME': return accessor(index, new EME())! as EME;
+    case 'EOO': return accessor(index, new EOO())! as EOO;
+    case 'EOP': return accessor(index, new EOP())! as EOP;
+    case 'EPM': return accessor(index, new EPM())! as EPM;
+    case 'HYP': return accessor(index, new HYP())! as HYP;
+    case 'IDM': return accessor(index, new IDM())! as IDM;
+    case 'LCC': return accessor(index, new LCC())! as LCC;
     case 'LDM': return accessor(index, new LDM())! as LDM;
+    case 'MET': return accessor(index, new MET())! as MET;
+    case 'MPE': return accessor(index, new MPE())! as MPE;
+    case 'OCM': return accessor(index, new OCM())! as OCM;
+    case 'OEM': return accessor(index, new OEM())! as OEM;
+    case 'OMM': return accessor(index, new OMM())! as OMM;
+    case 'OSM': return accessor(index, new OSM())! as OSM;
+    case 'PLD': return accessor(index, new PLD())! as PLD;
+    case 'PNM': return accessor(index, new PNM())! as PNM;
+    case 'PRG': return accessor(index, new PRG())! as PRG;
+    case 'RFM': return accessor(index, new RFM())! as RFM;
+    case 'ROC': return accessor(index, new ROC())! as ROC;
+    case 'SCM': return accessor(index, new SCM())! as SCM;
+    case 'SIT': return accessor(index, new SIT())! as SIT;
     case 'TDM': return accessor(index, new TDM())! as TDM;
+    case 'TIM': return accessor(index, new TIM())! as TIM;
+    case 'VCM': return accessor(index, new VCM())! as VCM;
     default: return null;
   }
 }
