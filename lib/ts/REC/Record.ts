@@ -65,9 +65,9 @@ value<T extends flatbuffers.Table>(obj:any):any|null {
   return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
 }
 
-type():string|null
-type(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-type(optionalEncoding?:any):string|Uint8Array|null {
+typeName():string|null
+typeName(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+typeName(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -84,8 +84,8 @@ static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
   builder.addFieldOffset(1, valueOffset, 0);
 }
 
-static addType(builder:flatbuffers.Builder, typeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, typeOffset, 0);
+static addTypeName(builder:flatbuffers.Builder, typeNameOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, typeNameOffset, 0);
 }
 
 static endRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -93,11 +93,11 @@ static endRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createRecord(builder:flatbuffers.Builder, valueType:RecordType, valueOffset:flatbuffers.Offset, typeOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRecord(builder:flatbuffers.Builder, valueType:RecordType, valueOffset:flatbuffers.Offset, typeNameOffset:flatbuffers.Offset):flatbuffers.Offset {
   Record.startRecord(builder);
   Record.addValueType(builder, valueType);
   Record.addValue(builder, valueOffset);
-  Record.addType(builder, typeOffset);
+  Record.addTypeName(builder, typeNameOffset);
   return Record.endRecord(builder);
 }
 
@@ -109,7 +109,7 @@ unpack(): RecordT {
       if(temp === null) { return null; }
       return temp.unpack()
   })(),
-    this.type()
+    this.typeName()
   );
 }
 
@@ -121,7 +121,7 @@ unpackTo(_o: RecordT): void {
       if(temp === null) { return null; }
       return temp.unpack()
   })();
-  _o.type = this.type();
+  _o.typeName = this.typeName();
 }
 }
 
@@ -129,18 +129,18 @@ export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
   public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null,
-  public type: string|Uint8Array|null = null
+  public typeName: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const value = builder.createObjectOffset(this.value);
-  const type = (this.type !== null ? builder.createString(this.type!) : 0);
+  const typeName = (this.typeName !== null ? builder.createString(this.typeName!) : 0);
 
   return Record.createRecord(builder,
     this.valueType,
     value,
-    type
+    typeName
   );
 }
 }

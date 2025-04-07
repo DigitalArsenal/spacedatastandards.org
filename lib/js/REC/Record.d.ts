@@ -38,22 +38,22 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
     static getSizePrefixedRootAsRecord(bb: flatbuffers.ByteBuffer, obj?: Record): Record;
     valueType(): RecordType;
     value<T extends flatbuffers.Table>(obj: any): any | null;
-    type(): string | null;
-    type(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    typeName(): string | null;
+    typeName(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startRecord(builder: flatbuffers.Builder): void;
     static addValueType(builder: flatbuffers.Builder, valueType: RecordType): void;
     static addValue(builder: flatbuffers.Builder, valueOffset: flatbuffers.Offset): void;
-    static addType(builder: flatbuffers.Builder, typeOffset: flatbuffers.Offset): void;
+    static addTypeName(builder: flatbuffers.Builder, typeNameOffset: flatbuffers.Offset): void;
     static endRecord(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createRecord(builder: flatbuffers.Builder, valueType: RecordType, valueOffset: flatbuffers.Offset, typeOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createRecord(builder: flatbuffers.Builder, valueType: RecordType, valueOffset: flatbuffers.Offset, typeNameOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): RecordT;
     unpackTo(_o: RecordT): void;
 }
 export declare class RecordT implements flatbuffers.IGeneratedObject {
     valueType: RecordType;
     value: BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null;
-    type: string | Uint8Array | null;
-    constructor(valueType?: RecordType, value?: BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null, type?: string | Uint8Array | null);
+    typeName: string | Uint8Array | null;
+    constructor(valueType?: RecordType, value?: BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null, typeName?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

@@ -27,16 +27,16 @@ public final class Record extends Table {
 
   public byte valueType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public Table value(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
-  public String type() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer typeAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer typeInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String typeName() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer typeNameAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer typeNameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
 
   public static int createRecord(FlatBufferBuilder builder,
       byte valueType,
       int valueOffset,
-      int typeOffset) {
+      int typeNameOffset) {
     builder.startTable(3);
-    Record.addType(builder, typeOffset);
+    Record.addTypeName(builder, typeNameOffset);
     Record.addValue(builder, valueOffset);
     Record.addValueType(builder, valueType);
     return Record.endRecord(builder);
@@ -45,7 +45,7 @@ public final class Record extends Table {
   public static void startRecord(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addValueType(FlatBufferBuilder builder, byte valueType) { builder.addByte(0, valueType, 0); }
   public static void addValue(FlatBufferBuilder builder, int valueOffset) { builder.addOffset(1, valueOffset, 0); }
-  public static void addType(FlatBufferBuilder builder, int typeOffset) { builder.addOffset(2, typeOffset, 0); }
+  public static void addTypeName(FlatBufferBuilder builder, int typeNameOffset) { builder.addOffset(2, typeNameOffset, 0); }
   public static int endRecord(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

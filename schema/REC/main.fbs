@@ -1,5 +1,5 @@
-// Hash: 037d9b6926461818fef26c3460e07d1c1e74ad8e6769164ce7f5e34f479705b0
-// Version: 1.44.2
+// Hash: ec6e080a067b02a5e9cf8656d4162f67315bda34113b98c495d79a4466781d76
+// Version: 1.44.3
 // -----------------------------------END_HEADER
 include "../BOV/main.fbs";
 include "../CAT/main.fbs";
@@ -45,7 +45,7 @@ union RecordType {
 
 table Record {
   value: RecordType; 
-  type: string;
+  type_name: string;
 }
 
 /// Collection of Standard Records
