@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.43.0+1744057614803",
+    "version": "1.44.0+1744058005341",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -93,7 +93,6 @@
         "lobster"
     ],
     "scripts": {
-        "postinstall": "cd website && npm i",
         "test": "mocha",
         "test:watch": "nodemon --exec 'npm test' --watch .",
         "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
