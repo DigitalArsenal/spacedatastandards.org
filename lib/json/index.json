@@ -11325,7 +11325,7 @@
                                 }
                             ]
                         },
-                        "type_name": {
+                        "typename": {
                             "type": "string"
                         }
                     },

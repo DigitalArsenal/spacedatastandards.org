@@ -101,7 +101,7 @@ class Record : flatbuffers.handle
         return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_VCM():
         return VCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def type_name() -> string:
+    def typename() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
 
 def GetRootAsRecord(buf:string): return Record { buf, flatbuffers.indirect(buf, 0) }
@@ -117,8 +117,8 @@ struct RecordBuilder:
     def add_value(value:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, value)
         return this
-    def add_type_name(type_name:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, type_name)
+    def add_typename(typename:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, typename)
         return this
     def end():
         return b_.EndObject()

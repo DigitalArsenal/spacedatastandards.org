@@ -64,30 +64,30 @@ public struct Record: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case valueType = 4
     case value = 6
-    case typeName = 8
+    case typename = 8
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
   public var valueType: RecordType { let o = _accessor.offset(VTOFFSET.valueType.v); return o == 0 ? .none_ : RecordType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   public func value<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.value.v); return o == 0 ? nil : _accessor.union(o) }
-  public var typeName: String? { let o = _accessor.offset(VTOFFSET.typeName.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var typeNameSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.typeName.v) }
+  public var typename: String? { let o = _accessor.offset(VTOFFSET.typename.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var typenameSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.typename.v) }
   public static func startRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(valueType: RecordType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: valueType.rawValue, def: 0, at: VTOFFSET.valueType.p) }
   public static func add(value: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: value, at: VTOFFSET.value.p) }
-  public static func add(typeName: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: typeName, at: VTOFFSET.typeName.p) }
+  public static func add(typename: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: typename, at: VTOFFSET.typename.p) }
   public static func endRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRecord(
     _ fbb: inout FlatBufferBuilder,
     valueType: RecordType = .none_,
     valueOffset value: Offset = Offset(),
-    typeNameOffset typeName: Offset = Offset()
+    typenameOffset typename: Offset = Offset()
   ) -> Offset {
     let __start = Record.startRecord(&fbb)
     Record.add(valueType: valueType, &fbb)
     Record.add(value: value, &fbb)
-    Record.add(typeName: typeName, &fbb)
+    Record.add(typename: typename, &fbb)
     return Record.endRecord(&fbb, start: __start)
   }
 
@@ -159,7 +159,7 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
       }
     })
-    try _v.visit(field: VTOFFSET.typeName.p, fieldName: "typeName", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.typename.p, fieldName: "typename", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

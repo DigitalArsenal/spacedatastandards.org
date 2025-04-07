@@ -4403,7 +4403,7 @@
         "value" : {
                 "anyOf": [{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" }]
               },
-        "type_name" : {
+        "typename" : {
                 "type" : "string"
               }
       },

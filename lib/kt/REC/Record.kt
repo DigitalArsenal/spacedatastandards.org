@@ -34,7 +34,7 @@ class Record : Table() {
     fun value(obj: Table) : Table? {
         val o = __offset(6); return if (o != 0) __union(obj, o + bb_pos) else null
     }
-    val typeName : String?
+    val typename : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -43,8 +43,8 @@ class Record : Table() {
                 null
             }
         }
-    val typeNameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun typeNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val typenameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun typenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRecord(_bb: ByteBuffer): Record = getRootAsRecord(_bb, Record())
@@ -52,9 +52,9 @@ class Record : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int, typeNameOffset: Int) : Int {
+        fun createRecord(builder: FlatBufferBuilder, valueType: UByte, valueOffset: Int, typenameOffset: Int) : Int {
             builder.startTable(3)
-            addTypeName(builder, typeNameOffset)
+            addTypename(builder, typenameOffset)
             addValue(builder, valueOffset)
             addValueType(builder, valueType)
             return endRecord(builder)
@@ -62,7 +62,7 @@ class Record : Table() {
         fun startRecord(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addValueType(builder: FlatBufferBuilder, valueType: UByte) = builder.addByte(0, valueType.toByte(), 0)
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
-        fun addTypeName(builder: FlatBufferBuilder, typeName: Int) = builder.addOffset(2, typeName, 0)
+        fun addTypename(builder: FlatBufferBuilder, typename: Int) = builder.addOffset(2, typename, 0)
         fun endRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

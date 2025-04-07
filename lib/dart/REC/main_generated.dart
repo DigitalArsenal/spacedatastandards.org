@@ -157,11 +157,11 @@ class Record {
       default: return null;
     }
   }
-  String? get typeName => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get typename => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'Record{valueType: ${valueType}, value: ${value}, typeName: ${typeName}}';
+    return 'Record{valueType: ${valueType}, value: ${value}, typename: ${typename}}';
   }
 }
 
@@ -190,7 +190,7 @@ class RecordBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addTypeNameOffset(int? offset) {
+  int addTypenameOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
@@ -203,27 +203,27 @@ class RecordBuilder {
 class RecordObjectBuilder extends fb.ObjectBuilder {
   final RecordTypeTypeId? _valueType;
   final dynamic _value;
-  final String? _typeName;
+  final String? _typename;
 
   RecordObjectBuilder({
     RecordTypeTypeId? valueType,
     dynamic value,
-    String? typeName,
+    String? typename,
   })
       : _valueType = valueType,
         _value = value,
-        _typeName = typeName;
+        _typename = typename;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? valueOffset = _value?.getOrCreateOffset(fbBuilder);
-    final int? typeNameOffset = _typeName == null ? null
-        : fbBuilder.writeString(_typeName!);
+    final int? typenameOffset = _typename == null ? null
+        : fbBuilder.writeString(_typename!);
     fbBuilder.startTable(3);
     fbBuilder.addUint8(0, _valueType?.value);
     fbBuilder.addOffset(1, valueOffset);
-    fbBuilder.addOffset(2, typeNameOffset);
+    fbBuilder.addOffset(2, typenameOffset);
     return fbBuilder.endTable();
   }
 

@@ -299,7 +299,7 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_VALUE_TYPE = 4,
     VT_VALUE = 6,
-    VT_TYPE_NAME = 8
+    VT_TYPENAME_ = 8
   };
   RecordType value_type() const {
     return static_cast<RecordType>(GetField<uint8_t>(VT_VALUE_TYPE, 0));
@@ -398,16 +398,16 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const VCM *value_as_VCM() const {
     return value_type() == RecordType_VCM ? static_cast<const VCM *>(value()) : nullptr;
   }
-  const ::flatbuffers::String *type_name() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPE_NAME);
+  const ::flatbuffers::String *typename_() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TYPENAME_);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_VALUE_TYPE, 1) &&
            VerifyOffset(verifier, VT_VALUE) &&
            VerifyRecordType(verifier, value(), value_type()) &&
-           VerifyOffset(verifier, VT_TYPE_NAME) &&
-           verifier.VerifyString(type_name()) &&
+           VerifyOffset(verifier, VT_TYPENAME_) &&
+           verifier.VerifyString(typename_()) &&
            verifier.EndTable();
   }
 };
@@ -542,8 +542,8 @@ struct RecordBuilder {
   void add_value(::flatbuffers::Offset<void> value) {
     fbb_.AddOffset(Record::VT_VALUE, value);
   }
-  void add_type_name(::flatbuffers::Offset<::flatbuffers::String> type_name) {
-    fbb_.AddOffset(Record::VT_TYPE_NAME, type_name);
+  void add_typename_(::flatbuffers::Offset<::flatbuffers::String> typename_) {
+    fbb_.AddOffset(Record::VT_TYPENAME_, typename_);
   }
   explicit RecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -560,9 +560,9 @@ inline ::flatbuffers::Offset<Record> CreateRecord(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RecordType value_type = RecordType_NONE,
     ::flatbuffers::Offset<void> value = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> type_name = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> typename_ = 0) {
   RecordBuilder builder_(_fbb);
-  builder_.add_type_name(type_name);
+  builder_.add_typename_(typename_);
   builder_.add_value(value);
   builder_.add_value_type(value_type);
   return builder_.Finish();
@@ -572,13 +572,13 @@ inline ::flatbuffers::Offset<Record> CreateRecordDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RecordType value_type = RecordType_NONE,
     ::flatbuffers::Offset<void> value = 0,
-    const char *type_name = nullptr) {
-  auto type_name__ = type_name ? _fbb.CreateString(type_name) : 0;
+    const char *typename_ = nullptr) {
+  auto typename___ = typename_ ? _fbb.CreateString(typename_) : 0;
   return CreateRecord(
       _fbb,
       value_type,
       value,
-      type_name__);
+      typename___);
 }
 
 /// Collection of Standard Records

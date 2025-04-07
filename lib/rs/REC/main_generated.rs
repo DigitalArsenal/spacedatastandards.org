@@ -1003,7 +1003,7 @@ impl<'a> flatbuffers::Follow<'a> for Record<'a> {
 impl<'a> Record<'a> {
   pub const VT_VALUE_TYPE: flatbuffers::VOffsetT = 4;
   pub const VT_VALUE: flatbuffers::VOffsetT = 6;
-  pub const VT_TYPE_NAME: flatbuffers::VOffsetT = 8;
+  pub const VT_TYPENAME: flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1015,7 +1015,7 @@ impl<'a> Record<'a> {
     args: &'args RecordArgs<'args>
   ) -> flatbuffers::WIPOffset<Record<'bldr>> {
     let mut builder = RecordBuilder::new(_fbb);
-    if let Some(x) = args.type_name { builder.add_type_name(x); }
+    if let Some(x) = args.typename { builder.add_typename(x); }
     if let Some(x) = args.value { builder.add_value(x); }
     builder.add_value_type(args.value_type);
     builder.finish()
@@ -1176,12 +1176,12 @@ impl<'a> Record<'a> {
       )),
       _ => RecordTypeT::NONE,
     };
-    let type_name = self.type_name().map(|x| {
+    let typename = self.typename().map(|x| {
       x.to_string()
     });
     RecordT {
       value,
-      type_name,
+      typename,
     }
   }
 
@@ -1200,11 +1200,11 @@ impl<'a> Record<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(Record::VT_VALUE, None)}
   }
   #[inline]
-  pub fn type_name(&self) -> Option<&'a str> {
+  pub fn typename(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Record::VT_TYPE_NAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Record::VT_TYPENAME, None)}
   }
   #[inline]
   #[allow(non_snake_case)]
@@ -1700,7 +1700,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           _ => Ok(()),
         }
      })?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("type_name", Self::VT_TYPE_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("typename", Self::VT_TYPENAME, false)?
      .finish();
     Ok(())
   }
@@ -1708,7 +1708,7 @@ impl flatbuffers::Verifiable for Record<'_> {
 pub struct RecordArgs<'a> {
     pub value_type: RecordType,
     pub value: Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>>,
-    pub type_name: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub typename: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for RecordArgs<'a> {
   #[inline]
@@ -1716,7 +1716,7 @@ impl<'a> Default for RecordArgs<'a> {
     RecordArgs {
       value_type: RecordType::NONE,
       value: None,
-      type_name: None,
+      typename: None,
     }
   }
 }
@@ -1735,8 +1735,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RecordBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_VALUE, value);
   }
   #[inline]
-  pub fn add_type_name(&mut self, type_name: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_TYPE_NAME, type_name);
+  pub fn add_typename(&mut self, typename: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_TYPENAME, typename);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RecordBuilder<'a, 'b, A> {
@@ -1973,7 +1973,7 @@ impl core::fmt::Debug for Record<'_> {
           ds.field("value", &x)
         },
       };
-      ds.field("type_name", &self.type_name());
+      ds.field("typename", &self.typename());
       ds.finish()
   }
 }
@@ -1981,13 +1981,13 @@ impl core::fmt::Debug for Record<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct RecordT {
   pub value: RecordTypeT,
-  pub type_name: Option<String>,
+  pub typename: Option<String>,
 }
 impl Default for RecordT {
   fn default() -> Self {
     Self {
       value: RecordTypeT::NONE,
-      type_name: None,
+      typename: None,
     }
   }
 }
@@ -1998,13 +1998,13 @@ impl RecordT {
   ) -> flatbuffers::WIPOffset<Record<'b>> {
     let value_type = self.value.record_type_type();
     let value = self.value.pack(_fbb);
-    let type_name = self.type_name.as_ref().map(|x|{
+    let typename = self.typename.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     Record::create(_fbb, &RecordArgs{
       value_type,
       value,
-      type_name,
+      typename,
     })
   }
 }
