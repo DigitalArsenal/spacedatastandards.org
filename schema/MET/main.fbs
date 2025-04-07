@@ -1,5 +1,5 @@
-// Hash: 027e35da6c490db3f94cf91e72c526dfbb0c3b4a343739eceb7ca1214558934f
-// Version: 1.0.0
+// Hash: 6249ba868a102d60f27aea94dc497b18fb5505b545bf08b363a8fcb752c7d88e
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 enum meanElementTheory : byte {
   /// Simplified General Perturbation Model 4

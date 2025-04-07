@@ -3,4 +3,3 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { CRM, CRMT } from './CRM.js';
-export { CRMCOLLECTION, CRMCOLLECTIONT } from './CRMCOLLECTION.js';

@@ -15,16 +15,6 @@
       },
       "additionalProperties" : false
     },
-    "RFMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Reference Frame Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "TDM" : {
       "type" : "object",
       "description" : "Tracking Data Message",
@@ -264,15 +254,6 @@
         "CLOCK_DRIFT" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Clock drift values -  CCSDS 503.0-B-1, Page D-15"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "TDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/TDM"}
               }
       },
       "additionalProperties" : false

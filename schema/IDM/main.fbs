@@ -1,5 +1,5 @@
-// Hash: 66b4152401551e60dae8f48716364c643ae46ea395df886b8c1ac211686cc300
-// Version: 1.0.2
+// Hash: 9142dced239a49aa8bf81bad7f2dcb57688340389780e43684fd5eaa1f7a82ab
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 /// Different types of polarization in EMT
 enum PolarizationType: byte {

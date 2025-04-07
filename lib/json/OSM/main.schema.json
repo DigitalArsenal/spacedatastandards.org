@@ -31,15 +31,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "OSMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/OSM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/OSM"

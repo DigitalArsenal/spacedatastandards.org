@@ -14,15 +14,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "METCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/MET"

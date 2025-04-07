@@ -197,15 +197,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "Geometry" : {
       "type" : "object",
       "description" : "Geometry table with information about geometric properties",
@@ -320,15 +311,6 @@
         "INTEGRATED_DEVICES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
                 "description" : "Vector of Integrated Devices (IDM)"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SITCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SIT"}
               }
       },
       "additionalProperties" : false

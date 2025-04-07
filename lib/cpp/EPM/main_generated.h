@@ -22,9 +22,6 @@ struct AddressBuilder;
 struct EPM;
 struct EPMBuilder;
 
-struct EPMCOLLECTION;
-struct EPMCOLLECTIONBuilder;
-
 enum KeyType : int8_t {
   KeyType_Signing = 0,
   KeyType_Encryption = 1,
@@ -587,58 +584,6 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
       TELEPHONE__,
       KEYS__,
       MULTIFORMAT_ADDRESS__);
-}
-
-struct EPMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef EPMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EPM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct EPMCOLLECTIONBuilder {
-  typedef EPMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> RECORDS) {
-    fbb_.AddOffset(EPMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit EPMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<EPMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<EPMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<EPMCOLLECTION> CreateEPMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EPM>>> RECORDS = 0) {
-  EPMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<EPMCOLLECTION> CreateEPMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<EPM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<EPM>>(*RECORDS) : 0;
-  return CreateEPMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const EPM *GetEPM(const void *buf) {

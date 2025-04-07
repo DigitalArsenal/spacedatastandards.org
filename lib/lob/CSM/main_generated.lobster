@@ -3,8 +3,6 @@ import flatbuffers
 
 class CSM
 
-class CSMCOLLECTION
-
 /// Conjunction Summary Message
 class CSM : flatbuffers.handle
     /// Satellite name for the first object
@@ -73,30 +71,4 @@ struct CSMBuilder:
         return this
     def end():
         return b_.EndObject()
-
-class CSMCOLLECTION : flatbuffers.handle
-    def RECORDS(i:int) -> CSM:
-        return CSM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 4)
-
-def GetRootAsCSMCOLLECTION(buf:string): return CSMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
-
-struct CSMCOLLECTIONBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def CSMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def CSMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
 

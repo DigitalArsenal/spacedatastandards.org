@@ -18,9 +18,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct TDM;
 struct TDMBuilder;
 
-struct TDMCOLLECTION;
-struct TDMCOLLECTIONBuilder;
-
 /// Tracking Data Message
 struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TDMBuilder Builder;
@@ -903,58 +900,6 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
       TEMPERATURE__,
       CLOCK_BIAS__,
       CLOCK_DRIFT__);
-}
-
-struct TDMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TDMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<TDM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TDM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct TDMCOLLECTIONBuilder {
-  typedef TDMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDM>>> RECORDS) {
-    fbb_.AddOffset(TDMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit TDMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<TDMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TDMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<TDMCOLLECTION> CreateTDMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDM>>> RECORDS = 0) {
-  TDMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<TDMCOLLECTION> CreateTDMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<TDM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<TDM>>(*RECORDS) : 0;
-  return CreateTDMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const TDM *GetTDM(const void *buf) {

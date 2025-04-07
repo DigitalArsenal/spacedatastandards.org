@@ -19,9 +19,6 @@ struct ScoreBuilder;
 struct HYP;
 struct HYPBuilder;
 
-struct HYPCOLLECTION;
-struct HYPCOLLECTIONBuilder;
-
 enum ScoreType : int8_t {
   ScoreType_OUTLIER = 0,
   ScoreType_MIN = ScoreType_OUTLIER,
@@ -342,58 +339,6 @@ inline ::flatbuffers::Offset<HYP> CreateHYPDirect(
       ANALYSIS_METHOD__,
       EVENT_START_TIME__,
       EVENT_END_TIME__);
-}
-
-struct HYPCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef HYPCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<HYP>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<HYP>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct HYPCOLLECTIONBuilder {
-  typedef HYPCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<HYP>>> RECORDS) {
-    fbb_.AddOffset(HYPCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit HYPCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<HYPCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<HYPCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<HYPCOLLECTION> CreateHYPCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<HYP>>> RECORDS = 0) {
-  HYPCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<HYPCOLLECTION> CreateHYPCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<HYP>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<HYP>>(*RECORDS) : 0;
-  return CreateHYPCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const HYP *GetHYP(const void *buf) {

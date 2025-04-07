@@ -1,5 +1,5 @@
-// Hash: 545c92b9ed8147a6eb7cded867979c8ae0fba687548e0638d416e21ee0e6dcfe
-// Version: 1.0.7
+// Hash: 69121db1b68d5a6b4980f23021c6471787d46f904115d419d49d5ab1a6c5cddc
+// Version: 1.0.8
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../IDM/main.fbs";

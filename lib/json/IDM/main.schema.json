@@ -192,15 +192,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/IDM"

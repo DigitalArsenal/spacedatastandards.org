@@ -15,15 +15,6 @@
       },
       "additionalProperties" : false
     },
-    "METCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "MPE" : {
       "type" : "object",
       "description" : "Minimum Propagatable Element Set",
@@ -67,15 +58,6 @@
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory",
                 "description" : "Description of the Mean Element Theory (SGP4, DSST, USM)"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "MPECOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/MPE"}
               }
       },
       "additionalProperties" : false

@@ -319,15 +319,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "CRMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CRM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/CRM"

@@ -18,9 +18,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct CSM;
 struct CSMBuilder;
 
-struct CSMCOLLECTION;
-struct CSMCOLLECTIONBuilder;
-
 /// Conjunction Summary Message
 struct CSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CSMBuilder Builder;
@@ -152,58 +149,6 @@ inline ::flatbuffers::Offset<CSM> CreateCSM(
   builder_.add_OBJECT_2(OBJECT_2);
   builder_.add_OBJECT_1(OBJECT_1);
   return builder_.Finish();
-}
-
-struct CSMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef CSMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<CSM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CSM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct CSMCOLLECTIONBuilder {
-  typedef CSMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CSM>>> RECORDS) {
-    fbb_.AddOffset(CSMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit CSMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<CSMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<CSMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<CSMCOLLECTION> CreateCSMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CSM>>> RECORDS = 0) {
-  CSMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<CSMCOLLECTION> CreateCSMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<CSM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<CSM>>(*RECORDS) : 0;
-  return CreateCSMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const CSM *GetCSM(const void *buf) {

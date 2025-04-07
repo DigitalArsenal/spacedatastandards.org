@@ -19,9 +19,6 @@ struct SCHEMA_STANDARDBuilder;
 struct SCM;
 struct SCMBuilder;
 
-struct SCMCOLLECTION;
-struct SCMCOLLECTIONBuilder;
-
 /// Schema Standard Definition
 struct SCHEMA_STANDARD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCHEMA_STANDARDBuilder Builder;
@@ -172,59 +169,6 @@ inline ::flatbuffers::Offset<SCM> CreateSCMDirect(
   return CreateSCM(
       _fbb,
       version__,
-      RECORDS__);
-}
-
-/// Declaring the root type
-struct SCMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef SCMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<SCM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct SCMCOLLECTIONBuilder {
-  typedef SCMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCM>>> RECORDS) {
-    fbb_.AddOffset(SCMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit SCMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<SCMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<SCMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<SCMCOLLECTION> CreateSCMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCM>>> RECORDS = 0) {
-  SCMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<SCMCOLLECTION> CreateSCMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<SCM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<SCM>>(*RECORDS) : 0;
-  return CreateSCMCOLLECTION(
-      _fbb,
       RECORDS__);
 }
 

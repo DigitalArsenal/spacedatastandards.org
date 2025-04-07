@@ -22,9 +22,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct LDM;
 struct LDMBuilder;
 
-struct LDMCOLLECTION;
-struct LDMCOLLECTIONBuilder;
-
 /// Launch Data Message
 struct LDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LDMBuilder Builder;
@@ -473,58 +470,6 @@ inline ::flatbuffers::Offset<LDM> CreateLDMDirect(
       COLA_POINTS_OF_CONTACT__,
       ORBITAL_PARAMETERS__,
       BURN_OUT_VECTORS__);
-}
-
-struct LDMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LDMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<LDM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<LDM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct LDMCOLLECTIONBuilder {
-  typedef LDMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<LDM>>> RECORDS) {
-    fbb_.AddOffset(LDMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit LDMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<LDMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LDMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<LDMCOLLECTION> CreateLDMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<LDM>>> RECORDS = 0) {
-  LDMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<LDMCOLLECTION> CreateLDMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<LDM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<LDM>>(*RECORDS) : 0;
-  return CreateLDMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const LDM *GetLDM(const void *buf) {

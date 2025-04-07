@@ -3,5 +3,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { LCC, LCCT } from './LCC.js';
-export { LCCCOLLECTION, LCCCOLLECTIONT } from './LCCCOLLECTION.js';
 export { legacyCountryCode } from './legacyCountryCode.js';

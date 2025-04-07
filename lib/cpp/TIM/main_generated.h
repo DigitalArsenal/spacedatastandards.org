@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct TIM;
 struct TIMBuilder;
 
-struct TIMCOLLECTION;
-struct TIMCOLLECTIONBuilder;
-
 enum timeSystem : int8_t {
   /// Greenwich Mean Sidereal Time
   timeSystem_GMST = 0,
@@ -131,58 +128,6 @@ inline ::flatbuffers::Offset<TIM> CreateTIM(
   TIMBuilder builder_(_fbb);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   return builder_.Finish();
-}
-
-struct TIMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TIMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<TIM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TIM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct TIMCOLLECTIONBuilder {
-  typedef TIMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TIM>>> RECORDS) {
-    fbb_.AddOffset(TIMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit TIMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<TIMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TIMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<TIMCOLLECTION> CreateTIMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TIM>>> RECORDS = 0) {
-  TIMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<TIMCOLLECTION> CreateTIMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<TIM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<TIM>>(*RECORDS) : 0;
-  return CreateTIMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const TIM *GetTIM(const void *buf) {

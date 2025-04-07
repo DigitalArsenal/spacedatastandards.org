@@ -3,8 +3,6 @@ import flatbuffers
 
 class PLD
 
-class PLDCOLLECTION
-
 /// Payload Information
 class PLD : flatbuffers.handle
     def PAYLOAD_DURATION() -> string:
@@ -58,32 +56,6 @@ struct PLDBuilder:
 def PLDStartINSTRUMENTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def PLDCreateINSTRUMENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-class PLDCOLLECTION : flatbuffers.handle
-    def RECORDS(i:int) -> PLD:
-        return PLD { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 4)
-
-def GetRootAsPLDCOLLECTION(buf:string): return PLDCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
-
-struct PLDCOLLECTIONBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def PLDCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def PLDCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

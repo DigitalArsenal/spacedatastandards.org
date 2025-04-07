@@ -3,7 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { RFM, RFMT } from './RFM.js';
-export { RFMCOLLECTION, RFMCOLLECTIONT } from './RFMCOLLECTION.js';
 export { TDM, TDMT } from './TDM.js';
-export { TDMCOLLECTION, TDMCOLLECTIONT } from './TDMCOLLECTION.js';
 export { refFrame } from './refFrame.js';

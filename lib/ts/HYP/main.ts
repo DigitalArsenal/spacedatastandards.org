@@ -3,6 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { HYP, HYPT } from './HYP.js';
-export { HYPCOLLECTION, HYPCOLLECTIONT } from './HYPCOLLECTION.js';
 export { Score, ScoreT } from './Score.js';
 export { ScoreType } from './ScoreType.js';

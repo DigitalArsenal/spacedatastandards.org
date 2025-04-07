@@ -11,8 +11,6 @@ class Address
 
 class EPM
 
-class EPMCOLLECTION
-
 /// Represents cryptographic key information
 class CryptoKey : flatbuffers.handle
     /// Public part of the cryptographic key, in hexidecimal format
@@ -244,32 +242,6 @@ def EPMCreateKEYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def EPMStartMULTIFORMAT_ADDRESSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def EPMCreateMULTIFORMAT_ADDRESSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-class EPMCOLLECTION : flatbuffers.handle
-    def RECORDS(i:int) -> EPM:
-        return EPM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 4)
-
-def GetRootAsEPMCOLLECTION(buf:string): return EPMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
-
-struct EPMCOLLECTIONBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def EPMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def EPMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

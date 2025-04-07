@@ -2,7 +2,6 @@ export { Header, HeaderT } from './Header.js';
 export { Maneuver, ManeuverT } from './Maneuver.js';
 export { Metadata, MetadataT } from './Metadata.js';
 export { OCM, OCMT } from './OCM.js';
-export { OCMCOLLECTION, OCMCOLLECTIONT } from './OCMCOLLECTION.js';
 export { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
 export { Perturbations, PerturbationsT } from './Perturbations.js';
 export { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';

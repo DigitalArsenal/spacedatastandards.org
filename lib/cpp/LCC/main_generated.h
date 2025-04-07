@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct LCC;
 struct LCCBuilder;
 
-struct LCCCOLLECTION;
-struct LCCCOLLECTIONBuilder;
-
 enum legacyCountryCode : int8_t {
   /// Arab Satellite Communications Organization
   legacyCountryCode_AB = 0,
@@ -587,58 +584,6 @@ inline ::flatbuffers::Offset<LCC> CreateLCC(
   LCCBuilder builder_(_fbb);
   builder_.add_OWNER(OWNER);
   return builder_.Finish();
-}
-
-struct LCCCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LCCCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<LCC>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<LCC>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct LCCCOLLECTIONBuilder {
-  typedef LCCCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<LCC>>> RECORDS) {
-    fbb_.AddOffset(LCCCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit LCCCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<LCCCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LCCCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<LCCCOLLECTION> CreateLCCCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<LCC>>> RECORDS = 0) {
-  LCCCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<LCCCOLLECTION> CreateLCCCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<LCC>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<LCC>>(*RECORDS) : 0;
-  return CreateLCCCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const LCC *GetLCC(const void *buf) {

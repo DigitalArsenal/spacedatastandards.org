@@ -3,16 +3,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { MET, METT } from './MET.js';
-export { METCOLLECTION, METCOLLECTIONT } from './METCOLLECTION.js';
 export { RFM, RFMT } from './RFM.js';
-export { RFMCOLLECTION, RFMCOLLECTIONT } from './RFMCOLLECTION.js';
 export { TIM, TIMT } from './TIM.js';
-export { TIMCOLLECTION, TIMCOLLECTIONT } from './TIMCOLLECTION.js';
 export { VCM, VCMT } from './VCM.js';
 export { VCMAtmosphericModelData, VCMAtmosphericModelDataT } from './VCMAtmosphericModelData.js';
 export { VCMCovarianceMatrixLine, VCMCovarianceMatrixLineT } from './VCMCovarianceMatrixLine.js';
 export { VCMStateVector, VCMStateVectorT } from './VCMStateVector.js';
-export { VCM_COLLECTION, VCM_COLLECTIONT } from './VCM_COLLECTION.js';
 export { anomalyType } from './anomalyType.js';
 export { atmosphericModel } from './atmosphericModel.js';
 export { elementType } from './elementType.js';

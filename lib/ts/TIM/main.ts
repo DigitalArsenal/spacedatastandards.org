@@ -3,5 +3,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { TIM, TIMT } from './TIM.js';
-export { TIMCOLLECTION, TIMCOLLECTIONT } from './TIMCOLLECTION.js';
 export { timeSystem } from './timeSystem.js';

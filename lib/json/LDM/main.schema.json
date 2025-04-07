@@ -229,15 +229,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "Geometry" : {
       "type" : "object",
       "description" : "Geometry table with information about geometric properties",
@@ -352,15 +343,6 @@
         "INTEGRATED_DEVICES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
                 "description" : "Vector of Integrated Devices (IDM)"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SITCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SIT"}
               }
       },
       "additionalProperties" : false
@@ -498,15 +480,6 @@
       },
       "additionalProperties" : false
     },
-    "EPMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EPM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -535,30 +508,12 @@
       },
       "additionalProperties" : false
     },
-    "PLDCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "LCC" : {
       "type" : "object",
       "description" : "Legacy Country Code",
       "properties" : {
         "OWNER" : {
                 "$ref" : "#/definitions/legacyCountryCode"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "LCCCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/LCC"}
               }
       },
       "additionalProperties" : false
@@ -662,15 +617,6 @@
       },
       "additionalProperties" : false
     },
-    "CATCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "ROC" : {
       "type" : "object",
       "description" : "Rocket Configuration",
@@ -763,16 +709,6 @@
       },
       "additionalProperties" : false
     },
-    "ROCCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Rocket Configurations",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/ROC"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "BOV" : {
       "type" : "object",
       "description" : "Burn Out Vector Message",
@@ -800,15 +736,6 @@
               },
         "TIME_FROM_LAUNCH" : {
                 "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "BOVCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/BOV"}
               }
       },
       "additionalProperties" : false
@@ -924,15 +851,6 @@
         "BURN_OUT_VECTORS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/BOV"},
                 "description" : "Burn Out Vectors for the Launch"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "LDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/LDM"}
               }
       },
       "additionalProperties" : false

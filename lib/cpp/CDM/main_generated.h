@@ -24,9 +24,6 @@ struct CDMObjectBuilder;
 struct CDM;
 struct CDMBuilder;
 
-struct CDMCOLLECTION;
-struct CDMCOLLECTIONBuilder;
-
 enum screeningVolumeShape : int8_t {
   screeningVolumeShape_ELLIPSOID = 0,
   screeningVolumeShape_BOX = 1,
@@ -1633,58 +1630,6 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
       OBJECT2,
       OBJECT1_DATASOURCE,
       OBJECT2_DATASOURCE);
-}
-
-struct CDMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef CDMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<CDM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CDM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct CDMCOLLECTIONBuilder {
-  typedef CDMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CDM>>> RECORDS) {
-    fbb_.AddOffset(CDMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit CDMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<CDMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<CDMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<CDMCOLLECTION> CreateCDMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CDM>>> RECORDS = 0) {
-  CDMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<CDMCOLLECTION> CreateCDMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<CDM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<CDM>>(*RECORDS) : 0;
-  return CreateCDMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const CDM *GetCDM(const void *buf) {

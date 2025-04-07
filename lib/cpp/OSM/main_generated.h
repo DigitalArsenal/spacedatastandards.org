@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct OSM;
 struct OSMBuilder;
 
-struct OSMCOLLECTION;
-struct OSMCOLLECTIONBuilder;
-
 /// Observation Stability Message
 struct OSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OSMBuilder Builder;
@@ -139,58 +136,6 @@ inline ::flatbuffers::Offset<OSM> CreateOSMDirect(
       ID_SENSOR__,
       PASS_START__,
       PASS_DURATION);
-}
-
-struct OSMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OSMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<OSM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OSM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OSMCOLLECTIONBuilder {
-  typedef OSMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OSM>>> RECORDS) {
-    fbb_.AddOffset(OSMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit OSMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<OSMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<OSMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<OSMCOLLECTION> CreateOSMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OSM>>> RECORDS = 0) {
-  OSMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<OSMCOLLECTION> CreateOSMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<OSM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<OSM>>(*RECORDS) : 0;
-  return CreateOSMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const OSM *GetOSM(const void *buf) {

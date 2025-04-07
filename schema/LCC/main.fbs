@@ -1,5 +1,5 @@
-// Hash: b9f1e2f997ad1c4b378badabffaf264c6907c04640b64e3db77f7c1a6f90e08d
-// Version: 1.0.0
+// Hash: f4ca2876e82fadd42986ca54d6047bbc7552086059bcd79ade2eca5fb8bc9db6
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 enum legacyCountryCode : byte {
   /// Arab Satellite Communications Organization

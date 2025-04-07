@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct RFM;
 struct RFMBuilder;
 
-struct RFMCOLLECTION;
-struct RFMCOLLECTIONBuilder;
-
 enum refFrame : int8_t {
   /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
   refFrame_ECEF = 0,
@@ -439,59 +436,6 @@ inline ::flatbuffers::Offset<RFM> CreateRFM(
   RFMBuilder builder_(_fbb);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   return builder_.Finish();
-}
-
-/// Collection of Reference Frame Messages
-struct RFMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef RFMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<RFM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<RFM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct RFMCOLLECTIONBuilder {
-  typedef RFMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RFM>>> RECORDS) {
-    fbb_.AddOffset(RFMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit RFMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<RFMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<RFMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<RFMCOLLECTION> CreateRFMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RFM>>> RECORDS = 0) {
-  RFMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<RFMCOLLECTION> CreateRFMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<RFM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<RFM>>(*RECORDS) : 0;
-  return CreateRFMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const RFM *GetRFM(const void *buf) {

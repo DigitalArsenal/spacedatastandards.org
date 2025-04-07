@@ -639,16 +639,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "OCMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/OCM"},
-                "description" : "Collection of OCM records."
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/OCM"

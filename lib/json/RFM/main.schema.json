@@ -14,16 +14,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "RFMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Reference Frame Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/RFM"

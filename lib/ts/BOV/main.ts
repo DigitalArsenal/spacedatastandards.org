@@ -3,4 +3,3 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { BOV, BOVT } from './BOV.js';
-export { BOVCOLLECTION, BOVCOLLECTIONT } from './BOVCOLLECTION.js';

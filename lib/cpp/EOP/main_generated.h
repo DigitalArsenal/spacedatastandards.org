@@ -16,9 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct EOP;
 struct EOPBuilder;
 
-struct EOPCOLLECTION;
-struct EOPCOLLECTIONBuilder;
-
 enum DataType : int8_t {
   DataType_OBSERVED = 0,
   DataType_PREDICTED = 1,
@@ -217,58 +214,6 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
       TAI_MINUS_UTC_SECONDS,
       LENGTH_OF_DAY_CORRECTION_SECONDS,
       DATA_TYPE);
-}
-
-struct EOPCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef EOPCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<EOP>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EOP>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct EOPCOLLECTIONBuilder {
-  typedef EOPCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOP>>> RECORDS) {
-    fbb_.AddOffset(EOPCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit EOPCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<EOPCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<EOPCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<EOPCOLLECTION> CreateEOPCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOP>>> RECORDS = 0) {
-  EOPCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<EOPCOLLECTION> CreateEOPCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<EOP>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<EOP>>(*RECORDS) : 0;
-  return CreateEOPCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const EOP *GetEOP(const void *buf) {

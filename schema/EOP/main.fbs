@@ -1,5 +1,5 @@
-// Hash: 8fbbdcf395c1c0fca2ced0306dc21fbd589b73c579449f24c0e5bf462a157730
-// Version: 1.0.0
+// Hash: 219b7e16d36a3b61cca3b2ef10f6026ea38be8aef260ccd63e80515048db6a40
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 enum DataType: byte {
   OBSERVED = 0,

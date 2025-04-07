@@ -67,16 +67,6 @@
       },
       "additionalProperties" : false
     },
-    "RFMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Reference Frame Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "TIM" : {
       "type" : "object",
       "description" : "Time System",
@@ -87,30 +77,12 @@
       },
       "additionalProperties" : false
     },
-    "TIMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "MET" : {
       "type" : "object",
       "description" : "Mean Element Theory",
       "properties" : {
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "METCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/MET"}
               }
       },
       "additionalProperties" : false
@@ -416,16 +388,6 @@
               },
         "USER_DEFINED_MICROSECONDS" : {
                 "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "VCM_COLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of VCM records",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/VCM"}
               }
       },
       "additionalProperties" : false

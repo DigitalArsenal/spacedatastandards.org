@@ -39,16 +39,6 @@
       },
       "additionalProperties" : false
     },
-    "RFMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Reference Frame Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "FrequencyRange" : {
       "type" : "object",
       "description" : "Frequency range with lower and upper limits",
@@ -221,15 +211,6 @@
         "TASKABLE" : {
                 "type" : "boolean",
                 "description" : "Indicates if the site is taskable"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
               }
       },
       "additionalProperties" : false
@@ -773,15 +754,6 @@
         "VALID_DATA_AREA_KM2" : {
                 "type" : "number",
                 "description" : "Total area covered by valid data (non-masked, usable imagery) in square kilometers."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "EOOCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EOO"}
               }
       },
       "additionalProperties" : false

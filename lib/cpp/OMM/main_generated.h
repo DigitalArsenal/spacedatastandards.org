@@ -20,9 +20,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct OMM;
 struct OMMBuilder;
 
-struct OMMCOLLECTION;
-struct OMMCOLLECTIONBuilder;
-
 enum ephemerisType : int8_t {
   /// Simplified General Perturbation Model
   ephemerisType_SGP = 0,
@@ -907,58 +904,6 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
       USER_DEFINED_EARTH_MODEL__,
       USER_DEFINED_EPOCH_TIMESTAMP,
       USER_DEFINED_MICROSECONDS);
-}
-
-struct OMMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OMMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OMMCOLLECTIONBuilder {
-  typedef OMMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> RECORDS) {
-    fbb_.AddOffset(OMMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit OMMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<OMMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<OMMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<OMMCOLLECTION> CreateOMMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> RECORDS = 0) {
-  OMMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<OMMCOLLECTION> CreateOMMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<OMM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<OMM>>(*RECORDS) : 0;
-  return CreateOMMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const OMM *GetOMM(const void *buf) {

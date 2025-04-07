@@ -40,9 +40,6 @@ struct UserDefinedParametersBuilder;
 struct OCM;
 struct OCMBuilder;
 
-struct OCMCOLLECTION;
-struct OCMCOLLECTIONBuilder;
-
 struct Header FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef HeaderBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -2493,59 +2490,6 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       PERTURBATIONS,
       ORBIT_DETERMINATION,
       USER_DEFINED_PARAMETERS__);
-}
-
-struct OCMCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef OCMCOLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  /// Collection of OCM records.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<OCM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OCM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct OCMCOLLECTIONBuilder {
-  typedef OCMCOLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCM>>> RECORDS) {
-    fbb_.AddOffset(OCMCOLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit OCMCOLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<OCMCOLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<OCMCOLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<OCMCOLLECTION> CreateOCMCOLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCM>>> RECORDS = 0) {
-  OCMCOLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<OCMCOLLECTION> CreateOCMCOLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<OCM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<OCM>>(*RECORDS) : 0;
-  return CreateOCMCOLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const OCM *GetOCM(const void *buf) {

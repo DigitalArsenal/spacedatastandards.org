@@ -43,15 +43,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "PNMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PNM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/PNM"

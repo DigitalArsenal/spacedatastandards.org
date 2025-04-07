@@ -8,8 +8,6 @@ class Score
 
 class HYP
 
-class HYPCOLLECTION
-
 class Score : flatbuffers.handle
     def NORAD_CAT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
@@ -169,32 +167,6 @@ def HYPCreateMATRIXVector(b_:flatbuffers.builder, v_:[bool]):
 def HYPStartSCOREVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def HYPCreateSCOREVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-class HYPCOLLECTION : flatbuffers.handle
-    def RECORDS(i:int) -> HYP:
-        return HYP { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 4)
-
-def GetRootAsHYPCOLLECTION(buf:string): return HYPCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
-
-struct HYPCOLLECTIONBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def HYPCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def HYPCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -14,15 +14,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "LCCCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/LCC"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/LCC"

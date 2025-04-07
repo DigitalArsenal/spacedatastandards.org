@@ -1,5 +1,5 @@
-// Hash: 8028ed4a59231732d244d239c5dde1595e41bd20f2d1262c03d8479a84380d7a
-// Version: 3.0.1
+// Hash: 63bb6c64954b75ef655efc22f9f6f2e6e02548954dac8b6dac91b872c8c15aeb
+// Version: 3.0.2
 // -----------------------------------END_HEADER
 enum refFrame : byte {
   /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.

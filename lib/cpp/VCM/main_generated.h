@@ -41,9 +41,6 @@ struct VCMAtmosphericModelDataBuilder;
 struct VCM;
 struct VCMBuilder;
 
-struct VCM_COLLECTION;
-struct VCM_COLLECTIONBuilder;
-
 enum elementType : int8_t {
   elementType_OSCULATING = 0,
   elementType_MEAN = 1,
@@ -1742,59 +1739,6 @@ inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
       USER_DEFINED_EARTH_MODEL__,
       USER_DEFINED_EPOCH_TIMESTAMP,
       USER_DEFINED_MICROSECONDS);
-}
-
-/// Collection of VCM records
-struct VCM_COLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef VCM_COLLECTIONBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RECORDS = 4
-  };
-  const ::flatbuffers::Vector<::flatbuffers::Offset<VCM>> *RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VCM>> *>(VT_RECORDS);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_RECORDS) &&
-           verifier.VerifyVector(RECORDS()) &&
-           verifier.VerifyVectorOfTables(RECORDS()) &&
-           verifier.EndTable();
-  }
-};
-
-struct VCM_COLLECTIONBuilder {
-  typedef VCM_COLLECTION Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VCM>>> RECORDS) {
-    fbb_.AddOffset(VCM_COLLECTION::VT_RECORDS, RECORDS);
-  }
-  explicit VCM_COLLECTIONBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<VCM_COLLECTION> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<VCM_COLLECTION>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<VCM_COLLECTION> CreateVCM_COLLECTION(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VCM>>> RECORDS = 0) {
-  VCM_COLLECTIONBuilder builder_(_fbb);
-  builder_.add_RECORDS(RECORDS);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<VCM_COLLECTION> CreateVCM_COLLECTIONDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<VCM>> *RECORDS = nullptr) {
-  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<VCM>>(*RECORDS) : 0;
-  return CreateVCM_COLLECTION(
-      _fbb,
-      RECORDS__);
 }
 
 inline const VCM *GetVCM(const void *buf) {

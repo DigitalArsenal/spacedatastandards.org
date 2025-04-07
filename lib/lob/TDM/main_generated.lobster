@@ -3,8 +3,6 @@ import flatbuffers
 
 class TDM
 
-class TDMCOLLECTION
-
 /// Tracking Data Message
 class TDM : flatbuffers.handle
     /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
@@ -480,31 +478,5 @@ def TDMStartCLOCK_DRIFTVector(b_:flatbuffers.builder, n_:int):
 def TDMCreateCLOCK_DRIFTVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
-    return b_.EndVector(v_.length)
-
-class TDMCOLLECTION : flatbuffers.handle
-    def RECORDS(i:int) -> TDM:
-        return TDM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
-    def RECORDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 4)
-
-def GetRootAsTDMCOLLECTION(buf:string): return TDMCOLLECTION { buf, flatbuffers.indirect(buf, 0) }
-
-struct TDMCOLLECTIONBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(1)
-        return this
-    def add_RECORDS(RECORDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, RECORDS)
-        return this
-    def end():
-        return b_.EndObject()
-
-def TDMCOLLECTIONStartRECORDSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TDMCOLLECTIONCreateRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 

@@ -137,15 +137,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "EPMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/EPM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/EPM"

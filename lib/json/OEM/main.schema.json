@@ -59,31 +59,12 @@
       },
       "additionalProperties" : false
     },
-    "RFMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of Reference Frame Messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/RFM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "TIM" : {
       "type" : "object",
       "description" : "Time System",
       "properties" : {
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "TIMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/TIM"}
               }
       },
       "additionalProperties" : false
@@ -264,15 +245,6 @@
       },
       "additionalProperties" : false
     },
-    "IDMCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "PLD" : {
       "type" : "object",
       "description" : "Payload Information",
@@ -301,30 +273,12 @@
       },
       "additionalProperties" : false
     },
-    "PLDCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"}
-              }
-      },
-      "additionalProperties" : false
-    },
     "LCC" : {
       "type" : "object",
       "description" : "Legacy Country Code",
       "properties" : {
         "OWNER" : {
                 "$ref" : "#/definitions/legacyCountryCode"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "LCCCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/LCC"}
               }
       },
       "additionalProperties" : false
@@ -424,15 +378,6 @@
         "PAYLOADS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PLD"},
                 "description" : "Vector of PAYLOADS"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "CATCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CAT"}
               }
       },
       "additionalProperties" : false
@@ -673,16 +618,6 @@
         "EPHEMERIS_DATA_BLOCK" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
                 "description" : "Array of ephemeris data blocks"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "OEMCOLLECTION" : {
-      "type" : "object",
-      "description" : "Collection of OEM messages",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/OEM"}
               }
       },
       "additionalProperties" : false

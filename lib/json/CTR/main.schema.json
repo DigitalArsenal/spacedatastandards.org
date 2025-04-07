@@ -39,15 +39,6 @@
               }
       },
       "additionalProperties" : false
-    },
-    "CTRCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/CTR"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
   "$ref" : "#/definitions/CTR"
