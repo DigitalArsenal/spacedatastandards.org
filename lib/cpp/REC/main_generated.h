@@ -299,7 +299,7 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_VALUE_TYPE = 4,
     VT_VALUE = 6,
-    VT_TYPENAME_ = 8
+    VT_STANDARD = 8
   };
   RecordType value_type() const {
     return static_cast<RecordType>(GetField<uint8_t>(VT_VALUE_TYPE, 0));
@@ -398,16 +398,16 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const VCM *value_as_VCM() const {
     return value_type() == RecordType_VCM ? static_cast<const VCM *>(value()) : nullptr;
   }
-  const ::flatbuffers::String *typename_() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPENAME_);
+  const ::flatbuffers::String *standard() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STANDARD);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_VALUE_TYPE, 1) &&
            VerifyOffset(verifier, VT_VALUE) &&
            VerifyRecordType(verifier, value(), value_type()) &&
-           VerifyOffset(verifier, VT_TYPENAME_) &&
-           verifier.VerifyString(typename_()) &&
+           VerifyOffset(verifier, VT_STANDARD) &&
+           verifier.VerifyString(standard()) &&
            verifier.EndTable();
   }
 };
@@ -542,8 +542,8 @@ struct RecordBuilder {
   void add_value(::flatbuffers::Offset<void> value) {
     fbb_.AddOffset(Record::VT_VALUE, value);
   }
-  void add_typename_(::flatbuffers::Offset<::flatbuffers::String> typename_) {
-    fbb_.AddOffset(Record::VT_TYPENAME_, typename_);
+  void add_standard(::flatbuffers::Offset<::flatbuffers::String> standard) {
+    fbb_.AddOffset(Record::VT_STANDARD, standard);
   }
   explicit RecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -560,9 +560,9 @@ inline ::flatbuffers::Offset<Record> CreateRecord(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RecordType value_type = RecordType_NONE,
     ::flatbuffers::Offset<void> value = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> typename_ = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> standard = 0) {
   RecordBuilder builder_(_fbb);
-  builder_.add_typename_(typename_);
+  builder_.add_standard(standard);
   builder_.add_value(value);
   builder_.add_value_type(value_type);
   return builder_.Finish();
@@ -572,13 +572,13 @@ inline ::flatbuffers::Offset<Record> CreateRecordDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RecordType value_type = RecordType_NONE,
     ::flatbuffers::Offset<void> value = 0,
-    const char *typename_ = nullptr) {
-  auto typename___ = typename_ ? _fbb.CreateString(typename_) : 0;
+    const char *standard = nullptr) {
+  auto standard__ = standard ? _fbb.CreateString(standard) : 0;
   return CreateRecord(
       _fbb,
       value_type,
       value,
-      typename___);
+      standard__);
 }
 
 /// Collection of Standard Records
@@ -586,14 +586,10 @@ struct REC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RECBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_VERSION = 4,
-    VT_STANDARD = 6,
-    VT_RECORDS = 8
+    VT_RECORDS = 6
   };
   const ::flatbuffers::String *version() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VERSION);
-  }
-  const ::flatbuffers::String *standard() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STANDARD);
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<Record>> *RECORDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<Record>> *>(VT_RECORDS);
@@ -602,8 +598,6 @@ struct REC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_VERSION) &&
            verifier.VerifyString(version()) &&
-           VerifyOffset(verifier, VT_STANDARD) &&
-           verifier.VerifyString(standard()) &&
            VerifyOffset(verifier, VT_RECORDS) &&
            verifier.VerifyVector(RECORDS()) &&
            verifier.VerifyVectorOfTables(RECORDS()) &&
@@ -617,9 +611,6 @@ struct RECBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_version(::flatbuffers::Offset<::flatbuffers::String> version) {
     fbb_.AddOffset(REC::VT_VERSION, version);
-  }
-  void add_standard(::flatbuffers::Offset<::flatbuffers::String> standard) {
-    fbb_.AddOffset(REC::VT_STANDARD, standard);
   }
   void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Record>>> RECORDS) {
     fbb_.AddOffset(REC::VT_RECORDS, RECORDS);
@@ -638,11 +629,9 @@ struct RECBuilder {
 inline ::flatbuffers::Offset<REC> CreateREC(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> version = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> standard = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Record>>> RECORDS = 0) {
   RECBuilder builder_(_fbb);
   builder_.add_RECORDS(RECORDS);
-  builder_.add_standard(standard);
   builder_.add_version(version);
   return builder_.Finish();
 }
@@ -650,15 +639,12 @@ inline ::flatbuffers::Offset<REC> CreateREC(
 inline ::flatbuffers::Offset<REC> CreateRECDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *version = nullptr,
-    const char *standard = nullptr,
     const std::vector<::flatbuffers::Offset<Record>> *RECORDS = nullptr) {
   auto version__ = version ? _fbb.CreateString(version) : 0;
-  auto standard__ = standard ? _fbb.CreateString(standard) : 0;
   auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<Record>>(*RECORDS) : 0;
   return CreateREC(
       _fbb,
       version__,
-      standard__,
       RECORDS__);
 }
 

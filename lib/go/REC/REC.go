@@ -62,16 +62,8 @@ func (rcv *REC) Version() []byte {
 	return nil
 }
 
-func (rcv *REC) Standard() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
 func (rcv *REC) RECORDS(obj *Record, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -83,7 +75,7 @@ func (rcv *REC) RECORDS(obj *Record, j int) bool {
 }
 
 func (rcv *REC) RECORDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -91,16 +83,13 @@ func (rcv *REC) RECORDSLength() int {
 }
 
 func RECStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(2)
 }
 func RECAddVersion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(version), 0)
 }
-func RECAddStandard(builder *flatbuffers.Builder, standard flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(standard), 0)
-}
 func RECAddRECORDS(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(RECORDS), 0)
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(RECORDS), 0)
 }
 func RECStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

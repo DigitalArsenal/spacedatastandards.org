@@ -1003,7 +1003,7 @@ impl<'a> flatbuffers::Follow<'a> for Record<'a> {
 impl<'a> Record<'a> {
   pub const VT_VALUE_TYPE: flatbuffers::VOffsetT = 4;
   pub const VT_VALUE: flatbuffers::VOffsetT = 6;
-  pub const VT_TYPENAME: flatbuffers::VOffsetT = 8;
+  pub const VT_STANDARD: flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1015,7 +1015,7 @@ impl<'a> Record<'a> {
     args: &'args RecordArgs<'args>
   ) -> flatbuffers::WIPOffset<Record<'bldr>> {
     let mut builder = RecordBuilder::new(_fbb);
-    if let Some(x) = args.typename { builder.add_typename(x); }
+    if let Some(x) = args.standard { builder.add_standard(x); }
     if let Some(x) = args.value { builder.add_value(x); }
     builder.add_value_type(args.value_type);
     builder.finish()
@@ -1176,12 +1176,12 @@ impl<'a> Record<'a> {
       )),
       _ => RecordTypeT::NONE,
     };
-    let typename = self.typename().map(|x| {
+    let standard = self.standard().map(|x| {
       x.to_string()
     });
     RecordT {
       value,
-      typename,
+      standard,
     }
   }
 
@@ -1200,11 +1200,11 @@ impl<'a> Record<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(Record::VT_VALUE, None)}
   }
   #[inline]
-  pub fn typename(&self) -> Option<&'a str> {
+  pub fn standard(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Record::VT_TYPENAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Record::VT_STANDARD, None)}
   }
   #[inline]
   #[allow(non_snake_case)]
@@ -1700,7 +1700,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           _ => Ok(()),
         }
      })?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("typename", Self::VT_TYPENAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("standard", Self::VT_STANDARD, false)?
      .finish();
     Ok(())
   }
@@ -1708,7 +1708,7 @@ impl flatbuffers::Verifiable for Record<'_> {
 pub struct RecordArgs<'a> {
     pub value_type: RecordType,
     pub value: Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>>,
-    pub typename: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub standard: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for RecordArgs<'a> {
   #[inline]
@@ -1716,7 +1716,7 @@ impl<'a> Default for RecordArgs<'a> {
     RecordArgs {
       value_type: RecordType::NONE,
       value: None,
-      typename: None,
+      standard: None,
     }
   }
 }
@@ -1735,8 +1735,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RecordBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_VALUE, value);
   }
   #[inline]
-  pub fn add_typename(&mut self, typename: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_TYPENAME, typename);
+  pub fn add_standard(&mut self, standard: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Record::VT_STANDARD, standard);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RecordBuilder<'a, 'b, A> {
@@ -1973,7 +1973,7 @@ impl core::fmt::Debug for Record<'_> {
           ds.field("value", &x)
         },
       };
-      ds.field("typename", &self.typename());
+      ds.field("standard", &self.standard());
       ds.finish()
   }
 }
@@ -1981,13 +1981,13 @@ impl core::fmt::Debug for Record<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct RecordT {
   pub value: RecordTypeT,
-  pub typename: Option<String>,
+  pub standard: Option<String>,
 }
 impl Default for RecordT {
   fn default() -> Self {
     Self {
       value: RecordTypeT::NONE,
-      typename: None,
+      standard: None,
     }
   }
 }
@@ -1998,13 +1998,13 @@ impl RecordT {
   ) -> flatbuffers::WIPOffset<Record<'b>> {
     let value_type = self.value.record_type_type();
     let value = self.value.pack(_fbb);
-    let typename = self.typename.as_ref().map(|x|{
+    let standard = self.standard.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     Record::create(_fbb, &RecordArgs{
       value_type,
       value,
-      typename,
+      standard,
     })
   }
 }
@@ -2026,8 +2026,7 @@ impl<'a> flatbuffers::Follow<'a> for REC<'a> {
 
 impl<'a> REC<'a> {
   pub const VT_VERSION: flatbuffers::VOffsetT = 4;
-  pub const VT_STANDARD: flatbuffers::VOffsetT = 6;
-  pub const VT_RECORDS: flatbuffers::VOffsetT = 8;
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 6;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2040,7 +2039,6 @@ impl<'a> REC<'a> {
   ) -> flatbuffers::WIPOffset<REC<'bldr>> {
     let mut builder = RECBuilder::new(_fbb);
     if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
-    if let Some(x) = args.standard { builder.add_standard(x); }
     if let Some(x) = args.version { builder.add_version(x); }
     builder.finish()
   }
@@ -2049,15 +2047,11 @@ impl<'a> REC<'a> {
     let version = self.version().map(|x| {
       x.to_string()
     });
-    let standard = self.standard().map(|x| {
-      x.to_string()
-    });
     let RECORDS = self.RECORDS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
     RECT {
       version,
-      standard,
       RECORDS,
     }
   }
@@ -2068,13 +2062,6 @@ impl<'a> REC<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(REC::VT_VERSION, None)}
-  }
-  #[inline]
-  pub fn standard(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(REC::VT_STANDARD, None)}
   }
   #[inline]
   pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Record<'a>>>> {
@@ -2093,7 +2080,6 @@ impl flatbuffers::Verifiable for REC<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("version", Self::VT_VERSION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("standard", Self::VT_STANDARD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Record>>>>("RECORDS", Self::VT_RECORDS, false)?
      .finish();
     Ok(())
@@ -2101,7 +2087,6 @@ impl flatbuffers::Verifiable for REC<'_> {
 }
 pub struct RECArgs<'a> {
     pub version: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub standard: Option<flatbuffers::WIPOffset<&'a str>>,
     pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Record<'a>>>>>,
 }
 impl<'a> Default for RECArgs<'a> {
@@ -2109,7 +2094,6 @@ impl<'a> Default for RECArgs<'a> {
   fn default() -> Self {
     RECArgs {
       version: None,
-      standard: None,
       RECORDS: None,
     }
   }
@@ -2123,10 +2107,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RECBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_version(&mut self, version: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(REC::VT_VERSION, version);
-  }
-  #[inline]
-  pub fn add_standard(&mut self, standard: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(REC::VT_STANDARD, standard);
   }
   #[inline]
   pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Record<'b >>>>) {
@@ -2151,7 +2131,6 @@ impl core::fmt::Debug for REC<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("REC");
       ds.field("version", &self.version());
-      ds.field("standard", &self.standard());
       ds.field("RECORDS", &self.RECORDS());
       ds.finish()
   }
@@ -2160,14 +2139,12 @@ impl core::fmt::Debug for REC<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct RECT {
   pub version: Option<String>,
-  pub standard: Option<String>,
   pub RECORDS: Option<Vec<RecordT>>,
 }
 impl Default for RECT {
   fn default() -> Self {
     Self {
       version: None,
-      standard: None,
       RECORDS: None,
     }
   }
@@ -2180,15 +2157,11 @@ impl RECT {
     let version = self.version.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let standard = self.standard.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let RECORDS = self.RECORDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     REC::create(_fbb, &RECArgs{
       version,
-      standard,
       RECORDS,
     })
   }

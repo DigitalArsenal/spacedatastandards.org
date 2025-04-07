@@ -37,15 +37,8 @@ class REC(object):
         return None
 
     # REC
-    def Standard(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # REC
     def RECORDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -58,18 +51,18 @@ class REC(object):
 
     # REC
     def RECORDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # REC
     def RECORDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
 def RECStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(2)
 
 def Start(builder):
     RECStart(builder)
@@ -80,14 +73,8 @@ def RECAddVersion(builder, version):
 def AddVersion(builder, version):
     RECAddVersion(builder, version)
 
-def RECAddStandard(builder, standard):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(standard), 0)
-
-def AddStandard(builder, standard):
-    RECAddStandard(builder, standard)
-
 def RECAddRECORDS(builder, RECORDS):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
 
 def AddRECORDS(builder, RECORDS):
     RECAddRECORDS(builder, RECORDS)
@@ -115,7 +102,6 @@ class RECT(object):
     # RECT
     def __init__(self):
         self.version = None  # type: str
-        self.standard = None  # type: str
         self.RECORDS = None  # type: List[Record.RecordT]
 
     @classmethod
@@ -140,7 +126,6 @@ class RECT(object):
         if REC is None:
             return
         self.version = REC.Version()
-        self.standard = REC.Standard()
         if not REC.RECORDSIsNone():
             self.RECORDS = []
             for i in range(REC.RECORDSLength()):
@@ -154,8 +139,6 @@ class RECT(object):
     def Pack(self, builder):
         if self.version is not None:
             version = builder.CreateString(self.version)
-        if self.standard is not None:
-            standard = builder.CreateString(self.standard)
         if self.RECORDS is not None:
             RECORDSlist = []
             for i in range(len(self.RECORDS)):
@@ -167,8 +150,6 @@ class RECT(object):
         RECStart(builder)
         if self.version is not None:
             RECAddVersion(builder, version)
-        if self.standard is not None:
-            RECAddStandard(builder, standard)
         if self.RECORDS is not None:
             RECAddRECORDS(builder, RECORDS)
         REC = RECEnd(builder)

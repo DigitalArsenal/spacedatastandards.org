@@ -47,18 +47,12 @@ class REC extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getStandard()
-    {
-        $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
     /**
      * @returnVectorOffset
      */
     public function getRECORDS($j)
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(6);
         $obj = new Record();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -68,7 +62,7 @@ class REC extends Table
      */
     public function getRECORDSLength()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(6);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -78,18 +72,17 @@ class REC extends Table
      */
     public static function startREC(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(2);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return REC
      */
-    public static function createREC(FlatBufferBuilder $builder, $version, $standard, $RECORDS)
+    public static function createREC(FlatBufferBuilder $builder, $version, $RECORDS)
     {
-        $builder->startObject(3);
+        $builder->startObject(2);
         self::addVersion($builder, $version);
-        self::addStandard($builder, $standard);
         self::addRECORDS($builder, $RECORDS);
         $o = $builder->endObject();
         return $o;
@@ -107,22 +100,12 @@ class REC extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addStandard(FlatBufferBuilder $builder, $standard)
-    {
-        $builder->addOffsetX(1, $standard, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addRECORDS(FlatBufferBuilder $builder, $RECORDS)
     {
-        $builder->addOffsetX(2, $RECORDS, 0);
+        $builder->addOffsetX(1, $RECORDS, 0);
     }
 
     /**

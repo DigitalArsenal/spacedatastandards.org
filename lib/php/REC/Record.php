@@ -58,7 +58,7 @@ class Record extends Table
         return $o != 0 ? $this->__union($obj, $o) : null;
     }
 
-    public function getTypename()
+    public function getStandard()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -77,12 +77,12 @@ class Record extends Table
      * @param FlatBufferBuilder $builder
      * @return Record
      */
-    public static function createRecord(FlatBufferBuilder $builder, $value_type, $value, $typename)
+    public static function createRecord(FlatBufferBuilder $builder, $value_type, $value, $standard)
     {
         $builder->startObject(3);
         self::addValueType($builder, $value_type);
         self::addValue($builder, $value);
-        self::addTypename($builder, $typename);
+        self::addStandard($builder, $standard);
         $o = $builder->endObject();
         return $o;
     }
@@ -107,9 +107,9 @@ class Record extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addTypename(FlatBufferBuilder $builder, $typename)
+    public static function addStandard(FlatBufferBuilder $builder, $standard)
     {
-        $builder->addOffsetX(2, $typename, 0);
+        $builder->addOffsetX(2, $standard, 0);
     }
 
     /**

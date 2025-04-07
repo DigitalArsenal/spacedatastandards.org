@@ -40,20 +40,9 @@ class REC : Table() {
         }
     val versionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val standard : String?
-        get() {
-            val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val standardAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun standardInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     fun RECORDS(j: Int) : Record? = RECORDS(Record(), j)
     fun RECORDS(obj: Record, j: Int) : Record? {
-        val o = __offset(8)
+        val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -62,7 +51,7 @@ class REC : Table() {
     }
     val RECORDSLength : Int
         get() {
-            val o = __offset(8); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -72,17 +61,15 @@ class REC : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RECBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REC")
-        fun createREC(builder: FlatBufferBuilder, versionOffset: Int, standardOffset: Int, RECORDSOffset: Int) : Int {
-            builder.startTable(3)
+        fun createREC(builder: FlatBufferBuilder, versionOffset: Int, RECORDSOffset: Int) : Int {
+            builder.startTable(2)
             addRECORDS(builder, RECORDSOffset)
-            addStandard(builder, standardOffset)
             addVersion(builder, versionOffset)
             return endREC(builder)
         }
-        fun startREC(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startREC(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addVersion(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
-        fun addStandard(builder: FlatBufferBuilder, standard: Int) = builder.addOffset(1, standard, 0)
-        fun addRECORDS(builder: FlatBufferBuilder, RECORDS: Int) = builder.addOffset(2, RECORDS, 0)
+        fun addRECORDS(builder: FlatBufferBuilder, RECORDS: Int) = builder.addOffset(1, RECORDS, 0)
         fun createRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

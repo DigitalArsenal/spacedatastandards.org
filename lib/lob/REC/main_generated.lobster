@@ -101,7 +101,7 @@ class Record : flatbuffers.handle
         return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_VCM():
         return VCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def typename() -> string:
+    def standard() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
 
 def GetRootAsRecord(buf:string): return Record { buf, flatbuffers.indirect(buf, 0) }
@@ -117,8 +117,8 @@ struct RecordBuilder:
     def add_value(value:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, value)
         return this
-    def add_typename(typename:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, typename)
+    def add_standard(standard:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, standard)
         return this
     def end():
         return b_.EndObject()
@@ -127,28 +127,23 @@ struct RecordBuilder:
 class REC : flatbuffers.handle
     def version() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    def standard() -> string:
-        return flatbuffers.field_string(buf_, pos_, 6)
     def RECORDS(i:int) -> Record:
-        return Record { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+        return Record { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
     def RECORDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 8)
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
 
 def GetRootAsREC(buf:string): return REC { buf, flatbuffers.indirect(buf, 0) }
 
 struct RECBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(2)
         return this
     def add_version(version:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, version)
         return this
-    def add_standard(standard:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(1, standard)
-        return this
     def add_RECORDS(RECORDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, RECORDS)
+        b_.PrependUOffsetTRelativeSlot(1, RECORDS)
         return this
     def end():
         return b_.EndObject()

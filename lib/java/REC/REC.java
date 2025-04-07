@@ -32,30 +32,24 @@ public final class REC extends Table {
   public String version() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer versionAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer versionInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String standard() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer standardAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer standardInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   public Record RECORDS(int j) { return RECORDS(new Record(), j); }
-  public Record RECORDS(Record obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int RECORDSLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
+  public Record RECORDS(Record obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int RECORDSLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
   public Record.Vector recordsVector() { return recordsVector(new Record.Vector()); }
-  public Record.Vector recordsVector(Record.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public Record.Vector recordsVector(Record.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createREC(FlatBufferBuilder builder,
       int versionOffset,
-      int standardOffset,
       int RECORDSOffset) {
-    builder.startTable(3);
+    builder.startTable(2);
     REC.addRecords(builder, RECORDSOffset);
-    REC.addStandard(builder, standardOffset);
     REC.addVersion(builder, versionOffset);
     return REC.endREC(builder);
   }
 
-  public static void startREC(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startREC(FlatBufferBuilder builder) { builder.startTable(2); }
   public static void addVersion(FlatBufferBuilder builder, int versionOffset) { builder.addOffset(0, versionOffset, 0); }
-  public static void addStandard(FlatBufferBuilder builder, int standardOffset) { builder.addOffset(1, standardOffset, 0); }
-  public static void addRecords(FlatBufferBuilder builder, int RECORDSOffset) { builder.addOffset(2, RECORDSOffset, 0); }
+  public static void addRecords(FlatBufferBuilder builder, int RECORDSOffset) { builder.addOffset(1, RECORDSOffset, 0); }
   public static int createRecordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endREC(FlatBufferBuilder builder) {

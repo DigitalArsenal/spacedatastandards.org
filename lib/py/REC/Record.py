@@ -46,7 +46,7 @@ class Record(object):
         return None
 
     # Record
-    def Typename(self):
+    def Standard(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -70,11 +70,11 @@ def RecordAddValue(builder, value):
 def AddValue(builder, value):
     RecordAddValue(builder, value)
 
-def RecordAddTypename(builder, typename):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(typename), 0)
+def RecordAddStandard(builder, standard):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(standard), 0)
 
-def AddTypename(builder, typename):
-    RecordAddTypename(builder, typename)
+def AddStandard(builder, standard):
+    RecordAddStandard(builder, standard)
 
 def RecordEnd(builder):
     return builder.EndObject()
@@ -124,7 +124,7 @@ class RecordT(object):
     def __init__(self):
         self.valueType = 0  # type: int
         self.value = None  # type: Union[None, BOV.BOVT, CAT.CATT, CDM.CDMT, CRM.CRMT, CSM.CSMT, CTR.CTRT, EME.EMET, EOO.EOOT, EOP.EOPT, EPM.EPMT, HYP.HYPT, IDM.IDMT, LCC.LCCT, LDM.LDMT, MET.METT, MPE.MPET, OCM.OCMT, OEM.OEMT, OMM.OMMT, OSM.OSMT, PLD.PLDT, PNM.PNMT, PRG.PRGT, RFM.RFMT, ROC.ROCT, SCM.SCMT, SIT.SITT, TDM.TDMT, TIM.TIMT, VCM.VCMT]
-        self.typename = None  # type: str
+        self.standard = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -149,19 +149,19 @@ class RecordT(object):
             return
         self.valueType = record.ValueType()
         self.value = RecordType.RecordTypeCreator(self.valueType, record.Value())
-        self.typename = record.Typename()
+        self.standard = record.Standard()
 
     # RecordT
     def Pack(self, builder):
         if self.value is not None:
             value = self.value.Pack(builder)
-        if self.typename is not None:
-            typename = builder.CreateString(self.typename)
+        if self.standard is not None:
+            standard = builder.CreateString(self.standard)
         RecordStart(builder)
         RecordAddValueType(builder, self.valueType)
         if self.value is not None:
             RecordAddValue(builder, value)
-        if self.typename is not None:
-            RecordAddTypename(builder, typename)
+        if self.standard is not None:
+            RecordAddStandard(builder, standard)
         record = RecordEnd(builder)
         return record

@@ -26,31 +26,21 @@ public struct REC : IFlatbufferObject
   public ArraySegment<byte>? GetVersionBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetVersionArray() { return __p.__vector_as_array<byte>(4); }
-  public string Standard { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetStandardBytes() { return __p.__vector_as_span<byte>(6, 1); }
-#else
-  public ArraySegment<byte>? GetStandardBytes() { return __p.__vector_as_arraysegment(6); }
-#endif
-  public byte[] GetStandardArray() { return __p.__vector_as_array<byte>(6); }
-  public Record? RECORDS(int j) { int o = __p.__offset(8); return o != 0 ? (Record?)(new Record()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int RECORDSLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public Record? RECORDS(int j) { int o = __p.__offset(6); return o != 0 ? (Record?)(new Record()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int RECORDSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<REC> CreateREC(FlatBufferBuilder builder,
       StringOffset versionOffset = default(StringOffset),
-      StringOffset standardOffset = default(StringOffset),
       VectorOffset RECORDSOffset = default(VectorOffset)) {
-    builder.StartTable(3);
+    builder.StartTable(2);
     REC.AddRECORDS(builder, RECORDSOffset);
-    REC.AddStandard(builder, standardOffset);
     REC.AddVersion(builder, versionOffset);
     return REC.EndREC(builder);
   }
 
-  public static void StartREC(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartREC(FlatBufferBuilder builder) { builder.StartTable(2); }
   public static void AddVersion(FlatBufferBuilder builder, StringOffset versionOffset) { builder.AddOffset(0, versionOffset.Value, 0); }
-  public static void AddStandard(FlatBufferBuilder builder, StringOffset standardOffset) { builder.AddOffset(1, standardOffset.Value, 0); }
-  public static void AddRECORDS(FlatBufferBuilder builder, VectorOffset RECORDSOffset) { builder.AddOffset(2, RECORDSOffset.Value, 0); }
+  public static void AddRECORDS(FlatBufferBuilder builder, VectorOffset RECORDSOffset) { builder.AddOffset(1, RECORDSOffset.Value, 0); }
   public static VectorOffset CreateRECORDSVector(FlatBufferBuilder builder, Offset<Record>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, Offset<Record>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<Record>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -69,14 +59,12 @@ public struct REC : IFlatbufferObject
   }
   public void UnPackTo(RECT _o) {
     _o.Version = this.Version;
-    _o.Standard = this.Standard;
     _o.RECORDS = new List<RecordT>();
     for (var _j = 0; _j < this.RECORDSLength; ++_j) {_o.RECORDS.Add(this.RECORDS(_j).HasValue ? this.RECORDS(_j).Value.UnPack() : null);}
   }
   public static Offset<REC> Pack(FlatBufferBuilder builder, RECT _o) {
     if (_o == null) return default(Offset<REC>);
     var _version = _o.Version == null ? default(StringOffset) : builder.CreateString(_o.Version);
-    var _standard = _o.Standard == null ? default(StringOffset) : builder.CreateString(_o.Standard);
     var _RECORDS = default(VectorOffset);
     if (_o.RECORDS != null) {
       var __RECORDS = new Offset<Record>[_o.RECORDS.Count];
@@ -86,7 +74,6 @@ public struct REC : IFlatbufferObject
     return CreateREC(
       builder,
       _version,
-      _standard,
       _RECORDS);
   }
 }
@@ -94,12 +81,10 @@ public struct REC : IFlatbufferObject
 public class RECT
 {
   public string Version { get; set; }
-  public string Standard { get; set; }
   public List<RecordT> RECORDS { get; set; }
 
   public RECT() {
     this.Version = null;
-    this.Standard = null;
     this.RECORDS = null;
   }
   public static RECT DeserializeFromBinary(byte[] fbBuffer) {
@@ -119,8 +104,7 @@ static public class RECVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*Version*/, false)
-      && verifier.VerifyString(tablePos, 6 /*Standard*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 8 /*RECORDS*/, RecordVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 6 /*RECORDS*/, RecordVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

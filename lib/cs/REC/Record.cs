@@ -48,20 +48,20 @@ public struct Record : IFlatbufferObject
   public TDM ValueAsTDM() { return Value<TDM>().Value; }
   public TIM ValueAsTIM() { return Value<TIM>().Value; }
   public VCM ValueAsVCM() { return Value<VCM>().Value; }
-  public string Typename { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string Standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTypenameBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetStandardBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetTypenameBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetStandardBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetTypenameArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetStandardArray() { return __p.__vector_as_array<byte>(8); }
 
   public static Offset<Record> CreateRecord(FlatBufferBuilder builder,
       RecordType value_type = RecordType.NONE,
       int valueOffset = 0,
-      StringOffset typenameOffset = default(StringOffset)) {
+      StringOffset standardOffset = default(StringOffset)) {
     builder.StartTable(3);
-    Record.AddTypename(builder, typenameOffset);
+    Record.AddStandard(builder, standardOffset);
     Record.AddValue(builder, valueOffset);
     Record.AddValueType(builder, value_type);
     return Record.EndRecord(builder);
@@ -70,7 +70,7 @@ public struct Record : IFlatbufferObject
   public static void StartRecord(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddValueType(FlatBufferBuilder builder, RecordType valueType) { builder.AddByte(0, (byte)valueType, 0); }
   public static void AddValue(FlatBufferBuilder builder, int valueOffset) { builder.AddOffset(1, valueOffset, 0); }
-  public static void AddTypename(FlatBufferBuilder builder, StringOffset typenameOffset) { builder.AddOffset(2, typenameOffset.Value, 0); }
+  public static void AddStandard(FlatBufferBuilder builder, StringOffset standardOffset) { builder.AddOffset(2, standardOffset.Value, 0); }
   public static Offset<Record> EndRecord(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Record>(o);
@@ -176,29 +176,29 @@ public struct Record : IFlatbufferObject
         _o.Value.Value = this.Value<VCM>().HasValue ? this.Value<VCM>().Value.UnPack() : null;
         break;
     }
-    _o.Typename = this.Typename;
+    _o.Standard = this.Standard;
   }
   public static Offset<Record> Pack(FlatBufferBuilder builder, RecordT _o) {
     if (_o == null) return default(Offset<Record>);
     var _value_type = _o.Value == null ? RecordType.NONE : _o.Value.Type;
     var _value = _o.Value == null ? 0 : RecordTypeUnion.Pack(builder, _o.Value);
-    var _typename = _o.Typename == null ? default(StringOffset) : builder.CreateString(_o.Typename);
+    var _standard = _o.Standard == null ? default(StringOffset) : builder.CreateString(_o.Standard);
     return CreateRecord(
       builder,
       _value_type,
       _value,
-      _typename);
+      _standard);
   }
 }
 
 public class RecordT
 {
   public RecordTypeUnion Value { get; set; }
-  public string Typename { get; set; }
+  public string Standard { get; set; }
 
   public RecordT() {
     this.Value = null;
-    this.Typename = null;
+    this.Standard = null;
   }
 }
 
@@ -210,7 +210,7 @@ static public class RecordVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ValueType*/, 1 /*RecordType*/, 1, false)
       && verifier.VerifyUnion(tablePos, 4, 6 /*Value*/, RecordTypeVerify.Verify, false)
-      && verifier.VerifyString(tablePos, 8 /*Typename*/, false)
+      && verifier.VerifyString(tablePos, 8 /*Standard*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

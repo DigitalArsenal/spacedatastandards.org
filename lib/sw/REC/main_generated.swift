@@ -64,30 +64,30 @@ public struct Record: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case valueType = 4
     case value = 6
-    case typename = 8
+    case standard = 8
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
   public var valueType: RecordType { let o = _accessor.offset(VTOFFSET.valueType.v); return o == 0 ? .none_ : RecordType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   public func value<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.value.v); return o == 0 ? nil : _accessor.union(o) }
-  public var typename: String? { let o = _accessor.offset(VTOFFSET.typename.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var typenameSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.typename.v) }
+  public var standard: String? { let o = _accessor.offset(VTOFFSET.standard.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var standardSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.standard.v) }
   public static func startRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(valueType: RecordType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: valueType.rawValue, def: 0, at: VTOFFSET.valueType.p) }
   public static func add(value: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: value, at: VTOFFSET.value.p) }
-  public static func add(typename: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: typename, at: VTOFFSET.typename.p) }
+  public static func add(standard: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: standard, at: VTOFFSET.standard.p) }
   public static func endRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRecord(
     _ fbb: inout FlatBufferBuilder,
     valueType: RecordType = .none_,
     valueOffset value: Offset = Offset(),
-    typenameOffset typename: Offset = Offset()
+    standardOffset standard: Offset = Offset()
   ) -> Offset {
     let __start = Record.startRecord(&fbb)
     Record.add(valueType: valueType, &fbb)
     Record.add(value: value, &fbb)
-    Record.add(typename: typename, &fbb)
+    Record.add(standard: standard, &fbb)
     return Record.endRecord(&fbb, start: __start)
   }
 
@@ -159,7 +159,7 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
       }
     })
-    try _v.visit(field: VTOFFSET.typename.p, fieldName: "typename", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.standard.p, fieldName: "standard", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -178,33 +178,27 @@ public struct REC: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case version = 4
-    case standard = 6
-    case RECORDS = 8
+    case RECORDS = 6
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
   public var version: String? { let o = _accessor.offset(VTOFFSET.version.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var versionSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.version.v) }
-  public var standard: String? { let o = _accessor.offset(VTOFFSET.standard.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var standardSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.standard.v) }
   public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
   public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func RECORDS(at index: Int32) -> Record? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : Record(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startREC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func startREC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(version: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: version, at: VTOFFSET.version.p) }
-  public static func add(standard: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: standard, at: VTOFFSET.standard.p) }
   public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
   public static func endREC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createREC(
     _ fbb: inout FlatBufferBuilder,
     versionOffset version: Offset = Offset(),
-    standardOffset standard: Offset = Offset(),
     RECORDSVectorOffset RECORDS: Offset = Offset()
   ) -> Offset {
     let __start = REC.startREC(&fbb)
     REC.add(version: version, &fbb)
-    REC.add(standard: standard, &fbb)
     REC.addVectorOf(RECORDS: RECORDS, &fbb)
     return REC.endREC(&fbb, start: __start)
   }
@@ -212,7 +206,6 @@ public struct REC: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.version.p, fieldName: "version", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.standard.p, fieldName: "standard", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<Record>, Record>>.self)
     _v.finish()
   }

@@ -157,11 +157,11 @@ class Record {
       default: return null;
     }
   }
-  String? get typename => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get standard => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'Record{valueType: ${valueType}, value: ${value}, typename: ${typename}}';
+    return 'Record{valueType: ${valueType}, value: ${value}, standard: ${standard}}';
   }
 }
 
@@ -190,7 +190,7 @@ class RecordBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addTypenameOffset(int? offset) {
+  int addStandardOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
@@ -203,27 +203,27 @@ class RecordBuilder {
 class RecordObjectBuilder extends fb.ObjectBuilder {
   final RecordTypeTypeId? _valueType;
   final dynamic _value;
-  final String? _typename;
+  final String? _standard;
 
   RecordObjectBuilder({
     RecordTypeTypeId? valueType,
     dynamic value,
-    String? typename,
+    String? standard,
   })
       : _valueType = valueType,
         _value = value,
-        _typename = typename;
+        _standard = standard;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? valueOffset = _value?.getOrCreateOffset(fbBuilder);
-    final int? typenameOffset = _typename == null ? null
-        : fbBuilder.writeString(_typename!);
+    final int? standardOffset = _standard == null ? null
+        : fbBuilder.writeString(_standard!);
     fbBuilder.startTable(3);
     fbBuilder.addUint8(0, _valueType?.value);
     fbBuilder.addOffset(1, valueOffset);
-    fbBuilder.addOffset(2, typenameOffset);
+    fbBuilder.addOffset(2, standardOffset);
     return fbBuilder.endTable();
   }
 
@@ -249,12 +249,11 @@ class REC {
   final int _bcOffset;
 
   String? get version => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get standard => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  List<Record>? get RECORDS => const fb.ListReader<Record>(Record.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<Record>? get RECORDS => const fb.ListReader<Record>(Record.reader).vTableGetNullable(_bc, _bcOffset, 6);
 
   @override
   String toString() {
-    return 'REC{version: ${version}, standard: ${standard}, RECORDS: ${RECORDS}}';
+    return 'REC{version: ${version}, RECORDS: ${RECORDS}}';
   }
 }
 
@@ -272,19 +271,15 @@ class RECBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(2);
   }
 
   int addVersionOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addStandardOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
   int addRecordsOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
 
@@ -295,16 +290,13 @@ class RECBuilder {
 
 class RECObjectBuilder extends fb.ObjectBuilder {
   final String? _version;
-  final String? _standard;
   final List<RecordObjectBuilder>? _RECORDS;
 
   RECObjectBuilder({
     String? version,
-    String? standard,
     List<RecordObjectBuilder>? RECORDS,
   })
       : _version = version,
-        _standard = standard,
         _RECORDS = RECORDS;
 
   /// Finish building, and store into the [fbBuilder].
@@ -312,14 +304,11 @@ class RECObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? versionOffset = _version == null ? null
         : fbBuilder.writeString(_version!);
-    final int? standardOffset = _standard == null ? null
-        : fbBuilder.writeString(_standard!);
     final int? RECORDSOffset = _RECORDS == null ? null
         : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(2);
     fbBuilder.addOffset(0, versionOffset);
-    fbBuilder.addOffset(1, standardOffset);
-    fbBuilder.addOffset(2, RECORDSOffset);
+    fbBuilder.addOffset(1, RECORDSOffset);
     return fbBuilder.endTable();
   }
 
