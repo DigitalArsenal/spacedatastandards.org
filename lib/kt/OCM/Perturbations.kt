@@ -44,17 +44,15 @@ class Perturbations : Table() {
     /**
      * Atmospheric model used.
      */
-    val ATMOSPHERIC_MODEL : String?
-        get() {
-            val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+    val ATMOSPHERIC_MODEL : ATM? get() = ATMOSPHERIC_MODEL(ATM())
+    fun ATMOSPHERIC_MODEL(obj: ATM) : ATM? {
+        val o = __offset(6)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
-    val ATMOSPHERIC_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ATMOSPHERIC_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    }
     /**
      * Gravity model used.
      */

@@ -1,4 +1,6 @@
+export { ATM, ATMT } from './ATM.js';
 export { Address, AddressT } from './Address.js';
+export { AtmosphericModelFamily } from './AtmosphericModelFamily.js';
 export { BOV, BOVT } from './BOV.js';
 export { Band, BandT } from './Band.js';
 export { CAT, CATT } from './CAT.js';

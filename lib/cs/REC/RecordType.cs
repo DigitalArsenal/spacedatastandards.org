@@ -5,36 +5,37 @@
 public enum RecordType : byte
 {
   NONE = 0,
-  BOV = 1,
-  CAT = 2,
-  CDM = 3,
-  CRM = 4,
-  CSM = 5,
-  CTR = 6,
-  EME = 7,
-  EOO = 8,
-  EOP = 9,
-  EPM = 10,
-  HYP = 11,
-  IDM = 12,
-  LCC = 13,
-  LDM = 14,
-  MET = 15,
-  MPE = 16,
-  OCM = 17,
-  OEM = 18,
-  OMM = 19,
-  OSM = 20,
-  PLD = 21,
-  PNM = 22,
-  PRG = 23,
-  RFM = 24,
-  ROC = 25,
-  SCM = 26,
-  SIT = 27,
-  TDM = 28,
-  TIM = 29,
-  VCM = 30,
+  ATM = 1,
+  BOV = 2,
+  CAT = 3,
+  CDM = 4,
+  CRM = 5,
+  CSM = 6,
+  CTR = 7,
+  EME = 8,
+  EOO = 9,
+  EOP = 10,
+  EPM = 11,
+  HYP = 12,
+  IDM = 13,
+  LCC = 14,
+  LDM = 15,
+  MET = 16,
+  MPE = 17,
+  OCM = 18,
+  OEM = 19,
+  OMM = 20,
+  OSM = 21,
+  PLD = 22,
+  PNM = 23,
+  PRG = 24,
+  RFM = 25,
+  ROC = 26,
+  SCM = 27,
+  SIT = 28,
+  TDM = 29,
+  TIM = 30,
+  VCM = 31,
 };
 
 public class RecordTypeUnion {
@@ -47,6 +48,8 @@ public class RecordTypeUnion {
   }
 
   public T As<T>() where T : class { return this.Value as T; }
+  public ATMT AsATM() { return this.As<ATMT>(); }
+  public static RecordTypeUnion FromATM(ATMT _atm) { return new RecordTypeUnion{ Type = RecordType.ATM, Value = _atm }; }
   public BOVT AsBOV() { return this.As<BOVT>(); }
   public static RecordTypeUnion FromBOV(BOVT _bov) { return new RecordTypeUnion{ Type = RecordType.BOV, Value = _bov }; }
   public CATT AsCAT() { return this.As<CATT>(); }
@@ -111,6 +114,7 @@ public class RecordTypeUnion {
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
       default: return 0;
+      case RecordType.ATM: return ATM.Pack(builder, _o.AsATM()).Value;
       case RecordType.BOV: return BOV.Pack(builder, _o.AsBOV()).Value;
       case RecordType.CAT: return CAT.Pack(builder, _o.AsCAT()).Value;
       case RecordType.CDM: return CDM.Pack(builder, _o.AsCDM()).Value;
@@ -154,6 +158,9 @@ static public class RecordTypeVerify
     bool result = true;
     switch((RecordType)typeId)
     {
+      case RecordType.ATM:
+        result = ATMVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.BOV:
         result = BOVVerify.Verify(verifier, tablePos);
         break;

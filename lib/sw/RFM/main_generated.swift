@@ -44,8 +44,8 @@ public enum refFrame: Int8, Enum, Verifiable {
   case tvn = 16
   ///  Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   case vvlh = 17
-  ///  Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
-  case vlvh = 18
+  ///  Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
+  case qsw = 18
   ///  Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   case ltp = 19
   ///  Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.

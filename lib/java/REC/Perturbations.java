@@ -35,9 +35,8 @@ public final class Perturbations extends Table {
   /**
    * Atmospheric model used.
    */
-  public String ATMOSPHERIC_MODEL() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ATMOSPHERIC_MODELAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer ATMOSPHERIC_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public ATM ATMOSPHERIC_MODEL() { return ATMOSPHERIC_MODEL(new ATM()); }
+  public ATM ATMOSPHERIC_MODEL(ATM obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Gravity model used.
    */

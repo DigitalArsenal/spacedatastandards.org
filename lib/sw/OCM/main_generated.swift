@@ -821,8 +821,7 @@ public struct Perturbations: FlatBufferObject, Verifiable {
   public var COMMENTCount: Int32 { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func COMMENT(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
   ///  Atmospheric model used.
-  public var ATMOSPHERIC_MODEL: String? { let o = _accessor.offset(VTOFFSET.ATMOSPHERIC_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATMOSPHERIC_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATMOSPHERIC_MODEL.v) }
+  public var ATMOSPHERIC_MODEL: ATM? { let o = _accessor.offset(VTOFFSET.ATMOSPHERIC_MODEL.v); return o == 0 ? nil : ATM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Gravity model used.
   public var GRAVITY_MODEL: String? { let o = _accessor.offset(VTOFFSET.GRAVITY_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GRAVITY_MODEL.v) }
@@ -938,7 +937,7 @@ public struct Perturbations: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ATMOSPHERIC_MODEL.p, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ATMOSPHERIC_MODEL.p, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<ATM>.self)
     try _v.visit(field: VTOFFSET.GRAVITY_MODEL.p, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.GRAVITY_DEGREE.p, fieldName: "GRAVITY_DEGREE", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.GRAVITY_ORDER.p, fieldName: "GRAVITY_ORDER", required: false, type: Int32.self)

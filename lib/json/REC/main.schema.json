@@ -1,6 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "AtmosphericModelFamily" : {
+      "type" : "string",
+      "enum": ["CIRA_XX", "DTM_XX", "GITM", "GOST", "GRAM_XX", "HP", "JAC_HASDM", "JAC_GILL", "JB08", "JR71", "JXX", "MET_XX", "MSIS_86", "MSISE_90", "NRLMSIS00E", "TIECGM", "USSA_XX"]
+    },
     "PolarizationType" : {
       "type" : "string",
       "enum": ["linear", "circular", "elliptical", "unpolarized"]
@@ -47,7 +51,7 @@
     },
     "refFrame" : {
       "type" : "string",
-      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "VLVH", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW", "EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING", "ALIGN_CB", "ALIGN_EARTH", "B1950", "CIRS", "DTRFyyyy", "EFG", "EME2000", "FIXED_CB", "FIXED_EARTH", "GCRFn", "GTOD", "MOD_CB", "MOD_EARTH", "MOD_MOON", "MOE_CB", "MOE_EARTH", "MOON_ME", "MOON_MEIAUE", "MOON_PAxxx", "TEMEOFDATE", "TEMEOFEPOCH", "TIRS", "TOD_CB", "TOD_EARTH", "TOD_MOON", "TOE_CB", "TOE_EARTH", "TOE_MOON", "TRUE_ECLIPTIC", "UVW_GO_INERTIAL", "WGS84", "ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+      "enum": ["ECEF", "ICRF", "TEME", "ENU", "NED", "NEU", "RIC", "J2000", "GCRF", "GRC", "ITRF2000", "ITRF93", "ITRF97", "TDR", "TOD", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW", "EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING", "ALIGN_CB", "ALIGN_EARTH", "B1950", "CIRS", "DTRFyyyy", "EFG", "EME2000", "FIXED_CB", "FIXED_EARTH", "GCRFn", "GTOD", "MOD_CB", "MOD_EARTH", "MOD_MOON", "MOE_CB", "MOE_EARTH", "MOON_ME", "MOON_MEIAUE", "MOON_PAxxx", "TEMEOFDATE", "TEMEOFEPOCH", "TIRS", "TOD_CB", "TOD_EARTH", "TOD_MOON", "TOE_CB", "TOE_EARTH", "TOE_MOON", "TRUE_ECLIPTIC", "UVW_GO_INERTIAL", "WGS84", "ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
     },
     "screeningVolumeShape" : {
       "type" : "string",
@@ -139,7 +143,22 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PNM", "PRG", "RFM", "ROC", "SCM", "SIT", "TDM", "TIM", "VCM"]
+      "enum": ["NONE", "ATM", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PNM", "PRG", "RFM", "ROC", "SCM", "SIT", "TDM", "TIM", "VCM"]
+    },
+    "ATM" : {
+      "type" : "object",
+      "description" : "Atmospheric Model Message",
+      "properties" : {
+        "MODEL" : {
+                "$ref" : "#/definitions/AtmosphericModelFamily",
+                "description" : "Canonical model family"
+              },
+        "YEAR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+              }
+      },
+      "additionalProperties" : false
     },
     "BOV" : {
       "type" : "object",
@@ -2982,7 +3001,7 @@
                 "description" : "Comments in the Perturbations section."
               },
         "ATMOSPHERIC_MODEL" : {
-                "type" : "string",
+                "$ref" : "#/definitions/ATM",
                 "description" : "Atmospheric model used."
               },
         "GRAVITY_MODEL" : {
@@ -4401,7 +4420,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" }]
+                "anyOf": [{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" }]
               },
         "standard" : {
                 "type" : "string"

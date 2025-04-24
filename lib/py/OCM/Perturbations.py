@@ -54,7 +54,11 @@ class Perturbations(object):
     def ATMOSPHERIC_MODEL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ATM import ATM
+            obj = ATM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
         return None
 
     # Gravity model used.
@@ -344,8 +348,9 @@ def PerturbationsEnd(builder):
 def End(builder):
     return PerturbationsEnd(builder)
 
+import ATM
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -354,7 +359,7 @@ class PerturbationsT(object):
     # PerturbationsT
     def __init__(self):
         self.COMMENT = None  # type: List[str]
-        self.ATMOSPHERIC_MODEL = None  # type: str
+        self.ATMOSPHERIC_MODEL = None  # type: Optional[ATM.ATMT]
         self.GRAVITY_MODEL = None  # type: str
         self.GRAVITY_DEGREE = 0  # type: int
         self.GRAVITY_ORDER = 0  # type: int
@@ -398,7 +403,8 @@ class PerturbationsT(object):
             self.COMMENT = []
             for i in range(perturbations.COMMENTLength()):
                 self.COMMENT.append(perturbations.COMMENT(i))
-        self.ATMOSPHERIC_MODEL = perturbations.ATMOSPHERIC_MODEL()
+        if perturbations.ATMOSPHERIC_MODEL() is not None:
+            self.ATMOSPHERIC_MODEL = ATM.ATMT.InitFromObj(perturbations.ATMOSPHERIC_MODEL())
         self.GRAVITY_MODEL = perturbations.GRAVITY_MODEL()
         self.GRAVITY_DEGREE = perturbations.GRAVITY_DEGREE()
         self.GRAVITY_ORDER = perturbations.GRAVITY_ORDER()
@@ -431,7 +437,7 @@ class PerturbationsT(object):
                 builder.PrependUOffsetTRelative(COMMENTlist[i])
             COMMENT = builder.EndVector()
         if self.ATMOSPHERIC_MODEL is not None:
-            ATMOSPHERIC_MODEL = builder.CreateString(self.ATMOSPHERIC_MODEL)
+            ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL.Pack(builder)
         if self.GRAVITY_MODEL is not None:
             GRAVITY_MODEL = builder.CreateString(self.GRAVITY_MODEL)
         if self.N_BODY_PERTURBATIONS is not None:

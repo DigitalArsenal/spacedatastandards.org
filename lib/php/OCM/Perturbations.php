@@ -63,8 +63,9 @@ class Perturbations extends Table
     /// Atmospheric model used.
     public function getATMOSPHERIC_MODEL()
     {
+        $obj = new ATM();
         $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Gravity model used.
@@ -292,7 +293,7 @@ class Perturbations extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param VectorOffset
      * @return void
      */
     public static function addATMOSPHERIC_MODEL(FlatBufferBuilder $builder, $ATMOSPHERIC_MODEL)

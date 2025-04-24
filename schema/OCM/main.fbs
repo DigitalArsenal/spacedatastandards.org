@@ -1,6 +1,8 @@
-// Hash: a1268499b780f660d9d469e33c045293071b42a36309d6ebed30542260398d04
-// Version: 1.0.3
+// Hash: 333db757e4fde574bac5e8bd7c4fd5c3f3b42c8d17737e2aaa8b8233f06c403c
+// Version: 1.0.4
 // -----------------------------------END_HEADER
+include "../ATM/main.fbs";
+
 // Orbit Comprehensive Message (OCM)
 // Description
 // The Orbit Comprehensive Message (OCM) is a standardized format used for exchanging detailed
@@ -196,7 +198,7 @@ table Perturbations {
   /// Comments in the Perturbations section.
   COMMENT: [string];
   /// Atmospheric model used.
-  ATMOSPHERIC_MODEL: string;
+  ATMOSPHERIC_MODEL: ATM;
   /// Gravity model used.
   GRAVITY_MODEL: string;
   /// Degree of the gravity model.

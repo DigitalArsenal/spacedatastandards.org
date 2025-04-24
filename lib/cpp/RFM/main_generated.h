@@ -53,8 +53,8 @@ enum refFrame : int8_t {
   refFrame_TVN = 16,
   /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   refFrame_VVLH = 17,
-  /// Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
-  refFrame_VLVH = 18,
+  /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
+  refFrame_QSW = 18,
   /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   refFrame_LTP = 19,
   /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
@@ -219,7 +219,7 @@ inline const refFrame (&EnumValuesrefFrame())[89] {
     refFrame_RTN,
     refFrame_TVN,
     refFrame_VVLH,
-    refFrame_VLVH,
+    refFrame_QSW,
     refFrame_LTP,
     refFrame_LVLH,
     refFrame_PNE,
@@ -314,7 +314,7 @@ inline const char * const *EnumNamesrefFrame() {
     "RTN",
     "TVN",
     "VVLH",
-    "VLVH",
+    "QSW",
     "LTP",
     "LVLH",
     "PNE",

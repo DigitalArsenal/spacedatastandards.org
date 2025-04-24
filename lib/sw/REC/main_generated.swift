@@ -14,36 +14,37 @@ public enum RecordType: UInt8, UnionEnum {
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case none_ = 0
-  case bov = 1
-  case cat = 2
-  case cdm = 3
-  case crm = 4
-  case csm = 5
-  case ctr = 6
-  case eme = 7
-  case eoo = 8
-  case eop = 9
-  case epm = 10
-  case hyp = 11
-  case idm = 12
-  case lcc = 13
-  case ldm = 14
-  case met = 15
-  case mpe = 16
-  case ocm = 17
-  case oem = 18
-  case omm = 19
-  case osm = 20
-  case pld = 21
-  case pnm = 22
-  case prg = 23
-  case rfm = 24
-  case roc = 25
-  case scm = 26
-  case sit = 27
-  case tdm = 28
-  case tim = 29
-  case vcm = 30
+  case atm = 1
+  case bov = 2
+  case cat = 3
+  case cdm = 4
+  case crm = 5
+  case csm = 6
+  case ctr = 7
+  case eme = 8
+  case eoo = 9
+  case eop = 10
+  case epm = 11
+  case hyp = 12
+  case idm = 13
+  case lcc = 14
+  case ldm = 15
+  case met = 16
+  case mpe = 17
+  case ocm = 18
+  case oem = 19
+  case omm = 20
+  case osm = 21
+  case pld = 22
+  case pnm = 23
+  case prg = 24
+  case rfm = 25
+  case roc = 26
+  case scm = 27
+  case sit = 28
+  case tdm = 29
+  case tim = 30
+  case vcm = 31
 
   public static var max: RecordType { return .vcm }
   public static var min: RecordType { return .none_ }
@@ -97,6 +98,8 @@ public struct Record: FlatBufferObject, Verifiable {
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
+      case .atm:
+        try ForwardOffset<ATM>.verify(&verifier, at: pos, of: ATM.self)
       case .bov:
         try ForwardOffset<BOV>.verify(&verifier, at: pos, of: BOV.self)
       case .cat:

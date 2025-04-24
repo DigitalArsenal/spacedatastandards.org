@@ -2,7 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+export { ATM, ATMT } from './ATM.js';
 export { Address, AddressT } from './Address.js';
+export { AtmosphericModelFamily } from './AtmosphericModelFamily.js';
 export { BOV, BOVT } from './BOV.js';
 export { Band, BandT } from './Band.js';
 export { CAT, CATT } from './CAT.js';

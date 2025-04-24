@@ -1,5 +1,5 @@
-// Hash: 63bb6c64954b75ef655efc22f9f6f2e6e02548954dac8b6dac91b872c8c15aeb
-// Version: 3.0.2
+// Hash: de4bfea5998a836c0e4d7ff411a0957fef99b28c4be4fd7e6ba6570622d1459f
+// Version: 3.0.3
 // -----------------------------------END_HEADER
 enum refFrame : byte {
   /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
@@ -38,8 +38,8 @@ enum refFrame : byte {
   TVN,
   /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   VVLH,
-  /// Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
-  VLVH,
+  /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
+  QSW,
   /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   LTP,
   /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.

@@ -61,10 +61,15 @@ func (rcv *Perturbations) COMMENTLength() int {
 
 /// Comments in the Perturbations section.
 /// Atmospheric model used.
-func (rcv *Perturbations) ATMOSPHERIC_MODEL() []byte {
+func (rcv *Perturbations) ATMOSPHERIC_MODEL(obj *ATM) *ATM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(ATM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
 	return nil
 }

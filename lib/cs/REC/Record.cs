@@ -18,6 +18,7 @@ public struct Record : IFlatbufferObject
 
   public RecordType ValueType { get { int o = __p.__offset(4); return o != 0 ? (RecordType)__p.bb.Get(o + __p.bb_pos) : RecordType.NONE; } }
   public TTable? Value<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
+  public ATM ValueAsATM() { return Value<ATM>().Value; }
   public BOV ValueAsBOV() { return Value<BOV>().Value; }
   public CAT ValueAsCAT() { return Value<CAT>().Value; }
   public CDM ValueAsCDM() { return Value<CDM>().Value; }
@@ -85,6 +86,9 @@ public struct Record : IFlatbufferObject
     _o.Value.Type = this.ValueType;
     switch (this.ValueType) {
       default: break;
+      case RecordType.ATM:
+        _o.Value.Value = this.Value<ATM>().HasValue ? this.Value<ATM>().Value.UnPack() : null;
+        break;
       case RecordType.BOV:
         _o.Value.Value = this.Value<BOV>().HasValue ? this.Value<BOV>().Value.UnPack() : null;
         break;

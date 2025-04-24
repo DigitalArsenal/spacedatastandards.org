@@ -43,6 +43,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -52,43 +53,45 @@ struct RECBuilder;
 
 enum RecordType : uint8_t {
   RecordType_NONE = 0,
-  RecordType_BOV = 1,
-  RecordType_CAT = 2,
-  RecordType_CDM = 3,
-  RecordType_CRM = 4,
-  RecordType_CSM = 5,
-  RecordType_CTR = 6,
-  RecordType_EME = 7,
-  RecordType_EOO = 8,
-  RecordType_EOP = 9,
-  RecordType_EPM = 10,
-  RecordType_HYP = 11,
-  RecordType_IDM = 12,
-  RecordType_LCC = 13,
-  RecordType_LDM = 14,
-  RecordType_MET = 15,
-  RecordType_MPE = 16,
-  RecordType_OCM = 17,
-  RecordType_OEM = 18,
-  RecordType_OMM = 19,
-  RecordType_OSM = 20,
-  RecordType_PLD = 21,
-  RecordType_PNM = 22,
-  RecordType_PRG = 23,
-  RecordType_RFM = 24,
-  RecordType_ROC = 25,
-  RecordType_SCM = 26,
-  RecordType_SIT = 27,
-  RecordType_TDM = 28,
-  RecordType_TIM = 29,
-  RecordType_VCM = 30,
+  RecordType_ATM = 1,
+  RecordType_BOV = 2,
+  RecordType_CAT = 3,
+  RecordType_CDM = 4,
+  RecordType_CRM = 5,
+  RecordType_CSM = 6,
+  RecordType_CTR = 7,
+  RecordType_EME = 8,
+  RecordType_EOO = 9,
+  RecordType_EOP = 10,
+  RecordType_EPM = 11,
+  RecordType_HYP = 12,
+  RecordType_IDM = 13,
+  RecordType_LCC = 14,
+  RecordType_LDM = 15,
+  RecordType_MET = 16,
+  RecordType_MPE = 17,
+  RecordType_OCM = 18,
+  RecordType_OEM = 19,
+  RecordType_OMM = 20,
+  RecordType_OSM = 21,
+  RecordType_PLD = 22,
+  RecordType_PNM = 23,
+  RecordType_PRG = 24,
+  RecordType_RFM = 25,
+  RecordType_ROC = 26,
+  RecordType_SCM = 27,
+  RecordType_SIT = 28,
+  RecordType_TDM = 29,
+  RecordType_TIM = 30,
+  RecordType_VCM = 31,
   RecordType_MIN = RecordType_NONE,
   RecordType_MAX = RecordType_VCM
 };
 
-inline const RecordType (&EnumValuesRecordType())[31] {
+inline const RecordType (&EnumValuesRecordType())[32] {
   static const RecordType values[] = {
     RecordType_NONE,
+    RecordType_ATM,
     RecordType_BOV,
     RecordType_CAT,
     RecordType_CDM,
@@ -124,8 +127,9 @@ inline const RecordType (&EnumValuesRecordType())[31] {
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[32] = {
+  static const char * const names[33] = {
     "NONE",
+    "ATM",
     "BOV",
     "CAT",
     "CDM",
@@ -169,6 +173,10 @@ inline const char *EnumNameRecordType(RecordType e) {
 
 template<typename T> struct RecordTypeTraits {
   static const RecordType enum_value = RecordType_NONE;
+};
+
+template<> struct RecordTypeTraits<ATM> {
+  static const RecordType enum_value = RecordType_ATM;
 };
 
 template<> struct RecordTypeTraits<BOV> {
@@ -308,6 +316,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const void *>(VT_VALUE);
   }
   template<typename T> const T *value_as() const;
+  const ATM *value_as_ATM() const {
+    return value_type() == RecordType_ATM ? static_cast<const ATM *>(value()) : nullptr;
+  }
   const BOV *value_as_BOV() const {
     return value_type() == RecordType_BOV ? static_cast<const BOV *>(value()) : nullptr;
   }
@@ -411,6 +422,10 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.EndTable();
   }
 };
+
+template<> inline const ATM *Record::value_as<ATM>() const {
+  return value_as_ATM();
+}
 
 template<> inline const BOV *Record::value_as<BOV>() const {
   return value_as_BOV();
@@ -652,6 +667,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
   switch (type) {
     case RecordType_NONE: {
       return true;
+    }
+    case RecordType_ATM: {
+      auto ptr = reinterpret_cast<const ATM *>(obj);
+      return verifier.VerifyTable(ptr);
     }
     case RecordType_BOV: {
       auto ptr = reinterpret_cast<const BOV *>(obj);

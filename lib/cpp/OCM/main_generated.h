@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+#include "main_generated.h"
+
 struct Header;
 struct HeaderBuilder;
 
@@ -1431,8 +1433,8 @@ struct Perturbations FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
   }
   /// Atmospheric model used.
-  const ::flatbuffers::String *ATMOSPHERIC_MODEL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ATMOSPHERIC_MODEL);
+  const ATM *ATMOSPHERIC_MODEL() const {
+    return GetPointer<const ATM *>(VT_ATMOSPHERIC_MODEL);
   }
   /// Gravity model used.
   const ::flatbuffers::String *GRAVITY_MODEL() const {
@@ -1508,7 +1510,7 @@ struct Perturbations FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(COMMENT()) &&
            verifier.VerifyVectorOfStrings(COMMENT()) &&
            VerifyOffset(verifier, VT_ATMOSPHERIC_MODEL) &&
-           verifier.VerifyString(ATMOSPHERIC_MODEL()) &&
+           verifier.VerifyTable(ATMOSPHERIC_MODEL()) &&
            VerifyOffset(verifier, VT_GRAVITY_MODEL) &&
            verifier.VerifyString(GRAVITY_MODEL()) &&
            VerifyField<int32_t>(verifier, VT_GRAVITY_DEGREE, 4) &&
@@ -1549,7 +1551,7 @@ struct PerturbationsBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
     fbb_.AddOffset(Perturbations::VT_COMMENT, COMMENT);
   }
-  void add_ATMOSPHERIC_MODEL(::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL) {
+  void add_ATMOSPHERIC_MODEL(::flatbuffers::Offset<ATM> ATMOSPHERIC_MODEL) {
     fbb_.AddOffset(Perturbations::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
   }
   void add_GRAVITY_MODEL(::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL) {
@@ -1617,7 +1619,7 @@ struct PerturbationsBuilder {
 inline ::flatbuffers::Offset<Perturbations> CreatePerturbations(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL = 0,
+    ::flatbuffers::Offset<ATM> ATMOSPHERIC_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL = 0,
     int32_t GRAVITY_DEGREE = 0,
     int32_t GRAVITY_ORDER = 0,
@@ -1661,7 +1663,7 @@ inline ::flatbuffers::Offset<Perturbations> CreatePerturbations(
 inline ::flatbuffers::Offset<Perturbations> CreatePerturbationsDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
-    const char *ATMOSPHERIC_MODEL = nullptr,
+    ::flatbuffers::Offset<ATM> ATMOSPHERIC_MODEL = 0,
     const char *GRAVITY_MODEL = nullptr,
     int32_t GRAVITY_DEGREE = 0,
     int32_t GRAVITY_ORDER = 0,
@@ -1680,7 +1682,6 @@ inline ::flatbuffers::Offset<Perturbations> CreatePerturbationsDirect(
     double FIXED_F10P7 = 0.0,
     double FIXED_F10P7_MEAN = 0.0) {
   auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
-  auto ATMOSPHERIC_MODEL__ = ATMOSPHERIC_MODEL ? _fbb.CreateString(ATMOSPHERIC_MODEL) : 0;
   auto GRAVITY_MODEL__ = GRAVITY_MODEL ? _fbb.CreateString(GRAVITY_MODEL) : 0;
   auto N_BODY_PERTURBATIONS__ = N_BODY_PERTURBATIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*N_BODY_PERTURBATIONS) : 0;
   auto OCEAN_TIDES_MODEL__ = OCEAN_TIDES_MODEL ? _fbb.CreateString(OCEAN_TIDES_MODEL) : 0;
@@ -1695,7 +1696,7 @@ inline ::flatbuffers::Offset<Perturbations> CreatePerturbationsDirect(
   return CreatePerturbations(
       _fbb,
       COMMENT__,
-      ATMOSPHERIC_MODEL__,
+      ATMOSPHERIC_MODEL,
       GRAVITY_MODEL__,
       GRAVITY_DEGREE,
       GRAVITY_ORDER,

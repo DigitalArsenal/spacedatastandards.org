@@ -1,3 +1,5 @@
+export { ATM, ATMT } from './ATM.js';
+export { AtmosphericModelFamily } from './AtmosphericModelFamily.js';
 export { Header, HeaderT } from './Header.js';
 export { Maneuver, ManeuverT } from './Maneuver.js';
 export { Metadata, MetadataT } from './Metadata.js';

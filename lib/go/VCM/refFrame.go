@@ -43,8 +43,8 @@ const (
 	refFrameTVN             refFrame = 16
 	/// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
 	refFrameVVLH            refFrame = 17
-	/// Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
-	refFrameVLVH            refFrame = 18
+	/// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
+	refFrameQSW             refFrame = 18
 	/// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
 	refFrameLTP             refFrame = 19
 	/// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
@@ -206,7 +206,7 @@ var EnumNamesrefFrame = map[refFrame]string{
 	refFrameRTN:             "RTN",
 	refFrameTVN:             "TVN",
 	refFrameVVLH:            "VVLH",
-	refFrameVLVH:            "VLVH",
+	refFrameQSW:             "QSW",
 	refFrameLTP:             "LTP",
 	refFrameLVLH:            "LVLH",
 	refFramePNE:             "PNE",
@@ -298,7 +298,7 @@ var EnumValuesrefFrame = map[string]refFrame{
 	"RTN":             refFrameRTN,
 	"TVN":             refFrameTVN,
 	"VVLH":            refFrameVVLH,
-	"VLVH":            refFrameVLVH,
+	"QSW":             refFrameQSW,
 	"LTP":             refFrameLTP,
 	"LVLH":            refFrameLVLH,
 	"PNE":             refFramePNE,

@@ -34,7 +34,7 @@ pub const ENUM_VALUES_REF_FRAME: [refFrame; 89] = [
   refFrame::RTN,
   refFrame::TVN,
   refFrame::VVLH,
-  refFrame::VLVH,
+  refFrame::QSW,
   refFrame::LTP,
   refFrame::LVLH,
   refFrame::PNE,
@@ -148,8 +148,8 @@ impl refFrame {
   pub const TVN: Self = Self(16);
   /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
   pub const VVLH: Self = Self(17);
-  /// Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
-  pub const VLVH: Self = Self(18);
+  /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
+  pub const QSW: Self = Self(18);
   /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
   pub const LTP: Self = Self(19);
   /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
@@ -312,7 +312,7 @@ impl refFrame {
     Self::RTN,
     Self::TVN,
     Self::VVLH,
-    Self::VLVH,
+    Self::QSW,
     Self::LTP,
     Self::LVLH,
     Self::PNE,
@@ -405,7 +405,7 @@ impl refFrame {
       Self::RTN => Some("RTN"),
       Self::TVN => Some("TVN"),
       Self::VVLH => Some("VVLH"),
-      Self::VLVH => Some("VLVH"),
+      Self::QSW => Some("QSW"),
       Self::LTP => Some("LTP"),
       Self::LVLH => Some("LVLH"),
       Self::PNE => Some("PNE"),

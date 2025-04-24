@@ -39,8 +39,8 @@ class refFrame
     const TVN = 16;
     /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
     const VVLH = 17;
-    /// Vehicle-Local-Vertical-Local-Horizontal: Used in surface or proximity ops.
-    const VLVH = 18;
+    /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
+    const QSW = 18;
     /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
     const LTP = 19;
     /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
@@ -201,7 +201,7 @@ class refFrame
         refFrame::RTN=>"RTN",
         refFrame::TVN=>"TVN",
         refFrame::VVLH=>"VVLH",
-        refFrame::VLVH=>"VLVH",
+        refFrame::QSW=>"QSW",
         refFrame::LTP=>"LTP",
         refFrame::LVLH=>"LVLH",
         refFrame::PNE=>"PNE",

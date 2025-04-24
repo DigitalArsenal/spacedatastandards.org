@@ -20,13 +20,7 @@ public struct Perturbations : IFlatbufferObject
   public string COMMENT(int j) { int o = __p.__offset(4); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int COMMENTLength { get { int o = __p.__offset(4); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Atmospheric model used.
-  public string ATMOSPHERIC_MODEL { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_span<byte>(6, 1); }
-#else
-  public ArraySegment<byte>? GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_arraysegment(6); }
-#endif
-  public byte[] GetATMOSPHERIC_MODELArray() { return __p.__vector_as_array<byte>(6); }
+  public ATM? ATMOSPHERIC_MODEL { get { int o = __p.__offset(6); return o != 0 ? (ATM?)(new ATM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Gravity model used.
   public string GRAVITY_MODEL { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -125,7 +119,7 @@ public struct Perturbations : IFlatbufferObject
 
   public static Offset<Perturbations> CreatePerturbations(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
-      StringOffset ATMOSPHERIC_MODELOffset = default(StringOffset),
+      Offset<ATM> ATMOSPHERIC_MODELOffset = default(Offset<ATM>),
       StringOffset GRAVITY_MODELOffset = default(StringOffset),
       int GRAVITY_DEGREE = 0,
       int GRAVITY_ORDER = 0,
@@ -173,7 +167,7 @@ public struct Perturbations : IFlatbufferObject
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOMMENTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODELOffset) { builder.AddOffset(1, ATMOSPHERIC_MODELOffset.Value, 0); }
+  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, Offset<ATM> ATMOSPHERIC_MODELOffset) { builder.AddOffset(1, ATMOSPHERIC_MODELOffset.Value, 0); }
   public static void AddGRAVITY_MODEL(FlatBufferBuilder builder, StringOffset GRAVITY_MODELOffset) { builder.AddOffset(2, GRAVITY_MODELOffset.Value, 0); }
   public static void AddGRAVITY_DEGREE(FlatBufferBuilder builder, int GRAVITY_DEGREE) { builder.AddInt(3, GRAVITY_DEGREE, 0); }
   public static void AddGRAVITY_ORDER(FlatBufferBuilder builder, int GRAVITY_ORDER) { builder.AddInt(4, GRAVITY_ORDER, 0); }
@@ -208,7 +202,7 @@ public struct Perturbations : IFlatbufferObject
   public void UnPackTo(PerturbationsT _o) {
     _o.COMMENT = new List<string>();
     for (var _j = 0; _j < this.COMMENTLength; ++_j) {_o.COMMENT.Add(this.COMMENT(_j));}
-    _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL;
+    _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL.HasValue ? this.ATMOSPHERIC_MODEL.Value.UnPack() : null;
     _o.GRAVITY_MODEL = this.GRAVITY_MODEL;
     _o.GRAVITY_DEGREE = this.GRAVITY_DEGREE;
     _o.GRAVITY_ORDER = this.GRAVITY_ORDER;
@@ -236,7 +230,7 @@ public struct Perturbations : IFlatbufferObject
       for (var _j = 0; _j < __COMMENT.Length; ++_j) { __COMMENT[_j] = builder.CreateString(_o.COMMENT[_j]); }
       _COMMENT = CreateCOMMENTVector(builder, __COMMENT);
     }
-    var _ATMOSPHERIC_MODEL = _o.ATMOSPHERIC_MODEL == null ? default(StringOffset) : builder.CreateString(_o.ATMOSPHERIC_MODEL);
+    var _ATMOSPHERIC_MODEL = _o.ATMOSPHERIC_MODEL == null ? default(Offset<ATM>) : ATM.Pack(builder, _o.ATMOSPHERIC_MODEL);
     var _GRAVITY_MODEL = _o.GRAVITY_MODEL == null ? default(StringOffset) : builder.CreateString(_o.GRAVITY_MODEL);
     var _N_BODY_PERTURBATIONS = default(VectorOffset);
     if (_o.N_BODY_PERTURBATIONS != null) {
@@ -280,7 +274,7 @@ public struct Perturbations : IFlatbufferObject
 public class PerturbationsT
 {
   public List<string> COMMENT { get; set; }
-  public string ATMOSPHERIC_MODEL { get; set; }
+  public ATMT ATMOSPHERIC_MODEL { get; set; }
   public string GRAVITY_MODEL { get; set; }
   public int GRAVITY_DEGREE { get; set; }
   public int GRAVITY_ORDER { get; set; }
@@ -329,7 +323,7 @@ static public class PerturbationsVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyVectorOfStrings(tablePos, 4 /*COMMENT*/, false)
-      && verifier.VerifyString(tablePos, 6 /*ATMOSPHERIC_MODEL*/, false)
+      && verifier.VerifyTable(tablePos, 6 /*ATMOSPHERIC_MODEL*/, ATMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 8 /*GRAVITY_MODEL*/, false)
       && verifier.VerifyField(tablePos, 10 /*GRAVITY_DEGREE*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 12 /*GRAVITY_ORDER*/, 4 /*int*/, 4, false)

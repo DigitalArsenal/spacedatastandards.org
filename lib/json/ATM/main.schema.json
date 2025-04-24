@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AtmosphericModelFamily" : {
+      "type" : "string",
+      "enum": ["CIRA_XX", "DTM_XX", "GITM", "GOST", "GRAM_XX", "HP", "JAC_HASDM", "JAC_GILL", "JB08", "JR71", "JXX", "MET_XX", "MSIS_86", "MSISE_90", "NRLMSIS00E", "TIECGM", "USSA_XX"]
+    },
+    "ATM" : {
+      "type" : "object",
+      "description" : "Atmospheric Model Message",
+      "properties" : {
+        "MODEL" : {
+                "$ref" : "#/definitions/AtmosphericModelFamily",
+                "description" : "Canonical model family"
+              },
+        "YEAR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ATM"
+}

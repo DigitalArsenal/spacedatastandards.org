@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ATM, ATMT } from './ATM.js';
 
 
 export class Perturbations implements flatbuffers.IUnpackableObject<PerturbationsT> {
@@ -42,11 +43,9 @@ commentLength():number {
 /**
  * Atmospheric model used.
  */
-ATMOSPHERIC_MODEL():string|null
-ATMOSPHERIC_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ATMOSPHERIC_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+ATMOSPHERIC_MODEL(obj?:ATM):ATM|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? (obj || new ATM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -321,34 +320,11 @@ static endPerturbations(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPerturbations(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, ATMOSPHERIC_MODELOffset:flatbuffers.Offset, GRAVITY_MODELOffset:flatbuffers.Offset, GRAVITY_DEGREE:number, GRAVITY_ORDER:number, GM:number, N_BODY_PERTURBATIONSOffset:flatbuffers.Offset, OCEAN_TIDES_MODELOffset:flatbuffers.Offset, SOLID_TIDES_MODELOffset:flatbuffers.Offset, ATMOSPHERIC_TIDES_MODELOffset:flatbuffers.Offset, GEOPOTENTIAL_MODELOffset:flatbuffers.Offset, SOLAR_RAD_PRESSUREOffset:flatbuffers.Offset, ALBEDOOffset:flatbuffers.Offset, THERMALOffset:flatbuffers.Offset, RELATIVITYOffset:flatbuffers.Offset, ATMOSPHERIC_DRAGOffset:flatbuffers.Offset, FIXED_GEOMAG_KP:number, FIXED_F10P7:number, FIXED_F10P7_MEAN:number):flatbuffers.Offset {
-  Perturbations.startPerturbations(builder);
-  Perturbations.addComment(builder, COMMENTOffset);
-  Perturbations.addAtmosphericModel(builder, ATMOSPHERIC_MODELOffset);
-  Perturbations.addGravityModel(builder, GRAVITY_MODELOffset);
-  Perturbations.addGravityDegree(builder, GRAVITY_DEGREE);
-  Perturbations.addGravityOrder(builder, GRAVITY_ORDER);
-  Perturbations.addGm(builder, GM);
-  Perturbations.addNBodyPerturbations(builder, N_BODY_PERTURBATIONSOffset);
-  Perturbations.addOceanTidesModel(builder, OCEAN_TIDES_MODELOffset);
-  Perturbations.addSolidTidesModel(builder, SOLID_TIDES_MODELOffset);
-  Perturbations.addAtmosphericTidesModel(builder, ATMOSPHERIC_TIDES_MODELOffset);
-  Perturbations.addGeopotentialModel(builder, GEOPOTENTIAL_MODELOffset);
-  Perturbations.addSolarRadPressure(builder, SOLAR_RAD_PRESSUREOffset);
-  Perturbations.addAlbedo(builder, ALBEDOOffset);
-  Perturbations.addThermal(builder, THERMALOffset);
-  Perturbations.addRelativity(builder, RELATIVITYOffset);
-  Perturbations.addAtmosphericDrag(builder, ATMOSPHERIC_DRAGOffset);
-  Perturbations.addFixedGeomagKp(builder, FIXED_GEOMAG_KP);
-  Perturbations.addFixedF10P7(builder, FIXED_F10P7);
-  Perturbations.addFixedF10P7Mean(builder, FIXED_F10P7_MEAN);
-  return Perturbations.endPerturbations(builder);
-}
 
 unpack(): PerturbationsT {
   return new PerturbationsT(
     this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength()),
-    this.ATMOSPHERIC_MODEL(),
+    (this.ATMOSPHERIC_MODEL() !== null ? this.ATMOSPHERIC_MODEL()!.unpack() : null),
     this.GRAVITY_MODEL(),
     this.GRAVITY_DEGREE(),
     this.GRAVITY_ORDER(),
@@ -372,7 +348,7 @@ unpack(): PerturbationsT {
 
 unpackTo(_o: PerturbationsT): void {
   _o.COMMENT = this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength());
-  _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL();
+  _o.ATMOSPHERIC_MODEL = (this.ATMOSPHERIC_MODEL() !== null ? this.ATMOSPHERIC_MODEL()!.unpack() : null);
   _o.GRAVITY_MODEL = this.GRAVITY_MODEL();
   _o.GRAVITY_DEGREE = this.GRAVITY_DEGREE();
   _o.GRAVITY_ORDER = this.GRAVITY_ORDER();
@@ -396,7 +372,7 @@ unpackTo(_o: PerturbationsT): void {
 export class PerturbationsT implements flatbuffers.IGeneratedObject {
 constructor(
   public COMMENT: (string)[] = [],
-  public ATMOSPHERIC_MODEL: string|Uint8Array|null = null,
+  public ATMOSPHERIC_MODEL: ATMT|null = null,
   public GRAVITY_MODEL: string|Uint8Array|null = null,
   public GRAVITY_DEGREE: number = 0,
   public GRAVITY_ORDER: number = 0,
@@ -419,7 +395,7 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COMMENT = Perturbations.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
-  const ATMOSPHERIC_MODEL = (this.ATMOSPHERIC_MODEL !== null ? builder.createString(this.ATMOSPHERIC_MODEL!) : 0);
+  const ATMOSPHERIC_MODEL = (this.ATMOSPHERIC_MODEL !== null ? this.ATMOSPHERIC_MODEL!.pack(builder) : 0);
   const GRAVITY_MODEL = (this.GRAVITY_MODEL !== null ? builder.createString(this.GRAVITY_MODEL!) : 0);
   const N_BODY_PERTURBATIONS = Perturbations.createNBodyPerturbationsVector(builder, builder.createObjectOffsetList(this.N_BODY_PERTURBATIONS));
   const OCEAN_TIDES_MODEL = (this.OCEAN_TIDES_MODEL !== null ? builder.createString(this.OCEAN_TIDES_MODEL!) : 0);
@@ -432,26 +408,27 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const RELATIVITY = (this.RELATIVITY !== null ? builder.createString(this.RELATIVITY!) : 0);
   const ATMOSPHERIC_DRAG = (this.ATMOSPHERIC_DRAG !== null ? builder.createString(this.ATMOSPHERIC_DRAG!) : 0);
 
-  return Perturbations.createPerturbations(builder,
-    COMMENT,
-    ATMOSPHERIC_MODEL,
-    GRAVITY_MODEL,
-    this.GRAVITY_DEGREE,
-    this.GRAVITY_ORDER,
-    this.GM,
-    N_BODY_PERTURBATIONS,
-    OCEAN_TIDES_MODEL,
-    SOLID_TIDES_MODEL,
-    ATMOSPHERIC_TIDES_MODEL,
-    GEOPOTENTIAL_MODEL,
-    SOLAR_RAD_PRESSURE,
-    ALBEDO,
-    THERMAL,
-    RELATIVITY,
-    ATMOSPHERIC_DRAG,
-    this.FIXED_GEOMAG_KP,
-    this.FIXED_F10P7,
-    this.FIXED_F10P7_MEAN
-  );
+  Perturbations.startPerturbations(builder);
+  Perturbations.addComment(builder, COMMENT);
+  Perturbations.addAtmosphericModel(builder, ATMOSPHERIC_MODEL);
+  Perturbations.addGravityModel(builder, GRAVITY_MODEL);
+  Perturbations.addGravityDegree(builder, this.GRAVITY_DEGREE);
+  Perturbations.addGravityOrder(builder, this.GRAVITY_ORDER);
+  Perturbations.addGm(builder, this.GM);
+  Perturbations.addNBodyPerturbations(builder, N_BODY_PERTURBATIONS);
+  Perturbations.addOceanTidesModel(builder, OCEAN_TIDES_MODEL);
+  Perturbations.addSolidTidesModel(builder, SOLID_TIDES_MODEL);
+  Perturbations.addAtmosphericTidesModel(builder, ATMOSPHERIC_TIDES_MODEL);
+  Perturbations.addGeopotentialModel(builder, GEOPOTENTIAL_MODEL);
+  Perturbations.addSolarRadPressure(builder, SOLAR_RAD_PRESSURE);
+  Perturbations.addAlbedo(builder, ALBEDO);
+  Perturbations.addThermal(builder, THERMAL);
+  Perturbations.addRelativity(builder, RELATIVITY);
+  Perturbations.addAtmosphericDrag(builder, ATMOSPHERIC_DRAG);
+  Perturbations.addFixedGeomagKp(builder, this.FIXED_GEOMAG_KP);
+  Perturbations.addFixedF10P7(builder, this.FIXED_F10P7);
+  Perturbations.addFixedF10P7Mean(builder, this.FIXED_F10P7_MEAN);
+
+  return Perturbations.endPerturbations(builder);
 }
 }

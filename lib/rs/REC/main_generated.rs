@@ -33,6 +33,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -42,11 +43,12 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 30;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 31;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 31] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 32] = [
   RecordType::NONE,
+  RecordType::ATM,
   RecordType::BOV,
   RecordType::CAT,
   RecordType::CDM,
@@ -85,41 +87,43 @@ pub struct RecordType(pub u8);
 #[allow(non_upper_case_globals)]
 impl RecordType {
   pub const NONE: Self = Self(0);
-  pub const BOV: Self = Self(1);
-  pub const CAT: Self = Self(2);
-  pub const CDM: Self = Self(3);
-  pub const CRM: Self = Self(4);
-  pub const CSM: Self = Self(5);
-  pub const CTR: Self = Self(6);
-  pub const EME: Self = Self(7);
-  pub const EOO: Self = Self(8);
-  pub const EOP: Self = Self(9);
-  pub const EPM: Self = Self(10);
-  pub const HYP: Self = Self(11);
-  pub const IDM: Self = Self(12);
-  pub const LCC: Self = Self(13);
-  pub const LDM: Self = Self(14);
-  pub const MET: Self = Self(15);
-  pub const MPE: Self = Self(16);
-  pub const OCM: Self = Self(17);
-  pub const OEM: Self = Self(18);
-  pub const OMM: Self = Self(19);
-  pub const OSM: Self = Self(20);
-  pub const PLD: Self = Self(21);
-  pub const PNM: Self = Self(22);
-  pub const PRG: Self = Self(23);
-  pub const RFM: Self = Self(24);
-  pub const ROC: Self = Self(25);
-  pub const SCM: Self = Self(26);
-  pub const SIT: Self = Self(27);
-  pub const TDM: Self = Self(28);
-  pub const TIM: Self = Self(29);
-  pub const VCM: Self = Self(30);
+  pub const ATM: Self = Self(1);
+  pub const BOV: Self = Self(2);
+  pub const CAT: Self = Self(3);
+  pub const CDM: Self = Self(4);
+  pub const CRM: Self = Self(5);
+  pub const CSM: Self = Self(6);
+  pub const CTR: Self = Self(7);
+  pub const EME: Self = Self(8);
+  pub const EOO: Self = Self(9);
+  pub const EOP: Self = Self(10);
+  pub const EPM: Self = Self(11);
+  pub const HYP: Self = Self(12);
+  pub const IDM: Self = Self(13);
+  pub const LCC: Self = Self(14);
+  pub const LDM: Self = Self(15);
+  pub const MET: Self = Self(16);
+  pub const MPE: Self = Self(17);
+  pub const OCM: Self = Self(18);
+  pub const OEM: Self = Self(19);
+  pub const OMM: Self = Self(20);
+  pub const OSM: Self = Self(21);
+  pub const PLD: Self = Self(22);
+  pub const PNM: Self = Self(23);
+  pub const PRG: Self = Self(24);
+  pub const RFM: Self = Self(25);
+  pub const ROC: Self = Self(26);
+  pub const SCM: Self = Self(27);
+  pub const SIT: Self = Self(28);
+  pub const TDM: Self = Self(29);
+  pub const TIM: Self = Self(30);
+  pub const VCM: Self = Self(31);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 30;
+  pub const ENUM_MAX: u8 = 31;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
+    Self::ATM,
     Self::BOV,
     Self::CAT,
     Self::CDM,
@@ -155,6 +159,7 @@ impl RecordType {
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::NONE => Some("NONE"),
+      Self::ATM => Some("ATM"),
       Self::BOV => Some("BOV"),
       Self::CAT => Some("CAT"),
       Self::CDM => Some("CDM"),
@@ -247,6 +252,7 @@ pub struct RecordTypeUnionTableOffset {}
 #[derive(Debug, Clone, PartialEq)]
 pub enum RecordTypeT {
   NONE,
+  ATM(Box<ATMT>),
   BOV(Box<BOVT>),
   CAT(Box<CATT>),
   CDM(Box<CDMT>),
@@ -287,6 +293,7 @@ impl RecordTypeT {
   pub fn record_type_type(&self) -> RecordType {
     match self {
       Self::NONE => RecordType::NONE,
+      Self::ATM(_) => RecordType::ATM,
       Self::BOV(_) => RecordType::BOV,
       Self::CAT(_) => RecordType::CAT,
       Self::CDM(_) => RecordType::CDM,
@@ -322,6 +329,7 @@ impl RecordTypeT {
   pub fn pack<'b, A: flatbuffers::Allocator + 'b>(&self, fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
     match self {
       Self::NONE => None,
+      Self::ATM(v) => Some(v.pack(fbb).as_union_value()),
       Self::BOV(v) => Some(v.pack(fbb).as_union_value()),
       Self::CAT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CDM(v) => Some(v.pack(fbb).as_union_value()),
@@ -353,6 +361,27 @@ impl RecordTypeT {
       Self::TIM(v) => Some(v.pack(fbb).as_union_value()),
       Self::VCM(v) => Some(v.pack(fbb).as_union_value()),
     }
+  }
+  /// If the union variant matches, return the owned ATMT, setting the union to NONE.
+  pub fn take_ATM(&mut self) -> Option<Box<ATMT>> {
+    if let Self::ATM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ATM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ATMT.
+  pub fn as_ATM(&self) -> Option<&ATMT> {
+    if let Self::ATM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ATMT.
+  pub fn as_ATM_mut(&mut self) -> Option<&mut ATMT> {
+    if let Self::ATM(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned BOVT, setting the union to NONE.
   pub fn take_BOV(&mut self) -> Option<Box<BOVT>> {
@@ -1024,6 +1053,11 @@ impl<'a> Record<'a> {
   pub fn unpack(&self) -> RecordT {
     let value = match self.value_type() {
       RecordType::NONE => RecordTypeT::NONE,
+      RecordType::ATM => RecordTypeT::ATM(Box::new(
+        self.value_as_ATM()
+            .expect("Invalid union table, expected `RecordType::ATM`.")
+            .unpack()
+      )),
       RecordType::BOV => RecordTypeT::BOV(Box::new(
         self.value_as_BOV()
             .expect("Invalid union table, expected `RecordType::BOV`.")
@@ -1206,6 +1240,21 @@ impl<'a> Record<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Record::VT_STANDARD, None)}
   }
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ATM(&self) -> Option<ATM<'a>> {
+    if self.value_type() == RecordType::ATM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ATM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
   #[inline]
   #[allow(non_snake_case)]
   pub fn value_as_BOV(&self) -> Option<BOV<'a>> {
@@ -1667,6 +1716,7 @@ impl flatbuffers::Verifiable for Record<'_> {
     v.visit_table(pos)?
      .visit_union::<RecordType, _>("value_type", Self::VT_VALUE_TYPE, "value", Self::VT_VALUE, false, |key, v, pos| {
         match key {
+          RecordType::ATM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ATM>>("RecordType::ATM", pos),
           RecordType::BOV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BOV>>("RecordType::BOV", pos),
           RecordType::CAT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CAT>>("RecordType::CAT", pos),
           RecordType::CDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CDM>>("RecordType::CDM", pos),
@@ -1758,6 +1808,13 @@ impl core::fmt::Debug for Record<'_> {
     let mut ds = f.debug_struct("Record");
       ds.field("value_type", &self.value_type());
       match self.value_type() {
+        RecordType::ATM => {
+          if let Some(x) = self.value_as_ATM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::BOV => {
           if let Some(x) = self.value_as_BOV() {
             ds.field("value", &x)

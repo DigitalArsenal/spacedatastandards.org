@@ -8,40 +8,42 @@ type RecordType byte
 
 const (
 	RecordTypeNONE RecordType = 0
-	RecordTypeBOV  RecordType = 1
-	RecordTypeCAT  RecordType = 2
-	RecordTypeCDM  RecordType = 3
-	RecordTypeCRM  RecordType = 4
-	RecordTypeCSM  RecordType = 5
-	RecordTypeCTR  RecordType = 6
-	RecordTypeEME  RecordType = 7
-	RecordTypeEOO  RecordType = 8
-	RecordTypeEOP  RecordType = 9
-	RecordTypeEPM  RecordType = 10
-	RecordTypeHYP  RecordType = 11
-	RecordTypeIDM  RecordType = 12
-	RecordTypeLCC  RecordType = 13
-	RecordTypeLDM  RecordType = 14
-	RecordTypeMET  RecordType = 15
-	RecordTypeMPE  RecordType = 16
-	RecordTypeOCM  RecordType = 17
-	RecordTypeOEM  RecordType = 18
-	RecordTypeOMM  RecordType = 19
-	RecordTypeOSM  RecordType = 20
-	RecordTypePLD  RecordType = 21
-	RecordTypePNM  RecordType = 22
-	RecordTypePRG  RecordType = 23
-	RecordTypeRFM  RecordType = 24
-	RecordTypeROC  RecordType = 25
-	RecordTypeSCM  RecordType = 26
-	RecordTypeSIT  RecordType = 27
-	RecordTypeTDM  RecordType = 28
-	RecordTypeTIM  RecordType = 29
-	RecordTypeVCM  RecordType = 30
+	RecordTypeATM  RecordType = 1
+	RecordTypeBOV  RecordType = 2
+	RecordTypeCAT  RecordType = 3
+	RecordTypeCDM  RecordType = 4
+	RecordTypeCRM  RecordType = 5
+	RecordTypeCSM  RecordType = 6
+	RecordTypeCTR  RecordType = 7
+	RecordTypeEME  RecordType = 8
+	RecordTypeEOO  RecordType = 9
+	RecordTypeEOP  RecordType = 10
+	RecordTypeEPM  RecordType = 11
+	RecordTypeHYP  RecordType = 12
+	RecordTypeIDM  RecordType = 13
+	RecordTypeLCC  RecordType = 14
+	RecordTypeLDM  RecordType = 15
+	RecordTypeMET  RecordType = 16
+	RecordTypeMPE  RecordType = 17
+	RecordTypeOCM  RecordType = 18
+	RecordTypeOEM  RecordType = 19
+	RecordTypeOMM  RecordType = 20
+	RecordTypeOSM  RecordType = 21
+	RecordTypePLD  RecordType = 22
+	RecordTypePNM  RecordType = 23
+	RecordTypePRG  RecordType = 24
+	RecordTypeRFM  RecordType = 25
+	RecordTypeROC  RecordType = 26
+	RecordTypeSCM  RecordType = 27
+	RecordTypeSIT  RecordType = 28
+	RecordTypeTDM  RecordType = 29
+	RecordTypeTIM  RecordType = 30
+	RecordTypeVCM  RecordType = 31
 )
 
 var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeNONE: "NONE",
+	RecordTypeATM:  "ATM",
 	RecordTypeBOV:  "BOV",
 	RecordTypeCAT:  "CAT",
 	RecordTypeCDM:  "CDM",
@@ -76,6 +78,7 @@ var EnumNamesRecordType = map[RecordType]string{
 
 var EnumValuesRecordType = map[string]RecordType{
 	"NONE": RecordTypeNONE,
+	"ATM":  RecordTypeATM,
 	"BOV":  RecordTypeBOV,
 	"CAT":  RecordTypeCAT,
 	"CDM":  RecordTypeCDM,

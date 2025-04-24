@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { ATM, ATMT } from './ATM.js';
 export declare class Perturbations implements flatbuffers.IUnpackableObject<PerturbationsT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -14,8 +15,7 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
     /**
      * Atmospheric model used.
      */
-    ATMOSPHERIC_MODEL(): string | null;
-    ATMOSPHERIC_MODEL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ATMOSPHERIC_MODEL(obj?: ATM): ATM | null;
     /**
      * Gravity model used.
      */
@@ -121,13 +121,12 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
     static addFixedF10P7(builder: flatbuffers.Builder, FIXED_F10P7: number): void;
     static addFixedF10P7Mean(builder: flatbuffers.Builder, FIXED_F10P7_MEAN: number): void;
     static endPerturbations(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPerturbations(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset, ATMOSPHERIC_MODELOffset: flatbuffers.Offset, GRAVITY_MODELOffset: flatbuffers.Offset, GRAVITY_DEGREE: number, GRAVITY_ORDER: number, GM: number, N_BODY_PERTURBATIONSOffset: flatbuffers.Offset, OCEAN_TIDES_MODELOffset: flatbuffers.Offset, SOLID_TIDES_MODELOffset: flatbuffers.Offset, ATMOSPHERIC_TIDES_MODELOffset: flatbuffers.Offset, GEOPOTENTIAL_MODELOffset: flatbuffers.Offset, SOLAR_RAD_PRESSUREOffset: flatbuffers.Offset, ALBEDOOffset: flatbuffers.Offset, THERMALOffset: flatbuffers.Offset, RELATIVITYOffset: flatbuffers.Offset, ATMOSPHERIC_DRAGOffset: flatbuffers.Offset, FIXED_GEOMAG_KP: number, FIXED_F10P7: number, FIXED_F10P7_MEAN: number): flatbuffers.Offset;
     unpack(): PerturbationsT;
     unpackTo(_o: PerturbationsT): void;
 }
 export declare class PerturbationsT implements flatbuffers.IGeneratedObject {
     COMMENT: (string)[];
-    ATMOSPHERIC_MODEL: string | Uint8Array | null;
+    ATMOSPHERIC_MODEL: ATMT | null;
     GRAVITY_MODEL: string | Uint8Array | null;
     GRAVITY_DEGREE: number;
     GRAVITY_ORDER: number;
@@ -145,7 +144,7 @@ export declare class PerturbationsT implements flatbuffers.IGeneratedObject {
     FIXED_GEOMAG_KP: number;
     FIXED_F10P7: number;
     FIXED_F10P7_MEAN: number;
-    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: string | Uint8Array | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number);
+    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Perturbations.d.ts.map

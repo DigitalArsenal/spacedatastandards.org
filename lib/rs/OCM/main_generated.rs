@@ -3,6 +3,7 @@
 
 // @generated
 
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -2742,7 +2743,7 @@ impl<'a> Perturbations<'a> {
       x.iter().map(|s| s.to_string()).collect()
     });
     let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL().map(|x| {
-      x.to_string()
+      Box::new(x.unpack())
     });
     let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
       x.to_string()
@@ -2816,11 +2817,11 @@ impl<'a> Perturbations<'a> {
   }
   /// Atmospheric model used.
   #[inline]
-  pub fn ATMOSPHERIC_MODEL(&self) -> Option<&'a str> {
+  pub fn ATMOSPHERIC_MODEL(&self) -> Option<ATM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_ATMOSPHERIC_MODEL, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<ATM>>(Perturbations::VT_ATMOSPHERIC_MODEL, None)}
   }
   /// Gravity model used.
   #[inline]
@@ -2968,7 +2969,7 @@ impl flatbuffers::Verifiable for Perturbations<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<ATM>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
      .visit_field::<i32>("GRAVITY_DEGREE", Self::VT_GRAVITY_DEGREE, false)?
      .visit_field::<i32>("GRAVITY_ORDER", Self::VT_GRAVITY_ORDER, false)?
@@ -2992,7 +2993,7 @@ impl flatbuffers::Verifiable for Perturbations<'_> {
 }
 pub struct PerturbationsArgs<'a> {
     pub COMMENT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ATMOSPHERIC_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ATMOSPHERIC_MODEL: Option<flatbuffers::WIPOffset<ATM<'a>>>,
     pub GRAVITY_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub GRAVITY_DEGREE: i32,
     pub GRAVITY_ORDER: i32,
@@ -3048,8 +3049,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> PerturbationsBuilder<'a, 'b, A>
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Perturbations::VT_COMMENT, COMMENT);
   }
   #[inline]
-  pub fn add_ATMOSPHERIC_MODEL(&mut self, ATMOSPHERIC_MODEL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(Perturbations::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
+  pub fn add_ATMOSPHERIC_MODEL(&mut self, ATMOSPHERIC_MODEL: flatbuffers::WIPOffset<ATM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<ATM>>(Perturbations::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
   }
   #[inline]
   pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: flatbuffers::WIPOffset<&'b  str>) {
@@ -3163,7 +3164,7 @@ impl core::fmt::Debug for Perturbations<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct PerturbationsT {
   pub COMMENT: Option<Vec<String>>,
-  pub ATMOSPHERIC_MODEL: Option<String>,
+  pub ATMOSPHERIC_MODEL: Option<Box<ATMT>>,
   pub GRAVITY_MODEL: Option<String>,
   pub GRAVITY_DEGREE: i32,
   pub GRAVITY_ORDER: i32,
@@ -3216,7 +3217,7 @@ impl PerturbationsT {
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL.as_ref().map(|x|{
-      _fbb.create_string(x)
+      x.pack(_fbb)
     });
     let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
       _fbb.create_string(x)

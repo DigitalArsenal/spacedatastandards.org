@@ -638,8 +638,9 @@ class Perturbations : flatbuffers.handle
     def COMMENT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 4)
     /// Atmospheric model used.
-    def ATMOSPHERIC_MODEL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 6)
+    def ATMOSPHERIC_MODEL() -> ATM?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: ATM { buf_, o } else: nil
     /// Gravity model used.
     def GRAVITY_MODEL() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)

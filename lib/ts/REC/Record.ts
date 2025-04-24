@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ATM, ATMT } from './ATM.js';
 import { BOV, BOVT } from './BOV.js';
 import { CAT, CATT } from './CAT.js';
 import { CDM, CDMT } from './CDM.js';
@@ -128,7 +129,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null,
+  public value: ATMT|BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 

@@ -5,6 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
+
 class Header {
   Header._(this._bc, this._bcOffset);
   factory Header(List<int> bytes) {
@@ -1222,7 +1224,7 @@ class Perturbations {
   ///  Comments in the Perturbations section.
   List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 4);
   ///  Atmospheric model used.
-  String? get ATMOSPHERIC_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ATM? get ATMOSPHERIC_MODEL => ATM.reader.vTableGetNullable(_bc, _bcOffset, 6);
   ///  Gravity model used.
   String? get GRAVITY_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Degree of the gravity model.
@@ -1365,7 +1367,7 @@ class PerturbationsBuilder {
 
 class PerturbationsObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _COMMENT;
-  final String? _ATMOSPHERIC_MODEL;
+  final ATMObjectBuilder? _ATMOSPHERIC_MODEL;
   final String? _GRAVITY_MODEL;
   final int? _GRAVITY_DEGREE;
   final int? _GRAVITY_ORDER;
@@ -1386,7 +1388,7 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
 
   PerturbationsObjectBuilder({
     List<String>? COMMENT,
-    String? ATMOSPHERIC_MODEL,
+    ATMObjectBuilder? ATMOSPHERIC_MODEL,
     String? GRAVITY_MODEL,
     int? GRAVITY_DEGREE,
     int? GRAVITY_ORDER,
@@ -1430,8 +1432,7 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? COMMENTOffset = _COMMENT == null ? null
         : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
-    final int? ATMOSPHERIC_MODELOffset = _ATMOSPHERIC_MODEL == null ? null
-        : fbBuilder.writeString(_ATMOSPHERIC_MODEL!);
+    final int? ATMOSPHERIC_MODELOffset = _ATMOSPHERIC_MODEL?.getOrCreateOffset(fbBuilder);
     final int? GRAVITY_MODELOffset = _GRAVITY_MODEL == null ? null
         : fbBuilder.writeString(_GRAVITY_MODEL!);
     final int? N_BODY_PERTURBATIONSOffset = _N_BODY_PERTURBATIONS == null ? null

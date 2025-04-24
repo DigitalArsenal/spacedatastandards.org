@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { ATMT } from './ATM.js';
 import { BOVT } from './BOV.js';
 import { CATT } from './CAT.js';
 import { CDMT } from './CDM.js';
@@ -51,9 +52,9 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
 }
 export declare class RecordT implements flatbuffers.IGeneratedObject {
     valueType: RecordType;
-    value: BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null;
+    value: ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null;
     standard: string | Uint8Array | null;
-    constructor(valueType?: RecordType, value?: BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null, standard?: string | Uint8Array | null);
+    constructor(valueType?: RecordType, value?: ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null, standard?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

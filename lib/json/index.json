@@ -365,7 +365,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -1160,7 +1160,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -2129,7 +2129,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -2983,7 +2983,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -4409,6 +4409,51 @@
                 }
             },
             "$ref": "#/definitions/PNM"
+        },
+        "ATM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "AtmosphericModelFamily": {
+                    "type": "string",
+                    "enum": [
+                        "CIRA_XX",
+                        "DTM_XX",
+                        "GITM",
+                        "GOST",
+                        "GRAM_XX",
+                        "HP",
+                        "JAC_HASDM",
+                        "JAC_GILL",
+                        "JB08",
+                        "JR71",
+                        "JXX",
+                        "MET_XX",
+                        "MSIS_86",
+                        "MSISE_90",
+                        "NRLMSIS00E",
+                        "TIECGM",
+                        "USSA_XX"
+                    ]
+                },
+                "ATM": {
+                    "type": "object",
+                    "description": "Atmospheric Model Message",
+                    "properties": {
+                        "MODEL": {
+                            "$ref": "#/definitions/AtmosphericModelFamily",
+                            "description": "Canonical model family"
+                        },
+                        "YEAR": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ATM"
         },
         "CSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -6058,6 +6103,28 @@
         "REC": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "AtmosphericModelFamily": {
+                    "type": "string",
+                    "enum": [
+                        "CIRA_XX",
+                        "DTM_XX",
+                        "GITM",
+                        "GOST",
+                        "GRAM_XX",
+                        "HP",
+                        "JAC_HASDM",
+                        "JAC_GILL",
+                        "JB08",
+                        "JR71",
+                        "JXX",
+                        "MET_XX",
+                        "MSIS_86",
+                        "MSISE_90",
+                        "NRLMSIS00E",
+                        "TIECGM",
+                        "USSA_XX"
+                    ]
+                },
                 "PolarizationType": {
                     "type": "string",
                     "enum": [
@@ -6343,7 +6410,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -6650,6 +6717,7 @@
                     "type": "string",
                     "enum": [
                         "NONE",
+                        "ATM",
                         "BOV",
                         "CAT",
                         "CDM",
@@ -6681,6 +6749,23 @@
                         "TIM",
                         "VCM"
                     ]
+                },
+                "ATM": {
+                    "type": "object",
+                    "description": "Atmospheric Model Message",
+                    "properties": {
+                        "MODEL": {
+                            "$ref": "#/definitions/AtmosphericModelFamily",
+                            "description": "Canonical model family"
+                        },
+                        "YEAR": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "BOV": {
                     "type": "object",
@@ -9684,7 +9769,7 @@
                             "description": "Comments in the Perturbations section."
                         },
                         "ATMOSPHERIC_MODEL": {
-                            "type": "string",
+                            "$ref": "#/definitions/ATM",
                             "description": "Atmospheric model used."
                         },
                         "GRAVITY_MODEL": {
@@ -11234,6 +11319,9 @@
                         "value": {
                             "anyOf": [
                                 {
+                                    "$ref": "#/definitions/ATM"
+                                },
+                                {
                                     "$ref": "#/definitions/BOV"
                                 },
                                 {
@@ -11353,6 +11441,45 @@
         "OCM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "AtmosphericModelFamily": {
+                    "type": "string",
+                    "enum": [
+                        "CIRA_XX",
+                        "DTM_XX",
+                        "GITM",
+                        "GOST",
+                        "GRAM_XX",
+                        "HP",
+                        "JAC_HASDM",
+                        "JAC_GILL",
+                        "JB08",
+                        "JR71",
+                        "JXX",
+                        "MET_XX",
+                        "MSIS_86",
+                        "MSISE_90",
+                        "NRLMSIS00E",
+                        "TIECGM",
+                        "USSA_XX"
+                    ]
+                },
+                "ATM": {
+                    "type": "object",
+                    "description": "Atmospheric Model Message",
+                    "properties": {
+                        "MODEL": {
+                            "$ref": "#/definitions/AtmosphericModelFamily",
+                            "description": "Canonical model family"
+                        },
+                        "YEAR": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "Header": {
                     "type": "object",
                     "properties": {
@@ -11746,7 +11873,7 @@
                             "description": "Comments in the Perturbations section."
                         },
                         "ATMOSPHERIC_MODEL": {
-                            "type": "string",
+                            "$ref": "#/definitions/ATM",
                             "description": "Atmospheric model used."
                         },
                         "GRAVITY_MODEL": {
@@ -12475,7 +12602,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -13833,7 +13960,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",
@@ -15159,7 +15286,7 @@
                         "RTN",
                         "TVN",
                         "VVLH",
-                        "VLVH",
+                        "QSW",
                         "LTP",
                         "LVLH",
                         "PNE",

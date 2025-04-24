@@ -82,6 +82,7 @@ def RecordEnd(builder):
 def End(builder):
     return RecordEnd(builder)
 
+import ATM
 import BOV
 import CAT
 import CDM
@@ -123,7 +124,7 @@ class RecordT(object):
     # RecordT
     def __init__(self):
         self.valueType = 0  # type: int
-        self.value = None  # type: Union[None, BOV.BOVT, CAT.CATT, CDM.CDMT, CRM.CRMT, CSM.CSMT, CTR.CTRT, EME.EMET, EOO.EOOT, EOP.EOPT, EPM.EPMT, HYP.HYPT, IDM.IDMT, LCC.LCCT, LDM.LDMT, MET.METT, MPE.MPET, OCM.OCMT, OEM.OEMT, OMM.OMMT, OSM.OSMT, PLD.PLDT, PNM.PNMT, PRG.PRGT, RFM.RFMT, ROC.ROCT, SCM.SCMT, SIT.SITT, TDM.TDMT, TIM.TIMT, VCM.VCMT]
+        self.value = None  # type: Union[None, ATM.ATMT, BOV.BOVT, CAT.CATT, CDM.CDMT, CRM.CRMT, CSM.CSMT, CTR.CTRT, EME.EMET, EOO.EOOT, EOP.EOPT, EPM.EPMT, HYP.HYPT, IDM.IDMT, LCC.LCCT, LDM.LDMT, MET.METT, MPE.MPET, OCM.OCMT, OEM.OEMT, OMM.OMMT, OSM.OSMT, PLD.PLDT, PNM.PNMT, PRG.PRGT, RFM.RFMT, ROC.ROCT, SCM.SCMT, SIT.SITT, TDM.TDMT, TIM.TIMT, VCM.VCMT]
         self.standard = None  # type: str
 
     @classmethod
