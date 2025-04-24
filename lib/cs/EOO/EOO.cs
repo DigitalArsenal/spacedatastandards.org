@@ -291,11 +291,11 @@ public struct EOO : IFlatbufferObject
 #endif
   public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(164); }
   /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(166); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? REFERENCE_FRAME { get { int o = __p.__offset(166); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  public refFrame SEN_REFERENCE_FRAME { get { int o = __p.__offset(168); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? SEN_REFERENCE_FRAME { get { int o = __p.__offset(168); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   public bool UMBRA { get { int o = __p.__offset(170); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
@@ -506,8 +506,8 @@ public struct EOO : IFlatbufferObject
   public static void AddDATA_MODE(FlatBufferBuilder builder, DataMode DATA_MODE) { builder.AddSbyte(78, (sbyte)DATA_MODE, 0); }
   public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(79, CREATED_ATOffset.Value, 0); }
   public static void AddCREATED_BY(FlatBufferBuilder builder, StringOffset CREATED_BYOffset) { builder.AddOffset(80, CREATED_BYOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(81, (sbyte)REFERENCE_FRAME, 0); }
-  public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame SEN_REFERENCE_FRAME) { builder.AddSbyte(82, (sbyte)SEN_REFERENCE_FRAME, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(81, REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> SEN_REFERENCE_FRAMEOffset) { builder.AddOffset(82, SEN_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddUMBRA(FlatBufferBuilder builder, bool UMBRA) { builder.AddBool(83, UMBRA, false); }
   public static void AddPENUMBRA(FlatBufferBuilder builder, bool PENUMBRA) { builder.AddBool(84, PENUMBRA, false); }
   public static void AddORIG_NETWORK(FlatBufferBuilder builder, StringOffset ORIG_NETWORKOffset) { builder.AddOffset(85, ORIG_NETWORKOffset.Value, 0); }
@@ -652,8 +652,8 @@ public struct EOO : IFlatbufferObject
     _o.DATA_MODE = this.DATA_MODE;
     _o.CREATED_AT = this.CREATED_AT;
     _o.CREATED_BY = this.CREATED_BY;
-    _o.REFERENCE_FRAME = this.REFERENCE_FRAME;
-    _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME;
+    _o.REFERENCE_FRAME = this.REFERENCE_FRAME.HasValue ? this.REFERENCE_FRAME.Value.UnPack() : null;
+    _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME.HasValue ? this.SEN_REFERENCE_FRAME.Value.UnPack() : null;
     _o.UMBRA = this.UMBRA;
     _o.PENUMBRA = this.PENUMBRA;
     _o.ORIG_NETWORK = this.ORIG_NETWORK;
@@ -724,6 +724,8 @@ public struct EOO : IFlatbufferObject
     var _ORIGIN = _o.ORIGIN == null ? default(StringOffset) : builder.CreateString(_o.ORIGIN);
     var _CREATED_AT = _o.CREATED_AT == null ? default(StringOffset) : builder.CreateString(_o.CREATED_AT);
     var _CREATED_BY = _o.CREATED_BY == null ? default(StringOffset) : builder.CreateString(_o.CREATED_BY);
+    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.REFERENCE_FRAME);
+    var _SEN_REFERENCE_FRAME = _o.SEN_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.SEN_REFERENCE_FRAME);
     var _ORIG_NETWORK = _o.ORIG_NETWORK == null ? default(StringOffset) : builder.CreateString(_o.ORIG_NETWORK);
     var _SOURCE_DL = _o.SOURCE_DL == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_DL);
     var _IMAGE_COMPRESSION = _o.IMAGE_COMPRESSION == null ? default(StringOffset) : builder.CreateString(_o.IMAGE_COMPRESSION);
@@ -810,8 +812,8 @@ public struct EOO : IFlatbufferObject
     AddDATA_MODE(builder, _o.DATA_MODE);
     AddCREATED_AT(builder, _CREATED_AT);
     AddCREATED_BY(builder, _CREATED_BY);
-    AddREFERENCE_FRAME(builder, _o.REFERENCE_FRAME);
-    AddSEN_REFERENCE_FRAME(builder, _o.SEN_REFERENCE_FRAME);
+    AddREFERENCE_FRAME(builder, _REFERENCE_FRAME);
+    AddSEN_REFERENCE_FRAME(builder, _SEN_REFERENCE_FRAME);
     AddUMBRA(builder, _o.UMBRA);
     AddPENUMBRA(builder, _o.PENUMBRA);
     AddORIG_NETWORK(builder, _ORIG_NETWORK);
@@ -950,8 +952,8 @@ public class EOOT
   public DataMode DATA_MODE { get; set; }
   public string CREATED_AT { get; set; }
   public string CREATED_BY { get; set; }
-  public refFrame REFERENCE_FRAME { get; set; }
-  public refFrame SEN_REFERENCE_FRAME { get; set; }
+  public RFMT REFERENCE_FRAME { get; set; }
+  public RFMT SEN_REFERENCE_FRAME { get; set; }
   public bool UMBRA { get; set; }
   public bool PENUMBRA { get; set; }
   public string ORIG_NETWORK { get; set; }
@@ -1086,8 +1088,8 @@ public class EOOT
     this.DATA_MODE = DataMode.EXERCISE;
     this.CREATED_AT = null;
     this.CREATED_BY = null;
-    this.REFERENCE_FRAME = refFrame.ECEF;
-    this.SEN_REFERENCE_FRAME = refFrame.ECEF;
+    this.REFERENCE_FRAME = null;
+    this.SEN_REFERENCE_FRAME = null;
     this.UMBRA = false;
     this.PENUMBRA = false;
     this.ORIG_NETWORK = null;
@@ -1237,8 +1239,8 @@ static public class EOOVerify
       && verifier.VerifyField(tablePos, 160 /*DATA_MODE*/, 1 /*DataMode*/, 1, false)
       && verifier.VerifyString(tablePos, 162 /*CREATED_AT*/, false)
       && verifier.VerifyString(tablePos, 164 /*CREATED_BY*/, false)
-      && verifier.VerifyField(tablePos, 166 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
-      && verifier.VerifyField(tablePos, 168 /*SEN_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 166 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 168 /*SEN_REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyField(tablePos, 170 /*UMBRA*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 172 /*PENUMBRA*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 174 /*ORIG_NETWORK*/, false)

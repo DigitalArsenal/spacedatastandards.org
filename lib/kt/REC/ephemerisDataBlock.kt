@@ -72,11 +72,15 @@ class ephemerisDataBlock : Table() {
     /**
      * Name of the reference frame (TEME, EME2000, etc.)
      */
-    val REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(10)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
+    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(10)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Epoch of reference frame, if not intrinsic to the definition of the reference frame
      */
@@ -94,11 +98,15 @@ class ephemerisDataBlock : Table() {
     /**
      * Reference frame for the covariance matrix
      */
-    val COV_REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(14)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val COV_REFERENCE_FRAME : RFM? get() = COV_REFERENCE_FRAME(RFM())
+    fun COV_REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(14)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Time system used for the orbit state and covariance matrix. (UTC)
      */
@@ -232,7 +240,7 @@ class ephemerisDataBlock : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createephemerisDataBlock(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAME: Byte, REFERENCE_FRAME_EPOCHOffset: Int, COV_REFERENCE_FRAME: Byte, TIME_SYSTEM: Byte, START_TIMEOffset: Int, USEABLE_START_TIMEOffset: Int, USEABLE_STOP_TIMEOffset: Int, STOP_TIMEOffset: Int, STEP_SIZE: Double, INTERPOLATIONOffset: Int, INTERPOLATION_DEGREE: UInt, EPHEMERIS_DATA_LINESOffset: Int, COVARIANCE_MATRIX_LINESOffset: Int) : Int {
+        fun createephemerisDataBlock(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, COV_REFERENCE_FRAMEOffset: Int, TIME_SYSTEM: Byte, START_TIMEOffset: Int, USEABLE_START_TIMEOffset: Int, USEABLE_STOP_TIMEOffset: Int, STOP_TIMEOffset: Int, STEP_SIZE: Double, INTERPOLATIONOffset: Int, INTERPOLATION_DEGREE: UInt, EPHEMERIS_DATA_LINESOffset: Int, COVARIANCE_MATRIX_LINESOffset: Int) : Int {
             builder.startTable(16)
             addSTEP_SIZE(builder, STEP_SIZE)
             addCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINESOffset)
@@ -243,22 +251,22 @@ class ephemerisDataBlock : Table() {
             addUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIMEOffset)
             addUSEABLE_START_TIME(builder, USEABLE_START_TIMEOffset)
             addSTART_TIME(builder, START_TIMEOffset)
+            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset)
             addREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCHOffset)
+            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
             addCENTER_NAME(builder, CENTER_NAMEOffset)
             addOBJECT(builder, OBJECTOffset)
             addCOMMENT(builder, COMMENTOffset)
             addTIME_SYSTEM(builder, TIME_SYSTEM)
-            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAME)
             return endephemerisDataBlock(builder)
         }
         fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
         fun addOBJECT(builder: FlatBufferBuilder, OBJECT: Int) = builder.addOffset(1, OBJECT, 0)
         fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(2, CENTER_NAME, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(3, REFERENCE_FRAME, 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(3, REFERENCE_FRAME, 0)
         fun addREFERENCE_FRAME_EPOCH(builder: FlatBufferBuilder, REFERENCE_FRAME_EPOCH: Int) = builder.addOffset(4, REFERENCE_FRAME_EPOCH, 0)
-        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Byte) = builder.addByte(5, COV_REFERENCE_FRAME, 0)
+        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Int) = builder.addOffset(5, COV_REFERENCE_FRAME, 0)
         fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(6, TIME_SYSTEM, 0)
         fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(7, START_TIME, 0)
         fun addUSEABLE_START_TIME(builder: FlatBufferBuilder, USEABLE_START_TIME: Int) = builder.addOffset(8, USEABLE_START_TIME, 0)

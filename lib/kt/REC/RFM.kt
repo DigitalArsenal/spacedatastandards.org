@@ -16,9 +16,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
-/**
- * Reference Frame Message
- */
 @Suppress("unused")
 class RFM : Table() {
 
@@ -29,11 +26,25 @@ class RFM : Table() {
         __init(_i, _bb)
         return this
     }
-    val REFERENCE_FRAME : Byte
+    val referenceFrameType : UByte
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    fun REFERENCE_FRAME(obj: Table) : Table? {
+        val o = __offset(6); return if (o != 0) __union(obj, o + bb_pos) else null
+    }
+    val INDEX : String?
+        get() {
+            val o = __offset(8)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val INDEXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun INDEXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRFM(_bb: ByteBuffer): RFM = getRootAsRFM(_bb, RFM())
@@ -42,13 +53,17 @@ class RFM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFM")
-        fun createRFM(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) : Int {
-            builder.startTable(1)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        fun createRFM(builder: FlatBufferBuilder, referenceFrameType: UByte, REFERENCE_FRAMEOffset: Int, INDEXOffset: Int) : Int {
+            builder.startTable(3)
+            addINDEX(builder, INDEXOffset)
+            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
+            addREFERENCEFRAMEType(builder, referenceFrameType)
             return endRFM(builder)
         }
-        fun startRFM(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(0, REFERENCE_FRAME, 0)
+        fun startRFM(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun addREFERENCEFRAMEType(builder: FlatBufferBuilder, referenceFrameType: UByte) = builder.addByte(0, referenceFrameType.toByte(), 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(1, REFERENCE_FRAME, 0)
+        fun addINDEX(builder: FlatBufferBuilder, INDEX: Int) = builder.addOffset(2, INDEX, 0)
         fun endRFM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

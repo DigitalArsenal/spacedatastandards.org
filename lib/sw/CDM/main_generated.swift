@@ -143,7 +143,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   ///  Covariance method
   public var COVARIANCE_METHOD: covarianceMethod { let o = _accessor.offset(VTOFFSET.COVARIANCE_METHOD.v); return o == 0 ? .calculated : covarianceMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .calculated }
   ///  Reference Frame in which the object position is defined
-  public var REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Gravity model
   public var GRAVITY_MODEL: String? { let o = _accessor.offset(VTOFFSET.GRAVITY_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GRAVITY_MODEL.v) }
@@ -303,7 +303,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public static func add(OPERATOR_ORGANIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_ORGANIZATION, at: VTOFFSET.OPERATOR_ORGANIZATION.p) }
   public static func add(EPHEMERIS_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_NAME, at: VTOFFSET.EPHEMERIS_NAME.p) }
   public static func add(COVARIANCE_METHOD: covarianceMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVARIANCE_METHOD.rawValue, def: 0, at: VTOFFSET.COVARIANCE_METHOD.p) }
-  public static func add(REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VTOFFSET.GRAVITY_MODEL.p) }
   public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VTOFFSET.ATMOSPHERIC_MODEL.p) }
   public static func add(N_BODY_PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: N_BODY_PERTURBATIONS, at: VTOFFSET.N_BODY_PERTURBATIONS.p) }
@@ -390,7 +390,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     OPERATOR_ORGANIZATIONOffset OPERATOR_ORGANIZATION: Offset = Offset(),
     EPHEMERIS_NAMEOffset EPHEMERIS_NAME: Offset = Offset(),
     COVARIANCE_METHOD: covarianceMethod = .calculated,
-    REFERENCE_FRAME: refFrame = .ecef,
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
     GRAVITY_MODELOffset GRAVITY_MODEL: Offset = Offset(),
     ATMOSPHERIC_MODELOffset ATMOSPHERIC_MODEL: Offset = Offset(),
     N_BODY_PERTURBATIONSOffset N_BODY_PERTURBATIONS: Offset = Offset(),
@@ -559,7 +559,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OPERATOR_ORGANIZATION.p, fieldName: "OPERATOR_ORGANIZATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EPHEMERIS_NAME.p, fieldName: "EPHEMERIS_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COVARIANCE_METHOD.p, fieldName: "COVARIANCE_METHOD", required: false, type: covarianceMethod.self)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: refFrame.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.GRAVITY_MODEL.p, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ATMOSPHERIC_MODEL.p, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.N_BODY_PERTURBATIONS.p, fieldName: "N_BODY_PERTURBATIONS", required: false, type: ForwardOffset<String>.self)
@@ -723,7 +723,7 @@ public struct CDM: FlatBufferObject, Verifiable {
   public var STOP_SCREEN_PERIOD: String? { let o = _accessor.offset(VTOFFSET.STOP_SCREEN_PERIOD.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STOP_SCREEN_PERIODSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_SCREEN_PERIOD.v) }
   ///  The reference frame for the screening volume
-  public var SCREEN_VOLUME_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.SCREEN_VOLUME_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var SCREEN_VOLUME_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.SCREEN_VOLUME_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  The shape of the screening volume
   public var SCREEN_VOLUME_SHAPE: screeningVolumeShape { let o = _accessor.offset(VTOFFSET.SCREEN_VOLUME_SHAPE.v); return o == 0 ? .ellipsoid : screeningVolumeShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ellipsoid }
   ///  The X dimension of the screening volume
@@ -768,7 +768,7 @@ public struct CDM: FlatBufferObject, Verifiable {
   public static func add(RELATIVE_VELOCITY_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_VELOCITY_N, def: 0.0, at: VTOFFSET.RELATIVE_VELOCITY_N.p) }
   public static func add(START_SCREEN_PERIOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_SCREEN_PERIOD, at: VTOFFSET.START_SCREEN_PERIOD.p) }
   public static func add(STOP_SCREEN_PERIOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_SCREEN_PERIOD, at: VTOFFSET.STOP_SCREEN_PERIOD.p) }
-  public static func add(SCREEN_VOLUME_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_FRAME.rawValue, def: 0, at: VTOFFSET.SCREEN_VOLUME_FRAME.p) }
+  public static func add(SCREEN_VOLUME_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_VOLUME_FRAME, at: VTOFFSET.SCREEN_VOLUME_FRAME.p) }
   public static func add(SCREEN_VOLUME_SHAPE: screeningVolumeShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_SHAPE.rawValue, def: 0, at: VTOFFSET.SCREEN_VOLUME_SHAPE.p) }
   public static func add(SCREEN_VOLUME_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_X, def: 0.0, at: VTOFFSET.SCREEN_VOLUME_X.p) }
   public static func add(SCREEN_VOLUME_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_VOLUME_Y, def: 0.0, at: VTOFFSET.SCREEN_VOLUME_Y.p) }
@@ -800,7 +800,7 @@ public struct CDM: FlatBufferObject, Verifiable {
     RELATIVE_VELOCITY_N: Double = 0.0,
     START_SCREEN_PERIODOffset START_SCREEN_PERIOD: Offset = Offset(),
     STOP_SCREEN_PERIODOffset STOP_SCREEN_PERIOD: Offset = Offset(),
-    SCREEN_VOLUME_FRAME: refFrame = .ecef,
+    SCREEN_VOLUME_FRAMEOffset SCREEN_VOLUME_FRAME: Offset = Offset(),
     SCREEN_VOLUME_SHAPE: screeningVolumeShape = .ellipsoid,
     SCREEN_VOLUME_X: Double = 0.0,
     SCREEN_VOLUME_Y: Double = 0.0,
@@ -865,7 +865,7 @@ public struct CDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.RELATIVE_VELOCITY_N.p, fieldName: "RELATIVE_VELOCITY_N", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.START_SCREEN_PERIOD.p, fieldName: "START_SCREEN_PERIOD", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STOP_SCREEN_PERIOD.p, fieldName: "STOP_SCREEN_PERIOD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCREEN_VOLUME_FRAME.p, fieldName: "SCREEN_VOLUME_FRAME", required: false, type: refFrame.self)
+    try _v.visit(field: VTOFFSET.SCREEN_VOLUME_FRAME.p, fieldName: "SCREEN_VOLUME_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.SCREEN_VOLUME_SHAPE.p, fieldName: "SCREEN_VOLUME_SHAPE", required: false, type: screeningVolumeShape.self)
     try _v.visit(field: VTOFFSET.SCREEN_VOLUME_X.p, fieldName: "SCREEN_VOLUME_X", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SCREEN_VOLUME_Y.p, fieldName: "SCREEN_VOLUME_Y", required: false, type: Double.self)

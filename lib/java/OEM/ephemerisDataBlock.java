@@ -48,7 +48,8 @@ public final class ephemerisDataBlock extends Table {
   /**
    * Name of the reference frame (TEME, EME2000, etc.)
    */
-  public byte REFERENCE_FRAME() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
+  public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Epoch of reference frame, if not intrinsic to the definition of the reference frame
    */
@@ -58,7 +59,8 @@ public final class ephemerisDataBlock extends Table {
   /**
    * Reference frame for the covariance matrix
    */
-  public byte COV_REFERENCE_FRAME() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public RFM COV_REFERENCE_FRAME() { return COV_REFERENCE_FRAME(new RFM()); }
+  public RFM COV_REFERENCE_FRAME(RFM obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Time system used for the orbit state and covariance matrix. (UTC)
    */
@@ -122,9 +124,9 @@ public final class ephemerisDataBlock extends Table {
       int COMMENTOffset,
       int OBJECTOffset,
       int CENTER_NAMEOffset,
-      byte REFERENCE_FRAME,
+      int REFERENCE_FRAMEOffset,
       int REFERENCE_FRAME_EPOCHOffset,
-      byte COV_REFERENCE_FRAME,
+      int COV_REFERENCE_FRAMEOffset,
       byte TIME_SYSTEM,
       int START_TIMEOffset,
       int USEABLE_START_TIMEOffset,
@@ -145,13 +147,13 @@ public final class ephemerisDataBlock extends Table {
     ephemerisDataBlock.addUseableStopTime(builder, USEABLE_STOP_TIMEOffset);
     ephemerisDataBlock.addUseableStartTime(builder, USEABLE_START_TIMEOffset);
     ephemerisDataBlock.addStartTime(builder, START_TIMEOffset);
+    ephemerisDataBlock.addCovReferenceFrame(builder, COV_REFERENCE_FRAMEOffset);
     ephemerisDataBlock.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCHOffset);
+    ephemerisDataBlock.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
     ephemerisDataBlock.addCenterName(builder, CENTER_NAMEOffset);
     ephemerisDataBlock.addObject(builder, OBJECTOffset);
     ephemerisDataBlock.addComment(builder, COMMENTOffset);
     ephemerisDataBlock.addTimeSystem(builder, TIME_SYSTEM);
-    ephemerisDataBlock.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
-    ephemerisDataBlock.addReferenceFrame(builder, REFERENCE_FRAME);
     return ephemerisDataBlock.endephemerisDataBlock(builder);
   }
 
@@ -159,9 +161,9 @@ public final class ephemerisDataBlock extends Table {
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
   public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(2, CENTER_NAMEOffset, 0); }
-  public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(3, REFERENCE_FRAME, 0); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(3, REFERENCE_FRAMEOffset, 0); }
   public static void addReferenceFrameEpoch(FlatBufferBuilder builder, int REFERENCE_FRAME_EPOCHOffset) { builder.addOffset(4, REFERENCE_FRAME_EPOCHOffset, 0); }
-  public static void addCovReferenceFrame(FlatBufferBuilder builder, byte COV_REFERENCE_FRAME) { builder.addByte(5, COV_REFERENCE_FRAME, 0); }
+  public static void addCovReferenceFrame(FlatBufferBuilder builder, int COV_REFERENCE_FRAMEOffset) { builder.addOffset(5, COV_REFERENCE_FRAMEOffset, 0); }
   public static void addTimeSystem(FlatBufferBuilder builder, byte TIME_SYSTEM) { builder.addByte(6, TIME_SYSTEM, 0); }
   public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(7, START_TIMEOffset, 0); }
   public static void addUseableStartTime(FlatBufferBuilder builder, int USEABLE_START_TIMEOffset) { builder.addOffset(8, USEABLE_START_TIMEOffset, 0); }

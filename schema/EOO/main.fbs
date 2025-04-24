@@ -1,5 +1,5 @@
-// Hash: 69121db1b68d5a6b4980f23021c6471787d46f904115d419d49d5ab1a6c5cddc
-// Version: 1.0.8
+// Hash: a2aff2147d3766df49ebc109b37db2416df55e41405bc96482363392c85730d9
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../IDM/main.fbs";
@@ -280,12 +280,12 @@ table EOO {
   CREATED_BY: string;
 
   /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-  REFERENCE_FRAME: refFrame;
+  REFERENCE_FRAME: RFM;
 
   /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  SEN_REFERENCE_FRAME: refFrame;
+  SEN_REFERENCE_FRAME: RFM;
 
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   UMBRA: bool;

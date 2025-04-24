@@ -121,7 +121,7 @@ class Cdmobject {
   ///  Covariance method
   CovarianceMethod get COVARIANCE_METHOD => CovarianceMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   ///  Reference Frame in which the object position is defined
-  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 18);
   ///  Gravity model
   String? get GRAVITY_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  Atmospheric model
@@ -320,8 +320,8 @@ class CdmobjectBuilder {
     fbBuilder.addInt8(6, COVARIANCE_METHOD?.value);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
-    fbBuilder.addInt8(7, REFERENCE_FRAME?.value);
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
   int addGravityModelOffset(int? offset) {
@@ -630,7 +630,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
   final String? _OPERATOR_ORGANIZATION;
   final String? _EPHEMERIS_NAME;
   final CovarianceMethod? _COVARIANCE_METHOD;
-  final RefFrame? _REFERENCE_FRAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
   final String? _GRAVITY_MODEL;
   final String? _ATMOSPHERIC_MODEL;
   final String? _N_BODY_PERTURBATIONS;
@@ -713,7 +713,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
     String? OPERATOR_ORGANIZATION,
     String? EPHEMERIS_NAME,
     CovarianceMethod? COVARIANCE_METHOD,
-    RefFrame? REFERENCE_FRAME,
+    RFMObjectBuilder? REFERENCE_FRAME,
     String? GRAVITY_MODEL,
     String? ATMOSPHERIC_MODEL,
     String? N_BODY_PERTURBATIONS,
@@ -883,6 +883,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OPERATOR_ORGANIZATION!);
     final int? EPHEMERIS_NAMEOffset = _EPHEMERIS_NAME == null ? null
         : fbBuilder.writeString(_EPHEMERIS_NAME!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? GRAVITY_MODELOffset = _GRAVITY_MODEL == null ? null
         : fbBuilder.writeString(_GRAVITY_MODEL!);
     final int? ATMOSPHERIC_MODELOffset = _ATMOSPHERIC_MODEL == null ? null
@@ -901,7 +902,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, OPERATOR_ORGANIZATIONOffset);
     fbBuilder.addOffset(5, EPHEMERIS_NAMEOffset);
     fbBuilder.addInt8(6, _COVARIANCE_METHOD?.value);
-    fbBuilder.addInt8(7, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(7, REFERENCE_FRAMEOffset);
     fbBuilder.addOffset(8, GRAVITY_MODELOffset);
     fbBuilder.addOffset(9, ATMOSPHERIC_MODELOffset);
     fbBuilder.addOffset(10, N_BODY_PERTURBATIONSOffset);
@@ -1032,7 +1033,7 @@ class CDM {
   ///  The end time of the screening period
   String? get STOP_SCREEN_PERIOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   ///  The reference frame for the screening volume
-  RefFrame get SCREEN_VOLUME_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  RFM? get SCREEN_VOLUME_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 36);
   ///  The shape of the screening volume
   ScreeningVolumeShape get SCREEN_VOLUME_SHAPE => ScreeningVolumeShape.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
   ///  The X dimension of the screening volume
@@ -1145,8 +1146,8 @@ class CDMBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addScreenVolumeFrame(RefFrame? SCREEN_VOLUME_FRAME) {
-    fbBuilder.addInt8(16, SCREEN_VOLUME_FRAME?.value);
+  int addScreenVolumeFrameOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
   int addScreenVolumeShape(ScreeningVolumeShape? SCREEN_VOLUME_SHAPE) {
@@ -1220,7 +1221,7 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
   final double? _RELATIVE_VELOCITY_N;
   final String? _START_SCREEN_PERIOD;
   final String? _STOP_SCREEN_PERIOD;
-  final RefFrame? _SCREEN_VOLUME_FRAME;
+  final RFMObjectBuilder? _SCREEN_VOLUME_FRAME;
   final ScreeningVolumeShape? _SCREEN_VOLUME_SHAPE;
   final double? _SCREEN_VOLUME_X;
   final double? _SCREEN_VOLUME_Y;
@@ -1251,7 +1252,7 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
     double? RELATIVE_VELOCITY_N,
     String? START_SCREEN_PERIOD,
     String? STOP_SCREEN_PERIOD,
-    RefFrame? SCREEN_VOLUME_FRAME,
+    RFMObjectBuilder? SCREEN_VOLUME_FRAME,
     ScreeningVolumeShape? SCREEN_VOLUME_SHAPE,
     double? SCREEN_VOLUME_X,
     double? SCREEN_VOLUME_Y,
@@ -1312,6 +1313,7 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_START_SCREEN_PERIOD!);
     final int? STOP_SCREEN_PERIODOffset = _STOP_SCREEN_PERIOD == null ? null
         : fbBuilder.writeString(_STOP_SCREEN_PERIOD!);
+    final int? SCREEN_VOLUME_FRAMEOffset = _SCREEN_VOLUME_FRAME?.getOrCreateOffset(fbBuilder);
     final int? SCREEN_ENTRY_TIMEOffset = _SCREEN_ENTRY_TIME == null ? null
         : fbBuilder.writeString(_SCREEN_ENTRY_TIME!);
     final int? SCREEN_EXIT_TIMEOffset = _SCREEN_EXIT_TIME == null ? null
@@ -1339,7 +1341,7 @@ class CDMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(13, _RELATIVE_VELOCITY_N);
     fbBuilder.addOffset(14, START_SCREEN_PERIODOffset);
     fbBuilder.addOffset(15, STOP_SCREEN_PERIODOffset);
-    fbBuilder.addInt8(16, _SCREEN_VOLUME_FRAME?.value);
+    fbBuilder.addOffset(16, SCREEN_VOLUME_FRAMEOffset);
     fbBuilder.addInt8(17, _SCREEN_VOLUME_SHAPE?.value);
     fbBuilder.addFloat64(18, _SCREEN_VOLUME_X);
     fbBuilder.addFloat64(19, _SCREEN_VOLUME_Y);

@@ -4,9 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { RFM, RFMT } from './RFM.js';
 import { ephemerisType } from './ephemerisType.js';
 import { meanElementTheory } from './meanElementTheory.js';
-import { refFrame } from './refFrame.js';
 import { timeSystem } from './timeSystem.js';
 
 
@@ -95,10 +95,11 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
 
 /**
  * Reference Frame
+ * Typically TEMEOFDATE
  */
-REFERENCE_FRAME():refFrame {
+REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.TEME;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -321,10 +322,11 @@ MEAN_MOTION_DDOT():number {
 /**
  * Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
  * COV_REF_FRAME reference frame for covariance [C if covariance given]
+ * Typically RSW
  */
-COV_REFERENCE_FRAME():refFrame {
+COV_REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 70);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.RSW;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -567,8 +569,8 @@ static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.
   builder.addFieldOffset(5, CENTER_NAMEOffset, 0);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(6, REFERENCE_FRAME, refFrame.TEME);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, REFERENCE_FRAMEOffset, 0);
 }
 
 static addReferenceFrameEpoch(builder:flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset) {
@@ -675,8 +677,8 @@ static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
   builder.addFieldFloat64(32, MEAN_MOTION_DDOT, 0.0);
 }
 
-static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(33, COV_REFERENCE_FRAME, refFrame.RSW);
+static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, COV_REFERENCE_FRAMEOffset, 0);
 }
 
 static addCxX(builder:flatbuffers.Builder, CX_X:number) {
@@ -796,70 +798,6 @@ static finishSizePrefixedOMMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OMM', true);
 }
 
-static createOMM(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset, TIME_SYSTEM:timeSystem, MEAN_ELEMENT_THEORY:meanElementTheory, COMMENTOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, SEMI_MAJOR_AXIS:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, GM:number, MASS:number, SOLAR_RAD_AREA:number, SOLAR_RAD_COEFF:number, DRAG_AREA:number, DRAG_COEFF:number, EPHEMERIS_TYPE:ephemerisType, CLASSIFICATION_TYPEOffset:flatbuffers.Offset, NORAD_CAT_ID:number, ELEMENT_SET_NO:number, REV_AT_EPOCH:number, BSTAR:number, MEAN_MOTION_DOT:number, MEAN_MOTION_DDOT:number, COV_REFERENCE_FRAME:refFrame, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number, USER_DEFINED_BIP_0044_TYPE:number, USER_DEFINED_OBJECT_DESIGNATOROffset:flatbuffers.Offset, USER_DEFINED_EARTH_MODELOffset:flatbuffers.Offset, USER_DEFINED_EPOCH_TIMESTAMP:number, USER_DEFINED_MICROSECONDS:number):flatbuffers.Offset {
-  OMM.startOMM(builder);
-  OMM.addCcsdsOmmVers(builder, CCSDS_OMM_VERS);
-  OMM.addCreationDate(builder, CREATION_DATEOffset);
-  OMM.addOriginator(builder, ORIGINATOROffset);
-  OMM.addObjectName(builder, OBJECT_NAMEOffset);
-  OMM.addObjectId(builder, OBJECT_IDOffset);
-  OMM.addCenterName(builder, CENTER_NAMEOffset);
-  OMM.addReferenceFrame(builder, REFERENCE_FRAME);
-  OMM.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCHOffset);
-  OMM.addTimeSystem(builder, TIME_SYSTEM);
-  OMM.addMeanElementTheory(builder, MEAN_ELEMENT_THEORY);
-  OMM.addComment(builder, COMMENTOffset);
-  OMM.addEpoch(builder, EPOCHOffset);
-  OMM.addSemiMajorAxis(builder, SEMI_MAJOR_AXIS);
-  OMM.addMeanMotion(builder, MEAN_MOTION);
-  OMM.addEccentricity(builder, ECCENTRICITY);
-  OMM.addInclination(builder, INCLINATION);
-  OMM.addRaOfAscNode(builder, RA_OF_ASC_NODE);
-  OMM.addArgOfPericenter(builder, ARG_OF_PERICENTER);
-  OMM.addMeanAnomaly(builder, MEAN_ANOMALY);
-  OMM.addGm(builder, GM);
-  OMM.addMass(builder, MASS);
-  OMM.addSolarRadArea(builder, SOLAR_RAD_AREA);
-  OMM.addSolarRadCoeff(builder, SOLAR_RAD_COEFF);
-  OMM.addDragArea(builder, DRAG_AREA);
-  OMM.addDragCoeff(builder, DRAG_COEFF);
-  OMM.addEphemerisType(builder, EPHEMERIS_TYPE);
-  OMM.addClassificationType(builder, CLASSIFICATION_TYPEOffset);
-  OMM.addNoradCatId(builder, NORAD_CAT_ID);
-  OMM.addElementSetNo(builder, ELEMENT_SET_NO);
-  OMM.addRevAtEpoch(builder, REV_AT_EPOCH);
-  OMM.addBstar(builder, BSTAR);
-  OMM.addMeanMotionDot(builder, MEAN_MOTION_DOT);
-  OMM.addMeanMotionDdot(builder, MEAN_MOTION_DDOT);
-  OMM.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
-  OMM.addCxX(builder, CX_X);
-  OMM.addCyX(builder, CY_X);
-  OMM.addCyY(builder, CY_Y);
-  OMM.addCzX(builder, CZ_X);
-  OMM.addCzY(builder, CZ_Y);
-  OMM.addCzZ(builder, CZ_Z);
-  OMM.addCxDotX(builder, CX_DOT_X);
-  OMM.addCxDotY(builder, CX_DOT_Y);
-  OMM.addCxDotZ(builder, CX_DOT_Z);
-  OMM.addCxDotXDot(builder, CX_DOT_X_DOT);
-  OMM.addCyDotX(builder, CY_DOT_X);
-  OMM.addCyDotY(builder, CY_DOT_Y);
-  OMM.addCyDotZ(builder, CY_DOT_Z);
-  OMM.addCyDotXDot(builder, CY_DOT_X_DOT);
-  OMM.addCyDotYDot(builder, CY_DOT_Y_DOT);
-  OMM.addCzDotX(builder, CZ_DOT_X);
-  OMM.addCzDotY(builder, CZ_DOT_Y);
-  OMM.addCzDotZ(builder, CZ_DOT_Z);
-  OMM.addCzDotXDot(builder, CZ_DOT_X_DOT);
-  OMM.addCzDotYDot(builder, CZ_DOT_Y_DOT);
-  OMM.addCzDotZDot(builder, CZ_DOT_Z_DOT);
-  OMM.addUserDefinedBip0044Type(builder, USER_DEFINED_BIP_0044_TYPE);
-  OMM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
-  OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODELOffset);
-  OMM.addUserDefinedEpochTimestamp(builder, USER_DEFINED_EPOCH_TIMESTAMP);
-  OMM.addUserDefinedMicroseconds(builder, USER_DEFINED_MICROSECONDS);
-  return OMM.endOMM(builder);
-}
 
 unpack(): OMMT {
   return new OMMT(
@@ -869,7 +807,7 @@ unpack(): OMMT {
     this.OBJECT_NAME(),
     this.OBJECT_ID(),
     this.CENTER_NAME(),
-    this.REFERENCE_FRAME(),
+    (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
     this.REFERENCE_FRAME_EPOCH(),
     this.TIME_SYSTEM(),
     this.MEAN_ELEMENT_THEORY(),
@@ -896,7 +834,7 @@ unpack(): OMMT {
     this.BSTAR(),
     this.MEAN_MOTION_DOT(),
     this.MEAN_MOTION_DDOT(),
-    this.COV_REFERENCE_FRAME(),
+    (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null),
     this.CX_X(),
     this.CY_X(),
     this.CY_Y(),
@@ -934,7 +872,7 @@ unpackTo(_o: OMMT): void {
   _o.OBJECT_NAME = this.OBJECT_NAME();
   _o.OBJECT_ID = this.OBJECT_ID();
   _o.CENTER_NAME = this.CENTER_NAME();
-  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
+  _o.REFERENCE_FRAME = (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null);
   _o.REFERENCE_FRAME_EPOCH = this.REFERENCE_FRAME_EPOCH();
   _o.TIME_SYSTEM = this.TIME_SYSTEM();
   _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY();
@@ -961,7 +899,7 @@ unpackTo(_o: OMMT): void {
   _o.BSTAR = this.BSTAR();
   _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT();
   _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT();
-  _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME();
+  _o.COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null);
   _o.CX_X = this.CX_X();
   _o.CY_X = this.CY_X();
   _o.CY_Y = this.CY_Y();
@@ -999,7 +937,7 @@ constructor(
   public OBJECT_NAME: string|Uint8Array|null = null,
   public OBJECT_ID: string|Uint8Array|null = null,
   public CENTER_NAME: string|Uint8Array|null = null,
-  public REFERENCE_FRAME: refFrame = refFrame.TEME,
+  public REFERENCE_FRAME: RFMT|null = null,
   public REFERENCE_FRAME_EPOCH: string|Uint8Array|null = null,
   public TIME_SYSTEM: timeSystem = timeSystem.UTC,
   public MEAN_ELEMENT_THEORY: meanElementTheory = meanElementTheory.SGP4,
@@ -1026,7 +964,7 @@ constructor(
   public BSTAR: number = 0.0,
   public MEAN_MOTION_DOT: number = 0.0,
   public MEAN_MOTION_DDOT: number = 0.0,
-  public COV_REFERENCE_FRAME: refFrame = refFrame.RSW,
+  public COV_REFERENCE_FRAME: RFMT|null = null,
   public CX_X: number = 0.0,
   public CY_X: number = 0.0,
   public CY_Y: number = 0.0,
@@ -1062,74 +1000,77 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
   const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
   const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
   const REFERENCE_FRAME_EPOCH = (this.REFERENCE_FRAME_EPOCH !== null ? builder.createString(this.REFERENCE_FRAME_EPOCH!) : 0);
   const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
   const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
   const CLASSIFICATION_TYPE = (this.CLASSIFICATION_TYPE !== null ? builder.createString(this.CLASSIFICATION_TYPE!) : 0);
+  const COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME !== null ? this.COV_REFERENCE_FRAME!.pack(builder) : 0);
   const USER_DEFINED_OBJECT_DESIGNATOR = (this.USER_DEFINED_OBJECT_DESIGNATOR !== null ? builder.createString(this.USER_DEFINED_OBJECT_DESIGNATOR!) : 0);
   const USER_DEFINED_EARTH_MODEL = (this.USER_DEFINED_EARTH_MODEL !== null ? builder.createString(this.USER_DEFINED_EARTH_MODEL!) : 0);
 
-  return OMM.createOMM(builder,
-    this.CCSDS_OMM_VERS,
-    CREATION_DATE,
-    ORIGINATOR,
-    OBJECT_NAME,
-    OBJECT_ID,
-    CENTER_NAME,
-    this.REFERENCE_FRAME,
-    REFERENCE_FRAME_EPOCH,
-    this.TIME_SYSTEM,
-    this.MEAN_ELEMENT_THEORY,
-    COMMENT,
-    EPOCH,
-    this.SEMI_MAJOR_AXIS,
-    this.MEAN_MOTION,
-    this.ECCENTRICITY,
-    this.INCLINATION,
-    this.RA_OF_ASC_NODE,
-    this.ARG_OF_PERICENTER,
-    this.MEAN_ANOMALY,
-    this.GM,
-    this.MASS,
-    this.SOLAR_RAD_AREA,
-    this.SOLAR_RAD_COEFF,
-    this.DRAG_AREA,
-    this.DRAG_COEFF,
-    this.EPHEMERIS_TYPE,
-    CLASSIFICATION_TYPE,
-    this.NORAD_CAT_ID,
-    this.ELEMENT_SET_NO,
-    this.REV_AT_EPOCH,
-    this.BSTAR,
-    this.MEAN_MOTION_DOT,
-    this.MEAN_MOTION_DDOT,
-    this.COV_REFERENCE_FRAME,
-    this.CX_X,
-    this.CY_X,
-    this.CY_Y,
-    this.CZ_X,
-    this.CZ_Y,
-    this.CZ_Z,
-    this.CX_DOT_X,
-    this.CX_DOT_Y,
-    this.CX_DOT_Z,
-    this.CX_DOT_X_DOT,
-    this.CY_DOT_X,
-    this.CY_DOT_Y,
-    this.CY_DOT_Z,
-    this.CY_DOT_X_DOT,
-    this.CY_DOT_Y_DOT,
-    this.CZ_DOT_X,
-    this.CZ_DOT_Y,
-    this.CZ_DOT_Z,
-    this.CZ_DOT_X_DOT,
-    this.CZ_DOT_Y_DOT,
-    this.CZ_DOT_Z_DOT,
-    this.USER_DEFINED_BIP_0044_TYPE,
-    USER_DEFINED_OBJECT_DESIGNATOR,
-    USER_DEFINED_EARTH_MODEL,
-    this.USER_DEFINED_EPOCH_TIMESTAMP,
-    this.USER_DEFINED_MICROSECONDS
-  );
+  OMM.startOMM(builder);
+  OMM.addCcsdsOmmVers(builder, this.CCSDS_OMM_VERS);
+  OMM.addCreationDate(builder, CREATION_DATE);
+  OMM.addOriginator(builder, ORIGINATOR);
+  OMM.addObjectName(builder, OBJECT_NAME);
+  OMM.addObjectId(builder, OBJECT_ID);
+  OMM.addCenterName(builder, CENTER_NAME);
+  OMM.addReferenceFrame(builder, REFERENCE_FRAME);
+  OMM.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCH);
+  OMM.addTimeSystem(builder, this.TIME_SYSTEM);
+  OMM.addMeanElementTheory(builder, this.MEAN_ELEMENT_THEORY);
+  OMM.addComment(builder, COMMENT);
+  OMM.addEpoch(builder, EPOCH);
+  OMM.addSemiMajorAxis(builder, this.SEMI_MAJOR_AXIS);
+  OMM.addMeanMotion(builder, this.MEAN_MOTION);
+  OMM.addEccentricity(builder, this.ECCENTRICITY);
+  OMM.addInclination(builder, this.INCLINATION);
+  OMM.addRaOfAscNode(builder, this.RA_OF_ASC_NODE);
+  OMM.addArgOfPericenter(builder, this.ARG_OF_PERICENTER);
+  OMM.addMeanAnomaly(builder, this.MEAN_ANOMALY);
+  OMM.addGm(builder, this.GM);
+  OMM.addMass(builder, this.MASS);
+  OMM.addSolarRadArea(builder, this.SOLAR_RAD_AREA);
+  OMM.addSolarRadCoeff(builder, this.SOLAR_RAD_COEFF);
+  OMM.addDragArea(builder, this.DRAG_AREA);
+  OMM.addDragCoeff(builder, this.DRAG_COEFF);
+  OMM.addEphemerisType(builder, this.EPHEMERIS_TYPE);
+  OMM.addClassificationType(builder, CLASSIFICATION_TYPE);
+  OMM.addNoradCatId(builder, this.NORAD_CAT_ID);
+  OMM.addElementSetNo(builder, this.ELEMENT_SET_NO);
+  OMM.addRevAtEpoch(builder, this.REV_AT_EPOCH);
+  OMM.addBstar(builder, this.BSTAR);
+  OMM.addMeanMotionDot(builder, this.MEAN_MOTION_DOT);
+  OMM.addMeanMotionDdot(builder, this.MEAN_MOTION_DDOT);
+  OMM.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
+  OMM.addCxX(builder, this.CX_X);
+  OMM.addCyX(builder, this.CY_X);
+  OMM.addCyY(builder, this.CY_Y);
+  OMM.addCzX(builder, this.CZ_X);
+  OMM.addCzY(builder, this.CZ_Y);
+  OMM.addCzZ(builder, this.CZ_Z);
+  OMM.addCxDotX(builder, this.CX_DOT_X);
+  OMM.addCxDotY(builder, this.CX_DOT_Y);
+  OMM.addCxDotZ(builder, this.CX_DOT_Z);
+  OMM.addCxDotXDot(builder, this.CX_DOT_X_DOT);
+  OMM.addCyDotX(builder, this.CY_DOT_X);
+  OMM.addCyDotY(builder, this.CY_DOT_Y);
+  OMM.addCyDotZ(builder, this.CY_DOT_Z);
+  OMM.addCyDotXDot(builder, this.CY_DOT_X_DOT);
+  OMM.addCyDotYDot(builder, this.CY_DOT_Y_DOT);
+  OMM.addCzDotX(builder, this.CZ_DOT_X);
+  OMM.addCzDotY(builder, this.CZ_DOT_Y);
+  OMM.addCzDotZ(builder, this.CZ_DOT_Z);
+  OMM.addCzDotXDot(builder, this.CZ_DOT_X_DOT);
+  OMM.addCzDotYDot(builder, this.CZ_DOT_Y_DOT);
+  OMM.addCzDotZDot(builder, this.CZ_DOT_Z_DOT);
+  OMM.addUserDefinedBip0044Type(builder, this.USER_DEFINED_BIP_0044_TYPE);
+  OMM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOR);
+  OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODEL);
+  OMM.addUserDefinedEpochTimestamp(builder, this.USER_DEFINED_EPOCH_TIMESTAMP);
+  OMM.addUserDefinedMicroseconds(builder, this.USER_DEFINED_MICROSECONDS);
+
+  return OMM.endOMM(builder);
 }
 }

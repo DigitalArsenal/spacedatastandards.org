@@ -1,5 +1,5 @@
-// Hash: 50be368b27dd83f6571878ec735d94bdcb22831f797f6280b24b60d5ece509a9
-// Version: 1.0.2
+// Hash: 367f8502c58df536b35c2555b6b6eef0d6b4f3a7162a75999fb9d4140503e8b2
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -95,11 +95,11 @@ table ephemerisDataBlock {
   /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   CENTER_NAME:string;
   /// Name of the reference frame (TEME, EME2000, etc.)
-  REFERENCE_FRAME:refFrame;
+  REFERENCE_FRAME:RFM;
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   REFERENCE_FRAME_EPOCH:string;
   /// Reference frame for the covariance matrix
-  COV_REFERENCE_FRAME:refFrame;
+  COV_REFERENCE_FRAME:RFM;
   /// Time system used for the orbit state and covariance matrix. (UTC)
   TIME_SYSTEM:timeSystem;
   /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)

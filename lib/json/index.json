@@ -344,82 +344,42 @@
         "OMM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -436,6 +396,60 @@
                         "SENSOR_i",
                         "STARTRACKER_i",
                         "TAM_i"
+                    ]
+                },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
                     ]
                 },
                 "timeSystem": {
@@ -474,12 +488,66 @@
                         "SDP8"
                     ]
                 },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -533,8 +601,8 @@
                             "description": "Center Name (e.g. EARTH, MARS)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
-                            "description": "Reference Frame"
+                            "$ref": "#/definitions/RFM",
+                            "description": "Reference Frame\nTypically TEMEOFDATE"
                         },
                         "REFERENCE_FRAME_EPOCH": {
                             "type": "string",
@@ -645,8 +713,8 @@
                             "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
-                            "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]"
+                            "$ref": "#/definitions/RFM",
+                            "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW"
                         },
                         "CX_X": {
                             "type": "number",
@@ -1139,82 +1207,42 @@
         "OEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -1231,6 +1259,60 @@
                         "SENSOR_i",
                         "STARTRACKER_i",
                         "TAM_i"
+                    ]
+                },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
                     ]
                 },
                 "timeSystem": {
@@ -1507,12 +1589,66 @@
                         "WET"
                     ]
                 },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -2010,7 +2146,7 @@
                             "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Name of the reference frame (TEME, EME2000, etc.)"
                         },
                         "REFERENCE_FRAME_EPOCH": {
@@ -2018,7 +2154,7 @@
                             "description": "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference frame for the covariance matrix"
                         },
                         "TIME_SYSTEM": {
@@ -2108,82 +2244,42 @@
         "VCM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -2200,6 +2296,60 @@
                         "SENSOR_i",
                         "STARTRACKER_i",
                         "TAM_i"
+                    ]
+                },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
                     ]
                 },
                 "timeSystem": {
@@ -2342,12 +2492,66 @@
                         "SDP8"
                     ]
                 },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -2962,82 +3166,42 @@
                         "Encryption"
                     ]
                 },
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -3054,6 +3218,60 @@
                         "SENSOR_i",
                         "STARTRACKER_i",
                         "TAM_i"
+                    ]
+                },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
                     ]
                 },
                 "screeningVolumeShape": {
@@ -3579,12 +3797,66 @@
                     },
                     "additionalProperties": false
                 },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -3620,7 +3892,7 @@
                             "description": "Covariance method"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference Frame in which the object position is defined"
                         },
                         "GRAVITY_MODEL": {
@@ -3995,7 +4267,7 @@
                             "description": "The end time of the screening period"
                         },
                         "SCREEN_VOLUME_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "The reference frame for the screening volume"
                         },
                         "SCREEN_VOLUME_SHAPE": {
@@ -6389,82 +6661,42 @@
                         "Encryption"
                     ]
                 },
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -6481,6 +6713,60 @@
                         "SENSOR_i",
                         "STARTRACKER_i",
                         "TAM_i"
+                    ]
+                },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
                     ]
                 },
                 "screeningVolumeShape": {
@@ -7307,12 +7593,66 @@
                     },
                     "additionalProperties": false
                 },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -7348,7 +7688,7 @@
                             "description": "Covariance method"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference Frame in which the object position is defined"
                         },
                         "GRAVITY_MODEL": {
@@ -7723,7 +8063,7 @@
                             "description": "The end time of the screening period"
                         },
                         "SCREEN_VOLUME_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "The reference frame for the screening volume"
                         },
                         "SCREEN_VOLUME_SHAPE": {
@@ -8585,11 +8925,11 @@
                             "description": "Application user who created the row in the database, auto-populated by the system."
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified."
                         },
                         "SEN_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),\nunless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).\nLat / long / height values should be reported using the WGS-84 ellipsoid, where applicable."
                         },
                         "UMBRA": {
@@ -10243,7 +10583,7 @@
                             "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Name of the reference frame (TEME, EME2000, etc.)"
                         },
                         "REFERENCE_FRAME_EPOCH": {
@@ -10251,7 +10591,7 @@
                             "description": "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference frame for the covariance matrix"
                         },
                         "TIME_SYSTEM": {
@@ -10364,8 +10704,8 @@
                             "description": "Center Name (e.g. EARTH, MARS)"
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
-                            "description": "Reference Frame"
+                            "$ref": "#/definitions/RFM",
+                            "description": "Reference Frame\nTypically TEMEOFDATE"
                         },
                         "REFERENCE_FRAME_EPOCH": {
                             "type": "string",
@@ -10476,8 +10816,8 @@
                             "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]"
                         },
                         "COV_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
-                            "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]"
+                            "$ref": "#/definitions/RFM",
+                            "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW"
                         },
                         "CX_X": {
                             "type": "number",
@@ -10740,11 +11080,11 @@
                             "description": "Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame"
                         },
                         "OBSERVER_POSITION_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "OBS_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "EPOCH": {
@@ -12581,82 +12921,42 @@
         "EOO": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -12673,6 +12973,60 @@
                         "SENSOR_i",
                         "STARTRACKER_i",
                         "TAM_i"
+                    ]
+                },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
                     ]
                 },
                 "PolarizationType": {
@@ -12772,12 +13126,66 @@
                         "SINGLE"
                     ]
                 },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -13300,11 +13708,11 @@
                             "description": "Application user who created the row in the database, auto-populated by the system."
                         },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified."
                         },
                         "SEN_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),\nunless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).\nLat / long / height values should be reported using the WGS-84 ellipsoid, where applicable."
                         },
                         "UMBRA": {
@@ -13939,82 +14347,42 @@
         "RFM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -14033,12 +14401,120 @@
                         "TAM_i"
                     ]
                 },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
+                    ]
+                },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -15265,82 +15741,42 @@
         "TDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "refFrame": {
+                "CelestialFrame": {
                     "type": "string",
                     "enum": [
-                        "ECEF",
-                        "ICRF",
-                        "TEME",
-                        "ENU",
-                        "NED",
-                        "NEU",
-                        "RIC",
-                        "J2000",
                         "GCRF",
-                        "GRC",
+                        "ICRF",
+                        "J2000",
+                        "J2000A",
+                        "EME2000",
+                        "TEMEOFDATE",
+                        "GTOD",
+                        "CIRS",
+                        "MOD_EARTH",
+                        "MOD_CB",
+                        "MOD_MOON",
+                        "TOD_EARTH",
+                        "TOD_CB",
+                        "TOD_MOON",
+                        "TOE_EARTH",
+                        "TOE_CB",
+                        "TOE_MOON",
                         "ITRF2000",
                         "ITRF93",
                         "ITRF97",
-                        "TDR",
-                        "TOD",
-                        "RTN",
-                        "TVN",
-                        "VVLH",
-                        "QSW",
-                        "LTP",
-                        "LVLH",
-                        "PNE",
-                        "BRF",
-                        "RSW",
-                        "TNW",
-                        "UVW",
-                        "EQW_INERTIAL",
-                        "LVLH_INERTIAL",
-                        "LVLH_ROTATING",
-                        "NSW_INERTIAL",
-                        "NSW_ROTATING",
-                        "NTW_INERTIAL",
-                        "NTW_ROTATING",
-                        "PQW_INERTIAL",
-                        "RSW_INERTIAL",
-                        "RSW_ROTATING",
-                        "SEZ_INERTIAL",
-                        "SEZ_ROTATING",
-                        "TNW_INERTIAL",
-                        "TNW_ROTATING",
-                        "VNC_INERTIAL",
-                        "VNC_ROTATING",
-                        "ALIGN_CB",
-                        "ALIGN_EARTH",
-                        "B1950",
-                        "CIRS",
-                        "DTRFyyyy",
                         "EFG",
-                        "EME2000",
                         "FIXED_CB",
                         "FIXED_EARTH",
-                        "GCRFn",
-                        "GTOD",
-                        "MOD_CB",
-                        "MOD_EARTH",
-                        "MOD_MOON",
-                        "MOE_CB",
-                        "MOE_EARTH",
-                        "MOON_ME",
-                        "MOON_MEIAUE",
-                        "MOON_PAxxx",
-                        "TEMEOFDATE",
-                        "TEMEOFEPOCH",
-                        "TIRS",
-                        "TOD_CB",
-                        "TOD_EARTH",
-                        "TOD_MOON",
-                        "TOE_CB",
-                        "TOE_EARTH",
-                        "TOE_MOON",
-                        "TRUE_ECLIPTIC",
-                        "UVW_GO_INERTIAL",
                         "WGS84",
+                        "DTRFYYYY",
+                        "ALIGN_EARTH",
+                        "ALIGN_CB",
+                        "B1950"
+                    ]
+                },
+                "SpacecraftFrame": {
+                    "type": "string",
+                    "enum": [
                         "ACC_i",
                         "ACTUATOR_i",
                         "AST_i",
@@ -15359,12 +15795,120 @@
                         "TAM_i"
                     ]
                 },
+                "OrbitFrame": {
+                    "type": "string",
+                    "enum": [
+                        "EQW_INERTIAL",
+                        "LVLH_INERTIAL",
+                        "LVLH_ROTATING",
+                        "NSW_INERTIAL",
+                        "NSW_ROTATING",
+                        "NTW_INERTIAL",
+                        "NTW_ROTATING",
+                        "PQW_INERTIAL",
+                        "RSW_INERTIAL",
+                        "RSW_ROTATING",
+                        "SEZ_INERTIAL",
+                        "SEZ_ROTATING",
+                        "TNW_INERTIAL",
+                        "TNW_ROTATING",
+                        "VNC_INERTIAL",
+                        "VNC_ROTATING"
+                    ]
+                },
+                "CustomFrame": {
+                    "type": "string",
+                    "enum": [
+                        "ECEF",
+                        "TEME",
+                        "TEMEOFEPOCH",
+                        "ENU",
+                        "NED",
+                        "NEU",
+                        "RIC",
+                        "RTN",
+                        "TVN",
+                        "VVLH",
+                        "QSW",
+                        "LTP",
+                        "LVLH",
+                        "PNE",
+                        "BRF",
+                        "RSW",
+                        "TNW",
+                        "UVW"
+                    ]
+                },
+                "RFMUnion": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "CelestialFrameWrapper",
+                        "SpacecraftFrameWrapper",
+                        "OrbitFrameWrapper",
+                        "CustomFrameWrapper"
+                    ]
+                },
+                "CelestialFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CelestialFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpacecraftFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/SpacecraftFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OrbitFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/OrbitFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CustomFrameWrapper": {
+                    "type": "object",
+                    "properties": {
+                        "frame": {
+                            "$ref": "#/definitions/CustomFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "RFM": {
                     "type": "object",
-                    "description": "Reference Frame Message",
                     "properties": {
+                        "REFERENCE_FRAME_type": {
+                            "$ref": "#/definitions/RFMUnion"
+                        },
                         "REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame"
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/CelestialFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/SpacecraftFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/OrbitFrameWrapper"
+                                },
+                                {
+                                    "$ref": "#/definitions/CustomFrameWrapper"
+                                }
+                            ]
+                        },
+                        "INDEX": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false
@@ -15402,11 +15946,11 @@
                             "description": "Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame"
                         },
                         "OBSERVER_POSITION_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "OBS_REFERENCE_FRAME": {
-                            "$ref": "#/definitions/refFrame",
+                            "$ref": "#/definitions/RFM",
                             "description": "Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)"
                         },
                         "EPOCH": {

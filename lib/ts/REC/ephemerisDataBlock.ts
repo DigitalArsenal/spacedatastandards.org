@@ -5,9 +5,9 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CAT, CATT } from './CAT.js';
+import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
-import { refFrame } from './refFrame.js';
 import { timeSystem } from './timeSystem.js';
 
 
@@ -63,9 +63,9 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Name of the reference frame (TEME, EME2000, etc.)
  */
-REFERENCE_FRAME():refFrame {
+REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -81,9 +81,9 @@ REFERENCE_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Reference frame for the covariance matrix
  */
-COV_REFERENCE_FRAME():refFrame {
+COV_REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -202,16 +202,16 @@ static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.
   builder.addFieldOffset(2, CENTER_NAMEOffset, 0);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(3, REFERENCE_FRAME, refFrame.ECEF);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, REFERENCE_FRAMEOffset, 0);
 }
 
 static addReferenceFrameEpoch(builder:flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset:flatbuffers.Offset) {
   builder.addFieldOffset(4, REFERENCE_FRAME_EPOCHOffset, 0);
 }
 
-static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(5, COV_REFERENCE_FRAME, refFrame.ECEF);
+static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, COV_REFERENCE_FRAMEOffset, 0);
 }
 
 static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem) {
@@ -289,9 +289,9 @@ unpack(): ephemerisDataBlockT {
     this.COMMENT(),
     (this.OBJECT() !== null ? this.OBJECT()!.unpack() : null),
     this.CENTER_NAME(),
-    this.REFERENCE_FRAME(),
+    (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
     this.REFERENCE_FRAME_EPOCH(),
-    this.COV_REFERENCE_FRAME(),
+    (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null),
     this.TIME_SYSTEM(),
     this.START_TIME(),
     this.USEABLE_START_TIME(),
@@ -310,9 +310,9 @@ unpackTo(_o: ephemerisDataBlockT): void {
   _o.COMMENT = this.COMMENT();
   _o.OBJECT = (this.OBJECT() !== null ? this.OBJECT()!.unpack() : null);
   _o.CENTER_NAME = this.CENTER_NAME();
-  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
+  _o.REFERENCE_FRAME = (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null);
   _o.REFERENCE_FRAME_EPOCH = this.REFERENCE_FRAME_EPOCH();
-  _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME();
+  _o.COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null);
   _o.TIME_SYSTEM = this.TIME_SYSTEM();
   _o.START_TIME = this.START_TIME();
   _o.USEABLE_START_TIME = this.USEABLE_START_TIME();
@@ -331,9 +331,9 @@ constructor(
   public COMMENT: string|Uint8Array|null = null,
   public OBJECT: CATT|null = null,
   public CENTER_NAME: string|Uint8Array|null = null,
-  public REFERENCE_FRAME: refFrame = refFrame.ECEF,
+  public REFERENCE_FRAME: RFMT|null = null,
   public REFERENCE_FRAME_EPOCH: string|Uint8Array|null = null,
-  public COV_REFERENCE_FRAME: refFrame = refFrame.ECEF,
+  public COV_REFERENCE_FRAME: RFMT|null = null,
   public TIME_SYSTEM: timeSystem = timeSystem.GMST,
   public START_TIME: string|Uint8Array|null = null,
   public USEABLE_START_TIME: string|Uint8Array|null = null,
@@ -351,7 +351,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
   const OBJECT = (this.OBJECT !== null ? this.OBJECT!.pack(builder) : 0);
   const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
   const REFERENCE_FRAME_EPOCH = (this.REFERENCE_FRAME_EPOCH !== null ? builder.createString(this.REFERENCE_FRAME_EPOCH!) : 0);
+  const COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME !== null ? this.COV_REFERENCE_FRAME!.pack(builder) : 0);
   const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
   const USEABLE_START_TIME = (this.USEABLE_START_TIME !== null ? builder.createString(this.USEABLE_START_TIME!) : 0);
   const USEABLE_STOP_TIME = (this.USEABLE_STOP_TIME !== null ? builder.createString(this.USEABLE_STOP_TIME!) : 0);
@@ -364,9 +366,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ephemerisDataBlock.addComment(builder, COMMENT);
   ephemerisDataBlock.addObject(builder, OBJECT);
   ephemerisDataBlock.addCenterName(builder, CENTER_NAME);
-  ephemerisDataBlock.addReferenceFrame(builder, this.REFERENCE_FRAME);
+  ephemerisDataBlock.addReferenceFrame(builder, REFERENCE_FRAME);
   ephemerisDataBlock.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCH);
-  ephemerisDataBlock.addCovReferenceFrame(builder, this.COV_REFERENCE_FRAME);
+  ephemerisDataBlock.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
   ephemerisDataBlock.addTimeSystem(builder, this.TIME_SYSTEM);
   ephemerisDataBlock.addStartTime(builder, START_TIME);
   ephemerisDataBlock.addUseableStartTime(builder, USEABLE_START_TIME);

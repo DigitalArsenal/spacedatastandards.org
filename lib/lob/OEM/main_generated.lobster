@@ -240,14 +240,16 @@ class ephemerisDataBlock : flatbuffers.handle
     def CENTER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// Name of the reference frame (TEME, EME2000, etc.)
-    def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    def REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: RFM { buf_, o } else: nil
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
     def REFERENCE_FRAME_EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
     /// Reference frame for the covariance matrix
-    def COV_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    def COV_REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 14)
+        return if o: RFM { buf_, o } else: nil
     /// Time system used for the orbit state and covariance matrix. (UTC)
     def TIME_SYSTEM() -> timeSystem:
         return timeSystem(flatbuffers.field_int8(buf_, pos_, 16, 0))
@@ -299,14 +301,14 @@ struct ephemerisDataBlockBuilder:
     def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, CENTER_NAME)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(3, REFERENCE_FRAME, 0)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, REFERENCE_FRAME)
         return this
     def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, REFERENCE_FRAME_EPOCH)
         return this
-    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(5, COV_REFERENCE_FRAME, 0)
+    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, COV_REFERENCE_FRAME)
         return this
     def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
         b_.PrependInt8Slot(6, TIME_SYSTEM, 0)

@@ -6,7 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { CDMObject, CDMObjectT } from './CDMObject.js';
 import { PNM, PNMT } from './PNM.js';
-import { refFrame } from './refFrame.js';
+import { RFM, RFMT } from './RFM.js';
 import { screeningVolumeShape } from './screeningVolumeShape.js';
 
 
@@ -180,9 +180,9 @@ STOP_SCREEN_PERIOD(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * The reference frame for the screening volume
  */
-SCREEN_VOLUME_FRAME():refFrame {
+SCREEN_VOLUME_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -355,8 +355,8 @@ static addStopScreenPeriod(builder:flatbuffers.Builder, STOP_SCREEN_PERIODOffset
   builder.addFieldOffset(15, STOP_SCREEN_PERIODOffset, 0);
 }
 
-static addScreenVolumeFrame(builder:flatbuffers.Builder, SCREEN_VOLUME_FRAME:refFrame) {
-  builder.addFieldInt8(16, SCREEN_VOLUME_FRAME, refFrame.ECEF);
+static addScreenVolumeFrame(builder:flatbuffers.Builder, SCREEN_VOLUME_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, SCREEN_VOLUME_FRAMEOffset, 0);
 }
 
 static addScreenVolumeShape(builder:flatbuffers.Builder, SCREEN_VOLUME_SHAPE:screeningVolumeShape) {
@@ -439,7 +439,7 @@ unpack(): CDMT {
     this.RELATIVE_VELOCITY_N(),
     this.START_SCREEN_PERIOD(),
     this.STOP_SCREEN_PERIOD(),
-    this.SCREEN_VOLUME_FRAME(),
+    (this.SCREEN_VOLUME_FRAME() !== null ? this.SCREEN_VOLUME_FRAME()!.unpack() : null),
     this.SCREEN_VOLUME_SHAPE(),
     this.SCREEN_VOLUME_X(),
     this.SCREEN_VOLUME_Y(),
@@ -473,7 +473,7 @@ unpackTo(_o: CDMT): void {
   _o.RELATIVE_VELOCITY_N = this.RELATIVE_VELOCITY_N();
   _o.START_SCREEN_PERIOD = this.START_SCREEN_PERIOD();
   _o.STOP_SCREEN_PERIOD = this.STOP_SCREEN_PERIOD();
-  _o.SCREEN_VOLUME_FRAME = this.SCREEN_VOLUME_FRAME();
+  _o.SCREEN_VOLUME_FRAME = (this.SCREEN_VOLUME_FRAME() !== null ? this.SCREEN_VOLUME_FRAME()!.unpack() : null);
   _o.SCREEN_VOLUME_SHAPE = this.SCREEN_VOLUME_SHAPE();
   _o.SCREEN_VOLUME_X = this.SCREEN_VOLUME_X();
   _o.SCREEN_VOLUME_Y = this.SCREEN_VOLUME_Y();
@@ -507,7 +507,7 @@ constructor(
   public RELATIVE_VELOCITY_N: number = 0.0,
   public START_SCREEN_PERIOD: string|Uint8Array|null = null,
   public STOP_SCREEN_PERIOD: string|Uint8Array|null = null,
-  public SCREEN_VOLUME_FRAME: refFrame = refFrame.ECEF,
+  public SCREEN_VOLUME_FRAME: RFMT|null = null,
   public SCREEN_VOLUME_SHAPE: screeningVolumeShape = screeningVolumeShape.ELLIPSOID,
   public SCREEN_VOLUME_X: number = 0.0,
   public SCREEN_VOLUME_Y: number = 0.0,
@@ -531,6 +531,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TCA = (this.TCA !== null ? builder.createString(this.TCA!) : 0);
   const START_SCREEN_PERIOD = (this.START_SCREEN_PERIOD !== null ? builder.createString(this.START_SCREEN_PERIOD!) : 0);
   const STOP_SCREEN_PERIOD = (this.STOP_SCREEN_PERIOD !== null ? builder.createString(this.STOP_SCREEN_PERIOD!) : 0);
+  const SCREEN_VOLUME_FRAME = (this.SCREEN_VOLUME_FRAME !== null ? this.SCREEN_VOLUME_FRAME!.pack(builder) : 0);
   const SCREEN_ENTRY_TIME = (this.SCREEN_ENTRY_TIME !== null ? builder.createString(this.SCREEN_ENTRY_TIME!) : 0);
   const SCREEN_EXIT_TIME = (this.SCREEN_EXIT_TIME !== null ? builder.createString(this.SCREEN_EXIT_TIME!) : 0);
   const COLLISION_PROBABILITY_METHOD = (this.COLLISION_PROBABILITY_METHOD !== null ? builder.createString(this.COLLISION_PROBABILITY_METHOD!) : 0);
@@ -556,7 +557,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CDM.addRelativeVelocityN(builder, this.RELATIVE_VELOCITY_N);
   CDM.addStartScreenPeriod(builder, START_SCREEN_PERIOD);
   CDM.addStopScreenPeriod(builder, STOP_SCREEN_PERIOD);
-  CDM.addScreenVolumeFrame(builder, this.SCREEN_VOLUME_FRAME);
+  CDM.addScreenVolumeFrame(builder, SCREEN_VOLUME_FRAME);
   CDM.addScreenVolumeShape(builder, this.SCREEN_VOLUME_SHAPE);
   CDM.addScreenVolumeX(builder, this.SCREEN_VOLUME_X);
   CDM.addScreenVolumeY(builder, this.SCREEN_VOLUME_Y);

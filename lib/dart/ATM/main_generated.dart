@@ -26,70 +26,87 @@ class AtmosphericModelFamily {
   static const int maxValue = 16;
   static bool containsValue(int value) => values.containsKey(value);
 
+  ///  OID: 1.3.112.4.57.9.1
   ///  COSPAR International Reference Atmosphere
   ///  Known years: 1965, 1972, 1986, 1990
   static const AtmosphericModelFamily CIRA_XX = AtmosphericModelFamily._(0);
 
+  ///  OID: 1.3.112.4.57.9.2
   ///  Drag Temperature Model
   ///  Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020
   static const AtmosphericModelFamily DTM_XX = AtmosphericModelFamily._(1);
 
+  ///  OID: 1.3.112.4.57.9.3
   ///  Global Ionosphere-Thermosphere Model
   ///  GITM has no specific year versions defined
   static const AtmosphericModelFamily GITM = AtmosphericModelFamily._(2);
 
+  ///  OID: 1.3.112.4.57.9.4
   ///  GOST atmospheric density model
   ///  Known version: 2004 (GOST R 25645.166-2004)
   static const AtmosphericModelFamily GOST = AtmosphericModelFamily._(3);
 
+  ///  OID: 1.3.112.4.57.9.5
   ///  Global Reference Atmospheric Model
   ///  Known version: 2016
   static const AtmosphericModelFamily GRAM_XX = AtmosphericModelFamily._(4);
 
+  ///  OID: 1.3.112.4.57.9.6
   ///  Harris-Priester empirical model
   ///  Known version: 1962
   static const AtmosphericModelFamily HP = AtmosphericModelFamily._(5);
 
+  ///  OID: 1.3.112.4.57.9.7
   ///  Jacchia atmosphere model with HASDM correction overlay
   ///  Based on Jacchia 1970 with HASDM (DCA) overlay
   static const AtmosphericModelFamily JAC_HASDM = AtmosphericModelFamily._(6);
 
+  ///  OID: 1.3.112.4.57.9.8
   ///  Jacchia-Gill bi-polynomial interpolation
   ///  Interpolates Jacchia 1971
   static const AtmosphericModelFamily JAC_GILL = AtmosphericModelFamily._(7);
 
+  ///  OID: 1.3.112.4.57.9.9
   ///  Jacchia-Bowman empirical model
   ///  Known versions: 2006 (JB2006), 2008 (JB2008)
   static const AtmosphericModelFamily JB08 = AtmosphericModelFamily._(8);
 
+  ///  OID: 1.3.112.4.57.9.10
   ///  Jacchia-Roberts analytic model
   ///  Known version: 1971
   static const AtmosphericModelFamily JR71 = AtmosphericModelFamily._(9);
 
+  ///  OID: 1.3.112.4.57.9.11
   ///  Jacchia static diffusion models
   ///  Known years: 1970, 1971, 1977
   static const AtmosphericModelFamily JXX = AtmosphericModelFamily._(10);
 
+  ///  OID: 1.3.112.4.57.9.12
   ///  Marshall Engineering Thermosphere
   ///  Known version: 2007
   static const AtmosphericModelFamily MET_XX = AtmosphericModelFamily._(11);
 
+  ///  OID: 1.3.112.4.57.9.13
   ///  MSIS empirical model
   ///  Known version: 1986
   static const AtmosphericModelFamily MSIS_86 = AtmosphericModelFamily._(12);
 
+  ///  OID: 1.3.112.4.57.9.14
   ///  MSISE empirical model with exosphere extension
   ///  Known version: 1990
   static const AtmosphericModelFamily MSISE_90 = AtmosphericModelFamily._(13);
 
+  ///  OID: 1.3.112.4.57.9.15
   ///  NRLMSISE empirical model
   ///  Known version: 2000 (NRLMSISE-00E)
   static const AtmosphericModelFamily NRLMSIS00E = AtmosphericModelFamily._(14);
 
+  ///  OID: 1.3.112.4.57.9.16
   ///  Thermosphere-Ionosphere Electrodynamic General Circulation Model
   ///  Based on TIME-GCM, no version specified
   static const AtmosphericModelFamily TIECGM = AtmosphericModelFamily._(15);
 
+  ///  OID: 1.3.112.4.57.9.17
   ///  U.S. Standard Atmosphere
   ///  Known versions: 1962, 1976
   static const AtmosphericModelFamily USSA_XX = AtmosphericModelFamily._(16);

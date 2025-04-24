@@ -40,9 +40,9 @@ public struct TDM : IFlatbufferObject
   /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   public double OBSERVER_VZ { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  public refFrame OBSERVER_POSITION_REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? OBSERVER_POSITION_REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  public refFrame OBS_REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? OBS_REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   public string EPOCH { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -382,8 +382,8 @@ public struct TDM : IFlatbufferObject
       double OBSERVER_VX = 0.0,
       double OBSERVER_VY = 0.0,
       double OBSERVER_VZ = 0.0,
-      refFrame OBSERVER_POSITION_REFERENCE_FRAME = refFrame.ECEF,
-      refFrame OBS_REFERENCE_FRAME = refFrame.ECEF,
+      Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAMEOffset = default(Offset<RFM>),
+      Offset<RFM> OBS_REFERENCE_FRAMEOffset = default(Offset<RFM>),
       StringOffset EPOCHOffset = default(StringOffset),
       StringOffset CCSDS_TDM_VERSOffset = default(StringOffset),
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -489,11 +489,11 @@ public struct TDM : IFlatbufferObject
     TDM.AddCOMMENT(builder, COMMENTOffset);
     TDM.AddCCSDS_TDM_VERS(builder, CCSDS_TDM_VERSOffset);
     TDM.AddEPOCH(builder, EPOCHOffset);
+    TDM.AddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAMEOffset);
+    TDM.AddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAMEOffset);
     TDM.AddOBSERVER_ID(builder, OBSERVER_IDOffset);
     TDM.AddPATH_2(builder, PATH_2);
     TDM.AddPATH_1(builder, PATH_1);
-    TDM.AddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME);
-    TDM.AddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME);
     return TDM.EndTDM(builder);
   }
 
@@ -505,8 +505,8 @@ public struct TDM : IFlatbufferObject
   public static void AddOBSERVER_VX(FlatBufferBuilder builder, double OBSERVER_VX) { builder.AddDouble(4, OBSERVER_VX, 0.0); }
   public static void AddOBSERVER_VY(FlatBufferBuilder builder, double OBSERVER_VY) { builder.AddDouble(5, OBSERVER_VY, 0.0); }
   public static void AddOBSERVER_VZ(FlatBufferBuilder builder, double OBSERVER_VZ) { builder.AddDouble(6, OBSERVER_VZ, 0.0); }
-  public static void AddOBSERVER_POSITION_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame OBSERVER_POSITION_REFERENCE_FRAME) { builder.AddSbyte(7, (sbyte)OBSERVER_POSITION_REFERENCE_FRAME, 0); }
-  public static void AddOBS_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame OBS_REFERENCE_FRAME) { builder.AddSbyte(8, (sbyte)OBS_REFERENCE_FRAME, 0); }
+  public static void AddOBSERVER_POSITION_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAMEOffset) { builder.AddOffset(7, OBSERVER_POSITION_REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddOBS_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> OBS_REFERENCE_FRAMEOffset) { builder.AddOffset(8, OBS_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(9, EPOCHOffset.Value, 0); }
   public static void AddCCSDS_TDM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_TDM_VERSOffset) { builder.AddOffset(10, CCSDS_TDM_VERSOffset.Value, 0); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(11, COMMENTOffset.Value, 0); }
@@ -636,8 +636,8 @@ public struct TDM : IFlatbufferObject
     _o.OBSERVER_VX = this.OBSERVER_VX;
     _o.OBSERVER_VY = this.OBSERVER_VY;
     _o.OBSERVER_VZ = this.OBSERVER_VZ;
-    _o.OBSERVER_POSITION_REFERENCE_FRAME = this.OBSERVER_POSITION_REFERENCE_FRAME;
-    _o.OBS_REFERENCE_FRAME = this.OBS_REFERENCE_FRAME;
+    _o.OBSERVER_POSITION_REFERENCE_FRAME = this.OBSERVER_POSITION_REFERENCE_FRAME.HasValue ? this.OBSERVER_POSITION_REFERENCE_FRAME.Value.UnPack() : null;
+    _o.OBS_REFERENCE_FRAME = this.OBS_REFERENCE_FRAME.HasValue ? this.OBS_REFERENCE_FRAME.Value.UnPack() : null;
     _o.EPOCH = this.EPOCH;
     _o.CCSDS_TDM_VERS = this.CCSDS_TDM_VERS;
     _o.COMMENT = new List<string>();
@@ -704,6 +704,8 @@ public struct TDM : IFlatbufferObject
   public static Offset<TDM> Pack(FlatBufferBuilder builder, TDMT _o) {
     if (_o == null) return default(Offset<TDM>);
     var _OBSERVER_ID = _o.OBSERVER_ID == null ? default(StringOffset) : builder.CreateString(_o.OBSERVER_ID);
+    var _OBSERVER_POSITION_REFERENCE_FRAME = _o.OBSERVER_POSITION_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.OBSERVER_POSITION_REFERENCE_FRAME);
+    var _OBS_REFERENCE_FRAME = _o.OBS_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.OBS_REFERENCE_FRAME);
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
     var _CCSDS_TDM_VERS = _o.CCSDS_TDM_VERS == null ? default(StringOffset) : builder.CreateString(_o.CCSDS_TDM_VERS);
     var _COMMENT = default(VectorOffset);
@@ -799,8 +801,8 @@ public struct TDM : IFlatbufferObject
       _o.OBSERVER_VX,
       _o.OBSERVER_VY,
       _o.OBSERVER_VZ,
-      _o.OBSERVER_POSITION_REFERENCE_FRAME,
-      _o.OBS_REFERENCE_FRAME,
+      _OBSERVER_POSITION_REFERENCE_FRAME,
+      _OBS_REFERENCE_FRAME,
       _EPOCH,
       _CCSDS_TDM_VERS,
       _COMMENT,
@@ -863,8 +865,8 @@ public class TDMT
   public double OBSERVER_VX { get; set; }
   public double OBSERVER_VY { get; set; }
   public double OBSERVER_VZ { get; set; }
-  public refFrame OBSERVER_POSITION_REFERENCE_FRAME { get; set; }
-  public refFrame OBS_REFERENCE_FRAME { get; set; }
+  public RFMT OBSERVER_POSITION_REFERENCE_FRAME { get; set; }
+  public RFMT OBS_REFERENCE_FRAME { get; set; }
   public string EPOCH { get; set; }
   public string CCSDS_TDM_VERS { get; set; }
   public List<string> COMMENT { get; set; }
@@ -924,8 +926,8 @@ public class TDMT
     this.OBSERVER_VX = 0.0;
     this.OBSERVER_VY = 0.0;
     this.OBSERVER_VZ = 0.0;
-    this.OBSERVER_POSITION_REFERENCE_FRAME = refFrame.ECEF;
-    this.OBS_REFERENCE_FRAME = refFrame.ECEF;
+    this.OBSERVER_POSITION_REFERENCE_FRAME = null;
+    this.OBS_REFERENCE_FRAME = null;
     this.EPOCH = null;
     this.CCSDS_TDM_VERS = null;
     this.COMMENT = null;
@@ -1000,8 +1002,8 @@ static public class TDMVerify
       && verifier.VerifyField(tablePos, 12 /*OBSERVER_VX*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*OBSERVER_VY*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 16 /*OBSERVER_VZ*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*OBSERVER_POSITION_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
-      && verifier.VerifyField(tablePos, 20 /*OBS_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 18 /*OBSERVER_POSITION_REFERENCE_FRAME*/, RFMVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*OBS_REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 22 /*EPOCH*/, false)
       && verifier.VerifyString(tablePos, 24 /*CCSDS_TDM_VERS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 26 /*COMMENT*/, false)

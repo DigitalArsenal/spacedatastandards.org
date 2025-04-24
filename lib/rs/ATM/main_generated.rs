@@ -42,54 +42,71 @@ pub const ENUM_VALUES_ATMOSPHERIC_MODEL_FAMILY: [AtmosphericModelFamily; 17] = [
 pub struct AtmosphericModelFamily(pub i8);
 #[allow(non_upper_case_globals)]
 impl AtmosphericModelFamily {
+  /// OID: 1.3.112.4.57.9.1
   /// COSPAR International Reference Atmosphere
   /// Known years: 1965, 1972, 1986, 1990
   pub const CIRA_XX: Self = Self(0);
+  /// OID: 1.3.112.4.57.9.2
   /// Drag Temperature Model
   /// Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020
   pub const DTM_XX: Self = Self(1);
+  /// OID: 1.3.112.4.57.9.3
   /// Global Ionosphere-Thermosphere Model
   /// GITM has no specific year versions defined
   pub const GITM: Self = Self(2);
+  /// OID: 1.3.112.4.57.9.4
   /// GOST atmospheric density model
   /// Known version: 2004 (GOST R 25645.166-2004)
   pub const GOST: Self = Self(3);
+  /// OID: 1.3.112.4.57.9.5
   /// Global Reference Atmospheric Model
   /// Known version: 2016
   pub const GRAM_XX: Self = Self(4);
+  /// OID: 1.3.112.4.57.9.6
   /// Harris-Priester empirical model
   /// Known version: 1962
   pub const HP: Self = Self(5);
+  /// OID: 1.3.112.4.57.9.7
   /// Jacchia atmosphere model with HASDM correction overlay
   /// Based on Jacchia 1970 with HASDM (DCA) overlay
   pub const JAC_HASDM: Self = Self(6);
+  /// OID: 1.3.112.4.57.9.8
   /// Jacchia-Gill bi-polynomial interpolation
   /// Interpolates Jacchia 1971
   pub const JAC_GILL: Self = Self(7);
+  /// OID: 1.3.112.4.57.9.9
   /// Jacchia-Bowman empirical model
   /// Known versions: 2006 (JB2006), 2008 (JB2008)
   pub const JB08: Self = Self(8);
+  /// OID: 1.3.112.4.57.9.10
   /// Jacchia-Roberts analytic model
   /// Known version: 1971
   pub const JR71: Self = Self(9);
+  /// OID: 1.3.112.4.57.9.11
   /// Jacchia static diffusion models
   /// Known years: 1970, 1971, 1977
   pub const JXX: Self = Self(10);
+  /// OID: 1.3.112.4.57.9.12
   /// Marshall Engineering Thermosphere
   /// Known version: 2007
   pub const MET_XX: Self = Self(11);
+  /// OID: 1.3.112.4.57.9.13
   /// MSIS empirical model
   /// Known version: 1986
   pub const MSIS_86: Self = Self(12);
+  /// OID: 1.3.112.4.57.9.14
   /// MSISE empirical model with exosphere extension
   /// Known version: 1990
   pub const MSISE_90: Self = Self(13);
+  /// OID: 1.3.112.4.57.9.15
   /// NRLMSISE empirical model
   /// Known version: 2000 (NRLMSISE-00E)
   pub const NRLMSIS00E: Self = Self(14);
+  /// OID: 1.3.112.4.57.9.16
   /// Thermosphere-Ionosphere Electrodynamic General Circulation Model
   /// Based on TIME-GCM, no version specified
   pub const TIECGM: Self = Self(15);
+  /// OID: 1.3.112.4.57.9.17
   /// U.S. Standard Atmosphere
   /// Known versions: 1962, 1976
   pub const USSA_XX: Self = Self(16);

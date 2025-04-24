@@ -817,25 +817,21 @@ class EOO extends Table
     }
 
     /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-    /**
-     * @return sbyte
-     */
     public function getREFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(166);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
     /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
     /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-    /**
-     * @return sbyte
-     */
     public function getSEN_REFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(168);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
@@ -2303,22 +2299,22 @@ class EOO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
     {
-        $builder->addSbyteX(81, $REFERENCE_FRAME, 0);
+        $builder->addOffsetX(81, $REFERENCE_FRAME, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addSEN_REFERENCE_FRAME(FlatBufferBuilder $builder, $SEN_REFERENCE_FRAME)
     {
-        $builder->addSbyteX(82, $SEN_REFERENCE_FRAME, 0);
+        $builder->addOffsetX(82, $SEN_REFERENCE_FRAME, 0);
     }
 
     /**

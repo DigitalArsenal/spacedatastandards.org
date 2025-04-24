@@ -6,7 +6,6 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Reference Frame Message
 type RFM struct {
 	_tab flatbuffers.Table
 }
@@ -54,23 +53,46 @@ func (rcv *RFM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *RFM) REFERENCE_FRAME() refFrame {
+func (rcv *RFM) ReferenceFrameType() RFMUnion {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return RFMUnion(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *RFM) MutateREFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(4, int8(n))
+func (rcv *RFM) MutateReferenceFrameType(n RFMUnion) bool {
+	return rcv._tab.MutateByteSlot(4, byte(n))
+}
+
+func (rcv *RFM) REFERENCE_FRAME(obj *flatbuffers.Table) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		rcv._tab.Union(obj, o)
+		return true
+	}
+	return false
+}
+
+func (rcv *RFM) INDEX() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
 }
 
 func RFMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(1)
+	builder.StartObject(3)
 }
-func RFMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(0, int8(REFERENCE_FRAME), 0)
+func RFMAddReferenceFrameType(builder *flatbuffers.Builder, referenceFrameType RFMUnion) {
+	builder.PrependByteSlot(0, byte(referenceFrameType), 0)
+}
+func RFMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
+}
+func RFMAddINDEX(builder *flatbuffers.Builder, INDEX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(INDEX), 0)
 }
 func RFMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -92,7 +92,8 @@ class OMM {
   ///  Center Name (e.g. EARTH, MARS)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  Reference Frame
-  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 2));
+  ///  Typically TEMEOFDATE
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 16);
   ///  Reference Frame Epoch (ISO 8601 UTC format)
   String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Time System [M, UTC]
@@ -148,7 +149,8 @@ class OMM {
   double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
-  RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 23));
+  ///  Typically RSW
+  RFM? get COV_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 70);
   ///  CX_X [km**2]
   double get CX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
   ///  CY_X [km**2]
@@ -249,8 +251,8 @@ class OMMBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
-    fbBuilder.addInt8(6, REFERENCE_FRAME?.value);
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
   int addReferenceFrameEpochOffset(int? offset) {
@@ -357,8 +359,8 @@ class OMMBuilder {
     fbBuilder.addFloat64(32, MEAN_MOTION_DDOT);
     return fbBuilder.offset;
   }
-  int addCovReferenceFrame(RefFrame? COV_REFERENCE_FRAME) {
-    fbBuilder.addInt8(33, COV_REFERENCE_FRAME?.value);
+  int addCovReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
     return fbBuilder.offset;
   }
   int addCxX(double? CX_X) {
@@ -478,7 +480,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
   final String? _CENTER_NAME;
-  final RefFrame? _REFERENCE_FRAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
   final String? _REFERENCE_FRAME_EPOCH;
   final TimeSystem? _TIME_SYSTEM;
   final MeanElementTheory? _MEAN_ELEMENT_THEORY;
@@ -505,7 +507,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final double? _BSTAR;
   final double? _MEAN_MOTION_DOT;
   final double? _MEAN_MOTION_DDOT;
-  final RefFrame? _COV_REFERENCE_FRAME;
+  final RFMObjectBuilder? _COV_REFERENCE_FRAME;
   final double? _CX_X;
   final double? _CY_X;
   final double? _CY_Y;
@@ -540,7 +542,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     String? OBJECT_NAME,
     String? OBJECT_ID,
     String? CENTER_NAME,
-    RefFrame? REFERENCE_FRAME,
+    RFMObjectBuilder? REFERENCE_FRAME,
     String? REFERENCE_FRAME_EPOCH,
     TimeSystem? TIME_SYSTEM,
     MeanElementTheory? MEAN_ELEMENT_THEORY,
@@ -567,7 +569,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     double? BSTAR,
     double? MEAN_MOTION_DOT,
     double? MEAN_MOTION_DDOT,
-    RefFrame? COV_REFERENCE_FRAME,
+    RFMObjectBuilder? COV_REFERENCE_FRAME,
     double? CX_X,
     double? CY_X,
     double? CY_Y,
@@ -669,6 +671,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBJECT_ID!);
     final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
         : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
         : fbBuilder.writeString(_REFERENCE_FRAME_EPOCH!);
     final int? COMMENTOffset = _COMMENT == null ? null
@@ -677,6 +680,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EPOCH!);
     final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
         : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    final int? COV_REFERENCE_FRAMEOffset = _COV_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? USER_DEFINED_OBJECT_DESIGNATOROffset = _USER_DEFINED_OBJECT_DESIGNATOR == null ? null
         : fbBuilder.writeString(_USER_DEFINED_OBJECT_DESIGNATOR!);
     final int? USER_DEFINED_EARTH_MODELOffset = _USER_DEFINED_EARTH_MODEL == null ? null
@@ -688,7 +692,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(3, OBJECT_NAMEOffset);
     fbBuilder.addOffset(4, OBJECT_IDOffset);
     fbBuilder.addOffset(5, CENTER_NAMEOffset);
-    fbBuilder.addInt8(6, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(6, REFERENCE_FRAMEOffset);
     fbBuilder.addOffset(7, REFERENCE_FRAME_EPOCHOffset);
     fbBuilder.addInt8(8, _TIME_SYSTEM?.value);
     fbBuilder.addInt8(9, _MEAN_ELEMENT_THEORY?.value);
@@ -715,7 +719,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(30, _BSTAR);
     fbBuilder.addFloat64(31, _MEAN_MOTION_DOT);
     fbBuilder.addFloat64(32, _MEAN_MOTION_DDOT);
-    fbBuilder.addInt8(33, _COV_REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(33, COV_REFERENCE_FRAMEOffset);
     fbBuilder.addFloat64(34, _CX_X);
     fbBuilder.addFloat64(35, _CY_X);
     fbBuilder.addFloat64(36, _CY_Y);

@@ -109,23 +109,19 @@ class TDM extends Table
     }
 
     /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-    /**
-     * @return sbyte
-     */
     public function getOBSERVER_POSITION_REFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-    /**
-     * @return sbyte
-     */
     public function getOBS_REFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
@@ -826,22 +822,22 @@ class TDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addOBSERVER_POSITION_REFERENCE_FRAME(FlatBufferBuilder $builder, $OBSERVER_POSITION_REFERENCE_FRAME)
     {
-        $builder->addSbyteX(7, $OBSERVER_POSITION_REFERENCE_FRAME, 0);
+        $builder->addOffsetX(7, $OBSERVER_POSITION_REFERENCE_FRAME, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addOBS_REFERENCE_FRAME(FlatBufferBuilder $builder, $OBS_REFERENCE_FRAME)
     {
-        $builder->addSbyteX(8, $OBS_REFERENCE_FRAME, 0);
+        $builder->addOffsetX(8, $OBS_REFERENCE_FRAME, 0);
     }
 
     /**

@@ -36,8 +36,10 @@ class OMM : flatbuffers.handle
     def CENTER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
     /// Reference Frame
-    def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 16, 2))
+    /// Typically TEMEOFDATE
+    def REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: RFM { buf_, o } else: nil
     /// Reference Frame Epoch (ISO 8601 UTC format)
     def REFERENCE_FRAME_EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 18)
@@ -119,8 +121,10 @@ class OMM : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
     /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-    def COV_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 70, 23))
+    /// Typically RSW
+    def COV_REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 70)
+        return if o: RFM { buf_, o } else: nil
     /// CX_X [km**2]
     def CX_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
@@ -225,8 +229,8 @@ struct OMMBuilder:
     def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, CENTER_NAME)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(6, REFERENCE_FRAME, 2)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, REFERENCE_FRAME)
         return this
     def add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, REFERENCE_FRAME_EPOCH)
@@ -306,8 +310,8 @@ struct OMMBuilder:
     def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
         b_.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
         return this
-    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(33, COV_REFERENCE_FRAME, 23)
+    def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, COV_REFERENCE_FRAME)
         return this
     def add_CX_X(CX_X:float):
         b_.PrependFloat64Slot(34, CX_X, 0.0)

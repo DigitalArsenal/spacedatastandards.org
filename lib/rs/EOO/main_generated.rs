@@ -402,6 +402,8 @@ impl<'a> EOO<'a> {
     builder.add_NIIRS(args.NIIRS);
     if let Some(x) = args.SOURCE_DL { builder.add_SOURCE_DL(x); }
     if let Some(x) = args.ORIG_NETWORK { builder.add_ORIG_NETWORK(x); }
+    if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     if let Some(x) = args.CREATED_BY { builder.add_CREATED_BY(x); }
     if let Some(x) = args.CREATED_AT { builder.add_CREATED_AT(x); }
     if let Some(x) = args.ORIGIN { builder.add_ORIGIN(x); }
@@ -492,8 +494,6 @@ impl<'a> EOO<'a> {
     builder.add_TYPE(args.TYPE);
     builder.add_PENUMBRA(args.PENUMBRA);
     builder.add_UMBRA(args.UMBRA);
-    builder.add_SEN_REFERENCE_FRAME(args.SEN_REFERENCE_FRAME);
-    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.add_DATA_MODE(args.DATA_MODE);
     builder.add_UCT(args.UCT);
     builder.add_OB_POSITION(args.OB_POSITION);
@@ -615,8 +615,12 @@ impl<'a> EOO<'a> {
     let CREATED_BY = self.CREATED_BY().map(|x| {
       x.to_string()
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME();
-    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let UMBRA = self.UMBRA();
     let PENUMBRA = self.PENUMBRA();
     let ORIG_NETWORK = self.ORIG_NETWORK().map(|x| {
@@ -1477,21 +1481,21 @@ impl<'a> EOO<'a> {
   }
   /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> refFrame {
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(EOO::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(EOO::VT_REFERENCE_FRAME, None)}
   }
   /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   #[inline]
-  pub fn SEN_REFERENCE_FRAME(&self) -> refFrame {
+  pub fn SEN_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(EOO::VT_SEN_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(EOO::VT_SEN_REFERENCE_FRAME, None)}
   }
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   #[inline]
@@ -1992,8 +1996,8 @@ impl flatbuffers::Verifiable for EOO<'_> {
      .visit_field::<DataMode>("DATA_MODE", Self::VT_DATA_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATED_BY", Self::VT_CREATED_BY, false)?
-     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
-     .visit_field::<refFrame>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
      .visit_field::<bool>("UMBRA", Self::VT_UMBRA, false)?
      .visit_field::<bool>("PENUMBRA", Self::VT_PENUMBRA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_NETWORK", Self::VT_ORIG_NETWORK, false)?
@@ -2131,8 +2135,8 @@ pub struct EOOArgs<'a> {
     pub DATA_MODE: DataMode,
     pub CREATED_AT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CREATED_BY: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REFERENCE_FRAME: refFrame,
-    pub SEN_REFERENCE_FRAME: refFrame,
+    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
+    pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub UMBRA: bool,
     pub PENUMBRA: bool,
     pub ORIG_NETWORK: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -2270,8 +2274,8 @@ impl<'a> Default for EOOArgs<'a> {
       DATA_MODE: DataMode::EXERCISE,
       CREATED_AT: None,
       CREATED_BY: None,
-      REFERENCE_FRAME: refFrame::ECEF,
-      SEN_REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: None,
+      SEN_REFERENCE_FRAME: None,
       UMBRA: false,
       PENUMBRA: false,
       ORIG_NETWORK: None,
@@ -2657,12 +2661,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EOO::VT_CREATED_BY, CREATED_BY);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_UMBRA(&mut self, UMBRA: bool) {
@@ -3107,8 +3111,8 @@ pub struct EOOT {
   pub DATA_MODE: DataMode,
   pub CREATED_AT: Option<String>,
   pub CREATED_BY: Option<String>,
-  pub REFERENCE_FRAME: refFrame,
-  pub SEN_REFERENCE_FRAME: refFrame,
+  pub REFERENCE_FRAME: Option<Box<RFMT>>,
+  pub SEN_REFERENCE_FRAME: Option<Box<RFMT>>,
   pub UMBRA: bool,
   pub PENUMBRA: bool,
   pub ORIG_NETWORK: Option<String>,
@@ -3245,8 +3249,8 @@ impl Default for EOOT {
       DATA_MODE: DataMode::EXERCISE,
       CREATED_AT: None,
       CREATED_BY: None,
-      REFERENCE_FRAME: refFrame::ECEF,
-      SEN_REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: None,
+      SEN_REFERENCE_FRAME: None,
       UMBRA: false,
       PENUMBRA: false,
       ORIG_NETWORK: None,
@@ -3419,8 +3423,12 @@ impl EOOT {
     let CREATED_BY = self.CREATED_BY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME;
-    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME;
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let UMBRA = self.UMBRA;
     let PENUMBRA = self.PENUMBRA;
     let ORIG_NETWORK = self.ORIG_NETWORK.as_ref().map(|x|{

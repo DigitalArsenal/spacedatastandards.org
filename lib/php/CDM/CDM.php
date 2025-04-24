@@ -181,13 +181,11 @@ class CDM extends Table
     }
 
     /// The reference frame for the screening volume
-    /**
-     * @return sbyte
-     */
     public function getSCREEN_VOLUME_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// The shape of the screening volume
@@ -504,12 +502,12 @@ class CDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addSCREEN_VOLUME_FRAME(FlatBufferBuilder $builder, $SCREEN_VOLUME_FRAME)
     {
-        $builder->addSbyteX(16, $SCREEN_VOLUME_FRAME, 0);
+        $builder->addOffsetX(16, $SCREEN_VOLUME_FRAME, 0);
     }
 
     /**

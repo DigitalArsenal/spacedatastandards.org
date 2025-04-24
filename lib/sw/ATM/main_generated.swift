@@ -10,54 +10,71 @@ public enum AtmosphericModelFamily: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
+  ///  OID: 1.3.112.4.57.9.1
   ///  COSPAR International Reference Atmosphere
   ///  Known years: 1965, 1972, 1986, 1990
   case ciraXx = 0
+  ///  OID: 1.3.112.4.57.9.2
   ///  Drag Temperature Model
   ///  Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020
   case dtmXx = 1
+  ///  OID: 1.3.112.4.57.9.3
   ///  Global Ionosphere-Thermosphere Model
   ///  GITM has no specific year versions defined
   case gitm = 2
+  ///  OID: 1.3.112.4.57.9.4
   ///  GOST atmospheric density model
   ///  Known version: 2004 (GOST R 25645.166-2004)
   case gost = 3
+  ///  OID: 1.3.112.4.57.9.5
   ///  Global Reference Atmospheric Model
   ///  Known version: 2016
   case gramXx = 4
+  ///  OID: 1.3.112.4.57.9.6
   ///  Harris-Priester empirical model
   ///  Known version: 1962
   case hp = 5
+  ///  OID: 1.3.112.4.57.9.7
   ///  Jacchia atmosphere model with HASDM correction overlay
   ///  Based on Jacchia 1970 with HASDM (DCA) overlay
   case jacHasdm = 6
+  ///  OID: 1.3.112.4.57.9.8
   ///  Jacchia-Gill bi-polynomial interpolation
   ///  Interpolates Jacchia 1971
   case jacGill = 7
+  ///  OID: 1.3.112.4.57.9.9
   ///  Jacchia-Bowman empirical model
   ///  Known versions: 2006 (JB2006), 2008 (JB2008)
   case jb08 = 8
+  ///  OID: 1.3.112.4.57.9.10
   ///  Jacchia-Roberts analytic model
   ///  Known version: 1971
   case jr71 = 9
+  ///  OID: 1.3.112.4.57.9.11
   ///  Jacchia static diffusion models
   ///  Known years: 1970, 1971, 1977
   case jxx = 10
+  ///  OID: 1.3.112.4.57.9.12
   ///  Marshall Engineering Thermosphere
   ///  Known version: 2007
   case metXx = 11
+  ///  OID: 1.3.112.4.57.9.13
   ///  MSIS empirical model
   ///  Known version: 1986
   case msis86 = 12
+  ///  OID: 1.3.112.4.57.9.14
   ///  MSISE empirical model with exosphere extension
   ///  Known version: 1990
   case msise90 = 13
+  ///  OID: 1.3.112.4.57.9.15
   ///  NRLMSISE empirical model
   ///  Known version: 2000 (NRLMSISE-00E)
   case nrlmsis00e = 14
+  ///  OID: 1.3.112.4.57.9.16
   ///  Thermosphere-Ionosphere Electrodynamic General Circulation Model
   ///  Based on TIME-GCM, no version specified
   case tiecgm = 15
+  ///  OID: 1.3.112.4.57.9.17
   ///  U.S. Standard Atmosphere
   ///  Known versions: 1962, 1976
   case ussaXx = 16

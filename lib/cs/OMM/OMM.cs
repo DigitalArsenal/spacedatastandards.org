@@ -62,7 +62,8 @@ public struct OMM : IFlatbufferObject
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(14); }
   /// Reference Frame
-  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(16); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.TEME; } }
+  /// Typically TEMEOFDATE
+  public RFM? REFERENCE_FRAME { get { int o = __p.__offset(16); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Reference Frame Epoch (ISO 8601 UTC format)
   public string REFERENCE_FRAME_EPOCH { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -142,7 +143,8 @@ public struct OMM : IFlatbufferObject
   public double MEAN_MOTION_DDOT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-  public refFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(70); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.RSW; } }
+  /// Typically RSW
+  public RFM? COV_REFERENCE_FRAME { get { int o = __p.__offset(70); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// CX_X [km**2]
   public double CX_X { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// CY_X [km**2]
@@ -215,7 +217,7 @@ public struct OMM : IFlatbufferObject
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       StringOffset OBJECT_IDOffset = default(StringOffset),
       StringOffset CENTER_NAMEOffset = default(StringOffset),
-      refFrame REFERENCE_FRAME = refFrame.TEME,
+      Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       StringOffset REFERENCE_FRAME_EPOCHOffset = default(StringOffset),
       timeSystem TIME_SYSTEM = timeSystem.UTC,
       meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory.SGP4,
@@ -242,7 +244,7 @@ public struct OMM : IFlatbufferObject
       double BSTAR = 0.0,
       double MEAN_MOTION_DOT = 0.0,
       double MEAN_MOTION_DDOT = 0.0,
-      refFrame COV_REFERENCE_FRAME = refFrame.RSW,
+      Offset<RFM> COV_REFERENCE_FRAMEOffset = default(Offset<RFM>),
       double CX_X = 0.0,
       double CY_X = 0.0,
       double CY_Y = 0.0,
@@ -314,22 +316,22 @@ public struct OMM : IFlatbufferObject
     OMM.AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset);
     OMM.AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     OMM.AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE);
+    OMM.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset);
     OMM.AddELEMENT_SET_NO(builder, ELEMENT_SET_NO);
     OMM.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     OMM.AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset);
     OMM.AddEPOCH(builder, EPOCHOffset);
     OMM.AddCOMMENT(builder, COMMENTOffset);
     OMM.AddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCHOffset);
+    OMM.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
     OMM.AddCENTER_NAME(builder, CENTER_NAMEOffset);
     OMM.AddOBJECT_ID(builder, OBJECT_IDOffset);
     OMM.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
     OMM.AddORIGINATOR(builder, ORIGINATOROffset);
     OMM.AddCREATION_DATE(builder, CREATION_DATEOffset);
-    OMM.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME);
     OMM.AddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE);
     OMM.AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY);
     OMM.AddTIME_SYSTEM(builder, TIME_SYSTEM);
-    OMM.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
     return OMM.EndOMM(builder);
   }
 
@@ -340,7 +342,7 @@ public struct OMM : IFlatbufferObject
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(4, OBJECT_IDOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(5, CENTER_NAMEOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(6, (sbyte)REFERENCE_FRAME, 2); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(6, REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddREFERENCE_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_FRAME_EPOCHOffset) { builder.AddOffset(7, REFERENCE_FRAME_EPOCHOffset.Value, 0); }
   public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(8, (sbyte)TIME_SYSTEM, 11); }
   public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementTheory MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
@@ -367,7 +369,7 @@ public struct OMM : IFlatbufferObject
   public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(30, BSTAR, 0.0); }
   public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(31, MEAN_MOTION_DOT, 0.0); }
   public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(32, MEAN_MOTION_DDOT, 0.0); }
-  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame COV_REFERENCE_FRAME) { builder.AddSbyte(33, (sbyte)COV_REFERENCE_FRAME, 23); }
+  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REFERENCE_FRAMEOffset) { builder.AddOffset(33, COV_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(34, CX_X, 0.0); }
   public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(35, CY_X, 0.0); }
   public static void AddCY_Y(FlatBufferBuilder builder, double CY_Y) { builder.AddDouble(36, CY_Y, 0.0); }
@@ -412,7 +414,7 @@ public struct OMM : IFlatbufferObject
     _o.OBJECT_NAME = this.OBJECT_NAME;
     _o.OBJECT_ID = this.OBJECT_ID;
     _o.CENTER_NAME = this.CENTER_NAME;
-    _o.REFERENCE_FRAME = this.REFERENCE_FRAME;
+    _o.REFERENCE_FRAME = this.REFERENCE_FRAME.HasValue ? this.REFERENCE_FRAME.Value.UnPack() : null;
     _o.REFERENCE_FRAME_EPOCH = this.REFERENCE_FRAME_EPOCH;
     _o.TIME_SYSTEM = this.TIME_SYSTEM;
     _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY;
@@ -439,7 +441,7 @@ public struct OMM : IFlatbufferObject
     _o.BSTAR = this.BSTAR;
     _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT;
     _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT;
-    _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME;
+    _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME.HasValue ? this.COV_REFERENCE_FRAME.Value.UnPack() : null;
     _o.CX_X = this.CX_X;
     _o.CY_X = this.CY_X;
     _o.CY_Y = this.CY_Y;
@@ -474,10 +476,12 @@ public struct OMM : IFlatbufferObject
     var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
     var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
     var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.REFERENCE_FRAME);
     var _REFERENCE_FRAME_EPOCH = _o.REFERENCE_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_FRAME_EPOCH);
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
     var _CLASSIFICATION_TYPE = _o.CLASSIFICATION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION_TYPE);
+    var _COV_REFERENCE_FRAME = _o.COV_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REFERENCE_FRAME);
     var _USER_DEFINED_OBJECT_DESIGNATOR = _o.USER_DEFINED_OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_OBJECT_DESIGNATOR);
     var _USER_DEFINED_EARTH_MODEL = _o.USER_DEFINED_EARTH_MODEL == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_EARTH_MODEL);
     return CreateOMM(
@@ -488,7 +492,7 @@ public struct OMM : IFlatbufferObject
       _OBJECT_NAME,
       _OBJECT_ID,
       _CENTER_NAME,
-      _o.REFERENCE_FRAME,
+      _REFERENCE_FRAME,
       _REFERENCE_FRAME_EPOCH,
       _o.TIME_SYSTEM,
       _o.MEAN_ELEMENT_THEORY,
@@ -515,7 +519,7 @@ public struct OMM : IFlatbufferObject
       _o.BSTAR,
       _o.MEAN_MOTION_DOT,
       _o.MEAN_MOTION_DDOT,
-      _o.COV_REFERENCE_FRAME,
+      _COV_REFERENCE_FRAME,
       _o.CX_X,
       _o.CY_X,
       _o.CY_Y,
@@ -553,7 +557,7 @@ public class OMMT
   public string OBJECT_NAME { get; set; }
   public string OBJECT_ID { get; set; }
   public string CENTER_NAME { get; set; }
-  public refFrame REFERENCE_FRAME { get; set; }
+  public RFMT REFERENCE_FRAME { get; set; }
   public string REFERENCE_FRAME_EPOCH { get; set; }
   public timeSystem TIME_SYSTEM { get; set; }
   public meanElementTheory MEAN_ELEMENT_THEORY { get; set; }
@@ -580,7 +584,7 @@ public class OMMT
   public double BSTAR { get; set; }
   public double MEAN_MOTION_DOT { get; set; }
   public double MEAN_MOTION_DDOT { get; set; }
-  public refFrame COV_REFERENCE_FRAME { get; set; }
+  public RFMT COV_REFERENCE_FRAME { get; set; }
   public double CX_X { get; set; }
   public double CY_X { get; set; }
   public double CY_Y { get; set; }
@@ -615,7 +619,7 @@ public class OMMT
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
     this.CENTER_NAME = null;
-    this.REFERENCE_FRAME = refFrame.TEME;
+    this.REFERENCE_FRAME = null;
     this.REFERENCE_FRAME_EPOCH = null;
     this.TIME_SYSTEM = timeSystem.UTC;
     this.MEAN_ELEMENT_THEORY = meanElementTheory.SGP4;
@@ -642,7 +646,7 @@ public class OMMT
     this.BSTAR = 0.0;
     this.MEAN_MOTION_DOT = 0.0;
     this.MEAN_MOTION_DDOT = 0.0;
-    this.COV_REFERENCE_FRAME = refFrame.RSW;
+    this.COV_REFERENCE_FRAME = null;
     this.CX_X = 0.0;
     this.CY_X = 0.0;
     this.CY_Y = 0.0;
@@ -692,7 +696,7 @@ static public class OMMVerify
       && verifier.VerifyString(tablePos, 10 /*OBJECT_NAME*/, false)
       && verifier.VerifyString(tablePos, 12 /*OBJECT_ID*/, false)
       && verifier.VerifyString(tablePos, 14 /*CENTER_NAME*/, false)
-      && verifier.VerifyField(tablePos, 16 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 16 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 18 /*REFERENCE_FRAME_EPOCH*/, false)
       && verifier.VerifyField(tablePos, 20 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
       && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementTheory*/, 1, false)
@@ -719,7 +723,7 @@ static public class OMMVerify
       && verifier.VerifyField(tablePos, 64 /*BSTAR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 66 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 68 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*COV_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 70 /*COV_REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyField(tablePos, 72 /*CX_X*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 74 /*CY_X*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 76 /*CY_Y*/, 8 /*double*/, 8, false)

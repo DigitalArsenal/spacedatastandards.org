@@ -13,362 +13,265 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct CelestialFrameWrapper;
+struct CelestialFrameWrapperBuilder;
+
+struct SpacecraftFrameWrapper;
+struct SpacecraftFrameWrapperBuilder;
+
+struct OrbitFrameWrapper;
+struct OrbitFrameWrapperBuilder;
+
+struct CustomFrameWrapper;
+struct CustomFrameWrapperBuilder;
+
 struct RFM;
 struct RFMBuilder;
 
-enum refFrame : int8_t {
-  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
-  refFrame_ECEF = 0,
-  /// International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
-  refFrame_ICRF = 1,
-  /// True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
-  refFrame_TEME = 2,
-  /// East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
-  refFrame_ENU = 3,
-  /// North-East-Down: Aviation/navigation frame aligned with gravity.
-  refFrame_NED = 4,
-  /// North-East-Up: Similar to NED, with "Up" opposite gravity.
-  refFrame_NEU = 5,
-  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
-  refFrame_RIC = 6,
-  /// Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
-  refFrame_J2000 = 7,
-  /// Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
-  refFrame_GCRF = 8,
-  /// Greenwich Rotating Coordinates: Rotates with Earth's true equator.
-  refFrame_GRC = 9,
-  /// International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
-  refFrame_ITRF2000 = 10,
-  /// International Terrestrial Reference Frame 1993: Older ITRF realization.
-  refFrame_ITRF93 = 11,
-  /// International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
-  refFrame_ITRF97 = 12,
-  /// True of Date, Rotating: Rotates with Earth's true equator.
-  refFrame_TDR = 13,
-  /// True of Date: Similar to TDR, without rotation.
-  refFrame_TOD = 14,
-  /// Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
-  refFrame_RTN = 15,
-  /// Transverse, Velocity, Normal: Alternative orbit frame.
-  refFrame_TVN = 16,
-  /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
-  refFrame_VVLH = 17,
-  /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
-  refFrame_QSW = 18,
-  /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
-  refFrame_LTP = 19,
-  /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
-  refFrame_LVLH = 20,
-  /// Polar-North-East: Polar coordinate frame.
-  refFrame_PNE = 21,
-  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  refFrame_BRF = 22,
-  /// Radial, Down-track, Cross-track: Alternate name for RTN.
-  refFrame_RSW = 23,
-  /// Tangential, Normal, Cross-track: Local orbit frame.
-  refFrame_TNW = 24,
-  /// Radial, Along-track, Cross-track: Satellite motion frame.
-  refFrame_UVW = 25,
-  /// Equinoctial Inertial: Frame with axes aligned to orbital properties.
-  refFrame_EQW_INERTIAL = 26,
-  /// Inertial version of LVLH.
-  refFrame_LVLH_INERTIAL = 27,
-  /// Rotating LVLH frame.
-  refFrame_LVLH_ROTATING = 28,
-  /// Inertial Nadir-Sun-Normal frame.
-  refFrame_NSW_INERTIAL = 29,
-  /// Rotating Nadir-Sun-Normal frame.
-  refFrame_NSW_ROTATING = 30,
-  /// Inertial Transverse-Velocity-Normal frame.
-  refFrame_NTW_INERTIAL = 31,
-  /// Rotating Transverse-Velocity-Normal frame.
-  refFrame_NTW_ROTATING = 32,
-  /// Perifocal Coordinate System: Inertial frame aligned to periapsis.
-  refFrame_PQW_INERTIAL = 33,
-  /// Inertial Radial, Transverse, Normal frame.
-  refFrame_RSW_INERTIAL = 34,
-  /// Rotating RSW frame: Aligned with orbit angular momentum.
-  refFrame_RSW_ROTATING = 35,
-  /// South/East/Zenith inertial frame.
-  refFrame_SEZ_INERTIAL = 36,
-  /// Rotating South/East/Zenith frame.
-  refFrame_SEZ_ROTATING = 37,
-  /// Inertial Tangential, Normal, Cross-track frame.
-  refFrame_TNW_INERTIAL = 38,
-  /// Rotating Tangential, Normal, Cross-track frame.
-  refFrame_TNW_ROTATING = 39,
-  /// Velocity, Normal, Co-normal inertial frame.
-  refFrame_VNC_INERTIAL = 40,
-  /// Rotating Velocity, Normal, Co-normal frame.
-  refFrame_VNC_ROTATING = 41,
-  /// Central Body alignment inertial frame.
-  refFrame_ALIGN_CB = 42,
-  /// Earth alignment inertial frame.
-  refFrame_ALIGN_EARTH = 43,
-  /// Inertial realization of B1950 epoch.
-  refFrame_B1950 = 44,
-  /// Celestial Intermediate Reference System.
-  refFrame_CIRS = 45,
-  /// DTRF Inertial frame with corrections.
-  refFrame_DTRFyyyy = 46,
-  /// Earth-Fixed Greenwich rotating frame.
-  refFrame_EFG = 47,
-  /// Earth Mean Equator and Equinox of 2000 epoch.
-  refFrame_EME2000 = 48,
-  /// Central Body fixed rotating frame.
-  refFrame_FIXED_CB = 49,
-  /// Earth-fixed rotating frame.
-  refFrame_FIXED_EARTH = 50,
-  /// Geocentric Celestial Reference Frame with versioning.
-  refFrame_GCRFn = 51,
-  /// Greenwich True-of-Date rotating frame.
-  refFrame_GTOD = 52,
-  /// Mean of Date for all central bodies except Earth and Moon.
-  refFrame_MOD_CB = 53,
-  /// Mean of Date for Earth.
-  refFrame_MOD_EARTH = 54,
-  /// Mean of Date for Moon.
-  refFrame_MOD_MOON = 55,
-  /// Mean of Epoch for central bodies.
-  refFrame_MOE_CB = 56,
-  /// Mean of Epoch for Earth.
-  refFrame_MOE_EARTH = 57,
-  /// Lunar Moon Mean Earth reference frame.
-  refFrame_MOON_ME = 58,
-  /// Lunar Mean Equator and IAU Node reference frame.
-  refFrame_MOON_MEIAUE = 59,
-  /// Lunar Principal Axis rotating frame.
-  refFrame_MOON_PAxxx = 60,
-  /// True Equator Mean Equinox of Date.
-  refFrame_TEMEOFDATE = 61,
-  /// True Equator Mean Equinox of Epoch.
-  refFrame_TEMEOFEPOCH = 62,
-  /// Terrestrial Intermediate Reference System.
-  refFrame_TIRS = 63,
-  /// True of Date for central bodies.
-  refFrame_TOD_CB = 64,
-  /// True of Date for Earth.
-  refFrame_TOD_EARTH = 65,
-  /// True of Date for Moon.
-  refFrame_TOD_MOON = 66,
-  /// True of Epoch for central bodies.
-  refFrame_TOE_CB = 67,
-  /// True of Epoch for Earth.
-  refFrame_TOE_EARTH = 68,
-  /// True of Epoch for Moon.
-  refFrame_TOE_MOON = 69,
-  /// True Ecliptic reference frame.
-  refFrame_TRUE_ECLIPTIC = 70,
-  /// Launch go-inertial reference frame.
-  refFrame_UVW_GO_INERTIAL = 71,
-  /// WGS 84 Earth-fixed terrestrial system.
-  refFrame_WGS84 = 72,
-  /// Accelerometer reference frame.
-  refFrame_ACC_i = 73,
-  /// Actuator reference frame.
-  refFrame_ACTUATOR_i = 74,
-  /// Autonomous Star Tracker reference frame.
-  refFrame_AST_i = 75,
-  /// Coarse Sun Sensor reference frame.
-  refFrame_CSS_i = 76,
-  /// Digital Sun Sensor reference frame.
-  refFrame_DSS_i = 77,
-  /// Earth Sensor Assembly reference frame.
-  refFrame_ESA_i = 78,
-  /// Gyro reference frame.
-  refFrame_GYRO_FRAME_i = 79,
-  /// Inertial Measurement Unit reference frame.
-  refFrame_IMU_FRAME_i = 80,
-  /// Instrument reference frame.
-  refFrame_INSTRUMENT_i = 81,
-  /// Magnetic Torque Assembly reference frame.
-  refFrame_MTA_i = 82,
-  /// Reaction Wheel reference frame.
-  refFrame_RW_i = 83,
-  /// Solar Array reference frame.
-  refFrame_SA_i = 84,
-  /// Spacecraft Body reference frame.
-  refFrame_SC_BODY_i = 85,
-  /// Sensor reference frame.
-  refFrame_SENSOR_i = 86,
-  /// Star Tracker reference frame.
-  refFrame_STARTRACKER_i = 87,
-  /// Three Axis Magnetometer reference frame.
-  refFrame_TAM_i = 88,
-  refFrame_MIN = refFrame_ECEF,
-  refFrame_MAX = refFrame_TAM_i
+/// https://www.sanaregistry.org/r/celestial_body_reference_frames/
+/// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
+enum CelestialFrame : int8_t {
+  /// OID: 1.3.112.4.57.2.9
+  /// Inertial Earth-centered frame aligned with Earth's center of mass.
+  CelestialFrame_GCRF = 0,
+  /// OID: 1.3.112.4.57.2.11
+  /// International Celestial Reference Frame based on distant quasars.
+  CelestialFrame_ICRF = 1,
+  /// OID: 1.3.112.4.57.2.14
+  /// Classical J2000 inertial frame defined at epoch J2000.0.
+  CelestialFrame_J2000 = 2,
+  /// OID: 1.3.112.4.57.2.15
+  /// Updated J2000 frame using IAU2000A precession-nutation models.
+  CelestialFrame_J2000A = 3,
+  /// OID: 1.3.112.4.57.2.7
+  /// Earth Mean Equator frame at epoch J2000 used in orbit determination.
+  CelestialFrame_EME2000 = 4,
+  /// OID: 1.3.112.4.57.2.25
+  /// True Equator Mean Equinox of Date frame for satellite tracking.
+  CelestialFrame_TEMEOFDATE = 5,
+  /// OID: 1.3.112.4.57.2.10
+  /// Greenwich True of Date: Earth rotation relative to celestial reference.
+  CelestialFrame_GTOD = 6,
+  /// OID: 1.3.112.4.57.2.4
+  /// Celestial Intermediate Reference System based on CIP and CIO.
+  CelestialFrame_CIRS = 7,
+  /// OID: 1.3.112.4.57.2.18
+  /// Mean of Date (MOD) Earth frame using IAU1976 precession.
+  CelestialFrame_MOD_EARTH = 8,
+  /// OID: 1.3.112.4.57.2.17
+  /// Mean of Date (MOD) celestial body frame evaluated at each epoch.
+  CelestialFrame_MOD_CB = 9,
+  /// OID: 1.3.112.4.57.2.19
+  /// Mean of Date (MOD) Moon frame evaluated at each epoch.
+  CelestialFrame_MOD_MOON = 10,
+  /// OID: 1.3.112.4.57.2.29
+  /// True of Date (TOD) Earth frame with polar motion included.
+  CelestialFrame_TOD_EARTH = 11,
+  /// OID: 1.3.112.4.57.2.28
+  /// True of Date (TOD) celestial body frame.
+  CelestialFrame_TOD_CB = 12,
+  /// OID: 1.3.112.4.57.2.30
+  /// True of Date (TOD) Moon frame.
+  CelestialFrame_TOD_MOON = 13,
+  /// OID: 1.3.112.4.57.2.32
+  /// True of Epoch (TOE) Earth frame at specific epoch.
+  CelestialFrame_TOE_EARTH = 14,
+  /// OID: 1.3.112.4.57.2.31
+  /// True of Epoch (TOE) celestial body frame at specific epoch.
+  CelestialFrame_TOE_CB = 15,
+  /// OID: 1.3.112.4.57.2.33
+  /// True of Epoch (TOE) Moon frame at specific epoch.
+  CelestialFrame_TOE_MOON = 16,
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 2000 (Earth-fixed).
+  CelestialFrame_ITRF2000 = 17,
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1993 (Earth-fixed).
+  CelestialFrame_ITRF93 = 18,
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1997 (Earth-fixed).
+  CelestialFrame_ITRF97 = 19,
+  /// OID: 1.3.112.4.57.2.6
+  /// Earth-Fixed Geocentric frame using geodetic coordinates.
+  CelestialFrame_EFG = 20,
+  /// OID: 1.3.112.4.57.2.8
+  /// Fixed frame of a celestial body.
+  CelestialFrame_FIXED_CB = 21,
+  /// OID: 1.3.112.4.57.2.39
+  /// Fixed Earth frame aligned with WGS84 ellipsoid.
+  CelestialFrame_FIXED_EARTH = 22,
+  /// WGS84 Earth-fixed terrestrial system.
+  CelestialFrame_WGS84 = 23,
+  /// OID: 1.3.112.4.57.2.5
+  /// Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+  CelestialFrame_DTRFYYYY = 24,
+  /// OID: 1.3.112.4.57.2.2
+  /// Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+  CelestialFrame_ALIGN_EARTH = 25,
+  /// OID: 1.3.112.4.57.2.1
+  /// Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+  CelestialFrame_ALIGN_CB = 26,
+  /// OID: 1.3.112.4.57.2.3
+  /// Classical Besselian 1950 equator and equinox frame.
+  CelestialFrame_B1950 = 27,
+  CelestialFrame_MIN = CelestialFrame_GCRF,
+  CelestialFrame_MAX = CelestialFrame_B1950
 };
 
-inline const refFrame (&EnumValuesrefFrame())[89] {
-  static const refFrame values[] = {
-    refFrame_ECEF,
-    refFrame_ICRF,
-    refFrame_TEME,
-    refFrame_ENU,
-    refFrame_NED,
-    refFrame_NEU,
-    refFrame_RIC,
-    refFrame_J2000,
-    refFrame_GCRF,
-    refFrame_GRC,
-    refFrame_ITRF2000,
-    refFrame_ITRF93,
-    refFrame_ITRF97,
-    refFrame_TDR,
-    refFrame_TOD,
-    refFrame_RTN,
-    refFrame_TVN,
-    refFrame_VVLH,
-    refFrame_QSW,
-    refFrame_LTP,
-    refFrame_LVLH,
-    refFrame_PNE,
-    refFrame_BRF,
-    refFrame_RSW,
-    refFrame_TNW,
-    refFrame_UVW,
-    refFrame_EQW_INERTIAL,
-    refFrame_LVLH_INERTIAL,
-    refFrame_LVLH_ROTATING,
-    refFrame_NSW_INERTIAL,
-    refFrame_NSW_ROTATING,
-    refFrame_NTW_INERTIAL,
-    refFrame_NTW_ROTATING,
-    refFrame_PQW_INERTIAL,
-    refFrame_RSW_INERTIAL,
-    refFrame_RSW_ROTATING,
-    refFrame_SEZ_INERTIAL,
-    refFrame_SEZ_ROTATING,
-    refFrame_TNW_INERTIAL,
-    refFrame_TNW_ROTATING,
-    refFrame_VNC_INERTIAL,
-    refFrame_VNC_ROTATING,
-    refFrame_ALIGN_CB,
-    refFrame_ALIGN_EARTH,
-    refFrame_B1950,
-    refFrame_CIRS,
-    refFrame_DTRFyyyy,
-    refFrame_EFG,
-    refFrame_EME2000,
-    refFrame_FIXED_CB,
-    refFrame_FIXED_EARTH,
-    refFrame_GCRFn,
-    refFrame_GTOD,
-    refFrame_MOD_CB,
-    refFrame_MOD_EARTH,
-    refFrame_MOD_MOON,
-    refFrame_MOE_CB,
-    refFrame_MOE_EARTH,
-    refFrame_MOON_ME,
-    refFrame_MOON_MEIAUE,
-    refFrame_MOON_PAxxx,
-    refFrame_TEMEOFDATE,
-    refFrame_TEMEOFEPOCH,
-    refFrame_TIRS,
-    refFrame_TOD_CB,
-    refFrame_TOD_EARTH,
-    refFrame_TOD_MOON,
-    refFrame_TOE_CB,
-    refFrame_TOE_EARTH,
-    refFrame_TOE_MOON,
-    refFrame_TRUE_ECLIPTIC,
-    refFrame_UVW_GO_INERTIAL,
-    refFrame_WGS84,
-    refFrame_ACC_i,
-    refFrame_ACTUATOR_i,
-    refFrame_AST_i,
-    refFrame_CSS_i,
-    refFrame_DSS_i,
-    refFrame_ESA_i,
-    refFrame_GYRO_FRAME_i,
-    refFrame_IMU_FRAME_i,
-    refFrame_INSTRUMENT_i,
-    refFrame_MTA_i,
-    refFrame_RW_i,
-    refFrame_SA_i,
-    refFrame_SC_BODY_i,
-    refFrame_SENSOR_i,
-    refFrame_STARTRACKER_i,
-    refFrame_TAM_i
+inline const CelestialFrame (&EnumValuesCelestialFrame())[28] {
+  static const CelestialFrame values[] = {
+    CelestialFrame_GCRF,
+    CelestialFrame_ICRF,
+    CelestialFrame_J2000,
+    CelestialFrame_J2000A,
+    CelestialFrame_EME2000,
+    CelestialFrame_TEMEOFDATE,
+    CelestialFrame_GTOD,
+    CelestialFrame_CIRS,
+    CelestialFrame_MOD_EARTH,
+    CelestialFrame_MOD_CB,
+    CelestialFrame_MOD_MOON,
+    CelestialFrame_TOD_EARTH,
+    CelestialFrame_TOD_CB,
+    CelestialFrame_TOD_MOON,
+    CelestialFrame_TOE_EARTH,
+    CelestialFrame_TOE_CB,
+    CelestialFrame_TOE_MOON,
+    CelestialFrame_ITRF2000,
+    CelestialFrame_ITRF93,
+    CelestialFrame_ITRF97,
+    CelestialFrame_EFG,
+    CelestialFrame_FIXED_CB,
+    CelestialFrame_FIXED_EARTH,
+    CelestialFrame_WGS84,
+    CelestialFrame_DTRFYYYY,
+    CelestialFrame_ALIGN_EARTH,
+    CelestialFrame_ALIGN_CB,
+    CelestialFrame_B1950
   };
   return values;
 }
 
-inline const char * const *EnumNamesrefFrame() {
-  static const char * const names[90] = {
-    "ECEF",
-    "ICRF",
-    "TEME",
-    "ENU",
-    "NED",
-    "NEU",
-    "RIC",
-    "J2000",
+inline const char * const *EnumNamesCelestialFrame() {
+  static const char * const names[29] = {
     "GCRF",
-    "GRC",
+    "ICRF",
+    "J2000",
+    "J2000A",
+    "EME2000",
+    "TEMEOFDATE",
+    "GTOD",
+    "CIRS",
+    "MOD_EARTH",
+    "MOD_CB",
+    "MOD_MOON",
+    "TOD_EARTH",
+    "TOD_CB",
+    "TOD_MOON",
+    "TOE_EARTH",
+    "TOE_CB",
+    "TOE_MOON",
     "ITRF2000",
     "ITRF93",
     "ITRF97",
-    "TDR",
-    "TOD",
-    "RTN",
-    "TVN",
-    "VVLH",
-    "QSW",
-    "LTP",
-    "LVLH",
-    "PNE",
-    "BRF",
-    "RSW",
-    "TNW",
-    "UVW",
-    "EQW_INERTIAL",
-    "LVLH_INERTIAL",
-    "LVLH_ROTATING",
-    "NSW_INERTIAL",
-    "NSW_ROTATING",
-    "NTW_INERTIAL",
-    "NTW_ROTATING",
-    "PQW_INERTIAL",
-    "RSW_INERTIAL",
-    "RSW_ROTATING",
-    "SEZ_INERTIAL",
-    "SEZ_ROTATING",
-    "TNW_INERTIAL",
-    "TNW_ROTATING",
-    "VNC_INERTIAL",
-    "VNC_ROTATING",
-    "ALIGN_CB",
-    "ALIGN_EARTH",
-    "B1950",
-    "CIRS",
-    "DTRFyyyy",
     "EFG",
-    "EME2000",
     "FIXED_CB",
     "FIXED_EARTH",
-    "GCRFn",
-    "GTOD",
-    "MOD_CB",
-    "MOD_EARTH",
-    "MOD_MOON",
-    "MOE_CB",
-    "MOE_EARTH",
-    "MOON_ME",
-    "MOON_MEIAUE",
-    "MOON_PAxxx",
-    "TEMEOFDATE",
-    "TEMEOFEPOCH",
-    "TIRS",
-    "TOD_CB",
-    "TOD_EARTH",
-    "TOD_MOON",
-    "TOE_CB",
-    "TOE_EARTH",
-    "TOE_MOON",
-    "TRUE_ECLIPTIC",
-    "UVW_GO_INERTIAL",
     "WGS84",
+    "DTRFYYYY",
+    "ALIGN_EARTH",
+    "ALIGN_CB",
+    "B1950",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCelestialFrame(CelestialFrame e) {
+  if (::flatbuffers::IsOutRange(e, CelestialFrame_GCRF, CelestialFrame_B1950)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCelestialFrame()[index];
+}
+
+/// https://sanaregistry.org/r/spacecraft_body_reference_frames/
+/// Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
+enum SpacecraftFrame : int8_t {
+  /// OID: 1.3.112.4.57.8.1
+  /// Accelerometer instrument frame.
+  SpacecraftFrame_ACC_i = 0,
+  /// OID: 1.3.112.4.57.8.2
+  /// Actuator system frame.
+  SpacecraftFrame_ACTUATOR_i = 1,
+  /// OID: 1.3.112.4.57.8.3
+  /// Attitude Sensor Target frame.
+  SpacecraftFrame_AST_i = 2,
+  /// OID: 1.3.112.4.57.8.4
+  /// Coarse Sun Sensor frame.
+  SpacecraftFrame_CSS_i = 3,
+  /// OID: 1.3.112.4.57.8.5
+  /// Digital Sun Sensor frame.
+  SpacecraftFrame_DSS_i = 4,
+  /// OID: 1.3.112.4.57.8.6
+  /// Earth Sensor Assembly frame.
+  SpacecraftFrame_ESA_i = 5,
+  /// OID: 1.3.112.4.57.8.7
+  /// Gyroscope instrument frame.
+  SpacecraftFrame_GYRO_FRAME_i = 6,
+  /// OID: 1.3.112.4.57.8.8
+  /// Inertial Measurement Unit frame.
+  SpacecraftFrame_IMU_FRAME_i = 7,
+  /// OID: 1.3.112.4.57.8.9
+  /// Generic instrument mounting frame.
+  SpacecraftFrame_INSTRUMENT_i = 8,
+  /// OID: 1.3.112.4.57.8.10
+  /// Magnetic Torquer Assembly frame.
+  SpacecraftFrame_MTA_i = 9,
+  /// OID: 1.3.112.4.57.8.11
+  /// Reaction Wheel assembly frame.
+  SpacecraftFrame_RW_i = 10,
+  /// OID: 1.3.112.4.57.8.12
+  /// Solar Array frame.
+  SpacecraftFrame_SA_i = 11,
+  /// OID: 1.3.112.4.57.8.13
+  /// Spacecraft body fixed frame.
+  SpacecraftFrame_SC_BODY_i = 12,
+  /// OID: 1.3.112.4.57.8.14
+  /// Generic sensor assembly frame.
+  SpacecraftFrame_SENSOR_i = 13,
+  /// OID: 1.3.112.4.57.8.15
+  /// Star Tracker instrument frame.
+  SpacecraftFrame_STARTRACKER_i = 14,
+  /// OID: 1.3.112.4.57.8.16
+  /// Thermal Assembly Module frame.
+  SpacecraftFrame_TAM_i = 15,
+  SpacecraftFrame_MIN = SpacecraftFrame_ACC_i,
+  SpacecraftFrame_MAX = SpacecraftFrame_TAM_i
+};
+
+inline const SpacecraftFrame (&EnumValuesSpacecraftFrame())[16] {
+  static const SpacecraftFrame values[] = {
+    SpacecraftFrame_ACC_i,
+    SpacecraftFrame_ACTUATOR_i,
+    SpacecraftFrame_AST_i,
+    SpacecraftFrame_CSS_i,
+    SpacecraftFrame_DSS_i,
+    SpacecraftFrame_ESA_i,
+    SpacecraftFrame_GYRO_FRAME_i,
+    SpacecraftFrame_IMU_FRAME_i,
+    SpacecraftFrame_INSTRUMENT_i,
+    SpacecraftFrame_MTA_i,
+    SpacecraftFrame_RW_i,
+    SpacecraftFrame_SA_i,
+    SpacecraftFrame_SC_BODY_i,
+    SpacecraftFrame_SENSOR_i,
+    SpacecraftFrame_STARTRACKER_i,
+    SpacecraftFrame_TAM_i
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesSpacecraftFrame() {
+  static const char * const names[17] = {
     "ACC_i",
     "ACTUATOR_i",
     "AST_i",
@@ -390,34 +293,509 @@ inline const char * const *EnumNamesrefFrame() {
   return names;
 }
 
-inline const char *EnumNamerefFrame(refFrame e) {
-  if (::flatbuffers::IsOutRange(e, refFrame_ECEF, refFrame_TAM_i)) return "";
+inline const char *EnumNameSpacecraftFrame(SpacecraftFrame e) {
+  if (::flatbuffers::IsOutRange(e, SpacecraftFrame_ACC_i, SpacecraftFrame_TAM_i)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesrefFrame()[index];
+  return EnumNamesSpacecraftFrame()[index];
 }
 
-/// Reference Frame Message
-struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef RFMBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_REFERENCE_FRAME = 4
+/// https://sanaregistry.org/r/orbit_relative_reference_frames/
+/// Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
+enum OrbitFrame : int8_t {
+  /// OID: 1.3.112.4.57.3.1
+  /// Earth Equatorial Inertial frame aligned with J2000 epoch.
+  OrbitFrame_EQW_INERTIAL = 0,
+  /// OID: 1.3.112.4.57.3.3
+  /// Local Vertical Local Horizontal inertial frame.
+  OrbitFrame_LVLH_INERTIAL = 1,
+  /// OID: 1.3.112.4.57.3.2
+  /// Local Vertical Local Horizontal rotating frame.
+  OrbitFrame_LVLH_ROTATING = 2,
+  /// OID: 1.3.112.4.57.3.5
+  /// Normal along-track cross-track inertial frame.
+  OrbitFrame_NSW_INERTIAL = 3,
+  /// OID: 1.3.112.4.57.3.4
+  /// Normal along-track cross-track rotating frame.
+  OrbitFrame_NSW_ROTATING = 4,
+  /// OID: 1.3.112.4.57.3.7
+  /// Orbit normal Tangential cross-track inertial frame.
+  OrbitFrame_NTW_INERTIAL = 5,
+  /// OID: 1.3.112.4.57.3.6
+  /// Orbit normal Tangential cross-track rotating frame.
+  OrbitFrame_NTW_ROTATING = 6,
+  /// OID: 1.3.112.4.57.3.8
+  /// Perifocal frame aligned with orbit's perigee.
+  OrbitFrame_PQW_INERTIAL = 7,
+  /// OID: 1.3.112.4.57.3.10
+  /// Radial along-track cross-track inertial frame.
+  OrbitFrame_RSW_INERTIAL = 8,
+  /// OID: 1.3.112.4.57.3.9
+  /// Radial along-track cross-track rotating frame.
+  OrbitFrame_RSW_ROTATING = 9,
+  /// OID: 1.3.112.4.57.3.14
+  /// South-East-Zenith inertial (topocentric) frame.
+  OrbitFrame_SEZ_INERTIAL = 10,
+  /// OID: 1.3.112.4.57.3.13
+  /// South-East-Zenith rotating (topocentric) frame.
+  OrbitFrame_SEZ_ROTATING = 11,
+  /// OID: 1.3.112.4.57.3.12
+  /// Transverse normal cross-track inertial frame.
+  OrbitFrame_TNW_INERTIAL = 12,
+  /// OID: 1.3.112.4.57.3.11
+  /// Transverse normal cross-track rotating frame.
+  OrbitFrame_TNW_ROTATING = 13,
+  /// OID: 1.3.112.4.57.3.16
+  /// Velocity-normal co-normal inertial frame.
+  OrbitFrame_VNC_INERTIAL = 14,
+  /// OID: 1.3.112.4.57.3.15
+  /// Velocity-normal co-normal rotating frame.
+  OrbitFrame_VNC_ROTATING = 15,
+  OrbitFrame_MIN = OrbitFrame_EQW_INERTIAL,
+  OrbitFrame_MAX = OrbitFrame_VNC_ROTATING
+};
+
+inline const OrbitFrame (&EnumValuesOrbitFrame())[16] {
+  static const OrbitFrame values[] = {
+    OrbitFrame_EQW_INERTIAL,
+    OrbitFrame_LVLH_INERTIAL,
+    OrbitFrame_LVLH_ROTATING,
+    OrbitFrame_NSW_INERTIAL,
+    OrbitFrame_NSW_ROTATING,
+    OrbitFrame_NTW_INERTIAL,
+    OrbitFrame_NTW_ROTATING,
+    OrbitFrame_PQW_INERTIAL,
+    OrbitFrame_RSW_INERTIAL,
+    OrbitFrame_RSW_ROTATING,
+    OrbitFrame_SEZ_INERTIAL,
+    OrbitFrame_SEZ_ROTATING,
+    OrbitFrame_TNW_INERTIAL,
+    OrbitFrame_TNW_ROTATING,
+    OrbitFrame_VNC_INERTIAL,
+    OrbitFrame_VNC_ROTATING
   };
-  refFrame REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  return values;
+}
+
+inline const char * const *EnumNamesOrbitFrame() {
+  static const char * const names[17] = {
+    "EQW_INERTIAL",
+    "LVLH_INERTIAL",
+    "LVLH_ROTATING",
+    "NSW_INERTIAL",
+    "NSW_ROTATING",
+    "NTW_INERTIAL",
+    "NTW_ROTATING",
+    "PQW_INERTIAL",
+    "RSW_INERTIAL",
+    "RSW_ROTATING",
+    "SEZ_INERTIAL",
+    "SEZ_ROTATING",
+    "TNW_INERTIAL",
+    "TNW_ROTATING",
+    "VNC_INERTIAL",
+    "VNC_ROTATING",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameOrbitFrame(OrbitFrame e) {
+  if (::flatbuffers::IsOutRange(e, OrbitFrame_EQW_INERTIAL, OrbitFrame_VNC_ROTATING)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesOrbitFrame()[index];
+}
+
+/// Non-registered or local use frames
+enum CustomFrame : int8_t {
+  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
+  CustomFrame_ECEF = 0,
+  /// True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
+  CustomFrame_TEME = 1,
+  /// True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
+  CustomFrame_TEMEOFEPOCH = 2,
+  /// East-North-Up: Local tangent plane for surface points.
+  CustomFrame_ENU = 3,
+  /// North-East-Down: Aviation/navigation frame aligned with gravity.
+  CustomFrame_NED = 4,
+  /// North-East-Up: Local tangent plane variant with Up positive.
+  CustomFrame_NEU = 5,
+  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
+  CustomFrame_RIC = 6,
+  /// Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
+  CustomFrame_RTN = 7,
+  /// Transverse-Velocity-Normal: Alternative orbit frame.
+  CustomFrame_TVN = 8,
+  /// Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
+  CustomFrame_VVLH = 9,
+  /// Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
+  CustomFrame_QSW = 10,
+  /// Local Tangent Plane: Surface-fixed frame centered on a point.
+  CustomFrame_LTP = 11,
+  /// Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
+  CustomFrame_LVLH = 12,
+  /// Polar-North-East: Surface coordinate frame.
+  CustomFrame_PNE = 13,
+  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
+  CustomFrame_BRF = 14,
+  /// Radial-Along-track-Cross-track: Same as RSW.
+  CustomFrame_RSW = 15,
+  /// Tangential-Normal-Cross-track: Same as TNW.
+  CustomFrame_TNW = 16,
+  /// Radial-UTF: Radial, Along-track, Cross-track variant.
+  CustomFrame_UVW = 17,
+  CustomFrame_MIN = CustomFrame_ECEF,
+  CustomFrame_MAX = CustomFrame_UVW
+};
+
+inline const CustomFrame (&EnumValuesCustomFrame())[18] {
+  static const CustomFrame values[] = {
+    CustomFrame_ECEF,
+    CustomFrame_TEME,
+    CustomFrame_TEMEOFEPOCH,
+    CustomFrame_ENU,
+    CustomFrame_NED,
+    CustomFrame_NEU,
+    CustomFrame_RIC,
+    CustomFrame_RTN,
+    CustomFrame_TVN,
+    CustomFrame_VVLH,
+    CustomFrame_QSW,
+    CustomFrame_LTP,
+    CustomFrame_LVLH,
+    CustomFrame_PNE,
+    CustomFrame_BRF,
+    CustomFrame_RSW,
+    CustomFrame_TNW,
+    CustomFrame_UVW
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCustomFrame() {
+  static const char * const names[19] = {
+    "ECEF",
+    "TEME",
+    "TEMEOFEPOCH",
+    "ENU",
+    "NED",
+    "NEU",
+    "RIC",
+    "RTN",
+    "TVN",
+    "VVLH",
+    "QSW",
+    "LTP",
+    "LVLH",
+    "PNE",
+    "BRF",
+    "RSW",
+    "TNW",
+    "UVW",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCustomFrame(CustomFrame e) {
+  if (::flatbuffers::IsOutRange(e, CustomFrame_ECEF, CustomFrame_UVW)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCustomFrame()[index];
+}
+
+enum RFMUnion : uint8_t {
+  RFMUnion_NONE = 0,
+  RFMUnion_CelestialFrameWrapper = 1,
+  RFMUnion_SpacecraftFrameWrapper = 2,
+  RFMUnion_OrbitFrameWrapper = 3,
+  RFMUnion_CustomFrameWrapper = 4,
+  RFMUnion_MIN = RFMUnion_NONE,
+  RFMUnion_MAX = RFMUnion_CustomFrameWrapper
+};
+
+inline const RFMUnion (&EnumValuesRFMUnion())[5] {
+  static const RFMUnion values[] = {
+    RFMUnion_NONE,
+    RFMUnion_CelestialFrameWrapper,
+    RFMUnion_SpacecraftFrameWrapper,
+    RFMUnion_OrbitFrameWrapper,
+    RFMUnion_CustomFrameWrapper
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesRFMUnion() {
+  static const char * const names[6] = {
+    "NONE",
+    "CelestialFrameWrapper",
+    "SpacecraftFrameWrapper",
+    "OrbitFrameWrapper",
+    "CustomFrameWrapper",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameRFMUnion(RFMUnion e) {
+  if (::flatbuffers::IsOutRange(e, RFMUnion_NONE, RFMUnion_CustomFrameWrapper)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesRFMUnion()[index];
+}
+
+template<typename T> struct RFMUnionTraits {
+  static const RFMUnion enum_value = RFMUnion_NONE;
+};
+
+template<> struct RFMUnionTraits<CelestialFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_CelestialFrameWrapper;
+};
+
+template<> struct RFMUnionTraits<SpacecraftFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_SpacecraftFrameWrapper;
+};
+
+template<> struct RFMUnionTraits<OrbitFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_OrbitFrameWrapper;
+};
+
+template<> struct RFMUnionTraits<CustomFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_CustomFrameWrapper;
+};
+
+bool VerifyRFMUnion(::flatbuffers::Verifier &verifier, const void *obj, RFMUnion type);
+bool VerifyRFMUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+
+struct CelestialFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CelestialFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  CelestialFrame frame() const {
+    return static_cast<CelestialFrame>(GetField<int8_t>(VT_FRAME, 0));
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
            verifier.EndTable();
   }
 };
+
+struct CelestialFrameWrapperBuilder {
+  typedef CelestialFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(CelestialFrame frame) {
+    fbb_.AddElement<int8_t>(CelestialFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit CelestialFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CelestialFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CelestialFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CelestialFrameWrapper> CreateCelestialFrameWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    CelestialFrame frame = CelestialFrame_GCRF) {
+  CelestialFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+struct SpacecraftFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SpacecraftFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  SpacecraftFrame frame() const {
+    return static_cast<SpacecraftFrame>(GetField<int8_t>(VT_FRAME, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct SpacecraftFrameWrapperBuilder {
+  typedef SpacecraftFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(SpacecraftFrame frame) {
+    fbb_.AddElement<int8_t>(SpacecraftFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit SpacecraftFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SpacecraftFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SpacecraftFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SpacecraftFrameWrapper> CreateSpacecraftFrameWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    SpacecraftFrame frame = SpacecraftFrame_ACC_i) {
+  SpacecraftFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+struct OrbitFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OrbitFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  OrbitFrame frame() const {
+    return static_cast<OrbitFrame>(GetField<int8_t>(VT_FRAME, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct OrbitFrameWrapperBuilder {
+  typedef OrbitFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(OrbitFrame frame) {
+    fbb_.AddElement<int8_t>(OrbitFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit OrbitFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OrbitFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OrbitFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OrbitFrameWrapper> CreateOrbitFrameWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    OrbitFrame frame = OrbitFrame_EQW_INERTIAL) {
+  OrbitFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+struct CustomFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CustomFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  CustomFrame frame() const {
+    return static_cast<CustomFrame>(GetField<int8_t>(VT_FRAME, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct CustomFrameWrapperBuilder {
+  typedef CustomFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(CustomFrame frame) {
+    fbb_.AddElement<int8_t>(CustomFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit CustomFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CustomFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CustomFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CustomFrameWrapper> CreateCustomFrameWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    CustomFrame frame = CustomFrame_ECEF) {
+  CustomFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REFERENCE_FRAME_TYPE = 4,
+    VT_REFERENCE_FRAME = 6,
+    VT_INDEX = 8
+  };
+  RFMUnion REFERENCE_FRAME_type() const {
+    return static_cast<RFMUnion>(GetField<uint8_t>(VT_REFERENCE_FRAME_TYPE, 0));
+  }
+  const void *REFERENCE_FRAME() const {
+    return GetPointer<const void *>(VT_REFERENCE_FRAME);
+  }
+  template<typename T> const T *REFERENCE_FRAME_as() const;
+  const CelestialFrameWrapper *REFERENCE_FRAME_as_CelestialFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_CelestialFrameWrapper ? static_cast<const CelestialFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const SpacecraftFrameWrapper *REFERENCE_FRAME_as_SpacecraftFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_SpacecraftFrameWrapper ? static_cast<const SpacecraftFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const OrbitFrameWrapper *REFERENCE_FRAME_as_OrbitFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_OrbitFrameWrapper ? static_cast<const OrbitFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const CustomFrameWrapper *REFERENCE_FRAME_as_CustomFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_CustomFrameWrapper ? static_cast<const CustomFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const ::flatbuffers::String *INDEX() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INDEX);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_REFERENCE_FRAME_TYPE, 1) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           VerifyRFMUnion(verifier, REFERENCE_FRAME(), REFERENCE_FRAME_type()) &&
+           VerifyOffset(verifier, VT_INDEX) &&
+           verifier.VerifyString(INDEX()) &&
+           verifier.EndTable();
+  }
+};
+
+template<> inline const CelestialFrameWrapper *RFM::REFERENCE_FRAME_as<CelestialFrameWrapper>() const {
+  return REFERENCE_FRAME_as_CelestialFrameWrapper();
+}
+
+template<> inline const SpacecraftFrameWrapper *RFM::REFERENCE_FRAME_as<SpacecraftFrameWrapper>() const {
+  return REFERENCE_FRAME_as_SpacecraftFrameWrapper();
+}
+
+template<> inline const OrbitFrameWrapper *RFM::REFERENCE_FRAME_as<OrbitFrameWrapper>() const {
+  return REFERENCE_FRAME_as_OrbitFrameWrapper();
+}
+
+template<> inline const CustomFrameWrapper *RFM::REFERENCE_FRAME_as<CustomFrameWrapper>() const {
+  return REFERENCE_FRAME_as_CustomFrameWrapper();
+}
 
 struct RFMBuilder {
   typedef RFM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(RFM::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
+  void add_REFERENCE_FRAME_type(RFMUnion REFERENCE_FRAME_type) {
+    fbb_.AddElement<uint8_t>(RFM::VT_REFERENCE_FRAME_TYPE, static_cast<uint8_t>(REFERENCE_FRAME_type), 0);
+  }
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<void> REFERENCE_FRAME) {
+    fbb_.AddOffset(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_INDEX(::flatbuffers::Offset<::flatbuffers::String> INDEX) {
+    fbb_.AddOffset(RFM::VT_INDEX, INDEX);
   }
   explicit RFMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -432,10 +810,64 @@ struct RFMBuilder {
 
 inline ::flatbuffers::Offset<RFM> CreateRFM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    refFrame REFERENCE_FRAME = refFrame_ECEF) {
+    RFMUnion REFERENCE_FRAME_type = RFMUnion_NONE,
+    ::flatbuffers::Offset<void> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INDEX = 0) {
   RFMBuilder builder_(_fbb);
+  builder_.add_INDEX(INDEX);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_REFERENCE_FRAME_type(REFERENCE_FRAME_type);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFM> CreateRFMDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    RFMUnion REFERENCE_FRAME_type = RFMUnion_NONE,
+    ::flatbuffers::Offset<void> REFERENCE_FRAME = 0,
+    const char *INDEX = nullptr) {
+  auto INDEX__ = INDEX ? _fbb.CreateString(INDEX) : 0;
+  return CreateRFM(
+      _fbb,
+      REFERENCE_FRAME_type,
+      REFERENCE_FRAME,
+      INDEX__);
+}
+
+inline bool VerifyRFMUnion(::flatbuffers::Verifier &verifier, const void *obj, RFMUnion type) {
+  switch (type) {
+    case RFMUnion_NONE: {
+      return true;
+    }
+    case RFMUnion_CelestialFrameWrapper: {
+      auto ptr = reinterpret_cast<const CelestialFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_SpacecraftFrameWrapper: {
+      auto ptr = reinterpret_cast<const SpacecraftFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_OrbitFrameWrapper: {
+      auto ptr = reinterpret_cast<const OrbitFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_CustomFrameWrapper: {
+      auto ptr = reinterpret_cast<const CustomFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    default: return true;
+  }
+}
+
+inline bool VerifyRFMUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
+  if (!values || !types) return !values && !types;
+  if (values->size() != types->size()) return false;
+  for (::flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
+    if (!VerifyRFMUnion(
+        verifier,  values->Get(i), types->GetEnum<RFMUnion>(i))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 inline const RFM *GetRFM(const void *buf) {

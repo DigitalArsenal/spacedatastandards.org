@@ -65,8 +65,10 @@ public final class OMM extends Table {
   public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Reference Frame
+   * Typically TEMEOFDATE
    */
-  public byte REFERENCE_FRAME() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 2; }
+  public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
+  public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Reference Frame Epoch (ISO 8601 UTC format)
    */
@@ -183,8 +185,10 @@ public final class OMM extends Table {
   /**
    * Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
    * COV_REF_FRAME reference frame for covariance [C if covariance given]
+   * Typically RSW
    */
-  public byte COV_REFERENCE_FRAME() { int o = __offset(70); return o != 0 ? bb.get(o + bb_pos) : 23; }
+  public RFM COV_REFERENCE_FRAME() { return COV_REFERENCE_FRAME(new RFM()); }
+  public RFM COV_REFERENCE_FRAME(RFM obj) { int o = __offset(70); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * CX_X [km**2]
    */
@@ -301,7 +305,7 @@ public final class OMM extends Table {
       int OBJECT_NAMEOffset,
       int OBJECT_IDOffset,
       int CENTER_NAMEOffset,
-      byte REFERENCE_FRAME,
+      int REFERENCE_FRAMEOffset,
       int REFERENCE_FRAME_EPOCHOffset,
       byte TIME_SYSTEM,
       byte MEAN_ELEMENT_THEORY,
@@ -328,7 +332,7 @@ public final class OMM extends Table {
       double BSTAR,
       double MEAN_MOTION_DOT,
       double MEAN_MOTION_DDOT,
-      byte COV_REFERENCE_FRAME,
+      int COV_REFERENCE_FRAMEOffset,
       double CX_X,
       double CY_X,
       double CY_Y,
@@ -400,22 +404,22 @@ public final class OMM extends Table {
     OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODELOffset);
     OMM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     OMM.addUserDefinedBip0044Type(builder, USER_DEFINED_BIP_0044_TYPE);
+    OMM.addCovReferenceFrame(builder, COV_REFERENCE_FRAMEOffset);
     OMM.addElementSetNo(builder, ELEMENT_SET_NO);
     OMM.addNoradCatId(builder, NORAD_CAT_ID);
     OMM.addClassificationType(builder, CLASSIFICATION_TYPEOffset);
     OMM.addEpoch(builder, EPOCHOffset);
     OMM.addComment(builder, COMMENTOffset);
     OMM.addReferenceFrameEpoch(builder, REFERENCE_FRAME_EPOCHOffset);
+    OMM.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
     OMM.addCenterName(builder, CENTER_NAMEOffset);
     OMM.addObjectId(builder, OBJECT_IDOffset);
     OMM.addObjectName(builder, OBJECT_NAMEOffset);
     OMM.addOriginator(builder, ORIGINATOROffset);
     OMM.addCreationDate(builder, CREATION_DATEOffset);
-    OMM.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
     OMM.addEphemerisType(builder, EPHEMERIS_TYPE);
     OMM.addMeanElementTheory(builder, MEAN_ELEMENT_THEORY);
     OMM.addTimeSystem(builder, TIME_SYSTEM);
-    OMM.addReferenceFrame(builder, REFERENCE_FRAME);
     return OMM.endOMM(builder);
   }
 
@@ -426,7 +430,7 @@ public final class OMM extends Table {
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(3, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(4, OBJECT_IDOffset, 0); }
   public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(5, CENTER_NAMEOffset, 0); }
-  public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(6, REFERENCE_FRAME, 2); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(6, REFERENCE_FRAMEOffset, 0); }
   public static void addReferenceFrameEpoch(FlatBufferBuilder builder, int REFERENCE_FRAME_EPOCHOffset) { builder.addOffset(7, REFERENCE_FRAME_EPOCHOffset, 0); }
   public static void addTimeSystem(FlatBufferBuilder builder, byte TIME_SYSTEM) { builder.addByte(8, TIME_SYSTEM, 11); }
   public static void addMeanElementTheory(FlatBufferBuilder builder, byte MEAN_ELEMENT_THEORY) { builder.addByte(9, MEAN_ELEMENT_THEORY, 0); }
@@ -453,7 +457,7 @@ public final class OMM extends Table {
   public static void addBstar(FlatBufferBuilder builder, double BSTAR) { builder.addDouble(30, BSTAR, 0.0); }
   public static void addMeanMotionDot(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.addDouble(31, MEAN_MOTION_DOT, 0.0); }
   public static void addMeanMotionDdot(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.addDouble(32, MEAN_MOTION_DDOT, 0.0); }
-  public static void addCovReferenceFrame(FlatBufferBuilder builder, byte COV_REFERENCE_FRAME) { builder.addByte(33, COV_REFERENCE_FRAME, 23); }
+  public static void addCovReferenceFrame(FlatBufferBuilder builder, int COV_REFERENCE_FRAMEOffset) { builder.addOffset(33, COV_REFERENCE_FRAMEOffset, 0); }
   public static void addCxX(FlatBufferBuilder builder, double CX_X) { builder.addDouble(34, CX_X, 0.0); }
   public static void addCyX(FlatBufferBuilder builder, double CY_X) { builder.addDouble(35, CY_X, 0.0); }
   public static void addCyY(FlatBufferBuilder builder, double CY_Y) { builder.addDouble(36, CY_Y, 0.0); }

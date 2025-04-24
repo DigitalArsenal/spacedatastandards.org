@@ -62,8 +62,12 @@ class ephemerisDataBlock(object):
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Epoch of reference frame, if not intrinsic to the definition of the reference frame
     # ephemerisDataBlock
@@ -78,8 +82,12 @@ class ephemerisDataBlock(object):
     def COV_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Time system used for the orbit state and covariance matrix. (UTC)
     # ephemerisDataBlock
@@ -222,7 +230,7 @@ def AddCENTER_NAME(builder, CENTER_NAME):
     ephemerisDataBlockAddCENTER_NAME(builder, CENTER_NAME)
 
 def ephemerisDataBlockAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependInt8Slot(3, REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
 
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     ephemerisDataBlockAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
@@ -234,7 +242,7 @@ def AddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH):
     ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
 
 def ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    builder.PrependInt8Slot(5, COV_REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REFERENCE_FRAME), 0)
 
 def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
     ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
@@ -318,6 +326,7 @@ def End(builder):
     return ephemerisDataBlockEnd(builder)
 
 import CAT
+import RFM
 import covarianceMatrixLine
 import ephemerisDataLine
 try:
@@ -332,9 +341,9 @@ class ephemerisDataBlockT(object):
         self.COMMENT = None  # type: str
         self.OBJECT = None  # type: Optional[CAT.CATT]
         self.CENTER_NAME = None  # type: str
-        self.REFERENCE_FRAME = 0  # type: int
+        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.REFERENCE_FRAME_EPOCH = None  # type: str
-        self.COV_REFERENCE_FRAME = 0  # type: int
+        self.COV_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.TIME_SYSTEM = 0  # type: int
         self.START_TIME = None  # type: str
         self.USEABLE_START_TIME = None  # type: str
@@ -371,9 +380,11 @@ class ephemerisDataBlockT(object):
         if ephemerisDataBlock.OBJECT() is not None:
             self.OBJECT = CAT.CATT.InitFromObj(ephemerisDataBlock.OBJECT())
         self.CENTER_NAME = ephemerisDataBlock.CENTER_NAME()
-        self.REFERENCE_FRAME = ephemerisDataBlock.REFERENCE_FRAME()
+        if ephemerisDataBlock.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(ephemerisDataBlock.REFERENCE_FRAME())
         self.REFERENCE_FRAME_EPOCH = ephemerisDataBlock.REFERENCE_FRAME_EPOCH()
-        self.COV_REFERENCE_FRAME = ephemerisDataBlock.COV_REFERENCE_FRAME()
+        if ephemerisDataBlock.COV_REFERENCE_FRAME() is not None:
+            self.COV_REFERENCE_FRAME = RFM.RFMT.InitFromObj(ephemerisDataBlock.COV_REFERENCE_FRAME())
         self.TIME_SYSTEM = ephemerisDataBlock.TIME_SYSTEM()
         self.START_TIME = ephemerisDataBlock.START_TIME()
         self.USEABLE_START_TIME = ephemerisDataBlock.USEABLE_START_TIME()
@@ -407,8 +418,12 @@ class ephemerisDataBlockT(object):
             OBJECT = self.OBJECT.Pack(builder)
         if self.CENTER_NAME is not None:
             CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
         if self.REFERENCE_FRAME_EPOCH is not None:
             REFERENCE_FRAME_EPOCH = builder.CreateString(self.REFERENCE_FRAME_EPOCH)
+        if self.COV_REFERENCE_FRAME is not None:
+            COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.Pack(builder)
         if self.START_TIME is not None:
             START_TIME = builder.CreateString(self.START_TIME)
         if self.USEABLE_START_TIME is not None:
@@ -442,10 +457,12 @@ class ephemerisDataBlockT(object):
             ephemerisDataBlockAddOBJECT(builder, OBJECT)
         if self.CENTER_NAME is not None:
             ephemerisDataBlockAddCENTER_NAME(builder, CENTER_NAME)
-        ephemerisDataBlockAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)
+        if self.REFERENCE_FRAME is not None:
+            ephemerisDataBlockAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
         if self.REFERENCE_FRAME_EPOCH is not None:
             ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
-        ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder, self.COV_REFERENCE_FRAME)
+        if self.COV_REFERENCE_FRAME is not None:
+            ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
         ephemerisDataBlockAddTIME_SYSTEM(builder, self.TIME_SYSTEM)
         if self.START_TIME is not None:
             ephemerisDataBlockAddSTART_TIME(builder, START_TIME)

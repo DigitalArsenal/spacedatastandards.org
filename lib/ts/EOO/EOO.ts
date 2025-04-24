@@ -8,7 +8,7 @@ import { CollectMethod } from './CollectMethod.js';
 import { DataMode } from './DataMode.js';
 import { DeviceType } from './DeviceType.js';
 import { ObservationPosition } from './ObservationPosition.js';
-import { refFrame } from './refFrame.js';
+import { RFM, RFMT } from './RFM.js';
 
 
 /**
@@ -732,9 +732,9 @@ CREATED_BY(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
  */
-REFERENCE_FRAME():refFrame {
+REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 166);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -742,9 +742,9 @@ REFERENCE_FRAME():refFrame {
  * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
  * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
  */
-SEN_REFERENCE_FRAME():refFrame {
+SEN_REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 168);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -1492,12 +1492,12 @@ static addCreatedBy(builder:flatbuffers.Builder, CREATED_BYOffset:flatbuffers.Of
   builder.addFieldOffset(80, CREATED_BYOffset, 0);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(81, REFERENCE_FRAME, refFrame.ECEF);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(81, REFERENCE_FRAMEOffset, 0);
 }
 
-static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(82, SEN_REFERENCE_FRAME, refFrame.ECEF);
+static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(82, SEN_REFERENCE_FRAMEOffset, 0);
 }
 
 static addUmbra(builder:flatbuffers.Builder, UMBRA:boolean) {
@@ -1717,144 +1717,6 @@ static finishSizePrefixedEOOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EOO', true);
 }
 
-static createEOO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, CORR_QUALITY:number, ID_ON_ORBITOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, COLLECT_METHOD:CollectMethod, NORAD_CAT_ID:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, OB_POSITION:ObservationPosition, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RA:number, RA_RATE:number, RA_UNC:number, RA_BIAS:number, DECLINATION:number, DECLINATION_RATE:number, DECLINATION_UNC:number, DECLINATION_BIAS:number, LOSX:number, LOSY:number, LOSZ:number, LOS_UNC:number, LOSXVEL:number, LOSYVEL:number, LOSZVEL:number, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, FOV_COUNT:number, FOV_COUNT_UCTS:number, EXP_DURATION:number, ZEROPTD:number, NET_OBJ_SIG:number, NET_OBJ_SIG_UNC:number, MAG:number, MAG_UNC:number, MAG_NORM_RANGE:number, GEOLAT:number, GEOLON:number, GEOALT:number, GEORANGE:number, SKY_BKGRND:number, PRIMARY_EXTINCTION:number, PRIMARY_EXTINCTION_UNC:number, SOLAR_PHASE_ANGLE:number, SOLAR_EQ_PHASE_ANGLE:number, SOLAR_DEC_ANGLE:number, SHUTTER_DELAY:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, INTENSITY:number, BG_INTENSITY:number, DESCRIPTOROffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, ORIGINOffset:flatbuffers.Offset, DATA_MODE:DataMode, CREATED_ATOffset:flatbuffers.Offset, CREATED_BYOffset:flatbuffers.Offset, REFERENCE_FRAME:refFrame, SEN_REFERENCE_FRAME:refFrame, UMBRA:boolean, PENUMBRA:boolean, ORIG_NETWORKOffset:flatbuffers.Offset, SOURCE_DLOffset:flatbuffers.Offset, TYPE:DeviceType, AZIMUTH_MEASURED:boolean, ELEVATION_MEASURED:boolean, RANGE_MEASURED:boolean, RANGERATE_MEASURED:boolean, RA_MEASURED:boolean, DECLINATION_MEASURED:boolean, NIIRS:number, METERS_PER_PIXEL:number, IMAGE_SNR:number, IMAGE_BIT_DEPTH:number, IMAGE_WIDTH:number, IMAGE_HEIGHT:number, IMAGE_COMPRESSIONOffset:flatbuffers.Offset, IMAGE_COMPRESSION_RATIO:number, PROCESSED_IMAGE_URIOffset:flatbuffers.Offset, IMAGE_AUTO_ENHANCED:boolean, MULTI_FRAME_STACKED:boolean, SYNTHETIC_TRACKING_USED:boolean, IMAGE_SHARPNESS:number, IMAGE_NOISE_STDDEV:number, IMAGE_CONTRAST:number, IMAGE_DYNAMIC_RANGE:number, IMAGE_ENTROPY:number, BACKGROUND_UNIFORMITY:number, BACKGROUND_MEAN_LEVEL:number, SATURATED_PIXEL_PERCENT:number, DEAD_PIXEL_PERCENT:number, PSF_FWHM:number, CLOUD_COVER_PERCENT:number, CLOUD_DETECTION_CONFIDENCE:number, HAZE_PERCENT:number, AEROSOL_OPTICAL_THICKNESS:number, WATER_VAPOR_CONTENT:number, SUN_ELEVATION:number, SUN_AZIMUTH:number, VIEW_ZENITH_ANGLE:number, VIEW_AZIMUTH_ANGLE:number, OFF_NADIR_ANGLE:number, SWATH_WIDTH_KM:number, MEAN_TERRAIN_ELEVATION:number, TERRAIN_ELEVATION_STDDEV:number, SHADOW_COVER_PERCENT:number, SUNGLINT_PRESENT:boolean, SUNGLINT_PERCENT:number, SNOW_ICE_COVER_PERCENT:number, VALID_DATA_AREA_KM2:number):flatbuffers.Offset {
-  EOO.startEOO(builder);
-  EOO.addId(builder, IDOffset);
-  EOO.addClassification(builder, CLASSIFICATIONOffset);
-  EOO.addObTime(builder, OB_TIMEOffset);
-  EOO.addCorrQuality(builder, CORR_QUALITY);
-  EOO.addIdOnOrbit(builder, ID_ON_ORBITOffset);
-  EOO.addSensorId(builder, SENSOR_IDOffset);
-  EOO.addCollectMethod(builder, COLLECT_METHOD);
-  EOO.addNoradCatId(builder, NORAD_CAT_ID);
-  EOO.addTaskId(builder, TASK_IDOffset);
-  EOO.addTransactionId(builder, TRANSACTION_IDOffset);
-  EOO.addImageSetId(builder, IMAGE_SET_IDOffset);
-  EOO.addImageSetLength(builder, IMAGE_SET_LENGTH);
-  EOO.addSequenceId(builder, SEQUENCE_ID);
-  EOO.addObPosition(builder, OB_POSITION);
-  EOO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  EOO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-  EOO.addUct(builder, UCT);
-  EOO.addAzimuth(builder, AZIMUTH);
-  EOO.addAzimuthUnc(builder, AZIMUTH_UNC);
-  EOO.addAzimuthBias(builder, AZIMUTH_BIAS);
-  EOO.addAzimuthRate(builder, AZIMUTH_RATE);
-  EOO.addElevation(builder, ELEVATION);
-  EOO.addElevationUnc(builder, ELEVATION_UNC);
-  EOO.addElevationBias(builder, ELEVATION_BIAS);
-  EOO.addElevationRate(builder, ELEVATION_RATE);
-  EOO.addRange(builder, RANGE);
-  EOO.addRangeUnc(builder, RANGE_UNC);
-  EOO.addRangeBias(builder, RANGE_BIAS);
-  EOO.addRangeRate(builder, RANGE_RATE);
-  EOO.addRangeRateUnc(builder, RANGE_RATE_UNC);
-  EOO.addRa(builder, RA);
-  EOO.addRaRate(builder, RA_RATE);
-  EOO.addRaUnc(builder, RA_UNC);
-  EOO.addRaBias(builder, RA_BIAS);
-  EOO.addDeclination(builder, DECLINATION);
-  EOO.addDeclinationRate(builder, DECLINATION_RATE);
-  EOO.addDeclinationUnc(builder, DECLINATION_UNC);
-  EOO.addDeclinationBias(builder, DECLINATION_BIAS);
-  EOO.addLosx(builder, LOSX);
-  EOO.addLosy(builder, LOSY);
-  EOO.addLosz(builder, LOSZ);
-  EOO.addLosUnc(builder, LOS_UNC);
-  EOO.addLosxvel(builder, LOSXVEL);
-  EOO.addLosyvel(builder, LOSYVEL);
-  EOO.addLoszvel(builder, LOSZVEL);
-  EOO.addSenlat(builder, SENLAT);
-  EOO.addSenlon(builder, SENLON);
-  EOO.addSenalt(builder, SENALT);
-  EOO.addSenx(builder, SENX);
-  EOO.addSeny(builder, SENY);
-  EOO.addSenz(builder, SENZ);
-  EOO.addFovCount(builder, FOV_COUNT);
-  EOO.addFovCountUcts(builder, FOV_COUNT_UCTS);
-  EOO.addExpDuration(builder, EXP_DURATION);
-  EOO.addZeroptd(builder, ZEROPTD);
-  EOO.addNetObjSig(builder, NET_OBJ_SIG);
-  EOO.addNetObjSigUnc(builder, NET_OBJ_SIG_UNC);
-  EOO.addMag(builder, MAG);
-  EOO.addMagUnc(builder, MAG_UNC);
-  EOO.addMagNormRange(builder, MAG_NORM_RANGE);
-  EOO.addGeolat(builder, GEOLAT);
-  EOO.addGeolon(builder, GEOLON);
-  EOO.addGeoalt(builder, GEOALT);
-  EOO.addGeorange(builder, GEORANGE);
-  EOO.addSkyBkgrnd(builder, SKY_BKGRND);
-  EOO.addPrimaryExtinction(builder, PRIMARY_EXTINCTION);
-  EOO.addPrimaryExtinctionUnc(builder, PRIMARY_EXTINCTION_UNC);
-  EOO.addSolarPhaseAngle(builder, SOLAR_PHASE_ANGLE);
-  EOO.addSolarEqPhaseAngle(builder, SOLAR_EQ_PHASE_ANGLE);
-  EOO.addSolarDecAngle(builder, SOLAR_DEC_ANGLE);
-  EOO.addShutterDelay(builder, SHUTTER_DELAY);
-  EOO.addTimingBias(builder, TIMING_BIAS);
-  EOO.addRawFileUri(builder, RAW_FILE_URIOffset);
-  EOO.addIntensity(builder, INTENSITY);
-  EOO.addBgIntensity(builder, BG_INTENSITY);
-  EOO.addDescriptor(builder, DESCRIPTOROffset);
-  EOO.addSource(builder, SOURCEOffset);
-  EOO.addOrigin(builder, ORIGINOffset);
-  EOO.addDataMode(builder, DATA_MODE);
-  EOO.addCreatedAt(builder, CREATED_ATOffset);
-  EOO.addCreatedBy(builder, CREATED_BYOffset);
-  EOO.addReferenceFrame(builder, REFERENCE_FRAME);
-  EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAME);
-  EOO.addUmbra(builder, UMBRA);
-  EOO.addPenumbra(builder, PENUMBRA);
-  EOO.addOrigNetwork(builder, ORIG_NETWORKOffset);
-  EOO.addSourceDl(builder, SOURCE_DLOffset);
-  EOO.addType(builder, TYPE);
-  EOO.addAzimuthMeasured(builder, AZIMUTH_MEASURED);
-  EOO.addElevationMeasured(builder, ELEVATION_MEASURED);
-  EOO.addRangeMeasured(builder, RANGE_MEASURED);
-  EOO.addRangerateMeasured(builder, RANGERATE_MEASURED);
-  EOO.addRaMeasured(builder, RA_MEASURED);
-  EOO.addDeclinationMeasured(builder, DECLINATION_MEASURED);
-  EOO.addNiirs(builder, NIIRS);
-  EOO.addMetersPerPixel(builder, METERS_PER_PIXEL);
-  EOO.addImageSnr(builder, IMAGE_SNR);
-  EOO.addImageBitDepth(builder, IMAGE_BIT_DEPTH);
-  EOO.addImageWidth(builder, IMAGE_WIDTH);
-  EOO.addImageHeight(builder, IMAGE_HEIGHT);
-  EOO.addImageCompression(builder, IMAGE_COMPRESSIONOffset);
-  EOO.addImageCompressionRatio(builder, IMAGE_COMPRESSION_RATIO);
-  EOO.addProcessedImageUri(builder, PROCESSED_IMAGE_URIOffset);
-  EOO.addImageAutoEnhanced(builder, IMAGE_AUTO_ENHANCED);
-  EOO.addMultiFrameStacked(builder, MULTI_FRAME_STACKED);
-  EOO.addSyntheticTrackingUsed(builder, SYNTHETIC_TRACKING_USED);
-  EOO.addImageSharpness(builder, IMAGE_SHARPNESS);
-  EOO.addImageNoiseStddev(builder, IMAGE_NOISE_STDDEV);
-  EOO.addImageContrast(builder, IMAGE_CONTRAST);
-  EOO.addImageDynamicRange(builder, IMAGE_DYNAMIC_RANGE);
-  EOO.addImageEntropy(builder, IMAGE_ENTROPY);
-  EOO.addBackgroundUniformity(builder, BACKGROUND_UNIFORMITY);
-  EOO.addBackgroundMeanLevel(builder, BACKGROUND_MEAN_LEVEL);
-  EOO.addSaturatedPixelPercent(builder, SATURATED_PIXEL_PERCENT);
-  EOO.addDeadPixelPercent(builder, DEAD_PIXEL_PERCENT);
-  EOO.addPsfFwhm(builder, PSF_FWHM);
-  EOO.addCloudCoverPercent(builder, CLOUD_COVER_PERCENT);
-  EOO.addCloudDetectionConfidence(builder, CLOUD_DETECTION_CONFIDENCE);
-  EOO.addHazePercent(builder, HAZE_PERCENT);
-  EOO.addAerosolOpticalThickness(builder, AEROSOL_OPTICAL_THICKNESS);
-  EOO.addWaterVaporContent(builder, WATER_VAPOR_CONTENT);
-  EOO.addSunElevation(builder, SUN_ELEVATION);
-  EOO.addSunAzimuth(builder, SUN_AZIMUTH);
-  EOO.addViewZenithAngle(builder, VIEW_ZENITH_ANGLE);
-  EOO.addViewAzimuthAngle(builder, VIEW_AZIMUTH_ANGLE);
-  EOO.addOffNadirAngle(builder, OFF_NADIR_ANGLE);
-  EOO.addSwathWidthKm(builder, SWATH_WIDTH_KM);
-  EOO.addMeanTerrainElevation(builder, MEAN_TERRAIN_ELEVATION);
-  EOO.addTerrainElevationStddev(builder, TERRAIN_ELEVATION_STDDEV);
-  EOO.addShadowCoverPercent(builder, SHADOW_COVER_PERCENT);
-  EOO.addSunglintPresent(builder, SUNGLINT_PRESENT);
-  EOO.addSunglintPercent(builder, SUNGLINT_PERCENT);
-  EOO.addSnowIceCoverPercent(builder, SNOW_ICE_COVER_PERCENT);
-  EOO.addValidDataAreaKm2(builder, VALID_DATA_AREA_KM2);
-  return EOO.endEOO(builder);
-}
 
 unpack(): EOOT {
   return new EOOT(
@@ -1939,8 +1801,8 @@ unpack(): EOOT {
     this.DATA_MODE(),
     this.CREATED_AT(),
     this.CREATED_BY(),
-    this.REFERENCE_FRAME(),
-    this.SEN_REFERENCE_FRAME(),
+    (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
+    (this.SEN_REFERENCE_FRAME() !== null ? this.SEN_REFERENCE_FRAME()!.unpack() : null),
     this.UMBRA(),
     this.PENUMBRA(),
     this.ORIG_NETWORK(),
@@ -2078,8 +1940,8 @@ unpackTo(_o: EOOT): void {
   _o.DATA_MODE = this.DATA_MODE();
   _o.CREATED_AT = this.CREATED_AT();
   _o.CREATED_BY = this.CREATED_BY();
-  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
-  _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME();
+  _o.REFERENCE_FRAME = (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null);
+  _o.SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME() !== null ? this.SEN_REFERENCE_FRAME()!.unpack() : null);
   _o.UMBRA = this.UMBRA();
   _o.PENUMBRA = this.PENUMBRA();
   _o.ORIG_NETWORK = this.ORIG_NETWORK();
@@ -2217,8 +2079,8 @@ constructor(
   public DATA_MODE: DataMode = DataMode.EXERCISE,
   public CREATED_AT: string|Uint8Array|null = null,
   public CREATED_BY: string|Uint8Array|null = null,
-  public REFERENCE_FRAME: refFrame = refFrame.ECEF,
-  public SEN_REFERENCE_FRAME: refFrame = refFrame.ECEF,
+  public REFERENCE_FRAME: RFMT|null = null,
+  public SEN_REFERENCE_FRAME: RFMT|null = null,
   public UMBRA: boolean = false,
   public PENUMBRA: boolean = false,
   public ORIG_NETWORK: string|Uint8Array|null = null,
@@ -2290,146 +2152,149 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORIGIN = (this.ORIGIN !== null ? builder.createString(this.ORIGIN!) : 0);
   const CREATED_AT = (this.CREATED_AT !== null ? builder.createString(this.CREATED_AT!) : 0);
   const CREATED_BY = (this.CREATED_BY !== null ? builder.createString(this.CREATED_BY!) : 0);
+  const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
+  const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? this.SEN_REFERENCE_FRAME!.pack(builder) : 0);
   const ORIG_NETWORK = (this.ORIG_NETWORK !== null ? builder.createString(this.ORIG_NETWORK!) : 0);
   const SOURCE_DL = (this.SOURCE_DL !== null ? builder.createString(this.SOURCE_DL!) : 0);
   const IMAGE_COMPRESSION = (this.IMAGE_COMPRESSION !== null ? builder.createString(this.IMAGE_COMPRESSION!) : 0);
   const PROCESSED_IMAGE_URI = (this.PROCESSED_IMAGE_URI !== null ? builder.createString(this.PROCESSED_IMAGE_URI!) : 0);
 
-  return EOO.createEOO(builder,
-    ID,
-    CLASSIFICATION,
-    OB_TIME,
-    this.CORR_QUALITY,
-    ID_ON_ORBIT,
-    SENSOR_ID,
-    this.COLLECT_METHOD,
-    this.NORAD_CAT_ID,
-    TASK_ID,
-    TRANSACTION_ID,
-    IMAGE_SET_ID,
-    this.IMAGE_SET_LENGTH,
-    this.SEQUENCE_ID,
-    this.OB_POSITION,
-    ORIG_OBJECT_ID,
-    ORIG_SENSOR_ID,
-    this.UCT,
-    this.AZIMUTH,
-    this.AZIMUTH_UNC,
-    this.AZIMUTH_BIAS,
-    this.AZIMUTH_RATE,
-    this.ELEVATION,
-    this.ELEVATION_UNC,
-    this.ELEVATION_BIAS,
-    this.ELEVATION_RATE,
-    this.RANGE,
-    this.RANGE_UNC,
-    this.RANGE_BIAS,
-    this.RANGE_RATE,
-    this.RANGE_RATE_UNC,
-    this.RA,
-    this.RA_RATE,
-    this.RA_UNC,
-    this.RA_BIAS,
-    this.DECLINATION,
-    this.DECLINATION_RATE,
-    this.DECLINATION_UNC,
-    this.DECLINATION_BIAS,
-    this.LOSX,
-    this.LOSY,
-    this.LOSZ,
-    this.LOS_UNC,
-    this.LOSXVEL,
-    this.LOSYVEL,
-    this.LOSZVEL,
-    this.SENLAT,
-    this.SENLON,
-    this.SENALT,
-    this.SENX,
-    this.SENY,
-    this.SENZ,
-    this.FOV_COUNT,
-    this.FOV_COUNT_UCTS,
-    this.EXP_DURATION,
-    this.ZEROPTD,
-    this.NET_OBJ_SIG,
-    this.NET_OBJ_SIG_UNC,
-    this.MAG,
-    this.MAG_UNC,
-    this.MAG_NORM_RANGE,
-    this.GEOLAT,
-    this.GEOLON,
-    this.GEOALT,
-    this.GEORANGE,
-    this.SKY_BKGRND,
-    this.PRIMARY_EXTINCTION,
-    this.PRIMARY_EXTINCTION_UNC,
-    this.SOLAR_PHASE_ANGLE,
-    this.SOLAR_EQ_PHASE_ANGLE,
-    this.SOLAR_DEC_ANGLE,
-    this.SHUTTER_DELAY,
-    this.TIMING_BIAS,
-    RAW_FILE_URI,
-    this.INTENSITY,
-    this.BG_INTENSITY,
-    DESCRIPTOR,
-    SOURCE,
-    ORIGIN,
-    this.DATA_MODE,
-    CREATED_AT,
-    CREATED_BY,
-    this.REFERENCE_FRAME,
-    this.SEN_REFERENCE_FRAME,
-    this.UMBRA,
-    this.PENUMBRA,
-    ORIG_NETWORK,
-    SOURCE_DL,
-    this.TYPE,
-    this.AZIMUTH_MEASURED,
-    this.ELEVATION_MEASURED,
-    this.RANGE_MEASURED,
-    this.RANGERATE_MEASURED,
-    this.RA_MEASURED,
-    this.DECLINATION_MEASURED,
-    this.NIIRS,
-    this.METERS_PER_PIXEL,
-    this.IMAGE_SNR,
-    this.IMAGE_BIT_DEPTH,
-    this.IMAGE_WIDTH,
-    this.IMAGE_HEIGHT,
-    IMAGE_COMPRESSION,
-    this.IMAGE_COMPRESSION_RATIO,
-    PROCESSED_IMAGE_URI,
-    this.IMAGE_AUTO_ENHANCED,
-    this.MULTI_FRAME_STACKED,
-    this.SYNTHETIC_TRACKING_USED,
-    this.IMAGE_SHARPNESS,
-    this.IMAGE_NOISE_STDDEV,
-    this.IMAGE_CONTRAST,
-    this.IMAGE_DYNAMIC_RANGE,
-    this.IMAGE_ENTROPY,
-    this.BACKGROUND_UNIFORMITY,
-    this.BACKGROUND_MEAN_LEVEL,
-    this.SATURATED_PIXEL_PERCENT,
-    this.DEAD_PIXEL_PERCENT,
-    this.PSF_FWHM,
-    this.CLOUD_COVER_PERCENT,
-    this.CLOUD_DETECTION_CONFIDENCE,
-    this.HAZE_PERCENT,
-    this.AEROSOL_OPTICAL_THICKNESS,
-    this.WATER_VAPOR_CONTENT,
-    this.SUN_ELEVATION,
-    this.SUN_AZIMUTH,
-    this.VIEW_ZENITH_ANGLE,
-    this.VIEW_AZIMUTH_ANGLE,
-    this.OFF_NADIR_ANGLE,
-    this.SWATH_WIDTH_KM,
-    this.MEAN_TERRAIN_ELEVATION,
-    this.TERRAIN_ELEVATION_STDDEV,
-    this.SHADOW_COVER_PERCENT,
-    this.SUNGLINT_PRESENT,
-    this.SUNGLINT_PERCENT,
-    this.SNOW_ICE_COVER_PERCENT,
-    this.VALID_DATA_AREA_KM2
-  );
+  EOO.startEOO(builder);
+  EOO.addId(builder, ID);
+  EOO.addClassification(builder, CLASSIFICATION);
+  EOO.addObTime(builder, OB_TIME);
+  EOO.addCorrQuality(builder, this.CORR_QUALITY);
+  EOO.addIdOnOrbit(builder, ID_ON_ORBIT);
+  EOO.addSensorId(builder, SENSOR_ID);
+  EOO.addCollectMethod(builder, this.COLLECT_METHOD);
+  EOO.addNoradCatId(builder, this.NORAD_CAT_ID);
+  EOO.addTaskId(builder, TASK_ID);
+  EOO.addTransactionId(builder, TRANSACTION_ID);
+  EOO.addImageSetId(builder, IMAGE_SET_ID);
+  EOO.addImageSetLength(builder, this.IMAGE_SET_LENGTH);
+  EOO.addSequenceId(builder, this.SEQUENCE_ID);
+  EOO.addObPosition(builder, this.OB_POSITION);
+  EOO.addOrigObjectId(builder, ORIG_OBJECT_ID);
+  EOO.addOrigSensorId(builder, ORIG_SENSOR_ID);
+  EOO.addUct(builder, this.UCT);
+  EOO.addAzimuth(builder, this.AZIMUTH);
+  EOO.addAzimuthUnc(builder, this.AZIMUTH_UNC);
+  EOO.addAzimuthBias(builder, this.AZIMUTH_BIAS);
+  EOO.addAzimuthRate(builder, this.AZIMUTH_RATE);
+  EOO.addElevation(builder, this.ELEVATION);
+  EOO.addElevationUnc(builder, this.ELEVATION_UNC);
+  EOO.addElevationBias(builder, this.ELEVATION_BIAS);
+  EOO.addElevationRate(builder, this.ELEVATION_RATE);
+  EOO.addRange(builder, this.RANGE);
+  EOO.addRangeUnc(builder, this.RANGE_UNC);
+  EOO.addRangeBias(builder, this.RANGE_BIAS);
+  EOO.addRangeRate(builder, this.RANGE_RATE);
+  EOO.addRangeRateUnc(builder, this.RANGE_RATE_UNC);
+  EOO.addRa(builder, this.RA);
+  EOO.addRaRate(builder, this.RA_RATE);
+  EOO.addRaUnc(builder, this.RA_UNC);
+  EOO.addRaBias(builder, this.RA_BIAS);
+  EOO.addDeclination(builder, this.DECLINATION);
+  EOO.addDeclinationRate(builder, this.DECLINATION_RATE);
+  EOO.addDeclinationUnc(builder, this.DECLINATION_UNC);
+  EOO.addDeclinationBias(builder, this.DECLINATION_BIAS);
+  EOO.addLosx(builder, this.LOSX);
+  EOO.addLosy(builder, this.LOSY);
+  EOO.addLosz(builder, this.LOSZ);
+  EOO.addLosUnc(builder, this.LOS_UNC);
+  EOO.addLosxvel(builder, this.LOSXVEL);
+  EOO.addLosyvel(builder, this.LOSYVEL);
+  EOO.addLoszvel(builder, this.LOSZVEL);
+  EOO.addSenlat(builder, this.SENLAT);
+  EOO.addSenlon(builder, this.SENLON);
+  EOO.addSenalt(builder, this.SENALT);
+  EOO.addSenx(builder, this.SENX);
+  EOO.addSeny(builder, this.SENY);
+  EOO.addSenz(builder, this.SENZ);
+  EOO.addFovCount(builder, this.FOV_COUNT);
+  EOO.addFovCountUcts(builder, this.FOV_COUNT_UCTS);
+  EOO.addExpDuration(builder, this.EXP_DURATION);
+  EOO.addZeroptd(builder, this.ZEROPTD);
+  EOO.addNetObjSig(builder, this.NET_OBJ_SIG);
+  EOO.addNetObjSigUnc(builder, this.NET_OBJ_SIG_UNC);
+  EOO.addMag(builder, this.MAG);
+  EOO.addMagUnc(builder, this.MAG_UNC);
+  EOO.addMagNormRange(builder, this.MAG_NORM_RANGE);
+  EOO.addGeolat(builder, this.GEOLAT);
+  EOO.addGeolon(builder, this.GEOLON);
+  EOO.addGeoalt(builder, this.GEOALT);
+  EOO.addGeorange(builder, this.GEORANGE);
+  EOO.addSkyBkgrnd(builder, this.SKY_BKGRND);
+  EOO.addPrimaryExtinction(builder, this.PRIMARY_EXTINCTION);
+  EOO.addPrimaryExtinctionUnc(builder, this.PRIMARY_EXTINCTION_UNC);
+  EOO.addSolarPhaseAngle(builder, this.SOLAR_PHASE_ANGLE);
+  EOO.addSolarEqPhaseAngle(builder, this.SOLAR_EQ_PHASE_ANGLE);
+  EOO.addSolarDecAngle(builder, this.SOLAR_DEC_ANGLE);
+  EOO.addShutterDelay(builder, this.SHUTTER_DELAY);
+  EOO.addTimingBias(builder, this.TIMING_BIAS);
+  EOO.addRawFileUri(builder, RAW_FILE_URI);
+  EOO.addIntensity(builder, this.INTENSITY);
+  EOO.addBgIntensity(builder, this.BG_INTENSITY);
+  EOO.addDescriptor(builder, DESCRIPTOR);
+  EOO.addSource(builder, SOURCE);
+  EOO.addOrigin(builder, ORIGIN);
+  EOO.addDataMode(builder, this.DATA_MODE);
+  EOO.addCreatedAt(builder, CREATED_AT);
+  EOO.addCreatedBy(builder, CREATED_BY);
+  EOO.addReferenceFrame(builder, REFERENCE_FRAME);
+  EOO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAME);
+  EOO.addUmbra(builder, this.UMBRA);
+  EOO.addPenumbra(builder, this.PENUMBRA);
+  EOO.addOrigNetwork(builder, ORIG_NETWORK);
+  EOO.addSourceDl(builder, SOURCE_DL);
+  EOO.addType(builder, this.TYPE);
+  EOO.addAzimuthMeasured(builder, this.AZIMUTH_MEASURED);
+  EOO.addElevationMeasured(builder, this.ELEVATION_MEASURED);
+  EOO.addRangeMeasured(builder, this.RANGE_MEASURED);
+  EOO.addRangerateMeasured(builder, this.RANGERATE_MEASURED);
+  EOO.addRaMeasured(builder, this.RA_MEASURED);
+  EOO.addDeclinationMeasured(builder, this.DECLINATION_MEASURED);
+  EOO.addNiirs(builder, this.NIIRS);
+  EOO.addMetersPerPixel(builder, this.METERS_PER_PIXEL);
+  EOO.addImageSnr(builder, this.IMAGE_SNR);
+  EOO.addImageBitDepth(builder, this.IMAGE_BIT_DEPTH);
+  EOO.addImageWidth(builder, this.IMAGE_WIDTH);
+  EOO.addImageHeight(builder, this.IMAGE_HEIGHT);
+  EOO.addImageCompression(builder, IMAGE_COMPRESSION);
+  EOO.addImageCompressionRatio(builder, this.IMAGE_COMPRESSION_RATIO);
+  EOO.addProcessedImageUri(builder, PROCESSED_IMAGE_URI);
+  EOO.addImageAutoEnhanced(builder, this.IMAGE_AUTO_ENHANCED);
+  EOO.addMultiFrameStacked(builder, this.MULTI_FRAME_STACKED);
+  EOO.addSyntheticTrackingUsed(builder, this.SYNTHETIC_TRACKING_USED);
+  EOO.addImageSharpness(builder, this.IMAGE_SHARPNESS);
+  EOO.addImageNoiseStddev(builder, this.IMAGE_NOISE_STDDEV);
+  EOO.addImageContrast(builder, this.IMAGE_CONTRAST);
+  EOO.addImageDynamicRange(builder, this.IMAGE_DYNAMIC_RANGE);
+  EOO.addImageEntropy(builder, this.IMAGE_ENTROPY);
+  EOO.addBackgroundUniformity(builder, this.BACKGROUND_UNIFORMITY);
+  EOO.addBackgroundMeanLevel(builder, this.BACKGROUND_MEAN_LEVEL);
+  EOO.addSaturatedPixelPercent(builder, this.SATURATED_PIXEL_PERCENT);
+  EOO.addDeadPixelPercent(builder, this.DEAD_PIXEL_PERCENT);
+  EOO.addPsfFwhm(builder, this.PSF_FWHM);
+  EOO.addCloudCoverPercent(builder, this.CLOUD_COVER_PERCENT);
+  EOO.addCloudDetectionConfidence(builder, this.CLOUD_DETECTION_CONFIDENCE);
+  EOO.addHazePercent(builder, this.HAZE_PERCENT);
+  EOO.addAerosolOpticalThickness(builder, this.AEROSOL_OPTICAL_THICKNESS);
+  EOO.addWaterVaporContent(builder, this.WATER_VAPOR_CONTENT);
+  EOO.addSunElevation(builder, this.SUN_ELEVATION);
+  EOO.addSunAzimuth(builder, this.SUN_AZIMUTH);
+  EOO.addViewZenithAngle(builder, this.VIEW_ZENITH_ANGLE);
+  EOO.addViewAzimuthAngle(builder, this.VIEW_AZIMUTH_ANGLE);
+  EOO.addOffNadirAngle(builder, this.OFF_NADIR_ANGLE);
+  EOO.addSwathWidthKm(builder, this.SWATH_WIDTH_KM);
+  EOO.addMeanTerrainElevation(builder, this.MEAN_TERRAIN_ELEVATION);
+  EOO.addTerrainElevationStddev(builder, this.TERRAIN_ELEVATION_STDDEV);
+  EOO.addShadowCoverPercent(builder, this.SHADOW_COVER_PERCENT);
+  EOO.addSunglintPresent(builder, this.SUNGLINT_PRESENT);
+  EOO.addSunglintPercent(builder, this.SUNGLINT_PERCENT);
+  EOO.addSnowIceCoverPercent(builder, this.SNOW_ICE_COVER_PERCENT);
+  EOO.addValidDataAreaKm2(builder, this.VALID_DATA_AREA_KM2);
+
+  return EOO.endEOO(builder);
 }
 }

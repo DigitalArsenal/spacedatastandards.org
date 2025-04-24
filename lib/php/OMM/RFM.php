@@ -6,7 +6,6 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Reference Frame Message
 class RFM extends Table
 {
     /**
@@ -42,12 +41,27 @@ class RFM extends Table
     }
 
     /**
-     * @return sbyte
+     * @return byte
      */
-    public function getREFERENCE_FRAME()
+    public function getREFERENCEFRAMEType()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \RFMUnion::NONE;
+    }
+
+    /**
+     * @returnint
+     */
+    public function getREFERENCE_FRAME($obj)
+    {
+        $o = $this->__offset(6);
+        return $o != 0 ? $this->__union($obj, $o) : null;
+    }
+
+    public function getINDEX()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -56,29 +70,46 @@ class RFM extends Table
      */
     public static function startRFM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(1);
+        $builder->StartObject(3);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFM
      */
-    public static function createRFM(FlatBufferBuilder $builder, $REFERENCE_FRAME)
+    public static function createRFM(FlatBufferBuilder $builder, $REFERENCE_FRAME_type, $REFERENCE_FRAME, $INDEX)
     {
-        $builder->startObject(1);
+        $builder->startObject(3);
+        self::addREFERENCEFRAMEType($builder, $REFERENCE_FRAME_type);
         self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
+        self::addINDEX($builder, $INDEX);
         $o = $builder->endObject();
         return $o;
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param byte
      * @return void
      */
-    public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
+    public static function addREFERENCEFRAMEType(FlatBufferBuilder $builder, $rEFERENCEFRAMEType)
     {
-        $builder->addSbyteX(0, $REFERENCE_FRAME, 0);
+        $builder->addByteX(0, $rEFERENCEFRAMEType, 0);
+    }
+
+    public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $offset)
+    {
+        $builder->addOffsetX(1, $offset, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addINDEX(FlatBufferBuilder $builder, $INDEX)
+    {
+        $builder->addOffsetX(2, $INDEX, 0);
     }
 
     /**

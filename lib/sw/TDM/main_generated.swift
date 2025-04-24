@@ -96,9 +96,9 @@ public struct TDM: FlatBufferObject, Verifiable {
   ///  Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   public var OBSERVER_VZ: Double { let o = _accessor.offset(VTOFFSET.OBSERVER_VZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  public var OBSERVER_POSITION_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var OBSERVER_POSITION_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  public var OBS_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.OBS_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var OBS_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.OBS_REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
@@ -269,8 +269,8 @@ public struct TDM: FlatBufferObject, Verifiable {
   public static func add(OBSERVER_VX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_VX, def: 0.0, at: VTOFFSET.OBSERVER_VX.p) }
   public static func add(OBSERVER_VY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_VY, def: 0.0, at: VTOFFSET.OBSERVER_VY.p) }
   public static func add(OBSERVER_VZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_VZ, def: 0.0, at: VTOFFSET.OBSERVER_VZ.p) }
-  public static func add(OBSERVER_POSITION_REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_POSITION_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p) }
-  public static func add(OBS_REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.OBS_REFERENCE_FRAME.p) }
+  public static func add(OBSERVER_POSITION_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_POSITION_REFERENCE_FRAME, at: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p) }
+  public static func add(OBS_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_REFERENCE_FRAME, at: VTOFFSET.OBS_REFERENCE_FRAME.p) }
   public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
   public static func add(CCSDS_TDM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TDM_VERS, at: VTOFFSET.CCSDS_TDM_VERS.p) }
   public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
@@ -331,8 +331,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     OBSERVER_VX: Double = 0.0,
     OBSERVER_VY: Double = 0.0,
     OBSERVER_VZ: Double = 0.0,
-    OBSERVER_POSITION_REFERENCE_FRAME: refFrame = .ecef,
-    OBS_REFERENCE_FRAME: refFrame = .ecef,
+    OBSERVER_POSITION_REFERENCE_FRAMEOffset OBSERVER_POSITION_REFERENCE_FRAME: Offset = Offset(),
+    OBS_REFERENCE_FRAMEOffset OBS_REFERENCE_FRAME: Offset = Offset(),
     EPOCHOffset EPOCH: Offset = Offset(),
     CCSDS_TDM_VERSOffset CCSDS_TDM_VERS: Offset = Offset(),
     COMMENTVectorOffset COMMENT: Offset = Offset(),
@@ -456,8 +456,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OBSERVER_VX.p, fieldName: "OBSERVER_VX", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.OBSERVER_VY.p, fieldName: "OBSERVER_VY", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.OBSERVER_VZ.p, fieldName: "OBSERVER_VZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p, fieldName: "OBSERVER_POSITION_REFERENCE_FRAME", required: false, type: refFrame.self)
-    try _v.visit(field: VTOFFSET.OBS_REFERENCE_FRAME.p, fieldName: "OBS_REFERENCE_FRAME", required: false, type: refFrame.self)
+    try _v.visit(field: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p, fieldName: "OBSERVER_POSITION_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VTOFFSET.OBS_REFERENCE_FRAME.p, fieldName: "OBS_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CCSDS_TDM_VERS.p, fieldName: "CCSDS_TDM_VERS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)

@@ -37,8 +37,9 @@ class CDMObject : flatbuffers.handle
     def COVARIANCE_METHOD() -> covarianceMethod:
         return covarianceMethod(flatbuffers.field_int8(buf_, pos_, 16, 0))
     /// Reference Frame in which the object position is defined
-    def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    def REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: RFM { buf_, o } else: nil
     /// Gravity model
     def GRAVITY_MODEL() -> string:
         return flatbuffers.field_string(buf_, pos_, 20)
@@ -287,8 +288,8 @@ struct CDMObjectBuilder:
     def add_COVARIANCE_METHOD(COVARIANCE_METHOD:covarianceMethod):
         b_.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(7, REFERENCE_FRAME, 0)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, REFERENCE_FRAME)
         return this
     def add_GRAVITY_MODEL(GRAVITY_MODEL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, GRAVITY_MODEL)
@@ -563,8 +564,9 @@ class CDM : flatbuffers.handle
     def STOP_SCREEN_PERIOD() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
     /// The reference frame for the screening volume
-    def SCREEN_VOLUME_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    def SCREEN_VOLUME_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: RFM { buf_, o } else: nil
     /// The shape of the screening volume
     def SCREEN_VOLUME_SHAPE() -> screeningVolumeShape:
         return screeningVolumeShape(flatbuffers.field_int8(buf_, pos_, 38, 0))
@@ -661,8 +663,8 @@ struct CDMBuilder:
     def add_STOP_SCREEN_PERIOD(STOP_SCREEN_PERIOD:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, STOP_SCREEN_PERIOD)
         return this
-    def add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME:refFrame):
-        b_.PrependInt8Slot(16, SCREEN_VOLUME_FRAME, 0)
+    def add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, SCREEN_VOLUME_FRAME)
         return this
     def add_SCREEN_VOLUME_SHAPE(SCREEN_VOLUME_SHAPE:screeningVolumeShape):
         b_.PrependInt8Slot(17, SCREEN_VOLUME_SHAPE, 0)

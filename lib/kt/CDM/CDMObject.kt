@@ -114,11 +114,15 @@ class CDMObject : Table() {
     /**
      * Reference Frame in which the object position is defined
      */
-    val REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(18)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
+    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Gravity model
      */
@@ -740,7 +744,7 @@ class CDMObject : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCDMObject(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, POCOffset: Int, OPERATOR_CONTACT_POSITIONOffset: Int, OPERATOR_ORGANIZATIONOffset: Int, EPHEMERIS_NAMEOffset: Int, COVARIANCE_METHOD: Byte, REFERENCE_FRAME: Byte, GRAVITY_MODELOffset: Int, ATMOSPHERIC_MODELOffset: Int, N_BODY_PERTURBATIONSOffset: Int, SOLAR_RAD_PRESSURE: Boolean, EARTH_TIDES: Boolean, INTRACK_THRUST: Boolean, TIME_LASTOB_STARTOffset: Int, TIME_LASTOB_ENDOffset: Int, RECOMMENDED_OD_SPAN: Double, ACTUAL_OD_SPAN: Double, OBS_AVAILABLE: UInt, OBS_USED: UInt, TRACKS_AVAILABLE: UInt, TRACKS_USED: UInt, RESIDUALS_ACCEPTED: Double, WEIGHTED_RMS: Double, AREA_PC: Double, AREA_DRG: Double, AREA_SRP: Double, CR_AREA_OVER_MASS: Double, THRUST_ACCELERATION: Double, SEDR: Double, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double, CR_R: Double, CT_R: Double, CT_T: Double, CN_R: Double, CN_T: Double, CN_N: Double, CRDOT_R: Double, CRDOT_T: Double, CRDOT_N: Double, CRDOT_RDOT: Double, CTDOT_R: Double, CTDOT_T: Double, CTDOT_N: Double, CTDOT_RDOT: Double, CTDOT_TDOT: Double, CNDOT_R: Double, CNDOT_T: Double, CNDOT_N: Double, CNDOT_RDOT: Double, CNDOT_TDOT: Double, CNDOT_NDOT: Double, CDRG_R: Double, CDRG_T: Double, CDRG_N: Double, CDRG_RDOT: Double, CDRG_TDOT: Double, CDRG_NDOT: Double, CDRG_DRG: Double, CSRP_R: Double, CSRP_T: Double, CSRP_N: Double, CSRP_RDOT: Double, CSRP_TDOT: Double, CSRP_NDOT: Double, CSRP_DRG: Double, CSRP_SRP: Double, CTHR_R: Double, CTHR_T: Double, CTHR_N: Double, CTHR_RDOT: Double, CTHR_TDOT: Double, CTHR_NDOT: Double, CTHR_DRG: Double, CTHR_SRP: Double, CTHR_THR: Double) : Int {
+        fun createCDMObject(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, POCOffset: Int, OPERATOR_CONTACT_POSITIONOffset: Int, OPERATOR_ORGANIZATIONOffset: Int, EPHEMERIS_NAMEOffset: Int, COVARIANCE_METHOD: Byte, REFERENCE_FRAMEOffset: Int, GRAVITY_MODELOffset: Int, ATMOSPHERIC_MODELOffset: Int, N_BODY_PERTURBATIONSOffset: Int, SOLAR_RAD_PRESSURE: Boolean, EARTH_TIDES: Boolean, INTRACK_THRUST: Boolean, TIME_LASTOB_STARTOffset: Int, TIME_LASTOB_ENDOffset: Int, RECOMMENDED_OD_SPAN: Double, ACTUAL_OD_SPAN: Double, OBS_AVAILABLE: UInt, OBS_USED: UInt, TRACKS_AVAILABLE: UInt, TRACKS_USED: UInt, RESIDUALS_ACCEPTED: Double, WEIGHTED_RMS: Double, AREA_PC: Double, AREA_DRG: Double, AREA_SRP: Double, CR_AREA_OVER_MASS: Double, THRUST_ACCELERATION: Double, SEDR: Double, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double, CR_R: Double, CT_R: Double, CT_T: Double, CN_R: Double, CN_T: Double, CN_N: Double, CRDOT_R: Double, CRDOT_T: Double, CRDOT_N: Double, CRDOT_RDOT: Double, CTDOT_R: Double, CTDOT_T: Double, CTDOT_N: Double, CTDOT_RDOT: Double, CTDOT_TDOT: Double, CNDOT_R: Double, CNDOT_T: Double, CNDOT_N: Double, CNDOT_RDOT: Double, CNDOT_TDOT: Double, CNDOT_NDOT: Double, CDRG_R: Double, CDRG_T: Double, CDRG_N: Double, CDRG_RDOT: Double, CDRG_TDOT: Double, CDRG_NDOT: Double, CDRG_DRG: Double, CSRP_R: Double, CSRP_T: Double, CSRP_N: Double, CSRP_RDOT: Double, CSRP_TDOT: Double, CSRP_NDOT: Double, CSRP_DRG: Double, CSRP_SRP: Double, CTHR_R: Double, CTHR_T: Double, CTHR_N: Double, CTHR_RDOT: Double, CTHR_TDOT: Double, CTHR_NDOT: Double, CTHR_DRG: Double, CTHR_SRP: Double, CTHR_THR: Double) : Int {
             builder.startTable(81)
             addCTHR_THR(builder, CTHR_THR)
             addCTHR_SRP(builder, CTHR_SRP)
@@ -812,6 +816,7 @@ class CDMObject : Table() {
             addN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONSOffset)
             addATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODELOffset)
             addGRAVITY_MODEL(builder, GRAVITY_MODELOffset)
+            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
             addEPHEMERIS_NAME(builder, EPHEMERIS_NAMEOffset)
             addOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATIONOffset)
             addOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITIONOffset)
@@ -821,7 +826,6 @@ class CDMObject : Table() {
             addINTRACK_THRUST(builder, INTRACK_THRUST)
             addEARTH_TIDES(builder, EARTH_TIDES)
             addSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAME)
             addCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
             return endCDMObject(builder)
         }
@@ -833,7 +837,7 @@ class CDMObject : Table() {
         fun addOPERATOR_ORGANIZATION(builder: FlatBufferBuilder, OPERATOR_ORGANIZATION: Int) = builder.addOffset(4, OPERATOR_ORGANIZATION, 0)
         fun addEPHEMERIS_NAME(builder: FlatBufferBuilder, EPHEMERIS_NAME: Int) = builder.addOffset(5, EPHEMERIS_NAME, 0)
         fun addCOVARIANCE_METHOD(builder: FlatBufferBuilder, COVARIANCE_METHOD: Byte) = builder.addByte(6, COVARIANCE_METHOD, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(7, REFERENCE_FRAME, 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(7, REFERENCE_FRAME, 0)
         fun addGRAVITY_MODEL(builder: FlatBufferBuilder, GRAVITY_MODEL: Int) = builder.addOffset(8, GRAVITY_MODEL, 0)
         fun addATMOSPHERIC_MODEL(builder: FlatBufferBuilder, ATMOSPHERIC_MODEL: Int) = builder.addOffset(9, ATMOSPHERIC_MODEL, 0)
         fun addN_BODY_PERTURBATIONS(builder: FlatBufferBuilder, N_BODY_PERTURBATIONS: Int) = builder.addOffset(10, N_BODY_PERTURBATIONS, 0)

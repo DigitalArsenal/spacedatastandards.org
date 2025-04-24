@@ -5,402 +5,874 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class RefFrame {
+///  https://www.sanaregistry.org/r/celestial_body_reference_frames/
+///  Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
+class CelestialFrame {
   final int value;
-  const RefFrame._(this.value);
+  const CelestialFrame._(this.value);
 
-  factory RefFrame.fromValue(int value) {
+  factory CelestialFrame.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum RefFrame');
+        throw StateError('Invalid value $value for bit flag enum CelestialFrame');
     }
     return result;
   }
 
-  static RefFrame? _createOrNull(int? value) => 
-      value == null ? null : RefFrame.fromValue(value);
+  static CelestialFrame? _createOrNull(int? value) => 
+      value == null ? null : CelestialFrame.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 88;
+  static const int maxValue = 27;
   static bool containsValue(int value) => values.containsKey(value);
 
-  ///  Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
-  static const RefFrame ECEF = RefFrame._(0);
+  ///  OID: 1.3.112.4.57.2.9
+  ///  Inertial Earth-centered frame aligned with Earth's center of mass.
+  static const CelestialFrame GCRF = CelestialFrame._(0);
 
-  ///  International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
-  static const RefFrame ICRF = RefFrame._(1);
+  ///  OID: 1.3.112.4.57.2.11
+  ///  International Celestial Reference Frame based on distant quasars.
+  static const CelestialFrame ICRF = CelestialFrame._(1);
 
-  ///  True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
-  static const RefFrame TEME = RefFrame._(2);
-
-  ///  East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
-  static const RefFrame ENU = RefFrame._(3);
-
-  ///  North-East-Down: Aviation/navigation frame aligned with gravity.
-  static const RefFrame NED = RefFrame._(4);
-
-  ///  North-East-Up: Similar to NED, with "Up" opposite gravity.
-  static const RefFrame NEU = RefFrame._(5);
-
-  ///  Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
-  static const RefFrame RIC = RefFrame._(6);
-
-  ///  Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
-  static const RefFrame J2000 = RefFrame._(7);
-
-  ///  Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
-  static const RefFrame GCRF = RefFrame._(8);
-
-  ///  Greenwich Rotating Coordinates: Rotates with Earth's true equator.
-  static const RefFrame GRC = RefFrame._(9);
-
-  ///  International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
-  static const RefFrame ITRF2000 = RefFrame._(10);
-
-  ///  International Terrestrial Reference Frame 1993: Older ITRF realization.
-  static const RefFrame ITRF93 = RefFrame._(11);
-
-  ///  International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
-  static const RefFrame ITRF97 = RefFrame._(12);
-
-  ///  True of Date, Rotating: Rotates with Earth's true equator.
-  static const RefFrame TDR = RefFrame._(13);
-
-  ///  True of Date: Similar to TDR, without rotation.
-  static const RefFrame TOD = RefFrame._(14);
-
-  ///  Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
-  static const RefFrame RTN = RefFrame._(15);
-
-  ///  Transverse, Velocity, Normal: Alternative orbit frame.
-  static const RefFrame TVN = RefFrame._(16);
-
-  ///  Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
-  static const RefFrame VVLH = RefFrame._(17);
-
-  ///  Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
-  static const RefFrame QSW = RefFrame._(18);
-
-  ///  Local Tangent Plane: Surface-fixed frame for terrestrial uses.
-  static const RefFrame LTP = RefFrame._(19);
-
-  ///  Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
-  static const RefFrame LVLH = RefFrame._(20);
-
-  ///  Polar-North-East: Polar coordinate frame.
-  static const RefFrame PNE = RefFrame._(21);
-
-  ///  Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  static const RefFrame BRF = RefFrame._(22);
-
-  ///  Radial, Down-track, Cross-track: Alternate name for RTN.
-  static const RefFrame RSW = RefFrame._(23);
-
-  ///  Tangential, Normal, Cross-track: Local orbit frame.
-  static const RefFrame TNW = RefFrame._(24);
-
-  ///  Radial, Along-track, Cross-track: Satellite motion frame.
-  static const RefFrame UVW = RefFrame._(25);
-
-  ///  Equinoctial Inertial: Frame with axes aligned to orbital properties.
-  static const RefFrame EQW_INERTIAL = RefFrame._(26);
-
-  ///  Inertial version of LVLH.
-  static const RefFrame LVLH_INERTIAL = RefFrame._(27);
-
-  ///  Rotating LVLH frame.
-  static const RefFrame LVLH_ROTATING = RefFrame._(28);
-
-  ///  Inertial Nadir-Sun-Normal frame.
-  static const RefFrame NSW_INERTIAL = RefFrame._(29);
-
-  ///  Rotating Nadir-Sun-Normal frame.
-  static const RefFrame NSW_ROTATING = RefFrame._(30);
-
-  ///  Inertial Transverse-Velocity-Normal frame.
-  static const RefFrame NTW_INERTIAL = RefFrame._(31);
-
-  ///  Rotating Transverse-Velocity-Normal frame.
-  static const RefFrame NTW_ROTATING = RefFrame._(32);
-
-  ///  Perifocal Coordinate System: Inertial frame aligned to periapsis.
-  static const RefFrame PQW_INERTIAL = RefFrame._(33);
-
-  ///  Inertial Radial, Transverse, Normal frame.
-  static const RefFrame RSW_INERTIAL = RefFrame._(34);
-
-  ///  Rotating RSW frame: Aligned with orbit angular momentum.
-  static const RefFrame RSW_ROTATING = RefFrame._(35);
-
-  ///  South/East/Zenith inertial frame.
-  static const RefFrame SEZ_INERTIAL = RefFrame._(36);
-
-  ///  Rotating South/East/Zenith frame.
-  static const RefFrame SEZ_ROTATING = RefFrame._(37);
-
-  ///  Inertial Tangential, Normal, Cross-track frame.
-  static const RefFrame TNW_INERTIAL = RefFrame._(38);
-
-  ///  Rotating Tangential, Normal, Cross-track frame.
-  static const RefFrame TNW_ROTATING = RefFrame._(39);
-
-  ///  Velocity, Normal, Co-normal inertial frame.
-  static const RefFrame VNC_INERTIAL = RefFrame._(40);
-
-  ///  Rotating Velocity, Normal, Co-normal frame.
-  static const RefFrame VNC_ROTATING = RefFrame._(41);
-
-  ///  Central Body alignment inertial frame.
-  static const RefFrame ALIGN_CB = RefFrame._(42);
-
-  ///  Earth alignment inertial frame.
-  static const RefFrame ALIGN_EARTH = RefFrame._(43);
-
-  ///  Inertial realization of B1950 epoch.
-  static const RefFrame B1950 = RefFrame._(44);
-
-  ///  Celestial Intermediate Reference System.
-  static const RefFrame CIRS = RefFrame._(45);
-
-  ///  DTRF Inertial frame with corrections.
-  static const RefFrame DTRFyyyy = RefFrame._(46);
-
-  ///  Earth-Fixed Greenwich rotating frame.
-  static const RefFrame EFG = RefFrame._(47);
-
-  ///  Earth Mean Equator and Equinox of 2000 epoch.
-  static const RefFrame EME2000 = RefFrame._(48);
-
-  ///  Central Body fixed rotating frame.
-  static const RefFrame FIXED_CB = RefFrame._(49);
-
-  ///  Earth-fixed rotating frame.
-  static const RefFrame FIXED_EARTH = RefFrame._(50);
-
-  ///  Geocentric Celestial Reference Frame with versioning.
-  static const RefFrame GCRFn = RefFrame._(51);
-
-  ///  Greenwich True-of-Date rotating frame.
-  static const RefFrame GTOD = RefFrame._(52);
-
-  ///  Mean of Date for all central bodies except Earth and Moon.
-  static const RefFrame MOD_CB = RefFrame._(53);
-
-  ///  Mean of Date for Earth.
-  static const RefFrame MOD_EARTH = RefFrame._(54);
-
-  ///  Mean of Date for Moon.
-  static const RefFrame MOD_MOON = RefFrame._(55);
-
-  ///  Mean of Epoch for central bodies.
-  static const RefFrame MOE_CB = RefFrame._(56);
-
-  ///  Mean of Epoch for Earth.
-  static const RefFrame MOE_EARTH = RefFrame._(57);
-
-  ///  Lunar Moon Mean Earth reference frame.
-  static const RefFrame MOON_ME = RefFrame._(58);
-
-  ///  Lunar Mean Equator and IAU Node reference frame.
-  static const RefFrame MOON_MEIAUE = RefFrame._(59);
-
-  ///  Lunar Principal Axis rotating frame.
-  static const RefFrame MOON_PAxxx = RefFrame._(60);
-
-  ///  True Equator Mean Equinox of Date.
-  static const RefFrame TEMEOFDATE = RefFrame._(61);
-
-  ///  True Equator Mean Equinox of Epoch.
-  static const RefFrame TEMEOFEPOCH = RefFrame._(62);
-
-  ///  Terrestrial Intermediate Reference System.
-  static const RefFrame TIRS = RefFrame._(63);
-
-  ///  True of Date for central bodies.
-  static const RefFrame TOD_CB = RefFrame._(64);
-
-  ///  True of Date for Earth.
-  static const RefFrame TOD_EARTH = RefFrame._(65);
-
-  ///  True of Date for Moon.
-  static const RefFrame TOD_MOON = RefFrame._(66);
-
-  ///  True of Epoch for central bodies.
-  static const RefFrame TOE_CB = RefFrame._(67);
-
-  ///  True of Epoch for Earth.
-  static const RefFrame TOE_EARTH = RefFrame._(68);
-
-  ///  True of Epoch for Moon.
-  static const RefFrame TOE_MOON = RefFrame._(69);
-
-  ///  True Ecliptic reference frame.
-  static const RefFrame TRUE_ECLIPTIC = RefFrame._(70);
-
-  ///  Launch go-inertial reference frame.
-  static const RefFrame UVW_GO_INERTIAL = RefFrame._(71);
-
-  ///  WGS 84 Earth-fixed terrestrial system.
-  static const RefFrame WGS84 = RefFrame._(72);
-
-  ///  Accelerometer reference frame.
-  static const RefFrame ACC_i = RefFrame._(73);
-
-  ///  Actuator reference frame.
-  static const RefFrame ACTUATOR_i = RefFrame._(74);
-
-  ///  Autonomous Star Tracker reference frame.
-  static const RefFrame AST_i = RefFrame._(75);
-
-  ///  Coarse Sun Sensor reference frame.
-  static const RefFrame CSS_i = RefFrame._(76);
-
-  ///  Digital Sun Sensor reference frame.
-  static const RefFrame DSS_i = RefFrame._(77);
-
-  ///  Earth Sensor Assembly reference frame.
-  static const RefFrame ESA_i = RefFrame._(78);
-
-  ///  Gyro reference frame.
-  static const RefFrame GYRO_FRAME_i = RefFrame._(79);
-
-  ///  Inertial Measurement Unit reference frame.
-  static const RefFrame IMU_FRAME_i = RefFrame._(80);
-
-  ///  Instrument reference frame.
-  static const RefFrame INSTRUMENT_i = RefFrame._(81);
-
-  ///  Magnetic Torque Assembly reference frame.
-  static const RefFrame MTA_i = RefFrame._(82);
-
-  ///  Reaction Wheel reference frame.
-  static const RefFrame RW_i = RefFrame._(83);
-
-  ///  Solar Array reference frame.
-  static const RefFrame SA_i = RefFrame._(84);
-
-  ///  Spacecraft Body reference frame.
-  static const RefFrame SC_BODY_i = RefFrame._(85);
-
-  ///  Sensor reference frame.
-  static const RefFrame SENSOR_i = RefFrame._(86);
-
-  ///  Star Tracker reference frame.
-  static const RefFrame STARTRACKER_i = RefFrame._(87);
-
-  ///  Three Axis Magnetometer reference frame.
-  static const RefFrame TAM_i = RefFrame._(88);
-  static const Map<int, RefFrame> values = {
-    0: ECEF,
+  ///  OID: 1.3.112.4.57.2.14
+  ///  Classical J2000 inertial frame defined at epoch J2000.0.
+  static const CelestialFrame J2000 = CelestialFrame._(2);
+
+  ///  OID: 1.3.112.4.57.2.15
+  ///  Updated J2000 frame using IAU2000A precession-nutation models.
+  static const CelestialFrame J2000A = CelestialFrame._(3);
+
+  ///  OID: 1.3.112.4.57.2.7
+  ///  Earth Mean Equator frame at epoch J2000 used in orbit determination.
+  static const CelestialFrame EME2000 = CelestialFrame._(4);
+
+  ///  OID: 1.3.112.4.57.2.25
+  ///  True Equator Mean Equinox of Date frame for satellite tracking.
+  static const CelestialFrame TEMEOFDATE = CelestialFrame._(5);
+
+  ///  OID: 1.3.112.4.57.2.10
+  ///  Greenwich True of Date: Earth rotation relative to celestial reference.
+  static const CelestialFrame GTOD = CelestialFrame._(6);
+
+  ///  OID: 1.3.112.4.57.2.4
+  ///  Celestial Intermediate Reference System based on CIP and CIO.
+  static const CelestialFrame CIRS = CelestialFrame._(7);
+
+  ///  OID: 1.3.112.4.57.2.18
+  ///  Mean of Date (MOD) Earth frame using IAU1976 precession.
+  static const CelestialFrame MOD_EARTH = CelestialFrame._(8);
+
+  ///  OID: 1.3.112.4.57.2.17
+  ///  Mean of Date (MOD) celestial body frame evaluated at each epoch.
+  static const CelestialFrame MOD_CB = CelestialFrame._(9);
+
+  ///  OID: 1.3.112.4.57.2.19
+  ///  Mean of Date (MOD) Moon frame evaluated at each epoch.
+  static const CelestialFrame MOD_MOON = CelestialFrame._(10);
+
+  ///  OID: 1.3.112.4.57.2.29
+  ///  True of Date (TOD) Earth frame with polar motion included.
+  static const CelestialFrame TOD_EARTH = CelestialFrame._(11);
+
+  ///  OID: 1.3.112.4.57.2.28
+  ///  True of Date (TOD) celestial body frame.
+  static const CelestialFrame TOD_CB = CelestialFrame._(12);
+
+  ///  OID: 1.3.112.4.57.2.30
+  ///  True of Date (TOD) Moon frame.
+  static const CelestialFrame TOD_MOON = CelestialFrame._(13);
+
+  ///  OID: 1.3.112.4.57.2.32
+  ///  True of Epoch (TOE) Earth frame at specific epoch.
+  static const CelestialFrame TOE_EARTH = CelestialFrame._(14);
+
+  ///  OID: 1.3.112.4.57.2.31
+  ///  True of Epoch (TOE) celestial body frame at specific epoch.
+  static const CelestialFrame TOE_CB = CelestialFrame._(15);
+
+  ///  OID: 1.3.112.4.57.2.33
+  ///  True of Epoch (TOE) Moon frame at specific epoch.
+  static const CelestialFrame TOE_MOON = CelestialFrame._(16);
+
+  ///  OID: 1.3.112.4.57.2.13
+  ///  International Terrestrial Reference Frame 2000 (Earth-fixed).
+  static const CelestialFrame ITRF2000 = CelestialFrame._(17);
+
+  ///  OID: 1.3.112.4.57.2.13
+  ///  International Terrestrial Reference Frame 1993 (Earth-fixed).
+  static const CelestialFrame ITRF93 = CelestialFrame._(18);
+
+  ///  OID: 1.3.112.4.57.2.13
+  ///  International Terrestrial Reference Frame 1997 (Earth-fixed).
+  static const CelestialFrame ITRF97 = CelestialFrame._(19);
+
+  ///  OID: 1.3.112.4.57.2.6
+  ///  Earth-Fixed Geocentric frame using geodetic coordinates.
+  static const CelestialFrame EFG = CelestialFrame._(20);
+
+  ///  OID: 1.3.112.4.57.2.8
+  ///  Fixed frame of a celestial body.
+  static const CelestialFrame FIXED_CB = CelestialFrame._(21);
+
+  ///  OID: 1.3.112.4.57.2.39
+  ///  Fixed Earth frame aligned with WGS84 ellipsoid.
+  static const CelestialFrame FIXED_EARTH = CelestialFrame._(22);
+
+  ///  WGS84 Earth-fixed terrestrial system.
+  static const CelestialFrame WGS84 = CelestialFrame._(23);
+
+  ///  OID: 1.3.112.4.57.2.5
+  ///  Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+  static const CelestialFrame DTRFYYYY = CelestialFrame._(24);
+
+  ///  OID: 1.3.112.4.57.2.2
+  ///  Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+  static const CelestialFrame ALIGN_EARTH = CelestialFrame._(25);
+
+  ///  OID: 1.3.112.4.57.2.1
+  ///  Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+  static const CelestialFrame ALIGN_CB = CelestialFrame._(26);
+
+  ///  OID: 1.3.112.4.57.2.3
+  ///  Classical Besselian 1950 equator and equinox frame.
+  static const CelestialFrame B1950 = CelestialFrame._(27);
+  static const Map<int, CelestialFrame> values = {
+    0: GCRF,
     1: ICRF,
-    2: TEME,
-    3: ENU,
-    4: NED,
-    5: NEU,
-    6: RIC,
-    7: J2000,
-    8: GCRF,
-    9: GRC,
-    10: ITRF2000,
-    11: ITRF93,
-    12: ITRF97,
-    13: TDR,
-    14: TOD,
-    15: RTN,
-    16: TVN,
-    17: VVLH,
-    18: QSW,
-    19: LTP,
-    20: LVLH,
-    21: PNE,
-    22: BRF,
-    23: RSW,
-    24: TNW,
-    25: UVW,
-    26: EQW_INERTIAL,
-    27: LVLH_INERTIAL,
-    28: LVLH_ROTATING,
-    29: NSW_INERTIAL,
-    30: NSW_ROTATING,
-    31: NTW_INERTIAL,
-    32: NTW_ROTATING,
-    33: PQW_INERTIAL,
-    34: RSW_INERTIAL,
-    35: RSW_ROTATING,
-    36: SEZ_INERTIAL,
-    37: SEZ_ROTATING,
-    38: TNW_INERTIAL,
-    39: TNW_ROTATING,
-    40: VNC_INERTIAL,
-    41: VNC_ROTATING,
-    42: ALIGN_CB,
-    43: ALIGN_EARTH,
-    44: B1950,
-    45: CIRS,
-    46: DTRFyyyy,
-    47: EFG,
-    48: EME2000,
-    49: FIXED_CB,
-    50: FIXED_EARTH,
-    51: GCRFn,
-    52: GTOD,
-    53: MOD_CB,
-    54: MOD_EARTH,
-    55: MOD_MOON,
-    56: MOE_CB,
-    57: MOE_EARTH,
-    58: MOON_ME,
-    59: MOON_MEIAUE,
-    60: MOON_PAxxx,
-    61: TEMEOFDATE,
-    62: TEMEOFEPOCH,
-    63: TIRS,
-    64: TOD_CB,
-    65: TOD_EARTH,
-    66: TOD_MOON,
-    67: TOE_CB,
-    68: TOE_EARTH,
-    69: TOE_MOON,
-    70: TRUE_ECLIPTIC,
-    71: UVW_GO_INERTIAL,
-    72: WGS84,
-    73: ACC_i,
-    74: ACTUATOR_i,
-    75: AST_i,
-    76: CSS_i,
-    77: DSS_i,
-    78: ESA_i,
-    79: GYRO_FRAME_i,
-    80: IMU_FRAME_i,
-    81: INSTRUMENT_i,
-    82: MTA_i,
-    83: RW_i,
-    84: SA_i,
-    85: SC_BODY_i,
-    86: SENSOR_i,
-    87: STARTRACKER_i,
-    88: TAM_i};
+    2: J2000,
+    3: J2000A,
+    4: EME2000,
+    5: TEMEOFDATE,
+    6: GTOD,
+    7: CIRS,
+    8: MOD_EARTH,
+    9: MOD_CB,
+    10: MOD_MOON,
+    11: TOD_EARTH,
+    12: TOD_CB,
+    13: TOD_MOON,
+    14: TOE_EARTH,
+    15: TOE_CB,
+    16: TOE_MOON,
+    17: ITRF2000,
+    18: ITRF93,
+    19: ITRF97,
+    20: EFG,
+    21: FIXED_CB,
+    22: FIXED_EARTH,
+    23: WGS84,
+    24: DTRFYYYY,
+    25: ALIGN_EARTH,
+    26: ALIGN_CB,
+    27: B1950};
 
-  static const fb.Reader<RefFrame> reader = _RefFrameReader();
+  static const fb.Reader<CelestialFrame> reader = _CelestialFrameReader();
 
   @override
   String toString() {
-    return 'RefFrame{value: $value}';
+    return 'CelestialFrame{value: $value}';
   }
 }
 
-class _RefFrameReader extends fb.Reader<RefFrame> {
-  const _RefFrameReader();
+class _CelestialFrameReader extends fb.Reader<CelestialFrame> {
+  const _CelestialFrameReader();
 
   @override
   int get size => 1;
 
   @override
-  RefFrame read(fb.BufferContext bc, int offset) =>
-      RefFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+  CelestialFrame read(fb.BufferContext bc, int offset) =>
+      CelestialFrame.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Reference Frame Message
+///  https://sanaregistry.org/r/spacecraft_body_reference_frames/
+///  Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
+class SpacecraftFrame {
+  final int value;
+  const SpacecraftFrame._(this.value);
+
+  factory SpacecraftFrame.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SpacecraftFrame');
+    }
+    return result;
+  }
+
+  static SpacecraftFrame? _createOrNull(int? value) => 
+      value == null ? null : SpacecraftFrame.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 15;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  ///  OID: 1.3.112.4.57.8.1
+  ///  Accelerometer instrument frame.
+  static const SpacecraftFrame ACC_i = SpacecraftFrame._(0);
+
+  ///  OID: 1.3.112.4.57.8.2
+  ///  Actuator system frame.
+  static const SpacecraftFrame ACTUATOR_i = SpacecraftFrame._(1);
+
+  ///  OID: 1.3.112.4.57.8.3
+  ///  Attitude Sensor Target frame.
+  static const SpacecraftFrame AST_i = SpacecraftFrame._(2);
+
+  ///  OID: 1.3.112.4.57.8.4
+  ///  Coarse Sun Sensor frame.
+  static const SpacecraftFrame CSS_i = SpacecraftFrame._(3);
+
+  ///  OID: 1.3.112.4.57.8.5
+  ///  Digital Sun Sensor frame.
+  static const SpacecraftFrame DSS_i = SpacecraftFrame._(4);
+
+  ///  OID: 1.3.112.4.57.8.6
+  ///  Earth Sensor Assembly frame.
+  static const SpacecraftFrame ESA_i = SpacecraftFrame._(5);
+
+  ///  OID: 1.3.112.4.57.8.7
+  ///  Gyroscope instrument frame.
+  static const SpacecraftFrame GYRO_FRAME_i = SpacecraftFrame._(6);
+
+  ///  OID: 1.3.112.4.57.8.8
+  ///  Inertial Measurement Unit frame.
+  static const SpacecraftFrame IMU_FRAME_i = SpacecraftFrame._(7);
+
+  ///  OID: 1.3.112.4.57.8.9
+  ///  Generic instrument mounting frame.
+  static const SpacecraftFrame INSTRUMENT_i = SpacecraftFrame._(8);
+
+  ///  OID: 1.3.112.4.57.8.10
+  ///  Magnetic Torquer Assembly frame.
+  static const SpacecraftFrame MTA_i = SpacecraftFrame._(9);
+
+  ///  OID: 1.3.112.4.57.8.11
+  ///  Reaction Wheel assembly frame.
+  static const SpacecraftFrame RW_i = SpacecraftFrame._(10);
+
+  ///  OID: 1.3.112.4.57.8.12
+  ///  Solar Array frame.
+  static const SpacecraftFrame SA_i = SpacecraftFrame._(11);
+
+  ///  OID: 1.3.112.4.57.8.13
+  ///  Spacecraft body fixed frame.
+  static const SpacecraftFrame SC_BODY_i = SpacecraftFrame._(12);
+
+  ///  OID: 1.3.112.4.57.8.14
+  ///  Generic sensor assembly frame.
+  static const SpacecraftFrame SENSOR_i = SpacecraftFrame._(13);
+
+  ///  OID: 1.3.112.4.57.8.15
+  ///  Star Tracker instrument frame.
+  static const SpacecraftFrame STARTRACKER_i = SpacecraftFrame._(14);
+
+  ///  OID: 1.3.112.4.57.8.16
+  ///  Thermal Assembly Module frame.
+  static const SpacecraftFrame TAM_i = SpacecraftFrame._(15);
+  static const Map<int, SpacecraftFrame> values = {
+    0: ACC_i,
+    1: ACTUATOR_i,
+    2: AST_i,
+    3: CSS_i,
+    4: DSS_i,
+    5: ESA_i,
+    6: GYRO_FRAME_i,
+    7: IMU_FRAME_i,
+    8: INSTRUMENT_i,
+    9: MTA_i,
+    10: RW_i,
+    11: SA_i,
+    12: SC_BODY_i,
+    13: SENSOR_i,
+    14: STARTRACKER_i,
+    15: TAM_i};
+
+  static const fb.Reader<SpacecraftFrame> reader = _SpacecraftFrameReader();
+
+  @override
+  String toString() {
+    return 'SpacecraftFrame{value: $value}';
+  }
+}
+
+class _SpacecraftFrameReader extends fb.Reader<SpacecraftFrame> {
+  const _SpacecraftFrameReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SpacecraftFrame read(fb.BufferContext bc, int offset) =>
+      SpacecraftFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  https://sanaregistry.org/r/orbit_relative_reference_frames/
+///  Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
+class OrbitFrame {
+  final int value;
+  const OrbitFrame._(this.value);
+
+  factory OrbitFrame.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum OrbitFrame');
+    }
+    return result;
+  }
+
+  static OrbitFrame? _createOrNull(int? value) => 
+      value == null ? null : OrbitFrame.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 15;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  ///  OID: 1.3.112.4.57.3.1
+  ///  Earth Equatorial Inertial frame aligned with J2000 epoch.
+  static const OrbitFrame EQW_INERTIAL = OrbitFrame._(0);
+
+  ///  OID: 1.3.112.4.57.3.3
+  ///  Local Vertical Local Horizontal inertial frame.
+  static const OrbitFrame LVLH_INERTIAL = OrbitFrame._(1);
+
+  ///  OID: 1.3.112.4.57.3.2
+  ///  Local Vertical Local Horizontal rotating frame.
+  static const OrbitFrame LVLH_ROTATING = OrbitFrame._(2);
+
+  ///  OID: 1.3.112.4.57.3.5
+  ///  Normal along-track cross-track inertial frame.
+  static const OrbitFrame NSW_INERTIAL = OrbitFrame._(3);
+
+  ///  OID: 1.3.112.4.57.3.4
+  ///  Normal along-track cross-track rotating frame.
+  static const OrbitFrame NSW_ROTATING = OrbitFrame._(4);
+
+  ///  OID: 1.3.112.4.57.3.7
+  ///  Orbit normal Tangential cross-track inertial frame.
+  static const OrbitFrame NTW_INERTIAL = OrbitFrame._(5);
+
+  ///  OID: 1.3.112.4.57.3.6
+  ///  Orbit normal Tangential cross-track rotating frame.
+  static const OrbitFrame NTW_ROTATING = OrbitFrame._(6);
+
+  ///  OID: 1.3.112.4.57.3.8
+  ///  Perifocal frame aligned with orbit's perigee.
+  static const OrbitFrame PQW_INERTIAL = OrbitFrame._(7);
+
+  ///  OID: 1.3.112.4.57.3.10
+  ///  Radial along-track cross-track inertial frame.
+  static const OrbitFrame RSW_INERTIAL = OrbitFrame._(8);
+
+  ///  OID: 1.3.112.4.57.3.9
+  ///  Radial along-track cross-track rotating frame.
+  static const OrbitFrame RSW_ROTATING = OrbitFrame._(9);
+
+  ///  OID: 1.3.112.4.57.3.14
+  ///  South-East-Zenith inertial (topocentric) frame.
+  static const OrbitFrame SEZ_INERTIAL = OrbitFrame._(10);
+
+  ///  OID: 1.3.112.4.57.3.13
+  ///  South-East-Zenith rotating (topocentric) frame.
+  static const OrbitFrame SEZ_ROTATING = OrbitFrame._(11);
+
+  ///  OID: 1.3.112.4.57.3.12
+  ///  Transverse normal cross-track inertial frame.
+  static const OrbitFrame TNW_INERTIAL = OrbitFrame._(12);
+
+  ///  OID: 1.3.112.4.57.3.11
+  ///  Transverse normal cross-track rotating frame.
+  static const OrbitFrame TNW_ROTATING = OrbitFrame._(13);
+
+  ///  OID: 1.3.112.4.57.3.16
+  ///  Velocity-normal co-normal inertial frame.
+  static const OrbitFrame VNC_INERTIAL = OrbitFrame._(14);
+
+  ///  OID: 1.3.112.4.57.3.15
+  ///  Velocity-normal co-normal rotating frame.
+  static const OrbitFrame VNC_ROTATING = OrbitFrame._(15);
+  static const Map<int, OrbitFrame> values = {
+    0: EQW_INERTIAL,
+    1: LVLH_INERTIAL,
+    2: LVLH_ROTATING,
+    3: NSW_INERTIAL,
+    4: NSW_ROTATING,
+    5: NTW_INERTIAL,
+    6: NTW_ROTATING,
+    7: PQW_INERTIAL,
+    8: RSW_INERTIAL,
+    9: RSW_ROTATING,
+    10: SEZ_INERTIAL,
+    11: SEZ_ROTATING,
+    12: TNW_INERTIAL,
+    13: TNW_ROTATING,
+    14: VNC_INERTIAL,
+    15: VNC_ROTATING};
+
+  static const fb.Reader<OrbitFrame> reader = _OrbitFrameReader();
+
+  @override
+  String toString() {
+    return 'OrbitFrame{value: $value}';
+  }
+}
+
+class _OrbitFrameReader extends fb.Reader<OrbitFrame> {
+  const _OrbitFrameReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  OrbitFrame read(fb.BufferContext bc, int offset) =>
+      OrbitFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Non-registered or local use frames
+class CustomFrame {
+  final int value;
+  const CustomFrame._(this.value);
+
+  factory CustomFrame.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CustomFrame');
+    }
+    return result;
+  }
+
+  static CustomFrame? _createOrNull(int? value) => 
+      value == null ? null : CustomFrame.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 17;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  ///  Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
+  static const CustomFrame ECEF = CustomFrame._(0);
+
+  ///  True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
+  static const CustomFrame TEME = CustomFrame._(1);
+
+  ///  True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
+  static const CustomFrame TEMEOFEPOCH = CustomFrame._(2);
+
+  ///  East-North-Up: Local tangent plane for surface points.
+  static const CustomFrame ENU = CustomFrame._(3);
+
+  ///  North-East-Down: Aviation/navigation frame aligned with gravity.
+  static const CustomFrame NED = CustomFrame._(4);
+
+  ///  North-East-Up: Local tangent plane variant with Up positive.
+  static const CustomFrame NEU = CustomFrame._(5);
+
+  ///  Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
+  static const CustomFrame RIC = CustomFrame._(6);
+
+  ///  Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
+  static const CustomFrame RTN = CustomFrame._(7);
+
+  ///  Transverse-Velocity-Normal: Alternative orbit frame.
+  static const CustomFrame TVN = CustomFrame._(8);
+
+  ///  Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
+  static const CustomFrame VVLH = CustomFrame._(9);
+
+  ///  Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
+  static const CustomFrame QSW = CustomFrame._(10);
+
+  ///  Local Tangent Plane: Surface-fixed frame centered on a point.
+  static const CustomFrame LTP = CustomFrame._(11);
+
+  ///  Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
+  static const CustomFrame LVLH = CustomFrame._(12);
+
+  ///  Polar-North-East: Surface coordinate frame.
+  static const CustomFrame PNE = CustomFrame._(13);
+
+  ///  Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
+  static const CustomFrame BRF = CustomFrame._(14);
+
+  ///  Radial-Along-track-Cross-track: Same as RSW.
+  static const CustomFrame RSW = CustomFrame._(15);
+
+  ///  Tangential-Normal-Cross-track: Same as TNW.
+  static const CustomFrame TNW = CustomFrame._(16);
+
+  ///  Radial-UTF: Radial, Along-track, Cross-track variant.
+  static const CustomFrame UVW = CustomFrame._(17);
+  static const Map<int, CustomFrame> values = {
+    0: ECEF,
+    1: TEME,
+    2: TEMEOFEPOCH,
+    3: ENU,
+    4: NED,
+    5: NEU,
+    6: RIC,
+    7: RTN,
+    8: TVN,
+    9: VVLH,
+    10: QSW,
+    11: LTP,
+    12: LVLH,
+    13: PNE,
+    14: BRF,
+    15: RSW,
+    16: TNW,
+    17: UVW};
+
+  static const fb.Reader<CustomFrame> reader = _CustomFrameReader();
+
+  @override
+  String toString() {
+    return 'CustomFrame{value: $value}';
+  }
+}
+
+class _CustomFrameReader extends fb.Reader<CustomFrame> {
+  const _CustomFrameReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CustomFrame read(fb.BufferContext bc, int offset) =>
+      CustomFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class RfmunionTypeId {
+  final int value;
+  const RfmunionTypeId._(this.value);
+
+  factory RfmunionTypeId.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum RfmunionTypeId');
+    }
+    return result;
+  }
+
+  static RfmunionTypeId? _createOrNull(int? value) => 
+      value == null ? null : RfmunionTypeId.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const RfmunionTypeId NONE = RfmunionTypeId._(0);
+  static const RfmunionTypeId CelestialFrameWrapper = RfmunionTypeId._(1);
+  static const RfmunionTypeId SpacecraftFrameWrapper = RfmunionTypeId._(2);
+  static const RfmunionTypeId OrbitFrameWrapper = RfmunionTypeId._(3);
+  static const RfmunionTypeId CustomFrameWrapper = RfmunionTypeId._(4);
+  static const Map<int, RfmunionTypeId> values = {
+    0: NONE,
+    1: CelestialFrameWrapper,
+    2: SpacecraftFrameWrapper,
+    3: OrbitFrameWrapper,
+    4: CustomFrameWrapper};
+
+  static const fb.Reader<RfmunionTypeId> reader = _RfmunionTypeIdReader();
+
+  @override
+  String toString() {
+    return 'RfmunionTypeId{value: $value}';
+  }
+}
+
+class _RfmunionTypeIdReader extends fb.Reader<RfmunionTypeId> {
+  const _RfmunionTypeIdReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  RfmunionTypeId read(fb.BufferContext bc, int offset) =>
+      RfmunionTypeId.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+class CelestialFrameWrapper {
+  CelestialFrameWrapper._(this._bc, this._bcOffset);
+  factory CelestialFrameWrapper(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CelestialFrameWrapper> reader = _CelestialFrameWrapperReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  CelestialFrame get frame => CelestialFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+
+  @override
+  String toString() {
+    return 'CelestialFrameWrapper{frame: ${frame}}';
+  }
+}
+
+class _CelestialFrameWrapperReader extends fb.TableReader<CelestialFrameWrapper> {
+  const _CelestialFrameWrapperReader();
+
+  @override
+  CelestialFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+    CelestialFrameWrapper._(bc, offset);
+}
+
+class CelestialFrameWrapperBuilder {
+  CelestialFrameWrapperBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addFrame(CelestialFrame? frame) {
+    fbBuilder.addInt8(0, frame?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CelestialFrameWrapperObjectBuilder extends fb.ObjectBuilder {
+  final CelestialFrame? _frame;
+
+  CelestialFrameWrapperObjectBuilder({
+    CelestialFrame? frame,
+  })
+      : _frame = frame;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(1);
+    fbBuilder.addInt8(0, _frame?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SpacecraftFrameWrapper {
+  SpacecraftFrameWrapper._(this._bc, this._bcOffset);
+  factory SpacecraftFrameWrapper(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SpacecraftFrameWrapper> reader = _SpacecraftFrameWrapperReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  SpacecraftFrame get frame => SpacecraftFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+
+  @override
+  String toString() {
+    return 'SpacecraftFrameWrapper{frame: ${frame}}';
+  }
+}
+
+class _SpacecraftFrameWrapperReader extends fb.TableReader<SpacecraftFrameWrapper> {
+  const _SpacecraftFrameWrapperReader();
+
+  @override
+  SpacecraftFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+    SpacecraftFrameWrapper._(bc, offset);
+}
+
+class SpacecraftFrameWrapperBuilder {
+  SpacecraftFrameWrapperBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addFrame(SpacecraftFrame? frame) {
+    fbBuilder.addInt8(0, frame?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SpacecraftFrameWrapperObjectBuilder extends fb.ObjectBuilder {
+  final SpacecraftFrame? _frame;
+
+  SpacecraftFrameWrapperObjectBuilder({
+    SpacecraftFrame? frame,
+  })
+      : _frame = frame;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(1);
+    fbBuilder.addInt8(0, _frame?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class OrbitFrameWrapper {
+  OrbitFrameWrapper._(this._bc, this._bcOffset);
+  factory OrbitFrameWrapper(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OrbitFrameWrapper> reader = _OrbitFrameWrapperReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  OrbitFrame get frame => OrbitFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+
+  @override
+  String toString() {
+    return 'OrbitFrameWrapper{frame: ${frame}}';
+  }
+}
+
+class _OrbitFrameWrapperReader extends fb.TableReader<OrbitFrameWrapper> {
+  const _OrbitFrameWrapperReader();
+
+  @override
+  OrbitFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+    OrbitFrameWrapper._(bc, offset);
+}
+
+class OrbitFrameWrapperBuilder {
+  OrbitFrameWrapperBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addFrame(OrbitFrame? frame) {
+    fbBuilder.addInt8(0, frame?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OrbitFrameWrapperObjectBuilder extends fb.ObjectBuilder {
+  final OrbitFrame? _frame;
+
+  OrbitFrameWrapperObjectBuilder({
+    OrbitFrame? frame,
+  })
+      : _frame = frame;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(1);
+    fbBuilder.addInt8(0, _frame?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class CustomFrameWrapper {
+  CustomFrameWrapper._(this._bc, this._bcOffset);
+  factory CustomFrameWrapper(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CustomFrameWrapper> reader = _CustomFrameWrapperReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  CustomFrame get frame => CustomFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+
+  @override
+  String toString() {
+    return 'CustomFrameWrapper{frame: ${frame}}';
+  }
+}
+
+class _CustomFrameWrapperReader extends fb.TableReader<CustomFrameWrapper> {
+  const _CustomFrameWrapperReader();
+
+  @override
+  CustomFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+    CustomFrameWrapper._(bc, offset);
+}
+
+class CustomFrameWrapperBuilder {
+  CustomFrameWrapperBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addFrame(CustomFrame? frame) {
+    fbBuilder.addInt8(0, frame?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CustomFrameWrapperObjectBuilder extends fb.ObjectBuilder {
+  final CustomFrame? _frame;
+
+  CustomFrameWrapperObjectBuilder({
+    CustomFrame? frame,
+  })
+      : _frame = frame;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(1);
+    fbBuilder.addInt8(0, _frame?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class RFM {
   RFM._(this._bc, this._bcOffset);
   factory RFM(List<int> bytes) {
@@ -413,11 +885,21 @@ class RFM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  RfmunionTypeId? get referenceFrameType => RfmunionTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 4));
+  dynamic get REFERENCE_FRAME {
+    switch (REFERENCE_FRAMEType?.value) {
+      case 1: return CelestialFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 2: return SpacecraftFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 3: return OrbitFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 4: return CustomFrameWrapper.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      default: return null;
+    }
+  }
+  String? get INDEX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'RFM{REFERENCE_FRAME: ${REFERENCE_FRAME}}';
+    return 'RFM{referenceFrameType: ${referenceFrameType}, REFERENCE_FRAME: ${REFERENCE_FRAME}, INDEX: ${INDEX}}';
   }
 }
 
@@ -435,11 +917,19 @@ class RFMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(3);
   }
 
-  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
-    fbBuilder.addInt8(0, REFERENCE_FRAME?.value);
+  int addReferenceFrameType(RfmunionTypeId? referenceFrameType) {
+    fbBuilder.addUint8(0, referenceFrameType?.value);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIndexOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
 
@@ -449,18 +939,29 @@ class RFMBuilder {
 }
 
 class RFMObjectBuilder extends fb.ObjectBuilder {
-  final RefFrame? _REFERENCE_FRAME;
+  final RfmunionTypeId? _referenceFrameType;
+  final dynamic _REFERENCE_FRAME;
+  final String? _INDEX;
 
   RFMObjectBuilder({
-    RefFrame? REFERENCE_FRAME,
+    RfmunionTypeId? referenceFrameType,
+    dynamic REFERENCE_FRAME,
+    String? INDEX,
   })
-      : _REFERENCE_FRAME = REFERENCE_FRAME;
+      : _referenceFrameType = referenceFrameType,
+        _REFERENCE_FRAME = REFERENCE_FRAME,
+        _INDEX = INDEX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
-    fbBuilder.addInt8(0, _REFERENCE_FRAME?.value);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? INDEXOffset = _INDEX == null ? null
+        : fbBuilder.writeString(_INDEX!);
+    fbBuilder.startTable(3);
+    fbBuilder.addUint8(0, _referenceFrameType?.value);
+    fbBuilder.addOffset(1, REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(2, INDEXOffset);
     return fbBuilder.endTable();
   }
 

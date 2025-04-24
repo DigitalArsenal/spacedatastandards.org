@@ -87,13 +87,12 @@ class OMM extends Table
     }
 
     /// Reference Frame
-    /**
-     * @return sbyte
-     */
+    /// Typically TEMEOFDATE
     public function getREFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::TEME;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Reference Frame Epoch (ISO 8601 UTC format)
@@ -347,13 +346,12 @@ class OMM extends Table
 
     /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
     /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-    /**
-     * @return sbyte
-     */
+    /// Typically RSW
     public function getCOV_REFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(70);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::RSW;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// CX_X [km**2]
@@ -752,12 +750,12 @@ class OMM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
     {
-        $builder->addSbyteX(6, $REFERENCE_FRAME, 2);
+        $builder->addOffsetX(6, $REFERENCE_FRAME, 0);
     }
 
     /**
@@ -1022,12 +1020,12 @@ class OMM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addCOV_REFERENCE_FRAME(FlatBufferBuilder $builder, $COV_REFERENCE_FRAME)
     {
-        $builder->addSbyteX(33, $COV_REFERENCE_FRAME, 23);
+        $builder->addOffsetX(33, $COV_REFERENCE_FRAME, 0);
     }
 
     /**

@@ -477,11 +477,11 @@ class EphemerisDataBlock {
   ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Name of the reference frame (TEME, EME2000, etc.)
-  RefFrame get REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 10);
   ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
   String? get REFERENCE_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Reference frame for the covariance matrix
-  RefFrame get COV_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  RFM? get COV_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 14);
   ///  Time system used for the orbit state and covariance matrix. (UTC)
   TimeSystem get TIME_SYSTEM => TimeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -538,16 +538,16 @@ class EphemerisDataBlockBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addReferenceFrame(RefFrame? REFERENCE_FRAME) {
-    fbBuilder.addInt8(3, REFERENCE_FRAME?.value);
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
   int addReferenceFrameEpochOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addCovReferenceFrame(RefFrame? COV_REFERENCE_FRAME) {
-    fbBuilder.addInt8(5, COV_REFERENCE_FRAME?.value);
+  int addCovReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
   int addTimeSystem(TimeSystem? TIME_SYSTEM) {
@@ -600,9 +600,9 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _COMMENT;
   final CATObjectBuilder? _OBJECT;
   final String? _CENTER_NAME;
-  final RefFrame? _REFERENCE_FRAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
   final String? _REFERENCE_FRAME_EPOCH;
-  final RefFrame? _COV_REFERENCE_FRAME;
+  final RFMObjectBuilder? _COV_REFERENCE_FRAME;
   final TimeSystem? _TIME_SYSTEM;
   final String? _START_TIME;
   final String? _USEABLE_START_TIME;
@@ -618,9 +618,9 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     String? COMMENT,
     CATObjectBuilder? OBJECT,
     String? CENTER_NAME,
-    RefFrame? REFERENCE_FRAME,
+    RFMObjectBuilder? REFERENCE_FRAME,
     String? REFERENCE_FRAME_EPOCH,
-    RefFrame? COV_REFERENCE_FRAME,
+    RFMObjectBuilder? COV_REFERENCE_FRAME,
     TimeSystem? TIME_SYSTEM,
     String? START_TIME,
     String? USEABLE_START_TIME,
@@ -657,8 +657,10 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     final int? OBJECTOffset = _OBJECT?.getOrCreateOffset(fbBuilder);
     final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
         : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? REFERENCE_FRAME_EPOCHOffset = _REFERENCE_FRAME_EPOCH == null ? null
         : fbBuilder.writeString(_REFERENCE_FRAME_EPOCH!);
+    final int? COV_REFERENCE_FRAMEOffset = _COV_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? START_TIMEOffset = _START_TIME == null ? null
         : fbBuilder.writeString(_START_TIME!);
     final int? USEABLE_START_TIMEOffset = _USEABLE_START_TIME == null ? null
@@ -677,9 +679,9 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
-    fbBuilder.addInt8(3, _REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(3, REFERENCE_FRAMEOffset);
     fbBuilder.addOffset(4, REFERENCE_FRAME_EPOCHOffset);
-    fbBuilder.addInt8(5, _COV_REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(5, COV_REFERENCE_FRAMEOffset);
     fbBuilder.addInt8(6, _TIME_SYSTEM?.value);
     fbBuilder.addOffset(7, START_TIMEOffset);
     fbBuilder.addOffset(8, USEABLE_START_TIMEOffset);

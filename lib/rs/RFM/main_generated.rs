@@ -10,363 +10,335 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_REF_FRAME: i8 = 0;
+pub const ENUM_MIN_CELESTIAL_FRAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_REF_FRAME: i8 = 88;
+pub const ENUM_MAX_CELESTIAL_FRAME: i8 = 27;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_REF_FRAME: [refFrame; 89] = [
-  refFrame::ECEF,
-  refFrame::ICRF,
-  refFrame::TEME,
-  refFrame::ENU,
-  refFrame::NED,
-  refFrame::NEU,
-  refFrame::RIC,
-  refFrame::J2000,
-  refFrame::GCRF,
-  refFrame::GRC,
-  refFrame::ITRF2000,
-  refFrame::ITRF93,
-  refFrame::ITRF97,
-  refFrame::TDR,
-  refFrame::TOD,
-  refFrame::RTN,
-  refFrame::TVN,
-  refFrame::VVLH,
-  refFrame::QSW,
-  refFrame::LTP,
-  refFrame::LVLH,
-  refFrame::PNE,
-  refFrame::BRF,
-  refFrame::RSW,
-  refFrame::TNW,
-  refFrame::UVW,
-  refFrame::EQW_INERTIAL,
-  refFrame::LVLH_INERTIAL,
-  refFrame::LVLH_ROTATING,
-  refFrame::NSW_INERTIAL,
-  refFrame::NSW_ROTATING,
-  refFrame::NTW_INERTIAL,
-  refFrame::NTW_ROTATING,
-  refFrame::PQW_INERTIAL,
-  refFrame::RSW_INERTIAL,
-  refFrame::RSW_ROTATING,
-  refFrame::SEZ_INERTIAL,
-  refFrame::SEZ_ROTATING,
-  refFrame::TNW_INERTIAL,
-  refFrame::TNW_ROTATING,
-  refFrame::VNC_INERTIAL,
-  refFrame::VNC_ROTATING,
-  refFrame::ALIGN_CB,
-  refFrame::ALIGN_EARTH,
-  refFrame::B1950,
-  refFrame::CIRS,
-  refFrame::DTRFyyyy,
-  refFrame::EFG,
-  refFrame::EME2000,
-  refFrame::FIXED_CB,
-  refFrame::FIXED_EARTH,
-  refFrame::GCRFn,
-  refFrame::GTOD,
-  refFrame::MOD_CB,
-  refFrame::MOD_EARTH,
-  refFrame::MOD_MOON,
-  refFrame::MOE_CB,
-  refFrame::MOE_EARTH,
-  refFrame::MOON_ME,
-  refFrame::MOON_MEIAUE,
-  refFrame::MOON_PAxxx,
-  refFrame::TEMEOFDATE,
-  refFrame::TEMEOFEPOCH,
-  refFrame::TIRS,
-  refFrame::TOD_CB,
-  refFrame::TOD_EARTH,
-  refFrame::TOD_MOON,
-  refFrame::TOE_CB,
-  refFrame::TOE_EARTH,
-  refFrame::TOE_MOON,
-  refFrame::TRUE_ECLIPTIC,
-  refFrame::UVW_GO_INERTIAL,
-  refFrame::WGS84,
-  refFrame::ACC_i,
-  refFrame::ACTUATOR_i,
-  refFrame::AST_i,
-  refFrame::CSS_i,
-  refFrame::DSS_i,
-  refFrame::ESA_i,
-  refFrame::GYRO_FRAME_i,
-  refFrame::IMU_FRAME_i,
-  refFrame::INSTRUMENT_i,
-  refFrame::MTA_i,
-  refFrame::RW_i,
-  refFrame::SA_i,
-  refFrame::SC_BODY_i,
-  refFrame::SENSOR_i,
-  refFrame::STARTRACKER_i,
-  refFrame::TAM_i,
+pub const ENUM_VALUES_CELESTIAL_FRAME: [CelestialFrame; 28] = [
+  CelestialFrame::GCRF,
+  CelestialFrame::ICRF,
+  CelestialFrame::J2000,
+  CelestialFrame::J2000A,
+  CelestialFrame::EME2000,
+  CelestialFrame::TEMEOFDATE,
+  CelestialFrame::GTOD,
+  CelestialFrame::CIRS,
+  CelestialFrame::MOD_EARTH,
+  CelestialFrame::MOD_CB,
+  CelestialFrame::MOD_MOON,
+  CelestialFrame::TOD_EARTH,
+  CelestialFrame::TOD_CB,
+  CelestialFrame::TOD_MOON,
+  CelestialFrame::TOE_EARTH,
+  CelestialFrame::TOE_CB,
+  CelestialFrame::TOE_MOON,
+  CelestialFrame::ITRF2000,
+  CelestialFrame::ITRF93,
+  CelestialFrame::ITRF97,
+  CelestialFrame::EFG,
+  CelestialFrame::FIXED_CB,
+  CelestialFrame::FIXED_EARTH,
+  CelestialFrame::WGS84,
+  CelestialFrame::DTRFYYYY,
+  CelestialFrame::ALIGN_EARTH,
+  CelestialFrame::ALIGN_CB,
+  CelestialFrame::B1950,
 ];
 
+/// https://www.sanaregistry.org/r/celestial_body_reference_frames/
+/// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct refFrame(pub i8);
+pub struct CelestialFrame(pub i8);
 #[allow(non_upper_case_globals)]
-impl refFrame {
-  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
-  pub const ECEF: Self = Self(0);
-  /// International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
+impl CelestialFrame {
+  /// OID: 1.3.112.4.57.2.9
+  /// Inertial Earth-centered frame aligned with Earth's center of mass.
+  pub const GCRF: Self = Self(0);
+  /// OID: 1.3.112.4.57.2.11
+  /// International Celestial Reference Frame based on distant quasars.
   pub const ICRF: Self = Self(1);
-  /// True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
-  pub const TEME: Self = Self(2);
-  /// East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
-  pub const ENU: Self = Self(3);
-  /// North-East-Down: Aviation/navigation frame aligned with gravity.
-  pub const NED: Self = Self(4);
-  /// North-East-Up: Similar to NED, with "Up" opposite gravity.
-  pub const NEU: Self = Self(5);
-  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
-  pub const RIC: Self = Self(6);
-  /// Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
-  pub const J2000: Self = Self(7);
-  /// Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
-  pub const GCRF: Self = Self(8);
-  /// Greenwich Rotating Coordinates: Rotates with Earth's true equator.
-  pub const GRC: Self = Self(9);
-  /// International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
-  pub const ITRF2000: Self = Self(10);
-  /// International Terrestrial Reference Frame 1993: Older ITRF realization.
-  pub const ITRF93: Self = Self(11);
-  /// International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
-  pub const ITRF97: Self = Self(12);
-  /// True of Date, Rotating: Rotates with Earth's true equator.
-  pub const TDR: Self = Self(13);
-  /// True of Date: Similar to TDR, without rotation.
-  pub const TOD: Self = Self(14);
-  /// Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
-  pub const RTN: Self = Self(15);
-  /// Transverse, Velocity, Normal: Alternative orbit frame.
-  pub const TVN: Self = Self(16);
-  /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
-  pub const VVLH: Self = Self(17);
-  /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
-  pub const QSW: Self = Self(18);
-  /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
-  pub const LTP: Self = Self(19);
-  /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
-  pub const LVLH: Self = Self(20);
-  /// Polar-North-East: Polar coordinate frame.
-  pub const PNE: Self = Self(21);
-  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  pub const BRF: Self = Self(22);
-  /// Radial, Down-track, Cross-track: Alternate name for RTN.
-  pub const RSW: Self = Self(23);
-  /// Tangential, Normal, Cross-track: Local orbit frame.
-  pub const TNW: Self = Self(24);
-  /// Radial, Along-track, Cross-track: Satellite motion frame.
-  pub const UVW: Self = Self(25);
-  /// Equinoctial Inertial: Frame with axes aligned to orbital properties.
-  pub const EQW_INERTIAL: Self = Self(26);
-  /// Inertial version of LVLH.
-  pub const LVLH_INERTIAL: Self = Self(27);
-  /// Rotating LVLH frame.
-  pub const LVLH_ROTATING: Self = Self(28);
-  /// Inertial Nadir-Sun-Normal frame.
-  pub const NSW_INERTIAL: Self = Self(29);
-  /// Rotating Nadir-Sun-Normal frame.
-  pub const NSW_ROTATING: Self = Self(30);
-  /// Inertial Transverse-Velocity-Normal frame.
-  pub const NTW_INERTIAL: Self = Self(31);
-  /// Rotating Transverse-Velocity-Normal frame.
-  pub const NTW_ROTATING: Self = Self(32);
-  /// Perifocal Coordinate System: Inertial frame aligned to periapsis.
-  pub const PQW_INERTIAL: Self = Self(33);
-  /// Inertial Radial, Transverse, Normal frame.
-  pub const RSW_INERTIAL: Self = Self(34);
-  /// Rotating RSW frame: Aligned with orbit angular momentum.
-  pub const RSW_ROTATING: Self = Self(35);
-  /// South/East/Zenith inertial frame.
-  pub const SEZ_INERTIAL: Self = Self(36);
-  /// Rotating South/East/Zenith frame.
-  pub const SEZ_ROTATING: Self = Self(37);
-  /// Inertial Tangential, Normal, Cross-track frame.
-  pub const TNW_INERTIAL: Self = Self(38);
-  /// Rotating Tangential, Normal, Cross-track frame.
-  pub const TNW_ROTATING: Self = Self(39);
-  /// Velocity, Normal, Co-normal inertial frame.
-  pub const VNC_INERTIAL: Self = Self(40);
-  /// Rotating Velocity, Normal, Co-normal frame.
-  pub const VNC_ROTATING: Self = Self(41);
-  /// Central Body alignment inertial frame.
-  pub const ALIGN_CB: Self = Self(42);
-  /// Earth alignment inertial frame.
-  pub const ALIGN_EARTH: Self = Self(43);
-  /// Inertial realization of B1950 epoch.
-  pub const B1950: Self = Self(44);
-  /// Celestial Intermediate Reference System.
-  pub const CIRS: Self = Self(45);
-  /// DTRF Inertial frame with corrections.
-  pub const DTRFyyyy: Self = Self(46);
-  /// Earth-Fixed Greenwich rotating frame.
-  pub const EFG: Self = Self(47);
-  /// Earth Mean Equator and Equinox of 2000 epoch.
-  pub const EME2000: Self = Self(48);
-  /// Central Body fixed rotating frame.
-  pub const FIXED_CB: Self = Self(49);
-  /// Earth-fixed rotating frame.
-  pub const FIXED_EARTH: Self = Self(50);
-  /// Geocentric Celestial Reference Frame with versioning.
-  pub const GCRFn: Self = Self(51);
-  /// Greenwich True-of-Date rotating frame.
-  pub const GTOD: Self = Self(52);
-  /// Mean of Date for all central bodies except Earth and Moon.
-  pub const MOD_CB: Self = Self(53);
-  /// Mean of Date for Earth.
-  pub const MOD_EARTH: Self = Self(54);
-  /// Mean of Date for Moon.
-  pub const MOD_MOON: Self = Self(55);
-  /// Mean of Epoch for central bodies.
-  pub const MOE_CB: Self = Self(56);
-  /// Mean of Epoch for Earth.
-  pub const MOE_EARTH: Self = Self(57);
-  /// Lunar Moon Mean Earth reference frame.
-  pub const MOON_ME: Self = Self(58);
-  /// Lunar Mean Equator and IAU Node reference frame.
-  pub const MOON_MEIAUE: Self = Self(59);
-  /// Lunar Principal Axis rotating frame.
-  pub const MOON_PAxxx: Self = Self(60);
-  /// True Equator Mean Equinox of Date.
-  pub const TEMEOFDATE: Self = Self(61);
-  /// True Equator Mean Equinox of Epoch.
-  pub const TEMEOFEPOCH: Self = Self(62);
-  /// Terrestrial Intermediate Reference System.
-  pub const TIRS: Self = Self(63);
-  /// True of Date for central bodies.
-  pub const TOD_CB: Self = Self(64);
-  /// True of Date for Earth.
-  pub const TOD_EARTH: Self = Self(65);
-  /// True of Date for Moon.
-  pub const TOD_MOON: Self = Self(66);
-  /// True of Epoch for central bodies.
-  pub const TOE_CB: Self = Self(67);
-  /// True of Epoch for Earth.
-  pub const TOE_EARTH: Self = Self(68);
-  /// True of Epoch for Moon.
-  pub const TOE_MOON: Self = Self(69);
-  /// True Ecliptic reference frame.
-  pub const TRUE_ECLIPTIC: Self = Self(70);
-  /// Launch go-inertial reference frame.
-  pub const UVW_GO_INERTIAL: Self = Self(71);
-  /// WGS 84 Earth-fixed terrestrial system.
-  pub const WGS84: Self = Self(72);
-  /// Accelerometer reference frame.
-  pub const ACC_i: Self = Self(73);
-  /// Actuator reference frame.
-  pub const ACTUATOR_i: Self = Self(74);
-  /// Autonomous Star Tracker reference frame.
-  pub const AST_i: Self = Self(75);
-  /// Coarse Sun Sensor reference frame.
-  pub const CSS_i: Self = Self(76);
-  /// Digital Sun Sensor reference frame.
-  pub const DSS_i: Self = Self(77);
-  /// Earth Sensor Assembly reference frame.
-  pub const ESA_i: Self = Self(78);
-  /// Gyro reference frame.
-  pub const GYRO_FRAME_i: Self = Self(79);
-  /// Inertial Measurement Unit reference frame.
-  pub const IMU_FRAME_i: Self = Self(80);
-  /// Instrument reference frame.
-  pub const INSTRUMENT_i: Self = Self(81);
-  /// Magnetic Torque Assembly reference frame.
-  pub const MTA_i: Self = Self(82);
-  /// Reaction Wheel reference frame.
-  pub const RW_i: Self = Self(83);
-  /// Solar Array reference frame.
-  pub const SA_i: Self = Self(84);
-  /// Spacecraft Body reference frame.
-  pub const SC_BODY_i: Self = Self(85);
-  /// Sensor reference frame.
-  pub const SENSOR_i: Self = Self(86);
-  /// Star Tracker reference frame.
-  pub const STARTRACKER_i: Self = Self(87);
-  /// Three Axis Magnetometer reference frame.
-  pub const TAM_i: Self = Self(88);
+  /// OID: 1.3.112.4.57.2.14
+  /// Classical J2000 inertial frame defined at epoch J2000.0.
+  pub const J2000: Self = Self(2);
+  /// OID: 1.3.112.4.57.2.15
+  /// Updated J2000 frame using IAU2000A precession-nutation models.
+  pub const J2000A: Self = Self(3);
+  /// OID: 1.3.112.4.57.2.7
+  /// Earth Mean Equator frame at epoch J2000 used in orbit determination.
+  pub const EME2000: Self = Self(4);
+  /// OID: 1.3.112.4.57.2.25
+  /// True Equator Mean Equinox of Date frame for satellite tracking.
+  pub const TEMEOFDATE: Self = Self(5);
+  /// OID: 1.3.112.4.57.2.10
+  /// Greenwich True of Date: Earth rotation relative to celestial reference.
+  pub const GTOD: Self = Self(6);
+  /// OID: 1.3.112.4.57.2.4
+  /// Celestial Intermediate Reference System based on CIP and CIO.
+  pub const CIRS: Self = Self(7);
+  /// OID: 1.3.112.4.57.2.18
+  /// Mean of Date (MOD) Earth frame using IAU1976 precession.
+  pub const MOD_EARTH: Self = Self(8);
+  /// OID: 1.3.112.4.57.2.17
+  /// Mean of Date (MOD) celestial body frame evaluated at each epoch.
+  pub const MOD_CB: Self = Self(9);
+  /// OID: 1.3.112.4.57.2.19
+  /// Mean of Date (MOD) Moon frame evaluated at each epoch.
+  pub const MOD_MOON: Self = Self(10);
+  /// OID: 1.3.112.4.57.2.29
+  /// True of Date (TOD) Earth frame with polar motion included.
+  pub const TOD_EARTH: Self = Self(11);
+  /// OID: 1.3.112.4.57.2.28
+  /// True of Date (TOD) celestial body frame.
+  pub const TOD_CB: Self = Self(12);
+  /// OID: 1.3.112.4.57.2.30
+  /// True of Date (TOD) Moon frame.
+  pub const TOD_MOON: Self = Self(13);
+  /// OID: 1.3.112.4.57.2.32
+  /// True of Epoch (TOE) Earth frame at specific epoch.
+  pub const TOE_EARTH: Self = Self(14);
+  /// OID: 1.3.112.4.57.2.31
+  /// True of Epoch (TOE) celestial body frame at specific epoch.
+  pub const TOE_CB: Self = Self(15);
+  /// OID: 1.3.112.4.57.2.33
+  /// True of Epoch (TOE) Moon frame at specific epoch.
+  pub const TOE_MOON: Self = Self(16);
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 2000 (Earth-fixed).
+  pub const ITRF2000: Self = Self(17);
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1993 (Earth-fixed).
+  pub const ITRF93: Self = Self(18);
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1997 (Earth-fixed).
+  pub const ITRF97: Self = Self(19);
+  /// OID: 1.3.112.4.57.2.6
+  /// Earth-Fixed Geocentric frame using geodetic coordinates.
+  pub const EFG: Self = Self(20);
+  /// OID: 1.3.112.4.57.2.8
+  /// Fixed frame of a celestial body.
+  pub const FIXED_CB: Self = Self(21);
+  /// OID: 1.3.112.4.57.2.39
+  /// Fixed Earth frame aligned with WGS84 ellipsoid.
+  pub const FIXED_EARTH: Self = Self(22);
+  /// WGS84 Earth-fixed terrestrial system.
+  pub const WGS84: Self = Self(23);
+  /// OID: 1.3.112.4.57.2.5
+  /// Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+  pub const DTRFYYYY: Self = Self(24);
+  /// OID: 1.3.112.4.57.2.2
+  /// Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+  pub const ALIGN_EARTH: Self = Self(25);
+  /// OID: 1.3.112.4.57.2.1
+  /// Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+  pub const ALIGN_CB: Self = Self(26);
+  /// OID: 1.3.112.4.57.2.3
+  /// Classical Besselian 1950 equator and equinox frame.
+  pub const B1950: Self = Self(27);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 88;
+  pub const ENUM_MAX: i8 = 27;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::ECEF,
-    Self::ICRF,
-    Self::TEME,
-    Self::ENU,
-    Self::NED,
-    Self::NEU,
-    Self::RIC,
-    Self::J2000,
     Self::GCRF,
-    Self::GRC,
+    Self::ICRF,
+    Self::J2000,
+    Self::J2000A,
+    Self::EME2000,
+    Self::TEMEOFDATE,
+    Self::GTOD,
+    Self::CIRS,
+    Self::MOD_EARTH,
+    Self::MOD_CB,
+    Self::MOD_MOON,
+    Self::TOD_EARTH,
+    Self::TOD_CB,
+    Self::TOD_MOON,
+    Self::TOE_EARTH,
+    Self::TOE_CB,
+    Self::TOE_MOON,
     Self::ITRF2000,
     Self::ITRF93,
     Self::ITRF97,
-    Self::TDR,
-    Self::TOD,
-    Self::RTN,
-    Self::TVN,
-    Self::VVLH,
-    Self::QSW,
-    Self::LTP,
-    Self::LVLH,
-    Self::PNE,
-    Self::BRF,
-    Self::RSW,
-    Self::TNW,
-    Self::UVW,
-    Self::EQW_INERTIAL,
-    Self::LVLH_INERTIAL,
-    Self::LVLH_ROTATING,
-    Self::NSW_INERTIAL,
-    Self::NSW_ROTATING,
-    Self::NTW_INERTIAL,
-    Self::NTW_ROTATING,
-    Self::PQW_INERTIAL,
-    Self::RSW_INERTIAL,
-    Self::RSW_ROTATING,
-    Self::SEZ_INERTIAL,
-    Self::SEZ_ROTATING,
-    Self::TNW_INERTIAL,
-    Self::TNW_ROTATING,
-    Self::VNC_INERTIAL,
-    Self::VNC_ROTATING,
-    Self::ALIGN_CB,
-    Self::ALIGN_EARTH,
-    Self::B1950,
-    Self::CIRS,
-    Self::DTRFyyyy,
     Self::EFG,
-    Self::EME2000,
     Self::FIXED_CB,
     Self::FIXED_EARTH,
-    Self::GCRFn,
-    Self::GTOD,
-    Self::MOD_CB,
-    Self::MOD_EARTH,
-    Self::MOD_MOON,
-    Self::MOE_CB,
-    Self::MOE_EARTH,
-    Self::MOON_ME,
-    Self::MOON_MEIAUE,
-    Self::MOON_PAxxx,
-    Self::TEMEOFDATE,
-    Self::TEMEOFEPOCH,
-    Self::TIRS,
-    Self::TOD_CB,
-    Self::TOD_EARTH,
-    Self::TOD_MOON,
-    Self::TOE_CB,
-    Self::TOE_EARTH,
-    Self::TOE_MOON,
-    Self::TRUE_ECLIPTIC,
-    Self::UVW_GO_INERTIAL,
     Self::WGS84,
+    Self::DTRFYYYY,
+    Self::ALIGN_EARTH,
+    Self::ALIGN_CB,
+    Self::B1950,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::GCRF => Some("GCRF"),
+      Self::ICRF => Some("ICRF"),
+      Self::J2000 => Some("J2000"),
+      Self::J2000A => Some("J2000A"),
+      Self::EME2000 => Some("EME2000"),
+      Self::TEMEOFDATE => Some("TEMEOFDATE"),
+      Self::GTOD => Some("GTOD"),
+      Self::CIRS => Some("CIRS"),
+      Self::MOD_EARTH => Some("MOD_EARTH"),
+      Self::MOD_CB => Some("MOD_CB"),
+      Self::MOD_MOON => Some("MOD_MOON"),
+      Self::TOD_EARTH => Some("TOD_EARTH"),
+      Self::TOD_CB => Some("TOD_CB"),
+      Self::TOD_MOON => Some("TOD_MOON"),
+      Self::TOE_EARTH => Some("TOE_EARTH"),
+      Self::TOE_CB => Some("TOE_CB"),
+      Self::TOE_MOON => Some("TOE_MOON"),
+      Self::ITRF2000 => Some("ITRF2000"),
+      Self::ITRF93 => Some("ITRF93"),
+      Self::ITRF97 => Some("ITRF97"),
+      Self::EFG => Some("EFG"),
+      Self::FIXED_CB => Some("FIXED_CB"),
+      Self::FIXED_EARTH => Some("FIXED_EARTH"),
+      Self::WGS84 => Some("WGS84"),
+      Self::DTRFYYYY => Some("DTRFYYYY"),
+      Self::ALIGN_EARTH => Some("ALIGN_EARTH"),
+      Self::ALIGN_CB => Some("ALIGN_CB"),
+      Self::B1950 => Some("B1950"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CelestialFrame {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CelestialFrame {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CelestialFrame {
+    type Output = CelestialFrame;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CelestialFrame {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CelestialFrame {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CelestialFrame {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SPACECRAFT_FRAME: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SPACECRAFT_FRAME: i8 = 15;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SPACECRAFT_FRAME: [SpacecraftFrame; 16] = [
+  SpacecraftFrame::ACC_i,
+  SpacecraftFrame::ACTUATOR_i,
+  SpacecraftFrame::AST_i,
+  SpacecraftFrame::CSS_i,
+  SpacecraftFrame::DSS_i,
+  SpacecraftFrame::ESA_i,
+  SpacecraftFrame::GYRO_FRAME_i,
+  SpacecraftFrame::IMU_FRAME_i,
+  SpacecraftFrame::INSTRUMENT_i,
+  SpacecraftFrame::MTA_i,
+  SpacecraftFrame::RW_i,
+  SpacecraftFrame::SA_i,
+  SpacecraftFrame::SC_BODY_i,
+  SpacecraftFrame::SENSOR_i,
+  SpacecraftFrame::STARTRACKER_i,
+  SpacecraftFrame::TAM_i,
+];
+
+/// https://sanaregistry.org/r/spacecraft_body_reference_frames/
+/// Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct SpacecraftFrame(pub i8);
+#[allow(non_upper_case_globals)]
+impl SpacecraftFrame {
+  /// OID: 1.3.112.4.57.8.1
+  /// Accelerometer instrument frame.
+  pub const ACC_i: Self = Self(0);
+  /// OID: 1.3.112.4.57.8.2
+  /// Actuator system frame.
+  pub const ACTUATOR_i: Self = Self(1);
+  /// OID: 1.3.112.4.57.8.3
+  /// Attitude Sensor Target frame.
+  pub const AST_i: Self = Self(2);
+  /// OID: 1.3.112.4.57.8.4
+  /// Coarse Sun Sensor frame.
+  pub const CSS_i: Self = Self(3);
+  /// OID: 1.3.112.4.57.8.5
+  /// Digital Sun Sensor frame.
+  pub const DSS_i: Self = Self(4);
+  /// OID: 1.3.112.4.57.8.6
+  /// Earth Sensor Assembly frame.
+  pub const ESA_i: Self = Self(5);
+  /// OID: 1.3.112.4.57.8.7
+  /// Gyroscope instrument frame.
+  pub const GYRO_FRAME_i: Self = Self(6);
+  /// OID: 1.3.112.4.57.8.8
+  /// Inertial Measurement Unit frame.
+  pub const IMU_FRAME_i: Self = Self(7);
+  /// OID: 1.3.112.4.57.8.9
+  /// Generic instrument mounting frame.
+  pub const INSTRUMENT_i: Self = Self(8);
+  /// OID: 1.3.112.4.57.8.10
+  /// Magnetic Torquer Assembly frame.
+  pub const MTA_i: Self = Self(9);
+  /// OID: 1.3.112.4.57.8.11
+  /// Reaction Wheel assembly frame.
+  pub const RW_i: Self = Self(10);
+  /// OID: 1.3.112.4.57.8.12
+  /// Solar Array frame.
+  pub const SA_i: Self = Self(11);
+  /// OID: 1.3.112.4.57.8.13
+  /// Spacecraft body fixed frame.
+  pub const SC_BODY_i: Self = Self(12);
+  /// OID: 1.3.112.4.57.8.14
+  /// Generic sensor assembly frame.
+  pub const SENSOR_i: Self = Self(13);
+  /// OID: 1.3.112.4.57.8.15
+  /// Star Tracker instrument frame.
+  pub const STARTRACKER_i: Self = Self(14);
+  /// OID: 1.3.112.4.57.8.16
+  /// Thermal Assembly Module frame.
+  pub const TAM_i: Self = Self(15);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 15;
+  pub const ENUM_VALUES: &'static [Self] = &[
     Self::ACC_i,
     Self::ACTUATOR_i,
     Self::AST_i,
@@ -387,79 +359,6 @@ impl refFrame {
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::ECEF => Some("ECEF"),
-      Self::ICRF => Some("ICRF"),
-      Self::TEME => Some("TEME"),
-      Self::ENU => Some("ENU"),
-      Self::NED => Some("NED"),
-      Self::NEU => Some("NEU"),
-      Self::RIC => Some("RIC"),
-      Self::J2000 => Some("J2000"),
-      Self::GCRF => Some("GCRF"),
-      Self::GRC => Some("GRC"),
-      Self::ITRF2000 => Some("ITRF2000"),
-      Self::ITRF93 => Some("ITRF93"),
-      Self::ITRF97 => Some("ITRF97"),
-      Self::TDR => Some("TDR"),
-      Self::TOD => Some("TOD"),
-      Self::RTN => Some("RTN"),
-      Self::TVN => Some("TVN"),
-      Self::VVLH => Some("VVLH"),
-      Self::QSW => Some("QSW"),
-      Self::LTP => Some("LTP"),
-      Self::LVLH => Some("LVLH"),
-      Self::PNE => Some("PNE"),
-      Self::BRF => Some("BRF"),
-      Self::RSW => Some("RSW"),
-      Self::TNW => Some("TNW"),
-      Self::UVW => Some("UVW"),
-      Self::EQW_INERTIAL => Some("EQW_INERTIAL"),
-      Self::LVLH_INERTIAL => Some("LVLH_INERTIAL"),
-      Self::LVLH_ROTATING => Some("LVLH_ROTATING"),
-      Self::NSW_INERTIAL => Some("NSW_INERTIAL"),
-      Self::NSW_ROTATING => Some("NSW_ROTATING"),
-      Self::NTW_INERTIAL => Some("NTW_INERTIAL"),
-      Self::NTW_ROTATING => Some("NTW_ROTATING"),
-      Self::PQW_INERTIAL => Some("PQW_INERTIAL"),
-      Self::RSW_INERTIAL => Some("RSW_INERTIAL"),
-      Self::RSW_ROTATING => Some("RSW_ROTATING"),
-      Self::SEZ_INERTIAL => Some("SEZ_INERTIAL"),
-      Self::SEZ_ROTATING => Some("SEZ_ROTATING"),
-      Self::TNW_INERTIAL => Some("TNW_INERTIAL"),
-      Self::TNW_ROTATING => Some("TNW_ROTATING"),
-      Self::VNC_INERTIAL => Some("VNC_INERTIAL"),
-      Self::VNC_ROTATING => Some("VNC_ROTATING"),
-      Self::ALIGN_CB => Some("ALIGN_CB"),
-      Self::ALIGN_EARTH => Some("ALIGN_EARTH"),
-      Self::B1950 => Some("B1950"),
-      Self::CIRS => Some("CIRS"),
-      Self::DTRFyyyy => Some("DTRFyyyy"),
-      Self::EFG => Some("EFG"),
-      Self::EME2000 => Some("EME2000"),
-      Self::FIXED_CB => Some("FIXED_CB"),
-      Self::FIXED_EARTH => Some("FIXED_EARTH"),
-      Self::GCRFn => Some("GCRFn"),
-      Self::GTOD => Some("GTOD"),
-      Self::MOD_CB => Some("MOD_CB"),
-      Self::MOD_EARTH => Some("MOD_EARTH"),
-      Self::MOD_MOON => Some("MOD_MOON"),
-      Self::MOE_CB => Some("MOE_CB"),
-      Self::MOE_EARTH => Some("MOE_EARTH"),
-      Self::MOON_ME => Some("MOON_ME"),
-      Self::MOON_MEIAUE => Some("MOON_MEIAUE"),
-      Self::MOON_PAxxx => Some("MOON_PAxxx"),
-      Self::TEMEOFDATE => Some("TEMEOFDATE"),
-      Self::TEMEOFEPOCH => Some("TEMEOFEPOCH"),
-      Self::TIRS => Some("TIRS"),
-      Self::TOD_CB => Some("TOD_CB"),
-      Self::TOD_EARTH => Some("TOD_EARTH"),
-      Self::TOD_MOON => Some("TOD_MOON"),
-      Self::TOE_CB => Some("TOE_CB"),
-      Self::TOE_EARTH => Some("TOE_EARTH"),
-      Self::TOE_MOON => Some("TOE_MOON"),
-      Self::TRUE_ECLIPTIC => Some("TRUE_ECLIPTIC"),
-      Self::UVW_GO_INERTIAL => Some("UVW_GO_INERTIAL"),
-      Self::WGS84 => Some("WGS84"),
       Self::ACC_i => Some("ACC_i"),
       Self::ACTUATOR_i => Some("ACTUATOR_i"),
       Self::AST_i => Some("AST_i"),
@@ -480,7 +379,7 @@ impl refFrame {
     }
   }
 }
-impl core::fmt::Debug for refFrame {
+impl core::fmt::Debug for SpacecraftFrame {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -489,7 +388,7 @@ impl core::fmt::Debug for refFrame {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for refFrame {
+impl<'a> flatbuffers::Follow<'a> for SpacecraftFrame {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -498,15 +397,15 @@ impl<'a> flatbuffers::Follow<'a> for refFrame {
   }
 }
 
-impl flatbuffers::Push for refFrame {
-    type Output = refFrame;
+impl flatbuffers::Push for SpacecraftFrame {
+    type Output = SpacecraftFrame;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for refFrame {
+impl flatbuffers::EndianScalar for SpacecraftFrame {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -520,7 +419,7 @@ impl flatbuffers::EndianScalar for refFrame {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for refFrame {
+impl<'a> flatbuffers::Verifiable for SpacecraftFrame {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -530,11 +429,1075 @@ impl<'a> flatbuffers::Verifiable for refFrame {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for refFrame {}
+impl flatbuffers::SimpleToVerifyInSlice for SpacecraftFrame {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ORBIT_FRAME: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ORBIT_FRAME: i8 = 15;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ORBIT_FRAME: [OrbitFrame; 16] = [
+  OrbitFrame::EQW_INERTIAL,
+  OrbitFrame::LVLH_INERTIAL,
+  OrbitFrame::LVLH_ROTATING,
+  OrbitFrame::NSW_INERTIAL,
+  OrbitFrame::NSW_ROTATING,
+  OrbitFrame::NTW_INERTIAL,
+  OrbitFrame::NTW_ROTATING,
+  OrbitFrame::PQW_INERTIAL,
+  OrbitFrame::RSW_INERTIAL,
+  OrbitFrame::RSW_ROTATING,
+  OrbitFrame::SEZ_INERTIAL,
+  OrbitFrame::SEZ_ROTATING,
+  OrbitFrame::TNW_INERTIAL,
+  OrbitFrame::TNW_ROTATING,
+  OrbitFrame::VNC_INERTIAL,
+  OrbitFrame::VNC_ROTATING,
+];
+
+/// https://sanaregistry.org/r/orbit_relative_reference_frames/
+/// Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct OrbitFrame(pub i8);
+#[allow(non_upper_case_globals)]
+impl OrbitFrame {
+  /// OID: 1.3.112.4.57.3.1
+  /// Earth Equatorial Inertial frame aligned with J2000 epoch.
+  pub const EQW_INERTIAL: Self = Self(0);
+  /// OID: 1.3.112.4.57.3.3
+  /// Local Vertical Local Horizontal inertial frame.
+  pub const LVLH_INERTIAL: Self = Self(1);
+  /// OID: 1.3.112.4.57.3.2
+  /// Local Vertical Local Horizontal rotating frame.
+  pub const LVLH_ROTATING: Self = Self(2);
+  /// OID: 1.3.112.4.57.3.5
+  /// Normal along-track cross-track inertial frame.
+  pub const NSW_INERTIAL: Self = Self(3);
+  /// OID: 1.3.112.4.57.3.4
+  /// Normal along-track cross-track rotating frame.
+  pub const NSW_ROTATING: Self = Self(4);
+  /// OID: 1.3.112.4.57.3.7
+  /// Orbit normal Tangential cross-track inertial frame.
+  pub const NTW_INERTIAL: Self = Self(5);
+  /// OID: 1.3.112.4.57.3.6
+  /// Orbit normal Tangential cross-track rotating frame.
+  pub const NTW_ROTATING: Self = Self(6);
+  /// OID: 1.3.112.4.57.3.8
+  /// Perifocal frame aligned with orbit's perigee.
+  pub const PQW_INERTIAL: Self = Self(7);
+  /// OID: 1.3.112.4.57.3.10
+  /// Radial along-track cross-track inertial frame.
+  pub const RSW_INERTIAL: Self = Self(8);
+  /// OID: 1.3.112.4.57.3.9
+  /// Radial along-track cross-track rotating frame.
+  pub const RSW_ROTATING: Self = Self(9);
+  /// OID: 1.3.112.4.57.3.14
+  /// South-East-Zenith inertial (topocentric) frame.
+  pub const SEZ_INERTIAL: Self = Self(10);
+  /// OID: 1.3.112.4.57.3.13
+  /// South-East-Zenith rotating (topocentric) frame.
+  pub const SEZ_ROTATING: Self = Self(11);
+  /// OID: 1.3.112.4.57.3.12
+  /// Transverse normal cross-track inertial frame.
+  pub const TNW_INERTIAL: Self = Self(12);
+  /// OID: 1.3.112.4.57.3.11
+  /// Transverse normal cross-track rotating frame.
+  pub const TNW_ROTATING: Self = Self(13);
+  /// OID: 1.3.112.4.57.3.16
+  /// Velocity-normal co-normal inertial frame.
+  pub const VNC_INERTIAL: Self = Self(14);
+  /// OID: 1.3.112.4.57.3.15
+  /// Velocity-normal co-normal rotating frame.
+  pub const VNC_ROTATING: Self = Self(15);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 15;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::EQW_INERTIAL,
+    Self::LVLH_INERTIAL,
+    Self::LVLH_ROTATING,
+    Self::NSW_INERTIAL,
+    Self::NSW_ROTATING,
+    Self::NTW_INERTIAL,
+    Self::NTW_ROTATING,
+    Self::PQW_INERTIAL,
+    Self::RSW_INERTIAL,
+    Self::RSW_ROTATING,
+    Self::SEZ_INERTIAL,
+    Self::SEZ_ROTATING,
+    Self::TNW_INERTIAL,
+    Self::TNW_ROTATING,
+    Self::VNC_INERTIAL,
+    Self::VNC_ROTATING,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::EQW_INERTIAL => Some("EQW_INERTIAL"),
+      Self::LVLH_INERTIAL => Some("LVLH_INERTIAL"),
+      Self::LVLH_ROTATING => Some("LVLH_ROTATING"),
+      Self::NSW_INERTIAL => Some("NSW_INERTIAL"),
+      Self::NSW_ROTATING => Some("NSW_ROTATING"),
+      Self::NTW_INERTIAL => Some("NTW_INERTIAL"),
+      Self::NTW_ROTATING => Some("NTW_ROTATING"),
+      Self::PQW_INERTIAL => Some("PQW_INERTIAL"),
+      Self::RSW_INERTIAL => Some("RSW_INERTIAL"),
+      Self::RSW_ROTATING => Some("RSW_ROTATING"),
+      Self::SEZ_INERTIAL => Some("SEZ_INERTIAL"),
+      Self::SEZ_ROTATING => Some("SEZ_ROTATING"),
+      Self::TNW_INERTIAL => Some("TNW_INERTIAL"),
+      Self::TNW_ROTATING => Some("TNW_ROTATING"),
+      Self::VNC_INERTIAL => Some("VNC_INERTIAL"),
+      Self::VNC_ROTATING => Some("VNC_ROTATING"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for OrbitFrame {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for OrbitFrame {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for OrbitFrame {
+    type Output = OrbitFrame;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for OrbitFrame {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for OrbitFrame {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for OrbitFrame {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CUSTOM_FRAME: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CUSTOM_FRAME: i8 = 17;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CUSTOM_FRAME: [CustomFrame; 18] = [
+  CustomFrame::ECEF,
+  CustomFrame::TEME,
+  CustomFrame::TEMEOFEPOCH,
+  CustomFrame::ENU,
+  CustomFrame::NED,
+  CustomFrame::NEU,
+  CustomFrame::RIC,
+  CustomFrame::RTN,
+  CustomFrame::TVN,
+  CustomFrame::VVLH,
+  CustomFrame::QSW,
+  CustomFrame::LTP,
+  CustomFrame::LVLH,
+  CustomFrame::PNE,
+  CustomFrame::BRF,
+  CustomFrame::RSW,
+  CustomFrame::TNW,
+  CustomFrame::UVW,
+];
+
+/// Non-registered or local use frames
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CustomFrame(pub i8);
+#[allow(non_upper_case_globals)]
+impl CustomFrame {
+  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
+  pub const ECEF: Self = Self(0);
+  /// True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
+  pub const TEME: Self = Self(1);
+  /// True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
+  pub const TEMEOFEPOCH: Self = Self(2);
+  /// East-North-Up: Local tangent plane for surface points.
+  pub const ENU: Self = Self(3);
+  /// North-East-Down: Aviation/navigation frame aligned with gravity.
+  pub const NED: Self = Self(4);
+  /// North-East-Up: Local tangent plane variant with Up positive.
+  pub const NEU: Self = Self(5);
+  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
+  pub const RIC: Self = Self(6);
+  /// Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
+  pub const RTN: Self = Self(7);
+  /// Transverse-Velocity-Normal: Alternative orbit frame.
+  pub const TVN: Self = Self(8);
+  /// Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
+  pub const VVLH: Self = Self(9);
+  /// Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
+  pub const QSW: Self = Self(10);
+  /// Local Tangent Plane: Surface-fixed frame centered on a point.
+  pub const LTP: Self = Self(11);
+  /// Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
+  pub const LVLH: Self = Self(12);
+  /// Polar-North-East: Surface coordinate frame.
+  pub const PNE: Self = Self(13);
+  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
+  pub const BRF: Self = Self(14);
+  /// Radial-Along-track-Cross-track: Same as RSW.
+  pub const RSW: Self = Self(15);
+  /// Tangential-Normal-Cross-track: Same as TNW.
+  pub const TNW: Self = Self(16);
+  /// Radial-UTF: Radial, Along-track, Cross-track variant.
+  pub const UVW: Self = Self(17);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 17;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ECEF,
+    Self::TEME,
+    Self::TEMEOFEPOCH,
+    Self::ENU,
+    Self::NED,
+    Self::NEU,
+    Self::RIC,
+    Self::RTN,
+    Self::TVN,
+    Self::VVLH,
+    Self::QSW,
+    Self::LTP,
+    Self::LVLH,
+    Self::PNE,
+    Self::BRF,
+    Self::RSW,
+    Self::TNW,
+    Self::UVW,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ECEF => Some("ECEF"),
+      Self::TEME => Some("TEME"),
+      Self::TEMEOFEPOCH => Some("TEMEOFEPOCH"),
+      Self::ENU => Some("ENU"),
+      Self::NED => Some("NED"),
+      Self::NEU => Some("NEU"),
+      Self::RIC => Some("RIC"),
+      Self::RTN => Some("RTN"),
+      Self::TVN => Some("TVN"),
+      Self::VVLH => Some("VVLH"),
+      Self::QSW => Some("QSW"),
+      Self::LTP => Some("LTP"),
+      Self::LVLH => Some("LVLH"),
+      Self::PNE => Some("PNE"),
+      Self::BRF => Some("BRF"),
+      Self::RSW => Some("RSW"),
+      Self::TNW => Some("TNW"),
+      Self::UVW => Some("UVW"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CustomFrame {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CustomFrame {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CustomFrame {
+    type Output = CustomFrame;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CustomFrame {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CustomFrame {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CustomFrame {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RFMUNION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RFMUNION: u8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RFMUNION: [RFMUnion; 5] = [
+  RFMUnion::NONE,
+  RFMUnion::CelestialFrameWrapper,
+  RFMUnion::SpacecraftFrameWrapper,
+  RFMUnion::OrbitFrameWrapper,
+  RFMUnion::CustomFrameWrapper,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct RFMUnion(pub u8);
+#[allow(non_upper_case_globals)]
+impl RFMUnion {
+  pub const NONE: Self = Self(0);
+  pub const CelestialFrameWrapper: Self = Self(1);
+  pub const SpacecraftFrameWrapper: Self = Self(2);
+  pub const OrbitFrameWrapper: Self = Self(3);
+  pub const CustomFrameWrapper: Self = Self(4);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NONE,
+    Self::CelestialFrameWrapper,
+    Self::SpacecraftFrameWrapper,
+    Self::OrbitFrameWrapper,
+    Self::CustomFrameWrapper,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NONE => Some("NONE"),
+      Self::CelestialFrameWrapper => Some("CelestialFrameWrapper"),
+      Self::SpacecraftFrameWrapper => Some("SpacecraftFrameWrapper"),
+      Self::OrbitFrameWrapper => Some("OrbitFrameWrapper"),
+      Self::CustomFrameWrapper => Some("CustomFrameWrapper"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for RFMUnion {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for RFMUnion {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<u8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for RFMUnion {
+    type Output = RFMUnion;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<u8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for RFMUnion {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for RFMUnion {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for RFMUnion {}
+pub struct RFMUnionUnionTableOffset {}
+
+#[allow(clippy::upper_case_acronyms)]
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub enum RFMUnionT {
+  NONE,
+  CelestialFrameWrapper(Box<CelestialFrameWrapperT>),
+  SpacecraftFrameWrapper(Box<SpacecraftFrameWrapperT>),
+  OrbitFrameWrapper(Box<OrbitFrameWrapperT>),
+  CustomFrameWrapper(Box<CustomFrameWrapperT>),
+}
+impl Default for RFMUnionT {
+  fn default() -> Self {
+    Self::NONE
+  }
+}
+impl RFMUnionT {
+  pub fn rfmunion_type(&self) -> RFMUnion {
+    match self {
+      Self::NONE => RFMUnion::NONE,
+      Self::CelestialFrameWrapper(_) => RFMUnion::CelestialFrameWrapper,
+      Self::SpacecraftFrameWrapper(_) => RFMUnion::SpacecraftFrameWrapper,
+      Self::OrbitFrameWrapper(_) => RFMUnion::OrbitFrameWrapper,
+      Self::CustomFrameWrapper(_) => RFMUnion::CustomFrameWrapper,
+    }
+  }
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(&self, fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
+    match self {
+      Self::NONE => None,
+      Self::CelestialFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SpacecraftFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OrbitFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CustomFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
+    }
+  }
+  /// If the union variant matches, return the owned CelestialFrameWrapperT, setting the union to NONE.
+  pub fn take_celestial_frame_wrapper(&mut self) -> Option<Box<CelestialFrameWrapperT>> {
+    if let Self::CelestialFrameWrapper(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CelestialFrameWrapper(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CelestialFrameWrapperT.
+  pub fn as_celestial_frame_wrapper(&self) -> Option<&CelestialFrameWrapperT> {
+    if let Self::CelestialFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CelestialFrameWrapperT.
+  pub fn as_celestial_frame_wrapper_mut(&mut self) -> Option<&mut CelestialFrameWrapperT> {
+    if let Self::CelestialFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SpacecraftFrameWrapperT, setting the union to NONE.
+  pub fn take_spacecraft_frame_wrapper(&mut self) -> Option<Box<SpacecraftFrameWrapperT>> {
+    if let Self::SpacecraftFrameWrapper(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SpacecraftFrameWrapper(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SpacecraftFrameWrapperT.
+  pub fn as_spacecraft_frame_wrapper(&self) -> Option<&SpacecraftFrameWrapperT> {
+    if let Self::SpacecraftFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SpacecraftFrameWrapperT.
+  pub fn as_spacecraft_frame_wrapper_mut(&mut self) -> Option<&mut SpacecraftFrameWrapperT> {
+    if let Self::SpacecraftFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OrbitFrameWrapperT, setting the union to NONE.
+  pub fn take_orbit_frame_wrapper(&mut self) -> Option<Box<OrbitFrameWrapperT>> {
+    if let Self::OrbitFrameWrapper(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OrbitFrameWrapper(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OrbitFrameWrapperT.
+  pub fn as_orbit_frame_wrapper(&self) -> Option<&OrbitFrameWrapperT> {
+    if let Self::OrbitFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OrbitFrameWrapperT.
+  pub fn as_orbit_frame_wrapper_mut(&mut self) -> Option<&mut OrbitFrameWrapperT> {
+    if let Self::OrbitFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CustomFrameWrapperT, setting the union to NONE.
+  pub fn take_custom_frame_wrapper(&mut self) -> Option<Box<CustomFrameWrapperT>> {
+    if let Self::CustomFrameWrapper(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CustomFrameWrapper(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CustomFrameWrapperT.
+  pub fn as_custom_frame_wrapper(&self) -> Option<&CustomFrameWrapperT> {
+    if let Self::CustomFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CustomFrameWrapperT.
+  pub fn as_custom_frame_wrapper_mut(&mut self) -> Option<&mut CustomFrameWrapperT> {
+    if let Self::CustomFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
+  }
+}
+pub enum CelestialFrameWrapperOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct CelestialFrameWrapper<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CelestialFrameWrapper<'a> {
+  type Inner = CelestialFrameWrapper<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CelestialFrameWrapper<'a> {
+  pub const VT_FRAME: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CelestialFrameWrapper { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CelestialFrameWrapperArgs
+  ) -> flatbuffers::WIPOffset<CelestialFrameWrapper<'bldr>> {
+    let mut builder = CelestialFrameWrapperBuilder::new(_fbb);
+    builder.add_frame(args.frame);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CelestialFrameWrapperT {
+    let frame = self.frame();
+    CelestialFrameWrapperT {
+      frame,
+    }
+  }
+
+  #[inline]
+  pub fn frame(&self) -> CelestialFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<CelestialFrame>(CelestialFrameWrapper::VT_FRAME, Some(CelestialFrame::GCRF)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CelestialFrameWrapper<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<CelestialFrame>("frame", Self::VT_FRAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CelestialFrameWrapperArgs {
+    pub frame: CelestialFrame,
+}
+impl<'a> Default for CelestialFrameWrapperArgs {
+  #[inline]
+  fn default() -> Self {
+    CelestialFrameWrapperArgs {
+      frame: CelestialFrame::GCRF,
+    }
+  }
+}
+
+pub struct CelestialFrameWrapperBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CelestialFrameWrapperBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_frame(&mut self, frame: CelestialFrame) {
+    self.fbb_.push_slot::<CelestialFrame>(CelestialFrameWrapper::VT_FRAME, frame, CelestialFrame::GCRF);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CelestialFrameWrapperBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CelestialFrameWrapperBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CelestialFrameWrapper<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CelestialFrameWrapper<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CelestialFrameWrapper");
+      ds.field("frame", &self.frame());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CelestialFrameWrapperT {
+  pub frame: CelestialFrame,
+}
+impl Default for CelestialFrameWrapperT {
+  fn default() -> Self {
+    Self {
+      frame: CelestialFrame::GCRF,
+    }
+  }
+}
+impl CelestialFrameWrapperT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CelestialFrameWrapper<'b>> {
+    let frame = self.frame;
+    CelestialFrameWrapper::create(_fbb, &CelestialFrameWrapperArgs{
+      frame,
+    })
+  }
+}
+pub enum SpacecraftFrameWrapperOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SpacecraftFrameWrapper<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for SpacecraftFrameWrapper<'a> {
+  type Inner = SpacecraftFrameWrapper<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> SpacecraftFrameWrapper<'a> {
+  pub const VT_FRAME: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    SpacecraftFrameWrapper { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SpacecraftFrameWrapperArgs
+  ) -> flatbuffers::WIPOffset<SpacecraftFrameWrapper<'bldr>> {
+    let mut builder = SpacecraftFrameWrapperBuilder::new(_fbb);
+    builder.add_frame(args.frame);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SpacecraftFrameWrapperT {
+    let frame = self.frame();
+    SpacecraftFrameWrapperT {
+      frame,
+    }
+  }
+
+  #[inline]
+  pub fn frame(&self) -> SpacecraftFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<SpacecraftFrame>(SpacecraftFrameWrapper::VT_FRAME, Some(SpacecraftFrame::ACC_i)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for SpacecraftFrameWrapper<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<SpacecraftFrame>("frame", Self::VT_FRAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SpacecraftFrameWrapperArgs {
+    pub frame: SpacecraftFrame,
+}
+impl<'a> Default for SpacecraftFrameWrapperArgs {
+  #[inline]
+  fn default() -> Self {
+    SpacecraftFrameWrapperArgs {
+      frame: SpacecraftFrame::ACC_i,
+    }
+  }
+}
+
+pub struct SpacecraftFrameWrapperBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SpacecraftFrameWrapperBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_frame(&mut self, frame: SpacecraftFrame) {
+    self.fbb_.push_slot::<SpacecraftFrame>(SpacecraftFrameWrapper::VT_FRAME, frame, SpacecraftFrame::ACC_i);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SpacecraftFrameWrapperBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SpacecraftFrameWrapperBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<SpacecraftFrameWrapper<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for SpacecraftFrameWrapper<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("SpacecraftFrameWrapper");
+      ds.field("frame", &self.frame());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SpacecraftFrameWrapperT {
+  pub frame: SpacecraftFrame,
+}
+impl Default for SpacecraftFrameWrapperT {
+  fn default() -> Self {
+    Self {
+      frame: SpacecraftFrame::ACC_i,
+    }
+  }
+}
+impl SpacecraftFrameWrapperT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<SpacecraftFrameWrapper<'b>> {
+    let frame = self.frame;
+    SpacecraftFrameWrapper::create(_fbb, &SpacecraftFrameWrapperArgs{
+      frame,
+    })
+  }
+}
+pub enum OrbitFrameWrapperOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct OrbitFrameWrapper<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for OrbitFrameWrapper<'a> {
+  type Inner = OrbitFrameWrapper<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> OrbitFrameWrapper<'a> {
+  pub const VT_FRAME: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    OrbitFrameWrapper { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args OrbitFrameWrapperArgs
+  ) -> flatbuffers::WIPOffset<OrbitFrameWrapper<'bldr>> {
+    let mut builder = OrbitFrameWrapperBuilder::new(_fbb);
+    builder.add_frame(args.frame);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> OrbitFrameWrapperT {
+    let frame = self.frame();
+    OrbitFrameWrapperT {
+      frame,
+    }
+  }
+
+  #[inline]
+  pub fn frame(&self) -> OrbitFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<OrbitFrame>(OrbitFrameWrapper::VT_FRAME, Some(OrbitFrame::EQW_INERTIAL)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for OrbitFrameWrapper<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<OrbitFrame>("frame", Self::VT_FRAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct OrbitFrameWrapperArgs {
+    pub frame: OrbitFrame,
+}
+impl<'a> Default for OrbitFrameWrapperArgs {
+  #[inline]
+  fn default() -> Self {
+    OrbitFrameWrapperArgs {
+      frame: OrbitFrame::EQW_INERTIAL,
+    }
+  }
+}
+
+pub struct OrbitFrameWrapperBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OrbitFrameWrapperBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_frame(&mut self, frame: OrbitFrame) {
+    self.fbb_.push_slot::<OrbitFrame>(OrbitFrameWrapper::VT_FRAME, frame, OrbitFrame::EQW_INERTIAL);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitFrameWrapperBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    OrbitFrameWrapperBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<OrbitFrameWrapper<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for OrbitFrameWrapper<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("OrbitFrameWrapper");
+      ds.field("frame", &self.frame());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OrbitFrameWrapperT {
+  pub frame: OrbitFrame,
+}
+impl Default for OrbitFrameWrapperT {
+  fn default() -> Self {
+    Self {
+      frame: OrbitFrame::EQW_INERTIAL,
+    }
+  }
+}
+impl OrbitFrameWrapperT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<OrbitFrameWrapper<'b>> {
+    let frame = self.frame;
+    OrbitFrameWrapper::create(_fbb, &OrbitFrameWrapperArgs{
+      frame,
+    })
+  }
+}
+pub enum CustomFrameWrapperOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct CustomFrameWrapper<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CustomFrameWrapper<'a> {
+  type Inner = CustomFrameWrapper<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CustomFrameWrapper<'a> {
+  pub const VT_FRAME: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CustomFrameWrapper { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CustomFrameWrapperArgs
+  ) -> flatbuffers::WIPOffset<CustomFrameWrapper<'bldr>> {
+    let mut builder = CustomFrameWrapperBuilder::new(_fbb);
+    builder.add_frame(args.frame);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CustomFrameWrapperT {
+    let frame = self.frame();
+    CustomFrameWrapperT {
+      frame,
+    }
+  }
+
+  #[inline]
+  pub fn frame(&self) -> CustomFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<CustomFrame>(CustomFrameWrapper::VT_FRAME, Some(CustomFrame::ECEF)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CustomFrameWrapper<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<CustomFrame>("frame", Self::VT_FRAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CustomFrameWrapperArgs {
+    pub frame: CustomFrame,
+}
+impl<'a> Default for CustomFrameWrapperArgs {
+  #[inline]
+  fn default() -> Self {
+    CustomFrameWrapperArgs {
+      frame: CustomFrame::ECEF,
+    }
+  }
+}
+
+pub struct CustomFrameWrapperBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CustomFrameWrapperBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_frame(&mut self, frame: CustomFrame) {
+    self.fbb_.push_slot::<CustomFrame>(CustomFrameWrapper::VT_FRAME, frame, CustomFrame::ECEF);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CustomFrameWrapperBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CustomFrameWrapperBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CustomFrameWrapper<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CustomFrameWrapper<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CustomFrameWrapper");
+      ds.field("frame", &self.frame());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CustomFrameWrapperT {
+  pub frame: CustomFrame,
+}
+impl Default for CustomFrameWrapperT {
+  fn default() -> Self {
+    Self {
+      frame: CustomFrame::ECEF,
+    }
+  }
+}
+impl CustomFrameWrapperT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CustomFrameWrapper<'b>> {
+    let frame = self.frame;
+    CustomFrameWrapper::create(_fbb, &CustomFrameWrapperArgs{
+      frame,
+    })
+  }
+}
 pub enum RFMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Reference Frame Message
 pub struct RFM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -548,7 +1511,9 @@ impl<'a> flatbuffers::Follow<'a> for RFM<'a> {
 }
 
 impl<'a> RFM<'a> {
-  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 4;
+  pub const VT_REFERENCE_FRAME_TYPE: flatbuffers::VOffsetT = 4;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 6;
+  pub const VT_INDEX: flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -557,27 +1522,130 @@ impl<'a> RFM<'a> {
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args RFMArgs
+    args: &'args RFMArgs<'args>
   ) -> flatbuffers::WIPOffset<RFM<'bldr>> {
     let mut builder = RFMBuilder::new(_fbb);
-    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
+    if let Some(x) = args.INDEX { builder.add_INDEX(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+    builder.add_REFERENCE_FRAME_type(args.REFERENCE_FRAME_type);
     builder.finish()
   }
 
   pub fn unpack(&self) -> RFMT {
-    let REFERENCE_FRAME = self.REFERENCE_FRAME();
+    let REFERENCE_FRAME = match self.REFERENCE_FRAME_type() {
+      RFMUnion::NONE => RFMUnionT::NONE,
+      RFMUnion::CelestialFrameWrapper => RFMUnionT::CelestialFrameWrapper(Box::new(
+        self.REFERENCE_FRAME_as_celestial_frame_wrapper()
+            .expect("Invalid union table, expected `RFMUnion::CelestialFrameWrapper`.")
+            .unpack()
+      )),
+      RFMUnion::SpacecraftFrameWrapper => RFMUnionT::SpacecraftFrameWrapper(Box::new(
+        self.REFERENCE_FRAME_as_spacecraft_frame_wrapper()
+            .expect("Invalid union table, expected `RFMUnion::SpacecraftFrameWrapper`.")
+            .unpack()
+      )),
+      RFMUnion::OrbitFrameWrapper => RFMUnionT::OrbitFrameWrapper(Box::new(
+        self.REFERENCE_FRAME_as_orbit_frame_wrapper()
+            .expect("Invalid union table, expected `RFMUnion::OrbitFrameWrapper`.")
+            .unpack()
+      )),
+      RFMUnion::CustomFrameWrapper => RFMUnionT::CustomFrameWrapper(Box::new(
+        self.REFERENCE_FRAME_as_custom_frame_wrapper()
+            .expect("Invalid union table, expected `RFMUnion::CustomFrameWrapper`.")
+            .unpack()
+      )),
+      _ => RFMUnionT::NONE,
+    };
+    let INDEX = self.INDEX().map(|x| {
+      x.to_string()
+    });
     RFMT {
       REFERENCE_FRAME,
+      INDEX,
     }
   }
 
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> refFrame {
+  pub fn REFERENCE_FRAME_type(&self) -> RFMUnion {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(RFM::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<RFMUnion>(RFM::VT_REFERENCE_FRAME_TYPE, Some(RFMUnion::NONE)).unwrap()}
   }
+  #[inline]
+  pub fn REFERENCE_FRAME(&self) -> Option<flatbuffers::Table<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(RFM::VT_REFERENCE_FRAME, None)}
+  }
+  #[inline]
+  pub fn INDEX(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFM::VT_INDEX, None)}
+  }
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn REFERENCE_FRAME_as_celestial_frame_wrapper(&self) -> Option<CelestialFrameWrapper<'a>> {
+    if self.REFERENCE_FRAME_type() == RFMUnion::CelestialFrameWrapper {
+      self.REFERENCE_FRAME().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CelestialFrameWrapper::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn REFERENCE_FRAME_as_spacecraft_frame_wrapper(&self) -> Option<SpacecraftFrameWrapper<'a>> {
+    if self.REFERENCE_FRAME_type() == RFMUnion::SpacecraftFrameWrapper {
+      self.REFERENCE_FRAME().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SpacecraftFrameWrapper::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn REFERENCE_FRAME_as_orbit_frame_wrapper(&self) -> Option<OrbitFrameWrapper<'a>> {
+    if self.REFERENCE_FRAME_type() == RFMUnion::OrbitFrameWrapper {
+      self.REFERENCE_FRAME().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OrbitFrameWrapper::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn REFERENCE_FRAME_as_custom_frame_wrapper(&self) -> Option<CustomFrameWrapper<'a>> {
+    if self.REFERENCE_FRAME_type() == RFMUnion::CustomFrameWrapper {
+      self.REFERENCE_FRAME().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CustomFrameWrapper::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl flatbuffers::Verifiable for RFM<'_> {
@@ -587,19 +1655,32 @@ impl flatbuffers::Verifiable for RFM<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_union::<RFMUnion, _>("REFERENCE_FRAME_type", Self::VT_REFERENCE_FRAME_TYPE, "REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false, |key, v, pos| {
+        match key {
+          RFMUnion::CelestialFrameWrapper => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CelestialFrameWrapper>>("RFMUnion::CelestialFrameWrapper", pos),
+          RFMUnion::SpacecraftFrameWrapper => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SpacecraftFrameWrapper>>("RFMUnion::SpacecraftFrameWrapper", pos),
+          RFMUnion::OrbitFrameWrapper => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OrbitFrameWrapper>>("RFMUnion::OrbitFrameWrapper", pos),
+          RFMUnion::CustomFrameWrapper => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CustomFrameWrapper>>("RFMUnion::CustomFrameWrapper", pos),
+          _ => Ok(()),
+        }
+     })?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INDEX", Self::VT_INDEX, false)?
      .finish();
     Ok(())
   }
 }
-pub struct RFMArgs {
-    pub REFERENCE_FRAME: refFrame,
+pub struct RFMArgs<'a> {
+    pub REFERENCE_FRAME_type: RFMUnion,
+    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>>,
+    pub INDEX: Option<flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for RFMArgs {
+impl<'a> Default for RFMArgs<'a> {
   #[inline]
   fn default() -> Self {
     RFMArgs {
-      REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME_type: RFMUnion::NONE,
+      REFERENCE_FRAME: None,
+      INDEX: None,
     }
   }
 }
@@ -610,8 +1691,16 @@ pub struct RFMBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
 }
 impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFMBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_REFERENCE_FRAME_type(&mut self, REFERENCE_FRAME_type: RFMUnion) {
+    self.fbb_.push_slot::<RFMUnion>(RFM::VT_REFERENCE_FRAME_TYPE, REFERENCE_FRAME_type, RFMUnion::NONE);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_INDEX(&mut self, INDEX: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFM::VT_INDEX, INDEX);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RFMBuilder<'a, 'b, A> {
@@ -631,19 +1720,56 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFMBuilder<'a, 'b, A> {
 impl core::fmt::Debug for RFM<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("RFM");
-      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("REFERENCE_FRAME_type", &self.REFERENCE_FRAME_type());
+      match self.REFERENCE_FRAME_type() {
+        RFMUnion::CelestialFrameWrapper => {
+          if let Some(x) = self.REFERENCE_FRAME_as_celestial_frame_wrapper() {
+            ds.field("REFERENCE_FRAME", &x)
+          } else {
+            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RFMUnion::SpacecraftFrameWrapper => {
+          if let Some(x) = self.REFERENCE_FRAME_as_spacecraft_frame_wrapper() {
+            ds.field("REFERENCE_FRAME", &x)
+          } else {
+            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RFMUnion::OrbitFrameWrapper => {
+          if let Some(x) = self.REFERENCE_FRAME_as_orbit_frame_wrapper() {
+            ds.field("REFERENCE_FRAME", &x)
+          } else {
+            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RFMUnion::CustomFrameWrapper => {
+          if let Some(x) = self.REFERENCE_FRAME_as_custom_frame_wrapper() {
+            ds.field("REFERENCE_FRAME", &x)
+          } else {
+            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        _ => {
+          let x: Option<()> = None;
+          ds.field("REFERENCE_FRAME", &x)
+        },
+      };
+      ds.field("INDEX", &self.INDEX());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct RFMT {
-  pub REFERENCE_FRAME: refFrame,
+  pub REFERENCE_FRAME: RFMUnionT,
+  pub INDEX: Option<String>,
 }
 impl Default for RFMT {
   fn default() -> Self {
     Self {
-      REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: RFMUnionT::NONE,
+      INDEX: None,
     }
   }
 }
@@ -652,9 +1778,15 @@ impl RFMT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<RFM<'b>> {
-    let REFERENCE_FRAME = self.REFERENCE_FRAME;
+    let REFERENCE_FRAME_type = self.REFERENCE_FRAME.rfmunion_type();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.pack(_fbb);
+    let INDEX = self.INDEX.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     RFM::create(_fbb, &RFMArgs{
+      REFERENCE_FRAME_type,
       REFERENCE_FRAME,
+      INDEX,
     })
   }
 }

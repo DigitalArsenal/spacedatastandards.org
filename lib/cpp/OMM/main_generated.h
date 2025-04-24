@@ -154,8 +154,9 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
   }
   /// Reference Frame
-  refFrame REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 2));
+  /// Typically TEMEOFDATE
+  const RFM *REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
   /// Reference Frame Epoch (ISO 8601 UTC format)
   const ::flatbuffers::String *REFERENCE_FRAME_EPOCH() const {
@@ -264,8 +265,9 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-  refFrame COV_REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_COV_REFERENCE_FRAME, 23));
+  /// Typically RSW
+  const RFM *COV_REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_COV_REFERENCE_FRAME);
   }
   /// CX_X [km**2]
   double CX_X() const {
@@ -384,7 +386,8 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OBJECT_ID()) &&
            VerifyOffset(verifier, VT_CENTER_NAME) &&
            verifier.VerifyString(CENTER_NAME()) &&
-           VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyTable(REFERENCE_FRAME()) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME_EPOCH) &&
            verifier.VerifyString(REFERENCE_FRAME_EPOCH()) &&
            VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
@@ -415,7 +418,8 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_BSTAR, 8) &&
            VerifyField<double>(verifier, VT_MEAN_MOTION_DOT, 8) &&
            VerifyField<double>(verifier, VT_MEAN_MOTION_DDOT, 8) &&
-           VerifyField<int8_t>(verifier, VT_COV_REFERENCE_FRAME, 1) &&
+           VerifyOffset(verifier, VT_COV_REFERENCE_FRAME) &&
+           verifier.VerifyTable(COV_REFERENCE_FRAME()) &&
            VerifyField<double>(verifier, VT_CX_X, 8) &&
            VerifyField<double>(verifier, VT_CY_X, 8) &&
            VerifyField<double>(verifier, VT_CY_Y, 8) &&
@@ -470,8 +474,8 @@ struct OMMBuilder {
   void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
     fbb_.AddOffset(OMM::VT_CENTER_NAME, CENTER_NAME);
   }
-  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(OMM::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 2);
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
+    fbb_.AddOffset(OMM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   void add_REFERENCE_FRAME_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH) {
     fbb_.AddOffset(OMM::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
@@ -551,8 +555,8 @@ struct OMMBuilder {
   void add_MEAN_MOTION_DDOT(double MEAN_MOTION_DDOT) {
     fbb_.AddElement<double>(OMM::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
   }
-  void add_COV_REFERENCE_FRAME(refFrame COV_REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(OMM::VT_COV_REFERENCE_FRAME, static_cast<int8_t>(COV_REFERENCE_FRAME), 23);
+  void add_COV_REFERENCE_FRAME(::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME) {
+    fbb_.AddOffset(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   void add_CX_X(double CX_X) {
     fbb_.AddElement<double>(OMM::VT_CX_X, CX_X, 0.0);
@@ -651,7 +655,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
-    refFrame REFERENCE_FRAME = refFrame_TEME,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH = 0,
     timeSystem TIME_SYSTEM = timeSystem_UTC,
     meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4,
@@ -678,7 +682,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
     double BSTAR = 0.0,
     double MEAN_MOTION_DOT = 0.0,
     double MEAN_MOTION_DDOT = 0.0,
-    refFrame COV_REFERENCE_FRAME = refFrame_RSW,
+    ::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME = 0,
     double CX_X = 0.0,
     double CY_X = 0.0,
     double CY_Y = 0.0,
@@ -750,22 +754,22 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
   builder_.add_USER_DEFINED_EARTH_MODEL(USER_DEFINED_EARTH_MODEL);
   builder_.add_USER_DEFINED_OBJECT_DESIGNATOR(USER_DEFINED_OBJECT_DESIGNATOR);
   builder_.add_USER_DEFINED_BIP_0044_TYPE(USER_DEFINED_BIP_0044_TYPE);
+  builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
   builder_.add_ELEMENT_SET_NO(ELEMENT_SET_NO);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
   builder_.add_EPOCH(EPOCH);
   builder_.add_COMMENT(COMMENT);
   builder_.add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_CENTER_NAME(CENTER_NAME);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
-  builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
   builder_.add_EPHEMERIS_TYPE(EPHEMERIS_TYPE);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
-  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   return builder_.Finish();
 }
 
@@ -777,7 +781,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
     const char *OBJECT_NAME = nullptr,
     const char *OBJECT_ID = nullptr,
     const char *CENTER_NAME = nullptr,
-    refFrame REFERENCE_FRAME = refFrame_TEME,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     const char *REFERENCE_FRAME_EPOCH = nullptr,
     timeSystem TIME_SYSTEM = timeSystem_UTC,
     meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4,
@@ -804,7 +808,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
     double BSTAR = 0.0,
     double MEAN_MOTION_DOT = 0.0,
     double MEAN_MOTION_DDOT = 0.0,
-    refFrame COV_REFERENCE_FRAME = refFrame_RSW,
+    ::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME = 0,
     double CX_X = 0.0,
     double CY_X = 0.0,
     double CY_Y = 0.0,

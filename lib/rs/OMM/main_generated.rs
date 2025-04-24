@@ -246,22 +246,22 @@ impl<'a> OMM<'a> {
     if let Some(x) = args.USER_DEFINED_EARTH_MODEL { builder.add_USER_DEFINED_EARTH_MODEL(x); }
     if let Some(x) = args.USER_DEFINED_OBJECT_DESIGNATOR { builder.add_USER_DEFINED_OBJECT_DESIGNATOR(x); }
     builder.add_USER_DEFINED_BIP_0044_TYPE(args.USER_DEFINED_BIP_0044_TYPE);
+    if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
     builder.add_ELEMENT_SET_NO(args.ELEMENT_SET_NO);
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
     if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     if let Some(x) = args.REFERENCE_FRAME_EPOCH { builder.add_REFERENCE_FRAME_EPOCH(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
-    builder.add_COV_REFERENCE_FRAME(args.COV_REFERENCE_FRAME);
     builder.add_EPHEMERIS_TYPE(args.EPHEMERIS_TYPE);
     builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
-    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.finish()
   }
 
@@ -282,7 +282,9 @@ impl<'a> OMM<'a> {
     let CENTER_NAME = self.CENTER_NAME().map(|x| {
       x.to_string()
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH().map(|x| {
       x.to_string()
     });
@@ -317,7 +319,9 @@ impl<'a> OMM<'a> {
     let BSTAR = self.BSTAR();
     let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT();
     let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT();
-    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME();
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let CX_X = self.CX_X();
     let CY_X = self.CY_X();
     let CY_Y = self.CY_Y();
@@ -461,12 +465,13 @@ impl<'a> OMM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CENTER_NAME, None)}
   }
   /// Reference Frame
+  /// Typically TEMEOFDATE
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> refFrame {
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(OMM::VT_REFERENCE_FRAME, Some(refFrame::TEME)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(OMM::VT_REFERENCE_FRAME, None)}
   }
   /// Reference Frame Epoch (ISO 8601 UTC format)
   #[inline]
@@ -679,12 +684,13 @@ impl<'a> OMM<'a> {
   }
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]
+  /// Typically RSW
   #[inline]
-  pub fn COV_REFERENCE_FRAME(&self) -> refFrame {
+  pub fn COV_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(OMM::VT_COV_REFERENCE_FRAME, Some(refFrame::RSW)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(OMM::VT_COV_REFERENCE_FRAME, None)}
   }
   /// CX_X [km**2]
   #[inline]
@@ -909,7 +915,7 @@ impl flatbuffers::Verifiable for OMM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
-     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
      .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<meanElementTheory>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
@@ -936,7 +942,7 @@ impl flatbuffers::Verifiable for OMM<'_> {
      .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
      .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
      .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
-     .visit_field::<refFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
      .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
      .visit_field::<f64>("CY_Y", Self::VT_CY_Y, false)?
@@ -974,7 +980,7 @@ pub struct OMMArgs<'a> {
     pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CENTER_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REFERENCE_FRAME: refFrame,
+    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub REFERENCE_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TIME_SYSTEM: timeSystem,
     pub MEAN_ELEMENT_THEORY: meanElementTheory,
@@ -1001,7 +1007,7 @@ pub struct OMMArgs<'a> {
     pub BSTAR: f64,
     pub MEAN_MOTION_DOT: f64,
     pub MEAN_MOTION_DDOT: f64,
-    pub COV_REFERENCE_FRAME: refFrame,
+    pub COV_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub CX_X: f64,
     pub CY_X: f64,
     pub CY_Y: f64,
@@ -1039,7 +1045,7 @@ impl<'a> Default for OMMArgs<'a> {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REFERENCE_FRAME: refFrame::TEME,
+      REFERENCE_FRAME: None,
       REFERENCE_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::UTC,
       MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
@@ -1066,7 +1072,7 @@ impl<'a> Default for OMMArgs<'a> {
       BSTAR: 0.0,
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
-      COV_REFERENCE_FRAME: refFrame::RSW,
+      COV_REFERENCE_FRAME: None,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -1127,8 +1133,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OMM::VT_CENTER_NAME, CENTER_NAME);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(OMM::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::TEME);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(OMM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -1235,8 +1241,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OMM::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
   }
   #[inline]
-  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, refFrame::RSW);
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_CX_X(&mut self, CX_X: f64) {
@@ -1432,7 +1438,7 @@ pub struct OMMT {
   pub OBJECT_NAME: Option<String>,
   pub OBJECT_ID: Option<String>,
   pub CENTER_NAME: Option<String>,
-  pub REFERENCE_FRAME: refFrame,
+  pub REFERENCE_FRAME: Option<Box<RFMT>>,
   pub REFERENCE_FRAME_EPOCH: Option<String>,
   pub TIME_SYSTEM: timeSystem,
   pub MEAN_ELEMENT_THEORY: meanElementTheory,
@@ -1459,7 +1465,7 @@ pub struct OMMT {
   pub BSTAR: f64,
   pub MEAN_MOTION_DOT: f64,
   pub MEAN_MOTION_DDOT: f64,
-  pub COV_REFERENCE_FRAME: refFrame,
+  pub COV_REFERENCE_FRAME: Option<Box<RFMT>>,
   pub CX_X: f64,
   pub CY_X: f64,
   pub CY_Y: f64,
@@ -1496,7 +1502,7 @@ impl Default for OMMT {
       OBJECT_NAME: None,
       OBJECT_ID: None,
       CENTER_NAME: None,
-      REFERENCE_FRAME: refFrame::TEME,
+      REFERENCE_FRAME: None,
       REFERENCE_FRAME_EPOCH: None,
       TIME_SYSTEM: timeSystem::UTC,
       MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
@@ -1523,7 +1529,7 @@ impl Default for OMMT {
       BSTAR: 0.0,
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
-      COV_REFERENCE_FRAME: refFrame::RSW,
+      COV_REFERENCE_FRAME: None,
       CX_X: 0.0,
       CY_X: 0.0,
       CY_Y: 0.0,
@@ -1574,7 +1580,9 @@ impl OMMT {
     let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME;
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1609,7 +1617,9 @@ impl OMMT {
     let BSTAR = self.BSTAR;
     let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT;
     let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT;
-    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME;
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let CX_X = self.CX_X;
     let CY_X = self.CY_X;
     let CY_Y = self.CY_Y;

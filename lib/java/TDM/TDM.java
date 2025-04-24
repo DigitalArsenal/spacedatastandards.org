@@ -62,11 +62,13 @@ public final class TDM extends Table {
   /**
    * Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
    */
-  public byte OBSERVER_POSITION_REFERENCE_FRAME() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public RFM OBSERVER_POSITION_REFERENCE_FRAME() { return OBSERVER_POSITION_REFERENCE_FRAME(new RFM()); }
+  public RFM OBSERVER_POSITION_REFERENCE_FRAME(RFM obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
    */
-  public byte OBS_REFERENCE_FRAME() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public RFM OBS_REFERENCE_FRAME() { return OBS_REFERENCE_FRAME(new RFM()); }
+  public RFM OBS_REFERENCE_FRAME(RFM obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
    */
@@ -386,8 +388,8 @@ public final class TDM extends Table {
       double OBSERVER_VX,
       double OBSERVER_VY,
       double OBSERVER_VZ,
-      byte OBSERVER_POSITION_REFERENCE_FRAME,
-      byte OBS_REFERENCE_FRAME,
+      int OBSERVER_POSITION_REFERENCE_FRAMEOffset,
+      int OBS_REFERENCE_FRAMEOffset,
       int EPOCHOffset,
       int CCSDS_TDM_VERSOffset,
       int COMMENTOffset,
@@ -493,11 +495,11 @@ public final class TDM extends Table {
     TDM.addComment(builder, COMMENTOffset);
     TDM.addCcsdsTdmVers(builder, CCSDS_TDM_VERSOffset);
     TDM.addEpoch(builder, EPOCHOffset);
+    TDM.addObsReferenceFrame(builder, OBS_REFERENCE_FRAMEOffset);
+    TDM.addObserverPositionReferenceFrame(builder, OBSERVER_POSITION_REFERENCE_FRAMEOffset);
     TDM.addObserverId(builder, OBSERVER_IDOffset);
     TDM.addPath2(builder, PATH_2);
     TDM.addPath1(builder, PATH_1);
-    TDM.addObsReferenceFrame(builder, OBS_REFERENCE_FRAME);
-    TDM.addObserverPositionReferenceFrame(builder, OBSERVER_POSITION_REFERENCE_FRAME);
     return TDM.endTDM(builder);
   }
 
@@ -509,8 +511,8 @@ public final class TDM extends Table {
   public static void addObserverVx(FlatBufferBuilder builder, double OBSERVER_VX) { builder.addDouble(4, OBSERVER_VX, 0.0); }
   public static void addObserverVy(FlatBufferBuilder builder, double OBSERVER_VY) { builder.addDouble(5, OBSERVER_VY, 0.0); }
   public static void addObserverVz(FlatBufferBuilder builder, double OBSERVER_VZ) { builder.addDouble(6, OBSERVER_VZ, 0.0); }
-  public static void addObserverPositionReferenceFrame(FlatBufferBuilder builder, byte OBSERVER_POSITION_REFERENCE_FRAME) { builder.addByte(7, OBSERVER_POSITION_REFERENCE_FRAME, 0); }
-  public static void addObsReferenceFrame(FlatBufferBuilder builder, byte OBS_REFERENCE_FRAME) { builder.addByte(8, OBS_REFERENCE_FRAME, 0); }
+  public static void addObserverPositionReferenceFrame(FlatBufferBuilder builder, int OBSERVER_POSITION_REFERENCE_FRAMEOffset) { builder.addOffset(7, OBSERVER_POSITION_REFERENCE_FRAMEOffset, 0); }
+  public static void addObsReferenceFrame(FlatBufferBuilder builder, int OBS_REFERENCE_FRAMEOffset) { builder.addOffset(8, OBS_REFERENCE_FRAMEOffset, 0); }
   public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(9, EPOCHOffset, 0); }
   public static void addCcsdsTdmVers(FlatBufferBuilder builder, int CCSDS_TDM_VERSOffset) { builder.addOffset(10, CCSDS_TDM_VERSOffset, 0); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(11, COMMENTOffset, 0); }

@@ -1,7 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { CDMObject, CDMObjectT } from './CDMObject.js';
 import { PNM, PNMT } from './PNM.js';
-import { refFrame } from './refFrame.js';
+import { RFM, RFMT } from './RFM.js';
 import { screeningVolumeShape } from './screeningVolumeShape.js';
 /**
  * Conjunction Data Message
@@ -87,7 +87,7 @@ export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
     /**
      * The reference frame for the screening volume
      */
-    SCREEN_VOLUME_FRAME(): refFrame;
+    SCREEN_VOLUME_FRAME(obj?: RFM): RFM | null;
     /**
      * The shape of the screening volume
      */
@@ -156,7 +156,7 @@ export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
     static addRelativeVelocityN(builder: flatbuffers.Builder, RELATIVE_VELOCITY_N: number): void;
     static addStartScreenPeriod(builder: flatbuffers.Builder, START_SCREEN_PERIODOffset: flatbuffers.Offset): void;
     static addStopScreenPeriod(builder: flatbuffers.Builder, STOP_SCREEN_PERIODOffset: flatbuffers.Offset): void;
-    static addScreenVolumeFrame(builder: flatbuffers.Builder, SCREEN_VOLUME_FRAME: refFrame): void;
+    static addScreenVolumeFrame(builder: flatbuffers.Builder, SCREEN_VOLUME_FRAMEOffset: flatbuffers.Offset): void;
     static addScreenVolumeShape(builder: flatbuffers.Builder, SCREEN_VOLUME_SHAPE: screeningVolumeShape): void;
     static addScreenVolumeX(builder: flatbuffers.Builder, SCREEN_VOLUME_X: number): void;
     static addScreenVolumeY(builder: flatbuffers.Builder, SCREEN_VOLUME_Y: number): void;
@@ -192,7 +192,7 @@ export declare class CDMT implements flatbuffers.IGeneratedObject {
     RELATIVE_VELOCITY_N: number;
     START_SCREEN_PERIOD: string | Uint8Array | null;
     STOP_SCREEN_PERIOD: string | Uint8Array | null;
-    SCREEN_VOLUME_FRAME: refFrame;
+    SCREEN_VOLUME_FRAME: RFMT | null;
     SCREEN_VOLUME_SHAPE: screeningVolumeShape;
     SCREEN_VOLUME_X: number;
     SCREEN_VOLUME_Y: number;
@@ -205,7 +205,7 @@ export declare class CDMT implements flatbuffers.IGeneratedObject {
     OBJECT2: CDMObjectT | null;
     OBJECT1_DATASOURCE: PNMT | null;
     OBJECT2_DATASOURCE: PNMT | null;
-    constructor(CCSDS_CDM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MESSAGE_FOR?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, TCA?: string | Uint8Array | null, MISS_DISTANCE?: number, RELATIVE_SPEED?: number, RELATIVE_POSITION_R?: number, RELATIVE_POSITION_T?: number, RELATIVE_POSITION_N?: number, RELATIVE_VELOCITY_R?: number, RELATIVE_VELOCITY_T?: number, RELATIVE_VELOCITY_N?: number, START_SCREEN_PERIOD?: string | Uint8Array | null, STOP_SCREEN_PERIOD?: string | Uint8Array | null, SCREEN_VOLUME_FRAME?: refFrame, SCREEN_VOLUME_SHAPE?: screeningVolumeShape, SCREEN_VOLUME_X?: number, SCREEN_VOLUME_Y?: number, SCREEN_VOLUME_Z?: number, SCREEN_ENTRY_TIME?: string | Uint8Array | null, SCREEN_EXIT_TIME?: string | Uint8Array | null, COLLISION_PROBABILITY?: number, COLLISION_PROBABILITY_METHOD?: string | Uint8Array | null, OBJECT1?: CDMObjectT | null, OBJECT2?: CDMObjectT | null, OBJECT1_DATASOURCE?: PNMT | null, OBJECT2_DATASOURCE?: PNMT | null);
+    constructor(CCSDS_CDM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MESSAGE_FOR?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, TCA?: string | Uint8Array | null, MISS_DISTANCE?: number, RELATIVE_SPEED?: number, RELATIVE_POSITION_R?: number, RELATIVE_POSITION_T?: number, RELATIVE_POSITION_N?: number, RELATIVE_VELOCITY_R?: number, RELATIVE_VELOCITY_T?: number, RELATIVE_VELOCITY_N?: number, START_SCREEN_PERIOD?: string | Uint8Array | null, STOP_SCREEN_PERIOD?: string | Uint8Array | null, SCREEN_VOLUME_FRAME?: RFMT | null, SCREEN_VOLUME_SHAPE?: screeningVolumeShape, SCREEN_VOLUME_X?: number, SCREEN_VOLUME_Y?: number, SCREEN_VOLUME_Z?: number, SCREEN_ENTRY_TIME?: string | Uint8Array | null, SCREEN_EXIT_TIME?: string | Uint8Array | null, COLLISION_PROBABILITY?: number, COLLISION_PROBABILITY_METHOD?: string | Uint8Array | null, OBJECT1?: CDMObjectT | null, OBJECT2?: CDMObjectT | null, OBJECT1_DATASOURCE?: PNMT | null, OBJECT2_DATASOURCE?: PNMT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CDM.d.ts.map

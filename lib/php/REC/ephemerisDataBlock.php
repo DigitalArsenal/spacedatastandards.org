@@ -64,13 +64,11 @@ class ephemerisDataBlock extends Table
     }
 
     /// Name of the reference frame (TEME, EME2000, etc.)
-    /**
-     * @return sbyte
-     */
     public function getREFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
@@ -81,13 +79,11 @@ class ephemerisDataBlock extends Table
     }
 
     /// Reference frame for the covariance matrix
-    /**
-     * @return sbyte
-     */
     public function getCOV_REFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Time system used for the orbit state and covariance matrix. (UTC)
@@ -263,12 +259,12 @@ class ephemerisDataBlock extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
     {
-        $builder->addSbyteX(3, $REFERENCE_FRAME, 0);
+        $builder->addOffsetX(3, $REFERENCE_FRAME, 0);
     }
 
     /**
@@ -283,12 +279,12 @@ class ephemerisDataBlock extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addCOV_REFERENCE_FRAME(FlatBufferBuilder $builder, $COV_REFERENCE_FRAME)
     {
-        $builder->addSbyteX(5, $COV_REFERENCE_FRAME, 0);
+        $builder->addOffsetX(5, $COV_REFERENCE_FRAME, 0);
     }
 
     /**

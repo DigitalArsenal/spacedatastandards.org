@@ -111,12 +111,12 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<double>(VT_OBSERVER_VZ, 0.0);
   }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  refFrame OBSERVER_POSITION_REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_OBSERVER_POSITION_REFERENCE_FRAME, 0));
+  const RFM *OBSERVER_POSITION_REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_OBSERVER_POSITION_REFERENCE_FRAME);
   }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  refFrame OBS_REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_OBS_REFERENCE_FRAME, 0));
+  const RFM *OBS_REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_OBS_REFERENCE_FRAME);
   }
   /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   const ::flatbuffers::String *EPOCH() const {
@@ -330,8 +330,10 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_OBSERVER_VX, 8) &&
            VerifyField<double>(verifier, VT_OBSERVER_VY, 8) &&
            VerifyField<double>(verifier, VT_OBSERVER_VZ, 8) &&
-           VerifyField<int8_t>(verifier, VT_OBSERVER_POSITION_REFERENCE_FRAME, 1) &&
-           VerifyField<int8_t>(verifier, VT_OBS_REFERENCE_FRAME, 1) &&
+           VerifyOffset(verifier, VT_OBSERVER_POSITION_REFERENCE_FRAME) &&
+           verifier.VerifyTable(OBSERVER_POSITION_REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_OBS_REFERENCE_FRAME) &&
+           verifier.VerifyTable(OBS_REFERENCE_FRAME()) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
            VerifyOffset(verifier, VT_CCSDS_TDM_VERS) &&
@@ -449,11 +451,11 @@ struct TDMBuilder {
   void add_OBSERVER_VZ(double OBSERVER_VZ) {
     fbb_.AddElement<double>(TDM::VT_OBSERVER_VZ, OBSERVER_VZ, 0.0);
   }
-  void add_OBSERVER_POSITION_REFERENCE_FRAME(refFrame OBSERVER_POSITION_REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, static_cast<int8_t>(OBSERVER_POSITION_REFERENCE_FRAME), 0);
+  void add_OBSERVER_POSITION_REFERENCE_FRAME(::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME) {
+    fbb_.AddOffset(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME);
   }
-  void add_OBS_REFERENCE_FRAME(refFrame OBS_REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(TDM::VT_OBS_REFERENCE_FRAME, static_cast<int8_t>(OBS_REFERENCE_FRAME), 0);
+  void add_OBS_REFERENCE_FRAME(::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME) {
+    fbb_.AddOffset(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME);
   }
   void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
     fbb_.AddOffset(TDM::VT_EPOCH, EPOCH);
@@ -625,8 +627,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
     double OBSERVER_VX = 0.0,
     double OBSERVER_VY = 0.0,
     double OBSERVER_VZ = 0.0,
-    refFrame OBSERVER_POSITION_REFERENCE_FRAME = refFrame_ECEF,
-    refFrame OBS_REFERENCE_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CCSDS_TDM_VERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
@@ -732,11 +734,11 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_COMMENT(COMMENT);
   builder_.add_CCSDS_TDM_VERS(CCSDS_TDM_VERS);
   builder_.add_EPOCH(EPOCH);
+  builder_.add_OBS_REFERENCE_FRAME(OBS_REFERENCE_FRAME);
+  builder_.add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVER_POSITION_REFERENCE_FRAME);
   builder_.add_OBSERVER_ID(OBSERVER_ID);
   builder_.add_PATH_2(PATH_2);
   builder_.add_PATH_1(PATH_1);
-  builder_.add_OBS_REFERENCE_FRAME(OBS_REFERENCE_FRAME);
-  builder_.add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVER_POSITION_REFERENCE_FRAME);
   return builder_.Finish();
 }
 
@@ -749,8 +751,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     double OBSERVER_VX = 0.0,
     double OBSERVER_VY = 0.0,
     double OBSERVER_VZ = 0.0,
-    refFrame OBSERVER_POSITION_REFERENCE_FRAME = refFrame_ECEF,
-    refFrame OBS_REFERENCE_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME = 0,
     const char *EPOCH = nullptr,
     const char *CCSDS_TDM_VERS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,

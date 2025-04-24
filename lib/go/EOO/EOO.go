@@ -1151,37 +1151,39 @@ func (rcv *EOO) CREATED_BY() []byte {
 
 /// Application user who created the row in the database, auto-populated by the system.
 /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-func (rcv *EOO) REFERENCE_FRAME() refFrame {
+func (rcv *EOO) REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(166))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
+	return nil
 }
 
 /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-func (rcv *EOO) MutateREFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(166, int8(n))
-}
-
 /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
 /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-func (rcv *EOO) SEN_REFERENCE_FRAME() refFrame {
+func (rcv *EOO) SEN_REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(168))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
+	return nil
 }
 
 /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
 /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-func (rcv *EOO) MutateSEN_REFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(168, int8(n))
-}
-
 /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
 func (rcv *EOO) UMBRA() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(170))
@@ -2128,11 +2130,11 @@ func EOOAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT flatbuffers.UOffs
 func EOOAddCREATED_BY(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(80, flatbuffers.UOffsetT(CREATED_BY), 0)
 }
-func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(81, int8(REFERENCE_FRAME), 0)
+func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(81, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
-func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(82, int8(SEN_REFERENCE_FRAME), 0)
+func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(82, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
 }
 func EOOAddUMBRA(builder *flatbuffers.Builder, UMBRA bool) {
 	builder.PrependBoolSlot(83, UMBRA, false)

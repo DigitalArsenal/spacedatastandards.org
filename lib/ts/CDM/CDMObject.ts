@@ -6,8 +6,8 @@ import * as flatbuffers from 'flatbuffers';
 
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
+import { RFM, RFMT } from './RFM.js';
 import { covarianceMethod } from './covarianceMethod.js';
-import { refFrame } from './refFrame.js';
 
 
 export class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
@@ -92,9 +92,9 @@ COVARIANCE_METHOD():covarianceMethod {
 /**
  * Reference Frame in which the object position is defined
  */
-REFERENCE_FRAME():refFrame {
+REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -723,8 +723,8 @@ static addCovarianceMethod(builder:flatbuffers.Builder, COVARIANCE_METHOD:covari
   builder.addFieldInt8(6, COVARIANCE_METHOD, covarianceMethod.CALCULATED);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(7, REFERENCE_FRAME, refFrame.ECEF);
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, REFERENCE_FRAMEOffset, 0);
 }
 
 static addGravityModel(builder:flatbuffers.Builder, GRAVITY_MODELOffset:flatbuffers.Offset) {
@@ -1034,7 +1034,7 @@ unpack(): CDMObjectT {
     this.OPERATOR_ORGANIZATION(),
     this.EPHEMERIS_NAME(),
     this.COVARIANCE_METHOD(),
-    this.REFERENCE_FRAME(),
+    (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
     this.GRAVITY_MODEL(),
     this.ATMOSPHERIC_MODEL(),
     this.N_BODY_PERTURBATIONS(),
@@ -1120,7 +1120,7 @@ unpackTo(_o: CDMObjectT): void {
   _o.OPERATOR_ORGANIZATION = this.OPERATOR_ORGANIZATION();
   _o.EPHEMERIS_NAME = this.EPHEMERIS_NAME();
   _o.COVARIANCE_METHOD = this.COVARIANCE_METHOD();
-  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
+  _o.REFERENCE_FRAME = (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null);
   _o.GRAVITY_MODEL = this.GRAVITY_MODEL();
   _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL();
   _o.N_BODY_PERTURBATIONS = this.N_BODY_PERTURBATIONS();
@@ -1206,7 +1206,7 @@ constructor(
   public OPERATOR_ORGANIZATION: string|Uint8Array|null = null,
   public EPHEMERIS_NAME: string|Uint8Array|null = null,
   public COVARIANCE_METHOD: covarianceMethod = covarianceMethod.CALCULATED,
-  public REFERENCE_FRAME: refFrame = refFrame.ECEF,
+  public REFERENCE_FRAME: RFMT|null = null,
   public GRAVITY_MODEL: string|Uint8Array|null = null,
   public ATMOSPHERIC_MODEL: string|Uint8Array|null = null,
   public N_BODY_PERTURBATIONS: string|Uint8Array|null = null,
@@ -1290,6 +1290,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OPERATOR_CONTACT_POSITION = (this.OPERATOR_CONTACT_POSITION !== null ? builder.createString(this.OPERATOR_CONTACT_POSITION!) : 0);
   const OPERATOR_ORGANIZATION = (this.OPERATOR_ORGANIZATION !== null ? builder.createString(this.OPERATOR_ORGANIZATION!) : 0);
   const EPHEMERIS_NAME = (this.EPHEMERIS_NAME !== null ? builder.createString(this.EPHEMERIS_NAME!) : 0);
+  const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
   const GRAVITY_MODEL = (this.GRAVITY_MODEL !== null ? builder.createString(this.GRAVITY_MODEL!) : 0);
   const ATMOSPHERIC_MODEL = (this.ATMOSPHERIC_MODEL !== null ? builder.createString(this.ATMOSPHERIC_MODEL!) : 0);
   const N_BODY_PERTURBATIONS = (this.N_BODY_PERTURBATIONS !== null ? builder.createString(this.N_BODY_PERTURBATIONS!) : 0);
@@ -1304,7 +1305,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CDMObject.addOperatorOrganization(builder, OPERATOR_ORGANIZATION);
   CDMObject.addEphemerisName(builder, EPHEMERIS_NAME);
   CDMObject.addCovarianceMethod(builder, this.COVARIANCE_METHOD);
-  CDMObject.addReferenceFrame(builder, this.REFERENCE_FRAME);
+  CDMObject.addReferenceFrame(builder, REFERENCE_FRAME);
   CDMObject.addGravityModel(builder, GRAVITY_MODEL);
   CDMObject.addAtmosphericModel(builder, ATMOSPHERIC_MODEL);
   CDMObject.addNBodyPerturbations(builder, N_BODY_PERTURBATIONS);

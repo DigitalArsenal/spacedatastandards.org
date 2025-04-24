@@ -197,8 +197,8 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return static_cast<covarianceMethod>(GetField<int8_t>(VT_COVARIANCE_METHOD, 0));
   }
   /// Reference Frame in which the object position is defined
-  refFrame REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  const RFM *REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
   /// Gravity model
   const ::flatbuffers::String *GRAVITY_MODEL() const {
@@ -507,7 +507,8 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_EPHEMERIS_NAME) &&
            verifier.VerifyString(EPHEMERIS_NAME()) &&
            VerifyField<int8_t>(verifier, VT_COVARIANCE_METHOD, 1) &&
-           VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyTable(REFERENCE_FRAME()) &&
            VerifyOffset(verifier, VT_GRAVITY_MODEL) &&
            verifier.VerifyString(GRAVITY_MODEL()) &&
            VerifyOffset(verifier, VT_ATMOSPHERIC_MODEL) &&
@@ -615,8 +616,8 @@ struct CDMObjectBuilder {
   void add_COVARIANCE_METHOD(covarianceMethod COVARIANCE_METHOD) {
     fbb_.AddElement<int8_t>(CDMObject::VT_COVARIANCE_METHOD, static_cast<int8_t>(COVARIANCE_METHOD), 0);
   }
-  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(CDMObject::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
+    fbb_.AddOffset(CDMObject::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   void add_GRAVITY_MODEL(::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL) {
     fbb_.AddOffset(CDMObject::VT_GRAVITY_MODEL, GRAVITY_MODEL);
@@ -857,7 +858,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     ::flatbuffers::Offset<::flatbuffers::String> OPERATOR_ORGANIZATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME = 0,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    refFrame REFERENCE_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> N_BODY_PERTURBATIONS = 0,
@@ -1002,6 +1003,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_N_BODY_PERTURBATIONS(N_BODY_PERTURBATIONS);
   builder_.add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL);
   builder_.add_GRAVITY_MODEL(GRAVITY_MODEL);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_EPHEMERIS_NAME(EPHEMERIS_NAME);
   builder_.add_OPERATOR_ORGANIZATION(OPERATOR_ORGANIZATION);
   builder_.add_OPERATOR_CONTACT_POSITION(OPERATOR_CONTACT_POSITION);
@@ -1011,7 +1013,6 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_INTRACK_THRUST(INTRACK_THRUST);
   builder_.add_EARTH_TIDES(EARTH_TIDES);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
-  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_COVARIANCE_METHOD(COVARIANCE_METHOD);
   return builder_.Finish();
 }
@@ -1025,7 +1026,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     const char *OPERATOR_ORGANIZATION = nullptr,
     const char *EPHEMERIS_NAME = nullptr,
     covarianceMethod COVARIANCE_METHOD = covarianceMethod_CALCULATED,
-    refFrame REFERENCE_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     const char *GRAVITY_MODEL = nullptr,
     const char *ATMOSPHERIC_MODEL = nullptr,
     const char *N_BODY_PERTURBATIONS = nullptr,
@@ -1292,8 +1293,8 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_STOP_SCREEN_PERIOD);
   }
   /// The reference frame for the screening volume
-  refFrame SCREEN_VOLUME_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_SCREEN_VOLUME_FRAME, 0));
+  const RFM *SCREEN_VOLUME_FRAME() const {
+    return GetPointer<const RFM *>(VT_SCREEN_VOLUME_FRAME);
   }
   /// The shape of the screening volume
   screeningVolumeShape SCREEN_VOLUME_SHAPE() const {
@@ -1368,7 +1369,8 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(START_SCREEN_PERIOD()) &&
            VerifyOffset(verifier, VT_STOP_SCREEN_PERIOD) &&
            verifier.VerifyString(STOP_SCREEN_PERIOD()) &&
-           VerifyField<int8_t>(verifier, VT_SCREEN_VOLUME_FRAME, 1) &&
+           VerifyOffset(verifier, VT_SCREEN_VOLUME_FRAME) &&
+           verifier.VerifyTable(SCREEN_VOLUME_FRAME()) &&
            VerifyField<int8_t>(verifier, VT_SCREEN_VOLUME_SHAPE, 1) &&
            VerifyField<double>(verifier, VT_SCREEN_VOLUME_X, 8) &&
            VerifyField<double>(verifier, VT_SCREEN_VOLUME_Y, 8) &&
@@ -1444,8 +1446,8 @@ struct CDMBuilder {
   void add_STOP_SCREEN_PERIOD(::flatbuffers::Offset<::flatbuffers::String> STOP_SCREEN_PERIOD) {
     fbb_.AddOffset(CDM::VT_STOP_SCREEN_PERIOD, STOP_SCREEN_PERIOD);
   }
-  void add_SCREEN_VOLUME_FRAME(refFrame SCREEN_VOLUME_FRAME) {
-    fbb_.AddElement<int8_t>(CDM::VT_SCREEN_VOLUME_FRAME, static_cast<int8_t>(SCREEN_VOLUME_FRAME), 0);
+  void add_SCREEN_VOLUME_FRAME(::flatbuffers::Offset<RFM> SCREEN_VOLUME_FRAME) {
+    fbb_.AddOffset(CDM::VT_SCREEN_VOLUME_FRAME, SCREEN_VOLUME_FRAME);
   }
   void add_SCREEN_VOLUME_SHAPE(screeningVolumeShape SCREEN_VOLUME_SHAPE) {
     fbb_.AddElement<int8_t>(CDM::VT_SCREEN_VOLUME_SHAPE, static_cast<int8_t>(SCREEN_VOLUME_SHAPE), 0);
@@ -1512,7 +1514,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
     double RELATIVE_VELOCITY_N = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> START_SCREEN_PERIOD = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STOP_SCREEN_PERIOD = 0,
-    refFrame SCREEN_VOLUME_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> SCREEN_VOLUME_FRAME = 0,
     screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape_ELLIPSOID,
     double SCREEN_VOLUME_X = 0.0,
     double SCREEN_VOLUME_Y = 0.0,
@@ -1546,6 +1548,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
   builder_.add_COLLISION_PROBABILITY_METHOD(COLLISION_PROBABILITY_METHOD);
   builder_.add_SCREEN_EXIT_TIME(SCREEN_EXIT_TIME);
   builder_.add_SCREEN_ENTRY_TIME(SCREEN_ENTRY_TIME);
+  builder_.add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME);
   builder_.add_STOP_SCREEN_PERIOD(STOP_SCREEN_PERIOD);
   builder_.add_START_SCREEN_PERIOD(START_SCREEN_PERIOD);
   builder_.add_TCA(TCA);
@@ -1554,7 +1557,6 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
   builder_.add_SCREEN_VOLUME_SHAPE(SCREEN_VOLUME_SHAPE);
-  builder_.add_SCREEN_VOLUME_FRAME(SCREEN_VOLUME_FRAME);
   return builder_.Finish();
 }
 
@@ -1576,7 +1578,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
     double RELATIVE_VELOCITY_N = 0.0,
     const char *START_SCREEN_PERIOD = nullptr,
     const char *STOP_SCREEN_PERIOD = nullptr,
-    refFrame SCREEN_VOLUME_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> SCREEN_VOLUME_FRAME = 0,
     screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape_ELLIPSOID,
     double SCREEN_VOLUME_X = 0.0,
     double SCREEN_VOLUME_Y = 0.0,

@@ -35,9 +35,9 @@ class TDM {
   ///  Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
   double get OBSERVER_VZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  RefFrame get OBSERVER_POSITION_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  RFM? get OBSERVER_POSITION_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 18);
   ///  Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  RefFrame get OBS_REFERENCE_FRAME => RefFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  RFM? get OBS_REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 20);
   ///  Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  TDM version number -  CCSDS 503.0-B-1, Page D-9
@@ -192,12 +192,12 @@ class TDMBuilder {
     fbBuilder.addFloat64(6, OBSERVER_VZ);
     return fbBuilder.offset;
   }
-  int addObserverPositionReferenceFrame(RefFrame? OBSERVER_POSITION_REFERENCE_FRAME) {
-    fbBuilder.addInt8(7, OBSERVER_POSITION_REFERENCE_FRAME?.value);
+  int addObserverPositionReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addObsReferenceFrame(RefFrame? OBS_REFERENCE_FRAME) {
-    fbBuilder.addInt8(8, OBS_REFERENCE_FRAME?.value);
+  int addObsReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
   int addEpochOffset(int? offset) {
@@ -414,8 +414,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
   final double? _OBSERVER_VX;
   final double? _OBSERVER_VY;
   final double? _OBSERVER_VZ;
-  final RefFrame? _OBSERVER_POSITION_REFERENCE_FRAME;
-  final RefFrame? _OBS_REFERENCE_FRAME;
+  final RFMObjectBuilder? _OBSERVER_POSITION_REFERENCE_FRAME;
+  final RFMObjectBuilder? _OBS_REFERENCE_FRAME;
   final String? _EPOCH;
   final String? _CCSDS_TDM_VERS;
   final List<String>? _COMMENT;
@@ -475,8 +475,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
     double? OBSERVER_VX,
     double? OBSERVER_VY,
     double? OBSERVER_VZ,
-    RefFrame? OBSERVER_POSITION_REFERENCE_FRAME,
-    RefFrame? OBS_REFERENCE_FRAME,
+    RFMObjectBuilder? OBSERVER_POSITION_REFERENCE_FRAME,
+    RFMObjectBuilder? OBS_REFERENCE_FRAME,
     String? EPOCH,
     String? CCSDS_TDM_VERS,
     List<String>? COMMENT,
@@ -593,6 +593,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? OBSERVER_IDOffset = _OBSERVER_ID == null ? null
         : fbBuilder.writeString(_OBSERVER_ID!);
+    final int? OBSERVER_POSITION_REFERENCE_FRAMEOffset = _OBSERVER_POSITION_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? OBS_REFERENCE_FRAMEOffset = _OBS_REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? EPOCHOffset = _EPOCH == null ? null
         : fbBuilder.writeString(_EPOCH!);
     final int? CCSDS_TDM_VERSOffset = _CCSDS_TDM_VERS == null ? null
@@ -675,8 +677,8 @@ class TDMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(4, _OBSERVER_VX);
     fbBuilder.addFloat64(5, _OBSERVER_VY);
     fbBuilder.addFloat64(6, _OBSERVER_VZ);
-    fbBuilder.addInt8(7, _OBSERVER_POSITION_REFERENCE_FRAME?.value);
-    fbBuilder.addInt8(8, _OBS_REFERENCE_FRAME?.value);
+    fbBuilder.addOffset(7, OBSERVER_POSITION_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(8, OBS_REFERENCE_FRAMEOffset);
     fbBuilder.addOffset(9, EPOCHOffset);
     fbBuilder.addOffset(10, CCSDS_TDM_VERSOffset);
     fbBuilder.addOffset(11, COMMENTOffset);

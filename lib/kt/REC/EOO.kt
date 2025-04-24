@@ -789,21 +789,29 @@ class EOO : Table() {
     /**
      * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
      */
-    val REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(166)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
+    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(166)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
      * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
      * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
      */
-    val SEN_REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(168)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val SEN_REFERENCE_FRAME : RFM? get() = SEN_REFERENCE_FRAME(RFM())
+    fun SEN_REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(168)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
      */
@@ -1327,8 +1335,8 @@ class EOO : Table() {
         fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Byte) = builder.addByte(78, DATA_MODE, 0)
         fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(79, CREATED_AT, 0)
         fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(80, CREATED_BY, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(81, REFERENCE_FRAME, 0)
-        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Byte) = builder.addByte(82, SEN_REFERENCE_FRAME, 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(81, REFERENCE_FRAME, 0)
+        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(82, SEN_REFERENCE_FRAME, 0)
         fun addUMBRA(builder: FlatBufferBuilder, UMBRA: Boolean) = builder.addBoolean(83, UMBRA, false)
         fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(84, PENUMBRA, false)
         fun addORIG_NETWORK(builder: FlatBufferBuilder, ORIG_NETWORK: Int) = builder.addOffset(85, ORIG_NETWORK, 0)

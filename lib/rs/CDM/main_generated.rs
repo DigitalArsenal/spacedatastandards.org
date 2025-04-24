@@ -364,6 +364,7 @@ impl<'a> CDMObject<'a> {
     if let Some(x) = args.N_BODY_PERTURBATIONS { builder.add_N_BODY_PERTURBATIONS(x); }
     if let Some(x) = args.ATMOSPHERIC_MODEL { builder.add_ATMOSPHERIC_MODEL(x); }
     if let Some(x) = args.GRAVITY_MODEL { builder.add_GRAVITY_MODEL(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     if let Some(x) = args.EPHEMERIS_NAME { builder.add_EPHEMERIS_NAME(x); }
     if let Some(x) = args.OPERATOR_ORGANIZATION { builder.add_OPERATOR_ORGANIZATION(x); }
     if let Some(x) = args.OPERATOR_CONTACT_POSITION { builder.add_OPERATOR_CONTACT_POSITION(x); }
@@ -373,7 +374,6 @@ impl<'a> CDMObject<'a> {
     builder.add_INTRACK_THRUST(args.INTRACK_THRUST);
     builder.add_EARTH_TIDES(args.EARTH_TIDES);
     builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
-    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.add_COVARIANCE_METHOD(args.COVARIANCE_METHOD);
     builder.finish()
   }
@@ -398,7 +398,9 @@ impl<'a> CDMObject<'a> {
       x.to_string()
     });
     let COVARIANCE_METHOD = self.COVARIANCE_METHOD();
-    let REFERENCE_FRAME = self.REFERENCE_FRAME();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
       x.to_string()
     });
@@ -624,11 +626,11 @@ impl<'a> CDMObject<'a> {
   }
   /// Reference Frame in which the object position is defined
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> refFrame {
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(CDMObject::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(CDMObject::VT_REFERENCE_FRAME, None)}
   }
   /// Gravity model
   #[inline]
@@ -1230,7 +1232,7 @@ impl flatbuffers::Verifiable for CDMObject<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPERATOR_ORGANIZATION", Self::VT_OPERATOR_ORGANIZATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME", Self::VT_EPHEMERIS_NAME, false)?
      .visit_field::<covarianceMethod>("COVARIANCE_METHOD", Self::VT_COVARIANCE_METHOD, false)?
-     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("N_BODY_PERTURBATIONS", Self::VT_N_BODY_PERTURBATIONS, false)?
@@ -1316,7 +1318,7 @@ pub struct CDMObjectArgs<'a> {
     pub OPERATOR_ORGANIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EPHEMERIS_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COVARIANCE_METHOD: covarianceMethod,
-    pub REFERENCE_FRAME: refFrame,
+    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub GRAVITY_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ATMOSPHERIC_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub N_BODY_PERTURBATIONS: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1402,7 +1404,7 @@ impl<'a> Default for CDMObjectArgs<'a> {
       OPERATOR_ORGANIZATION: None,
       EPHEMERIS_NAME: None,
       COVARIANCE_METHOD: covarianceMethod::CALCULATED,
-      REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: None,
       GRAVITY_MODEL: None,
       ATMOSPHERIC_MODEL: None,
       N_BODY_PERTURBATIONS: None,
@@ -1514,8 +1516,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CDMObjectBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<covarianceMethod>(CDMObject::VT_COVARIANCE_METHOD, COVARIANCE_METHOD, covarianceMethod::CALCULATED);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(CDMObject::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(CDMObject::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: flatbuffers::WIPOffset<&'b  str>) {
@@ -1921,7 +1923,7 @@ pub struct CDMObjectT {
   pub OPERATOR_ORGANIZATION: Option<String>,
   pub EPHEMERIS_NAME: Option<String>,
   pub COVARIANCE_METHOD: covarianceMethod,
-  pub REFERENCE_FRAME: refFrame,
+  pub REFERENCE_FRAME: Option<Box<RFMT>>,
   pub GRAVITY_MODEL: Option<String>,
   pub ATMOSPHERIC_MODEL: Option<String>,
   pub N_BODY_PERTURBATIONS: Option<String>,
@@ -2006,7 +2008,7 @@ impl Default for CDMObjectT {
       OPERATOR_ORGANIZATION: None,
       EPHEMERIS_NAME: None,
       COVARIANCE_METHOD: covarianceMethod::CALCULATED,
-      REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: None,
       GRAVITY_MODEL: None,
       ATMOSPHERIC_MODEL: None,
       N_BODY_PERTURBATIONS: None,
@@ -2107,7 +2109,9 @@ impl CDMObjectT {
       _fbb.create_string(x)
     });
     let COVARIANCE_METHOD = self.COVARIANCE_METHOD;
-    let REFERENCE_FRAME = self.REFERENCE_FRAME;
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2353,6 +2357,7 @@ impl<'a> CDM<'a> {
     if let Some(x) = args.COLLISION_PROBABILITY_METHOD { builder.add_COLLISION_PROBABILITY_METHOD(x); }
     if let Some(x) = args.SCREEN_EXIT_TIME { builder.add_SCREEN_EXIT_TIME(x); }
     if let Some(x) = args.SCREEN_ENTRY_TIME { builder.add_SCREEN_ENTRY_TIME(x); }
+    if let Some(x) = args.SCREEN_VOLUME_FRAME { builder.add_SCREEN_VOLUME_FRAME(x); }
     if let Some(x) = args.STOP_SCREEN_PERIOD { builder.add_STOP_SCREEN_PERIOD(x); }
     if let Some(x) = args.START_SCREEN_PERIOD { builder.add_START_SCREEN_PERIOD(x); }
     if let Some(x) = args.TCA { builder.add_TCA(x); }
@@ -2361,7 +2366,6 @@ impl<'a> CDM<'a> {
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
     builder.add_SCREEN_VOLUME_SHAPE(args.SCREEN_VOLUME_SHAPE);
-    builder.add_SCREEN_VOLUME_FRAME(args.SCREEN_VOLUME_FRAME);
     builder.finish()
   }
 
@@ -2396,7 +2400,9 @@ impl<'a> CDM<'a> {
     let STOP_SCREEN_PERIOD = self.STOP_SCREEN_PERIOD().map(|x| {
       x.to_string()
     });
-    let SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME();
+    let SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let SCREEN_VOLUME_SHAPE = self.SCREEN_VOLUME_SHAPE();
     let SCREEN_VOLUME_X = self.SCREEN_VOLUME_X();
     let SCREEN_VOLUME_Y = self.SCREEN_VOLUME_Y();
@@ -2586,11 +2592,11 @@ impl<'a> CDM<'a> {
   }
   /// The reference frame for the screening volume
   #[inline]
-  pub fn SCREEN_VOLUME_FRAME(&self) -> refFrame {
+  pub fn SCREEN_VOLUME_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(CDM::VT_SCREEN_VOLUME_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(CDM::VT_SCREEN_VOLUME_FRAME, None)}
   }
   /// The shape of the screening volume
   #[inline]
@@ -2713,7 +2719,7 @@ impl flatbuffers::Verifiable for CDM<'_> {
      .visit_field::<f64>("RELATIVE_VELOCITY_N", Self::VT_RELATIVE_VELOCITY_N, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_SCREEN_PERIOD", Self::VT_START_SCREEN_PERIOD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STOP_SCREEN_PERIOD", Self::VT_STOP_SCREEN_PERIOD, false)?
-     .visit_field::<refFrame>("SCREEN_VOLUME_FRAME", Self::VT_SCREEN_VOLUME_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("SCREEN_VOLUME_FRAME", Self::VT_SCREEN_VOLUME_FRAME, false)?
      .visit_field::<screeningVolumeShape>("SCREEN_VOLUME_SHAPE", Self::VT_SCREEN_VOLUME_SHAPE, false)?
      .visit_field::<f64>("SCREEN_VOLUME_X", Self::VT_SCREEN_VOLUME_X, false)?
      .visit_field::<f64>("SCREEN_VOLUME_Y", Self::VT_SCREEN_VOLUME_Y, false)?
@@ -2747,7 +2753,7 @@ pub struct CDMArgs<'a> {
     pub RELATIVE_VELOCITY_N: f64,
     pub START_SCREEN_PERIOD: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STOP_SCREEN_PERIOD: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SCREEN_VOLUME_FRAME: refFrame,
+    pub SCREEN_VOLUME_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub SCREEN_VOLUME_SHAPE: screeningVolumeShape,
     pub SCREEN_VOLUME_X: f64,
     pub SCREEN_VOLUME_Y: f64,
@@ -2781,7 +2787,7 @@ impl<'a> Default for CDMArgs<'a> {
       RELATIVE_VELOCITY_N: 0.0,
       START_SCREEN_PERIOD: None,
       STOP_SCREEN_PERIOD: None,
-      SCREEN_VOLUME_FRAME: refFrame::ECEF,
+      SCREEN_VOLUME_FRAME: None,
       SCREEN_VOLUME_SHAPE: screeningVolumeShape::ELLIPSOID,
       SCREEN_VOLUME_X: 0.0,
       SCREEN_VOLUME_Y: 0.0,
@@ -2868,8 +2874,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDM::VT_STOP_SCREEN_PERIOD, STOP_SCREEN_PERIOD);
   }
   #[inline]
-  pub fn add_SCREEN_VOLUME_FRAME(&mut self, SCREEN_VOLUME_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(CDM::VT_SCREEN_VOLUME_FRAME, SCREEN_VOLUME_FRAME, refFrame::ECEF);
+  pub fn add_SCREEN_VOLUME_FRAME(&mut self, SCREEN_VOLUME_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(CDM::VT_SCREEN_VOLUME_FRAME, SCREEN_VOLUME_FRAME);
   }
   #[inline]
   pub fn add_SCREEN_VOLUME_SHAPE(&mut self, SCREEN_VOLUME_SHAPE: screeningVolumeShape) {
@@ -2988,7 +2994,7 @@ pub struct CDMT {
   pub RELATIVE_VELOCITY_N: f64,
   pub START_SCREEN_PERIOD: Option<String>,
   pub STOP_SCREEN_PERIOD: Option<String>,
-  pub SCREEN_VOLUME_FRAME: refFrame,
+  pub SCREEN_VOLUME_FRAME: Option<Box<RFMT>>,
   pub SCREEN_VOLUME_SHAPE: screeningVolumeShape,
   pub SCREEN_VOLUME_X: f64,
   pub SCREEN_VOLUME_Y: f64,
@@ -3021,7 +3027,7 @@ impl Default for CDMT {
       RELATIVE_VELOCITY_N: 0.0,
       START_SCREEN_PERIOD: None,
       STOP_SCREEN_PERIOD: None,
-      SCREEN_VOLUME_FRAME: refFrame::ECEF,
+      SCREEN_VOLUME_FRAME: None,
       SCREEN_VOLUME_SHAPE: screeningVolumeShape::ELLIPSOID,
       SCREEN_VOLUME_X: 0.0,
       SCREEN_VOLUME_Y: 0.0,
@@ -3072,7 +3078,9 @@ impl CDMT {
     let STOP_SCREEN_PERIOD = self.STOP_SCREEN_PERIOD.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME;
+    let SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let SCREEN_VOLUME_SHAPE = self.SCREEN_VOLUME_SHAPE;
     let SCREEN_VOLUME_X = self.SCREEN_VOLUME_X;
     let SCREEN_VOLUME_Y = self.SCREEN_VOLUME_Y;

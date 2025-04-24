@@ -1,8 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
+import { RFM, RFMT } from './RFM.js';
 import { covarianceMethod } from './covarianceMethod.js';
-import { refFrame } from './refFrame.js';
 export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -41,7 +41,7 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
     /**
      * Reference Frame in which the object position is defined
      */
-    REFERENCE_FRAME(): refFrame;
+    REFERENCE_FRAME(obj?: RFM): RFM | null;
     /**
      * Gravity model
      */
@@ -347,7 +347,7 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
     static addOperatorOrganization(builder: flatbuffers.Builder, OPERATOR_ORGANIZATIONOffset: flatbuffers.Offset): void;
     static addEphemerisName(builder: flatbuffers.Builder, EPHEMERIS_NAMEOffset: flatbuffers.Offset): void;
     static addCovarianceMethod(builder: flatbuffers.Builder, COVARIANCE_METHOD: covarianceMethod): void;
-    static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAME: refFrame): void;
+    static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addGravityModel(builder: flatbuffers.Builder, GRAVITY_MODELOffset: flatbuffers.Offset): void;
     static addAtmosphericModel(builder: flatbuffers.Builder, ATMOSPHERIC_MODELOffset: flatbuffers.Offset): void;
     static addNBodyPerturbations(builder: flatbuffers.Builder, N_BODY_PERTURBATIONSOffset: flatbuffers.Offset): void;
@@ -433,7 +433,7 @@ export declare class CDMObjectT implements flatbuffers.IGeneratedObject {
     OPERATOR_ORGANIZATION: string | Uint8Array | null;
     EPHEMERIS_NAME: string | Uint8Array | null;
     COVARIANCE_METHOD: covarianceMethod;
-    REFERENCE_FRAME: refFrame;
+    REFERENCE_FRAME: RFMT | null;
     GRAVITY_MODEL: string | Uint8Array | null;
     ATMOSPHERIC_MODEL: string | Uint8Array | null;
     N_BODY_PERTURBATIONS: string | Uint8Array | null;
@@ -507,7 +507,7 @@ export declare class CDMObjectT implements flatbuffers.IGeneratedObject {
     CTHR_DRG: number;
     CTHR_SRP: number;
     CTHR_THR: number;
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceMethod, REFERENCE_FRAME?: refFrame, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, CR_R?: number, CT_R?: number, CT_T?: number, CN_R?: number, CN_T?: number, CN_N?: number, CRDOT_R?: number, CRDOT_T?: number, CRDOT_N?: number, CRDOT_RDOT?: number, CTDOT_R?: number, CTDOT_T?: number, CTDOT_N?: number, CTDOT_RDOT?: number, CTDOT_TDOT?: number, CNDOT_R?: number, CNDOT_T?: number, CNDOT_N?: number, CNDOT_RDOT?: number, CNDOT_TDOT?: number, CNDOT_NDOT?: number, CDRG_R?: number, CDRG_T?: number, CDRG_N?: number, CDRG_RDOT?: number, CDRG_TDOT?: number, CDRG_NDOT?: number, CDRG_DRG?: number, CSRP_R?: number, CSRP_T?: number, CSRP_N?: number, CSRP_RDOT?: number, CSRP_TDOT?: number, CSRP_NDOT?: number, CSRP_DRG?: number, CSRP_SRP?: number, CTHR_R?: number, CTHR_T?: number, CTHR_N?: number, CTHR_RDOT?: number, CTHR_TDOT?: number, CTHR_NDOT?: number, CTHR_DRG?: number, CTHR_SRP?: number, CTHR_THR?: number);
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceMethod, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, CR_R?: number, CT_R?: number, CT_T?: number, CN_R?: number, CN_T?: number, CN_N?: number, CRDOT_R?: number, CRDOT_T?: number, CRDOT_N?: number, CRDOT_RDOT?: number, CTDOT_R?: number, CTDOT_T?: number, CTDOT_N?: number, CTDOT_RDOT?: number, CTDOT_TDOT?: number, CNDOT_R?: number, CNDOT_T?: number, CNDOT_N?: number, CNDOT_RDOT?: number, CNDOT_TDOT?: number, CNDOT_NDOT?: number, CDRG_R?: number, CDRG_T?: number, CDRG_N?: number, CDRG_RDOT?: number, CDRG_TDOT?: number, CDRG_NDOT?: number, CDRG_DRG?: number, CSRP_R?: number, CSRP_T?: number, CSRP_N?: number, CSRP_RDOT?: number, CSRP_TDOT?: number, CSRP_NDOT?: number, CSRP_DRG?: number, CSRP_SRP?: number, CTHR_R?: number, CTHR_T?: number, CTHR_N?: number, CTHR_RDOT?: number, CTHR_TDOT?: number, CTHR_NDOT?: number, CTHR_DRG?: number, CTHR_SRP?: number, CTHR_THR?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CDMObject.d.ts.map

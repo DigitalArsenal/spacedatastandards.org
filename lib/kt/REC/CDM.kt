@@ -202,11 +202,15 @@ class CDM : Table() {
     /**
      * The reference frame for the screening volume
      */
-    val SCREEN_VOLUME_FRAME : Byte
-        get() {
-            val o = __offset(36)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val SCREEN_VOLUME_FRAME : RFM? get() = SCREEN_VOLUME_FRAME(RFM())
+    fun SCREEN_VOLUME_FRAME(obj: RFM) : RFM? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * The shape of the screening volume
      */
@@ -345,7 +349,7 @@ class CDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CDM")
-        fun createCDM(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_FOROffset: Int, MESSAGE_IDOffset: Int, TCAOffset: Int, MISS_DISTANCE: Double, RELATIVE_SPEED: Double, RELATIVE_POSITION_R: Double, RELATIVE_POSITION_T: Double, RELATIVE_POSITION_N: Double, RELATIVE_VELOCITY_R: Double, RELATIVE_VELOCITY_T: Double, RELATIVE_VELOCITY_N: Double, START_SCREEN_PERIODOffset: Int, STOP_SCREEN_PERIODOffset: Int, SCREEN_VOLUME_FRAME: Byte, SCREEN_VOLUME_SHAPE: Byte, SCREEN_VOLUME_X: Double, SCREEN_VOLUME_Y: Double, SCREEN_VOLUME_Z: Double, SCREEN_ENTRY_TIMEOffset: Int, SCREEN_EXIT_TIMEOffset: Int, COLLISION_PROBABILITY: Double, COLLISION_PROBABILITY_METHODOffset: Int, OBJECT1Offset: Int, OBJECT2Offset: Int, OBJECT1_DATASOURCEOffset: Int, OBJECT2_DATASOURCEOffset: Int) : Int {
+        fun createCDM(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_FOROffset: Int, MESSAGE_IDOffset: Int, TCAOffset: Int, MISS_DISTANCE: Double, RELATIVE_SPEED: Double, RELATIVE_POSITION_R: Double, RELATIVE_POSITION_T: Double, RELATIVE_POSITION_N: Double, RELATIVE_VELOCITY_R: Double, RELATIVE_VELOCITY_T: Double, RELATIVE_VELOCITY_N: Double, START_SCREEN_PERIODOffset: Int, STOP_SCREEN_PERIODOffset: Int, SCREEN_VOLUME_FRAMEOffset: Int, SCREEN_VOLUME_SHAPE: Byte, SCREEN_VOLUME_X: Double, SCREEN_VOLUME_Y: Double, SCREEN_VOLUME_Z: Double, SCREEN_ENTRY_TIMEOffset: Int, SCREEN_EXIT_TIMEOffset: Int, COLLISION_PROBABILITY: Double, COLLISION_PROBABILITY_METHODOffset: Int, OBJECT1Offset: Int, OBJECT2Offset: Int, OBJECT1_DATASOURCEOffset: Int, OBJECT2_DATASOURCEOffset: Int) : Int {
             builder.startTable(29)
             addCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
             addSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z)
@@ -367,6 +371,7 @@ class CDM : Table() {
             addCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHODOffset)
             addSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIMEOffset)
             addSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIMEOffset)
+            addSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAMEOffset)
             addSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIODOffset)
             addSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIODOffset)
             addTCA(builder, TCAOffset)
@@ -375,7 +380,6 @@ class CDM : Table() {
             addORIGINATOR(builder, ORIGINATOROffset)
             addCREATION_DATE(builder, CREATION_DATEOffset)
             addSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE)
-            addSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
             return endCDM(builder)
         }
         fun startCDM(builder: FlatBufferBuilder) = builder.startTable(29)
@@ -395,7 +399,7 @@ class CDM : Table() {
         fun addRELATIVE_VELOCITY_N(builder: FlatBufferBuilder, RELATIVE_VELOCITY_N: Double) = builder.addDouble(13, RELATIVE_VELOCITY_N, 0.0)
         fun addSTART_SCREEN_PERIOD(builder: FlatBufferBuilder, START_SCREEN_PERIOD: Int) = builder.addOffset(14, START_SCREEN_PERIOD, 0)
         fun addSTOP_SCREEN_PERIOD(builder: FlatBufferBuilder, STOP_SCREEN_PERIOD: Int) = builder.addOffset(15, STOP_SCREEN_PERIOD, 0)
-        fun addSCREEN_VOLUME_FRAME(builder: FlatBufferBuilder, SCREEN_VOLUME_FRAME: Byte) = builder.addByte(16, SCREEN_VOLUME_FRAME, 0)
+        fun addSCREEN_VOLUME_FRAME(builder: FlatBufferBuilder, SCREEN_VOLUME_FRAME: Int) = builder.addOffset(16, SCREEN_VOLUME_FRAME, 0)
         fun addSCREEN_VOLUME_SHAPE(builder: FlatBufferBuilder, SCREEN_VOLUME_SHAPE: Byte) = builder.addByte(17, SCREEN_VOLUME_SHAPE, 0)
         fun addSCREEN_VOLUME_X(builder: FlatBufferBuilder, SCREEN_VOLUME_X: Double) = builder.addDouble(18, SCREEN_VOLUME_X, 0.0)
         fun addSCREEN_VOLUME_Y(builder: FlatBufferBuilder, SCREEN_VOLUME_Y: Double) = builder.addDouble(19, SCREEN_VOLUME_Y, 0.0)

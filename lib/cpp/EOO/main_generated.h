@@ -572,14 +572,14 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATED_BY);
   }
   /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-  refFrame REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_REFERENCE_FRAME, 0));
+  const RFM *REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
   /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  refFrame SEN_REFERENCE_FRAME() const {
-    return static_cast<refFrame>(GetField<int8_t>(VT_SEN_REFERENCE_FRAME, 0));
+  const RFM *SEN_REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_SEN_REFERENCE_FRAME);
   }
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   bool UMBRA() const {
@@ -885,8 +885,10 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CREATED_AT()) &&
            VerifyOffset(verifier, VT_CREATED_BY) &&
            verifier.VerifyString(CREATED_BY()) &&
-           VerifyField<int8_t>(verifier, VT_REFERENCE_FRAME, 1) &&
-           VerifyField<int8_t>(verifier, VT_SEN_REFERENCE_FRAME, 1) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyTable(REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
+           verifier.VerifyTable(SEN_REFERENCE_FRAME()) &&
            VerifyField<uint8_t>(verifier, VT_UMBRA, 1) &&
            VerifyField<uint8_t>(verifier, VT_PENUMBRA, 1) &&
            VerifyOffset(verifier, VT_ORIG_NETWORK) &&
@@ -1193,11 +1195,11 @@ struct EOOBuilder {
   void add_CREATED_BY(::flatbuffers::Offset<::flatbuffers::String> CREATED_BY) {
     fbb_.AddOffset(EOO::VT_CREATED_BY, CREATED_BY);
   }
-  void add_REFERENCE_FRAME(refFrame REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(EOO::VT_REFERENCE_FRAME, static_cast<int8_t>(REFERENCE_FRAME), 0);
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
+    fbb_.AddOffset(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
-  void add_SEN_REFERENCE_FRAME(refFrame SEN_REFERENCE_FRAME) {
-    fbb_.AddElement<int8_t>(EOO::VT_SEN_REFERENCE_FRAME, static_cast<int8_t>(SEN_REFERENCE_FRAME), 0);
+  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<RFM> SEN_REFERENCE_FRAME) {
+    fbb_.AddOffset(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   void add_UMBRA(bool UMBRA) {
     fbb_.AddElement<uint8_t>(EOO::VT_UMBRA, static_cast<uint8_t>(UMBRA), 0);
@@ -1446,8 +1448,8 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     DataMode DATA_MODE = DataMode_EXERCISE,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
-    refFrame REFERENCE_FRAME = refFrame_ECEF,
-    refFrame SEN_REFERENCE_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<RFM> SEN_REFERENCE_FRAME = 0,
     bool UMBRA = false,
     bool PENUMBRA = false,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_NETWORK = 0,
@@ -1538,6 +1540,8 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_NIIRS(NIIRS);
   builder_.add_SOURCE_DL(SOURCE_DL);
   builder_.add_ORIG_NETWORK(ORIG_NETWORK);
+  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_CREATED_BY(CREATED_BY);
   builder_.add_CREATED_AT(CREATED_AT);
   builder_.add_ORIGIN(ORIGIN);
@@ -1628,8 +1632,6 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_TYPE(TYPE);
   builder_.add_PENUMBRA(PENUMBRA);
   builder_.add_UMBRA(UMBRA);
-  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
-  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_DATA_MODE(DATA_MODE);
   builder_.add_UCT(UCT);
   builder_.add_OB_POSITION(OB_POSITION);
@@ -1720,8 +1722,8 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     DataMode DATA_MODE = DataMode_EXERCISE,
     const char *CREATED_AT = nullptr,
     const char *CREATED_BY = nullptr,
-    refFrame REFERENCE_FRAME = refFrame_ECEF,
-    refFrame SEN_REFERENCE_FRAME = refFrame_ECEF,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<RFM> SEN_REFERENCE_FRAME = 0,
     bool UMBRA = false,
     bool PENUMBRA = false,
     const char *ORIG_NETWORK = nullptr,

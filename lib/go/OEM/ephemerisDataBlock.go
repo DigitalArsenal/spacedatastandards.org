@@ -78,19 +78,20 @@ func (rcv *ephemerisDataBlock) CENTER_NAME() []byte {
 
 /// Origin of reference frame (EARTH, MARS, MOON, etc.)
 /// Name of the reference frame (TEME, EME2000, etc.)
-func (rcv *ephemerisDataBlock) REFERENCE_FRAME() refFrame {
+func (rcv *ephemerisDataBlock) REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
+	return nil
 }
 
 /// Name of the reference frame (TEME, EME2000, etc.)
-func (rcv *ephemerisDataBlock) MutateREFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(10, int8(n))
-}
-
 /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
 func (rcv *ephemerisDataBlock) REFERENCE_FRAME_EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -102,19 +103,20 @@ func (rcv *ephemerisDataBlock) REFERENCE_FRAME_EPOCH() []byte {
 
 /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
 /// Reference frame for the covariance matrix
-func (rcv *ephemerisDataBlock) COV_REFERENCE_FRAME() refFrame {
+func (rcv *ephemerisDataBlock) COV_REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
+	return nil
 }
 
 /// Reference frame for the covariance matrix
-func (rcv *ephemerisDataBlock) MutateCOV_REFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(14, int8(n))
-}
-
 /// Time system used for the orbit state and covariance matrix. (UTC)
 func (rcv *ephemerisDataBlock) TIME_SYSTEM() timeSystem {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -263,14 +265,14 @@ func ephemerisDataBlockAddOBJECT(builder *flatbuffers.Builder, OBJECT flatbuffer
 func ephemerisDataBlockAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CENTER_NAME), 0)
 }
-func ephemerisDataBlockAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(3, int8(REFERENCE_FRAME), 0)
+func ephemerisDataBlockAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
 func ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(REFERENCE_FRAME_EPOCH), 0)
 }
-func ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(5, int8(COV_REFERENCE_FRAME), 0)
+func ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
 }
 func ephemerisDataBlockAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
 	builder.PrependInt8Slot(6, int8(TIME_SYSTEM), 0)

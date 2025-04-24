@@ -4,12 +4,13 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { refFrame } from './refFrame.js';
+import { CelestialFrameWrapper, CelestialFrameWrapperT } from './CelestialFrameWrapper.js';
+import { CustomFrameWrapper, CustomFrameWrapperT } from './CustomFrameWrapper.js';
+import { OrbitFrameWrapper, OrbitFrameWrapperT } from './OrbitFrameWrapper.js';
+import { RFMUnion, unionToRfmunion, unionListToRfmunion } from './RFMUnion.js';
+import { SpacecraftFrameWrapper, SpacecraftFrameWrapperT } from './SpacecraftFrameWrapper.js';
 
 
-/**
- * Reference Frame Message
- */
 export class RFM implements flatbuffers.IUnpackableObject<RFMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
@@ -32,17 +33,37 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RFM');
 }
 
-REFERENCE_FRAME():refFrame {
+referenceFrameType():RFMUnion {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : RFMUnion.NONE;
+}
+
+REFERENCE_FRAME<T extends flatbuffers.Table>(obj:any):any|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
+}
+
+INDEX():string|null
+INDEX(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+INDEX(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startRFM(builder:flatbuffers.Builder) {
-  builder.startObject(1);
+  builder.startObject(3);
 }
 
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(0, REFERENCE_FRAME, refFrame.ECEF);
+static addReferenceFrameType(builder:flatbuffers.Builder, referenceFrameType:RFMUnion) {
+  builder.addFieldInt8(0, referenceFrameType, RFMUnion.NONE);
+}
+
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, REFERENCE_FRAMEOffset, 0);
+}
+
+static addIndex(builder:flatbuffers.Builder, INDEXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, INDEXOffset, 0);
 }
 
 static endRFM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -58,33 +79,54 @@ static finishSizePrefixedRFMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFM', true);
 }
 
-static createRFM(builder:flatbuffers.Builder, REFERENCE_FRAME:refFrame):flatbuffers.Offset {
+static createRFM(builder:flatbuffers.Builder, referenceFrameType:RFMUnion, REFERENCE_FRAMEOffset:flatbuffers.Offset, INDEXOffset:flatbuffers.Offset):flatbuffers.Offset {
   RFM.startRFM(builder);
-  RFM.addReferenceFrame(builder, REFERENCE_FRAME);
+  RFM.addReferenceFrameType(builder, referenceFrameType);
+  RFM.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
+  RFM.addIndex(builder, INDEXOffset);
   return RFM.endRFM(builder);
 }
 
 unpack(): RFMT {
   return new RFMT(
-    this.REFERENCE_FRAME()
+    this.referenceFrameType(),
+    (() => {
+      const temp = unionToRfmunion(this.referenceFrameType(), this.REFERENCE_FRAME.bind(this));
+      if(temp === null) { return null; }
+      return temp.unpack()
+  })(),
+    this.INDEX()
   );
 }
 
 
 unpackTo(_o: RFMT): void {
-  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
+  _o.referenceFrameType = this.referenceFrameType();
+  _o.REFERENCE_FRAME = (() => {
+      const temp = unionToRfmunion(this.referenceFrameType(), this.REFERENCE_FRAME.bind(this));
+      if(temp === null) { return null; }
+      return temp.unpack()
+  })();
+  _o.INDEX = this.INDEX();
 }
 }
 
 export class RFMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public REFERENCE_FRAME: refFrame = refFrame.ECEF
+  public referenceFrameType: RFMUnion = RFMUnion.NONE,
+  public REFERENCE_FRAME: CelestialFrameWrapperT|CustomFrameWrapperT|OrbitFrameWrapperT|SpacecraftFrameWrapperT|null = null,
+  public INDEX: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
+  const REFERENCE_FRAME = builder.createObjectOffset(this.REFERENCE_FRAME);
+  const INDEX = (this.INDEX !== null ? builder.createString(this.INDEX!) : 0);
+
   return RFM.createRFM(builder,
-    this.REFERENCE_FRAME
+    this.referenceFrameType,
+    REFERENCE_FRAME,
+    INDEX
   );
 }
 }

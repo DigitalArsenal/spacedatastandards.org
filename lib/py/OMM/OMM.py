@@ -78,12 +78,17 @@ class OMM(object):
         return None
 
     # Reference Frame
+    # Typically TEMEOFDATE
     # OMM
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 2
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Reference Frame Epoch (ISO 8601 UTC format)
     # OMM
@@ -296,12 +301,17 @@ class OMM(object):
 
     # Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
     # COV_REF_FRAME reference frame for covariance [C if covariance given]
+    # Typically RSW
     # OMM
     def COV_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 23
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # CX_X [km**2]
     # OMM
@@ -554,7 +564,7 @@ def AddCENTER_NAME(builder, CENTER_NAME):
     OMMAddCENTER_NAME(builder, CENTER_NAME)
 
 def OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependInt8Slot(6, REFERENCE_FRAME, 2)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
 
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
@@ -716,7 +726,7 @@ def AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
     OMMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
 
 def OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    builder.PrependInt8Slot(33, COV_REFERENCE_FRAME, 23)
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REFERENCE_FRAME), 0)
 
 def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
     OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
@@ -883,6 +893,11 @@ def OMMEnd(builder):
 def End(builder):
     return OMMEnd(builder)
 
+import RFM
+try:
+    from typing import Optional
+except:
+    pass
 
 class OMMT(object):
 
@@ -894,7 +909,7 @@ class OMMT(object):
         self.OBJECT_NAME = None  # type: str
         self.OBJECT_ID = None  # type: str
         self.CENTER_NAME = None  # type: str
-        self.REFERENCE_FRAME = 2  # type: int
+        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.REFERENCE_FRAME_EPOCH = None  # type: str
         self.TIME_SYSTEM = 11  # type: int
         self.MEAN_ELEMENT_THEORY = 0  # type: int
@@ -921,7 +936,7 @@ class OMMT(object):
         self.BSTAR = 0.0  # type: float
         self.MEAN_MOTION_DOT = 0.0  # type: float
         self.MEAN_MOTION_DDOT = 0.0  # type: float
-        self.COV_REFERENCE_FRAME = 23  # type: int
+        self.COV_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.CX_X = 0.0  # type: float
         self.CY_X = 0.0  # type: float
         self.CY_Y = 0.0  # type: float
@@ -976,7 +991,8 @@ class OMMT(object):
         self.OBJECT_NAME = OMM.OBJECT_NAME()
         self.OBJECT_ID = OMM.OBJECT_ID()
         self.CENTER_NAME = OMM.CENTER_NAME()
-        self.REFERENCE_FRAME = OMM.REFERENCE_FRAME()
+        if OMM.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(OMM.REFERENCE_FRAME())
         self.REFERENCE_FRAME_EPOCH = OMM.REFERENCE_FRAME_EPOCH()
         self.TIME_SYSTEM = OMM.TIME_SYSTEM()
         self.MEAN_ELEMENT_THEORY = OMM.MEAN_ELEMENT_THEORY()
@@ -1003,7 +1019,8 @@ class OMMT(object):
         self.BSTAR = OMM.BSTAR()
         self.MEAN_MOTION_DOT = OMM.MEAN_MOTION_DOT()
         self.MEAN_MOTION_DDOT = OMM.MEAN_MOTION_DDOT()
-        self.COV_REFERENCE_FRAME = OMM.COV_REFERENCE_FRAME()
+        if OMM.COV_REFERENCE_FRAME() is not None:
+            self.COV_REFERENCE_FRAME = RFM.RFMT.InitFromObj(OMM.COV_REFERENCE_FRAME())
         self.CX_X = OMM.CX_X()
         self.CY_X = OMM.CY_X()
         self.CY_Y = OMM.CY_Y()
@@ -1043,6 +1060,8 @@ class OMMT(object):
             OBJECT_ID = builder.CreateString(self.OBJECT_ID)
         if self.CENTER_NAME is not None:
             CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
         if self.REFERENCE_FRAME_EPOCH is not None:
             REFERENCE_FRAME_EPOCH = builder.CreateString(self.REFERENCE_FRAME_EPOCH)
         if self.COMMENT is not None:
@@ -1051,6 +1070,8 @@ class OMMT(object):
             EPOCH = builder.CreateString(self.EPOCH)
         if self.CLASSIFICATION_TYPE is not None:
             CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
+        if self.COV_REFERENCE_FRAME is not None:
+            COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.Pack(builder)
         if self.USER_DEFINED_OBJECT_DESIGNATOR is not None:
             USER_DEFINED_OBJECT_DESIGNATOR = builder.CreateString(self.USER_DEFINED_OBJECT_DESIGNATOR)
         if self.USER_DEFINED_EARTH_MODEL is not None:
@@ -1067,7 +1088,8 @@ class OMMT(object):
             OMMAddOBJECT_ID(builder, OBJECT_ID)
         if self.CENTER_NAME is not None:
             OMMAddCENTER_NAME(builder, CENTER_NAME)
-        OMMAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)
+        if self.REFERENCE_FRAME is not None:
+            OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
         if self.REFERENCE_FRAME_EPOCH is not None:
             OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
         OMMAddTIME_SYSTEM(builder, self.TIME_SYSTEM)
@@ -1098,7 +1120,8 @@ class OMMT(object):
         OMMAddBSTAR(builder, self.BSTAR)
         OMMAddMEAN_MOTION_DOT(builder, self.MEAN_MOTION_DOT)
         OMMAddMEAN_MOTION_DDOT(builder, self.MEAN_MOTION_DDOT)
-        OMMAddCOV_REFERENCE_FRAME(builder, self.COV_REFERENCE_FRAME)
+        if self.COV_REFERENCE_FRAME is not None:
+            OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
         OMMAddCX_X(builder, self.CX_X)
         OMMAddCY_X(builder, self.CY_X)
         OMMAddCY_Y(builder, self.CY_Y)

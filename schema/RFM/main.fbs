@@ -1,190 +1,330 @@
-// Hash: de4bfea5998a836c0e4d7ff411a0957fef99b28c4be4fd7e6ba6570622d1459f
-// Version: 3.0.3
+// Hash: 2490f0c065acae78588e68cee48d2529e2f1eaa4baedc79570756c6220d9a2b1
+// Version: 4.0.8
 // -----------------------------------END_HEADER
-enum refFrame : byte {
-  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
-  ECEF,
-  /// International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
-  ICRF,
-  /// True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
-  TEME,
-  /// East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
-  ENU,
-  /// North-East-Down: Aviation/navigation frame aligned with gravity.
-  NED,
-  /// North-East-Up: Similar to NED, with "Up" opposite gravity.
-  NEU,
-  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
-  RIC,
-  /// Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
-  J2000,
-  /// Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
+/// https://www.sanaregistry.org/r/celestial_body_reference_frames/
+/// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
+enum CelestialFrame : byte {
+  /// OID: 1.3.112.4.57.2.9
+  /// Inertial Earth-centered frame aligned with Earth's center of mass.
   GCRF,
-  /// Greenwich Rotating Coordinates: Rotates with Earth's true equator.
-  GRC,
-  /// International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
-  ITRF2000,
-  /// International Terrestrial Reference Frame 1993: Older ITRF realization.
-  ITRF93,
-  /// International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
-  ITRF97,
-  /// True of Date, Rotating: Rotates with Earth's true equator.
-  TDR,
-  /// True of Date: Similar to TDR, without rotation.
-  TOD,
-  /// Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
-  RTN,
-  /// Transverse, Velocity, Normal: Alternative orbit frame.
-  TVN,
-  /// Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
-  VVLH,
-  /// Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
-  QSW,
-  /// Local Tangent Plane: Surface-fixed frame for terrestrial uses.
-  LTP,
-  /// Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
-  LVLH,
-  /// Polar-North-East: Polar coordinate frame.
-  PNE,
-  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  BRF,
-  /// Radial, Down-track, Cross-track: Alternate name for RTN.
-  RSW,
-  /// Tangential, Normal, Cross-track: Local orbit frame.
-  TNW,
-  /// Radial, Along-track, Cross-track: Satellite motion frame.
-  UVW,
-  /// Equinoctial Inertial: Frame with axes aligned to orbital properties.
-  EQW_INERTIAL,
-  /// Inertial version of LVLH.
-  LVLH_INERTIAL,
-  /// Rotating LVLH frame.
-  LVLH_ROTATING,
-  /// Inertial Nadir-Sun-Normal frame.
-  NSW_INERTIAL,
-  /// Rotating Nadir-Sun-Normal frame.
-  NSW_ROTATING,
-  /// Inertial Transverse-Velocity-Normal frame.
-  NTW_INERTIAL,
-  /// Rotating Transverse-Velocity-Normal frame.
-  NTW_ROTATING,
-  /// Perifocal Coordinate System: Inertial frame aligned to periapsis.
-  PQW_INERTIAL,
-  /// Inertial Radial, Transverse, Normal frame.
-  RSW_INERTIAL,
-  /// Rotating RSW frame: Aligned with orbit angular momentum.
-  RSW_ROTATING,
-  /// South/East/Zenith inertial frame.
-  SEZ_INERTIAL,
-  /// Rotating South/East/Zenith frame.
-  SEZ_ROTATING,
-  /// Inertial Tangential, Normal, Cross-track frame.
-  TNW_INERTIAL,
-  /// Rotating Tangential, Normal, Cross-track frame.
-  TNW_ROTATING,
-  /// Velocity, Normal, Co-normal inertial frame.
-  VNC_INERTIAL,
-  /// Rotating Velocity, Normal, Co-normal frame.
-  VNC_ROTATING,
-  /// Central Body alignment inertial frame.
-  ALIGN_CB,
-  /// Earth alignment inertial frame.
-  ALIGN_EARTH,
-  /// Inertial realization of B1950 epoch.
-  B1950,
-  /// Celestial Intermediate Reference System.
-  CIRS,
-  /// DTRF Inertial frame with corrections.
-  DTRFyyyy,
-  /// Earth-Fixed Greenwich rotating frame.
-  EFG,
-  /// Earth Mean Equator and Equinox of 2000 epoch.
+
+  /// OID: 1.3.112.4.57.2.11
+  /// International Celestial Reference Frame based on distant quasars.
+  ICRF,
+
+  /// OID: 1.3.112.4.57.2.14
+  /// Classical J2000 inertial frame defined at epoch J2000.0.
+  J2000,
+
+  /// OID: 1.3.112.4.57.2.15
+  /// Updated J2000 frame using IAU2000A precession-nutation models.
+  J2000A,
+
+  /// OID: 1.3.112.4.57.2.7
+  /// Earth Mean Equator frame at epoch J2000 used in orbit determination.
   EME2000,
-  /// Central Body fixed rotating frame.
-  FIXED_CB,
-  /// Earth-fixed rotating frame.
-  FIXED_EARTH,
-  /// Geocentric Celestial Reference Frame with versioning.
-  GCRFn,
-  /// Greenwich True-of-Date rotating frame.
-  GTOD,
-  /// Mean of Date for all central bodies except Earth and Moon.
-  MOD_CB,
-  /// Mean of Date for Earth.
-  MOD_EARTH,
-  /// Mean of Date for Moon.
-  MOD_MOON,
-  /// Mean of Epoch for central bodies.
-  MOE_CB,
-  /// Mean of Epoch for Earth.
-  MOE_EARTH,
-  /// Lunar Moon Mean Earth reference frame.
-  MOON_ME,
-  /// Lunar Mean Equator and IAU Node reference frame.
-  MOON_MEIAUE,
-  /// Lunar Principal Axis rotating frame.
-  MOON_PAxxx,
-  /// True Equator Mean Equinox of Date.
+
+  /// OID: 1.3.112.4.57.2.25
+  /// True Equator Mean Equinox of Date frame for satellite tracking.
   TEMEOFDATE,
-  /// True Equator Mean Equinox of Epoch.
-  TEMEOFEPOCH,
-  /// Terrestrial Intermediate Reference System.
-  TIRS,
-  /// True of Date for central bodies.
-  TOD_CB,
-  /// True of Date for Earth.
+
+  /// OID: 1.3.112.4.57.2.10
+  /// Greenwich True of Date: Earth rotation relative to celestial reference.
+  GTOD,
+
+  /// OID: 1.3.112.4.57.2.4
+  /// Celestial Intermediate Reference System based on CIP and CIO.
+  CIRS,
+
+  /// OID: 1.3.112.4.57.2.18
+  /// Mean of Date (MOD) Earth frame using IAU1976 precession.
+  MOD_EARTH,
+
+  /// OID: 1.3.112.4.57.2.17
+  /// Mean of Date (MOD) celestial body frame evaluated at each epoch.
+  MOD_CB,
+
+  /// OID: 1.3.112.4.57.2.19
+  /// Mean of Date (MOD) Moon frame evaluated at each epoch.
+  MOD_MOON,
+
+  /// OID: 1.3.112.4.57.2.29
+  /// True of Date (TOD) Earth frame with polar motion included.
   TOD_EARTH,
-  /// True of Date for Moon.
+
+  /// OID: 1.3.112.4.57.2.28
+  /// True of Date (TOD) celestial body frame.
+  TOD_CB,
+
+  /// OID: 1.3.112.4.57.2.30
+  /// True of Date (TOD) Moon frame.
   TOD_MOON,
-  /// True of Epoch for central bodies.
-  TOE_CB,
-  /// True of Epoch for Earth.
+
+  /// OID: 1.3.112.4.57.2.32
+  /// True of Epoch (TOE) Earth frame at specific epoch.
   TOE_EARTH,
-  /// True of Epoch for Moon.
+
+  /// OID: 1.3.112.4.57.2.31
+  /// True of Epoch (TOE) celestial body frame at specific epoch.
+  TOE_CB,
+
+  /// OID: 1.3.112.4.57.2.33
+  /// True of Epoch (TOE) Moon frame at specific epoch.
   TOE_MOON,
-  /// True Ecliptic reference frame.
-  TRUE_ECLIPTIC,
-  /// Launch go-inertial reference frame.
-  UVW_GO_INERTIAL,
-  /// WGS 84 Earth-fixed terrestrial system.
+
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 2000 (Earth-fixed).
+  ITRF2000,
+
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1993 (Earth-fixed).
+  ITRF93,
+
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1997 (Earth-fixed).
+  ITRF97,
+
+  /// OID: 1.3.112.4.57.2.6
+  /// Earth-Fixed Geocentric frame using geodetic coordinates.
+  EFG,
+
+  /// OID: 1.3.112.4.57.2.8
+  /// Fixed frame of a celestial body.
+  FIXED_CB,
+
+  /// OID: 1.3.112.4.57.2.39
+  /// Fixed Earth frame aligned with WGS84 ellipsoid.
+  FIXED_EARTH,
+
+  /// WGS84 Earth-fixed terrestrial system.
   WGS84,
-  /// Accelerometer reference frame.
+
+  /// OID: 1.3.112.4.57.2.5
+  /// Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+  DTRFYYYY,
+
+  /// OID: 1.3.112.4.57.2.2
+  /// Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+  ALIGN_EARTH,
+
+  /// OID: 1.3.112.4.57.2.1
+  /// Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+  ALIGN_CB,
+
+  /// OID: 1.3.112.4.57.2.3
+  /// Classical Besselian 1950 equator and equinox frame.
+  B1950
+}
+
+/// https://sanaregistry.org/r/spacecraft_body_reference_frames/
+/// Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
+enum SpacecraftFrame : byte {
+  /// OID: 1.3.112.4.57.8.1
+  /// Accelerometer instrument frame.
   ACC_i,
-  /// Actuator reference frame.
+
+  /// OID: 1.3.112.4.57.8.2
+  /// Actuator system frame.
   ACTUATOR_i,
-  /// Autonomous Star Tracker reference frame.
+
+  /// OID: 1.3.112.4.57.8.3
+  /// Attitude Sensor Target frame.
   AST_i,
-  /// Coarse Sun Sensor reference frame.
+
+  /// OID: 1.3.112.4.57.8.4
+  /// Coarse Sun Sensor frame.
   CSS_i,
-  /// Digital Sun Sensor reference frame.
+
+  /// OID: 1.3.112.4.57.8.5
+  /// Digital Sun Sensor frame.
   DSS_i,
-  /// Earth Sensor Assembly reference frame.
+
+  /// OID: 1.3.112.4.57.8.6
+  /// Earth Sensor Assembly frame.
   ESA_i,
-  /// Gyro reference frame.
+
+  /// OID: 1.3.112.4.57.8.7
+  /// Gyroscope instrument frame.
   GYRO_FRAME_i,
-  /// Inertial Measurement Unit reference frame.
+
+  /// OID: 1.3.112.4.57.8.8
+  /// Inertial Measurement Unit frame.
   IMU_FRAME_i,
-  /// Instrument reference frame.
+
+  /// OID: 1.3.112.4.57.8.9
+  /// Generic instrument mounting frame.
   INSTRUMENT_i,
-  /// Magnetic Torque Assembly reference frame.
+
+  /// OID: 1.3.112.4.57.8.10
+  /// Magnetic Torquer Assembly frame.
   MTA_i,
-  /// Reaction Wheel reference frame.
+
+  /// OID: 1.3.112.4.57.8.11
+  /// Reaction Wheel assembly frame.
   RW_i,
-  /// Solar Array reference frame.
+
+  /// OID: 1.3.112.4.57.8.12
+  /// Solar Array frame.
   SA_i,
-  /// Spacecraft Body reference frame.
+
+  /// OID: 1.3.112.4.57.8.13
+  /// Spacecraft body fixed frame.
   SC_BODY_i,
-  /// Sensor reference frame.
+
+  /// OID: 1.3.112.4.57.8.14
+  /// Generic sensor assembly frame.
   SENSOR_i,
-  /// Star Tracker reference frame.
+
+  /// OID: 1.3.112.4.57.8.15
+  /// Star Tracker instrument frame.
   STARTRACKER_i,
-  /// Three Axis Magnetometer reference frame.
+
+  /// OID: 1.3.112.4.57.8.16
+  /// Thermal Assembly Module frame.
   TAM_i
 }
 
-/// Reference Frame Message
+/// https://sanaregistry.org/r/orbit_relative_reference_frames/
+/// Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
+enum OrbitFrame : byte {
+  /// OID: 1.3.112.4.57.3.1
+  /// Earth Equatorial Inertial frame aligned with J2000 epoch.
+  EQW_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.3
+  /// Local Vertical Local Horizontal inertial frame.
+  LVLH_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.2
+  /// Local Vertical Local Horizontal rotating frame.
+  LVLH_ROTATING,
+
+  /// OID: 1.3.112.4.57.3.5
+  /// Normal along-track cross-track inertial frame.
+  NSW_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.4
+  /// Normal along-track cross-track rotating frame.
+  NSW_ROTATING,
+
+  /// OID: 1.3.112.4.57.3.7
+  /// Orbit normal Tangential cross-track inertial frame.
+  NTW_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.6
+  /// Orbit normal Tangential cross-track rotating frame.
+  NTW_ROTATING,
+
+  /// OID: 1.3.112.4.57.3.8
+  /// Perifocal frame aligned with orbit's perigee.
+  PQW_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.10
+  /// Radial along-track cross-track inertial frame.
+  RSW_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.9
+  /// Radial along-track cross-track rotating frame.
+  RSW_ROTATING,
+
+  /// OID: 1.3.112.4.57.3.14
+  /// South-East-Zenith inertial (topocentric) frame.
+  SEZ_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.13
+  /// South-East-Zenith rotating (topocentric) frame.
+  SEZ_ROTATING,
+
+  /// OID: 1.3.112.4.57.3.12
+  /// Transverse normal cross-track inertial frame.
+  TNW_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.11
+  /// Transverse normal cross-track rotating frame.
+  TNW_ROTATING,
+
+  /// OID: 1.3.112.4.57.3.16
+  /// Velocity-normal co-normal inertial frame.
+  VNC_INERTIAL,
+
+  /// OID: 1.3.112.4.57.3.15
+  /// Velocity-normal co-normal rotating frame.
+  VNC_ROTATING
+}
+
+/// Non-registered or local use frames
+enum CustomFrame : byte {
+  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
+  ECEF,
+
+  /// True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
+  TEME,
+
+  /// True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
+  TEMEOFEPOCH,
+
+  /// East-North-Up: Local tangent plane for surface points.
+  ENU,
+
+  /// North-East-Down: Aviation/navigation frame aligned with gravity.
+  NED,
+
+  /// North-East-Up: Local tangent plane variant with Up positive.
+  NEU,
+
+  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
+  RIC,
+
+  /// Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
+  RTN,
+
+  /// Transverse-Velocity-Normal: Alternative orbit frame.
+  TVN,
+
+  /// Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
+  VVLH,
+
+  /// Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
+  QSW,
+
+  /// Local Tangent Plane: Surface-fixed frame centered on a point.
+  LTP,
+
+  /// Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
+  LVLH,
+
+  /// Polar-North-East: Surface coordinate frame.
+  PNE,
+
+  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
+  BRF,
+
+  /// Radial-Along-track-Cross-track: Same as RSW.
+  RSW,
+
+  /// Tangential-Normal-Cross-track: Same as TNW.
+  TNW,
+
+  /// Radial-UTF: Radial, Along-track, Cross-track variant.
+  UVW
+}
+
+// wrapper tables for each enum
+table CelestialFrameWrapper { frame: CelestialFrame; }
+table SpacecraftFrameWrapper { frame: SpacecraftFrame; }
+table OrbitFrameWrapper     { frame: OrbitFrame; }
+table CustomFrameWrapper    { frame: CustomFrame; }
+
+union RFMUnion {
+  CelestialFrameWrapper,
+  SpacecraftFrameWrapper,
+  OrbitFrameWrapper,
+  CustomFrameWrapper
+}
+
 table RFM {
-  REFERENCE_FRAME: refFrame;
+  REFERENCE_FRAME: RFMUnion;
+  INDEX: string;
 }
 
 root_type RFM;

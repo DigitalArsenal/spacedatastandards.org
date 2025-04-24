@@ -151,11 +151,11 @@ impl<'a> TDM<'a> {
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     if let Some(x) = args.CCSDS_TDM_VERS { builder.add_CCSDS_TDM_VERS(x); }
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.OBS_REFERENCE_FRAME { builder.add_OBS_REFERENCE_FRAME(x); }
+    if let Some(x) = args.OBSERVER_POSITION_REFERENCE_FRAME { builder.add_OBSERVER_POSITION_REFERENCE_FRAME(x); }
     if let Some(x) = args.OBSERVER_ID { builder.add_OBSERVER_ID(x); }
     builder.add_PATH_2(args.PATH_2);
     builder.add_PATH_1(args.PATH_1);
-    builder.add_OBS_REFERENCE_FRAME(args.OBS_REFERENCE_FRAME);
-    builder.add_OBSERVER_POSITION_REFERENCE_FRAME(args.OBSERVER_POSITION_REFERENCE_FRAME);
     builder.finish()
   }
 
@@ -169,8 +169,12 @@ impl<'a> TDM<'a> {
     let OBSERVER_VX = self.OBSERVER_VX();
     let OBSERVER_VY = self.OBSERVER_VY();
     let OBSERVER_VZ = self.OBSERVER_VZ();
-    let OBSERVER_POSITION_REFERENCE_FRAME = self.OBSERVER_POSITION_REFERENCE_FRAME();
-    let OBS_REFERENCE_FRAME = self.OBS_REFERENCE_FRAME();
+    let OBSERVER_POSITION_REFERENCE_FRAME = self.OBSERVER_POSITION_REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OBS_REFERENCE_FRAME = self.OBS_REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let EPOCH = self.EPOCH().map(|x| {
       x.to_string()
     });
@@ -416,19 +420,19 @@ impl<'a> TDM<'a> {
   }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
   #[inline]
-  pub fn OBSERVER_POSITION_REFERENCE_FRAME(&self) -> refFrame {
+  pub fn OBSERVER_POSITION_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, None)}
   }
   /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
   #[inline]
-  pub fn OBS_REFERENCE_FRAME(&self) -> refFrame {
+  pub fn OBS_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(TDM::VT_OBS_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(TDM::VT_OBS_REFERENCE_FRAME, None)}
   }
   /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   #[inline]
@@ -848,8 +852,8 @@ impl flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<f64>("OBSERVER_VX", Self::VT_OBSERVER_VX, false)?
      .visit_field::<f64>("OBSERVER_VY", Self::VT_OBSERVER_VY, false)?
      .visit_field::<f64>("OBSERVER_VZ", Self::VT_OBSERVER_VZ, false)?
-     .visit_field::<refFrame>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
-     .visit_field::<refFrame>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CCSDS_TDM_VERS", Self::VT_CCSDS_TDM_VERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
@@ -912,8 +916,8 @@ pub struct TDMArgs<'a> {
     pub OBSERVER_VX: f64,
     pub OBSERVER_VY: f64,
     pub OBSERVER_VZ: f64,
-    pub OBSERVER_POSITION_REFERENCE_FRAME: refFrame,
-    pub OBS_REFERENCE_FRAME: refFrame,
+    pub OBSERVER_POSITION_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
+    pub OBS_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CCSDS_TDM_VERS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COMMENT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
@@ -976,8 +980,8 @@ impl<'a> Default for TDMArgs<'a> {
       OBSERVER_VX: 0.0,
       OBSERVER_VY: 0.0,
       OBSERVER_VZ: 0.0,
-      OBSERVER_POSITION_REFERENCE_FRAME: refFrame::ECEF,
-      OBS_REFERENCE_FRAME: refFrame::ECEF,
+      OBSERVER_POSITION_REFERENCE_FRAME: None,
+      OBS_REFERENCE_FRAME: None,
       EPOCH: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,
@@ -1066,12 +1070,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(TDM::VT_OBSERVER_VZ, OBSERVER_VZ, 0.0);
   }
   #[inline]
-  pub fn add_OBSERVER_POSITION_REFERENCE_FRAME(&mut self, OBSERVER_POSITION_REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_OBSERVER_POSITION_REFERENCE_FRAME(&mut self, OBSERVER_POSITION_REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_OBS_REFERENCE_FRAME(&mut self, OBS_REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_OBS_REFERENCE_FRAME(&mut self, OBS_REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -1363,8 +1367,8 @@ pub struct TDMT {
   pub OBSERVER_VX: f64,
   pub OBSERVER_VY: f64,
   pub OBSERVER_VZ: f64,
-  pub OBSERVER_POSITION_REFERENCE_FRAME: refFrame,
-  pub OBS_REFERENCE_FRAME: refFrame,
+  pub OBSERVER_POSITION_REFERENCE_FRAME: Option<Box<RFMT>>,
+  pub OBS_REFERENCE_FRAME: Option<Box<RFMT>>,
   pub EPOCH: Option<String>,
   pub CCSDS_TDM_VERS: Option<String>,
   pub COMMENT: Option<Vec<String>>,
@@ -1426,8 +1430,8 @@ impl Default for TDMT {
       OBSERVER_VX: 0.0,
       OBSERVER_VY: 0.0,
       OBSERVER_VZ: 0.0,
-      OBSERVER_POSITION_REFERENCE_FRAME: refFrame::ECEF,
-      OBS_REFERENCE_FRAME: refFrame::ECEF,
+      OBSERVER_POSITION_REFERENCE_FRAME: None,
+      OBS_REFERENCE_FRAME: None,
       EPOCH: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,
@@ -1495,8 +1499,12 @@ impl TDMT {
     let OBSERVER_VX = self.OBSERVER_VX;
     let OBSERVER_VY = self.OBSERVER_VY;
     let OBSERVER_VZ = self.OBSERVER_VZ;
-    let OBSERVER_POSITION_REFERENCE_FRAME = self.OBSERVER_POSITION_REFERENCE_FRAME;
-    let OBS_REFERENCE_FRAME = self.OBS_REFERENCE_FRAME;
+    let OBSERVER_POSITION_REFERENCE_FRAME = self.OBSERVER_POSITION_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OBS_REFERENCE_FRAME = self.OBS_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });

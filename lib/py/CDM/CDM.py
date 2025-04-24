@@ -162,8 +162,12 @@ class CDM(object):
     def SCREEN_VOLUME_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # The shape of the screening volume
     # CDM
@@ -380,7 +384,7 @@ def AddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD):
     CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD)
 
 def CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME):
-    builder.PrependInt8Slot(16, SCREEN_VOLUME_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_VOLUME_FRAME), 0)
 
 def AddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME):
     CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
@@ -465,6 +469,7 @@ def End(builder):
 
 import CDMObject
 import PNM
+import RFM
 try:
     from typing import Optional
 except:
@@ -490,7 +495,7 @@ class CDMT(object):
         self.RELATIVE_VELOCITY_N = 0.0  # type: float
         self.START_SCREEN_PERIOD = None  # type: str
         self.STOP_SCREEN_PERIOD = None  # type: str
-        self.SCREEN_VOLUME_FRAME = 0  # type: int
+        self.SCREEN_VOLUME_FRAME = None  # type: Optional[RFM.RFMT]
         self.SCREEN_VOLUME_SHAPE = 0  # type: int
         self.SCREEN_VOLUME_X = 0.0  # type: float
         self.SCREEN_VOLUME_Y = 0.0  # type: float
@@ -541,7 +546,8 @@ class CDMT(object):
         self.RELATIVE_VELOCITY_N = CDM.RELATIVE_VELOCITY_N()
         self.START_SCREEN_PERIOD = CDM.START_SCREEN_PERIOD()
         self.STOP_SCREEN_PERIOD = CDM.STOP_SCREEN_PERIOD()
-        self.SCREEN_VOLUME_FRAME = CDM.SCREEN_VOLUME_FRAME()
+        if CDM.SCREEN_VOLUME_FRAME() is not None:
+            self.SCREEN_VOLUME_FRAME = RFM.RFMT.InitFromObj(CDM.SCREEN_VOLUME_FRAME())
         self.SCREEN_VOLUME_SHAPE = CDM.SCREEN_VOLUME_SHAPE()
         self.SCREEN_VOLUME_X = CDM.SCREEN_VOLUME_X()
         self.SCREEN_VOLUME_Y = CDM.SCREEN_VOLUME_Y()
@@ -575,6 +581,8 @@ class CDMT(object):
             START_SCREEN_PERIOD = builder.CreateString(self.START_SCREEN_PERIOD)
         if self.STOP_SCREEN_PERIOD is not None:
             STOP_SCREEN_PERIOD = builder.CreateString(self.STOP_SCREEN_PERIOD)
+        if self.SCREEN_VOLUME_FRAME is not None:
+            SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME.Pack(builder)
         if self.SCREEN_ENTRY_TIME is not None:
             SCREEN_ENTRY_TIME = builder.CreateString(self.SCREEN_ENTRY_TIME)
         if self.SCREEN_EXIT_TIME is not None:
@@ -613,7 +621,8 @@ class CDMT(object):
             CDMAddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD)
         if self.STOP_SCREEN_PERIOD is not None:
             CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD)
-        CDMAddSCREEN_VOLUME_FRAME(builder, self.SCREEN_VOLUME_FRAME)
+        if self.SCREEN_VOLUME_FRAME is not None:
+            CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
         CDMAddSCREEN_VOLUME_SHAPE(builder, self.SCREEN_VOLUME_SHAPE)
         CDMAddSCREEN_VOLUME_X(builder, self.SCREEN_VOLUME_X)
         CDMAddSCREEN_VOLUME_Y(builder, self.SCREEN_VOLUME_Y)

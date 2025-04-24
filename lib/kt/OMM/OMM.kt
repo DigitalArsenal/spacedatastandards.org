@@ -109,12 +109,17 @@ class OMM : Table() {
     fun CENTER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Reference Frame
+     * Typically TEMEOFDATE
      */
-    val REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(16)
-            return if(o != 0) bb.get(o + bb_pos) else 2
+    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
+    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Reference Frame Epoch (ISO 8601 UTC format)
      */
@@ -351,12 +356,17 @@ class OMM : Table() {
     /**
      * Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
      * COV_REF_FRAME reference frame for covariance [C if covariance given]
+     * Typically RSW
      */
-    val COV_REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(70)
-            return if(o != 0) bb.get(o + bb_pos) else 23
+    val COV_REFERENCE_FRAME : RFM? get() = COV_REFERENCE_FRAME(RFM())
+    fun COV_REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(70)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * CX_X [km**2]
      */
@@ -585,7 +595,7 @@ class OMM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
-        fun createOMM(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAME: Byte, REFERENCE_FRAME_EPOCHOffset: Int, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, COMMENTOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, GM: Double, MASS: Double, SOLAR_RAD_AREA: Double, SOLAR_RAD_COEFF: Double, DRAG_AREA: Double, DRAG_COEFF: Double, EPHEMERIS_TYPE: Byte, CLASSIFICATION_TYPEOffset: Int, NORAD_CAT_ID: UInt, ELEMENT_SET_NO: UInt, REV_AT_EPOCH: Double, BSTAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, COV_REFERENCE_FRAME: Byte, CX_X: Double, CY_X: Double, CY_Y: Double, CZ_X: Double, CZ_Y: Double, CZ_Z: Double, CX_DOT_X: Double, CX_DOT_Y: Double, CX_DOT_Z: Double, CX_DOT_X_DOT: Double, CY_DOT_X: Double, CY_DOT_Y: Double, CY_DOT_Z: Double, CY_DOT_X_DOT: Double, CY_DOT_Y_DOT: Double, CZ_DOT_X: Double, CZ_DOT_Y: Double, CZ_DOT_Z: Double, CZ_DOT_X_DOT: Double, CZ_DOT_Y_DOT: Double, CZ_DOT_Z_DOT: Double, USER_DEFINED_BIP_0044_TYPE: UInt, USER_DEFINED_OBJECT_DESIGNATOROffset: Int, USER_DEFINED_EARTH_MODELOffset: Int, USER_DEFINED_EPOCH_TIMESTAMP: Double, USER_DEFINED_MICROSECONDS: Double) : Int {
+        fun createOMM(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, COMMENTOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, GM: Double, MASS: Double, SOLAR_RAD_AREA: Double, SOLAR_RAD_COEFF: Double, DRAG_AREA: Double, DRAG_COEFF: Double, EPHEMERIS_TYPE: Byte, CLASSIFICATION_TYPEOffset: Int, NORAD_CAT_ID: UInt, ELEMENT_SET_NO: UInt, REV_AT_EPOCH: Double, BSTAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, COV_REFERENCE_FRAMEOffset: Int, CX_X: Double, CY_X: Double, CY_Y: Double, CZ_X: Double, CZ_Y: Double, CZ_Z: Double, CX_DOT_X: Double, CX_DOT_Y: Double, CX_DOT_Z: Double, CX_DOT_X_DOT: Double, CY_DOT_X: Double, CY_DOT_Y: Double, CY_DOT_Z: Double, CY_DOT_X_DOT: Double, CY_DOT_Y_DOT: Double, CZ_DOT_X: Double, CZ_DOT_Y: Double, CZ_DOT_Z: Double, CZ_DOT_X_DOT: Double, CZ_DOT_Y_DOT: Double, CZ_DOT_Z_DOT: Double, USER_DEFINED_BIP_0044_TYPE: UInt, USER_DEFINED_OBJECT_DESIGNATOROffset: Int, USER_DEFINED_EARTH_MODELOffset: Int, USER_DEFINED_EPOCH_TIMESTAMP: Double, USER_DEFINED_MICROSECONDS: Double) : Int {
             builder.startTable(60)
             addUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
             addUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
@@ -631,22 +641,22 @@ class OMM : Table() {
             addUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset)
             addUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset)
             addUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
+            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset)
             addELEMENT_SET_NO(builder, ELEMENT_SET_NO)
             addNORAD_CAT_ID(builder, NORAD_CAT_ID)
             addCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset)
             addEPOCH(builder, EPOCHOffset)
             addCOMMENT(builder, COMMENTOffset)
             addREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCHOffset)
+            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
             addCENTER_NAME(builder, CENTER_NAMEOffset)
             addOBJECT_ID(builder, OBJECT_IDOffset)
             addOBJECT_NAME(builder, OBJECT_NAMEOffset)
             addORIGINATOR(builder, ORIGINATOROffset)
             addCREATION_DATE(builder, CREATION_DATEOffset)
-            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
             addEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE)
             addMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
             addTIME_SYSTEM(builder, TIME_SYSTEM)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAME)
             return endOMM(builder)
         }
         fun startOMM(builder: FlatBufferBuilder) = builder.startTable(60)
@@ -656,7 +666,7 @@ class OMM : Table() {
         fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
         fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(4, OBJECT_ID, 0)
         fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(5, CENTER_NAME, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Byte) = builder.addByte(6, REFERENCE_FRAME, 2)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(6, REFERENCE_FRAME, 0)
         fun addREFERENCE_FRAME_EPOCH(builder: FlatBufferBuilder, REFERENCE_FRAME_EPOCH: Int) = builder.addOffset(7, REFERENCE_FRAME_EPOCH, 0)
         fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(8, TIME_SYSTEM, 11)
         fun addMEAN_ELEMENT_THEORY(builder: FlatBufferBuilder, MEAN_ELEMENT_THEORY: Byte) = builder.addByte(9, MEAN_ELEMENT_THEORY, 0)
@@ -683,7 +693,7 @@ class OMM : Table() {
         fun addBSTAR(builder: FlatBufferBuilder, BSTAR: Double) = builder.addDouble(30, BSTAR, 0.0)
         fun addMEAN_MOTION_DOT(builder: FlatBufferBuilder, MEAN_MOTION_DOT: Double) = builder.addDouble(31, MEAN_MOTION_DOT, 0.0)
         fun addMEAN_MOTION_DDOT(builder: FlatBufferBuilder, MEAN_MOTION_DDOT: Double) = builder.addDouble(32, MEAN_MOTION_DDOT, 0.0)
-        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Byte) = builder.addByte(33, COV_REFERENCE_FRAME, 23)
+        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Int) = builder.addOffset(33, COV_REFERENCE_FRAME, 0)
         fun addCX_X(builder: FlatBufferBuilder, CX_X: Double) = builder.addDouble(34, CX_X, 0.0)
         fun addCY_X(builder: FlatBufferBuilder, CY_X: Double) = builder.addDouble(35, CY_X, 0.0)
         fun addCY_Y(builder: FlatBufferBuilder, CY_Y: Double) = builder.addDouble(36, CY_Y, 0.0)

@@ -695,8 +695,12 @@ class EOO(object):
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
     # unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
@@ -705,8 +709,12 @@ class EOO(object):
     def SEN_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Boolean indicating that the target object was in umbral eclipse at the time of this observation.
     # EOO
@@ -1610,13 +1618,13 @@ def AddCREATED_BY(builder, CREATED_BY):
     EOOAddCREATED_BY(builder, CREATED_BY)
 
 def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependInt8Slot(81, REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(81, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
 
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 
 def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
-    builder.PrependInt8Slot(82, SEN_REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
 
 def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
     EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
@@ -1933,6 +1941,11 @@ def EOOEnd(builder):
 def End(builder):
     return EOOEnd(builder)
 
+import RFM
+try:
+    from typing import Optional
+except:
+    pass
 
 class EOOT(object):
 
@@ -2019,8 +2032,8 @@ class EOOT(object):
         self.DATA_MODE = 0  # type: int
         self.CREATED_AT = None  # type: str
         self.CREATED_BY = None  # type: str
-        self.REFERENCE_FRAME = 0  # type: int
-        self.SEN_REFERENCE_FRAME = 0  # type: int
+        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
+        self.SEN_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.UMBRA = False  # type: bool
         self.PENUMBRA = False  # type: bool
         self.ORIG_NETWORK = None  # type: str
@@ -2175,8 +2188,10 @@ class EOOT(object):
         self.DATA_MODE = EOO.DATA_MODE()
         self.CREATED_AT = EOO.CREATED_AT()
         self.CREATED_BY = EOO.CREATED_BY()
-        self.REFERENCE_FRAME = EOO.REFERENCE_FRAME()
-        self.SEN_REFERENCE_FRAME = EOO.SEN_REFERENCE_FRAME()
+        if EOO.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(EOO.REFERENCE_FRAME())
+        if EOO.SEN_REFERENCE_FRAME() is not None:
+            self.SEN_REFERENCE_FRAME = RFM.RFMT.InitFromObj(EOO.SEN_REFERENCE_FRAME())
         self.UMBRA = EOO.UMBRA()
         self.PENUMBRA = EOO.PENUMBRA()
         self.ORIG_NETWORK = EOO.ORIG_NETWORK()
@@ -2263,6 +2278,10 @@ class EOOT(object):
             CREATED_AT = builder.CreateString(self.CREATED_AT)
         if self.CREATED_BY is not None:
             CREATED_BY = builder.CreateString(self.CREATED_BY)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
+        if self.SEN_REFERENCE_FRAME is not None:
+            SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.Pack(builder)
         if self.ORIG_NETWORK is not None:
             ORIG_NETWORK = builder.CreateString(self.ORIG_NETWORK)
         if self.SOURCE_DL is not None:
@@ -2369,8 +2388,10 @@ class EOOT(object):
             EOOAddCREATED_AT(builder, CREATED_AT)
         if self.CREATED_BY is not None:
             EOOAddCREATED_BY(builder, CREATED_BY)
-        EOOAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)
-        EOOAddSEN_REFERENCE_FRAME(builder, self.SEN_REFERENCE_FRAME)
+        if self.REFERENCE_FRAME is not None:
+            EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        if self.SEN_REFERENCE_FRAME is not None:
+            EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
         EOOAddUMBRA(builder, self.UMBRA)
         EOOAddPENUMBRA(builder, self.PENUMBRA)
         if self.ORIG_NETWORK is not None:

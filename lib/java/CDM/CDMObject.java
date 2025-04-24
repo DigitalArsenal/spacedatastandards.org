@@ -63,7 +63,8 @@ public final class CDMObject extends Table {
   /**
    * Reference Frame in which the object position is defined
    */
-  public byte REFERENCE_FRAME() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
+  public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Gravity model
    */
@@ -375,7 +376,7 @@ public final class CDMObject extends Table {
       int OPERATOR_ORGANIZATIONOffset,
       int EPHEMERIS_NAMEOffset,
       byte COVARIANCE_METHOD,
-      byte REFERENCE_FRAME,
+      int REFERENCE_FRAMEOffset,
       int GRAVITY_MODELOffset,
       int ATMOSPHERIC_MODELOffset,
       int N_BODY_PERTURBATIONSOffset,
@@ -520,6 +521,7 @@ public final class CDMObject extends Table {
     CDMObject.addNBodyPerturbations(builder, N_BODY_PERTURBATIONSOffset);
     CDMObject.addAtmosphericModel(builder, ATMOSPHERIC_MODELOffset);
     CDMObject.addGravityModel(builder, GRAVITY_MODELOffset);
+    CDMObject.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
     CDMObject.addEphemerisName(builder, EPHEMERIS_NAMEOffset);
     CDMObject.addOperatorOrganization(builder, OPERATOR_ORGANIZATIONOffset);
     CDMObject.addOperatorContactPosition(builder, OPERATOR_CONTACT_POSITIONOffset);
@@ -529,7 +531,6 @@ public final class CDMObject extends Table {
     CDMObject.addIntrackThrust(builder, INTRACK_THRUST);
     CDMObject.addEarthTides(builder, EARTH_TIDES);
     CDMObject.addSolarRadPressure(builder, SOLAR_RAD_PRESSURE);
-    CDMObject.addReferenceFrame(builder, REFERENCE_FRAME);
     CDMObject.addCovarianceMethod(builder, COVARIANCE_METHOD);
     return CDMObject.endCDMObject(builder);
   }
@@ -542,7 +543,7 @@ public final class CDMObject extends Table {
   public static void addOperatorOrganization(FlatBufferBuilder builder, int OPERATOR_ORGANIZATIONOffset) { builder.addOffset(4, OPERATOR_ORGANIZATIONOffset, 0); }
   public static void addEphemerisName(FlatBufferBuilder builder, int EPHEMERIS_NAMEOffset) { builder.addOffset(5, EPHEMERIS_NAMEOffset, 0); }
   public static void addCovarianceMethod(FlatBufferBuilder builder, byte COVARIANCE_METHOD) { builder.addByte(6, COVARIANCE_METHOD, 0); }
-  public static void addReferenceFrame(FlatBufferBuilder builder, byte REFERENCE_FRAME) { builder.addByte(7, REFERENCE_FRAME, 0); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(7, REFERENCE_FRAMEOffset, 0); }
   public static void addGravityModel(FlatBufferBuilder builder, int GRAVITY_MODELOffset) { builder.addOffset(8, GRAVITY_MODELOffset, 0); }
   public static void addAtmosphericModel(FlatBufferBuilder builder, int ATMOSPHERIC_MODELOffset) { builder.addOffset(9, ATMOSPHERIC_MODELOffset, 0); }
   public static void addNBodyPerturbations(FlatBufferBuilder builder, int N_BODY_PERTURBATIONSOffset) { builder.addOffset(10, N_BODY_PERTURBATIONSOffset, 0); }

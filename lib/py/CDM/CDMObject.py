@@ -96,8 +96,12 @@ class CDMObject(object):
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Gravity model
     # CDMObject
@@ -732,7 +736,7 @@ def AddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD):
     CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
 
 def CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependInt8Slot(7, REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
 
 def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
@@ -1183,6 +1187,7 @@ def End(builder):
 
 import CAT
 import EPM
+import RFM
 try:
     from typing import Optional
 except:
@@ -1199,7 +1204,7 @@ class CDMObjectT(object):
         self.OPERATOR_ORGANIZATION = None  # type: str
         self.EPHEMERIS_NAME = None  # type: str
         self.COVARIANCE_METHOD = 0  # type: int
-        self.REFERENCE_FRAME = 0  # type: int
+        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.GRAVITY_MODEL = None  # type: str
         self.ATMOSPHERIC_MODEL = None  # type: str
         self.N_BODY_PERTURBATIONS = None  # type: str
@@ -1304,7 +1309,8 @@ class CDMObjectT(object):
         self.OPERATOR_ORGANIZATION = cdmobject.OPERATOR_ORGANIZATION()
         self.EPHEMERIS_NAME = cdmobject.EPHEMERIS_NAME()
         self.COVARIANCE_METHOD = cdmobject.COVARIANCE_METHOD()
-        self.REFERENCE_FRAME = cdmobject.REFERENCE_FRAME()
+        if cdmobject.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(cdmobject.REFERENCE_FRAME())
         self.GRAVITY_MODEL = cdmobject.GRAVITY_MODEL()
         self.ATMOSPHERIC_MODEL = cdmobject.ATMOSPHERIC_MODEL()
         self.N_BODY_PERTURBATIONS = cdmobject.N_BODY_PERTURBATIONS()
@@ -1393,6 +1399,8 @@ class CDMObjectT(object):
             OPERATOR_ORGANIZATION = builder.CreateString(self.OPERATOR_ORGANIZATION)
         if self.EPHEMERIS_NAME is not None:
             EPHEMERIS_NAME = builder.CreateString(self.EPHEMERIS_NAME)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
         if self.GRAVITY_MODEL is not None:
             GRAVITY_MODEL = builder.CreateString(self.GRAVITY_MODEL)
         if self.ATMOSPHERIC_MODEL is not None:
@@ -1417,7 +1425,8 @@ class CDMObjectT(object):
         if self.EPHEMERIS_NAME is not None:
             CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
         CDMObjectAddCOVARIANCE_METHOD(builder, self.COVARIANCE_METHOD)
-        CDMObjectAddREFERENCE_FRAME(builder, self.REFERENCE_FRAME)
+        if self.REFERENCE_FRAME is not None:
+            CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
         if self.GRAVITY_MODEL is not None:
             CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
         if self.ATMOSPHERIC_MODEL is not None:

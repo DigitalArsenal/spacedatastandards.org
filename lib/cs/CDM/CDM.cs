@@ -94,7 +94,7 @@ public struct CDM : IFlatbufferObject
 #endif
   public byte[] GetSTOP_SCREEN_PERIODArray() { return __p.__vector_as_array<byte>(34); }
   /// The reference frame for the screening volume
-  public refFrame SCREEN_VOLUME_FRAME { get { int o = __p.__offset(36); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? SCREEN_VOLUME_FRAME { get { int o = __p.__offset(36); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// The shape of the screening volume
   public screeningVolumeShape SCREEN_VOLUME_SHAPE { get { int o = __p.__offset(38); return o != 0 ? (screeningVolumeShape)__p.bb.GetSbyte(o + __p.bb_pos) : screeningVolumeShape.ELLIPSOID; } }
   /// The X dimension of the screening volume
@@ -155,7 +155,7 @@ public struct CDM : IFlatbufferObject
       double RELATIVE_VELOCITY_N = 0.0,
       StringOffset START_SCREEN_PERIODOffset = default(StringOffset),
       StringOffset STOP_SCREEN_PERIODOffset = default(StringOffset),
-      refFrame SCREEN_VOLUME_FRAME = refFrame.ECEF,
+      Offset<RFM> SCREEN_VOLUME_FRAMEOffset = default(Offset<RFM>),
       screeningVolumeShape SCREEN_VOLUME_SHAPE = screeningVolumeShape.ELLIPSOID,
       double SCREEN_VOLUME_X = 0.0,
       double SCREEN_VOLUME_Y = 0.0,
@@ -189,6 +189,7 @@ public struct CDM : IFlatbufferObject
     CDM.AddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHODOffset);
     CDM.AddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIMEOffset);
     CDM.AddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIMEOffset);
+    CDM.AddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAMEOffset);
     CDM.AddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIODOffset);
     CDM.AddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIODOffset);
     CDM.AddTCA(builder, TCAOffset);
@@ -197,7 +198,6 @@ public struct CDM : IFlatbufferObject
     CDM.AddORIGINATOR(builder, ORIGINATOROffset);
     CDM.AddCREATION_DATE(builder, CREATION_DATEOffset);
     CDM.AddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE);
-    CDM.AddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME);
     return CDM.EndCDM(builder);
   }
 
@@ -218,7 +218,7 @@ public struct CDM : IFlatbufferObject
   public static void AddRELATIVE_VELOCITY_N(FlatBufferBuilder builder, double RELATIVE_VELOCITY_N) { builder.AddDouble(13, RELATIVE_VELOCITY_N, 0.0); }
   public static void AddSTART_SCREEN_PERIOD(FlatBufferBuilder builder, StringOffset START_SCREEN_PERIODOffset) { builder.AddOffset(14, START_SCREEN_PERIODOffset.Value, 0); }
   public static void AddSTOP_SCREEN_PERIOD(FlatBufferBuilder builder, StringOffset STOP_SCREEN_PERIODOffset) { builder.AddOffset(15, STOP_SCREEN_PERIODOffset.Value, 0); }
-  public static void AddSCREEN_VOLUME_FRAME(FlatBufferBuilder builder, refFrame SCREEN_VOLUME_FRAME) { builder.AddSbyte(16, (sbyte)SCREEN_VOLUME_FRAME, 0); }
+  public static void AddSCREEN_VOLUME_FRAME(FlatBufferBuilder builder, Offset<RFM> SCREEN_VOLUME_FRAMEOffset) { builder.AddOffset(16, SCREEN_VOLUME_FRAMEOffset.Value, 0); }
   public static void AddSCREEN_VOLUME_SHAPE(FlatBufferBuilder builder, screeningVolumeShape SCREEN_VOLUME_SHAPE) { builder.AddSbyte(17, (sbyte)SCREEN_VOLUME_SHAPE, 0); }
   public static void AddSCREEN_VOLUME_X(FlatBufferBuilder builder, double SCREEN_VOLUME_X) { builder.AddDouble(18, SCREEN_VOLUME_X, 0.0); }
   public static void AddSCREEN_VOLUME_Y(FlatBufferBuilder builder, double SCREEN_VOLUME_Y) { builder.AddDouble(19, SCREEN_VOLUME_Y, 0.0); }
@@ -259,7 +259,7 @@ public struct CDM : IFlatbufferObject
     _o.RELATIVE_VELOCITY_N = this.RELATIVE_VELOCITY_N;
     _o.START_SCREEN_PERIOD = this.START_SCREEN_PERIOD;
     _o.STOP_SCREEN_PERIOD = this.STOP_SCREEN_PERIOD;
-    _o.SCREEN_VOLUME_FRAME = this.SCREEN_VOLUME_FRAME;
+    _o.SCREEN_VOLUME_FRAME = this.SCREEN_VOLUME_FRAME.HasValue ? this.SCREEN_VOLUME_FRAME.Value.UnPack() : null;
     _o.SCREEN_VOLUME_SHAPE = this.SCREEN_VOLUME_SHAPE;
     _o.SCREEN_VOLUME_X = this.SCREEN_VOLUME_X;
     _o.SCREEN_VOLUME_Y = this.SCREEN_VOLUME_Y;
@@ -282,6 +282,7 @@ public struct CDM : IFlatbufferObject
     var _TCA = _o.TCA == null ? default(StringOffset) : builder.CreateString(_o.TCA);
     var _START_SCREEN_PERIOD = _o.START_SCREEN_PERIOD == null ? default(StringOffset) : builder.CreateString(_o.START_SCREEN_PERIOD);
     var _STOP_SCREEN_PERIOD = _o.STOP_SCREEN_PERIOD == null ? default(StringOffset) : builder.CreateString(_o.STOP_SCREEN_PERIOD);
+    var _SCREEN_VOLUME_FRAME = _o.SCREEN_VOLUME_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.SCREEN_VOLUME_FRAME);
     var _SCREEN_ENTRY_TIME = _o.SCREEN_ENTRY_TIME == null ? default(StringOffset) : builder.CreateString(_o.SCREEN_ENTRY_TIME);
     var _SCREEN_EXIT_TIME = _o.SCREEN_EXIT_TIME == null ? default(StringOffset) : builder.CreateString(_o.SCREEN_EXIT_TIME);
     var _COLLISION_PROBABILITY_METHOD = _o.COLLISION_PROBABILITY_METHOD == null ? default(StringOffset) : builder.CreateString(_o.COLLISION_PROBABILITY_METHOD);
@@ -307,7 +308,7 @@ public struct CDM : IFlatbufferObject
       _o.RELATIVE_VELOCITY_N,
       _START_SCREEN_PERIOD,
       _STOP_SCREEN_PERIOD,
-      _o.SCREEN_VOLUME_FRAME,
+      _SCREEN_VOLUME_FRAME,
       _o.SCREEN_VOLUME_SHAPE,
       _o.SCREEN_VOLUME_X,
       _o.SCREEN_VOLUME_Y,
@@ -341,7 +342,7 @@ public class CDMT
   public double RELATIVE_VELOCITY_N { get; set; }
   public string START_SCREEN_PERIOD { get; set; }
   public string STOP_SCREEN_PERIOD { get; set; }
-  public refFrame SCREEN_VOLUME_FRAME { get; set; }
+  public RFMT SCREEN_VOLUME_FRAME { get; set; }
   public screeningVolumeShape SCREEN_VOLUME_SHAPE { get; set; }
   public double SCREEN_VOLUME_X { get; set; }
   public double SCREEN_VOLUME_Y { get; set; }
@@ -372,7 +373,7 @@ public class CDMT
     this.RELATIVE_VELOCITY_N = 0.0;
     this.START_SCREEN_PERIOD = null;
     this.STOP_SCREEN_PERIOD = null;
-    this.SCREEN_VOLUME_FRAME = refFrame.ECEF;
+    this.SCREEN_VOLUME_FRAME = null;
     this.SCREEN_VOLUME_SHAPE = screeningVolumeShape.ELLIPSOID;
     this.SCREEN_VOLUME_X = 0.0;
     this.SCREEN_VOLUME_Y = 0.0;
@@ -418,7 +419,7 @@ static public class CDMVerify
       && verifier.VerifyField(tablePos, 30 /*RELATIVE_VELOCITY_N*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 32 /*START_SCREEN_PERIOD*/, false)
       && verifier.VerifyString(tablePos, 34 /*STOP_SCREEN_PERIOD*/, false)
-      && verifier.VerifyField(tablePos, 36 /*SCREEN_VOLUME_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 36 /*SCREEN_VOLUME_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyField(tablePos, 38 /*SCREEN_VOLUME_SHAPE*/, 1 /*screeningVolumeShape*/, 1, false)
       && verifier.VerifyField(tablePos, 40 /*SCREEN_VOLUME_X*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*SCREEN_VOLUME_Y*/, 8 /*double*/, 8, false)

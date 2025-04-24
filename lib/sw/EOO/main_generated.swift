@@ -377,11 +377,11 @@ public struct EOO: FlatBufferObject, Verifiable {
   public var CREATED_BY: String? { let o = _accessor.offset(VTOFFSET.CREATED_BY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CREATED_BYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATED_BY.v) }
   ///  EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-  public var REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
   ///  unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
   ///  Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-  public var SEN_REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var SEN_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   public var UMBRA: Bool { let o = _accessor.offset(VTOFFSET.UMBRA.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
@@ -572,8 +572,8 @@ public struct EOO: FlatBufferObject, Verifiable {
   public static func add(DATA_MODE: DataMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_MODE.rawValue, def: 0, at: VTOFFSET.DATA_MODE.p) }
   public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VTOFFSET.CREATED_AT.p) }
   public static func add(CREATED_BY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_BY, at: VTOFFSET.CREATED_BY.p) }
-  public static func add(REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(SEN_REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN_REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
   public static func add(UMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UMBRA, def: false,
    at: VTOFFSET.UMBRA.p) }
   public static func add(PENUMBRA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PENUMBRA, def: false,
@@ -721,8 +721,8 @@ public struct EOO: FlatBufferObject, Verifiable {
     DATA_MODE: DataMode = .exercise,
     CREATED_ATOffset CREATED_AT: Offset = Offset(),
     CREATED_BYOffset CREATED_BY: Offset = Offset(),
-    REFERENCE_FRAME: refFrame = .ecef,
-    SEN_REFERENCE_FRAME: refFrame = .ecef,
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
     UMBRA: Bool = false,
     PENUMBRA: Bool = false,
     ORIG_NETWORKOffset ORIG_NETWORK: Offset = Offset(),
@@ -996,8 +996,8 @@ public struct EOO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.DATA_MODE.p, fieldName: "DATA_MODE", required: false, type: DataMode.self)
     try _v.visit(field: VTOFFSET.CREATED_AT.p, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CREATED_BY.p, fieldName: "CREATED_BY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: refFrame.self)
-    try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: refFrame.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.UMBRA.p, fieldName: "UMBRA", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.PENUMBRA.p, fieldName: "PENUMBRA", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.ORIG_NETWORK.p, fieldName: "ORIG_NETWORK", required: false, type: ForwardOffset<String>.self)

@@ -36,7 +36,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(8); }
   /// Name of the reference frame (TEME, EME2000, etc.)
-  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(10); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? REFERENCE_FRAME { get { int o = __p.__offset(10); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   public string REFERENCE_FRAME_EPOCH { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -46,7 +46,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
 #endif
   public byte[] GetREFERENCE_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(12); }
   /// Reference frame for the covariance matrix
-  public refFrame COV_REFERENCE_FRAME { get { int o = __p.__offset(14); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFM? COV_REFERENCE_FRAME { get { int o = __p.__offset(14); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Time system used for the orbit state and covariance matrix. (UTC)
   public timeSystem TIME_SYSTEM { get { int o = __p.__offset(16); return o != 0 ? (timeSystem)__p.bb.GetSbyte(o + __p.bb_pos) : timeSystem.GMST; } }
   /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -104,9 +104,9 @@ public struct ephemerisDataBlock : IFlatbufferObject
       StringOffset COMMENTOffset = default(StringOffset),
       Offset<CAT> OBJECTOffset = default(Offset<CAT>),
       StringOffset CENTER_NAMEOffset = default(StringOffset),
-      refFrame REFERENCE_FRAME = refFrame.ECEF,
+      Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       StringOffset REFERENCE_FRAME_EPOCHOffset = default(StringOffset),
-      refFrame COV_REFERENCE_FRAME = refFrame.ECEF,
+      Offset<RFM> COV_REFERENCE_FRAMEOffset = default(Offset<RFM>),
       timeSystem TIME_SYSTEM = timeSystem.GMST,
       StringOffset START_TIMEOffset = default(StringOffset),
       StringOffset USEABLE_START_TIMEOffset = default(StringOffset),
@@ -127,13 +127,13 @@ public struct ephemerisDataBlock : IFlatbufferObject
     ephemerisDataBlock.AddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIMEOffset);
     ephemerisDataBlock.AddUSEABLE_START_TIME(builder, USEABLE_START_TIMEOffset);
     ephemerisDataBlock.AddSTART_TIME(builder, START_TIMEOffset);
+    ephemerisDataBlock.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset);
     ephemerisDataBlock.AddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCHOffset);
+    ephemerisDataBlock.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
     ephemerisDataBlock.AddCENTER_NAME(builder, CENTER_NAMEOffset);
     ephemerisDataBlock.AddOBJECT(builder, OBJECTOffset);
     ephemerisDataBlock.AddCOMMENT(builder, COMMENTOffset);
     ephemerisDataBlock.AddTIME_SYSTEM(builder, TIME_SYSTEM);
-    ephemerisDataBlock.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME);
-    ephemerisDataBlock.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
     return ephemerisDataBlock.EndephemerisDataBlock(builder);
   }
 
@@ -141,9 +141,9 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(2, CENTER_NAMEOffset.Value, 0); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(3, (sbyte)REFERENCE_FRAME, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(3, REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddREFERENCE_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_FRAME_EPOCHOffset) { builder.AddOffset(4, REFERENCE_FRAME_EPOCHOffset.Value, 0); }
-  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, refFrame COV_REFERENCE_FRAME) { builder.AddSbyte(5, (sbyte)COV_REFERENCE_FRAME, 0); }
+  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REFERENCE_FRAMEOffset) { builder.AddOffset(5, COV_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(6, (sbyte)TIME_SYSTEM, 0); }
   public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(7, START_TIMEOffset.Value, 0); }
   public static void AddUSEABLE_START_TIME(FlatBufferBuilder builder, StringOffset USEABLE_START_TIMEOffset) { builder.AddOffset(8, USEABLE_START_TIMEOffset.Value, 0); }
@@ -177,9 +177,9 @@ public struct ephemerisDataBlock : IFlatbufferObject
     _o.COMMENT = this.COMMENT;
     _o.OBJECT = this.OBJECT.HasValue ? this.OBJECT.Value.UnPack() : null;
     _o.CENTER_NAME = this.CENTER_NAME;
-    _o.REFERENCE_FRAME = this.REFERENCE_FRAME;
+    _o.REFERENCE_FRAME = this.REFERENCE_FRAME.HasValue ? this.REFERENCE_FRAME.Value.UnPack() : null;
     _o.REFERENCE_FRAME_EPOCH = this.REFERENCE_FRAME_EPOCH;
-    _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME;
+    _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME.HasValue ? this.COV_REFERENCE_FRAME.Value.UnPack() : null;
     _o.TIME_SYSTEM = this.TIME_SYSTEM;
     _o.START_TIME = this.START_TIME;
     _o.USEABLE_START_TIME = this.USEABLE_START_TIME;
@@ -198,7 +198,9 @@ public struct ephemerisDataBlock : IFlatbufferObject
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
     var _OBJECT = _o.OBJECT == null ? default(Offset<CAT>) : CAT.Pack(builder, _o.OBJECT);
     var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.REFERENCE_FRAME);
     var _REFERENCE_FRAME_EPOCH = _o.REFERENCE_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_FRAME_EPOCH);
+    var _COV_REFERENCE_FRAME = _o.COV_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REFERENCE_FRAME);
     var _START_TIME = _o.START_TIME == null ? default(StringOffset) : builder.CreateString(_o.START_TIME);
     var _USEABLE_START_TIME = _o.USEABLE_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.USEABLE_START_TIME);
     var _USEABLE_STOP_TIME = _o.USEABLE_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.USEABLE_STOP_TIME);
@@ -221,9 +223,9 @@ public struct ephemerisDataBlock : IFlatbufferObject
       _COMMENT,
       _OBJECT,
       _CENTER_NAME,
-      _o.REFERENCE_FRAME,
+      _REFERENCE_FRAME,
       _REFERENCE_FRAME_EPOCH,
-      _o.COV_REFERENCE_FRAME,
+      _COV_REFERENCE_FRAME,
       _o.TIME_SYSTEM,
       _START_TIME,
       _USEABLE_START_TIME,
@@ -242,9 +244,9 @@ public class ephemerisDataBlockT
   public string COMMENT { get; set; }
   public CATT OBJECT { get; set; }
   public string CENTER_NAME { get; set; }
-  public refFrame REFERENCE_FRAME { get; set; }
+  public RFMT REFERENCE_FRAME { get; set; }
   public string REFERENCE_FRAME_EPOCH { get; set; }
-  public refFrame COV_REFERENCE_FRAME { get; set; }
+  public RFMT COV_REFERENCE_FRAME { get; set; }
   public timeSystem TIME_SYSTEM { get; set; }
   public string START_TIME { get; set; }
   public string USEABLE_START_TIME { get; set; }
@@ -260,9 +262,9 @@ public class ephemerisDataBlockT
     this.COMMENT = null;
     this.OBJECT = null;
     this.CENTER_NAME = null;
-    this.REFERENCE_FRAME = refFrame.ECEF;
+    this.REFERENCE_FRAME = null;
     this.REFERENCE_FRAME_EPOCH = null;
-    this.COV_REFERENCE_FRAME = refFrame.ECEF;
+    this.COV_REFERENCE_FRAME = null;
     this.TIME_SYSTEM = timeSystem.GMST;
     this.START_TIME = null;
     this.USEABLE_START_TIME = null;
@@ -285,9 +287,9 @@ static public class ephemerisDataBlockVerify
       && verifier.VerifyString(tablePos, 4 /*COMMENT*/, false)
       && verifier.VerifyTable(tablePos, 6 /*OBJECT*/, CATVerify.Verify, false)
       && verifier.VerifyString(tablePos, 8 /*CENTER_NAME*/, false)
-      && verifier.VerifyField(tablePos, 10 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 10 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 12 /*REFERENCE_FRAME_EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 14 /*COV_REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 14 /*COV_REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyField(tablePos, 16 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
       && verifier.VerifyString(tablePos, 18 /*START_TIME*/, false)
       && verifier.VerifyString(tablePos, 20 /*USEABLE_START_TIME*/, false)

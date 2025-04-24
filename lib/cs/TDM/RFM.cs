@@ -6,7 +6,6 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Reference Frame Message
 public struct RFM : IFlatbufferObject
 {
   private Table __p;
@@ -19,17 +18,35 @@ public struct RFM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RFM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public refFrame REFERENCE_FRAME { get { int o = __p.__offset(4); return o != 0 ? (refFrame)__p.bb.GetSbyte(o + __p.bb_pos) : refFrame.ECEF; } }
+  public RFMUnion REFERENCEFRAMEType { get { int o = __p.__offset(4); return o != 0 ? (RFMUnion)__p.bb.Get(o + __p.bb_pos) : RFMUnion.NONE; } }
+  public TTable? REFERENCE_FRAME<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
+  public CelestialFrameWrapper REFERENCE_FRAMEAsCelestialFrameWrapper() { return REFERENCE_FRAME<CelestialFrameWrapper>().Value; }
+  public SpacecraftFrameWrapper REFERENCE_FRAMEAsSpacecraftFrameWrapper() { return REFERENCE_FRAME<SpacecraftFrameWrapper>().Value; }
+  public OrbitFrameWrapper REFERENCE_FRAMEAsOrbitFrameWrapper() { return REFERENCE_FRAME<OrbitFrameWrapper>().Value; }
+  public CustomFrameWrapper REFERENCE_FRAMEAsCustomFrameWrapper() { return REFERENCE_FRAME<CustomFrameWrapper>().Value; }
+  public string INDEX { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetINDEXBytes() { return __p.__vector_as_span<byte>(8, 1); }
+#else
+  public ArraySegment<byte>? GetINDEXBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+  public byte[] GetINDEXArray() { return __p.__vector_as_array<byte>(8); }
 
   public static Offset<RFM> CreateRFM(FlatBufferBuilder builder,
-      refFrame REFERENCE_FRAME = refFrame.ECEF) {
-    builder.StartTable(1);
-    RFM.AddREFERENCE_FRAME(builder, REFERENCE_FRAME);
+      RFMUnion REFERENCE_FRAME_type = RFMUnion.NONE,
+      int REFERENCE_FRAMEOffset = 0,
+      StringOffset INDEXOffset = default(StringOffset)) {
+    builder.StartTable(3);
+    RFM.AddINDEX(builder, INDEXOffset);
+    RFM.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
+    RFM.AddREFERENCEFRAMEType(builder, REFERENCE_FRAME_type);
     return RFM.EndRFM(builder);
   }
 
-  public static void StartRFM(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, refFrame REFERENCE_FRAME) { builder.AddSbyte(0, (sbyte)REFERENCE_FRAME, 0); }
+  public static void StartRFM(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void AddREFERENCEFRAMEType(FlatBufferBuilder builder, RFMUnion rEFERENCEFRAMEType) { builder.AddByte(0, (byte)rEFERENCEFRAMEType, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.AddOffset(1, REFERENCE_FRAMEOffset, 0); }
+  public static void AddINDEX(FlatBufferBuilder builder, StringOffset INDEXOffset) { builder.AddOffset(2, INDEXOffset.Value, 0); }
   public static Offset<RFM> EndRFM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFM>(o);
@@ -42,22 +59,46 @@ public struct RFM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(RFMT _o) {
-    _o.REFERENCE_FRAME = this.REFERENCE_FRAME;
+    _o.REFERENCE_FRAME = new RFMUnionUnion();
+    _o.REFERENCE_FRAME.Type = this.REFERENCE_FRAMEType;
+    switch (this.REFERENCE_FRAMEType) {
+      default: break;
+      case RFMUnion.CelestialFrameWrapper:
+        _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<CelestialFrameWrapper>().HasValue ? this.REFERENCE_FRAME<CelestialFrameWrapper>().Value.UnPack() : null;
+        break;
+      case RFMUnion.SpacecraftFrameWrapper:
+        _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<SpacecraftFrameWrapper>().HasValue ? this.REFERENCE_FRAME<SpacecraftFrameWrapper>().Value.UnPack() : null;
+        break;
+      case RFMUnion.OrbitFrameWrapper:
+        _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<OrbitFrameWrapper>().HasValue ? this.REFERENCE_FRAME<OrbitFrameWrapper>().Value.UnPack() : null;
+        break;
+      case RFMUnion.CustomFrameWrapper:
+        _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<CustomFrameWrapper>().HasValue ? this.REFERENCE_FRAME<CustomFrameWrapper>().Value.UnPack() : null;
+        break;
+    }
+    _o.INDEX = this.INDEX;
   }
   public static Offset<RFM> Pack(FlatBufferBuilder builder, RFMT _o) {
     if (_o == null) return default(Offset<RFM>);
+    var _REFERENCE_FRAME_type = _o.REFERENCE_FRAME == null ? RFMUnion.NONE : _o.REFERENCE_FRAME.Type;
+    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? 0 : RFMUnionUnion.Pack(builder, _o.REFERENCE_FRAME);
+    var _INDEX = _o.INDEX == null ? default(StringOffset) : builder.CreateString(_o.INDEX);
     return CreateRFM(
       builder,
-      _o.REFERENCE_FRAME);
+      _REFERENCE_FRAME_type,
+      _REFERENCE_FRAME,
+      _INDEX);
   }
 }
 
 public class RFMT
 {
-  public refFrame REFERENCE_FRAME { get; set; }
+  public RFMUnionUnion REFERENCE_FRAME { get; set; }
+  public string INDEX { get; set; }
 
   public RFMT() {
-    this.REFERENCE_FRAME = refFrame.ECEF;
+    this.REFERENCE_FRAME = null;
+    this.INDEX = null;
   }
   public static RFMT DeserializeFromBinary(byte[] fbBuffer) {
     return RFM.GetRootAsRFM(new ByteBuffer(fbBuffer)).UnPack();
@@ -75,7 +116,9 @@ static public class RFMVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*REFERENCE_FRAME*/, 1 /*refFrame*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*REFERENCEFRAMEType*/, 1 /*RFMUnion*/, 1, false)
+      && verifier.VerifyUnion(tablePos, 4, 6 /*REFERENCE_FRAME*/, RFMUnionVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 8 /*INDEX*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

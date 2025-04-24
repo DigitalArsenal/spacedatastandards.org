@@ -94,19 +94,27 @@ class TDM : Table() {
     /**
      * Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
      */
-    val OBSERVER_POSITION_REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(18)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val OBSERVER_POSITION_REFERENCE_FRAME : RFM? get() = OBSERVER_POSITION_REFERENCE_FRAME(RFM())
+    fun OBSERVER_POSITION_REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
      */
-    val OBS_REFERENCE_FRAME : Byte
-        get() {
-            val o = __offset(20)
-            return if(o != 0) bb.get(o + bb_pos) else 0
+    val OBS_REFERENCE_FRAME : RFM? get() = OBS_REFERENCE_FRAME(RFM())
+    fun OBS_REFERENCE_FRAME(obj: RFM) : RFM? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
     /**
      * Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
      */
@@ -773,7 +781,7 @@ class TDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TDM")
-        fun createTDM(builder: FlatBufferBuilder, OBSERVER_IDOffset: Int, OBSERVER_X: Double, OBSERVER_Y: Double, OBSERVER_Z: Double, OBSERVER_VX: Double, OBSERVER_VY: Double, OBSERVER_VZ: Double, OBSERVER_POSITION_REFERENCE_FRAME: Byte, OBS_REFERENCE_FRAME: Byte, EPOCHOffset: Int, CCSDS_TDM_VERSOffset: Int, COMMENTOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, META_STARTOffset: Int, TIME_SYSTEMOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, PARTICIPANT_1Offset: Int, PARTICIPANT_2Offset: Int, PARTICIPANT_3Offset: Int, PARTICIPANT_4Offset: Int, PARTICIPANT_5Offset: Int, MODEOffset: Int, PATH_1: UShort, PATH_2: UShort, TRANSMIT_BANDOffset: Int, RECEIVE_BANDOffset: Int, INTEGRATION_INTERVAL: Float, INTEGRATION_REFOffset: Int, RECEIVE_DELAY_2: Double, RECEIVE_DELAY_3: Double, DATA_QUALITYOffset: Int, META_STOPOffset: Int, DATA_STARTOffset: Int, TRANSMIT_FREQ_1: Double, RECEIVE_FREQOffset: Int, DATA_STOPOffset: Int, TIMETAG_REFOffset: Int, ANGLE_TYPEOffset: Int, ANGLE_1Offset: Int, ANGLE_2Offset: Int, ANGLE_UNCERTAINTY_1: Float, ANGLE_UNCERTAINTY_2: Float, RANGE_RATE: Double, RANGE_UNCERTAINTY: Double, RANGE_MODEOffset: Int, RANGE_MODULUS: Double, CORRECTION_ANGLE_1: Float, CORRECTION_ANGLE_2: Float, CORRECTIONS_APPLIEDOffset: Int, TROPO_DRYOffset: Int, TROPO_WETOffset: Int, STECOffset: Int, PRESSUREOffset: Int, RHUMIDITYOffset: Int, TEMPERATUREOffset: Int, CLOCK_BIASOffset: Int, CLOCK_DRIFTOffset: Int) : Int {
+        fun createTDM(builder: FlatBufferBuilder, OBSERVER_IDOffset: Int, OBSERVER_X: Double, OBSERVER_Y: Double, OBSERVER_Z: Double, OBSERVER_VX: Double, OBSERVER_VY: Double, OBSERVER_VZ: Double, OBSERVER_POSITION_REFERENCE_FRAMEOffset: Int, OBS_REFERENCE_FRAMEOffset: Int, EPOCHOffset: Int, CCSDS_TDM_VERSOffset: Int, COMMENTOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, META_STARTOffset: Int, TIME_SYSTEMOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, PARTICIPANT_1Offset: Int, PARTICIPANT_2Offset: Int, PARTICIPANT_3Offset: Int, PARTICIPANT_4Offset: Int, PARTICIPANT_5Offset: Int, MODEOffset: Int, PATH_1: UShort, PATH_2: UShort, TRANSMIT_BANDOffset: Int, RECEIVE_BANDOffset: Int, INTEGRATION_INTERVAL: Float, INTEGRATION_REFOffset: Int, RECEIVE_DELAY_2: Double, RECEIVE_DELAY_3: Double, DATA_QUALITYOffset: Int, META_STOPOffset: Int, DATA_STARTOffset: Int, TRANSMIT_FREQ_1: Double, RECEIVE_FREQOffset: Int, DATA_STOPOffset: Int, TIMETAG_REFOffset: Int, ANGLE_TYPEOffset: Int, ANGLE_1Offset: Int, ANGLE_2Offset: Int, ANGLE_UNCERTAINTY_1: Float, ANGLE_UNCERTAINTY_2: Float, RANGE_RATE: Double, RANGE_UNCERTAINTY: Double, RANGE_MODEOffset: Int, RANGE_MODULUS: Double, CORRECTION_ANGLE_1: Float, CORRECTION_ANGLE_2: Float, CORRECTIONS_APPLIEDOffset: Int, TROPO_DRYOffset: Int, TROPO_WETOffset: Int, STECOffset: Int, PRESSUREOffset: Int, RHUMIDITYOffset: Int, TEMPERATUREOffset: Int, CLOCK_BIASOffset: Int, CLOCK_DRIFTOffset: Int) : Int {
             builder.startTable(59)
             addRANGE_MODULUS(builder, RANGE_MODULUS)
             addRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY)
@@ -829,11 +837,11 @@ class TDM : Table() {
             addCOMMENT(builder, COMMENTOffset)
             addCCSDS_TDM_VERS(builder, CCSDS_TDM_VERSOffset)
             addEPOCH(builder, EPOCHOffset)
+            addOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAMEOffset)
+            addOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAMEOffset)
             addOBSERVER_ID(builder, OBSERVER_IDOffset)
             addPATH_2(builder, PATH_2)
             addPATH_1(builder, PATH_1)
-            addOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME)
-            addOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME)
             return endTDM(builder)
         }
         fun startTDM(builder: FlatBufferBuilder) = builder.startTable(59)
@@ -844,8 +852,8 @@ class TDM : Table() {
         fun addOBSERVER_VX(builder: FlatBufferBuilder, OBSERVER_VX: Double) = builder.addDouble(4, OBSERVER_VX, 0.0)
         fun addOBSERVER_VY(builder: FlatBufferBuilder, OBSERVER_VY: Double) = builder.addDouble(5, OBSERVER_VY, 0.0)
         fun addOBSERVER_VZ(builder: FlatBufferBuilder, OBSERVER_VZ: Double) = builder.addDouble(6, OBSERVER_VZ, 0.0)
-        fun addOBSERVER_POSITION_REFERENCE_FRAME(builder: FlatBufferBuilder, OBSERVER_POSITION_REFERENCE_FRAME: Byte) = builder.addByte(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
-        fun addOBS_REFERENCE_FRAME(builder: FlatBufferBuilder, OBS_REFERENCE_FRAME: Byte) = builder.addByte(8, OBS_REFERENCE_FRAME, 0)
+        fun addOBSERVER_POSITION_REFERENCE_FRAME(builder: FlatBufferBuilder, OBSERVER_POSITION_REFERENCE_FRAME: Int) = builder.addOffset(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
+        fun addOBS_REFERENCE_FRAME(builder: FlatBufferBuilder, OBS_REFERENCE_FRAME: Int) = builder.addOffset(8, OBS_REFERENCE_FRAME, 0)
         fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(9, EPOCH, 0)
         fun addCCSDS_TDM_VERS(builder: FlatBufferBuilder, CCSDS_TDM_VERS: Int) = builder.addOffset(10, CCSDS_TDM_VERS, 0)
         fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(11, COMMENT, 0)

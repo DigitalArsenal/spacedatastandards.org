@@ -276,13 +276,15 @@ class EOO : flatbuffers.handle
     def CREATED_BY() -> string:
         return flatbuffers.field_string(buf_, pos_, 164)
     /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-    def REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 166, 0))
+    def REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 166)
+        return if o: RFM { buf_, o } else: nil
     /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
     /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
     /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
-    def SEN_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 168, 0))
+    def SEN_REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 168)
+        return if o: RFM { buf_, o } else: nil
     /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
     def UMBRA() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 170, 0))
@@ -688,11 +690,11 @@ struct EOOBuilder:
     def add_CREATED_BY(CREATED_BY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(80, CREATED_BY)
         return this
-    def add_REFERENCE_FRAME(REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(81, REFERENCE_FRAME, 0)
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(81, REFERENCE_FRAME)
         return this
-    def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(82, SEN_REFERENCE_FRAME, 0)
+    def add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(82, SEN_REFERENCE_FRAME)
         return this
     def add_UMBRA(UMBRA:bool):
         b_.PrependBoolSlot(83, UMBRA, 0)

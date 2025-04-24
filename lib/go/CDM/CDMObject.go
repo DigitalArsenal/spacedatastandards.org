@@ -124,19 +124,20 @@ func (rcv *CDMObject) MutateCOVARIANCE_METHOD(n covarianceMethod) bool {
 }
 
 /// Reference Frame in which the object position is defined
-func (rcv *CDMObject) REFERENCE_FRAME() refFrame {
+func (rcv *CDMObject) REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
+	return nil
 }
 
 /// Reference Frame in which the object position is defined
-func (rcv *CDMObject) MutateREFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(18, int8(n))
-}
-
 /// Gravity model
 func (rcv *CDMObject) GRAVITY_MODEL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
@@ -1163,8 +1164,8 @@ func CDMObjectAddEPHEMERIS_NAME(builder *flatbuffers.Builder, EPHEMERIS_NAME fla
 func CDMObjectAddCOVARIANCE_METHOD(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceMethod) {
 	builder.PrependInt8Slot(6, int8(COVARIANCE_METHOD), 0)
 }
-func CDMObjectAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(7, int8(REFERENCE_FRAME), 0)
+func CDMObjectAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
 func CDMObjectAddGRAVITY_MODEL(builder *flatbuffers.Builder, GRAVITY_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(GRAVITY_MODEL), 0)

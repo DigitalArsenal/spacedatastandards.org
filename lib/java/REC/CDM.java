@@ -110,7 +110,8 @@ public final class CDM extends Table {
   /**
    * The reference frame for the screening volume
    */
-  public byte SCREEN_VOLUME_FRAME() { int o = __offset(36); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public RFM SCREEN_VOLUME_FRAME() { return SCREEN_VOLUME_FRAME(new RFM()); }
+  public RFM SCREEN_VOLUME_FRAME(RFM obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * The shape of the screening volume
    */
@@ -187,7 +188,7 @@ public final class CDM extends Table {
       double RELATIVE_VELOCITY_N,
       int START_SCREEN_PERIODOffset,
       int STOP_SCREEN_PERIODOffset,
-      byte SCREEN_VOLUME_FRAME,
+      int SCREEN_VOLUME_FRAMEOffset,
       byte SCREEN_VOLUME_SHAPE,
       double SCREEN_VOLUME_X,
       double SCREEN_VOLUME_Y,
@@ -221,6 +222,7 @@ public final class CDM extends Table {
     CDM.addCollisionProbabilityMethod(builder, COLLISION_PROBABILITY_METHODOffset);
     CDM.addScreenExitTime(builder, SCREEN_EXIT_TIMEOffset);
     CDM.addScreenEntryTime(builder, SCREEN_ENTRY_TIMEOffset);
+    CDM.addScreenVolumeFrame(builder, SCREEN_VOLUME_FRAMEOffset);
     CDM.addStopScreenPeriod(builder, STOP_SCREEN_PERIODOffset);
     CDM.addStartScreenPeriod(builder, START_SCREEN_PERIODOffset);
     CDM.addTca(builder, TCAOffset);
@@ -229,7 +231,6 @@ public final class CDM extends Table {
     CDM.addOriginator(builder, ORIGINATOROffset);
     CDM.addCreationDate(builder, CREATION_DATEOffset);
     CDM.addScreenVolumeShape(builder, SCREEN_VOLUME_SHAPE);
-    CDM.addScreenVolumeFrame(builder, SCREEN_VOLUME_FRAME);
     return CDM.endCDM(builder);
   }
 
@@ -250,7 +251,7 @@ public final class CDM extends Table {
   public static void addRelativeVelocityN(FlatBufferBuilder builder, double RELATIVE_VELOCITY_N) { builder.addDouble(13, RELATIVE_VELOCITY_N, 0.0); }
   public static void addStartScreenPeriod(FlatBufferBuilder builder, int START_SCREEN_PERIODOffset) { builder.addOffset(14, START_SCREEN_PERIODOffset, 0); }
   public static void addStopScreenPeriod(FlatBufferBuilder builder, int STOP_SCREEN_PERIODOffset) { builder.addOffset(15, STOP_SCREEN_PERIODOffset, 0); }
-  public static void addScreenVolumeFrame(FlatBufferBuilder builder, byte SCREEN_VOLUME_FRAME) { builder.addByte(16, SCREEN_VOLUME_FRAME, 0); }
+  public static void addScreenVolumeFrame(FlatBufferBuilder builder, int SCREEN_VOLUME_FRAMEOffset) { builder.addOffset(16, SCREEN_VOLUME_FRAMEOffset, 0); }
   public static void addScreenVolumeShape(FlatBufferBuilder builder, byte SCREEN_VOLUME_SHAPE) { builder.addByte(17, SCREEN_VOLUME_SHAPE, 0); }
   public static void addScreenVolumeX(FlatBufferBuilder builder, double SCREEN_VOLUME_X) { builder.addDouble(18, SCREEN_VOLUME_X, 0.0); }
   public static void addScreenVolumeY(FlatBufferBuilder builder, double SCREEN_VOLUME_Y) { builder.addDouble(19, SCREEN_VOLUME_Y, 0.0); }

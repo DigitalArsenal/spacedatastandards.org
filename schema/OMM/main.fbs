@@ -1,5 +1,5 @@
-// Hash: 53fcd859a4ee426eb9de8c600857cfc18081315a19684820934a83475dbcd47e
-// Version: 1.0.2
+// Hash: 4052bd4e7b1e02b4ac22e3e908b4f71af8ff6849f6bde1a8d6f025d49ba8e2b3
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -44,7 +44,8 @@ table OMM {
   /// Center Name (e.g. EARTH, MARS)
   CENTER_NAME:string;
   /// Reference Frame
-  REFERENCE_FRAME:refFrame = TEME;
+  /// Typically TEMEOFDATE
+  REFERENCE_FRAME:RFM;
   /// Reference Frame Epoch (ISO 8601 UTC format)
   REFERENCE_FRAME_EPOCH:string;
   /// Time System [M, UTC]
@@ -104,7 +105,8 @@ table OMM {
 
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-  COV_REFERENCE_FRAME:refFrame = RSW;
+  /// Typically RSW
+  COV_REFERENCE_FRAME:RFM;
   /// CX_X [km**2]
   CX_X:double;
   /// CY_X [km**2]

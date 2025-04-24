@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { refFrame } from './refFrame.js';
+import { RFM, RFMT } from './RFM.js';
 
 
 /**
@@ -93,17 +93,17 @@ OBSERVER_VZ():number {
 /**
  * Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
  */
-OBSERVER_POSITION_REFERENCE_FRAME():refFrame {
+OBSERVER_POSITION_REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
  */
-OBS_REFERENCE_FRAME():refFrame {
+OBS_REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : refFrame.ECEF;
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -707,12 +707,12 @@ static addObserverVz(builder:flatbuffers.Builder, OBSERVER_VZ:number) {
   builder.addFieldFloat64(6, OBSERVER_VZ, 0.0);
 }
 
-static addObserverPositionReferenceFrame(builder:flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(7, OBSERVER_POSITION_REFERENCE_FRAME, refFrame.ECEF);
+static addObserverPositionReferenceFrame(builder:flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, OBSERVER_POSITION_REFERENCE_FRAMEOffset, 0);
 }
 
-static addObsReferenceFrame(builder:flatbuffers.Builder, OBS_REFERENCE_FRAME:refFrame) {
-  builder.addFieldInt8(8, OBS_REFERENCE_FRAME, refFrame.ECEF);
+static addObsReferenceFrame(builder:flatbuffers.Builder, OBS_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, OBS_REFERENCE_FRAMEOffset, 0);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
@@ -1127,69 +1127,6 @@ static finishSizePrefixedTDMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TDM', true);
 }
 
-static createTDM(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset, OBSERVER_X:number, OBSERVER_Y:number, OBSERVER_Z:number, OBSERVER_VX:number, OBSERVER_VY:number, OBSERVER_VZ:number, OBSERVER_POSITION_REFERENCE_FRAME:refFrame, OBS_REFERENCE_FRAME:refFrame, EPOCHOffset:flatbuffers.Offset, CCSDS_TDM_VERSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, META_STARTOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, PARTICIPANT_1Offset:flatbuffers.Offset, PARTICIPANT_2Offset:flatbuffers.Offset, PARTICIPANT_3Offset:flatbuffers.Offset, PARTICIPANT_4Offset:flatbuffers.Offset, PARTICIPANT_5Offset:flatbuffers.Offset, MODEOffset:flatbuffers.Offset, PATH_1:number, PATH_2:number, TRANSMIT_BANDOffset:flatbuffers.Offset, RECEIVE_BANDOffset:flatbuffers.Offset, INTEGRATION_INTERVAL:number, INTEGRATION_REFOffset:flatbuffers.Offset, RECEIVE_DELAY_2:number, RECEIVE_DELAY_3:number, DATA_QUALITYOffset:flatbuffers.Offset, META_STOPOffset:flatbuffers.Offset, DATA_STARTOffset:flatbuffers.Offset, TRANSMIT_FREQ_1:number, RECEIVE_FREQOffset:flatbuffers.Offset, DATA_STOPOffset:flatbuffers.Offset, TIMETAG_REFOffset:flatbuffers.Offset, ANGLE_TYPEOffset:flatbuffers.Offset, ANGLE_1Offset:flatbuffers.Offset, ANGLE_2Offset:flatbuffers.Offset, ANGLE_UNCERTAINTY_1:number, ANGLE_UNCERTAINTY_2:number, RANGE_RATE:number, RANGE_UNCERTAINTY:number, RANGE_MODEOffset:flatbuffers.Offset, RANGE_MODULUS:number, CORRECTION_ANGLE_1:number, CORRECTION_ANGLE_2:number, CORRECTIONS_APPLIEDOffset:flatbuffers.Offset, TROPO_DRYOffset:flatbuffers.Offset, TROPO_WETOffset:flatbuffers.Offset, STECOffset:flatbuffers.Offset, PRESSUREOffset:flatbuffers.Offset, RHUMIDITYOffset:flatbuffers.Offset, TEMPERATUREOffset:flatbuffers.Offset, CLOCK_BIASOffset:flatbuffers.Offset, CLOCK_DRIFTOffset:flatbuffers.Offset):flatbuffers.Offset {
-  TDM.startTDM(builder);
-  TDM.addObserverId(builder, OBSERVER_IDOffset);
-  TDM.addObserverX(builder, OBSERVER_X);
-  TDM.addObserverY(builder, OBSERVER_Y);
-  TDM.addObserverZ(builder, OBSERVER_Z);
-  TDM.addObserverVx(builder, OBSERVER_VX);
-  TDM.addObserverVy(builder, OBSERVER_VY);
-  TDM.addObserverVz(builder, OBSERVER_VZ);
-  TDM.addObserverPositionReferenceFrame(builder, OBSERVER_POSITION_REFERENCE_FRAME);
-  TDM.addObsReferenceFrame(builder, OBS_REFERENCE_FRAME);
-  TDM.addEpoch(builder, EPOCHOffset);
-  TDM.addCcsdsTdmVers(builder, CCSDS_TDM_VERSOffset);
-  TDM.addComment(builder, COMMENTOffset);
-  TDM.addCreationDate(builder, CREATION_DATEOffset);
-  TDM.addOriginator(builder, ORIGINATOROffset);
-  TDM.addMetaStart(builder, META_STARTOffset);
-  TDM.addTimeSystem(builder, TIME_SYSTEMOffset);
-  TDM.addStartTime(builder, START_TIMEOffset);
-  TDM.addStopTime(builder, STOP_TIMEOffset);
-  TDM.addParticipant1(builder, PARTICIPANT_1Offset);
-  TDM.addParticipant2(builder, PARTICIPANT_2Offset);
-  TDM.addParticipant3(builder, PARTICIPANT_3Offset);
-  TDM.addParticipant4(builder, PARTICIPANT_4Offset);
-  TDM.addParticipant5(builder, PARTICIPANT_5Offset);
-  TDM.addMode(builder, MODEOffset);
-  TDM.addPath1(builder, PATH_1);
-  TDM.addPath2(builder, PATH_2);
-  TDM.addTransmitBand(builder, TRANSMIT_BANDOffset);
-  TDM.addReceiveBand(builder, RECEIVE_BANDOffset);
-  TDM.addIntegrationInterval(builder, INTEGRATION_INTERVAL);
-  TDM.addIntegrationRef(builder, INTEGRATION_REFOffset);
-  TDM.addReceiveDelay2(builder, RECEIVE_DELAY_2);
-  TDM.addReceiveDelay3(builder, RECEIVE_DELAY_3);
-  TDM.addDataQuality(builder, DATA_QUALITYOffset);
-  TDM.addMetaStop(builder, META_STOPOffset);
-  TDM.addDataStart(builder, DATA_STARTOffset);
-  TDM.addTransmitFreq1(builder, TRANSMIT_FREQ_1);
-  TDM.addReceiveFreq(builder, RECEIVE_FREQOffset);
-  TDM.addDataStop(builder, DATA_STOPOffset);
-  TDM.addTimetagRef(builder, TIMETAG_REFOffset);
-  TDM.addAngleType(builder, ANGLE_TYPEOffset);
-  TDM.addAngle1(builder, ANGLE_1Offset);
-  TDM.addAngle2(builder, ANGLE_2Offset);
-  TDM.addAngleUncertainty1(builder, ANGLE_UNCERTAINTY_1);
-  TDM.addAngleUncertainty2(builder, ANGLE_UNCERTAINTY_2);
-  TDM.addRangeRate(builder, RANGE_RATE);
-  TDM.addRangeUncertainty(builder, RANGE_UNCERTAINTY);
-  TDM.addRangeMode(builder, RANGE_MODEOffset);
-  TDM.addRangeModulus(builder, RANGE_MODULUS);
-  TDM.addCorrectionAngle1(builder, CORRECTION_ANGLE_1);
-  TDM.addCorrectionAngle2(builder, CORRECTION_ANGLE_2);
-  TDM.addCorrectionsApplied(builder, CORRECTIONS_APPLIEDOffset);
-  TDM.addTropoDry(builder, TROPO_DRYOffset);
-  TDM.addTropoWet(builder, TROPO_WETOffset);
-  TDM.addStec(builder, STECOffset);
-  TDM.addPressure(builder, PRESSUREOffset);
-  TDM.addRhumidity(builder, RHUMIDITYOffset);
-  TDM.addTemperature(builder, TEMPERATUREOffset);
-  TDM.addClockBias(builder, CLOCK_BIASOffset);
-  TDM.addClockDrift(builder, CLOCK_DRIFTOffset);
-  return TDM.endTDM(builder);
-}
 
 unpack(): TDMT {
   return new TDMT(
@@ -1200,8 +1137,8 @@ unpack(): TDMT {
     this.OBSERVER_VX(),
     this.OBSERVER_VY(),
     this.OBSERVER_VZ(),
-    this.OBSERVER_POSITION_REFERENCE_FRAME(),
-    this.OBS_REFERENCE_FRAME(),
+    (this.OBSERVER_POSITION_REFERENCE_FRAME() !== null ? this.OBSERVER_POSITION_REFERENCE_FRAME()!.unpack() : null),
+    (this.OBS_REFERENCE_FRAME() !== null ? this.OBS_REFERENCE_FRAME()!.unpack() : null),
     this.EPOCH(),
     this.CCSDS_TDM_VERS(),
     this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength()),
@@ -1264,8 +1201,8 @@ unpackTo(_o: TDMT): void {
   _o.OBSERVER_VX = this.OBSERVER_VX();
   _o.OBSERVER_VY = this.OBSERVER_VY();
   _o.OBSERVER_VZ = this.OBSERVER_VZ();
-  _o.OBSERVER_POSITION_REFERENCE_FRAME = this.OBSERVER_POSITION_REFERENCE_FRAME();
-  _o.OBS_REFERENCE_FRAME = this.OBS_REFERENCE_FRAME();
+  _o.OBSERVER_POSITION_REFERENCE_FRAME = (this.OBSERVER_POSITION_REFERENCE_FRAME() !== null ? this.OBSERVER_POSITION_REFERENCE_FRAME()!.unpack() : null);
+  _o.OBS_REFERENCE_FRAME = (this.OBS_REFERENCE_FRAME() !== null ? this.OBS_REFERENCE_FRAME()!.unpack() : null);
   _o.EPOCH = this.EPOCH();
   _o.CCSDS_TDM_VERS = this.CCSDS_TDM_VERS();
   _o.COMMENT = this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength());
@@ -1328,8 +1265,8 @@ constructor(
   public OBSERVER_VX: number = 0.0,
   public OBSERVER_VY: number = 0.0,
   public OBSERVER_VZ: number = 0.0,
-  public OBSERVER_POSITION_REFERENCE_FRAME: refFrame = refFrame.ECEF,
-  public OBS_REFERENCE_FRAME: refFrame = refFrame.ECEF,
+  public OBSERVER_POSITION_REFERENCE_FRAME: RFMT|null = null,
+  public OBS_REFERENCE_FRAME: RFMT|null = null,
   public EPOCH: string|Uint8Array|null = null,
   public CCSDS_TDM_VERS: string|Uint8Array|null = null,
   public COMMENT: (string)[] = [],
@@ -1385,6 +1322,8 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBSERVER_ID = (this.OBSERVER_ID !== null ? builder.createString(this.OBSERVER_ID!) : 0);
+  const OBSERVER_POSITION_REFERENCE_FRAME = (this.OBSERVER_POSITION_REFERENCE_FRAME !== null ? this.OBSERVER_POSITION_REFERENCE_FRAME!.pack(builder) : 0);
+  const OBS_REFERENCE_FRAME = (this.OBS_REFERENCE_FRAME !== null ? this.OBS_REFERENCE_FRAME!.pack(builder) : 0);
   const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
   const CCSDS_TDM_VERS = (this.CCSDS_TDM_VERS !== null ? builder.createString(this.CCSDS_TDM_VERS!) : 0);
   const COMMENT = TDM.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
@@ -1423,66 +1362,67 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CLOCK_BIAS = TDM.createClockBiasVector(builder, this.CLOCK_BIAS);
   const CLOCK_DRIFT = TDM.createClockDriftVector(builder, this.CLOCK_DRIFT);
 
-  return TDM.createTDM(builder,
-    OBSERVER_ID,
-    this.OBSERVER_X,
-    this.OBSERVER_Y,
-    this.OBSERVER_Z,
-    this.OBSERVER_VX,
-    this.OBSERVER_VY,
-    this.OBSERVER_VZ,
-    this.OBSERVER_POSITION_REFERENCE_FRAME,
-    this.OBS_REFERENCE_FRAME,
-    EPOCH,
-    CCSDS_TDM_VERS,
-    COMMENT,
-    CREATION_DATE,
-    ORIGINATOR,
-    META_START,
-    TIME_SYSTEM,
-    START_TIME,
-    STOP_TIME,
-    PARTICIPANT_1,
-    PARTICIPANT_2,
-    PARTICIPANT_3,
-    PARTICIPANT_4,
-    PARTICIPANT_5,
-    MODE,
-    this.PATH_1,
-    this.PATH_2,
-    TRANSMIT_BAND,
-    RECEIVE_BAND,
-    this.INTEGRATION_INTERVAL,
-    INTEGRATION_REF,
-    this.RECEIVE_DELAY_2,
-    this.RECEIVE_DELAY_3,
-    DATA_QUALITY,
-    META_STOP,
-    DATA_START,
-    this.TRANSMIT_FREQ_1,
-    RECEIVE_FREQ,
-    DATA_STOP,
-    TIMETAG_REF,
-    ANGLE_TYPE,
-    ANGLE_1,
-    ANGLE_2,
-    this.ANGLE_UNCERTAINTY_1,
-    this.ANGLE_UNCERTAINTY_2,
-    this.RANGE_RATE,
-    this.RANGE_UNCERTAINTY,
-    RANGE_MODE,
-    this.RANGE_MODULUS,
-    this.CORRECTION_ANGLE_1,
-    this.CORRECTION_ANGLE_2,
-    CORRECTIONS_APPLIED,
-    TROPO_DRY,
-    TROPO_WET,
-    STEC,
-    PRESSURE,
-    RHUMIDITY,
-    TEMPERATURE,
-    CLOCK_BIAS,
-    CLOCK_DRIFT
-  );
+  TDM.startTDM(builder);
+  TDM.addObserverId(builder, OBSERVER_ID);
+  TDM.addObserverX(builder, this.OBSERVER_X);
+  TDM.addObserverY(builder, this.OBSERVER_Y);
+  TDM.addObserverZ(builder, this.OBSERVER_Z);
+  TDM.addObserverVx(builder, this.OBSERVER_VX);
+  TDM.addObserverVy(builder, this.OBSERVER_VY);
+  TDM.addObserverVz(builder, this.OBSERVER_VZ);
+  TDM.addObserverPositionReferenceFrame(builder, OBSERVER_POSITION_REFERENCE_FRAME);
+  TDM.addObsReferenceFrame(builder, OBS_REFERENCE_FRAME);
+  TDM.addEpoch(builder, EPOCH);
+  TDM.addCcsdsTdmVers(builder, CCSDS_TDM_VERS);
+  TDM.addComment(builder, COMMENT);
+  TDM.addCreationDate(builder, CREATION_DATE);
+  TDM.addOriginator(builder, ORIGINATOR);
+  TDM.addMetaStart(builder, META_START);
+  TDM.addTimeSystem(builder, TIME_SYSTEM);
+  TDM.addStartTime(builder, START_TIME);
+  TDM.addStopTime(builder, STOP_TIME);
+  TDM.addParticipant1(builder, PARTICIPANT_1);
+  TDM.addParticipant2(builder, PARTICIPANT_2);
+  TDM.addParticipant3(builder, PARTICIPANT_3);
+  TDM.addParticipant4(builder, PARTICIPANT_4);
+  TDM.addParticipant5(builder, PARTICIPANT_5);
+  TDM.addMode(builder, MODE);
+  TDM.addPath1(builder, this.PATH_1);
+  TDM.addPath2(builder, this.PATH_2);
+  TDM.addTransmitBand(builder, TRANSMIT_BAND);
+  TDM.addReceiveBand(builder, RECEIVE_BAND);
+  TDM.addIntegrationInterval(builder, this.INTEGRATION_INTERVAL);
+  TDM.addIntegrationRef(builder, INTEGRATION_REF);
+  TDM.addReceiveDelay2(builder, this.RECEIVE_DELAY_2);
+  TDM.addReceiveDelay3(builder, this.RECEIVE_DELAY_3);
+  TDM.addDataQuality(builder, DATA_QUALITY);
+  TDM.addMetaStop(builder, META_STOP);
+  TDM.addDataStart(builder, DATA_START);
+  TDM.addTransmitFreq1(builder, this.TRANSMIT_FREQ_1);
+  TDM.addReceiveFreq(builder, RECEIVE_FREQ);
+  TDM.addDataStop(builder, DATA_STOP);
+  TDM.addTimetagRef(builder, TIMETAG_REF);
+  TDM.addAngleType(builder, ANGLE_TYPE);
+  TDM.addAngle1(builder, ANGLE_1);
+  TDM.addAngle2(builder, ANGLE_2);
+  TDM.addAngleUncertainty1(builder, this.ANGLE_UNCERTAINTY_1);
+  TDM.addAngleUncertainty2(builder, this.ANGLE_UNCERTAINTY_2);
+  TDM.addRangeRate(builder, this.RANGE_RATE);
+  TDM.addRangeUncertainty(builder, this.RANGE_UNCERTAINTY);
+  TDM.addRangeMode(builder, RANGE_MODE);
+  TDM.addRangeModulus(builder, this.RANGE_MODULUS);
+  TDM.addCorrectionAngle1(builder, this.CORRECTION_ANGLE_1);
+  TDM.addCorrectionAngle2(builder, this.CORRECTION_ANGLE_2);
+  TDM.addCorrectionsApplied(builder, CORRECTIONS_APPLIED);
+  TDM.addTropoDry(builder, TROPO_DRY);
+  TDM.addTropoWet(builder, TROPO_WET);
+  TDM.addStec(builder, STEC);
+  TDM.addPressure(builder, PRESSURE);
+  TDM.addRhumidity(builder, RHUMIDITY);
+  TDM.addTemperature(builder, TEMPERATURE);
+  TDM.addClockBias(builder, CLOCK_BIAS);
+  TDM.addClockDrift(builder, CLOCK_DRIFT);
+
+  return TDM.endTDM(builder);
 }
 }

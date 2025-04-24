@@ -94,13 +94,11 @@ class CDMObject extends Table
     }
 
     /// Reference Frame in which the object position is defined
-    /**
-     * @return sbyte
-     */
     public function getREFERENCE_FRAME()
     {
+        $obj = new RFM();
         $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \refFrame::ECEF;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Gravity model
@@ -991,12 +989,12 @@ class CDMObject extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param sbyte
+     * @param VectorOffset
      * @return void
      */
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
     {
-        $builder->addSbyteX(7, $REFERENCE_FRAME, 0);
+        $builder->addOffsetX(7, $REFERENCE_FRAME, 0);
     }
 
     /**

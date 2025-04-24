@@ -1052,13 +1052,13 @@ impl<'a> ephemerisDataBlock<'a> {
     if let Some(x) = args.USEABLE_STOP_TIME { builder.add_USEABLE_STOP_TIME(x); }
     if let Some(x) = args.USEABLE_START_TIME { builder.add_USEABLE_START_TIME(x); }
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
     if let Some(x) = args.REFERENCE_FRAME_EPOCH { builder.add_REFERENCE_FRAME_EPOCH(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
     if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
-    builder.add_COV_REFERENCE_FRAME(args.COV_REFERENCE_FRAME);
-    builder.add_REFERENCE_FRAME(args.REFERENCE_FRAME);
     builder.finish()
   }
 
@@ -1072,11 +1072,15 @@ impl<'a> ephemerisDataBlock<'a> {
     let CENTER_NAME = self.CENTER_NAME().map(|x| {
       x.to_string()
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH().map(|x| {
       x.to_string()
     });
-    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME();
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
+      Box::new(x.unpack())
+    });
     let TIME_SYSTEM = self.TIME_SYSTEM();
     let START_TIME = self.START_TIME().map(|x| {
       x.to_string()
@@ -1147,11 +1151,11 @@ impl<'a> ephemerisDataBlock<'a> {
   }
   /// Name of the reference frame (TEME, EME2000, etc.)
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> refFrame {
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(ephemerisDataBlock::VT_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(ephemerisDataBlock::VT_REFERENCE_FRAME, None)}
   }
   /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
   #[inline]
@@ -1163,11 +1167,11 @@ impl<'a> ephemerisDataBlock<'a> {
   }
   /// Reference frame for the covariance matrix
   #[inline]
-  pub fn COV_REFERENCE_FRAME(&self) -> refFrame {
+  pub fn COV_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<refFrame>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, Some(refFrame::ECEF)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, None)}
   }
   /// Time system used for the orbit state and covariance matrix. (UTC)
   #[inline]
@@ -1261,9 +1265,9 @@ impl flatbuffers::Verifiable for ephemerisDataBlock<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
-     .visit_field::<refFrame>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
-     .visit_field::<refFrame>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USEABLE_START_TIME", Self::VT_USEABLE_START_TIME, false)?
@@ -1282,9 +1286,9 @@ pub struct ephemerisDataBlockArgs<'a> {
     pub COMMENT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT: Option<flatbuffers::WIPOffset<CAT<'a>>>,
     pub CENTER_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REFERENCE_FRAME: refFrame,
+    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub REFERENCE_FRAME_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COV_REFERENCE_FRAME: refFrame,
+    pub COV_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub TIME_SYSTEM: timeSystem,
     pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub USEABLE_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1303,9 +1307,9 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
       COMMENT: None,
       OBJECT: None,
       CENTER_NAME: None,
-      REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: None,
       REFERENCE_FRAME_EPOCH: None,
-      COV_REFERENCE_FRAME: refFrame::ECEF,
+      COV_REFERENCE_FRAME: None,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,
       USEABLE_START_TIME: None,
@@ -1338,16 +1342,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a, '
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_CENTER_NAME, CENTER_NAME);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(ephemerisDataBlock::VT_REFERENCE_FRAME, REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(ephemerisDataBlock::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
   }
   #[inline]
-  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: refFrame) {
-    self.fbb_.push_slot::<refFrame>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME, refFrame::ECEF);
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
@@ -1432,9 +1436,9 @@ pub struct ephemerisDataBlockT {
   pub COMMENT: Option<String>,
   pub OBJECT: Option<Box<CATT>>,
   pub CENTER_NAME: Option<String>,
-  pub REFERENCE_FRAME: refFrame,
+  pub REFERENCE_FRAME: Option<Box<RFMT>>,
   pub REFERENCE_FRAME_EPOCH: Option<String>,
-  pub COV_REFERENCE_FRAME: refFrame,
+  pub COV_REFERENCE_FRAME: Option<Box<RFMT>>,
   pub TIME_SYSTEM: timeSystem,
   pub START_TIME: Option<String>,
   pub USEABLE_START_TIME: Option<String>,
@@ -1452,9 +1456,9 @@ impl Default for ephemerisDataBlockT {
       COMMENT: None,
       OBJECT: None,
       CENTER_NAME: None,
-      REFERENCE_FRAME: refFrame::ECEF,
+      REFERENCE_FRAME: None,
       REFERENCE_FRAME_EPOCH: None,
-      COV_REFERENCE_FRAME: refFrame::ECEF,
+      COV_REFERENCE_FRAME: None,
       TIME_SYSTEM: timeSystem::GMST,
       START_TIME: None,
       USEABLE_START_TIME: None,
@@ -1482,11 +1486,15 @@ impl ephemerisDataBlockT {
     let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REFERENCE_FRAME = self.REFERENCE_FRAME;
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME;
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let TIME_SYSTEM = self.TIME_SYSTEM;
     let START_TIME = self.START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)

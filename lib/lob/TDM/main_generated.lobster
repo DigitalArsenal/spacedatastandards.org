@@ -27,11 +27,13 @@ class TDM : flatbuffers.handle
     def OBSERVER_VZ() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-    def OBSERVER_POSITION_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    def OBSERVER_POSITION_REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: RFM { buf_, o } else: nil
     /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-    def OBS_REFERENCE_FRAME() -> refFrame:
-        return refFrame(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def OBS_REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: RFM { buf_, o } else: nil
     /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 22)
@@ -237,11 +239,11 @@ struct TDMBuilder:
     def add_OBSERVER_VZ(OBSERVER_VZ:float):
         b_.PrependFloat64Slot(6, OBSERVER_VZ, 0.0)
         return this
-    def add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVER_POSITION_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
+    def add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVER_POSITION_REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, OBSERVER_POSITION_REFERENCE_FRAME)
         return this
-    def add_OBS_REFERENCE_FRAME(OBS_REFERENCE_FRAME:refFrame):
-        b_.PrependInt8Slot(8, OBS_REFERENCE_FRAME, 0)
+    def add_OBS_REFERENCE_FRAME(OBS_REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, OBS_REFERENCE_FRAME)
         return this
     def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, EPOCH)

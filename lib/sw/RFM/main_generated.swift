@@ -4,195 +4,436 @@
 
 import FlatBuffers
 
-public enum refFrame: Int8, Enum, Verifiable {
+///  https://www.sanaregistry.org/r/celestial_body_reference_frames/
+///  Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
+public enum CelestialFrame: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  OID: 1.3.112.4.57.2.9
+  ///  Inertial Earth-centered frame aligned with Earth's center of mass.
+  case gcrf = 0
+  ///  OID: 1.3.112.4.57.2.11
+  ///  International Celestial Reference Frame based on distant quasars.
+  case icrf = 1
+  ///  OID: 1.3.112.4.57.2.14
+  ///  Classical J2000 inertial frame defined at epoch J2000.0.
+  case j2000 = 2
+  ///  OID: 1.3.112.4.57.2.15
+  ///  Updated J2000 frame using IAU2000A precession-nutation models.
+  case j2000a = 3
+  ///  OID: 1.3.112.4.57.2.7
+  ///  Earth Mean Equator frame at epoch J2000 used in orbit determination.
+  case eme2000 = 4
+  ///  OID: 1.3.112.4.57.2.25
+  ///  True Equator Mean Equinox of Date frame for satellite tracking.
+  case temeofdate = 5
+  ///  OID: 1.3.112.4.57.2.10
+  ///  Greenwich True of Date: Earth rotation relative to celestial reference.
+  case gtod = 6
+  ///  OID: 1.3.112.4.57.2.4
+  ///  Celestial Intermediate Reference System based on CIP and CIO.
+  case cirs = 7
+  ///  OID: 1.3.112.4.57.2.18
+  ///  Mean of Date (MOD) Earth frame using IAU1976 precession.
+  case modEarth = 8
+  ///  OID: 1.3.112.4.57.2.17
+  ///  Mean of Date (MOD) celestial body frame evaluated at each epoch.
+  case modCb = 9
+  ///  OID: 1.3.112.4.57.2.19
+  ///  Mean of Date (MOD) Moon frame evaluated at each epoch.
+  case modMoon = 10
+  ///  OID: 1.3.112.4.57.2.29
+  ///  True of Date (TOD) Earth frame with polar motion included.
+  case todEarth = 11
+  ///  OID: 1.3.112.4.57.2.28
+  ///  True of Date (TOD) celestial body frame.
+  case todCb = 12
+  ///  OID: 1.3.112.4.57.2.30
+  ///  True of Date (TOD) Moon frame.
+  case todMoon = 13
+  ///  OID: 1.3.112.4.57.2.32
+  ///  True of Epoch (TOE) Earth frame at specific epoch.
+  case toeEarth = 14
+  ///  OID: 1.3.112.4.57.2.31
+  ///  True of Epoch (TOE) celestial body frame at specific epoch.
+  case toeCb = 15
+  ///  OID: 1.3.112.4.57.2.33
+  ///  True of Epoch (TOE) Moon frame at specific epoch.
+  case toeMoon = 16
+  ///  OID: 1.3.112.4.57.2.13
+  ///  International Terrestrial Reference Frame 2000 (Earth-fixed).
+  case itrf2000 = 17
+  ///  OID: 1.3.112.4.57.2.13
+  ///  International Terrestrial Reference Frame 1993 (Earth-fixed).
+  case itrf93 = 18
+  ///  OID: 1.3.112.4.57.2.13
+  ///  International Terrestrial Reference Frame 1997 (Earth-fixed).
+  case itrf97 = 19
+  ///  OID: 1.3.112.4.57.2.6
+  ///  Earth-Fixed Geocentric frame using geodetic coordinates.
+  case efg = 20
+  ///  OID: 1.3.112.4.57.2.8
+  ///  Fixed frame of a celestial body.
+  case fixedCb = 21
+  ///  OID: 1.3.112.4.57.2.39
+  ///  Fixed Earth frame aligned with WGS84 ellipsoid.
+  case fixedEarth = 22
+  ///  WGS84 Earth-fixed terrestrial system.
+  case wgs84 = 23
+  ///  OID: 1.3.112.4.57.2.5
+  ///  Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+  case dtrfyyyy = 24
+  ///  OID: 1.3.112.4.57.2.2
+  ///  Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+  case alignEarth = 25
+  ///  OID: 1.3.112.4.57.2.1
+  ///  Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+  case alignCb = 26
+  ///  OID: 1.3.112.4.57.2.3
+  ///  Classical Besselian 1950 equator and equinox frame.
+  case b1950 = 27
+
+  public static var max: CelestialFrame { return .b1950 }
+  public static var min: CelestialFrame { return .gcrf }
+}
+
+
+///  https://sanaregistry.org/r/spacecraft_body_reference_frames/
+///  Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
+public enum SpacecraftFrame: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  OID: 1.3.112.4.57.8.1
+  ///  Accelerometer instrument frame.
+  case accI = 0
+  ///  OID: 1.3.112.4.57.8.2
+  ///  Actuator system frame.
+  case actuatorI = 1
+  ///  OID: 1.3.112.4.57.8.3
+  ///  Attitude Sensor Target frame.
+  case astI = 2
+  ///  OID: 1.3.112.4.57.8.4
+  ///  Coarse Sun Sensor frame.
+  case cssI = 3
+  ///  OID: 1.3.112.4.57.8.5
+  ///  Digital Sun Sensor frame.
+  case dssI = 4
+  ///  OID: 1.3.112.4.57.8.6
+  ///  Earth Sensor Assembly frame.
+  case esaI = 5
+  ///  OID: 1.3.112.4.57.8.7
+  ///  Gyroscope instrument frame.
+  case gyroFrameI = 6
+  ///  OID: 1.3.112.4.57.8.8
+  ///  Inertial Measurement Unit frame.
+  case imuFrameI = 7
+  ///  OID: 1.3.112.4.57.8.9
+  ///  Generic instrument mounting frame.
+  case instrumentI = 8
+  ///  OID: 1.3.112.4.57.8.10
+  ///  Magnetic Torquer Assembly frame.
+  case mtaI = 9
+  ///  OID: 1.3.112.4.57.8.11
+  ///  Reaction Wheel assembly frame.
+  case rwI = 10
+  ///  OID: 1.3.112.4.57.8.12
+  ///  Solar Array frame.
+  case saI = 11
+  ///  OID: 1.3.112.4.57.8.13
+  ///  Spacecraft body fixed frame.
+  case scBodyI = 12
+  ///  OID: 1.3.112.4.57.8.14
+  ///  Generic sensor assembly frame.
+  case sensorI = 13
+  ///  OID: 1.3.112.4.57.8.15
+  ///  Star Tracker instrument frame.
+  case startrackerI = 14
+  ///  OID: 1.3.112.4.57.8.16
+  ///  Thermal Assembly Module frame.
+  case tamI = 15
+
+  public static var max: SpacecraftFrame { return .tamI }
+  public static var min: SpacecraftFrame { return .accI }
+}
+
+
+///  https://sanaregistry.org/r/orbit_relative_reference_frames/
+///  Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
+public enum OrbitFrame: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  OID: 1.3.112.4.57.3.1
+  ///  Earth Equatorial Inertial frame aligned with J2000 epoch.
+  case eqwInertial = 0
+  ///  OID: 1.3.112.4.57.3.3
+  ///  Local Vertical Local Horizontal inertial frame.
+  case lvlhInertial = 1
+  ///  OID: 1.3.112.4.57.3.2
+  ///  Local Vertical Local Horizontal rotating frame.
+  case lvlhRotating = 2
+  ///  OID: 1.3.112.4.57.3.5
+  ///  Normal along-track cross-track inertial frame.
+  case nswInertial = 3
+  ///  OID: 1.3.112.4.57.3.4
+  ///  Normal along-track cross-track rotating frame.
+  case nswRotating = 4
+  ///  OID: 1.3.112.4.57.3.7
+  ///  Orbit normal Tangential cross-track inertial frame.
+  case ntwInertial = 5
+  ///  OID: 1.3.112.4.57.3.6
+  ///  Orbit normal Tangential cross-track rotating frame.
+  case ntwRotating = 6
+  ///  OID: 1.3.112.4.57.3.8
+  ///  Perifocal frame aligned with orbit's perigee.
+  case pqwInertial = 7
+  ///  OID: 1.3.112.4.57.3.10
+  ///  Radial along-track cross-track inertial frame.
+  case rswInertial = 8
+  ///  OID: 1.3.112.4.57.3.9
+  ///  Radial along-track cross-track rotating frame.
+  case rswRotating = 9
+  ///  OID: 1.3.112.4.57.3.14
+  ///  South-East-Zenith inertial (topocentric) frame.
+  case sezInertial = 10
+  ///  OID: 1.3.112.4.57.3.13
+  ///  South-East-Zenith rotating (topocentric) frame.
+  case sezRotating = 11
+  ///  OID: 1.3.112.4.57.3.12
+  ///  Transverse normal cross-track inertial frame.
+  case tnwInertial = 12
+  ///  OID: 1.3.112.4.57.3.11
+  ///  Transverse normal cross-track rotating frame.
+  case tnwRotating = 13
+  ///  OID: 1.3.112.4.57.3.16
+  ///  Velocity-normal co-normal inertial frame.
+  case vncInertial = 14
+  ///  OID: 1.3.112.4.57.3.15
+  ///  Velocity-normal co-normal rotating frame.
+  case vncRotating = 15
+
+  public static var max: OrbitFrame { return .vncRotating }
+  public static var min: OrbitFrame { return .eqwInertial }
+}
+
+
+///  Non-registered or local use frames
+public enum CustomFrame: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   ///  Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
   case ecef = 0
-  ///  International Celestial Reference Frame: Fixed relative to distant stars. Used in astronomy.
-  case icrf = 1
-  ///  True Equator Mean Equinox: Dynamic frame for SGP4 satellite tracking.
-  case teme = 2
-  ///  East-North-Up: Local tangent plane for surface points. Suitable for stationary objects.
+  ///  True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
+  case teme = 1
+  ///  True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
+  case temeofepoch = 2
+  ///  East-North-Up: Local tangent plane for surface points.
   case enu = 3
   ///  North-East-Down: Aviation/navigation frame aligned with gravity.
   case ned = 4
-  ///  North-East-Up: Similar to NED, with "Up" opposite gravity.
+  ///  North-East-Up: Local tangent plane variant with Up positive.
   case neu = 5
   ///  Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
   case ric = 6
-  ///  Earth Mean Equator and Equinox of J2000: Fixed relative to stars, used for celestial mechanics.
-  case j2000 = 7
-  ///  Geocentric Celestial Reference Frame: Inertial Earth-centered frame.
-  case gcrf = 8
-  ///  Greenwich Rotating Coordinates: Rotates with Earth's true equator.
-  case grc = 9
-  ///  International Terrestrial Reference Frame 2000: Rotating Earth-fixed frame.
-  case itrf2000 = 10
-  ///  International Terrestrial Reference Frame 1993: Older ITRF realization.
-  case itrf93 = 11
-  ///  International Terrestrial Reference Frame 1997: Intermediate ITRF realization.
-  case itrf97 = 12
-  ///  True of Date, Rotating: Rotates with Earth's true equator.
-  case tdr = 13
-  ///  True of Date: Similar to TDR, without rotation.
-  case tod = 14
-  ///  Radial, Transverse, Normal: Orbit frame for spacecraft dynamics.
-  case rtn = 15
-  ///  Transverse, Velocity, Normal: Alternative orbit frame.
-  case tvn = 16
-  ///  Vehicle-Body-Local-Horizontal: Orbit frame aligned with spacecraft.
-  case vvlh = 17
-  ///  Radial, Tangential, Cross-track: Used for nadir- or velocity-aligned spacecraft; equivalent to LVLH in many formulations.
-  case qsw = 18
-  ///  Local Tangent Plane: Surface-fixed frame for terrestrial uses.
-  case ltp = 19
-  ///  Local Vertical-Local Horizontal: Orbit frame with Z towards Earth center.
-  case lvlh = 20
-  ///  Polar-North-East: Polar coordinate frame.
-  case pne = 21
+  ///  Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
+  case rtn = 7
+  ///  Transverse-Velocity-Normal: Alternative orbit frame.
+  case tvn = 8
+  ///  Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
+  case vvlh = 9
+  ///  Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
+  case qsw = 10
+  ///  Local Tangent Plane: Surface-fixed frame centered on a point.
+  case ltp = 11
+  ///  Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
+  case lvlh = 12
+  ///  Polar-North-East: Surface coordinate frame.
+  case pne = 13
   ///  Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  case brf = 22
-  ///  Radial, Down-track, Cross-track: Alternate name for RTN.
-  case rsw = 23
-  ///  Tangential, Normal, Cross-track: Local orbit frame.
-  case tnw = 24
-  ///  Radial, Along-track, Cross-track: Satellite motion frame.
-  case uvw = 25
-  ///  Equinoctial Inertial: Frame with axes aligned to orbital properties.
-  case eqwInertial = 26
-  ///  Inertial version of LVLH.
-  case lvlhInertial = 27
-  ///  Rotating LVLH frame.
-  case lvlhRotating = 28
-  ///  Inertial Nadir-Sun-Normal frame.
-  case nswInertial = 29
-  ///  Rotating Nadir-Sun-Normal frame.
-  case nswRotating = 30
-  ///  Inertial Transverse-Velocity-Normal frame.
-  case ntwInertial = 31
-  ///  Rotating Transverse-Velocity-Normal frame.
-  case ntwRotating = 32
-  ///  Perifocal Coordinate System: Inertial frame aligned to periapsis.
-  case pqwInertial = 33
-  ///  Inertial Radial, Transverse, Normal frame.
-  case rswInertial = 34
-  ///  Rotating RSW frame: Aligned with orbit angular momentum.
-  case rswRotating = 35
-  ///  South/East/Zenith inertial frame.
-  case sezInertial = 36
-  ///  Rotating South/East/Zenith frame.
-  case sezRotating = 37
-  ///  Inertial Tangential, Normal, Cross-track frame.
-  case tnwInertial = 38
-  ///  Rotating Tangential, Normal, Cross-track frame.
-  case tnwRotating = 39
-  ///  Velocity, Normal, Co-normal inertial frame.
-  case vncInertial = 40
-  ///  Rotating Velocity, Normal, Co-normal frame.
-  case vncRotating = 41
-  ///  Central Body alignment inertial frame.
-  case alignCb = 42
-  ///  Earth alignment inertial frame.
-  case alignEarth = 43
-  ///  Inertial realization of B1950 epoch.
-  case b1950 = 44
-  ///  Celestial Intermediate Reference System.
-  case cirs = 45
-  ///  DTRF Inertial frame with corrections.
-  case dtrfyyyy = 46
-  ///  Earth-Fixed Greenwich rotating frame.
-  case efg = 47
-  ///  Earth Mean Equator and Equinox of 2000 epoch.
-  case eme2000 = 48
-  ///  Central Body fixed rotating frame.
-  case fixedCb = 49
-  ///  Earth-fixed rotating frame.
-  case fixedEarth = 50
-  ///  Geocentric Celestial Reference Frame with versioning.
-  case gcrfn = 51
-  ///  Greenwich True-of-Date rotating frame.
-  case gtod = 52
-  ///  Mean of Date for all central bodies except Earth and Moon.
-  case modCb = 53
-  ///  Mean of Date for Earth.
-  case modEarth = 54
-  ///  Mean of Date for Moon.
-  case modMoon = 55
-  ///  Mean of Epoch for central bodies.
-  case moeCb = 56
-  ///  Mean of Epoch for Earth.
-  case moeEarth = 57
-  ///  Lunar Moon Mean Earth reference frame.
-  case moonMe = 58
-  ///  Lunar Mean Equator and IAU Node reference frame.
-  case moonMeiaue = 59
-  ///  Lunar Principal Axis rotating frame.
-  case moonPaxxx = 60
-  ///  True Equator Mean Equinox of Date.
-  case temeofdate = 61
-  ///  True Equator Mean Equinox of Epoch.
-  case temeofepoch = 62
-  ///  Terrestrial Intermediate Reference System.
-  case tirs = 63
-  ///  True of Date for central bodies.
-  case todCb = 64
-  ///  True of Date for Earth.
-  case todEarth = 65
-  ///  True of Date for Moon.
-  case todMoon = 66
-  ///  True of Epoch for central bodies.
-  case toeCb = 67
-  ///  True of Epoch for Earth.
-  case toeEarth = 68
-  ///  True of Epoch for Moon.
-  case toeMoon = 69
-  ///  True Ecliptic reference frame.
-  case trueEcliptic = 70
-  ///  Launch go-inertial reference frame.
-  case uvwGoInertial = 71
-  ///  WGS 84 Earth-fixed terrestrial system.
-  case wgs84 = 72
-  ///  Accelerometer reference frame.
-  case accI = 73
-  ///  Actuator reference frame.
-  case actuatorI = 74
-  ///  Autonomous Star Tracker reference frame.
-  case astI = 75
-  ///  Coarse Sun Sensor reference frame.
-  case cssI = 76
-  ///  Digital Sun Sensor reference frame.
-  case dssI = 77
-  ///  Earth Sensor Assembly reference frame.
-  case esaI = 78
-  ///  Gyro reference frame.
-  case gyroFrameI = 79
-  ///  Inertial Measurement Unit reference frame.
-  case imuFrameI = 80
-  ///  Instrument reference frame.
-  case instrumentI = 81
-  ///  Magnetic Torque Assembly reference frame.
-  case mtaI = 82
-  ///  Reaction Wheel reference frame.
-  case rwI = 83
-  ///  Solar Array reference frame.
-  case saI = 84
-  ///  Spacecraft Body reference frame.
-  case scBodyI = 85
-  ///  Sensor reference frame.
-  case sensorI = 86
-  ///  Star Tracker reference frame.
-  case startrackerI = 87
-  ///  Three Axis Magnetometer reference frame.
-  case tamI = 88
+  case brf = 14
+  ///  Radial-Along-track-Cross-track: Same as RSW.
+  case rsw = 15
+  ///  Tangential-Normal-Cross-track: Same as TNW.
+  case tnw = 16
+  ///  Radial-UTF: Radial, Along-track, Cross-track variant.
+  case uvw = 17
 
-  public static var max: refFrame { return .tamI }
-  public static var min: refFrame { return .ecef }
+  public static var max: CustomFrame { return .uvw }
+  public static var min: CustomFrame { return .ecef }
 }
 
 
-///  Reference Frame Message
+public enum RFMUnion: UInt8, UnionEnum {
+  public typealias T = UInt8
+
+  public init?(value: T) {
+    self.init(rawValue: value)
+  }
+
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case celestialframewrapper = 1
+  case spacecraftframewrapper = 2
+  case orbitframewrapper = 3
+  case customframewrapper = 4
+
+  public static var max: RFMUnion { return .customframewrapper }
+  public static var min: RFMUnion { return .none_ }
+}
+
+
+public struct CelestialFrameWrapper: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CelestialFrameWrapper.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case frame = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  public var frame: CelestialFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .gcrf : CelestialFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gcrf }
+  public static func startCelestialFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(frame: CelestialFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func endCelestialFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCelestialFrameWrapper(
+    _ fbb: inout FlatBufferBuilder,
+    frame: CelestialFrame = .gcrf
+  ) -> Offset {
+    let __start = CelestialFrameWrapper.startCelestialFrameWrapper(&fbb)
+    CelestialFrameWrapper.add(frame: frame, &fbb)
+    return CelestialFrameWrapper.endCelestialFrameWrapper(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: CelestialFrame.self)
+    _v.finish()
+  }
+}
+
+public struct SpacecraftFrameWrapper: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SpacecraftFrameWrapper.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case frame = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  public var frame: SpacecraftFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .accI : SpacecraftFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .accI }
+  public static func startSpacecraftFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(frame: SpacecraftFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func endSpacecraftFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSpacecraftFrameWrapper(
+    _ fbb: inout FlatBufferBuilder,
+    frame: SpacecraftFrame = .accI
+  ) -> Offset {
+    let __start = SpacecraftFrameWrapper.startSpacecraftFrameWrapper(&fbb)
+    SpacecraftFrameWrapper.add(frame: frame, &fbb)
+    return SpacecraftFrameWrapper.endSpacecraftFrameWrapper(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: SpacecraftFrame.self)
+    _v.finish()
+  }
+}
+
+public struct OrbitFrameWrapper: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OrbitFrameWrapper.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case frame = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  public var frame: OrbitFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .eqwInertial : OrbitFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eqwInertial }
+  public static func startOrbitFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(frame: OrbitFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func endOrbitFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOrbitFrameWrapper(
+    _ fbb: inout FlatBufferBuilder,
+    frame: OrbitFrame = .eqwInertial
+  ) -> Offset {
+    let __start = OrbitFrameWrapper.startOrbitFrameWrapper(&fbb)
+    OrbitFrameWrapper.add(frame: frame, &fbb)
+    return OrbitFrameWrapper.endOrbitFrameWrapper(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: OrbitFrame.self)
+    _v.finish()
+  }
+}
+
+public struct CustomFrameWrapper: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CustomFrameWrapper.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case frame = 4
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  public var frame: CustomFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .ecef : CustomFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public static func startCustomFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(frame: CustomFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func endCustomFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCustomFrameWrapper(
+    _ fbb: inout FlatBufferBuilder,
+    frame: CustomFrame = .ecef
+  ) -> Offset {
+    let __start = CustomFrameWrapper.startCustomFrameWrapper(&fbb)
+    CustomFrameWrapper.add(frame: frame, &fbb)
+    return CustomFrameWrapper.endCustomFrameWrapper(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: CustomFrame.self)
+    _v.finish()
+  }
+}
+
 public struct RFM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }
@@ -205,27 +446,52 @@ public struct RFM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case REFERENCE_FRAME = 4
+    case referenceFrameType = 4
+    case REFERENCE_FRAME = 6
+    case INDEX = 8
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  public var REFERENCE_FRAME: refFrame { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? .ecef : refFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
-  public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(REFERENCE_FRAME: refFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public var referenceFrameType: RFMUnion { let o = _accessor.offset(VTOFFSET.referenceFrameType.v); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public func REFERENCE_FRAME<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.union(o) }
+  public var INDEX: String? { let o = _accessor.offset(VTOFFSET.INDEX.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INDEXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INDEX.v) }
+  public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(referenceFrameType: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: referenceFrameType.rawValue, def: 0, at: VTOFFSET.referenceFrameType.p) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
+  public static func add(INDEX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEX, at: VTOFFSET.INDEX.p) }
   public static func endRFM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFM(
     _ fbb: inout FlatBufferBuilder,
-    REFERENCE_FRAME: refFrame = .ecef
+    referenceFrameType: RFMUnion = .none_,
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    INDEXOffset INDEX: Offset = Offset()
   ) -> Offset {
     let __start = RFM.startRFM(&fbb)
+    RFM.add(referenceFrameType: referenceFrameType, &fbb)
     RFM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    RFM.add(INDEX: INDEX, &fbb)
     return RFM.endRFM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: refFrame.self)
+    try _v.visit(unionKey: VTOFFSET.REFERENCE_FRAMEType.p, unionField: VTOFFSET.REFERENCE_FRAME.p, unionKeyName: "REFERENCE_FRAMEType", fieldName: "REFERENCE_FRAME", required: false, completion: { (verifier, key: RFMUnion, pos) in
+      switch key {
+      case .none_:
+        break // NOTE - SWIFT doesnt support none
+      case .celestialframewrapper:
+        try ForwardOffset<CelestialFrameWrapper>.verify(&verifier, at: pos, of: CelestialFrameWrapper.self)
+      case .spacecraftframewrapper:
+        try ForwardOffset<SpacecraftFrameWrapper>.verify(&verifier, at: pos, of: SpacecraftFrameWrapper.self)
+      case .orbitframewrapper:
+        try ForwardOffset<OrbitFrameWrapper>.verify(&verifier, at: pos, of: OrbitFrameWrapper.self)
+      case .customframewrapper:
+        try ForwardOffset<CustomFrameWrapper>.verify(&verifier, at: pos, of: CustomFrameWrapper.self)
+      }
+    })
+    try _v.visit(field: VTOFFSET.INDEX.p, fieldName: "INDEX", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

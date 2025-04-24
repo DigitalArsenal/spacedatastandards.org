@@ -119,19 +119,22 @@ func (rcv *OMM) CENTER_NAME() []byte {
 
 /// Center Name (e.g. EARTH, MARS)
 /// Reference Frame
-func (rcv *OMM) REFERENCE_FRAME() refFrame {
+/// Typically TEMEOFDATE
+func (rcv *OMM) REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 2
+	return nil
 }
 
 /// Reference Frame
-func (rcv *OMM) MutateREFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(16, int8(n))
-}
-
+/// Typically TEMEOFDATE
 /// Reference Frame Epoch (ISO 8601 UTC format)
 func (rcv *OMM) REFERENCE_FRAME_EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
@@ -484,20 +487,23 @@ func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 
 /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
 /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-func (rcv *OMM) COV_REFERENCE_FRAME() refFrame {
+/// Typically RSW
+func (rcv *OMM) COV_REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
-		return refFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 23
+	return nil
 }
 
 /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
 /// COV_REF_FRAME reference frame for covariance [C if covariance given]
-func (rcv *OMM) MutateCOV_REFERENCE_FRAME(n refFrame) bool {
-	return rcv._tab.MutateInt8Slot(70, int8(n))
-}
-
+/// Typically RSW
 /// CX_X [km**2]
 func (rcv *OMM) CX_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
@@ -875,8 +881,8 @@ func OMMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffset
 func OMMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CENTER_NAME), 0)
 }
-func OMMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(6, int8(REFERENCE_FRAME), 2)
+func OMMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
 func OMMAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REFERENCE_FRAME_EPOCH), 0)
@@ -956,8 +962,8 @@ func OMMAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64
 func OMMAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
 	builder.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
 }
-func OMMAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME refFrame) {
-	builder.PrependInt8Slot(33, int8(COV_REFERENCE_FRAME), 23)
+func OMMAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
 }
 func OMMAddCX_X(builder *flatbuffers.Builder, CX_X float64) {
 	builder.PrependFloat64Slot(34, CX_X, 0.0)

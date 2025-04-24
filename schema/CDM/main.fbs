@@ -1,5 +1,5 @@
-// Hash: 8e790d04f04a1129f047da111e14449c4debb9770bfaa476835a4d4742142d8b
-// Version: 1.0.1
+// Hash: a1ea2fb507304e144950ef981c89a09b1ab82d0d7c19147c948b8a666b74d4d7
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../PNM/main.fbs";
 include "../CAT/main.fbs";
@@ -32,7 +32,7 @@ table CDMObject {
   /// Covariance method
   COVARIANCE_METHOD:covarianceMethod;
   /// Reference Frame in which the object position is defined
-  REFERENCE_FRAME:refFrame;
+  REFERENCE_FRAME:RFM;
   /// Gravity model
   GRAVITY_MODEL:string;
   /// Atmospheric model
@@ -219,7 +219,7 @@ table CDM {
   /// The end time of the screening period
   STOP_SCREEN_PERIOD:string;
   /// The reference frame for the screening volume
-  SCREEN_VOLUME_FRAME:refFrame;
+  SCREEN_VOLUME_FRAME:RFM;
   /// The shape of the screening volume
   SCREEN_VOLUME_SHAPE:screeningVolumeShape;
   /// The X dimension of the screening volume

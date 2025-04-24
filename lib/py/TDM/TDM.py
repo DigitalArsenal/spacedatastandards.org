@@ -90,16 +90,24 @@ class TDM(object):
     def OBSERVER_POSITION_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
     # TDM
     def OBS_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
     # TDM
@@ -785,13 +793,13 @@ def AddOBSERVER_VZ(builder, OBSERVER_VZ):
     TDMAddOBSERVER_VZ(builder, OBSERVER_VZ)
 
 def TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME):
-    builder.PrependInt8Slot(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVER_POSITION_REFERENCE_FRAME), 0)
 
 def AddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME):
     TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME)
 
 def TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME):
-    builder.PrependInt8Slot(8, OBS_REFERENCE_FRAME, 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OBS_REFERENCE_FRAME), 0)
 
 def AddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME):
     TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME)
@@ -1174,8 +1182,9 @@ def TDMEnd(builder):
 def End(builder):
     return TDMEnd(builder)
 
+import RFM
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -1190,8 +1199,8 @@ class TDMT(object):
         self.OBSERVER_VX = 0.0  # type: float
         self.OBSERVER_VY = 0.0  # type: float
         self.OBSERVER_VZ = 0.0  # type: float
-        self.OBSERVER_POSITION_REFERENCE_FRAME = 0  # type: int
-        self.OBS_REFERENCE_FRAME = 0  # type: int
+        self.OBSERVER_POSITION_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
+        self.OBS_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
         self.EPOCH = None  # type: str
         self.CCSDS_TDM_VERS = None  # type: str
         self.COMMENT = None  # type: List[str]
@@ -1271,8 +1280,10 @@ class TDMT(object):
         self.OBSERVER_VX = TDM.OBSERVER_VX()
         self.OBSERVER_VY = TDM.OBSERVER_VY()
         self.OBSERVER_VZ = TDM.OBSERVER_VZ()
-        self.OBSERVER_POSITION_REFERENCE_FRAME = TDM.OBSERVER_POSITION_REFERENCE_FRAME()
-        self.OBS_REFERENCE_FRAME = TDM.OBS_REFERENCE_FRAME()
+        if TDM.OBSERVER_POSITION_REFERENCE_FRAME() is not None:
+            self.OBSERVER_POSITION_REFERENCE_FRAME = RFM.RFMT.InitFromObj(TDM.OBSERVER_POSITION_REFERENCE_FRAME())
+        if TDM.OBS_REFERENCE_FRAME() is not None:
+            self.OBS_REFERENCE_FRAME = RFM.RFMT.InitFromObj(TDM.OBS_REFERENCE_FRAME())
         self.EPOCH = TDM.EPOCH()
         self.CCSDS_TDM_VERS = TDM.CCSDS_TDM_VERS()
         if not TDM.COMMENTIsNone():
@@ -1397,6 +1408,10 @@ class TDMT(object):
     def Pack(self, builder):
         if self.OBSERVER_ID is not None:
             OBSERVER_ID = builder.CreateString(self.OBSERVER_ID)
+        if self.OBSERVER_POSITION_REFERENCE_FRAME is not None:
+            OBSERVER_POSITION_REFERENCE_FRAME = self.OBSERVER_POSITION_REFERENCE_FRAME.Pack(builder)
+        if self.OBS_REFERENCE_FRAME is not None:
+            OBS_REFERENCE_FRAME = self.OBS_REFERENCE_FRAME.Pack(builder)
         if self.EPOCH is not None:
             EPOCH = builder.CreateString(self.EPOCH)
         if self.CCSDS_TDM_VERS is not None:
@@ -1552,8 +1567,10 @@ class TDMT(object):
         TDMAddOBSERVER_VX(builder, self.OBSERVER_VX)
         TDMAddOBSERVER_VY(builder, self.OBSERVER_VY)
         TDMAddOBSERVER_VZ(builder, self.OBSERVER_VZ)
-        TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, self.OBSERVER_POSITION_REFERENCE_FRAME)
-        TDMAddOBS_REFERENCE_FRAME(builder, self.OBS_REFERENCE_FRAME)
+        if self.OBSERVER_POSITION_REFERENCE_FRAME is not None:
+            TDMAddOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAME)
+        if self.OBS_REFERENCE_FRAME is not None:
+            TDMAddOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAME)
         if self.EPOCH is not None:
             TDMAddEPOCH(builder, EPOCH)
         if self.CCSDS_TDM_VERS is not None:
