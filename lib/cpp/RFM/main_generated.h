@@ -728,6 +728,7 @@ inline ::flatbuffers::Offset<CustomFrameWrapper> CreateCustomFrameWrapper(
   return builder_.Finish();
 }
 
+/// Reference Frame Message
 struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

@@ -1498,6 +1498,7 @@ impl CustomFrameWrapperT {
 pub enum RFMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Reference Frame Message
 pub struct RFM<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }

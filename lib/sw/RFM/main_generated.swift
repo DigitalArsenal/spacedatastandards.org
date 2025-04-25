@@ -434,6 +434,7 @@ public struct CustomFrameWrapper: FlatBufferObject, Verifiable {
   }
 }
 
+///  Reference Frame Message
 public struct RFM: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }

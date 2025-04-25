@@ -103,6 +103,7 @@
     },
     "RFM" : {
       "type" : "object",
+      "description" : "Reference Frame Message",
       "properties" : {
         "REFERENCE_FRAME_type" : {
                 "$ref" : "#/definitions/RFMUnion"

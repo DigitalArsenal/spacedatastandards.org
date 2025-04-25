@@ -316,6 +316,7 @@ struct CustomFrameWrapperBuilder:
     def end():
         return b_.EndObject()
 
+/// Reference Frame Message
 class RFM : flatbuffers.handle
     def REFERENCE_FRAME_type() -> RFMUnion:
         return RFMUnion(flatbuffers.field_uint8(buf_, pos_, 4, 0))

@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Reference Frame Message
 public struct RFM : IFlatbufferObject
 {
   private Table __p;

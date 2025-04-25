@@ -11,6 +11,9 @@ import { RFMUnion, unionToRfmunion, unionListToRfmunion } from './RFMUnion.js';
 import { SpacecraftFrameWrapper, SpacecraftFrameWrapperT } from './SpacecraftFrameWrapper.js';
 
 
+/**
+ * Reference Frame Message
+ */
 export class RFM implements flatbuffers.IUnpackableObject<RFMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

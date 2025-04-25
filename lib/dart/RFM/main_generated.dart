@@ -873,6 +873,7 @@ class CustomFrameWrapperObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Reference Frame Message
 class RFM {
   RFM._(this._bc, this._bcOffset);
   factory RFM(List<int> bytes) {

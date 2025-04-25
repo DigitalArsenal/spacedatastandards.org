@@ -4,6 +4,9 @@ import { CustomFrameWrapperT } from './CustomFrameWrapper.js';
 import { OrbitFrameWrapperT } from './OrbitFrameWrapper.js';
 import { RFMUnion } from './RFMUnion.js';
 import { SpacecraftFrameWrapperT } from './SpacecraftFrameWrapper.js';
+/**
+ * Reference Frame Message
+ */
 export declare class RFM implements flatbuffers.IUnpackableObject<RFMT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;

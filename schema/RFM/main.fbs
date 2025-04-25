@@ -1,5 +1,5 @@
-// Hash: 2490f0c065acae78588e68cee48d2529e2f1eaa4baedc79570756c6220d9a2b1
-// Version: 4.0.8
+// Hash: ba28ad497e848189ab30ab4f71aeb9f434275411b97500ed09b5b1fbdc4b8be4
+// Version: 4.0.9
 // -----------------------------------END_HEADER
 /// https://www.sanaregistry.org/r/celestial_body_reference_frames/
 /// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
@@ -322,6 +322,7 @@ union RFMUnion {
   CustomFrameWrapper
 }
 
+/// Reference Frame Message
 table RFM {
   REFERENCE_FRAME: RFMUnion;
   INDEX: string;
