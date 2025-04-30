@@ -896,11 +896,12 @@ class RFM {
       default: return null;
     }
   }
-  String? get INDEX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  int get INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
   String toString() {
-    return 'RFM{referenceFrameType: ${referenceFrameType}, REFERENCE_FRAME: ${REFERENCE_FRAME}, INDEX: ${INDEX}}';
+    return 'RFM{referenceFrameType: ${referenceFrameType}, REFERENCE_FRAME: ${REFERENCE_FRAME}, INDEX: ${INDEX}, NAME: ${NAME}}';
   }
 }
 
@@ -918,7 +919,7 @@ class RFMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
   int addReferenceFrameType(RfmunionTypeId? referenceFrameType) {
@@ -929,8 +930,12 @@ class RFMBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIndexOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addIndex(int? INDEX) {
+    fbBuilder.addInt32(2, INDEX);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
 
@@ -942,27 +947,31 @@ class RFMBuilder {
 class RFMObjectBuilder extends fb.ObjectBuilder {
   final RfmunionTypeId? _referenceFrameType;
   final dynamic _REFERENCE_FRAME;
-  final String? _INDEX;
+  final int? _INDEX;
+  final String? _NAME;
 
   RFMObjectBuilder({
     RfmunionTypeId? referenceFrameType,
     dynamic REFERENCE_FRAME,
-    String? INDEX,
+    int? INDEX,
+    String? NAME,
   })
       : _referenceFrameType = referenceFrameType,
         _REFERENCE_FRAME = REFERENCE_FRAME,
-        _INDEX = INDEX;
+        _INDEX = INDEX,
+        _NAME = NAME;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
-    final int? INDEXOffset = _INDEX == null ? null
-        : fbBuilder.writeString(_INDEX!);
-    fbBuilder.startTable(3);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    fbBuilder.startTable(4);
     fbBuilder.addUint8(0, _referenceFrameType?.value);
     fbBuilder.addOffset(1, REFERENCE_FRAMEOffset);
-    fbBuilder.addOffset(2, INDEXOffset);
+    fbBuilder.addInt32(2, _INDEX);
+    fbBuilder.addOffset(3, NAMEOffset);
     return fbBuilder.endTable();
   }
 

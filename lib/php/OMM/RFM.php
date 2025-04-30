@@ -59,9 +59,18 @@ class RFM extends Table
         return $o != 0 ? $this->__union($obj, $o) : null;
     }
 
+    /**
+     * @return int
+     */
     public function getINDEX()
     {
         $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    public function getNAME()
+    {
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -71,19 +80,20 @@ class RFM extends Table
      */
     public static function startRFM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFM
      */
-    public static function createRFM(FlatBufferBuilder $builder, $REFERENCE_FRAME_type, $REFERENCE_FRAME, $INDEX)
+    public static function createRFM(FlatBufferBuilder $builder, $REFERENCE_FRAME_type, $REFERENCE_FRAME, $INDEX, $NAME)
     {
-        $builder->startObject(3);
+        $builder->startObject(4);
         self::addREFERENCEFRAMEType($builder, $REFERENCE_FRAME_type);
         self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
         self::addINDEX($builder, $INDEX);
+        self::addNAME($builder, $NAME);
         $o = $builder->endObject();
         return $o;
     }
@@ -105,12 +115,22 @@ class RFM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param int
      * @return void
      */
     public static function addINDEX(FlatBufferBuilder $builder, $INDEX)
     {
-        $builder->addOffsetX(2, $INDEX, 0);
+        $builder->addIntX(2, $INDEX, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNAME(FlatBufferBuilder $builder, $NAME)
+    {
+        $builder->addOffsetX(3, $NAME, 0);
     }
 
     /**

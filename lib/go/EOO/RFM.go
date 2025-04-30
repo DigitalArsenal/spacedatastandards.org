@@ -75,8 +75,20 @@ func (rcv *RFM) REFERENCE_FRAME(obj *flatbuffers.Table) bool {
 	return false
 }
 
-func (rcv *RFM) INDEX() []byte {
+func (rcv *RFM) INDEX() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *RFM) MutateINDEX(n int32) bool {
+	return rcv._tab.MutateInt32Slot(8, n)
+}
+
+func (rcv *RFM) NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -84,7 +96,7 @@ func (rcv *RFM) INDEX() []byte {
 }
 
 func RFMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(4)
 }
 func RFMAddReferenceFrameType(builder *flatbuffers.Builder, referenceFrameType RFMUnion) {
 	builder.PrependByteSlot(0, byte(referenceFrameType), 0)
@@ -92,8 +104,11 @@ func RFMAddReferenceFrameType(builder *flatbuffers.Builder, referenceFrameType R
 func RFMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
-func RFMAddINDEX(builder *flatbuffers.Builder, INDEX flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(INDEX), 0)
+func RFMAddINDEX(builder *flatbuffers.Builder, INDEX int32) {
+	builder.PrependInt32Slot(2, INDEX, 0)
+}
+func RFMAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NAME), 0)
 }
 func RFMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

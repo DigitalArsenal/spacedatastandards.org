@@ -450,29 +450,34 @@ public struct RFM: FlatBufferObject, Verifiable {
     case referenceFrameType = 4
     case REFERENCE_FRAME = 6
     case INDEX = 8
+    case NAME = 10
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
   public var referenceFrameType: RFMUnion { let o = _accessor.offset(VTOFFSET.referenceFrameType.v); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   public func REFERENCE_FRAME<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.union(o) }
-  public var INDEX: String? { let o = _accessor.offset(VTOFFSET.INDEX.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INDEXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INDEX.v) }
-  public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public var INDEX: Int32 { let o = _accessor.offset(VTOFFSET.INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(referenceFrameType: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: referenceFrameType.rawValue, def: 0, at: VTOFFSET.referenceFrameType.p) }
   public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(INDEX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEX, at: VTOFFSET.INDEX.p) }
+  public static func add(INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INDEX, def: 0, at: VTOFFSET.INDEX.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func endRFM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFM(
     _ fbb: inout FlatBufferBuilder,
     referenceFrameType: RFMUnion = .none_,
     REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    INDEXOffset INDEX: Offset = Offset()
+    INDEX: Int32 = 0,
+    NAMEOffset NAME: Offset = Offset()
   ) -> Offset {
     let __start = RFM.startRFM(&fbb)
     RFM.add(referenceFrameType: referenceFrameType, &fbb)
     RFM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
     RFM.add(INDEX: INDEX, &fbb)
+    RFM.add(NAME: NAME, &fbb)
     return RFM.endRFM(&fbb, start: __start)
   }
 
@@ -492,7 +497,8 @@ public struct RFM: FlatBufferObject, Verifiable {
         try ForwardOffset<CustomFrameWrapper>.verify(&verifier, at: pos, of: CustomFrameWrapper.self)
       }
     })
-    try _v.visit(field: VTOFFSET.INDEX.p, fieldName: "INDEX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.INDEX.p, fieldName: "INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

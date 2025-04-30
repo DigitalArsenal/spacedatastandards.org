@@ -328,15 +328,17 @@ class RFM : flatbuffers.handle
         return OrbitFrameWrapper { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def REFERENCE_FRAME_as_CustomFrameWrapper():
         return CustomFrameWrapper { buf_, flatbuffers.field_table(buf_, pos_, 6) }
-    def INDEX() -> string:
-        return flatbuffers.field_string(buf_, pos_, 8)
+    def INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 8, 0)
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
 
 def GetRootAsRFM(buf:string): return RFM { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(4)
         return this
     def add_REFERENCE_FRAME_type(REFERENCE_FRAME_type:RFMUnion):
         b_.PrependUint8Slot(0, REFERENCE_FRAME_type, 0)
@@ -344,8 +346,11 @@ struct RFMBuilder:
     def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, REFERENCE_FRAME)
         return this
-    def add_INDEX(INDEX:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, INDEX)
+    def add_INDEX(INDEX:int):
+        b_.PrependInt32Slot(2, INDEX, 0)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, NAME)
         return this
     def end():
         return b_.EndObject()

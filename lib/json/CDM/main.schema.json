@@ -609,6 +609,9 @@
                 "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" }]
               },
         "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
                 "type" : "string"
               }
       },

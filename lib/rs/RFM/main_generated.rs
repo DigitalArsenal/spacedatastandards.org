@@ -1515,6 +1515,7 @@ impl<'a> RFM<'a> {
   pub const VT_REFERENCE_FRAME_TYPE: flatbuffers::VOffsetT = 4;
   pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 6;
   pub const VT_INDEX: flatbuffers::VOffsetT = 8;
+  pub const VT_NAME: flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1526,7 +1527,8 @@ impl<'a> RFM<'a> {
     args: &'args RFMArgs<'args>
   ) -> flatbuffers::WIPOffset<RFM<'bldr>> {
     let mut builder = RFMBuilder::new(_fbb);
-    if let Some(x) = args.INDEX { builder.add_INDEX(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_INDEX(args.INDEX);
     if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     builder.add_REFERENCE_FRAME_type(args.REFERENCE_FRAME_type);
     builder.finish()
@@ -1557,12 +1559,14 @@ impl<'a> RFM<'a> {
       )),
       _ => RFMUnionT::NONE,
     };
-    let INDEX = self.INDEX().map(|x| {
+    let INDEX = self.INDEX();
+    let NAME = self.NAME().map(|x| {
       x.to_string()
     });
     RFMT {
       REFERENCE_FRAME,
       INDEX,
+      NAME,
     }
   }
 
@@ -1581,11 +1585,18 @@ impl<'a> RFM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(RFM::VT_REFERENCE_FRAME, None)}
   }
   #[inline]
-  pub fn INDEX(&self) -> Option<&'a str> {
+  pub fn INDEX(&self) -> i32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFM::VT_INDEX, None)}
+    unsafe { self._tab.get::<i32>(RFM::VT_INDEX, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFM::VT_NAME, None)}
   }
   #[inline]
   #[allow(non_snake_case)]
@@ -1665,7 +1676,8 @@ impl flatbuffers::Verifiable for RFM<'_> {
           _ => Ok(()),
         }
      })?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INDEX", Self::VT_INDEX, false)?
+     .visit_field::<i32>("INDEX", Self::VT_INDEX, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .finish();
     Ok(())
   }
@@ -1673,7 +1685,8 @@ impl flatbuffers::Verifiable for RFM<'_> {
 pub struct RFMArgs<'a> {
     pub REFERENCE_FRAME_type: RFMUnion,
     pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>>,
-    pub INDEX: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub INDEX: i32,
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for RFMArgs<'a> {
   #[inline]
@@ -1681,7 +1694,8 @@ impl<'a> Default for RFMArgs<'a> {
     RFMArgs {
       REFERENCE_FRAME_type: RFMUnion::NONE,
       REFERENCE_FRAME: None,
-      INDEX: None,
+      INDEX: 0,
+      NAME: None,
     }
   }
 }
@@ -1700,8 +1714,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_INDEX(&mut self, INDEX: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFM::VT_INDEX, INDEX);
+  pub fn add_INDEX(&mut self, INDEX: i32) {
+    self.fbb_.push_slot::<i32>(RFM::VT_INDEX, INDEX, 0);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFM::VT_NAME, NAME);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RFMBuilder<'a, 'b, A> {
@@ -1757,6 +1775,7 @@ impl core::fmt::Debug for RFM<'_> {
         },
       };
       ds.field("INDEX", &self.INDEX());
+      ds.field("NAME", &self.NAME());
       ds.finish()
   }
 }
@@ -1764,13 +1783,15 @@ impl core::fmt::Debug for RFM<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct RFMT {
   pub REFERENCE_FRAME: RFMUnionT,
-  pub INDEX: Option<String>,
+  pub INDEX: i32,
+  pub NAME: Option<String>,
 }
 impl Default for RFMT {
   fn default() -> Self {
     Self {
       REFERENCE_FRAME: RFMUnionT::NONE,
-      INDEX: None,
+      INDEX: 0,
+      NAME: None,
     }
   }
 }
@@ -1781,13 +1802,15 @@ impl RFMT {
   ) -> flatbuffers::WIPOffset<RFM<'b>> {
     let REFERENCE_FRAME_type = self.REFERENCE_FRAME.rfmunion_type();
     let REFERENCE_FRAME = self.REFERENCE_FRAME.pack(_fbb);
-    let INDEX = self.INDEX.as_ref().map(|x|{
+    let INDEX = self.INDEX;
+    let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     RFM::create(_fbb, &RFMArgs{
       REFERENCE_FRAME_type,
       REFERENCE_FRAME,
       INDEX,
+      NAME,
     })
   }
 }

@@ -50,11 +50,18 @@ class RFM(object):
     def INDEX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # RFM
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
 def RFMStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(4)
 
 def Start(builder):
     RFMStart(builder)
@@ -72,10 +79,16 @@ def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 
 def RFMAddINDEX(builder, INDEX):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(INDEX), 0)
+    builder.PrependInt32Slot(2, INDEX, 0)
 
 def AddINDEX(builder, INDEX):
     RFMAddINDEX(builder, INDEX)
+
+def RFMAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    RFMAddNAME(builder, NAME)
 
 def RFMEnd(builder):
     return builder.EndObject()
@@ -99,7 +112,8 @@ class RFMT(object):
     def __init__(self):
         self.referenceFrameType = 0  # type: int
         self.REFERENCE_FRAME = None  # type: Union[None, CelestialFrameWrapper.CelestialFrameWrapperT, SpacecraftFrameWrapper.SpacecraftFrameWrapperT, OrbitFrameWrapper.OrbitFrameWrapperT, CustomFrameWrapper.CustomFrameWrapperT]
-        self.INDEX = None  # type: str
+        self.INDEX = 0  # type: int
+        self.NAME = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -125,18 +139,20 @@ class RFMT(object):
         self.referenceFrameType = RFM.ReferenceFrameType()
         self.REFERENCE_FRAME = RFMUnion.RFMUnionCreator(self.REFERENCE_FRAMEType, RFM.REFERENCE_FRAME())
         self.INDEX = RFM.INDEX()
+        self.NAME = RFM.NAME()
 
     # RFMT
     def Pack(self, builder):
         if self.REFERENCE_FRAME is not None:
             REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
-        if self.INDEX is not None:
-            INDEX = builder.CreateString(self.INDEX)
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
         RFMStart(builder)
         RFMAddReferenceFrameType(builder, self.referenceFrameType)
         if self.REFERENCE_FRAME is not None:
             RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-        if self.INDEX is not None:
-            RFMAddINDEX(builder, INDEX)
+        RFMAddINDEX(builder, self.INDEX)
+        if self.NAME is not None:
+            RFMAddNAME(builder, NAME)
         RFM = RFMEnd(builder)
         return RFM

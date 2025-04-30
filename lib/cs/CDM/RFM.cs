@@ -25,29 +25,33 @@ public struct RFM : IFlatbufferObject
   public SpacecraftFrameWrapper REFERENCE_FRAMEAsSpacecraftFrameWrapper() { return REFERENCE_FRAME<SpacecraftFrameWrapper>().Value; }
   public OrbitFrameWrapper REFERENCE_FRAMEAsOrbitFrameWrapper() { return REFERENCE_FRAME<OrbitFrameWrapper>().Value; }
   public CustomFrameWrapper REFERENCE_FRAMEAsCustomFrameWrapper() { return REFERENCE_FRAME<CustomFrameWrapper>().Value; }
-  public string INDEX { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public int INDEX { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public string NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetINDEXBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetINDEXBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetINDEXArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(10); }
 
   public static Offset<RFM> CreateRFM(FlatBufferBuilder builder,
       RFMUnion REFERENCE_FRAME_type = RFMUnion.NONE,
       int REFERENCE_FRAMEOffset = 0,
-      StringOffset INDEXOffset = default(StringOffset)) {
-    builder.StartTable(3);
-    RFM.AddINDEX(builder, INDEXOffset);
+      int INDEX = 0,
+      StringOffset NAMEOffset = default(StringOffset)) {
+    builder.StartTable(4);
+    RFM.AddNAME(builder, NAMEOffset);
+    RFM.AddINDEX(builder, INDEX);
     RFM.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
     RFM.AddREFERENCEFRAMEType(builder, REFERENCE_FRAME_type);
     return RFM.EndRFM(builder);
   }
 
-  public static void StartRFM(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartRFM(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddREFERENCEFRAMEType(FlatBufferBuilder builder, RFMUnion rEFERENCEFRAMEType) { builder.AddByte(0, (byte)rEFERENCEFRAMEType, 0); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.AddOffset(1, REFERENCE_FRAMEOffset, 0); }
-  public static void AddINDEX(FlatBufferBuilder builder, StringOffset INDEXOffset) { builder.AddOffset(2, INDEXOffset.Value, 0); }
+  public static void AddINDEX(FlatBufferBuilder builder, int INDEX) { builder.AddInt(2, INDEX, 0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(3, NAMEOffset.Value, 0); }
   public static Offset<RFM> EndRFM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFM>(o);
@@ -78,28 +82,32 @@ public struct RFM : IFlatbufferObject
         break;
     }
     _o.INDEX = this.INDEX;
+    _o.NAME = this.NAME;
   }
   public static Offset<RFM> Pack(FlatBufferBuilder builder, RFMT _o) {
     if (_o == null) return default(Offset<RFM>);
     var _REFERENCE_FRAME_type = _o.REFERENCE_FRAME == null ? RFMUnion.NONE : _o.REFERENCE_FRAME.Type;
     var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? 0 : RFMUnionUnion.Pack(builder, _o.REFERENCE_FRAME);
-    var _INDEX = _o.INDEX == null ? default(StringOffset) : builder.CreateString(_o.INDEX);
+    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     return CreateRFM(
       builder,
       _REFERENCE_FRAME_type,
       _REFERENCE_FRAME,
-      _INDEX);
+      _o.INDEX,
+      _NAME);
   }
 }
 
 public class RFMT
 {
   public RFMUnionUnion REFERENCE_FRAME { get; set; }
-  public string INDEX { get; set; }
+  public int INDEX { get; set; }
+  public string NAME { get; set; }
 
   public RFMT() {
     this.REFERENCE_FRAME = null;
-    this.INDEX = null;
+    this.INDEX = 0;
+    this.NAME = null;
   }
   public static RFMT DeserializeFromBinary(byte[] fbBuffer) {
     return RFM.GetRootAsRFM(new ByteBuffer(fbBuffer)).UnPack();
@@ -119,7 +127,8 @@ static public class RFMVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*REFERENCEFRAMEType*/, 1 /*RFMUnion*/, 1, false)
       && verifier.VerifyUnion(tablePos, 4, 6 /*REFERENCE_FRAME*/, RFMUnionVerify.Verify, false)
-      && verifier.VerifyString(tablePos, 8 /*INDEX*/, false)
+      && verifier.VerifyField(tablePos, 8 /*INDEX*/, 4 /*int*/, 4, false)
+      && verifier.VerifyString(tablePos, 10 /*NAME*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

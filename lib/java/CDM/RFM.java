@@ -31,25 +31,29 @@ public final class RFM extends Table {
 
   public byte referenceFrameType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public Table REFERENCE_FRAME(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
-  public String INDEX() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INDEXAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer INDEXInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public int INDEX() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public String NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
 
   public static int createRFM(FlatBufferBuilder builder,
       byte referenceFrameType,
       int REFERENCE_FRAMEOffset,
-      int INDEXOffset) {
-    builder.startTable(3);
-    RFM.addIndex(builder, INDEXOffset);
+      int INDEX,
+      int NAMEOffset) {
+    builder.startTable(4);
+    RFM.addName(builder, NAMEOffset);
+    RFM.addIndex(builder, INDEX);
     RFM.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
     RFM.addReferenceFrameType(builder, referenceFrameType);
     return RFM.endRFM(builder);
   }
 
-  public static void startRFM(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startRFM(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addReferenceFrameType(FlatBufferBuilder builder, byte referenceFrameType) { builder.addByte(0, referenceFrameType, 0); }
   public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(1, REFERENCE_FRAMEOffset, 0); }
-  public static void addIndex(FlatBufferBuilder builder, int INDEXOffset) { builder.addOffset(2, INDEXOffset, 0); }
+  public static void addIndex(FlatBufferBuilder builder, int INDEX) { builder.addInt(2, INDEX, 0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(3, NAMEOffset, 0); }
   public static int endRFM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

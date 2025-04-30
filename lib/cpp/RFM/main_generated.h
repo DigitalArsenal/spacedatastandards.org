@@ -734,7 +734,8 @@ struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_REFERENCE_FRAME_TYPE = 4,
     VT_REFERENCE_FRAME = 6,
-    VT_INDEX = 8
+    VT_INDEX = 8,
+    VT_NAME = 10
   };
   RFMUnion REFERENCE_FRAME_type() const {
     return static_cast<RFMUnion>(GetField<uint8_t>(VT_REFERENCE_FRAME_TYPE, 0));
@@ -755,16 +756,20 @@ struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CustomFrameWrapper *REFERENCE_FRAME_as_CustomFrameWrapper() const {
     return REFERENCE_FRAME_type() == RFMUnion_CustomFrameWrapper ? static_cast<const CustomFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
   }
-  const ::flatbuffers::String *INDEX() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_INDEX);
+  int32_t INDEX() const {
+    return GetField<int32_t>(VT_INDEX, 0);
+  }
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_REFERENCE_FRAME_TYPE, 1) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
            VerifyRFMUnion(verifier, REFERENCE_FRAME(), REFERENCE_FRAME_type()) &&
-           VerifyOffset(verifier, VT_INDEX) &&
-           verifier.VerifyString(INDEX()) &&
+           VerifyField<int32_t>(verifier, VT_INDEX, 4) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
            verifier.EndTable();
   }
 };
@@ -795,8 +800,11 @@ struct RFMBuilder {
   void add_REFERENCE_FRAME(::flatbuffers::Offset<void> REFERENCE_FRAME) {
     fbb_.AddOffset(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
-  void add_INDEX(::flatbuffers::Offset<::flatbuffers::String> INDEX) {
-    fbb_.AddOffset(RFM::VT_INDEX, INDEX);
+  void add_INDEX(int32_t INDEX) {
+    fbb_.AddElement<int32_t>(RFM::VT_INDEX, INDEX, 0);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(RFM::VT_NAME, NAME);
   }
   explicit RFMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -813,8 +821,10 @@ inline ::flatbuffers::Offset<RFM> CreateRFM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RFMUnion REFERENCE_FRAME_type = RFMUnion_NONE,
     ::flatbuffers::Offset<void> REFERENCE_FRAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> INDEX = 0) {
+    int32_t INDEX = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0) {
   RFMBuilder builder_(_fbb);
+  builder_.add_NAME(NAME);
   builder_.add_INDEX(INDEX);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_REFERENCE_FRAME_type(REFERENCE_FRAME_type);
@@ -825,13 +835,15 @@ inline ::flatbuffers::Offset<RFM> CreateRFMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     RFMUnion REFERENCE_FRAME_type = RFMUnion_NONE,
     ::flatbuffers::Offset<void> REFERENCE_FRAME = 0,
-    const char *INDEX = nullptr) {
-  auto INDEX__ = INDEX ? _fbb.CreateString(INDEX) : 0;
+    int32_t INDEX = 0,
+    const char *NAME = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   return CreateRFM(
       _fbb,
       REFERENCE_FRAME_type,
       REFERENCE_FRAME,
-      INDEX__);
+      INDEX,
+      NAME__);
 }
 
 inline bool VerifyRFMUnion(::flatbuffers::Verifier &verifier, const void *obj, RFMUnion type) {
