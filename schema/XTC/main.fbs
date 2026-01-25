@@ -1,0 +1,1378 @@
+// Hash: 1350c8d84324b1aa53e2b036817ffaa683041877e4e9376163ed08f85eed9a0e
+// Version: 1.0.0
+// -----------------------------------END_HEADER
+
+// XTCE - XML Telemetry and Command Exchange
+//
+// This schema implements the CCSDS XTCE 1.2 standard (CCSDS 660.1-G-2) for
+// defining telemetry and command metadata for space systems. XTCE provides
+// a standardized format for describing spacecraft telemetry parameters,
+// command structures, containers (packet definitions), calibration algorithms,
+// and data encoding specifications.
+//
+// Reference: OMG Space Domain Task Force XTCE 1.2
+// https://www.omg.org/spec/XTCE/
+
+// ============================================================================
+// ENUMERATIONS
+// ============================================================================
+
+/// Comparison operators for match criteria and conditions
+enum ComparisonOperator : byte {
+  /// Equal to
+  EQ,
+  /// Not equal to
+  NE,
+  /// Greater than
+  GT,
+  /// Less than
+  LT,
+  /// Greater than or equal to
+  GE,
+  /// Less than or equal to
+  LE,
+  /// String starts with
+  STARTS_WITH,
+  /// String ends with
+  ENDS_WITH,
+  /// String contains
+  CONTAINS,
+  /// String does not start with
+  NOT_STARTS_WITH,
+  /// String does not end with
+  NOT_ENDS_WITH,
+  /// String does not contain
+  NOT_CONTAINS
+}
+
+/// Data source types for telemetry parameters
+enum DataSourceType : byte {
+  /// Data received from spacecraft telemetry
+  TELEMETERED,
+  /// Computed from other parameters
+  DERIVED,
+  /// Fixed constant value
+  CONSTANT,
+  /// Local ground system value
+  LOCAL,
+  /// Ground-generated data
+  GROUND
+}
+
+/// Boolean operators for combining conditions
+enum BooleanOperatorType : byte {
+  /// Logical AND
+  AND,
+  /// Logical OR
+  OR,
+  /// Logical XOR
+  XOR
+}
+
+/// Reference location for positioning within containers
+enum ReferenceLocationType : byte {
+  /// Start of the container
+  CONTAINER_START,
+  /// End of the container
+  CONTAINER_END,
+  /// End of previous entry
+  PREVIOUS_ENTRY,
+  /// Start of next entry
+  NEXT_ENTRY
+}
+
+/// Rate basis for stream rate specifications
+enum RateBasisType : byte {
+  /// Rate per second
+  PER_SECOND,
+  /// Rate per container occurrence
+  PER_CONTAINER
+}
+
+/// Byte ordering for data encoding
+enum ByteOrderType : byte {
+  /// Most significant byte first
+  BIG_ENDIAN,
+  /// Least significant byte first
+  LITTLE_ENDIAN
+}
+
+/// Integer encoding types
+enum IntegerEncodingType : byte {
+  /// Unsigned binary
+  UNSIGNED,
+  /// Two's complement signed
+  TWOS_COMPLEMENT,
+  /// Sign-magnitude representation
+  SIGN_MAGNITUDE,
+  /// Ones' complement signed
+  ONES_COMPLEMENT,
+  /// Binary Coded Decimal
+  BCD,
+  /// Packed BCD
+  PACKED_BCD
+}
+
+/// Float encoding formats
+enum FloatEncodingType : byte {
+  /// IEEE 754-1985 single precision (32-bit)
+  IEEE754_1985,
+  /// MIL-STD-1750A format
+  MILSTD_1750A,
+  /// DEC PDP format
+  DEC,
+  /// IBM System/360 format
+  IBM,
+  /// Texas Instruments TI format
+  TI
+}
+
+/// String encoding character sets
+enum StringEncodingType : byte {
+  /// US-ASCII (7-bit)
+  US_ASCII,
+  /// ISO 8859-1 Latin-1
+  ISO_8859_1,
+  /// Windows-1252
+  WINDOWS_1252,
+  /// UTF-8
+  UTF_8,
+  /// UTF-16
+  UTF_16,
+  /// UTF-16 Big Endian
+  UTF_16BE,
+  /// UTF-16 Little Endian
+  UTF_16LE
+}
+
+/// String size specification type
+enum StringSizeType : byte {
+  /// Fixed length string
+  FIXED,
+  /// Variable with leading count
+  LEADING_SIZE,
+  /// Variable with termination character
+  TERMINATION_CHAR
+}
+
+/// Alarm severity levels
+enum AlarmSeverityType : byte {
+  /// Normal operation
+  NORMAL,
+  /// Watch level - early warning
+  WATCH,
+  /// Warning level
+  WARNING,
+  /// Distress level - significant issue
+  DISTRESS,
+  /// Critical level - immediate action required
+  CRITICAL,
+  /// Severe level - system failure
+  SEVERE
+}
+
+/// Verifier type for command verification
+enum VerifierType : byte {
+  /// Execution started
+  START,
+  /// Progress update
+  PROGRESS,
+  /// Execution complete
+  COMPLETE,
+  /// Command failed
+  FAILED
+}
+
+/// Time window reference for command verification
+enum TimeWindowRefType : byte {
+  /// Relative to command release time
+  COMMAND_RELEASE,
+  /// Relative to last verifier passed
+  TIME_LAST_VERIFIER_PASSED
+}
+
+/// Epoch reference for absolute time
+enum EpochType : byte {
+  /// TAI epoch (1958-01-01)
+  TAI,
+  /// J2000 epoch (2000-01-01 12:00:00 TT)
+  J2000,
+  /// Unix epoch (1970-01-01)
+  UNIX,
+  /// GPS epoch (1980-01-06)
+  GPS,
+  /// Custom epoch specified in offset
+  CUSTOM
+}
+
+/// Error detection/correction algorithms
+enum ErrorDetectionType : byte {
+  /// No error detection
+  NONE,
+  /// Cyclic redundancy check
+  CRC,
+  /// Checksum
+  CHECKSUM,
+  /// Parity
+  PARITY
+}
+
+// ============================================================================
+// DATA ENCODING TYPES
+// ============================================================================
+
+/// Integer data encoding specification
+table IntegerDataEncoding {
+  /// Number of bits for this integer
+  SIZE_IN_BITS:uint16;
+  /// Byte ordering
+  BYTE_ORDER:ByteOrderType = BIG_ENDIAN;
+  /// Integer encoding type
+  ENCODING:IntegerEncodingType = UNSIGNED;
+  /// Default calibrator reference
+  DEFAULT_CALIBRATOR:string;
+  /// Context-dependent calibrators
+  CONTEXT_CALIBRATOR_LIST:[ContextCalibrator];
+}
+
+/// Float data encoding specification
+table FloatDataEncoding {
+  /// Number of bits (typically 32 or 64)
+  SIZE_IN_BITS:uint16;
+  /// Byte ordering
+  BYTE_ORDER:ByteOrderType = BIG_ENDIAN;
+  /// Float encoding format
+  ENCODING:FloatEncodingType = IEEE754_1985;
+  /// Default calibrator reference
+  DEFAULT_CALIBRATOR:string;
+  /// Context-dependent calibrators
+  CONTEXT_CALIBRATOR_LIST:[ContextCalibrator];
+}
+
+/// String data encoding specification
+table StringDataEncoding {
+  /// Character encoding
+  ENCODING:StringEncodingType = UTF_8;
+  /// Size type specification
+  SIZE_TYPE:StringSizeType = FIXED;
+  /// Fixed size in bits (when SIZE_TYPE=FIXED)
+  SIZE_IN_BITS:uint16;
+  /// Termination character (when SIZE_TYPE=TERMINATION_CHAR)
+  TERMINATION_CHAR:uint8;
+  /// Maximum size in bits (for variable length)
+  MAX_SIZE_IN_BITS:uint16;
+  /// Leading size field bits (when SIZE_TYPE=LEADING_SIZE)
+  LEADING_SIZE_BITS:uint8;
+}
+
+/// Binary data encoding specification
+table BinaryDataEncoding {
+  /// Fixed size in bits
+  SIZE_IN_BITS:uint16;
+  /// Maximum size in bits (for variable length)
+  MAX_SIZE_IN_BITS:uint16;
+  /// Leading size field bits (for variable length)
+  LEADING_SIZE_BITS:uint8;
+}
+
+// ============================================================================
+// CALIBRATION TYPES
+// ============================================================================
+
+/// Polynomial calibrator - converts raw to engineering using polynomial
+table PolynomialCalibrator {
+  /// Polynomial terms (index is power, value is coefficient)
+  COEFFICIENTS:[double];
+}
+
+/// Spline point for spline calibration
+table SplinePoint {
+  /// Raw value
+  RAW:double;
+  /// Calibrated/engineering value
+  CALIBRATED:double;
+}
+
+/// Spline calibrator - piecewise linear interpolation
+table SplineCalibrator {
+  /// Spline points ordered by raw value
+  POINTS:[SplinePoint];
+  /// Extrapolate below minimum point
+  EXTRAPOLATE_LOW:bool;
+  /// Extrapolate above maximum point
+  EXTRAPOLATE_HIGH:bool;
+}
+
+/// Mathematical operation for math operation calibrator
+table MathOperation {
+  /// Operation in Reverse Polish Notation (RPN)
+  RPN_EXPRESSION:string;
+}
+
+/// Context-dependent calibrator selection
+table ContextCalibrator {
+  /// Match criteria for selecting this calibrator
+  MATCH_CRITERIA:MatchCriteria;
+  /// Polynomial calibrator (if used)
+  POLYNOMIAL:PolynomialCalibrator;
+  /// Spline calibrator (if used)
+  SPLINE:SplineCalibrator;
+  /// Math operation calibrator (if used)
+  MATH_OPERATION:MathOperation;
+}
+
+// ============================================================================
+// ALARM DEFINITIONS
+// ============================================================================
+
+/// Numeric alarm range
+table AlarmRange {
+  /// Minimum value (inclusive)
+  MIN_INCLUSIVE:double;
+  /// Maximum value (inclusive)
+  MAX_INCLUSIVE:double;
+  /// Minimum value (exclusive)
+  MIN_EXCLUSIVE:double;
+  /// Maximum value (exclusive)
+  MAX_EXCLUSIVE:double;
+}
+
+/// Static numeric alarm levels
+table StaticAlarmRanges {
+  /// Watch range
+  WATCH_RANGE:AlarmRange;
+  /// Warning range
+  WARNING_RANGE:AlarmRange;
+  /// Distress range
+  DISTRESS_RANGE:AlarmRange;
+  /// Critical range
+  CRITICAL_RANGE:AlarmRange;
+  /// Severe range
+  SEVERE_RANGE:AlarmRange;
+}
+
+/// Enumerated alarm
+table EnumerationAlarm {
+  /// Enumerated value label
+  LABEL:string;
+  /// Alarm level for this value
+  ALARM_LEVEL:AlarmSeverityType;
+}
+
+/// Default alarm definition
+table DefaultAlarm {
+  /// Minimum violations before alarm triggers
+  MIN_VIOLATIONS:uint16;
+  /// Static numeric alarm ranges
+  STATIC_ALARM_RANGES:StaticAlarmRanges;
+  /// Enumeration alarms for enumerated types
+  ENUMERATION_ALARMS:[EnumerationAlarm];
+}
+
+/// Context-dependent alarm
+table ContextAlarm {
+  /// Match criteria for this alarm context
+  MATCH_CRITERIA:MatchCriteria;
+  /// Alarm definition for this context
+  ALARM:DefaultAlarm;
+}
+
+// ============================================================================
+// MATCH CRITERIA AND CONDITIONS
+// ============================================================================
+
+/// Parameter comparison for match criteria
+table ParameterComparison {
+  /// Parameter reference path
+  PARAMETER_REF:string;
+  /// Comparison operator
+  OPERATOR:ComparisonOperator = EQ;
+  /// Value to compare against
+  VALUE:string;
+  /// Use calibrated value (true) or raw value (false)
+  USE_CALIBRATED_VALUE:bool = true;
+}
+
+/// Boolean expression combining comparisons
+table BooleanExpression {
+  /// Boolean operator
+  OPERATOR:BooleanOperatorType = AND;
+  /// Comparison conditions
+  CONDITIONS:[ParameterComparison];
+  /// Nested expressions
+  EXPRESSIONS:[BooleanExpression];
+}
+
+/// Match criteria for conditional logic
+table MatchCriteria {
+  /// Single comparison
+  COMPARISON:ParameterComparison;
+  /// List of comparisons (implicit AND)
+  COMPARISON_LIST:[ParameterComparison];
+  /// Boolean expression
+  BOOLEAN_EXPRESSION:BooleanExpression;
+  /// Custom algorithm reference
+  CUSTOM_ALGORITHM:string;
+}
+
+// ============================================================================
+// PARAMETER TYPES
+// ============================================================================
+
+/// Unit specification
+table Unit {
+  /// Unit description (e.g., "meters per second")
+  DESCRIPTION:string;
+  /// Unit symbol (e.g., "m/s")
+  SYMBOL:string;
+  /// Power/exponent for this unit
+  POWER:double;
+  /// Factor multiplier
+  FACTOR:double;
+}
+
+/// Enumeration value mapping
+table EnumerationValue {
+  /// Label/name for this value
+  LABEL:string;
+  /// Numeric value
+  VALUE:int64;
+  /// Maximum value (for ranges)
+  MAX_VALUE:int64;
+  /// Description of this enumeration value
+  DESCRIPTION:string;
+}
+
+/// Integer parameter type
+table IntegerParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Units
+  UNITS:[Unit];
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// Default alarm
+  DEFAULT_ALARM:DefaultAlarm;
+  /// Context alarms
+  CONTEXT_ALARMS:[ContextAlarm];
+  /// Minimum valid value
+  VALID_MIN:int64;
+  /// Maximum valid value
+  VALID_MAX:int64;
+  /// Signed integer (true) or unsigned (false)
+  SIGNED:bool;
+  /// Size in bits
+  SIZE_IN_BITS:uint16;
+  /// Initial/default value
+  INITIAL_VALUE:int64;
+}
+
+/// Float parameter type
+table FloatParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Units
+  UNITS:[Unit];
+  /// Data encoding
+  DATA_ENCODING:FloatDataEncoding;
+  /// Default alarm
+  DEFAULT_ALARM:DefaultAlarm;
+  /// Context alarms
+  CONTEXT_ALARMS:[ContextAlarm];
+  /// Minimum valid value
+  VALID_MIN:double;
+  /// Maximum valid value
+  VALID_MAX:double;
+  /// Size in bits (32 or 64)
+  SIZE_IN_BITS:uint16;
+  /// Initial/default value
+  INITIAL_VALUE:double;
+}
+
+/// String parameter type
+table StringParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:StringDataEncoding;
+  /// Default alarm
+  DEFAULT_ALARM:DefaultAlarm;
+  /// Context alarms
+  CONTEXT_ALARMS:[ContextAlarm];
+  /// Initial/default value
+  INITIAL_VALUE:string;
+  /// Restriction pattern (regex)
+  RESTRICTION_PATTERN:string;
+}
+
+/// Boolean parameter type
+table BooleanParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding (typically IntegerDataEncoding with 1 bit)
+  DATA_ENCODING:IntegerDataEncoding;
+  /// String representation of true value
+  ONE_STRING_VALUE:string;
+  /// String representation of false value
+  ZERO_STRING_VALUE:string;
+  /// Initial/default value
+  INITIAL_VALUE:bool;
+}
+
+/// Enumerated parameter type
+table EnumeratedParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// Default alarm
+  DEFAULT_ALARM:DefaultAlarm;
+  /// Context alarms
+  CONTEXT_ALARMS:[ContextAlarm];
+  /// Enumeration values list
+  ENUMERATION_LIST:[EnumerationValue];
+  /// Initial/default value label
+  INITIAL_VALUE:string;
+}
+
+/// Binary parameter type
+table BinaryParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:BinaryDataEncoding;
+  /// Initial/default value (hex string)
+  INITIAL_VALUE:string;
+}
+
+/// Absolute time parameter type
+table AbsoluteTimeParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Reference epoch
+  EPOCH:EpochType = UNIX;
+  /// Custom epoch date (ISO 8601) when EPOCH=CUSTOM
+  EPOCH_DATE:string;
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// Time unit scale factor
+  SCALE:double;
+  /// Time unit offset
+  OFFSET:double;
+  /// Default alarm
+  DEFAULT_ALARM:DefaultAlarm;
+  /// Context alarms
+  CONTEXT_ALARMS:[ContextAlarm];
+}
+
+/// Relative time parameter type
+table RelativeTimeParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Units
+  UNITS:[Unit];
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// Default alarm
+  DEFAULT_ALARM:DefaultAlarm;
+  /// Context alarms
+  CONTEXT_ALARMS:[ContextAlarm];
+}
+
+/// Array dimension specification
+table ArrayDimension {
+  /// Fixed size of this dimension
+  SIZE:uint32;
+  /// Dynamic size from parameter reference
+  SIZE_PARAMETER_REF:string;
+}
+
+/// Array parameter type
+table ArrayParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Reference to the array element type
+  ARRAY_TYPE_REF:string;
+  /// Dimension list
+  DIMENSIONS:[ArrayDimension];
+}
+
+/// Aggregate member definition
+table AggregateMember {
+  /// Member name
+  NAME:string;
+  /// Reference to parameter type
+  TYPE_REF:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+}
+
+/// Aggregate parameter type (structure)
+table AggregateParameterType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Member list
+  MEMBERS:[AggregateMember];
+}
+
+/// Collection of all parameter types
+table ParameterTypeSet {
+  /// Integer parameter types
+  INTEGER_TYPES:[IntegerParameterType];
+  /// Float parameter types
+  FLOAT_TYPES:[FloatParameterType];
+  /// String parameter types
+  STRING_TYPES:[StringParameterType];
+  /// Boolean parameter types
+  BOOLEAN_TYPES:[BooleanParameterType];
+  /// Enumerated parameter types
+  ENUMERATED_TYPES:[EnumeratedParameterType];
+  /// Binary parameter types
+  BINARY_TYPES:[BinaryParameterType];
+  /// Absolute time parameter types
+  ABSOLUTE_TIME_TYPES:[AbsoluteTimeParameterType];
+  /// Relative time parameter types
+  RELATIVE_TIME_TYPES:[RelativeTimeParameterType];
+  /// Array parameter types
+  ARRAY_TYPES:[ArrayParameterType];
+  /// Aggregate parameter types
+  AGGREGATE_TYPES:[AggregateParameterType];
+}
+
+// ============================================================================
+// PARAMETER DEFINITIONS
+// ============================================================================
+
+/// Parameter properties
+table ParameterProperties {
+  /// Data source type
+  DATA_SOURCE:DataSourceType = TELEMETERED;
+  /// Read-only parameter
+  READ_ONLY:bool = true;
+  /// System/subsystem name
+  SYSTEM_NAME:string;
+  /// Validity condition
+  VALIDITY_CONDITION:MatchCriteria;
+}
+
+/// Parameter definition
+table Parameter {
+  /// Parameter name
+  NAME:string;
+  /// Reference to parameter type
+  PARAMETER_TYPE_REF:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Parameter properties
+  PROPERTIES:ParameterProperties;
+  /// Physical address mapping
+  PHYSICAL_ADDRESS:string;
+  /// Initial/default value
+  INITIAL_VALUE:string;
+}
+
+/// Collection of parameters
+table ParameterSet {
+  /// Parameters
+  PARAMETERS:[Parameter];
+}
+
+// ============================================================================
+// CONTAINER DEFINITIONS
+// ============================================================================
+
+/// Location specification within a container
+table LocationInContainer {
+  /// Reference location type
+  REFERENCE_LOCATION:ReferenceLocationType = PREVIOUS_ENTRY;
+  /// Offset in bits from reference location
+  OFFSET_IN_BITS:int32;
+}
+
+/// Repeat entry specification
+table RepeatEntry {
+  /// Fixed repeat count
+  COUNT:uint32;
+  /// Dynamic count from parameter reference
+  COUNT_PARAMETER_REF:string;
+  /// Offset in bits between repetitions
+  OFFSET_IN_BITS:int32;
+}
+
+/// Parameter reference entry in container
+table ParameterRefEntry {
+  /// Parameter reference path
+  PARAMETER_REF:string;
+  /// Location in container
+  LOCATION:LocationInContainer;
+  /// Repeat specification
+  REPEAT:RepeatEntry;
+  /// Include condition
+  INCLUDE_CONDITION:MatchCriteria;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+}
+
+/// Container reference entry (nested container)
+table ContainerRefEntry {
+  /// Container reference path
+  CONTAINER_REF:string;
+  /// Location in container
+  LOCATION:LocationInContainer;
+  /// Repeat specification
+  REPEAT:RepeatEntry;
+  /// Include condition
+  INCLUDE_CONDITION:MatchCriteria;
+}
+
+/// Fixed value entry (static padding/header)
+table FixedValueEntry {
+  /// Binary value (hex string)
+  BINARY_VALUE:string;
+  /// Size in bits
+  SIZE_IN_BITS:uint16;
+  /// Name/description
+  NAME:string;
+  /// Location in container
+  LOCATION:LocationInContainer;
+}
+
+/// Array parameter reference entry
+table ArrayParameterRefEntry {
+  /// Parameter reference path
+  PARAMETER_REF:string;
+  /// Location in container
+  LOCATION:LocationInContainer;
+  /// First index to include
+  FIRST_INDEX:uint32;
+  /// Last index to include
+  LAST_INDEX:uint32;
+}
+
+/// Container entry list item (union of entry types)
+table ContainerEntry {
+  /// Parameter reference entry
+  PARAMETER_REF_ENTRY:ParameterRefEntry;
+  /// Container reference entry
+  CONTAINER_REF_ENTRY:ContainerRefEntry;
+  /// Fixed value entry
+  FIXED_VALUE_ENTRY:FixedValueEntry;
+  /// Array parameter reference entry
+  ARRAY_PARAMETER_REF_ENTRY:ArrayParameterRefEntry;
+}
+
+/// Base container reference with restriction
+table BaseContainer {
+  /// Container reference path
+  CONTAINER_REF:string;
+  /// Restriction criteria
+  RESTRICTION_CRITERIA:MatchCriteria;
+}
+
+/// Rate specification for container in stream
+table RateInStream {
+  /// Stream reference
+  STREAM_REF:string;
+  /// Rate value
+  RATE:double;
+  /// Rate basis
+  BASIS:RateBasisType = PER_SECOND;
+}
+
+/// Binary encoding specification for container
+table ContainerBinaryEncoding {
+  /// Error detection type
+  ERROR_DETECTION:ErrorDetectionType = NONE;
+  /// CRC polynomial (for CRC error detection)
+  CRC_POLYNOMIAL:string;
+  /// Size in bits
+  SIZE_IN_BITS:uint32;
+}
+
+/// Sequence container (packet definition)
+table SequenceContainer {
+  /// Container name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Abstract container (used as base only)
+  ABSTRACT:bool;
+  /// Container entry list
+  ENTRY_LIST:[ContainerEntry];
+  /// Base container (inheritance)
+  BASE_CONTAINER:BaseContainer;
+  /// Binary encoding
+  BINARY_ENCODING:ContainerBinaryEncoding;
+  /// Rate in stream
+  RATE_IN_STREAM:RateInStream;
+  /// Idle pattern (hex string for padding)
+  IDLE_PATTERN:string;
+}
+
+/// Collection of sequence containers
+table ContainerSet {
+  /// Sequence containers
+  CONTAINERS:[SequenceContainer];
+}
+
+// ============================================================================
+// ALGORITHM DEFINITIONS
+// ============================================================================
+
+/// Algorithm input binding
+table AlgorithmInput {
+  /// Parameter reference
+  PARAMETER_REF:string;
+  /// Input name in algorithm
+  INPUT_NAME:string;
+}
+
+/// Algorithm output binding
+table AlgorithmOutput {
+  /// Parameter reference
+  PARAMETER_REF:string;
+  /// Output name in algorithm
+  OUTPUT_NAME:string;
+}
+
+/// Trigger condition for algorithm execution
+table AlgorithmTrigger {
+  /// Trigger on parameter update
+  PARAMETER_REF:string;
+  /// Trigger on container reception
+  CONTAINER_REF:string;
+  /// Trigger rate (per second)
+  RATE:double;
+}
+
+/// Custom algorithm definition
+table CustomAlgorithm {
+  /// Algorithm name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Programming language
+  LANGUAGE:string;
+  /// Algorithm text/code
+  ALGORITHM_TEXT:string;
+  /// External algorithm reference
+  EXTERNAL_ALGORITHM_REF:string;
+  /// Input bindings
+  INPUTS:[AlgorithmInput];
+  /// Output bindings
+  OUTPUTS:[AlgorithmOutput];
+  /// Trigger conditions
+  TRIGGERS:[AlgorithmTrigger];
+}
+
+/// Math algorithm (inline calculation)
+table MathAlgorithm {
+  /// Algorithm name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Math operation in RPN
+  MATH_OPERATION:string;
+  /// Output parameter reference
+  OUTPUT_PARAMETER_REF:string;
+  /// Trigger conditions
+  TRIGGERS:[AlgorithmTrigger];
+}
+
+/// Collection of algorithms
+table AlgorithmSet {
+  /// Custom algorithms
+  CUSTOM_ALGORITHMS:[CustomAlgorithm];
+  /// Math algorithms
+  MATH_ALGORITHMS:[MathAlgorithm];
+}
+
+// ============================================================================
+// COMMAND ARGUMENT TYPES
+// ============================================================================
+
+/// Integer argument type
+table IntegerArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Units
+  UNITS:[Unit];
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// Minimum valid value
+  VALID_MIN:int64;
+  /// Maximum valid value
+  VALID_MAX:int64;
+  /// Signed integer (true) or unsigned (false)
+  SIGNED:bool;
+  /// Size in bits
+  SIZE_IN_BITS:uint16;
+  /// Initial/default value
+  INITIAL_VALUE:int64;
+}
+
+/// Float argument type
+table FloatArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Units
+  UNITS:[Unit];
+  /// Data encoding
+  DATA_ENCODING:FloatDataEncoding;
+  /// Minimum valid value
+  VALID_MIN:double;
+  /// Maximum valid value
+  VALID_MAX:double;
+  /// Size in bits
+  SIZE_IN_BITS:uint16;
+  /// Initial/default value
+  INITIAL_VALUE:double;
+}
+
+/// String argument type
+table StringArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:StringDataEncoding;
+  /// Initial/default value
+  INITIAL_VALUE:string;
+  /// Restriction pattern (regex)
+  RESTRICTION_PATTERN:string;
+}
+
+/// Boolean argument type
+table BooleanArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// String representation of true value
+  ONE_STRING_VALUE:string;
+  /// String representation of false value
+  ZERO_STRING_VALUE:string;
+  /// Initial/default value
+  INITIAL_VALUE:bool;
+}
+
+/// Enumerated argument type
+table EnumeratedArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:IntegerDataEncoding;
+  /// Enumeration values list
+  ENUMERATION_LIST:[EnumerationValue];
+  /// Initial/default value label
+  INITIAL_VALUE:string;
+}
+
+/// Binary argument type
+table BinaryArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Data encoding
+  DATA_ENCODING:BinaryDataEncoding;
+  /// Initial/default value (hex string)
+  INITIAL_VALUE:string;
+}
+
+/// Aggregate argument type
+table AggregateArgumentType {
+  /// Type name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Member list
+  MEMBERS:[AggregateMember];
+}
+
+/// Collection of argument types
+table ArgumentTypeSet {
+  /// Integer argument types
+  INTEGER_TYPES:[IntegerArgumentType];
+  /// Float argument types
+  FLOAT_TYPES:[FloatArgumentType];
+  /// String argument types
+  STRING_TYPES:[StringArgumentType];
+  /// Boolean argument types
+  BOOLEAN_TYPES:[BooleanArgumentType];
+  /// Enumerated argument types
+  ENUMERATED_TYPES:[EnumeratedArgumentType];
+  /// Binary argument types
+  BINARY_TYPES:[BinaryArgumentType];
+  /// Aggregate argument types
+  AGGREGATE_TYPES:[AggregateArgumentType];
+}
+
+// ============================================================================
+// COMMAND DEFINITIONS
+// ============================================================================
+
+/// Command argument definition
+table Argument {
+  /// Argument name
+  NAME:string;
+  /// Reference to argument type
+  ARGUMENT_TYPE_REF:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Initial/default value
+  INITIAL_VALUE:string;
+}
+
+/// Argument reference entry in command container
+table ArgumentRefEntry {
+  /// Argument reference
+  ARGUMENT_REF:string;
+  /// Location in container
+  LOCATION:LocationInContainer;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+}
+
+/// Command container entry
+table CommandContainerEntry {
+  /// Argument reference entry
+  ARGUMENT_REF_ENTRY:ArgumentRefEntry;
+  /// Parameter reference entry
+  PARAMETER_REF_ENTRY:ParameterRefEntry;
+  /// Fixed value entry
+  FIXED_VALUE_ENTRY:FixedValueEntry;
+}
+
+/// Command container definition
+table CommandContainer {
+  /// Container name
+  NAME:string;
+  /// Entry list
+  ENTRY_LIST:[CommandContainerEntry];
+  /// Base container reference
+  BASE_CONTAINER:BaseContainer;
+}
+
+/// Command verifier definition
+table CommandVerifier {
+  /// Verifier name
+  NAME:string;
+  /// Verifier type
+  VERIFIER_TYPE:VerifierType;
+  /// Verification condition
+  CONDITION:MatchCriteria;
+  /// Container reference for verification
+  CONTAINER_REF:string;
+  /// Time window start (seconds)
+  TIME_WINDOW_START:double;
+  /// Time window stop (seconds)
+  TIME_WINDOW_STOP:double;
+  /// Time window reference type
+  TIME_WINDOW_REF:TimeWindowRefType = COMMAND_RELEASE;
+}
+
+/// Significance of command execution
+table CommandSignificance {
+  /// Consequence level (1=lowest, higher=more severe)
+  CONSEQUENCE_LEVEL:uint8;
+  /// Reason for significance
+  REASON_FOR_WARNING:string;
+}
+
+/// Base metacommand reference
+table BaseMetaCommand {
+  /// MetaCommand reference
+  META_COMMAND_REF:string;
+  /// Argument assignments for inherited arguments
+  ARGUMENT_ASSIGNMENTS:[ArgumentAssignment];
+}
+
+/// Argument assignment (value binding)
+table ArgumentAssignment {
+  /// Argument name
+  ARGUMENT_NAME:string;
+  /// Assigned value
+  VALUE:string;
+}
+
+/// Interlock constraint
+table Interlock {
+  /// Parameter reference
+  PARAMETER_REF:string;
+  /// Required value
+  VALUE:string;
+  /// Operator for comparison
+  OPERATOR:ComparisonOperator = EQ;
+}
+
+/// MetaCommand definition
+table MetaCommand {
+  /// Command name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Abstract command (base only)
+  ABSTRACT:bool;
+  /// Argument list
+  ARGUMENTS:[Argument];
+  /// Command container
+  COMMAND_CONTAINER:CommandContainer;
+  /// Base metacommand (inheritance)
+  BASE_META_COMMAND:BaseMetaCommand;
+  /// Command verifiers
+  VERIFIERS:[CommandVerifier];
+  /// Command significance
+  SIGNIFICANCE:CommandSignificance;
+  /// Interlock constraints
+  INTERLOCKS:[Interlock];
+  /// Default significance
+  DEFAULT_SIGNIFICANCE:CommandSignificance;
+}
+
+/// Collection of metacommands
+table MetaCommandSet {
+  /// MetaCommands
+  META_COMMANDS:[MetaCommand];
+}
+
+// ============================================================================
+// STREAM DEFINITIONS
+// ============================================================================
+
+/// Fixed frame stream
+table FixedFrameStream {
+  /// Stream name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Frame size in bits
+  FRAME_SIZE_IN_BITS:uint32;
+  /// Sync pattern (hex string)
+  SYNC_PATTERN:string;
+}
+
+/// Variable frame stream
+table VariableFrameStream {
+  /// Stream name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Minimum frame size in bits
+  MIN_FRAME_SIZE_IN_BITS:uint32;
+  /// Maximum frame size in bits
+  MAX_FRAME_SIZE_IN_BITS:uint32;
+  /// Size field location in bits
+  SIZE_FIELD_OFFSET:uint32;
+  /// Size field size in bits
+  SIZE_FIELD_SIZE:uint16;
+}
+
+/// Custom stream
+table CustomStream {
+  /// Stream name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Algorithm reference for parsing
+  ALGORITHM_REF:string;
+}
+
+/// Collection of streams
+table StreamSet {
+  /// Fixed frame streams
+  FIXED_FRAME_STREAMS:[FixedFrameStream];
+  /// Variable frame streams
+  VARIABLE_FRAME_STREAMS:[VariableFrameStream];
+  /// Custom streams
+  CUSTOM_STREAMS:[CustomStream];
+}
+
+// ============================================================================
+// SERVICE DEFINITIONS
+// ============================================================================
+
+/// Service definition
+table Service {
+  /// Service name
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Container references provided by this service
+  CONTAINER_REFS:[string];
+  /// Command references accepted by this service
+  COMMAND_REFS:[string];
+}
+
+/// Collection of services
+table ServiceSet {
+  /// Services
+  SERVICES:[Service];
+}
+
+// ============================================================================
+// HEADER AND METADATA
+// ============================================================================
+
+/// Document header information
+table Header {
+  /// Version of this XTCE document
+  VERSION:string;
+  /// Date of document creation (ISO 8601)
+  DATE:string;
+  /// Classification level
+  CLASSIFICATION:string;
+  /// Validation status
+  VALIDATION_STATUS:string;
+  /// Author information
+  AUTHOR:string;
+  /// Notes/comments
+  NOTES:[string];
+}
+
+// ============================================================================
+// TELEMETRY METADATA
+// ============================================================================
+
+/// Telemetry metadata collection
+table TelemetryMetaData {
+  /// Parameter type definitions
+  PARAMETER_TYPE_SET:ParameterTypeSet;
+  /// Parameter definitions
+  PARAMETER_SET:ParameterSet;
+  /// Container definitions
+  CONTAINER_SET:ContainerSet;
+  /// Algorithm definitions
+  ALGORITHM_SET:AlgorithmSet;
+  /// Stream definitions
+  STREAM_SET:StreamSet;
+}
+
+// ============================================================================
+// COMMAND METADATA
+// ============================================================================
+
+/// Command metadata collection
+table CommandMetaData {
+  /// Argument type definitions
+  ARGUMENT_TYPE_SET:ArgumentTypeSet;
+  /// Parameter types used by commands
+  PARAMETER_TYPE_SET:ParameterTypeSet;
+  /// Parameters used by commands
+  PARAMETER_SET:ParameterSet;
+  /// MetaCommand definitions
+  META_COMMAND_SET:MetaCommandSet;
+  /// Command container set
+  COMMAND_CONTAINER_SET:ContainerSet;
+  /// Algorithm definitions
+  ALGORITHM_SET:AlgorithmSet;
+  /// Stream definitions
+  STREAM_SET:StreamSet;
+}
+
+// ============================================================================
+// SPACE SYSTEM (ROOT)
+// ============================================================================
+
+/// SpaceSystem - Root element for XTCE document
+/// A SpaceSystem defines the telemetry and command configuration for a space
+/// vehicle or subsystem. SpaceSystems can be nested hierarchically to represent
+/// the structure of a spacecraft (e.g., spacecraft -> subsystem -> payload).
+table XTC {
+  /// Name of this space system
+  NAME:string;
+  /// Short description
+  SHORT_DESCRIPTION:string;
+  /// Long description
+  LONG_DESCRIPTION:string;
+  /// Operational status
+  OPERATIONAL_STATUS:string;
+  /// Document header
+  HEADER:Header;
+  /// Telemetry metadata
+  TELEMETRY_META_DATA:TelemetryMetaData;
+  /// Command metadata
+  COMMAND_META_DATA:CommandMetaData;
+  /// Service definitions
+  SERVICE_SET:ServiceSet;
+  /// Child space systems (hierarchical structure)
+  CHILD_SYSTEMS:[XTC];
+}
+
+root_type XTC;
+file_identifier "$XTC";

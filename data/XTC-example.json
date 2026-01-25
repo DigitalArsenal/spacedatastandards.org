@@ -1,0 +1,637 @@
+{
+  "$comment": "Example XTCE (XML Telemetry and Command Exchange) data in JSON format. This represents the BogusSAT-1 spacecraft telemetry and command definitions converted from XTCE XML.",
+  "NAME": "BogusSAT",
+  "SHORT_DESCRIPTION": "Example satellite for demonstrating XTCE telemetry and command definitions",
+  "LONG_DESCRIPTION": "BogusSAT is a fictional spacecraft used to demonstrate the XTCE standard for telemetry and command metadata exchange. It includes representative examples of parameter types, containers, commands, and calibration definitions.",
+  "OPERATIONAL_STATUS": "OPERATIONAL",
+  "HEADER": {
+    "VERSION": "1.0",
+    "DATE": "2024-01-15T00:00:00Z",
+    "CLASSIFICATION": "UNCLASSIFIED",
+    "VALIDATION_STATUS": "Validated",
+    "AUTHOR": "Space Data Standards",
+    "NOTES": [
+      "Example XTCE configuration for demonstration purposes",
+      "Based on CCSDS XTCE 1.2 specification"
+    ]
+  },
+  "TELEMETRY_META_DATA": {
+    "PARAMETER_TYPE_SET": {
+      "INTEGER_TYPES": [
+        {
+          "NAME": "CCSDS_APID_Type",
+          "SHORT_DESCRIPTION": "CCSDS Application Process Identifier",
+          "LONG_DESCRIPTION": "11-bit unsigned integer for CCSDS packet identification",
+          "SIGNED": false,
+          "SIZE_IN_BITS": 11,
+          "VALID_MIN": 0,
+          "VALID_MAX": 2047,
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 11,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          }
+        },
+        {
+          "NAME": "CCSDS_PacketLength_Type",
+          "SHORT_DESCRIPTION": "CCSDS Packet Data Length",
+          "LONG_DESCRIPTION": "16-bit unsigned integer representing packet data length minus 1",
+          "SIGNED": false,
+          "SIZE_IN_BITS": 16,
+          "VALID_MIN": 0,
+          "VALID_MAX": 65535,
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 16,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          }
+        },
+        {
+          "NAME": "Battery_Charge_Type",
+          "SHORT_DESCRIPTION": "Battery charge percentage",
+          "LONG_DESCRIPTION": "8-bit unsigned integer representing battery charge as percentage (0-100)",
+          "UNITS": [
+            {
+              "SYMBOL": "%",
+              "DESCRIPTION": "percent"
+            }
+          ],
+          "SIGNED": false,
+          "SIZE_IN_BITS": 8,
+          "VALID_MIN": 0,
+          "VALID_MAX": 100,
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 8,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          },
+          "DEFAULT_ALARM": {
+            "MIN_VIOLATIONS": 3,
+            "STATIC_ALARM_RANGES": {
+              "WARNING_RANGE": {
+                "MIN_INCLUSIVE": 15,
+                "MAX_INCLUSIVE": 100
+              },
+              "CRITICAL_RANGE": {
+                "MIN_INCLUSIVE": 5,
+                "MAX_INCLUSIVE": 100
+              }
+            }
+          }
+        }
+      ],
+      "FLOAT_TYPES": [
+        {
+          "NAME": "Battery_Voltage_Type",
+          "SHORT_DESCRIPTION": "Battery voltage",
+          "LONG_DESCRIPTION": "32-bit IEEE 754 floating point battery voltage in volts",
+          "UNITS": [
+            {
+              "SYMBOL": "V",
+              "DESCRIPTION": "volts"
+            }
+          ],
+          "SIZE_IN_BITS": 32,
+          "VALID_MIN": 0.0,
+          "VALID_MAX": 35.0,
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 32,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "IEEE754_1985",
+            "DEFAULT_CALIBRATOR": "Battery_Voltage_Calibrator"
+          },
+          "DEFAULT_ALARM": {
+            "MIN_VIOLATIONS": 1,
+            "STATIC_ALARM_RANGES": {
+              "WARNING_RANGE": {
+                "MIN_INCLUSIVE": 24.0,
+                "MAX_INCLUSIVE": 32.0
+              },
+              "CRITICAL_RANGE": {
+                "MIN_INCLUSIVE": 22.0,
+                "MAX_INCLUSIVE": 34.0
+              }
+            }
+          }
+        },
+        {
+          "NAME": "Temperature_Type",
+          "SHORT_DESCRIPTION": "Temperature sensor reading",
+          "LONG_DESCRIPTION": "32-bit IEEE 754 floating point temperature in degrees Celsius",
+          "UNITS": [
+            {
+              "SYMBOL": "degC",
+              "DESCRIPTION": "degrees Celsius"
+            }
+          ],
+          "SIZE_IN_BITS": 32,
+          "VALID_MIN": -40.0,
+          "VALID_MAX": 85.0,
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 32,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "IEEE754_1985"
+          }
+        }
+      ],
+      "ENUMERATED_TYPES": [
+        {
+          "NAME": "Spacecraft_Mode_Type",
+          "SHORT_DESCRIPTION": "Spacecraft operational mode",
+          "LONG_DESCRIPTION": "Enumerated type defining spacecraft operational modes",
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 8,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          },
+          "ENUMERATION_LIST": [
+            {
+              "LABEL": "SAFE",
+              "VALUE": 0,
+              "DESCRIPTION": "Safe mode - minimal operations"
+            },
+            {
+              "LABEL": "STANDBY",
+              "VALUE": 1,
+              "DESCRIPTION": "Standby mode - ready for operations"
+            },
+            {
+              "LABEL": "NOMINAL",
+              "VALUE": 2,
+              "DESCRIPTION": "Nominal operations mode"
+            },
+            {
+              "LABEL": "SCIENCE",
+              "VALUE": 3,
+              "DESCRIPTION": "Science data collection mode"
+            },
+            {
+              "LABEL": "MANEUVER",
+              "VALUE": 4,
+              "DESCRIPTION": "Orbital maneuver mode"
+            }
+          ],
+          "INITIAL_VALUE": "STANDBY"
+        },
+        {
+          "NAME": "Payload_State_Type",
+          "SHORT_DESCRIPTION": "Payload power state",
+          "LONG_DESCRIPTION": "Enumerated type for payload on/off state",
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 8,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          },
+          "ENUMERATION_LIST": [
+            {
+              "LABEL": "OFF",
+              "VALUE": 0,
+              "DESCRIPTION": "Payload powered off"
+            },
+            {
+              "LABEL": "ON",
+              "VALUE": 1,
+              "DESCRIPTION": "Payload powered on"
+            }
+          ]
+        }
+      ],
+      "BOOLEAN_TYPES": [
+        {
+          "NAME": "Switch_State_Type",
+          "SHORT_DESCRIPTION": "Binary switch state",
+          "LONG_DESCRIPTION": "Boolean type for on/off switch states",
+          "ONE_STRING_VALUE": "ON",
+          "ZERO_STRING_VALUE": "OFF",
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 1,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          }
+        }
+      ],
+      "ABSOLUTE_TIME_TYPES": [
+        {
+          "NAME": "Unix_Time_Type",
+          "SHORT_DESCRIPTION": "Unix timestamp",
+          "LONG_DESCRIPTION": "64-bit integer seconds since Unix epoch (1970-01-01)",
+          "EPOCH": "UNIX",
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 64,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          },
+          "SCALE": 1.0,
+          "OFFSET": 0.0
+        }
+      ]
+    },
+    "PARAMETER_SET": {
+      "PARAMETERS": [
+        {
+          "NAME": "CCSDS_APID",
+          "PARAMETER_TYPE_REF": "CCSDS_APID_Type",
+          "SHORT_DESCRIPTION": "CCSDS Application Process ID",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "CCSDS"
+          }
+        },
+        {
+          "NAME": "Battery_Voltage",
+          "PARAMETER_TYPE_REF": "Battery_Voltage_Type",
+          "SHORT_DESCRIPTION": "Main battery voltage",
+          "LONG_DESCRIPTION": "Primary spacecraft battery voltage measurement",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "EPS"
+          }
+        },
+        {
+          "NAME": "Battery_Charge",
+          "PARAMETER_TYPE_REF": "Battery_Charge_Type",
+          "SHORT_DESCRIPTION": "Battery state of charge",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "EPS"
+          }
+        },
+        {
+          "NAME": "Spacecraft_Mode",
+          "PARAMETER_TYPE_REF": "Spacecraft_Mode_Type",
+          "SHORT_DESCRIPTION": "Current spacecraft mode",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "CDH"
+          }
+        },
+        {
+          "NAME": "Panel_Temperature",
+          "PARAMETER_TYPE_REF": "Temperature_Type",
+          "SHORT_DESCRIPTION": "Solar panel temperature",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "THERMAL"
+          }
+        },
+        {
+          "NAME": "Payload1_State",
+          "PARAMETER_TYPE_REF": "Payload_State_Type",
+          "SHORT_DESCRIPTION": "Payload 1 power state",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "PAYLOAD"
+          }
+        },
+        {
+          "NAME": "Timestamp",
+          "PARAMETER_TYPE_REF": "Unix_Time_Type",
+          "SHORT_DESCRIPTION": "Packet timestamp",
+          "PROPERTIES": {
+            "DATA_SOURCE": "TELEMETERED",
+            "READ_ONLY": true,
+            "SYSTEM_NAME": "CDH"
+          }
+        }
+      ]
+    },
+    "CONTAINER_SET": {
+      "CONTAINERS": [
+        {
+          "NAME": "CCSDS_Packet_Header",
+          "SHORT_DESCRIPTION": "CCSDS Space Packet Primary Header",
+          "LONG_DESCRIPTION": "Standard 6-byte CCSDS primary header for space packets",
+          "ABSTRACT": true,
+          "ENTRY_LIST": [
+            {
+              "FIXED_VALUE_ENTRY": {
+                "NAME": "Version",
+                "BINARY_VALUE": "000",
+                "SIZE_IN_BITS": 3
+              }
+            },
+            {
+              "FIXED_VALUE_ENTRY": {
+                "NAME": "Type",
+                "BINARY_VALUE": "0",
+                "SIZE_IN_BITS": 1
+              }
+            },
+            {
+              "FIXED_VALUE_ENTRY": {
+                "NAME": "SecHdrFlag",
+                "BINARY_VALUE": "1",
+                "SIZE_IN_BITS": 1
+              }
+            },
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "CCSDS_APID"
+              }
+            }
+          ]
+        },
+        {
+          "NAME": "Housekeeping_Packet",
+          "SHORT_DESCRIPTION": "Spacecraft housekeeping telemetry packet",
+          "LONG_DESCRIPTION": "Contains basic spacecraft health and status information",
+          "ABSTRACT": false,
+          "BASE_CONTAINER": {
+            "CONTAINER_REF": "CCSDS_Packet_Header",
+            "RESTRICTION_CRITERIA": {
+              "COMPARISON": {
+                "PARAMETER_REF": "CCSDS_APID",
+                "OPERATOR": "EQ",
+                "VALUE": "100"
+              }
+            }
+          },
+          "ENTRY_LIST": [
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "Timestamp"
+              }
+            },
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "Spacecraft_Mode"
+              }
+            },
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "Battery_Voltage"
+              }
+            },
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "Battery_Charge"
+              }
+            },
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "Panel_Temperature"
+              }
+            },
+            {
+              "PARAMETER_REF_ENTRY": {
+                "PARAMETER_REF": "Payload1_State"
+              }
+            }
+          ],
+          "RATE_IN_STREAM": {
+            "STREAM_REF": "TM_Stream",
+            "RATE": 1.0,
+            "BASIS": "PER_SECOND"
+          }
+        }
+      ]
+    },
+    "ALGORITHM_SET": {
+      "MATH_ALGORITHMS": [
+        {
+          "NAME": "Battery_Power_Calculator",
+          "SHORT_DESCRIPTION": "Calculate battery power consumption",
+          "MATH_OPERATION": "Battery_Voltage Battery_Current *",
+          "OUTPUT_PARAMETER_REF": "Battery_Power",
+          "TRIGGERS": [
+            {
+              "PARAMETER_REF": "Battery_Voltage"
+            }
+          ]
+        }
+      ],
+      "CUSTOM_ALGORITHMS": [
+        {
+          "NAME": "Battery_Voltage_Calibrator",
+          "SHORT_DESCRIPTION": "Polynomial calibration for battery voltage",
+          "LANGUAGE": "polynomial",
+          "ALGORITHM_TEXT": "coefficients: [0.0, 0.001, 0.0]",
+          "INPUTS": [
+            {
+              "PARAMETER_REF": "Battery_Voltage_Raw",
+              "INPUT_NAME": "raw"
+            }
+          ],
+          "OUTPUTS": [
+            {
+              "PARAMETER_REF": "Battery_Voltage",
+              "OUTPUT_NAME": "calibrated"
+            }
+          ]
+        }
+      ]
+    },
+    "STREAM_SET": {
+      "FIXED_FRAME_STREAMS": [
+        {
+          "NAME": "TM_Stream",
+          "SHORT_DESCRIPTION": "Main telemetry stream",
+          "FRAME_SIZE_IN_BITS": 8920,
+          "SYNC_PATTERN": "1ACFFC1D"
+        }
+      ]
+    }
+  },
+  "COMMAND_META_DATA": {
+    "ARGUMENT_TYPE_SET": {
+      "INTEGER_TYPES": [
+        {
+          "NAME": "Mode_Arg_Type",
+          "SHORT_DESCRIPTION": "Mode selection argument",
+          "SIGNED": false,
+          "SIZE_IN_BITS": 8,
+          "VALID_MIN": 0,
+          "VALID_MAX": 4,
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 8,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          }
+        }
+      ],
+      "ENUMERATED_TYPES": [
+        {
+          "NAME": "Payload_Control_Arg_Type",
+          "SHORT_DESCRIPTION": "Payload control command argument",
+          "DATA_ENCODING": {
+            "SIZE_IN_BITS": 8,
+            "BYTE_ORDER": "BIG_ENDIAN",
+            "ENCODING": "UNSIGNED"
+          },
+          "ENUMERATION_LIST": [
+            {
+              "LABEL": "OFF",
+              "VALUE": 0
+            },
+            {
+              "LABEL": "ON",
+              "VALUE": 1
+            },
+            {
+              "LABEL": "STANDBY",
+              "VALUE": 2
+            }
+          ]
+        }
+      ]
+    },
+    "META_COMMAND_SET": {
+      "META_COMMANDS": [
+        {
+          "NAME": "Set_Mode",
+          "SHORT_DESCRIPTION": "Set spacecraft operational mode",
+          "LONG_DESCRIPTION": "Command to change the spacecraft operational mode",
+          "ABSTRACT": false,
+          "ARGUMENTS": [
+            {
+              "NAME": "NEW_MODE",
+              "ARGUMENT_TYPE_REF": "Mode_Arg_Type",
+              "SHORT_DESCRIPTION": "Target mode"
+            }
+          ],
+          "COMMAND_CONTAINER": {
+            "NAME": "Set_Mode_Container",
+            "ENTRY_LIST": [
+              {
+                "FIXED_VALUE_ENTRY": {
+                  "NAME": "CMD_ID",
+                  "BINARY_VALUE": "01",
+                  "SIZE_IN_BITS": 8
+                }
+              },
+              {
+                "ARGUMENT_REF_ENTRY": {
+                  "ARGUMENT_REF": "NEW_MODE"
+                }
+              }
+            ]
+          },
+          "VERIFIERS": [
+            {
+              "NAME": "Mode_Change_Verify",
+              "VERIFIER_TYPE": "COMPLETE",
+              "CONDITION": {
+                "COMPARISON": {
+                  "PARAMETER_REF": "Spacecraft_Mode",
+                  "OPERATOR": "EQ",
+                  "VALUE": "NEW_MODE"
+                }
+              },
+              "TIME_WINDOW_START": 0.0,
+              "TIME_WINDOW_STOP": 10.0,
+              "TIME_WINDOW_REF": "COMMAND_RELEASE"
+            }
+          ],
+          "SIGNIFICANCE": {
+            "CONSEQUENCE_LEVEL": 2,
+            "REASON_FOR_WARNING": "Changes spacecraft operational mode"
+          }
+        },
+        {
+          "NAME": "Payload1_Control",
+          "SHORT_DESCRIPTION": "Control Payload 1 power state",
+          "ABSTRACT": false,
+          "ARGUMENTS": [
+            {
+              "NAME": "STATE",
+              "ARGUMENT_TYPE_REF": "Payload_Control_Arg_Type",
+              "SHORT_DESCRIPTION": "Desired payload state"
+            }
+          ],
+          "COMMAND_CONTAINER": {
+            "NAME": "Payload1_Control_Container",
+            "ENTRY_LIST": [
+              {
+                "FIXED_VALUE_ENTRY": {
+                  "NAME": "CMD_ID",
+                  "BINARY_VALUE": "10",
+                  "SIZE_IN_BITS": 8
+                }
+              },
+              {
+                "ARGUMENT_REF_ENTRY": {
+                  "ARGUMENT_REF": "STATE"
+                }
+              }
+            ]
+          },
+          "VERIFIERS": [
+            {
+              "NAME": "Payload_State_Verify",
+              "VERIFIER_TYPE": "COMPLETE",
+              "CONDITION": {
+                "COMPARISON": {
+                  "PARAMETER_REF": "Payload1_State",
+                  "OPERATOR": "EQ",
+                  "VALUE": "STATE"
+                }
+              },
+              "TIME_WINDOW_START": 0.0,
+              "TIME_WINDOW_STOP": 5.0,
+              "TIME_WINDOW_REF": "COMMAND_RELEASE"
+            }
+          ],
+          "SIGNIFICANCE": {
+            "CONSEQUENCE_LEVEL": 1,
+            "REASON_FOR_WARNING": "Changes payload power state"
+          }
+        }
+      ]
+    }
+  },
+  "CHILD_SYSTEMS": [
+    {
+      "NAME": "BusElectronics",
+      "SHORT_DESCRIPTION": "Spacecraft bus electronics subsystem",
+      "TELEMETRY_META_DATA": {
+        "PARAMETER_TYPE_SET": {
+          "FLOAT_TYPES": [
+            {
+              "NAME": "Bus_Voltage_Type",
+              "SHORT_DESCRIPTION": "Bus voltage measurement",
+              "UNITS": [
+                {
+                  "SYMBOL": "V",
+                  "DESCRIPTION": "volts"
+                }
+              ],
+              "SIZE_IN_BITS": 32,
+              "DATA_ENCODING": {
+                "SIZE_IN_BITS": 32,
+                "BYTE_ORDER": "BIG_ENDIAN",
+                "ENCODING": "IEEE754_1985"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "NAME": "Payload1",
+      "SHORT_DESCRIPTION": "Primary payload subsystem",
+      "TELEMETRY_META_DATA": {
+        "PARAMETER_TYPE_SET": {
+          "INTEGER_TYPES": [
+            {
+              "NAME": "Data_Counter_Type",
+              "SHORT_DESCRIPTION": "Payload data counter",
+              "SIGNED": false,
+              "SIZE_IN_BITS": 32,
+              "DATA_ENCODING": {
+                "SIZE_IN_BITS": 32,
+                "BYTE_ORDER": "BIG_ENDIAN",
+                "ENCODING": "UNSIGNED"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

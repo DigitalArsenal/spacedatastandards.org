@@ -49,9 +49,10 @@
     "PUR": { description: "Purchase Request", category: "Marketplace" },
     "REV": { description: "Review", category: "Marketplace" },
     "ACL": { description: "Access Control Grant", category: "Marketplace" },
+    "XTC": { description: "XML Telemetry and Command Exchange", category: "Telemetry" },
   };
 
-  const categories = ["All", "Orbital", "Conjunction", "Entity", "Tracking", "Maneuver", "Propagation", "Reference", "Marketplace", "Other"];
+  const categories = ["All", "Orbital", "Conjunction", "Entity", "Tracking", "Telemetry", "Maneuver", "Propagation", "Reference", "Marketplace", "Other"];
 
   let schemas = writable<SchemaInfo[]>([]);
   let searchQuery = writable("");
@@ -89,6 +90,7 @@
       "Conjunction": "rgba(245, 87, 108, 0.2)",
       "Entity": "rgba(56, 239, 125, 0.2)",
       "Tracking": "rgba(23, 234, 217, 0.2)",
+      "Telemetry": "rgba(0, 200, 170, 0.2)",
       "Maneuver": "rgba(142, 45, 226, 0.2)",
       "Propagation": "rgba(240, 147, 251, 0.2)",
       "Reference": "rgba(247, 151, 30, 0.2)",
@@ -104,6 +106,7 @@
       "Conjunction": "#f5576c",
       "Entity": "#38ef7d",
       "Tracking": "#17ead9",
+      "Telemetry": "#00c8aa",
       "Maneuver": "#8E2DE2",
       "Propagation": "#f093fb",
       "Reference": "#f7971e",
