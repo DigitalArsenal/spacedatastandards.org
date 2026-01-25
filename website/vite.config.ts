@@ -21,7 +21,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     customLogger: logger,
-    // Use a different base URL in development mode
     plugins: [svelte(), viteSingleFile()],
     publicDir: isDev ? '../' : false,
     resolve: {

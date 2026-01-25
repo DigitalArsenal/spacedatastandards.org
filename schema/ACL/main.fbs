@@ -1,0 +1,37 @@
+// Hash:
+// Version: 1.0.0
+// -----------------------------------END_HEADER
+include "../STF/main.fbs";
+
+/// Access Control Grant - Permission to access purchased data
+table ACL {
+  /// Unique identifier for this grant
+  GRANT_ID: string (required);
+  /// ID of the listing this grant applies to
+  LISTING_ID: string (required);
+  /// Peer ID of the buyer/grantee
+  BUYER_PEER_ID: string (required);
+  /// Buyer's encryption public key for encrypted delivery
+  BUYER_ENCRYPTION_PUBKEY: [ubyte];
+
+  /// Type of access granted
+  ACCESS_TYPE: accessType;
+  /// Name of the pricing tier purchased
+  TIER_NAME: string;
+
+  /// Unix timestamp when access was granted
+  GRANTED_AT: uint64;
+  /// Unix timestamp when access expires (0 = never expires)
+  EXPIRES_AT: uint64;
+
+  /// Transaction hash or reference proving payment
+  PAYMENT_TX_HASH: string;
+  /// Payment method used
+  PAYMENT_METHOD: paymentMethod;
+
+  /// Ed25519 signature from provider
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type ACL;
+file_identifier "$ACL";

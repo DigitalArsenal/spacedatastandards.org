@@ -1,0 +1,121 @@
+// Hash:
+// Version: 1.0.0
+// -----------------------------------END_HEADER
+
+/// Access type for data listings
+enum accessType : byte {
+  /// One-time purchase
+  OneTime,
+  /// Recurring subscription
+  Subscription,
+  /// Real-time streaming access
+  Streaming,
+  /// Query-based access
+  Query
+}
+
+/// Payment method accepted
+enum paymentMethod : byte {
+  /// Ethereum cryptocurrency
+  Crypto_ETH,
+  /// Solana cryptocurrency
+  Crypto_SOL,
+  /// Bitcoin cryptocurrency
+  Crypto_BTC,
+  /// Internal SDN credits system
+  SDN_Credits,
+  /// Fiat payment via Stripe
+  Fiat_Stripe,
+  /// Free/open data
+  Free
+}
+
+/// Spatial coverage definition
+table SpatialCoverage {
+  /// Type of coverage: "global", "region", "object_list"
+  TYPE: string;
+  /// Regions covered, e.g., ["LEO", "GEO", "MEO"]
+  REGIONS: [string];
+  /// Specific NORAD IDs or catalog numbers
+  OBJECT_IDS: [string];
+}
+
+/// Temporal coverage definition
+table TemporalCoverage {
+  /// Start epoch in ISO 8601 format
+  START_EPOCH: string;
+  /// End epoch in ISO 8601 format
+  END_EPOCH: string;
+  /// Update frequency: "realtime", "hourly", "daily"
+  UPDATE_FREQUENCY: string;
+  /// Days of historical data available
+  HISTORICAL_DEPTH: uint32;
+}
+
+/// Data coverage combining spatial and temporal
+table DataCoverage {
+  /// Spatial coverage definition
+  SPATIAL: SpatialCoverage;
+  /// Temporal coverage definition
+  TEMPORAL: TemporalCoverage;
+}
+
+/// Pricing tier for a listing
+table PricingTier {
+  /// Tier name, e.g., "Basic", "Pro", "Enterprise"
+  NAME: string;
+  /// Price in smallest unit (cents, satoshis, etc.)
+  PRICE_AMOUNT: uint64;
+  /// Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
+  PRICE_CURRENCY: string;
+  /// Duration in days (0 = one-time purchase)
+  DURATION_DAYS: uint32;
+  /// Rate limit in requests per hour
+  RATE_LIMIT: uint32;
+  /// List of features included in this tier
+  FEATURES: [string];
+}
+
+/// Storefront Listing - Data marketplace listing
+table STF {
+  /// Unique identifier for the listing
+  LISTING_ID: string (required);
+  /// Peer ID of the data provider
+  PROVIDER_PEER_ID: string (required);
+  /// IPFS CID of provider's EPM (Entity Profile Message)
+  PROVIDER_EPM_CID: string;
+
+  /// Title of the data listing
+  TITLE: string (required);
+  /// Detailed description of the data offering
+  DESCRIPTION: string;
+  /// SDS data types offered, e.g., ["OMM", "CDM", "TLE"]
+  DATA_TYPES: [string];
+  /// Coverage information (spatial and temporal)
+  COVERAGE: DataCoverage;
+  /// IPFS CID of sample data
+  SAMPLE_CID: string;
+
+  /// Type of access offered
+  ACCESS_TYPE: accessType;
+  /// Whether encryption is required for data delivery
+  ENCRYPTION_REQUIRED: bool;
+
+  /// Available pricing tiers
+  PRICING: [PricingTier];
+  /// Payment methods accepted
+  ACCEPTED_PAYMENTS: [paymentMethod];
+
+  /// Unix timestamp when listing was created
+  CREATED_AT: uint64;
+  /// Unix timestamp when listing was last updated
+  UPDATED_AT: uint64;
+  /// Whether the listing is currently active
+  ACTIVE: bool;
+
+  /// Ed25519 signature from provider
+  SIGNATURE: [ubyte];
+}
+
+root_type STF;
+file_identifier "$STF";

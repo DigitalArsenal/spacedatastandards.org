@@ -1,0 +1,31 @@
+// Hash:
+// Version: 1.0.0
+// -----------------------------------END_HEADER
+
+/// Review - User review of a storefront listing
+table REV {
+  /// Unique identifier for this review
+  REVIEW_ID: string (required);
+  /// ID of the listing being reviewed
+  LISTING_ID: string (required);
+  /// Peer ID of the reviewer
+  REVIEWER_PEER_ID: string (required);
+
+  /// Rating from 1-5 stars
+  RATING: uint8;
+  /// Review title
+  TITLE: string;
+  /// Review content/body
+  CONTENT: string;
+
+  /// ACL grant ID proving purchase (proof of purchase)
+  ACL_GRANT_ID: string;
+
+  /// Unix timestamp of the review
+  TIMESTAMP: uint64;
+  /// Ed25519 signature from reviewer
+  REVIEWER_SIGNATURE: [ubyte];
+}
+
+root_type REV;
+file_identifier "$REV";

@@ -1,0 +1,42 @@
+// Hash:
+// Version: 1.0.0
+// -----------------------------------END_HEADER
+include "../STF/main.fbs";
+
+/// Purchase Request - Request to purchase data from a storefront listing
+table PUR {
+  /// Unique identifier for this purchase request
+  REQUEST_ID: string (required);
+  /// ID of the listing being purchased
+  LISTING_ID: string (required);
+  /// Name of the pricing tier selected
+  TIER_NAME: string (required);
+
+  /// Peer ID of the buyer
+  BUYER_PEER_ID: string (required);
+  /// Buyer's encryption public key for encrypted delivery
+  BUYER_ENCRYPTION_PUBKEY: [ubyte];
+
+  /// Payment method used
+  PAYMENT_METHOD: paymentMethod;
+  /// Payment amount in smallest unit
+  PAYMENT_AMOUNT: uint64;
+  /// Currency of payment
+  PAYMENT_CURRENCY: string;
+
+  /// Transaction hash for cryptocurrency payments
+  PAYMENT_TX_HASH: string;
+  /// Blockchain network: "ethereum", "solana", "bitcoin"
+  PAYMENT_CHAIN: string;
+
+  /// Reference ID for credit/fiat payments
+  PAYMENT_REFERENCE: string;
+
+  /// Ed25519 signature from buyer
+  BUYER_SIGNATURE: [ubyte];
+  /// Unix timestamp of the request
+  TIMESTAMP: uint64;
+}
+
+root_type PUR;
+file_identifier "$PUR";

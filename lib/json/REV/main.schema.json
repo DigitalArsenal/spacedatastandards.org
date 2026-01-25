@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "REV": {
+      "type": "object",
+      "description": "Review - User review of a storefront listing",
+      "required": ["REVIEW_ID", "LISTING_ID", "REVIEWER_PEER_ID"],
+      "properties": {
+        "REVIEW_ID": {
+          "type": "string",
+          "description": "Unique identifier for this review",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 0
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "description": "ID of the listing being reviewed",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 1
+        },
+        "REVIEWER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the reviewer",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 2
+        },
+        "RATING": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Rating from 1-5 stars",
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-field-id": 3
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Review title",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 4
+        },
+        "CONTENT": {
+          "type": "string",
+          "description": "Review content/body",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 5
+        },
+        "ACL_GRANT_ID": {
+          "type": "string",
+          "description": "ACL grant ID proving purchase (proof of purchase)",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 6
+        },
+        "TIMESTAMP": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unix timestamp of the review",
+          "x-flatbuffer-type": "uint64",
+          "x-flatbuffer-field-id": 7
+        },
+        "REVIEWER_SIGNATURE": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "description": "Ed25519 signature from reviewer",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-field-id": 8
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/REV"
+}

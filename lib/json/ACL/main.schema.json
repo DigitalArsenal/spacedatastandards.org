@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "accessType": {
+      "type": "string",
+      "enum": ["OneTime", "Subscription", "Streaming", "Query"],
+      "description": "Access type for data listings"
+    },
+    "paymentMethod": {
+      "type": "string",
+      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"],
+      "description": "Payment method accepted"
+    },
+    "ACL": {
+      "type": "object",
+      "description": "Access Control Grant - Permission to access purchased data",
+      "required": ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
+      "properties": {
+        "GRANT_ID": {
+          "type": "string",
+          "description": "Unique identifier for this grant",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 0
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "description": "ID of the listing this grant applies to",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 1
+        },
+        "BUYER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the buyer/grantee",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 2
+        },
+        "BUYER_ENCRYPTION_PUBKEY": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "description": "Buyer's encryption public key for encrypted delivery",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-field-id": 3
+        },
+        "ACCESS_TYPE": {
+          "$ref": "#/definitions/accessType",
+          "description": "Type of access granted",
+          "x-flatbuffer-field-id": 4
+        },
+        "TIER_NAME": {
+          "type": "string",
+          "description": "Name of the pricing tier purchased",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 5
+        },
+        "GRANTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unix timestamp when access was granted",
+          "x-flatbuffer-type": "uint64",
+          "x-flatbuffer-field-id": 6
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unix timestamp when access expires (0 = never expires)",
+          "x-flatbuffer-type": "uint64",
+          "x-flatbuffer-field-id": 7
+        },
+        "PAYMENT_TX_HASH": {
+          "type": "string",
+          "description": "Transaction hash or reference proving payment",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 8
+        },
+        "PAYMENT_METHOD": {
+          "$ref": "#/definitions/paymentMethod",
+          "description": "Payment method used",
+          "x-flatbuffer-field-id": 9
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "description": "Ed25519 signature from provider",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-field-id": 10
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ACL"
+}

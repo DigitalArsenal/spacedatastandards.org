@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "paymentMethod": {
+      "type": "string",
+      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"],
+      "description": "Payment method accepted"
+    },
+    "PUR": {
+      "type": "object",
+      "description": "Purchase Request - Request to purchase data from a storefront listing",
+      "required": ["REQUEST_ID", "LISTING_ID", "TIER_NAME", "BUYER_PEER_ID"],
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "description": "Unique identifier for this purchase request",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 0
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "description": "ID of the listing being purchased",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 1
+        },
+        "TIER_NAME": {
+          "type": "string",
+          "description": "Name of the pricing tier selected",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 2
+        },
+        "BUYER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the buyer",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 3
+        },
+        "BUYER_ENCRYPTION_PUBKEY": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "description": "Buyer's encryption public key for encrypted delivery",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-field-id": 4
+        },
+        "PAYMENT_METHOD": {
+          "$ref": "#/definitions/paymentMethod",
+          "description": "Payment method used",
+          "x-flatbuffer-field-id": 5
+        },
+        "PAYMENT_AMOUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Payment amount in smallest unit",
+          "x-flatbuffer-type": "uint64",
+          "x-flatbuffer-field-id": 6
+        },
+        "PAYMENT_CURRENCY": {
+          "type": "string",
+          "description": "Currency of payment",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 7
+        },
+        "PAYMENT_TX_HASH": {
+          "type": "string",
+          "description": "Transaction hash for cryptocurrency payments",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 8
+        },
+        "PAYMENT_CHAIN": {
+          "type": "string",
+          "description": "Blockchain network: ethereum, solana, bitcoin",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 9
+        },
+        "PAYMENT_REFERENCE": {
+          "type": "string",
+          "description": "Reference ID for credit/fiat payments",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-field-id": 10
+        },
+        "BUYER_SIGNATURE": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "description": "Ed25519 signature from buyer",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-field-id": 11
+        },
+        "TIMESTAMP": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unix timestamp of the request",
+          "x-flatbuffer-type": "uint64",
+          "x-flatbuffer-field-id": 12
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PUR"
+}
