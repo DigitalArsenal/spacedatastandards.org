@@ -41,6 +41,7 @@ public struct Record : IFlatbufferObject
   public OMM ValueAsOMM() { return Value<OMM>().Value; }
   public OSM ValueAsOSM() { return Value<OSM>().Value; }
   public PLD ValueAsPLD() { return Value<PLD>().Value; }
+  public PLG ValueAsPLG() { return Value<PLG>().Value; }
   public PNM ValueAsPNM() { return Value<PNM>().Value; }
   public PRG ValueAsPRG() { return Value<PRG>().Value; }
   public PUR ValueAsPUR() { return Value<PUR>().Value; }
@@ -159,6 +160,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.PLD:
         _o.Value.Value = this.Value<PLD>().HasValue ? this.Value<PLD>().Value.UnPack() : null;
+        break;
+      case RecordType.PLG:
+        _o.Value.Value = this.Value<PLG>().HasValue ? this.Value<PLG>().Value.UnPack() : null;
         break;
       case RecordType.PNM:
         _o.Value.Value = this.Value<PNM>().HasValue ? this.Value<PNM>().Value.UnPack() : null;

@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pluginType" : {
+      "type" : "string",
+      "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics"]
+    },
+    "PluginCapability" : {
+      "type" : "object",
+      "description" : "Plugin capability declaration",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Capability name, e.g., \"gpu_compute\", \"wasm_simd\""
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Capability version"
+              },
+        "REQUIRED" : {
+                "type" : "boolean",
+                "description" : "Whether this capability is required"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PluginDependency" : {
+      "type" : "object",
+      "description" : "Plugin dependency on another plugin",
+      "properties" : {
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "Plugin ID of the dependency"
+              },
+        "MIN_VERSION" : {
+                "type" : "string",
+                "description" : "Minimum version required (semver)"
+              },
+        "MAX_VERSION" : {
+                "type" : "string",
+                "description" : "Maximum version allowed (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EntryFunction" : {
+      "type" : "object",
+      "description" : "Plugin entry point function definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Function name as exported from WASM"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable description"
+              },
+        "INPUT_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Input parameter types (FlatBuffer schema names)"
+              },
+        "OUTPUT_SCHEMA" : {
+                "type" : "string",
+                "description" : "Output type (FlatBuffer schema name)"
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "PLG" : {
+      "type" : "object",
+      "description" : "Plugin Manifest - WASM plugin distribution",
+      "properties" : {
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the plugin"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable plugin name"
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Plugin version (semver format)"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Detailed description of plugin functionality"
+              },
+        "PLUGIN_TYPE" : {
+                "$ref" : "#/definitions/pluginType",
+                "description" : "Type/category of the plugin"
+              },
+        "ABI_VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ABI version for compatibility checking"
+              },
+        "WASM_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA256 hash of the decrypted WASM binary"
+              },
+        "WASM_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of WASM binary in bytes"
+              },
+        "WASM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the encrypted WASM binary"
+              },
+        "ENTRY_FUNCTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EntryFunction"},
+                "description" : "Entry point functions exported by the plugin"
+              },
+        "REQUIRED_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "FlatBuffer schemas required by this plugin"
+              },
+        "DEPENDENCIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PluginDependency"},
+                "description" : "Other plugins this depends on"
+              },
+        "CAPABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PluginCapability"},
+                "description" : "Capabilities provided by this plugin"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the plugin provider"
+              },
+        "PROVIDER_EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of provider's EPM (Entity Profile Message)"
+              },
+        "ENCRYPTED" : {
+                "type" : "boolean",
+                "description" : "Whether the WASM binary is encrypted"
+              },
+        "MIN_PERMISSIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Minimum permissions required to run"
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when plugin was created"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when plugin was last updated"
+              },
+        "DOCUMENTATION_URL" : {
+                "type" : "string",
+                "description" : "URL to plugin documentation"
+              },
+        "ICON_URL" : {
+                "type" : "string",
+                "description" : "URL to plugin icon/logo"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "License identifier (SPDX format)"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider over manifest"
+              }
+      },
+      "required" : ["PLUGIN_ID", "NAME", "VERSION"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PLG"
+}

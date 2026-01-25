@@ -27,18 +27,19 @@ class RecordType private constructor() {
         const val OMM: UByte = 21u
         const val OSM: UByte = 22u
         const val PLD: UByte = 23u
-        const val PNM: UByte = 24u
-        const val PRG: UByte = 25u
-        const val PUR: UByte = 26u
-        const val REV: UByte = 27u
-        const val RFM: UByte = 28u
-        const val ROC: UByte = 29u
-        const val SCM: UByte = 30u
-        const val SIT: UByte = 31u
-        const val STF: UByte = 32u
-        const val TDM: UByte = 33u
-        const val TIM: UByte = 34u
-        const val VCM: UByte = 35u
-        const val XTC: UByte = 36u
+        const val PLG: UByte = 24u
+        const val PNM: UByte = 25u
+        const val PRG: UByte = 26u
+        const val PUR: UByte = 27u
+        const val REV: UByte = 28u
+        const val RFM: UByte = 29u
+        const val ROC: UByte = 30u
+        const val SCM: UByte = 31u
+        const val SIT: UByte = 32u
+        const val STF: UByte = 33u
+        const val TDM: UByte = 34u
+        const val TIM: UByte = 35u
+        const val VCM: UByte = 36u
+        const val XTC: UByte = 37u
     }
 }

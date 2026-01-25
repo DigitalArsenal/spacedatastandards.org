@@ -37,19 +37,20 @@ public enum RecordType: UInt8, UnionEnum {
   case omm = 21
   case osm = 22
   case pld = 23
-  case pnm = 24
-  case prg = 25
-  case pur = 26
-  case rev = 27
-  case rfm = 28
-  case roc = 29
-  case scm = 30
-  case sit = 31
-  case stf = 32
-  case tdm = 33
-  case tim = 34
-  case vcm = 35
-  case xtc = 36
+  case plg = 24
+  case pnm = 25
+  case prg = 26
+  case pur = 27
+  case rev = 28
+  case rfm = 29
+  case roc = 30
+  case scm = 31
+  case sit = 32
+  case stf = 33
+  case tdm = 34
+  case tim = 35
+  case vcm = 36
+  case xtc = 37
 
   public static var max: RecordType { return .xtc }
   public static var min: RecordType { return .none_ }
@@ -149,6 +150,8 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<OSM>.verify(&verifier, at: pos, of: OSM.self)
       case .pld:
         try ForwardOffset<PLD>.verify(&verifier, at: pos, of: PLD.self)
+      case .plg:
+        try ForwardOffset<PLG>.verify(&verifier, at: pos, of: PLG.self)
       case .pnm:
         try ForwardOffset<PNM>.verify(&verifier, at: pos, of: PNM.self)
       case .prg:

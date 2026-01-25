@@ -31,19 +31,20 @@ const (
 	RecordTypeOMM  RecordType = 21
 	RecordTypeOSM  RecordType = 22
 	RecordTypePLD  RecordType = 23
-	RecordTypePNM  RecordType = 24
-	RecordTypePRG  RecordType = 25
-	RecordTypePUR  RecordType = 26
-	RecordTypeREV  RecordType = 27
-	RecordTypeRFM  RecordType = 28
-	RecordTypeROC  RecordType = 29
-	RecordTypeSCM  RecordType = 30
-	RecordTypeSIT  RecordType = 31
-	RecordTypeSTF  RecordType = 32
-	RecordTypeTDM  RecordType = 33
-	RecordTypeTIM  RecordType = 34
-	RecordTypeVCM  RecordType = 35
-	RecordTypeXTC  RecordType = 36
+	RecordTypePLG  RecordType = 24
+	RecordTypePNM  RecordType = 25
+	RecordTypePRG  RecordType = 26
+	RecordTypePUR  RecordType = 27
+	RecordTypeREV  RecordType = 28
+	RecordTypeRFM  RecordType = 29
+	RecordTypeROC  RecordType = 30
+	RecordTypeSCM  RecordType = 31
+	RecordTypeSIT  RecordType = 32
+	RecordTypeSTF  RecordType = 33
+	RecordTypeTDM  RecordType = 34
+	RecordTypeTIM  RecordType = 35
+	RecordTypeVCM  RecordType = 36
+	RecordTypeXTC  RecordType = 37
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -71,6 +72,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeOMM:  "OMM",
 	RecordTypeOSM:  "OSM",
 	RecordTypePLD:  "PLD",
+	RecordTypePLG:  "PLG",
 	RecordTypePNM:  "PNM",
 	RecordTypePRG:  "PRG",
 	RecordTypePUR:  "PUR",
@@ -111,6 +113,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"OMM":  RecordTypeOMM,
 	"OSM":  RecordTypeOSM,
 	"PLD":  RecordTypePLD,
+	"PLG":  RecordTypePLG,
 	"PNM":  RecordTypePNM,
 	"PRG":  RecordTypePRG,
 	"PUR":  RecordTypePUR,

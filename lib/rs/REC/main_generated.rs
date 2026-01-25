@@ -39,6 +39,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -48,10 +49,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 36;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 37;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 37] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 38] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ATM,
@@ -76,6 +77,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 37] = [
   RecordType::OMM,
   RecordType::OSM,
   RecordType::PLD,
+  RecordType::PLG,
   RecordType::PNM,
   RecordType::PRG,
   RecordType::PUR,
@@ -120,22 +122,23 @@ impl RecordType {
   pub const OMM: Self = Self(21);
   pub const OSM: Self = Self(22);
   pub const PLD: Self = Self(23);
-  pub const PNM: Self = Self(24);
-  pub const PRG: Self = Self(25);
-  pub const PUR: Self = Self(26);
-  pub const REV: Self = Self(27);
-  pub const RFM: Self = Self(28);
-  pub const ROC: Self = Self(29);
-  pub const SCM: Self = Self(30);
-  pub const SIT: Self = Self(31);
-  pub const STF: Self = Self(32);
-  pub const TDM: Self = Self(33);
-  pub const TIM: Self = Self(34);
-  pub const VCM: Self = Self(35);
-  pub const XTC: Self = Self(36);
+  pub const PLG: Self = Self(24);
+  pub const PNM: Self = Self(25);
+  pub const PRG: Self = Self(26);
+  pub const PUR: Self = Self(27);
+  pub const REV: Self = Self(28);
+  pub const RFM: Self = Self(29);
+  pub const ROC: Self = Self(30);
+  pub const SCM: Self = Self(31);
+  pub const SIT: Self = Self(32);
+  pub const STF: Self = Self(33);
+  pub const TDM: Self = Self(34);
+  pub const TIM: Self = Self(35);
+  pub const VCM: Self = Self(36);
+  pub const XTC: Self = Self(37);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 36;
+  pub const ENUM_MAX: u8 = 37;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -161,6 +164,7 @@ impl RecordType {
     Self::OMM,
     Self::OSM,
     Self::PLD,
+    Self::PLG,
     Self::PNM,
     Self::PRG,
     Self::PUR,
@@ -202,6 +206,7 @@ impl RecordType {
       Self::OMM => Some("OMM"),
       Self::OSM => Some("OSM"),
       Self::PLD => Some("PLD"),
+      Self::PLG => Some("PLG"),
       Self::PNM => Some("PNM"),
       Self::PRG => Some("PRG"),
       Self::PUR => Some("PUR"),
@@ -300,6 +305,7 @@ pub enum RecordTypeT {
   OMM(Box<OMMT>),
   OSM(Box<OSMT>),
   PLD(Box<PLDT>),
+  PLG(Box<PLGT>),
   PNM(Box<PNMT>),
   PRG(Box<PRGT>),
   PUR(Box<PURT>),
@@ -346,6 +352,7 @@ impl RecordTypeT {
       Self::OMM(_) => RecordType::OMM,
       Self::OSM(_) => RecordType::OSM,
       Self::PLD(_) => RecordType::PLD,
+      Self::PLG(_) => RecordType::PLG,
       Self::PNM(_) => RecordType::PNM,
       Self::PRG(_) => RecordType::PRG,
       Self::PUR(_) => RecordType::PUR,
@@ -387,6 +394,7 @@ impl RecordTypeT {
       Self::OMM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLD(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PLG(v) => Some(v.pack(fbb).as_union_value()),
       Self::PNM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PRG(v) => Some(v.pack(fbb).as_union_value()),
       Self::PUR(v) => Some(v.pack(fbb).as_union_value()),
@@ -885,6 +893,27 @@ impl RecordTypeT {
   pub fn as_PLD_mut(&mut self) -> Option<&mut PLDT> {
     if let Self::PLD(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned PLGT, setting the union to NONE.
+  pub fn take_PLG(&mut self) -> Option<Box<PLGT>> {
+    if let Self::PLG(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::PLG(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PLGT.
+  pub fn as_PLG(&self) -> Option<&PLGT> {
+    if let Self::PLG(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PLGT.
+  pub fn as_PLG_mut(&mut self) -> Option<&mut PLGT> {
+    if let Self::PLG(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned PNMT, setting the union to NONE.
   pub fn take_PNM(&mut self) -> Option<Box<PNMT>> {
     if let Self::PNM(_) = self {
@@ -1311,6 +1340,11 @@ impl<'a> Record<'a> {
       RecordType::PLD => RecordTypeT::PLD(Box::new(
         self.value_as_PLD()
             .expect("Invalid union table, expected `RecordType::PLD`.")
+            .unpack()
+      )),
+      RecordType::PLG => RecordTypeT::PLG(Box::new(
+        self.value_as_PLG()
+            .expect("Invalid union table, expected `RecordType::PLG`.")
             .unpack()
       )),
       RecordType::PNM => RecordTypeT::PNM(Box::new(
@@ -1757,6 +1791,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_PLG(&self) -> Option<PLG<'a>> {
+    if self.value_type() == RecordType::PLG {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PLG::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_PNM(&self) -> Option<PNM<'a>> {
     if self.value_type() == RecordType::PNM {
       self.value().map(|t| {
@@ -1984,6 +2033,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::OMM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OMM>>("RecordType::OMM", pos),
           RecordType::OSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OSM>>("RecordType::OSM", pos),
           RecordType::PLD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLD>>("RecordType::PLD", pos),
+          RecordType::PLG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLG>>("RecordType::PLG", pos),
           RecordType::PNM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PNM>>("RecordType::PNM", pos),
           RecordType::PRG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PRG>>("RecordType::PRG", pos),
           RecordType::PUR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PUR>>("RecordType::PUR", pos),
@@ -2214,6 +2264,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::PLD => {
           if let Some(x) = self.value_as_PLD() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PLG => {
+          if let Some(x) = self.value_as_PLG() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

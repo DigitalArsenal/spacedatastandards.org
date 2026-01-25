@@ -1,0 +1,114 @@
+// Hash: fd563a2cd85ca17a38336fbd8ac00e6505d0235b1c94b3f61f333390b7209ba9
+// Version: 1.0.1
+// -----------------------------------END_HEADER
+/// Plugin type category
+enum pluginType : byte {
+  /// Sensor simulation and analysis
+  Sensor,
+  /// Orbital propagation algorithms
+  Propagator,
+  /// Custom rendering/visualization
+  Renderer,
+  /// Data analysis and processing
+  Analysis,
+  /// External data source integration
+  DataSource,
+  /// Electronic warfare simulation
+  EW,
+  /// Communications modeling
+  Comms,
+  /// Physics simulation
+  Physics
+}
+
+/// Plugin capability declaration
+table PluginCapability {
+  /// Capability name, e.g., "gpu_compute", "wasm_simd"
+  NAME: string;
+  /// Capability version
+  VERSION: string;
+  /// Whether this capability is required
+  REQUIRED: bool;
+}
+
+/// Plugin dependency on another plugin
+table PluginDependency {
+  /// Plugin ID of the dependency
+  PLUGIN_ID: string;
+  /// Minimum version required (semver)
+  MIN_VERSION: string;
+  /// Maximum version allowed (optional)
+  MAX_VERSION: string;
+}
+
+/// Plugin entry point function definition
+table EntryFunction {
+  /// Function name as exported from WASM
+  NAME: string (required);
+  /// Human-readable description
+  DESCRIPTION: string;
+  /// Input parameter types (FlatBuffer schema names)
+  INPUT_SCHEMAS: [string];
+  /// Output type (FlatBuffer schema name)
+  OUTPUT_SCHEMA: string;
+}
+
+/// Plugin Manifest - WASM plugin distribution
+table PLG {
+  /// Unique identifier for the plugin
+  PLUGIN_ID: string (required);
+  /// Human-readable plugin name
+  NAME: string (required);
+  /// Plugin version (semver format)
+  VERSION: string (required);
+  /// Detailed description of plugin functionality
+  DESCRIPTION: string;
+  /// Type/category of the plugin
+  PLUGIN_TYPE: pluginType;
+
+  /// ABI version for compatibility checking
+  ABI_VERSION: uint32 = 1;
+
+  /// SHA256 hash of the decrypted WASM binary
+  WASM_HASH: [ubyte];
+  /// Size of WASM binary in bytes
+  WASM_SIZE: uint64;
+  /// IPFS CID of the encrypted WASM binary
+  WASM_CID: string;
+
+  /// Entry point functions exported by the plugin
+  ENTRY_FUNCTIONS: [EntryFunction];
+  /// FlatBuffer schemas required by this plugin
+  REQUIRED_SCHEMAS: [string];
+  /// Other plugins this depends on
+  DEPENDENCIES: [PluginDependency];
+  /// Capabilities provided by this plugin
+  CAPABILITIES: [PluginCapability];
+
+  /// Peer ID of the plugin provider
+  PROVIDER_PEER_ID: string;
+  /// IPFS CID of provider's EPM (Entity Profile Message)
+  PROVIDER_EPM_CID: string;
+
+  /// Whether the WASM binary is encrypted
+  ENCRYPTED: bool = true;
+  /// Minimum permissions required to run
+  MIN_PERMISSIONS: [string];
+
+  /// Unix timestamp when plugin was created
+  CREATED_AT: uint64;
+  /// Unix timestamp when plugin was last updated
+  UPDATED_AT: uint64;
+  /// URL to plugin documentation
+  DOCUMENTATION_URL: string;
+  /// URL to plugin icon/logo
+  ICON_URL: string;
+  /// License identifier (SPDX format)
+  LICENSE: string;
+
+  /// Ed25519 signature from provider over manifest
+  SIGNATURE: [ubyte];
+}
+
+root_type PLG;
+file_identifier "$PLG";

@@ -28,19 +28,20 @@ public enum RecordType : byte
   OMM = 21,
   OSM = 22,
   PLD = 23,
-  PNM = 24,
-  PRG = 25,
-  PUR = 26,
-  REV = 27,
-  RFM = 28,
-  ROC = 29,
-  SCM = 30,
-  SIT = 31,
-  STF = 32,
-  TDM = 33,
-  TIM = 34,
-  VCM = 35,
-  XTC = 36,
+  PLG = 24,
+  PNM = 25,
+  PRG = 26,
+  PUR = 27,
+  REV = 28,
+  RFM = 29,
+  ROC = 30,
+  SCM = 31,
+  SIT = 32,
+  STF = 33,
+  TDM = 34,
+  TIM = 35,
+  VCM = 36,
+  XTC = 37,
 };
 
 public class RecordTypeUnion {
@@ -99,6 +100,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromOSM(OSMT _osm) { return new RecordTypeUnion{ Type = RecordType.OSM, Value = _osm }; }
   public PLDT AsPLD() { return this.As<PLDT>(); }
   public static RecordTypeUnion FromPLD(PLDT _pld) { return new RecordTypeUnion{ Type = RecordType.PLD, Value = _pld }; }
+  public PLGT AsPLG() { return this.As<PLGT>(); }
+  public static RecordTypeUnion FromPLG(PLGT _plg) { return new RecordTypeUnion{ Type = RecordType.PLG, Value = _plg }; }
   public PNMT AsPNM() { return this.As<PNMT>(); }
   public static RecordTypeUnion FromPNM(PNMT _pnm) { return new RecordTypeUnion{ Type = RecordType.PNM, Value = _pnm }; }
   public PRGT AsPRG() { return this.As<PRGT>(); }
@@ -152,6 +155,7 @@ public class RecordTypeUnion {
       case RecordType.OMM: return OMM.Pack(builder, _o.AsOMM()).Value;
       case RecordType.OSM: return OSM.Pack(builder, _o.AsOSM()).Value;
       case RecordType.PLD: return PLD.Pack(builder, _o.AsPLD()).Value;
+      case RecordType.PLG: return PLG.Pack(builder, _o.AsPLG()).Value;
       case RecordType.PNM: return PNM.Pack(builder, _o.AsPNM()).Value;
       case RecordType.PRG: return PRG.Pack(builder, _o.AsPRG()).Value;
       case RecordType.PUR: return PUR.Pack(builder, _o.AsPUR()).Value;
@@ -246,6 +250,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.PLD:
         result = PLDVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PLG:
+        result = PLGVerify.Verify(verifier, tablePos);
         break;
       case RecordType.PNM:
         result = PNMVerify.Verify(verifier, tablePos);

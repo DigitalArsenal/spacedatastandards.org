@@ -22,6 +22,7 @@ import { OEMT } from './OEM.js';
 import { OMMT } from './OMM.js';
 import { OSMT } from './OSM.js';
 import { PLDT } from './PLD.js';
+import { PLGT } from './PLG.js';
 import { PNMT } from './PNM.js';
 import { PRGT } from './PRG.js';
 import { PURT } from './PUR.js';
@@ -57,9 +58,9 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
 }
 export declare class RecordT implements flatbuffers.IGeneratedObject {
     valueType: RecordType;
-    value: ACLT | ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | PURT | REVT | RFMT | ROCT | SCMT | SITT | STFT | TDMT | TIMT | VCMT | XTCT | null;
+    value: ACLT | ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PLGT | PNMT | PRGT | PURT | REVT | RFMT | ROCT | SCMT | SITT | STFT | TDMT | TIMT | VCMT | XTCT | null;
     standard: string | Uint8Array | null;
-    constructor(valueType?: RecordType, value?: ACLT | ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | PURT | REVT | RFMT | ROCT | SCMT | SITT | STFT | TDMT | TIMT | VCMT | XTCT | null, standard?: string | Uint8Array | null);
+    constructor(valueType?: RecordType, value?: ACLT | ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PLGT | PNMT | PRGT | PURT | REVT | RFMT | ROCT | SCMT | SITT | STFT | TDMT | TIMT | VCMT | XTCT | null, standard?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

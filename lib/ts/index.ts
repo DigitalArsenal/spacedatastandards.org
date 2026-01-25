@@ -21,6 +21,7 @@ export * as OEM from './OEM/main.js';
 export * as OMM from './OMM/main.js';
 export * as OSM from './OSM/main.js';
 export * as PLD from './PLD/main.js';
+export * as PLG from './PLG/main.js';
 export * as PNM from './PNM/main.js';
 export * as PRG from './PRG/main.js';
 export * as PUR from './PUR/main.js';
